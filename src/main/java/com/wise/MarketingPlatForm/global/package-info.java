@@ -1,0 +1,1 @@
+package com.wise.MarketingPlatForm.global;
