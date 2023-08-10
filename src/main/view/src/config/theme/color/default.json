@@ -1,0 +1,7 @@
+{
+    "primary": "#577df6",
+    "primaryGradient": "linear-gradient(to bottom, #2b5eff, #577df6)",
+    "background": "#f5f6fa",
+    "panelColor": "#ffffff",
+    "secondary": "#646464"
+}
