@@ -16,6 +16,20 @@
     ],
     "rules": {
         "linebreak-style": 0,
-        "comma-dangle": ["error", {"functions": "ignore"}]
+        "comma-dangle": ["error", {"functions": "ignore"}],
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-uses-react": "off",
+        "require-jsdoc": [
+            "error",
+            {
+                "require": {
+                    "FunctionDeclaration": false,
+                    "MethodDefinition": false,
+                    "ClassDeclaration": false,
+                    "ArrowFunctionExpression": false,
+                    "FunctionExpression": false
+                 }
+            }
+        ]
     }
 }
