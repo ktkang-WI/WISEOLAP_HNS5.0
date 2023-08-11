@@ -19,6 +19,7 @@
         "comma-dangle": ["error", {"functions": "ignore"}],
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
+        "arraysInObjects": false,
         "require-jsdoc": [
             "error",
             {
