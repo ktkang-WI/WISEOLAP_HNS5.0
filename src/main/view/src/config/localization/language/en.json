@@ -1,3 +1,11 @@
 {
-    "test": "TEST"
+  "test": "TEST",
+  "newWindow": "new window",
+  "viewer": "viewer",
+  "showQuery": "Show Query",
+  "reportProperty": "Report Property",
+  "dashboard": "Dashboard",
+  "adhoc": "AdHoc",
+  "dataset": "Dataset",
+  "preference": "Preference"
 }

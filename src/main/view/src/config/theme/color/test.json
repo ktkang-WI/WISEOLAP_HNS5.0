@@ -1,8 +1,11 @@
 {
-    "primary": "#577df6",
+    "primary": "#2b5eff",
     "primaryGradient": "linear-gradient(to bottom, #2b5eff, #577df6)",
     "background": "#f5f6fa",
     "panelColor": "#ffffff",
     "secondary": "#646464",
-    "test": "test"
+    "test": "test",
+    "primaryFontColor": "#7d8291",
+    "secondaryFontColor": "#ffffff",
+    "popupTitleFontColor": "#222222"
 }
