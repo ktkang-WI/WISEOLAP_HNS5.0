@@ -13,6 +13,7 @@ const firstPage = {
   dashboard: {index: true, element: <Dashboard/>},
   exel: {index: false, element: <SpreadSheet/>}
 };
+
 const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath,
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
         element: <Dashboard/>
       },
       {
-        path: 'adhoc',
+        path: 'unstructure',
         element: <UnstructureReport/>
       },
       {
