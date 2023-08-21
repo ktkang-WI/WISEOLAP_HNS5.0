@@ -1,14 +1,14 @@
 import defaultColor from './color/default.json';
-import defaultFont from './color/default.json';
-import defaultMargin from './color/default.json';
-import defaultSize from './color/default.json';
+import defaultFont from './font/default.json';
+import defaultMargin from './margin/default.json';
+import defaultSize from './size/default.json';
 
 import testColor from './color/test.json';
-import testFont from './color/test.json';
-import testMargin from './color/test.json';
-import testSize from './color/test.json';
+import testFont from './font/test.json';
+import testMargin from './margin/test.json';
+import testSize from './size/test.json';
 
-let theme = {};
+const theme = {};
 
 /**
  * 호출 시 테마 변경. theme는 참조를 반환하므로 해당 메서드 호출 시
@@ -48,4 +48,4 @@ const getTheme = (themeName) => {
   return theme;
 };
 
-export { getTheme, changeTheme };
+export {getTheme, changeTheme};

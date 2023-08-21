@@ -1,13 +1,13 @@
-import { getTheme, changeTheme } from "config/theme";
+import {getTheme, changeTheme} from 'config/theme';
 
 describe('Theme', () => {
-    it('theme Test', () => {
-        let theme = getTheme();
+  it('theme Test', () => {
+    const theme = getTheme();
 
-        expect(theme.color.test).toEqual(undefined);
+    expect(theme.color.test).toEqual(undefined);
 
-        changeTheme("test")
+    changeTheme('test');
 
-        expect(theme.color.test).toEqual("test");
-    })
-})
+    expect(theme.color.test).toEqual('test');
+  });
+});

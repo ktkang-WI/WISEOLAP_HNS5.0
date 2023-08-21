@@ -1,3 +1,11 @@
 {
-    "test": "테스트"
+  "test": "테스트",
+  "newWindow": "새 창 열기",
+  "viewer": "뷰어",
+  "showQuery": "쿼리보기",
+  "reportProperty": "보고서 속성",
+  "dashboard": "대시보드",
+  "adhoc": "비정형 보고서",
+  "dataset": "데이터집합",
+  "preference": "환경설정"
 }
