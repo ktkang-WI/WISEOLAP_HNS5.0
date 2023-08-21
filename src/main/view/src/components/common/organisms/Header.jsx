@@ -16,6 +16,7 @@ const StyledHeader = styled.div`
   border-bottom: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
+  box-shadow: 0 0 11px #eaf0f6;
 `;
 
 const Left = styled.div`
