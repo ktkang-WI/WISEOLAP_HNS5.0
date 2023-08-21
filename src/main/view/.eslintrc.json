@@ -16,10 +16,16 @@
     ],
     "rules": {
         "linebreak-style": 0,
-        "comma-dangle": ["error", {"functions": "ignore"}],
+        "comma-dangle": [
+            "error",
+            {
+                "functions": "ignore"
+            }
+        ],
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
-        "arraysInObjects": false,
+        "arraysInObjects": 0,
+        "react/prop-types": "off",
         "require-jsdoc": [
             "error",
             {
@@ -29,7 +35,7 @@
                     "ClassDeclaration": false,
                     "ArrowFunctionExpression": false,
                     "FunctionExpression": false
-                 }
+                }
             }
         ]
     }
