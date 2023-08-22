@@ -1,15 +1,15 @@
 import {createBrowserRouter} from 'react-router-dom';
-import Designer from './routesInitialPage/Designer';
+import Designer from './Designer';
 import Dashboard from 'components/designer/Dashboard';
-import UnstructureReport from 'components/designer/UnstructrueReport';
+import Adhoc from 'components/designer/Adhoc';
 import SpreadSheet from 'components/designer/SpreadSheet';
-import Viewer from './routesInitialPage/Viewer';
-import Config from './routesInitialPage/Config';
-import Login from './routesInitialPage/Login';
+import Viewer from './Viewer';
+import Config from './Config';
+import Login from './Login';
 
 const contextPath = '/editds';
 const firstPage = {
-  unstruct: {index: false, element: <UnstructureReport/>},
+  unstruct: {index: false, element: <Adhoc/>},
   dashboard: {index: true, element: <Dashboard/>},
   exel: {index: false, element: <SpreadSheet/>}
 };
@@ -24,12 +24,12 @@ const router = createBrowserRouter([
         element: firstPage.dashboard.element
       },
       {
-        path: 'dash',
+        path: 'dashboard',
         element: <Dashboard/>
       },
       {
-        path: 'unstructure',
-        element: <UnstructureReport/>
+        path: 'Adhoc',
+        element: <Adhoc/>
       },
       {
         path: 'spreadsheet',

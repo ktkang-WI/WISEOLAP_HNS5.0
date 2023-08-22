@@ -4,7 +4,9 @@ import './App.css';
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <div className="App">
+      <RouterProvider router={router}/>
+    </div>
   );
 }
 

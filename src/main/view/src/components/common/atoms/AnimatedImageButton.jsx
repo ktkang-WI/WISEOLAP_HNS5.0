@@ -42,7 +42,6 @@ const AnimatedImageButton = ({
   onClick, imgSrc, hoveredImgSrc, width='60px', height='60px', ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
-
   const onMouseOver = function() {
     setSrc(hoveredImgSrc);
   };

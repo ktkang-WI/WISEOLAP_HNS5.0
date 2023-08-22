@@ -1,18 +1,17 @@
-import {Link, Outlet} from 'react-router-dom';
-const contextPath = '/editds';
+import Header from 'components/common/organisms/Header';
+import SideNavigationBar from 'components/common/organisms/SideNavigationBar';
+import {Outlet} from 'react-router-dom';
 const Designer = () => {
   return (
     <div>
-      디자이너 페이지
-      <div>
-        <ul>
-          <li><Link to={contextPath + '/adhoc'}>비정형</Link></li>
-          <li><Link to={contextPath + '/dash'}>대시보드</Link></li>
-          <li><Link to={contextPath + '/spreadsheet'}>엑셀</Link></li>
-          <li><Link to={contextPath + '/viewer'}>뷰어</Link></li>
-          <li><Link to={contextPath + '/Config'}>설정</Link></li>
-        </ul>
-      </div>
+      <Header
+        left={['Logo', 'Viewer', 'NewWindow', 'ReportTabs']}
+        right={['ShowQuery', 'ReportProperty']}
+      >
+      </Header>
+      <SideNavigationBar
+        content={['Dashboard', 'AdHoc', 'Dataset', 'Preference']}
+      />
       <Outlet/>
     </div>
   );
