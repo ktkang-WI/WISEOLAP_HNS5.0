@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import { configureStore } from "@reduxjs/toolkit";
 
 function App() {
   return (
