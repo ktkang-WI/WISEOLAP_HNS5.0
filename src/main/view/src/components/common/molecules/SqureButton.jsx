@@ -15,6 +15,11 @@ const Wrapper = styled.div`
   border: 1px solid ${theme.color.breakLine};
   flex-direction: column;
   word-break: keep-all;
+  cursor: pointer;
+
+  &:hover {
+    background: ${theme.color.secondaryGradient}
+  }
 
   & + & {
     margin-left: 0px;
