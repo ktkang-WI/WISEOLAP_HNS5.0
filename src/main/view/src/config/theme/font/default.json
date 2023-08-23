@@ -1,7 +1,10 @@
 {
-    "title": "normal 16px \"맑은 고딕\"",
-    "content": "normal 16px \"맑은 고딕\"",
-    "item": "normal 14px \"맑은 고딕\"",
-    "small": "600 normal 11px \"맑은 고딕\"",
-    "snb": "600 normal 13px \"맑은 고딕\""
+    "title": "normal 16px \"Noto Sans\"",
+    "content": "normal 16px \"Noto Sans\"",
+    "item": "normal 14px \"Noto Sans\"",
+    "small": "600 normal 11px \"Noto Sans\"",
+    "snb": "600 normal 13px \"Noto Sans\"",
+    "panelTitle": "600 normal 14px \"Noto Sans\"",
+    "dataColumn": "600 normal 14px \"Noto Sans\"",
+    "dataSource": "500 normal 14px \"Noto Sans\""
 }

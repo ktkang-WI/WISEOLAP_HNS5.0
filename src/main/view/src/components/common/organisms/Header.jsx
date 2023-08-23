@@ -1,4 +1,3 @@
-// import React from 'react';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import HeaderPanel from 'components/common/atoms/HeaderPanel';
@@ -60,7 +59,7 @@ const getHeaderItem = (item) => {
   } else if (item.type === 'Logo') {
     return (
       <HeaderPanel
-        width={theme.size.snbWidth}
+        width={'calc(' + theme.size.snbWidth + ' - 1px)'}
         key={item.id}
         position={item.position}
       >
