@@ -40,7 +40,8 @@ const itemIterator = (items) => {
 const StyledSNB = styled.div`
   width: ${theme.size.snbWidth};
   height: calc(100vh - ${theme.size.headerHeight});
-  outline: solid 1px ${theme.color.breakLine};
+  border-right: solid 1px ${theme.color.breakLine};
+  box-sizing: border-box;
   background: ${theme.color.panelColor};
   position: absolute;
   left: 0px;
