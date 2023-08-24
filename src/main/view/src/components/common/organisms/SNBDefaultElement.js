@@ -11,33 +11,45 @@ import datasetActive
 import preference from '../../../assets/image/icon/button/preference.png';
 import preferenceActive
   from '../../../assets/image/icon/button/preference_active.png';
+import {useNavigate} from 'react-router';
 
-const SNBDefaultElement = {
-  'Dashboard': {
-    id: 'dashboard',
-    imgSrc: dashboard,
-    hoveredImgSrc: dashboardActive,
-    label: localizedString.dashboard
-  },
-  'AdHoc': {
-    id: 'adhoc',
-    imgSrc: adhoc,
-    hoveredImgSrc: adhocActive,
-    label: localizedString.adhoc
-  },
-  'Dataset': {
-    id: 'dataset',
-    imgSrc: dataset,
-    hoveredImgSrc: datasetActive,
-    label: localizedString.dataset
-  },
-  'Preference': {
-    id: 'preference',
-    imgSrc: preference,
-    hoveredImgSrc: preferenceActive,
-    label: localizedString.preference
-  }
+const SNBDefaultElement = () => {
+  const nav = useNavigate();
+  return {
+    'Dashboard': {
+      id: 'dashboard',
+      imgSrc: dashboard,
+      hoveredImgSrc: dashboardActive,
+      label: localizedString.dashboard,
+      onClick: (e) => {
+        nav('dashboard');
+      }
+    },
+    'AdHoc': {
+      id: 'adhoc',
+      imgSrc: adhoc,
+      hoveredImgSrc: adhocActive,
+      label: localizedString.adhoc,
+      onClick: (e) => {
+        nav('adhoc');
+      }
+    },
+    'Dataset': {
+      id: 'dataset',
+      imgSrc: dataset,
+      hoveredImgSrc: datasetActive,
+      label: localizedString.dataset
+    },
+    'Preference': {
+      id: 'preference',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.preference,
+      onClick: (e) => {
+        nav('config');
+      }
+    }
+  };
 };
-
 
 export default SNBDefaultElement;
