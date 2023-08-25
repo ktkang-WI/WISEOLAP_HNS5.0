@@ -1,6 +1,8 @@
+import DesingerContent from './DesingerDataSource';
+
 const Dashboard = () => {
   return (
-    <div>대시보드</div>
+    <DesingerContent></DesingerContent>
   );
 };
 export default Dashboard;

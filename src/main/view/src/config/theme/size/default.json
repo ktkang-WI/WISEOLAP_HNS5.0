@@ -3,5 +3,7 @@
     "snbWidth": "80px",
     "dataColumn": "36px",
     "panelWidth": "250px",
-    "tabHeaderHeight": "40px"
+    "tabHeaderHeight": "40px",
+    "filterBarHeight": "45px",
+    "filterHeight": "26px"
 }
