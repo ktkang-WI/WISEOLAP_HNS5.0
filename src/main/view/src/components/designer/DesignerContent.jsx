@@ -8,7 +8,7 @@ import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
 import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
 
-const DesingerContent = ({children}) => {
+const DesignerContent = ({children}) => {
   return (
     <Content>
       <DragDropContext>
@@ -29,4 +29,4 @@ const DesingerContent = ({children}) => {
   );
 };
 
-export default DesingerContent;
+export default DesignerContent;

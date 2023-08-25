@@ -16,7 +16,7 @@ const StyledRibbon = styled.div`
   border-bottom: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
-  padding-left: 80px;
+  padding-left: ${theme.size.snbWidth};
 `;
 
 const Left = styled.div`
