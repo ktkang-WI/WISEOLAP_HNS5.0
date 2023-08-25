@@ -24,8 +24,8 @@ const Button = styled.div`
   }
 
   &:hover{
-    border: 1px solid #577df6;
-    background: #dce1eb;
+    border: 1px solid #c5ccdd;
+    background: #f5f6fa;
     border-radius: 10%;
   }
 `;
@@ -52,7 +52,8 @@ const ButtonPanel = styled.div`
   }
 
   &:hover{
-    border: 1px solid #577df6;
+    border: 1px solid #c5ccdd;
+    background: #f5f6fa;
     border-radius: 10%;
   }
 `;
@@ -75,8 +76,8 @@ const ArrowButton = styled.div`
   }
 
   &:hover{
-    border: 0px solid #577df6;
-    background: #dce1eb;
+    border: 1px solid #c5ccdd;
+    background: #f5f6fa;
     border-radius: 10%;
   }
 `;
