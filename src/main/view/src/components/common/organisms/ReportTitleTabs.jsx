@@ -1,5 +1,6 @@
 import {styled} from 'styled-components';
 import ReportTitleTab from '../molecules/ReportTitleTab';
+import localizedString from '../../../config/localization';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,7 +16,7 @@ const Wrapper = styled.div`
 const ReportTitleTabs = () => {
   return (
     <Wrapper>
-      <ReportTitleTab>새 보고서</ReportTitleTab>
+      <ReportTitleTab>{localizedString.defaultReportName}</ReportTitleTab>
       {/* <ReportTitleTab>새 보고서</ReportTitleTab> */}
     </Wrapper>
   );

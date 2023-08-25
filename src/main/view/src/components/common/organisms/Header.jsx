@@ -1,4 +1,3 @@
-// import React from 'react';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import HeaderPanel from 'components/common/atoms/HeaderPanel';
@@ -6,7 +5,7 @@ import HeaderLogoImage from 'components/common/atoms/HeaderLogoImage';
 import AnimatedImageButton from 'components/common/atoms/AnimatedImageButton';
 import ReportTitleTabs from './ReportTitleTabs';
 import LabelImageButton from '../molecules/LabelImageButton';
-import HeaderDefaultElement from './HeaderDefaultElement';
+import headerDefaultElement from './HeaderDefaultElement';
 
 const theme = getTheme();
 
@@ -16,6 +15,7 @@ const StyledHeader = styled.div`
   border-bottom: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
+  box-shadow: 0 0 11px #eaf0f6;
 `;
 
 const Left = styled.div`
@@ -42,6 +42,7 @@ const getHeaderItem = (item) => {
           height={item.height}
           imgSrc={item.imgSrc}
           hoveredImgSrc={item.hoveredImgSrc}
+          onClick={item.onClick}
         />
       </HeaderPanel>
     );
@@ -53,13 +54,14 @@ const getHeaderItem = (item) => {
           width={item.width}
           height={item.height}
           imgSrc={item.imgSrc}
+          onClick={item.onClick}
         />
       </HeaderPanel>
     );
   } else if (item.type === 'Logo') {
     return (
       <HeaderPanel
-        width={theme.size.snbWidth}
+        width={'calc(' + theme.size.snbWidth + ' - 1px)'}
         key={item.id}
         position={item.position}
       >
@@ -95,7 +97,7 @@ const itemIterator = (items, position) => {
 
   return itemArr.map((item) => {
     if (typeof item === 'string') {
-      return getHeaderItem({...HeaderDefaultElement[item], position});
+      return getHeaderItem({...headerDefaultElement()[item], position});
     } else if (item) {
       return getHeaderItem({...item, position});
     }

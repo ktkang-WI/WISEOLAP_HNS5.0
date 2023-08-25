@@ -1,7 +1,7 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import AnimatedButton from '../molecules/AnimatedButton';
-import SNBDefaultElement from './SNBDefaultElement';
+import snbDefaultElement from './SNBDefaultElement';
 
 const theme = getTheme();
 
@@ -23,6 +23,8 @@ const getSNBItem = (item) => {
         title={item.label}
         height={item.height}
         hoveredImgSrc={item.hoveredImgSrc}
+        onClick={item.onClick}
+        path={item.path}
       />
     </ItemWrapper>
 
@@ -33,14 +35,15 @@ const itemIterator = (items) => {
   if (!items) return;
 
   return items.map((item) => {
-    return getSNBItem(SNBDefaultElement[item]);
+    return getSNBItem(snbDefaultElement()[item]);
   });
 };
 
 const StyledSNB = styled.div`
   width: ${theme.size.snbWidth};
   height: calc(100vh - ${theme.size.headerHeight});
-  outline: solid 1px ${theme.color.breakLine};
+  border-right: solid 1px ${theme.color.breakLine};
+  box-sizing: border-box;
   background: ${theme.color.panelColor};
   position: absolute;
   left: 0px;

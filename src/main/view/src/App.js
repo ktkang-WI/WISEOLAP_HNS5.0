@@ -1,5 +1,6 @@
 import {RouterProvider} from 'react-router-dom';
 import router from './routes/Router';
+import 'devextreme/dist/css/dx.light.css';
 import './App.css';
 
 function App() {

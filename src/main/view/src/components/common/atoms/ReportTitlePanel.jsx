@@ -13,7 +13,7 @@ const Wrapper = styled.div `
 
 const TitlePanel = styled.div`
   border-radius: 5px 5px 0 0;
-  background-image: ${theme.color.primaryGradient};
+  background-image: ${theme.color.primaryGradientHover};
   height: ${(props) => props.height};
   width: 100%;
   position: absolute;
