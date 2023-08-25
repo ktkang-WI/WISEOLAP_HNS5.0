@@ -1,6 +1,8 @@
+import DesingerContent from './DesingerDataSource';
+
 const Adhoc = () => {
   return (
-    <div>비정형</div>
+    <DesingerContent></DesingerContent>
   );
 };
 export default Adhoc;

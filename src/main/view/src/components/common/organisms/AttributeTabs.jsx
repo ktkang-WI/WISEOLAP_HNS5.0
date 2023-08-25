@@ -66,6 +66,7 @@ const StyledTabPanel = styled(TabPanel)`
     padding: 0px;
     box-shadow: inset 0 1px ${theme.color.breakLine},
     inset 0 -1px ${theme.color.breakLine} !important;
+    border-right: 1px solid ${theme.color.breakLine};
   }
 
   .dx-multiview-wrapper {
