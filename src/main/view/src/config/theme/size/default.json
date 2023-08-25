@@ -4,6 +4,7 @@
     "dataColumn": "36px",
     "panelWidth": "250px",
     "tabHeaderHeight": "40px",
+    "ribbonHeight": "60px"
     "filterBarHeight": "45px",
     "filterHeight": "26px"
 }
