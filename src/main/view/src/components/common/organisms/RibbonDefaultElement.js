@@ -26,7 +26,6 @@ import palette from '../../../assets/image/icon/button/ico_globalColor.png';
 import colorEdit from '../../../assets/image/icon/button/ico_editColor.png';
 import pointLabel from '../../../assets/image/icon/button/ico_pointLabels.png';
 import querySearch from '../../../assets/image/icon/button/ico_querySearch.png';
-// import arrowDown from '../../../assets/image/icon/button/ico_arrowDown.png';
 
 const RibbonDefaultElement = {
   'NewReport': {
@@ -236,15 +235,6 @@ const RibbonDefaultElement = {
     'width': 'auto',
     'height': '40px'
   }
-  // 'ArrowDown': {
-  //   'id': 'arrow_down',
-  //   'title': '',
-  //   'label': '',
-  //   'type': 'RibbonButton',
-  //   'imgSrc': arrowDown,
-  //   'width': 'auto',
-  //   'height': '40px'
-  // }
 };
 
 export default RibbonDefaultElement;

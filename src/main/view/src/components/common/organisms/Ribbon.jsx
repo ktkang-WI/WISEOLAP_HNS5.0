@@ -11,104 +11,158 @@ import arrowRight from '../../../assets/image/icon/button/ico_arrow_right.png';
 const theme = getTheme();
 
 const StyledRibbon = styled.div`
-    width: 100vw;
-    height: ${theme.size.ribbonHeight};
-    border-bottom: solid 1px ${theme.color.breakLine};
-    background: ${theme.color.panelColor};
-    box-sizing: border-box;
-    padding-left: 80px;
+  width: 100vw;
+  height: ${theme.size.ribbonHeight};
+  border-bottom: solid 1px ${theme.color.breakLine};
+  background: ${theme.color.panelColor};
+  box-sizing: border-box;
+  padding-left: 80px;
 `;
 
 const Left = styled.div`
-    width: auto;
-    height: 100%;
-    text-align: left;
-    float: left;
-    display: flex;
-    margin-left: 10px;
-    margin-right: 8px;
-    position: relative;
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: left;
+  display: flex;
+  margin-left: 10px;
+  margin-right: 8px;
+  position: relative;
 
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -8px; /* Adjust this value to match the margin-right */
-      height: 100%;
-      width: 1px; /* Width of the border */
-      background-color: ${theme.color.breakLine};
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px; /* Adjust this value to match the margin-right */
+    height: 100%;
+    width: 1px; /* Width of the border */
+    background-color: ${theme.color.breakLine};
+  }
 `;
 
 const Middle = styled.div`
-    width: auto;
-    height: 100%;
-    text-align: left;
-    float: left;
-    display: flex;
-    margin-left: 8px;
-    margin-right: 8px;
-    position: relative;
-    @media screen and (max-width: 720px) {
-        display: none;
-      }
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: left;
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  @media screen and (max-width: 720px) {
+      display: none;
+  }
 
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -8px; /* Adjust this value to match the margin-right */
-      height: 100%;
-      width: 1px; /* Width of the border */
-      background-color: ${theme.color.breakLine};
-        }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px; /* Adjust this value to match the margin-right */
+    height: 100%;
+    width: 1px; /* Width of the border */
+    background-color: ${theme.color.breakLine};
+  }
 `;
 
 const Right = styled.div`
-    width: auto;
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: left;
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  @media screen and (max-width: 900px) {
+      display: none;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px; /* Adjust this value to match the margin-right */
     height: 100%;
-    text-align: left;
-    float: left;
-    display: flex;
-    margin-left: 8px;
-    margin-right: 8px;
-    position: relative;
-    @media screen and (max-width: 900px) {
-        display: none;
+    width: 1px; /* Width of the border */
+    background-color: ${theme.color.breakLine};
       }
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: -8px; /* Adjust this value to match the margin-right */
-        height: 100%;
-        width: 1px; /* Width of the border */
-        background-color: ${theme.color.breakLine};
-          }
 `;
 
 const QuerySearch = styled.div`
-    width: auto;
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: right;
+  display: flex;
+  margin-right: 20px;
+  position: relative; /* Ensure relative positioning for ::before */
+  
+  &::before {
+    content: ''; /* Create the ::before pseudo-element */
+    position: absolute;
+    top: 0;
+    left: -20px; /* Adjust this value for the border width */
     height: 100%;
-    text-align: left;
-    float: right;
-    display: flex;
-    margin-right: 20px;
-    position: relative; /* Ensure relative positioning for ::before */
-    
-    &::before {
-      content: ''; /* Create the ::before pseudo-element */
-      position: absolute;
-      top: 0;
-      left: -20px; /* Adjust this value for the border width */
-      height: 100%;
-      width: 1px; /* Width of the border */
-      background-color: ${theme.color.breakLine};
-    }
+    width: 1px; /* Width of the border */
+    background-color: ${theme.color.breakLine};
+  }
     
 `;
 
 const CustomMenu = styled.div`
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: left;
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  @media screen and (max-width: 1200px) {
+      display: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px; /* Adjust this value to match the margin-right */
+    height: 100%;
+    width: 1px; /* Width of the border */
+    background-color: ${theme.color.breakLine};
+  }
+`;
+
+const CustomMenuForWrapper = styled.div`
+  width: auto;
+  height: 100%;
+  text-align: left;
+  float: left;
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  @media screen and (max-width: 1280px) {
+      display: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px; /* Adjust this value to match the margin-right */
+    height: 100%;
+    background-color: ${theme.color.breakLine};
+  }
+`;
+
+const CustomButtonWrapper = styled.div`
+  display: none; /* Hide by default */
+
+  @media screen and (min-width: 1280px) {
+    display: none;
+  }
+
+  @media screen and (max-width: 1700px) {
     width: auto;
     height: 100%;
     text-align: left;
@@ -117,9 +171,6 @@ const CustomMenu = styled.div`
     margin-left: 8px;
     margin-right: 8px;
     position: relative;
-    @media screen and (max-width: 1200px) {
-        display: none;
-      }
 
     &::before {
       content: '';
@@ -129,65 +180,13 @@ const CustomMenu = styled.div`
       height: 100%;
       width: 1px; /* Width of the border */
       background-color: ${theme.color.breakLine};
-        }
-`;
+    }
 
-const CustomMenuForWrapper = styled.div`
-    width: auto;
-    height: 100%;
-    text-align: left;
-    float: left;
-    display: flex;
-    margin-left: 8px;
-    margin-right: 8px;
-    position: relative;
     @media screen and (max-width: 1280px) {
-        display: none;
-      }
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -8px; /* Adjust this value to match the margin-right */
-      height: 100%;
-      background-color: ${theme.color.breakLine};
-        }
-      @media screen and (max-width: 1280px) {
-          display: none;
-      }
-`;
-
-const CustomButtonWrapper = styled.div`
-    display: none; /* Hide by default */
-
-    @media screen and (min-width: 1280px) {
       display: none;
     }
-
-    @media screen and (max-width: 1700px) {
-      width: auto;
-      height: 100%;
-      text-align: left;
-      float: left;
-      display: flex;
-      margin-left: 8px;
-      margin-right: 8px;
-      position: relative;
-  
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: -8px; /* Adjust this value to match the margin-right */
-        height: 100%;
-        width: 1px; /* Width of the border */
-        background-color: ${theme.color.breakLine};
-          }
-          @media screen and (max-width: 1280px) {
-            display: none;
-          }
-    }
+    
+  }
 `;
 
 const NavigationButton = styled.div`
