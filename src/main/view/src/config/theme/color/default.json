@@ -1,12 +1,16 @@
 {
     "primary": "#577df6",
     "primaryGradient": "linear-gradient(to bottom, #2b5eff, #577df6)",
+    "secondary": "#646464",
+    "secondaryGradient": "linear-gradient(to bottom, #fafafa, #ececed)",
     "background": "#f5f6fa",
     "panelColor": "#ffffff",
-    "secondary": "#646464",
     "primaryFont": "#7d8291",
+    "primaryBorder": "#7d8291",
     "secondaryFont": "#ffffff",
     "popupTitleFont": "#222222",
     "breakLine": "#ddd",
+    "dashedBorder": "#c3c8d9",
+    "selectedTabHeader": "linear-gradient(to bottom, #6a6f7f, #979aa3)",
     "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#577df6), to(#2b5eff)) !important;"
 }

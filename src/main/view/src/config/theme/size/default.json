@@ -1,5 +1,8 @@
 {
     "headerHeight": "60px",
     "snbWidth": "80px",
+    "dataColumn": "36px",
+    "panelWidth": "250px",
+    "tabHeaderHeight": "40px",
     "ribbonHeight": "60px"
 }
