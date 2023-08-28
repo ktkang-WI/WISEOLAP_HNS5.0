@@ -12,8 +12,8 @@ const DesignerContent = ({children}) => {
   return (
     <Content>
       <DragDropContext>
-        <CustomDrawer component={DataSourceTab}>
-          <CustomDrawer component={AttributeTabs}>
+        <CustomDrawer index={0} component={DataSourceTab}>
+          <CustomDrawer index={1} component={AttributeTabs}>
             <Wrapper>
               <ReportContentWrapper>
                 <FilterBar/>
