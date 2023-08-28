@@ -100,6 +100,7 @@ const getHeaderItem = (item) => {
         <TextButton
           title={item.label}
           height={theme.size.headerHeight}
+          onClick={item.onClick}
         >
           {item.label}
         </TextButton>
