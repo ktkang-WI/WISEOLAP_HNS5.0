@@ -1,10 +1,11 @@
 {
-    "headerHeight": "60px",
-    "snbWidth": "80px",
+    "headerHeight": "35px",
+    "snbWidth": "45px",
+    "snbDrawerWidth": "170px",
     "dataColumn": "36px",
     "panelWidth": "250px",
-    "tabHeaderHeight": "40px",
-    "ribbonHeight": "60px",
-    "filterBarHeight": "45px",
+    "tabHeaderHeight": "42px",
+    "ribbonHeight": "40px",
+    "filterBarHeight": "42px",
     "filterHeight": "26px"
 }

@@ -1,0 +1,7 @@
+{
+  "test": "TEST",
+  "snbOnlyIcon": false,
+  "useSNBDrawer": true,
+  "useRibbonLabel": true,
+  "ribbonOnlyIcon": true
+}

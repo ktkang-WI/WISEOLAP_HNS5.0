@@ -10,6 +10,16 @@ const Button = styled.div`
   width: ${(props) => props.width || '60px'};
   height: ${(props) => props.height || '60px'};
   color: ${theme.color.primaryFont};
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  ${(props) => props.direction == 'row' ? css `
+    flex-direction: row;
+    width: ${theme.size.snbDrawerWidth};
+  ` : css `
+    flex-direction: column;
+  `}
+
   cursor: pointer;
 
   &:active > img{
@@ -31,6 +41,7 @@ const Button = styled.div`
 const Image = styled.img`
   width: auto;
   height: ${(props) => props.height};
+  margin: ${(props) => props.margin};
 `;
 
 /**
@@ -47,7 +58,14 @@ const Image = styled.img`
  * @return {Component}
  */
 const AnimatedButton = ({
-  onClick, imgSrc, label, hoveredImgSrc, width='80px', height='50px', ...props
+  onClick,
+  imgSrc,
+  label,
+  hoveredImgSrc,
+  width='80px',
+  height='50px',
+  direction='column',
+  ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
 
@@ -63,6 +81,7 @@ const AnimatedButton = ({
     <Button
       width={width}
       height={height}
+      direction={direction}
       hoveranimation={hoveredImgSrc? '' : 'true'}
       onClick={onClick}
       onMouseOver={hoveredImgSrc? onMouseOver : null}
@@ -71,9 +90,11 @@ const AnimatedButton = ({
     >
       <Image
         src={src}
-        height={height}
+        height={height && direction === 'row' ?
+          'calc(' + height + ' - 8px)': height}
+        margin={direction === 'row' ? '4px' : '0px'}
       />
-      <AnimatedButtonLabel>
+      <AnimatedButtonLabel textAlign={direction == 'column'? 'center' : 'left'}>
         {label}
       </AnimatedButtonLabel>
     </Button>

@@ -6,6 +6,7 @@ import AnimatedImageButton from 'components/common/atoms/AnimatedImageButton';
 import ReportTitleTabs from './ReportTitleTabs';
 import LabelImageButton from '../molecules/LabelImageButton';
 import headerDefaultElement from './HeaderDefaultElement';
+import TextButton from '../molecules/TextButton';
 
 const theme = getTheme();
 
@@ -35,7 +36,10 @@ const Right = styled.div`
 const getHeaderItem = (item) => {
   if (item.type === 'AnimatedImageButton') {
     return (
-      <HeaderPanel leftborder="true" key={item.id} position={item.position}>
+      <HeaderPanel
+        breakLine={item.index !== item.length - 1}
+        key={item.id}
+        position={item.position}>
         <AnimatedImageButton
           title={item.title}
           width={item.width}
@@ -48,7 +52,11 @@ const getHeaderItem = (item) => {
     );
   } else if (item.type === 'LabelImageButton') {
     return (
-      <HeaderPanel key={item.id} position={item.position}>
+      <HeaderPanel
+        key={item.id}
+        position={item.position}
+        breakLine={item.index !== item.length - 1}
+      >
         <LabelImageButton
           label={item.label}
           width={item.width}
@@ -61,11 +69,12 @@ const getHeaderItem = (item) => {
   } else if (item.type === 'Logo') {
     return (
       <HeaderPanel
-        width={'calc(' + theme.size.snbWidth + ' - 1px)'}
+        width={item.width}
         key={item.id}
         position={item.position}
+        breakLine={item.index !== item.length - 1}
       >
-        <HeaderLogoImage/>
+        <HeaderLogoImage height={item.height}/>
       </HeaderPanel>
     );
   } else if (item.type === 'ReportTabs') {
@@ -74,10 +83,26 @@ const getHeaderItem = (item) => {
         width={item.width}
         height={theme.size.headerHeight}
         itemAlignment='flex-start'
+        breakLine={item.index !== item.length - 1}
         key={item.id}
         position={item.position}
       >
         <ReportTitleTabs/>
+      </HeaderPanel>
+    );
+  } else if (item.type === 'TextButton') {
+    return (
+      <HeaderPanel
+        breakLine={item.index !== item.length - 1}
+        key={item.id}
+        width={'auto'}
+        position={item.position}>
+        <TextButton
+          title={item.label}
+          height={theme.size.headerHeight}
+        >
+          {item.label}
+        </TextButton>
       </HeaderPanel>
     );
   } else {
@@ -95,11 +120,20 @@ const itemIterator = (items, position) => {
     itemArr.reverse();
   }
 
-  return itemArr.map((item) => {
+  return itemArr.map((item, i) => {
     if (typeof item === 'string') {
-      return getHeaderItem({...headerDefaultElement()[item], position});
+      return getHeaderItem({
+        ...headerDefaultElement()[item],
+        position,
+        index: i,
+        length: position == 'right'? 1 : itemArr.length
+      });
     } else if (item) {
-      return getHeaderItem({...item, position});
+      return getHeaderItem({...item,
+        position,
+        index: i,
+        length: position == 'right'? 1 : itemArr.length
+      });
     }
   });
 };

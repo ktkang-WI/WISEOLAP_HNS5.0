@@ -5,8 +5,8 @@ const Designer = () => {
   return (
     <div>
       <Header
-        left={['Logo', 'Viewer', 'NewWindow', 'ReportTabs']}
-        right={['ShowQuery', 'ReportProperty']}
+        left={['Logo', 'ReportTabs']}
+        right={['Viewer', 'ShowQuery', 'ReportProperty']}
       >
       </Header>
       <SideNavigationBar

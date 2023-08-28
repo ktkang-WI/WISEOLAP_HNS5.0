@@ -5,6 +5,8 @@
     "small": "600 normal 11px \"Noto Sans\"",
     "snb": "600 normal 13px \"Noto Sans\"",
     "panelTitle": "600 normal 14px \"Noto Sans\"",
+    "reportTitle": "600 normal 14px \"Noto Sans\"",
+    "textButton": "600 normal 13px \"Noto Sans\"",
     "dataColumn": "600 normal 14px \"Noto Sans\"",
     "dataSource": "500 normal 14px \"Noto Sans\"",
     "fitlerLabel": "500 normal 14px \"Noto Sans\"",

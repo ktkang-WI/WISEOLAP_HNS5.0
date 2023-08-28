@@ -60,13 +60,13 @@ const ColumnWrapper = styled.div`
 `;
 
 const Column = styled.div`
-  background: ${theme.color.secondaryGradient};
+  background: ${theme.color.dataColumn};
   color: ${theme.color.primaryFont};
   height: ${theme.size.dataColumn};
   width: ${(props) => props.width};
   font: ${theme.font.dataColumn};
-  border: 1px solid ${theme.color.primaryBorder};
-  border-radius: 5px;
+  border: 1px solid ${theme.color.dataColumnBorder};
+  border-radius: 2px;
   line-height: ${theme.size.dataColumn};
   text-align: center;
   justify-content: center;
@@ -86,9 +86,8 @@ const Button = styled.div`
   cursor: pointer;
   width: 35px;
   &:hover {
-    background: ${theme.color.secondaryGradient};
-    border: 1px solid ${theme.color.primaryBorder};
-    border-radius: 5px;
+    background: ${theme.color.dataColumn};
+    border: 1px solid ${theme.color.dataColumnBorder};
   }
 `;
 

@@ -7,6 +7,7 @@ import RibbonPanel from '../atoms/RibbonPanel';
 import OnlyImageButton from '../molecules/OnlyImageButton';
 import arrowLeft from '../../../assets/image/icon/button/ico_arrow_left.png';
 import arrowRight from '../../../assets/image/icon/button/ico_arrow_right.png';
+import CommonButton from '../atoms/CommonButton';
 
 const theme = getTheme();
 
@@ -217,7 +218,7 @@ const getRibbonItem = (item) => {
           imgSrc={item.imgSrc}
           title={item.title}
           width={item.width}
-          height={item.height}
+          height={'calc(' + theme.size.ribbonHeight + ' - 15px)'}
         />
       </RibbonPanel>
     );
@@ -231,6 +232,19 @@ const getRibbonItem = (item) => {
           width={item.width}
           height={item.height}
         />
+      </RibbonPanel>
+    );
+  } else if (item.type === 'CommonButton') {
+    return (
+      <RibbonPanel key={item.id} position={item.position}>
+        <CommonButton
+          label={item.label}
+          title={item.title}
+          width={item.width}
+          height={item.height}
+        >
+          {item.label}
+        </CommonButton>
       </RibbonPanel>
     );
   }

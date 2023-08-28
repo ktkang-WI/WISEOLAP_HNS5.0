@@ -229,11 +229,11 @@ const RibbonDefaultElement = {
   'QuerySearch': {
     'id': 'query_search',
     'title': localizedString.querySearch,
-    'label': '',
-    'type': 'OnlyImageButton',
+    'label': localizedString.querySearch,
+    'type': 'CommonButton',
     'imgSrc': querySearch,
     'width': 'auto',
-    'height': '40px'
+    'height': '30px'
   }
 };
 

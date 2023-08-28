@@ -4,8 +4,10 @@ import {styled} from 'styled-components';
 const theme = getTheme();
 
 const ReportTitleText = styled.div`
-  color: ${theme.color.secondaryFont};
-  padding: 10px 20px;
+  color: ${theme.color.primaryFont};
+  font: ${theme.font.reportTitle};
+  padding-left: 20px;
+  cursor: pointer;
 `;
 
 export default ReportTitleText;

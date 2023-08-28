@@ -1,5 +1,5 @@
-import {styled, css} from 'styled-components';
-import {getTheme} from '../../../config/theme';
+import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
 import React from 'react';
 
 const theme = getTheme();
@@ -8,34 +8,32 @@ const Panel = styled.div`
   width: ${(props) => props.width};
   min-width: 40px;
   height: 100%;
-  display: block;
+  display: flex;
   float: ${(props) => props.position};
   vertical-align: top;
   box-sizing: border-box;
-
-  ${(props) => props.leftborder && css`
-    border-left: solid 1px ${theme.color.breakLine};
-  `}
-
-  ${(props) => props.rightborder && css`
-    border-left: solid 1px ${theme.color.breakLine};
-  `}
+  align-items: center;
 `;
 
 const Wrapper = styled.div`
   height: ${(props) => props.height};
-  width: 100%;
+  width: calc(100% - 1px);
   display: flex;
   justify-content: ${(props) => props.item_alignment};
   align-items: center;
   flex-direction: row;
 `;
 
+const BreakLine = styled.div`
+  width: 1px;
+  height: 70%;
+  background: ${theme.color.breakLine};
+`;
+
 const HeaderPanel = ({
   width='60px',
   height='100%',
-  leftborder,
-  rightborder,
+  breakLine=true,
   children,
   itemAlignment='center',
   position='left'
@@ -44,13 +42,12 @@ const HeaderPanel = ({
     <Panel
       width={width}
       height={height}
-      leftborder={leftborder}
-      rightborder={rightborder}
       position={position}
     >
       <Wrapper height={height} item_alignment={itemAlignment}>
         {children}
       </Wrapper>
+      {breakLine && (<BreakLine/>)}
     </Panel>
   );
 };

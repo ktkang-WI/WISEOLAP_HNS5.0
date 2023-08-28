@@ -39,33 +39,45 @@ const itemTitleRender = (data) => {
 };
 
 const StyledTabPanel = styled(TabPanel)`
-  .dx-tab.dx-state-hover, .dx-tab.dx-tab-selected {
+  .dx-tab.dx-state-hover{
     background: ${theme.color.selectedTabHeader};
-    span {
-      color: ${theme.color.secondaryFont};
-    }
+    border-bottom: 1px solid  ${theme.color.breakLine};
   }
+
+  .dx-tab.dx-tab-selected {
+    background: ${theme.color.secondaryGradient};
+    border-bottom: 3px solid ${theme.color.primary};
+  }
+
+  .dx-tab.dx-tab-selected > div {
+    top: 2px;
+  }
+
   .dx-tab {
     background: ${theme.color.secondaryGradient};
+    border-bottom: 1px solid ${theme.color.breakLine};
+    box-sizing: border-box;
     span {
       color: ${theme.color.primaryFont};
     }
+  }
+
+  .dx-tab > div {
+    position: relative;
+    top: 1px;
   }
   .dx-tabs-wrapper {
     height: ${theme.size.tabHeaderHeight};
   }
 
   .dx-tabpanel-tabs .dx-tab.dx-tab-selected {
-    box-shadow: inset 0 1px ${theme.color.breakLine},
-    inset -1px 0 ${theme.color.breakLine},
-    inset 1px 0 ${theme.color.breakLine};
+    box-shadow: none !important;
   }
 
   .dx-tabpanel-tabs .dx-tab {
     width: 500px;
     padding: 0px;
-    box-shadow: inset 0 1px ${theme.color.breakLine},
-    inset 0 -1px ${theme.color.breakLine} !important;
+    box-shadow: none !important;
     border-right: 1px solid ${theme.color.breakLine};
   }
 

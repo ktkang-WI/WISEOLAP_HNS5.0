@@ -1,6 +1,6 @@
 import {styled} from 'styled-components';
 import React from 'react';
-import logo from '../../../assets/image/icon/report/logo.png';
+import logo from '../../../assets/image/icon/report/logo2.png';
 
 const StyeldImage = styled.img`
   height: ${(props) => props.height || '40px'};
