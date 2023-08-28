@@ -30,7 +30,7 @@ const Adhoc = () => {
           'YAxisSetting',
           'ExtraAxisSetting',
           'ShowColorLegend',
-          'BarTwo',
+          'SeriesType',
           'Palette',
           'ColorEdit',
           'PointLabel'

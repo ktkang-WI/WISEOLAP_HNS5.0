@@ -60,7 +60,7 @@
   "yAxisSetting": "YAxis Setting",
   "extraAxisSetting": "ExtraAxis Setting",
   "showColorLegend": "Show ColorLegend",
-  "barTwo": "Bar Type",
+  "SeriesType": "Series Type",
   "palette": "Palette",
   "colorEdit": "Color Edit",
   "pointLabel": "Animation",

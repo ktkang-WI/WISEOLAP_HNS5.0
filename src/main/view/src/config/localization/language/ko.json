@@ -60,7 +60,7 @@
   "yAxisSetting": "Y축 설정",
   "extraAxisSetting": "보조축 설정",
   "showColorLegend": "범례",
-  "barTwo": "계열 유형",
+  "SeriesType": "계열 유형",
   "palette": "팔레트",
   "colorEdit": "색상 편집",
   "pointLabel": "애니메이션",

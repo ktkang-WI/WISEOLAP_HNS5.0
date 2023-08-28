@@ -5,8 +5,8 @@ import RibbonButton from '../molecules/RibbonButton';
 import RibbonDefaultElement from './RibbonDefaultElement';
 import RibbonPanel from '../atoms/RibbonPanel';
 import OnlyImageButton from '../molecules/OnlyImageButton';
-import arrowLeft from '../../../assets/image/icon/button/ico_arrow_left.png';
-import arrowRight from '../../../assets/image/icon/button/ico_arrow_right.png';
+import arrowLeft from '../../../assets/image/icon/button/arrow_left.png';
+import arrowRight from '../../../assets/image/icon/button/arrow_right.png';
 import CommonButton from '../atoms/CommonButton';
 
 const theme = getTheme();
