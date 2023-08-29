@@ -51,5 +51,7 @@
     "eslint": "^8.46.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.33.1"
-  }
+  },
+  "proxy": "http://localhost:8080/",
+  "homepage": "."
 }
