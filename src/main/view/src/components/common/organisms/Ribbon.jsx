@@ -218,7 +218,7 @@ const getRibbonItem = (item) => {
           imgSrc={item.imgSrc}
           title={item.title}
           width={item.width}
-          height={'calc(' + theme.size.ribbonHeight + ' - 15px)'}
+          height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
         />
       </RibbonPanel>
     );

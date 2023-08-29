@@ -1,4 +1,4 @@
-import {styled} from 'styled-components';
+import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
 import {getTheme} from '../../../config/theme';
 import RibbonButtonLabel from '../atoms/RibbonButtonLabel';
@@ -17,6 +17,13 @@ const Button = styled.div`
   justify-content: center;
   cursor: pointer;
   padding: 6px;
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 10%;
+  
+  ${(props) => props.rightButton && css`
+    padding-right: 20px;
+  `}
 
   &:active > img{
     transform: scale(0.9, 0.9);
@@ -24,9 +31,16 @@ const Button = styled.div`
   }
 
   &:hover{
-    border: 1px solid #c5ccdd;
-    background: #f5f6fa;
-    border-radius: 10%;
+    outline: 1px solid ${theme.color.dataColumnBorder};
+    background: ${theme.color.ribbonHover};
+    box-sizing: border-box;
+  
+
+    div {
+      border-left: 1px solid ${theme.color.ribbonHoverBorder};
+      background: ${theme.color.ribbonHover};
+      border-radius: 10%;
+    }
   }
 `;
 
@@ -35,32 +49,9 @@ const Image = styled.img`
   width: auto;
 `;
 
-const ButtonPanel = styled.div`
-  width: auto;
-  height: 44px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  cursor: pointer;
-  padding: 2px;
-
-  &:active > img{
-    transform: scale(0.9, 0.9);
-    transition: transform .2s;
-  }
-
-  &:hover{
-    border: 1px solid #c5ccdd;
-    background: #f5f6fa;
-    border-radius: 10%;
-  }
-`;
-
 const ArrowButton = styled.div`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  width: 15px;
+  height: 100%;
   color: ${theme.color.primaryFont};
   text-align: center;
   display: flex;
@@ -68,17 +59,13 @@ const ArrowButton = styled.div`
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
-  padding: 2px;
+  position: absolute;
+  right: 0;
+  box-sizing: border-box;
 
   &:active > img{
     transform: scale(0.9, 0.9);
     transition: transform .2s;
-  }
-
-  &:hover{
-    border: 1px solid #c5ccdd;
-    background: #f5f6fa;
-    border-radius: 10%;
   }
 `;
 
@@ -126,19 +113,18 @@ const RibbonButton = ({
       'add_custom_chart'].includes(buttonKeyId)) {
       // Return a different UI for specific buttons
       return (
-        <ButtonPanel>
-          <ArrowButton
-            width={width}
-            height={height}
-            hoveranimation={hoveredImgSrc? '' : 'true'}
-            onClick={onClick}
-            onMouseOver={hoveredImgSrc? onMouseOver : null}
-            onMouseOut={hoveredImgSrc? onMouseOut : null}
-            {...props}
-          >
-            <Image src={src} height={height} />
-            <RibbonButtonLabel>{label}</RibbonButtonLabel>
-          </ArrowButton>
+        <Button
+          width={width}
+          height={height}
+          hoveranimation={hoveredImgSrc? '' : 'true'}
+          onClick={onClick}
+          onMouseOver={hoveredImgSrc? onMouseOver : null}
+          onMouseOut={hoveredImgSrc? onMouseOut : null}
+          rightButton
+          {...props}
+        >
+          <Image src={src} height={height} />
+          <RibbonButtonLabel>{label}</RibbonButtonLabel>
           <ArrowButton
             width={width}
             height={height}
@@ -150,7 +136,7 @@ const RibbonButton = ({
           >
             <ArrowImage src={arrowDown} height={height} />
           </ArrowButton>
-        </ButtonPanel>
+        </Button>
       );
     } else {
       return (

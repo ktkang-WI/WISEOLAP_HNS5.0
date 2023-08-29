@@ -5,7 +5,7 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 const ribbonOnlyIcon = getConfig('ribbonOnlyIcon');
 
-const RibbonButtonLabel = styled.div`
+const RibbonButtonLabel = styled.span`
   height: 15px;
   width: auto;
   text-align: center;

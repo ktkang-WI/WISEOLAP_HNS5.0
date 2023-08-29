@@ -13,6 +13,8 @@
     "secondaryFont": "#ffffff",
     "popupTitleFont": "#222222",
     "dataColumnBorder": "#c5c5c5",
+    "ribbonHoverBorder": "#c5c5c5",
+    "ribbonHover": "#f5f6fa",
     "breakLine": "#ddd",
     "dashedBorder": "#c3c8d9",
     "selectedTabHeader": "#ececec",
