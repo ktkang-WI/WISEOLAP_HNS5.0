@@ -45,7 +45,6 @@ const StyledTabPanel = styled(TabPanel)`
   }
 
   .dx-tab.dx-tab-selected {
-    background: ${theme.color.secondaryGradient};
     border-bottom: 3px solid ${theme.color.primary};
   }
 
