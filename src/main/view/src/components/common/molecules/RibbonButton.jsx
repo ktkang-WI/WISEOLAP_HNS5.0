@@ -95,6 +95,7 @@ const RibbonButton = ({
   hoveredImgSrc,
   width='60px',
   height='60px',
+  useArrowButton,
   ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
@@ -106,54 +107,34 @@ const RibbonButton = ({
     setSrc(imgSrc);
   };
   const renderButtonContent = () => {
-    if ([
-      'save_report',
-      'download_report',
-      'add_default_chart',
-      'add_custom_chart'].includes(buttonKeyId)) {
-      // Return a different UI for specific buttons
-      return (
-        <Button
-          width={width}
-          height={height}
-          hoveranimation={hoveredImgSrc? '' : 'true'}
-          onClick={onClick}
-          onMouseOver={hoveredImgSrc? onMouseOver : null}
-          onMouseOut={hoveredImgSrc? onMouseOut : null}
-          rightButton
-          {...props}
-        >
-          <Image src={src} height={height} />
-          <RibbonButtonLabel>{label}</RibbonButtonLabel>
+    return (
+      <Button
+        width={width}
+        height={height}
+        hoveranimation={hoveredImgSrc? '' : 'true'}
+        onClick={onClick}
+        onMouseOver={hoveredImgSrc? onMouseOver : null}
+        onMouseOut={hoveredImgSrc? onMouseOut : null}
+        {...props}
+        rightButton={useArrowButton}
+      >
+        <Image src={src} height={height} />
+        <RibbonButtonLabel>{label}</RibbonButtonLabel>
+        {useArrowButton && (
           <ArrowButton
             width={width}
             height={height}
-            hoveranimation={hoveredImgSrc? '' : 'true'}
+            hoveranimation={hoveredImgSrc ? '' : 'true'}
             onClick={onClick}
-            onMouseOver={hoveredImgSrc? onMouseOver : null}
-            onMouseOut={hoveredImgSrc? onMouseOut : null}
+            onMouseOver={hoveredImgSrc ? onMouseOver : null}
+            onMouseOut={hoveredImgSrc ? onMouseOut : null}
             {...props}
           >
             <ArrowImage src={arrowDown} height={height} />
           </ArrowButton>
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          width={width}
-          height={height}
-          hoveranimation={hoveredImgSrc? '' : 'true'}
-          onClick={onClick}
-          onMouseOver={hoveredImgSrc? onMouseOver : null}
-          onMouseOut={hoveredImgSrc? onMouseOut : null}
-          {...props}
-        >
-          <Image src={src} height={height} />
-          <RibbonButtonLabel>{label}</RibbonButtonLabel>
-        </Button>
-      );
-    }
+        )}
+      </Button>
+    );
   };
 
   return (

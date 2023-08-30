@@ -219,6 +219,7 @@ const getRibbonItem = (item) => {
           title={item.title}
           width={item.width}
           height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
+          useArrowButton={item.useArrowButton}
         />
       </RibbonPanel>
     );

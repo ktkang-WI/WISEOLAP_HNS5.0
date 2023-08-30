@@ -35,7 +35,8 @@ const RibbonDefaultElement = {
     type: 'RibbonButton',
     imgSrc: newReport,
     width: 'auto',
-    height: '45px'
+    height: '45px',
+    useArrowButton: false
   },
   'LoadReport': {
     id: 'load_report',
@@ -44,7 +45,8 @@ const RibbonDefaultElement = {
     type: 'RibbonButton',
     imgSrc: loadReport,
     width: 'auto',
-    height: '45px'
+    height: '45px',
+    useArrowButton: false
   },
   'SaveReport': {
     'id': 'save_report',
@@ -53,7 +55,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': saveReport,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': true
   },
   'DeleteReport': {
     'id': 'delete_report',
@@ -62,7 +65,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': deleteReport,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'DownloadReport': {
     'id': 'download_report',
@@ -71,7 +75,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': downloadReport,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': true
   },
   'ConnectReport': {
     'id': 'connect_report',
@@ -80,7 +85,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': connectReport,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'AddContainer': {
     'id': 'add_container',
@@ -89,7 +95,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': addContainer,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'AddChart': {
     'id': 'add_default_chart',
@@ -98,7 +105,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': addChart,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': true
   },
   'AddPivotGrid': {
     'id': 'add_pivotGrid',
@@ -107,7 +115,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': addPivotGrid,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'AddGrid': {
     'id': 'add_grid',
@@ -116,7 +125,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': addGrid,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'AddCustomChart': {
     'id': 'add_custom_chart',
@@ -125,7 +135,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': addChart,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': true
   },
   'CaptionView': {
     'id': 'caption_view',
@@ -134,7 +145,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': captionView,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'NameEdit': {
     'id': 'name_edit',
@@ -143,7 +155,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': nameEdit,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'Rotate': {
     'id': 'rotate',
@@ -152,7 +165,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': rotate,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'XAxisSetting': {
     'id': 'xAxis_setting',
@@ -161,7 +175,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': xAxisSetting,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'YAxisSetting': {
     'id': 'yAxis_setting',
@@ -170,7 +185,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': yAxisSetting,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'ExtraAxisSetting': {
     'id': 'extra_setting',
@@ -179,7 +195,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': yAxisSetting,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'ShowColorLegend': {
     'id': 'show_color_legend',
@@ -188,7 +205,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': showColorLegend,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'SeriesType': {
     'id': 'bar_two',
@@ -197,7 +215,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': seriesType,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'Palette': {
     'id': 'palette',
@@ -206,7 +225,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': palette,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'ColorEdit': {
     'id': 'color_edit',
@@ -215,7 +235,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': colorEdit,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'PointLabel': {
     'id': 'point_label',
@@ -224,7 +245,8 @@ const RibbonDefaultElement = {
     'type': 'RibbonButton',
     'imgSrc': pointLabel,
     'width': 'auto',
-    'height': '45px'
+    'height': '45px',
+    'useArrowButton': false
   },
   'QuerySearch': {
     'id': 'query_search',
@@ -233,7 +255,8 @@ const RibbonDefaultElement = {
     'type': 'CommonButton',
     'imgSrc': querySearch,
     'width': 'auto',
-    'height': '30px'
+    'height': '30px',
+    'useArrowButton': false
   }
 };
 
