@@ -7,10 +7,17 @@ import DataSourceTab from 'components/common/organisms/DataSourceTab';
 import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
 import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const DesignerContent = ({children}) => {
   return (
-    <Content>
+    <Content
+      snbWidth={theme.size.snbWidth}
+      headerHeight={theme.size.headerHeight}
+      ribbonHeight={theme.size.ribbonHeight}
+    >
       <DragDropContext>
         <CustomDrawer index={0} component={DataSourceTab}>
           <CustomDrawer index={1} component={AttributeTabs}>
