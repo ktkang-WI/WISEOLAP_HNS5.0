@@ -7,6 +7,7 @@ import AttributeTabs from 'components/common/organisms/AttributeTabs';
 import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
 import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
+import ReportTabs from 'components/common/organisms/ReportTabs';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
@@ -17,16 +18,18 @@ const ViewerContent = ({children}) => {
       headerHeight={theme.size.headerHeight}
     >
       <DragDropContext>
-        <CustomDrawer opened={false} component={DataSourceTab}>
-          <CustomDrawer opened={false} component={AttributeTabs}>
-            <Wrapper>
-              <ReportContentWrapper>
-                <FilterBar/>
-                <ReportContent>
-                  {children}
-                </ReportContent>
-              </ReportContentWrapper>
-            </Wrapper>
+        <CustomDrawer index={0} component={ReportTabs}>
+          <CustomDrawer index={1} opened={false} component={DataSourceTab}>
+            <CustomDrawer index={2} opened={false} component={AttributeTabs}>
+              <Wrapper>
+                <ReportContentWrapper>
+                  <FilterBar/>
+                  <ReportContent>
+                    {children}
+                  </ReportContent>
+                </ReportContentWrapper>
+              </Wrapper>
+            </CustomDrawer>
           </CustomDrawer>
         </CustomDrawer>
       </DragDropContext>
