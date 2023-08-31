@@ -1,6 +1,8 @@
 import localizedString from '../../../config/localization';
 import {useNavigate} from 'react-router';
-
+import dashboard from '../../../assets/image/icon/button/dashboard.png';
+import dashboardActive
+  from '../../../assets/image/icon/button/dashboard_active.png';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -44,6 +46,18 @@ const HeaderDefaultElement = () => {
       'id': 'report_property',
       'label': localizedString.reportProperty,
       'type': 'TextButton'
+    },
+    'Designer': {
+      'id': 'designer',
+      'label': localizedString.designer,
+      'type': 'AnimatedImageButton',
+      'imgSrc': dashboard,
+      'hoveredImgSrc': dashboardActive,
+      'width': '45px',
+      'height': '45px',
+      'onClick': (e) => {
+        window.open('dashboard');
+      }
     }
   };
 };
