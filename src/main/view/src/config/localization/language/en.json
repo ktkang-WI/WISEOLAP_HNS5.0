@@ -64,5 +64,7 @@
   "palette": "Palette",
   "colorEdit": "Color Edit",
   "pointLabel": "Animation",
-  "querySearch": "QuerySearch"
+  "querySearch": "QuerySearch",
+  "publicReport": "Public Report",
+  "privateReport": "Private Report"
 }
