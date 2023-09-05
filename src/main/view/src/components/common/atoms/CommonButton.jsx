@@ -19,6 +19,7 @@ const Button = styled.div`
   font: ${theme.font.button};
   box-sizing: border-box;
   padding: 0px 1px;
+  border-radius:${(props) => props? props : '0px'};
 
   &:hover {
     background: ${(props) => props.hoverBackground};
