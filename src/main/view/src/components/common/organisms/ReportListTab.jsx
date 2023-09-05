@@ -35,6 +35,9 @@ const ReportListTab = (props) => {
         keyExpr="ID"
         noDataText="조회된 보고서가 없습니다."
         searchEnabled={true}
+        searchEditorOptions={{
+          placeholder: '검색'
+        }}
         focusStateEnabled={false}
       />
     </Wrapper>
