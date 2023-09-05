@@ -1,6 +1,10 @@
+import Drawer from 'devextreme/ui/drawer';
 import localizedString from '../../../config/localization';
 import CommonTab from '../atoms/CommonTab';
-// import CommonToolbar from '../atoms/CommonToolbar';
+import CommonToolbar from '../atoms/CommonToolbar';
+import Wrapper from '../atoms/Wrapper';
+import tempData from '../molecules/ReportFoldableListTempData';
+
 import ReportListTab from './ReportListTab';
 
 const ReportTabSource = [
@@ -14,30 +18,46 @@ const ReportTabSource = [
   }
 ];
 
-const getTabContent = ({data}) => {
-  return <ReportListTab/>;
-};
+const ToolbarItems = [
+  {
+    location: 'before',
+    key: '1',
+    widget: 'dxButton',
+    options: {
+      icon: 'inactivefolder',
+      onClick: () => {
+        const element = document.getElementById('ReportListCustomDrawer');
+        const instance = Drawer.getInstance(element);
 
-// const ToolbarItems = [
-//   {
-//     location: 'before',
-//     key: '1',
-//     widget: 'dxButton',
-//     options: {
-//       icon: 'back',
-//       onClick: () => {
-//         alert('hi');
-//       }
-//     }
-//   }
-// ];
+        instance.toggle();
+      }
+    }
+  },
+  {
+    location: 'after',
+    key: '2',
+    widget: 'dxButton',
+    options: {
+      icon: 'refresh',
+      onClick: () => {
+      }
+    }
+  }
+];
 
 const ReportTabs = () => {
+  const getTabContent = ({data}) => {
+    return <ReportListTab items={tempData[data.id]}/>;
+  };
+
   return (
-    <CommonTab
-      dataSource={ReportTabSource}
-      itemComponent={getTabContent}
-    />
+    <Wrapper>
+      <CommonToolbar items={ToolbarItems}/>
+      <CommonTab
+        dataSource={ReportTabSource}
+        itemComponent={getTabContent}
+      />
+    </Wrapper>
   );
 };
 

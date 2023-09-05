@@ -1,6 +1,6 @@
 import {getTheme} from 'config/theme';
-import {Lookup} from 'devextreme-react';
 import {styled} from 'styled-components';
+import {TreeView} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -12,11 +12,31 @@ const Wrapper = styled.div`
   border-right: solid 1px ${theme.color.breakLine};
   text-align: left;
 `;
+const StyledTreeView = styled(TreeView)`
+  color: ${theme.color.primaryFont};
+  font: ${theme.font.dataSource};
+  letter-spacing: -1px;
+  .dx-treeview-toggle-item-visibility {
+    color: ${theme.color.primaryFont};
+  }
+  .dx-treeview-item-content {
+    transform: none !important;
+  }
+`;
 
-const ReportListTab = () => {
+const ReportListTab = (props) => {
   return (
     <Wrapper>
-      <Lookup></Lookup>
+      <StyledTreeView
+        items={props.items}
+        dataStructure="plain"
+        displayExpr="name"
+        parentIdExpr="categoryId"
+        keyExpr="ID"
+        noDataText="조회된 보고서가 없습니다."
+        searchEnabled={true}
+        focusStateEnabled={false}
+      />
     </Wrapper>
   );
 };
