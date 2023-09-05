@@ -1,6 +1,6 @@
 import Drawer from 'devextreme-react/drawer';
 import Wrapper from '../atoms/Wrapper';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {styled} from 'styled-components';
 import expandImg from 'assets/image/icon/button/expand.png';
 
@@ -21,8 +21,13 @@ const ExpandButton = styled.div`
 `;
 const CustomDrawer = ({children, index=0, defaultValue=true, ...props}) => {
   const [opened, setOpened] = useState(defaultValue);
+  const ref = useRef(null);
 
   const expandDrawer = () => {
+    if (props.component.name === 'ReportTabs') {
+      ref.current.instance.toggle();
+      return;
+    }
     setOpened(!opened);
   };
 
@@ -35,6 +40,7 @@ const CustomDrawer = ({children, index=0, defaultValue=true, ...props}) => {
   return (
     <Wrapper>
       <Drawer
+        ref={ref}
         opened={opened}
         position='left'
         openedStateMode='shrink'

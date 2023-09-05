@@ -5,10 +5,10 @@ import Content from 'components/common/atoms/Content';
 import DataSourceTab from 'components/common/organisms/DataSourceTab';
 import AttributeTabs from 'components/common/organisms/AttributeTabs';
 import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
-import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
 import ReportTabs from 'components/common/organisms/ReportTabs';
 import {getTheme} from 'config/theme';
+import ViewerFilterBar from 'components/common/organisms/ViewerFilterBar';
 
 const theme = getTheme();
 
@@ -18,12 +18,16 @@ const ViewerContent = ({children}) => {
       headerHeight={theme.size.headerHeight}
     >
       <DragDropContext>
-        <CustomDrawer index={0} component={ReportTabs}>
+        <CustomDrawer
+          index={0}
+          component={ReportTabs}
+          elementAttr={{id: 'ReportListCustomDrawer'}}
+        >
           <CustomDrawer index={1} opened={false} component={DataSourceTab}>
             <CustomDrawer index={2} opened={false} component={AttributeTabs}>
               <Wrapper>
                 <ReportContentWrapper>
-                  <FilterBar/>
+                  <ViewerFilterBar/>
                   <ReportContent>
                     {children}
                   </ReportContent>
