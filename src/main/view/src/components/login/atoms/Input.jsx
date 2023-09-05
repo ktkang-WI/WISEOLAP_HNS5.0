@@ -1,4 +1,10 @@
 import {TextBox} from 'devextreme-react';
+import {styled} from 'styled-components';
+
+const StyledTextBox = styled(TextBox)`
+  .dx-texteditor-input-container{
+  }
+`;
 
 const Input = ({contents}) => {
   const handleValidation = (contents, input) => {
@@ -18,7 +24,7 @@ const Input = ({contents}) => {
       {
         contents.inputs.map(
             (input, index) =>
-              <TextBox
+              <StyledTextBox
                 key={index}
                 label={input}
                 labelMode={contents.labelMode}
@@ -30,7 +36,7 @@ const Input = ({contents}) => {
               >
                 {type === 'register' ? handleValidation(contents, input) : ''}
                 {input === 'ID' ? contents.checkBtn : ''}
-              </TextBox>
+              </StyledTextBox>
         )
       }
     </div>
