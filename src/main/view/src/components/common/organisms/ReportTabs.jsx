@@ -1,11 +1,12 @@
-import Drawer from 'devextreme/ui/drawer';
 import localizedString from '../../../config/localization';
 import CommonTab from '../atoms/CommonTab';
 import CommonToolbar from '../atoms/CommonToolbar';
 import Wrapper from '../atoms/Wrapper';
 import tempData from '../molecules/ReportFoldableListTempData';
+import refresh from '../../../assets/image/icon/button/refresh.png';
 
 import ReportListTab from './ReportListTab';
+import SmallImageButton from '../atoms/SmallImageButton';
 
 const ReportTabSource = [
   {
@@ -20,27 +21,10 @@ const ReportTabSource = [
 
 const ToolbarItems = [
   {
-    location: 'before',
-    key: '1',
-    widget: 'dxButton',
-    options: {
-      icon: 'inactivefolder',
-      onClick: () => {
-        const element = document.getElementById('ReportListCustomDrawer');
-        const instance = Drawer.getInstance(element);
-
-        instance.toggle();
-      }
-    }
-  },
-  {
     location: 'after',
     key: '2',
-    widget: 'dxButton',
-    options: {
-      icon: 'refresh',
-      onClick: () => {
-      }
+    render: () => {
+      return <SmallImageButton src={refresh}/>;
     }
   }
 ];
