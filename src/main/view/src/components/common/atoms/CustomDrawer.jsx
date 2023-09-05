@@ -24,10 +24,6 @@ const CustomDrawer = ({children, index=0, defaultValue=true, ...props}) => {
   const ref = useRef(null);
 
   const expandDrawer = () => {
-    if (props.component.name === 'ReportTabs') {
-      ref.current.instance.toggle();
-      return;
-    }
     setOpened(!opened);
   };
 
