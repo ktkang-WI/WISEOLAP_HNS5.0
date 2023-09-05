@@ -7,8 +7,8 @@ import Wrapper from 'components/common/atoms/Wrapper';
 import ReportTabs from 'components/common/organisms/ReportTabs';
 import {getTheme} from 'config/theme';
 import ViewerFilterBar from 'components/common/organisms/ViewerFilterBar';
-import ViewerDataSourceTab
-  from 'components/common/organisms/ViewerDataSourceTab';
+import ViewerDataAttributePanels
+  from 'components/common/organisms/ViewerDataAttributePanels';
 
 const theme = getTheme();
 
@@ -24,8 +24,9 @@ const ViewerContent = ({children}) => {
         >
           <CustomDrawer
             index={1}
+            component={ViewerDataAttributePanels}
             opened={false}
-            component={ViewerDataSourceTab}
+            visible={false}
           >
             <Wrapper>
               <ReportContentWrapper>
