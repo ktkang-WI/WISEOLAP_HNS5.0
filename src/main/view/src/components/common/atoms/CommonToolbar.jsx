@@ -8,6 +8,9 @@ const StyledTabPanel = styled(Toolbar)`
   .dx-toolbar-items-container {
     height: ${theme.size.filterBarHeight};
     background: ${theme.color.filterBar};
+  },
+  .dx-toolbar-after {
+    padding-right: 15px;
   }
 `;
 
@@ -22,8 +25,8 @@ const CommonToolbar = ({items}) => {
             <Item
               key={index}
               location={item.location}
-              widget={item.widget}
-              options={item.options}
+              render={item.render}
+              options={item.option}
             />
           );
         })
