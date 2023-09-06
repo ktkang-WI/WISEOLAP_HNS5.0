@@ -6,11 +6,8 @@ import React from 'react';
 const theme = getTheme();
 
 const StyledTabPanel = styled(TabPanel)`
-  .dx-tab.dx-state-hover, .dx-tab.dx-tab-selected {
-    background: ${theme.color.selectedTabHeader};
-    span {
-      color: ${theme.color.secondaryFont};
-    }
+  .dx-tab.dx-tab-selected {
+    border-bottom: 3px solid ${theme.color.primary};
   }
   .dx-tab {
     background: ${theme.color.secondaryGradient};
