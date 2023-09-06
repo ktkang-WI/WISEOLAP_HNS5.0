@@ -6,6 +6,8 @@ import SpreadSheet from 'components/designer/SpreadSheet';
 import Viewer from './Viewer';
 import Config from './Config';
 import Login from './Login';
+import Register from 'components/login/organisms/Register';
+import SignIn from 'components/login/organisms/SignIn';
 
 const contextPath = '/editds';
 const firstPage = {
@@ -47,7 +49,17 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/login',
-    element: <Login/>
+    element: <Login/>,
+    children: [
+      {
+        index: true,
+        element: <SignIn/>
+      },
+      {
+        path: contextPath + '/login/regist',
+        element: <Register/>
+      }
+    ]
   }
 ]);
 
