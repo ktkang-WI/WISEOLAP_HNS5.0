@@ -1,6 +1,6 @@
 import Drawer from 'devextreme-react/drawer';
 import Wrapper from '../atoms/Wrapper';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {styled} from 'styled-components';
 import expandImg from 'assets/image/icon/button/expand.png';
 
@@ -15,12 +15,16 @@ const ExpandButton = styled.div`
   border: 1px solid #ddd;
   box-sizing: border-box;
   border-left: none;
-  display: flex;
+  display: ${(props) => props.visible ? 'flex' : 'none'};
   align-items: center;
   justify-content: center;
 `;
-const CustomDrawer = ({children, index=0, defaultValue=true, ...props}) => {
+
+const CustomDrawer = ({
+  children, index=0, defaultValue=true, visible=true, ...props
+}) => {
   const [opened, setOpened] = useState(defaultValue);
+  const ref = useRef(null);
 
   const expandDrawer = () => {
     setOpened(!opened);
@@ -29,19 +33,24 @@ const CustomDrawer = ({children, index=0, defaultValue=true, ...props}) => {
   const ExpandImage = styled.img`
     width: 15px;
     height: 15px;
-    transform: rotate(${opened? '90deg' : '270deg'});
+    transform: rotate(${opened ? '90deg' : '270deg'});
   `;
 
   return (
     <Wrapper>
       <Drawer
+        ref={ref}
         opened={opened}
         position='left'
         openedStateMode='shrink'
         revealMode='slide'
         {...props}
       >
-        <ExpandButton onClick={expandDrawer} bottom={index * 25}>
+        <ExpandButton
+          visible={visible}
+          onClick={expandDrawer}
+          bottom={index * 25}
+        >
           <ExpandImage src={expandImg}></ExpandImage>
         </ExpandButton>
         {children}

@@ -64,5 +64,8 @@
   "palette": "팔레트",
   "colorEdit": "색상 편집",
   "pointLabel": "애니메이션",
-  "querySearch": "조회"
+  "querySearch": "조회",
+  "publicReport": "공용 보고서",
+  "privateReport": "개인 보고서",
+  "designer": "디자이너"
 }

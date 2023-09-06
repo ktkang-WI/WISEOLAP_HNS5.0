@@ -1,11 +1,15 @@
 import {styled, css} from 'styled-components';
 import {useState} from 'react';
 import {getTheme} from 'config/theme';
+import CommonButton from 'components/common/atoms/CommonButton';
+import FilterBarWrapper from 'components/common/molecules/FilterBarWrapper';
+import RibbonDefaultElement
+  from 'components/common/organisms/RibbonDefaultElement';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
-import FilterBarWrapper from '../molecules/FilterBarWrapper';
 
 const theme = getTheme();
+const queryButton = RibbonDefaultElement['QuerySearch'];
 
 const tempFitlerData = [
   {
@@ -151,7 +155,7 @@ const tempFitlerData = [
   }
 ];
 
-const FilterBar = ({useExpandButton=true}) => {
+const ViewerFilterBar = ({useExpandButton=true}) => {
   const [isExpand, setIsExpand] = useState(false);
 
   const ExpandBtn = (props) => {
@@ -192,6 +196,17 @@ const FilterBar = ({useExpandButton=true}) => {
     display: flex;
   `;
 
+  const QueryButtonWrapper = styled.div`
+    height: 100%;
+    min-height: ${theme.size.filterBarHeight};
+    background: ${isExpand ?
+      theme.color.filterBarExpand : theme.color.filterBar};
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid ${theme.color.breakLine};
+    padding-right: 20px;
+  `;
+
   return (
     <Wrapper>
       {useExpandButton ?
@@ -203,8 +218,18 @@ const FilterBar = ({useExpandButton=true}) => {
         tempFitlerData={tempFitlerData}
         isExpand={isExpand}
       />
+      <QueryButtonWrapper>
+        <CommonButton
+          label={queryButton.label}
+          title={queryButton.title}
+          width={queryButton.width}
+          height={queryButton.height}
+        >
+          {queryButton.label}
+        </CommonButton>
+      </QueryButtonWrapper>
     </Wrapper>
   );
 };
 
-export default FilterBar;
+export default ViewerFilterBar;

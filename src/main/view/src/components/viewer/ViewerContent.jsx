@@ -2,28 +2,35 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import CustomDrawer from '../common/atoms/CustomDrawer';
 import ReportContent from 'components/common/atoms/ReportContent';
 import Content from 'components/common/atoms/Content';
-import AttributeTabs from 'components/common/organisms/AttributeTabs';
-import DataSourceTab from 'components/common/organisms/DataSourceTab';
 import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
-import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
+import ReportTabs from 'components/common/organisms/ReportTabs';
 import {getTheme} from 'config/theme';
+import ViewerFilterBar from 'components/common/organisms/ViewerFilterBar';
+import ViewerDataAttributePanels
+  from 'components/common/organisms/ViewerDataAttributePanels';
 
 const theme = getTheme();
 
-const DesignerContent = ({children}) => {
+const ViewerContent = ({children}) => {
   return (
     <Content
-      snbWidth={theme.size.snbWidth}
       headerHeight={theme.size.headerHeight}
-      ribbonHeight={theme.size.ribbonHeight}
     >
       <DragDropContext>
-        <CustomDrawer index={0} component={DataSourceTab}>
-          <CustomDrawer index={1} component={AttributeTabs}>
+        <CustomDrawer
+          index={0}
+          component={ReportTabs}
+        >
+          <CustomDrawer
+            index={1}
+            component={ViewerDataAttributePanels}
+            opened={false}
+            visible={false}
+          >
             <Wrapper>
               <ReportContentWrapper>
-                <FilterBar/>
+                <ViewerFilterBar/>
                 <ReportContent>
                   {children}
                 </ReportContent>
@@ -36,4 +43,4 @@ const DesignerContent = ({children}) => {
   );
 };
 
-export default DesignerContent;
+export default ViewerContent;
