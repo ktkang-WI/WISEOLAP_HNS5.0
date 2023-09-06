@@ -7,6 +7,7 @@ import ReportTitleTabs from './ReportTitleTabs';
 import LabelImageButton from '../molecules/LabelImageButton';
 import headerDefaultElement from './HeaderDefaultElement';
 import TextButton from '../molecules/TextButton';
+import {Link} from 'react-router-dom';
 
 const theme = getTheme();
 
@@ -74,7 +75,9 @@ const getHeaderItem = (item) => {
         position={item.position}
         breakLine={item.index !== item.length - 1}
       >
-        <HeaderLogoImage height={item.height}/>
+        <Link to={'login'}>
+          <HeaderLogoImage height={item.height}/>
+        </Link>
       </HeaderPanel>
     );
   } else if (item.type === 'ReportTabs') {
