@@ -1,17 +1,25 @@
+import ItemButtons from '../molecules/ItemButtons';
+import ItemTitleText from '../atoms/ItemTitleText';
 import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
 
-const StyledHeader = styled.div`
-  height: 4%;
+const theme = getTheme();
+
+const HeaderWrapper = styled.div`
   width: 100%;
   display: flex;
-  flex: 1;
-  border: 2px solid red;
+  height: ${theme.size.itemHeaderHeight};
+  border-bottom: 1px solid ${theme.color.breakLine};
+  align-items: center;
+  justify-content: space-between;
 `;
 
-const ItemHeader = () => {
+const ItemHeader = ({title}) => {
   return (
-    <StyledHeader>
-    </StyledHeader>
+    <HeaderWrapper>
+      <ItemTitleText>{title}</ItemTitleText>
+      <ItemButtons></ItemButtons>
+    </HeaderWrapper>
   );
 };
 
