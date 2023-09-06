@@ -15,14 +15,21 @@ const ActionPageWrap = styled.div`
   padding: 134px 112px 0;
 `;
 
+const FormWrap = styled.div`
+  height: 400px;
+  padding-top: 50px;
+`;
+
 const Register = () => {
   return (
     <StyledSignIn>
       <ActionPageWrap>
         <TitleImage type={'register'}/>
-        <FormInputs
-          contents={inputElements()['register']}
-        />
+        <FormWrap>
+          <FormInputs
+            contents={inputElements()['register']}
+          />
+        </FormWrap>
       </ActionPageWrap>
     </StyledSignIn>
   );

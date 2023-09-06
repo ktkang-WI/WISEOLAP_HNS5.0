@@ -14,15 +14,22 @@ const ActionPageWrap = styled.div`
   padding: 134px 112px 0;
 `;
 
+const FormWrap = styled.div`
+  height: 400px;
+  padding-top: 100px;
+`;
+
 const SignIn = () => {
   return (
     <StyledSignIn>
       <ActionPageWrap>
         <TitleImage type={'login'}/>
-        <FormInputs
-          contents={inputElements()['login']}
-        />
-        forgot the password?
+        <FormWrap>
+          <FormInputs
+            contents={inputElements()['login']}
+          />
+        </FormWrap>
+        {/* forgot the password? */}
       </ActionPageWrap>
     </StyledSignIn>
   );

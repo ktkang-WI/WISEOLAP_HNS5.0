@@ -14,12 +14,24 @@ const StyledForm = styled.form.attrs(() => ({
   }
 `;
 
+const Span = styled.span`
+  color: #7f8fa4;
+`;
+
 const FormInterval = styled.div`
   padding-top: ${(props) => {
     if (props.props === 'login') {
-      return '100px';
+      return '90px';
     }
   }}
+`;
+
+const StyledInput = styled.input`
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+  background-position: -341px -12px;
+  transform: translateY(20%);
 `;
 
 const CheckBoxWrap = styled.div`
@@ -43,8 +55,10 @@ const createCheckBox = (contents) => {
     return (
       <CheckBoxWrap>
         <CheckBoxSpanWrap>
-          <input type='checkBox' id='remainId'/>
-          <label htmlFor='remainId'>Remain ID</label>
+          <StyledInput type='checkBox' id='remainId'/>
+          <label htmlFor='remainId'>
+            <Span>ID Remember</Span>
+          </label>
         </CheckBoxSpanWrap>
       </CheckBoxWrap>
     );
