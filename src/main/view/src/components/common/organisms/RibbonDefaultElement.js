@@ -119,14 +119,17 @@ const RibbonDefaultElement = {
     'useArrowButton': false
   },
   'AddGrid': {
-    'id': 'add_grid',
-    'title': localizedString.addGrid,
-    'label': localizedString.addGrid,
-    'type': 'RibbonButton',
-    'imgSrc': addGrid,
-    'width': 'auto',
-    'height': '45px',
-    'useArrowButton': false
+    id: 'add_grid',
+    title: localizedString.addGrid,
+    label: localizedString.addGrid,
+    type: 'RibbonButton',
+    imgSrc: addGrid,
+    width: 'auto',
+    height: '45px',
+    useArrowButton: false,
+    onClick: () => {
+      console.log('눌렸어요!');
+    }
   },
   'AddCustomChart': {
     'id': 'add_custom_chart',
