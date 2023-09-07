@@ -1,7 +1,8 @@
 import {styled} from 'styled-components';
-// import ItemHeader from '../molecules/ItemHeader';
-// import ItemWrapper from '../molecules/ItemWrapper';
-import GridLayout from 'react-grid-layout';
+import ChartExample from './ChartExample';
+import FlexLayout from 'flexlayout-react';
+import 'flexlayout-react/style/light.css';
+// import * as FlexLayout from "flexlayout-react";
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -10,28 +11,35 @@ const StyledBoard = styled.div`
   background: #f5f6fa;
 `;
 
-const SelectedBoard = styled.div`
-  height: inherit; /* Inherit height from parent */
-  width: inherit; /* Inherit width from parent */
-  background: white;
-`;
+// const SelectedBoard = styled.div`
+//   height: inherit; /* Inherit height from parent */
+//   width: inherit; /* Inherit width from parent */
+//   background: white;
+// `;
 
 const ItemBoard = () => {
   const initialLayouts = [
-    {i: 'grid1', x: 0, y: 0, w: 11.6, h: 20.6}
+    {i: 'grid1', x: 0, y: 0, w: 1000, h: 1000},
+    {i: 'grid2', x: 6, y: 0, w: 1000, h: 1000}
   ];
 
   return (
     <StyledBoard>
-      <GridLayout
-        className="layout"
+      <FlexLayout.Layout
+        model={{global: {tabEnableClose: true}}}
         layout={initialLayouts}
-        cols={12} // Number of columns in the grid
-        rowHeight={30} // Height of a single row in pixels
-        width={1200} // Width of the grid in pixels
       >
-        <SelectedBoard key="grid1">Grid 1</SelectedBoard>
-      </GridLayout>
+        <FlexLayout.TabSet key="grid1">
+          <FlexLayout.Tab name="ChartExample 1">
+            <ChartExample />
+          </FlexLayout.Tab>
+        </FlexLayout.TabSet>
+        <FlexLayout.TabSet key="grid2">
+          <FlexLayout.Tab name="ChartExample 2">
+            <ChartExample />
+          </FlexLayout.Tab>
+        </FlexLayout.TabSet>
+      </FlexLayout.Layout>
     </StyledBoard>
   );
 };

@@ -126,10 +126,7 @@ const RibbonDefaultElement = {
     imgSrc: addGrid,
     width: 'auto',
     height: '45px',
-    useArrowButton: false,
-    onClick: () => {
-      console.log('눌렸어요!');
-    }
+    useArrowButton: false
   },
   'AddCustomChart': {
     'id': 'add_custom_chart',

@@ -48,7 +48,7 @@ const ItemContent = styled.div`
 `;
 
 // TODO: 추후 아이템별로 나눠야함.
-const Item = () => {
+const ChartExample = () => {
   return (
     <ItemWrapper>
       <ItemHeader title="2023 World Population by Decade"></ItemHeader>
@@ -79,4 +79,4 @@ const Item = () => {
   );
 };
 
-export default Item;
+export default ChartExample;
