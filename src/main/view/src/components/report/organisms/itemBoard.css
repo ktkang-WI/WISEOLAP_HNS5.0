@@ -1,0 +1,10 @@
+div.flexlayout__tabset_tabbar_outer {
+  background: 0;
+  border: 0;
+}
+
+div.flexlayout__tab_button--selected {
+  background: 0;
+  cursor: move;
+  width: 95%;
+}

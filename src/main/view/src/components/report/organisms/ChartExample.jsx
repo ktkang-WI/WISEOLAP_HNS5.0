@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atoms/Wrapper';
-import ItemHeader from '../molecules/ItemHeader';
+// import ItemHeader from '../molecules/ItemHeader';
 import Chart, {
   ArgumentAxis,
   Label,
@@ -51,7 +51,6 @@ const ItemContent = styled.div`
 const ChartExample = () => {
   return (
     <ItemWrapper>
-      <ItemHeader title="2023 World Population by Decade"></ItemHeader>
       <ItemContent>
         <Chart
           title="World Population by Decade"

@@ -1,8 +1,8 @@
 import {styled} from 'styled-components';
+import {Layout, Model} from 'flexlayout-react';
+import 'flexlayout-react/style/light.css'; // Import the CSS styling
 import ChartExample from './ChartExample';
-import FlexLayout from 'flexlayout-react';
-import 'flexlayout-react/style/light.css';
-// import * as FlexLayout from "flexlayout-react";
+// import './itemBoard.css';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -11,37 +11,55 @@ const StyledBoard = styled.div`
   background: #f5f6fa;
 `;
 
-// const SelectedBoard = styled.div`
-//   height: inherit; /* Inherit height from parent */
-//   width: inherit; /* Inherit width from parent */
-//   background: white;
-// `;
-
 const ItemBoard = () => {
-  const initialLayouts = [
-    {i: 'grid1', x: 0, y: 0, w: 1000, h: 1000},
-    {i: 'grid2', x: 6, y: 0, w: 1000, h: 1000}
-  ];
+  const layoutConfig = {
+    global: {tabEnableClose: true},
+    layout: {
+      type: 'row',
+      children: [
+        {
+          type: 'tabset',
+          weight: 50,
+          selected: 0,
+          children: [
+            {
+              type: 'tab',
+              name: 'Chart Tab 1',
+              component: 'chart'
+            }
+          ]
+        },
+        {
+          type: 'tabset',
+          weight: 50,
+          selected: 0,
+          children: [
+            {
+              type: 'tab',
+              name: 'Chart Tab 2',
+              component: 'chart'
+            }
+          ]
+        }
+      ]
+    }
+
+  };
+
+  function factory(node) {
+    const component = node.getComponent();
+    if (component === 'chart') {
+      return <ChartExample/>;
+    }
+  }
 
   return (
     <StyledBoard>
-      <FlexLayout.Layout
-        model={{global: {tabEnableClose: true}}}
-        layout={initialLayouts}
-      >
-        <FlexLayout.TabSet key="grid1">
-          <FlexLayout.Tab name="ChartExample 1">
-            <ChartExample />
-          </FlexLayout.Tab>
-        </FlexLayout.TabSet>
-        <FlexLayout.TabSet key="grid2">
-          <FlexLayout.Tab name="ChartExample 2">
-            <ChartExample />
-          </FlexLayout.Tab>
-        </FlexLayout.TabSet>
-      </FlexLayout.Layout>
+      <Layout model={Model.fromJson(layoutConfig)}
+        factory={factory}/>
     </StyledBoard>
   );
 };
+
 
 export default ItemBoard;
