@@ -44,7 +44,7 @@ const ItemWrapper = styled(Wrapper)`
 
 const ItemContent = styled.div`
   width: 100%;
-  height: calc(100% - ${theme.size.itemHeaderHeight});
+  height: 100%;
 `;
 
 // TODO: 추후 아이템별로 나눠야함.
