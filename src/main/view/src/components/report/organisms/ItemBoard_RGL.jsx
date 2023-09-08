@@ -17,7 +17,7 @@ const SelectedBoard = styled.div`
   background: white;
 `;
 
-const ItemBoard_RGL = () => {
+const ItemBoard = () => {
   // const maxWidth = 12;
   // const maxHeight = 21;
   // const width = Math.min(maxWidth, 11.6);
@@ -48,4 +48,4 @@ const ItemBoard_RGL = () => {
   );
 };
 
-export default ItemBoard_RGL;
+export default ItemBoard;
