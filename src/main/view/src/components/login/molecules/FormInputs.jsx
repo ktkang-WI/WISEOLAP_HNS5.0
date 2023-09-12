@@ -75,7 +75,7 @@ const createFormBtn = (contents) => {
   const type = contents.type;
   const btnTexts =
     type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
-  const path = type === 'login' ? '/editds/login/regist' : '/editds/login';
+  const path = type === 'login' ? '/editds/regist' : '/editds';
   return btnTexts.map((btnText, index) => {
     if (btnText.linkBtn) {
       return (
@@ -93,13 +93,18 @@ const createFormBtn = (contents) => {
       );
     } else {
       return (
-        <TextButton
-          className='form-textBtn'
+        <Link
+          to={btnText === '로그인' ? '/editds/dashboard' : ''}
           key={index}
-          border-radius= '5px;'
         >
-          {btnText.linkBtn ? btnText.linkBtn : btnText}
-        </TextButton>
+          <TextButton
+            className='form-textBtn'
+            key={index}
+            border-radius= '5px;'
+          >
+            {btnText.linkBtn ? btnText.linkBtn : btnText}
+          </TextButton>
+        </Link>
       );
     }
   });
