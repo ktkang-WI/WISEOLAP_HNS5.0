@@ -46,9 +46,7 @@ const InnerWrap = styled.div`
   }
 `;
 
-const StyledLoginImg = styled.img.attrs((props)=>({
-  src: props.src
-}))`
+const StyledLoginImg = styled.img`
   width: 400px;
   margin-left: -20px;
   vertical-align: middle;
