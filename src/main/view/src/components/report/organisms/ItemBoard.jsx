@@ -67,8 +67,6 @@ const ItemBoard = () => {
             key="delete"
             title="Delete tabset"
             onClick={() => {
-              // model.doAction(FlexLayout.Actions.
-              //     deleteTab(tabNode.getId()));
             }}
           >
           &#128473;&#xFE0E;
