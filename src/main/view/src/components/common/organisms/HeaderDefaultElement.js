@@ -1,7 +1,6 @@
 import localizedString from '../../../config/localization';
 import {useNavigate} from 'react-router';
 
-
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
 
@@ -43,6 +42,19 @@ const HeaderDefaultElement = () => {
     'ReportProperty': {
       'id': 'report_property',
       'label': localizedString.reportProperty,
+      'type': 'TextButton'
+    },
+    'Designer': {
+      'id': 'designer',
+      'label': localizedString.designer,
+      'type': 'TextButton',
+      'onClick': (e) => {
+        nav('/editds/dashboard');
+      }
+    },
+    'DownloadReport': {
+      'id': 'designer',
+      'label': localizedString.downloadReport,
       'type': 'TextButton'
     }
   };

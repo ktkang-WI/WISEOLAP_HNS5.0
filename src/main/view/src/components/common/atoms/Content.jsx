@@ -1,12 +1,20 @@
-import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 
-const theme = getTheme();
-
-const Content = styled.div`
-  padding-left: ${theme.size.snbWidth};
-  height: calc(100vh - ${theme.size.headerHeight} - ${theme.size.ribbonHeight});
-  width: calc(100vw - ${theme.size.snbWidth});
+const StyledContent = styled.div`
+  padding-left: ${(props) => props.snbWidth || '0px'};
+  height: calc(
+    100vh - ${(props) => props.headerHeight || '0px'} -
+    ${(props) => props.ribbonHeight || '0px'}
+  );
+  width: calc(100vw - ${(props) => props.snbWidth || '0px'});
 `;
+
+const Content = ({...props}) => {
+  return (
+    <StyledContent
+      {...props}
+    />
+  );
+};
 
 export default Content;

@@ -11,7 +11,11 @@ import ItemBoard from 'components/report/organisms/ItemBoard';
 
 const DesignerContent = ({children}) => {
   return (
-    <Content>
+    <Content
+      snbWidth={theme.size.snbWidth}
+      headerHeight={theme.size.headerHeight}
+      ribbonHeight={theme.size.ribbonHeight}
+    >
       <DragDropContext>
         <CustomDrawer index={0} component={DataSourceTab}>
           <CustomDrawer index={1} component={AttributeTabs}>

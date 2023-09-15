@@ -6,29 +6,36 @@ import SpreadSheet from 'components/designer/SpreadSheet';
 import Viewer from './Viewer';
 import Config from './Config';
 import Login from './Login';
+import Register from 'components/login/organisms/Register';
+import SignIn from 'components/login/organisms/SignIn';
 
 const contextPath = '/editds';
-const firstPage = {
-  unstruct: {index: false, element: <Adhoc/>},
-  dashboard: {index: true, element: <Dashboard/>},
-  exel: {index: false, element: <SpreadSheet/>}
-};
 
 const router = createBrowserRouter([
-  { // 초기 화면
+  {
     path: contextPath,
-    element: <Designer/>,
+    element: <Login/>,
     children: [
       {
-        index: firstPage.dashboard.index,
-        element: firstPage.dashboard.element
+        index: true,
+        element: <SignIn/>
       },
+      {
+        path: contextPath + '/regist',
+        element: <Register/>
+      }
+    ]
+  },
+  { // 초기 화면
+    path: contextPath + '',
+    element: <Designer/>,
+    children: [
       {
         path: 'dashboard',
         element: <Dashboard/>
       },
       {
-        path: 'Adhoc',
+        path: 'adhoc',
         element: <Adhoc/>
       },
       {
@@ -44,10 +51,6 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/config',
     element: <Config/>
-  },
-  {
-    path: contextPath + '/login',
-    element: <Login/>
   }
 ]);
 
