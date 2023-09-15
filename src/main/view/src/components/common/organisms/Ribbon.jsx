@@ -220,6 +220,7 @@ const getRibbonItem = (item) => {
           width={item.width}
           height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
           useArrowButton={item.useArrowButton}
+          onClick={item.onClick}
         />
       </RibbonPanel>
     );
@@ -232,6 +233,7 @@ const getRibbonItem = (item) => {
           title={item.title}
           width={item.width}
           height={item.height}
+          onClick={item.onClick}
         />
       </RibbonPanel>
     );
@@ -243,6 +245,7 @@ const getRibbonItem = (item) => {
           title={item.title}
           width={item.width}
           height={item.height}
+          onClick={item.onClick}
         >
           {item.label}
         </CommonButton>
@@ -265,7 +268,8 @@ const itemIterator = (items, position) => {
   });
 };
 
-const Ribbon = ({left, middle, right, customMenu, querySearch}) => {
+const Ribbon = ({left, middle, right, customMenu,
+  querySearch}) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleRange, setVisibleRange] =
     useState({start: 0, end: 5}); // Initial visible range
