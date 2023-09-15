@@ -1,6 +1,5 @@
 import {DragDropContext} from 'react-beautiful-dnd';
 import CustomDrawer from '../common/atoms/CustomDrawer';
-// import ReportContent from 'components/common/atoms/ReportContent';
 import Content from 'components/common/atoms/Content';
 import AttributeTabs from 'components/common/organisms/AttributeTabs';
 import DataSourceTab from 'components/common/organisms/DataSourceTab';
@@ -8,6 +7,9 @@ import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
 import FilterBar from 'components/common/organisms/FilterBar';
 import Wrapper from 'components/common/atoms/Wrapper';
 import ItemBoard from 'components/report/organisms/ItemBoard';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const DesignerContent = ({children}) => {
   return (
