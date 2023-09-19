@@ -1,4 +1,3 @@
-import test from 'components/validateTest/test';
 import {Validator} from 'devextreme-react';
 import {AsyncRule, CompareRule, EmailRule} from 'devextreme-react/form';
 

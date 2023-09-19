@@ -14,18 +14,22 @@ section {
   line-height: 12px;
   min-width: 20px;
 }
+
 div.flexlayout__tabset_tabbar_outer {
   background: 0;
   border: 0;
 }
+
 div.flexlayout__tabset_tabbar_inner_tab_container {
   position: static;
   flex-grow: 1;
 }
+
 div.flexlayout__tab_button--selected {
   background: 0 !important;
   width: 95%;
 }
+
 .flexlayout__drag_rect {
   background: #fff !important;
   box-shadow: none !important;
@@ -33,11 +37,13 @@ div.flexlayout__tab_button--selected {
   font-size: 12px !important;
   border-radius: 0 !important;
 }
+
 .flexlayout__outline_rect {
   background: rgb(154 221 255 / 15%);
   border: 2px dashed #9addff;
   box-shadow: none !important;
 }
+
 .flexlayout__outline_rect_edge {
   background: rgb(154 221 255 / 40%);
   border: 2px solid #9addff;
@@ -46,4 +52,10 @@ div.flexlayout__tab_button--selected {
 
 .flexlayout__splitter {
   background: white;
+}
+
+.flexlayout__layout {
+  width: 100%;
+  height: 100%;
+  position: relative !important;
 }
