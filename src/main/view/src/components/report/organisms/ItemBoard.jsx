@@ -10,6 +10,8 @@ const StyledBoard = styled.div`
   width: 100%;
   flex: 1;
   background: #f5f6fa;
+  display: flex;
+  min-height: 0px;
 `;
 
 const DownloadImage = styled.img`
