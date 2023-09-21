@@ -1,5 +1,5 @@
 import Drawer from 'devextreme-react/drawer';
-import Wrapper from '../atoms/Wrapper';
+import Wrapper from '../Wrap/Wrapper';
 import {useRef, useState} from 'react';
 import {styled} from 'styled-components';
 import expandImg from 'assets/image/icon/button/expand.png';
