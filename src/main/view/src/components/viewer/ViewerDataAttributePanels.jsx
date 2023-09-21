@@ -1,6 +1,7 @@
 import {styled} from 'styled-components';
-import AttributeTabs from './AttributeTabs';
-import DataSourceTab from './DataSourceTab';
+import AttributeTabs from '../common/atomic/AttributeTab/AttributeTabs';
+import DataSourceTab
+  from '../common/atomic/DataSourceTab/DataSourceTab';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
