@@ -1,31 +1,41 @@
-import localizedString from '../../../config/localization';
-import newReport from '../../../assets/image/icon/button/new.png';
-import loadReport from '../../../assets/image/icon/button/load.png';
-import saveReport from '../../../assets/image/icon/button/save.png';
-import deleteReport from '../../../assets/image/icon/button/crud_remove.png';
+import localizedString from '../../../../../config/localization';
+import newReport from '../../../../../assets/image/icon/button/new.png';
+import loadReport from '../../../../../assets/image/icon/button/load.png';
+import saveReport from '../../../../../assets/image/icon/button/save.png';
+import deleteReport
+  from '../../../../../assets/image/icon/button/crud_remove.png';
 import downloadReport
-  from '../../../assets/image/icon/button/download_new.png';
+  from '../../../../../assets/image/icon/button/download_new.png';
 import connectReport
-  from '../../../assets/image/icon/button/connect_report_add.png';
+  from '../../../../../assets/image/icon/button/connect_report_add.png';
 import addContainer
-  from '../../../assets/image/icon/button/insert_container.png';
-import addChart from '../../../assets/image/icon/button/add_chart.png';
-import addPivotGrid from '../../../assets/image/icon/button/pivot_grid.png';
-import addGrid from '../../../assets/image/icon/button/basic_grid.png';
-import captionView from '../../../assets/image/icon/button/caption_view.png';
-import nameEdit from '../../../assets/image/icon/button/name_edit.png';
-import rotate from '../../../assets/image/icon/button/rotate.png';
+  from '../../../../../assets/image/icon/button/insert_container.png';
+import addChart
+  from '../../../../../assets/image/icon/button/add_chart.png';
+import addPivotGrid
+  from '../../../../../assets/image/icon/button/pivot_grid.png';
+import addGrid
+  from '../../../../../assets/image/icon/button/basic_grid.png';
+import captionView
+  from '../../../../../assets/image/icon/button/caption_view.png';
+import nameEdit from '../../../../../assets/image/icon/button/name_edit.png';
+import rotate from '../../../../../assets/image/icon/button/rotate.png';
 import xAxisSetting
-  from '../../../assets/image/icon/button/x_axis_settings.png';
+  from '../../../../../assets/image/icon/button/x_axis_settings.png';
 import yAxisSetting
-  from '../../../assets/image/icon/button/y_axis_settings.png';
+  from '../../../../../assets/image/icon/button/y_axis_settings.png';
 import showColorLegend
-  from '../../../assets/image/icon/button/show_color_legend.png';
-import seriesType from '../../../assets/image/icon/button/series_type.png';
-import palette from '../../../assets/image/icon/button/global_color.png';
-import colorEdit from '../../../assets/image/icon/button/edit_color.png';
-import pointLabel from '../../../assets/image/icon/button/point_labels.png';
-import querySearch from '../../../assets/image/icon/button/query_search.png';
+  from
+  '../../../../../assets/image/icon/button/show_color_legend.png';
+import seriesType
+  from '../../../../../assets/image/icon/button/series_type.png';
+import palette from '../../../../../assets/image/icon/button/global_color.png';
+import colorEdit
+  from '../../../../../assets/image/icon/button/edit_color.png';
+import pointLabel
+  from '../../../../../assets/image/icon/button/point_labels.png';
+import querySearch
+  from '../../../../../assets/image/icon/button/query_search.png';
 
 const RibbonDefaultElement = {
   'NewReport': {

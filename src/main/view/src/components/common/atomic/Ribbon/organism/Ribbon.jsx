@@ -1,13 +1,14 @@
 import {useState, useEffect} from 'react'; // Import useEffect
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import RibbonButton from '../molecules/RibbonButton';
+import RibbonButton from '../../Common/Button/RibbonButton';
 import RibbonDefaultElement from './RibbonDefaultElement';
-import RibbonPanel from '../atoms/RibbonPanel';
-import OnlyImageButton from '../molecules/OnlyImageButton';
-import arrowLeft from '../../../assets/image/icon/button/arrow_left.png';
-import arrowRight from '../../../assets/image/icon/button/arrow_right.png';
-import CommonButton from '../atoms/CommonButton';
+import RibbonPanel from '../../Common/Panel/RibbonPanel';
+import OnlyImageButton from '../../Common/Button/OnlyImageButton';
+import arrowLeft from '../../../../../assets/image/icon/button/arrow_left.png';
+import arrowRight
+  from '../../../../../assets/image/icon/button/arrow_right.png';
+import CommonButton from '../../Common/Button/CommonButton';
 
 const theme = getTheme();
 
