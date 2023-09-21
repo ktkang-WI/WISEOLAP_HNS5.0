@@ -1,9 +1,9 @@
-import FilterLabel from '../atoms/FilterLabel';
+import FilterLabel from '../atom/FilterLabel';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
-import InputFilter from '../atoms/InputFilter';
-import ListFilter from '../atoms/ListFilter';
-import CalendarFilter from '../atoms/CalendarFilter';
+import InputFilter from '../atom/InputFilter';
+import ListFilter from '../atom/ListFilter';
+import CalendarFilter from '../atom/CalendarFilter';
 
 const theme = getTheme();
 

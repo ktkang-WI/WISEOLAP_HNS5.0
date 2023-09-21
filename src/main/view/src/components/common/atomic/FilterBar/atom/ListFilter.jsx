@@ -1,8 +1,8 @@
 import {TextBox, Popover, List} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import Wrapper from './Wrapper';
-import CommonButton from './CommonButton';
+import Wrapper from '../../Common/Wrap/Wrapper';
+import CommonButton from '../../Common/Button/CommonButton';
 import {useRef} from 'react';
 
 const theme = getTheme();

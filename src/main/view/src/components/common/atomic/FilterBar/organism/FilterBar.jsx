@@ -3,7 +3,8 @@ import {useState} from 'react';
 import {getTheme} from 'config/theme';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
-import FilterBarWrapper from '../molecules/FilterBarWrapper';
+import FilterBarWrapper from
+  'components/common/atomic/Common/Wrap/FilterBarWrapper';
 
 const theme = getTheme();
 

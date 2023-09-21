@@ -1,10 +1,11 @@
 import {styled, css} from 'styled-components';
 import {useState} from 'react';
 import {getTheme} from 'config/theme';
-import CommonButton from 'components/common/atoms/CommonButton';
-import FilterBarWrapper from 'components/common/molecules/FilterBarWrapper';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import FilterBarWrapper
+  from 'components/common/atomic/Common/Wrap/FilterBarWrapper';
 import RibbonDefaultElement
-  from 'components/common/organisms/RibbonDefaultElement';
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
 
