@@ -1,8 +1,8 @@
 import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
-import {getTheme} from '../../../config/theme';
-import RibbonButtonLabel from '../atoms/RibbonButtonLabel';
-import arrowDown from '../../../assets/image/icon/button/arrow_down.png';
+import {getTheme} from '../../../../../config/theme';
+import RibbonButtonLabel from '../Label/RibbonButtonLabel';
+import arrowDown from '../../../../../assets/image/icon/button/arrow_down.png';
 
 const theme = getTheme();
 

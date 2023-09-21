@@ -1,8 +1,8 @@
 import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
-import {getTheme} from '../../../config/theme';
+import {getTheme} from '../../../../../config/theme';
 import {hexToRgb, rgbToFilterString} from 'components/utils/Color';
-import AnimatedButtonLabel from '../atoms/AnimatedButtonLabel';
+import AnimatedButtonLabel from '../Label/AnimatedButtonLabel';
 
 const theme = getTheme();
 

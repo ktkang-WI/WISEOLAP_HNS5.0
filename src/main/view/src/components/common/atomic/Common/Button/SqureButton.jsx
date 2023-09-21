@@ -1,6 +1,6 @@
 import {styled} from 'styled-components';
-import SmallButtonImage from '../atoms/SmallButtonImage';
-import SmallButtonLabel from '../atoms/SmallButtonLabel';
+import SmallButtonImage from '../Image/SmallButtonImage';
+import SmallButtonLabel from '../Label/SmallButtonLabel';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();

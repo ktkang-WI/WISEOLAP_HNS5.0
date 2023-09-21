@@ -1,4 +1,4 @@
-import SmallButtonImage from '../atoms/SmallButtonImage';
+import SmallButtonImage from '../Image/SmallButtonImage';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 

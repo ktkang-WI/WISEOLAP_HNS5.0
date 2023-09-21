@@ -1,5 +1,5 @@
-import SmallButtonImage from '../atoms/SmallButtonImage';
-import SmallButtonLabel from '../atoms/SmallButtonLabel';
+import SmallButtonImage from '../Image/SmallButtonImage';
+import SmallButtonLabel from '../Label/SmallButtonLabel';
 import {styled} from 'styled-components';
 
 const Wrapper = styled.div`
