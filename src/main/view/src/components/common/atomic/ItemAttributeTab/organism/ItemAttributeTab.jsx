@@ -1,7 +1,7 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import PanelTitleText from '../atoms/PanelTitleText';
-import SqureButton from '../molecules/SqureButton';
+import PanelTitleText from '../../Common/Panel/PanelTitleText';
+import SqureButton from '../../Common/Button/SqureButton';
 import itemAttributeDefaultElement from './ItemAttributeDefaultElement';
 
 const theme = getTheme();
