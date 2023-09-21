@@ -1,5 +1,5 @@
 import {styled, css} from 'styled-components';
-import {getTheme} from '../../../config/theme';
+import {getTheme} from '../../../../../config/theme';
 import React from 'react';
 
 const theme = getTheme();

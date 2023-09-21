@@ -1,5 +1,5 @@
-import PanelTitleText from '../atoms/PanelTitleText';
-import SmallImageButton from '../atoms/SmallImageButton';
+import PanelTitleText from './PanelTitleText';
+import SmallImageButton from '../Button/SmallImageButton';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import PanelTitleDefaultElement from './PanelTitleDefaultElement';
