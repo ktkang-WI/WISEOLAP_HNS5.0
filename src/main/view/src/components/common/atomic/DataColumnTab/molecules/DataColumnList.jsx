@@ -1,8 +1,9 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
-import SmallImageButton from '../atoms/SmallImageButton';
-import resetLayoutImg from '../../../assets/image/icon/button/reset_layout.png';
-import PanelTitleText from '../atoms/PanelTitleText';
+import SmallImageButton from '../../Common/Button/SmallImageButton';
+import resetLayoutImg
+  from '../../../../../assets/image/icon/button/reset_layout.png';
+import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
 

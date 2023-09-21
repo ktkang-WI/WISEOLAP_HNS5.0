@@ -1,12 +1,13 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import PanelTitleText from '../atoms/PanelTitleText';
-import DataColumnList from '../molecules/DataColumnList';
-import dimensionIcon from '../../../assets/image/icon/dataSource/dimension.png';
-import measureIcon from '../../../assets/image/icon/dataSource/measure.png';
+import PanelTitleText from '../Common/Panel/PanelTitleText';
+import DataColumnList from './molecules/DataColumnList';
+import dimensionIcon
+  from '../../../../assets/image/icon/dataSource/dimension.png';
+import measureIcon from '../../../../assets/image/icon/dataSource/measure.png';
 import chartSeriesButtonIcon
-  from '../../../assets/image/icon/item/chart_bar.png';
-import localizedString from '../../../config/localization';
+  from '../../../../assets/image/icon/item/chart_bar.png';
+import localizedString from '../../../../config/localization';
 
 // TODO: 추후 redux로 교체 예정
 const tempData = {

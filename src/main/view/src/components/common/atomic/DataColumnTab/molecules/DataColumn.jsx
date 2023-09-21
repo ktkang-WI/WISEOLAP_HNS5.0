@@ -1,9 +1,11 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
-import arrowImg from '../../../assets/image/icon/dataSource/sort_arrow.png';
-import otherMenuImg from '../../../assets/image/icon/dataSource/other_menu.png';
+import arrowImg
+  from '../../../../../assets/image/icon/dataSource/sort_arrow.png';
+import otherMenuImg
+  from '../../../../../assets/image/icon/dataSource/other_menu.png';
 import {ContextMenu} from 'devextreme-react';
-import localizedString from '../../../config/localization';
+import localizedString from '../../../../../config/localization';
 import uuid from 'react-uuid';
 
 const theme = getTheme();
