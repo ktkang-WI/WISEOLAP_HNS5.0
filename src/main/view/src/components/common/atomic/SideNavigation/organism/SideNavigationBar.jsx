@@ -1,7 +1,7 @@
 import {styled, css} from 'styled-components';
 import {getTheme} from 'config/theme';
 import {getConfig} from 'config/config';
-import AnimatedButton from '../molecules/AnimatedButton';
+import AnimatedButton from '../../Common/Button/AnimatedButton';
 import snbDefaultElement from './SNBDefaultElement';
 
 const theme = getTheme();
