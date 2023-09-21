@@ -1,5 +1,5 @@
 import {Droppable} from 'react-beautiful-dnd';
-import Filter from './Filter';
+import Filter from '../../FilterBar/molecules/Filter';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 
