@@ -1,9 +1,9 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import {Lookup} from 'devextreme-react';
-import localizedString from '../../../config/localization';
-import PanelTitle from '../molecules/PanelTitle';
-import DataSourceFoldableList from '../molecules/DataSourceFoldableList';
+import localizedString from '../../../../config/localization';
+import PanelTitle from '../Common/Panel/PanelTitle';
+import DataSourceFoldableList from './molecules/DataSourceFoldableList';
 
 const theme = getTheme();
 

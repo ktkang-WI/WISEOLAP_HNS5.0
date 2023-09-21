@@ -1,16 +1,16 @@
 import {TreeView} from 'devextreme-react';
 import {getTheme} from 'config/theme';
-import Wrapper from '../atoms/Wrapper';
+import Wrapper from '../../Common/Wrap/Wrapper';
 import tempData from './DataSourceFoldableListTempData';
 import cubeMeaGrpImg from
-  '../../../assets/image/icon/dataSource/cube_measure.png';
+  '../../../../../assets/image/icon/dataSource/cube_measure.png';
 import cubeDimGrpImg from
-  '../../../assets/image/icon/dataSource/cube_dimension.png';
-import meaImg from '../../../assets/image/icon/dataSource/measure.png';
-import dimImg from '../../../assets/image/icon/dataSource/dimension.png';
+  '../../../../../assets/image/icon/dataSource/cube_dimension.png';
+import meaImg from '../../../../../assets/image/icon/dataSource/measure.png';
+import dimImg from '../../../../../assets/image/icon/dataSource/dimension.png';
 import {useState} from 'react';
 import {styled} from 'styled-components';
-import DataColumn from './DataColumn';
+import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
 import {useRef} from 'react';
 
