@@ -1,4 +1,4 @@
-import {getTheme} from '../../../config/theme';
+import {getTheme} from '../../../../../config/theme';
 import {styled} from 'styled-components';
 
 const theme = getTheme();

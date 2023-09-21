@@ -1,5 +1,5 @@
-import ReportTitlePanel from '../atoms/ReportTitlePanel';
-import ReportTitleText from '../atoms/ReportTitleText';
+import ReportTitlePanel from '../../Common/Panel/ReportTitlePanel';
+import ReportTitleText from '../atom/ReportTitleText';
 
 const ReportTitleTab = ({children, height}) => {
   return (

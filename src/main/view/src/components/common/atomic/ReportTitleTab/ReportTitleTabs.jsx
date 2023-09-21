@@ -1,6 +1,6 @@
 import {styled} from 'styled-components';
-import ReportTitleTab from '../molecules/ReportTitleTab';
-import localizedString from '../../../config/localization';
+import ReportTitleTab from './molecules/ReportTitleTab';
+import localizedString from '../../../../config/localization';
 
 const Wrapper = styled.div`
   width: 100%;
