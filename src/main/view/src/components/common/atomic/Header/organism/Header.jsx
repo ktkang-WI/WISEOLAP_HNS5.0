@@ -1,12 +1,14 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import HeaderPanel from 'components/common/atoms/HeaderPanel';
-import HeaderLogoImage from 'components/common/atoms/HeaderLogoImage';
-import AnimatedImageButton from 'components/common/atoms/AnimatedImageButton';
-import ReportTitleTabs from './ReportTitleTabs';
-import LabelImageButton from '../molecules/LabelImageButton';
+import HeaderPanel from 'components/common/atomic/Common/Panel/HeaderPanel';
+import HeaderLogoImage
+  from 'components/common/atomic/Common/Image/HeaderLogoImage';
+import AnimatedImageButton
+  from 'components/common/atomic/Common/Button/AnimatedImageButton';
+import ReportTitleTabs from '../../ReportTitleTab/ReportTitleTabs';
+import LabelImageButton from '../../Common/Button/LabelImageButton';
 import headerDefaultElement from './HeaderDefaultElement';
-import TextButton from '../molecules/TextButton';
+import TextButton from '../../Common/Button/TextButton';
 import {Link} from 'react-router-dom';
 
 const theme = getTheme();
