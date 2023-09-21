@@ -1,4 +1,4 @@
-import Header from 'components/common/organisms/Header';
+import Header from 'components/common/atomic/Header/organism/Header';
 import ViewerContent from 'components/viewer/ViewerContent';
 
 const Viewer = () => {

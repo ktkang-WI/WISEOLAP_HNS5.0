@@ -1,7 +1,7 @@
 import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link} from 'react-router-dom';
-import TextButton from 'components/common/atoms/CommonButton';
+import TextButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const StyledForm = styled.form.attrs(() => ({
   action: 'http://localhost:3000/editds'

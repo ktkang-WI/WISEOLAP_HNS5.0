@@ -1,11 +1,14 @@
 import {DragDropContext} from 'react-beautiful-dnd';
-import CustomDrawer from '../common/atoms/CustomDrawer';
-import Content from 'components/common/atoms/Content';
-import AttributeTabs from 'components/common/organisms/AttributeTabs';
-import DataSourceTab from 'components/common/organisms/DataSourceTab';
-import ReportContentWrapper from 'components/common/atoms/ReportContentWrapper';
-import FilterBar from 'components/common/organisms/FilterBar';
-import Wrapper from 'components/common/atoms/Wrapper';
+import CustomDrawer from '../common/atomic/Common/Interactive/CustomDrawer';
+import Content from 'components/common/atomic/Common/Content/Content';
+import AttributeTabs
+  from 'components/common/atomic/AttributeTab/AttributeTabs';
+import DataSourceTab
+  from 'components/common/atomic/DataSourceTab/DataSourceTab';
+import ReportContentWrapper
+  from 'components/common/atomic/Common/Wrap/ReportContentWrapper';
+import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import ItemBoard from 'components/report/organisms/ItemBoard';
 import {getTheme} from 'config/theme';
 

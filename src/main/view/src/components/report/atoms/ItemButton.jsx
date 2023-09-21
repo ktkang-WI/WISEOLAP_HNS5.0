@@ -1,5 +1,5 @@
 import {styled} from 'styled-components';
-import SmallImageButton from 'components/common/atoms/SmallImageButton';
+import SmallImageButton from 'components/common/atomic/Common/Button/SmallImageButton';
 
 const ItemTitleText = styled(SmallImageButton)`
   img {

@@ -1,7 +1,7 @@
 import {styled} from 'styled-components';
 import LoginLogo from '../assets/image/icon/login/login_visual.png';
 import PagingTransition from
-  'components/common/routesTransition/PagingTransition';
+  'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
