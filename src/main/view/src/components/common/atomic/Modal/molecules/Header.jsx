@@ -9,17 +9,17 @@ const Wrapper = styled.div`
   display: flex;
   font: ${theme.font.modalTitle};
   color: ${theme.color.primaryFont};
-  height: 30px;
+  height: 40px;
   padding-left: 15px;
   align-items: center;
   box-sizing: border-box;
   cursor: move;
 `;
 
-const Header = () => {
+const Header = ({children}) => {
   return (
     <Wrapper className='modal-header'>
-      X축 설정
+      {children}
     </Wrapper>
   );
 };

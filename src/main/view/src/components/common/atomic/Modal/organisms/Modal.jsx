@@ -14,6 +14,7 @@ const Modal = ({
   page=0,
   usePage=false,
   width='50%', height='50%',
+  modalTitle='',
   ...props
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +25,9 @@ const Modal = ({
         handle='.modal-header'
       >
         <Content width={width} height={height}>
-          <Header/>
+          <Header>
+            {modalTitle}
+          </Header>
           <Inner usePage={usePage} currentPage={currentPage}>
             {children}
           </Inner>
