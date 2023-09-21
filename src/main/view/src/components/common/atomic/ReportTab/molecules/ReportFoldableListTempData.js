@@ -1,7 +1,8 @@
-import excelFile from '../../../assets/image/icon/report/excel_file.png';
-import adhoc from '../../../assets/image/icon/report/adhoc.png';
-import folderLoad from '../../../assets/image/icon/report/folder_load.png';
-import dash from '../../../assets/image/icon/report/dash.png';
+import excelFile from '../../../../../assets/image/icon/report/excel_file.png';
+import adhoc from '../../../../../assets/image/icon/report/adhoc.png';
+import folderLoad
+  from '../../../../../assets/image/icon/report/folder_load.png';
+import dash from '../../../../../assets/image/icon/report/dash.png';
 
 const tempData = {
   'publicReport': [{

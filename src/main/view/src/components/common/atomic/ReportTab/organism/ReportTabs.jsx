@@ -1,12 +1,12 @@
-import localizedString from '../../../config/localization';
-import CommonTab from '../atoms/CommonTab';
-import CommonToolbar from '../atoms/CommonToolbar';
-import Wrapper from '../atoms/Wrapper';
+import localizedString from '../../../../../config/localization';
+import CommonTab from '../../Common/Interactive/CommonTab';
+import CommonToolbar from '../../Common/CommonToolbar';
+import Wrapper from '../../Common/Wrap/Wrapper';
 import tempData from '../molecules/ReportFoldableListTempData';
-import refresh from '../../../assets/image/icon/button/refresh.png';
+import refresh from '../../../../../assets/image/icon/button/refresh.png';
 
 import ReportListTab from './ReportListTab';
-import SmallImageButton from '../atoms/SmallImageButton';
+import SmallImageButton from '../../Common/Button/SmallImageButton';
 
 const ReportTabSource = [
   {
