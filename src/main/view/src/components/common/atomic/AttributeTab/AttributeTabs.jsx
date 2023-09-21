@@ -1,7 +1,8 @@
-import ItemAttributeTab from './ItemAttributeTab';
-import DataColumntab from './DataColumnTab';
-import localizedString from '../../../config/localization';
-import CommonTab from '../atoms/CommonTab';
+import ItemAttributeTab
+  from '../ItemAttributeTab/organism/ItemAttributeTab';
+import DataColumntab from '../DataColumnTab/DataColumnTab';
+import localizedString from '../../../../config/localization';
+import CommonTab from '../Common/Interactive/CommonTab';
 
 const AttributeTabsSource = [
   {
