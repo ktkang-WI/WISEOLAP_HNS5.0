@@ -36,11 +36,9 @@ const Modal = ({
             maxPage={page}
             usePage={usePage}
             onPrev={() => {
-              console.log(currentPage - 1);
               setCurrentPage(currentPage - 1);
             }}
             onNext={() => {
-              console.log(currentPage + 1);
               setCurrentPage(currentPage + 1);
             }}
             onSubmit={onSubmit}
