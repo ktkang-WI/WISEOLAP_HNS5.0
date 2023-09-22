@@ -1,5 +1,6 @@
-import Header from 'components/common/organisms/Header';
-import SideNavigationBar from 'components/common/organisms/SideNavigationBar';
+import Header from 'components/common/atomic/Header/organism/Header';
+import SideNavigationBar
+  from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {Outlet} from 'react-router-dom';
 const Designer = () => {
   return (
