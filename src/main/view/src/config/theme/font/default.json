@@ -11,6 +11,7 @@
     "dataColumn": "600 normal 14px \"Noto Sans\"",
     "dataSource": "500 normal 14px \"Noto Sans\"",
     "fitlerLabel": "500 normal 14px \"Noto Sans\"",
+    "modalTitle": "500 normal 16px \"Noto Sans\"",
     "filterContent": "500 normal 14px \"Noto Sans\"",
     "button": "500 normal 14px \"Noto Sans\""
 }

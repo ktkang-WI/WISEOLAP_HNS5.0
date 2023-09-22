@@ -79,12 +79,14 @@ const StyledSNB = styled.div`
   overflow: hidden;
   position: absolute;
   left: 0px;
-  transition: width 0.5s;
-  z-index: 30;
+  z-index: 0;
+  transition: width 0.5s, z-index 0.5s step-end;
 
   ${useSNBDrawer && css`
     &:hover {
       width: ${theme.size.snbDrawerWidth};
+      z-index: 30;
+      transition: width 0.5s, z-index 0.5s;
       & > div > div {
         box-sizing: border-box;
         border-bottom: 1px solid ${theme.color.breakLine};
