@@ -1,4 +1,4 @@
-import CommonButton from 'components/common/atoms/CommonButton';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {styled} from 'styled-components';
 
 const ButtonWrapper = styled.div`

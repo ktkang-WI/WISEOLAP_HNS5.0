@@ -1,4 +1,4 @@
-import Wrapper from 'components/common/atoms/Wrapper';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const PageWrapper = ({children}) => {
   return (
