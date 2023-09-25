@@ -34,16 +34,6 @@ const reducers = {
   deleteReport(state, actions) {
     state = state.reports.filter(
         (report) => report.reportId != actions.payload);
-  },
-  setTestData(state, actions) {
-    state.reports = [{
-      reportId: 3532, option: {},
-      datasets: [{
-        id: 'dataSource1',
-        fields: [],
-        parameters: []
-      }]
-    }];
   }
 };
 
