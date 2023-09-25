@@ -67,5 +67,11 @@
   "querySearch": "QuerySearch",
   "publicReport": "Public Report",
   "privateReport": "Private Report",
-  "designer": "디자이너"
+  "designer": "Designer",
+  "next": "next",
+  "previous": "previous",
+  "confirm": "confirm",
+  "cancel": "cancel",
+  "warning": "warning",
+  "alert": "alert"
 }
