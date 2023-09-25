@@ -7,6 +7,7 @@ import Overlay from '../atoms/Overlay';
 import Inner from '../atoms/Inner';
 import {useState} from 'react';
 import {motion} from 'framer-motion';
+import Wrapper from '../../Common/Wrap/Wrapper';
 
 const Modal = ({
   children,
@@ -38,35 +39,37 @@ const Modal = ({
         <Draggable
           handle='.modal-header'
         >
-          <motion.div
-            style={{width: '100%', height: '100%'}}
-            initial={{scale: 0.7}}
-            animate={{scale: 1}}
-            exit={{scale: 0.7}}
-            transition={{duration: 0.2}}
-          >
-            <Content width={width} height={height}>
-              <Header>
-                {modalTitle}
-              </Header>
-              <Inner usePage={usePage} currentPage={currentPage}>
-                {children}
-              </Inner>
-              <Footer
-                currentPage={currentPage}
-                maxPage={page}
-                usePage={usePage}
-                onPrev={() => {
-                  changePage(currentPage - 1);
-                }}
-                onNext={() => {
-                  changePage(currentPage + 1);
-                }}
-                onSubmit={onSubmit}
-                onClose={onClose}
-              />
-            </Content>
-          </motion.div>
+          <Wrapper>
+            <motion.div
+              style={{width: '100%', height: '100%'}}
+              initial={{scale: 0.7}}
+              animate={{scale: 1}}
+              exit={{scale: 0.7}}
+              transition={{duration: 0.2}}
+            >
+              <Content width={width} height={height}>
+                <Header>
+                  {modalTitle}
+                </Header>
+                <Inner usePage={usePage} currentPage={currentPage}>
+                  {children}
+                </Inner>
+                <Footer
+                  currentPage={currentPage}
+                  maxPage={page}
+                  usePage={usePage}
+                  onPrev={() => {
+                    changePage(currentPage - 1);
+                  }}
+                  onNext={() => {
+                    changePage(currentPage + 1);
+                  }}
+                  onSubmit={onSubmit}
+                  onClose={onClose}
+                />
+              </Content>
+            </motion.div>
+          </Wrapper>
         </Draggable>
       </Overlay>
     </motion.div>
