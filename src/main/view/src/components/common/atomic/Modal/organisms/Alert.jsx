@@ -1,33 +1,22 @@
 import Footer from '../molecules/Footer';
-import Header from '../molecules/Header';
-import Draggable from 'react-draggable';
 import Content from '../atoms/Content';
 import Overlay from '../atoms/Overlay';
 import Inner from '../atoms/Inner';
-import {useState} from 'react';
 import {motion} from 'framer-motion';
 import Wrapper from '../../Common/Wrap/Wrapper';
+import Header from '../molecules/Header';
+import localizedString from 'config/localization';
+import Draggable from 'react-draggable';
 
-const Modal = ({
+const Alert = ({
   children,
   onClose,
   onSubmit,
-  onChangedPage,
-  page=0,
-  usePage=false,
-  width='50%', height='50%',
-  modalTitle='',
+  width='350px', height='170px',
+  type='alert',
+  message='',
   ...props
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const changePage = (nextPage) => {
-    if (onChangedPage) {
-      onChangedPage(nextPage);
-    }
-    setCurrentPage(nextPage);
-  };
-
   return (
     <motion.div
       initial={{opacity: 0, zIndex: 30}}
@@ -49,21 +38,13 @@ const Modal = ({
             >
               <Content width={width} height={height}>
                 <Header>
-                  {modalTitle}
+                  {type == 'alert'?
+                    localizedString.alert : localizedString.warning}
                 </Header>
-                <Inner usePage={usePage} currentPage={currentPage}>
-                  {children}
+                <Inner>
+                  {message}
                 </Inner>
                 <Footer
-                  currentPage={currentPage}
-                  maxPage={page}
-                  usePage={usePage}
-                  onPrev={() => {
-                    changePage(currentPage - 1);
-                  }}
-                  onNext={() => {
-                    changePage(currentPage + 1);
-                  }}
                   onSubmit={onSubmit}
                   onClose={onClose}
                 />
@@ -76,4 +57,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default Alert;

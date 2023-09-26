@@ -1,5 +1,6 @@
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {styled} from 'styled-components';
+import localizedString from 'config/localization';
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -18,23 +19,32 @@ const Footer = ({
   onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage
 }) => {
   const onConfirm = () => {
-    onSubmit();
-    onClose();
+    if (!onSubmit()) {
+      onClose();
+    }
   };
 
   return (
     <ButtonWrapper>
       {usePage && currentPage != 1 &&
-        <CommonButton width="60px" onClick={onPrev} visible>이전</CommonButton>
+        <CommonButton width="60px" onClick={onPrev} visible>
+          {localizedString.previous}
+        </CommonButton>
       }
       {usePage && currentPage != maxPage &&
-        <CommonButton width="60px" onClick={onNext} visible>다음</CommonButton>
+        <CommonButton width="60px" onClick={onNext} visible>
+          {localizedString.next}
+        </CommonButton>
       }
       {
-        (!usePage || (usePage && currentPage == maxPage)) &&
-        <CommonButton width="60px" onClick={onConfirm}>확인</CommonButton>
+        (!usePage || (usePage && currentPage == maxPage)) && onSubmit &&
+        <CommonButton width="60px" onClick={onConfirm}>
+          {localizedString.confirm}
+        </CommonButton>
       }
-      <CommonButton width="60px" onClick={onClose}>취소</CommonButton>
+      <CommonButton width="60px" onClick={onClose}>
+        {onSubmit? localizedString.cancel : localizedString.confirm}
+      </CommonButton>
     </ButtonWrapper>
   );
 };
