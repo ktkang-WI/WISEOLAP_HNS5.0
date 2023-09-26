@@ -12,7 +12,7 @@ const Alert = ({
   children,
   onClose,
   onSubmit,
-  width='400px', height='200px',
+  width='350px', height='170px',
   type='alert',
   message='',
   ...props

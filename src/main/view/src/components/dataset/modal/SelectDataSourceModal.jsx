@@ -1,16 +1,24 @@
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {Column, Selection} from 'devextreme-react/data-grid';
-import tempSelectDataSource from './tempSelectDataSource.json';
-import DataSourceInfoForm from './SelectDataSourceModal/DataSourceInfoForm';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import _ from 'lodash';
+import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
+import models from 'models';
 
 const SelectDataSourceModal = ({onSubmit, ...props}) => {
   const [selectedDataSource, setSelectedDataSource] = useState({});
+  const [dataSource, setDataSource] = useState([]);
   const {openModal} = useModal();
+
+  useEffect(() => {
+    models.DataSource.getByIdAndDsType('admin', 'DS_SQL')
+        .then((data) => {
+          setDataSource(data);
+        });
+  }, []);
 
   return (
     <Modal
@@ -19,7 +27,7 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
           onSubmit(selectedDataSource);
         } else {
           openModal(Alert, {
-            message: '으악'
+            message: '데이터 원본을 선택하지 않았습니다.'
           });
 
           return true;
@@ -32,16 +40,16 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
     >
       <CommonDataGrid
         width='40%'
-        dataSource={tempSelectDataSource}
+        dataSource={dataSource}
         onSelectionChanged={(e) => {
           setSelectedDataSource(e.selectedRowsData[0]);
         }}
       >
         <Selection mode='single'/>
-        <Column caption='데이터 원본 명' dataField='DS_NM'/>
-        <Column caption='DB 유형' dataField='DBMS_TYPE'/>
-        <Column caption='서버 주소(명)' dataField='IP'/>
-        <Column caption='사용자 데이터' dataField='USER_AREA_YN'/>
+        <Column caption='데이터 원본 명' dataField='dsNm'/>
+        <Column caption='DB 유형' dataField='dbmsType'/>
+        <Column caption='서버 주소(명)' dataField='ip'/>
+        <Column caption='사용자 데이터' dataField='userAreaYn'/>
       </CommonDataGrid>
       <DataSourceInfoForm
         selectedDataSource={selectedDataSource}

@@ -9,28 +9,28 @@ const DataSourceInfoForm = ({selectedDataSource, compact=false, ...props}) => {
       labelLocation='left'
       {...props}
     >
-      <Item editorType='dxTextBox' dataField='DS_NM'>
+      <Item editorType='dxTextBox' dataField='dsNm'>
         <Label>데이터 원본 명: </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='IP'>
+      <Item editorType='dxTextBox' dataField='ip'>
         <Label>서버 주소(명): </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='DB_NM'>
+      <Item editorType='dxTextBox' dataField='dbNm'>
         <Label>DB 명: </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='DBMS_TYPE'>
+      <Item editorType='dxTextBox' dataField='dbmsType'>
         <Label>DB 유형: </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='PORT' visible={!compact}>
+      <Item editorType='dxTextBox' dataField='port' visible={!compact}>
         <Label>Port: </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='OWNER_NM' visible={!compact}>
+      <Item editorType='dxTextBox' dataField='ownerNm' visible={!compact}>
         <Label>소유자: </Label>
       </Item>
-      <Item editorType='dxTextBox' dataField='USER_ID' visible={!compact}>
+      <Item editorType='dxTextBox' dataField='userId' visible={!compact}>
         <Label>접속 ID: </Label>
       </Item>
-      <Item editorType='dxTextArea' dataField='DS_DESC' visible={!compact}>
+      <Item editorType='dxTextArea' dataField='dsDesc' visible={!compact}>
         <Label>설명: </Label>
       </Item>
     </Form>
