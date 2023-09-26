@@ -67,5 +67,9 @@
   "querySearch": "QuerySearch",
   "publicReport": "Public Report",
   "privateReport": "Private Report",
-  "designer": "디자이너"
+  "designer": "디자이너",
+  "selectCube": "Select a Cube",
+  "dataSourceList": "DataSource List",
+  "cubeList": "Cube List",
+  "cubeComment": "Cube Comment"
 }
