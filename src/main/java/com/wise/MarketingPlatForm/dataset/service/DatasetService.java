@@ -6,11 +6,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.dataset.type.DBMSType;
+import com.wise.MarketingPlatForm.dataset.type.DSType;
+import com.wise.MarketingPlatForm.dataset.vo.DBColumnVO;
+import com.wise.MarketingPlatForm.dataset.vo.DBTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DSMstrDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
 public class DatasetService {
-  public List<DSMstrDTO> getDataSourceList(String userId, String dsId) {
+  public List<DSMstrDTO> getDataSources(String userId) {
     List<DSMstrDTO> temp = new ArrayList<>();
 
     temp.add(DSMstrDTO.builder()
@@ -53,5 +57,18 @@ public class DatasetService {
       .build());
 
     return temp;
+  }
+
+  public List<DBTableVO> getDBTables(String dsId, String search) {
+    return null;
+  }
+
+  public List<DBColumnVO> getDBColumns(String dsId, String table, String search) {
+    return null;
+  }
+
+  // TODO: 추후 필터 정보도 받아와야 함.
+  public List<DatasetFieldVO> getDatasetFields(String dsId, DSType dsType, String query) {
+    return null;
   }
 }

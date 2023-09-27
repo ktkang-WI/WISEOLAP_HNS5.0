@@ -1,14 +1,15 @@
 import {TreeView} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 import Wrapper from '../../Common/Wrap/Wrapper';
-import tempData from './DataSourceFoldableListTempData';
-import cubeMeaGrpImg from
-  '../../../../../assets/image/icon/dataSource/cube_measure.png';
-import cubeDimGrpImg from
-  '../../../../../assets/image/icon/dataSource/cube_dimension.png';
-import meaImg from '../../../../../assets/image/icon/dataSource/measure.png';
-import dimImg from '../../../../../assets/image/icon/dataSource/dimension.png';
-import {useState} from 'react';
+// import tempData from './DataSourceFoldableListTempData';
+// import cubeMeaGrpImg from
+//   '../../../../../assets/image/icon/dataSource/cube_measure.png';
+// import cubeDimGrpImg from
+//   '../../../../../assets/image/icon/dataSource/cube_dimension.png';
+// import meaImg from '../../../../../assets/image/icon/dataSource/measure.png';
+// import dimImg
+// from '../../../../../assets/image/icon/dataSource/dimension.png';
+// import {useState} from 'react';
 import {styled} from 'styled-components';
 import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
@@ -29,58 +30,59 @@ const StyledTreeView = styled(TreeView)`
 `;
 
 // TODO: 추후 Redux 연동 예정 현재는 임시 데이터 사용
-const DataSourceFoldableList = () => {
+const DataSourceFoldableList = ({dataset}) => {
   const ref = useRef();
 
-  const getTreeViewData = (data) => {
-    // 주제영역일 경우
-    const cubeMeasure = data.measures.reduce((acc, meaGrp) => {
-      const measureGrp = {
-        ...meaGrp,
-        type: 'meaGrp',
-        name: meaGrp.logicalName,
-        icon: cubeMeaGrpImg
-      };
+  // const getTreeViewData = (data) => {
+  //   // 주제영역일 경우 해당 부분 보수 필요
+  //   const cubeMeasure = data.measures.reduce((acc, meaGrp) => {
+  //     const measureGrp = {
+  //       ...meaGrp,
+  //       type: 'meaGrp',
+  //       name: meaGrp.logicalName,
+  //       icon: cubeMeaGrpImg
+  //     };
 
-      const measures = meaGrp.columns.map((col) => {
-        return {
-          ...col,
-          type: 'mea',
-          name: col.captionName,
-          icon: meaImg
-        };
-      });
+  //     const measures = meaGrp.columns.map((col) => {
+  //       return {
+  //         ...col,
+  //         type: 'mea',
+  //         name: col.captionName,
+  //         icon: meaImg
+  //       };
+  //     });
 
-      acc.push(measureGrp, ...measures);
-      return acc;
-    }, []);
+  //     acc.push(measureGrp, ...measures);
+  //     return acc;
+  //   }, []);
 
-    const cubeDimension = data.dimensions.reduce((acc, dimGrp) => {
-      const dimensionGrp = {
-        ...dimGrp,
-        type: 'dimGrp',
-        name: dimGrp.logicalName,
-        icon: cubeDimGrpImg
-      };
+  //   const cubeDimension = data.dimensions.reduce((acc, dimGrp) => {
+  //     const dimensionGrp = {
+  //       ...dimGrp,
+  //       type: 'dimGrp',
+  //       name: dimGrp.logicalName,
+  //       icon: cubeDimGrpImg
+  //     };
 
-      const dimensions = dimGrp.columns.map((col) => {
-        return {
-          ...col,
-          type: 'dim',
-          name: col.captionName,
-          icon: dimImg
-        };
-      });
+  //     const dimensions = dimGrp.columns.map((col) => {
+  //       return {
+  //         ...col,
+  //         type: 'dim',
+  //         name: col.captionName,
+  //         icon: dimImg
+  //       };
+  //     });
 
-      acc.push(dimensionGrp, ...dimensions);
-      return acc;
-    }, []);
+  //     acc.push(dimensionGrp, ...dimensions);
+  //     return acc;
+  //   }, []);
 
-    return cubeMeasure.concat(cubeDimension);
-  };
+  //   return cubeMeasure.concat(cubeDimension);
+  // };
 
   const getRenderItem = (items) => {
     const getDraggableItem = (provided, snapshot, rubric) => {
+      if (rubric.draggableId == 0) return;
       const item = items.find(
           (data) => data.uniqueName == rubric.draggableId
       ) || {};
@@ -101,7 +103,6 @@ const DataSourceFoldableList = () => {
     return getDraggableItem;
   };
 
-  const [data] = useState(getTreeViewData(tempData));
 
   const itemRender = (item, index, snapshot) => {
     const shouldRenderClone = item.uniqueName === snapshot.draggingFromThisWith;
@@ -134,6 +135,8 @@ const DataSourceFoldableList = () => {
     );
   };
 
+  const data = dataset? _.cloneDeep(dataset.fields) : [];
+
   return (
     <Wrapper>
       <Droppable
@@ -152,7 +155,7 @@ const DataSourceFoldableList = () => {
               items={data}
               dataStructure="plain"
               displayExpr="name"
-              parentIdExpr="tableName"
+              parentIdExpr="parentId"
               keyExpr="uniqueName"
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}

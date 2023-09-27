@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.vo.DBColumnVO;
+import com.wise.MarketingPlatForm.dataset.vo.DBTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DSMstrDTO;
 
 @RestController
@@ -22,12 +24,27 @@ public class DatasetController {
     datasetService = service;
   }
 
-  @PostMapping(value = "/dataSourceList")
-  public List<DSMstrDTO> getDataSourceList(@RequestBody Map<String, String> param)
-  {
-    String userId = param.get("userId");
-    String dsType = param.get("dsType");
+  @PostMapping(value = "/dataSources")
+  public List<DSMstrDTO> getDataSources(@RequestBody Map<String, String> param) {
+    String userId = param.getOrDefault("userId", "");
     
-    return datasetService.getDataSourceList(userId, dsType);
+    return datasetService.getDataSources(userId);
+  }
+
+  @PostMapping(value = "/dbTables")
+  public List<DBTableVO> getDBTables(@RequestBody Map<String, String> param) {
+    String dsId = param.getOrDefault("dsId", "");
+    String search = param.getOrDefault("search", "");
+
+    return datasetService.getDBTables(dsId, search);
+  }
+
+  @PostMapping(value = "/dbColumns")
+  public List<DBColumnVO> getDBColumns(@RequestBody Map<String, String> param) {
+    String dsId = param.getOrDefault("dsId", "");
+    String table = param.getOrDefault("table", "");
+    String search = param.getOrDefault("search", "");
+
+    return datasetService.getDBColumns(dsId, table, search);
   }
 }

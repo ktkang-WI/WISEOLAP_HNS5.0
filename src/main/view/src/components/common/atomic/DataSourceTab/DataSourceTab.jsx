@@ -4,6 +4,10 @@ import {Lookup} from 'devextreme-react';
 import localizedString from '../../../../config/localization';
 import PanelTitle from '../Common/Panel/PanelTitle';
 import DataSourceFoldableList from './molecules/DataSourceFoldableList';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportDatasets} from 'redux/selector/ReportSelector';
+import {useEffect, useRef, useState} from 'react';
+import _ from 'lodash';
 
 const theme = getTheme();
 
@@ -17,14 +21,39 @@ const Wrapper = styled.div`
 `;
 
 const DataSourceTab = () => {
+  const datasets = useSelector(selectCurrentReportDatasets);
+  const [selectedDataset, setSelectedDataset] = useState({});
+  const lookup = useRef();
+
+  useEffect(() => {
+    if (datasets.length == 1) {
+      console.log(lookup.current);
+    }
+  }, datasets);
   return (
     <Wrapper>
       <PanelTitle
         panelTitle={localizedString.dataSource}
         buttons={['CustomField', 'DataSourceModify', 'DataSourceRemove']}
       />
-      <Lookup></Lookup>
-      <DataSourceFoldableList></DataSourceFoldableList>
+      <Lookup
+        dropDownOptions={{
+          showCloseButton: false,
+          showTitle: false
+        }}
+        ref={lookup}
+        defaultValue={datasets.length > 0 ? _.defaultsDeep(datasets[0]) : {}}
+        dataSource={datasets}
+        displayExpr='datasetNm'
+        searchEnabled={false}
+        onValueChanged={(e) => {
+          console.log(e.value);
+          setSelectedDataset(e.value);
+        }}
+      />
+      {!_.isEmpty(selectedDataset) &&
+        <DataSourceFoldableList dataset={selectedDataset}/>
+      }
     </Wrapper>
   );
 };

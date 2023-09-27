@@ -6,6 +6,7 @@ const StyledWrapper = styled(Wrapper)`
   height: ${(props) => props.height || '100%'};
   width: ${(props) => props.width || '100%'};
   padding:${(props) => props.padding || '0'}px;
+  box-sizing: border-box;
 `;
 
 const InnerContent = styled(Wrapper)`
