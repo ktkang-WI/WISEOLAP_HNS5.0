@@ -9,14 +9,20 @@ const StyledWrapper = styled(Wrapper)`
   box-sizing: border-box;
 `;
 
+const Content = styled.div`
+  height: calc(100% - 30px);
+  padding-top: 10px;
+  box-sizing: border-box;
+`;
+
 
 const ModalPanel = (props) => {
   return (
     <StyledWrapper {...props}>
       <ModalPanelTitle>{props.title}</ModalPanelTitle>
-      <Wrapper>
+      <Content>
         {props.children}
-      </Wrapper>
+      </Content>
     </StyledWrapper>
   );
 };

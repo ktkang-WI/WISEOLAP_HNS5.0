@@ -26,10 +26,12 @@ const DataSourceTab = () => {
   const lookup = useRef();
 
   useEffect(() => {
-    if (datasets.length == 1) {
-      console.log(lookup.current);
+    if (datasets && datasets.length > 0) {
+      setSelectedDataset(datasets[datasets.length - 1]);
+      lookup.current.instance.option('value', datasets[datasets.length - 1]);
     }
-  }, datasets);
+  }, [datasets]);
+
   return (
     <Wrapper>
       <PanelTitle
@@ -39,10 +41,13 @@ const DataSourceTab = () => {
       <Lookup
         dropDownOptions={{
           showCloseButton: false,
-          showTitle: false
+          showTitle: false,
+          hideOnOutsideClick: true
         }}
+        placeholder='데이터 집합 선택'
+        showCancelButton={false}
         ref={lookup}
-        defaultValue={datasets.length > 0 ? _.defaultsDeep(datasets[0]) : {}}
+        defaultValue={selectedDataset}
         dataSource={datasets}
         displayExpr='datasetNm'
         searchEnabled={false}
