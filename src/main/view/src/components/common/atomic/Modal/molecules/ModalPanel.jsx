@@ -11,6 +11,7 @@ const StyledWrapper = styled(Wrapper)`
 
 const Content = styled.div`
   height: calc(100% - 30px);
+  width: 100%;
   padding-top: 10px;
   box-sizing: border-box;
 `;
