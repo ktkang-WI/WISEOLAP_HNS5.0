@@ -7,6 +7,7 @@ import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import _ from 'lodash';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
 import models from 'models';
+import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 
 const SelectDataSourceModal = ({onSubmit, ...props}) => {
   const [selectedDataSource, setSelectedDataSource] = useState({});
@@ -38,24 +39,28 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
       modalTitle='데이터 원본 선택'
       {...props}
     >
-      <CommonDataGrid
-        width='40%'
-        dataSource={dataSource}
-        onSelectionChanged={(e) => {
-          setSelectedDataSource(e.selectedRowsData[0]);
-        }}
-      >
-        <Selection mode='single'/>
-        <Column caption='데이터 원본 명' dataField='dsNm'/>
-        <Column caption='DB 유형' dataField='dbmsType'/>
-        <Column caption='서버 주소(명)' dataField='ip'/>
-        <Column caption='사용자 데이터' dataField='userAreaYn'/>
-      </CommonDataGrid>
-      <DataSourceInfoForm
-        selectedDataSource={selectedDataSource}
-        height='100%'
-        width='40%'
-      />
+      <ModalPanel title='데이터 원본 선택' width='50%' padding='10px'>
+        <CommonDataGrid
+          width='100%'
+          dataSource={dataSource}
+          onSelectionChanged={(e) => {
+            setSelectedDataSource(e.selectedRowsData[0]);
+          }}
+        >
+          <Selection mode='single'/>
+          <Column caption='데이터 원본 명' dataField='dsNm'/>
+          <Column caption='DB 유형' dataField='dbmsType'/>
+          <Column caption='서버 주소(명)' dataField='ip'/>
+          <Column caption='사용자 데이터' dataField='userAreaYn'/>
+        </CommonDataGrid>
+      </ModalPanel>
+      <ModalPanel title='데이터 원본 정보' width='50%'>
+        <DataSourceInfoForm
+          selectedDataSource={selectedDataSource}
+          height='100%'
+          width='100%'
+        />
+      </ModalPanel>
     </Modal>
   );
 };

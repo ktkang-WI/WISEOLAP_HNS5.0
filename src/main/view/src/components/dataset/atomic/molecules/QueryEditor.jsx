@@ -2,7 +2,7 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/ext-inline_autocomplete';
 
-const QueryEditor = () => {
+const QueryEditor = ({editorRef, ...props}) => {
   return (
     <AceEditor
       placeholder=""
@@ -15,6 +15,7 @@ const QueryEditor = () => {
       showPrintMargin={true}
       showGutter={true}
       highlightActiveLine={true}
+      ref={editorRef}
       value={``}
       setOptions={{
         enableBasicAutocompletion: false,
@@ -22,7 +23,9 @@ const QueryEditor = () => {
         enableSnippets: false,
         showLineNumbers: true,
         tabSize: 2
-      }}/>
+      }}
+      {...props}
+    />
   );
 };
 
