@@ -8,7 +8,7 @@ const ModalPanelTitle = styled.span`
   height: 19px;
   display: block;
   padding-bottom: 5px;
-  font: ${theme.font.modalFirstTitle};
+  font: ${theme.font.modalTilte};
   color: ${theme.color.primary};
   border-bottom: solid 1px ${theme.color.breakLine};
 `;

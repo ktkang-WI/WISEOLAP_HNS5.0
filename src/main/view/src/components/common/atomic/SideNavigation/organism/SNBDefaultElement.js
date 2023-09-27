@@ -13,7 +13,7 @@ import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
 import useModal from 'hooks/useModal';
-import SelectCubeModal from '../../Modal/organisms/SelectCubeModal';
+import SelectCubeModal from '../../../../dataset/modal/SelectCubeModal';
 
 const SNBDefaultElement = () => {
   const nav = useNavigate();

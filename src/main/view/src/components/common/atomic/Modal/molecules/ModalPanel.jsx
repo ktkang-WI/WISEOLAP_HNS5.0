@@ -8,14 +8,19 @@ const StyledWrapper = styled(Wrapper)`
   padding:${(props) => props.padding || '0'}px;
 `;
 
+const InnerContent = styled(Wrapper)`
+  height: calc(100% - 50px);
+  width: calc(100% - 16px);
+  padding: 8px;
+`;
 
-const ModalPanel = (props) => {
+const ModalPanel = ({title, children, ...props}) => {
   return (
     <StyledWrapper {...props}>
-      <ModalPanelTitle>{props.title}</ModalPanelTitle>
-      <Wrapper>
-        {props.children}
-      </Wrapper>
+      <ModalPanelTitle>{title}</ModalPanelTitle>
+      <InnerContent>
+        {children}
+      </InnerContent>
     </StyledWrapper>
   );
 };
