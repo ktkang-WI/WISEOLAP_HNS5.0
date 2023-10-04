@@ -64,6 +64,11 @@
 			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>
+    <dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
 
 		<!-- DB Logback -->
 		<dependency>
