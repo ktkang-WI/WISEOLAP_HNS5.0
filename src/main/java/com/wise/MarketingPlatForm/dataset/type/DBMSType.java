@@ -7,7 +7,8 @@ import java.util.stream.Stream;
 
 public enum DBMSType {
   ORACLE("ORACLE"), MS_SQL("MS-SQL"), TIBERO("TIBERO"), MARIA("MARIA"),
-  MY_SQL("MY-SQL");
+  MY_SQL("MYSQL"), VERTICA("VERTICA"), CUBRID("CUBRID"), DB2("DB2BLU"),
+  IMPALA("IMPALA"), POSTGRES("POSTGRES"), SAPIQ("SAPIQ");
 
   private final String symbol;
 

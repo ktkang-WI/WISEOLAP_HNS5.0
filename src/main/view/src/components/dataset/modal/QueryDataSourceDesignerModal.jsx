@@ -15,6 +15,7 @@ import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import DatasetName from '../atomic/molecules/DatasetName';
+import CustomStore from 'devextreme/data/custom_store';
 
 const theme = getTheme();
 
@@ -42,6 +43,13 @@ const QueryDataSourceDesignerModal = ({
   const {insertDataset} = ReportSlice.actions;
   const queryEditorRef = useRef();
   const [dataset, setDataset] = useState(orgDataset);
+
+  const store = new CustomStore({
+    key: 'id',
+    load: (loadOptions) => {
+      console.log(loadOptions);
+    }
+  });
 
   useEffect(() => {
     if (!_.isEmpty(dataset)) {
@@ -81,14 +89,11 @@ const QueryDataSourceDesignerModal = ({
           name: '데이터집합', type: 'FLD', uniqueName: '0', icon: folderImg
         });
 
-        // state에 insert
-        setDataset({
+        dispatch(insertDataset({
           ...dataset,
           datasetQuery: queryEditorRef.current.editor.getValue(),
           fields: tempFields
-        });
-
-        dispatch(insertDataset(dataset));
+        }));
         // return true;
       }}
       width='70%'
@@ -113,7 +118,22 @@ const QueryDataSourceDesignerModal = ({
             height='100%'
             width='300px'
             padding='10'>
-            <TreeView></TreeView>
+            <TreeView
+              dataSource={store}
+              remoteOperations={true}
+              searchPanel={{
+                visible: true,
+                searchVisibleColumnsOnly: true,
+                highlightSearchText: true,
+                width: '100%'
+              }}
+              expandNodesOnFiltering={false}
+              filterMode='matchOnly'
+              keyExpr='id'
+              parentIdExpr='parent'
+              hasItemsExpr='hasItems'
+            >
+            </TreeView>
           </ModalPanel>
         </ColumnWrapper>
         <ColumnWrapper>

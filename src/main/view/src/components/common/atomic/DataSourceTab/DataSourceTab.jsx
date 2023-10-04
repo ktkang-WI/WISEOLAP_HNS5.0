@@ -52,7 +52,6 @@ const DataSourceTab = () => {
         displayExpr='datasetNm'
         searchEnabled={false}
         onValueChanged={(e) => {
-          console.log(e.value);
           setSelectedDataset(e.value);
         }}
       />
