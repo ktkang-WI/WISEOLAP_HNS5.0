@@ -10,3 +10,12 @@ export const getByIdAndDsType = async (userId, dsType) => {
 
   return res.data;
 };
+
+export const getCubesByDsId = async () => {
+  const res = await axios.post(path + '/cubes', {
+    userId: userId,
+    dsType: dsType
+  });
+
+  return res.data;
+};

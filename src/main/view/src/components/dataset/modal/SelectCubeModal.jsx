@@ -9,8 +9,8 @@ import PageWrapper from '../../common/atomic/Modal/atoms/PageWrapper';
 import CommonTextArea from '../../common/atomic/Common/CommonTextArea';
 import {Column} from 'devextreme-react/data-grid';
 import useModal from 'hooks/useModal';
-import {useEffect, useState} from 'react';
-import models from 'models';
+import {useState} from 'react';
+
 
 const theme = getTheme();
 
@@ -30,16 +30,7 @@ const StyledWrapper = styled(Wrapper)`
 
 const SelectCubeModal = ({onSubmit, ...props}) => {
   const [selectedDataSource, setSelectedDataSource] = useState({});
-  const [dataSource, setDataSource] = useState([]);
   const {openModal} = useModal();
-
-  useEffect(() => {
-    // DS_SQL -> CUBE로
-    models.DataSource.getByIdAndDsType('admin', 'DS_SQL')
-        .then((data) => {
-          setDataSource(data);
-        });
-  }, []);
 
   return (
     <Modal
@@ -67,7 +58,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
               title={localizedString.dataSourceList}
             >
               <CommonDataGrid
-                dataSource={dataSource}
+                dataSource={{}}
                 onSelectionChanged={(e) => {
                   setSelectedDataSource(e.selectedRowsData[0]);
                 }}
@@ -80,7 +71,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
           </StyledWrapper>
           <StyledWrapper width='50%' padding={padding}>
             <ModalPanel height={'60%'} title={localizedString.cubeList}>
-              <CommonDataGrid dataSource={dataSource}>
+              <CommonDataGrid dataSource={{}}>
                 <Column dataField='State' caption='State'/>
                 <Column dataField='State' caption='State'/>
               </CommonDataGrid>
