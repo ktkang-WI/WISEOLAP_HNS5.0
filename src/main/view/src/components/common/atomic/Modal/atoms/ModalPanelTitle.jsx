@@ -5,7 +5,7 @@ const theme = getTheme();
 
 const ModalPanelTitle = styled.span`
   width: 100%;
-  height: 19px;
+  height: 20px;
   display: block;
   padding-bottom: 5px;
   font: ${theme.font.modalTilte};

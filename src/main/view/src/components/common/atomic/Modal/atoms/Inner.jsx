@@ -3,7 +3,7 @@ import {styled, css} from 'styled-components';
 const Inner = styled.div`
   width: 100%;
   height: calc(100% - 110px);
-  padding: 20px;
+  padding: 15px;
   box-sizing: border-box;
 
   ${(props) => props.usePage && css`

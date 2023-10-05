@@ -9,14 +9,60 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import {Column} from 'devextreme-react/data-grid';
 import ReportSlice from 'redux/modules/ReportSlice';
 import {useDispatch} from 'react-redux';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import _ from 'lodash';
+import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
+import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
+import DatasetName from '../atomic/molecules/DatasetName';
+import CustomStore from 'devextreme/data/custom_store';
+
+const theme = getTheme();
+
+const ColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & + & {
+    border-left: 1px solid ${theme.color.breakLine};
+  }
+`;
+const RowWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+`;
 
 const QueryDataSourceDesignerModal = ({
-  onSubmit, selectedDataSource, query='', ...props
+  onSubmit, selectedDataSource, orgDataset={}, query='', ...props
 }) => {
+  // const isNew = _.isEmpty(dataset);
   const dispatch = useDispatch();
   const {insertDataset} = ReportSlice.actions;
   const queryEditorRef = useRef();
+  const [dataset, setDataset] = useState(orgDataset);
+
+  const store = new CustomStore({
+    key: 'id',
+    load: (loadOptions) => {
+      console.log(loadOptions);
+    }
+  });
+
+  useEffect(() => {
+    if (!_.isEmpty(dataset)) {
+      // TODO: 기존 데이터 집합 수정하는 경우!!
+    } else {
+      setDataset({
+        datasetNm: '데이터집합',
+        datsetType: 'DS_SQL',
+        datasrcId: selectedDataSource.dsId
+      });
+    }
+  }, []);
+
   return (
     <Modal
       onSubmit={() => {
@@ -43,16 +89,11 @@ const QueryDataSourceDesignerModal = ({
           name: '데이터집합', type: 'FLD', uniqueName: '0', icon: folderImg
         });
 
-        // state에 insert
-        const dataset = {
-          datasetNm: '데이터집합',
+        dispatch(insertDataset({
+          ...dataset,
           datasetQuery: queryEditorRef.current.editor.getValue(),
-          datsetType: 'DS_SQL',
-          datasrcId: 5145,
           fields: tempFields
-        };
-
-        dispatch(insertDataset(dataset));
+        }));
         // return true;
       }}
       width='70%'
@@ -60,22 +101,65 @@ const QueryDataSourceDesignerModal = ({
       modalTitle='데이터 집합 디자이너'
       {...props}
     >
-      <DataSourceInfoForm
-        compact={true}
-        selectedDataSource={selectedDataSource}
-      />
-      <QueryEditor editorRef={queryEditorRef}/>
-      <TreeView></TreeView>
-      <CommonDataGrid>
-        <Column caption='매개변수 명'/>
-        <Column caption='매개변수 Caption'/>
-        <Column caption='데이터 유형'/>
-        <Column caption='매개변수 유형'/>
-        <Column caption='Visible'/>
-        <Column caption='다중선택'/>
-        <Column caption='순서'/>
-        <Column caption='조건 명'/>
-      </CommonDataGrid>
+      <RowWrapper>
+        <ColumnWrapper>
+          <ModalPanel
+            title='데이터 원본 정보'
+            width='300px'
+            height='250px'
+            padding='10'>
+            <DataSourceInfoForm
+              compact={true}
+              selectedDataSource={selectedDataSource}
+            />
+          </ModalPanel>
+          <ModalPanel
+            title='데이터 항목'
+            height='100%'
+            width='300px'
+            padding='10'>
+            <TreeView
+              dataSource={store}
+              remoteOperations={true}
+              searchPanel={{
+                visible: true,
+                searchVisibleColumnsOnly: true,
+                highlightSearchText: true,
+                width: '100%'
+              }}
+              expandNodesOnFiltering={false}
+              filterMode='matchOnly'
+              keyExpr='id'
+              parentIdExpr='parent'
+              hasItemsExpr='hasItems'
+            >
+            </TreeView>
+          </ModalPanel>
+        </ColumnWrapper>
+        <ColumnWrapper>
+          <DatasetName
+            name={dataset.datasetNm || ''}
+            onChangedValue={(datasetNm) => {
+              setDataset({...dataset, datasetNm});
+            }}
+          />
+          <ModalPanel title='쿼리' height='100%' padding='10'>
+            <QueryEditor editorRef={queryEditorRef}/>
+          </ModalPanel>
+          <ModalPanel title='매개변수' height='300px' padding='10'>
+            <CommonDataGrid>
+              <Column caption='매개변수 명'/>
+              <Column caption='매개변수 Caption'/>
+              <Column caption='데이터 유형'/>
+              <Column caption='매개변수 유형'/>
+              <Column caption='Visible'/>
+              <Column caption='다중선택'/>
+              <Column caption='순서'/>
+              <Column caption='조건 명'/>
+            </CommonDataGrid>
+          </ModalPanel>
+        </ColumnWrapper>
+      </RowWrapper>
     </Modal>
   );
 };

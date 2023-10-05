@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
+import com.wise.MarketingPlatForm.dataset.entity.DSMstrEntity;
 import com.wise.MarketingPlatForm.dataset.type.DBMSType;
 import com.wise.MarketingPlatForm.dataset.type.DSType;
 import com.wise.MarketingPlatForm.dataset.vo.DBColumnVO;
@@ -14,49 +16,38 @@ import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
 public class DatasetService {
+
+  DatasetDAO datasetDAO;
+
+  DatasetService(DatasetDAO datasetDAO) {
+    this.datasetDAO = datasetDAO;
+  }
+
   public List<DSMstrDTO> getDataSources(String userId) {
-    List<DSMstrDTO> temp = new ArrayList<>();
+    List<DSMstrEntity> entities = datasetDAO.selectUserAuthDsList(userId);
 
-    temp.add(DSMstrDTO.builder()
-      .dsId(5142)
-      .dsNm("테스트")
-      .ip("123.456.789.10")
-      .port("라면포트")
-      .dbNm("가나다라1")
-      .ownerNm("wise")
-      .userId("홍길동")
-      .userAreaYn("Y")
-      .dsDesc("설명")
-      .dbmsType(DBMSType.MARIA)
+    if (entities.isEmpty()) {
+      entities = datasetDAO.selectGrpAuthDsList(userId);
+    }
+
+    List<DSMstrDTO> result = new ArrayList<>();
+
+    for (DSMstrEntity entity : entities) {
+      result.add(DSMstrDTO.builder()
+      .dsId(entity.getDsId())
+      .dsNm(entity.getDsNm())
+      .ip(entity.getIp())
+      .port(entity.getPort())
+      .dbNm(entity.getDbNm())
+      .ownerNm(entity.getOwnerNm())
+      .userId(entity.getUserId())
+      .userAreaYn(entity.getUserAreaYn())
+      .dsDesc(entity.getDsDesc())
+      .dbmsType(DBMSType.fromString(entity.getDbmsType()).get())
       .build());
+    }
 
-    temp.add(DSMstrDTO.builder()
-      .dsId(5142)
-      .dsNm("테스트2")
-      .ip("123.456.29.10")
-      .port("74684")
-      .dbNm("가나다라2")
-      .ownerNm("wise")
-      .userId("김철수")
-      .userAreaYn("Y")
-      .dsDesc("설명")
-      .dbmsType(DBMSType.ORACLE)
-      .build());
-
-    temp.add(DSMstrDTO.builder()
-      .dsId(5142)
-      .dsNm("테스트3")
-      .ip("123.456.789.120")
-      .port("7887")
-      .dbNm("가나다라")
-      .ownerNm("wise")
-      .userId("김영희")
-      .userAreaYn("Y")
-      .dsDesc("설명4342")
-      .dbmsType(DBMSType.MS_SQL)
-      .build());
-
-    return temp;
+    return result;
   }
 
   public List<DBTableVO> getDBTables(String dsId, String search) {
