@@ -93,7 +93,13 @@
   "dataSourceNotSelectedMsg": "No data source selected.",
   "selectDataSource": "Select Data Source",
   "dataSourceName": "Data Source Name",
+  "dbName": "DB Name",
   "dbType": "DB Type",
   "dbAddress": "DB Address",
-  "userData": "User Data"
+  "userData": "User Data",
+  "datasetName": "Dataset Name",
+  "editDatasetName": "Edit Dataset Name",
+  "owner": "Owner",
+  "dbId": "DB User ID",
+  "description": "Description"
 }

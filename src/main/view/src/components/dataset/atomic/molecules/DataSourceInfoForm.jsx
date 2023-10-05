@@ -1,4 +1,5 @@
 import Form, {Item, Label} from 'devextreme-react/form';
+import localizedString from 'config/localization';
 
 const DataSourceInfoForm = ({selectedDataSource, compact=false, ...props}) => {
   return (
@@ -10,28 +11,28 @@ const DataSourceInfoForm = ({selectedDataSource, compact=false, ...props}) => {
       {...props}
     >
       <Item editorType='dxTextBox' dataField='dsNm'>
-        <Label>데이터 원본 명: </Label>
+        <Label>{localizedString.dataSourceName}: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='ip'>
-        <Label>서버 주소(명): </Label>
+        <Label>{localizedString.dbAddress}: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='dbNm'>
-        <Label>DB 명: </Label>
+        <Label>{localizedString.dbName}: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='dbmsType'>
-        <Label>DB 유형: </Label>
+        <Label>{localizedString.dbType}: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='port' visible={!compact}>
         <Label>Port: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='ownerNm' visible={!compact}>
-        <Label>소유자: </Label>
+        <Label>{localizedString.owner}: </Label>
       </Item>
       <Item editorType='dxTextBox' dataField='userId' visible={!compact}>
-        <Label>접속 ID: </Label>
+        <Label>{localizedString.dbId}: </Label>
       </Item>
       <Item editorType='dxTextArea' dataField='dsDesc' visible={!compact}>
-        <Label>설명: </Label>
+        <Label>{localizedString.description}: </Label>
       </Item>
     </Form>
   );

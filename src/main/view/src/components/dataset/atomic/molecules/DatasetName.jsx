@@ -6,6 +6,7 @@ import editImage from 'assets/image/icon/button/modify.png';
 import useModal from 'hooks/useModal';
 import SimpleInputModal
   from 'components/common/atomic/Modal/organisms/SimpleInputModal';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
@@ -16,7 +17,10 @@ const StyledWrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const DatasetName = ({onChangedValue, name='데이터 집합'}) => {
+const DatasetName = ({
+  onChangedValue,
+  name=localizedString.defaultDatasetName
+}) => {
   const {openModal} = useModal();
   return (
     <StyledWrapper>
@@ -24,8 +28,8 @@ const DatasetName = ({onChangedValue, name='데이터 집합'}) => {
       <SmallImageButton
         onClick={() => {
           openModal(SimpleInputModal, {
-            modalTitle: '데이터 집합 명 수정',
-            label: '데이터 집합 명',
+            modalTitle: localizedString.editDatasetName,
+            label: localizedString.datasetName,
             defaultValue: name,
             onSubmit: (title) => {
               onChangedValue(title);

@@ -93,7 +93,13 @@
   "dataSourceNotSelectedMsg": "데이터 원본을 선택하지 않았습니다.",
   "selectDataSource": "데이터 원본 선택",
   "dataSourceName": "데이터 원본 명",
+  "dbName": "DB 명",
   "dbType": "DB 유형",
   "dbAddress": "서버 주소(명)",
-  "userData": "사용자 데이터"
+  "userData": "사용자 데이터",
+  "datasetName": "데이터 집합 명",
+  "editDatasetName": "데이터 집합 명 수정",
+  "owner": "소유자",
+  "dbId": "접속 ID",
+  "description": "설명"
 }
