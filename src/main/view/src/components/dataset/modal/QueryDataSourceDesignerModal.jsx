@@ -16,6 +16,7 @@ import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import DatasetName from '../atomic/molecules/DatasetName';
 import CustomStore from 'devextreme/data/custom_store';
+import localizedString from '../../../config/localization';
 
 const theme = getTheme();
 
@@ -56,7 +57,7 @@ const QueryDataSourceDesignerModal = ({
       // TODO: 기존 데이터 집합 수정하는 경우!!
     } else {
       setDataset({
-        datasetNm: '데이터집합',
+        datasetNm: localizedString.defaultDatasetName,
         datsetType: 'DS_SQL',
         datasrcId: selectedDataSource.dsId
       });
@@ -86,7 +87,10 @@ const QueryDataSourceDesignerModal = ({
         });
 
         tempFields.unshift({
-          name: '데이터집합', type: 'FLD', uniqueName: '0', icon: folderImg
+          name: localizedString.defaultDatasetName,
+          type: 'FLD',
+          uniqueName: '0',
+          icon: folderImg
         });
 
         dispatch(insertDataset({
@@ -98,13 +102,13 @@ const QueryDataSourceDesignerModal = ({
       }}
       width='70%'
       height='90%'
-      modalTitle='데이터 집합 디자이너'
+      modalTitle={localizedString.datasetDesigner}
       {...props}
     >
       <RowWrapper>
         <ColumnWrapper>
           <ModalPanel
-            title='데이터 원본 정보'
+            title={localizedString.dataSourceInfo}
             width='300px'
             height='250px'
             padding='10'>
@@ -114,7 +118,7 @@ const QueryDataSourceDesignerModal = ({
             />
           </ModalPanel>
           <ModalPanel
-            title='데이터 항목'
+            title={localizedString.dataItem}
             height='100%'
             width='300px'
             padding='10'>
@@ -143,19 +147,22 @@ const QueryDataSourceDesignerModal = ({
               setDataset({...dataset, datasetNm});
             }}
           />
-          <ModalPanel title='쿼리' height='100%' padding='10'>
+          <ModalPanel title={localizedString.query} height='100%' padding='10'>
             <QueryEditor editorRef={queryEditorRef}/>
           </ModalPanel>
-          <ModalPanel title='매개변수' height='300px' padding='10'>
+          <ModalPanel
+            title={localizedString.parameter}
+            height='300px'
+            padding='10'>
             <CommonDataGrid>
-              <Column caption='매개변수 명'/>
-              <Column caption='매개변수 Caption'/>
-              <Column caption='데이터 유형'/>
-              <Column caption='매개변수 유형'/>
+              <Column caption={localizedString.parameterName}/>
+              <Column caption={localizedString.parameterCaption}/>
+              <Column caption={localizedString.dataType}/>
+              <Column caption={localizedString.parameterType}/>
               <Column caption='Visible'/>
-              <Column caption='다중선택'/>
-              <Column caption='순서'/>
-              <Column caption='조건 명'/>
+              <Column caption={localizedString.multiSelect}/>
+              <Column caption={localizedString.order}/>
+              <Column caption={localizedString.conditionName}/>
             </CommonDataGrid>
           </ModalPanel>
         </ColumnWrapper>

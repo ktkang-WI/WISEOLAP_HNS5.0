@@ -20,9 +20,9 @@ const Content = styled.div`
 const ModalPanel = ({title, children, ...props}) => {
   return (
     <StyledWrapper {...props}>
-      <ModalPanelTitle>{props.title}</ModalPanelTitle>
+      <ModalPanelTitle>{title}</ModalPanelTitle>
       <Content>
-        {props.children}
+        {children}
       </Content>
     </StyledWrapper>
   );

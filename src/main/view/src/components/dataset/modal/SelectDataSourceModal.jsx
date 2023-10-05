@@ -10,6 +10,7 @@ import models from 'models';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import localizedString from '../../../config/localization';
 
 const StyledWrapper = styled(Wrapper)`
   display: flex;
@@ -34,7 +35,7 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
           onSubmit(selectedDataSource);
         } else {
           openModal(Alert, {
-            message: '데이터 원본을 선택하지 않았습니다.'
+            message: localizedString.dataSourceNotSelectedMsg
           });
 
           return true;
@@ -42,11 +43,14 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
       }}
       width='70%'
       height='90%'
-      modalTitle='데이터 원본 선택'
+      modalTitle={localizedString.selectDataSource}
       {...props}
     >
       <StyledWrapper>
-        <ModalPanel title='데이터 원본 선택' width='50%' padding='10'>
+        <ModalPanel
+          title={localizedString.selectDataSource}
+          width='50%'
+          padding='10'>
           <CommonDataGrid
             width='100%'
             dataSource={dataSource}
@@ -55,13 +59,16 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
             }}
           >
             <Selection mode='single'/>
-            <Column caption='데이터 원본 명' dataField='dsNm'/>
-            <Column caption='DB 유형' dataField='dbmsType'/>
-            <Column caption='서버 주소(명)' dataField='ip'/>
-            <Column caption='사용자 데이터' dataField='userAreaYn'/>
+            <Column caption={localizedString.dataSourceName} dataField='dsNm'/>
+            <Column caption={localizedString.dbType} dataField='dbmsType'/>
+            <Column caption={localizedString.dbAddress} dataField='ip'/>
+            <Column caption={localizedString.userData} dataField='userAreaYn'/>
           </CommonDataGrid>
         </ModalPanel>
-        <ModalPanel title='데이터 원본 정보' width='50%' padding='10'>
+        <ModalPanel
+          title={localizedString.dataSourceInfo}
+          width='50%'
+          padding='10'>
           <DataSourceInfoForm
             selectedDataSource={selectedDataSource}
             height='100%'
