@@ -1,0 +1,21 @@
+import axios from 'axios';
+
+const path = document.location.origin + '/dataset';
+
+export const getByIdAndDsType = async (userId, dsType) => {
+  const res = await axios.post(path + '/dataSources', {
+    userId: userId,
+    dsType: dsType
+  });
+
+  return res.data;
+};
+
+export const getCubesByDsId = async () => {
+  const res = await axios.post(path + '/cubes', {
+    userId: userId,
+    dsType: dsType
+  });
+
+  return res.data;
+};

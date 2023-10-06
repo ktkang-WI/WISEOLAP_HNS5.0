@@ -12,9 +12,13 @@ import preference from '../../../../../assets/image/icon/button/preference.png';
 import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
+import useModal from 'hooks/useModal';
+import SelectCubeModal from '../../../../dataset/modal/SelectCubeModal';
 
 const SNBDefaultElement = () => {
   const nav = useNavigate();
+  const {openModal} = useModal();
+
   return {
     'Dashboard': {
       id: 'dashboard',
@@ -38,7 +42,10 @@ const SNBDefaultElement = () => {
       id: 'dataset',
       imgSrc: dataset,
       hoveredImgSrc: datasetActive,
-      label: localizedString.dataset
+      label: localizedString.dataset,
+      onClick: (e) => {
+        openModal(SelectCubeModal);
+      }
     },
     'Preference': {
       id: 'preference',

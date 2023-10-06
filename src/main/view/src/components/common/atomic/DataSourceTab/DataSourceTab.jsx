@@ -4,6 +4,10 @@ import {Lookup} from 'devextreme-react';
 import localizedString from '../../../../config/localization';
 import PanelTitle from '../Common/Panel/PanelTitle';
 import DataSourceFoldableList from './molecules/DataSourceFoldableList';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportDatasets} from 'redux/selector/ReportSelector';
+import {useEffect, useRef, useState} from 'react';
+import _ from 'lodash';
 
 const theme = getTheme();
 
@@ -17,14 +21,43 @@ const Wrapper = styled.div`
 `;
 
 const DataSourceTab = () => {
+  const datasets = useSelector(selectCurrentReportDatasets);
+  const [selectedDataset, setSelectedDataset] = useState({});
+  const lookup = useRef();
+
+  useEffect(() => {
+    if (datasets && datasets.length > 0) {
+      setSelectedDataset(datasets[datasets.length - 1]);
+      lookup.current.instance.option('value', datasets[datasets.length - 1]);
+    }
+  }, [datasets]);
+
   return (
     <Wrapper>
       <PanelTitle
         panelTitle={localizedString.dataSource}
         buttons={['CustomField', 'DataSourceModify', 'DataSourceRemove']}
       />
-      <Lookup></Lookup>
-      <DataSourceFoldableList></DataSourceFoldableList>
+      <Lookup
+        dropDownOptions={{
+          showCloseButton: false,
+          showTitle: false,
+          hideOnOutsideClick: true
+        }}
+        placeholder='데이터 집합 선택'
+        showCancelButton={false}
+        ref={lookup}
+        defaultValue={selectedDataset}
+        dataSource={datasets}
+        displayExpr='datasetNm'
+        searchEnabled={false}
+        onValueChanged={(e) => {
+          setSelectedDataset(e.value);
+        }}
+      />
+      {!_.isEmpty(selectedDataset) &&
+        <DataSourceFoldableList dataset={selectedDataset}/>
+      }
     </Wrapper>
   );
 };

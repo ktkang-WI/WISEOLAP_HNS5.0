@@ -1,8 +1,20 @@
 import {createSlice} from '@reduxjs/toolkit';
+import localizedString from 'config/localization';
 
 const initialState = {
   selectedReportId: 0,
-  reports: []
+  reports: [{
+    reportId: 0,
+    options: {
+      reportNm: localizedString.defaultReportName,
+      reportDesc: '',
+      reportPath: '', // 해당 경로 비어있을 경우 새 보고서
+      order: 0
+    },
+    datasetQuantity: 0,
+    datasets: [],
+    items: [] // TODO: 기본값 지정 필요
+  }]
 };
 
 // TODO: 보고서 객체 생성시 아래와 유사하게 생성
@@ -18,6 +30,21 @@ const initialState = {
 // }
 
 const reducers = {
+  /* REPORT */
+  initReport(state, actions) {
+    state.reports = [{
+      reportId: 0,
+      options: {
+        reportNm: localizedString.defaultReportName,
+        reportDesc: '',
+        reportPath: '', // 해당 경로 비어있을 경우 새 보고서
+        order: 0
+      },
+      datasetQuantity: 0,
+      datasets: [],
+      items: [] // TODO: 기본값 지정 필요
+    }];
+  },
   insertReport(state, actions) {
     state.reports = state.concat(actions.payload);
   },
@@ -32,18 +59,60 @@ const reducers = {
     }
   },
   deleteReport(state, actions) {
-    state = state.reports.filter(
+    state.reports = state.reports.filter(
         (report) => report.reportId != actions.payload);
   },
-  setTestData(state, actions) {
-    state.reports = [{
-      reportId: 3532, option: {},
-      datasets: [{
-        id: 'dataSource1',
-        fields: [],
-        parameters: []
-      }]
-    }];
+  deleteAllReport(state, actions) {
+    state.reports = [];
+  },
+
+  /* DATASET */
+  insertDataset(state, actions) {
+    const index = state.reports.findIndex(
+        (report) => report.reportId == state.selectedReportId
+    );
+
+    state.reports[index].datasetQuantity++;
+
+
+    actions.payload.datasetId =
+      'dataset' + state.reports[index].datasetQuantity;
+    state.reports[index].datasets =
+      state.reports[index].datasets.concat(actions.payload);
+  },
+  updateDataset(state, actions) {
+    const selectedReport = state.reports.findIndex(
+        (report) => report.reportId == state.selectedReportId
+    );
+
+    const datasetIndex = state.reports[selectedReport].datasets.findIndex(
+        (ds) => ds.reportId == actions.payload.datasetId
+    );
+
+    if (datasetIndex > 0) {
+      state.reports[selectedReport].datasets[datasetIndex] = actions.payload;
+    } else {
+      state.reports[selectedReport].datasets =
+        state.reports[selectedReport].datasets.concat(actions.payload);
+    }
+    state.reports[index].datasets =
+      state.reports[index].datasets.concat(actions.payload);
+  },
+  deleteDataset(state, actions) {
+    const selectedReport = state.reports.findIndex(
+        (report) => report.reportId == state.selectedReportId
+    );
+
+    state.reports[selectedReport].datasets =
+    state.reports[selectedReport].datasets.filter(
+        (ds) => ds.datasetId != actions.payload
+    );
+  },
+  deleteAllDataset(state, actions) {
+    const selectedReport = state.reports.findIndex(
+        (report) => report.reportId == state.selectedReportId
+    );
+    state.reports[selectedReport].datasets = [];
   }
 };
 

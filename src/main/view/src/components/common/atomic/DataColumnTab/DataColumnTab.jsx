@@ -34,7 +34,6 @@ const tempData = {
     label: localizedString.dimension,
     icon: dimensionIcon,
     placeholder: localizedString.dimensionPlaceholder,
-    placeholder: '새 차원',
     type: 'DIM', // 타입은 DIM 또는 MEA. 조회시 MEA와 DIM 구분하기 위함.
     columns: [
       // uniqueName은 단일테이블이나 주제영역만 사용

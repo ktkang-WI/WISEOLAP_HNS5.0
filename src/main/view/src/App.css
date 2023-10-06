@@ -34,6 +34,10 @@ a {
   color: #61dafb;
 }
 
+.dx-texteditor.dx-state-readonly {
+  border-style: solid;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
