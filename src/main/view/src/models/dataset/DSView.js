@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const path = document.location.origin + '/dataset';
+import {getConfig} from 'config/config';
+
+const contextRoot =
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
+const path = document.location.origin + contextRoot + '/dataset';
 
 
 export const getByUserId = async (userId) => {
