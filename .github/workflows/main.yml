@@ -28,4 +28,4 @@ jobs:
         run: |
           cd target
           mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds2.war
-          curl -u 'wise:wise1012' -X PUT --upload-file cube-test.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds2"
+          curl -u 'wise:wise1012' -X PUT --upload-file editds2.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds2"
