@@ -33,53 +33,6 @@ const StyledTreeView = styled(TreeView)`
 const DataSourceFoldableList = ({dataset}) => {
   const ref = useRef();
 
-  // const getTreeViewData = (data) => {
-  //   // 주제영역일 경우 해당 부분 보수 필요
-  //   const cubeMeasure = data.measures.reduce((acc, meaGrp) => {
-  //     const measureGrp = {
-  //       ...meaGrp,
-  //       type: 'meaGrp',
-  //       name: meaGrp.logicalName,
-  //       icon: cubeMeaGrpImg
-  //     };
-
-  //     const measures = meaGrp.columns.map((col) => {
-  //       return {
-  //         ...col,
-  //         type: 'mea',
-  //         name: col.captionName,
-  //         icon: meaImg
-  //       };
-  //     });
-
-  //     acc.push(measureGrp, ...measures);
-  //     return acc;
-  //   }, []);
-
-  //   const cubeDimension = data.dimensions.reduce((acc, dimGrp) => {
-  //     const dimensionGrp = {
-  //       ...dimGrp,
-  //       type: 'dimGrp',
-  //       name: dimGrp.logicalName,
-  //       icon: cubeDimGrpImg
-  //     };
-
-  //     const dimensions = dimGrp.columns.map((col) => {
-  //       return {
-  //         ...col,
-  //         type: 'dim',
-  //         name: col.captionName,
-  //         icon: dimImg
-  //       };
-  //     });
-
-  //     acc.push(dimensionGrp, ...dimensions);
-  //     return acc;
-  //   }, []);
-
-  //   return cubeMeasure.concat(cubeDimension);
-  // };
-
   const getRenderItem = (items) => {
     const getDraggableItem = (provided, snapshot, rubric) => {
       if (rubric.draggableId == 0) return;
@@ -157,6 +110,7 @@ const DataSourceFoldableList = ({dataset}) => {
               displayExpr="name"
               parentIdExpr="parentId"
               keyExpr="uniqueName"
+              height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
             />
