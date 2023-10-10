@@ -27,4 +27,15 @@ public class AuthDataDTO {
 
     return false;
   }
+
+  public boolean hasAuthDim(int dsViewId, String dimUniNm) {
+    for (AuthDimVO dimVo : authDim) {
+      if (dimVo.getDsViewId() == dsViewId &&
+          dimVo.getDimUniNm().equals(dimUniNm)) {
+            return true;
+        }
+    }
+
+    return false;
+  }
 }

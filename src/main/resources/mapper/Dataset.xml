@@ -32,15 +32,6 @@
     <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
     <result column="IP" property="ip" javaType="String"/>
 	</resultMap>
-
-  <resultMap id="CubeMstr" type="com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity">
-    <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
-    <result column="CUBE_ID" property="cubeId" javaType="int"/>
-    <result column="CUBE_NM" property="cubeNm" javaType="String"/>
-    <result column="CUBE_DESC" property="cubeDesc" javaType="String"/>
-    <result column="CUBE_ORDINAL" property="ordinal" javaType="int"/>
-	</resultMap>
-	
 <!-- Mapper End -->
 
 <!-- Query -->
@@ -81,20 +72,6 @@
 		JOIN GRP_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
-	</select>
-
-  <!-- Cube -->
-	<select id="selectCubeList" resultMap="CubeMstr">
-		SELECT 	*
-		FROM 	CUBE_MSTR
-		ORDER BY CUBE_ORDINAL
-	</select>
-
-  <select id="selectCubeListByDsViewId" parameterType="String" resultMap="CubeMstr">
-		SELECT 	*
-		FROM 	CUBE_MSTR
-    WHERE DS_VIEW_ID = #{dsViewId}
-		ORDER BY CUBE_ORDINAL
 	</select>
 <!-- Query End -->
 </mapper>

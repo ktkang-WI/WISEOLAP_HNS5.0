@@ -1,6 +1,6 @@
-package com.wise.MarketingPlatForm.dataset.vo;
+package com.wise.MarketingPlatForm.dataset.domain.cube.vo;
 
-import com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
 
 import lombok.Builder;
 import lombok.Getter;

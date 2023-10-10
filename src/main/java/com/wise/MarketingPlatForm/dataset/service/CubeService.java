@@ -1,0 +1,137 @@
+package com.wise.MarketingPlatForm.dataset.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.wise.MarketingPlatForm.auth.service.AuthService;
+import com.wise.MarketingPlatForm.auth.vo.AuthDataDTO;
+import com.wise.MarketingPlatForm.dataset.dao.CubeDAO;
+import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeDimColEntity;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMeaColEntity;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeTblEntity;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+
+@Service
+public class CubeService {
+  private final CubeDAO cubeDAO;
+  private final AuthService authService;
+
+  CubeService(CubeDAO cubeDAO, AuthService authService) {
+    this.cubeDAO = cubeDAO;
+    this.authService = authService;
+  }
+
+  public List<CubeMstrDTO> getCubes(String dsViewId, String userId) {
+    List<CubeMstrEntity> entities;
+
+    if (!dsViewId.equals("")) {
+      entities = cubeDAO.selectCubeListByDsViewId(dsViewId);
+    } else {
+      entities = cubeDAO.selectCubeList();
+    }
+
+    AuthDataDTO auth = authService.getAuthData(userId);
+
+    List<CubeMstrDTO> result = new ArrayList<>();
+    
+    for (CubeMstrEntity entity : entities) {
+      if(auth.hasAuthCube(entity.getDsViewId(), entity.getCubeId())) {
+        result.add(CubeMstrDTO.builder()
+          .cubeId(entity.getCubeId())
+          .cubeNm(entity.getCubeNm())
+          .cubeDesc(entity.getCubeDesc())
+          .dsViewId(entity.getDsViewId())
+          .ordinal(entity.getOrdinal())
+          .build());
+      }
+    }
+
+    return result;
+  }
+
+  public CubeInfoDTO getCube(String cubeId, String userId) {
+    AuthDataDTO auth = authService.getAuthData(userId);
+    List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO> ();
+    CubeInfoDTO cubeInfo = new CubeInfoDTO();
+
+    
+    // 측정값 그룹 불러오기
+    List<CubeTblEntity> cubeMeaTblEntities = cubeDAO.selectCubeMeaTables(cubeId);
+    for (CubeTblEntity entity : cubeMeaTblEntities) {
+      fields.add(DatasetFieldVO.builder()
+        .type(DataFieldType.MEASURE)
+        .order(entity.getOrder())
+        .uniqueName(entity.getUniqueName())
+        .logicalName(entity.getLogicalName())
+        .physicalName(entity.getPhysicalName())
+        .name(entity.getLogicalName())
+        .build());
+    }
+
+    // 측정값 컬럼 불러오기
+    List<CubeMeaColEntity> cubeMeaColEntities = cubeDAO.selectCubeMeaColumns(cubeId);
+
+    for (CubeMeaColEntity entity : cubeMeaColEntities) {
+      // 권한 있는 차원의 컬럼만 추가
+      fields.add(DatasetFieldVO.builder()
+        .type(DataFieldType.MEASURE)
+        .order(entity.getMeaOrder())
+        .name(entity.getCaptionName())
+        .parentId(entity.getTableName())
+        .dataType(entity.getDataType())
+        .uniqueName(entity.getUniqueName())
+        .build());
+    }
+
+    // 차원 그룹 불러오기 - 권한 적용
+    List<CubeTblEntity> cubeDimTblEntities = cubeDAO.selectCubeDimTables(cubeId);
+    List<String> authDimNames = new ArrayList<> ();
+
+    for (CubeTblEntity entity : cubeDimTblEntities) {
+      if(auth.hasAuthDim(entity.getDsViewId(), entity.getPhysicalName())) {
+        authDimNames.add(entity.getPhysicalName());
+        fields.add(DatasetFieldVO.builder()
+          .type(DataFieldType.DIMENSION)
+          .order(entity.getOrder())
+          .uniqueName(entity.getUniqueName())
+          .logicalName(entity.getLogicalName())
+          .physicalName(entity.getPhysicalName())
+          .name(entity.getLogicalName())
+          .build());
+      }
+    }
+
+    // 차원 컬럼 불러오기
+    List<CubeDimColEntity> cubeDimColEntities = cubeDAO.selectCubeDimColumns(cubeId);
+
+    for (CubeDimColEntity entity : cubeDimColEntities) {
+      // 권한 있는 차원의 컬럼만 추가
+      if (authDimNames.contains(entity.getTableName())) {
+        fields.add(DatasetFieldVO.builder()
+          .type(DataFieldType.DIMENSION)
+          .order(entity.getOrder())
+          .name(entity.getCaptionName())
+          .parentId(entity.getTableName())
+          .dataType(entity.getDataType())
+          .orderBy(entity.getOrderBy())
+          .uniqueName(entity.getUniqueName())
+          .build());
+      }
+    }
+
+    // TODO: 상세데이터 정보 추가해야함.
+    cubeInfo.setFields(fields);
+    return cubeInfo;
+  }
+
+  List<DatasetFieldVO> getCubeFields() {
+    return null;
+  }
+}

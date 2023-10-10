@@ -1,20 +1,19 @@
-package com.wise.MarketingPlatForm.dataset.entity;
+package com.wise.MarketingPlatForm.dataset.domain.cube.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CubeMstrEntity {
+public class CubeTblEntity {
   int cubeId;
   int dsViewId;
-  String cubeNm;
-  String cubeDesc;
-  int ordinal;
+  String uniqueName;
+  String physicalName;
+  String logicalName;
+  int order;
 }

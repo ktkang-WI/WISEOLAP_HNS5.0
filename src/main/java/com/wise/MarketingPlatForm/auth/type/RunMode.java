@@ -17,9 +17,9 @@ public enum RunMode {
 			Collectors.toMap(Object::toString, e -> e));
 
   /**
-   * 문자열에 상응하는 DBMSType이 있는 경우 반환합니다.
+   * 문자열에 상응하는 RunMode가 있는 경우 반환합니다.
    * @param symbol
-   * @return DMBSType
+   * @return RunMode
    */
   public static Optional<RunMode> fromString(String symbol) {
     return Optional.ofNullable(stringToEnum.get(symbol));

@@ -6,15 +6,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.auth.service.AuthService;
-import com.wise.MarketingPlatForm.auth.vo.AuthDataDTO;
-import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
-import com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
-import com.wise.MarketingPlatForm.dataset.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -70,34 +66,6 @@ public class DatasetService {
   // TODO: 추후 필터 정보도 받아와야 함.
   public List<DatasetFieldVO> getDatasetFields(String dsId, DsType dsType, String query) {
     return null;
-  }
-
-  public List<CubeMstrDTO> getCubes(String dsViewId, String userId) {
-    List<CubeMstrEntity> entities;
-
-    if (!dsViewId.equals("")) {
-      entities = datasetDAO.selectCubeListByDsViewId(dsViewId);
-    } else {
-      entities = datasetDAO.selectCubeList();
-    }
-
-    AuthDataDTO auth = authService.getAuthData(userId);
-    
-    List<CubeMstrDTO> result = new ArrayList<>();
-    
-    for (CubeMstrEntity entity : entities) {
-      if(auth.hasAuthCube(entity.getDsViewId(), entity.getCubeId())) {
-        result.add(CubeMstrDTO.builder()
-          .cubeId(entity.getCubeId())
-          .cubeNm(entity.getCubeNm())
-          .cubeDesc(entity.getCubeDesc())
-          .dsViewId(entity.getDsViewId())
-          .ordinal(entity.getOrdinal())
-          .build());
-      }
-    }
-
-    return result;
   }
 
   public List<DsViewDTO> getDsViews(String userId) {

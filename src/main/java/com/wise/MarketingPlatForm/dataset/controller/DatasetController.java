@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
+import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
-import com.wise.MarketingPlatForm.dataset.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -28,9 +30,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DatasetController {
 
   private final DatasetService datasetService;
+  private final CubeService cubeService;
 
-  DatasetController(DatasetService service) {
-    datasetService = service;
+  DatasetController(DatasetService datasetService, CubeService cubeService) {
+    this.datasetService = datasetService;
+    this.cubeService = cubeService;
   }
 
   @Operation(
@@ -139,6 +143,28 @@ public class DatasetController {
     String dsViewId = param.getOrDefault("dsViewId", "");
     String userId = param.getOrDefault("userId", "");
 
-    return datasetService.getCubes(dsViewId, userId);
+    return cubeService.getCubes(dsViewId, userId);
+  }
+
+  @Operation(
+    summary = "get cube",
+    description = "전체 또는 dsViewId에 해당하는 cube list를 반환합니다.")
+  @Parameters({
+    @Parameter(name = "cubeId", description = "cube id", example = "3295"),
+    @Parameter(name = "userId", description = "user id", example = "admin", required = true),
+  })
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    content = @Content(
+      examples = {
+        @ExampleObject(name = "example", value = "{\"cubeId\": \"5181\", \"userId\": \"admin\"}")
+      }
+    )
+  )
+  @PostMapping(value = "/cube")
+  public CubeInfoDTO getCube(@RequestBody Map<String, String> param) {
+    String cubeId = param.getOrDefault("cubeId", "");
+    String userId = param.getOrDefault("userId", "");
+
+    return cubeService.getCube(cubeId, userId);
   }
 }

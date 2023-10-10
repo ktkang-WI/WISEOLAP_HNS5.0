@@ -41,12 +41,18 @@ public class AuthService {
       authDataEntity = authDAO.selectUserAuthData(user.getUserNo());
     }
 
-    byte[] decodedBytes = Base64.getDecoder().decode(authDataEntity.getDataXmlBase64());
-    String dataxml = new String(decodedBytes);
+    byte[] decodedBytes = Base64.getDecoder().decode(
+      authDataEntity.getDataXmlBase64().replaceAll("\\R", ""));
+    String dataXml = "";
+    try {
+      dataXml = new String(decodedBytes, "UTF-8");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     AuthDataDTO authData = AuthDataDTO.builder()
       .dataXmlBase64(authDataEntity.getDataXmlBase64())
-      .dataXml(dataxml)
+      .dataXml(dataXml)
       .grpId(user.getGrpId())
       .userNo(user.getUserNo()).build();
 
@@ -56,7 +62,7 @@ public class AuthService {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.parse(new InputSource(new StringReader(dataxml)));
+      Document document = builder.parse(new InputSource(new StringReader(dataXml)));
 
       Element root = document.getDocumentElement();
       NodeList children = root.getChildNodes();
