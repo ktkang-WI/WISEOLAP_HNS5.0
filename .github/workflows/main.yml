@@ -5,7 +5,7 @@ jobs:
   my_job:
     env:
       CI: ''
-    name: Deploy Refactoring Proeject
+    name: Deploy Refactoring Project
     runs-on: ubuntu-latest
     steps:
       # repositoy 체크아웃
@@ -17,7 +17,7 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
 
-      - name: Build Cube Project
+      - name: Build Refactoring Project
         run: |
           chmod -R 777 ./
           ./mvnw clean install
@@ -27,5 +27,5 @@ jobs:
       - name: Deploy Application
         run: |
           cd target
-          mv intelligence-0.0.1-SNAPSHOT.war editds2.war
+          mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds2.war
           curl -u 'wise:wise1012' -X PUT --upload-file cube-test.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds2"
