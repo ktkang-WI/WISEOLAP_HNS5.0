@@ -7,9 +7,19 @@ import Wrapper from '../../common/atomic/Common/Wrap/Wrapper';
 import CommonDataGrid from '../../common/atomic/Common/CommonDataGrid';
 import PageWrapper from '../../common/atomic/Modal/atoms/PageWrapper';
 import CommonTextArea from '../../common/atomic/Common/CommonTextArea';
-import {Column} from 'devextreme-react/data-grid';
+import ReportSlice from 'redux/modules/ReportSlice';
+import meaImg from 'assets/image/icon/dataSource/measure.png';
+import dimImg from 'assets/image/icon/dataSource/dimension.png';
+import cubeMeaGrpImg from
+  'assets/image/icon/dataSource/cube_measure.png';
+import cubeDimGrpImg from
+  'assets/image/icon/dataSource/cube_dimension.png';
+import {Column, Selection} from 'devextreme-react/data-grid';
 import useModal from 'hooks/useModal';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import models from 'models';
+import _ from 'lodash';
+import {useDispatch} from 'react-redux';
 
 
 const theme = getTheme();
@@ -29,26 +39,65 @@ const StyledWrapper = styled(Wrapper)`
 `;
 
 const SelectCubeModal = ({onSubmit, ...props}) => {
-  const [selectedDataSource, setSelectedDataSource] = useState({});
+  const [dsViewList, setDsViewList] = useState([]);
+  const [selectedCubeList, setSelectedCubeList] = useState([]);
+  const [selectedCube, setSelectedCube] = useState({});
+  const userId = 'admin';
+
   const {openModal} = useModal();
+  const dispatch = useDispatch();
+  const {insertDataset} = ReportSlice.actions;
+
+  useEffect(() => {
+    // TODO: 추후 접속중인 유저 ID로 변경
+    models.DSView.getByUserId(userId)
+        .then((data) => {
+          setDsViewList(data);
+        });
+  }, []);
 
   return (
     <Modal
       onSubmit={()=> {
-        if (!_.isEmpty(selectedDataSource)) {
-          onSubmit(selectedDataSource);
+        if (!_.isEmpty(selectedCube)) {
+          models.Cube.getByCubeId(userId, selectedCube.cubeId)
+              .then((data) => {
+                data.fields = data.fields.map((field) => {
+                  // 그룹일 경우
+                  if (!field.parentId) {
+                    if (field.type == 'DIMENSION') {
+                      field.icon = cubeDimGrpImg;
+                    } else if (field.type == 'MEASURE') {
+                      field.icon = cubeMeaGrpImg;
+                    }
+                  } else {
+                    if (field.type == 'DIMENSION') {
+                      field.icon = dimImg;
+                    } else if (field.type == 'MEASURE') {
+                      field.icon = meaImg;
+                    }
+                  }
+
+                  return field;
+                });
+
+                dispatch(insertDataset({
+                  ...selectedCube,
+                  fields: data.fields,
+                  datasetNm: selectedCube.cubeNm,
+                  datsetType: 'CUBE'
+                }));
+              });
         } else {
           openModal(Alert, {
-            message: '데이터 원본을 선택하지 않았습니다.'
+            message: '주제영역을 선택하지 않았습니다.'
           });
           return true;
         }
       }}
-      page={1}
-      usePage
       modalTitle={localizedString.selectCube}
-      height={theme.size.middleModalHeight}
-      width={theme.size.middleModalWidth}
+      height={theme.size.bigModalHeight}
+      width={theme.size.bigModalWidth}
       {...props}
     >
       <PageWrapper>
@@ -58,12 +107,21 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
               title={localizedString.dataSourceList}
             >
               <CommonDataGrid
-                dataSource={{}}
+                dataSource={dsViewList}
                 onSelectionChanged={(e) => {
-                  setSelectedDataSource(e.selectedRowsData[0]);
+                  if (e.selectedRowsData.length > 0) {
+                    models.Cube.getByDsViewId(userId,
+                        e.selectedRowsData[0].dsViewId)
+                        .then((data) => {
+                          setSelectedCubeList(data);
+                        });
+                  } else {
+                    setSelectedCubeList([]);
+                  }
                 }}
               >
-                <Column dataField='dsNm' caption='데이터원본 뷰 명'/>
+                <Selection mode='single'/>
+                <Column dataField='dsViewNm' caption='데이터원본 뷰 명'/>
                 <Column dataField='dbNm' caption='데이터원본 명'/>
                 <Column dataField='dbmsType' caption='DB 유형'/>
               </CommonDataGrid>
@@ -71,13 +129,24 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
           </StyledWrapper>
           <StyledWrapper width='50%' padding={padding}>
             <ModalPanel height={'60%'} title={localizedString.cubeList}>
-              <CommonDataGrid dataSource={{}}>
-                <Column dataField='State' caption='State'/>
-                <Column dataField='State' caption='State'/>
+              <CommonDataGrid
+                dataSource={selectedCubeList}
+                onSelectionChanged={(e) => {
+                  if (e.selectedRowsData.length > 0) {
+                    setSelectedCube(e.selectedRowsData[0]);
+                  } else {
+                    setSelectedCube({});
+                  }
+                }}
+              >
+                <Selection mode='single'/>
+                <Column dataField='cubeNm' caption='주제영역 명'/>
               </CommonDataGrid>
             </ModalPanel>
             <ModalPanel height={'40%'} title={localizedString.cubeComment}>
-              <CommonTextArea value={'test용'}/>
+              <CommonTextArea
+                value={_.isEmpty(selectedCube)? '' : selectedCube.cubeDesc}
+              />
             </ModalPanel>
           </StyledWrapper>
         </StyledWrapper>

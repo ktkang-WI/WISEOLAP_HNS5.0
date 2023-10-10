@@ -5,16 +5,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum DBMSType {
+public enum DbmsType {
   ORACLE("ORACLE"), MS_SQL("MS-SQL"), TIBERO("TIBERO"), MARIA("MARIA"),
   MY_SQL("MYSQL"), VERTICA("VERTICA"), CUBRID("CUBRID"), DB2("DB2BLU"),
   IMPALA("IMPALA"), POSTGRES("POSTGRES"), SAPIQ("SAPIQ");
 
   private final String symbol;
 
-	DBMSType (String symbol) { this.symbol = symbol; }
+	DbmsType (String symbol) { this.symbol = symbol; }
 
-  private static final Map<String, DBMSType> stringToEnum =
+  private static final Map<String, DbmsType> stringToEnum =
 		Stream.of(values()).collect(
 			Collectors.toMap(Object::toString, e -> e));
 
@@ -23,7 +23,7 @@ public enum DBMSType {
    * @param symbol
    * @return DMBSType
    */
-  public static Optional<DBMSType> fromString(String symbol) {
+  public static Optional<DbmsType> fromString(String symbol) {
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 

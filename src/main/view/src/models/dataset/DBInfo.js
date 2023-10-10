@@ -3,7 +3,7 @@ import axios from 'axios';
 const path = document.location.origin + '/dataset';
 
 export const dbTables = async (dsId, search) => {
-  const res = await axios.post(path + '/dbTables', {
+  const res = await axios.post(path + '/db-tables', {
     dsId: dsId,
     search: search
   });
@@ -12,7 +12,7 @@ export const dbTables = async (dsId, search) => {
 };
 
 export const dbColumns = async (dsId, search, table) => {
-  const res = await axios.post(path + '/dbColumns', {
+  const res = await axios.post(path + '/db-columns', {
     dsId: dsId,
     search: search,
     table: table
