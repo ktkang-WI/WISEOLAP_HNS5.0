@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class DBColumnVO {
+public class DbColumnVO {
   String tblNm;
   String tblCpation;
   String colId;

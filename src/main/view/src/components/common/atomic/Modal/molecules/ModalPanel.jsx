@@ -17,9 +17,9 @@ const Content = styled.div`
 `;
 
 
-const ModalPanel = ({title, children, ...props}) => {
+const ModalPanel = ({title, children, padding = '10', ...props}) => {
   return (
-    <StyledWrapper {...props}>
+    <StyledWrapper padding={padding} {...props}>
       <ModalPanelTitle>{title}</ModalPanelTitle>
       <Content>
         {children}

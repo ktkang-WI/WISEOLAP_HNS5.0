@@ -100,8 +100,8 @@ const QueryDataSourceDesignerModal = ({
         }));
         // return true;
       }}
-      width='70%'
-      height='90%'
+      height={theme.size.bigModalHeight}
+      width={theme.size.bigModalWidth}
       modalTitle={localizedString.datasetDesigner}
       {...props}
     >

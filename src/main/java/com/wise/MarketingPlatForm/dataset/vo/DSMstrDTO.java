@@ -1,7 +1,7 @@
 package com.wise.MarketingPlatForm.dataset.vo;
 
-import com.wise.MarketingPlatForm.dataset.entity.DSMstrEntity;
-import com.wise.MarketingPlatForm.dataset.type.DBMSType;
+import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
+import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Builder
 @Setter
-public class DSMstrDTO {
+public class DsMstrDTO {
   int dsId;
   String dsNm;
   String dbNm;
@@ -18,15 +18,15 @@ public class DSMstrDTO {
   String userId;
   String password;
   String port;
-  DBMSType dbmsType;
+  DbmsType dbmsType;
   String ownerNm;
   String dsDesc;
   String connector;
   String userAreaYn;
   String hashYn;
 
-  public static DSMstrEntity toEntity(DSMstrDTO dsMstrDTO) {
-    return DSMstrEntity.builder()
+  public static DsMstrEntity toEntity(DsMstrDTO dsMstrDTO) {
+    return DsMstrEntity.builder()
       .dsId(dsMstrDTO.getDsId())
       .dbNm(dsMstrDTO.getDbNm())
       .ip(dsMstrDTO.getIp())

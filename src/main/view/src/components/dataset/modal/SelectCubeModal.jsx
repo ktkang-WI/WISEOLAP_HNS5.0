@@ -7,9 +7,11 @@ import Wrapper from '../../common/atomic/Common/Wrap/Wrapper';
 import CommonDataGrid from '../../common/atomic/Common/CommonDataGrid';
 import PageWrapper from '../../common/atomic/Modal/atoms/PageWrapper';
 import CommonTextArea from '../../common/atomic/Common/CommonTextArea';
-import {Column} from 'devextreme-react/data-grid';
+import {Column, Selection} from 'devextreme-react/data-grid';
 import useModal from 'hooks/useModal';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import models from 'models';
+import _ from 'lodash';
 
 
 const theme = getTheme();
@@ -29,13 +31,25 @@ const StyledWrapper = styled(Wrapper)`
 `;
 
 const SelectCubeModal = ({onSubmit, ...props}) => {
-  const [selectedDataSource, setSelectedDataSource] = useState({});
+  const [dsViewList, setDsViewList] = useState([]);
+  const [selectedCubeList, setSelectedCubeList] = useState([]);
+  const [selectedCube, setSelectedCube] = useState({});
+  const userId = 'admin';
+
   const {openModal} = useModal();
+
+  useEffect(() => {
+    // TODO: 추후 접속중인 유저 ID로 변경
+    models.DSView.getByUserId(userId)
+        .then((data) => {
+          setDsViewList(data);
+        });
+  }, []);
 
   return (
     <Modal
       onSubmit={()=> {
-        if (!_.isEmpty(selectedDataSource)) {
+        if (!_.isEmpty(selectedCube)) {
           onSubmit(selectedDataSource);
         } else {
           openModal(Alert, {
@@ -44,11 +58,9 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
           return true;
         }
       }}
-      page={1}
-      usePage
       modalTitle={localizedString.selectCube}
-      height={theme.size.middleModalHeight}
-      width={theme.size.middleModalWidth}
+      height={theme.size.bigModalHeight}
+      width={theme.size.bigModalWidth}
       {...props}
     >
       <PageWrapper>
@@ -58,12 +70,21 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
               title={localizedString.dataSourceList}
             >
               <CommonDataGrid
-                dataSource={{}}
+                dataSource={dsViewList}
                 onSelectionChanged={(e) => {
-                  setSelectedDataSource(e.selectedRowsData[0]);
+                  if (e.selectedRowsData.length > 0) {
+                    models.Cube.getByDsViewId(userId,
+                        e.selectedRowsData[0].dsViewId)
+                        .then((data) => {
+                          setSelectedCubeList(data);
+                        });
+                  } else {
+                    setSelectedCubeList([]);
+                  }
                 }}
               >
-                <Column dataField='dsNm' caption='데이터원본 뷰 명'/>
+                <Selection mode='single'/>
+                <Column dataField='dsViewNm' caption='데이터원본 뷰 명'/>
                 <Column dataField='dbNm' caption='데이터원본 명'/>
                 <Column dataField='dbmsType' caption='DB 유형'/>
               </CommonDataGrid>
@@ -71,13 +92,24 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
           </StyledWrapper>
           <StyledWrapper width='50%' padding={padding}>
             <ModalPanel height={'60%'} title={localizedString.cubeList}>
-              <CommonDataGrid dataSource={{}}>
-                <Column dataField='State' caption='State'/>
-                <Column dataField='State' caption='State'/>
+              <CommonDataGrid
+                dataSource={selectedCubeList}
+                onSelectionChanged={(e) => {
+                  if (e.selectedRowsData.length > 0) {
+                    setSelectedCube(e.selectedRowsData[0]);
+                  } else {
+                    setSelectedCube({});
+                  }
+                }}
+              >
+                <Selection mode='single'/>
+                <Column dataField='cubeNm' caption='주제영역 명'/>
               </CommonDataGrid>
             </ModalPanel>
             <ModalPanel height={'40%'} title={localizedString.cubeComment}>
-              <CommonTextArea value={'test용'}/>
+              <CommonTextArea
+                value={_.isEmpty(selectedCube)? '' : selectedCube.cubeDesc}
+              />
             </ModalPanel>
           </StyledWrapper>
         </StyledWrapper>

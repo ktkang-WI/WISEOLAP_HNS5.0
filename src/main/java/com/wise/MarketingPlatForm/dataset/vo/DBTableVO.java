@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class DBTableVO {
+public class DbTableVO {
   String tblNm;
   String tblCpation;
   String parent;

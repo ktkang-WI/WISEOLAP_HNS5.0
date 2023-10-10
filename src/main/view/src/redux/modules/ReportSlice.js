@@ -5,6 +5,7 @@ const initialState = {
   selectedReportId: 0,
   reports: [{
     reportId: 0,
+    selectedItemId: '',
     options: {
       reportNm: localizedString.defaultReportName,
       reportDesc: '',

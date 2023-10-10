@@ -1,20 +1,18 @@
-package com.wise.MarketingPlatForm.dataset.type;
+package com.wise.MarketingPlatForm.auth.type;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum DbmsType {
-  ORACLE("ORACLE"), MS_SQL("MS-SQL"), TIBERO("TIBERO"), MARIA("MARIA"),
-  MY_SQL("MYSQL"), VERTICA("VERTICA"), CUBRID("CUBRID"), DB2("DB2BLU"),
-  IMPALA("IMPALA"), POSTGRES("POSTGRES"), SAPIQ("SAPIQ");
+public enum RunMode {
+  ADMIN("ADMIN"), VIEW("VIEW");
 
   private final String symbol;
 
-	DbmsType (String symbol) { this.symbol = symbol; }
+	RunMode (String symbol) { this.symbol = symbol; }
 
-  private static final Map<String, DbmsType> stringToEnum =
+  private static final Map<String, RunMode> stringToEnum =
 		Stream.of(values()).collect(
 			Collectors.toMap(Object::toString, e -> e));
 
@@ -23,7 +21,7 @@ public enum DbmsType {
    * @param symbol
    * @return DMBSType
    */
-  public static Optional<DbmsType> fromString(String symbol) {
+  public static Optional<RunMode> fromString(String symbol) {
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 

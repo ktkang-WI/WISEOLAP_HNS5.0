@@ -11,19 +11,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DsMstrEntity {
+public class DsViewMstrEntity {
+  int dsViewId;
   int dsId;
-  String dsNm;
-  String dbNm;
-  String ip;
-  String userId;
-  String password;
-  String port;
-  String dbmsType;
-  String ownerNm;
-  String dsDesc;
-  String connector;
-  String userAreaYn;
-  String hashYn;
-  String wfYn;
+  String dsViewNm;
+  String dsViewDesc;
 }
