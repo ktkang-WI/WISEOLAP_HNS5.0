@@ -4,6 +4,7 @@ import Wrapper from '../../Common/Wrap/Wrapper';
 import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
 import {useRef} from 'react';
+import {styled} from 'styled-components';
 
 const theme = getTheme();
 
