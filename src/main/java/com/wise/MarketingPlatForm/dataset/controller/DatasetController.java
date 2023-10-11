@@ -1,8 +1,10 @@
 package com.wise.MarketingPlatForm.dataset.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.DBColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DBTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DSMstrDTO;
+import com.wise.MarketingPlatForm.global.config.mart.MartConfig;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,8 +28,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/dataset")
 public class DatasetController {
 
-  private final DatasetService datasetService;
-
+  @Autowired
+  DatasetService datasetService;
+  
   DatasetController(DatasetService service) {
     datasetService = service;
   }
@@ -96,5 +100,10 @@ public class DatasetController {
     String search = param.getOrDefault("search", "");
 
     return datasetService.getDBColumns(dsId, table, search);
+  }
+  
+  @PostMapping(value = "/MartSelectList")
+  public List<HashMap<String, Object>> MartSelectList() {
+	return datasetService.MartSelectList();
   }
 }
