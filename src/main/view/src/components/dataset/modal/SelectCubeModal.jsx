@@ -7,7 +7,8 @@ import Wrapper from '../../common/atomic/Common/Wrap/Wrapper';
 import CommonDataGrid from '../../common/atomic/Common/CommonDataGrid';
 import PageWrapper from '../../common/atomic/Modal/atoms/PageWrapper';
 import CommonTextArea from '../../common/atomic/Common/CommonTextArea';
-import ReportSlice from 'redux/modules/ReportSlice';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import cubeMeaGrpImg from
@@ -19,7 +20,7 @@ import useModal from 'hooks/useModal';
 import {useEffect, useState} from 'react';
 import models from 'models';
 import _ from 'lodash';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 
 const theme = getTheme();
@@ -42,11 +43,12 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
   const [dsViewList, setDsViewList] = useState([]);
   const [selectedCubeList, setSelectedCubeList] = useState([]);
   const [selectedCube, setSelectedCube] = useState({});
+  const selectedReportId = useSelector(selectCurrentReportId);
   const userId = 'admin';
 
   const {openModal} = useModal();
   const dispatch = useDispatch();
-  const {insertDataset} = ReportSlice.actions;
+  const {insertDataset} = DatasetSlice.actions;
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
@@ -82,10 +84,13 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                 });
 
                 dispatch(insertDataset({
-                  ...selectedCube,
-                  fields: data.fields,
-                  datasetNm: selectedCube.cubeNm,
-                  datsetType: 'CUBE'
+                  reportId: selectedReportId,
+                  dataset: {
+                    ...selectedCube,
+                    fields: data.fields,
+                    datasetNm: selectedCube.cubeNm,
+                    datsetType: 'CUBE'
+                  }
                 }));
               });
         } else {

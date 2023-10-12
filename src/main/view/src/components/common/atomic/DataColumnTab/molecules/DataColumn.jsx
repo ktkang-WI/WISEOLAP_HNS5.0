@@ -59,6 +59,9 @@ const ColumnWrapper = styled.div`
   justify-content: space-between;
   height: ${theme.size.dataColumn};
   margin: 5px;
+  ${(props) => props.fixed &&
+  'transform: none !important;'}
+  
 `;
 
 const Column = styled.div`
@@ -117,11 +120,12 @@ const OtherMenuButton = styled.img `
 
 const DataColumn = ({
   data, children, provided, onClick, showContextMenu, type,
-  useButton, buttonEvent, buttonIcon, sortOrder, ...props
+  useButton, buttonEvent, buttonIcon, sortOrder, fixed, ...props
 }) => {
   const otherMenuId = 'a' + uuid();
   return (
     <ColumnWrapper
+      fixed={fixed}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       ref={provided.innerRef}

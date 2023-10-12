@@ -11,18 +11,19 @@ import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import ItemBoard from 'components/report/organisms/ItemBoard';
 import {getTheme} from 'config/theme';
-import {onDragEnd} from 'components/common/DragNDropController';
+import useDrag from 'hooks/useDrag';
 
 const theme = getTheme();
 
 const DesignerContent = ({children}) => {
+  const {onDragEnd, onDragStart} = useDrag();
   return (
     <Content
       snbWidth={theme.size.snbWidth}
       headerHeight={theme.size.headerHeight}
       ribbonHeight={theme.size.ribbonHeight}
     >
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
           <CustomDrawer index={1} component={AttributeTabs}>
             <Wrapper>

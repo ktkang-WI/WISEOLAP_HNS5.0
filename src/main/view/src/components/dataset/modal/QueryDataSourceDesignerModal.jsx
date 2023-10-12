@@ -7,8 +7,8 @@ import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import {Column} from 'devextreme-react/data-grid';
-import ReportSlice from 'redux/modules/ReportSlice';
-import {useDispatch} from 'react-redux';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
@@ -17,6 +17,7 @@ import {getTheme} from 'config/theme';
 import DatasetName from '../atomic/molecules/DatasetName';
 import CustomStore from 'devextreme/data/custom_store';
 import localizedString from '../../../config/localization';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
@@ -41,7 +42,8 @@ const QueryDataSourceDesignerModal = ({
 }) => {
   // const isNew = _.isEmpty(dataset);
   const dispatch = useDispatch();
-  const {insertDataset} = ReportSlice.actions;
+  const {insertDataset} = DatasetSlice.actions;
+  const selectedReportId = useSelector(selectCurrentReportId);
   const queryEditorRef = useRef();
   const [dataset, setDataset] = useState(orgDataset);
 
@@ -94,9 +96,12 @@ const QueryDataSourceDesignerModal = ({
         });
 
         dispatch(insertDataset({
-          ...dataset,
-          datasetQuery: queryEditorRef.current.editor.getValue(),
-          fields: tempFields
+          reportId: selectedReportId,
+          dataset: {
+            ...dataset,
+            datasetQuery: queryEditorRef.current.editor.getValue(),
+            fields: tempFields
+          }
         }));
         // return true;
       }}

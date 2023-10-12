@@ -6,6 +6,8 @@ import resetLayoutImg
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
+import {selectCurrentDataField} from 'redux/selector/ReportSelector';
+import {useSelector} from 'react-redux';
 
 const theme = getTheme();
 
@@ -55,9 +57,10 @@ const getRenderItem = (items) => {
 
 
 const DataColumnList = ({
-  id, icon, label, columns, type, placeholder,
-  useButton, buttonIcon, onClick, buttonEvent
+  id, icon, label, type, placeholder,
+  useButton, buttonIcon, onClick, buttonEvent, key
 }) => {
+  const columns = useSelector(selectCurrentDataField)[id];
   return (
     <Wrapper>
       <Title>
@@ -76,7 +79,7 @@ const DataColumnList = ({
             {columns.map((column, index) =>
               <Draggable
                 key={column.uniqueName}
-                draggableId={column.uniqueName}
+                draggableId={column.fieldId}
                 index={index}>
                 {(provided) => (
                   <DataColumn
@@ -96,12 +99,22 @@ const DataColumnList = ({
               </Draggable>
             )}
             {columns.length === 0 &&
-              <DataColumn
-                key={label}
-                provided={provided}
+              <Draggable
+                key={id + 'temp'}
+                draggableId={id + 'temp'}
+                index={0}
+                isDragDisabled={true}
               >
-                {placeholder}
-              </DataColumn>
+                {(provided) => (
+                  <DataColumn
+                    key={label}
+                    provided={provided}
+                    fixed={true}
+                  >
+                    {placeholder}
+                  </DataColumn>
+                )}
+              </Draggable>
             }
             {columns.length > 0 && provided.placeholder}
           </ListWrapper>
