@@ -5,14 +5,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum DSType {
+public enum DsType {
   DS_SQL("DS_SQL"), DS("DS"), DS_SINGLE("DS_SINGLE"), CUBE("CUBE");
 
   private final String symbol;
 
-	DSType (String symbol) { this.symbol = symbol; }
+	DsType (String symbol) { this.symbol = symbol; }
 
-  private static final Map<String, DSType> stringToEnum =
+  private static final Map<String, DsType> stringToEnum =
 		Stream.of(values()).collect(
 			Collectors.toMap(Object::toString, e -> e));
 
@@ -21,7 +21,7 @@ public enum DSType {
    * @param symbol
    * @return DSType
    */
-  public static Optional<DSType> fromString(String symbol) {
+  public static Optional<DsType> fromString(String symbol) {
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 

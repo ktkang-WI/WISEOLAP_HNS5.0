@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.auth.dao.AuthDAO">
+<!-- Mapper -->
+
+	<resultMap id="User" type="com.wise.MarketingPlatForm.auth.entity.UserEntity">
+		<result column="USER_NO" property="userNo" javaType="int"/>
+    <result column="GRP_ID" property="grpId" javaType="int"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="PASSWD" property="password" javaType="String"/>
+    <result column="E_MAIL" property="email" javaType="String"/>
+    <result column="E_MAIL2" property="email2" javaType="String"/>
+    <result column="DEL_YN" property="delYn" javaType="String"/>
+    <result column="HP_NO" property="hpNo" javaType="String"/>
+    <result column="TEL_NO" property="telNo" javaType="String"/>
+    <result column="USER_REL_CD" property="userRelCd" javaType="String"/>
+    <result column="USER_DESC" property="userDesc" javaType="String"/>
+    <result column="RUN_MODE" property="runMode" javaType="String"/>
+    <result column="HASH_YN" property="hashYn" javaType="String"/>
+	</resultMap>
+
+  <resultMap id="AuthData" type="com.wise.MarketingPlatForm.auth.entity.AuthDataEntity">
+    <result column="USER_NO" property="userNo" javaType="int"/>
+    <result column="GRP_ID" property="grpId" javaType="int"/>
+    <result column="DATA_XML" property="dataXmlBase64" javaType="String"/>
+  </resultMap>
+
+<!-- Mapper End -->
+
+<!-- Query -->
+
+  <select id="selectUserById" resultMap="User">
+    SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+  </select>
+
+  <select id="selectGrpAuthData" resultMap="AuthData">
+    SELECT * FROM GRP_AUTH_DATA_MSTR WHERE GRP_ID = #{grpId}
+  </select>
+
+  <select id="selectUserAuthData" resultMap="AuthData">
+    SELECT * FROM USER_AUTH_DATA_MSTR WHERE USER_NO = #{userNo}
+  </select>
+
+<!-- Query End -->
+
+</mapper>

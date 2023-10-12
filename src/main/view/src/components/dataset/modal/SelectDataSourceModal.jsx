@@ -11,6 +11,9 @@ import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from '../../../config/localization';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const StyledWrapper = styled(Wrapper)`
   display: flex;
@@ -41,8 +44,8 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
           return true;
         }
       }}
-      width='70%'
-      height='90%'
+      height={theme.size.bigModalHeight}
+      width={theme.size.bigModalWidth}
       modalTitle={localizedString.selectDataSource}
       {...props}
     >

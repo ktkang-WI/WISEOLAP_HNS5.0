@@ -26,7 +26,7 @@ public enum DBMSType {
 		this.driver = driver;	
 	}
 
-  private static final Map<String, DBMSType> stringToEnum =
+  private static final Map<String, DbmsType> stringToEnum =
 		Stream.of(values()).collect(
 			Collectors.toMap(Object::toString, e -> e));
 
@@ -35,7 +35,7 @@ public enum DBMSType {
    * @param symbol
    * @return DMBSType
    */
-  public static Optional<DBMSType> fromString(String symbol) {
+  public static Optional<DbmsType> fromString(String symbol) {
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 

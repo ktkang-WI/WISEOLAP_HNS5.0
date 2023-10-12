@@ -1,0 +1,31 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  my_job:
+    env:
+      CI: ''
+    name: Deploy Refactoring Project
+    runs-on: ubuntu-latest
+    steps:
+      # repositoy 체크아웃
+      - uses: actions/checkout@v2
+      
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Build Refactoring Project
+        run: |
+          chmod -R 777 ./
+          ./mvnw clean install
+      - name: Undeploy Application
+        run: curl -u 'wise:wise1012' "http://3.37.38.145:38080/manager/text/undeploy?path=/editds"
+
+      - name: Deploy Application
+        run: |
+          cd target
+          mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds.war
+          curl -u 'wise:wise1012' -X PUT --upload-file editds.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds"

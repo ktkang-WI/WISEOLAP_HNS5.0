@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.dataset.dao.CubeDAO">
+<!-- Mapper -->
+
+  <resultMap id="CubeMstr" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity">
+    <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
+    <result column="CUBE_ID" property="cubeId" javaType="int"/>
+    <result column="CUBE_NM" property="cubeNm" javaType="String"/>
+    <result column="CUBE_DESC" property="cubeDesc" javaType="String"/>
+    <result column="CUBE_ORDINAL" property="ordinal" javaType="int"/>
+	</resultMap>
+
+  <resultMap id="CubeTbl" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeTblEntity">
+    <result column="DSVIEWID" property="dsViewId" javaType="int"/>
+    <result column="CUBEID" property="cubeId" javaType="int"/>
+    <result column="UNIQUENAME" property="uniqueName" javaType="String"/>
+    <result column="PHYSICALNAME" property="physicalName" javaType="String"/>
+    <result column="LOGICALNAME" property="logicalName" javaType="String"/>
+    <result column="ORDER" property="order" javaType="int"/>
+	</resultMap>
+
+  <resultMap id="CubeDimColumn" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeDimColEntity">
+    <result column="CUBEID" property="cubeId" javaType="int"/>
+    <result column="UNIQUENAME" property="uniqueName" javaType="String"/>
+    <result column="TABLENAME" property="tableName" javaType="String"/>
+    <result column="DIM_DIM_UNI_NM" property="dimDimUniNm" javaType="String"/>
+    <result column="HIE_HIE_UNI_NM" property="hieHieUniNm" javaType="String"/>
+    <result column="ORDERBY" property="orderBy" javaType="String"/>
+    <result column="DATATYPE" property="dataType" javaType="String"/>
+    <result column="ORDER" property="order" javaType="int"/>
+    <result column="CAPTIONNAME" property="captionName" javaType="String"/> 
+	</resultMap>
+
+  <resultMap id="CubeMeaColumn" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMeaColEntity">
+    <result column="CUBEID" property="cubeId" javaType="int"/>
+    <result column="UNIQUENAME" property="uniqueName" javaType="String"/>
+    <result column="TABLENAME" property="tableName" javaType="String"/>
+    <result column="SUMMARYTYPE" property="summaryType" javaType="String"/>
+    <result column="folder" property="folder" javaType="String"/>
+    <result column="expression" property="expression" javaType="String"/>
+    <result column="DATATYPE" property="dataType" javaType="String"/>
+    <result column="ORDER" property="order" javaType="int"/>
+    <result column="CAPTIONNAME" property="captionName" javaType="String"/> 
+    <result column="format" property="format" javaType="String"/>
+    <result column="MEA_ORDER" property="meaOrder" javaType="int"/>
+	</resultMap>
+	
+<!-- Mapper End -->
+
+<!-- Query -->
+	<select id="selectCubeList" resultMap="CubeMstr">
+		SELECT 	*
+		FROM 	CUBE_MSTR
+		ORDER BY CUBE_ORDINAL
+	</select>
+
+  <select id="selectCubeListByDsViewId" parameterType="String" resultMap="CubeMstr">
+		SELECT 	*
+		FROM 	CUBE_MSTR
+    WHERE DS_VIEW_ID = #{dsViewId}
+		ORDER BY CUBE_ORDINAL
+	</select>
+
+  <select id="selectCubeDimTables" parameterType="String" resultMap="CubeTbl">
+		SELECT	CUBE_ID as cubeId
+		       ,DIM_UNI_NM as uniqueName
+		       ,DIM_DIM_UNI_NM as physicalName
+		       ,DIM_CAPTION as logicalName
+		       ,DIM_IS_VISIBLE as "visible"
+		       ,DIM_ORDINAL as "order"
+		       ,(SELECT DS_VIEW_ID FROM CUBE_MSTR T2 WHERE T2.CUBE_ID = T1.CUBE_ID) as dsViewId
+		FROM	CUBE_DIM_MSTR T1
+		WHERE	CUBE_ID = #{cubeId}
+		AND 	T1.DIM_IS_VISIBLE = 1
+  </select>
+
+  <select id="selectCubeDimColumns" parameterType="String" resultMap="CubeDimColumn">
+		<!-- <if test="_databaseId == 'sqlserver'">
+			SELECT DISTINCT T1.*
+			   ,T2.TBL_NM as physicalTableName
+        	   ,T2.KEY_COL as physicalColumnId
+        	   ,T2.NAME_COL as physicalColumnName
+		       ,CASE WHEN T1.displayType is not null then T1.displayType
+	            ELSE
+	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
+	                CASE WHEN T2.TBL_NM IS NULL OR T2.TBL_NM = '' THEN 'LEVEL'
+	                ELSE CASE WHEN CONCAT('[',CONCAT(T2.TBL_NM,']')) <![CDATA[<>]]> T1.DIM_DIM_UNI_NM THEN 'SF' END
+	                END
+	              ELSE CAST(T2.HIE_DSP_FLD AS CHAR) END
+			        END as hieFolderName
+		       ,'dimension' as type
+		       ,CAST(T2.ORDER_BY as CHAR) as orderBy
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T3
+		         WHERE	T3.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T3.TBL_NM = T2.TBL_NM
+		         AND	T3.COL_NM = T2.KEY_COL) AS dataType
+		       ,T2.HIE_DSP_FLD as folder
+		       ,T1.HIE_ORDINAL as t1ordinal
+			   ,T2.HIE_ORDINAL as t2ordinal
+			FROM   (
+		       SELECT	CUBE_ID as cubeId
+		       		   ,HIE_UNI_NM as uniqueName
+		               ,DIM_UNI_NM as tableName
+		               ,HIE_CAPTION as captionName
+		               ,'Count' as summaryType
+		               ,HIE_IS_VISIBLE as "visible"
+		               ,NULL AS displayType
+		               ,DIM_DIM_UNI_NM
+		               ,HIE_HIE_UNI_NM
+		               ,HIE_ORDINAL
+		        FROM    CUBE_HIE_MSTR
+		        WHERE	CUBE_ID = #{cubeId}
+		        AND		HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		        UNION ALL
+				SELECT  ${cubeId} AS CUBE_ID
+						,X.LVL_UNI_NM
+						,X.DIM_UNI_NM
+						,CASE WHEN Z.HIE_CAPTION IS NULL OR Z.HIE_CAPTION = '' THEN X.LVL_CAPTION
+             			 ELSE Z.HIE_CAPTION   END AS captionName
+						,'Count' AS MEA_AGG
+						,Z.HIE_IS_VISIBLE as "visible"
+						,CASE WHEN Y.HIE_DSP_FLD IS NULL OR Y.HIE_DSP_FLD = '' THEN 'LEVEL_LEAF'
+                  		 ELSE CAST(Y.HIE_DSP_FLD AS CHAR) END AS displayType
+						,X.DIM_UNI_NM
+						,X.LVL_UNI_NM
+						,Z.HIE_ORDINAL
+				FROM	DS_VIEW_LVL_MSTR X
+							INNER JOIN DS_VIEW_HIE_MSTR Y
+								ON X.DS_VIEW_ID = Y.DS_VIEW_ID
+								AND X.DIM_UNI_NM = Y.DIM_UNI_NM
+								AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+							LEFT OUTER JOIN CUBE_HIE_MSTR Z
+				                ON Z.CUBE_ID = #{cubeId}
+				                AND Y.HIE_UNI_NM = Z.HIE_UNI_NM
+				WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		        ) T1
+		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
+		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
+			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+		</if>
+		<if test="_databaseId == 'Oracle'"> -->
+			SELECT DISTINCT T1.*
+			   ,T2.TBL_NM as physicalTableName
+        	   ,T2.KEY_COL as physicalColumnId
+        	   ,T2.NAME_COL as physicalColumnName
+		       ,CASE WHEN T1.displayType is not null then T1.displayType
+	            ELSE
+	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
+	                CASE WHEN T2.TBL_NM IS NULL OR T2.TBL_NM = '' THEN 'LEVEL'
+	                ELSE CASE WHEN CONCAT('[',CONCAT(T2.TBL_NM,']')) <![CDATA[<>]]> T1.DIM_DIM_UNI_NM THEN 'SF' END
+	                END
+	              ELSE TO_CHAR(T2.HIE_DSP_FLD) END
+			        END as hieFolderName
+		       ,'dimension' as type
+		       ,TO_CHAR(T2.ORDER_BY) as orderBy
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T3
+		         WHERE	T3.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T3.TBL_NM = T2.TBL_NM
+		         AND	T3.COL_NM = T2.KEY_COL) AS dataType
+		       ,T2.HIE_DSP_FLD as folder
+		       ,T1.HIE_ORDINAL as t1ordinal
+			   ,T2.HIE_ORDINAL as t2ordinal
+			FROM   (
+		       SELECT	CUBE_ID as cubeId
+		       		   ,HIE_UNI_NM as uniqueName
+		               ,DIM_UNI_NM as tableName
+		               ,HIE_CAPTION as captionName
+		               ,'Count' as summaryType
+		               ,HIE_IS_VISIBLE as "visible"
+		               ,NULL AS displayType
+		               ,DIM_DIM_UNI_NM
+		               ,HIE_HIE_UNI_NM
+		               ,HIE_ORDINAL
+		        FROM    CUBE_HIE_MSTR
+		        WHERE	CUBE_ID = #{cubeId}
+		        AND		HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		        UNION ALL
+				SELECT  ${cubeId} AS CUBE_ID
+						,X.LVL_UNI_NM
+						,X.DIM_UNI_NM
+						,CASE WHEN Z.HIE_CAPTION IS NULL OR Z.HIE_CAPTION = '' THEN X.LVL_CAPTION
+             			 ELSE Z.HIE_CAPTION   END AS captionName
+						,'Count' AS MEA_AGG
+						,Z.HIE_IS_VISIBLE as "visible"
+						,CASE WHEN Y.HIE_DSP_FLD IS NULL OR Y.HIE_DSP_FLD = '' THEN 'LEVEL_LEAF'
+                  		 ELSE TO_CHAR(Y.HIE_DSP_FLD) END AS displayType
+						,X.DIM_UNI_NM
+						,X.LVL_UNI_NM
+						,Z.HIE_ORDINAL
+				FROM	DS_VIEW_LVL_MSTR X
+							INNER JOIN DS_VIEW_HIE_MSTR Y
+								ON X.DS_VIEW_ID = Y.DS_VIEW_ID
+								AND X.DIM_UNI_NM = Y.DIM_UNI_NM
+								AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+							LEFT OUTER JOIN CUBE_HIE_MSTR Z
+				                ON Z.CUBE_ID = #{cubeId}
+				                AND Y.HIE_UNI_NM = Z.HIE_UNI_NM
+				WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		        ) T1
+		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
+		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
+			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+		<!-- </if>
+		<if test="_databaseId == 'db2'">
+			SELECT DISTINCT T1.*
+			   ,T2.TBL_NM as physicalTableName
+        	   ,T2.KEY_COL as physicalColumnId
+        	   ,T2.NAME_COL as physicalColumnName
+		       ,CASE WHEN T1.displayType is not null then T1.displayType
+	            ELSE
+	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
+	                CASE WHEN T2.TBL_NM IS NULL OR T2.TBL_NM = '' THEN 'LEVEL'
+	                ELSE CASE WHEN CONCAT('[',CONCAT(T2.TBL_NM,']')) <![CDATA[<>]]> T1.DIM_DIM_UNI_NM THEN 'SF' END
+	                END
+	              ELSE CAST(T2.HIE_DSP_FLD AS CHAR) END
+			        END as hieFolderName
+		       ,'dimension' as type
+		       ,CAST(T2.ORDER_BY as CHAR) as orderBy
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T3
+		         WHERE	T3.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T3.TBL_NM = T2.TBL_NM
+		         AND	T3.COL_NM = T2.KEY_COL) AS dataType
+		       ,T2.HIE_DSP_FLD as folder
+		       ,T1.HIE_ORDINAL as t1ordinal
+			   ,T2.HIE_ORDINAL as t2ordinal
+		FROM   (
+		       SELECT	CUBE_ID as cubeId
+		       		   ,HIE_UNI_NM as uniqueName
+		               ,DIM_UNI_NM as tableName
+		               ,HIE_CAPTION as captionName
+		               ,'Count' as summaryType
+		               ,HIE_IS_VISIBLE as "visible"
+		               ,NULL AS displayType
+		               ,DIM_DIM_UNI_NM
+		               ,HIE_HIE_UNI_NM
+		               ,HIE_ORDINAL
+		        FROM    CUBE_HIE_MSTR
+		        WHERE	CUBE_ID = #{cubeId}
+		        AND		HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		        UNION ALL
+				SELECT  ${cubeId} AS CUBE_ID
+						,X.LVL_UNI_NM
+						,X.DIM_UNI_NM
+						,CASE WHEN Z.HIE_CAPTION IS NULL OR Z.HIE_CAPTION = '' THEN X.LVL_CAPTION
+             			 ELSE Z.HIE_CAPTION   END AS captionName
+						,'Count' AS MEA_AGG
+						,Z.HIE_IS_VISIBLE as "visible"
+						,CASE WHEN Y.HIE_DSP_FLD IS NULL OR Y.HIE_DSP_FLD = '' THEN 'LEVEL_LEAF'
+                  		 ELSE CAST(Y.HIE_DSP_FLD AS CHAR) END AS displayType
+						,X.DIM_UNI_NM
+						,X.LVL_UNI_NM
+						,Z.HIE_ORDINAL
+				FROM	DS_VIEW_LVL_MSTR X
+							INNER JOIN DS_VIEW_HIE_MSTR Y
+								ON X.DS_VIEW_ID = Y.DS_VIEW_ID
+								AND X.DIM_UNI_NM = Y.DIM_UNI_NM
+								AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+							LEFT OUTER JOIN CUBE_HIE_MSTR Z
+				                ON Z.CUBE_ID = #{cubeId}
+				                AND Y.HIE_UNI_NM = Z.HIE_UNI_NM
+				WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		        ) T1
+		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
+		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
+		WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+		</if>
+		<if test="_databaseId == 'Tibero'">
+			SELECT DISTINCT T1.*
+			   ,T2.TBL_NM as physicalTableName
+        	   ,T2.KEY_COL as physicalColumnId
+        	   ,T2.NAME_COL as physicalColumnName
+		       ,CASE WHEN T1.displayType is not null then T1.displayType
+	            ELSE
+	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
+	                CASE WHEN T2.TBL_NM IS NULL OR T2.TBL_NM = '' THEN 'LEVEL'
+	                ELSE CASE WHEN CONCAT('[',CONCAT(T2.TBL_NM,']')) <![CDATA[<>]]> T1.DIM_DIM_UNI_NM THEN 'SF' END
+	                END
+	              ELSE TO_CHAR(T2.HIE_DSP_FLD) END
+			        END as hieFolderName
+		       ,'dimension' as type
+		       ,TO_CHAR(T2.ORDER_BY) as orderBy
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T3
+		         WHERE	T3.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T3.TBL_NM = T2.TBL_NM
+		         AND	T3.COL_NM = T2.KEY_COL) AS dataType
+		       ,T2.HIE_DSP_FLD as folder
+		       ,T1.HIE_ORDINAL as t1ordinal
+			   ,T2.HIE_ORDINAL as t2ordinal
+			FROM   (
+		       SELECT	CUBE_ID as cubeId
+		       		   ,HIE_UNI_NM as uniqueName
+		               ,DIM_UNI_NM as tableName
+		               ,HIE_CAPTION as captionName
+		               ,'Count' as summaryType
+		               ,HIE_IS_VISIBLE as "visible"
+		               ,NULL AS displayType
+		               ,DIM_DIM_UNI_NM
+		               ,HIE_HIE_UNI_NM
+		               ,HIE_ORDINAL
+		        FROM    CUBE_HIE_MSTR
+		        WHERE	CUBE_ID = #{cubeId}
+		        AND		HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		        UNION ALL
+				SELECT  ${cubeId} AS CUBE_ID
+						,X.LVL_UNI_NM
+						,X.DIM_UNI_NM
+						,CASE WHEN Z.HIE_CAPTION IS NULL OR Z.HIE_CAPTION = '' THEN X.LVL_CAPTION
+             			 ELSE Z.HIE_CAPTION   END AS captionName
+						,'Count' AS MEA_AGG
+						,Z.HIE_IS_VISIBLE as "visible"
+						,CASE WHEN Y.HIE_DSP_FLD IS NULL OR Y.HIE_DSP_FLD = '' THEN 'LEVEL_LEAF'
+                  		 ELSE TO_CHAR(Y.HIE_DSP_FLD) END AS displayType
+						,X.DIM_UNI_NM
+						,X.LVL_UNI_NM
+						,Z.HIE_ORDINAL
+				FROM	DS_VIEW_LVL_MSTR X
+							INNER JOIN DS_VIEW_HIE_MSTR Y
+								ON X.DS_VIEW_ID = Y.DS_VIEW_ID
+								AND X.DIM_UNI_NM = Y.DIM_UNI_NM
+								AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+							LEFT OUTER JOIN CUBE_HIE_MSTR Z
+				                ON Z.CUBE_ID = #{cubeId}
+				                AND Y.HIE_UNI_NM = Z.HIE_UNI_NM
+				WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		        ) T1
+		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
+		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
+			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+		</if>
+		<if test="_databaseId == 'Maria'">
+			SELECT DISTINCT T1.*
+			   ,T2.TBL_NM as physicalTableName
+        	   ,T2.KEY_COL as physicalColumnId
+        	   ,T2.NAME_COL as physicalColumnName
+		       ,CASE WHEN T1.displayType is not null then T1.displayType
+	            ELSE
+	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
+	                CASE WHEN T2.TBL_NM IS NULL OR T2.TBL_NM = '' THEN 'LEVEL'
+	                ELSE CASE WHEN CONCAT('[',CONCAT(T2.TBL_NM,']')) <![CDATA[<>]]> T1.DIM_DIM_UNI_NM THEN 'SF' END
+	                END
+	              ELSE CAST(T2.HIE_DSP_FLD AS CHAR) END
+			        END as hieFolderName
+		       ,'dimension' as type
+		       ,CAST(T2.ORDER_BY as CHAR) as orderBy
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T3
+		         WHERE	T3.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T3.TBL_NM = T2.TBL_NM
+		         AND	T3.COL_NM = T2.KEY_COL) AS dataType
+		       ,T2.HIE_DSP_FLD as folder
+		       ,T1.HIE_ORDINAL as t1ordinal
+			   ,T2.HIE_ORDINAL as t2ordinal
+			FROM   (
+		       SELECT	CUBE_ID as cubeId
+		       		   ,HIE_UNI_NM as uniqueName
+		               ,DIM_UNI_NM as tableName
+		               ,HIE_CAPTION as captionName
+		               ,'Count' as summaryType
+		               ,HIE_IS_VISIBLE as "visible"
+		               ,NULL AS displayType
+		               ,DIM_DIM_UNI_NM
+		               ,HIE_HIE_UNI_NM
+		               ,HIE_ORDINAL
+		        FROM    CUBE_HIE_MSTR
+		        WHERE	CUBE_ID = #{cubeId}
+		        AND		HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		        UNION ALL
+				SELECT  ${cubeId} AS CUBE_ID
+						,X.LVL_UNI_NM
+						,X.DIM_UNI_NM
+						,CASE WHEN Z.HIE_CAPTION IS NULL OR Z.HIE_CAPTION = '' THEN X.LVL_CAPTION
+             			 ELSE Z.HIE_CAPTION   END AS captionName
+						,'Count' AS MEA_AGG
+						,Z.HIE_IS_VISIBLE as "visible"
+						,CASE WHEN Y.HIE_DSP_FLD IS NULL OR Y.HIE_DSP_FLD = '' THEN 'LEVEL_LEAF'
+                  		 ELSE CAST(Y.HIE_DSP_FLD AS CHAR) END AS displayType
+						,X.DIM_UNI_NM
+						,X.LVL_UNI_NM
+						,Z.HIE_ORDINAL
+				FROM	DS_VIEW_LVL_MSTR X
+							INNER JOIN DS_VIEW_HIE_MSTR Y
+								ON X.DS_VIEW_ID = Y.DS_VIEW_ID
+								AND X.DIM_UNI_NM = Y.DIM_UNI_NM
+								AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+							LEFT OUTER JOIN CUBE_HIE_MSTR Z
+				                ON Z.CUBE_ID = #{cubeId}
+				                AND Y.HIE_UNI_NM = Z.HIE_UNI_NM
+				WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		        ) T1
+		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
+		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
+			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+		</if> -->
+	</select>
+
+  <select id="selectCubeMeaTables" parameterType="String" resultMap="CubeTbl">
+		SELECT	CUBE_ID as cubeId
+		       ,MEA_GRP_UNI_NM as uniqueName
+		       ,MEA_GRP_CAPTION as logicalName
+		       ,TBL_NM as physicalName
+		       ,IS_VISIBLE as "visible"
+		       ,MEA_GRP_ORDINAL as "order"
+		       ,(SELECT DS_VIEW_ID FROM CUBE_MSTR T2 WHERE T2.CUBE_ID = T1.CUBE_ID) as dsViewId
+		FROM	CUBE_MEA_GRP_MSTR T1
+		WHERE	CUBE_ID = #{cubeId}
+		AND 	T1.IS_VISIBLE = 1
+		ORDER BY MEA_GRP_ORDINAL
+	</select>
+
+  <select id="selectCubeMeaColumns" parameterType="String" resultMap="CubeMeaColumn">
+		SELECT  T2.CUBE_ID as cubeId
+			   ,T2.MEA_UNI_NM as uniqueName
+		       ,T2.MEA_GRP_UNI_NM as tableName  			<!-- logical table name -->
+		       ,T2.MEA_CAPTION as captionName
+		       ,T2.MEA_AGG as summaryType
+		       ,T2.MEA_IS_VISIBLE as "visible"
+		       ,T2.MEA_FORMAT_STR as "format"
+		       ,T2.MEA_DSP_FLD AS "folder"
+		       ,T2.MEA_ORDINAL
+		       ,(SELECT COL_EXPRESS
+		         FROM	DS_VIEW_COL_MSTR T1
+		         WHERE	T1.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		         AND	T1.TBL_NM = T2.MEA_TBL_NM
+		         AND	T1.COL_NM = T2.MEA_COL_NM) AS expression
+		       ,'measure' as type
+		       ,(SELECT DATA_TYPE
+		         FROM	DS_VIEW_COL_MSTR T1
+		         WHERE	T1.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+				 AND	T1.TBL_NM = T2.MEA_TBL_NM
+		         AND	T1.COL_NM = T2.MEA_COL_NM) AS dataType
+		       , T2.MEA_TBL_NM as logicalTableName
+		       , T2.MEA_COL_NM as logicalColumnName
+		FROM	CUBE_MEA_MSTR T2
+		WHERE	T2.CUBE_ID = #{cubeId}
+		ORDER BY  T2.MEA_ORDINAL
+	</select>
+<!-- Query End -->
+</mapper>
