@@ -1,8 +1,10 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.auth.service.AuthService;
@@ -16,16 +18,19 @@ import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+import com.wise.MarketingPlatForm.global.config.mart.MartConfig;
 
 @Service
 public class DatasetService {
 
   private final DatasetDAO datasetDAO;
   private final AuthService authService;
+  private final MartConfig martConfig;
 
-  DatasetService(DatasetDAO datasetDAO, AuthService authService) {
+  DatasetService(DatasetDAO datasetDAO, AuthService authService, MartConfig martConfig) {
     this.datasetDAO = datasetDAO;
     this.authService = authService;
+    this.martConfig = martConfig;
   }
 
   public List<DsMstrDTO> getDataSources(String userId) {
@@ -90,5 +95,25 @@ public class DatasetService {
     }
 
     return result;
+  }
+
+  public List<HashMap<String, Object>> MartSelectList() {  
+	  DSMstrDTO dsMstrDTO = DSMstrDTO.builder()
+	  		.dsId(2223)
+	  	  .dsNm("[MSSQL] WISE_JKㅁ")
+	  	  .ip("3.39.141.250")
+	  	  .port("1433")
+	  	  .dbNm("WISE_JK")
+	  	  .ownerNm("dbo")
+	  	  .password("dnltpdemo1012!@#$")
+	  	  .userId("wise")
+	  	  .connector("jdbc:sqlserver://3.39.141.250:1433;DatabaseName=WISE_JK")
+	  	  .dsDesc("dnltpdemo1012!@#$")
+	  	  .dbmsType(DBMSType.MS_SQL)
+	  	  .build();
+	    
+	  martConfig.setMartDataSource(dsMstrDTO);
+	  String query = "SELECT * FROM BMT_F_버블차트";
+	  return martDAO.selectList(query);
   }
 }
