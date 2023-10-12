@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum DBMSType {
+public enum DbmsType {
   ORACLE("ORACLE", "oracle.jdbc.driver.OracleDriver"), 
   MS_SQL("MS-SQL", "com.microsoft.sqlserver.jdbc.SQLServerDriver"), 
   TIBERO("TIBERO", "com.tmax.tibero.jdbc.TbDriver"), 
@@ -21,10 +21,10 @@ public enum DBMSType {
   private final String symbol;
   private final String driver;
 
-	DBMSType (String symbol, String driver) { 
-		this.symbol = symbol; 
-		this.driver = driver;	
-	}
+  DbmsType (String symbol, String driver) { 
+	this.symbol = symbol; 
+	this.driver = driver;	
+  }
 
   private static final Map<String, DbmsType> stringToEnum =
 		Stream.of(values()).collect(

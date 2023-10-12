@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
+import com.wise.MarketingPlatForm.dataset.dao.MartDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
@@ -26,11 +25,13 @@ public class DatasetService {
   private final DatasetDAO datasetDAO;
   private final AuthService authService;
   private final MartConfig martConfig;
+  private final MartDAO martDAO;
 
-  DatasetService(DatasetDAO datasetDAO, AuthService authService, MartConfig martConfig) {
+  DatasetService(DatasetDAO datasetDAO, AuthService authService, MartConfig martConfig, MartDAO martDAO) {
     this.datasetDAO = datasetDAO;
     this.authService = authService;
     this.martConfig = martConfig;
+    this.martDAO = martDAO;
   }
 
   public List<DsMstrDTO> getDataSources(String userId) {
@@ -98,7 +99,7 @@ public class DatasetService {
   }
 
   public List<HashMap<String, Object>> MartSelectList() {  
-	  DSMstrDTO dsMstrDTO = DSMstrDTO.builder()
+	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
 	  		.dsId(2223)
 	  	  .dsNm("[MSSQL] WISE_JKㅁ")
 	  	  .ip("3.39.141.250")
@@ -109,7 +110,7 @@ public class DatasetService {
 	  	  .userId("wise")
 	  	  .connector("jdbc:sqlserver://3.39.141.250:1433;DatabaseName=WISE_JK")
 	  	  .dsDesc("dnltpdemo1012!@#$")
-	  	  .dbmsType(DBMSType.MS_SQL)
+	  	  .dbmsType(DbmsType.MS_SQL)
 	  	  .build();
 	    
 	  martConfig.setMartDataSource(dsMstrDTO);

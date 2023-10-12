@@ -1,7 +1,6 @@
 package com.wise.MarketingPlatForm.global.config.mart;
 
-import com.wise.MarketingPlatForm.dataset.type.DBMSType;
-import com.wise.MarketingPlatForm.dataset.vo.DSMstrDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -17,7 +16,7 @@ public class MartConfig {
 	@Resource(name="martTemplates")
 	MartSqlSession martSqlSession;
 
-    public void setMartDataSource(DSMstrDTO dsMstrDTO) {
+    public void setMartDataSource(DsMstrDTO dsMstrDTO) {
         try {
         	SqlSessionTemplate templateChecker = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
         	
