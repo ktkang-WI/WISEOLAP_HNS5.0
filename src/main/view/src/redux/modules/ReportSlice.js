@@ -1,20 +1,55 @@
 import {createSlice} from '@reduxjs/toolkit';
 import localizedString from 'config/localization';
+import chartSeriesButtonIcon
+  from 'assets/image/icon/item/chart_bar.png';
+import dimensionIcon
+  from 'assets/image/icon/dataSource/dimension.png';
+import measureIcon from 'assets/image/icon/dataSource/measure.png';
 
 const initialState = {
   selectedReportId: 0,
   reports: [{
     reportId: 0,
-    selectedItemId: '',
+    selectedItemId: 'item1',
     options: {
       reportNm: localizedString.defaultReportName,
       reportDesc: '',
       reportPath: '', // 해당 경로 비어있을 경우 새 보고서
       order: 0
     },
-    datasetQuantity: 0,
-    datasets: [],
-    items: [] // TODO: 기본값 지정 필요
+    itemQuantity: 0,
+    items: [{
+      id: 'item1',
+      meta: {
+        dataField: {
+          dataFieldQuantity: 0,
+          measure: [],
+          dimension: []
+        }
+      },
+      temp: {
+        dataFieldOption: {
+          measure: {
+            label: localizedString.measure,
+            icon: measureIcon,
+            placeholder: localizedString.measurePlaceholder,
+            type: 'MEA',
+            useButton: true,
+            // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
+            buttonIcon: chartSeriesButtonIcon,
+            buttonEvent: function(e) {
+              console.log(e);
+            }
+          },
+          dimension: {
+            label: localizedString.dimension,
+            icon: dimensionIcon,
+            placeholder: localizedString.dimensionPlaceholder,
+            type: 'DIM' // 타입은 DIM 또는 MEA. 조회시 MEA와 DIM 구분하기 위함.
+          }
+        }
+      }
+    }] // TODO: 기본값 지정 필요
   }]
 };
 
@@ -33,21 +68,10 @@ const initialState = {
 const reducers = {
   /* REPORT */
   initReport(state, actions) {
-    state.reports = [{
-      reportId: 0,
-      options: {
-        reportNm: localizedString.defaultReportName,
-        reportDesc: '',
-        reportPath: '', // 해당 경로 비어있을 경우 새 보고서
-        order: 0
-      },
-      datasetQuantity: 0,
-      datasets: [],
-      items: [] // TODO: 기본값 지정 필요
-    }];
+    state.reports = initialState.reports;
   },
   insertReport(state, actions) {
-    state.reports = state.concat(actions.payload);
+    state.reports = state.reports.concat(actions.payload);
   },
   updateReport(state, actions) {
     const index = state.reports.findIndex(
@@ -66,54 +90,69 @@ const reducers = {
   deleteAllReport(state, actions) {
     state.reports = [];
   },
-
-  /* DATASET */
-  insertDataset(state, actions) {
+  /* Item */
+  insertItem(state, actions) {
     const index = state.reports.findIndex(
         (report) => report.reportId == state.selectedReportId
     );
 
-    state.reports[index].datasetQuantity++;
+    state.reports[index].itemQuantity++;
 
+    actions.payload.id =
+      'item' + state.reports[index].itemQuantity;
+    state.reports[index].items =
+      state.reports[index].items.concat(actions.payload);
 
-    actions.payload.datasetId =
-      'dataset' + state.reports[index].datasetQuantity;
-    state.reports[index].datasets =
-      state.reports[index].datasets.concat(actions.payload);
+    state.reports[index].selectedItemId =
+      'item' + state.reports[index].itemQuantity;
   },
-  updateDataset(state, actions) {
+  updateItem(state, actions) {
     const selectedReport = state.reports.findIndex(
         (report) => report.reportId == state.selectedReportId
     );
 
-    const datasetIndex = state.reports[selectedReport].datasets.findIndex(
-        (ds) => ds.reportId == actions.payload.datasetId
+    const itemIndex = state.reports[selectedReport].items.findIndex(
+        (item) => item.id == actions.payload.id
     );
 
-    if (datasetIndex > 0) {
-      state.reports[selectedReport].datasets[datasetIndex] = actions.payload;
+    if (itemIndex >= 0) {
+      state.reports[selectedReport].items[itemIndex] = actions.payload;
     } else {
-      state.reports[selectedReport].datasets =
-        state.reports[selectedReport].datasets.concat(actions.payload);
+      state.reports[selectedReport].items =
+        state.reports[selectedReport].items.concat(actions.payload);
     }
-    state.reports[index].datasets =
-      state.reports[index].datasets.concat(actions.payload);
+    state.reports[selectedReport].items =
+      state.reports[selectedReport].items.concat(actions.payload);
   },
-  deleteDataset(state, actions) {
+  deleteItem(state, actions) {
     const selectedReport = state.reports.findIndex(
         (report) => report.reportId == state.selectedReportId
     );
 
-    state.reports[selectedReport].datasets =
-    state.reports[selectedReport].datasets.filter(
-        (ds) => ds.datasetId != actions.payload
+    state.reports[selectedReport].items =
+    state.reports[selectedReport].items.filter(
+        (item) => item.id != actions.payload
     );
   },
-  deleteAllDataset(state, actions) {
+  selectItem(state, actions) {
     const selectedReport = state.reports.findIndex(
         (report) => report.reportId == state.selectedReportId
     );
-    state.reports[selectedReport].datasets = [];
+    state.reports[selectedReport].selectedItemId = actions.payload;
+  },
+  updateItemField(state, actions) {
+    const selectedReport = state.reports.findIndex(
+        (report) => report.reportId == state.selectedReportId
+    );
+
+    const itemIndex = state.reports[selectedReport].items.findIndex(
+        (item) => item.id == state.reports[selectedReport].selectedItemId
+    );
+
+    if (itemIndex >= 0) {
+      state.reports[selectedReport].items[itemIndex].meta.dataField =
+       actions.payload;
+    }
   }
 };
 

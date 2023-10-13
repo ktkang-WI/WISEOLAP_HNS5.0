@@ -2,10 +2,12 @@ import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import ConfigSlice from './ConfigSlice';
 import ReportSlice from './ReportSlice';
 import ModalSlice from './ModalSlice';
+import DatasetSlice from './DatasetSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
-  report: ReportSlice.reducer
+  report: ReportSlice.reducer,
+  dataset: DatasetSlice.reducer
 });
 
 const systemReducer = combineReducers({

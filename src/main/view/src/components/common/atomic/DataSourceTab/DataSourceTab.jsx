@@ -4,10 +4,12 @@ import {Lookup} from 'devextreme-react';
 import localizedString from '../../../../config/localization';
 import PanelTitle from '../Common/Panel/PanelTitle';
 import DataSourceFoldableList from './molecules/DataSourceFoldableList';
-import {useSelector} from 'react-redux';
-import {selectCurrentReportDatasets} from 'redux/selector/ReportSelector';
-import {useEffect, useRef, useState} from 'react';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
+import {selectCurrentDataset, selectCurrentDatasets}
+  from 'redux/selector/DatasetSelector';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 import _ from 'lodash';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
@@ -21,16 +23,11 @@ const Wrapper = styled.div`
 `;
 
 const DataSourceTab = () => {
-  const datasets = useSelector(selectCurrentReportDatasets);
-  const [selectedDataset, setSelectedDataset] = useState({});
-  const lookup = useRef();
-
-  useEffect(() => {
-    if (datasets && datasets.length > 0) {
-      setSelectedDataset(datasets[datasets.length - 1]);
-      lookup.current.instance.option('value', datasets[datasets.length - 1]);
-    }
-  }, [datasets]);
+  const datasets = useSelector(selectCurrentDatasets);
+  const selectedDataset = useSelector(selectCurrentDataset);
+  const selectedReportId = useSelector(selectCurrentReportId, shallowEqual);
+  const dispatch = useDispatch();
+  const {selectDataset} = DatasetSlice.actions;
 
   return (
     <Wrapper>
@@ -46,13 +43,16 @@ const DataSourceTab = () => {
         }}
         placeholder='데이터 집합 선택'
         showCancelButton={false}
-        ref={lookup}
         defaultValue={selectedDataset}
+        value={selectedDataset}
         dataSource={datasets}
         displayExpr='datasetNm'
         searchEnabled={false}
         onValueChanged={(e) => {
-          setSelectedDataset(e.value);
+          dispatch(selectDataset({
+            reportId: selectedReportId,
+            datasetId: e.value? e.value.datasetId : ''
+          }));
         }}
       />
       {!_.isEmpty(selectedDataset) &&
