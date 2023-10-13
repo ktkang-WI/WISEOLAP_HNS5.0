@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>/src/main/resources/application.properties</value>
+		</property>
+	</bean>
+
+	<!-- JDBC용  -->	
+ 	<bean id="repositoryDataSource" class="org.apache.commons.dbcp.BasicDataSource"> 
+		<property name="driverClassName" value="${spring.datasource.driver-class-name}" />
+		<property name="url" value="${spring.datasource.url}" />
+		<property name="username" value="${spring.datasource.username}" />
+		<property name="password" value="${spring.datasource.password}" />
+		<property name="defaultAutoCommit" value="false" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="repositoryDataSource"/>
+		<property name="configLocation" value="/src/main/resources/mybatis/mybatis-config.xml"/>
+		<property name="mapperLocations" value="/src/main/resources/mapper/*.xml" />
+		<property name="databaseIdProvider" ref="databaseIdProvider"/>
+	</bean>
+	
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider"> 
+		<property name="properties" ref="vendorProperties"/>
+	</bean>
+	
+	<bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="properties">
+	        <props>
+	            <prop key="SQL Server">sqlserver</prop>
+	            <prop key="Oracle">Oracle</prop>
+	            <prop key="DB2">db2</prop>
+	            <prop key="Tibero">Tibero</prop>
+	            <prop key="MySQL">mysql</prop>
+	            <prop key="PostgreSQL">postgres</prop>
+	            <prop key="Maria">Maria</prop>
+	        </props>
+	    </property>
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+</beans>
