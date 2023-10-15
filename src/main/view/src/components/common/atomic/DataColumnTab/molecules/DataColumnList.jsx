@@ -78,7 +78,7 @@ const DataColumnList = ({
           >
             {columns.map((column, index) =>
               <Draggable
-                key={column.uniqueName}
+                key={column.fieldId}
                 draggableId={column.fieldId}
                 index={index}>
                 {(provided) => (
