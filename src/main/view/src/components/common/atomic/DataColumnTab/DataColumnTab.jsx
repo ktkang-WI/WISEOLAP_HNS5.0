@@ -2,8 +2,8 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import PanelTitleText from '../Common/Panel/PanelTitleText';
 import DataColumnList from './molecules/DataColumnList';
-import localizedString from '../../../../config/localization';
-import {selectCurrentDataFieldOption} from 'redux/selector/ReportSelector';
+import localizedString from 'config/localization';
+import {selectCurrentDataFieldOption} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 
 const theme = getTheme();

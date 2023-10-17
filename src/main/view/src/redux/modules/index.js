@@ -3,11 +3,13 @@ import ConfigSlice from './ConfigSlice';
 import ReportSlice from './ReportSlice';
 import ModalSlice from './ModalSlice';
 import DatasetSlice from './DatasetSlice';
+import ItemSlice from './ItemSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
   report: ReportSlice.reducer,
-  dataset: DatasetSlice.reducer
+  dataset: DatasetSlice.reducer,
+  item: ItemSlice.reducer
 });
 
 const systemReducer = combineReducers({

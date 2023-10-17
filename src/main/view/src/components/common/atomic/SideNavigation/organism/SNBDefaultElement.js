@@ -1,4 +1,4 @@
-import localizedString from '../../../../../config/localization';
+import localizedString from 'config/localization';
 import dashboard from '../../../../../assets/image/icon/button/dashboard.png';
 import dashboardActive
   from '../../../../../assets/image/icon/button/dashboard_active.png';

@@ -74,11 +74,11 @@ const reducers = {
 
 const extraReducers = {};
 
-const ReportSlice = createSlice({
-  name: 'Report',
+const DatasetSlice = createSlice({
+  name: 'Dataset',
   initialState: initialState,
   reducers: reducers,
   extraReducers: extraReducers
 });
 
-export default ReportSlice;
+export default DatasetSlice;
