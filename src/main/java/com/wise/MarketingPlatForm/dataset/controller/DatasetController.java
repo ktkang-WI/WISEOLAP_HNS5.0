@@ -140,6 +140,7 @@ public class DatasetController {
       }
     )
   )
+ 
   @PostMapping(value = "/cubes")
   public List<CubeMstrDTO> getCubes(@RequestBody Map<String, String> param) {
     String dsViewId = param.getOrDefault("dsViewId", "");
