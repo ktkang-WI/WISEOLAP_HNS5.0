@@ -1,7 +1,7 @@
 import customFieldImg from 'assets/image/icon/button/custom_field.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
-import localizedString from '../../../../../config/localization';
+import localizedString from 'config/localization';
 
 const PanelTitleDefaultElement = {
   'CustomField': {

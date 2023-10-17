@@ -5,7 +5,7 @@ import arrowImg
 import otherMenuImg
   from '../../../../../assets/image/icon/dataSource/other_menu.png';
 import {ContextMenu} from 'devextreme-react';
-import localizedString from '../../../../../config/localization';
+import localizedString from 'config/localization';
 import uuid from 'react-uuid';
 
 const theme = getTheme();

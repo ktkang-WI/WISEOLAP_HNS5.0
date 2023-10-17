@@ -4,12 +4,14 @@ import ReportSlice from './ReportSlice';
 import ModalSlice from './ModalSlice';
 import DatasetSlice from './DatasetSlice';
 import LayoutSlice from './LayoutSlice';
+import ItemSlice from './ItemSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
   report: ReportSlice.reducer,
   dataset: DatasetSlice.reducer,
-  layout: LayoutSlice.reducer
+  layout: LayoutSlice.reducer,
+  item: ItemSlice.reducer
 });
 
 const systemReducer = combineReducers({

@@ -6,7 +6,7 @@ import resetLayoutImg
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
-import {selectCurrentDataField} from 'redux/selector/ReportSelector';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 
 const theme = getTheme();
@@ -78,7 +78,7 @@ const DataColumnList = ({
           >
             {columns.map((column, index) =>
               <Draggable
-                key={column.uniqueName}
+                key={column.fieldId}
                 draggableId={column.fieldId}
                 index={index}>
                 {(provided) => (
