@@ -31,7 +31,7 @@ const reducers = {
     };
   },
   // insertFlexLayout
-  insertFlextLayout(state, actions) {
+  insertFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
     const num = actions.payload.num;
     const component = actions.payload.component;

@@ -18,7 +18,7 @@ export default function useLayout() {
     const param =
       {reportId: reportId, num: parseInt(num)+1, component: component};
 
-    dispatch(flexLayout.insertFlextLayout(param));
+    dispatch(flexLayout.insertFlexLayout(param));
   };
 
   const deleteFlexLayout = (reportId, tabId) => {
