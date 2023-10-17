@@ -1,4 +1,4 @@
-import localizedString from '../../../../../config/localization';
+import localizedString from 'config/localization';
 import CommonTab from '../../Common/Interactive/CommonTab';
 import CommonToolbar from '../../Common/CommonToolbar';
 import Wrapper from '../../Common/Wrap/Wrapper';

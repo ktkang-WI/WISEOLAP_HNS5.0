@@ -1,22 +1,18 @@
-import localizedString from '../../../../../config/localization';
-import filteringImg from '../../../../../assets/image/icon/report/filter.png';
-import resetFilterImg
-  from '../../../../../assets/image/icon/report/reset_filter.png';
+import localizedString from 'config/localization';
+import filteringImg from 'assets/image/icon/report/filter.png';
+import resetFilterImg from 'assets/image/icon/report/reset_filter.png';
 import singleMasterFilterImg
-  from '../../../../../assets/image/icon/report/single_master_filter.png';
+  from 'assets/image/icon/report/single_master_filter.png';
 import multiMaseterFilterImg
-  from '../../../../../assets/image/icon/report/multi_master_filter.png';
-import drillDownImg
-  from '../../../../../assets/image/icon/report/drill_down.png';
+  from 'assets/image/icon/report/multi_master_filter.png';
+import drillDownImg from 'assets/image/icon/report/drill_down.png';
 import crossDataSourceFilteringImg
-  from
-  '../../../../../assets/image/icon/report/cross_data_source_filtering.png';
+  from 'assets/image/icon/report/cross_data_source_filtering.png';
 import ignoreMasterFilterImg
-  from '../../../../../assets/image/icon/report/ignore_master_filter.png';
-import dimensionImg
-  from '../../../../../assets/image/icon/report/dimension.png';
+  from 'assets/image/icon/report/ignore_master_filter.png';
+import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
-  from '../../../../../assets/image/icon/report/dimension_group.png';
+  from 'assets/image/icon/report/dimension_group.png';
 
 
 const ItemAttributeDefaultElement = () => {

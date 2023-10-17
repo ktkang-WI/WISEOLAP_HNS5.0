@@ -23,26 +23,3 @@ export const selectCurrentReportId = createSelector(
     (state) => state.meta.report.selectedReportId,
     (selectedReportId) => selectedReportId
 );
-
-/**
- * 현재 선택된 아이템 선택
- */
-export const selectCurrentReportItem = createSelector(
-    selectCurrentReport,
-    (selectedReport) => {
-      return !selectedReport ? [] :
-        selectedReport.items.find(
-            (item) => item.id == selectedReport.selectedItemId
-        );
-    }
-);
-
-export const selectCurrentDataField = createSelector(
-    selectCurrentReportItem,
-    (selectedItem) => selectedItem.meta.dataField
-);
-
-export const selectCurrentDataFieldOption = createSelector(
-    selectCurrentReportItem,
-    (selectedItem) => selectedItem.temp.dataFieldOption
-);
