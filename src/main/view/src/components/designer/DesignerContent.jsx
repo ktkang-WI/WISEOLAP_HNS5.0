@@ -12,7 +12,6 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import ItemBoard from 'components/report/organisms/ItemBoard';
 import {getTheme} from 'config/theme';
 import useDrag from 'hooks/useDrag';
-// import ItemBoard2 from 'components/report/organisms/ItemBoard2';
 
 const theme = getTheme();
 
