@@ -17,7 +17,7 @@ const reducers = {
     state[0].layoutConfig = actions.payload;
   },
   // deleteFlexLayout
-  deleteFlextLayout(state, actions) {
+  deleteFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
     const tabId = actions.payload.tabId;
     state[reportId].layoutConfig = {
@@ -30,7 +30,7 @@ const reducers = {
       }
     };
   },
-  // deleteFlexLayout
+  // insertFlexLayout
   insertFlextLayout(state, actions) {
     const reportId = actions.payload.reportId;
     const num = actions.payload.num;

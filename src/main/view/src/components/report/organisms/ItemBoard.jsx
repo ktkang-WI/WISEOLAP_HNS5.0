@@ -10,7 +10,7 @@ import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import flexLayoutDefault from './FlexLayoutDefault';
 import {useEffect} from 'react';
-import {flexLayoutConfig} from 'redux/selector/LayoutSelector';
+import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 
 const StyledBoard = styled.div`
@@ -28,15 +28,16 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
-  const locattion = useLocation();
+  const location = useLocation();
   const {defaultFlexLayout, deleteFlexLayout} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
   useEffect(() => {
-    const defaultLayout = locattion.pathname.includes('dashboard')?
+    const defaultLayout = location.pathname.includes('dashboard')?
     flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
     defaultFlexLayout(defaultLayout);
-  }, [locattion]);
-  const layoutConfig = useSelector(flexLayoutConfig);
+  }, [location]);
+  const layoutConfig = useSelector(selectFlexLayoutConfig);
+
   function factory(node) {
     const component = node.getComponent();
     if (component === 'chart') {
@@ -68,6 +69,7 @@ const ItemBoard = () => {
       );
     }
   }
+
   return (
     <StyledBoard>
       <Layout model={Model.fromJson(layoutConfig)}
