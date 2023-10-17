@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'; // Import useEffect
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import RibbonButton from '../../Common/Button/RibbonButton';
-import RibbonDefaultElement from './RibbonDefaultElement';
+import ribbonDefaultElement from './RibbonDefaultElement';
 import RibbonPanel from '../../Common/Panel/RibbonPanel';
 import OnlyImageButton from '../../Common/Button/OnlyImageButton';
 import arrowLeft from '../../../../../assets/image/icon/button/arrow_left.png';
@@ -262,7 +262,7 @@ const itemIterator = (items, position) => {
 
   return itemArr.map((item) => {
     if (typeof item === 'string') {
-      return getRibbonItem({...RibbonDefaultElement[item], position});
+      return getRibbonItem({...ribbonDefaultElement()[item], position});
     } else if (item) {
       return getRibbonItem({...item, position});
     }

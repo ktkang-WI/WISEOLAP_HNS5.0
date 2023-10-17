@@ -4,6 +4,14 @@ import 'flexlayout-react/style/light.css'; // Import the CSS styling
 import ChartExample from './ChartExample';
 import './itemBoard.css';
 import download from '../../../assets/image/icon/button/download_new.png';
+import {useSelector} from 'react-redux';
+import {useLocation} from 'react-router-dom';
+import useLayout from 'hooks/useLayout';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import flexLayoutDefault from './FlexLayoutDefault';
+import {useEffect} from 'react';
+import {flexLayoutConfig} from 'redux/selector/LayoutSelector';
+
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -20,40 +28,15 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
-  const layoutConfig = {
-    global: {tabEnableClose: false},
-    layout: {
-      type: 'row',
-      children: [
-        {
-          type: 'tabset',
-          weight: 50,
-          selected: 0,
-          children: [
-            {
-              type: 'tab',
-              name: 'Chart Tab 1',
-              component: 'chart'
-            }
-          ]
-        },
-        {
-          type: 'tabset',
-          weight: 50,
-          selected: 0,
-          children: [
-            {
-              type: 'tab',
-              name: 'Chart Tab 2',
-              component: 'chart'
-            }
-          ]
-        }
-      ]
-    }
-
-  };
-
+  const locattion = useLocation();
+  const {defaultFlexLayout, deleteFlexLayout} = useLayout();
+  const selectedReportId = useSelector(selectCurrentReportId);
+  useEffect(() => {
+    const defaultLayout = locattion.pathname.includes('dashboard')?
+    flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
+    defaultFlexLayout(defaultLayout);
+  }, [locattion]);
+  const layoutConfig = useSelector(flexLayoutConfig);
   function factory(node) {
     const component = node.getComponent();
     if (component === 'chart') {
@@ -68,7 +51,8 @@ const ItemBoard = () => {
           <button
             key="delete"
             title="Delete tabset"
-            onClick={() => {
+            onClick={(e) => {
+              deleteFlexLayout(selectedReportId, tabNode._attributes.id);
             }}
           >
           &#128473;&#xFE0E;
@@ -84,7 +68,6 @@ const ItemBoard = () => {
       );
     }
   }
-
   return (
     <StyledBoard>
       <Layout model={Model.fromJson(layoutConfig)}
