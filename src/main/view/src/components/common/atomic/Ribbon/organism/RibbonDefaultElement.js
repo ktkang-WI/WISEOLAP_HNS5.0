@@ -20,11 +20,14 @@ import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
 import pointLabel from 'assets/image/icon/button/point_labels.png';
 import querySearch from 'assets/image/icon/button/query_search.png';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import useLayout from 'hooks/useLayout';
+import {useSelector} from 'react-redux';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
-  const component = '';
+  const component = 'chart';
   return {
     'NewReport': {
       id: 'new_report',

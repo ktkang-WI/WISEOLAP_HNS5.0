@@ -10,7 +10,7 @@ import localizedString from 'config/localization';
 const initialState = {
   0: {
     selectedItemId: 'item1',
-    itemQuantity: 0,
+    itemQuantity: 1,
     items: [{
       id: 'item1',
       meta: {
@@ -100,6 +100,11 @@ const reducers = {
     state[reportId].items.filter(
         (item) => item.id != itemId
     );
+
+    const lastItem = state[reportId].items[state[reportId].items.length-1];
+    const selectedItemId = lastItem ? lastItem.id : '';
+
+    state[reportId].selectedItemId = selectedItemId;
   },
   // 파라미터로 reportId
   deleteAllItems(state, actions) {

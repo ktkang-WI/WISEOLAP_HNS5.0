@@ -11,7 +11,7 @@ const FlexLayoutDefault= () => {
             selected: 0,
             children: [
               {
-                id: '1',
+                id: 'item1',
                 type: 'tab',
                 name: 'Chart 1',
                 component: 'chart'
@@ -32,7 +32,7 @@ const FlexLayoutDefault= () => {
             selected: 0,
             children: [
               {
-                id: '1',
+                id: 'item1',
                 type: 'tab',
                 name: 'Chart',
                 component: 'chart'
@@ -45,10 +45,10 @@ const FlexLayoutDefault= () => {
             selected: 0,
             children: [
               {
-                id: '2',
+                id: 'item2',
                 type: 'tab',
                 name: 'PivotGrid',
-                component: ''
+                component: 'pivot'
               }
             ]
           }

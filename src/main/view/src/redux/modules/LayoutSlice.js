@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   0: {
+    layoutQuantity: 1,
     layoutConfig: {
       global: {tabEnableClose: false},
       layout: {
@@ -19,13 +20,14 @@ const reducers = {
   // deleteFlexLayout
   deleteFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
-    const tabId = actions.payload.tabId;
+    const itemId = actions.payload.itemId;
+
     state[reportId].layoutConfig = {
       ...state[reportId].layoutConfig,
       layout: {
         ...state[reportId].layoutConfig.layout,
         children: state[reportId].layoutConfig.layout.children.filter(
-            (child) => child.children[0].id != tabId
+            (child) => child.children[0].id != itemId
         )
       }
     };
@@ -33,14 +35,16 @@ const reducers = {
   // insertFlexLayout
   insertFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
-    const num = actions.payload.num;
     const component = actions.payload.component;
+    state[reportId].layoutQuantity++;
+
     const child = {
-      id: num,
+      id: 'item' + state[reportId].layoutQuantity,
       type: 'tab',
-      name: 'Chart '+ num,
+      name: 'Chart '+ state[reportId].layoutQuantity,
       component: component
     };
+
     state[reportId].layoutConfig = {
       ...state[reportId].layoutConfig,
       layout: {

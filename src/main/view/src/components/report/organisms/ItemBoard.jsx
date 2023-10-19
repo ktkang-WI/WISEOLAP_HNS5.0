@@ -36,14 +36,16 @@ const DownloadImage = styled.img`
 const ItemBoard = () => {
   const location = useLocation();
   const {defaultFlexLayout, deleteFlexLayout} = useLayout();
+  const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
+
   useEffect(() => {
     const defaultLayout = location.pathname.includes('dashboard')?
     flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
     defaultFlexLayout(defaultLayout);
   }, [location]);
+
   const layoutConfig = useSelector(selectFlexLayoutConfig);
-  const dispatch = useDispatch();
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
   const selectedItemId = useSelector(selectSelectedItemId);
@@ -51,7 +53,8 @@ const ItemBoard = () => {
   const model = Model.fromJson(layoutConfig);
 
   const itemFactory = {
-    chart: Chart
+    chart: Chart,
+    pivot: Chart
   };
 
   /**

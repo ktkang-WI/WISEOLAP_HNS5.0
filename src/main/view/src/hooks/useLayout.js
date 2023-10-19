@@ -1,30 +1,34 @@
-import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
-import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 export default function useLayout() {
   const dispatch = useDispatch();
   const flexLayout = LayoutSlice.actions;
-  const layoutNum = useSelector(selectFlexLayoutConfig);
+  const itemSlice = ItemSlice.actions;
 
   const defaultFlexLayout = (reportType) => {
     dispatch(flexLayout.defaultFlexLayout(reportType));
   };
 
   const insertFlexLayout = (reportId, component) => {
-    const len = layoutNum.layout.children.length;
-    const num = len != 0? layoutNum.layout.children[len-1].children[0].id : 0;
     const param =
-      {reportId: reportId, num: parseInt(num)+1, component: component};
+      {reportId: reportId, component: component};
 
     dispatch(flexLayout.insertFlexLayout(param));
+    dispatch(itemSlice.insertItem({
+      reportId: reportId, // 보고서 ID
+      item: {
+        type: component // type을 담고 있는 item 객체
+      }
+    }));
   };
 
   const deleteFlexLayout = (reportId, tabId) => {
-    const param = {reportId: reportId, tabId: tabId};
+    const param = {reportId: reportId, itemId: tabId};
 
     dispatch(flexLayout.deleteFlexLayout(param));
+    dispatch(itemSlice.deleteItem(param));
   };
 
   return {
