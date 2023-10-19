@@ -27,7 +27,7 @@ public class MartConfig {
         		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         		
         		hikariConfig.setDriverClassName(dsMstrDTO.getDbmsType().getDriver());
-        		hikariConfig.setJdbcUrl("jdbc:sqlserver://3.39.141.250:1433;DatabaseName=WISE_JK"); 
+        		hikariConfig.setJdbcUrl(dsMstrDTO.getDbmsType().getUrl(dsMstrDTO)); 
         		hikariConfig.setUsername(dsMstrDTO.getUserId());
         		hikariConfig.setPassword(dsMstrDTO.getPassword());
         		
