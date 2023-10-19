@@ -6,12 +6,16 @@ import {
   selectCurrentItems,
   selectSelectedItemId
 } from 'redux/selector/ItemSelector';
-import {
-  selectCurrentReportId
-} from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import './itemBoard.css';
 import download from '../../../assets/image/icon/button/download_new.png';
+import {useLocation} from 'react-router-dom';
+import useLayout from 'hooks/useLayout';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import flexLayoutDefault from './FlexLayoutDefault';
+import {useEffect} from 'react';
+import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
+
 import Chart from '../item/Chart';
 import Item from '../atoms/Item';
 
@@ -30,51 +34,27 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
+  const location = useLocation();
+  const {defaultFlexLayout, deleteFlexLayout} = useLayout();
   const dispatch = useDispatch();
+  const selectedReportId = useSelector(selectCurrentReportId);
+
+  useEffect(() => {
+    const defaultLayout = location.pathname.includes('dashboard')?
+    flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
+    defaultFlexLayout(defaultLayout);
+  }, [location]);
+
+  const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
-
-  const layoutConfig = {
-    global: {tabEnableClose: false},
-    layout: {
-      type: 'row',
-      children: [
-        {
-          type: 'tabset',
-          weight: 50,
-          selected: 0,
-          children: [
-            {
-              type: 'tab',
-              id: 'item1',
-              name: 'ddd',
-              component: 'chart'
-            }
-          ]
-        },
-        {
-          type: 'tabset',
-          weight: 50,
-          selected: 0,
-          children: [
-            {
-              type: 'tab',
-              id: 'item5',
-              name: 'ddd2',
-              component: 'chart'
-            }
-          ]
-        }
-      ]
-    }
-  };
-
   const model = Model.fromJson(layoutConfig);
 
   const itemFactory = {
-    chart: Chart
+    chart: Chart,
+    pivot: Chart
   };
 
   /**
@@ -134,7 +114,8 @@ const ItemBoard = () => {
           <button
             key="delete"
             title="Delete tabset"
-            onClick={() => {
+            onClick={(e) => {
+              deleteFlexLayout(selectedReportId, tabNode._attributes.id);
             }}
           >
           &#128473;&#xFE0E;
