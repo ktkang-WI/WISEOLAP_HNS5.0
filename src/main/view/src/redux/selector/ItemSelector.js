@@ -27,5 +27,5 @@ export const selectCurrentDataField = createSelector(
 
 export const selectCurrentDataFieldOption = createSelector(
     selectCurrentItem,
-    (selectedItem) => selectedItem? selectedItem.mart.dataFieldOption : []
+    (selectedItem) => selectedItem ? selectedItem.mart.dataFieldOption : []
 );

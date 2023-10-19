@@ -1,4 +1,4 @@
-const FlexLayoutDefault= () => {
+const FlexLayoutDefault = () => {
   return {
     dashboard: {
       global: {tabEnableClose: false},
@@ -57,4 +57,5 @@ const FlexLayoutDefault= () => {
     }
   };
 };
+
 export default FlexLayoutDefault;

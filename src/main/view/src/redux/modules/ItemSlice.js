@@ -101,7 +101,7 @@ const reducers = {
         (item) => item.id != itemId
     );
 
-    const lastItem = state[reportId].items[state[reportId].items.length-1];
+    const lastItem = state[reportId].items[state[reportId].items.length - 1];
     const selectedItemId = lastItem ? lastItem.id : '';
 
     state[reportId].selectedItemId = selectedItemId;
