@@ -11,6 +11,10 @@ export default function useLayout() {
     dispatch(flexLayout.defaultFlexLayout(reportType));
   };
 
+  const setLayout = (reportId, layout) => {
+    dispatch(flexLayout.seLayout({reportId: reportId, layout: layout}));
+  };
+
   const insertFlexLayout = (reportId, component) => {
     const param =
       {reportId: reportId, component: component};
@@ -33,6 +37,7 @@ export default function useLayout() {
 
   return {
     insertFlexLayout,
+    setLayout,
     deleteFlexLayout,
     defaultFlexLayout
   };

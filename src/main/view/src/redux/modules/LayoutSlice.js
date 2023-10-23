@@ -17,6 +17,10 @@ const reducers = {
   defaultFlexLayout(state, actions) {
     state[0].layoutConfig = actions.payload;
   },
+  setLayout(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId] = actions.payload.layout;
+  },
   // deleteFlexLayout
   deleteFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;

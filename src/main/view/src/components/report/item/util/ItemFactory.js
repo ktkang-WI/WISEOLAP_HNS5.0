@@ -4,7 +4,7 @@ import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
 
 
-const setItem = (orgItem) => {
+const makeItem = (orgItem) => {
   let item = {};
   // meta 값 있는 경우 불러오기로 간주
   if (!orgItem.meta) {
@@ -77,4 +77,4 @@ const setItem = (orgItem) => {
   return item;
 };
 
-export {setItem};
+export {makeItem};
