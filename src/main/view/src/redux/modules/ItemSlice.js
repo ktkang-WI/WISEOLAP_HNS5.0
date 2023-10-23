@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {setItem} from 'components/report/item/util/ItemFactory';
+import {makeItem} from 'components/report/item/util/ItemFactory';
 import chartSeriesButtonIcon
   from 'assets/image/icon/item/chart_bar.png';
 import dimensionIcon
@@ -68,7 +68,7 @@ const reducers = {
 
     actions.payload.item.id = itemId;
 
-    const item = setItem(actions.payload.item);
+    const item = makeItem(actions.payload.item);
 
     state[reportId].items =
       state[reportId].items.concat(item);
@@ -128,6 +128,10 @@ const reducers = {
     if (itemIndex >= 0) {
       state[reportId].items[itemIndex].meta.dataField = dataField;
     }
+  },
+  setItem(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId] = actions.payload.items;
   }
 };
 

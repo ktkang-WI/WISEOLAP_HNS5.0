@@ -255,14 +255,14 @@ const getRibbonItem = (item) => {
   }
 };
 
-const itemIterator = (items, position) => {
+const itemIterator = (ribbonDefaultItems, items, position) => {
   if (!items) return;
 
   const itemArr = [...items];
 
   return itemArr.map((item) => {
     if (typeof item === 'string') {
-      return getRibbonItem({...ribbonDefaultElement()[item], position});
+      return getRibbonItem({...ribbonDefaultItems[item], position});
     } else if (item) {
       return getRibbonItem({...item, position});
     }
@@ -271,6 +271,7 @@ const itemIterator = (items, position) => {
 
 const Ribbon = ({left, middle, right, customMenu,
   querySearch}) => {
+  const ribbonDefaultItems = ribbonDefaultElement();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [visibleRange, setVisibleRange] =
     useState({start: 0, end: 5}); // Initial visible range
@@ -312,13 +313,13 @@ const Ribbon = ({left, middle, right, customMenu,
   return (
     <StyledRibbon>
       <Left>
-        {itemIterator(left, 'left')}
+        {itemIterator(ribbonDefaultItems, left, 'left')}
       </Left>
       <Middle>
-        {itemIterator(middle, 'middle')}
+        {itemIterator(ribbonDefaultItems, middle, 'middle')}
       </Middle>
       <Right>
-        {itemIterator(right, 'right')}
+        {itemIterator(ribbonDefaultItems, right, 'right')}
       </Right>
       {screenWidth <= 1700 && (
         <CustomButtonWrapper>
@@ -329,6 +330,7 @@ const Ribbon = ({left, middle, right, customMenu,
           </NavigationButton>
           <CustomMenuForWrapper>
             {itemIterator(
+                ribbonDefaultItems,
                 customMenu.slice(visibleRange.start, visibleRange.end),
                 'customMenu'
             )}
@@ -342,7 +344,7 @@ const Ribbon = ({left, middle, right, customMenu,
       )}
       {screenWidth > 1700 && (
         <CustomMenu>
-          {itemIterator(customMenu, 'customMenu')}
+          {itemIterator(ribbonDefaultItems, customMenu, 'customMenu')}
         </CustomMenu>
       )}
       <QuerySearch>

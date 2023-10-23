@@ -116,7 +116,7 @@ const getHeaderItem = (item) => {
   }
 };
 
-const itemIterator = (items, position) => {
+const itemIterator = (headerDefaultItems, items, position) => {
   if (!items) return;
 
   // reverse로 인해 입력된 데이터가 수정될 가능성 막음
@@ -129,7 +129,7 @@ const itemIterator = (items, position) => {
   return itemArr.map((item, i) => {
     if (typeof item === 'string') {
       return getHeaderItem({
-        ...headerDefaultElement()[item],
+        ...headerDefaultItems[item],
         position,
         index: i,
         length: position == 'right'? 1 : itemArr.length
@@ -145,13 +145,14 @@ const itemIterator = (items, position) => {
 };
 
 const Header = ({left, right}) => {
+  const headerDefaultItems = headerDefaultElement();
   return (
     <StyledHeader>
       <Left>
-        {itemIterator(left, 'left')}
+        {itemIterator(headerDefaultItems, left, 'left')}
       </Left>
       <Right>
-        {itemIterator(right, 'right')}
+        {itemIterator(headerDefaultItems, right, 'right')}
       </Right>
     </StyledHeader>
   );
