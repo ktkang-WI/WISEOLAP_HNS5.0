@@ -171,7 +171,10 @@ public class DatasetController {
     return cubeService.getCube(cubeId, userId);
   }
 
-  @PostMapping(value = "/MartSelectList")
+  @Operation(
+    summary = "mart connection sample code",
+    description = "mart db연결 sample code")
+  @PostMapping(value = "/mart-sample")
     public List<HashMap<String, Object>> MartSelectList() {
     return datasetService.MartSelectList();
   }
