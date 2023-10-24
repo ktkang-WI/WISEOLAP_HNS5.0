@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
-import com.wise.MarketingPlatForm.dataset.dao.MartDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
@@ -16,8 +15,10 @@ import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.global.config.MartConfig;
+import com.wise.MarketingPlatForm.mart.dao.MartDAO;
+import com.wise.MarketingPlatForm.mart.vo.MartResult;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
-import com.wise.MarketingPlatForm.global.config.mart.MartConfig;
 
 @Service
 public class DatasetService {
@@ -98,7 +99,7 @@ public class DatasetService {
     return result;
   }
 
-  public List<HashMap<String, Object>> MartSelectList() {  
+  public MartResult MartSelectList() {  
 	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
 	  		.dsId(2223)
 	  	  .dsNm("[MSSQL] WISE_JKㅁ")
@@ -115,6 +116,6 @@ public class DatasetService {
 	    
 	  martConfig.setMartDataSource(dsMstrDTO);
 	  String query = "SELECT * FROM BMT_F_버블차트";
-	  return martDAO.selectList(query);
+	  return martDAO.select(query);
   }
 }

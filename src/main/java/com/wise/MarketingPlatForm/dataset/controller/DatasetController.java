@@ -18,6 +18,7 @@ import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.mart.vo.MartResult;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -175,7 +176,7 @@ public class DatasetController {
     summary = "mart connection sample code",
     description = "mart db연결 sample code")
   @PostMapping(value = "/mart-sample")
-    public List<HashMap<String, Object>> MartSelectList() {
+    public MartResult MartSelectList() {
     return datasetService.MartSelectList();
   }
 }

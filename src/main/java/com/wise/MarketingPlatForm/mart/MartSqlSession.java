@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.global.config.mart;
+package com.wise.MarketingPlatForm.mart;
 
 import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;

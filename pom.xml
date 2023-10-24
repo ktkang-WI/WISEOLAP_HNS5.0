@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<log4j2.version>2.15.0</log4j2.version>
+		<webapp.lib>${basedir}/lib</webapp.lib>
 	</properties>
 	
 	<dependencies>
@@ -203,8 +204,16 @@
       <artifactId>lombok</artifactId>
       <optional>true</optional>
    </dependency>
-		
-	</dependencies>	
+   
+    <dependency>
+	  <groupId>javaxt</groupId> 
+	  <artifactId>javaxt</artifactId>
+	  <version>1.0.0</version>
+	  <scope>system</scope> 
+	  <systemPath>${basedir}/src/main/webapp/WEB-INF/extra-lib/javaxt-corecustom-1.0.0.jar</systemPath> 
+    </dependency>
+
+  </dependencies>	
 
 	<build>
 		<plugins>
