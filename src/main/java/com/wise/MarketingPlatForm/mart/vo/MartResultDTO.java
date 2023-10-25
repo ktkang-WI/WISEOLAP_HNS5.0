@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MartResult {
+public class MartResultDTO {
 	List<MetaDTO> metaData;
 	List<HashMap<String, Object>> rowData;
 }

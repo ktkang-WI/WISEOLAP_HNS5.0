@@ -48,8 +48,6 @@ public class JavaxtUtils {
     				Date date = field.getValue().toDate();
     				String dateStr = "";
     				dateStr += date.getYear() + ".";
-    				/*DOGFOOT cshan 20200113 - datetime 조회하면 월 값의 +1이 되는 오류 수정*/
-//                dateStr += StringUtils.leftPad(String.valueOf(date.getMonth()+1), 2, "0") + ".";
     				dateStr += StringUtils.leftPad(String.valueOf(date.getMonth()), 2, "0") + ".";
     				dateStr += StringUtils.leftPad(String.valueOf(date.getDay()), 2, "0") + " ";
     				dateStr += StringUtils.leftPad(String.valueOf(date.getHour()), 2, "0") + ":";
@@ -61,19 +59,6 @@ public class JavaxtUtils {
     			else {
     				value = field.getValue().toObject();
     			}
-    			
-    			/* 특수문자 필터링 */
-    			/*for (String string : stringTypes) {
-                if (type.equalsIgnoreCase(string)) {
-                    value = ((String)value).replaceAll("\\,"," ");
-                    value = ((String)value).replaceAll("\'","-");
-                    value = ((String)value).replaceAll("\",","-");
-                    value = ((String)value).replaceAll("\\(","[");
-                    value = ((String)value).replaceAll("\\)","]");
-                    break;
-                }
-            }*/
-    			
     		}
 			
 		} catch (Exception e) {

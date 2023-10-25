@@ -3,7 +3,7 @@ package com.wise.MarketingPlatForm.mart;
 import org.apache.ibatis.plugin.Intercepts;
 import com.wise.MarketingPlatForm.global.util.DataField;
 import com.wise.MarketingPlatForm.global.util.JavaxtUtils;
-import com.wise.MarketingPlatForm.mart.vo.MartResult;
+import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import java.sql.ResultSet;
@@ -30,8 +30,8 @@ import java.util.*;
 public class MartInterceptor implements Interceptor {
 	
 	@Override
-    public List<MartResult> intercept(Invocation invocation) throws Throwable {
-        List<MartResult> returnValue = new ArrayList<MartResult>();
+    public List<MartResultDTO> intercept(Invocation invocation) throws Throwable {
+        List<MartResultDTO> returnValue = new ArrayList<MartResultDTO>();
         Object[] args = invocation.getArgs();
         Statement statement = (Statement) args[0];
         ResultSet rs;
@@ -67,7 +67,7 @@ public class MartInterceptor implements Interceptor {
             	}
             	rowData.add(row);
             }
-            MartResult mart = new MartResult();
+            MartResultDTO mart = new MartResultDTO();
             mart.setMetaData(metaData);
             mart.setRowData(rowData);
             returnValue.add(mart);

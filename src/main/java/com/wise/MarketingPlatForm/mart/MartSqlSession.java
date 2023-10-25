@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.mart;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class MartSqlSession {
 	
 	public SqlSessionTemplate sessionTemplate;
-	public HashMap<Integer, SqlSessionTemplate> sessionTemplates;
+	public Map<Integer, SqlSessionTemplate> sessionTemplates;
 	
 	MartSqlSession(){
 		this.sessionTemplates = new HashMap<Integer, SqlSessionTemplate>();
