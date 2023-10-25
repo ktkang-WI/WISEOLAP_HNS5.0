@@ -2,6 +2,7 @@ const FlexLayoutDefault = () => {
   return {
     dashboard: {
       global: {tabEnableClose: false},
+      borders: [],
       layout: {
         type: 'row',
         children: [
@@ -24,7 +25,7 @@ const FlexLayoutDefault = () => {
     adhoc: {
       global: {tabEnableClose: false},
       layout: {
-        type: 'column',
+        type: 'row',
         children: [
           {
             type: 'tabset',
