@@ -62,11 +62,11 @@ const getSNBItem = (item) => {
   }
 };
 
-const itemIterator = (items) => {
+const itemIterator = (snbDefaultItems, items) => {
   if (!items) return;
 
   return items.map((item) => {
-    return getSNBItem(snbDefaultElement()[item]);
+    return getSNBItem(snbDefaultItems[item]);
   });
 };
 
@@ -96,10 +96,11 @@ const StyledSNB = styled.div`
 `;
 
 const SideNavigationBar = ({content}) => {
+  const snbDefaultItems = snbDefaultElement();
   return (
     <StyledSNB>
       <Wrapper>
-        {itemIterator(content)}
+        {itemIterator(snbDefaultItems, content)}
       </Wrapper>
     </StyledSNB>
   );

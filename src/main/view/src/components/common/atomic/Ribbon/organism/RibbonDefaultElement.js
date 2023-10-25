@@ -28,6 +28,7 @@ const RibbonDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
   const component = 'chart';
+
   return {
     'NewReport': {
       id: 'new_report',

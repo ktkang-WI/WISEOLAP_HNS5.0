@@ -1,0 +1,8 @@
+server:
+ port: 8080
+
+
+wise:
+ config:
+  database-string-type: varchar, varchar2, char, nchar, nvarchar, nvarchar2, text, varbinary, date, datetime, NVCHAR, TIMESTAMP
+  database-integer-type: int, number, money, numeric, float, BIGINT, decimal, integer, double

@@ -1,6 +1,5 @@
 package com.wise.MarketingPlatForm.dataset.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
@@ -17,7 +15,7 @@ import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
-
+import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -174,7 +172,7 @@ public class DatasetController {
     summary = "mart connection sample code",
     description = "mart db연결 sample code")
   @PostMapping(value = "/mart-sample")
-    public List<Map<String, Object>> MartSelectList() {
+  public MartResultDTO MartSelectList() {
     return datasetService.MartSelectList();
   }
 }
