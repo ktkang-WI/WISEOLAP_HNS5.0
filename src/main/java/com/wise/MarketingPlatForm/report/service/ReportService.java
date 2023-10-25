@@ -1,14 +1,12 @@
 package com.wise.MarketingPlatForm.report.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
-import com.wise.MarketingPlatForm.dataset.dao.MartDAO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
-import com.wise.MarketingPlatForm.global.config.mart.MartConfig;
+import com.wise.MarketingPlatForm.global.config.MartConfig;
+import com.wise.MarketingPlatForm.mart.dao.MartDAO;
+import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
@@ -51,11 +49,11 @@ public class ReportService {
 
     String query = queryGenerator.getQuery(dataAggreagtion);
     
-    List<Map<String, Object>> data = martDAO.selectList(query);
+    MartResultDTO martResultDTO = martDAO.select(query);
     ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
     ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
   
-    result = itemDataMaker.make(dataAggreagtion, data);
+    result = itemDataMaker.make(dataAggreagtion, martResultDTO.getRowData());
 
     return result;
 
