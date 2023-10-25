@@ -2,6 +2,8 @@ package com.wise.MarketingPlatForm.dataset.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +15,7 @@ public class MartDAO {
 	@Resource(name="martTemplates")
 	MartSqlSession martSqlSession;
 	
-	public List<HashMap<String, Object>> selectList(String query){
+	public List<Map<String, Object>> selectList(String query){
 		return martSqlSession.sessionTemplate.selectList("Mart.selectList", query);
 	};
 
