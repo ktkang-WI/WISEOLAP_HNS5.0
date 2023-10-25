@@ -130,11 +130,13 @@ const ItemBoard = () => {
       );
     }
   }
+
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
       setMovedLayout(model.toJson());
     }
   };
+
   return (
     <StyledBoard>
       <Layout
