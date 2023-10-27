@@ -16,7 +16,7 @@ import flexLayoutDefault from './FlexLayoutDefault';
 import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
-import Chart from '../item/Chart';
+import Chart from '../item/chart/Chart';
 import Item from '../atoms/Item';
 
 const StyledBoard = styled.div`
@@ -35,7 +35,7 @@ const DownloadImage = styled.img`
 
 const ItemBoard = () => {
   const location = useLocation();
-  const {defaultFlexLayout, deleteFlexLayout} = useLayout();
+  const {defaultFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
 
@@ -69,9 +69,11 @@ const ItemBoard = () => {
 
     const item = items.find((i) => id == i.id);
 
+    if (!item) return <></>;
+
     return (
       <Item>
-        <ItemComponent {...item}/>
+        <ItemComponent mart={item.mart} id={item.id}/>
       </Item>
     );
   }
@@ -103,7 +105,6 @@ const ItemBoard = () => {
       }
       return;
     }
-
     return action;
   }
 
@@ -132,6 +133,12 @@ const ItemBoard = () => {
     }
   }
 
+  const onModelChange = (node, action) => {
+    if (action.type == 'FlexLayout_MoveNode') {
+      setMovedLayout(model.toJson());
+    }
+  };
+
   return (
     <StyledBoard>
       <Layout
@@ -140,6 +147,7 @@ const ItemBoard = () => {
         titleFactory={titleFactory}
         onAction={onFocusItem}
         onRenderTabSet={onRenderTabSet}
+        onModelChange={onModelChange}
       />
     </StyledBoard>
   );

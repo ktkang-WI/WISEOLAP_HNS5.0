@@ -23,11 +23,13 @@ import querySearch from 'assets/image/icon/button/query_search.png';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
   const component = 'chart';
+  const {executeItems} = useQueryExecute();
 
   return {
     'NewReport': {
@@ -261,7 +263,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': querySearch,
       'width': 'auto',
       'height': '30px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': () => {
+        executeItems();
+      }
     }
   };
 };

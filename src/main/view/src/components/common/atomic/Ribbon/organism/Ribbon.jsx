@@ -348,7 +348,7 @@ const Ribbon = ({left, middle, right, customMenu,
         </CustomMenu>
       )}
       <QuerySearch>
-        {itemIterator(querySearch, 'querySearch')}
+        {itemIterator(ribbonDefaultItems, querySearch, 'querySearch')}
       </QuerySearch>
     </StyledRibbon>
   );

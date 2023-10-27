@@ -48,7 +48,6 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: datasetActive,
       label: localizedString.dataset,
       onClick: (e) => {
-        // openModal(SelectCubeModal);
         openModal(SelectDataSourceModal, {
           onSubmit: (dataSource) => {
             openModal(QueryDataSourceDesignerModal,
@@ -56,6 +55,7 @@ const SNBDefaultElement = () => {
             );
           }
         });
+        // openModal(SelectCubeModal);
       }
     },
     'Preference': {
