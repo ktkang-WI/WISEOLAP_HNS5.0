@@ -58,9 +58,9 @@ public class MartInterceptor implements Interceptor {
             }
             
             // Mart Data
-            List<HashMap<String, Object>> rowData = new ArrayList<HashMap<String,Object>>();
+            List<Map<String, Object>> rowData = new ArrayList<>();
             while (rs.next()) {
-            	HashMap<String, Object> row = new HashMap<String, Object>();
+            	Map<String, Object> row = new HashMap<>();
             	for (int i = 1; i <= columnCount; i++) {
             		DataField field =  new DataField(i, rsmd, rs.getObject(i));
             		row.put(rsmd.getColumnLabel(i), JavaxtUtils.getValue(field));
@@ -82,6 +82,7 @@ public class MartInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
+
     }
 
 }

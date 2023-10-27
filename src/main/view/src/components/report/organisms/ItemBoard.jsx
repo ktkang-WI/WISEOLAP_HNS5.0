@@ -16,7 +16,7 @@ import flexLayoutDefault from './FlexLayoutDefault';
 import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
-import Chart from '../item/Chart';
+import Chart from '../item/chart/Chart';
 import Item from '../atoms/Item';
 
 const StyledBoard = styled.div`
@@ -69,9 +69,11 @@ const ItemBoard = () => {
 
     const item = items.find((i) => id == i.id);
 
+    if (!item) return <></>;
+
     return (
       <Item>
-        <ItemComponent {...item}/>
+        <ItemComponent mart={item.mart} id={item.id}/>
       </Item>
     );
   }

@@ -1,9 +1,8 @@
 package com.wise.MarketingPlatForm.dataset.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -173,7 +172,7 @@ public class DatasetController {
     summary = "mart connection sample code",
     description = "mart db연결 sample code")
   @PostMapping(value = "/mart-sample")
-    public MartResultDTO MartSelectList() {
+  public MartResultDTO MartSelectList() {
     return datasetService.MartSelectList();
   }
 }

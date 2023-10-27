@@ -1,0 +1,39 @@
+package com.wise.MarketingPlatForm.report.domain.item.datamaker;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+
+import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
+import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
+import com.wise.MarketingPlatForm.report.util.DataSanitizer;
+
+public class DataGridDataMaker implements ItemDataMaker {
+  @Override
+  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
+    List<Measure> measures = dataAggreagtion.getMeasures();
+    List<Dimension> dimensions = dataAggreagtion.getDimensions();
+    PagingOption pagingOption = dataAggreagtion.getPagingOption();
+
+    DataSanitizer sanitizer = new DataSanitizer(data);
+
+    data = sanitizer
+        .groupBy(measures, dimensions)
+        .columnFiltering(measures, dimensions)
+        .orderBy(dimensions)
+        .paging(pagingOption)
+        .getData();
+
+    Map<String, Object> info = new HashMap<String, Object> ();
+    info.put("maxPage", sanitizer.getMaxPage());
+    info.put("totalRows", sanitizer.getGrpDataLenth());
+    CommonResult result = new CommonResult(data, "", info);
+
+    return result;
+  }
+}

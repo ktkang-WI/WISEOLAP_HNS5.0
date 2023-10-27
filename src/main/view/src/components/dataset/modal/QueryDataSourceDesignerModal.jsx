@@ -60,8 +60,8 @@ const QueryDataSourceDesignerModal = ({
     } else {
       setDataset({
         datasetNm: localizedString.defaultDatasetName,
-        datsetType: 'DS_SQL',
-        datasrcId: selectedDataSource.dsId
+        datasetType: 'DS_SQL',
+        dataSrcId: selectedDataSource.dsId
       });
     }
   }, []);
@@ -72,11 +72,11 @@ const QueryDataSourceDesignerModal = ({
         // 쿼리 확인
         // 쿼리 확인 겸 필드 가져온 뒤 가공
         let tempFields = [
-          {name: '측정값1', type: 'mea', dataType: 'number'},
-          {name: '측정값2', type: 'mea', dataType: 'number'},
-          {name: '측정값3', type: 'dim', dataType: 'varchar'},
-          {name: '측정값4', type: 'dim', dataType: 'varchar'},
-          {name: '측정값5', type: 'dim', dataType: 'varchar'}
+          {name: '금액', type: 'mea', dataType: 'number'},
+          {name: '소계', type: 'mea', dataType: 'number'},
+          {name: '생산회사이름', type: 'dim', dataType: 'varchar'},
+          {name: '자동차명', type: 'dim', dataType: 'varchar'},
+          {name: '결재구분명', type: 'dim', dataType: 'varchar'}
         ];
 
         tempFields = tempFields.map((field) => {

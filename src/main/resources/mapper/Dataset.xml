@@ -73,5 +73,9 @@
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>
+
+  <select id="selectDataSource" parameterType="int" resultMap="DsMstr">
+    SELECT * FROM DS_MSTR WHERE DS_ID = #{dsId}
+  </select>
 <!-- Query End -->
 </mapper>

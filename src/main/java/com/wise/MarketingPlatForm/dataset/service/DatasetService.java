@@ -1,10 +1,9 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
-import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
@@ -23,13 +22,11 @@ import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 public class DatasetService {
 
   private final DatasetDAO datasetDAO;
-  private final AuthService authService;
   private final MartConfig martConfig;
   private final MartDAO martDAO;
 
-  DatasetService(DatasetDAO datasetDAO, AuthService authService, MartConfig martConfig, MartDAO martDAO) {
+  DatasetService(DatasetDAO datasetDAO, MartConfig martConfig, MartDAO martDAO) {
     this.datasetDAO = datasetDAO;
-    this.authService = authService;
     this.martConfig = martConfig;
     this.martDAO = martDAO;
   }
@@ -59,6 +56,24 @@ public class DatasetService {
     }
 
     return result;
+  }
+
+  public DsMstrDTO getDataSource(int dsId) {
+    DsMstrEntity entity = datasetDAO.selectDataSource(dsId);
+
+    return DsMstrDTO.builder()
+        .dsId(entity.getDsId())
+        .dsNm(entity.getDsNm())
+        .ip(entity.getIp())
+        .port(entity.getPort())
+        .dbNm(entity.getDbNm())
+        .password(entity.getPassword())
+        .ownerNm(entity.getOwnerNm())
+        .userId(entity.getUserId())
+        .userAreaYn(entity.getUserAreaYn())
+        .dsDesc(entity.getDsDesc())
+        .dbmsType(DbmsType.fromString(entity.getDbmsType()).get())
+        .build();
   }
 
   public List<DbTableVO> getDBTables(String dsId, String search) {
