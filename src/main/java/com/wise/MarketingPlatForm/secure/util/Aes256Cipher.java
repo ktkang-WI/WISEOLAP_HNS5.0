@@ -57,7 +57,6 @@ public class Aes256Cipher {
     public String AES_Decode(String str)
             throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-        System.out.println("secret key: " + secretKey);
         byte[] keyData = secretKey.getBytes("UTF-8");
         SecretKey secureKey = new SecretKeySpec(keyData, "AES");
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");

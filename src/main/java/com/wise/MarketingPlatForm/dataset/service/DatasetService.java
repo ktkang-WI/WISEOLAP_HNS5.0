@@ -59,7 +59,6 @@ public class DatasetService {
   }
 
   public DsMstrDTO getDataSource(int dsId) {
-    System.out.println(dsId);
     DsMstrEntity entity = datasetDAO.selectDataSource(dsId);
 
     return DsMstrDTO.builder()

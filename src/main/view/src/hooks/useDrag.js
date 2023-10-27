@@ -52,22 +52,26 @@ const useDrag = () => {
           name: sourceField.name,
           uniqueName: sourceField.uniqueName,
           caption: sourceField.name,
-          fieldId: 'dataItem' + (dataField.dataFieldQuantity++)
+          fieldId: 'dataItem' + (dataField.dataFieldQuantity++),
+          category: dest.droppableId
         };
 
         dataField[dest.droppableId].splice(dest.index, 0, tempField);
+        dataField.datasetId = selectedDataset.datasetId;
         dispatch(updateItemField({reportId, dataField}));
       } else {
         const dataField = _.cloneDeep(
             selectedItem.meta.dataField
         );
 
-        const sourceItem = dataField[source.droppableId]
+        let sourceItem = dataField[source.droppableId]
             .splice(source.index, 1);
+
+        sourceItem = {...sourceItem[0], category: dest.droppableId};
 
         // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
         // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
-        dataField[dest.droppableId].splice(dest.index, 0, sourceItem[0]);
+        dataField[dest.droppableId].splice(dest.index, 0, sourceItem);
 
         dispatch(updateItemField({reportId, dataField}));
       }

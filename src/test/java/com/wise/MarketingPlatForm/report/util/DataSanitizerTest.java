@@ -29,8 +29,8 @@ public class DataSanitizerTest {
     measures = new ArrayList<>();
     pagingOption = new PagingOption(0, 20, true);
 
-    dimensions.add(new Dimension("category", "category", "category", "dataItem1"));
-    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "dataItem2"));
+    dimensions.add(new Dimension("category", "category", "category", "dataItem1", "dimension"));
+    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "dataItem2", "dimension"));
     measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3"));
   }
 

@@ -133,7 +133,7 @@ public final class DataSanitizer {
       }
 
       maxPage = data.size() / pagingOption.getSize();
-      
+
       if (data.size() % pagingOption.getSize() > 0) {
         maxPage += 1;
       }

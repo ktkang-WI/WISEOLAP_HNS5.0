@@ -261,6 +261,7 @@ const itemIterator = (ribbonDefaultItems, items, position) => {
   const itemArr = [...items];
 
   return itemArr.map((item) => {
+    console.log(item);
     if (typeof item === 'string') {
       return getRibbonItem({...ribbonDefaultItems[item], position});
     } else if (item) {
@@ -348,7 +349,7 @@ const Ribbon = ({left, middle, right, customMenu,
         </CustomMenu>
       )}
       <QuerySearch>
-        {itemIterator(querySearch, 'querySearch')}
+        {itemIterator(ribbonDefaultItems, querySearch, 'querySearch')}
       </QuerySearch>
     </StyledRibbon>
   );

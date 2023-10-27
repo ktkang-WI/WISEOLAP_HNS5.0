@@ -1,13 +1,15 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import SmallImageButton from '../../Common/Button/SmallImageButton';
-import resetLayoutImg
-  from '../../../../../assets/image/icon/button/reset_layout.png';
+import resetImg from 'assets/image/icon/button/reset_layout.png';
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
+import store from 'redux/modules';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
@@ -55,12 +57,25 @@ const getRenderItem = (items) => {
   return getDraggableItem;
 };
 
-
 const DataColumnList = ({
   id, icon, label, type, placeholder,
   useButton, buttonIcon, onClick, buttonEvent, key
 }) => {
-  const columns = useSelector(selectCurrentDataField)[id];
+  const {updateItemField} = ItemSlice.actions;
+  const reportId = selectCurrentReportId(store.getState());
+  const dataFields = useSelector(selectCurrentDataField);
+  const columns = dataFields[id];
+  const dispatch = useDispatch();
+
+  const resetDataColumn = () => {
+    const temp = {
+      ...dataFields,
+      [id]: []
+    };
+
+    dispatch(updateItemField({reportId, dataField: temp}));
+  };
+
   return (
     <Wrapper>
       <Title>
@@ -68,7 +83,7 @@ const DataColumnList = ({
           <Icon src={icon}></Icon>
           {label}
         </PanelTitleText>
-        <SmallImageButton src={resetLayoutImg}/>
+        <SmallImageButton src={resetImg} onClick={() => resetDataColumn(id)}/>
       </Title>
       <Droppable droppableId={id} renderClone={getRenderItem(columns)}>
         {(provided) => (

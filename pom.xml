@@ -213,6 +213,11 @@
 	  <systemPath>${basedir}/src/main/webapp/WEB-INF/extra-lib/javaxt-corecustom-1.0.0.jar</systemPath> 
     </dependency>
 
+    <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20231013</version>
+    </dependency>
   </dependencies>	
 
 	<build>
