@@ -261,7 +261,6 @@ const itemIterator = (ribbonDefaultItems, items, position) => {
   const itemArr = [...items];
 
   return itemArr.map((item) => {
-    console.log(item);
     if (typeof item === 'string') {
       return getRibbonItem({...ribbonDefaultItems[item], position});
     } else if (item) {

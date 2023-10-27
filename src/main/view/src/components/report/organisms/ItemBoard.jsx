@@ -69,8 +69,6 @@ const ItemBoard = () => {
 
     const item = items.find((i) => id == i.id);
 
-    console.log(id);
-
     if (!item) return <></>;
 
     return (
