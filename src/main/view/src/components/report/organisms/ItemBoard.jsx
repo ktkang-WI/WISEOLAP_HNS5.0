@@ -35,7 +35,7 @@ const DownloadImage = styled.img`
 
 const ItemBoard = () => {
   const location = useLocation();
-  const {defaultFlexLayout, deleteFlexLayout} = useLayout();
+  const {defaultFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
 
@@ -105,7 +105,6 @@ const ItemBoard = () => {
       }
       return;
     }
-
     return action;
   }
 
@@ -134,6 +133,12 @@ const ItemBoard = () => {
     }
   }
 
+  const onModelChange = (node, action) => {
+    if (action.type == 'FlexLayout_MoveNode') {
+      setMovedLayout(model.toJson());
+    }
+  };
+
   return (
     <StyledBoard>
       <Layout
@@ -142,6 +147,7 @@ const ItemBoard = () => {
         titleFactory={titleFactory}
         onAction={onFocusItem}
         onRenderTabSet={onRenderTabSet}
+        onModelChange={onModelChange}
       />
     </StyledBoard>
   );
