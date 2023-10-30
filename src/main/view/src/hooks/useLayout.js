@@ -12,7 +12,11 @@ export default function useLayout() {
   };
 
   const setLayout = (reportId, layout) => {
-    dispatch(flexLayout.seLayout({reportId: reportId, layout: layout}));
+    dispatch(flexLayout.setLayout({reportId: reportId, layout: layout}));
+  };
+
+  const setMovedLayout = (action) => {
+    dispatch(flexLayout.setMovedLayout(action));
   };
 
   const insertFlexLayout = (reportId, component) => {
@@ -39,6 +43,7 @@ export default function useLayout() {
     insertFlexLayout,
     setLayout,
     deleteFlexLayout,
-    defaultFlexLayout
+    defaultFlexLayout,
+    setMovedLayout
   };
 };

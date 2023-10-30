@@ -103,20 +103,22 @@ const QueryDataSourceDesignerModal = ({
           // return false; // 확인 누르고 유효성 검사 실패 해도 팝업 닫힘. 확인 필요.
         } else if (!dataset || dataset == '') {
           console.log('데이터 집합 명 입력 하세요');
-        } else if (false) { // 백단에서 쿼리 문법 검사. 및 데이터 가져옴.
+        } else if (false) { // 데이터 집합 명 중복 검사.
           console.log('동일한 데이터 집합 명이 존재 합니다.');
         } else if (false) { // 백단에서 쿼리 문법 검사. 및 데이터 가져옴.
           if (getByQueryValidate()) {
-            getByQueryDsView();
-
-            dispatch(insertDataset({
-              reportId: selectedReportId,
-              dataset: {
-                ...dataset,
-                datasetQuery: queryEditorRef.current.editor.getValue(),
-                fields: tempFields
-              }
-            }));
+            getByQueryDsView().then((response) => {
+              dispatch(insertDataset({
+                reportId: selectedReportId,
+                dataset: {
+                  ...dataset,
+                  datasetQuery: queryEditorRef.current.editor.getValue(),
+                  fields: tempFields
+                }
+              }));
+            }).catch(() => {
+              console.log('Error');
+            });
           } else {
             console.log('쿼리가 부적합 합니다.');
             return false;

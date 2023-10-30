@@ -89,7 +89,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     ...selectedCube,
                     fields: data.fields,
                     datasetNm: selectedCube.cubeNm,
-                    datsetType: 'CUBE'
+                    datasetType: 'CUBE'
                   }
                 }));
               });

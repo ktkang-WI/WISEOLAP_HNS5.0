@@ -1,7 +1,7 @@
 package com.wise.MarketingPlatForm.mart.vo;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 public class MartResultDTO {
 	List<MetaDTO> metaData;
-	List<HashMap<String, Object>> rowData;
+	List<Map<String, Object>> rowData;
 }

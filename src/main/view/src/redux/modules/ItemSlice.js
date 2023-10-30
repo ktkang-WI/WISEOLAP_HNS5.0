@@ -85,10 +85,7 @@ const reducers = {
     );
 
     if (itemIndex >= 0) {
-      state[reportId].items[itemIndex] = actions.payload;
-    } else {
-      state[reportId].items =
-        state[reportId].items.concat(actions.payload);
+      state[reportId].items[itemIndex] = item;
     }
   },
   // 파라미터로 reportId와 itemId

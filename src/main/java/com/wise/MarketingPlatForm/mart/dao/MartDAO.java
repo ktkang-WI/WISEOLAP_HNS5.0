@@ -14,7 +14,7 @@ public class MartDAO {
 	MartSqlSession martSqlSession;
 	
 	public MartResultDTO select(String query){
-		List<Object> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
+		List<MartResultDTO> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
 		return (MartResultDTO) result.get(0);
 	}
 
