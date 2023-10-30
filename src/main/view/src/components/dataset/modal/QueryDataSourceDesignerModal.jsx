@@ -1,11 +1,10 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-import {TreeView} from 'devextreme-react';
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
+// import meaImg from 'assets/image/icon/dataSource/measure.png';
+// import dimImg from 'assets/image/icon/dataSource/dimension.png';
+// import folderImg from 'assets/image/icon/report/folder_load.png';
 import {Column} from 'devextreme-react/data-grid';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,9 +14,12 @@ import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import DatasetName from '../atomic/molecules/DatasetName';
-import CustomStore from 'devextreme/data/custom_store';
 import localizedString from '../../../config/localization';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {Scrolling, TreeList} from 'devextreme-react/tree-list';
+import {getByQueryDsView, getByQueryValidate, getByTables}
+  from 'models/dataset/DSView';
+// import Alert from 'components/common/atomic/Modal/organisms/Alert';
 
 const theme = getTheme();
 
@@ -46,13 +48,35 @@ const QueryDataSourceDesignerModal = ({
   const selectedReportId = useSelector(selectCurrentReportId);
   const queryEditorRef = useRef();
   const [dataset, setDataset] = useState(orgDataset);
+  const [datasource, setDatasource] = useState('');
+  const [inputQuery, setQuery] = useState('');
 
-  const store = new CustomStore({
-    key: 'id',
-    load: (loadOptions) => {
-      console.log(loadOptions);
+  useEffect(() => {
+    const tableList = getByTables(selectedDataSource)
+        .then((response) => {
+          const tables = response.tables.rowData;
+          const columns = response.columns.rowData;
+
+          const tableList = tables.map((tbl) => {
+            return {...tbl, column: columns.filter(
+                (col) => col.TBL_NM == tbl.id
+            )};
+          });
+
+          return tableList;
+        })
+        .catch(() => {
+          throw new Error('Data Loading Error');
+        });
+
+    setDatasource(tableList);
+  }, []);
+
+  const store = {
+    load(loadOptions) {
+      return datasource;
     }
-  });
+  };
 
   useEffect(() => {
     if (!_.isEmpty(dataset)) {
@@ -69,41 +93,35 @@ const QueryDataSourceDesignerModal = ({
   return (
     <Modal
       onSubmit={() => {
-        // 쿼리 확인
-        // 쿼리 확인 겸 필드 가져온 뒤 가공
-        let tempFields = [
-          {name: '측정값1', type: 'mea', dataType: 'number'},
-          {name: '측정값2', type: 'mea', dataType: 'number'},
-          {name: '측정값3', type: 'dim', dataType: 'varchar'},
-          {name: '측정값4', type: 'dim', dataType: 'varchar'},
-          {name: '측정값5', type: 'dim', dataType: 'varchar'}
-        ];
+        // 쿼리 확인 -> 백 OR 프론트, 아무 곳이에서 유효성 검사?
+        // 1. 쿼리 빈칸, 2. 데이터 집합 명 빈칸, 3. 데이터 집합 명 겹침.
+        // 4. 쿼리 문법 안 맞음. 등등.
+        console.log(inputQuery);
+        if (!inputQuery || inputQuery == '') {
+          // Alert();
+          console.log('쿼리 입력 하세요');
+          // return false; // 확인 누르고 유효성 검사 실패 해도 팝업 닫힘. 확인 필요.
+        } else if (!dataset || dataset == '') {
+          console.log('데이터 집합 명 입력 하세요');
+        } else if (false) { // 백단에서 쿼리 문법 검사. 및 데이터 가져옴.
+          console.log('동일한 데이터 집합 명이 존재 합니다.');
+        } else if (false) { // 백단에서 쿼리 문법 검사. 및 데이터 가져옴.
+          if (getByQueryValidate()) {
+            getByQueryDsView();
 
-        tempFields = tempFields.map((field) => {
-          return {
-            icon: field.type == 'mea' ? meaImg : dimImg,
-            parentId: '0',
-            uniqueName: field.name,
-            ...field
-          };
-        });
-
-        tempFields.unshift({
-          name: localizedString.defaultDatasetName,
-          type: 'FLD',
-          uniqueName: '0',
-          icon: folderImg
-        });
-
-        dispatch(insertDataset({
-          reportId: selectedReportId,
-          dataset: {
-            ...dataset,
-            datasetQuery: queryEditorRef.current.editor.getValue(),
-            fields: tempFields
+            dispatch(insertDataset({
+              reportId: selectedReportId,
+              dataset: {
+                ...dataset,
+                datasetQuery: queryEditorRef.current.editor.getValue(),
+                fields: tempFields
+              }
+            }));
+          } else {
+            console.log('쿼리가 부적합 합니다.');
+            return false;
           }
-        }));
-        // return true;
+        }
       }}
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
@@ -124,12 +142,13 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
           <ModalPanel
             title={localizedString.dataItem}
-            height='100%'
+            height='400px'
             width='300px'
             padding='10'>
-            <TreeView
+            <TreeList
               dataSource={store}
               remoteOperations={true}
+              showColumnHeaders={false}
               searchPanel={{
                 visible: true,
                 searchVisibleColumnsOnly: true,
@@ -139,10 +158,15 @@ const QueryDataSourceDesignerModal = ({
               expandNodesOnFiltering={false}
               filterMode='matchOnly'
               keyExpr='id'
-              parentIdExpr='parent'
               hasItemsExpr='hasItems'
+              dataStructure="tree"
+              height='100%'
+              itemsExpr='column'
             >
-            </TreeView>
+              <Scrolling mode='virtual'/>
+              <Column dataField='id' width="100%">
+              </Column>
+            </TreeList>
           </ModalPanel>
         </ColumnWrapper>
         <ColumnWrapper>
@@ -153,7 +177,9 @@ const QueryDataSourceDesignerModal = ({
             }}
           />
           <ModalPanel title={localizedString.query} height='100%' padding='10'>
-            <QueryEditor editorRef={queryEditorRef}/>
+            <QueryEditor editorRef={queryEditorRef}
+              setQuery={setQuery} text={inputQuery}
+            />
           </ModalPanel>
           <ModalPanel
             title={localizedString.parameter}

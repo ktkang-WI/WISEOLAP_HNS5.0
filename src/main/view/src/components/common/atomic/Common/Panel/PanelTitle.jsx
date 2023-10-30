@@ -2,7 +2,7 @@ import PanelTitleText from './PanelTitleText';
 import SmallImageButton from '../Button/SmallImageButton';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import PanelTitleDefaultElement from './PanelTitleDefaultElement';
+import panelTitleDefaultElement from './PanelTitleDefaultElement';
 
 const theme = getTheme();
 
@@ -40,7 +40,7 @@ const generateButtons = (buttons) => {
 
   return buttons.map((button) => {
     if (typeof button === 'string') {
-      return getButton(PanelTitleDefaultElement[button]);
+      return getButton(panelTitleDefaultElement()[button]);
     } else {
       return getButton(button);
     }

@@ -3,6 +3,8 @@ package com.wise.MarketingPlatForm.dataset.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
@@ -116,5 +118,43 @@ public class DatasetService {
 	  martConfig.setMartDataSource(dsMstrDTO);
 	  String query = "SELECT * FROM BMT_F_버블차트";
 	  return martDAO.select(query);
+  }
+  
+  public Map<String, MartResultDTO> getQueryDatasetTable(Map<String, String> datasource) {
+	  List<DsMstrEntity> dsInfoEntity = datasetDAO.selectDsInfo(datasource.get("dsId"));
+	  List<DsMstrDTO> result = new ArrayList<>();
+	  Map<String, MartResultDTO> tbl_Col = new HashMap<>();
+	  for(DsMstrEntity dsInfo : dsInfoEntity) {
+		  result.add(DsMstrDTO.builder()
+			        .dsId(dsInfo.getDsId())
+			        .dsNm(dsInfo.getDsNm())
+			        .ip(dsInfo.getIp())
+			        .port(dsInfo.getPort())
+			        .password(dsInfo.getPassword())
+			        .dbNm(dsInfo.getDbNm())
+			        .ownerNm(dsInfo.getOwnerNm())
+			        .userId(dsInfo.getUserId())
+			        .userAreaYn(dsInfo.getUserAreaYn())
+			        .dsDesc(dsInfo.getDsDesc())
+			        .dbmsType(DbmsType.fromString(dsInfo.getDbmsType()).get())
+			        .build());
+	  }
+	  
+	  martConfig.setMartDataSource(result.get(0));
+	  // 쿼리 xml에 정리 -> db별로
+//	  String query = "SELECT A.OBJECT_NAME TBL_NM, B.COMMENTS TBL_CAPTION "
+//	  		+ "FROM	ALL_OBJECTS A, ALL_TAB_COMMENTS B"
+//	  		+ " WHERE A.OWNER = B.OWNER"
+//	  		+ " AND A.OBJECT_TYPE IN ('TABLE','VIEW')"
+//	  		+ " AND A.OBJECT_NAME = B.TABLE_NAME "
+//	  		+ " AND A.OWNER = 'DW'"
+//	  		+ " AND ( UPPER(A.OBJECT_NAME) LIKE '%%'"
+//	  		+ " OR UPPER(B.COMMENTS) LIKE '%%' )"
+//	  		+ " ORDER BY 1;";
+	  MartResultDTO result1 = martDAO.selectTalbe();
+	  MartResultDTO result2 = martDAO.selectColumn();
+	  tbl_Col.put("tables", result1);
+	  tbl_Col.put("columns", result2);
+	  return tbl_Col;
   }
 }

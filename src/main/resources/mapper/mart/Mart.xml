@@ -6,5 +6,36 @@
   	<select id="select" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO">
       ${query}
 	</select>
-
+  	
+  	<select id="selectTable" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO">
+      SELECT
+      	CAST(A.NAME AS NVARCHAR(200)) AS TBL_NM,
+      	CAST(B.VALUE AS NVARCHAR(200)) AS TBL_CAPTION, 
+      	CAST(A.NAME AS NVARCHAR(200)) AS id
+      	FROM SYSOBJECTS A
+      	LEFT JOIN ::FN_LISTEXTENDEDPROPERTY(DEFAULT, N'USER', N'dbo', N'TABLE',DEFAULT,DEFAULT,DEFAULT) B
+      	ON A.name = B.objname collate Latin1_General_CI_AI
+      	LEFT JOIN SYS.schemas C ON A.uid = C.schema_id
+      	WHERE A.xtype IN ('U', 'V') AND A.NAME NOT IN ('sysdiagrams')
+      	AND (UPPER(CAST(A.NAME AS NVARCHAR(200))) LIKE '%%'
+      	OR UPPER(CAST(B.VALUE AS NVARCHAR(200))) LIKE '%%')
+      	AND C.name = 'dbo' ORDER BY 1
+	</select>
+	
+  	<select id="selectColumn" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO">
+      SELECT
+      	CAST(A.[name] AS NVARCHAR(200)) AS 'TBL_NM',
+      	CAST('['+A.NAME+'].['+B.[name]+']' AS NVARCHAR(200)) AS id,
+      	CAST(B.[name] AS NVARCHAR(200))  AS 'COL_NM',
+      	CAST(C.[name] AS NVARCHAR(200))  AS 'DATA_TYPE',
+      	CAST(B.[length] AS NVARCHAR(200))  AS 'LENGTH',
+      	CAST(B.[colid] AS NVARCHAR(200))  AS 'COL_ID',
+      	CAST(E.[indid] AS NVARCHAR(200))  AS 'PK_YN',
+      	CAST(F.value AS NVARCHAR(200))  AS 'COL_CAPTION',
+      	CAST(G.value AS NVARCHAR(200)) AS 'TBL_CAPTION'
+      	FROM  SYSOBJECTS A INNER JOIN SYSCOLUMNS B ON A.id = B.id
+      	INNER JOIN SYSTYPES C ON B.xusertype = C.xusertype
+      	LEFT JOIN SYSINDEXKEYS E ON E.id = A.id AND B.colid = E.colid
+      	LEFT JOIN SYS.extended_properties F ON B.ID = F.major_id AND B.colid = F.minor_id        LEFT JOIN SYS.extended_properties G ON A.ID = G.major_id AND G.minor_id = 0  WHERE 1 = 1  AND   A.xtype IN ('U', 'V') ORDER BY B.colorder
+	</select>
 </mapper>

@@ -7,57 +7,57 @@
 
 	<resultMap id="DsMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity">
 		<result column="DS_ID" property="dsId" javaType="int"/>
-    <result column="DS_NM" property="dsNm" javaType="String"/>
-    <result column="DB_NM" property="dbNm" javaType="String"/>
-    <result column="IP" property="ip" javaType="String"/>
-    <result column="USER_ID" property="userId" javaType="String"/>
-    <result column="PASSWD" property="password" javaType="String"/>
-    <result column="PORT" property="port" javaType="String"/>
-    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
-    <result column="OWNER_NM" property="ownerNm" javaType="String"/>
-    <result column="DS_DESC" property="dsDesc" javaType="String"/>
-    <result column="DS_CONNECTOR" property="connector" javaType="String"/>
-    <result column="USER_AREA_YN" property="userAreaYn" javaType="String"/>
-    <result column="HASH_YN" property="hashYn" javaType="String"/>
-    <result column="WF_YN" property="wfYn" javaType="String"/>
+	    <result column="DS_NM" property="dsNm" javaType="String"/>
+	    <result column="DB_NM" property="dbNm" javaType="String"/>
+	    <result column="IP" property="ip" javaType="String"/>
+	    <result column="USER_ID" property="userId" javaType="String"/>
+	    <result column="PASSWD" property="password" javaType="String"/>
+	    <result column="PORT" property="port" javaType="String"/>
+	    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+	    <result column="OWNER_NM" property="ownerNm" javaType="String"/>
+	    <result column="DS_DESC" property="dsDesc" javaType="String"/>
+	    <result column="DS_CONNECTOR" property="connector" javaType="String"/>
+	    <result column="USER_AREA_YN" property="userAreaYn" javaType="String"/>
+	    <result column="HASH_YN" property="hashYn" javaType="String"/>
+	    <result column="WF_YN" property="wfYn" javaType="String"/>
 	</resultMap>
 
-  <resultMap id="DsView" type="com.wise.MarketingPlatForm.dataset.entity.DsViewEntity">
+  	<resultMap id="DsView" type="com.wise.MarketingPlatForm.dataset.entity.DsViewEntity">
 		<result column="DS_ID" property="dsId" javaType="int"/>
-    <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
-    <result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
-    <result column="DS_VIEW_DESC" property="dsViewDesc" javaType="String"/>
-    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
-    <result column="DB_NM" property="dbNm" javaType="String"/>
-    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
-    <result column="IP" property="ip" javaType="String"/>
+	    <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
+	    <result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
+	    <result column="DS_VIEW_DESC" property="dsViewDesc" javaType="String"/>
+	    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+	    <result column="DB_NM" property="dbNm" javaType="String"/>
+	    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+	    <result column="IP" property="ip" javaType="String"/>
 	</resultMap>
 <!-- Mapper End -->
 
 <!-- Query -->
 
   <!-- DataSource -->
-  <select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
-    SELECT
-      DS_MSTR.DS_ID AS DS_ID,
-      DS_NM,
-      DB_NM,
-      IP,
-      DS_MSTR.USER_ID AS USER_ID,
-      PORT,
-      DBMS_TYPE,
-      OWNER_NM,
-      DS_DESC,
-      WF_YN,
-      USER_AREA_YN
-    from GRP_AUTH_DS_MSTR
-      INNER JOIN DS_MSTR ON DS_MSTR.DS_ID = GRP_AUTH_DS_MSTR.DS_ID
-      INNER JOIN USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
-    WHERE USER_MSTR.USER_ID = #{userId}
-    ORDER BY DS_NM
+  	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
+	    SELECT
+	      DS_MSTR.DS_ID AS DS_ID,
+	      DS_NM,
+	      DB_NM,
+	      IP,
+	      DS_MSTR.USER_ID AS USER_ID,
+	      PORT,
+	      DBMS_TYPE,
+	      OWNER_NM,
+	      DS_DESC,
+	      WF_YN,
+	      USER_AREA_YN
+	    from GRP_AUTH_DS_MSTR
+	      INNER JOIN DS_MSTR ON DS_MSTR.DS_ID = GRP_AUTH_DS_MSTR.DS_ID
+	      INNER JOIN USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
+	    WHERE USER_MSTR.USER_ID = #{userId}
+	    ORDER BY DS_NM
 	</select>
 
-  <!-- DsView -->
+  	<!-- DsView -->
 	<select id="selectUserAuthDsViewList" parameterType="String" resultMap="DsView">
 		SELECT DISTINCT *
 		FROM DS_MSTR A
@@ -66,12 +66,19 @@
 		WHERE USER_NO = (SELECT USER_NO FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>
 
-  <select id="selectGrpAuthDsViewList" parameterType="String" resultMap="DsView">
+  	<select id="selectGrpAuthDsViewList" parameterType="String" resultMap="DsView">
 		SELECT DISTINCT *
 		FROM DS_MSTR A
 		JOIN GRP_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>
+  	
+  	<select id="selectDsInfo" parameterType="String" resultMap="DsMstr">
+		SELECT * FROM DS_MSTR
+		WHERE DS_ID = #{dsId}
+	</select>
+	
+	
 <!-- Query End -->
 </mapper>

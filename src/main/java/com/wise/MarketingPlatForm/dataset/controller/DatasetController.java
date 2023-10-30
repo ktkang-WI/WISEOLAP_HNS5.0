@@ -176,4 +176,12 @@ public class DatasetController {
     public MartResultDTO MartSelectList() {
     return datasetService.MartSelectList();
   }
+  
+  @Operation(
+    summary = "queryDataset tables",
+	description = "쿼리 직접입력 데이터 항목 가져옴.")
+  @PostMapping(value = "/queryDataset-getTables")
+  public Map<String, MartResultDTO> getTables(@RequestBody Map<String, String> datasource) {
+	  return datasetService.getQueryDatasetTable(datasource);
+  }
 }

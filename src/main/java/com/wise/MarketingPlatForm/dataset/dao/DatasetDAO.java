@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 
 @Mapper
 public interface DatasetDAO {
@@ -16,4 +17,6 @@ public interface DatasetDAO {
   public List<DsViewEntity> selectGrpAuthDsViewList(String userId);
 
   public List<DsViewEntity> selectUserAuthDsViewList(String userId);
+  
+  public List<DsMstrEntity> selectDsInfo(String dsId);
 }

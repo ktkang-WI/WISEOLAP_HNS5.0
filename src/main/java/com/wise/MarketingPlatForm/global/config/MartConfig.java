@@ -51,7 +51,7 @@ public class MartConfig {
         		martSqlSession.sessionTemplate = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
         	} catch (Exception e) {
         		log.debug(e.getMessage());
-        		
+        		new Exception();
         	} 
         }
     }

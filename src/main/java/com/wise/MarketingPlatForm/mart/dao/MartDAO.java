@@ -16,6 +16,16 @@ public class MartDAO {
 	public MartResultDTO select(String query){
 		List<Object> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
 		return (MartResultDTO) result.get(0);
+	}
+
+	public MartResultDTO selectTalbe() {
+		List<Object> result = martSqlSession.sessionTemplate.selectList("Mart.selectTable");
+		return (MartResultDTO) result.get(0);
+	}
+
+	public MartResultDTO selectColumn() {
+		List<Object> result = martSqlSession.sessionTemplate.selectList("Mart.selectColumn");
+		return (MartResultDTO) result.get(0);
 	};
 
 }
