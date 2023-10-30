@@ -6,14 +6,14 @@ import com.wise.MarketingPlatForm.report.domain.store.datastore.CubeQueryGenerat
 import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
 
 public class QueryGeneratorFactory {
-  public QueryGenerator getDataStore(DsType dsType) {
-    if (dsType == DsType.DS_SQL) {
-      return new SqlQueryGenerator();
-    }
-    if (dsType == DsType.CUBE) {
-      return new CubeQueryGenerator();
-    }
+    public QueryGenerator getDataStore(DsType dsType) {
+        if (dsType == DsType.DS_SQL) {
+            return new SqlQueryGenerator();
+        }
+        if (dsType == DsType.CUBE) {
+            return new CubeQueryGenerator();
+        }
 
-    return null;
-  }
+        return null;
+    }
 }

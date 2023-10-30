@@ -6,17 +6,17 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
-  public ItemDataMaker getItemDataMaker(ItemType itemType) {
-    if (itemType == ItemType.CHART) {
-      return new ChartDataMaker();
-    }
-    if (itemType == ItemType.PIVOT_GRID) {
-      return null;
-    }
-    if (itemType == ItemType.DATA_GRID) {
-      return new DataGridDataMaker();
-    }
+    public ItemDataMaker getItemDataMaker(ItemType itemType) {
+        if (itemType == ItemType.CHART) {
+            return new ChartDataMaker();
+        }
+        if (itemType == ItemType.PIVOT_GRID) {
+            return null;
+        }
+        if (itemType == ItemType.DATA_GRID) {
+            return new DataGridDataMaker();
+        }
 
-    return null;
-  }
+        return null;
+    }
 }

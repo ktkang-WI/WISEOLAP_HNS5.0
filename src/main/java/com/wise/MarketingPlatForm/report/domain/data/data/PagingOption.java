@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PagingOption {
-  int start;
-  int size;
-  boolean pagingEnabled;
+    int start;
+    int size;
+    boolean pagingEnabled;
 }

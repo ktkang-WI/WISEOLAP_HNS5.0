@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthDataEntity {
-  int grpId;
-  int usrId;
-  int userNo;
-  String dataXmlBase64;
+    int grpId;
+    int usrId;
+    int userNo;
+    String dataXmlBase64;
 }

@@ -16,10 +16,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DataAggregation {
-  String userId;
-  List<Measure> measures;
-  List<Dimension> dimensions;
-  ItemType itemType;
-  Dataset dataset;
-  PagingOption pagingOption;
+    String userId;
+    List<Measure> measures;
+    List<Dimension> dimensions;
+    ItemType itemType;
+    Dataset dataset;
+    PagingOption pagingOption;
 }
