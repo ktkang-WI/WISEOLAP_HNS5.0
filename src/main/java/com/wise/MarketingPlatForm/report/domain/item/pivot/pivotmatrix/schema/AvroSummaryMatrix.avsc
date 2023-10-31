@@ -1,0 +1,280 @@
+[
+   {
+      "type":"record",
+      "name":"AvroGroupParam",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "selector",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "groupInterval",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "isExpanded",
+            "type": [ "boolean", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroUdfGroupParam",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "name",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "selectors",
+            "type": {
+               "type": "array",
+               "items": "string"
+            }
+         },
+         {
+            "name": "groupIntervals",
+            "type": {
+               "type": "array",
+               "items": "string"
+            }
+         },
+         {
+            "name": "expression",
+            "type": [ "string", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryParam",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "selector",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "summaryType",
+            "type": [ "string", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSortInfoParam",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "sortOrder",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "dataField",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "sortByField",
+            "type": [ "string", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroTopBottomParam",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "dataFieldName",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "applyFieldName",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "topBottomType",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "topBottomCount",
+            "type": "int"
+         },
+         {
+            "name": "inPercent",
+            "type": [ "boolean", "null" ]
+         },
+         {
+            "name": "showOthers",
+            "type": [ "boolean", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryDimension",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "childDataGroupKey",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "key",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "depth",
+            "type": "int"
+         },
+         {
+            "name": "path",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "parentPath",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "children",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryDimension"
+            }
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryValue",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "fieldName",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "summaryType",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "count",
+            "type": "long"
+         },
+         {
+            "name": "sum",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "value",
+            "type": [ "string", "null" ]
+         },
+         {
+            "name": "distinctValues",
+            "type": {
+               "type": "array",
+               "items": "string"
+            }
+         },
+         {
+            "name": "textValue",
+            "type": [ "string", "null" ]
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryCell",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "summaryValues",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryValue"
+            }
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryCellRow",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "row",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryCell"
+            }
+         }
+      ]
+   },
+   {
+      "type":"record",
+      "name":"AvroSummaryMatrix",
+      "namespace":"com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro",
+      "fields":[
+         {
+            "name": "rowGroupParams",
+            "type": {
+               "type": "array",
+               "items": "AvroGroupParam"
+            }
+         },
+         {
+            "name": "colGroupParams",
+            "type": {
+               "type": "array",
+               "items": "AvroGroupParam"
+            }
+         },
+         {
+            "name": "summaryParams",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryParam"
+            }
+         },
+         {
+            "name": "rowSummaryDimension",
+            "type": [ "AvroSummaryDimension", "null" ]
+         },
+         {
+            "name": "colSummaryDimension",
+            "type": [ "AvroSummaryDimension", "null" ]
+         },
+         {
+            "name": "rowFlattendSummaryDimensions",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryDimension"
+            }
+         },
+         {
+            "name": "colFlattendSummaryDimensions",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryDimension"
+            }
+         },
+         {
+            "name": "rows",
+            "type": "int"
+         },
+         {
+            "name": "cols",
+            "type": "int"
+         },
+         {
+            "name": "cells",
+            "type": {
+               "type": "array",
+               "items": "AvroSummaryCellRow"
+            }
+         }
+      ]
+   }
+]
