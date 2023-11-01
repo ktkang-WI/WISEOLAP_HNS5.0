@@ -103,5 +103,9 @@
   "editDatasetName": "Edit Dataset Name",
   "owner": "Owner",
   "dbId": "DB User ID",
-  "description": "Description"
+  "description": "Description",
+  "row": "Row",
+  "column": "Column",
+  "rowPlaceholder": "New Row",
+  "columnPlaceholder": "New Column"
 }

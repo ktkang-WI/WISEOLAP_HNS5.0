@@ -80,6 +80,40 @@ const makeItem = (orgItem) => {
       item.meta.dataField.dimension = [];
       item.meta.dataField.dimensionGroup = [];
     }
+  } else if (item.type == ItemType.PIVOT_GRID) {
+    const mart = {
+      ...defaultMart,
+      dataFieldOption: {
+        measure: {
+          ...defaultMesarue,
+          useButton: true,
+          // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
+          buttonIcon: chartSeriesButtonIcon,
+          buttonEvent: function(e) {
+            console.log(e);
+          }
+        },
+        column: {
+          ...defaultDimension,
+          label: localizedString.column,
+          placeholder: localizedString.columnPlaceholder
+        },
+        row: {
+          ...defaultDimension,
+          label: localizedString.row,
+          placeholder: localizedString.rowPlaceholder
+        }
+      },
+      ribbonItem: []
+    };
+
+    item.mart = mart;
+
+    if (!orgItem.meta) {
+      item.meta.dataField.measure = [];
+      item.meta.dataField.column = [];
+      item.meta.dataField.row = [];
+    }
   }
 
   return item;

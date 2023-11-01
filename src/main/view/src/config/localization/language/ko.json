@@ -103,5 +103,9 @@
   "editDatasetName": "데이터 집합 명 수정",
   "owner": "소유자",
   "dbId": "접속 ID",
-  "description": "설명"
+  "description": "설명",
+  "row": "열",
+  "column": "행",
+  "rowPlaceholder": "새 열",
+  "columnPlaceholder": "새 행"
 }

@@ -4,7 +4,15 @@
  * @param {*} data 조회된 데이터
  */
 const generateItem = (item, data) => {
+  // const dataSourceConfig = {
+  //   remoteOperations: true,
+  //   load: function(loadOptions) {
 
+  //   },
+  //   onChanged: function(e) {
+
+  //   }
+  // };
 };
 
 /**
