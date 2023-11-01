@@ -11,7 +11,7 @@ const PivotGrid = ({id, mart}) => {
       width='100%'
       height='100%'
       id={id}
-      dataSource={mart.dataSource}
+      dataSource={mart.dataSourceConfig}
     >
     </DevPivotGrid>
   );

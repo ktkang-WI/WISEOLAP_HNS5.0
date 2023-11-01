@@ -11,6 +11,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
+import ItemType from 'components/report/item/util/ItemType';
 
 
 const useQueryExecute = () => {
@@ -54,18 +55,26 @@ const useQueryExecute = () => {
     const tempItem = _.cloneDeep(item);
     const param = generateParameter(tempItem, datasets);
     const reportId = selectCurrentReportId(store.getState());
-    getItemData(param, (response) => {
-      if (response.status != 200) {
-        return;
-      }
 
+    if (item.type == ItemType.PIVOT_GRID) {
       tempItem.mart.init = true;
-      tempItem.mart.data = response.data;
-
-      ItemUtilityFactory[tempItem.type].generateItem(tempItem);
+      ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
 
       dispatch(updateItem({reportId, item: tempItem}));
-    });
+    } else {
+      getItemData(param, (response) => {
+        if (response.status != 200) {
+          return;
+        }
+
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+
+        ItemUtilityFactory[tempItem.type].generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    }
   };
 
   /**
