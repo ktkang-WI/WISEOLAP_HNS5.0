@@ -1,4 +1,4 @@
 export default {
   CHART: 'chart',
-  PIVOT: 'pivot'
+  PIVOT_GRID: 'pivot'
 };

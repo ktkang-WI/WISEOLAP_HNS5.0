@@ -127,8 +127,9 @@ public final class DataSanitizer {
 
             int start = pagingOption.getStart();
             int size = pagingOption.getSize();
+            int rows = Math.min(start + size, data.size());
 
-            for (int i = start; i < start + size; i++) {
+            for (int i = start; i < rows; i++) {
                 tempList.add(data.get(i));
             }
 

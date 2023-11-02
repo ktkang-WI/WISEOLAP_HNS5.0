@@ -4,11 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
@@ -16,6 +24,8 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -31,7 +41,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/report")
 public class ReportController {
+    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+
     private final ReportService reportService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     ReportController(ReportService reportService) {
         this.reportService = reportService;
@@ -80,7 +95,8 @@ public class ReportController {
                     "}")
     }))
     @PostMapping(value = "/item-data")
-    public ReportResult getCube(@RequestBody Map<String, String> param) {
+    public ReportResult getItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
+            throws Exception {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "");
         String measuresStr = param.getOrDefault("measure", "");
@@ -108,7 +124,16 @@ public class ReportController {
                 .pagingOption(pagingOption)
                 .build();
 
-        return reportService.getItemData(dataAggreagtion);
-    }
+        if (itemType == ItemType.PIVOT_GRID) {
+            final String pagingParamValue = param.get("paging");
+            final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
+                    ? (ObjectNode) objectMapper.readTree(pagingParamValue)
+                    : null;
+            final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
 
+            return reportService.getPivotData(param, pagingParam, dataAggreagtion);
+        } else {
+            return reportService.getItemData(dataAggreagtion);
+        }
+    }
 }

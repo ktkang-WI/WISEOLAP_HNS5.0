@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum SummaryType {
-    SUM("SUM"), COUNT("COUNT");
+    SUM("SUM"), COUNT("COUNT"), COUNTDISTINCT("COUNTDISTINCT"), MIN("MIN"), MAX("MAX"), AVERAGE("AVERAGE"),
+    CUSTOM("CUSTOM"), AVG("AVG");
 
     private final String symbol;
 
