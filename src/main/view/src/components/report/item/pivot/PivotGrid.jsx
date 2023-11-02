@@ -35,17 +35,11 @@ const PivotGrid = ({id, mart}) => {
     };
   }, []);
 
-  const onContentReady = (e, e2) => {
-    console.log(e);
-    console.log(e2);
-  };
-
   return (
     <DevPivotGrid
       ref={ref}
       id={id}
       dataSource={mart.dataSourceConfig}
-      onOptionChanged={onContentReady}
       wordWrapEnabled={false}
     >
       <FieldChooser enabled={false}> </FieldChooser>
