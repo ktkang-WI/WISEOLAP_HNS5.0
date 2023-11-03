@@ -53,7 +53,8 @@ const useDrag = () => {
           uniqueName: sourceField.uniqueName,
           caption: sourceField.name,
           fieldId: 'dataItem' + (dataField.dataFieldQuantity++),
-          category: dest.droppableId
+          category: dest.droppableId,
+          type: sourceField.type
         };
 
         dataField[dest.droppableId].splice(dest.index, 0, tempField);
