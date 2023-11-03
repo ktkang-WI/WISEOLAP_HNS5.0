@@ -107,5 +107,8 @@
   "row": "열",
   "column": "행",
   "rowPlaceholder": "새 열",
-  "columnPlaceholder": "새 행"
+  "columnPlaceholder": "새 행",
+  "fieldPlaceholder": "새 필드",
+  "sparkline": "스파크 라인",
+  "sparklinePlaceholder": "새 스파크 라인"
 }

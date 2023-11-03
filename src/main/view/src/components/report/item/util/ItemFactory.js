@@ -114,6 +114,30 @@ const makeItem = (orgItem) => {
       item.meta.dataField.column = [];
       item.meta.dataField.row = [];
     }
+  } else if (item.type == ItemType.DATA_GRID) {
+    const mart = {
+      ...defaultMart,
+      dataFieldOption: {
+        field: {
+          ...defaultDimension,
+          label: localizedString.field,
+          placeholder: localizedString.fieldPlaceholder
+        },
+        sparkline: {
+          ...defaultDimension,
+          label: localizedString.sparkline,
+          placeholder: localizedString.sparklinePlaceholder
+        }
+      },
+      ribbonItem: []
+    };
+
+    item.mart = mart;
+
+    if (!orgItem.meta) {
+      item.meta.dataField.field = [];
+      item.meta.dataField.sparkline = [];
+    }
   }
 
   return item;

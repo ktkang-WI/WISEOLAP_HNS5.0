@@ -19,6 +19,7 @@ import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import Chart from '../item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from '../item/pivot/PivotGrid';
+import DataGrid from '../item/grid/DataGrid';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -55,7 +56,8 @@ const ItemBoard = () => {
 
   const itemFactory = {
     chart: Chart,
-    pivot: PivotGrid
+    pivot: PivotGrid,
+    grid: DataGrid
   };
 
   /**

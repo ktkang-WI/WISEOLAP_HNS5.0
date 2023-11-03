@@ -128,14 +128,17 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddGrid': {
-      id: 'add_grid',
-      title: localizedString.addGrid,
-      label: localizedString.addGrid,
-      type: 'RibbonButton',
-      imgSrc: addGrid,
-      width: 'auto',
-      height: '45px',
-      useArrowButton: false
+      'id': 'add_grid',
+      'title': localizedString.addGrid,
+      'label': localizedString.addGrid,
+      'type': 'RibbonButton',
+      'imgSrc': addGrid,
+      'width': 'auto',
+      'height': '45px',
+      'useArrowButton': false,
+      'onClick': (e) => {
+        insertFlexLayout(selectedReportId, 'grid');
+      }
     },
     'AddCustomChart': {
       'id': 'add_custom_chart',
