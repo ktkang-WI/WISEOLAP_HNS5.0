@@ -74,11 +74,10 @@
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>
   	
-  	<select id="selectDsInfo" parameterType="String" resultMap="DsMstr">
+  	<select id="selectDataSource" parameterType="int" resultMap="DsMstr">
 		SELECT * FROM DS_MSTR
 		WHERE DS_ID = #{dsId}
 	</select>
-	
 	
 <!-- Query End -->
 </mapper>

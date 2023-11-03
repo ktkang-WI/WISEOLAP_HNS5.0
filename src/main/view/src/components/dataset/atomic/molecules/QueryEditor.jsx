@@ -3,10 +3,6 @@ import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/ext-inline_autocomplete';
 
 const QueryEditor = ({editorRef, ...props}) => {
-  const test = (e) => {
-    const text = props.inputQuery ? props.inputQuery : '';
-    props.setQuery(text + e);
-  };
   return (
     <AceEditor
       placeholder=""
@@ -20,8 +16,7 @@ const QueryEditor = ({editorRef, ...props}) => {
       showGutter={true}
       highlightActiveLine={true}
       ref={editorRef}
-      value={props.inputQuery}
-      onChange={test}
+      value={''}
       setOptions={{
         enableBasicAutocompletion: false,
         enableLiveAutocompletion: true,

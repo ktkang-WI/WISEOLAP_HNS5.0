@@ -25,3 +25,20 @@ export const dbColumns = async (dsId, search, table) => {
 
   return res.data;
 };
+
+export const getTablesByMart = async (datasource) => {
+  const res = await axios.post(path + '/query-dataset-tables', {
+    dsId: parseInt(datasource.dsId)
+  });
+
+  return res.data;
+};
+
+export const getDataByQueryMart = async (datasource, query) => {
+  const res = await axios.post(path + '/query-datset-fields', {
+    dsId: parseInt(datasource.dsId),
+    query: query
+  });
+
+  return res.data;
+};

@@ -15,21 +15,3 @@ export const getByUserId = async (userId) => {
 
   return res.data;
 };
-
-export const getByTables = async (datasource) => {
-  const res = await axios.post(path + '/queryDataset-getTables', datasource);
-
-  return res.data;
-};
-
-export const getByQueryValidate = async (datasource) => {
-  const res = await axios.post(path + '/queryDataset-getValidate', datasource);
-
-  return res.data;
-};
-
-export const getByQueryDsView = async (datasource) => {
-  const res = await axios.post(path + '/queryDataset-getDsview', datasource);
-
-  return res.data;
-};

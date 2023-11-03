@@ -1,6 +1,8 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -134,41 +136,76 @@ public class DatasetService {
 	  return martDAO.select(query);
   }
   
-  public Map<String, MartResultDTO> getQueryDatasetTable(Map<String, String> datasource) {
-	  List<DsMstrEntity> dsInfoEntity = datasetDAO.selectDsInfo(datasource.get("dsId"));
-	  List<DsMstrDTO> result = new ArrayList<>();
+  public Map<String, MartResultDTO> getQueryDatasetTable(int dsId) {
+	  DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
 	  Map<String, MartResultDTO> tbl_Col = new HashMap<>();
-	  for(DsMstrEntity dsInfo : dsInfoEntity) {
-		  result.add(DsMstrDTO.builder()
-			        .dsId(dsInfo.getDsId())
-			        .dsNm(dsInfo.getDsNm())
-			        .ip(dsInfo.getIp())
-			        .port(dsInfo.getPort())
-			        .password(dsInfo.getPassword())
-			        .dbNm(dsInfo.getDbNm())
-			        .ownerNm(dsInfo.getOwnerNm())
-			        .userId(dsInfo.getUserId())
-			        .userAreaYn(dsInfo.getUserAreaYn())
-			        .dsDesc(dsInfo.getDsDesc())
-			        .dbmsType(DbmsType.fromString(dsInfo.getDbmsType()).get())
-			        .build());
-	  }
+	  Map<String, String> param = new HashMap<>();
 	  
-	  martConfig.setMartDataSource(result.get(0));
-	  // 쿼리 xml에 정리 -> db별로
-//	  String query = "SELECT A.OBJECT_NAME TBL_NM, B.COMMENTS TBL_CAPTION "
-//	  		+ "FROM	ALL_OBJECTS A, ALL_TAB_COMMENTS B"
-//	  		+ " WHERE A.OWNER = B.OWNER"
-//	  		+ " AND A.OBJECT_TYPE IN ('TABLE','VIEW')"
-//	  		+ " AND A.OBJECT_NAME = B.TABLE_NAME "
-//	  		+ " AND A.OWNER = 'DW'"
-//	  		+ " AND ( UPPER(A.OBJECT_NAME) LIKE '%%'"
-//	  		+ " OR UPPER(B.COMMENTS) LIKE '%%' )"
-//	  		+ " ORDER BY 1;";
-	  MartResultDTO result1 = martDAO.selectTalbe();
-	  MartResultDTO result2 = martDAO.selectColumn();
-	  tbl_Col.put("tables", result1);
-	  tbl_Col.put("columns", result2);
+	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+			  .dsId(dsInfoEntity.getDsId())
+			  .dsNm(dsInfoEntity.getDsNm())
+			  .ip(dsInfoEntity.getIp())
+			  .port(dsInfoEntity.getPort())
+			  .password(dsInfoEntity.getPassword())
+			  .dbNm(dsInfoEntity.getDbNm())
+			  .ownerNm(dsInfoEntity.getOwnerNm())
+			  .userId(dsInfoEntity.getUserId())
+			  .userAreaYn(dsInfoEntity.getUserAreaYn())
+			  .dsDesc(dsInfoEntity.getDsDesc())
+			  .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+			  .build();
+	  
+	  martConfig.setMartDataSource(dsMstrDTO);
+	  param.put("dbType", dsMstrDTO.getDbmsType().name());
+	  param.put("owner", dsMstrDTO.getOwnerNm());
+	  
+	  MartResultDTO tableList = martDAO.selectQueryDataTbl(param);
+	  MartResultDTO columnList = martDAO.selectQueryDataCol(param);
+	  
+	  tbl_Col.put("tables", tableList);
+	  tbl_Col.put("columns", columnList);
+	  
 	  return tbl_Col;
+  }
+  
+  public MartResultDTO getQueryData(int dsId, String query) {
+	  DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+	  
+	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+			  .dsId(dsInfoEntity.getDsId())
+			  .dsNm(dsInfoEntity.getDsNm())
+			  .ip(dsInfoEntity.getIp())
+			  .port(dsInfoEntity.getPort())
+			  .password(dsInfoEntity.getPassword())
+			  .dbNm(dsInfoEntity.getDbNm())
+			  .ownerNm(dsInfoEntity.getOwnerNm())
+			  .userId(dsInfoEntity.getUserId())
+			  .userAreaYn(dsInfoEntity.getUserAreaYn())
+			  .dsDesc(dsInfoEntity.getDsDesc())
+			  .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+			  .build();
+	  
+	  martConfig.setMartDataSource(dsMstrDTO);
+	  
+	  String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
+	  MartResultDTO re = new MartResultDTO();
+	  
+	  try {
+		re = martDAO.select(newQuery);
+	} catch (Exception e) {
+		List<Map<String, Object>> err = new ArrayList<Map<String,Object>>();
+		err.add(Collections.singletonMap("error", "error"));
+		re.setRowData(err);
+	}
+	  return re;
+  }
+  
+  private String convertTopN(String sql, String dbType, int rowNum) {
+  	if ("MS_SQL".equals(dbType)) {
+  		sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
+  	} else {
+  		sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
+  	}
+  	return sql;
   }
 }

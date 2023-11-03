@@ -1,8 +1,10 @@
 package com.wise.MarketingPlatForm.dataset.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -179,8 +181,45 @@ public class DatasetController {
   @Operation(
     summary = "queryDataset tables",
 	description = "쿼리 직접입력 데이터 항목 가져옴.")
-  @PostMapping(value = "/queryDataset-getTables")
-  public Map<String, MartResultDTO> getTables(@RequestBody Map<String, String> datasource) {
-	  return datasetService.getQueryDatasetTable(datasource);
+  @Parameters({
+	    @Parameter(name = "dsId", description = "DS id", example = "2703"),
+  })
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    content = @Content(
+      examples = {
+        @ExampleObject(name = "example", value = "{\"dsId\": \"2703\"}")
+      }
+    )
+  )
+  @PostMapping(value = "/query-dataset-tables")
+  public Map<String, MartResultDTO> getTables(@RequestBody Map<String, Integer> datasource) {
+	  int dsId = datasource.get("dsId");
+
+	  return datasetService.getQueryDatasetTable(dsId);
+  }
+  
+  @Operation(
+	summary = "queryDataset validate",
+	description = "쿼리 유효성 검사 및 데이터 가져옴")
+  @Parameters({
+	    @Parameter(name = "query", description = "query contents",
+	    		example = "select * from DEMO_01_D_공공_고객"),
+	    @Parameter(name = "dsId", description = "DS id", example = "2703"),
+  })
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    content = @Content(
+      examples = {
+        @ExampleObject(name = "example",
+        		value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}"
+        )
+      }
+    )
+  )
+  @PostMapping(value = "/query-datset-fields")
+  public MartResultDTO getValidate(@RequestBody Map<String, String> datasource) {
+	  String query = datasource.get("query");
+	  int dsId = Integer.parseInt(datasource.get("dsId"));
+	  
+	  return datasetService.getQueryData(dsId, query);
   }
 }
