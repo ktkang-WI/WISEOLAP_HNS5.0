@@ -8,5 +8,5 @@ import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 
 @Mapper
 public interface ReportDAO {
-    public List<ReportMstrEntity> selectReport(Map<String, String> arguments);
+    public ReportMstrEntity selectReport(String reportId);
 }

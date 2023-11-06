@@ -17,6 +17,7 @@
     <result column="OWNER_NM" property="ownerNm" javaType="String"/>
     <result column="DS_DESC" property="dsDesc" javaType="String"/>
     <result column="DS_CONNECTOR" property="connector" javaType="String"/>
+    <result column="CONN_TYPE" property="connectorType" javaType="String"/>
     <result column="USER_AREA_YN" property="userAreaYn" javaType="String"/>
     <result column="HASH_YN" property="hashYn" javaType="String"/>
     <result column="WF_YN" property="wfYn" javaType="String"/>

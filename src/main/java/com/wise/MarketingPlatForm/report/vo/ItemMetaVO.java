@@ -3,9 +3,10 @@ package com.wise.MarketingPlatForm.report.vo;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class ReportVO {
-	int reportId;
-	ReportOptionsVO options;
+@Getter
+public class ItemMetaVO {
+	String memo;
+	String name;
+	DataFieldVO dataField;
 }

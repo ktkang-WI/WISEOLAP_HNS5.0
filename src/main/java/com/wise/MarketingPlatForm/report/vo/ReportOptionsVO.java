@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReportOptions {
+public class ReportOptionsVO {
 	int order;
 	String reportDesc;
 	String reportNm;

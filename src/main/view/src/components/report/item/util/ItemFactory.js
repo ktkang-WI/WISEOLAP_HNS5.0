@@ -17,7 +17,7 @@ const makeItem = (orgItem) => {
     item = {
       ...orgItem,
       meta: {
-        name: '아이템',
+        name: 'test',
         memo: '',
         useCaption: true,
         dataField: {

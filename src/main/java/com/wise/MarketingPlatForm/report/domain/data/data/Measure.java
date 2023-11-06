@@ -19,4 +19,5 @@ public class Measure {
   String uniqueName;
   SummaryType summaryType;
   String fieldId;
+  String category;
 }

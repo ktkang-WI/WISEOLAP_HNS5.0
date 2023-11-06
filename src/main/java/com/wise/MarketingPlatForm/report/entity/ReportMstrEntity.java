@@ -57,6 +57,8 @@ public class ReportMstrEntity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        decodedString.replaceAll("&lt;", "<");
+        decodedString.replaceAll("&gt;", ">");
         return decodedString;
     }
 
@@ -66,6 +68,7 @@ public class ReportMstrEntity {
     	String decodedLayoutXml = null;
     	String decodedParamXml = null;
     	String decodedDatasetQuery = null;
+    	String decodedDatasetXml = null;
     	
     	if(reportMstrEntity.getReportXml() != null) {
     		decodedReportXml = decodeBase64(reportMstrEntity.getReportXml());
@@ -81,6 +84,9 @@ public class ReportMstrEntity {
     	}
     	if(reportMstrEntity.getDatasetQuery() != null) {
     		decodedDatasetQuery = decodeBase64(reportMstrEntity.getDatasetQuery());
+    	}
+    	if(reportMstrEntity.getDatasetXml() != null) {
+    		decodedDatasetXml = decodeBase64(reportMstrEntity.getDatasetXml());
     	}
         
         return ReportMstrDTO.builder()
@@ -100,8 +106,9 @@ public class ReportMstrEntity {
         .reportXml(decodedReportXml)  
         .chartXml(decodedChartXml)
         .layoutXml(decodedLayoutXml)
-        .paramXml(decodedParamXml)
         .datasetQuery(decodedDatasetQuery)
+        .datasetXml(decodedDatasetXml)
+        .paramXml(decodedParamXml)
         .regUserNo(reportMstrEntity.getRegUserNo())
         .RegDt(reportMstrEntity.getRegDt())
         .delYn(reportMstrEntity.getDelYn())

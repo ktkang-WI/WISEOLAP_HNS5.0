@@ -73,6 +73,8 @@ public class DatasetService {
         .userId(entity.getUserId())
         .userAreaYn(entity.getUserAreaYn())
         .dsDesc(entity.getDsDesc())
+        .connector(entity.getConnector())
+        .connectorType(entity.getConnectorType())
         .dbmsType(DbmsType.fromString(entity.getDbmsType()).get())
         .build();
   }
