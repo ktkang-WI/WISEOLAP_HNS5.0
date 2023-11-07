@@ -7,7 +7,7 @@ const theme = getTheme();
 const Wrapper = styled.div`
   background: ${theme.color.panelColor};
   height: 100%;
-  width: ${theme.size.panelWidth};
+  width: ${(props) => props.width || theme.size.panelWidth};
   display: inline-block;
   border-right: solid 1px ${theme.color.breakLine};
   text-align: left;
@@ -24,11 +24,12 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = (props) => {
+const ReportListTab = ({items, width, ...props}) => {
+  console.log(props);
   return (
-    <Wrapper>
+    <Wrapper width={width}>
       <StyledTreeView
-        items={props.items}
+        items={items}
         dataStructure="plain"
         displayExpr="name"
         parentIdExpr="categoryId"
@@ -39,6 +40,7 @@ const ReportListTab = (props) => {
           placeholder: '검색'
         }}
         focusStateEnabled={false}
+        {...props}
       />
     </Wrapper>
   );
