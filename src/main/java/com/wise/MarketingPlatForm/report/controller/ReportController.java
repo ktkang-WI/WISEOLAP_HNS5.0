@@ -3,9 +3,7 @@ package com.wise.MarketingPlatForm.report.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -29,7 +28,9 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
-
+import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
+import com.wise.MarketingPlatForm.report.vo.MetaVO;
+import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -136,4 +137,25 @@ public class ReportController {
             return reportService.getItemData(dataAggreagtion);
         }
     }
+
+    @Operation(
+	    summary = "get report",
+	    description = "reportId로 보고서를 불러옵니다.")
+	@Parameters({
+	    @Parameter(name = "reportId", description = "report id", example = "8486", required = true),
+	    @Parameter(name = "userId", description = "user id", example = "admin", required = true),
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+	    content = @Content(
+	        examples = {
+	            @ExampleObject(name = "example", value = "{\"reportId\": \"8486\", \"userId\": \"admin\"}")
+	        }
+	    )
+	)
+	@PostMapping(value = "/report")
+	public MetaVO getReport(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+        String userId = param.getOrDefault("userId", "");
+        return reportService.getReport(reportId, userId);
+	}   
 }

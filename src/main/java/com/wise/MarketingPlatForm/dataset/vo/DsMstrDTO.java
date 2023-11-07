@@ -22,6 +22,7 @@ public class DsMstrDTO {
   String ownerNm;
   String dsDesc;
   String connector;
+  String connectorType;
   String userAreaYn;
   String hashYn;
 
@@ -36,6 +37,7 @@ public class DsMstrDTO {
       .dbmsType(dsMstrDTO.getDbmsType().toString())
       .ownerNm(dsMstrDTO.getOwnerNm())
       .dsDesc(dsMstrDTO.getDsDesc())
+      .connectorType(dsMstrDTO.getConnectorType())
       .connector(dsMstrDTO.getConnector())
       .userAreaYn(dsMstrDTO.getUserAreaYn())
       .hashYn(dsMstrDTO.getHashYn())

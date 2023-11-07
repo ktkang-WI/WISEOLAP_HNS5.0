@@ -23,6 +23,7 @@ public class DsMstrEntity {
   String ownerNm;
   String dsDesc;
   String connector;
+  String connectorType;
   String userAreaYn;
   String hashYn;
   String wfYn;
