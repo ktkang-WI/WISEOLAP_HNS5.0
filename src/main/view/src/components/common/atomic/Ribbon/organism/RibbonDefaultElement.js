@@ -177,7 +177,7 @@ const RibbonDefaultElement = () => {
       'onClick': () => {
         openModal(SimpleInputModal,
             {
-              modalTitle: '이름 편집',
+              modalTitle: localizedString.nameEdit,
               defaultValue: selectedItem.meta.name,
               onSubmit: (value) => {
                 editItemName(selectedReportId, selectedItem, value);
