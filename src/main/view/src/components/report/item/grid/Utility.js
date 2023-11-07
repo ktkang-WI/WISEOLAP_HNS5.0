@@ -4,7 +4,6 @@
  * @param {*} data 조회된 데이터
  */
 const generateItem = (item, data) => {
-  console.log('datagrid generateItem');
   const columnsConfig = {
     allowEditing: false
   };
@@ -24,8 +23,6 @@ const generateItem = (item, data) => {
  * @param {JSON} param 파라미터 정보를 삽입할 객체
  */
 const generateParameter = (item, param) => {
-  console.log('dataGrid generateParameter');
-
   const dataField = item.meta.dataField;
   param.dimension = dataField.field.filter((field)=>field.type === 'dim');
   param.measure = dataField.field.filter((field)=>field.type === 'mea');
