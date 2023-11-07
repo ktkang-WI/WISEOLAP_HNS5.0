@@ -87,8 +87,9 @@ const ItemBoard = () => {
   function titleFactory(node) {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
+    const useCaption = item.meta.useCaption;
 
-    return <span>{item? item.meta.name : '아이템 없음'}</span>;
+    return <span>{useCaption? item.meta.name : false}</span>;
   }
 
   /**

@@ -15,6 +15,7 @@ const initialState = {
       id: 'item1',
       meta: {
         name: '아이템',
+        useCaption: true,
         dataField: {
           dataFieldQuantity: 0,
           measure: [],
