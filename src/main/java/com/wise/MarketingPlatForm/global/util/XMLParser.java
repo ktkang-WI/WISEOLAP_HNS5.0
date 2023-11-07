@@ -371,8 +371,8 @@ public class XMLParser {
 				}
 				dataField = ChartFieldVO.builder()
 						.datasetId(datasetId)
-						.dimensions(dimensions)
-						.measures(measures)
+						.dimension(dimensions)
+						.measure(measures)
 						.build();				
 			}
 //				추후 아이템 추가시.

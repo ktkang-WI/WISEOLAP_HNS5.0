@@ -11,9 +11,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 public class ChartFieldVO extends RootFieldVO{
+	// 추후에 dimensions로 변경해야됨 bjsong 2023-11-07
 	@Builder.Default
-	List<Dimension> dimensions = new ArrayList<Dimension>();
+	List<Dimension> dimension = new ArrayList<Dimension>();
 	@Builder.Default
-	List<Measure> measures = new ArrayList<Measure>();
+	List<Measure> measure = new ArrayList<Measure>();
 	String datasetId;
 }
