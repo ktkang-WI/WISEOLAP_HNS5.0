@@ -99,13 +99,51 @@ const ItemBoard = () => {
    * @param {*} action
    * @return {Action} action
    */
-  function onFocusItem(action) {
+  function onAction(action) {
+    // TabSet Focus 처리
     if (action.type == 'FlexLayout_SetActiveTabset') {
       const node = model.getNodeById(action.data.tabsetNode);
       const itemId = node.getChildren()[0].getId();
       if (selectedItemId != itemId) {
         dispatch(selectItem({reportId, itemId}));
       }
+      return;
+    }
+
+    // Tab Focus 처리
+    if (action.type == 'FlexLayout_SelectTab') {
+      const itemId = action.data.tabNode;
+      if (selectedItemId != itemId) {
+        dispatch(selectItem({reportId, itemId}));
+      }
+    }
+
+    // 레이아웃 조절
+    if (action.type == 'FlexLayout_AdjustSplit') {
+      const modelJson = model.toJson();
+      const nodes = [action.data.node1, action.data.node2];
+      const weight = [action.data.weight1, action.data.weight2];
+      let complete = 0;
+
+      const setWeight = (json) => {
+        const index = nodes.indexOf(json.id);
+        if (complete == 2) {
+          return;
+        }
+        if (index >= 0) {
+          json.weight = weight[index];
+          complete++;
+          return;
+        }
+        if (json.children) {
+          for (const child of json.children) {
+            setWeight(child);
+          }
+        }
+      };
+
+      setWeight(modelJson.layout);
+      setMovedLayout(modelJson);
       return;
     }
     return action;
@@ -148,7 +186,7 @@ const ItemBoard = () => {
         model={model}
         factory={factory}
         titleFactory={titleFactory}
-        onAction={onFocusItem}
+        onAction={onAction}
         onRenderTabSet={onRenderTabSet}
         onModelChange={onModelChange}
       />

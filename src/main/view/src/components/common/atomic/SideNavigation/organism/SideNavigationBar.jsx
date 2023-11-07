@@ -85,11 +85,16 @@ const StyledSNB = styled.div`
   ${useSNBDrawer && css`
     &:hover {
       width: ${theme.size.snbDrawerWidth};
+      box-shadow: 2px 1px 5px 0px rgb(187 187 187 / 23%);
       z-index: 30;
       transition: width 0.5s, z-index 0.5s;
       & > div > div {
         box-sizing: border-box;
-        border-bottom: 1px solid ${theme.color.breakLine};
+        & :hover {
+          transition: background-color 0.1s;
+          background-color: #efefef;
+        }
+        /* border-bottom: 1px solid ${theme.color.breakLine}; */
       }
     }
   `}
