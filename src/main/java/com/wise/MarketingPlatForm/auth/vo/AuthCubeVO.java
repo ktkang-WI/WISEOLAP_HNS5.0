@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AuthCubeVO {
-  int dsViewId;
-  int cubeId;
+    int dsViewId;
+    int cubeId;
 }

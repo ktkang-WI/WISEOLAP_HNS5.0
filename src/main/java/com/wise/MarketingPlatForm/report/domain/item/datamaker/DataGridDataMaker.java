@@ -14,26 +14,26 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.util.DataSanitizer;
 
 public class DataGridDataMaker implements ItemDataMaker {
-  @Override
-  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-    List<Measure> measures = dataAggreagtion.getMeasures();
-    List<Dimension> dimensions = dataAggreagtion.getDimensions();
-    PagingOption pagingOption = dataAggreagtion.getPagingOption();
+    @Override
+    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
+        List<Measure> measures = dataAggreagtion.getMeasures();
+        List<Dimension> dimensions = dataAggreagtion.getDimensions();
+        PagingOption pagingOption = dataAggreagtion.getPagingOption();
 
-    DataSanitizer sanitizer = new DataSanitizer(data);
+        DataSanitizer sanitizer = new DataSanitizer(data);
 
-    data = sanitizer
-        .groupBy(measures, dimensions)
-        .columnFiltering(measures, dimensions)
-        .orderBy(dimensions)
-        .paging(pagingOption)
-        .getData();
+        data = sanitizer
+                .groupBy(measures, dimensions)
+                .columnFiltering(measures, dimensions)
+                .orderBy(dimensions)
+                .paging(pagingOption)
+                .getData();
 
-    Map<String, Object> info = new HashMap<String, Object> ();
-    info.put("maxPage", sanitizer.getMaxPage());
-    info.put("totalRows", sanitizer.getGrpDataLenth());
-    CommonResult result = new CommonResult(data, "", info);
+        Map<String, Object> info = new HashMap<String, Object>();
+        info.put("maxPage", sanitizer.getMaxPage());
+        info.put("totalRows", sanitizer.getGrpDataLenth());
+        CommonResult result = new CommonResult(data, "", info);
 
-    return result;
-  }
+        return result;
+    }
 }

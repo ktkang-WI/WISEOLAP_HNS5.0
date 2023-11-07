@@ -12,19 +12,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
-  int userNo;
-  int grpId;
-  String userId;
-  String userNm;
-  String password;
-  String email;
-  String email2;
-  String delYn;
-  String hpNo;
-  String telNo;
-  String userRelCd;
-  String userDesc;
-  String runMode;
-  int lockCnt;
-  String hashYn;
+    int userNo;
+    int grpId;
+    String userId;
+    String userNm;
+    String password;
+    String email;
+    String email2;
+    String delYn;
+    String hpNo;
+    String telNo;
+    String userRelCd;
+    String userDesc;
+    String runMode;
+    int lockCnt;
+    String hashYn;
 }

@@ -12,9 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Dimension {
-  String caption;
-  String name;
-  String uniqueName;
-  String fieldId;
-  String category;
+    String caption;
+    String name;
+    String uniqueName;
+    String fieldId;
+    String category;
 }

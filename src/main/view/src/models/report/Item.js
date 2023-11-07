@@ -16,3 +16,9 @@ export const getItemData = (param, callback) => {
   axios.post(path + '/item-data', param)
       .then(callback);
 };
+
+export const getPivotData = async (param) => {
+  const res = await axios.post(path + '/item-data', param);
+
+  return res.data;
+};

@@ -10,32 +10,32 @@ import lombok.Setter;
 @Builder
 @Setter
 public class AuthDataDTO {
-  int grpId;
-  int userNo;
-  String dataXmlBase64;
-  String dataXml;
-  List<AuthCubeVO> authCube;
-  List<AuthDimVO> authDim;
+    int grpId;
+    int userNo;
+    String dataXmlBase64;
+    String dataXml;
+    List<AuthCubeVO> authCube;
+    List<AuthDimVO> authDim;
 
-  public boolean hasAuthCube(int dsViewId, int cubeId) {
-    for (AuthCubeVO cubeVo : authCube) {
-      if (cubeVo.getDsViewId() == dsViewId &&
-          cubeVo.getCubeId() == cubeId) {
-            return true;
+    public boolean hasAuthCube(int dsViewId, int cubeId) {
+        for (AuthCubeVO cubeVo : authCube) {
+            if (cubeVo.getDsViewId() == dsViewId &&
+                    cubeVo.getCubeId() == cubeId) {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    return false;
-  }
-
-  public boolean hasAuthDim(int dsViewId, String dimUniNm) {
-    for (AuthDimVO dimVo : authDim) {
-      if (dimVo.getDsViewId() == dsViewId &&
-          dimVo.getDimUniNm().equals(dimUniNm)) {
-            return true;
+    public boolean hasAuthDim(int dsViewId, String dimUniNm) {
+        for (AuthDimVO dimVo : authDim) {
+            if (dimVo.getDsViewId() == dsViewId &&
+                    dimVo.getDimUniNm().equals(dimUniNm)) {
+                return true;
+            }
         }
-    }
 
-    return false;
-  }
+        return false;
+    }
 }

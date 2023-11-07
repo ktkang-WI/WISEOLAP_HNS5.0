@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dataset {
-  // 주제영역일 경우 해당 컬럼 cubeId로 사용
-  int dsId;
-  String query;
-  DsType dsType;
+    // 주제영역일 경우 해당 컬럼 cubeId로 사용
+    int dsId;
+    String query;
+    DsType dsType;
 }

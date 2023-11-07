@@ -17,7 +17,7 @@ public class Swagger2Config {
                 .pathsToMatch("/**")
                 .build();
     }
-    
+
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
