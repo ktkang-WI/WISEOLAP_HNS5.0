@@ -1,49 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {makeItem} from 'components/report/item/util/ItemFactory';
-import chartSeriesButtonIcon
-  from 'assets/image/icon/item/chart_bar.png';
-import dimensionIcon
-  from 'assets/image/icon/dataSource/dimension.png';
-import measureIcon from 'assets/image/icon/dataSource/measure.png';
-import localizedString from 'config/localization';
+
+const item = makeItem({
+  id: 'item1',
+  type: 'chart'
+});
 
 const initialState = {
   0: {
     selectedItemId: 'item1',
     itemQuantity: 1,
-    items: [{
-      id: 'item1',
-      meta: {
-        name: '아이템',
-        dataField: {
-          dataFieldQuantity: 0,
-          measure: [],
-          dimension: []
-        }
-      },
-      mart: {
-        dataFieldOption: {
-          measure: {
-            label: localizedString.measure,
-            icon: measureIcon,
-            placeholder: localizedString.measurePlaceholder,
-            type: 'MEA',
-            useButton: true,
-            // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-            buttonIcon: chartSeriesButtonIcon,
-            buttonEvent: function(e) {
-              console.log(e);
-            }
-          },
-          dimension: {
-            label: localizedString.dimension,
-            icon: dimensionIcon,
-            placeholder: localizedString.dimensionPlaceholder,
-            type: 'DIM' // 타입은 DIM 또는 MEA. 조회시 MEA와 DIM 구분하기 위함.
-          }
-        }
-      }
-    }]
+    items: [item]
   }
 };
 
