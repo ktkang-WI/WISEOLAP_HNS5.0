@@ -27,7 +27,6 @@ div.flexlayout__tabset_tabbar_inner_tab_container {
 
 div.flexlayout__tab_button--selected {
   background: 0 !important;
-  width: 95%;
 }
 
 .flexlayout__drag_rect {

@@ -1,0 +1,36 @@
+package com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix;
+
+import java.util.List;
+
+import com.wise.MarketingPlatForm.report.domain.item.pivot.param.GroupParam;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.param.SummaryParam;
+
+public interface SummaryMatrix {
+
+    public SummaryDimension[] getRowFlattendSummaryDimensions();
+
+    public SummaryDimension[] getColFlattendSummaryDimensions();
+
+    public int getRows();
+
+    public int getCols();
+
+    public SummaryCell[][] getSummaryCells();
+
+    public SummaryDimension getRowSummaryDimension();
+
+    public SummaryDimension getColSummaryDimension();
+
+    public int getRowIndexByDimensionPath(final String path);
+
+    public int getColIndexByDimensionPath(final String path);
+
+    public SummaryMatrix sliceRows(final List<Integer> pageRowIndices);
+
+    public List<GroupParam> getRowGroupParams();
+
+    public List<GroupParam> getColGroupParams();
+
+    public List<SummaryParam> getSummaryParams();
+
+}

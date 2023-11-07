@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AuthDimVO {
-  int dsViewId;
-  String dimUniNm;
+    int dsViewId;
+    String dimUniNm;
 }

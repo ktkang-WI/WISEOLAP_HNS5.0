@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.mart;
 
-import org.apache.ibatis.plugin.Intercepts;
+import com.wise.MarketingPlatForm.data.list.CloseableList;
+import com.wise.MarketingPlatForm.data.list.FileBackedMapList;
 import com.wise.MarketingPlatForm.global.util.DataField;
 import com.wise.MarketingPlatForm.global.util.JavaxtUtils;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -58,7 +59,7 @@ public class MartInterceptor implements Interceptor {
             }
             
             // Mart Data
-            List<Map<String, Object>> rowData = new ArrayList<>();
+            CloseableList<Map<String, Object>> rowData = new FileBackedMapList();
             while (rs.next()) {
             	Map<String, Object> row = new HashMap<>();
             	for (int i = 1; i <= columnCount; i++) {

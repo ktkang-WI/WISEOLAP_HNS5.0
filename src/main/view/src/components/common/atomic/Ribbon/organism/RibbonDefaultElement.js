@@ -28,7 +28,6 @@ import useQueryExecute from 'hooks/useQueryExecute';
 const RibbonDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
-  const component = 'chart';
   const {executeItems} = useQueryExecute();
 
   return {
@@ -112,7 +111,7 @@ const RibbonDefaultElement = () => {
       'height': '45px',
       'useArrowButton': true,
       'onClick': (e) => {
-        insertFlexLayout(selectedReportId, component);
+        insertFlexLayout(selectedReportId, 'chart');
       }
     },
     'AddPivotGrid': {
@@ -123,7 +122,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': addPivotGrid,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        insertFlexLayout(selectedReportId, 'pivot');
+      }
     },
     'AddGrid': {
       id: 'add_grid',

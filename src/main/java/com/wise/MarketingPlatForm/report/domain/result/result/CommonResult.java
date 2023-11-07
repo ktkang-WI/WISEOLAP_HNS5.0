@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class CommonResult implements ReportResult {
-  List<Map<String, Object>> data;
-  String query;
-  Map<String, Object> info;
+    List<Map<String, Object>> data;
+    String query;
+    Map<String, Object> info;
 }

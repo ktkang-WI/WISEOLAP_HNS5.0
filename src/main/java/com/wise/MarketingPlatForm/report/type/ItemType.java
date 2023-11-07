@@ -6,24 +6,29 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ItemType {
-  CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid");
+    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid");
 
-  private final String symbol;
+    private final String symbol;
 
-	ItemType (String symbol) { this.symbol = symbol; }
+    ItemType(String symbol) {
+        this.symbol = symbol;
+    }
 
-  private static final Map<String, ItemType> stringToEnum =
-		Stream.of(values()).collect(
-			Collectors.toMap(Object::toString, e -> e));
+    private static final Map<String, ItemType> stringToEnum = Stream.of(values()).collect(
+            Collectors.toMap(Object::toString, e -> e));
 
-  /**
-   * 문자열에 상응하는 ItemType 있는 경우 반환합니다.
-   * @param symbol
-   * @return ItemType
-   */
-  public static Optional<ItemType> fromString(String symbol) {
-    return Optional.ofNullable(stringToEnum.get(symbol));
-  }
+    /**
+     * 문자열에 상응하는 ItemType 있는 경우 반환합니다.
+     * 
+     * @param symbol
+     * @return ItemType
+     */
+    public static Optional<ItemType> fromString(String symbol) {
+        return Optional.ofNullable(stringToEnum.get(symbol));
+    }
 
-  @Override public String toString() { return symbol; }
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

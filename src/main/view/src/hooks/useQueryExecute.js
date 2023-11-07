@@ -1,5 +1,4 @@
-import ChartUtility from 'components/report/item/chart/Utility';
-import ItemType from 'components/report/item/util/ItemType';
+import ItemUtilityFactory from 'components/report/item/util/ItemUtilityFactory';
 import {getItemData} from 'models/report/Item';
 import {
   selectCurrentDatasets
@@ -12,6 +11,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
+import ItemType from 'components/report/item/util/ItemType';
 
 
 const useQueryExecute = () => {
@@ -41,10 +41,7 @@ const useQueryExecute = () => {
     param.dataset.query = orgDataset.datasetQuery;
 
     param.dataset = JSON.stringify(param.dataset);
-
-    if (item.type == ItemType.CHART) {
-      ChartUtility.generateParameter(item, param);
-    }
+    ItemUtilityFactory[item.type].generateParameter(item, param);
 
     return param;
   };
@@ -55,22 +52,29 @@ const useQueryExecute = () => {
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    */
   const executeItem = (item, datasets) => {
-    const param = generateParameter(item, datasets);
+    const tempItem = _.cloneDeep(item);
+    const param = generateParameter(tempItem, datasets);
     const reportId = selectCurrentReportId(store.getState());
-    getItemData(param, (response) => {
-      if (response.status != 200) {
-        return;
-      }
 
-      item.mart.init = true;
-      item.mart.data = response.data;
+    if (item.type == ItemType.PIVOT_GRID) {
+      tempItem.mart.init = true;
+      ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
 
-      if (item.type == ItemType.CHART) {
-        ChartUtility.generateItem(item, response.data);
-      }
+      dispatch(updateItem({reportId, item: tempItem}));
+    } else {
+      getItemData(param, (response) => {
+        if (response.status != 200) {
+          return;
+        }
 
-      dispatch(updateItem({reportId, item}));
-    });
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+
+        ItemUtilityFactory[tempItem.type].generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    }
   };
 
   /**
@@ -80,7 +84,7 @@ const useQueryExecute = () => {
     const items = selectCurrentItems(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
 
-    items.map((item) => executeItem(_.cloneDeep(item), datasets));
+    items.map((item) => executeItem(item, datasets));
   };
 
   return {
