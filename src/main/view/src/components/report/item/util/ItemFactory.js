@@ -24,7 +24,7 @@ const makeItem = (orgItem) => {
   }
 
   // mart 및 meta 값 세팅
-  const mart = makeMart(DataFieldTypeOfItemType[item.type]);
+  const mart = makeMart(item);
   item.mart = mart;
 
   if (!orgItem.meta) {
@@ -34,6 +34,10 @@ const makeItem = (orgItem) => {
   return item;
 };
 
+/**
+ * item.meta.dataField 데이터 초기화
+ * @param {JSON} item 아이템 객체
+ */
 const initDataFieldMeta = (item) => {
   const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);

@@ -1,4 +1,4 @@
-import {DataFieldType} from './dataFieldType';
+import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import localizedString from 'config/localization';
 import chartSeriesButtonIcon from 'assets/image/icon/item/chart_bar.png';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
@@ -79,7 +79,13 @@ const dataFieldOptionChild = {
   [DataFieldType.SPARKLINE]: dataFieldSparkline
 };
 
-const makeMart = (dataFieldTypes) => {
+/**
+ * 아이템의 type값을 가지고 아이템의 Mart 생성
+ * @param {JSON} item 아이템 객체
+ * @return {JSON} 생성된 아이템 Mart 객체
+ */
+const makeMart = (item) => {
+  const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   const dataFieldOptions = makeDataFieldOptions(dataFieldTypes);
   return {
     ...defaultMart,
@@ -90,6 +96,11 @@ const makeMart = (dataFieldTypes) => {
   };
 };
 
+/**
+ * 한 item 의 모든 dataFieldOption 생성
+ * @param {string[]} dataFieldTypes dataFieldType 배열
+ * @return {JSON} dataFieldOptions
+ */
 const makeDataFieldOptions = (dataFieldTypes) => {
   const dataFieldOptions = {};
   dataFieldTypes.forEach((type) =>
@@ -98,6 +109,11 @@ const makeDataFieldOptions = (dataFieldTypes) => {
   return dataFieldOptions;
 };
 
+/**
+ * dataFieldOption 하나 생성
+ * @param {string} type dataFieldType
+ * @return {JSON} dataFieldOption
+ */
 const makeDataFieldOptionChild = (type) =>
   ({[type]: dataFieldOptionChild[type]});
 
