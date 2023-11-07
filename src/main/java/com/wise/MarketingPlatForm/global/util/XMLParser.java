@@ -55,12 +55,16 @@ public class XMLParser {
 			Element root = document.getDocumentElement();
 			NodeList children = root.getChildNodes();
 			
-			IntStream.range(0, children.getLength()).forEach((datasetIndex) -> {
-				
+			IntStream.range(0, children.getLength())
+			.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
+			.forEach((datasetIndex) -> {
+
 				NodeList nodes = children.item(datasetIndex).getChildNodes().item(0).getChildNodes();
 				DatasetXmlDTO datasetXmlDTO = new DatasetXmlDTO();
 				
-				IntStream.range(0, nodes.getLength()).forEach((nodesIndex) -> {
+				IntStream.range(0, nodes.getLength())
+				.filter((i) -> nodes.item(i).getNodeType() == Node.ELEMENT_NODE)
+				.forEach((nodesIndex) -> {
 					Node node = nodes.item(nodesIndex);
 					switch (node.getNodeName()) {
 					case "DATASET_SEQ":
@@ -88,16 +92,14 @@ public class XMLParser {
 							String dataType = Optional.ofNullable(field.getNamedItem("DATA_TYPE"))
 							        .map(Node::getTextContent)
 							        .orElse(null);
-							String name = Optional.ofNullable(field.getNamedItem("CAPTION"))
-									.map(Node::getTextContent)
-							        .orElse(null);
+							String name = field.getNamedItem("CAPTION").getTextContent();
 							String icon = Optional.ofNullable(field.getNamedItem("icon"))
 									.map(Node::getTextContent)
 							        .orElse(null);
 							DataFieldType type = Optional.ofNullable(field.getNamedItem("TYPE"))
 									.map((i) ->
-									"MEA".equals(i.getTextContent()) ? DataFieldType.MEASURE : DataFieldType.DIMENSION)
-						        .orElse(null);
+										"MEA".equals(i.getTextContent()) ? DataFieldType.MEASURE : DataFieldType.DIMENSION)
+									.orElse(null);
 							String uniqueName = Optional.ofNullable(field.getNamedItem("UNI_NM"))
 									.map(Node::getTextContent)
 							        .orElse(null);
@@ -203,7 +205,9 @@ public class XMLParser {
 	private LayoutConfigVO layoutRecursionParser(Node layoutNode, LayoutTabWrapperVO parent, LayoutConfigVO resultLayoutConfigVO, List<ItemsVO> items) {
 		
 		NodeList children = layoutNode.getChildNodes();
-		IntStream.range(0, children.getLength()).forEach((layoutIndex) -> {
+		IntStream.range(0, children.getLength())
+		.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
+		.forEach((layoutIndex) -> {
 			Node node = children.item(layoutIndex);
 			Double weight;
 			
@@ -283,116 +287,101 @@ public class XMLParser {
 		List<Measure> measures = new ArrayList<Measure>();
 		List<ItemsVO> itemsList = new ArrayList<ItemsVO>();
 		
-		IntStream.range(0, children.getLength()).forEach((itemsIndex) -> {
+		IntStream.range(0, children.getLength())
+		.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
+		.forEach((itemsIndex) -> {
 			Node node = children.item(itemsIndex);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
+			
+			String itemType = node.getNodeName().toLowerCase();
+			ItemType type = null;
+			String componentName =node.getAttributes().getNamedItem("ComponentName").getTextContent();
+			String datasetId = node.getAttributes().getNamedItem("DataSource").getTextContent();
+			String name = node.getAttributes().getNamedItem("Name").getTextContent();
+			String memo = Optional.ofNullable(node.getAttributes().getNamedItem("MemoText"))
+					.map(Node::getTextContent)
+					.orElse(null);
+			
+			if(ItemType.CHART.toString().equals(itemType)) {
+				type = ItemType.CHART;
+				NodeList itemChildren = node.getChildNodes();
 				
-				String itemType = node.getNodeName().toLowerCase();
-				ItemType type = null;
-				String componentName = Optional.ofNullable(node.getAttributes().getNamedItem("ComponentName"))
-				.map(Node::getTextContent)
-				.orElse(null);
-				String datasetId = Optional.ofNullable(node.getAttributes().getNamedItem("DataSource"))
-						.map(Node::getTextContent)
-						.orElse(null);
-				String name = Optional.ofNullable(node.getAttributes().getNamedItem("Name"))
-						.map(Node::getTextContent)
-						.orElse(null);
-				String memo = Optional.ofNullable(node.getAttributes().getNamedItem("MemoText"))
-						.map(Node::getTextContent)
-						.orElse(null);
-				
-				if(ItemType.CHART.toString().equals(itemType)) {
-					type = ItemType.CHART;
-					NodeList itemChildren = node.getChildNodes();
-					
-					IntStream.range(0, itemChildren.getLength()).forEach((itemChildrenIndex) -> {
-						Node itemChild = itemChildren.item(itemChildrenIndex);
-						if("DataItems".equals(itemChild.getNodeName())) {
-							NodeList datas = itemChild.getChildNodes();
-							
-							IntStream.range(0, datas.getLength()).forEach((datasIndex) -> {
-								Node data = datas.item(datasIndex);
-								if(DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
-									NamedNodeMap dimensionNodes = data.getAttributes();
-									
-									String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
-											.map(Node::getTextContent)
-											.orElse(dimensionNodes.getNamedItem("DataMember").getTextContent());
-									String dimName = Optional.ofNullable(dimensionNodes.getNamedItem("DataMember"))
-											.map(Node::getTextContent)
-											.orElse(null);
-									String uniqueName = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
-											.map(Node::getTextContent)
-											.orElse(null);
-									
-									Dimension dimensoion = Dimension.builder()
-											.caption(caption)
-											.category(DataFieldType.DIMENSION.toString())
-											.fieldId("")
-											.name(dimName)
-											.uniqueName(uniqueName)
-											.build();
-									
-									dimensions.add(dimensoion);
-									
-								} else if(DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
-									NamedNodeMap measureNodes = data.getAttributes();
-									
-									String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
-											.map(Node::getTextContent)
-											.orElse(measureNodes.getNamedItem("DataMember").getTextContent());
-									SummaryType summaryType = SummaryType.fromString(
-											measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
-									String meaName = Optional.ofNullable(measureNodes.getNamedItem("DataMember"))
-											.map(Node::getTextContent)
-											.orElse(null);
-									String uniqueName = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
-											.map(Node::getTextContent)
-											.orElse(null);
-									
-									Measure measure = Measure.builder()
-											.caption(caption)
-											.category(DataFieldType.MEASURE.toString())
-											.fieldId("")
-											.name(meaName)
-											.uniqueName(uniqueName)
-											.summaryType(summaryType)
-											.build();
-									
-									measures.add(measure);
-								}
+				IntStream.range(0, itemChildren.getLength())
+				.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
+				.forEach((itemChildrenIndex) -> {
+					Node itemChild = itemChildren.item(itemChildrenIndex);
+					if("DataItems".equals(itemChild.getNodeName())) {
+						NodeList datas = itemChild.getChildNodes();
+						
+						IntStream.range(0, datas.getLength()).forEach((datasIndex) -> {
+							Node data = datas.item(datasIndex);
+							if(DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap dimensionNodes = data.getAttributes();
 								
-							});
-						}
-					});
-				}
+								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+								String uniqueName = dimensionNodes.getNamedItem("uniqueName").getTextContent();
+								
+								Dimension dimensoion = Dimension.builder()
+										.caption(caption)
+										.category(DataFieldType.DIMENSION.toString())
+										.fieldId("")
+										.name(dimName)
+										.uniqueName(uniqueName)
+										.build();
+								
+								dimensions.add(dimensoion);
+								
+							} else if(DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap measureNodes = data.getAttributes();
+								
+								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+								SummaryType summaryType = SummaryType.fromString(
+										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
+								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+								String uniqueName = measureNodes.getNamedItem("uniqueName").getTextContent();
+								
+								Measure measure = Measure.builder()
+										.caption(caption)
+										.category(DataFieldType.MEASURE.toString())
+										.fieldId("")
+										.name(meaName)
+										.uniqueName(uniqueName)
+										.summaryType(summaryType)
+										.build();
+								
+								measures.add(measure);
+							}
+							
+						});
+					}
+				});
+			}
 //				추후 아이템 추가시.
 //				else if (ItemType.GRID.toString().equals(itemType)) {
 //					
 //				}
-		
-				DataFieldVO dataField = DataFieldVO.builder()
-						.datasetId(datasetId)
-						.dimension(dimensions)
-						.measure(measures)
-						.build();
-				
-				ItemMetaVO meta = ItemMetaVO.builder()
-						.dataField(dataField)
-						.memo(memo)
-						.name(name)
-						.build();
-				
-				ItemsVO items = ItemsVO.builder()
-						.id(componentName)
-						.type(type.toString())
-						.meta(meta)
-						.build();
-				itemsList.add(items);
-				
-			}
+			DataFieldVO dataField = DataFieldVO.builder()
+					.datasetId(datasetId)
+					.dimension(dimensions)
+					.measure(measures)
+					.build();
 			
+			ItemMetaVO meta = ItemMetaVO.builder()
+					.dataField(dataField)
+					.memo(memo)
+					.name(name)
+					.build();
+			
+			ItemsVO items = ItemsVO.builder()
+					.id(componentName)
+					.type(type.toString())
+					.meta(meta)
+					.build();
+			itemsList.add(items);
 		});
 		
 		ItemVO itemVO = ItemVO.builder()

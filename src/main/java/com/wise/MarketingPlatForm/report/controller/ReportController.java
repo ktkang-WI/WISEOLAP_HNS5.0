@@ -1,7 +1,6 @@
 package com.wise.MarketingPlatForm.report.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -124,13 +123,12 @@ public class ReportController {
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(
 	    content = @Content(
 	        examples = {
-	            @ExampleObject(name = "example", value = "{\"reportId\": \"38454\", \"userId\": \"admin\"}")
+	            @ExampleObject(name = "example", value = "{\"reportId\": \"8486\", \"userId\": \"admin\"}")
 	        }
 	    )
 	)
 	@PostMapping(value = "/report")
 	public MetaVO getReport(@RequestBody Map<String, String> param) {
-	  Map<String, String> arguments = new HashMap<String, String>();
 	  String reportId = param.getOrDefault("reportId", "8486");
 	  String userId = param.getOrDefault("userId", "admin");
 	  return reportService.getReport(reportId, userId);
