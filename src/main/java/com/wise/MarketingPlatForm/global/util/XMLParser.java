@@ -38,7 +38,7 @@ import com.wise.MarketingPlatForm.report.vo.MetaVO;
 @Component
 public class XMLParser {
 	
-	private DocumentBuilderFactory factory;
+	private final DocumentBuilderFactory factory;
 	private final CubeService cubeService;
 	
 	XMLParser (CubeService cubeService) {
@@ -342,7 +342,9 @@ public class XMLParser {
 								SummaryType summaryType = SummaryType.fromString(
 										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
 								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
-								String uniqueName = measureNodes.getNamedItem("uniqueName").getTextContent();
+								String uniqueName = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
+										.map(Node::getTextContent)
+										.orElse(null);
 								
 								Measure measure = Measure.builder()
 										.caption(caption)
