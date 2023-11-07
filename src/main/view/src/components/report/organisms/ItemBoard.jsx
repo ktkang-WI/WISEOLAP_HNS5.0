@@ -106,6 +106,12 @@ const ItemBoard = () => {
       }
       return;
     }
+    if (action.type == 'FlexLayout_SelectTab') {
+      const itemId = action.data.tabNode;
+      if (selectedItemId != itemId) {
+        dispatch(selectItem({reportId, itemId}));
+      }
+    }
     return action;
   }
 
