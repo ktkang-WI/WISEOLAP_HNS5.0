@@ -100,7 +100,7 @@ public class ReportService {
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) 
+            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
         this.xmlParser = xmlParser;   
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
