@@ -7,7 +7,7 @@ const DataFieldType = {
   COLUMN: 'column',
   ROW: 'row',
   FIELD: 'field',
-  SPARKLINE: 'sprkline'
+  SPARKLINE: 'sparkline'
 };
 
 const DataFieldTypeOfItemType = {
