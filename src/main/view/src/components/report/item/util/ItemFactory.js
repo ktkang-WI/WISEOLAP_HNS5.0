@@ -85,13 +85,7 @@ const makeItem = (orgItem) => {
       ...defaultMart,
       dataFieldOption: {
         measure: {
-          ...defaultMesarue,
-          useButton: true,
-          // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-          buttonIcon: chartSeriesButtonIcon,
-          buttonEvent: function(e) {
-            console.log(e);
-          }
+          ...defaultMesarue
         },
         column: {
           ...defaultDimension,
