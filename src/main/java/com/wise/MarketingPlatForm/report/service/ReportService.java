@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,11 +62,12 @@ import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
-import com.wise.MarketingPlatForm.report.vo.DatasetVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
 import com.wise.MarketingPlatForm.report.vo.ReportVO;
+import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -131,7 +130,7 @@ public class ReportService {
 	}});
 	
 	// dataset
-	List<DatasetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
+	List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
 	metaVO.getDatasets().put(dto.getReportId(), datasetVO);
 	
 	// layout

@@ -24,8 +24,8 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
-import com.wise.MarketingPlatForm.report.vo.DataFieldVO;
-import com.wise.MarketingPlatForm.report.vo.DatasetVO;
+import com.wise.MarketingPlatForm.report.vo.ChartFieldVO;
+import com.wise.MarketingPlatForm.report.vo.CubeDatasetVO;
 import com.wise.MarketingPlatForm.report.vo.DatasetXmlDTO;
 import com.wise.MarketingPlatForm.report.vo.ItemMetaVO;
 import com.wise.MarketingPlatForm.report.vo.ItemVO;
@@ -34,6 +34,9 @@ import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutTabVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutTabWrapperVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
+import com.wise.MarketingPlatForm.report.vo.QueryDatasetVO;
+import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
+import com.wise.MarketingPlatForm.report.vo.RootFieldVO;
 
 @Component
 public class XMLParser {
@@ -46,8 +49,8 @@ public class XMLParser {
 		this.factory = DocumentBuilderFactory.newInstance();
 	}
 
-	public List<DatasetVO> datasetParser(String xml, String userId) {
-		List<DatasetVO> datasetVOList = new ArrayList<DatasetVO>();
+	public List<RootDataSetVO> datasetParser(String xml, String userId) {
+		List<RootDataSetVO> datasetVOList = new ArrayList<RootDataSetVO>();
 
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder(); 
@@ -55,16 +58,15 @@ public class XMLParser {
 			Element root = document.getDocumentElement();
 			NodeList children = root.getChildNodes();
 			
-			IntStream.range(0, children.getLength())
-			.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
-			.forEach((datasetIndex) -> {
-
+			for(int datasetIndex = 0; datasetIndex < children.getLength(); datasetIndex++) {
+				if(children.item(datasetIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+				
 				NodeList nodes = children.item(datasetIndex).getChildNodes().item(0).getChildNodes();
 				DatasetXmlDTO datasetXmlDTO = new DatasetXmlDTO();
 				
-				IntStream.range(0, nodes.getLength())
-				.filter((i) -> nodes.item(i).getNodeType() == Node.ELEMENT_NODE)
-				.forEach((nodesIndex) -> {
+				for(int nodesIndex = 0; nodesIndex < nodes.getLength(); nodesIndex++) {
+					if(nodes.item(nodesIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+				
 					Node node = nodes.item(nodesIndex);
 					switch (node.getNodeName()) {
 					case "DATASET_SEQ":
@@ -129,13 +131,13 @@ public class XMLParser {
 						datasetXmlDTO.setDatasetQuery(node.getTextContent());
 						break;
 					}
-				});
+				}
 				
-				DatasetVO datasetVO = null;
+				RootDataSetVO datasetVO = null;
 				if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
 					CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasetXmlDTO.getDatasrcId().toString(), userId);
 					List<DatasetFieldVO> fields = cubeInfoDTO.getFields();
-					datasetVO = DatasetVO.cubeDatasetBuilder()
+					datasetVO = CubeDatasetVO.builder()
 						.datasetId(datasetXmlDTO.getDatasrcId())
 						.datasetNm(datasetXmlDTO.getDatasetNm())
 						.datsetType(datasetXmlDTO.getDatasrcType())
@@ -147,7 +149,7 @@ public class XMLParser {
 //						.ordinal(cubeDesc)
 						.build();
 				} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
-					datasetVO = DatasetVO.queryDatasetBuilder()
+					datasetVO = QueryDatasetVO.builder()
 						.datasetId(datasetXmlDTO.getDatasrcId())
 						.datasetNm(datasetXmlDTO.getDatasetNm())
 						.datsetType(datasetXmlDTO.getDatasrcType())
@@ -157,7 +159,7 @@ public class XMLParser {
 						.build();
 				}
 				datasetVOList.add(datasetVO);
-			});
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -175,7 +177,9 @@ public class XMLParser {
 			Element root = document.getDocumentElement();
 			NodeList children = root.getChildNodes();
 			
-			IntStream.range(0, children.getLength()).forEach((layoutIndex) -> {
+			for(int layoutIndex = 0; layoutIndex < children.getLength(); layoutIndex++) {
+				if(children.item(layoutIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+				
 				Node node = children.item(layoutIndex);
 				switch (node.getNodeName()) {
 //				추후 추가
@@ -194,7 +198,7 @@ public class XMLParser {
 					metaVO.getLayout().put(reportId, resultLayoutConfigVO);
 					break;
 				}
-			});
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -205,9 +209,9 @@ public class XMLParser {
 	private LayoutConfigVO layoutRecursionParser(Node layoutNode, LayoutTabWrapperVO parent, LayoutConfigVO resultLayoutConfigVO, List<ItemsVO> items) {
 		
 		NodeList children = layoutNode.getChildNodes();
-		IntStream.range(0, children.getLength())
-		.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
-		.forEach((layoutIndex) -> {
+		for(int layoutIndex = 0; layoutIndex < children.getLength(); layoutIndex++) {
+			if(children.item(layoutIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+
 			Node node = children.item(layoutIndex);
 			Double weight;
 			
@@ -277,7 +281,7 @@ public class XMLParser {
 //			case "LayoutTabPage":
 //				break;
 			}
-		});
+		}
 		return resultLayoutConfigVO;
 	}
 	
@@ -287,9 +291,9 @@ public class XMLParser {
 		List<Measure> measures = new ArrayList<Measure>();
 		List<ItemsVO> itemsList = new ArrayList<ItemsVO>();
 		
-		IntStream.range(0, children.getLength())
-		.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
-		.forEach((itemsIndex) -> {
+		for(int itemsIndex = 0; itemsIndex < children.getLength(); itemsIndex++) {
+			if(children.item(itemsIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+
 			Node node = children.item(itemsIndex);
 			
 			String itemType = node.getNodeName().toLowerCase();
@@ -300,19 +304,22 @@ public class XMLParser {
 			String memo = Optional.ofNullable(node.getAttributes().getNamedItem("MemoText"))
 					.map(Node::getTextContent)
 					.orElse(null);
+			RootFieldVO dataField = null;
 			
 			if(ItemType.CHART.toString().equals(itemType)) {
 				type = ItemType.CHART;
 				NodeList itemChildren = node.getChildNodes();
 				
-				IntStream.range(0, itemChildren.getLength())
-				.filter((i) -> children.item(i).getNodeType() == Node.ELEMENT_NODE)
-				.forEach((itemChildrenIndex) -> {
+				for(int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
+					if(itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+					
 					Node itemChild = itemChildren.item(itemChildrenIndex);
 					if("DataItems".equals(itemChild.getNodeName())) {
 						NodeList datas = itemChild.getChildNodes();
 						
-						IntStream.range(0, datas.getLength()).forEach((datasIndex) -> {
+						for(int datasIndex = 0; datasIndex < datas.getLength(); datasIndex++) {
+							if(datas.item(datasIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+							
 							Node data = datas.item(datasIndex);
 							if(DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap dimensionNodes = data.getAttributes();
@@ -321,7 +328,9 @@ public class XMLParser {
 										.map(Node::getTextContent)
 										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
 								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
-								String uniqueName = dimensionNodes.getNamedItem("uniqueName").getTextContent();
+								String uniqueName = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
+										.map(Node::getTextContent)
+										.orElse(null);
 								
 								Dimension dimensoion = Dimension.builder()
 										.caption(caption)
@@ -357,20 +366,19 @@ public class XMLParser {
 								
 								measures.add(measure);
 							}
-							
-						});
+						}
 					}
-				});
+				}
+				dataField = ChartFieldVO.builder()
+						.datasetId(datasetId)
+						.dimensions(dimensions)
+						.measures(measures)
+						.build();				
 			}
 //				추후 아이템 추가시.
 //				else if (ItemType.GRID.toString().equals(itemType)) {
 //					
 //				}
-			DataFieldVO dataField = DataFieldVO.builder()
-					.datasetId(datasetId)
-					.dimension(dimensions)
-					.measure(measures)
-					.build();
 			
 			ItemMetaVO meta = ItemMetaVO.builder()
 					.dataField(dataField)
@@ -384,7 +392,7 @@ public class XMLParser {
 					.meta(meta)
 					.build();
 			itemsList.add(items);
-		});
+		}
 		
 		ItemVO itemVO = ItemVO.builder()
 			.items(itemsList)

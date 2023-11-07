@@ -10,7 +10,7 @@ import lombok.Getter;
 @Builder
 public class MetaVO {
 	@Builder.Default
-	Map<Integer, List<DatasetVO>> datasets = new HashMap<Integer, List<DatasetVO>>();
+	Map<Integer, List<RootDataSetVO>> datasets = new HashMap<Integer, List<RootDataSetVO>>();
 	@Builder.Default
 	Map<Integer, List<ReportVO>> reports = new HashMap<Integer, List<ReportVO>>();
 	@Builder.Default

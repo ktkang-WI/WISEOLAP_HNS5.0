@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
@@ -16,7 +15,6 @@ import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.report.vo.DatasetVO;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service

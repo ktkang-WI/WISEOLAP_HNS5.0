@@ -142,7 +142,7 @@ public class ReportController {
 	    summary = "get report",
 	    description = "reportId로 보고서를 불러옵니다.")
 	@Parameters({
-	    @Parameter(name = "reportId", description = "report id", example = "38454"),
+	    @Parameter(name = "reportId", description = "report id", example = "8486", required = true),
 	    @Parameter(name = "userId", description = "user id", example = "admin", required = true),
 	})
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -154,8 +154,8 @@ public class ReportController {
 	)
 	@PostMapping(value = "/report")
 	public MetaVO getReport(@RequestBody Map<String, String> param) {
-        String reportId = param.getOrDefault("reportId", "8486");
-        String userId = param.getOrDefault("userId", "admin");
+        String reportId = param.getOrDefault("reportId", "");
+        String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
 	}   
 }

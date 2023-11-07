@@ -6,13 +6,14 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Builder
 @Getter
-public class DataFieldVO {
+@SuperBuilder
+public class ChartFieldVO extends RootFieldVO{
 	@Builder.Default
-	List<Dimension> dimension = new ArrayList<Dimension>();
+	List<Dimension> dimensions = new ArrayList<Dimension>();
 	@Builder.Default
-	List<Measure> measure = new ArrayList<Measure>();
+	List<Measure> measures = new ArrayList<Measure>();
 	String datasetId;
 }
