@@ -16,5 +16,4 @@ public class ChartFieldVO extends RootFieldVO{
 	List<Dimension> dimension = new ArrayList<Dimension>();
 	@Builder.Default
 	List<Measure> measure = new ArrayList<Measure>();
-	String datasetId;
 }

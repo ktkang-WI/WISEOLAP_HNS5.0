@@ -2,10 +2,13 @@ package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.SQLException;
+import java.sql.Types;
 import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
@@ -15,6 +18,7 @@ import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
+import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
@@ -133,5 +137,58 @@ public class DatasetService {
 	  String query = "SELECT * FROM BMT_F_버블차트";
 	  return martDAO.select(query);
   }
+  
+  public List<DatasetFieldVO> queryTableSql(int dsId, String query, boolean join) {
+	  List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO>();
+      try {
+          /* DOGFOOT ktkang 데이터 집합 기본값 USE_SQL 로 되어있을 때 오류 수정  20200701 */
+//    	  추후 param이 추가된 이루에 추가.
+//      	if(sqlType != null && sqlType.equals("dataset")) {
+//      		sql = this.sqlMapper.mapParameter(sql, params, sqlType,null);
+//      	} else {
+//      		sql = this.sqlMapper.mapParameter(sql, params);
+//      	}
+    	  DsMstrDTO dsMstrDTO = getDataSource(dsId);
+    	  martConfig.setMartDataSource(dsMstrDTO);
+          if(join) {
+        	  query = query.replaceAll("RIGHT OUTER", "INNER");
+          }
+          
+          MartResultDTO result = martDAO.select(query);
+          
+          for(int metaIndex = 0; metaIndex < result.getMetaData().size(); metaIndex++) {
+        	  MetaDTO meta = result.getMetaData().get(metaIndex);
+        	  if(meta.getColumnName().equals("")) throw new SQLException();
+        	  DataFieldType type;
+        	  switch (Integer.parseInt(meta.getColumnType())) {
+	        	  case Types.BIGINT:
+	        	  case Types.DECIMAL:
+	        	  case Types.DOUBLE:
+	        	  case Types.FLOAT:
+	        	  case Types.INTEGER:
+	        	  case Types.TINYINT:
+	        	  case Types.SMALLINT:
+	        	  case Types.NUMERIC:
+	        	  case Types.REAL:
+	        		  type = DataFieldType.MEASURE;
+	        		  break;
+	        	  default:
+	        		  type = DataFieldType.DIMENSION;
+        	  }
+        	  DatasetFieldVO field = DatasetFieldVO.builder()
+        			  .parentId("0")
+        			  .uniqueName(meta.getColumnName())
+        			  .type(type)
+        			  .dataType(meta.getColumnTypeName())
+        			  .name(meta.getColumnLabel())
+        			  .build();
+        	  
+        	  fields.add(field);
+          }
+      } catch (Exception e) {
+    	  
+      }
 
+      return fields;
+	}
 }

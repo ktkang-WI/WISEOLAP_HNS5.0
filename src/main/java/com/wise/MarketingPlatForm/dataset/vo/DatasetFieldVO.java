@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
+// 상속구조로 변경해야됨!!! bjsong
 public class DatasetFieldVO {
   // 공통 속성
   String parentId;

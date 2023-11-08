@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,16 +18,20 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
+import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.dataset.type.DataSetType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.GridField;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.SparkLine;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 import com.wise.MarketingPlatForm.report.vo.ChartFieldVO;
 import com.wise.MarketingPlatForm.report.vo.CubeDatasetVO;
+import com.wise.MarketingPlatForm.report.vo.DataGridFieldVO;
 import com.wise.MarketingPlatForm.report.vo.DatasetXmlDTO;
 import com.wise.MarketingPlatForm.report.vo.ItemMetaVO;
 import com.wise.MarketingPlatForm.report.vo.ItemVO;
@@ -48,6 +54,9 @@ public class XMLParser {
 		this.cubeService = cubeService;
 		this.factory = DocumentBuilderFactory.newInstance();
 	}
+	
+	@Autowired
+	DatasetService datasetService;
 
 	public List<RootDataSetVO> datasetParser(String xml, String userId) {
 		List<RootDataSetVO> datasetVOList = new ArrayList<RootDataSetVO>();
@@ -55,110 +64,128 @@ public class XMLParser {
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder(); 
 			Document document = builder.parse(new InputSource(new StringReader(xml)));
+			// DATASET_XML
 			Element root = document.getDocumentElement();
 			NodeList children = root.getChildNodes();
 			
-			for(int datasetIndex = 0; datasetIndex < children.getLength(); datasetIndex++) {
-				if(children.item(datasetIndex).getNodeType() != Node.ELEMENT_NODE) continue;
-				
-				NodeList nodes = children.item(datasetIndex).getChildNodes().item(0).getChildNodes();
-				DatasetXmlDTO datasetXmlDTO = new DatasetXmlDTO();
-				
-				for(int nodesIndex = 0; nodesIndex < nodes.getLength(); nodesIndex++) {
-					if(nodes.item(nodesIndex).getNodeType() != Node.ELEMENT_NODE) continue;
-				
-					Node node = nodes.item(nodesIndex);
-					switch (node.getNodeName()) {
-					case "DATASET_SEQ":
-						datasetXmlDTO.setDatasetSeq(node.getTextContent());
-						break;
-					case "DATASET_NM":
-						datasetXmlDTO.setDatasetNm(node.getTextContent());
-						break;
-					case "DATASRC_ID":
-						datasetXmlDTO.setDatasrcId(Integer.parseInt(node.getTextContent()));
-						break;
-					case "DATASRC_TYPE":
-						datasetXmlDTO.setDatasrcType(DsType.fromString(node.getTextContent()).get());
-						break;
-					case "DATASET_TYPE":
-						datasetXmlDTO.setDatasetType(DataSetType.fromString(node.getTextContent()).get());
-						break;
-					case "DATASET_FIELD":
-						NodeList fieldNodes = node.getChildNodes();
-						List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO>();
-						IntStream.range(0, fieldNodes.getLength()).forEach((fieldIndex) -> {
-							Node fieldNode = fieldNodes.item(fieldIndex);
-							NamedNodeMap field = fieldNode.getAttributes();
+			for(int datasetElementIndex = 0; datasetElementIndex < children.getLength(); datasetElementIndex++) {
+				if(children.item(datasetElementIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+				// DATASET_ELEMENT
+				NodeList datasets = children.item(datasetElementIndex).getChildNodes();
+				for(int datasetIndex = 0; datasetIndex < datasets.getLength(); datasetIndex++) {
+					if(datasets.item(datasetIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+					// DATASET
+					NodeList nodes = datasets.item(datasetIndex).getChildNodes();
+					DatasetXmlDTO datasetXmlDTO = new DatasetXmlDTO();
+					
+					for(int nodesIndex = 0; nodesIndex < nodes.getLength(); nodesIndex++) {
+						if(nodes.item(nodesIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+					
+						Node node = nodes.item(nodesIndex);
+						switch (node.getNodeName()) {
+						case "DATASET_SEQ":
+							datasetXmlDTO.setDatasetSeq(node.getTextContent());
+							break;
+						case "DATASET_NM":
+							datasetXmlDTO.setDatasetNm(node.getTextContent());
+							break;
+						case "DATASRC_ID":
+							datasetXmlDTO.setDatasrcId(Integer.parseInt(node.getTextContent()));
+							break;
+						case "DATASRC_TYPE":
+							datasetXmlDTO.setDatasrcType(DsType.fromString(node.getTextContent()).get());
+							break;
+						case "DATASET_TYPE":
+							datasetXmlDTO.setDatasetType(DataSetType.fromString(node.getTextContent()).get());
+							break;
+						case "DATASET_FIELD":
+							NodeList fieldNodes = node.getChildNodes();
+							List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO>();
 							
-							String dataType = Optional.ofNullable(field.getNamedItem("DATA_TYPE"))
-							        .map(Node::getTextContent)
-							        .orElse(null);
-							String name = field.getNamedItem("CAPTION").getTextContent();
-							String icon = Optional.ofNullable(field.getNamedItem("icon"))
-									.map(Node::getTextContent)
-							        .orElse(null);
-							DataFieldType type = Optional.ofNullable(field.getNamedItem("TYPE"))
-									.map((i) ->
-										"MEA".equals(i.getTextContent()) ? DataFieldType.MEASURE : DataFieldType.DIMENSION)
-									.orElse(null);
-							String uniqueName = Optional.ofNullable(field.getNamedItem("UNI_NM"))
-									.map(Node::getTextContent)
-							        .orElse(null);
-							String parentId = Optional.ofNullable(field.getNamedItem("PARENT_ID"))
-									.map(Node::getTextContent)
-							        .orElse(null);
-							int order = Integer.parseInt(field.getNamedItem("ORDER").getTextContent());
+							for(int fieldIndex = 0; fieldIndex < fieldNodes.getLength(); fieldIndex++) {
+								if(fieldNodes.item(fieldIndex).getNodeType() != Node.ELEMENT_NODE) continue;
 							
-							DatasetFieldVO vo = DatasetFieldVO.builder()
-								.dataType(dataType)
-								.name(name)
-								.type(type)
-								.uniqueName(uniqueName)
-								.parentId(parentId)
-								.order(order)
-								.build();
-							
-							fields.add(vo);
-						});
-						datasetXmlDTO.setDatasetField(fields);
-						break;
-//					추후 필요하면 추가
-//					case "DATASET_XML":
-//						datasetXmlDTO.setDatasetXml(node.getTextContent());
-//						break;
-					case "DATASET_QUERY":
-						datasetXmlDTO.setDatasetQuery(node.getTextContent());
-						break;
+								Node fieldNode = fieldNodes.item(fieldIndex);
+								NamedNodeMap field = fieldNode.getAttributes();
+								
+								String dataType = Optional.ofNullable(field.getNamedItem("DATA_TYPE"))
+								        .map(Node::getTextContent)
+								        .orElse(null);
+								String name = field.getNamedItem("CAPTION").getTextContent();
+								String icon = Optional.ofNullable(field.getNamedItem("icon"))
+										.map(Node::getTextContent)
+								        .orElse(null);
+								DataFieldType type = Optional.ofNullable(field.getNamedItem("TYPE"))
+										.map((i) ->
+											"MEA".equals(i.getTextContent()) ? DataFieldType.MEASURE : DataFieldType.DIMENSION)
+										.orElse(null);
+								String uniqueName = Optional.ofNullable(field.getNamedItem("UNI_NM"))
+										.map(Node::getTextContent)
+								        .orElse(null);
+								String parentId = Optional.ofNullable(field.getNamedItem("PARENT_ID"))
+										.map(Node::getTextContent)
+								        .orElse(null);
+								int order = Integer.parseInt(field.getNamedItem("ORDER").getTextContent());
+								
+								DatasetFieldVO vo = DatasetFieldVO.builder()
+									.dataType(dataType)
+									.name(name)
+									.type(type)
+									.uniqueName(uniqueName)
+									.parentId(parentId)
+									.order(order)
+									.build();
+								
+								fields.add(vo);
+							}
+							datasetXmlDTO.setDatasetField(fields);
+							break;
+	//					추후 필요하면 추가
+	//					case "DATASET_XML":
+	//						datasetXmlDTO.setDatasetXml(node.getTextContent());
+	//						break;
+						case "DATASET_QUERY":
+							datasetXmlDTO.setDatasetQuery(node.getTextContent());
+							break;
+						}
 					}
+					
+					if(datasetXmlDTO.getDatasetField() == null) {
+						List<DatasetFieldVO> fields = null;
+						if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
+							CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasetXmlDTO.getDatasrcId().toString(), userId);
+							fields = cubeInfoDTO.getFields();
+						} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
+							fields = datasetService.queryTableSql(datasetXmlDTO.getDatasrcId(), datasetXmlDTO.getDatasetQuery(), false);
+						}
+						datasetXmlDTO.setDatasetField(fields);
+					}
+					
+					RootDataSetVO datasetVO = null;
+					if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
+						datasetVO = CubeDatasetVO.builder()
+							.datasetId(datasetXmlDTO.getDatasrcId())
+							.datasetNm(datasetXmlDTO.getDatasetNm())
+							.datsetType(datasetXmlDTO.getDatasrcType())
+							.fields(datasetXmlDTO.getDatasetField())
+							.cubeId(datasetXmlDTO.getDatasrcId())
+							.cubeNm(datasetXmlDTO.getDatasetNm())
+	//						.cubeDesc(cubeDesc)
+	//						.dsViewId(cubeDesc)
+	//						.ordinal(cubeDesc)
+							.build();
+					} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
+						datasetVO = QueryDatasetVO.builder()
+							.datasetId(datasetXmlDTO.getDatasrcId())
+							.datasetNm(datasetXmlDTO.getDatasetNm())
+							.datsetType(datasetXmlDTO.getDatasrcType())
+							.fields(datasetXmlDTO.getDatasetField())
+							.datasrcId(datasetXmlDTO.getDatasrcId())
+							.datasetQuery(datasetXmlDTO.getDatasetQuery())
+							.build();
+					}
+					datasetVOList.add(datasetVO);
 				}
-				
-				RootDataSetVO datasetVO = null;
-				if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
-					CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasetXmlDTO.getDatasrcId().toString(), userId);
-					List<DatasetFieldVO> fields = cubeInfoDTO.getFields();
-					datasetVO = CubeDatasetVO.builder()
-						.datasetId(datasetXmlDTO.getDatasrcId())
-						.datasetNm(datasetXmlDTO.getDatasetNm())
-						.datsetType(datasetXmlDTO.getDatasrcType())
-						.fields(fields)
-						.cubeId(datasetXmlDTO.getDatasrcId())
-						.cubeNm(datasetXmlDTO.getDatasetNm())
-//						.cubeDesc(cubeDesc)
-//						.dsViewId(cubeDesc)
-//						.ordinal(cubeDesc)
-						.build();
-				} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
-					datasetVO = QueryDatasetVO.builder()
-						.datasetId(datasetXmlDTO.getDatasrcId())
-						.datasetNm(datasetXmlDTO.getDatasetNm())
-						.datsetType(datasetXmlDTO.getDatasrcType())
-						.fields(datasetXmlDTO.getDatasetField())
-						.datasrcId(datasetXmlDTO.getDatasrcId())
-						.datasetQuery(datasetXmlDTO.getDatasetQuery())
-						.build();
-				}
-				datasetVOList.add(datasetVO);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -287,8 +314,6 @@ public class XMLParser {
 	
 	private ItemVO itemsParser(Node itemsNode) {
 		NodeList children = itemsNode.getChildNodes();
-		List<Dimension> dimensions = new ArrayList<Dimension>();
-		List<Measure> measures = new ArrayList<Measure>();
 		List<ItemsVO> itemsList = new ArrayList<ItemsVO>();
 		
 		for(int itemsIndex = 0; itemsIndex < children.getLength(); itemsIndex++) {
@@ -309,6 +334,8 @@ public class XMLParser {
 			if(ItemType.CHART.toString().equals(itemType)) {
 				type = ItemType.CHART;
 				NodeList itemChildren = node.getChildNodes();
+				List<Dimension> dimensions = new ArrayList<Dimension>();
+				List<Measure> measures = new ArrayList<Measure>();
 				
 				for(int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if(itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE) continue;
@@ -328,16 +355,16 @@ public class XMLParser {
 										.map(Node::getTextContent)
 										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
 								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
-								String uniqueName = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
+								String fieldId = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
 										.map(Node::getTextContent)
 										.orElse(null);
 								
 								Dimension dimensoion = Dimension.builder()
 										.caption(caption)
 										.category(DataFieldType.DIMENSION.toString())
-										.fieldId("")
+										.fieldId(fieldId)
 										.name(dimName)
-										.uniqueName(uniqueName)
+										.uniqueName(fieldId)
 										.build();
 								
 								dimensions.add(dimensoion);
@@ -351,16 +378,16 @@ public class XMLParser {
 								SummaryType summaryType = SummaryType.fromString(
 										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
 								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
-								String uniqueName = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
+								String fieldId = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
 										.map(Node::getTextContent)
 										.orElse(null);
 								
 								Measure measure = Measure.builder()
 										.caption(caption)
 										.category(DataFieldType.MEASURE.toString())
-										.fieldId("")
+										.fieldId(fieldId)
 										.name(meaName)
-										.uniqueName(uniqueName)
+										.uniqueName(meaName)
 										.summaryType(summaryType)
 										.build();
 								
@@ -373,12 +400,80 @@ public class XMLParser {
 						.datasetId(datasetId)
 						.dimension(dimensions)
 						.measure(measures)
-						.build();				
-			}
-//				추후 아이템 추가시.
-//				else if (ItemType.GRID.toString().equals(itemType)) {
-//					
-//				}
+						.build();	
+				
+			} else if (ItemType.DATA_GRID.toString().equals(itemType)) {
+				type = ItemType.DATA_GRID;
+				NodeList itemChildren = node.getChildNodes();
+				List<GridField> fields = new ArrayList<GridField>();
+				List<SparkLine> sparklines = new ArrayList<SparkLine>();
+				
+				for(int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
+					if(itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+
+					Node itemChild = itemChildren.item(itemChildrenIndex);
+					if("DataItems".equals(itemChild.getNodeName())) {
+						NodeList datas = itemChild.getChildNodes();
+						
+						for(int datasIndex = 0; datasIndex < datas.getLength(); datasIndex++) {
+							if(datas.item(datasIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+							
+							Node data = datas.item(datasIndex);
+							if(DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap dimensionNodes = data.getAttributes();
+								// bjsong 여기 해야됨!!!!!!!!!
+//								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+//										.map(Node::getTextContent)
+//										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+//								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+//								String fieldId = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
+//										.map(Node::getTextContent)
+//										.orElse(null);
+//								
+//								Dimension dimensoion = Dimension.builder()
+//										.caption(caption)
+//										.category(DataFieldType.FIELD.toString())
+//										.fieldId(fieldId)
+//										.name(dimName)
+//										.uniqueName(dimName)
+//										.build();
+//								
+//								dimensions.add(dimensoion);
+							} else if(DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap measureNodes = data.getAttributes();
+								
+//								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+//										.map(Node::getTextContent)
+//										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+//								SummaryType summaryType = SummaryType.fromString(
+//										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
+//								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+//								String fieldId = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
+//										.map(Node::getTextContent)
+//										.orElse(null);
+//								
+//								GridField measure = GridField.builder()
+//										.caption(caption)
+//										.category(null)
+//										.fieldId(fieldId)
+//										.name(meaName)
+//										.uniqueName(meaName)
+//										.type(summaryType)
+//										.build();
+								
+							} 
+//							else if(sparkLine 추후 추가)
+							dataField = DataGridFieldVO.builder()
+									.datasetId(datasetId)
+									.field(null)
+									.sparkline(null)
+									.build();	
+							
+						}	
+					}
+					
+				}
+			}	
 			
 			ItemMetaVO meta = ItemMetaVO.builder()
 					.dataField(dataField)
