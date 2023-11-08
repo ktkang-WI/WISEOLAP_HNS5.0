@@ -2,19 +2,15 @@ package com.wise.MarketingPlatForm.report.entity;
 
 import java.sql.Date;
 import java.util.Base64;
-import java.util.Optional;
 
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

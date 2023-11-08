@@ -1,12 +1,14 @@
 package com.wise.MarketingPlatForm.report.type;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ReportType {
-    DASH_ANY("DashAny"), AD_HOC("AdHoc"), EXCEL("Excel");
+    ALL("All"), DASH_ANY("DashAny"), AD_HOC("AdHoc"), EXCEL("Excel");
 
     private final String symbol;
 
@@ -25,5 +27,20 @@ public enum ReportType {
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 
+  public List<String> toStrList() {
+    List<String> list = new ArrayList<>();
+    if (this.equals(ALL)) {
+        for (ReportType val : values()) {
+            list.add(val.toString());
+        }
+        list.add("SPREAD");
+    } else if (this.equals(EXCEL)) {
+        list.add("SPREAD");
+    } else {
+        list.add(this.toString());
+    }
+
+    return list;
+  }
   @Override public String toString() { return symbol; }
 }

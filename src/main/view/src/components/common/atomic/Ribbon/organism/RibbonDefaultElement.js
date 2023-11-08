@@ -24,9 +24,12 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
+import useModal from 'hooks/useModal';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
+  const {openModal} = useModal();
   const selectedReportId = useSelector(selectCurrentReportId);
   const {executeItems} = useQueryExecute();
 
@@ -49,7 +52,10 @@ const RibbonDefaultElement = () => {
       imgSrc: loadReport,
       width: 'auto',
       height: '45px',
-      useArrowButton: false
+      useArrowButton: false,
+      onClick: (e) => {
+        openModal(LoadReportModal);
+      }
     },
     'SaveReport': {
       'id': 'save_report',
