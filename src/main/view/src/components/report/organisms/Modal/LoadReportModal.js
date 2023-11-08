@@ -7,36 +7,55 @@ import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import useModal from 'hooks/useModal';
 import {useEffect, useState} from 'react';
-// import models from 'models';
+import models from 'models';
+import {setIconReportList} from 'components/report/util/ReportUtility';
+// import ReportSlice from 'redux/modules/ReportSlice';
+// import ItemSlice from 'redux/modules/ItemSlice';
+// import LayoutSlice from 'redux/modules/LayoutSlice';
+// import DatasetSlice from 'redux/modules/DatasetSlice';
+// import {useDispatch} from 'react-redux';
 
 const theme = getTheme();
 
 const LoadReportModal = ({...props}) => {
   const [selectedReport, setSelectedReport] = useState({});
+  const [reportList, setReportList] = useState();
   const {openModal} = useModal();
+  // const dispatch = useDispatch();
+
+  // const {setReports, selectReport} = ReportSlice.actions;
+  // const {setItem} = ItemSlice.actions;
+  // const {setLayout} = LayoutSlice.actions;
+  // const {setDataset} = DatasetSlice.actions;
 
 
   useEffect(() => {
-    // TODO: 추후 접속중인 유저 ID로 변경
-    // models.Report.getById(userId)
-    //     .then((data) => {
-    //       setDsViewList(data);
-    //     });
+    models.Report.getList('admin', 'DashAny', 'designer').then((data) => {
+      setIconReportList(data.privateReport);
+      setIconReportList(data.publicReport);
+      setReportList(data);
+    });
   }, []);
 
   return (
     <Modal
       onSubmit={() => {
         if (!_.isEmpty(selectedReport)) {
-          if (selectedReport.expanded) {
+          if (selectedReport.type == 'REPORT') {
+            models.Report.getById('admin', selectedReport.id)
+                .then((data) => {
+                  dispatch(setLayout({
+                    reportId: selectedReport.id,
+                    layout: data.layout[selectedReport.id]
+                  }));
+                  // dispatch(selectReport(selectedReport.id));
+                  // dispatch(setReports(data.reports[selectedReport.id]));
+                });
+          } else {
             openModal(Alert, {
               message: '선택한 항목이 보고서가 아닙니다.'
             });
             return true;
-          } else {
-            // models.Report.getById(userId, )
-            //   .then((data) => {
-            // });
           }
         } else {
           openModal(Alert, {
@@ -51,15 +70,17 @@ const LoadReportModal = ({...props}) => {
       {...props}
     >
       <PageWrapper>
-        <DesignerReportTabs onSelectionChanged={(e) => {
-          const nodes = e.component.getSelectedNodes();
+        <DesignerReportTabs
+          reportList={reportList}
+          onSelectionChanged={(e) => {
+            const nodes = e.component.getSelectedNodes();
 
-          if (nodes.length > 0) {
-            setSelectedReport(nodes[0].itemData);
-          } else {
-            setSelectedReport({});
-          }
-        }}/>
+            if (nodes.length > 0) {
+              setSelectedReport(nodes[0].itemData);
+            } else {
+              setSelectedReport({});
+            }
+          }}/>
       </PageWrapper>
     </Modal>
   );

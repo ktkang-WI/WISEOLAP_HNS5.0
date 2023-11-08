@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -27,10 +26,12 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
+import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ItemType;
-import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
+import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
-import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -157,5 +158,31 @@ public class ReportController {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
-	}   
+	}
+
+    @Operation(
+	    summary = "get report list",
+	    description = "설정한 타입과 userId에 맞는 보고서를 반환합니다.")
+	@Parameters({
+	    @Parameter(name = "reportType", description = "All, Excel, DashAny, AdHoc 중 하나 입력", example = "All", required = true),
+	    @Parameter(name = "userId", description = "user id", example = "admin", required = true),
+        @Parameter(name = "editMode", description = "designer, viewer, config 중 하나 입력력", example = "designer", required = true),
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+	    content = @Content(
+	        examples = {
+	            @ExampleObject(name = "example", value = "{\"fldType\": \"All\", \"userId\": \"admin\", \"editMode\": \"desinger\"}")
+	        }
+	    )
+	)
+	@PostMapping(value = "/report-list")
+    public Map<String, List<ReportListDTO>> getReportList(@RequestBody Map<String, String> param) {
+        String userId = param.getOrDefault("userId", "");
+        String reportTypeStr = param.getOrDefault("reportType", "");
+        String editModeStr = param.getOrDefault("editMode", "viewer");
+
+        ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
+        EditMode editMode = EditMode.fromString(editModeStr).orElse(null);
+        return reportService.getReportList(userId, reportType, editMode);
+    }
 }

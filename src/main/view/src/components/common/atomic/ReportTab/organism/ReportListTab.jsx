@@ -25,15 +25,14 @@ const StyledTreeView = styled(TreeView)`
 `;
 
 const ReportListTab = ({items, width, ...props}) => {
-  console.log(props);
   return (
     <Wrapper width={width}>
       <StyledTreeView
         items={items}
         dataStructure="plain"
         displayExpr="name"
-        parentIdExpr="categoryId"
-        keyExpr="ID"
+        parentIdExpr="upperId"
+        keyExpr="id"
         noDataText="조회된 보고서가 없습니다."
         searchEnabled={true}
         searchEditorOptions={{

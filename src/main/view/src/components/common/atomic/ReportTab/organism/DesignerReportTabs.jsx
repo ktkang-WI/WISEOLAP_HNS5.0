@@ -2,7 +2,6 @@ import localizedString from 'config/localization';
 import CommonTab from '../../Common/Interactive/CommonTab';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import ReportListTab from './ReportListTab';
-import tempData from '../molecules/ReportFoldableListTempData';
 
 const ReportTabSource = [
   {
@@ -18,7 +17,7 @@ const ReportTabSource = [
 const DesignerReportTabs = ({reportList, onSelectionChanged}) => {
   const getTabContent = ({data}) => {
     return <ReportListTab
-      items={reportList? reportList[data.id] : tempData[data.id]}
+      items={reportList? reportList[data.id] : []}
       width='100%'
       onSelectionChanged={onSelectionChanged}
       selectionMode='single'

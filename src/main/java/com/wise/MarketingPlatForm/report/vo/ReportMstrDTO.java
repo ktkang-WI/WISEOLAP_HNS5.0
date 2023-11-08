@@ -2,9 +2,7 @@ package com.wise.MarketingPlatForm.report.vo;
 
 import java.sql.Date;
 import java.util.Base64;
-import java.util.Optional;
 
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 

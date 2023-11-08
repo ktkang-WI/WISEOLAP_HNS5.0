@@ -2,7 +2,6 @@ import localizedString from 'config/localization';
 import CommonTab from '../../Common/Interactive/CommonTab';
 import CommonToolbar from '../../Common/CommonToolbar';
 import Wrapper from '../../Common/Wrap/Wrapper';
-import tempData from '../molecules/ReportFoldableListTempData';
 import refresh from '../../../../../assets/image/icon/button/refresh.png';
 
 import ReportListTab from './ReportListTab';
@@ -31,7 +30,7 @@ const ToolbarItems = [
 
 const ReportTabs = () => {
   const getTabContent = ({data}) => {
-    return <ReportListTab items={tempData[data.id]}/>;
+    return <ReportListTab items={[]}/>;
   };
 
   return (
