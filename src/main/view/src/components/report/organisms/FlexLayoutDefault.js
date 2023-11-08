@@ -1,7 +1,10 @@
 const FlexLayoutDefault = () => {
   return {
     dashboard: {
-      global: {tabEnableClose: false},
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
       borders: [],
       layout: {
         type: 'row',
@@ -12,6 +15,7 @@ const FlexLayoutDefault = () => {
             selected: 0,
             children: [
               {
+                className: 'item1',
                 id: 'item1',
                 type: 'tab',
                 name: 'Chart 1',
@@ -23,7 +27,10 @@ const FlexLayoutDefault = () => {
       }
     },
     adhoc: {
-      global: {tabEnableClose: false},
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
       layout: {
         type: 'row',
         children: [
