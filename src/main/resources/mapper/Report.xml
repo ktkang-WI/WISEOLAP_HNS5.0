@@ -24,7 +24,7 @@
 				, A.REPORT_DESC as reportDesc
 				, A.REPORT_LAYOUT as reportLayout
 				, A.GRID_INFO as gridInfo
-				, A.DATASRC_ID as datasrcId
+				, A.DATASRC_ID as dataSrcId
 				, A.DATASRC_TYPE as datasrcType
 				, A.DATASET_TYPE as datasetType
 				, A.REPORT_XML as reportXml

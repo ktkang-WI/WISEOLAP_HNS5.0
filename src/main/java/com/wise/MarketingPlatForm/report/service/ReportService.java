@@ -129,7 +129,13 @@ public class ReportService {
                 .options(reportOptions)
                 .build();
         reportMetaDTO.getReport().add(reports);
-
+        
+        // layout
+        // item
+        LayoutWrapperDTO layoutWrapperDTO = new LayoutWrapperDTO();
+        reportMetaDTO.setLayout(layoutWrapperDTO);
+        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
+        
         // dataset
         List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
         DatasetWrapperVO datasetWrapper = DatasetWrapperVO.builder()
@@ -138,11 +144,6 @@ public class ReportService {
         		.datasets(datasetVO)
         		.build();
         reportMetaDTO.setDataset(datasetWrapper);
-
-        // layout
-        LayoutWrapperDTO layoutWrapperDTO = new LayoutWrapperDTO();
-        reportMetaDTO.setLayout(layoutWrapperDTO);
-        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
 
         return reportMetaDTO;
     }

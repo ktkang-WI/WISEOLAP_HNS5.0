@@ -3,8 +3,7 @@ package com.wise.MarketingPlatForm.report.vo;
 import java.util.List;
 import com.wise.MarketingPlatForm.dataset.type.DataSetType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
-import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
-
+import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +12,10 @@ import lombok.Setter;
 public class DatasetXmlDTO {
 	String datasetSeq;
 	String datasetNm;
-	Integer datasrcId;
+	Integer dataSrcId;
 	DsType datasrcType;
 	DataSetType datasetType;
-	List<DatasetFieldVO> datasetField;
+	List<RootFieldVO> datasetField;
 	String datasetXml;
 	String datasetQuery;
 }

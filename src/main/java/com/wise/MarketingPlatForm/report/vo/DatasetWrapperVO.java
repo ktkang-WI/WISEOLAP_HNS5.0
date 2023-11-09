@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class DatasetWrapperVO {
-	int selectedDatasetId;
+	String selectedDatasetId;
 	int datasetQuantity;
 	@Builder.Default
 	List<RootDataSetVO> datasets =  new ArrayList<RootDataSetVO>();

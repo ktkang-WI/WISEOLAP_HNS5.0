@@ -21,11 +21,13 @@ import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
 import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
-import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 
 @Service
 public class DatasetService {
@@ -97,7 +99,7 @@ public class DatasetService {
   }
 
   // TODO: 추후 필터 정보도 받아와야 함.
-  public List<DatasetFieldVO> getDatasetFields(String dsId, DsType dsType, String query) {
+  public List<CubeFieldVO> getDatasetFields(String dsId, DsType dsType, String query) {
     return null;
   }
 
@@ -145,8 +147,8 @@ public class DatasetService {
 	  return martDAO.select(query);
   }
   
-  public List<DatasetFieldVO> queryTableSql(int dsId, String query, boolean join) {
-	  List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO>();
+  public List<RootFieldVO> queryTableSql(int dsId, String query, boolean join) {
+	  List<RootFieldVO> fields = new ArrayList<RootFieldVO>();
       try {
           /* DOGFOOT ktkang 데이터 집합 기본값 USE_SQL 로 되어있을 때 오류 수정  20200701 */
 //    	  추후 param이 추가된 이루에 추가.
@@ -166,7 +168,7 @@ public class DatasetService {
           for(int metaIndex = 0; metaIndex < result.getMetaData().size(); metaIndex++) {
         	  MetaDTO meta = result.getMetaData().get(metaIndex);
         	  if(meta.getColumnName().equals("")) throw new SQLException();
-        	  DataFieldType type;
+        	  String type;
         	  switch (Integer.parseInt(meta.getColumnType())) {
 	        	  case Types.BIGINT:
 	        	  case Types.DECIMAL:
@@ -177,12 +179,12 @@ public class DatasetService {
 	        	  case Types.SMALLINT:
 	        	  case Types.NUMERIC:
 	        	  case Types.REAL:
-	        		  type = DataFieldType.MEASURE;
+	        		  type = "MEA";
 	        		  break;
 	        	  default:
-	        		  type = DataFieldType.DIMENSION;
+	        		  type = "DIM";
         	  }
-        	  DatasetFieldVO field = DatasetFieldVO.builder()
+        	  QueryFieldVO field = QueryFieldVO.builder()
         			  .parentId("0")
         			  .uniqueName(meta.getColumnName())
         			  .type(type)

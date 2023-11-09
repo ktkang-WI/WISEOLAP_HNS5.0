@@ -2,9 +2,10 @@ package com.wise.MarketingPlatForm.global.util;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.dataset.type.DataSetType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
-import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
@@ -41,13 +44,15 @@ import com.wise.MarketingPlatForm.report.vo.LayoutTabWrapperVO;
 import com.wise.MarketingPlatForm.report.vo.QueryDatasetVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
-import com.wise.MarketingPlatForm.report.vo.RootFieldVO;
+import com.wise.MarketingPlatForm.report.vo.RootItemFieldVO;
+
 
 @Component
 public class XMLParser {
 	
 	private final DocumentBuilderFactory factory;
 	private final CubeService cubeService;
+	private Map<String, String> datasources = new HashMap<String, String>();
 	
 	XMLParser (CubeService cubeService) {
 		this.cubeService = cubeService;
@@ -89,7 +94,7 @@ public class XMLParser {
 							datasetXmlDTO.setDatasetNm(node.getTextContent());
 							break;
 						case "DATASRC_ID":
-							datasetXmlDTO.setDatasrcId(Integer.parseInt(node.getTextContent()));
+							datasetXmlDTO.setDataSrcId(Integer.parseInt(node.getTextContent()));
 							break;
 						case "DATASRC_TYPE":
 							datasetXmlDTO.setDatasrcType(DsType.fromString(node.getTextContent()).get());
@@ -99,13 +104,14 @@ public class XMLParser {
 							break;
 						case "DATASET_FIELD":
 							NodeList fieldNodes = node.getChildNodes();
-							List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO>();
+							List<RootFieldVO> fields = new ArrayList<RootFieldVO>();
 							
 							for(int fieldIndex = 0; fieldIndex < fieldNodes.getLength(); fieldIndex++) {
 								if(fieldNodes.item(fieldIndex).getNodeType() != Node.ELEMENT_NODE) continue;
 							
 								Node fieldNode = fieldNodes.item(fieldIndex);
 								NamedNodeMap field = fieldNode.getAttributes();
+								RootFieldVO vo = null;
 								
 								String dataType = Optional.ofNullable(field.getNamedItem("DATA_TYPE"))
 								        .map(Node::getTextContent)
@@ -114,8 +120,6 @@ public class XMLParser {
 								String icon = Optional.ofNullable(field.getNamedItem("icon"))
 										.map(Node::getTextContent)
 								        .orElse(null);
-								DataFieldType type = "MEA".equals(field.getNamedItem("TYPE").getTextContent())
-										? DataFieldType.MEASURE : DataFieldType.DIMENSION;
 								String uniqueName = Optional.ofNullable(field.getNamedItem("UNI_NM"))
 										.map(Node::getTextContent)
 								        .orElse(null);
@@ -123,15 +127,27 @@ public class XMLParser {
 										.map(Node::getTextContent)
 								        .orElse(null);
 								int order = Integer.parseInt(field.getNamedItem("ORDER").getTextContent());
+								String type = field.getNamedItem("TYPE").getTextContent();
 								
-								DatasetFieldVO vo = DatasetFieldVO.builder()
-									.dataType(dataType)
-									.name(name)
-									.type(type)
-									.uniqueName(uniqueName)
-									.parentId(parentId)
-									.order(order)
-									.build();
+								if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
+									vo = CubeFieldVO.builder()
+											.dataType(dataType)
+											.name(name)
+											.type(type)
+											.uniqueName(uniqueName)
+											.parentId(parentId)
+											.order(order)
+											.build();
+									
+								} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
+									vo = QueryFieldVO.builder()
+											.dataType(dataType)
+											.name(name)
+											.type(type)
+											.uniqueName(uniqueName)
+											.parentId(parentId)
+											.build();
+								}
 								
 								fields.add(vo);
 							}
@@ -148,12 +164,12 @@ public class XMLParser {
 					}
 					
 					if(datasetXmlDTO.getDatasetField() == null) {
-						List<DatasetFieldVO> fields = null;
+						List<RootFieldVO> fields = null;
 						if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
-							CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasetXmlDTO.getDatasrcId().toString(), userId);
+							CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasetXmlDTO.getDataSrcId().toString(), userId);
 							fields = cubeInfoDTO.getFields();
 						} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
-							fields = datasetService.queryTableSql(datasetXmlDTO.getDatasrcId(), datasetXmlDTO.getDatasetQuery(), false);
+							fields = datasetService.queryTableSql(datasetXmlDTO.getDataSrcId(), datasetXmlDTO.getDatasetQuery(), false);
 						}
 						datasetXmlDTO.setDatasetField(fields);
 					}
@@ -161,11 +177,11 @@ public class XMLParser {
 					RootDataSetVO datasetVO = null;
 					if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
 						datasetVO = CubeDatasetVO.builder()
-							.datasetId(datasetXmlDTO.getDatasrcId())
+							.datasetId(datasources.get(datasetXmlDTO.getDatasetNm()))
 							.datasetNm(datasetXmlDTO.getDatasetNm())
-							.datsetType(datasetXmlDTO.getDatasrcType())
+							.datasetType(datasetXmlDTO.getDatasrcType())
 							.fields(datasetXmlDTO.getDatasetField())
-							.cubeId(datasetXmlDTO.getDatasrcId())
+							.cubeId(datasetXmlDTO.getDataSrcId())
 							.cubeNm(datasetXmlDTO.getDatasetNm())
 	//						.cubeDesc(cubeDesc)
 	//						.dsViewId(cubeDesc)
@@ -173,11 +189,11 @@ public class XMLParser {
 							.build();
 					} else if(datasetXmlDTO.getDatasrcType().equals(DsType.DS_SQL)) {
 						datasetVO = QueryDatasetVO.builder()
-							.datasetId(datasetXmlDTO.getDatasrcId())
+							.datasetId(datasources.get(datasetXmlDTO.getDatasetNm()))
 							.datasetNm(datasetXmlDTO.getDatasetNm())
-							.datsetType(datasetXmlDTO.getDatasrcType())
+							.datasetType(datasetXmlDTO.getDatasrcType())
 							.fields(datasetXmlDTO.getDatasetField())
-							.datasrcId(datasetXmlDTO.getDatasrcId())
+							.dataSrcId(datasetXmlDTO.getDataSrcId())
 							.datasetQuery(datasetXmlDTO.getDatasetQuery())
 							.build();
 					}
@@ -186,6 +202,8 @@ public class XMLParser {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			datasources = new HashMap<String, String>();
 		}
 		return datasetVOList;
 	}
@@ -211,16 +229,25 @@ public class XMLParser {
 			NodeList children = root.getChildNodes();
 			
 			for(int layoutIndex = 0; layoutIndex < children.getLength(); layoutIndex++) {
-				if(children.item(layoutIndex).getNodeType() != Node.ELEMENT_NODE) continue;
-				
 				Node node = children.item(layoutIndex);
+				if(node.getNodeType() != Node.ELEMENT_NODE) continue;
+				
 				switch (node.getNodeName()) {
 //				추후 추가
 //				case "Title":
 //					
 //					break;
 				case "DataSources":
-					
+					NodeList datasourceNodes = node.getChildNodes();
+					for(int datasourceIndex = 0; datasourceIndex < datasourceNodes.getLength(); datasourceIndex++) {
+						Node datasourceNode = datasourceNodes.item(datasourceIndex);
+						if(datasourceNode.getNodeType() != Node.ELEMENT_NODE) continue;
+						// value = id
+						String componentName = datasourceNode.getAttributes().getNamedItem("ComponentName").getTextContent();
+						// key = name
+						String Name = datasourceNode.getAttributes().getNamedItem("Name").getTextContent();
+						datasources.put(Name, componentName);
+					}
 					break;
 				case "Items":
 					ItemWrapperVO itemWrapper = itemsParser(node);
@@ -331,13 +358,13 @@ public class XMLParser {
 			
 			String itemType = node.getNodeName().toLowerCase();
 			ItemType type = null;
-			String componentName =node.getAttributes().getNamedItem("ComponentName").getTextContent();
+			String componentName = node.getAttributes().getNamedItem("ComponentName").getTextContent();
 			String datasetId = node.getAttributes().getNamedItem("DataSource").getTextContent();
 			String name = node.getAttributes().getNamedItem("Name").getTextContent();
 			String memo = Optional.ofNullable(node.getAttributes().getNamedItem("MemoText"))
 					.map(Node::getTextContent)
 					.orElse(null);
-			RootFieldVO dataField = null;
+			RootItemFieldVO dataField = null;
 			int dataFieldQuantity = 0;
 			
 			if(ItemType.CHART.toString().equals(itemType)) {

@@ -8,5 +8,5 @@ import lombok.Getter;
 public class ItemMetaVO {
 	String memo;
 	String name;
-	RootFieldVO dataField;
+	RootItemFieldVO dataField;
 }

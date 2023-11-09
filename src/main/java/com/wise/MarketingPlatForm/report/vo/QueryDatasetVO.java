@@ -6,6 +6,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 public class QueryDatasetVO extends RootDataSetVO {
-	int datasrcId; 
+	int dataSrcId; 
 	String datasetQuery;
 }

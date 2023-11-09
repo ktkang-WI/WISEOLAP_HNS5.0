@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public class RootFieldVO {
+public class RootItemFieldVO {
 	String datasetId;
 	@Builder.Default
 	int dataFieldQuantity = 0;
