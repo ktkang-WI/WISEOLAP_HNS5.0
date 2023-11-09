@@ -125,7 +125,7 @@ const QueryDataSourceDesignerModal = ({
                 parentId: '0',
                 uniqueName: field.columnName,
                 name: field.columnName,
-                type: type ? 'MEA' : 'DIM',
+                type: type ? 'MEASURE' : 'DIMENSION',
                 ...field
               };
             });

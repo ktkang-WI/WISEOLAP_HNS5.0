@@ -144,7 +144,8 @@ const DataColumn = ({
         {showContextMenu &&
           <ContextMenu
             className='other-menu'
-            dataSource={type === 'DIM'? dimensionMenuItems : measureMenuItems}
+            dataSource={type === 'DIMENSION'?
+            dimensionMenuItems : measureMenuItems}
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}
