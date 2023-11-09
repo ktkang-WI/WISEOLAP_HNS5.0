@@ -24,11 +24,16 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import useModal from 'hooks/useModal';
+import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 
 const RibbonDefaultElement = () => {
-  const {insertFlexLayout} = useLayout();
+  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const selectedReportId = useSelector(selectCurrentReportId);
+  const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
+  const {openModal} = useModal();
 
   return {
     'NewReport': {
@@ -128,14 +133,17 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddGrid': {
-      id: 'add_grid',
-      title: localizedString.addGrid,
-      label: localizedString.addGrid,
-      type: 'RibbonButton',
-      imgSrc: addGrid,
-      width: 'auto',
-      height: '45px',
-      useArrowButton: false
+      'id': 'add_grid',
+      'title': localizedString.addGrid,
+      'label': localizedString.addGrid,
+      'type': 'RibbonButton',
+      'imgSrc': addGrid,
+      'width': 'auto',
+      'height': '45px',
+      'useArrowButton': false,
+      'onClick': (e) => {
+        insertFlexLayout(selectedReportId, 'grid');
+      }
     },
     'AddCustomChart': {
       'id': 'add_custom_chart',
@@ -155,7 +163,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': captionView,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': () => {
+        convertCaptionVisible(selectedReportId, selectedItem);
+      }
     },
     'NameEdit': {
       'id': 'name_edit',
@@ -165,7 +176,18 @@ const RibbonDefaultElement = () => {
       'imgSrc': nameEdit,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': () => {
+        openModal(SimpleInputModal,
+            {
+              modalTitle: localizedString.nameEdit,
+              defaultValue: selectedItem.meta.name,
+              onSubmit: (value) => {
+                editItemName(selectedReportId, selectedItem, value);
+              }
+            }
+        );
+      }
     },
     'Rotate': {
       'id': 'rotate',

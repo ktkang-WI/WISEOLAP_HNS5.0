@@ -14,9 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Measure {
-    String caption;
-    String name;
-    String uniqueName;
-    SummaryType summaryType;
-    String fieldId;
+  String caption;
+  String name;
+  String uniqueName;
+  SummaryType summaryType;
+  String fieldId;
+  String category;
 }
