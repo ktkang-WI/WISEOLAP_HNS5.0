@@ -1,8 +1,15 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
@@ -19,7 +26,8 @@ import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
 public class DatasetService {
-
+	
+  private static Logger log = LoggerFactory.getLogger(DatasetService.class);
   private final DatasetDAO datasetDAO;
   private final MartConfig martConfig;
   private final MartDAO martDAO;
@@ -133,5 +141,80 @@ public class DatasetService {
 	  String query = "SELECT * FROM BMT_F_버블차트";
 	  return martDAO.select(query);
   }
-
+  
+  public Map<String, MartResultDTO> getQueryDatasetTable(int dsId) {
+	  DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+	  Map<String, MartResultDTO> tbl_Col = new HashMap<>();
+	  Map<String, String> param = new HashMap<>();
+	  
+	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+			  .dsId(dsInfoEntity.getDsId())
+			  .dsNm(dsInfoEntity.getDsNm())
+			  .ip(dsInfoEntity.getIp())
+			  .port(dsInfoEntity.getPort())
+			  .password(dsInfoEntity.getPassword())
+			  .dbNm(dsInfoEntity.getDbNm())
+			  .ownerNm(dsInfoEntity.getOwnerNm())
+			  .userId(dsInfoEntity.getUserId())
+			  .userAreaYn(dsInfoEntity.getUserAreaYn())
+			  .dsDesc(dsInfoEntity.getDsDesc())
+			  .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+			  .build();
+	  
+	  martConfig.setMartDataSource(dsMstrDTO);
+	  param.put("dbType", dsMstrDTO.getDbmsType().name());
+	  param.put("owner", dsMstrDTO.getOwnerNm());
+	  
+	  MartResultDTO tableList = martDAO.selectQueryDataTbl(param);
+	  MartResultDTO columnList = martDAO.selectQueryDataCol(param);
+	  
+	  tbl_Col.put("tables", tableList);
+	  tbl_Col.put("columns", columnList);
+	  
+	  return tbl_Col;
+  }
+  
+  public MartResultDTO getQueryData(int dsId, String query) {
+	  DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+	  
+	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+			  .dsId(dsInfoEntity.getDsId())
+			  .dsNm(dsInfoEntity.getDsNm())
+			  .ip(dsInfoEntity.getIp())
+			  .port(dsInfoEntity.getPort())
+			  .password(dsInfoEntity.getPassword())
+			  .dbNm(dsInfoEntity.getDbNm())
+			  .ownerNm(dsInfoEntity.getOwnerNm())
+			  .userId(dsInfoEntity.getUserId())
+			  .userAreaYn(dsInfoEntity.getUserAreaYn())
+			  .dsDesc(dsInfoEntity.getDsDesc())
+			  .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+			  .build();
+	  
+	  martConfig.setMartDataSource(dsMstrDTO);
+	  
+	  String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
+	  MartResultDTO re = new MartResultDTO();
+	  
+	  try {
+		re = martDAO.select(newQuery);
+	} catch (Exception e) {
+		log.warn(e.toString());
+		
+		List<Map<String, Object>> err = new ArrayList<Map<String,Object>>();
+		err.add(Collections.singletonMap("error", e.toString()));
+		
+		re.setRowData(err);
+	}
+	  return re;
+  }
+  
+  private String convertTopN(String sql, String dbType, int rowNum) {
+  	if ("MS_SQL".equals(dbType)) {
+  		sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
+  	} else {
+  		sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
+  	}
+  	return sql;
+  }
 }

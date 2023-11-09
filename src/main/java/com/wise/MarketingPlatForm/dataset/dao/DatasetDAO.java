@@ -14,6 +14,6 @@ public interface DatasetDAO {
   public List<DsViewEntity> selectGrpAuthDsViewList(String userId);
 
   public List<DsViewEntity> selectUserAuthDsViewList(String userId);
-
+  
   public DsMstrEntity selectDataSource(int dsId);
 }

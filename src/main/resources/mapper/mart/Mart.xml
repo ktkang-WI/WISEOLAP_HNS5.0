@@ -6,5 +6,94 @@
   	<select id="select" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO">
       ${query}
 	</select>
-
+	
+	<select id="selectQueryDataTbl" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO" parameterType="hashMap">
+		<if test='dbType.equalsIgnoreCase("ORACLE")'>
+			SELECT  
+				A.OBJECT_NAME TBL_NM,
+				A.OBJECT_NAME ID,
+				B.COMMENTS TBL_CAPTION,
+				-1 AS PARENT_ID
+				FROM ALL_OBJECTS A, ALL_TAB_COMMENTS B 
+				WHERE A.OWNER = B.OWNER
+				AND A.OBJECT_TYPE IN ('TABLE','VIEW')
+				AND A.OBJECT_NAME = B.TABLE_NAME
+				AND A.OWNER = '${owner}' 
+				AND ( UPPER(A.OBJECT_NAME) LIKE '%%' 
+				OR UPPER(B.COMMENTS) LIKE '%%' ) ORDER BY 1
+		</if>
+		<if test='dbType.equalsIgnoreCase("MS_SQL")'>
+			SELECT
+				CAST(A.NAME AS NVARCHAR(200)) AS TBL_NM,
+			    CAST(B.VALUE AS NVARCHAR(200)) AS TBL_CAPTION,
+				CAST(A.NAME AS NVARCHAR(200)) AS ID,
+				-1 AS PARENT_ID
+				FROM SYSOBJECTS A
+				LEFT JOIN ::FN_LISTEXTENDEDPROPERTY(DEFAULT, N'USER', N'dbo', N'TABLE',DEFAULT,DEFAULT,DEFAULT) B
+				ON A.name = B.objname collate Latin1_General_CI_AI
+				LEFT JOIN SYS.schemas C ON A.uid = C.schema_id
+				WHERE A.xtype IN ('U', 'V') AND A.NAME NOT IN ('sysdiagrams')
+				AND (UPPER(CAST(A.NAME AS NVARCHAR(200))) LIKE '%%'
+				OR UPPER(CAST(B.VALUE AS NVARCHAR(200))) LIKE '%%')
+				AND C.name = 'dbo' ORDER BY 1
+		</if>
+	</select>
+	
+	<select id="selectQueryDataCol" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO" parameterType="hashMap">
+		<if test='dbType.equalsIgnoreCase("ORACLE")'>
+			SELECT DISTINCT * FROM (
+				select  
+				  a.table_name as TBL_NM,
+				  a.column_name AS COL_NM,
+				  CONCAT(CONCAT('[', CONCAT(a.table_name, '].[')),CONCAT(a.column_name, ']')) AS ID
+				  ,data_type as DATA_TYPE
+				  ,CAST(data_length as VARCHAR(50)) as LENGTH
+				  ,CAST(a.column_id AS VARCHAR(50)) as COL_ID
+				  ,CAST(c.position AS VARCHAR(50)) as PK_YN
+				  ,d.comments as TBL_CAPTION
+				  ,a.table_name AS PARENT_ID
+				  from    all_tab_columns a
+				  ,all_col_comments b
+				  ,all_tab_comments d,
+				  (
+					  select    a.table_name
+						  ,a.column_name
+						  ,a.position
+						  from    all_cons_columns a, all_constraints b
+						  where     a.table_name = b.table_name
+						  and     b.constraint_type = 'P'
+						  and     a.constraint_name = b.constraint_name
+				  ) c
+				  where    1 = 1
+				  and   a.owner = '${owner}'
+				  and   b.owner = '${owner}'
+				  and   d.owner = '${owner}'
+				  and    a.table_name  = b.table_name(+)
+				  and    a.column_name = b.column_name(+)
+				  and    a.table_name  = c.table_name(+)
+				  and    a.column_name = c.column_name(+)
+				  and    a.table_name  = d.table_name(+)
+				  order    by PK_YN, column_id)
+		</if>
+		<if test='dbType.equalsIgnoreCase("MS_SQL")'>
+			SELECT
+		      	CAST(A.[name] AS NVARCHAR(200)) AS 'TBL_NM',
+		      	CAST('['+A.NAME+'].['+B.[name]+']' AS NVARCHAR(200)) AS ID,
+		      	CAST(B.[name] AS NVARCHAR(200))  AS 'COL_NM',
+		      	CAST(C.[name] AS NVARCHAR(200))  AS 'DATA_TYPE',
+		      	CAST(B.[length] AS NVARCHAR(200))  AS 'LENGTH',
+		      	CAST(B.[colid] AS NVARCHAR(200))  AS 'COL_ID',
+		      	CAST(E.[indid] AS NVARCHAR(200))  AS 'PK_YN',
+		      	CAST(F.value AS NVARCHAR(200))  AS 'COL_CAPTION',
+		      	CAST(G.value AS NVARCHAR(200)) AS 'TBL_CAPTION',
+		      	CAST(A.[name] AS NVARCHAR(200)) AS PARENT_ID
+		      	FROM  SYSOBJECTS A INNER JOIN SYSCOLUMNS B ON A.id = B.id
+		      	INNER JOIN SYSTYPES C ON B.xusertype = C.xusertype
+		      	LEFT JOIN SYSINDEXKEYS E ON E.id = A.id AND B.colid = E.colid
+		      	LEFT JOIN SYS.extended_properties F ON B.ID = F.major_id AND B.colid = F.minor_id
+		      	LEFT JOIN SYS.extended_properties G ON A.ID = G.major_id AND G.minor_id = 0
+		      	WHERE 1 = 1  AND   A.xtype IN ('U', 'V') 
+		      	ORDER BY B.colorder
+		</if>
+	</select>
 </mapper>
