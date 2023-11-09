@@ -10,23 +10,26 @@ import org.springframework.context.ApplicationContext;
 
 import com.wise.MarketingPlatForm.global.context.BeanContext;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @SpringBootApplication
 public class MarketingPlatFormApplication extends SpringBootServletInitializer {
 
-  private final ApplicationContext context;
-	public static void main(String[] args) {
-		SpringApplication.run(MarketingPlatFormApplication.class, args);
-	}
+    private ApplicationContext context;
 
-  @PostConstruct
-  public void init() {
-    BeanContext.init(context);
-  }
-	
-	@Override
+    public static void main(String[] args) {
+        SpringApplication.run(MarketingPlatFormApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        BeanContext.init(context);
+    }
+
+    @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(MarketingPlatFormApplication.class);
     }
