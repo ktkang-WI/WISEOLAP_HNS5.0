@@ -78,7 +78,7 @@ const QueryDataSourceDesignerModal = ({
       setDataset({
         datasetNm: localizedString.defaultDatasetName,
         datasetType: 'DS_SQL',
-        datasrcId: selectedDataSource.dsId
+        dataSrcId: selectedDataSource.dsId
       });
     }
   }, []);
