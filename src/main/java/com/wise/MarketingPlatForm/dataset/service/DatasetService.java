@@ -79,6 +79,8 @@ public class DatasetService {
         .userId(entity.getUserId())
         .userAreaYn(entity.getUserAreaYn())
         .dsDesc(entity.getDsDesc())
+        .connector(entity.getConnector())
+        .connectorType(entity.getConnectorType())
         .dbmsType(DbmsType.fromString(entity.getDbmsType()).get())
         .build();
   }
@@ -120,21 +122,21 @@ public class DatasetService {
     return result;
   }
 
-  public MartResultDTO MartSelectList() {  
+  public MartResultDTO martSelectList() {  
 	  DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
-	  		.dsId(2223)
-	  	  .dsNm("[MSSQL] WISE_JKㅁ")
-	  	  .ip("3.39.141.250")
-	  	  .port("1433")
-	  	  .dbNm("WISE_JK")
-	  	  .ownerNm("dbo")
-	  	  .password("dnltpdemo1012!@#$")
-	  	  .userId("wise")
-	  	  .connector("jdbc:sqlserver://3.39.141.250:1433;DatabaseName=WISE_JK")
-	  	  .dsDesc("dnltpdemo1012!@#$")
-	  	  .dbmsType(DbmsType.MS_SQL)
+	  		.dsId(2564)
+	  	  .dsNm("[Oracle] WISEMART")
+	  	  .ip("52.79.199.37")
+	  	  .port("1539")
+	  	  .dbNm("wise")
+	  	  .ownerNm("WISEMART")
+	  	  .password("wisemart")
+	  	  .userId("wisemart")
+	  	  .connector("SID")
+	  	  .dsDesc("")
+	  	  .dbmsType(DbmsType.ORACLE)
 	  	  .build();
-	    
+	  
 	  martConfig.setMartDataSource(dsMstrDTO);
 	  String query = "SELECT * FROM BMT_F_버블차트";
 	  return martDAO.select(query);
@@ -215,4 +217,5 @@ public class DatasetService {
   	}
   	return sql;
   }
+
 }

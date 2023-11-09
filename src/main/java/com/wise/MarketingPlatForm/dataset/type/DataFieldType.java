@@ -10,7 +10,7 @@ public enum DataFieldType {
 
   private final String symbol;
 
-	DataFieldType (String symbol) { this.symbol = symbol; }
+  DataFieldType (String symbol) { this.symbol = symbol; }
 
   private static final Map<String, DataFieldType> stringToEnum =
 		Stream.of(values()).collect(

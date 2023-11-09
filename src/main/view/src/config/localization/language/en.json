@@ -107,5 +107,8 @@
   "row": "Row",
   "column": "Column",
   "rowPlaceholder": "New Row",
-  "columnPlaceholder": "New Column"
+  "columnPlaceholder": "New Column",
+  "fieldPlaceholder": "New Field",
+  "sparkline": "Spark Line",
+  "sparklinePlaceholder": "new Spark Line"
 }

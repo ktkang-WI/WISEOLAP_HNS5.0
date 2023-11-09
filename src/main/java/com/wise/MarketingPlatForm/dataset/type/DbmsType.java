@@ -55,7 +55,7 @@ public enum DbmsType {
 	String returnUrl = dsMstrDTO.getDbmsType().url;
 	
 	if("ORACLE".equals(this.symbol)) {
-		String connPrefix = ("SID".equals(dsMstrDTO.getConnector())) ? ":" : "/";
+		String connPrefix = ("SID".equals(dsMstrDTO.getConnectorType())) ? ":" : "/";
 		returnUrl = returnUrl.replaceAll(CONN_PREFIX, connPrefix);
 	}
 	returnUrl = returnUrl.replaceAll(DATABASE_IP, dsMstrDTO.getIp());

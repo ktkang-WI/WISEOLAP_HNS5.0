@@ -31,7 +31,7 @@ public class DataSanitizerTest {
 
     dimensions.add(new Dimension("category", "category", "category", "dataItem1", "dimension"));
     dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "dataItem2", "dimension"));
-    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3"));
+    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3", "category"));
   }
 
   @BeforeEach

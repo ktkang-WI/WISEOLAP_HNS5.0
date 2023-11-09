@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.report.dao.ReportDAO">
+    <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+        SELECT 	A.REPORT_ID as reportId
+				, A.REPORT_NM as reportNm
+				, A.FLD_ID as fldId   
+				, A.FLD_TYPE as fldType
+				, A.REPORT_ORDINAL as reportOrdinal
+				, A.REPORT_TYPE as reportType
+				, A.REPORT_TAG as reportTag
+				, A.REPORT_DESC as reportDesc
+				, A.REPORT_LAYOUT as reportLayout
+				, A.GRID_INFO as gridInfo
+				, A.DATASRC_ID as datasrcId
+				, A.DATASRC_TYPE as datasrcType
+				, A.DATASET_TYPE as datasetType
+				, A.REPORT_XML as reportXml
+				, A.CHART_XML as chartXml
+				, A.LAYOUT_XML as layoutXml
+				, A.DATASET_XML as datasetXml
+				, A.PARAM_XML as paramXml
+				, A.DATASET_QUERY as datasetQuery
+				, A.DEL_YN as delYn
+				, A.REG_USER_NO as regUserNo
+				, B.USER_NM AS RegUserNm
+				, A.REG_DT as regDt
+				, A.PROMPT_YN as promptYn
+				, A.REPORT_SUB_TITLE as reportSubTitle
+				, A.MOD_USER_NO as modUserNo
+				, C.USER_NM AS modUserNm							
+				, A.MOD_DT as modDt
+				, B.USER_NM as userNm
+				, A.PRIVACY_YN as privacyYn
+            FROM 	REPORT_MSTR A
+				LEFT OUTER JOIN USER_MSTR B ON A.REG_USER_NO = B.USER_NO
+				LEFT OUTER JOIN USER_MSTR C ON A.MOD_USER_NO = C.USER_NO
+            WHERE   1=1
+            AND		A.DEL_YN = 'N'
+            <if test='reportId != null'>
+                AND A.REPORT_ID = #{reportId}
+            </if>
+    </select>
+</mapper>

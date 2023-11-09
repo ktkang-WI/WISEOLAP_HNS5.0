@@ -174,8 +174,8 @@ public class DatasetController {
     summary = "mart connection sample code",
     description = "mart db연결 sample code")
   @PostMapping(value = "/mart-sample")
-  public MartResultDTO MartSelectList() {
-    return datasetService.MartSelectList();
+    public MartResultDTO martSelectList() {
+    return datasetService.martSelectList();
   }
   
   @Operation(
