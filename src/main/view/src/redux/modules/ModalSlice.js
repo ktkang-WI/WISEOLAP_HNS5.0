@@ -1,8 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  openedModals: [],
-  data: {}
+  openedModals: []
 };
 
 const reducers = {
@@ -15,10 +14,6 @@ const reducers = {
     state.openedModals = state.openedModals.filter((modal, index) => {
       return index !== actions.payload;
     });
-    state.data = {};
-  },
-  setData(state, actions) {
-    state.data = actions.payload;
   }
 };
 

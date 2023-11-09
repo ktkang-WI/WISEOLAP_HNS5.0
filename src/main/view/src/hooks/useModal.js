@@ -22,13 +22,8 @@ export default function useModal() {
     dispatch(modalActions.close(index));
   };
 
-  const setData = (data) => {
-    dispatch(modalActions.setData(data));
-  };
-
   return {
     openModal,
-    closeModal,
-    setData
+    closeModal
   };
 };
