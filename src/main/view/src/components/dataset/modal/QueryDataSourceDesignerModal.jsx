@@ -175,7 +175,7 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
           <ModalPanel
             title={localizedString.dataItem}
-            height='70%'
+            height='calc(100% - 250px)'
             width='300px'
             padding='10'>
             <TreeList
