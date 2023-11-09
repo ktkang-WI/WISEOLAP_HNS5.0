@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
@@ -29,9 +30,9 @@ public class DataSanitizerTest {
     measures = new ArrayList<>();
     pagingOption = new PagingOption(0, 20, true);
 
-    dimensions.add(new Dimension("category", "category", "category", "dataItem1", "dimension"));
-    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "dataItem2", "dimension"));
-    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3", "category"));
+    dimensions.add(new Dimension("category", "category", "uniqueName", "category", "dataItem1", DataFieldType.DIMENSION));
+    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "uniqueName2", "dataItem2", DataFieldType.DIMENSION));
+    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3", "category", DataFieldType.DIMENSION));
   }
 
   @BeforeEach
