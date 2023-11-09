@@ -1,7 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.data.data;
 
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +20,5 @@ public class Measure implements RootData{
   SummaryType summaryType;
   String fieldId;
   String category;
+  DataFieldType type;
 }

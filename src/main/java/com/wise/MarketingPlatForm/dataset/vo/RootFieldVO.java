@@ -1,7 +1,6 @@
 package com.wise.MarketingPlatForm.dataset.vo;
 
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
-
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -12,5 +11,5 @@ public abstract class RootFieldVO {
 	String uniqueName;
 	String dataType;
 	String name;
-	String type;
+	DataFieldType type;
 }

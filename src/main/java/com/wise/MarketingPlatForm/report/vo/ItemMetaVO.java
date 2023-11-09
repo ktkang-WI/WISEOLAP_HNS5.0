@@ -9,4 +9,5 @@ public class ItemMetaVO {
 	String memo;
 	String name;
 	RootItemFieldVO dataField;
+	String useCaption;
 }

@@ -168,7 +168,7 @@ public class DatasetService {
           for(int metaIndex = 0; metaIndex < result.getMetaData().size(); metaIndex++) {
         	  MetaDTO meta = result.getMetaData().get(metaIndex);
         	  if(meta.getColumnName().equals("")) throw new SQLException();
-        	  String type;
+        	  DataFieldType type;
         	  switch (Integer.parseInt(meta.getColumnType())) {
 	        	  case Types.BIGINT:
 	        	  case Types.DECIMAL:
@@ -179,10 +179,10 @@ public class DatasetService {
 	        	  case Types.SMALLINT:
 	        	  case Types.NUMERIC:
 	        	  case Types.REAL:
-	        		  type = "MEA";
+	        		  type = DataFieldType.MEASURE;
 	        		  break;
 	        	  default:
-	        		  type = "DIM";
+	        		  type = DataFieldType.DIMENSION;
         	  }
         	  QueryFieldVO field = QueryFieldVO.builder()
         			  .parentId("0")

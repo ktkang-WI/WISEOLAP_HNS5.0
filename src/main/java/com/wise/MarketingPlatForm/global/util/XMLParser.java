@@ -127,7 +127,8 @@ public class XMLParser {
 										.map(Node::getTextContent)
 								        .orElse(null);
 								int order = Integer.parseInt(field.getNamedItem("ORDER").getTextContent());
-								String type = field.getNamedItem("TYPE").getTextContent();
+								DataFieldType type = "MEA".equals(field.getNamedItem("TYPE").getTextContent())
+										? DataFieldType.MEASURE : DataFieldType.DIMENSION;
 								
 								if(datasetXmlDTO.getDatasrcType().equals(DsType.CUBE)) {
 									vo = CubeFieldVO.builder()
@@ -460,12 +461,14 @@ public class XMLParser {
 										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
 								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
 								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
-								
+								DataFieldType dataType = DataFieldType.DIMENSION;
+										
 								Dimension dimensoion = Dimension.builder()
 										.caption(caption)
 										.category(DataFieldType.FIELD.toString())
 										.fieldId(fieldId)
 										.name(dimName)
+										.type(dataType)
 										.uniqueName(dimName)
 										.build();
 								
@@ -480,12 +483,14 @@ public class XMLParser {
 										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
 								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
 								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
+								DataFieldType dataType = DataFieldType.MEASURE;
 								
 								Measure measure = Measure.builder()
 										.caption(caption)
 										.category(DataFieldType.MEASURE.toString())
 										.fieldId(fieldId)
 										.name(meaName)
+										.type(dataType)
 										.uniqueName(meaName)
 										.summaryType(summaryType)
 										.build();
@@ -508,6 +513,7 @@ public class XMLParser {
 					.dataField(dataField)
 					.memo(memo)
 					.name(name)
+					.useCaption(name)
 					.build();
 			
 			ItemsVO items = ItemsVO.builder()
