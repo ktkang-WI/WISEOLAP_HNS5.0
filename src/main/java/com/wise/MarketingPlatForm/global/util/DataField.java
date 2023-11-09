@@ -19,7 +19,7 @@ import java.sql.ResultSetMetaData;
 public class DataField extends javaxt.sql.Field {
     public DataField(int index, ResultSetMetaData md, Object dataValue) {
         super(index, md);
-        super.Value = new DataValue(dataValue);
+        super.setValue(new DataValue(dataValue));
     }
     
     @Override
