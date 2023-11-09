@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -29,9 +28,8 @@ import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
-import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
-
+import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -154,7 +152,7 @@ public class ReportController {
 	    )
 	)
 	@PostMapping(value = "/report")
-	public MetaVO getReport(@RequestBody Map<String, String> param) {
+	public ReportMetaDTO getReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);

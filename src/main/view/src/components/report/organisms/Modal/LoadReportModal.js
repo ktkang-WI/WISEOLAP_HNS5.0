@@ -9,11 +9,13 @@ import useModal from 'hooks/useModal';
 import {useEffect, useState} from 'react';
 import models from 'models';
 import {setIconReportList} from 'components/report/util/ReportUtility';
-// import ReportSlice from 'redux/modules/ReportSlice';
-// import ItemSlice from 'redux/modules/ItemSlice';
-// import LayoutSlice from 'redux/modules/LayoutSlice';
-// import DatasetSlice from 'redux/modules/DatasetSlice';
-// import {useDispatch} from 'react-redux';
+import ReportSlice from 'redux/modules/ReportSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import LayoutSlice from 'redux/modules/LayoutSlice';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import {useDispatch} from 'react-redux';
+import {makeMart} from 'components/report/item/util/martUtilityFactory';
+import folderImg from 'assets/image/icon/report/folder_load.png';
 
 const theme = getTheme();
 
@@ -21,12 +23,12 @@ const LoadReportModal = ({...props}) => {
   const [selectedReport, setSelectedReport] = useState({});
   const [reportList, setReportList] = useState();
   const {openModal} = useModal();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const {setReports, selectReport} = ReportSlice.actions;
-  // const {setItem} = ItemSlice.actions;
-  // const {setLayout} = LayoutSlice.actions;
-  // const {setDataset} = DatasetSlice.actions;
+  const {setReports, selectReport} = ReportSlice.actions;
+  const {setItem} = ItemSlice.actions;
+  const {setLayout} = LayoutSlice.actions;
+  const {setDataset} = DatasetSlice.actions;
 
 
   useEffect(() => {
@@ -46,10 +48,29 @@ const LoadReportModal = ({...props}) => {
                 .then((data) => {
                   dispatch(setLayout({
                     reportId: selectedReport.id,
-                    layout: data.layout[selectedReport.id]
+                    layout: data.layout
                   }));
-                  // dispatch(selectReport(selectedReport.id));
-                  // dispatch(setReports(data.reports[selectedReport.id]));
+                  dispatch(selectReport(selectedReport.id));
+                  dispatch(setReports(data.report));
+                  data.item.items.forEach((i) => {
+                    i.mart = makeMart(i);
+                  });
+                  dispatch(setItem({
+                    reportId: selectedReport.id,
+                    items: data.item
+                  }));
+                  data.dataset.datasets.forEach((i) => {
+                    i.fields.unshift({
+                      name: localizedString.defaultDatasetName,
+                      type: 'FLD',
+                      uniqueName: '0',
+                      icon: folderImg
+                    });
+                  });
+                  dispatch(setDataset({
+                    reportId: selectedReport.id,
+                    dataset: data.dataset
+                  }));
                 });
           } else {
             openModal(Alert, {

@@ -62,8 +62,10 @@ import com.wise.MarketingPlatForm.report.entity.ReportListEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
-import com.wise.MarketingPlatForm.report.vo.MetaVO;
+import com.wise.MarketingPlatForm.report.vo.DatasetWrapperVO;
+import com.wise.MarketingPlatForm.report.vo.LayoutWrapperDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
 import com.wise.MarketingPlatForm.report.vo.ReportVO;
@@ -109,11 +111,11 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public MetaVO getReport(String reportId, String userId) {
+    public ReportMetaDTO getReport(String reportId, String userId) {
         ReportMstrEntity temp = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
 
-        MetaVO metaVO = MetaVO.builder().build();
+        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
 
         // report
         ReportOptionsVO reportOptions = ReportOptionsVO.builder()
@@ -126,20 +128,23 @@ public class ReportService {
                 .reportId(dto.getReportId())
                 .options(reportOptions)
                 .build();
-        metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {
-            {
-                add(reports);
-            }
-        });
+        reportMetaDTO.getReport().add(reports);
 
         // dataset
         List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-        metaVO.getDatasets().put(dto.getReportId(), datasetVO);
+        DatasetWrapperVO datasetWrapper = DatasetWrapperVO.builder()
+        		.datasetQuantity(datasetVO.size())
+        		.selectedDatasetId(datasetVO.get(0).getDatasetId())
+        		.datasets(datasetVO)
+        		.build();
+        reportMetaDTO.setDataset(datasetWrapper);
 
         // layout
-        metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
+        LayoutWrapperDTO layoutWrapperDTO = new LayoutWrapperDTO();
+        reportMetaDTO.setLayout(layoutWrapperDTO);
+        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
 
-        return metaVO;
+        return reportMetaDTO;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {

@@ -10,12 +10,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class LayoutConfigVO {
-//	필요시 추가.
-//	List<Object> borders;
+	@Builder.Default
+	List<Object> borders = new ArrayList<Object>();
 	@Builder.Default
 	Map<String, Boolean> global = new HashMap<String, Boolean>() {{
 	    put("tabEnableClose", false);
 	}};
-	@Builder.Default
-	List<ParentLayout> layout = new ArrayList<ParentLayout>();
+	ParentLayout layout;
 }

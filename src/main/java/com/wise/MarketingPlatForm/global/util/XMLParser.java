@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -24,8 +23,8 @@ import com.wise.MarketingPlatForm.dataset.type.DataSetType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
-import com.wise.MarketingPlatForm.report.domain.data.data.GridField;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
 import com.wise.MarketingPlatForm.report.domain.data.data.SparkLine;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
@@ -34,13 +33,13 @@ import com.wise.MarketingPlatForm.report.vo.CubeDatasetVO;
 import com.wise.MarketingPlatForm.report.vo.DataGridFieldVO;
 import com.wise.MarketingPlatForm.report.vo.DatasetXmlDTO;
 import com.wise.MarketingPlatForm.report.vo.ItemMetaVO;
-import com.wise.MarketingPlatForm.report.vo.ItemVO;
+import com.wise.MarketingPlatForm.report.vo.ItemWrapperVO;
 import com.wise.MarketingPlatForm.report.vo.ItemsVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutTabVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutTabWrapperVO;
-import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.QueryDatasetVO;
+import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
 import com.wise.MarketingPlatForm.report.vo.RootFieldVO;
 
@@ -115,10 +114,8 @@ public class XMLParser {
 								String icon = Optional.ofNullable(field.getNamedItem("icon"))
 										.map(Node::getTextContent)
 								        .orElse(null);
-								DataFieldType type = Optional.ofNullable(field.getNamedItem("TYPE"))
-										.map((i) ->
-											"MEA".equals(i.getTextContent()) ? DataFieldType.MEASURE : DataFieldType.DIMENSION)
-										.orElse(null);
+								DataFieldType type = "MEA".equals(field.getNamedItem("TYPE").getTextContent())
+										? DataFieldType.MEASURE : DataFieldType.DIMENSION;
 								String uniqueName = Optional.ofNullable(field.getNamedItem("UNI_NM"))
 										.map(Node::getTextContent)
 								        .orElse(null);
@@ -193,9 +190,18 @@ public class XMLParser {
 		return datasetVOList;
 	}
 	
-	public MetaVO layoutParser(int reportId, MetaVO metaVO, String xml) {
+	public ReportMetaDTO layoutParser(int reportId, ReportMetaDTO reportMetaDTO, String xml) {
 		Document document;
-		LayoutConfigVO resultLayoutConfigVO =  LayoutConfigVO.builder().build();
+		
+		LayoutTabWrapperVO layoutWrapper = LayoutTabWrapperVO.builder()
+				.type("row")
+				.weight((double) 100)
+				.build();
+		
+		LayoutConfigVO resultLayoutConfigVO =  LayoutConfigVO.builder()
+				.layout(layoutWrapper)
+				.build();
+		
 		xml = xml.trim();
 		
 		try {
@@ -217,12 +223,12 @@ public class XMLParser {
 					
 					break;
 				case "Items":
-					ItemVO item = itemsParser(node);
-					metaVO.getItem().put(reportId, item);
+					ItemWrapperVO itemWrapper = itemsParser(node);
+					reportMetaDTO.setItem(itemWrapper);
 					break;
 				case "LayoutTree":
-					layoutRecursionParser(node, null, resultLayoutConfigVO, metaVO.getItem().get(reportId).getItems());
-					metaVO.getLayout().put(reportId, resultLayoutConfigVO);
+					layoutRecursionParser(node, null, resultLayoutConfigVO, reportMetaDTO.getItem().getItems());
+					reportMetaDTO.getLayout().setLayoutConfig(resultLayoutConfigVO);
 					break;
 				}
 			}
@@ -230,7 +236,7 @@ public class XMLParser {
 			e.printStackTrace();
 		} 
 		
-		return metaVO;
+		return reportMetaDTO;
 	}
 	
 	private LayoutConfigVO layoutRecursionParser(Node layoutNode, LayoutTabWrapperVO parent, LayoutConfigVO resultLayoutConfigVO, List<ItemsVO> items) {
@@ -254,7 +260,8 @@ public class XMLParser {
 					.build();
 				
 				if(parent == null) {
-					resultLayoutConfigVO.getLayout().add(layoutWrapper);
+					LayoutTabWrapperVO rootNode = (LayoutTabWrapperVO) resultLayoutConfigVO.getLayout();
+					rootNode.getChildren().add(layoutWrapper);
 				} else {
 					parent.getChildren().add(layoutWrapper);
 				}
@@ -297,7 +304,8 @@ public class XMLParser {
 				layoutTabset.getChildren().add(tab);
 				
 				if(parent == null) {
-					resultLayoutConfigVO.getLayout().add(layoutTabset);
+					LayoutTabWrapperVO rootNode = (LayoutTabWrapperVO) resultLayoutConfigVO.getLayout();
+					rootNode.getChildren().add(layoutTabset);
 				} else {
 					parent.getChildren().add(layoutTabset);
 				}
@@ -312,7 +320,7 @@ public class XMLParser {
 		return resultLayoutConfigVO;
 	}
 	
-	private ItemVO itemsParser(Node itemsNode) {
+	private ItemWrapperVO itemsParser(Node itemsNode) {
 		NodeList children = itemsNode.getChildNodes();
 		List<ItemsVO> itemsList = new ArrayList<ItemsVO>();
 		
@@ -330,6 +338,7 @@ public class XMLParser {
 					.map(Node::getTextContent)
 					.orElse(null);
 			RootFieldVO dataField = null;
+			int dataFieldQuantity = 0;
 			
 			if(ItemType.CHART.toString().equals(itemType)) {
 				type = ItemType.CHART;
@@ -339,6 +348,7 @@ public class XMLParser {
 				
 				for(int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if(itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE) continue;
+					dataFieldQuantity++;
 					
 					Node itemChild = itemChildren.item(itemChildrenIndex);
 					if("DataItems".equals(itemChild.getNodeName())) {
@@ -355,16 +365,14 @@ public class XMLParser {
 										.map(Node::getTextContent)
 										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
 								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
-								String fieldId = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
-										.map(Node::getTextContent)
-										.orElse(null);
+								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
 								
 								Dimension dimensoion = Dimension.builder()
 										.caption(caption)
 										.category(DataFieldType.DIMENSION.toString())
 										.fieldId(fieldId)
 										.name(dimName)
-										.uniqueName(fieldId)
+										.uniqueName(dimName)
 										.build();
 								
 								dimensions.add(dimensoion);
@@ -378,9 +386,7 @@ public class XMLParser {
 								SummaryType summaryType = SummaryType.fromString(
 										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
 								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
-								String fieldId = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
-										.map(Node::getTextContent)
-										.orElse(null);
+								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
 								
 								Measure measure = Measure.builder()
 										.caption(caption)
@@ -400,12 +406,13 @@ public class XMLParser {
 						.datasetId(datasetId)
 						.dimension(dimensions)
 						.measure(measures)
+						.dataFieldQuantity(dataFieldQuantity)
 						.build();	
 				
 			} else if (ItemType.DATA_GRID.toString().equals(itemType)) {
 				type = ItemType.DATA_GRID;
 				NodeList itemChildren = node.getChildNodes();
-				List<GridField> fields = new ArrayList<GridField>();
+				List<RootData> fields = new ArrayList<RootData>();
 				List<SparkLine> sparklines = new ArrayList<SparkLine>();
 				
 				for(int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
@@ -421,52 +428,47 @@ public class XMLParser {
 							Node data = datas.item(datasIndex);
 							if(DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap dimensionNodes = data.getAttributes();
-								// bjsong 여기 해야됨!!!!!!!!!
-//								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
-//										.map(Node::getTextContent)
-//										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
-//								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
-//								String fieldId = Optional.ofNullable(dimensionNodes.getNamedItem("uniqueName"))
-//										.map(Node::getTextContent)
-//										.orElse(null);
-//								
-//								Dimension dimensoion = Dimension.builder()
-//										.caption(caption)
-//										.category(DataFieldType.FIELD.toString())
-//										.fieldId(fieldId)
-//										.name(dimName)
-//										.uniqueName(dimName)
-//										.build();
-//								
-//								dimensions.add(dimensoion);
+								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
+								
+								Dimension dimensoion = Dimension.builder()
+										.caption(caption)
+										.category(DataFieldType.FIELD.toString())
+										.fieldId(fieldId)
+										.name(dimName)
+										.uniqueName(dimName)
+										.build();
+								
+								fields.add(dimensoion);
 							} else if(DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap measureNodes = data.getAttributes();
 								
-//								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
-//										.map(Node::getTextContent)
-//										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
-//								SummaryType summaryType = SummaryType.fromString(
-//										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
-//								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
-//								String fieldId = Optional.ofNullable(measureNodes.getNamedItem("uniqueName"))
-//										.map(Node::getTextContent)
-//										.orElse(null);
-//								
-//								GridField measure = GridField.builder()
-//										.caption(caption)
-//										.category(null)
-//										.fieldId(fieldId)
-//										.name(meaName)
-//										.uniqueName(meaName)
-//										.type(summaryType)
-//										.build();
+								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+								SummaryType summaryType = SummaryType.fromString(
+										measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase()).get();
+								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
 								
+								Measure measure = Measure.builder()
+										.caption(caption)
+										.category(DataFieldType.MEASURE.toString())
+										.fieldId(fieldId)
+										.name(meaName)
+										.uniqueName(meaName)
+										.summaryType(summaryType)
+										.build();
+								fields.add(measure);
 							} 
 //							else if(sparkLine 추후 추가)
 							dataField = DataGridFieldVO.builder()
 									.datasetId(datasetId)
-									.field(null)
-									.sparkline(null)
+									.field(fields)
+									.sparkline(new ArrayList<SparkLine>())
 									.build();	
 							
 						}	
@@ -489,7 +491,9 @@ public class XMLParser {
 			itemsList.add(items);
 		}
 		
-		ItemVO itemVO = ItemVO.builder()
+		ItemWrapperVO itemVO = ItemWrapperVO.builder()
+			.itemQuantity(itemsList.size())
+			.selectedItemId(itemsList.get(0).getId())
 			.items(itemsList)
 			.build();
 		

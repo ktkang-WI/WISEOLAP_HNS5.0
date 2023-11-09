@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Measure {
+public class Measure implements RootData{
   String caption;
   String name;
   String uniqueName;

@@ -1,13 +1,11 @@
 package com.wise.MarketingPlatForm.report.vo;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
-public class LayoutTabVO implements ParentLayout{
+@SuperBuilder
+public class LayoutTabVO extends ParentLayout{
 	String component;
-	String id;
 	String name;
-	String type;
 }

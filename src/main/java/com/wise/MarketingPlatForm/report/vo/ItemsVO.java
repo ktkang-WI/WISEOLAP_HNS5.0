@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.report.vo;
 
+import com.wise.MarketingPlatForm.report.type.ItemType;
+
 import lombok.Builder;
 import lombok.Getter;
 

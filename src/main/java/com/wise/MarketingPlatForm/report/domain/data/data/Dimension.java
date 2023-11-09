@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dimension {
+public class Dimension implements RootData {
     String caption;
     String name;
     String uniqueName;
