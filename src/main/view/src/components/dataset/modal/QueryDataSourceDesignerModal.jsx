@@ -22,7 +22,6 @@ import {getDataByQueryMart, getTablesByMart}
 import useModal from 'hooks/useModal';
 import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
-// import {Lookup} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -78,7 +77,7 @@ const QueryDataSourceDesignerModal = ({
       setDataset({
         datasetNm: localizedString.defaultDatasetName,
         datasetType: 'DS_SQL',
-        dataSrcId: selectedDataSource.dsId
+        datasrcId: selectedDataSource.dsId
       });
     }
   }, []);
@@ -153,6 +152,7 @@ const QueryDataSourceDesignerModal = ({
               message: '쿼리가 부적절 합니다. 다시 입력해 주세요.'
             });
           }
+
           return true;
         }
       }}
@@ -175,7 +175,7 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
           <ModalPanel
             title={localizedString.dataItem}
-            height='390px'
+            height='70%'
             width='300px'
             padding='10'>
             <TreeList
