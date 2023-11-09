@@ -16,7 +16,7 @@ const QueryEditor = ({editorRef, ...props}) => {
       showGutter={true}
       highlightActiveLine={true}
       ref={editorRef}
-      value={``}
+      value={''}
       setOptions={{
         enableBasicAutocompletion: false,
         enableLiveAutocompletion: true,

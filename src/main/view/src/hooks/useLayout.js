@@ -32,11 +32,32 @@ export default function useLayout() {
     }));
   };
 
-  const deleteFlexLayout = (reportId, tabId) => {
-    const param = {reportId: reportId, itemId: tabId};
+  const deleteFlexLayout = (reportId, itemId) => {
+    const param = {reportId: reportId, itemId: itemId};
 
     dispatch(flexLayout.deleteFlexLayout(param));
     dispatch(itemSlice.deleteItem(param));
+  };
+
+  // 캡션 보기 활성화, 비활성화.
+  const convertCaptionVisible = (reportId, selectedItem) => {
+    const convert = selectedItem.meta.useCaption;
+    const item = {
+      ...selectedItem,
+      meta: {...selectedItem.meta, useCaption: convert? false : true}
+    };
+
+    dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
+  };
+
+  // 아이템 이름 변경.
+  const editItemName = (reportId, selectedItem, editText) => {
+    const item = {
+      ...selectedItem,
+      meta: {...selectedItem.meta, name: editText}
+    };
+
+    dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
   };
 
   return {
@@ -44,6 +65,8 @@ export default function useLayout() {
     setLayout,
     deleteFlexLayout,
     defaultFlexLayout,
-    setMovedLayout
+    setMovedLayout,
+    convertCaptionVisible,
+    editItemName
   };
 };

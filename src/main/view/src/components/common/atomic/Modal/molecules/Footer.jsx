@@ -16,10 +16,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const Footer = ({
-  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage
+  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, ...props
 }) => {
-  const onConfirm = () => {
-    if (!onSubmit()) {
+  const onConfirm = async () => {
+    if (!await onSubmit()) {
       onClose();
     }
   };

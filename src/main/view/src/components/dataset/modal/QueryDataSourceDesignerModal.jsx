@@ -1,7 +1,6 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-import {TreeView} from 'devextreme-react';
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
@@ -15,9 +14,14 @@ import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import DatasetName from '../atomic/molecules/DatasetName';
-import CustomStore from 'devextreme/data/custom_store';
 import localizedString from '../../../config/localization';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {Scrolling, TreeList} from 'devextreme-react/tree-list';
+import {getDataByQueryMart, getTablesByMart}
+  from 'models/dataset/DBInfo';
+import useModal from 'hooks/useModal';
+import Alert from 'components/common/atomic/Modal/organisms/Alert';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 
 const theme = getTheme();
 
@@ -41,18 +45,30 @@ const QueryDataSourceDesignerModal = ({
   onSubmit, selectedDataSource, orgDataset={}, query='', ...props
 }) => {
   // const isNew = _.isEmpty(dataset);
+  const {openModal} = useModal();
   const dispatch = useDispatch();
   const {insertDataset} = DatasetSlice.actions;
   const selectedReportId = useSelector(selectCurrentReportId);
+  const datasets = useSelector(selectCurrentDatasets);
   const queryEditorRef = useRef();
+  const editorRef = queryEditorRef.current;
   const [dataset, setDataset] = useState(orgDataset);
+  const [datasource, setDatasource] = useState('');
 
-  const store = new CustomStore({
-    key: 'id',
-    load: (loadOptions) => {
-      console.log(loadOptions);
-    }
-  });
+  useEffect(() => {
+    getTablesByMart(selectedDataSource)
+        .then((response) => {
+          const tables = response.tables.rowData;
+          const columns = response.columns.rowData;
+
+          const tableList = tables.concat(columns);
+
+          setDatasource(tableList);
+        })
+        .catch(() => {
+          throw new Error('Data Loading Error');
+        });
+  }, []);
 
   useEffect(() => {
     if (!_.isEmpty(dataset)) {
@@ -66,44 +82,79 @@ const QueryDataSourceDesignerModal = ({
     }
   }, []);
 
+  const displayCaption = (data) => {
+    let caption = '';
+    if (!data.COL_NM) {
+      caption = data.TBL_CAPTION == null ? data.TBL_NM : data.TBL_CAPTION;
+    } else {
+      caption = data.COL_CAPTION == null ? data.COL_NM : data.COL_CAPTION;
+    }
+
+    return caption;
+  };
+
   return (
     <Modal
-      onSubmit={() => {
-        // 쿼리 확인
-        // 쿼리 확인 겸 필드 가져온 뒤 가공
-        let tempFields = [
-          {name: '금액', type: 'mea', dataType: 'number'},
-          {name: '소계', type: 'mea', dataType: 'number'},
-          {name: '생산회사이름', type: 'dim', dataType: 'varchar'},
-          {name: '자동차명', type: 'dim', dataType: 'varchar'},
-          {name: '결재구분명', type: 'dim', dataType: 'varchar'}
-        ];
+      onSubmit={async () => {
+        const query = editorRef.editor.getValue();
+        const dupleCheck =
+          datasets.find((name) => name.datasetNm == dataset.datasetNm);
 
-        tempFields = tempFields.map((field) => {
-          return {
-            icon: field.type == 'mea' ? meaImg : dimImg,
-            parentId: '0',
-            uniqueName: field.name,
-            ...field
-          };
-        });
+        if (!query || query == '') { // 쿼리 빈값 확인.
+          openModal(Alert, {
+            message: '쿼리를 입력해 주세요.'
+          });
+        } else if (!dataset.datasetNm || dataset.datasetNm == '') {
+          openModal(Alert, { // 데이터 집합 명 빈값 확인.
+            message: '데이터 집합 명을 입력해 주세요.'
+          });
+        } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
+          openModal(Alert, {
+            message: '중복된 데이터 집합 명입니다. 다시 입력해 주세요.'
+          });
+        } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
+          const response = await getDataByQueryMart(selectedDataSource, query);
+          if (!response.rowData[0].error) {
+            const types = ['int', 'NUMBER', 'decimal'];
+            let tempFields = response.metaData;
 
-        tempFields.unshift({
-          name: localizedString.defaultDatasetName,
-          type: 'FLD',
-          uniqueName: '0',
-          icon: folderImg
-        });
+            tempFields = tempFields.map((field) => {
+              const type = types.includes(field.columnTypeName);
+              return {
+                icon: type ? meaImg : dimImg,
+                parentId: '0',
+                uniqueName: field.columnName,
+                name: field.columnName,
+                type: type ? 'MEA' : 'DIM',
+                ...field
+              };
+            });
 
-        dispatch(insertDataset({
-          reportId: selectedReportId,
-          dataset: {
-            ...dataset,
-            datasetQuery: queryEditorRef.current.editor.getValue(),
-            fields: tempFields
+            tempFields.unshift({
+              name: localizedString.defaultDatasetName,
+              type: 'FLD',
+              uniqueName: '0',
+              icon: folderImg
+            });
+
+            dispatch(insertDataset({
+              reportId: selectedReportId,
+              dataset: {
+                ...dataset,
+                datasetQuery: query,
+                fields: tempFields
+              }
+            }));
+
+            return;
+          } else {
+            openModal(Alert, {
+              message: '쿼리가 부적절 합니다. 다시 입력해 주세요.'
+            });
           }
-        }));
-        // return true;
+
+          return true;
+        }
       }}
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
@@ -124,25 +175,33 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
           <ModalPanel
             title={localizedString.dataItem}
-            height='100%'
+            height='calc(100% - 250px)'
             width='300px'
             padding='10'>
-            <TreeView
-              dataSource={store}
-              remoteOperations={true}
+            <TreeList
+              height='100%'
+              dataSource={datasource}
+              showColumnHeaders={false}
               searchPanel={{
                 visible: true,
                 searchVisibleColumnsOnly: true,
                 highlightSearchText: true,
-                width: '100%'
+                width: '280px'
               }}
+              rootValue={-1}
               expandNodesOnFiltering={false}
               filterMode='matchOnly'
-              keyExpr='id'
-              parentIdExpr='parent'
-              hasItemsExpr='hasItems'
+              keyExpr='ID'
+              parentIdExpr='PARENT_ID'
             >
-            </TreeView>
+              <Scrolling mode='standard'/>
+              <Column
+                dataField='ID'
+                width="100%"
+                calculateDisplayValue={displayCaption}
+              >
+              </Column>
+            </TreeList>
           </ModalPanel>
         </ColumnWrapper>
         <ColumnWrapper>
@@ -153,7 +212,9 @@ const QueryDataSourceDesignerModal = ({
             }}
           />
           <ModalPanel title={localizedString.query} height='100%' padding='10'>
-            <QueryEditor editorRef={queryEditorRef}/>
+            <QueryEditor
+              editorRef={queryEditorRef}
+              value={editorRef && editorRef.editor.getValue()}/>
           </ModalPanel>
           <ModalPanel
             title={localizedString.parameter}
