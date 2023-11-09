@@ -21,6 +21,13 @@
     <webapp.lib>${basedir}/lib</webapp.lib>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>javaxt.com</id>
+      <url>https://www.javaxt.com/maven</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -271,10 +278,8 @@
 
     <dependency>
       <groupId>javaxt</groupId>
-      <artifactId>javaxt</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/src/main/webapp/WEB-INF/extra-lib/javaxt-corecustom-1.0.0.jar</systemPath>
+      <artifactId>javaxt-core</artifactId>
+      <version>2.1.2</version>
     </dependency>
 
     <dependency>
