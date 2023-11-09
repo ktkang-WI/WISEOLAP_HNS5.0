@@ -153,6 +153,7 @@ const QueryDataSourceDesignerModal = ({
               message: '쿼리가 부적절 합니다. 다시 입력해 주세요.'
             });
           }
+          return true;
         }
       }}
       height={theme.size.bigModalHeight}
