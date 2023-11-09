@@ -22,6 +22,7 @@ import {getDataByQueryMart, getTablesByMart}
 import useModal from 'hooks/useModal';
 import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+// import {Lookup} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -49,8 +50,9 @@ const QueryDataSourceDesignerModal = ({
   const dispatch = useDispatch();
   const {insertDataset} = DatasetSlice.actions;
   const selectedReportId = useSelector(selectCurrentReportId);
-  const datasetNms = useSelector(selectCurrentDatasets);
+  const datasets = useSelector(selectCurrentDatasets);
   const queryEditorRef = useRef();
+  const editorRef = queryEditorRef.current;
   const [dataset, setDataset] = useState(orgDataset);
   const [datasource, setDatasource] = useState('');
 
@@ -75,18 +77,29 @@ const QueryDataSourceDesignerModal = ({
     } else {
       setDataset({
         datasetNm: localizedString.defaultDatasetName,
-        datsetType: 'DS_SQL',
+        datasetType: 'DS_SQL',
         datasrcId: selectedDataSource.dsId
       });
     }
   }, []);
 
+  const displayCaption = (data) => {
+    let caption = '';
+    if (!data.COL_NM) {
+      caption = data.TBL_CAPTION == null ? data.TBL_NM : data.TBL_CAPTION;
+    } else {
+      caption = data.COL_CAPTION == null ? data.COL_NM : data.COL_CAPTION;
+    }
+
+    return caption;
+  };
+
   return (
     <Modal
-      onSubmit={() => {
-        const query = queryEditorRef.current.editor.getValue();
+      onSubmit={async () => {
+        const query = editorRef.editor.getValue();
         const dupleCheck =
-            datasetNms.find((name) => name.datasetNm == dataset.datasetNm);
+          datasets.find((name) => name.datasetNm == dataset.datasetNm);
 
         if (!query || query == '') { // 쿼리 빈값 확인.
           openModal(Alert, {
@@ -101,52 +114,46 @@ const QueryDataSourceDesignerModal = ({
             message: '중복된 데이터 집합 명입니다. 다시 입력해 주세요.'
           });
         } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
-          getDataByQueryMart(selectedDataSource, query).then((response) => {
-            if (!response.rowData[0].error) {
-              const types = ['int', 'NUMBER', 'decimal'];
-              let tempFields = response.metaData;
+          const response = await getDataByQueryMart(selectedDataSource, query);
+          if (!response.rowData[0].error) {
+            const types = ['int', 'NUMBER', 'decimal'];
+            let tempFields = response.metaData;
 
-              tempFields = tempFields.map((field) => {
-                return {
-                  icon: types.includes(field.columnTypeName) ?
-                    meaImg : dimImg,
-                  parentId: '0',
-                  uniqueName: field.columnName,
-                  name: field.columnName,
-                  type: types.includes(field.columnTypeName) ?
-                    'MEA' : 'DIM',
-                  ...field
-                };
-              });
+            tempFields = tempFields.map((field) => {
+              const type = types.includes(field.columnTypeName);
+              return {
+                icon: type ? meaImg : dimImg,
+                parentId: '0',
+                uniqueName: field.columnName,
+                name: field.columnName,
+                type: type ? 'MEA' : 'DIM',
+                ...field
+              };
+            });
 
-              tempFields.unshift({
-                name: localizedString.defaultDatasetName,
-                type: 'FLD',
-                uniqueName: '0',
-                icon: folderImg
-              });
+            tempFields.unshift({
+              name: localizedString.defaultDatasetName,
+              type: 'FLD',
+              uniqueName: '0',
+              icon: folderImg
+            });
 
-              dispatch(insertDataset({
-                reportId: selectedReportId,
-                dataset: {
-                  ...dataset,
-                  datasetQuery: query,
-                  fields: tempFields
-                }
-              }));
+            dispatch(insertDataset({
+              reportId: selectedReportId,
+              dataset: {
+                ...dataset,
+                datasetQuery: query,
+                fields: tempFields
+              }
+            }));
 
-              props.onClose();
-            } else {
-              openModal(Alert, {
-                message: '쿼리가 적절하지 않습니다.'
-              });
-            }
-          }).catch((error) => {
-            console.log('Error');
-          });
+            return;
+          } else {
+            openModal(Alert, {
+              message: '쿼리가 부적절 합니다. 다시 입력해 주세요.'
+            });
+          }
         }
-
-        return true;
       }}
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
@@ -167,7 +174,7 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
           <ModalPanel
             title={localizedString.dataItem}
-            height='400px'
+            height='390px'
             width='300px'
             padding='10'>
             <TreeList
@@ -178,7 +185,7 @@ const QueryDataSourceDesignerModal = ({
                 visible: true,
                 searchVisibleColumnsOnly: true,
                 highlightSearchText: true,
-                width: '100%'
+                width: '280px'
               }}
               rootValue={-1}
               expandNodesOnFiltering={false}
@@ -190,7 +197,9 @@ const QueryDataSourceDesignerModal = ({
               <Column
                 dataField='ID'
                 width="100%"
-              />
+                calculateDisplayValue={displayCaption}
+              >
+              </Column>
             </TreeList>
           </ModalPanel>
         </ColumnWrapper>
@@ -202,7 +211,9 @@ const QueryDataSourceDesignerModal = ({
             }}
           />
           <ModalPanel title={localizedString.query} height='100%' padding='10'>
-            <QueryEditor editorRef={queryEditorRef}/>
+            <QueryEditor
+              editorRef={queryEditorRef}
+              value={editorRef && editorRef.editor.getValue()}/>
           </ModalPanel>
           <ModalPanel
             title={localizedString.parameter}

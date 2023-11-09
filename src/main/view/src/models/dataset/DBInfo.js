@@ -35,7 +35,7 @@ export const getTablesByMart = async (datasource) => {
 };
 
 export const getDataByQueryMart = async (datasource, query) => {
-  const res = await axios.post(path + '/query-datset-fields', {
+  const res = await axios.post(path + '/query-dataset-fields', {
     dsId: parseInt(datasource.dsId),
     query: query
   });

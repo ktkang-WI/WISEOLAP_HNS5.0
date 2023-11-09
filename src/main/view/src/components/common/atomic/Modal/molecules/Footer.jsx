@@ -16,10 +16,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const Footer = ({
-  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage
+  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, ...props
 }) => {
-  const onConfirm = () => {
-    if (!onSubmit()) {
+  const onConfirm = async () => {
+    if (!await onSubmit()) {
       onClose();
     }
   };
@@ -45,6 +45,11 @@ const Footer = ({
       <CommonButton width="60px" onClick={onClose}>
         {onSubmit? localizedString.cancel : localizedString.confirm}
       </CommonButton>
+      {props.type === 'alert' &&
+        <CommonButton width="60px" onClick={onPrev} visible>
+          {localizedString.previous}
+        </CommonButton>
+      }
     </ButtonWrapper>
   );
 };

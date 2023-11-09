@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
@@ -23,7 +26,8 @@ import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
 public class DatasetService {
-
+	
+  private static Logger log = LoggerFactory.getLogger(DatasetService.class);
   private final DatasetDAO datasetDAO;
   private final MartConfig martConfig;
   private final MartDAO martDAO;
@@ -193,8 +197,11 @@ public class DatasetService {
 	  try {
 		re = martDAO.select(newQuery);
 	} catch (Exception e) {
+		log.warn(e.toString());
+		
 		List<Map<String, Object>> err = new ArrayList<Map<String,Object>>();
-		err.add(Collections.singletonMap("error", "error"));
+		err.add(Collections.singletonMap("error", e.toString()));
+		
 		re.setRowData(err);
 	}
 	  return re;

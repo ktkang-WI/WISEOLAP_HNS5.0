@@ -215,7 +215,7 @@ public class DatasetController {
       }
     )
   )
-  @PostMapping(value = "/query-datset-fields")
+  @PostMapping(value = "/query-dataset-fields")
   public MartResultDTO getValidate(@RequestBody Map<String, String> datasource) {
 	  String query = datasource.get("query");
 	  int dsId = Integer.parseInt(datasource.get("dsId"));
