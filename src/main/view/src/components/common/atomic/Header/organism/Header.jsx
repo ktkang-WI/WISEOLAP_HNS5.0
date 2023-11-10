@@ -77,7 +77,7 @@ const getHeaderItem = (item) => {
         position={item.position}
         breakLine={item.index !== item.length - 1}
       >
-        <Link to={'/olap/'}>
+        <Link to={'/editds/'}>
           <HeaderLogoImage height={item.height}/>
         </Link>
       </HeaderPanel>
