@@ -214,13 +214,13 @@ const generateItem = (item, param) => {
               matrixInfo = result;
 
               const tempResult = makeDataByMatrix();
-              resolve(tempResult.data, {summary: tempResult.summary});
+              resolve(tempResult);
             } else {
               const matrixLoadWaitFunc = setInterval(function() {
                 if (matrixInfo) {
                   try {
                     const result = makeDataByMatrix();
-                    resolve(result.data, {summary: result.summary});
+                    resolve(result);
                     clearInterval(matrixLoadWaitFunc);
                   } catch (e) {
                     clearInterval(matrixLoadWaitFunc);
