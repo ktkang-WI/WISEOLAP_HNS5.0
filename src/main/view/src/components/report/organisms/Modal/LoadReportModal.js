@@ -20,7 +20,7 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 const theme = getTheme();
 
 const LoadReportModal = ({...props}) => {
-  const [selectedReport, setSelectedReport] = useState({});
+  let selectedReport = {};
   const [reportList, setReportList] = useState();
   const {openModal} = useModal();
   const dispatch = useDispatch();
@@ -97,9 +97,9 @@ const LoadReportModal = ({...props}) => {
             const nodes = e.component.getSelectedNodes();
 
             if (nodes.length > 0) {
-              setSelectedReport(nodes[0].itemData);
+              selectedReport = nodes[0].itemData;
             } else {
-              setSelectedReport({});
+              selectedReport = {};
             }
           }}/>
       </PageWrapper>
