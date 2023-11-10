@@ -9,7 +9,7 @@ import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
 
-const contextPath = '/editds';
+const contextPath = '/olap';
 
 const router = createBrowserRouter([
   {

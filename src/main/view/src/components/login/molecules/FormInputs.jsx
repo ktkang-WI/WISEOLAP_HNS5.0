@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import TextButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const StyledForm = styled.form.attrs(() => ({
-  action: 'http://localhost:3000/editds'
+  action: 'http://localhost:3000/olap'
 }))`
   & > .interval > .form-textBtn {
     margin-bottom: 7px;
@@ -75,7 +75,7 @@ const createFormBtn = (contents) => {
   const type = contents.type;
   const btnTexts =
     type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
-  const path = type === 'login' ? '/editds/regist' : '/editds';
+  const path = type === 'login' ? '/olap/regist' : '/olap';
   return btnTexts.map((btnText, index) => {
     if (btnText.linkBtn) {
       return (
@@ -94,7 +94,7 @@ const createFormBtn = (contents) => {
     } else {
       return (
         <Link
-          to={btnText === '로그인' ? '/editds/dashboard' : ''}
+          to={btnText === '로그인' ? '/olap/dashboard' : ''}
           key={index}
         >
           <TextButton

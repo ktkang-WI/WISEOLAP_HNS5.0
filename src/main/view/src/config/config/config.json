@@ -4,5 +4,5 @@
   "useSNBDrawer": true,
   "useRibbonLabel": true,
   "ribbonOnlyIcon": true,
-  "contextRoot": "/editds"
+  "contextRoot": "/olap"
 }

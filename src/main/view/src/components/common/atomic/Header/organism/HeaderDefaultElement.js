@@ -49,7 +49,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.designer,
       'type': 'TextButton',
       'onClick': (e) => {
-        nav('/editds/dashboard');
+        nav('/olap/dashboard');
       }
     },
     'DownloadReport': {
