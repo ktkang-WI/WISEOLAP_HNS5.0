@@ -22,10 +22,10 @@ jobs:
           chmod -R 777 ./
           ./mvnw clean install
       - name: Undeploy Application
-        run: curl -u 'wise:wise1012' "http://3.37.38.145:38080/manager/text/undeploy?path=/olap"
+        run: curl -u 'wise:wise1012' "http://3.37.38.145:38080/manager/text/undeploy?path=/editds"
 
       - name: Deploy Application
         run: |
           cd target
-          mv MarketingPlatForm-0.0.1-SNAPSHOT.war olap.war
-          curl -u 'wise:wise1012' -X PUT --upload-file olap.war "http://3.37.38.145:38080/manager/text/deploy?path=/olap"
+          mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds.war
+          curl -u 'wise:wise1012' -X PUT --upload-file editds.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds"
