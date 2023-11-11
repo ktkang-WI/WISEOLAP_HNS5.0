@@ -16,6 +16,7 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import folderImg from 'assets/image/icon/report/folder_load.png';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 const theme = getTheme();
 
@@ -29,7 +30,7 @@ const LoadReportModal = ({...props}) => {
   const {setItem} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
   const {setDataset} = DatasetSlice.actions;
-
+  const {executeItems} = useQueryExecute();
 
   useEffect(() => {
     models.Report.getList('admin', 'DashAny', 'designer').then((data) => {
@@ -71,6 +72,7 @@ const LoadReportModal = ({...props}) => {
                     reportId: selectedReport.id,
                     dataset: data.dataset
                   }));
+                  executeItems();
                 });
           } else {
             openModal(Alert, {
