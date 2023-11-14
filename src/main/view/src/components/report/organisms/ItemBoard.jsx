@@ -144,7 +144,7 @@ const ItemBoard = () => {
       };
 
       setWeight(modelJson.layout);
-      setMovedLayout(modelJson);
+      setMovedLayout({reportId, layout: modelJson});
       return;
     }
     return action;
@@ -177,7 +177,7 @@ const ItemBoard = () => {
 
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
-      setMovedLayout(model.toJson());
+      setMovedLayout({reportId, layout: model.toJson()});
     }
   };
 
