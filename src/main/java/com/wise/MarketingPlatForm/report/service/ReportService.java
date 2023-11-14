@@ -62,8 +62,8 @@ import com.wise.MarketingPlatForm.report.entity.ReportListEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
-import com.wise.MarketingPlatForm.report.vo.DatasetWrapperVO;
-import com.wise.MarketingPlatForm.report.vo.LayoutWrapperDTO;
+import com.wise.MarketingPlatForm.report.vo.DatasetVO;
+import com.wise.MarketingPlatForm.report.vo.LayoutDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
@@ -132,13 +132,13 @@ public class ReportService {
         
         // layout
         // item
-        LayoutWrapperDTO layoutWrapperDTO = new LayoutWrapperDTO();
+        LayoutDTO layoutWrapperDTO = new LayoutDTO();
         reportMetaDTO.setLayout(layoutWrapperDTO);
         reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
         
         // dataset
         List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-        DatasetWrapperVO datasetWrapper = DatasetWrapperVO.builder()
+        DatasetVO datasetWrapper = DatasetVO.builder()
         		.datasetQuantity(datasetVO.size())
         		.selectedDatasetId(datasetVO.get(0).getDatasetId())
         		.datasets(datasetVO)

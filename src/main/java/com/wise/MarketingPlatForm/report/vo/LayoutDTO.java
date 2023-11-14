@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LayoutWrapperDTO {
+public class LayoutDTO {
 	LayoutConfigVO layoutConfig;
 	int layoutQuantity;
 }

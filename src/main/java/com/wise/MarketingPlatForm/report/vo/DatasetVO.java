@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class DatasetWrapperVO {
+public class DatasetVO {
 	String selectedDatasetId;
 	int datasetQuantity;
 	@Builder.Default

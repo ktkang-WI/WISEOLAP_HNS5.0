@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReportMetaDTO {
-	DatasetWrapperVO dataset;
+	DatasetVO dataset;
 	List<ReportVO> report = new ArrayList<ReportVO>();
-	ItemWrapperVO item;
-	LayoutWrapperDTO layout;
+	ItemVO item;
+	LayoutDTO layout;
 }

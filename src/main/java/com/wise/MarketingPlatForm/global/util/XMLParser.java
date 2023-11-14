@@ -36,7 +36,7 @@ import com.wise.MarketingPlatForm.report.vo.CubeDatasetVO;
 import com.wise.MarketingPlatForm.report.vo.DataGridFieldVO;
 import com.wise.MarketingPlatForm.report.vo.DatasetXmlDTO;
 import com.wise.MarketingPlatForm.report.vo.ItemMetaVO;
-import com.wise.MarketingPlatForm.report.vo.ItemWrapperVO;
+import com.wise.MarketingPlatForm.report.vo.ItemVO;
 import com.wise.MarketingPlatForm.report.vo.ItemsVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
 import com.wise.MarketingPlatForm.report.vo.LayoutTabVO;
@@ -251,7 +251,7 @@ public class XMLParser {
 					}
 					break;
 				case "Items":
-					ItemWrapperVO itemWrapper = itemsParser(node);
+					ItemVO itemWrapper = itemsParser(node);
 					reportMetaDTO.setItem(itemWrapper);
 					break;
 				case "LayoutTree":
@@ -348,7 +348,7 @@ public class XMLParser {
 		return resultLayoutConfigVO;
 	}
 	
-	private ItemWrapperVO itemsParser(Node itemsNode) {
+	private ItemVO itemsParser(Node itemsNode) {
 		NodeList children = itemsNode.getChildNodes();
 		List<ItemsVO> itemsList = new ArrayList<ItemsVO>();
 		
@@ -524,7 +524,7 @@ public class XMLParser {
 			itemsList.add(items);
 		}
 		
-		ItemWrapperVO itemVO = ItemWrapperVO.builder()
+		ItemVO itemVO = ItemVO.builder()
 			.itemQuantity(itemsList.size())
 			.selectedItemId(itemsList.get(0).getId())
 			.items(itemsList)

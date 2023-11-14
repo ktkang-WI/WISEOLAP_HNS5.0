@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ItemWrapperVO {
+public class ItemVO {
 	int itemQuantity;
 	String selectedItemId;
 	@Builder.Default
