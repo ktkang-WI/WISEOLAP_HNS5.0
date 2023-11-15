@@ -58,7 +58,6 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
-import com.wise.MarketingPlatForm.report.entity.ReportListEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
@@ -383,20 +382,10 @@ public class ReportService {
     }
 
     public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
-        List<ReportListEntity> pubEntityList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
+        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
                 editMode.toString());
-        List<ReportListEntity> priEntityList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
+        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
                 editMode.toString());
-
-        List<ReportListDTO> pubList = new ArrayList<>();
-        for (ReportListEntity entity : pubEntityList) {
-            pubList.add(entity.toDTO());
-        }
-
-        List<ReportListDTO> priList = new ArrayList<>();
-        for (ReportListEntity entity : priEntityList) {
-            priList.add(entity.toDTO());
-        }
 
         Map<String, List<ReportListDTO>> result = new HashMap<>();
         result.put("publicReport", pubList);

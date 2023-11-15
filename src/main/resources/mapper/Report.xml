@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wise.MarketingPlatForm.report.dao.ReportDAO">
   <!-- Mapper -->
-  <resultMap id="ReportList" type="com.wise.MarketingPlatForm.report.entity.ReportListEntity">
+  <resultMap id="ReportList" type="com.wise.MarketingPlatForm.report.vo.ReportListDTO">
 		<result column="ID" property="id" javaType="int"/>
     <result column="TEXT" property="name" javaType="String"/>
     <result column="UPPERID" property="upperId" javaType="int"/>
