@@ -27,14 +27,15 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+// import usePopover from 'hooks/usePopover';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
+  // const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
   const {openModal} = useModal();
-
   return {
     'NewReport': {
       id: 'new_report',
@@ -114,10 +115,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': addChart,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': true,
-      'onClick': (e) => {
-        insertFlexLayout(selectedReportId, 'chart');
-      }
+      'useArrowButton': true
     },
     'AddPivotGrid': {
       'id': 'add_pivotGrid',

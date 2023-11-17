@@ -7,6 +7,8 @@ import 'react-resizable/css/styles.css';
 import store from 'redux/modules';
 import {Provider} from 'react-redux';
 import Modals from 'components/common/atomic/Modal/organisms/Modals';
+// import PopoverComp from 'components/common/atomic/Popover/organism/Popover';
+import Popover2 from 'components/common/atomic/Popover/organism/Popover2';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -14,6 +16,8 @@ root.render(
     <Provider store={store}>
       <App />
       <Modals/>
+      {/* <PopoverComp/> */}
+      <Popover2/>
     </Provider>
 );
 

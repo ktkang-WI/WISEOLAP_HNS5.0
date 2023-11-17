@@ -1,14 +1,11 @@
-import {useState, useEffect} from 'react'; // Import useEffect
+import {useState, useEffect, useRef} from 'react'; // Import useEffect
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import RibbonButton from '../../Common/Button/RibbonButton';
-import ribbonDefaultElement from './RibbonDefaultElement';
-import RibbonPanel from '../../Common/Panel/RibbonPanel';
-import OnlyImageButton from '../../Common/Button/OnlyImageButton';
-import arrowLeft from '../../../../../assets/image/icon/button/arrow_left.png';
-import arrowRight
-  from '../../../../../assets/image/icon/button/arrow_right.png';
-import CommonButton from '../../Common/Button/CommonButton';
+// import arrowLeft
+// from '../../../../../assets/image/icon/button/arrow_left.png';
+// import arrowRight
+//   from '../../../../../assets/image/icon/button/arrow_right.png';
+import CreateRibbonBtns from '../molecules/CreateRibbonBtns';
 
 const theme = getTheme();
 
@@ -187,95 +184,34 @@ const CustomButtonWrapper = styled.div`
     @media screen and (max-width: 1280px) {
       display: none;
     }
-    
+
   }
 `;
 
-const NavigationButton = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  @media screen and (max-width: 1280px) {
-    display: none;
-  }
-`;
+// const NavigationButton = styled.div`
+//   width: 40px;
+//   height: 40px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   cursor: pointer;
+//   @media screen and (max-width: 1280px) {
+//     display: none;
+//   }
+// `;
 
-const Image = styled.img`
-  height: 24px;
-  width: auto;
-`;
-
-
-const getRibbonItem = (item) => {
-  if (item.type === 'RibbonButton') {
-    return (
-      <RibbonPanel key={item.id} position={item.position}>
-        <RibbonButton
-          buttonKeyId={item.id}
-          label={item.label}
-          imgSrc={item.imgSrc}
-          title={item.title}
-          width={item.width}
-          height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
-          useArrowButton={item.useArrowButton}
-          onClick={item.onClick}
-        />
-      </RibbonPanel>
-    );
-  } else if (item.type === 'OnlyImageButton') {
-    return (
-      <RibbonPanel key={item.id} position={item.position}>
-        <OnlyImageButton
-          label={item.label}
-          imgSrc={item.imgSrc}
-          title={item.title}
-          width={item.width}
-          height={item.height}
-          onClick={item.onClick}
-        />
-      </RibbonPanel>
-    );
-  } else if (item.type === 'CommonButton') {
-    return (
-      <RibbonPanel key={item.id} position={item.position}>
-        <CommonButton
-          label={item.label}
-          title={item.title}
-          width={item.width}
-          height={item.height}
-          onClick={item.onClick}
-        >
-          {item.label}
-        </CommonButton>
-      </RibbonPanel>
-    );
-  }
-};
-
-const itemIterator = (ribbonDefaultItems, items, position) => {
-  if (!items) return;
-
-  const itemArr = [...items];
-
-  return itemArr.map((item) => {
-    if (typeof item === 'string') {
-      return getRibbonItem({...ribbonDefaultItems[item], position});
-    } else if (item) {
-      return getRibbonItem({...item, position});
-    }
-  });
-};
+// const Image = styled.img`
+//   height: 24px;
+//   width: auto;
+// `;
 
 const Ribbon = ({left, middle, right, customMenu,
   querySearch}) => {
-  const ribbonDefaultItems = ribbonDefaultElement();
+  const btnRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [visibleRange, setVisibleRange] =
-    useState({start: 0, end: 5}); // Initial visible range
-  const totalNum = customMenu.length;
+  // const [visibleRange, setVisibleRange] =
+  //   useState({start: 0, end: 5}); // Initial visible range
+  // const totalNum = customMenu.length;
 
   useEffect(() => {
     const handleResize = () => {
@@ -288,67 +224,66 @@ const Ribbon = ({left, middle, right, customMenu,
     };
   }, []);
 
-  const handlePrevButtonClick = () => {
-    setVisibleRange((prevRange) => {
-      const newStart = Math.max(prevRange.start - 1, 0);
-      const newEnd = Math.max(prevRange.end - 1, newStart + 5);
-      return {
-        start: newStart,
-        end: newEnd
-      };
-    });
-  };
+  // const handlePrevButtonClick = () => {
+  //   setVisibleRange((prevRange) => {
+  //     const newStart = Math.max(prevRange.start - 1, 0);
+  //     const newEnd = Math.max(prevRange.end - 1, newStart + 5);
+  //     return {
+  //       start: newStart,
+  //       end: newEnd
+  //     };
+  //   });
+  // };
 
-  const handleNextButtonClick = () => {
-    setVisibleRange((prevRange) => {
-      const newEnd = Math.min(prevRange.end + 1, totalNum);
-      const newStart = Math.min(prevRange.start + 1, newEnd - 5);
-      return {
-        start: newStart,
-        end: newEnd
-      };
-    });
-  };
+  // const handleNextButtonClick = () => {
+  //   setVisibleRange((prevRange) => {
+  //     const newEnd = Math.min(prevRange.end + 1, totalNum);
+  //     const newStart = Math.min(prevRange.start + 1, newEnd - 5);
+  //     return {
+  //       start: newStart,
+  //       end: newEnd
+  //     };
+  //   });
+  // };
 
   return (
     <StyledRibbon>
       <Left>
-        {itemIterator(ribbonDefaultItems, left, 'left')}
+        <CreateRibbonBtns items={left} loaction={'left'} btnRef={btnRef}/>
       </Left>
       <Middle>
-        {itemIterator(ribbonDefaultItems, middle, 'middle')}
+        <CreateRibbonBtns items={middle} loaction={'middle'} btnRef={btnRef}/>
       </Middle>
       <Right>
-        {itemIterator(ribbonDefaultItems, right, 'right')}
+        <CreateRibbonBtns items={right} loaction={'right'} btnRef={btnRef}/>
       </Right>
       {screenWidth <= 1700 && (
         <CustomButtonWrapper>
-          <NavigationButton onClick={handlePrevButtonClick}>
+          {/* <NavigationButton onClick={handlePrevButtonClick}>
             <Image
               src={arrowLeft}
             />
-          </NavigationButton>
+          </NavigationButton> */}
           <CustomMenuForWrapper>
-            {itemIterator(
-                ribbonDefaultItems,
-                customMenu.slice(visibleRange.start, visibleRange.end),
-                'customMenu'
-            )}
+            <CreateRibbonBtns
+              items={customMenu}
+              loaction={'customMenu'}
+            />
           </CustomMenuForWrapper>
-          <NavigationButton onClick={handleNextButtonClick}>
+          {/* <NavigationButton onClick={handleNextButtonClick}>
             <Image
               src={arrowRight}
             />
-          </NavigationButton>
+          </NavigationButton> */}
         </CustomButtonWrapper>
       )}
       {screenWidth > 1700 && (
         <CustomMenu>
-          {itemIterator(ribbonDefaultItems, customMenu, 'customMenu')}
+          <CreateRibbonBtns items={customMenu} loaction={'customMenu'}/>
         </CustomMenu>
       )}
       <QuerySearch>
-        {itemIterator(ribbonDefaultItems, querySearch, 'querySearch')}
+        <CreateRibbonBtns items={querySearch} loaction={'querySearch'}/>
       </QuerySearch>
     </StyledRibbon>
   );

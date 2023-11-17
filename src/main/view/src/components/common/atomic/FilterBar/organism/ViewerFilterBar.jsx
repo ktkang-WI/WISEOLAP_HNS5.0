@@ -5,7 +5,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import FilterBarWrapper
   from 'components/common/atomic/Common/Wrap/FilterBarWrapper';
 import RibbonDefaultElement
-  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
+  from 'components/common/atomic/Ribbon/molecules/RibbonDefaultElement';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
 
