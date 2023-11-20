@@ -110,5 +110,11 @@
   "columnPlaceholder": "New Column",
   "fieldPlaceholder": "New Field",
   "sparkline": "Spark Line",
-  "sparklinePlaceholder": "new Spark Line"
+  "sparklinePlaceholder": "New Spark Line",
+  "reportName": "Report Name",
+  "reportSubTitle": "Report Sub Title",
+  "annotation": "Annotation",
+  "displayOrder": "Display Order",
+  "selectFolder": "Select Folder",
+  "folderList": "Folder List"
 }

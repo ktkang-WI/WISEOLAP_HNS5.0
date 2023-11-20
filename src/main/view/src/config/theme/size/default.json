@@ -12,5 +12,7 @@
     "middleModalHeight" : "70vh",
     "middleModalWidth" : "50vw",
     "bigModalHeight" : "90%",
-    "bigModalWidth" : "70%"
+    "bigModalWidth" : "70%",
+    "labelTextBoxHeight" : "36px",
+    "labelTextAreaHeight" : "80px"
 }
