@@ -73,6 +73,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
   const getNewParamInfo = () => {
     const newParamInfo = paramInfo.map((info) => {
       if (selectedParam.name == info.name) {
+        return selectedParam;
       }
       return info;
     });
