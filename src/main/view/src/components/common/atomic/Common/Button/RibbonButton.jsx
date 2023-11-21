@@ -113,7 +113,7 @@ const RibbonButton = ({
         width={width}
         height={height}
         hoveranimation={hoveredImgSrc? '' : 'true'}
-        onClick={onClick}
+        onClick={() => onClick(ref)}
         onMouseOver={hoveredImgSrc? onMouseOver : null}
         onMouseOut={hoveredImgSrc? onMouseOut : null}
         {...props}

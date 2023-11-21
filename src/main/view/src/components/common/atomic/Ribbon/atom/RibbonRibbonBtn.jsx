@@ -3,7 +3,7 @@ import RibbonButton from '../../Common/Button/RibbonButton';
 import RibbonPanel from '../../Common/Panel/RibbonPanel';
 
 const theme = getTheme();
-const RibbonBtn = ({item, onClick, ref}) => {
+const RibbonRibbonBtn = ({item}) => {
   return (
     <RibbonPanel id={item.id} key={item.id} position={item.position}>
       <RibbonButton
@@ -14,10 +14,9 @@ const RibbonBtn = ({item, onClick, ref}) => {
         width={item.width}
         height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
         useArrowButton={item.useArrowButton}
-        onClick={item.onClick? item.onClick : onClick}
-        ref={ref}
+        onClick={item.onClick}
       />
     </RibbonPanel>
   );
 };
-export default RibbonBtn;
+export default RibbonRibbonBtn;

@@ -1,10 +1,5 @@
-import {useState, useEffect, useRef} from 'react'; // Import useEffect
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-// import arrowLeft
-// from '../../../../../assets/image/icon/button/arrow_left.png';
-// import arrowRight
-//   from '../../../../../assets/image/icon/button/arrow_right.png';
 import CreateRibbonBtns from '../molecules/CreateRibbonBtns';
 
 const theme = getTheme();
@@ -18,273 +13,87 @@ const StyledRibbon = styled.div`
   padding-left: ${theme.size.snbWidth};
 `;
 
-const Left = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: left;
-  display: flex;
-  margin-left: 10px;
-  margin-right: 8px;
-  position: relative;
+// const CustomButtonWrapper = styled.div`
+//   display: none; /* Hide by default */
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px; /* Adjust this value to match the margin-right */
-    height: 100%;
-    width: 1px; /* Width of the border */
-    background-color: ${theme.color.breakLine};
-  }
-`;
-
-const Middle = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: left;
-  display: flex;
-  margin-left: 8px;
-  margin-right: 8px;
-  position: relative;
-  @media screen and (max-width: 720px) {
-      display: none;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px; /* Adjust this value to match the margin-right */
-    height: 100%;
-    width: 1px; /* Width of the border */
-    background-color: ${theme.color.breakLine};
-  }
-`;
-
-const Right = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: left;
-  display: flex;
-  margin-left: 8px;
-  margin-right: 8px;
-  position: relative;
-  @media screen and (max-width: 900px) {
-      display: none;
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px; /* Adjust this value to match the margin-right */
-    height: 100%;
-    width: 1px; /* Width of the border */
-    background-color: ${theme.color.breakLine};
-      }
-`;
-
-const QuerySearch = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: right;
-  display: flex;
-  margin-right: 20px;
-  position: relative; /* Ensure relative positioning for ::before */
-  
-  &::before {
-    content: ''; /* Create the ::before pseudo-element */
-    position: absolute;
-    top: 0;
-    left: -20px; /* Adjust this value for the border width */
-    height: 100%;
-    width: 1px; /* Width of the border */
-    background-color: ${theme.color.breakLine};
-  }
-    
-`;
-
-const CustomMenu = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: left;
-  display: flex;
-  margin-left: 8px;
-  margin-right: 8px;
-  position: relative;
-  @media screen and (max-width: 1200px) {
-      display: none;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px; /* Adjust this value to match the margin-right */
-    height: 100%;
-    width: 1px; /* Width of the border */
-    background-color: ${theme.color.breakLine};
-  }
-`;
-
-const CustomMenuForWrapper = styled.div`
-  width: auto;
-  height: 100%;
-  text-align: left;
-  float: left;
-  display: flex;
-  margin-left: 8px;
-  margin-right: 8px;
-  position: relative;
-  @media screen and (max-width: 1280px) {
-      display: none;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px; /* Adjust this value to match the margin-right */
-    height: 100%;
-    background-color: ${theme.color.breakLine};
-  }
-`;
-
-const CustomButtonWrapper = styled.div`
-  display: none; /* Hide by default */
-
-  @media screen and (min-width: 1280px) {
-    display: none;
-  }
-
-  @media screen and (max-width: 1700px) {
-    width: auto;
-    height: 100%;
-    text-align: left;
-    float: left;
-    display: flex;
-    margin-left: 8px;
-    margin-right: 8px;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -8px; /* Adjust this value to match the margin-right */
-      height: 100%;
-      width: 1px; /* Width of the border */
-      background-color: ${theme.color.breakLine};
-    }
-
-    @media screen and (max-width: 1280px) {
-      display: none;
-    }
-
-  }
-`;
-
-// const NavigationButton = styled.div`
-//   width: 40px;
-//   height: 40px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   cursor: pointer;
-//   @media screen and (max-width: 1280px) {
+//   @media screen and (min-width: 1280px) {
 //     display: none;
+//   }
+
+//   @media screen and (max-width: 1700px) {
+//     width: auto;
+//     height: 100%;
+//     text-align: left;
+//     float: left;
+//     display: flex;
+//     margin-left: 8px;
+//     margin-right: 8px;
+//     position: relative;
+
+//     &::before {
+//       content: '';
+//       position: absolute;
+//       top: 0;
+//       right: -8px; /* Adjust this value to match the margin-right */
+//       height: 100%;
+//       width: 1px; /* Width of the border */
+//       background-color: ${theme.color.breakLine};
+//     }
+
+//     @media screen and (max-width: 1280px) {
+//       display: none;
+//     }
+
 //   }
 // `;
 
-// const Image = styled.img`
-//   height: 24px;
-//   width: auto;
-// `;
-
-const Ribbon = ({left, middle, right, customMenu,
-  querySearch}) => {
-  const btnRef = useRef(null);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  // const [visibleRange, setVisibleRange] =
-  //   useState({start: 0, end: 5}); // Initial visible range
-  // const totalNum = customMenu.length;
-
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // const handlePrevButtonClick = () => {
-  //   setVisibleRange((prevRange) => {
-  //     const newStart = Math.max(prevRange.start - 1, 0);
-  //     const newEnd = Math.max(prevRange.end - 1, newStart + 5);
-  //     return {
-  //       start: newStart,
-  //       end: newEnd
-  //     };
-  //   });
-  // };
-
-  // const handleNextButtonClick = () => {
-  //   setVisibleRange((prevRange) => {
-  //     const newEnd = Math.min(prevRange.end + 1, totalNum);
-  //     const newStart = Math.min(prevRange.start + 1, newEnd - 5);
-  //     return {
-  //       start: newStart,
-  //       end: newEnd
-  //     };
-  //   });
-  // };
-
+const Ribbon = () => {
   return (
     <StyledRibbon>
-      <Left>
-        <CreateRibbonBtns items={left} loaction={'left'} btnRef={btnRef}/>
-      </Left>
-      <Middle>
-        <CreateRibbonBtns items={middle} loaction={'middle'} btnRef={btnRef}/>
-      </Middle>
-      <Right>
-        <CreateRibbonBtns items={right} loaction={'right'} btnRef={btnRef}/>
-      </Right>
-      {screenWidth <= 1700 && (
-        <CustomButtonWrapper>
-          {/* <NavigationButton onClick={handlePrevButtonClick}>
-            <Image
-              src={arrowLeft}
-            />
-          </NavigationButton> */}
-          <CustomMenuForWrapper>
-            <CreateRibbonBtns
-              items={customMenu}
-              loaction={'customMenu'}
-            />
-          </CustomMenuForWrapper>
-          {/* <NavigationButton onClick={handleNextButtonClick}>
-            <Image
-              src={arrowRight}
-            />
-          </NavigationButton> */}
-        </CustomButtonWrapper>
-      )}
-      {screenWidth > 1700 && (
-        <CustomMenu>
-          <CreateRibbonBtns items={customMenu} loaction={'customMenu'}/>
-        </CustomMenu>
-      )}
-      <QuerySearch>
-        <CreateRibbonBtns items={querySearch} loaction={'querySearch'}/>
-      </QuerySearch>
+      <CreateRibbonBtns
+        items={[
+          'NewReport',
+          'LoadReport',
+          'SaveReport',
+          'DeleteReport',
+          'DownloadReport',
+          'ConnectReport'
+        ]}
+        loaction={'reportManagement'}/>
+      <CreateRibbonBtns
+        items={[
+          'NewReport',
+          'LoadReport',
+          'SaveReport',
+          'DeleteReport',
+          'DownloadReport',
+          'ConnectReport'
+        ]}
+        loaction={'chartManagement'}/>
+      {/* <CustomButtonWrapper> */}
+      {/* 필요시 화살표 버튼 추가(prev) */}
+      <CreateRibbonBtns
+        items={[
+          'CaptionView',
+          'NameEdit',
+          'Rotate',
+          'XAxisSetting',
+          'YAxisSetting',
+          'ExtraAxisSetting',
+          'ShowColorLegend',
+          'SeriesType',
+          'Palette',
+          'ColorEdit',
+          'PointLabel'
+        ]}
+        loaction={'itemOptionsManagement'}/>
+      {/* 필요시 화살표 버튼 추가(next) */}
+      {/* </CustomButtonWrapper> */}
+      <CreateRibbonBtns
+        items={[
+          'QuerySearch'
+        ]}
+        loaction={'querySearch'}/>
     </StyledRibbon>
   );
 };

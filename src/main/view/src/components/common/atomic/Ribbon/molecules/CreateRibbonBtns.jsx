@@ -1,30 +1,25 @@
-import Popover2 from '../../Popover/organism/Popover2';
-import RibbonBtn from '../atom/RibbonButton';
+import Popover2 from '../../Popover/organism/Popover';
+import RibbonRibbonBtn from '../atom/RibbonRibbonBtn';
 import RibbonCommonBtn from '../atom/RibbonCommonBtn';
 import RibbonOnlyImageBtn from '../atom/RibbonOnlyImageBtn';
-import ribbonDefaultElement from './RibbonDefaultElement';
+import ribbonDefaultElement from '../organism/RibbonDefaultElement';
+import RibbonBtnWrap from '../atom/RibbonBtnWrap';
 
 const CreateRibbonBtns = ({items, loaction}) => {
-  const onClick = (self) => {
-    console.log('test');
-    console.log(self);
-  };
-
   const getRibbonItem = (item) => {
-    if (item.type === 'RibbonButton' && item.useArrowButton == false) {
-      return (
-        <RibbonBtn item={item}/>
-      );
-    } else if (item.type === 'RibbonButton' &&
-      (item.useArrowButton == true || item.id === 'connect_report')) {
-      return (
-        <div>
-          <RibbonBtn onClick={onClick(self)} item={item}/>
-          <Popover2
-            id={item.id}
-          />
-        </div>
-      );
+    if (item.type === 'RibbonButton') {
+      if (item.useArrowButton == true || item.id === 'connect_report') {
+        return (
+          <div>
+            <RibbonRibbonBtn item={item}/>
+            <Popover2/>
+          </div>
+        );
+      } else {
+        return (
+          <RibbonRibbonBtn item={item}/>
+        );
+      }
     } else if (item.type === 'OnlyImageButton') {
       return (<RibbonOnlyImageBtn item={item}/>);
     } else if (item.type === 'CommonButton') {
@@ -49,7 +44,9 @@ const CreateRibbonBtns = ({items, loaction}) => {
 
   const ribbonDefaultItems = ribbonDefaultElement();
   return (
-    itemIterator(ribbonDefaultItems, items, loaction)
+    <RibbonBtnWrap loaction={loaction}>
+      {itemIterator(ribbonDefaultItems, items, loaction)}
+    </RibbonBtnWrap>
   );
 };
 export default CreateRibbonBtns;
