@@ -46,7 +46,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
   const selectedReportId = useSelector(selectCurrentReportId);
   const userId = 'admin';
 
-  const {openModal} = useModal();
+  const {alert} = useModal();
   const dispatch = useDispatch();
   const {insertDataset} = DatasetSlice.actions;
 
@@ -94,9 +94,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                 }));
               });
         } else {
-          openModal(Alert, {
-            message: '주제영역을 선택하지 않았습니다.'
-          });
+          alert('주제영역을 선택하지 않았습니다.');
           return true;
         }
       }}

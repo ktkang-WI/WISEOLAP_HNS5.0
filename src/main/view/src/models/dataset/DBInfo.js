@@ -16,10 +16,9 @@ export const dbTables = async (dsId, search) => {
   return res.data;
 };
 
-export const dbColumns = async (dsId, search, table) => {
+export const dbColumns = async (dsId, table, search) => {
   const res = await axios.post(path + '/db-columns', {
     dsId: dsId,
-    search: search,
     table: table
   });
 

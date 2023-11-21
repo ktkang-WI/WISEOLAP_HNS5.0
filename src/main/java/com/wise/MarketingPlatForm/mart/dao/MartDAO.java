@@ -11,25 +11,25 @@ import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 
 @Repository
 public class MartDAO {
-	
-	@Resource(name="martTemplates")
-	MartSqlSession martSqlSession;
-	
-	public MartResultDTO select(String query){
-		List<MartResultDTO> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
-		
-		return (MartResultDTO) result.get(0);
-	}
-	
-	public MartResultDTO selectQueryDataTbl(Map<String, String> param){
-		MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataTbl", param);
-		
-		return result;
-	}
 
-	public MartResultDTO selectQueryDataCol(Map<String, String> param) {
-		MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataCol", param);
-		
-		return result;
-	}
+    @Resource(name = "martTemplates")
+    MartSqlSession martSqlSession;
+
+    public MartResultDTO select(String query) {
+        List<MartResultDTO> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
+
+        return (MartResultDTO) result.get(0);
+    }
+
+    public MartResultDTO selectQueryDataTbl(Map<String, String> param) {
+        MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataTbl", param);
+
+        return result;
+    }
+
+    public MartResultDTO selectQueryDataCol(Map<String, String> param) {
+        MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataCol", param);
+
+        return result;
+    }
 }

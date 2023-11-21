@@ -63,7 +63,6 @@ public class DatasetController {
     description = "지정한 DS_ID에 해당하는 데이터베이스의 테이블 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
   @Parameters({
     @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
-    @Parameter(name = "search", description = "필터링 할 키워드(선택)", example = "")
   })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
     content = @Content(
@@ -73,11 +72,10 @@ public class DatasetController {
     )
   )
   @PostMapping(value = "/db-tables")
-  public List<DbTableVO> getDBTables(@RequestBody Map<String, String> param) {
+  public List<Map<String, Object>> getDBTables(@RequestBody Map<String, String> param) {
     String dsId = param.getOrDefault("dsId", "");
-    String search = param.getOrDefault("search", "");
 
-    return datasetService.getDBTables(dsId, search);
+    return datasetService.getDBTables(dsId);
   }
 
   @Operation(
@@ -86,7 +84,6 @@ public class DatasetController {
   @Parameters({
     @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
     @Parameter(name = "table", description = "테이블 명", example = "TEST", required = true),
-    @Parameter(name = "search", description = "필터링 할 키워드(선택)", example = "")
   })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
     content = @Content(
@@ -96,12 +93,11 @@ public class DatasetController {
     )
   )
   @PostMapping(value = "/db-columns")
-  public List<DbColumnVO> getDBColumns(@RequestBody Map<String, String> param) {
+  public List<Map<String, Object>> getDBColumns(@RequestBody Map<String, String> param) {
     String dsId = param.getOrDefault("dsId", "");
     String table = param.getOrDefault("table", "");
-    String search = param.getOrDefault("search", "");
 
-    return datasetService.getDBColumns(dsId, table, search);
+    return datasetService.getDBColumns(dsId, table);
   }
 
   @Operation(

@@ -10,6 +10,8 @@
     "filterHeight": "26px",
     "itemHeaderHeight": "50px",
     "middleModalHeight" : "70vh",
+    "smalleModalHeight" : "70vh",
+    "smallModalWidth" : "500px",
     "middleModalWidth" : "50vw",
     "bigModalHeight" : "90%",
     "bigModalWidth" : "70%"
