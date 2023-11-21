@@ -62,12 +62,11 @@ const Ribbon = () => {
         loaction={'reportManagement'}/>
       <CreateRibbonBtns
         items={[
-          'NewReport',
-          'LoadReport',
-          'SaveReport',
-          'DeleteReport',
-          'DownloadReport',
-          'ConnectReport'
+          'AddContainer',
+          'AddChart',
+          'AddPivotGrid',
+          'AddGrid',
+          'AddCustomChart'
         ]}
         loaction={'chartManagement'}/>
       {/* <CustomButtonWrapper> */}
