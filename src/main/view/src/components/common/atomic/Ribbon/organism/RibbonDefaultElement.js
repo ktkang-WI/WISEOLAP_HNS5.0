@@ -27,7 +27,7 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
-import SaveReportModal from 'components/report/organisms/Modal/SaveReportModal';
+import ReportSaveModal from 'components/report/organisms/Modal/ReportSaveModal';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -67,7 +67,7 @@ const RibbonDefaultElement = () => {
       'height': '45px',
       'useArrowButton': true,
       'onClick': () => {
-        openModal(SaveReportModal);
+        openModal(ReportSaveModal);
       }
     },
     'DeleteReport': {

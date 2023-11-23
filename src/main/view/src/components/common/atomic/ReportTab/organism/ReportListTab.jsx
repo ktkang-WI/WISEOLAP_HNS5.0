@@ -24,13 +24,12 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = (props) => {
+const ReportListTab = ({width, ...props}) => {
   return (
     <Wrapper
-      width={props.width}
+      width={width}
     >
       <StyledTreeView
-        items={props.items}
         dataStructure="plain"
         displayExpr="name"
         parentIdExpr="categoryId"
@@ -41,6 +40,7 @@ const ReportListTab = (props) => {
           placeholder: '검색'
         }}
         focusStateEnabled={true}
+        {...props}
       />
     </Wrapper>
   );
