@@ -6,6 +6,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 import lombok.Builder;
@@ -22,4 +23,5 @@ public class DataAggregation {
     ItemType itemType;
     Dataset dataset;
     PagingOption pagingOption;
+    List<Parameter> parameters;
 }

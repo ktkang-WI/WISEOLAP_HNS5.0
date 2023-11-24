@@ -88,7 +88,125 @@ const sanitizeParamInformation = (param) => {
   return info;
 };
 
+/**
+ * 입력한 쿼리에서 매개변수의 이름을 배열로 추출합니다.
+ * @param {string} query
+ * @return {Array} names를 담은 배열
+ */
+const getParameterNamesInQuery = (query) => {
+  return query.match(/@[^()\s]+/g);
+};
+
+/**
+ * 문자열로 된 날짜를 Date로 바꿔 반환합니다.
+ * @param {string} str 날짜 문자열
+ * @param {string} format 포맷
+ * @return {Date}
+ */
+const parseDateFromString = (str, format) => {
+  switch (format) {
+    case 'yyyy':
+    case 'yyyy-MM':
+    case 'yyyy-MM-dd':
+      return new Date(str);
+    case 'yyyy':
+    case 'yyyyMM':
+    case 'yyyyMMdd':
+      const year = str.substring(0, 4);
+      const month = str.length > 4 ? str.substring(4, 6) : '';
+      const day = str.length > 6 ? str.substring(6, 8) : '1';
+
+      return new Date(year, Number(month) - 1, day);
+  }
+};
+
+/**
+ * Date 객체를 문자열로 바꿔 반환합니다.
+ * @param {Date} date 날짜
+ * @param {string} format 포맷
+ * @return {string}
+ */
+const parseStringFromDate = (date, format) => {
+  let str = format;
+
+  str = str.replace('yyyy', date.getFullYear());
+  str = str.replace('MM', (date.getMonth() + 1).toString().padStart(2, '0'));
+  str = str.replace('dd', date.getDate().toString().padStart(2, '0'));
+
+  return str;
+};
+
+/**
+ * 쿼리 실행에 필요한 Request Body 생성
+ * @param {*} parameters 매개변수 목록
+ * @return {string} parameter
+ */
+const generateParameterForQueryExecute = (parameters) => {
+  const parameter = parameters.informations.map((p) => {
+    let values = [];
+
+    if (parameters.values[p.name]) {
+      values = parameters.values[p.name].value;
+    } else {
+      values = [];
+    }
+
+    if (values.length == 0 &&
+      p.paramType == 'CALENDAR' && p.calendarDefaultType == 'NOW') {
+      p.calendarPeriodBase.map((base, i) => {
+        const value = p.calendarPeriodValue[i];
+        const date = getCalendarNowDefaultValue(base, value);
+        // TODO: 달력 필터 기본값 만들기
+        values.push(
+            parseStringFromDate(date, p.calendarKeyFormat)
+        );
+      });
+    }
+
+    return {
+      name: p.name,
+      values: values,
+      exceptionValue: p.exceptionValue,
+      dataType: p.dataType,
+      operation: p.operation,
+      dsType: p.dsType,
+      dsId: p.dsId
+    };
+  });
+
+  return parameter;
+};
+
+/**
+ * 달력 매개변수 현재 기준 기본값 계산
+ * @param {*} base 기본값 기준
+ * @param {*} value 이동값
+ * @return {Date} 계산값
+ */
+const getCalendarNowDefaultValue = (base, value) => {
+  let date = new Date();
+  if (base == 'YEAR') {
+    const year = date.getFullYear() + Number(value);
+    date = new Date(year, date.getMonth(), date.getDate());
+  }
+  if (base == 'MONTH') {
+    const month = date.getMonth() + Number(value);
+    date = new Date(date.getFullYear(), month, date.getDate());
+  }
+  if (base == 'DATE') {
+    const day = date.getDate() + Number(value);
+    date = new Date(date.getFullYear(), date.getMonth(), day);
+  }
+
+  return date;
+};
+
 export default {
   newParamInformation,
-  sanitizeParamInformation
+  sanitizeParamInformation,
+  getParameterNamesInQuery,
+  parseDateFromString,
+  parseStringFromDate,
+  generateParameterForQueryExecute,
+  getCalendarNowDefaultValue
 };

@@ -4,7 +4,7 @@ const initialState = {
   0: {
     informations: [],
     values: {},
-    filterSearchComplete: 0
+    filterSearchComplete: []
   }
 };
 
@@ -15,7 +15,8 @@ const reducers = {
     const informations = actions.payload.informations;
 
     state[reportId].informations = informations;
-    state[reportId].filterSearchComplete = 0;
+    state[reportId].values = {};
+    state[reportId].filterSearchComplete = [];
   },
   // 파라미터로 reportId, values
   setParameterValues(state, actions) {
@@ -28,12 +29,14 @@ const reducers = {
     state[actions.payload] = {
       informations: [],
       values: {},
-      filterSearchComplete: 0
+      filterSearchComplete: []
     };
   },
   filterSearchComplete(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].filterSearchComplete++;
+    const filterId = actions.payload.id;
+    state[reportId].filterSearchComplete =
+        state[reportId].filterSearchComplete.concat([filterId]);
   }
 };
 

@@ -7,23 +7,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
+import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
+import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResultVO;
+import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO.LinkageValue;
+import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.util.ListParameterUtils;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
-import com.wise.MarketingPlatForm.dataset.type.DsType;
-import com.wise.MarketingPlatForm.dataset.vo.DbColumnVO;
-import com.wise.MarketingPlatForm.dataset.vo.DbTableVO;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
+import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
 
 @Service
 public class DatasetService {
@@ -236,7 +239,7 @@ public class DatasetService {
         return tbl_Col;
     }
 
-    public MartResultDTO getQueryData(int dsId, String query) {
+    public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters) {
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
 
         DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
@@ -255,6 +258,9 @@ public class DatasetService {
 
         martConfig.setMartDataSource(dsMstrDTO);
 
+        SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
+        query = queryGenerator.applyParameter(parameters, query);
+        
         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
         MartResultDTO re = new MartResultDTO();
 
@@ -278,5 +284,101 @@ public class DatasetService {
             sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
         }
         return sql;
+    }
+
+    public ListParameterResultVO getListParameterItems(ListParameterDTO listParameterDTO) {
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(listParameterDTO.getDsId());
+
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                .dsId(dsInfoEntity.getDsId())
+                .dsNm(dsInfoEntity.getDsNm())
+                .ip(dsInfoEntity.getIp())
+                .port(dsInfoEntity.getPort())
+                .password(dsInfoEntity.getPassword())
+                .dbNm(dsInfoEntity.getDbNm())
+                .ownerNm(dsInfoEntity.getOwnerNm())
+                .userId(dsInfoEntity.getUserId())
+                .userAreaYn(dsInfoEntity.getUserAreaYn())
+                .dsDesc(dsInfoEntity.getDsDesc())
+                .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                .build();
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = "";
+
+        // 리스트 조회
+        if ("TABLE".equals(listParameterDTO.getDataSourceType())) {
+            query = "SELECT " + listParameterDTO.getItemKey() + ", " + listParameterDTO.getItemCaption() +
+                    (StringUtil.isBlank(listParameterDTO.getSortBy()) ? ", " + listParameterDTO.getSortBy() : "") +
+                    " FROM " + listParameterDTO.getDataSource();
+        } else {
+            query = listParameterDTO.getDataSource();
+            query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);
+        }
+
+        MartResultDTO result = martDAO.select(query);
+        List<Map<String, Object>> listItems = ListParameterUtils.sanitize(result.getRowData(), listParameterDTO);
+
+        List<String> defaultValue = listParameterDTO.getDefaultValue();
+
+        if (listParameterDTO.isDefaultValueUseSql()) {
+            defaultValue = getDefaultValues(listParameterDTO.getDsId(), listParameterDTO.getDefaultValue());
+        }
+
+        return new ListParameterResultVO(defaultValue, listItems);
+    }
+
+    public List<String> getDefaultValues(int dsId, List<String> queries) {
+        List<String> defaultValues = new ArrayList<String>();
+
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                .dsId(dsInfoEntity.getDsId())
+                .dsNm(dsInfoEntity.getDsNm())
+                .ip(dsInfoEntity.getIp())
+                .port(dsInfoEntity.getPort())
+                .password(dsInfoEntity.getPassword())
+                .dbNm(dsInfoEntity.getDbNm())
+                .ownerNm(dsInfoEntity.getOwnerNm())
+                .userId(dsInfoEntity.getUserId())
+                .userAreaYn(dsInfoEntity.getUserAreaYn())
+                .dsDesc(dsInfoEntity.getDsDesc())
+                .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                .build();
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        for (String query : queries) {
+            if (StringUtil.isBlank(query)) {
+                defaultValues.add("");
+                continue;
+            }
+            MartResultDTO result = martDAO.select(query);
+            List<Map<String, Object>> data = result.getRowData();
+
+            if (data.size() == 0) {
+                defaultValues.add("");
+            } else {
+                StringBuilder sb = new StringBuilder("");
+                String key = "";
+                for (String k : data.get(0).keySet()) {
+                    key = k;
+                    break;
+                }
+
+                for (Map<String, Object> map : data) {
+                    sb.append(map.get(key));
+                    sb.append(", ");
+                }
+
+                String value = sb.toString();
+                value = value.substring(0, value.length() - 2);
+                defaultValues.add(value);
+            }
+        }
+
+        return defaultValues;
     }
 }

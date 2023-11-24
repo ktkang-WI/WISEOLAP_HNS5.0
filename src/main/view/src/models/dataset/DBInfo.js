@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ParamUtils from 'components/dataset/utils/ParamUtils';
 
 import {getConfig} from 'config/config';
 
@@ -33,10 +34,13 @@ export const getTablesByMart = async (datasource) => {
   return res.data;
 };
 
-export const getDataByQueryMart = async (datasource, query) => {
+export const getDataByQueryMart = async (datasource, query, parameters) => {
+  const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
+
   const res = await axios.post(path + '/query-dataset-fields', {
     dsId: parseInt(datasource.dsId),
-    query: query
+    query: query,
+    parameter: JSON.stringify(parameter)
   });
 
   return res.data;

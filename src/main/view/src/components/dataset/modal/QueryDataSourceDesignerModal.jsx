@@ -75,7 +75,7 @@ const QueryDataSourceDesignerModal = ({
     text: '생성',
     onClick: () => {
       const query = editorRef.editor.getValue();
-      const paramNames = query.match(/@.\S+/g);
+      const paramNames = ParamUtils.getParameterNamesInQuery(query);
       let order = paramInfo.reduce((acc, param) => {
         if (acc <= param.order) {
           acc = param.order + 1;
@@ -90,6 +90,7 @@ const QueryDataSourceDesignerModal = ({
         return;
       }
 
+      // TODO: 현재 데이터셋과 관련 없는 경우 tempParam에 추가되어야 함.
       paramNames.forEach((name) => {
         const p = paramInfo.find((param) => param.name == name);
         if (!p) {
@@ -148,8 +149,13 @@ const QueryDataSourceDesignerModal = ({
         } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
           alert('중복된 데이터 집합 명입니다. 다시 입력해 주세요.');
         } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
-          const response =
-            await models.DBInfo.getDataByQueryMart(selectedDataSource, query);
+          const parameters = {
+            informations: paramInfo,
+            values: {}
+          };
+
+          const response = await models.DBInfo.
+              getDataByQueryMart(selectedDataSource, query, parameters);
           if (!response.rowData[0].error) {
             const types = ['int', 'NUMBER', 'decimal'];
             let tempFields = response.metaData;
@@ -222,7 +228,7 @@ const QueryDataSourceDesignerModal = ({
         <ColumnWrapper>
           <DatasetName
             name={dataset.datasetNm || ''}
-            onChangedValue={(datasetNm) => {
+            onValueChanged={(datasetNm) => {
               setDataset({...dataset, datasetNm});
             }}
           />
@@ -238,6 +244,7 @@ const QueryDataSourceDesignerModal = ({
             padding='10'>
             <ParameterList
               height='200px'
+              // TODO: 해당 부분 추후 데이터 집합 수정 추가시 dataset에 해당하는 param만 보이게 필터 걸어야함.
               dataSource={paramInfo}
               selection={{mode: 'multiple'}}
               onSelectionChanged={(e) => {

@@ -1,5 +1,4 @@
 import ItemUtilityFactory from 'components/report/item/util/ItemUtilityFactory';
-import {getItemData} from 'models/report/Item';
 import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
@@ -12,19 +11,25 @@ import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
 import ItemType from 'components/report/item/util/ItemType';
+import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
+import ParameterSlice from 'redux/modules/ParameterSlice';
+import ParamUtils from 'components/dataset/utils/ParamUtils';
+import models from 'models';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
 
   /**
    * 조회에 필요한 파라미터 생성
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
+   * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    * @return {JSON} parameter
    */
-  const generateParameter = (item, datasets) => {
+  const generateParameter = (item, datasets, parameters) => {
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -40,6 +45,10 @@ const useQueryExecute = () => {
     param.dataset.dsType = orgDataset.datasetType;
     param.dataset.query = orgDataset.datasetQuery;
 
+    const parameter = ParamUtils.
+        generateParameterForQueryExecute(parameters);
+
+    param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
     ItemUtilityFactory[item.type].generateParameter(item, param);
 
@@ -50,10 +59,11 @@ const useQueryExecute = () => {
    * 매개변수로 전달받은 item만 조회
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
+   * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
-  const executeItem = (item, datasets) => {
+  const executeItem = (item, datasets, parameters) => {
     const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets);
+    const param = generateParameter(tempItem, datasets, parameters);
     const reportId = selectCurrentReportId(store.getState());
 
     if (item.type == ItemType.PIVOT_GRID) {
@@ -62,7 +72,7 @@ const useQueryExecute = () => {
 
       dispatch(updateItem({reportId, item: tempItem}));
     } else {
-      getItemData(param, (response) => {
+      models.Item.getItemData(param, (response) => {
         if (response.status != 200) {
           return;
         }
@@ -83,14 +93,156 @@ const useQueryExecute = () => {
   const executeItems = () => {
     const items = selectCurrentItems(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectCurrentParameters(store.getState());
 
-    items.map((item) => executeItem(item, datasets));
+    items.map((item) => executeItem(item, datasets, parameters));
+  };
+
+  /**
+   * 연계 필터가 있는 리스트 필터 조회
+   * @param {JSON} param 필터 정보
+   * @param {Array} linkageFilter 연계 필터 리스트
+   * @return {Promise}
+   */
+  const executeLinkageFilter = async (param, linkageFilter) => {
+    return await new Promise((resolve) => {
+      const wait = setInterval(() => {
+        const parameters = selectCurrentParameters(store.getState());
+        const requiredFilterLength = linkageFilter.
+            filter((filterName) => !parameters.values[filterName]).length;
+        if (requiredFilterLength == 0) {
+          setListValues(param, linkageFilter).then((data) => {
+            resolve(data);
+          });
+          clearInterval(wait);
+        }
+      }, 500);
+
+      setTimeout(() => {
+        clearInterval(wait);
+        resolve();
+      }, 600000);
+    });
+  };
+
+  const setListValues = async (param, linkageFilter) => {
+    const parameters = selectCurrentParameters(store.getState());
+    try {
+      let linkageValues = null;
+      if (linkageFilter) {
+        linkageValues = [];
+        linkageFilter.map((name) => {
+          const info = parameters.informations.find((p) => p.name == name);
+
+          linkageValues.push({
+            name,
+            operation: info.operation,
+            exceptionValue: info.exceptionValue,
+            value: parameters.values[name].value
+          });
+        });
+      }
+
+      const values = await models.Parameter.getListItems(param, linkageValues);
+      if (linkageFilter) {
+        values.linkageFilter = linkageFilter;
+      }
+
+      return values;
+    } catch (e) {
+      console.error(e);
+      return {
+        listItems: [],
+        value: ''
+      };
+    }
+  };
+
+  /**
+   * List의 아이템과 defaultValue 조회
+   * @param {JSON} param
+   */
+  const executeListParameter = async (param) => {
+    // QUERY일 경우 연계 필터인지 확인
+    if (param.dataSourceType == 'QUERY') {
+      const query = param.dataSource;
+      const linkageFilter = ParamUtils.getParameterNamesInQuery(query);
+
+      if (linkageFilter.length > 0) {
+        return await executeLinkageFilter(param, linkageFilter);
+      } else {
+        return await setListValues(param);
+      }
+    } else {
+      return await setListValues(param);
+    }
+  };
+
+  const executeParameterDefaultValueQuery = async (param) => {
+    return await models.Parameter.getDefaultValue(param);
+  };
+
+  const executeParameters = () => {
+    const parameters = selectCurrentParameters(store.getState());
+    const reportId = selectCurrentReportId(store.getState());
+
+    const setDefaultValue = (name, value) => {
+      dispatch(setParameterValues({
+        reportId, values: {[name]: {
+          value
+        }}
+      }));
+      dispatch(filterSearchComplete({reportId, id: name}));
+    };
+
+    const setValues = (name, values) => {
+      dispatch(setParameterValues({reportId, values: {[name]: values}}));
+      dispatch(filterSearchComplete({reportId, id: name}));
+    };
+
+    parameters.informations.map((param) => {
+      try {
+        if (param.paramType == 'LIST') {
+          executeListParameter(param).then((data) => {
+            if (data) {
+              setValues(param.name, data);
+            }
+          });
+        } else {
+          if (param.defaultValueUseSql && param.calendarDefaultType != 'NOW') {
+            executeParameterDefaultValueQuery(param).then((data) => {
+              setValues(param.name, data);
+            });
+          } else if (param.calendarDefaultType == 'NOW') {
+            const defaultValue = [];
+
+            param.calendarPeriodBase.map((base, i) => {
+              const value = param.calendarPeriodValue[i];
+              const date = ParamUtils.getCalendarNowDefaultValue(base, value);
+              // TODO: 달력 필터 기본값 만들기
+              defaultValue.push(
+                  ParamUtils.parseStringFromDate(date, param.calendarKeyFormat)
+              );
+            });
+
+            setDefaultValue(param.name, defaultValue);
+          } else {
+            setDefaultValue(param.name, param.defaultValue);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        filterSearchComplete({reportId, id: param.name});
+      }
+    });
   };
 
   return {
     generateParameter,
     executeItem,
-    executeItems
+    executeItems,
+    executeParameters,
+    executeLinkageFilter
   };
 };
 

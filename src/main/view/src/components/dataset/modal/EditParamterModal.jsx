@@ -118,7 +118,8 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
           newParamInfo = getNewParamInfo();
         }
 
-        newParamInfo.map((param) => ParamUtils.sanitizeParamInformation(param));
+        newParamInfo = newParamInfo.
+            map((param) => ParamUtils.sanitizeParamInformation(param));
 
         onSubmit(newParamInfo);
       }}
@@ -136,6 +137,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
           height='100%'>
           <ParameterList
             compact={true}
+            // TODO: 해당 부분 추후 데이터 집합 수정 추가시 dataset에 해당하는 param만 보이게 필터 걸어야함.
             dataSource={paramInfo}
             d={selectedParam}
             selection={{mode: 'single'}}

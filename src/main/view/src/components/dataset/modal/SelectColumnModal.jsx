@@ -10,7 +10,7 @@ const theme = getTheme();
 
 const SelectColumnModal = ({dsId, table, onSubmit, ...props}) => {
   const [columns, setColumns] = useState([]);
-  const [selectedColumn, setSelectedColumn] = useState({});
+  let selectedColumn = {};
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
@@ -33,11 +33,10 @@ const SelectColumnModal = ({dsId, table, onSubmit, ...props}) => {
       <CommonDataGrid
         dataSource={columns}
         onSelectionChanged={(e) => {
-          console.log(e);
           if (e.selectedRowsData.length > 0) {
-            setSelectedColumn(e.selectedRowsData[0]);
+            selectedColumn = e.selectedRowsData[0];
           } else {
-            setSelectedColumn({});
+            selectedColumn = {};
           }
         }}
       >

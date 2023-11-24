@@ -19,16 +19,20 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
   const periodSource = [
     {name: 'YEAR', caption: localizedString.year},
     {name: 'MONTH', caption: localizedString.month},
-    {name: 'DATE', caption: localizedString.date}
+    {name: 'DAY', caption: localizedString.day}
   ];
 
   const formData = _.cloneDeep(param);
 
   if (!formData.calendarDefaultType) {
+    const e = {};
+    e.dataField = 'calendarDefaultType';
+    e.value = 'NOW';
+    onFieldDataChanged(e);
     formData.calendarDefaultType = 'NOW';
   }
   if (!formData.calendarPeriodBase) {
-    formData.calendarPeriodBase = ['YEAR', 'YEAR'];
+    formData.calendarPeriodBase = ['', ''];
   }
   if (!formData.calendarPeriodValue) {
     formData.calendarPeriodValue = [0, 0];
