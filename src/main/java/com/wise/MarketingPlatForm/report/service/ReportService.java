@@ -372,5 +372,41 @@ public class ReportService {
             }
         }
     }
+    
+    public int addReport(Map<String, String> param) {
+    	String reportNm = param.getOrDefault("reportNm", "");
+        String reportSubNm = param.getOrDefault("reportSubNm", "");
+        String fldId = param.getOrDefault("fldId", "");
+        String fldNm = param.getOrDefault("fldNm", "");
+        String fldType = param.getOrDefault("fldType", "");
+        String reportAnnotation = param.getOrDefault("reportAnnotation", "");
+        String reportDescription = param.getOrDefault("reportDescription", "");
+        String reportOrder = param.getOrDefault("reportOrder", "0");
+        String reportType = param.getOrDefault("reportType", "0");
+        String layoutXML = param.getOrDefault("layoutXML", "");
+        String paramXML = param.getOrDefault("paramXML", "");
+        String datasetXML = param.getOrDefault("datasetXML", "");
+        String chartXML = param.getOrDefault("chartXML", "");
+        String reportXML = param.getOrDefault("reportXML", "");
+        String regUserNo = param.getOrDefault("regUserNo", "");
+        
+       ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+        .reportNm(reportNm)
+        .fldId(Integer.parseInt(fldId))
+        .fldType(fldType)
+        .reportOrdinal(Integer.parseInt(reportOrder))
+        .reportType(reportType)
+        .reportDesc(reportDescription)
+        .reportXml(reportXML)  
+        .chartXml(chartXML)
+        .layoutXml(layoutXML)
+        .datasetXml(datasetXML)
+        .paramXml(paramXML)
+        .regUserNo(Integer.parseInt(regUserNo))
+        .reportSubTitle(reportSubNm)
+        .build();
+        
+        return reportDAO.addReport(reportMstrEntity);
+    }
 }
 

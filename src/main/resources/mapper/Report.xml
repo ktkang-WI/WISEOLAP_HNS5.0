@@ -43,4 +43,42 @@
                 AND A.REPORT_ID = #{reportId}
             </if>
     </select>
+    
+    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+       <selectKey resultType="int" keyProperty="reportId" order="BEFORE">
+    		SELECT MAX(REPORT_ID)+1 FROM REPORT_MSTR
+    	</selectKey>
+    	INSERT INTO REPORT_MSTR
+       (
+       	REPORT_ID,
+       	REPORT_NM,
+       	REPORT_SUB_TITLE,
+       	FLD_ID,
+       	FLD_TYPE,
+       	REPORT_ORDINAL,
+       	REPORT_TYPE,
+       	REPORT_DESC,
+       	REPORT_XML,
+       	CHART_XML,
+       	LAYOUT_XML,
+       	PARAM_XML,
+       	REG_USER_NO
+       )
+       VALUES
+       (
+       	#{reportId},
+        #{reportNm},
+        #{reportSubTitle},
+       	#{fldId},
+       	#{fldType},
+       	#{reportOrdinal},
+       	#{reportType},
+       	#{reportDesc},
+       	#{reportXml},
+       	#{chartXml},
+       	#{layoutXml},
+       	#{paramXml},
+       	#{regUserNo}       	
+       )       
+    </insert>
 </mapper>

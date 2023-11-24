@@ -158,4 +158,11 @@ public class ReportController {
         String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
 	}   
+    
+    @PostMapping(value = "/report-save")
+	public int addReport(@RequestBody Map<String, String> param) {
+        // String reportId = param.getOrDefault("reportId", "");
+        
+        return reportService.addReport(param);
+	}
 }

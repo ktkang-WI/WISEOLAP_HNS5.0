@@ -7,9 +7,12 @@ const initialState = {
     reportId: 0,
     options: {
       reportNm: localizedString.defaultReportName,
-      reportDesc: '',
-      reportPath: '', // 해당 경로 비어있을 경우 새 보고서
-      order: 0
+      reportSubNm: '',
+      fldNm: '',
+      reportOrder: 0,
+      reportAnnotation: '',
+      reportDescription: '',
+      reportPath: '' // 해당 경로 비어있을 경우 새 보고서
     }
   }]
 };

@@ -13,6 +13,6 @@ const path = document.location.origin + contextRoot + '/report';
  * @param {function} callback
  */
 export const addReport = (param, callback) => {
-  axios.post(path + '/report', param)
+  axios.post(path + '/report-save', param)
       .then(callback);
 };

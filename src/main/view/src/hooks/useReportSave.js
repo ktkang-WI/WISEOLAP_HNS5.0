@@ -3,7 +3,7 @@ import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReport}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
-import {getItemData} from 'models/report/Item';
+import {addReport} from 'models/report/Report';
 
 const useReportSave = () => {
   // const dispatch = useDispatch();
@@ -20,11 +20,11 @@ const useReportSave = () => {
 
     param.reportType = 'DashAny';
 
-    param.reportXML = selectCurrentReport(store.getState());
-    param.chartXML = selectCurrentItem(store.getState());
-    param.layoutXML = {};
-    param.datasetXML = selectCurrentDataset(store.getState());
-    param.paramXML = {};
+    param.reportXML = JSON.stringify(selectCurrentReport(store.getState()));
+    param.chartXML = JSON.stringify(selectCurrentItem(store.getState()));
+    param.layoutXML = '';
+    param.datasetXML = JSON.stringify(selectCurrentDataset(store.getState()));
+    param.paramXML = '';
 
     param.regUserNo = '1001';
     param.regDt = '2023-11-08:04:41:46';
@@ -34,14 +34,13 @@ const useReportSave = () => {
 
   /**
    * 보고서 저장
-  *  @param {JSON} report 저장할 보고서
    * @param {JSON} dataSource 저장에 필요한 Modal dataSource
    */
-  const saveReport = (report, dataSource) => {
+  const saveReport = (dataSource) => {
     // const tempReport = _.cloneDeep(report);
     const param = generateParameter(dataSource);
 
-    getItemData(param, (response) => {
+    addReport(param, (response) => {
       if (response.status != 200) {
         return;
       }

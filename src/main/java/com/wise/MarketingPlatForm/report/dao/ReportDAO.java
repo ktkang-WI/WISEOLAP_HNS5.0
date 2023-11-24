@@ -9,4 +9,5 @@ import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 @Mapper
 public interface ReportDAO {
     public ReportMstrEntity selectReport(String reportId);
+    public int addReport(ReportMstrEntity report);
 }
