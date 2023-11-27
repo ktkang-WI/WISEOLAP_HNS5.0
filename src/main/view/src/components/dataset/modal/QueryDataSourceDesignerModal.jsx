@@ -155,19 +155,18 @@ const QueryDataSourceDesignerModal = ({
           };
 
           const response = await models.DBInfo.
-              getDataByQueryMart(selectedDataSource, query, parameters);
+              getDataByQueryMart(selectedDataSource.dsId, query, parameters);
           if (!response.rowData[0].error) {
-            const types = ['int', 'NUMBER', 'decimal'];
             let tempFields = response.metaData;
 
             tempFields = tempFields.map((field) => {
-              const type = types.includes(field.columnTypeName);
+              const isMea = field.columnTypeName == 'decimal';
               return {
-                icon: type ? meaImg : dimImg,
+                icon: isMea ? meaImg : dimImg,
                 parentId: '0',
                 uniqueName: field.columnName,
                 name: field.columnName,
-                type: type ? 'MEA' : 'DIM',
+                type: isMea ? 'MEA' : 'DIM',
                 ...field
               };
             });

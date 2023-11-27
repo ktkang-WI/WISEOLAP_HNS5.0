@@ -6,7 +6,7 @@ const QueryDataFieldList = ({dataSource}) => {
   const [datasource, setDatasource] = useState('');
 
   useEffect(() => {
-    models.DBInfo.getTablesByMart(dataSource)
+    models.DBInfo.getTablesByMart(dataSource.dsId)
         .then((response) => {
           const tables = response.tables.rowData;
           const columns = response.columns.rowData;

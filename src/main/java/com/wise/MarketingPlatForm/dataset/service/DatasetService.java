@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResultVO;
-import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO.LinkageValue;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.util.ListParameterUtils;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
@@ -25,6 +25,7 @@ import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
+import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
 
@@ -260,21 +261,29 @@ public class DatasetService {
 
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
-        
+
         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
-        MartResultDTO re = new MartResultDTO();
+        MartResultDTO resultDTO = new MartResultDTO();
 
         try {
-            re = martDAO.select(newQuery);
+            resultDTO = martDAO.select(newQuery);
+            List<MetaDTO> metaDTOs = resultDTO.getMetaData();
+
+            for (MetaDTO metaDTO : metaDTOs) {
+                if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER")) {
+                    metaDTO.setColumnTypeName("decimal");
+                }
+            }
+
         } catch (Exception e) {
             log.warn(e.toString());
 
             List<Map<String, Object>> err = new ArrayList<Map<String, Object>>();
             err.add(Collections.singletonMap("error", e.toString()));
 
-            re.setRowData(err);
+            resultDTO.setRowData(err);
         }
-        return re;
+        return resultDTO;
     }
 
     private String convertTopN(String sql, String dbType, int rowNum) {
