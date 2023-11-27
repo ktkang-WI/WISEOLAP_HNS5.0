@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 
 const theme = getTheme();
 
-const InputFilter = ({info, key, value, isTo, onValueChanged, ...props}) => {
+const InputFilter = ({info, value, isTo, onValueChanged, ...props}) => {
   const index = isTo ? 1 : 0;
   return (
     <TextBox

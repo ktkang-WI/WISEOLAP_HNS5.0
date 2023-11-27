@@ -19,7 +19,7 @@ const FilterWrapper = styled.div`
 `;
 
 // TODO: 추후 각 필터에 onChangeValue 받아서 이벤트 처리 예정
-const Filter = ({info, key, value, isTo, onValueChanged}) => {
+const Filter = ({info, value, isTo, onValueChanged}) => {
   const getParamId = (id) => {
     return id.slice(1);
   };

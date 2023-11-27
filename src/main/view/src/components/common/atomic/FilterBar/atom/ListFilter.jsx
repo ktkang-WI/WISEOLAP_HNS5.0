@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 const theme = getTheme();
 
-const ListFilter = ({info, key, value, isTo, onValueChanged, ...props}) => {
+const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
   const index = isTo ? 1 : 0;
   const [selectionKeys, setSelectionKeys] = useState([]);
   const [text, setText] = useState('');

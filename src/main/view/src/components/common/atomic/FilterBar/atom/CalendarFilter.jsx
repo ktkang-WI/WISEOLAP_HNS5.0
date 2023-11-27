@@ -4,7 +4,7 @@ import ParamUtils from 'components/dataset/utils/ParamUtils';
 
 const theme = getTheme();
 
-const CalendarFilter = ({info, key, value, isTo, onValueChanged, ...props}) => {
+const CalendarFilter = ({info, value, isTo, onValueChanged, ...props}) => {
   const index = isTo ? 1 : 0;
   let dateValue = '';
   const keyFormat = info.calendarKeyFormat;
