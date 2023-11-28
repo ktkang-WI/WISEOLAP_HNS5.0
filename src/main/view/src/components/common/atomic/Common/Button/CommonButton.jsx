@@ -19,7 +19,7 @@ const Button = styled.div`
   font: ${theme.font.button};
   box-sizing: border-box;
   padding: 0px 1px;
-  border-radius:${(props) => props? props : '0px'};
+  border-radius:${(props) => props.borderRadius || '0px'};
 
   &:hover {
     background: ${(props) => props.hoverBackground};
@@ -30,7 +30,7 @@ const Button = styled.div`
   }
 `;
 
-const TextButton = ({
+const CommonButton = ({
   type='primary',
   children,
   width='100%',
@@ -71,4 +71,4 @@ const TextButton = ({
   );
 };
 
-export default TextButton;
+export default CommonButton;

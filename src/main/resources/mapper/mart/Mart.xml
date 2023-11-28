@@ -68,6 +68,9 @@
 				  and   a.owner = '${owner}'
 				  and   b.owner = '${owner}'
 				  and   d.owner = '${owner}'
+          <if test='table != null'>
+            and a.table_name = #{table}
+          </if>
 				  and    a.table_name  = b.table_name(+)
 				  and    a.column_name = b.column_name(+)
 				  and    a.table_name  = c.table_name(+)
@@ -93,6 +96,9 @@
 		      	LEFT JOIN SYS.extended_properties F ON B.ID = F.major_id AND B.colid = F.minor_id
 		      	LEFT JOIN SYS.extended_properties G ON A.ID = G.major_id AND G.minor_id = 0
 		      	WHERE 1 = 1  AND   A.xtype IN ('U', 'V') 
+            <if test='table != null'>
+              AND A.[name] = #{table}
+            </if>
 		      	ORDER BY B.colorder
 		</if>
 	</select>
