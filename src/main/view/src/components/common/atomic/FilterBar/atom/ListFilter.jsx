@@ -3,12 +3,56 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import CommonButton from '../../Common/Button/CommonButton';
-import {useRef} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import _ from 'lodash';
 
 const theme = getTheme();
 
-const ListFilter = ({items=[], ...props}) => {
+const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
+  const index = isTo ? 1 : 0;
+  const [selectionKeys, setSelectionKeys] = useState([]);
+  const [text, setText] = useState('');
   const popOverRef = useRef();
+  const listRef = useRef();
+
+  const generateCaptionText = (keys) => {
+    if (!value) return '';
+    const temp = _.cloneDeep(keys);
+    let tempText = '';
+
+    for (const item of value.listItems) {
+      const index = temp.indexOf(item.name);
+      if (index >= 0) {
+        tempText += item.caption + ', ';
+        temp.splice(index, 1);
+      }
+      if (temp.length == 0) {
+        break;
+      }
+    }
+    if (tempText.length > 0) {
+      tempText = tempText.substring(0, tempText.length - 2);
+    } else {
+      return '전체';
+    }
+
+    return tempText;
+  };
+
+  useEffect(() => {
+    let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
+
+    if (!value || !value.value) {
+      setText('');
+    } else if (!keys || keys == '[All]') {
+      keys = value.listItems.map((item) => item.name);
+      setText('전체');
+    } else {
+      keys = keys.split(', ');
+      setText(generateCaptionText(keys));
+    }
+    setSelectionKeys(keys);
+  }, [info, value]);
 
   const Footer = styled.div`
     display: flex;
@@ -19,7 +63,7 @@ const ListFilter = ({items=[], ...props}) => {
     justify-content: center;
   `;
 
-  const renderContent = () => {
+  const renderContent = useCallback(() => {
     const StyledList = styled(List)`
       .dx-list-item-content {
         font: ${theme.font.filterContent};
@@ -27,6 +71,18 @@ const ListFilter = ({items=[], ...props}) => {
     `;
 
     const confirm = () => {
+      const selectionKeys = listRef.current.instance.option('selectedItemKeys');
+      let selection;
+      if (selectionKeys.length == 0 ||
+          selectionKeys.length == dataSource.length) {
+        selection = '[All]';
+      } else {
+        selection = selectionKeys.join(', ');
+      }
+
+      onValueChanged(info.name, selection, index);
+      setSelectionKeys(selectionKeys);
+      setText(generateCaptionText(selectionKeys));
       popOverRef.current.instance.hide();
     };
 
@@ -34,15 +90,32 @@ const ListFilter = ({items=[], ...props}) => {
       popOverRef.current.instance.hide();
     };
 
+    const dataSource = value ? _.cloneDeep(value.listItems) : [];
+    let selectionMode = info.multiSelect ? 'multiple' : 'single';
+
+    if (selectionMode == 'multiple' && info.useAll) {
+      selectionMode = 'all';
+    } else if (info.useAll) {
+      dataSource.unshift({
+        name: '[All]',
+        caption: '전체'
+      });
+    }
+
     return (
       <Wrapper>
         <StyledList
-          selectionMode='multiple'
+          selectionMode={selectionMode}
           showSelectionControls={true}
+          selectAllText='전체'
           selectAllMode={'allPage'}
           selectedByClick={true}
-          height="200px"
-          items={['1', '2', '3', '4', '5', '6']}
+          height='200px'
+          displayExpr='caption'
+          keyExpr='name'
+          ref={listRef}
+          defaultSelectedItemKeys={selectionKeys}
+          dataSource={dataSource}
         >
         </StyledList>
         <Footer>
@@ -55,7 +128,7 @@ const ListFilter = ({items=[], ...props}) => {
         </Footer>
       </Wrapper>
     );
-  };
+  }, [value, selectionKeys]);
 
   return (
     <>
@@ -65,7 +138,7 @@ const ListFilter = ({items=[], ...props}) => {
           hoverStateEnabled={false}
           height={theme.size.filterHeight}
           readOnly={true}
-          {...props}
+          value={text}
         />
       </div>
       <Popover
@@ -76,6 +149,7 @@ const ListFilter = ({items=[], ...props}) => {
         ref={popOverRef}
         width={props.width}
         maxWidth={props.width? props.width : '200px'}
+        hideOnOutsideClick
         contentRender={renderContent}
       >
       </Popover>

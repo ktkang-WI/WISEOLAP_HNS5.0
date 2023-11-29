@@ -1,3 +1,4 @@
+import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import {useDispatch} from 'react-redux';
 import ModalSlice from 'redux/modules/ModalSlice';
 
@@ -22,8 +23,31 @@ export default function useModal() {
     dispatch(modalActions.close(index));
   };
 
+  /**
+   * 알림창을 엽니다.
+   * @param {string} msg
+   */
+  const alert = (msg) => {
+    openModal(Alert, {
+      message: msg
+    });
+  };
+
+  /**
+   * 경고창을 엽니다.
+   * @param {string} msg
+   */
+  const warning = (msg) => {
+    openModal(Alert, {
+      teyp: 'warning',
+      message: msg
+    });
+  };
+
   return {
     openModal,
-    closeModal
+    closeModal,
+    alert,
+    warning
   };
 };
