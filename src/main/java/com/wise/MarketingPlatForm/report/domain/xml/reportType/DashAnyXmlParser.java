@@ -31,6 +31,7 @@ import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
+import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
@@ -218,10 +219,10 @@ public class DashAnyXmlParser implements XMLParser {
 	        		}
 	        	} else {
 	        		if(datasrcType.equals(DsType.CUBE.toString())) {
-						CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasrcId.toString(), userId);
-						fields = cubeInfoDTO.getFields();
+	        			// 추후 추가
+	        			fields = cubeService.getCubeFields();
 					} else if(datasrcType.equals(DsType.DS_SQL.toString())) {
-						fields = datasetService.queryTableSql(datasrcId, datasetQuery, false);
+						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery, null);
 					}
 	        	}
 	        	
