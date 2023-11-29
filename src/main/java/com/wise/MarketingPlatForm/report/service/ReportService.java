@@ -375,8 +375,6 @@ public class ReportService {
     
     public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
         reportDAO.addReport(reportMstrDTO);
-        System.out.println(reportMstrDTO.getReportId());
-        System.out.println(reportMstrDTO.getReportNm());
         return reportMstrDTO;
     }
     

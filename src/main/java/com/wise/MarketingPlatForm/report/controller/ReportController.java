@@ -173,6 +173,7 @@ public class ReportController {
         String reportTag = param.getOrDefault("tag", "");
         String reportDescription = param.getOrDefault("description", "");
         String reportOrder = param.getOrDefault("order", "0");
+        // 우선 임시로 Dashboard로 고정 추후 수정
         // String reportType = param.getOrDefault("reportType", "0");
         String layoutXML = param.getOrDefault("layoutXML", "");
         String paramXML = param.getOrDefault("paramXML", "");
