@@ -70,27 +70,8 @@
     </select>
     
     <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
-    	<selectKey keyProperty="reportId, reportNm, fldId, fldType, reportOrdinal, reportType, reportTag, reportDesc, reportLayout, reportXml, chartXml, layoutXml, datasetXml, paramXml" 
-    	resultType="hashmap" order="AFTER">			
-				SELECT 
-				REPORT_ID as reportId,
-				REPORT_NM as reportNm,
-				FLD_ID as fldId,
-				FLD_TYPE as fldType,
-				REPORT_ORDINAL as reportOrdinal,
-				REPORT_TYPE as reportType,
-				REPORT_TAG as reportTag,
-				REPORT_DESC as reportDesc,
-				REPORT_LAYOUT as reportLayout,
-				REPORT_XML as reportXml,
-				CHART_XML as chartXml,
-				LAYOUT_XML as layoutXml,
-				DATASET_XML as datasetXml,
-				PARAM_XML as paramXml
-				FROM REPORT_MSTR
-				WHERE REPORT_ID = (
-					SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-				) 
+    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">			
+				SELECT MAX(REPORT_ID) FROM REPORT_MSTR
 		</selectKey>       
     	<!--  <if test = "dbType == 'Oracle'"> -->
 	    	MERGE INTO REPORT_MSTR

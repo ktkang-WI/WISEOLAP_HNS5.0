@@ -12,7 +12,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 @Mapper
 public interface ReportDAO {
     public ReportMstrEntity selectReport(String reportId);
-    public Map addReport(ReportMstrDTO reportMstrDTO);
+    public int addReport(ReportMstrDTO reportMstrDTO);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
 }

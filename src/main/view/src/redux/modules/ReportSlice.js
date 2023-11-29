@@ -6,13 +6,23 @@ const initialState = {
   reports: [{
     reportId: 0,
     options: {
-      reportNm: localizedString.defaultReportName,
-      reportSubNm: '',
-      fldNm: '',
-      reportOrder: 0,
-      reportAnnotation: '',
-      reportDescription: '',
-      reportPath: '' // 해당 경로 비어있을 경우 새 보고서
+      name: localizedString.defaultReportName,
+      subName: '',
+      fldId: 0,
+      fldName: '',
+      fldType: '',
+      order: 0,
+      tag: '',
+      description: '',
+      path: '', // 해당 경로 비어있을 경우 새 보고서
+      chartXML: '',
+      datasetXML: '',
+      layoutXML: '',
+      reportXML: '',
+      paramXML: '',
+      regDt: '',
+      regUserNo: '',
+      reportType: ''
     }
   }]
 };
@@ -24,6 +34,7 @@ const reducers = {
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
+    // state.selectedReportId = actions.payload.reportId;
   },
   updateReport(state, actions) {
     const index = state.reports.findIndex(

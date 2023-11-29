@@ -1,12 +1,15 @@
 import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReport}
+import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import {addReport} from 'models/report/Report';
+import {useDispatch} from 'react-redux';
+import ReportSlice from 'redux/modules/ReportSlice';
 
 const useReportSave = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const {insertReport} = ReportSlice.actions;
 
   /**
    * 저장에 필요한 파라미터 생성
@@ -15,11 +18,9 @@ const useReportSave = () => {
    */
   const generateParameter = (dataSource) => {
     const param = {...dataSource};
-    // param.fldId = 1901;
-    // param.fldType = 'PUBLIC';
 
+    param.reportId = selectCurrentReportId(store.getState());
     param.reportType = 'DashAny';
-
     param.reportXML = JSON.stringify(selectCurrentReport(store.getState()));
     param.chartXML = JSON.stringify(selectCurrentItem(store.getState()));
     param.layoutXML = '';
@@ -37,15 +38,17 @@ const useReportSave = () => {
    * @param {JSON} dataSource 저장에 필요한 Modal dataSource
    */
   const saveReport = (dataSource) => {
-    // const tempReport = _.cloneDeep(report);
     const param = generateParameter(dataSource);
 
     addReport(param, (response) => {
       if (response.status != 200) {
         return;
       }
-      // dispatch(inserReport({tempReport}));
-      console.log(response);
+      const report = {
+        reportId: response.data.reportId,
+        options: {...response.data}
+      };
+      dispatch(insertReport(report));
     });
   };
 

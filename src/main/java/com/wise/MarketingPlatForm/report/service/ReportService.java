@@ -373,11 +373,11 @@ public class ReportService {
         }
     }
     
-    public int addReport(ReportMstrDTO reportMstrDTO) {
+    public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
         reportDAO.addReport(reportMstrDTO);
         System.out.println(reportMstrDTO.getReportId());
         System.out.println(reportMstrDTO.getReportNm());
-        return reportMstrDTO.getReportId();
+        return reportMstrDTO;
     }
     
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {

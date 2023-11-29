@@ -163,7 +163,7 @@ public class ReportController {
 	}   
     
     @PostMapping(value = "/report-save")
-	public int addReport(@RequestBody Map<String, String> param) {
+	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
     	String reportNm = param.getOrDefault("name", "");
         String reportSubNm = param.getOrDefault("subName", "");

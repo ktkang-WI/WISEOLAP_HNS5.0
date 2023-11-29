@@ -34,7 +34,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
     >
       <Item
         editorType='dxTextBox'
-        dataField='reportNm'
+        dataField='name'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -45,7 +45,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='reportSubNm'
+        dataField='subName'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -56,25 +56,21 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='fldNm'
-        readOnly={true}
+        dataField='fldName'
+        readOnly={false}
         editorOptions={{
           height: theme.size.labelTextBoxHeight,
-          readOnly: true,
-          text: dataSource.fldNm,
+          readOnly: false,
+          text: dataSource.path,
           buttons: [dataSrcSearchBtn],
-          createDataSource: createDataSource,
           elementAttr: {
             id: 'searchFileText'
           },
           onValueChanged: (e) => {
             const elementAttr = e.component.option('elementAttr');
-            console.log(elementAttr);
             createDataSource({
-              // 'fldId': elementAttr.fldId,
-              // 'fldType': elementAttr.fldType
-              'fldId': 1901,
-              'fldType': 'PUBLIC'
+              'fldId': elementAttr.fldId,
+              'fldType': elementAttr.fldType
             });
           }
         }}
@@ -104,7 +100,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </SimpleItem> */}
       <Item
         editorType='dxNumberBox'
-        dataField='reportOrder'
+        dataField='order'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -115,7 +111,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='reportAnnotation'
+        dataField='tag'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -126,7 +122,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextArea'
-        dataField='reportDescription'
+        dataField='description'
         editorOptions={{
           height: theme.size.labelTextAreaHeight
         }}
