@@ -3,7 +3,9 @@ package com.wise.MarketingPlatForm.report.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -28,9 +29,11 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
-import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
+import com.wise.MarketingPlatForm.report.type.ReportType;
+import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -161,8 +164,48 @@ public class ReportController {
     
     @PostMapping(value = "/report-save")
 	public int addReport(@RequestBody Map<String, String> param) {
-        // String reportId = param.getOrDefault("reportId", "");
+        String reportId = param.getOrDefault("reportId", "");
+    	String reportNm = param.getOrDefault("name", "");
+        String reportSubNm = param.getOrDefault("subName", "");
+        String fldId = param.getOrDefault("fldId", "");
+        String fldNm = param.getOrDefault("fldName", "");
+        String fldType = param.getOrDefault("fldType", "");
+        String reportTag = param.getOrDefault("tag", "");
+        String reportDescription = param.getOrDefault("description", "");
+        String reportOrder = param.getOrDefault("order", "0");
+        // String reportType = param.getOrDefault("reportType", "0");
+        String layoutXML = param.getOrDefault("layoutXML", "");
+        String paramXML = param.getOrDefault("paramXML", "");
+        String datasetXML = param.getOrDefault("datasetXML", "");
+        String chartXML = param.getOrDefault("chartXML", "");
+        String reportXML = param.getOrDefault("reportXML", "");
+        String regUserNo = param.getOrDefault("regUserNo", "");
         
-        return reportService.addReport(param);
+        ReportMstrDTO reportMstrDTO = ReportMstrDTO.builder()
+        .reportId(Integer.parseInt(reportId))
+		.reportNm(reportNm)
+	    .fldId(Integer.parseInt(fldId))
+	    .fldType(fldType)
+	    .reportOrdinal(Integer.parseInt(reportOrder))
+	    .reportType(ReportType.DASH_ANY)
+	    .reportDesc(reportDescription)
+	    .reportXml(reportXML)  
+	    .chartXml(chartXML)
+	    .layoutXml(layoutXML)
+	    .datasetXml(datasetXML)
+	    .paramXml(paramXML)
+	    .reportTag(reportTag)
+	    .regUserNo(Integer.parseInt(regUserNo))
+	    .reportSubTitle(reportSubNm)
+	    .build();		
+        		
+        return reportService.addReport(reportMstrDTO);
+	}
+    
+    @PostMapping(value = "/report-folder-list")
+	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
+        String userId = param.getOrDefault("userId", "");    	
+        		
+        return reportService.getReportFolderList(userId);
 	}
 }

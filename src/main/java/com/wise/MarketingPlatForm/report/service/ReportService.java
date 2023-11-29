@@ -8,8 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -17,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
-import com.wise.MarketingPlatForm.data.list.CloseableList;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -36,7 +36,6 @@ import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
 import com.wise.MarketingPlatForm.global.util.XMLParser;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.report.controller.ReportController;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
@@ -62,6 +61,7 @@ import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
@@ -373,40 +373,25 @@ public class ReportService {
         }
     }
     
-    public int addReport(Map<String, String> param) {
-    	String reportNm = param.getOrDefault("reportNm", "");
-        String reportSubNm = param.getOrDefault("reportSubNm", "");
-        String fldId = param.getOrDefault("fldId", "");
-        String fldNm = param.getOrDefault("fldNm", "");
-        String fldType = param.getOrDefault("fldType", "");
-        String reportAnnotation = param.getOrDefault("reportAnnotation", "");
-        String reportDescription = param.getOrDefault("reportDescription", "");
-        String reportOrder = param.getOrDefault("reportOrder", "0");
-        String reportType = param.getOrDefault("reportType", "0");
-        String layoutXML = param.getOrDefault("layoutXML", "");
-        String paramXML = param.getOrDefault("paramXML", "");
-        String datasetXML = param.getOrDefault("datasetXML", "");
-        String chartXML = param.getOrDefault("chartXML", "");
-        String reportXML = param.getOrDefault("reportXML", "");
-        String regUserNo = param.getOrDefault("regUserNo", "");
-        
-       ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
-        .reportNm(reportNm)
-        .fldId(Integer.parseInt(fldId))
-        .fldType(fldType)
-        .reportOrdinal(Integer.parseInt(reportOrder))
-        .reportType(reportType)
-        .reportDesc(reportDescription)
-        .reportXml(reportXML)  
-        .chartXml(chartXML)
-        .layoutXml(layoutXML)
-        .datasetXml(datasetXML)
-        .paramXml(paramXML)
-        .regUserNo(Integer.parseInt(regUserNo))
-        .reportSubTitle(reportSubNm)
-        .build();
-        
-        return reportDAO.addReport(reportMstrEntity);
+    public int addReport(ReportMstrDTO reportMstrDTO) {
+        reportDAO.addReport(reportMstrDTO);
+        System.out.println(reportMstrDTO.getReportId());
+        System.out.println(reportMstrDTO.getReportNm());
+        return reportMstrDTO.getReportId();
+    }
+    
+    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
+    	Map<String, List<FolderMasterVO>> result = new HashMap<>();
+    	// List<FolderMasterVO> reportFolderList = new ArrayList<FolderMasterVO>();
+    	
+    	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
+    	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+    	
+    	 
+	    result.put("publicFolder", publicFolderList);
+	    result.put("privateFolder", privateFolderList);
+
+        return result;
     }
 }
 

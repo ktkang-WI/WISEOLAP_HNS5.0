@@ -116,5 +116,7 @@
   "annotation": "Annotation",
   "displayOrder": "Display Order",
   "selectFolder": "Select Folder",
-  "folderList": "Folder List"
+  "folderList": "Folder List",
+  "publicFolder": "Public Folder",
+  "privateFolder": "Private Folder"
 }
