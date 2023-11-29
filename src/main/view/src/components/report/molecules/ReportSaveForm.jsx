@@ -57,10 +57,10 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       <Item
         editorType='dxTextBox'
         dataField='fldName'
-        readOnly={false}
+        readOnly={true}
         editorOptions={{
           height: theme.size.labelTextBoxHeight,
-          readOnly: false,
+          readOnly: true,
           text: dataSource.path,
           buttons: [dataSrcSearchBtn],
           elementAttr: {
