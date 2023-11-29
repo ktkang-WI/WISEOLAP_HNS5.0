@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.vo;
+package com.wise.MarketingPlatForm.report.domain.xml.vo;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

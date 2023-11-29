@@ -12,14 +12,15 @@ const path = document.location.origin + contextRoot + '/report';
  * @param {string} userId
  * @param {string} reportId
  */
-export const getById = async (userId, reportId) => {
-  const res = await axios.post(path + '/report', {
+export const getReportById = async (userId, reportId) => {
+  const res = await axios.get(path + '/report', {params: {
     reportId: reportId,
     userId: userId
-  });
+  }});
 
   return res.data;
 };
+
 
 /**
  * 보고서 목록 조회

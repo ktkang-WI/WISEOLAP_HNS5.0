@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.vo;
+package com.wise.MarketingPlatForm.report.domain.xml.vo;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;

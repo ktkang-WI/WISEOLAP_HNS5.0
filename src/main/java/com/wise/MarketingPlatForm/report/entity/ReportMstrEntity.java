@@ -53,8 +53,8 @@ public class ReportMstrEntity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        decodedString.replaceAll("&lt;", "<");
-        decodedString.replaceAll("&gt;", ">");
+        decodedString = decodedString.replaceAll("&lt;", "<");
+        decodedString = decodedString.replaceAll("&gt;", ">");
         return decodedString;
     }
 

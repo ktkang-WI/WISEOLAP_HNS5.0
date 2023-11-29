@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.vo;
+package com.wise.MarketingPlatForm.report.domain.xml.vo;
 
 import java.util.ArrayList;
 import java.util.List;

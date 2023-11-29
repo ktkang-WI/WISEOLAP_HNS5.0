@@ -31,7 +31,6 @@ import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
-import com.wise.MarketingPlatForm.global.util.XMLParser;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
@@ -58,17 +57,13 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
+import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
-import com.wise.MarketingPlatForm.report.vo.DatasetVO;
-import com.wise.MarketingPlatForm.report.vo.LayoutDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
-import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
-import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
-import com.wise.MarketingPlatForm.report.vo.ReportVO;
-import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,7 +75,6 @@ public class ReportService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
-    private final XMLParser xmlParser;
     private final QueryResultCacheManager queryResultCacheManager;
     private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
@@ -99,10 +93,12 @@ public class ReportService {
 
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
+    
+    @Autowired
+    private XMLParserFactory xmlParserFactory;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
-        this.xmlParser = xmlParser;
+            QueryResultCacheManager queryResultCacheManager) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -110,41 +106,59 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public ReportMetaDTO getReport(String reportId, String userId) {
+    public Map<String, Object> getReport(String reportId, String userId) {
         ReportMstrEntity temp = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
 
-        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
-
-        // report
-        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
-                .order(dto.getReportOrdinal())
-                .reportDesc(dto.getReportDesc())
-                .reportNm(dto.getReportNm())
-                .reportPath(null)
-                .build();
-        ReportVO reports = ReportVO.builder()
-                .reportId(dto.getReportId())
-                .options(reportOptions)
-                .build();
-        reportMetaDTO.getReport().add(reports);
+//        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
+        XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
         
+        List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+        Map<String, Object> report = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<String, Object>();
+//        report.put("reportId", reportId);
+        options.put("order", dto.getReportOrdinal());
+        options.put("reportNm", dto.getReportNm());
+        options.put("reportDesc", dto.getReportDesc());
+        options.put("reportPath", null);
+        
+        report.put("reportId", reportId);
+        report.put("options", options);
+        
+        reports.add(report);
+        
+        Map<String, Object> returnReport = xmlParser.getReport(dto, userId);
+        returnReport.put("reports", reports);
+        // report
+//        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
+//                .order(dto.getReportOrdinal())
+//                .reportDesc(dto.getReportDesc())
+//                .reportNm(dto.getReportNm())
+//                .reportPath(null)
+//                .build();
+//        ReportVO reports = ReportVO.builder()
+//                .reportId(dto.getReportId())
+//                .options(reportOptions)
+//                .build();
+//        reportMetaDTO.getReport().add(reports);
+//        
         // layout
         // item
-        LayoutDTO layoutWrapperDTO = new LayoutDTO();
-        reportMetaDTO.setLayout(layoutWrapperDTO);
-        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
+//        LayoutDTO layoutWrapperDTO = new LayoutDTO();
+//        reportMetaDTO.setLayout(layoutWrapperDTO);
+//        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
         
         // dataset
-        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-        DatasetVO datasetWrapper = DatasetVO.builder()
-        		.datasetQuantity(datasetVO.size())
-        		.selectedDatasetId(datasetVO.get(0).getDatasetId())
-        		.datasets(datasetVO)
-        		.build();
-        reportMetaDTO.setDataset(datasetWrapper);
-
-        return reportMetaDTO;
+//        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
+//        DatasetVO datasetWrapper = DatasetVO.builder()
+//        		.datasetQuantity(datasetVO.size())
+//        		.selectedDatasetId(datasetVO.get(0).getDatasetId())
+//        		.datasets(datasetVO)
+//        		.build();
+//        reportMetaDTO.setDataset(datasetWrapper);
+        
+//        return reportMetaDTO;
+        return returnReport;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {

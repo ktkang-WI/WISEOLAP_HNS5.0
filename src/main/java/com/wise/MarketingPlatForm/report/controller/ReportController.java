@@ -8,9 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -29,7 +32,6 @@ import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
-import com.wise.MarketingPlatForm.report.vo.ReportMetaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -151,10 +153,10 @@ public class ReportController {
 	        }
 	    )
 	)
-	@PostMapping(value = "/report")
-	public ReportMetaDTO getReport(@RequestBody Map<String, String> param) {
-        String reportId = param.getOrDefault("reportId", "");
-        String userId = param.getOrDefault("userId", "");
+	@GetMapping(value = "/report")
+	public Map<String, Object> getReport(@RequestParam String reportId, @RequestParam String userId) {
+//        String reportId = param.getOrDefault("reportId", "");
+//        String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
 	}
 

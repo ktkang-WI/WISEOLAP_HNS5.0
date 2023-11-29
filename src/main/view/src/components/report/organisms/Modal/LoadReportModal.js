@@ -45,14 +45,14 @@ const LoadReportModal = ({...props}) => {
       onSubmit={() => {
         if (!_.isEmpty(selectedReport)) {
           if (selectedReport.type == 'REPORT') {
-            models.Report.getById('admin', selectedReport.id)
+            models.Report.getReportById('admin', selectedReport.id)
                 .then((data) => {
                   dispatch(setLayout({
                     reportId: selectedReport.id,
                     layout: data.layout
                   }));
                   dispatch(selectReport(selectedReport.id));
-                  dispatch(setReports(data.report));
+                  dispatch(setReports(data.reports));
                   data.item.items.forEach((i) => {
                     i.mart = makeMart(i);
                   });

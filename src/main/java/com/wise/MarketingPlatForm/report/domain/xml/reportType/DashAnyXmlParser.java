@@ -1,0 +1,501 @@
+package com.wise.MarketingPlatForm.report.domain.xml.reportType;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONPointer;
+import org.json.XML;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
+import com.wise.MarketingPlatForm.dataset.service.CubeService;
+import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+import com.wise.MarketingPlatForm.dataset.type.DsType;
+import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
+import com.wise.MarketingPlatForm.report.domain.data.data.SparkLine;
+import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabVO;
+import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabWrapperVO;
+import com.wise.MarketingPlatForm.report.type.ItemType;
+import com.wise.MarketingPlatForm.report.type.SummaryType;
+import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+
+public class DashAnyXmlParser implements XMLParser {
+
+	private Map<String, Object> dataset = new HashMap<String, Object>();
+	private List<Map<String, Object>> report = new ArrayList<Map<String, Object>>();
+	private Map<String, Object> item = new HashMap<String, Object>();
+	private Map<String, Object> layout = new HashMap<String, Object>();
+	private Map<String, Object> returnReport = new HashMap<String, Object>();
+
+	private JSONArray datasetJsonArray = new JSONArray();
+	private JSONObject reportJson = new JSONObject();
+	private JSONObject chartJson = new JSONObject();
+
+	private List<String> reportType = new ArrayList<String>();
+	private List<String> datasetType = new ArrayList<String>();
+	private List<String> datasrcType = new ArrayList<String>();
+	private List<Integer> datasrcId = new ArrayList<Integer>();
+	private List<String> datasetNm = new ArrayList<String>();
+	
+	private Map<String, String> datasources = new HashMap<String, String>();
+
+	private CubeService cubeService;
+	private DatasetService datasetService;
+
+	static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	
+	public DashAnyXmlParser(CubeService cubeService, DatasetService datasetService) {
+		this.cubeService = cubeService;
+		this.datasetService = datasetService;
+	}
+	
+	@Override
+	public void getReportXmlDTO(String reportXml) {
+
+	}
+
+	@Override
+	public void getChartXmlDTO(String chartXml) {
+
+	}
+
+	@Override
+	public void getlayoutXmlDTO(String layoutXml) {
+		
+		Map<String, Object> layout = new HashMap<String, Object>();
+		Map<String, Object> layoutConfig = new HashMap<String, Object>();
+		
+		Document document;
+		LayoutTabWrapperVO layoutWrapper = LayoutTabWrapperVO.builder()
+				.type("row")
+				.weight((double) 100)
+				.build();
+		
+		layoutConfig.put("borders", new ArrayList<String>());
+		layoutConfig.put("global", new HashMap<String, Object>(){{
+			put("tabEnableClose", false);
+			put("tabEnableRename", false);
+		}});
+		layoutConfig.put("layout", layoutWrapper);
+		
+		this.layout.put("layoutConfig", layoutConfig);
+		
+		layoutXml = layoutXml.trim();
+		
+		try {
+			DocumentBuilder builder = factory.newDocumentBuilder(); 
+			document = builder.parse(new InputSource(new StringReader(layoutXml)));
+			Element root = document.getDocumentElement();
+			NodeList children = root.getChildNodes();
+			
+			for(int layoutIndex = 0; layoutIndex < children.getLength(); layoutIndex++) {
+				Node node = children.item(layoutIndex);
+				if(node.getNodeType() != Node.ELEMENT_NODE) continue;
+				
+				switch (node.getNodeName()) {
+//				추후 추가
+//				case "Title":
+//					
+//					break;
+				case "DataSources":
+					NodeList datasourceNodes = node.getChildNodes();
+					for(int datasourceIndex = 0; datasourceIndex < datasourceNodes.getLength(); datasourceIndex++) {
+						Node datasourceNode = datasourceNodes.item(datasourceIndex);
+						if(datasourceNode.getNodeType() != Node.ELEMENT_NODE) continue;
+						// value = id
+						String componentName = datasourceNode.getAttributes().getNamedItem("ComponentName").getTextContent();
+						// key = name
+						String Name = datasourceNode.getAttributes().getNamedItem("Name").getTextContent();
+						
+						datasources.put(Name, componentName);
+					}
+					break;
+				case "Items":
+					Map<String, Object> items = new HashMap<String, Object>();
+					itemsParser(node);
+					break;
+				case "LayoutTree":
+					layoutRecursionParser(node, null, (LayoutTabWrapperVO) layoutWrapper
+							, (List<Map<String, Object>>)this.item.get("items"));
+					
+//					reportMetaDTO.getLayout().setLayoutConfig(resultLayoutConfigVO);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+	}
+
+	@Override
+	public void getDatasetXmlDTO(String datasetXml, String userId) {
+		try {
+//	        this.datasetJsonArray = XML.toJSONObject(datasetXml).getJSONObject("DATASET_XML")
+//	        		.getJSONObject("DATASET_ELEMENT");
+	        JSONObject root = XML.toJSONObject(datasetXml);
+	        JSONPointer pointer = new JSONPointer("/DATASET_XML/DATASET_ELEMENT/DATASET");
+	        Object result = pointer.queryFrom(root);
+	        
+	        if (result instanceof JSONObject) {
+	        	this.datasetJsonArray.put((JSONObject) result);
+	        } else if (result instanceof JSONArray) {
+	        	this.datasetJsonArray = (JSONArray) result;
+	        } else {
+	            System.out.println("DATA_SET not found or has unexpected format.");
+	        }
+	        
+	        List<Map<String, Object>> datasets = new ArrayList<Map<String, Object>>();
+	        
+	        for (int datasetArrayIndex = 0; datasetArrayIndex < this.datasetJsonArray.length(); datasetArrayIndex++) {
+	        	Map<String, Object> dataset = new HashMap<String, Object>();
+	        	
+	        	JSONObject datasetJson = this.datasetJsonArray.getJSONObject(datasetArrayIndex);
+	        	String datasetNm = datasetJson.getString("DATASET_NM");
+	        	Integer datasrcId = datasetJson.getInt("DATASRC_ID");
+	        	String datasetType = datasetJson.getString("DATASET_TYPE");
+	        	String datasrcType = datasetJson.getString("DATASRC_TYPE");
+	        	String datasetQuery = datasetJson.getString("DATASET_QUERY");
+	        	JSONObject datasetField = datasetJson.optJSONObject("DATASET_FIELD");
+	        	List<RootFieldVO> fields = new ArrayList<RootFieldVO>();
+	        	if(datasetField != null) {
+	        		JSONArray fieldsArray = datasetField.getJSONArray("LIST");
+	        		for(int fieldsIndex = 0; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
+	        			RootFieldVO field = null;
+	        			JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
+	        			String dataType = fieldObject.getString("DATA_TYPE");
+	        			String name = fieldObject.getString("CAPTION");
+	        			String icon = fieldObject.getString("icon");
+	        			String uniqueName = fieldObject.getString("UNI_NM");
+	        			String parentId = fieldObject.getString("PARENT_ID");
+	        			Integer order = fieldObject.getInt("ORDER");
+	        			DataFieldType type = "MEA".equals(fieldObject.getString("TYPE"))
+								? DataFieldType.MEASURE : DataFieldType.DIMENSION;
+	        			
+		        		if(datasrcType.equals(DsType.CUBE)) {
+		        			// 추후 추가
+		        			field = CubeFieldVO.builder()
+									.dataType(dataType)
+									.name(name)
+									.type(type)
+									.uniqueName(uniqueName)
+									.parentId(parentId)
+									.order(order)
+									.build();
+		        		} else if (datasrcType.equals(DsType.DS_SQL)) {
+		        			field = QueryFieldVO.builder()
+									.dataType(dataType)
+									.name(name)
+									.type(type)
+									.uniqueName(uniqueName)
+									.parentId(parentId)
+									.build();
+		        		}
+		        		fields.add(field);
+	        		}
+	        	} else {
+	        		if(datasrcType.equals(DsType.CUBE.toString())) {
+						CubeInfoDTO cubeInfoDTO = cubeService.getCube(datasrcId.toString(), userId);
+						fields = cubeInfoDTO.getFields();
+					} else if(datasrcType.equals(DsType.DS_SQL.toString())) {
+						fields = datasetService.queryTableSql(datasrcId, datasetQuery, false);
+					}
+	        	}
+	        	
+	        	this.datasetNm.add(datasetNm);
+	        	this.datasrcId.add(datasrcId);
+	        	this.datasetType.add(datasetType);
+	        	this.datasrcType.add(datasrcType);
+	        	
+	        	dataset.put("dataSrcId", datasrcId);
+	        	dataset.put("datasetNm", datasetNm);
+	        	dataset.put("datasetQuery", datasetQuery);
+	        	dataset.put("datasetType", datasrcType);
+	        	dataset.put("datasetId", datasources.get(datasetNm));
+	        	dataset.put("fields", fields);
+	        	datasets.add(dataset);
+			}
+	        
+			this.dataset.put("selectedDatasetId", datasources.values().iterator().next());
+			this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
+			this.dataset.put("datasets", datasets);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	/**
+	 * 
+	 * @param layoutNode -> xml Node
+	 * @param parent -> 상위 Layout
+	 * @param allLayouts -> total Layout
+	 * @param items -> items
+	 */
+	private void layoutRecursionParser(Node layoutNode, LayoutTabWrapperVO parent,
+			LayoutTabWrapperVO allLayouts, List<Map<String, Object>> items) {
+
+		NodeList children = layoutNode.getChildNodes();
+		for (int layoutIndex = 0; layoutIndex < children.getLength(); layoutIndex++) {
+			if (children.item(layoutIndex).getNodeType() != Node.ELEMENT_NODE)
+				continue;
+
+			Node node = children.item(layoutIndex);
+			Double weight;
+
+			switch (node.getNodeName()) {
+			case "LayoutGroup":
+				weight = Double.parseDouble(Optional.ofNullable(node.getAttributes().getNamedItem("Weight"))
+						.map(Node::getTextContent).orElse(null));
+
+				LayoutTabWrapperVO layoutWrapper = LayoutTabWrapperVO.builder().type("row").weight(weight).build();
+
+				if (parent == null) {
+					allLayouts.getChildren().add(layoutWrapper);
+				} else {
+					parent.getChildren().add(layoutWrapper);
+				}
+
+				layoutRecursionParser(node, layoutWrapper, allLayouts, items);
+				break;
+			case "LayoutItem":
+
+				weight = Double.parseDouble(Optional.ofNullable(node.getAttributes().getNamedItem("Weight"))
+						.map(Node::getTextContent).orElse(null));
+				String id = Optional.ofNullable(node.getAttributes().getNamedItem("DashboardItem"))
+						.map(Node::getTextContent).orElse(null);
+
+				String component = "";
+				String name = "";
+				for(int i = 0; i < items.size(); i++) {
+					if(items.get(i).get("id").equals(id)) {
+						component = items.get(i).get("type").toString();
+						name = ((Map<String, Object>) items.get(i).get("meta")).get("name").toString();
+					}
+					
+				}
+
+				LayoutTabVO tab = LayoutTabVO.builder().component(component).id(id).name(name).type("tab").build();
+
+				LayoutTabWrapperVO layoutTabset = LayoutTabWrapperVO.builder().type("tabset").weight(weight).build();
+
+				layoutTabset.getChildren().add(tab);
+
+				if (parent == null) {
+					allLayouts.getChildren().add(layoutTabset);
+				} else {
+					parent.getChildren().add(layoutTabset);
+				}
+				break;
+			// 추후 추가
+			// case "LayoutTabContainer":
+			// break;
+			// case "LayoutTabPage":
+			// break;
+			}
+		}
+		
+	}
+
+	private void itemsParser(Node itemsNode) {
+		NodeList children = itemsNode.getChildNodes();
+		List<Map<String, Object>> itemsList = new ArrayList<Map<String, Object>>();
+
+		for (int itemsIndex = 0; itemsIndex < children.getLength(); itemsIndex++) {
+			if (children.item(itemsIndex).getNodeType() != Node.ELEMENT_NODE)
+				continue;
+
+			Node node = children.item(itemsIndex);
+
+			String itemType = node.getNodeName().toLowerCase();
+			ItemType type = null;
+			String componentName = node.getAttributes().getNamedItem("ComponentName").getTextContent();
+			String datasetId = node.getAttributes().getNamedItem("DataSource").getTextContent();
+			String name = node.getAttributes().getNamedItem("Name").getTextContent();
+			String memo = Optional.ofNullable(node.getAttributes().getNamedItem("MemoText")).map(Node::getTextContent)
+					.orElse(null);
+			int dataFieldQuantity = 0;
+			Map<String, Object> dataField = new HashMap<String, Object>();
+			
+			// factory로 전환 부분(ItemType별로)
+			if (ItemType.CHART.toString().equals(itemType)) {
+				type = ItemType.CHART;
+				NodeList itemChildren = node.getChildNodes();
+				List<Dimension> dimensions = new ArrayList<Dimension>();
+				List<Map<String, Object>> dimensionGroups = new ArrayList<Map<String, Object>>();
+				List<Measure> measures = new ArrayList<Measure>();
+
+				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
+					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
+						continue;
+					dataFieldQuantity++;
+
+					Node itemChild = itemChildren.item(itemChildrenIndex);
+					if ("DataItems".equals(itemChild.getNodeName())) {
+						NodeList datas = itemChild.getChildNodes();
+
+						for (int datasIndex = 0; datasIndex < datas.getLength(); datasIndex++) {
+							if (datas.item(datasIndex).getNodeType() != Node.ELEMENT_NODE)
+								continue;
+
+							Node data = datas.item(datasIndex);
+							if (DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap dimensionNodes = data.getAttributes();
+
+								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
+
+								Dimension dimensoion = Dimension.builder().caption(caption)
+										.category(DataFieldType.DIMENSION.toString())
+										.fieldId(fieldId)
+										.name(dimName)
+										.uniqueName(dimName).build();
+
+								dimensions.add(dimensoion);
+
+							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap measureNodes = data.getAttributes();
+
+								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+								SummaryType summaryType = SummaryType.fromString(
+												measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase())
+												.get();
+								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
+
+								Measure measure = Measure.builder().caption(caption)
+										.category(DataFieldType.MEASURE.toString())
+										.fieldId(fieldId)
+										.name(meaName)
+										.uniqueName(meaName)
+										.summaryType(summaryType).build();
+
+								measures.add(measure);
+							}
+						}
+					}
+				}
+				dataField.put("datasetId", datasetId);
+				dataField.put("dimension", dimensions);
+				dataField.put("measure", measures);
+				dataField.put("dimensionGroup", dimensionGroups);
+				dataField.put("dataFieldQuantity", dataFieldQuantity);
+
+			} else if (ItemType.DATA_GRID.toString().equals(itemType)) {
+				type = ItemType.DATA_GRID;
+				NodeList itemChildren = node.getChildNodes();
+				List<RootData> fields = new ArrayList<RootData>();
+				List<SparkLine> sparklines = new ArrayList<SparkLine>();
+
+				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
+					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
+						continue;
+
+					Node itemChild = itemChildren.item(itemChildrenIndex);
+					if ("DataItems".equals(itemChild.getNodeName())) {
+						NodeList datas = itemChild.getChildNodes();
+
+						for (int datasIndex = 0; datasIndex < datas.getLength(); datasIndex++) {
+							if (datas.item(datasIndex).getNodeType() != Node.ELEMENT_NODE)
+								continue;
+
+							Node data = datas.item(datasIndex);
+							if (DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap dimensionNodes = data.getAttributes();
+								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
+								DataFieldType dataType = DataFieldType.DIMENSION;
+
+								Dimension dimensoion = Dimension.builder().caption(caption)
+										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
+										.type(dataType).uniqueName(dimName).build();
+
+								fields.add(dimensoion);
+							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap measureNodes = data.getAttributes();
+
+								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+								SummaryType summaryType = SummaryType
+										.fromString(
+												measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase())
+										.get();
+								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
+								DataFieldType dataType = DataFieldType.MEASURE;
+
+								Measure measure = Measure.builder().caption(caption)
+										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
+										.type(dataType).uniqueName(meaName).summaryType(summaryType).build();
+								fields.add(measure);
+							}
+							// else if(sparkLine 추후 추가)
+							dataField.put("datasetId", datasetId);
+							dataField.put("field", fields);
+							dataField.put("sparkline", new ArrayList<String>());
+						}
+					}
+
+				}
+			}
+			Map<String, Object> meta = new HashMap<String, Object>();
+			meta.put("dataField", dataField);
+			meta.put("memo", memo);
+			meta.put("name", name);
+			meta.put("useCaption", name);
+
+			Map<String, Object> items = new HashMap<String, Object>();
+			items.put("id", componentName);
+			items.put("type", type.toString());
+			items.put("meta", meta);
+			itemsList.add(items);
+		}
+		
+		this.item.put("itemQuantity", itemsList.size());
+		this.item.put("selectedItemId", itemsList.get(0).get("id"));
+		this.item.put("items", itemsList);
+	}
+
+	@Override
+	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
+		getlayoutXmlDTO(dto.getLayoutXml());
+        getDatasetXmlDTO(dto.getDatasetXml(), userId);
+        getChartXmlDTO(dto.getChartXml());
+        getReportXmlDTO(dto.getReportXml());
+        
+		this.returnReport.put("dataset", this.dataset);
+		this.returnReport.put("item", this.item);
+		this.returnReport.put("layout", this.layout);
+		return returnReport;
+	}
+}
