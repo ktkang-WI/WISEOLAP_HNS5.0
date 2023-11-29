@@ -69,10 +69,16 @@
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
     
-    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
-    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">			
-				SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-		</selectKey>       
+    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">    		
+	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">	
+	    		<if test='reportId == 0'>
+                	SELECT MAX(REPORT_ID) FROM REPORT_MSTR
+            	</if>
+            	<if test='reportId != 0'>
+                	SELECT REPORT_ID as reportId FROM REPORT_MSTR 
+            		WHERE REPORT_ID = #{reportId}
+            	</if>            						
+			</selectKey>       		
     	<!--  <if test = "dbType == 'Oracle'"> -->
 	    	MERGE INTO REPORT_MSTR
 	    	USING dual
