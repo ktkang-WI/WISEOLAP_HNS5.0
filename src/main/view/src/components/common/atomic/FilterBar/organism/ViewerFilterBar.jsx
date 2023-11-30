@@ -2,8 +2,7 @@ import {styled, css} from 'styled-components';
 import {useState} from 'react';
 import {getTheme} from 'config/theme';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import FilterBarWrapper
-  from 'components/common/atomic/Common/Wrap/FilterBarWrapper';
+import FilterBarWrapper from '../molecules/FilterBarWrapper';
 import ribbonDefaultElement
   from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import filterImg from 'assets/image/icon/report/filter.png';

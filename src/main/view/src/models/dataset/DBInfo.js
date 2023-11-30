@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ParamUtils from 'components/dataset/utils/ParamUtils';
 
 import {getConfig} from 'config/config';
 
@@ -16,28 +17,30 @@ export const dbTables = async (dsId, search) => {
   return res.data;
 };
 
-export const dbColumns = async (dsId, search, table) => {
+export const dbColumns = async (dsId, table, search) => {
   const res = await axios.post(path + '/db-columns', {
     dsId: dsId,
-    search: search,
     table: table
   });
 
   return res.data;
 };
 
-export const getTablesByMart = async (datasource) => {
+export const getTablesByMart = async (dsId) => {
   const res = await axios.post(path + '/query-dataset-tables', {
-    dsId: parseInt(datasource.dsId)
+    dsId: parseInt(dsId)
   });
 
   return res.data;
 };
 
-export const getDataByQueryMart = async (datasource, query) => {
+export const getDataByQueryMart = async (dsId, query, parameters) => {
+  const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
+
   const res = await axios.post(path + '/query-dataset-fields', {
-    dsId: parseInt(datasource.dsId),
-    query: query
+    dsId: parseInt(dsId),
+    query: query,
+    parameter: JSON.stringify(parameter)
   });
 
   return res.data;

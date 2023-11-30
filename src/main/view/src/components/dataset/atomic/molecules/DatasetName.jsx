@@ -18,7 +18,7 @@ const StyledWrapper = styled.div`
 `;
 
 const DatasetName = ({
-  onChangedValue,
+  onValueChanged,
   name=localizedString.defaultDatasetName
 }) => {
   const {openModal} = useModal();
@@ -32,7 +32,7 @@ const DatasetName = ({
             label: localizedString.datasetName,
             defaultValue: name,
             onSubmit: (title) => {
-              onChangedValue(title);
+              onValueChanged(title);
             }
           });
         }}

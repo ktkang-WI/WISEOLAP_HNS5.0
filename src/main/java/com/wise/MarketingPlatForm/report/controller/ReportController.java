@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -28,9 +27,7 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
-import com.wise.MarketingPlatForm.report.vo.LayoutConfigVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
-import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -102,6 +99,7 @@ public class ReportController {
         String dimensionsStr = param.getOrDefault("dimension", "");
         String measuresStr = param.getOrDefault("measure", "");
         String datasetStr = param.getOrDefault("dataset", "");
+        String parameterStr = param.getOrDefault("parameter", "");
         String ItemTypeStr = param.getOrDefault("itemType", "");
         String userId = param.getOrDefault("userId", "");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
@@ -111,6 +109,9 @@ public class ReportController {
                 }.getType());
         List<Measure> measures = gson.fromJson(measuresStr,
                 new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
                 }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
@@ -122,6 +123,7 @@ public class ReportController {
                 .dimensions(dimensions)
                 .itemType(itemType)
                 .userId(userId)
+                .parameters(parameters)
                 .pagingOption(pagingOption)
                 .build();
 
