@@ -1,15 +1,9 @@
 import customFieldImg from 'assets/image/icon/button/custom_field.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
-import QueryDataSourceDesignerModal
-  from 'components/dataset/modal/QueryDataSourceDesignerModal';
-import SelectDataSourceModal
-  from 'components/dataset/modal/SelectDataSourceModal';
 import localizedString from 'config/localization';
-import useModal from 'hooks/useModal';
 
 const PanelTitleDefaultElement = () => {
-  const {openModal} = useModal();
   return {
     CustomField: {
       id: 'custom_field',
@@ -23,13 +17,6 @@ const PanelTitleDefaultElement = () => {
     DataSourceModify: {
       id: 'data_source_modify',
       onClick: () => {
-        openModal(SelectDataSourceModal, {
-          onSubmit: (dataSource) => {
-            openModal(QueryDataSourceDesignerModal,
-                {selectedDataSource: dataSource}
-            );
-          }
-        });
       },
       src: modifyImg,
       label: localizedString.dataSourceModify
