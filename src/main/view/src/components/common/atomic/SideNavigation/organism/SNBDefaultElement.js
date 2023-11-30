@@ -13,11 +13,11 @@ import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
 import useModal from 'hooks/useModal';
-import SelectCubeModal from '../../../../dataset/modal/SelectCubeModal';
-// import SelectDataSourceModal
-//  from 'components/dataset/modal/SelectDataSourceModal';
-// import QueryDataSourceDesignerModal
-//   from 'components/dataset/modal/QueryDataSourceDesignerModal';
+// import SelectCubeModal from '../../../../dataset/modal/SelectCubeModal';
+import SelectDataSourceModal
+  from 'components/dataset/modal/SelectDataSourceModal';
+import QueryDataSourceDesignerModal
+  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 
 const SNBDefaultElement = () => {
   const nav = useNavigate();
@@ -48,14 +48,14 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: datasetActive,
       label: localizedString.dataset,
       onClick: (e) => {
-        // openModal(SelectDataSourceModal, {
-        //   onSubmit: (dataSource) => {
-        //     openModal(QueryDataSourceDesignerModal,
-        //         {selectedDataSource: dataSource}
-        //     );
-        //   }
-        // });
-        openModal(SelectCubeModal);
+        openModal(SelectDataSourceModal, {
+          onSubmit: (dataSource) => {
+            openModal(QueryDataSourceDesignerModal,
+                {selectedDataSource: dataSource}
+            );
+          }
+        });
+        // openModal(SelectCubeModal);
       }
     },
     'Preference': {

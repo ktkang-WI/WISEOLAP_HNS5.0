@@ -16,13 +16,15 @@ import localizedString from '../../../config/localization';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import models from 'models';
 import useModal from 'hooks/useModal';
-import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import {selectCurrentDatasets, selectDatasetQuantity}
+  from 'redux/selector/DatasetSelector';
 import QueryDataFieldList from '../atomic/molecules/QueryDataFieldList';
 import EditParamterModal from './EditParamterModal';
 import ParameterList from '../atomic/molecules/ParameterList';
 import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
 import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
+import DatasetType from '../utils/DatasetType';
 
 const theme = getTheme();
 
@@ -43,39 +45,52 @@ const RowWrapper = styled.div`
 `;
 
 const QueryDataSourceDesignerModal = ({
-  onSubmit, selectedDataSource, orgDataset={}, query='', ...props
+  onSubmit, selectedDataSource, orgDataset, query='', ...props
 }) => {
-  // const isNew = _.isEmpty(dataset);
+  const defaultDataset = {
+    datasetNm: localizedString.defaultDatasetName,
+    datasetType: DatasetType.DS_SQL,
+    dataSrcId: selectedDataSource.dsId,
+    datasetQuery: ''
+  };
+
+  // hook
   const {openModal, alert} = useModal();
   const dispatch = useDispatch();
-  const {insertDataset} = DatasetSlice.actions;
-  const {setParameterInformation} = ParameterSlice.actions;
+
+  // actions
+  const {updateDataset} = DatasetSlice.actions;
+  const {updateParameterInformation} = ParameterSlice.actions;
+
+  // selector
   const selectedReportId = useSelector(selectCurrentReportId);
   const datasets = useSelector(selectCurrentDatasets);
   const parameters = useSelector(selectCurrentParameters);
-  const queryEditorRef = useRef();
-  const editorRef = queryEditorRef.current;
-  const [dataset, setDataset] = useState(orgDataset);
-  const [paramInfo, setParamInfo] = useState(parameters.informations);
+  const datasetQuantity = useSelector(selectDatasetQuantity);
+
+  // local
+  const datasetId = orgDataset ?
+    orgDataset.datasetId : 'dataset' + (datasetQuantity + 1);
   let selectedParam = [];
 
+  // state
+  const queryEditorRef = useRef();
+  const [dataset, setDataset] =
+      useState(_.cloneDeep(orgDataset || defaultDataset));
+  const [paramInfo, setParamInfo] = useState(parameters.informations
+      .filter((i) => i.dataset.includes(datasetId)));
+
   useEffect(() => {
-    if (!_.isEmpty(dataset)) {
-      // TODO: 기존 데이터 집합 수정하는 경우!!
-    } else {
-      setDataset({
-        datasetNm: localizedString.defaultDatasetName,
-        datasetType: 'DS_SQL',
-        dataSrcId: selectedDataSource.dsId
-      });
+    if (!_.isEmpty(queryEditorRef.current)) {
+      queryEditorRef.current.editor.setValue(dataset.datasetQuery);
     }
-  }, []);
+  }, [queryEditorRef]);
 
   const generateParameter = {
     text: '생성',
     onClick: () => {
-      const query = editorRef.editor.getValue();
-      const paramNames = ParamUtils.getParameterNamesInQuery(query);
+      const query = queryEditorRef.current.editor.getValue();
+      const paramNames = ParamUtils.getParameterNamesInQuery(query) || [];
       let order = paramInfo.reduce((acc, param) => {
         if (acc <= param.order) {
           acc = param.order + 1;
@@ -83,29 +98,36 @@ const QueryDataSourceDesignerModal = ({
         return acc;
       }, 1);
 
-      const tempParam = [];
+      // 기존 데이터 필터링
+      const newParamInfo = paramInfo.filter((info) => {
+        const idx = paramNames.indexOf(info.name);
+        // 기존에 있던 필터
+        if (idx >= 0) {
+          paramNames.splice(idx, 1);
+          return true;
+        }
+        return false;
+      }, []);
 
-      if (!paramNames) {
-        setParamInfo(tempParam);
-        return;
-      }
-
-      // TODO: 현재 데이터셋과 관련 없는 경우 tempParam에 추가되어야 함.
-      paramNames.forEach((name) => {
-        const p = paramInfo.find((param) => param.name == name);
-        if (!p) {
+      // 기존에 없던 필터
+      for (name of paramNames) {
+        const org = parameters.informations.find((info) => info.name == name);
+        if (org) {
+          // 다른 데이터 집합에 동일한 이름을 가진 필터가 있는 경우우
+          newParamInfo.push({...org, dataset: org.dataset.concat([datasetId])});
+        } else {
           const newParam =
             ParamUtils.newParamInformation(
                 name, dataset.dataSrcId, dataset.datasetType, order ++);
-          tempParam.push(newParam);
-        } else {
-          tempParam.push(p);
+
+          newParam.dataset = [datasetId];
+          newParamInfo.push(newParam);
         }
-      });
+      }
 
-      tempParam.sort((a, b) => a.order - b.order);
+      newParamInfo.sort((a, b) => a.order - b.order);
 
-      setParamInfo(tempParam);
+      setParamInfo(newParamInfo);
     }
   };
 
@@ -138,9 +160,9 @@ const QueryDataSourceDesignerModal = ({
   return (
     <Modal
       onSubmit={async () => {
-        const query = editorRef.editor.getValue();
-        const dupleCheck =
-          datasets.find((name) => name.datasetNm == dataset.datasetNm);
+        const query = queryEditorRef.current.editor.getValue();
+        const dupleCheck = datasets.find((ds) =>
+          ds.datasetNm == dataset.datasetNm && ds.datasetId != datasetId);
 
         if (!query || query == '') { // 쿼리 빈값 확인.
           alert('쿼리를 입력해 주세요.');
@@ -178,16 +200,18 @@ const QueryDataSourceDesignerModal = ({
               icon: folderImg
             });
 
-            dispatch(insertDataset({
+            dispatch(updateDataset({
               reportId: selectedReportId,
               dataset: {
                 ...dataset,
+                datasetId: datasetId,
                 datasetQuery: query,
                 fields: tempFields
               }
             }));
 
-            dispatch(setParameterInformation({
+            dispatch(updateParameterInformation({
+              datasetId: datasetId,
               reportId: selectedReportId,
               informations: paramInfo
             }));
@@ -234,7 +258,8 @@ const QueryDataSourceDesignerModal = ({
           <ModalPanel title={localizedString.query} height='100%' padding='10'>
             <QueryEditor
               editorRef={queryEditorRef}
-              value={editorRef && editorRef.editor.getValue()}/>
+              value={queryEditorRef.current &&
+                queryEditorRef.current.editor.getValue()}/>
           </ModalPanel>
           <ModalPanel
             title={localizedString.parameter}

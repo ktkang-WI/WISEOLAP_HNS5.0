@@ -15,3 +15,11 @@ export const getByIdAndDsType = async (userId, dsType) => {
 
   return res.data;
 };
+
+export const getByDsId = async (dsId) => {
+  const res = await axios.post(path + '/data-source', {
+    dsId: dsId
+  });
+
+  return res.data;
+};
