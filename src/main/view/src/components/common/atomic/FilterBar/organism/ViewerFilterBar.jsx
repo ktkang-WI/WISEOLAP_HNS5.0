@@ -4,13 +4,12 @@ import {getTheme} from 'config/theme';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import FilterBarWrapper
   from 'components/common/atomic/Common/Wrap/FilterBarWrapper';
-import RibbonDefaultElement
-  from 'components/common/atomic/Ribbon/molecules/RibbonDefaultElement';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
 
 const theme = getTheme();
-const queryButton = RibbonDefaultElement['QuerySearch'];
 
 const tempFitlerData = [
   {
@@ -158,6 +157,7 @@ const tempFitlerData = [
 
 const ViewerFilterBar = ({useExpandButton=true}) => {
   const [isExpand, setIsExpand] = useState(false);
+  const queryButton = ribbonDefaultElement()['QuerySearch'];
 
   const ExpandBtn = (props) => {
     const BtnWrapper = styled.div`

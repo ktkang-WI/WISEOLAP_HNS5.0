@@ -113,7 +113,7 @@ const RibbonButton = ({
         width={width}
         height={height}
         hoveranimation={hoveredImgSrc? '' : 'true'}
-        onClick={() => onClick(ref)}
+        onClick={() => onClick(Object.assign({}, ref))}
         onMouseOver={hoveredImgSrc? onMouseOver : null}
         onMouseOut={hoveredImgSrc? onMouseOut : null}
         {...props}
@@ -127,7 +127,6 @@ const RibbonButton = ({
             width={width}
             height={height}
             hoveranimation={hoveredImgSrc ? '' : 'true'}
-            // onClick={onClick}
             onMouseOver={hoveredImgSrc ? onMouseOver : null}
             onMouseOut={hoveredImgSrc ? onMouseOut : null}
             {...props}

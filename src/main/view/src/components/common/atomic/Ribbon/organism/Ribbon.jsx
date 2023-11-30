@@ -13,52 +13,20 @@ const StyledRibbon = styled.div`
   padding-left: ${theme.size.snbWidth};
 `;
 
-// const CustomButtonWrapper = styled.div`
-//   display: none; /* Hide by default */
-
-//   @media screen and (min-width: 1280px) {
-//     display: none;
-//   }
-
-//   @media screen and (max-width: 1700px) {
-//     width: auto;
-//     height: 100%;
-//     text-align: left;
-//     float: left;
-//     display: flex;
-//     margin-left: 8px;
-//     margin-right: 8px;
-//     position: relative;
-
-//     &::before {
-//       content: '';
-//       position: absolute;
-//       top: 0;
-//       right: -8px; /* Adjust this value to match the margin-right */
-//       height: 100%;
-//       width: 1px; /* Width of the border */
-//       background-color: ${theme.color.breakLine};
-//     }
-
-//     @media screen and (max-width: 1280px) {
-//       display: none;
-//     }
-
-//   }
-// `;
-
 const Ribbon = () => {
   return (
     <StyledRibbon>
       <CreateRibbonBtns
         items={[
           'NewReport',
+          'Dataset',
           'LoadReport',
           'SaveReport',
           'DeleteReport',
           'DownloadReport',
           'ConnectReport'
         ]}
+        className='test'
         loaction={'reportManagement'}/>
       <CreateRibbonBtns
         items={[

@@ -13,9 +13,12 @@ const Wrapper = styled.div`
   cursor: pointer;
 `;
 
-const LabelImageButton = ({label, imgSrc, height='60px', width='60px'}) => {
+const LabelImageButton = (
+    {label, imgSrc, height='60px', width='60px', ...props}) => {
   return (
-    <Wrapper height={height} width={width} title={label}>
+    <Wrapper height={height} width={width} title={label}
+      onClick={props.onClick}
+    >
       <SmallButtonImage src={imgSrc}/>
       <SmallButtonLabel>{label}</SmallButtonLabel>
     </Wrapper>

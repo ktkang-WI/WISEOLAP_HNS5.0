@@ -1,5 +1,6 @@
 import localizedString from 'config/localization';
 import newReport from 'assets/image/icon/button/new.png';
+import dataset from 'assets/image/icon/button/dataset.png';
 import loadReport from 'assets/image/icon/button/load.png';
 import saveReport from 'assets/image/icon/button/save.png';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
@@ -51,6 +52,26 @@ const RibbonDefaultElement = () => {
         console.log(e);
       }
     },
+    'Dataset': {
+      id: 'dataset',
+      title: localizedString.dataset,
+      label: localizedString.dataset,
+      type: 'RibbonButton',
+      imgSrc: dataset,
+      width: 'auto',
+      height: '45px',
+      useArrowButton: false,
+      onClick: (ref) => {
+        const config = {
+          width: 'max-content',
+          height: 'auto',
+          popoverType: 'onlyTextBtn',
+          titlePanel: false,
+          id: 'dataset'
+        };
+        openedPopover(ref, PopoverUI, config);
+      }
+    },
     'LoadReport': {
       id: 'load_report',
       title: localizedString.loadReport,
@@ -75,8 +96,8 @@ const RibbonDefaultElement = () => {
       'useArrowButton': true,
       'onClick': (ref) => {
         const props = {
-          width: '200px',
-          height: '100%',
+          width: 'max-content',
+          height: 'auto',
           popoverType: 'onlyTextBtn',
           titlePanel: false,
           id: 'save_report'
@@ -109,7 +130,7 @@ const RibbonDefaultElement = () => {
       'onClick': (ref) => {
         const props = {
           width: '200px',
-          height: '100%',
+          height: 'auto',
           popoverType: 'subMenuBtn',
           titlePanel: false,
           id: 'download_report'
@@ -154,7 +175,7 @@ const RibbonDefaultElement = () => {
       'onClick': (ref) => {
         const props = {
           width: '500px',
-          height: '500px',
+          height: 'auto',
           popoverType: 'labelImages',
           titlePanel: true,
           id: 'add_default_chart'
@@ -200,7 +221,7 @@ const RibbonDefaultElement = () => {
       'onClick': (ref) => {
         const props = {
           width: '900px',
-          height: '650px',
+          height: 'auto',
           popoverType: 'labelImages',
           titlePanel: true,
           id: 'add_custom_chart'
