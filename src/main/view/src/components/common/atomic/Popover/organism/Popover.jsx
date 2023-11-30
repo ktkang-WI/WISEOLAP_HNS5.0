@@ -1,30 +1,27 @@
-// import {Popover} from 'devextreme-react';
-// import {useSelector} from 'react-redux';
-// import {selectOpenedPopover} from 'redux/selector/PopoverSelector';
+import {ControlledMenu} from '@szhsin/react-menu';
+// import usePopover from 'hooks/usePopover';
+import React from 'react';
+import {useSelector} from 'react-redux';
+import {selectOpenedPopover} from 'redux/selector/PopoverSelector';
 
-// // dev 사용.
-// const PopoverComp = ({children}) => {
-//   const selectedPopover = useSelector(selectOpenedPopover);
-//   // console.log(selectedPopover);
-//   // const test = () => {
-//   //   console.log('testss');
-//   // };
+// react menu 사용. 팝오버 띄우는 용도.
+const Popover = () => {
+  const selectedPopover = useSelector(selectOpenedPopover);
+  // const {closePopover} = usePopover();
 
-//   return (
-//     <div>
-//       <Popover
-//         target={'#'+selectedPopover.target}
-//         showEvent='click'
-//         position={'bottom'}
-//         // hideOnOutsideClick={test}
-//         width={300}
-//         height={500}
-//         showTitle={true}
-//         title='Details'
-//       >
-//         {children ? children : ''}
-//       </Popover>
-//     </div>
-//   );
-// };
-// export default PopoverComp;
+  const {Component, props} = selectedPopover;
+  const onClose = (e) => {
+    // console.log(e);
+  };
+  return (
+    <ControlledMenu
+      id='Popover'
+      state={selectedPopover.isOpen ? 'open' : 'closed'}
+      anchorRef={selectedPopover.targetRef}
+      onClose={onClose}
+    >
+      {Component ? <Component props={{...props}}/> : <div></div>}
+    </ControlledMenu>
+  );
+};
+export default React.memo(Popover);
