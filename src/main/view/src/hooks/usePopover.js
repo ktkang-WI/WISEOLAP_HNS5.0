@@ -5,15 +5,21 @@ export default function usePopover() {
   const dispatch = useDispatch();
   const popoverSlice = PopoverSlice.actions;
 
-  const openedPopover = (target, content) => {
-    dispatch(popoverSlice.openPopover({target: target, content: content}));
+  const openedPopover = (targetRef, component, props) => {
+    const param = {
+      targetRef: targetRef,
+      component: component,
+      props: props
+    };
+
+    dispatch(popoverSlice.openPopover(param));
   };
 
-  const openedPopover2 = (target) => {
-    dispatch(popoverSlice.openPopover2(target));
+  const closePopover = () => {
+    dispatch(popoverSlice.closePopover());
   };
   return {
     openedPopover,
-    openedPopover2
+    closePopover
   };
 };
