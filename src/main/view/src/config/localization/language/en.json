@@ -110,5 +110,9 @@
   "columnPlaceholder": "New Column",
   "fieldPlaceholder": "New Field",
   "sparkline": "Spark Line",
-  "sparklinePlaceholder": "new Spark Line"
+  "sparklinePlaceholder": "new Spark Line",
+  "addDsUpload": "add Ds Upload",
+  "addDsSingle": "add Ds Single",
+  "addCUBE": "add cube",
+  "addDsSQL": "add Ds SQL"
 }
