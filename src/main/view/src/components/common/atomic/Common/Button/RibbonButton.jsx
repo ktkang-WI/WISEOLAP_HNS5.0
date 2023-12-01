@@ -99,14 +99,16 @@ const RibbonButton = ({
   ...props
 }) => {
   const ref = useRef(null);
-  // console.log('btns', ref);
   const [src, setSrc] = useState(imgSrc);
+
   const onMouseOver = function() {
     setSrc(hoveredImgSrc);
   };
+
   const onMouseOut = function() {
     setSrc(imgSrc);
   };
+
   const renderButtonContent = () => {
     return (
       <Button
