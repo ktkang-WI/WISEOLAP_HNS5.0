@@ -24,10 +24,8 @@ const SearchFileTextBox = ({editorOptions}) => {
           const elementAttr = e.component.option('elementAttr');
           editorOptions.createDataSource({
             'fldNm': elementAttr.name,
-            // 'fldId': elementAttr.fldId,
-            // 'fldType': elementAttr.fldType
-            'fldId': 1901,
-            'fldType': 'PUBLIC'
+            'fldId': elementAttr.fldId,
+            'fldType': elementAttr.fldType
           });
         }}
       />

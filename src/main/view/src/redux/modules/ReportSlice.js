@@ -34,7 +34,7 @@ const reducers = {
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
-    // state.selectedReportId = actions.payload.reportId;
+    state.selectedReportId = actions.payload.reportId;
   },
   updateReport(state, actions) {
     const index = state.reports.findIndex(

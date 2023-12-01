@@ -34,16 +34,13 @@ const ReportFolderSelectorModal = ({...props}) => {
       if (response.status != 200) {
         return;
       }
-      // dispatch(inserReport({tempReport}));
-      console.log(response);
       setItems(response.data);
     });
   }, []);
 
   const getFolderPath = (component, fldParentId, fldPath) => {
-    const folder = component.option('items').filter((item) => {
-      return item.fldId === fldParentId;
-    })[0];
+    const folder = component.option('items').find((item) =>
+      item.fldId === fldParentId);
     if (fldParentId != 0) {
       return getFolderPath(component, folder.fldParentId,
           folder.fldNm + ' > ' + fldPath);

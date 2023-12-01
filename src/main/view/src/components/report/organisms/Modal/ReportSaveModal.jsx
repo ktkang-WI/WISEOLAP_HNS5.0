@@ -50,7 +50,6 @@ const SaveReportModal = ({...props}) => {
       height={theme.size.bigModalHeight}
       width={theme.size.middleModalHeight}
       onSubmit={(e) => {
-        // generateParameter(dataSource);
         saveReport(dataSource);
       }}
       {...props}
