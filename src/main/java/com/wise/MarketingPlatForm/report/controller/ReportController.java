@@ -162,7 +162,7 @@ public class ReportController {
         return reportService.getReport(reportId, userId);
 	}   
     
-    @PostMapping(value = "/report-save")
+    @PostMapping(value = "/save-report")
 	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
     	String reportNm = param.getOrDefault("name", "");
