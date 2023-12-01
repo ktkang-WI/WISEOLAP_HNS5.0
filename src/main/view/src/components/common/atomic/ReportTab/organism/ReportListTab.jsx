@@ -1,6 +1,7 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {TreeView} from 'devextreme-react';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
@@ -37,7 +38,7 @@ const ReportListTab = ({width, ...props}) => {
         noDataText="조회된 보고서가 없습니다."
         searchEnabled={true}
         searchEditorOptions={{
-          placeholder: '검색'
+          placeholder: localizedString.search
         }}
         focusStateEnabled={true}
         {...props}

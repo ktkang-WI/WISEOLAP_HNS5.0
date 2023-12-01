@@ -118,5 +118,6 @@
   "selectFolder": "폴더 선택",
   "folderList": "폴더 목록",
   "publicFolder": "공용 폴더",
-  "privateFolder": "개인 폴더"
+  "privateFolder": "개인 폴더",
+  "search": "검색"
 }
