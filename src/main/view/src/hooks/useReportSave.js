@@ -6,11 +6,16 @@ import store from 'redux/modules';
 import {addReport} from 'models/report/Report';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import LayoutSlice from 'redux/modules/LayoutSlice';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {insertReport} = ReportSlice.actions;
-
+  const {insertItemReportId} = ItemSlice.actions;
+  const {insertLayoutReportId} = LayoutSlice.actions;
+  const {insertDatasetReportId} = DatasetSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
@@ -44,11 +49,15 @@ const useReportSave = () => {
       if (response.status != 200) {
         return;
       }
+      const reportId = response.data.reportId;
       const report = {
-        reportId: response.data.reportId,
+        reportId: reportId,
         options: {...response.data}
       };
       dispatch(insertReport(report));
+      dispatch(insertItemReportId(report));
+      dispatch(insertLayoutReportId(report));
+      dispatch(insertDatasetReportId(report));
     });
   };
 

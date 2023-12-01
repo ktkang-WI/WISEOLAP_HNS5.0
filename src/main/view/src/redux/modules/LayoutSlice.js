@@ -61,6 +61,11 @@ const reducers = {
         )
       }
     };
+  },
+  insertLayoutReportId(state, actions) {
+    const newReport = state[0];
+    delete state[0];
+    state[actions.payload.reportId] = {...newReport};
   }
 };
 const extraReducers = {};
