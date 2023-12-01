@@ -156,7 +156,7 @@ const generateParameterForQueryExecute = (parameters) => {
     if (values.length == 0 &&
       p.paramType == 'CALENDAR' && p.calendarDefaultType == 'NOW') {
       p.calendarPeriodBase.map((base, i) => {
-        const value = p.calendarPeriodValue? p.calendarPeriodValue[i] : 0;
+        const value = p.calendarPeriodValue ? p.calendarPeriodValue[i] : 0;
         const date = getCalendarNowDefaultValue(base, value);
         // TODO: 달력 필터 기본값 만들기
         values.push(
