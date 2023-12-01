@@ -28,6 +28,8 @@ const newParamInformation = (name, dsId, dsType, order = 1) => {
     exceptionValue: '', // 기존 where_clause, 전체나 비어있는 값 입력시 들어가는 값
     dsId: dsId, // 데이터 원본 정보, 주제영역 사용시 CUBE_ID로 사용
     dsType: dsType, // 데이터 원본 타입
+    dataset: [], // 필터를 사용하는 데이터집합
+
     // CUBE or DS_SINGLE Only Use
     orgField: '', // 주제영역, 단일 테이블의 경우 조회를 위해 원본 데이터 항목 키값 저장
 
@@ -154,7 +156,7 @@ const generateParameterForQueryExecute = (parameters) => {
     if (values.length == 0 &&
       p.paramType == 'CALENDAR' && p.calendarDefaultType == 'NOW') {
       p.calendarPeriodBase.map((base, i) => {
-        const value = p.calendarPeriodValue[i];
+        const value = p.calendarPeriodValue ? p.calendarPeriodValue[i] : 0;
         const date = getCalendarNowDefaultValue(base, value);
         // TODO: 달력 필터 기본값 만들기
         values.push(

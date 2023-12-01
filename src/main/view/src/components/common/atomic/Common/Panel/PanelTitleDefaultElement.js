@@ -3,13 +3,15 @@ import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
 import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
-import SelectDataSourceModal
-  from 'components/dataset/modal/SelectDataSourceModal';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
+import store from 'redux/modules';
+import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
+import DatasetType from 'components/dataset/utils/DatasetType';
+import models from 'models';
 
 const PanelTitleDefaultElement = () => {
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   return {
     CustomField: {
       id: 'custom_field',
@@ -22,14 +24,22 @@ const PanelTitleDefaultElement = () => {
     },
     DataSourceModify: {
       id: 'data_source_modify',
-      onClick: () => {
-        openModal(SelectDataSourceModal, {
-          onSubmit: (dataSource) => {
-            openModal(QueryDataSourceDesignerModal,
-                {selectedDataSource: dataSource}
-            );
-          }
-        });
+      onClick: async () => {
+        const dataset = selectCurrentDataset(store.getState());
+
+        if (!dataset) {
+          alert(localizedString.datasetNotSelected);
+          return;
+        }
+
+        if (dataset.datasetType == DatasetType.DS_SQL) {
+          const dataSource = await models.
+              DataSource.getByDsId(dataset.dataSrcId);
+
+          openModal(QueryDataSourceDesignerModal,
+              {selectedDataSource: dataSource, orgDataset: dataset}
+          );
+        }
       },
       src: modifyImg,
       label: localizedString.dataSourceModify

@@ -2,7 +2,7 @@ import PanelTitleText from './PanelTitleText';
 import SmallImageButton from '../Button/SmallImageButton';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import panelTitleDefaultElement from './PanelTitleDefaultElement';
+import getElement from './PanelTitleDefaultElement';
 
 const theme = getTheme();
 
@@ -22,32 +22,35 @@ const Buttons = styled.div`
   float: right;
 `;
 
-const getButton = (button) => {
-  return (
-    <SmallImageButton
-      key={button.id}
-      title={button.label}
-      onClick={button.onClick}
-      src={button.src}
-      {...button}
-    >
-    </SmallImageButton>
-  );
-};
-
-const generateButtons = (buttons) => {
-  if (!buttons) return;
-
-  return buttons.map((button) => {
-    if (typeof button === 'string') {
-      return getButton(panelTitleDefaultElement()[button]);
-    } else {
-      return getButton(button);
-    }
-  });
-};
-
 const PanelTitle = ({panelTitle, buttons}) => {
+  const panelTitleDefaultElement = getElement();
+
+
+  const getButton = (button) => {
+    return (
+      <SmallImageButton
+        key={button.id}
+        title={button.label}
+        onClick={button.onClick}
+        src={button.src}
+        {...button}
+      >
+      </SmallImageButton>
+    );
+  };
+
+  const generateButtons = (buttons) => {
+    if (!buttons) return;
+
+    return buttons.map((button) => {
+      if (typeof button === 'string') {
+        return getButton(panelTitleDefaultElement[button]);
+      } else {
+        return getButton(button);
+      }
+    });
+  };
+
   return (
     <Wrapper>
       <PanelTitleText>{panelTitle}</PanelTitleText>
