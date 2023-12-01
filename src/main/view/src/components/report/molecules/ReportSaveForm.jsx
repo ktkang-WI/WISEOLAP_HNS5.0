@@ -79,25 +79,6 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
           {localizedString.selectFolder}
         </Label>
       </Item>
-      {/* SimpleItem, SearchFileTextBox Component 따로 구현
-      ** 우선 Item, dxTextBox 로 사용하여 검색 버튼 구현하여 사용 하지만
-      ** 검색 버튼이 textbox 의 있지 않고 외부로 독립적인 Component 로 사용한다고 한다면
-      ** SearchFileTextBox Component 사용 고려
-      */}
-      {/* <SimpleItem
-        render={SearchFileTextBox}
-        dataField='reportFolder'
-        editorOptions={{
-          height: theme.size.labelTextBoxHeight,
-          text: dataSource.fldNm,
-          onClick: () => openModal(ReportFolderSelectorModal),
-          createDataSource: createDataSource
-        }}
-      >
-        <Label>
-          {localizedString.selectFolder}
-        </Label>
-      </SimpleItem> */}
       <Item
         editorType='dxNumberBox'
         dataField='order'

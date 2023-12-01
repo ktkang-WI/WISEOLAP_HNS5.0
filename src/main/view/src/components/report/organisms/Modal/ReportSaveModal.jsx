@@ -36,7 +36,7 @@ const SaveReportModal = ({...props}) => {
 
   /**
    * SaveReportModal state(dataSource) 값 설정
-   * ReportSaveForm.jsx , searchFileTextBox.jsx 에서 현재 파일의 state를 변경하기 위함
+   * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
    * (key 값은 Form item 의 dataField 값과 일치)
    * @param {JSON} param  dataSource 의 key, value 값
    */
