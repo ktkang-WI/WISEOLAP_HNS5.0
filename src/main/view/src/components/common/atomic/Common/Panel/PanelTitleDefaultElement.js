@@ -9,9 +9,19 @@ import store from 'redux/modules';
 import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import DatasetType from 'components/dataset/utils/DatasetType';
 import models from 'models';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import ParameterSlice from 'redux/modules/ParameterSlice';
+import {useDispatch} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const PanelTitleDefaultElement = () => {
-  const {openModal, alert} = useModal();
+  const {openModal, alert, confirm} = useModal();
+  const dispatch = useDispatch();
+  const {deleteDataset} = DatasetSlice.actions;
+  const {deleteParameterByDatsetId} = ParameterSlice.actions;
+  const {initItemByDatsetId} = ItemSlice.actions;
+
   return {
     CustomField: {
       id: 'custom_field',
@@ -47,7 +57,14 @@ const PanelTitleDefaultElement = () => {
     DataSourceRemove: {
       id: 'data_source_remove',
       onClick: () => {
-        console.log('눌렸어요!3');
+        const dataset = selectCurrentDataset(store.getState());
+        const reportId = selectCurrentReportId(store.getState());
+        confirm('데이터 집합을 삭제하시겠습니까?', () => {
+          const datasetId = dataset.datasetId;
+          dispatch(deleteDataset({datasetId, reportId}));
+          dispatch(deleteParameterByDatsetId({reportId, datasetId}));
+          dispatch(initItemByDatsetId({reportId, datasetId}));
+        });
       },
       src: removeImg,
       label: localizedString.dataSourceRemove
