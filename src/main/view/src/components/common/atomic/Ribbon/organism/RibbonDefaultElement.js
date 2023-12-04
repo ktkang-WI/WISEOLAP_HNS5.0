@@ -60,6 +60,7 @@ const RibbonDefaultElement = () => {
       imgSrc: dataset,
       width: 'auto',
       height: '45px',
+      usePopover: true,
       useArrowButton: false,
       onClick: (ref) => {
         const config = {
@@ -69,7 +70,7 @@ const RibbonDefaultElement = () => {
           titlePanel: false,
           id: 'dataset'
         };
-        openedPopover(ref, PopoverUI, config);
+        openedPopover(PopoverUI, config);
       }
     },
     'LoadReport': {
@@ -93,6 +94,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': saveReport,
       'width': 'auto',
       'height': '45px',
+      'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
         const props = {
@@ -102,7 +104,8 @@ const RibbonDefaultElement = () => {
           titlePanel: false,
           id: 'save_report'
         };
-        openedPopover(ref, PopoverUI, props);
+        openedPopover(PopoverUI, props);
+        console.log('clicked');
       }
     },
     'DeleteReport': {
@@ -114,8 +117,8 @@ const RibbonDefaultElement = () => {
       'width': 'auto',
       'height': '45px',
       'useArrowButton': false,
-      'onClick': (ref, e) => {
-        console.log(ref, e);
+      'onClick': (ref) => {
+        console.log(ref);
       }
     },
     'DownloadReport': {
@@ -126,6 +129,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': downloadReport,
       'width': 'auto',
       'height': '45px',
+      'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
         const props = {
@@ -135,7 +139,7 @@ const RibbonDefaultElement = () => {
           titlePanel: false,
           id: 'download_report'
         };
-        openedPopover(ref, PopoverUI, props);
+        openedPopover(PopoverUI, props);
       }
     },
     'ConnectReport': {
@@ -171,8 +175,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': addChart,
       'width': 'auto',
       'height': '45px',
+      'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
+        console.log('AddChart~~!');
         const props = {
           width: '500px',
           height: 'auto',
@@ -180,7 +186,7 @@ const RibbonDefaultElement = () => {
           titlePanel: true,
           id: 'add_default_chart'
         };
-        openedPopover(ref, PopoverUI, props);
+        openedPopover(PopoverUI, props);
       }
     },
     'AddPivotGrid': {
@@ -217,8 +223,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': addChart,
       'width': 'auto',
       'height': '45px',
+      'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
+        console.log('AddCustomChart');
         const props = {
           width: '900px',
           height: 'auto',
@@ -226,7 +234,7 @@ const RibbonDefaultElement = () => {
           titlePanel: true,
           id: 'add_custom_chart'
         };
-        openedPopover(ref, PopoverUI, props);
+        openedPopover(PopoverUI, props);
       }
     },
     'CaptionView': {

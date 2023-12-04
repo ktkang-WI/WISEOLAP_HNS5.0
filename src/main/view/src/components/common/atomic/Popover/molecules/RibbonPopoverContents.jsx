@@ -26,7 +26,11 @@ const popoverSelector = (type, items) => {
         {items.map((item, idx) => {
           return (
             <IconWrap key={idx}>
-              <PopoverLabelImageBtn item={item}/>
+              <PopoverLabelImageBtn
+                label={item.label}
+                imgSrc={item.imgSrc}
+                onClick={item.onClick}
+              />
             </IconWrap>
           );
         })}
@@ -37,7 +41,11 @@ const popoverSelector = (type, items) => {
       <InnerContentWrapper>
         {items.map((item, idx) => {
           return (item.visible || typeof item.visible === 'undefined') &&
-            <PopoverTextBtn item={item} key={idx}/>;
+            <PopoverTextBtn
+              key={idx}
+              label={item.label}
+              onClick={item.onClick}
+            />;
         })}
       </InnerContentWrapper>
     );
@@ -47,7 +55,9 @@ const popoverSelector = (type, items) => {
         {items.map((item, idx) => {
           return item.visible &&
             <PopoverSubMenu
-              item={item}
+              label={item.label}
+              visible={item.visible}
+              contents={item.contents}
               key={idx}
             />;
         })}
@@ -68,6 +78,7 @@ const RibbonPopoverContents = ({popoverType, titlePanel, id}) => {
                 {e}
               </PopoverTitlePanel>
             </TitleWrap>}
+
           {popoverSelector(popoverType, element[e])}
         </StyledDiv>
       );

@@ -12,9 +12,18 @@ const PopoverWrap = styled.div`
 const PopoverUI = ({props}) => {
   return (
     <PopoverWrap
+      id={props.id}
+      width={props.width}
+      height={props.height}
+      titlePanel={props.titlePanel}
+      popoverType={props.popoverType}
       {...props}
     >
-      <RibbonPopoverContents {...props}/>
+      <RibbonPopoverContents
+        id={props.id}
+        titlePanel={props.titlePanel}
+        popoverType={props.popoverType}
+        {...props}/>
     </PopoverWrap>
   );
 };

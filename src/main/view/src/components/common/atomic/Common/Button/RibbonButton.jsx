@@ -1,5 +1,5 @@
 import {styled, css} from 'styled-components';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {getTheme} from '../../../../../config/theme';
 import RibbonButtonLabel from '../Label/RibbonButtonLabel';
 import arrowDown from '../../../../../assets/image/icon/button/arrow_down.png';
@@ -98,7 +98,6 @@ const RibbonButton = ({
   useArrowButton,
   ...props
 }) => {
-  const ref = useRef(null);
   const [src, setSrc] = useState(imgSrc);
 
   const onMouseOver = function() {
@@ -115,12 +114,11 @@ const RibbonButton = ({
         width={width}
         height={height}
         hoveranimation={hoveredImgSrc? '' : 'true'}
-        onClick={() => onClick(Object.assign({}, ref))}
+        onClick={onClick}
         onMouseOver={hoveredImgSrc? onMouseOver : null}
         onMouseOut={hoveredImgSrc? onMouseOut : null}
         {...props}
         rightButton={useArrowButton}
-        ref={ref}
       >
         <Image src={src} height={height} />
         <RibbonButtonLabel>{label}</RibbonButtonLabel>

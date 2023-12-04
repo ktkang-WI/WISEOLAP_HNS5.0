@@ -5,9 +5,8 @@ export default function usePopover() {
   const dispatch = useDispatch();
   const popoverSlice = PopoverSlice.actions;
 
-  const openedPopover = (targetRef, component, props) => {
+  const openedPopover = (component, props) => {
     const param = {
-      targetRef: targetRef,
       component: component,
       props: props
     };
@@ -18,6 +17,7 @@ export default function usePopover() {
   const closePopover = () => {
     dispatch(popoverSlice.closePopover());
   };
+
   return {
     openedPopover,
     closePopover

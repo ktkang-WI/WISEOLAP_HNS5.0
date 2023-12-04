@@ -26,8 +26,7 @@ const Ribbon = () => {
           'DownloadReport',
           'ConnectReport'
         ]}
-        className='test'
-        loaction={'reportManagement'}/>
+      />
       <CreateRibbonBtns
         items={[
           'AddContainer',
@@ -36,9 +35,7 @@ const Ribbon = () => {
           'AddGrid',
           'AddCustomChart'
         ]}
-        loaction={'chartManagement'}/>
-      {/* <CustomButtonWrapper> */}
-      {/* 필요시 화살표 버튼 추가(prev) */}
+      />
       <CreateRibbonBtns
         items={[
           'CaptionView',
@@ -53,14 +50,12 @@ const Ribbon = () => {
           'ColorEdit',
           'PointLabel'
         ]}
-        loaction={'itemOptionsManagement'}/>
-      {/* 필요시 화살표 버튼 추가(next) */}
-      {/* </CustomButtonWrapper> */}
+      />
       <CreateRibbonBtns
         items={[
           'QuerySearch'
         ]}
-        loaction={'querySearch'}/>
+      />
     </StyledRibbon>
   );
 };

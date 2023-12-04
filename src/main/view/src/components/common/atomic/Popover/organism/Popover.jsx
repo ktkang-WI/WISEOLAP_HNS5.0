@@ -1,27 +1,38 @@
-import {ControlledMenu} from '@szhsin/react-menu';
-// import usePopover from 'hooks/usePopover';
-import React from 'react';
+import {Menu, MenuButton} from '@szhsin/react-menu';
 import {useSelector} from 'react-redux';
 import {selectOpenedPopover} from 'redux/selector/PopoverSelector';
 
 // react menu 사용. 팝오버 띄우는 용도.
-const Popover = () => {
+const Popover = ({btn}) => {
   const selectedPopover = useSelector(selectOpenedPopover);
-  // const {closePopover} = usePopover();
 
   const {Component, props} = selectedPopover;
-  const onClose = (e) => {
-    // console.log(e);
-  };
+
   return (
-    <ControlledMenu
+    <Menu
       id='Popover'
-      state={selectedPopover.isOpen ? 'open' : 'closed'}
-      anchorRef={selectedPopover.targetRef}
-      onClose={onClose}
+      menuButton={
+        <MenuButton
+          style={{ // 버튼 CSS 제거.
+            border: 0,
+            backgroundColor: 'transparent',
+            padding: 0
+          }}
+        >
+          {btn}
+        </MenuButton>}
+      position='initial'
     >
-      {Component ? <Component props={{...props}}/> : <div></div>}
-    </ControlledMenu>
+      {Component ?
+        <Component
+          id={props.id}
+          width={props.width}
+          height={props.height}
+          popoverType={props.popoverType}
+          titlePanel={props.titlePanel}
+          props={{...props}}
+        /> : <div></div>}
+    </Menu>
   );
 };
-export default React.memo(Popover);
+export default Popover;

@@ -1,25 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  openedPopover: {isOpen: false}
+  openedPopover: {}
 };
 
 const reducers = {
   openPopover(state, actions) {
-    if (!state.openedPopover.isOpen) {
-      state.openedPopover = {
-        ...state.openedPopover,
-        isOpen: true,
-        targetRef: actions.payload.targetRef,
-        Component: actions.payload.component,
-        props: actions.payload.props
-      };
-    } else {
-      state.openedPopover = {isOpen: false};
-    }
+    state.openedPopover = {
+      Component: actions.payload.component,
+      props: actions.payload.props
+    };
   },
   closePopover(state, actions) {
-    state.openedPopover = {isOpen: false};
+    state.openedPopover = {};
   }
 };
 
