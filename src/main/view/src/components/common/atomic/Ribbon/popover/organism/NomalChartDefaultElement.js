@@ -12,82 +12,69 @@ const NomalChartDefaultElement = () => {
   return {
     barChart: [
       {
-        src: bar,
+        imgSrc: bar,
         label: localizedString.barChart,
-        locatoin: 'barChart',
         onClick: () => {
           insertFlexLayout(selectedReportId, 'chart');
           closePopover();
         }
       },
       {
-        src: bar,
+        imgSrc: bar,
         label: 'aaa',
-        locatoin: 'barChart',
         onClick: () => {
           console.log('test');
         }
       },
       {
-        src: bar,
-        label: 'ccc',
-        locatoin: 'barChart'
+        imgSrc: bar,
+        label: 'ccc'
       },
       {
-        src: bar,
-        label: 'dddd',
-        locatoin: 'barChart'
+        imgSrc: bar,
+        label: 'dddd'
       }
     ],
     lineChart: [
       {
-        src: bar,
-        label: 'ddd',
-        locatoin: 'lineChart'
+        imgSrc: bar,
+        label: 'ddd'
       },
       {
-        src: bar,
-        label: 'aaa',
-        locatoin: 'lineChart'
+        imgSrc: bar,
+        label: 'aaa'
       },
       {
-        src: bar,
-        label: 'ccc',
-        locatoin: 'lineChart'
+        imgSrc: bar,
+        label: 'ccc'
       }
     ],
     areaChart: [
       {
-        src: bar,
-        label: 'ddd',
-        locatoin: 'areaChart'
+        imgSrc: bar,
+        label: 'ddd'
       },
       {
-        src: bar,
-        label: 'aaa',
-        locatoin: 'areaChart'
+        imgSrc: bar,
+        label: 'aaa'
       },
       {
-        src: bar,
-        label: 'ccc',
-        locatoin: 'areaChart'
+        imgSrc: bar,
+        label: 'ccc'
       }
     ],
     restChart: [
       {
-        src: bar,
-        label: 'ddd',
-        locatoin: 'restChart'
+        imgSrc: bar,
+        label: 'ddd'
       },
       {
-        src: bar,
-        label: 'aaa',
-        locatoin: 'restChart'
+        imgSrc: bar,
+        label: 'aaa'
       },
       {
-        src: bar,
-        label: 'ccc',
-        locatoin: 'restChart'
+        imgSrc: bar,
+        label: 'ccc'
       }
     ],
     keys: [

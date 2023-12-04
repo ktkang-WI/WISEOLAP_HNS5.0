@@ -9,25 +9,30 @@ height: 100%;
 text-align: left;
 display: flex;
 position: relative;
+
 &:nth-child(n) {
   margin-left: 10px;
   margin-right: 8px;
   float: left;
 }
+
 &:last-child {
   float: right;
   margin-right: 20px;
 }
+
 &:nth-child(2) {
   @media screen and (max-width: 900px) {
     display: none;
   }
 }
+
 &:nth-child(3) {
   @media screen and (max-width: 1280px) {
     display: none;
   }
 }
+
 &:nth-child(n)::before {
   content: '';
   position: absolute;
@@ -37,6 +42,7 @@ position: relative;
   height: 100%;
   background-color: ${theme.color.breakLine};
 }
+
 &:last-child::before {
   margin-right: 169%;
 }

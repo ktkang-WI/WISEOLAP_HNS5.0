@@ -1,14 +1,12 @@
 import localizedString from 'config/localization';
 import SelectCubeModal from 'components/dataset/modal/SelectCubeModal';
 import useModal from 'hooks/useModal';
-import usePopover from 'hooks/usePopover';
 import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import SelectDataSourceModal
   from 'components/dataset/modal/SelectDataSourceModal';
 
 const DatasetDefaultElement = () => {
-  const {closePopover} = usePopover();
   const {openModal} = useModal();
   return {
     dataset: [
@@ -18,8 +16,6 @@ const DatasetDefaultElement = () => {
         visible: true,
         onClick: () => {
           openModal(SelectCubeModal);
-
-          closePopover();
         }
       },
       {
@@ -34,8 +30,6 @@ const DatasetDefaultElement = () => {
               );
             }
           });
-
-          closePopover();
         }
       },
       {

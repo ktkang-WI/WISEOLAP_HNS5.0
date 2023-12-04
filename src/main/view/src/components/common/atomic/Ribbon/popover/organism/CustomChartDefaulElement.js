@@ -1,3 +1,4 @@
+import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
 import barImg from '../../../../../../assets/image/icon/item/bar.png';
 
@@ -6,74 +7,74 @@ const CustomChartDefaulElement = () => {
   return {
     relationChart: [
       {
-        src: barImg,
-        label: 'ddd',
+        imgSrc: barImg,
+        label: localizedString.histogram,
         onClick: () => {
           console.log(insertFlexLayout);
         }
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'aaa'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'ccc'
       }
     ],
     associativeChart: [
       {
-        src: '',
+        imgSrc: '',
         label: 'ddd'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'aaa'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'ccc'
       }
     ],
     compareDistritution: [
       {
-        src: '',
+        imgSrc: '',
         label: 'ddd'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'aaa'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'ccc'
       }
     ],
     filter: [
       {
-        src: '',
+        imgSrc: '',
         label: 'ddd'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'aaa'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'ccc'
       }
     ],
     restItem: [
       {
-        src: '',
+        imgSrc: '',
         label: 'ddd'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'aaa'
       },
       {
-        src: '',
+        imgSrc: '',
         label: 'ccc'
       }
     ],

@@ -1,21 +1,25 @@
-// import Popover from '../../Popover/organism/Popover';
-import RibbonRibbonBtn from '../atom/RibbonRibbonBtn';
-import RibbonCommonBtn from '../atom/RibbonCommonBtn';
-import RibbonOnlyImageBtn from '../atom/RibbonOnlyImageBtn';
+import AddRibbonBtn from '../atom/AddRibbonBtn';
+import AddCommonBtn from '../atom/AddCommonBtn';
+import AddOnlyImageBtn from '../atom/AddOnlyImageBtn';
 import ribbonDefaultElement from '../organism/RibbonDefaultElement';
 import RibbonBtnWrap from '../atom/RibbonBtnWrap';
+import Popover from '../../Popover/organism/Popover';
 
-const CreateRibbonBtns = ({items, loaction}) => {
+const CreateRibbonBtns = ({items}) => {
   const getRibbonItem = (item) => {
-    if (item.type === 'RibbonButton') {
-      return (<RibbonRibbonBtn item={item}/>);
+    if (item.type === 'RibbonButton' && !item.usePopover) {
+      return (<AddRibbonBtn item={item}/>);
+    } else if (item.usePopover == true) {
+      return (
+        <Popover btn={<AddRibbonBtn item={item}/>}/>
+      );
     } else if (item.type === 'OnlyImageButton') {
-      return (<RibbonOnlyImageBtn item={item}/>);
+      return (<AddOnlyImageBtn item={item}/>);
     } else if (item.type === 'CommonButton') {
-      return (<RibbonCommonBtn item={item}/>);
+      return (<AddCommonBtn item={item}/>);
     }
   };
-  const itemIterator = (ribbonDefaultItems, items, loaction) => {
+  const itemIterator = (ribbonDefaultItems, items) => {
     if (!items) return;
 
     const itemArr = [...items];
@@ -23,10 +27,10 @@ const CreateRibbonBtns = ({items, loaction}) => {
     return itemArr.map((item) => {
       if (typeof item === 'string') {
         return getRibbonItem(
-            {...ribbonDefaultItems[item], loaction}
+            {...ribbonDefaultItems[item]}
         );
       } else if (item) {
-        return getRibbonItem({...item, loaction});
+        return getRibbonItem({...item});
       }
     });
   };
@@ -34,7 +38,7 @@ const CreateRibbonBtns = ({items, loaction}) => {
   const ribbonDefaultItems = ribbonDefaultElement();
   return (
     <RibbonBtnWrap>
-      {itemIterator(ribbonDefaultItems, items, loaction)}
+      {itemIterator(ribbonDefaultItems, items)}
     </RibbonBtnWrap>
   );
 };
