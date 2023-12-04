@@ -1,6 +1,6 @@
 import RibbonPanel from '../../Common/Panel/RibbonPanel';
 import CommonButton from '../../Common/Button/TextButton';
-const RibbonCommonBtn = ({item}) => {
+const AddCommonBtn = ({item}) => {
   return (
     <RibbonPanel key={item.id} position={item.position}>
       <CommonButton
@@ -15,4 +15,4 @@ const RibbonCommonBtn = ({item}) => {
     </RibbonPanel>
   );
 };
-export default RibbonCommonBtn;
+export default AddCommonBtn;

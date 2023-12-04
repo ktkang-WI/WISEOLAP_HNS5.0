@@ -1,7 +1,7 @@
 import OnlyImageButton from '../../Common/Button/OnlyImageButton';
 import RibbonPanel from '../../Common/Panel/RibbonPanel';
 
-const RibbonOnlyImageBtn = () => {
+const AddOnlyImageBtn = () => {
   return (
     <RibbonPanel key={item.id} position={item.position}>
       <OnlyImageButton
@@ -15,4 +15,4 @@ const RibbonOnlyImageBtn = () => {
     </RibbonPanel>
   );
 };
-export default RibbonOnlyImageBtn;
+export default AddOnlyImageBtn;

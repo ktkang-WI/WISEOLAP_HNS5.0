@@ -3,7 +3,7 @@ import RibbonButton from '../../Common/Button/RibbonButton';
 import RibbonPanel from '../../Common/Panel/RibbonPanel';
 
 const theme = getTheme();
-const RibbonRibbonBtn = ({item}) => {
+const AddRibbonBtn = ({item}) => {
   return (
     <RibbonPanel id={item.id} key={item.id} position={item.position}>
       <RibbonButton
@@ -19,4 +19,4 @@ const RibbonRibbonBtn = ({item}) => {
     </RibbonPanel>
   );
 };
-export default RibbonRibbonBtn;
+export default AddRibbonBtn;

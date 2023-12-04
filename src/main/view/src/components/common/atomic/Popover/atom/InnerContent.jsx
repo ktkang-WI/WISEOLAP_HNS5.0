@@ -1,14 +1,17 @@
 import {MenuItem, SubMenu} from '@szhsin/react-menu';
 import LabelImageButton from '../../Common/Button/LabelImageButton';
 import styled from 'styled-components';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const Wrap = styled.div`
   list-style: none;
   width: 150px;
   height: auto;
-  background-color: #fff;
+  background-color: ${theme.color.popoverBackground};
   border-radius: 5px;
-  box-shadow: 0 0 5px 0 rgba(51, 51, 51, 0.3);
+  box-shadow: ${theme.color.boxShadow};
   `;
 
 const PointerWrap = styled.div`
@@ -22,47 +25,46 @@ const ArrowImage = styled.div`
   content: '';
   width: 5px; /* 사이즈 */
   height: 5px; /* 사이즈 */
-  border-top: 2px solid #000; /* 선 두께 */
-  border-right: 2px solid #000; /* 선 두께 */
+  border-top: 1px solid #000; /* 선 두께 */
+  border-right: 1px solid #000; /* 선 두께 */
   transform: rotate(45deg); /* 각도 */
 }
 `;
 
 // export 1 라벨아이콘만.
-export const PopoverLabelImageBtn = ({item}) => {
+export const PopoverLabelImageBtn = ({label, imgSrc, onClick}) => {
   return (
     <LabelImageButton
-      label={item.label}
-      imgSrc={item.src}
+      label={label}
+      imgSrc={imgSrc}
       height='60px'
       width='60px'
-      tiile={item.label}
-      onClick={item.onClick}
+      onClick={onClick}
     />
   );
 };
 
 // export 2 텍스트만 + 이미지.
-export const PopoverTextBtn = ({item}) => {
+export const PopoverTextBtn = ({label, onClick}) => {
   return (
     <PointerWrap>
       <MenuItem
         style={{padding: '5px'}}
-        onClick={item.onClick}
+        onClick={onClick}
       >
-        {item.label}
+        {label}
       </MenuItem>
     </PointerWrap>
   );
 };
 
 // export 3 subMenu 사용 팝오버
-export const PopoverSubMenu = ({item}) => {
+export const PopoverSubMenu = ({label, visible, contents}) => {
   return (
     <PointerWrap>
-      <SubMenu id='subMenu' label={item.label}>
+      <SubMenu id='subMenu' label={label}>
         <Wrap>
-          {item.contents.map((i, idx) => {
+          {contents && visible && contents.map((i, idx) => {
             return i.visible &&
               <MenuItem
                 style={{padding: '5px'}}

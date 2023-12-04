@@ -1,9 +1,12 @@
+import {getTheme} from 'config/theme';
 import styled from 'styled-components';
 
+const theme = getTheme();
+
 const Wrap = styled.div`
-  border: 2px solid #f5f6fa;
+  border: 2px solid ${theme.color.background};
   & > div: hover {
-    background-color: #f5f6fa
+    background-color: ${theme.color.background}
   }
   margin: 5px 0px 10px 10px;
 `;
