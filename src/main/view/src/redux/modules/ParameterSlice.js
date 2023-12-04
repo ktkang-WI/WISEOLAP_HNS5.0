@@ -76,6 +76,27 @@ const reducers = {
     const filterId = actions.payload.id;
     state[reportId].filterSearchComplete =
         state[reportId].filterSearchComplete.concat([filterId]);
+  },
+  deleteParameterByDatsetId(state, actions) {
+    const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
+
+    state[reportId].informations = state[reportId].informations
+        .reduce((acc, info) => {
+          const datasetArr = info.dataset;
+          const idx = datasetArr.indexOf(datasetId);
+
+          if (idx >= 0) {
+            if (datasetArr.length > 1) {
+              datasetArr.splice(idx, 1);
+              acc.push({...info, dataset: datasetArr});
+            }
+          } else {
+            acc.push(info);
+          }
+
+          return acc;
+        }, []);
   }
 };
 
