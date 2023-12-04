@@ -11,6 +11,7 @@ import {styled} from 'styled-components';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from '../../../config/localization';
 import {getTheme} from 'config/theme';
+import DatasetType from '../utils/DatasetType';
 
 const theme = getTheme();
 
@@ -24,7 +25,7 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
   const {alert} = useModal();
 
   useEffect(() => {
-    models.DataSource.getByIdAndDsType('admin', 'DS_SQL')
+    models.DataSource.getByIdAndDsType('admin', DatasetType.DS_SQL)
         .then((data) => {
           setDataSource(data);
         });

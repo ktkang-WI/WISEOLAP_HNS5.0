@@ -14,3 +14,9 @@ export const selectCurrentDatasets = createSelector(
     (state) => state.meta.dataset,
     (reportId, dataset) => dataset[reportId].datasets
 );
+
+export const selectDatasetQuantity = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.dataset,
+    (reportId, dataset) => dataset[reportId].datasetQuantity
+);

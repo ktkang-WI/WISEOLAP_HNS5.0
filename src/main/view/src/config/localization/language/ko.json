@@ -148,5 +148,6 @@
   "calendarCaptionFormat": "Caption Value 형식",
   "year": "년도",
   "month": "월",
-  "day": "일"
+  "day": "일",
+  "datasetNotSelected": "데이터집합이 선택되지 않았습니다."
 }

@@ -148,5 +148,6 @@
   "calendarCaptionFormat": "Caption Value Format",
   "year": "year",
   "month": "month",
-  "day": "day"
+  "day": "day",
+  "datasetNotSelected": "Dataset is not selected."
 }

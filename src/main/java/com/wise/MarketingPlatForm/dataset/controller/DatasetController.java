@@ -54,6 +54,21 @@ public class DatasetController {
         return datasetService.getDataSources(userId);
     }
 
+    @Operation(summary = "get datasource", description = "DS_MSTR 테이블에 있는 DataSource의 정보를 가져옵니다.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "dataset 아이디", example = "2143", required = true)
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"2143\"}")
+    }))
+    @PostMapping(value = "/data-source")
+    public DsMstrDTO getDataSource(@RequestBody Map<String, String> param) {
+        String dsId = param.getOrDefault("dsId", "");
+
+        return datasetService.getDataSource(Integer.parseInt(dsId));
+    }
+
+
     @Operation(summary = "get database tables", description = "지정한 DS_ID에 해당하는 데이터베이스의 테이블 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
     @Parameters({
             @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
