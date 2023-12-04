@@ -158,10 +158,10 @@ public class ReportController {
 	        }
 	    )
 	)
-	@GetMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestParam String reportId, @RequestParam String userId) {
-//        String reportId = param.getOrDefault("reportId", "");
-//        String userId = param.getOrDefault("userId", "");
+    @PostMapping(value = "/report")
+	public Map<String, Object> getReport(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+        String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
 	}
 

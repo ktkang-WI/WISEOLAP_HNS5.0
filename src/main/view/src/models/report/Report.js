@@ -13,10 +13,10 @@ const path = document.location.origin + contextRoot + '/report';
  * @param {string} reportId
  */
 export const getReportById = async (userId, reportId) => {
-  const res = await axios.get(path + '/report', {params: {
+  const res = await axios.post(path + '/report', {
     reportId: reportId,
     userId: userId
-  }});
+  });
 
   return res.data;
 };

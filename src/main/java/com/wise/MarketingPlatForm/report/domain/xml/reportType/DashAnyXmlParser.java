@@ -8,22 +8,20 @@ import java.util.Map;
 import java.util.Optional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPointer;
 import org.json.XML;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
+
+import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
@@ -45,23 +43,21 @@ import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 public class DashAnyXmlParser implements XMLParser {
 
-	private Map<String, Object> dataset = new HashMap<String, Object>();
-	private List<Map<String, Object>> report = new ArrayList<Map<String, Object>>();
-	private Map<String, Object> item = new HashMap<String, Object>();
-	private Map<String, Object> layout = new HashMap<String, Object>();
-	private Map<String, Object> returnReport = new HashMap<String, Object>();
+	private static Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
+
+	private Map<String, Object> dataset = new HashMap<>();
+	private Map<String, Object> item = new HashMap<>();
+	private Map<String, Object> layout = new HashMap<>();
+	private Map<String, Object> returnReport = new HashMap<>();
 
 	private JSONArray datasetJsonArray = new JSONArray();
-	private JSONObject reportJson = new JSONObject();
-	private JSONObject chartJson = new JSONObject();
 
-	private List<String> reportType = new ArrayList<String>();
-	private List<String> datasetType = new ArrayList<String>();
-	private List<String> datasrcType = new ArrayList<String>();
-	private List<Integer> datasrcId = new ArrayList<Integer>();
-	private List<String> datasetNm = new ArrayList<String>();
+	private List<String> datasetType = new ArrayList<>();
+	private List<String> datasrcType = new ArrayList<>();
+	private List<Integer> datasrcId = new ArrayList<>();
+	private List<String> datasetNm = new ArrayList<>();
 	
-	private Map<String, String> datasources = new HashMap<String, String>();
+	private Map<String, String> datasources = new HashMap<>();
 
 	private CubeService cubeService;
 	private DatasetService datasetService;
@@ -85,9 +81,7 @@ public class DashAnyXmlParser implements XMLParser {
 
 	@Override
 	public void getlayoutXmlDTO(String layoutXml) {
-		
-		Map<String, Object> layout = new HashMap<String, Object>();
-		Map<String, Object> layoutConfig = new HashMap<String, Object>();
+		Map<String, Object> layoutConfig = new HashMap<>();
 		
 		Document document;
 		LayoutTabWrapperVO layoutWrapper = LayoutTabWrapperVO.builder()
@@ -135,14 +129,11 @@ public class DashAnyXmlParser implements XMLParser {
 					}
 					break;
 				case "Items":
-					Map<String, Object> items = new HashMap<String, Object>();
 					itemsParser(node);
 					break;
 				case "LayoutTree":
 					layoutRecursionParser(node, null, (LayoutTabWrapperVO) layoutWrapper
 							, (List<Map<String, Object>>)this.item.get("items"));
-					
-//					reportMetaDTO.getLayout().setLayoutConfig(resultLayoutConfigVO);
 					break;
 				}
 			}
@@ -155,8 +146,6 @@ public class DashAnyXmlParser implements XMLParser {
 	@Override
 	public void getDatasetXmlDTO(String datasetXml, String userId) {
 		try {
-//	        this.datasetJsonArray = XML.toJSONObject(datasetXml).getJSONObject("DATASET_XML")
-//	        		.getJSONObject("DATASET_ELEMENT");
 	        JSONObject root = XML.toJSONObject(datasetXml);
 	        JSONPointer pointer = new JSONPointer("/DATASET_XML/DATASET_ELEMENT/DATASET");
 	        Object result = pointer.queryFrom(root);
@@ -166,13 +155,13 @@ public class DashAnyXmlParser implements XMLParser {
 	        } else if (result instanceof JSONArray) {
 	        	this.datasetJsonArray = (JSONArray) result;
 	        } else {
-	            System.out.println("DATA_SET not found or has unexpected format.");
+	            log.error("DATA_SET not found or has unexpected format.");
 	        }
 	        
-	        List<Map<String, Object>> datasets = new ArrayList<Map<String, Object>>();
+	        List<Map<String, Object>> datasets = new ArrayList<>();
 	        
 	        for (int datasetArrayIndex = 0; datasetArrayIndex < this.datasetJsonArray.length(); datasetArrayIndex++) {
-	        	Map<String, Object> dataset = new HashMap<String, Object>();
+	        	Map<String, Object> dataset = new HashMap<>();
 	        	
 	        	JSONObject datasetJson = this.datasetJsonArray.getJSONObject(datasetArrayIndex);
 	        	String datasetNm = datasetJson.getString("DATASET_NM");
@@ -181,7 +170,7 @@ public class DashAnyXmlParser implements XMLParser {
 	        	String datasrcType = datasetJson.getString("DATASRC_TYPE");
 	        	String datasetQuery = datasetJson.getString("DATASET_QUERY");
 	        	JSONObject datasetField = datasetJson.optJSONObject("DATASET_FIELD");
-	        	List<RootFieldVO> fields = new ArrayList<RootFieldVO>();
+	        	List<RootFieldVO> fields = new ArrayList<>();
 	        	if(datasetField != null) {
 	        		JSONArray fieldsArray = datasetField.getJSONArray("LIST");
 	        		for(int fieldsIndex = 0; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
@@ -189,7 +178,6 @@ public class DashAnyXmlParser implements XMLParser {
 	        			JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
 	        			String dataType = fieldObject.getString("DATA_TYPE");
 	        			String name = fieldObject.getString("CAPTION");
-	        			String icon = fieldObject.getString("icon");
 	        			String uniqueName = fieldObject.getString("UNI_NM");
 	        			String parentId = fieldObject.getString("PARENT_ID");
 	        			Integer order = fieldObject.getInt("ORDER");
@@ -249,10 +237,10 @@ public class DashAnyXmlParser implements XMLParser {
 	}
 	/**
 	 * 
-	 * @param layoutNode -> xml Node
-	 * @param parent -> 상위 Layout
-	 * @param allLayouts -> total Layout
-	 * @param items -> items
+	 * @param layoutNode xml Node
+	 * @param parent 상위 Layout
+	 * @param allLayouts total Layout
+	 * @param items items
 	 */
 	private void layoutRecursionParser(Node layoutNode, LayoutTabWrapperVO parent,
 			LayoutTabWrapperVO allLayouts, List<Map<String, Object>> items) {
@@ -343,9 +331,9 @@ public class DashAnyXmlParser implements XMLParser {
 			if (ItemType.CHART.toString().equals(itemType)) {
 				type = ItemType.CHART;
 				NodeList itemChildren = node.getChildNodes();
-				List<Dimension> dimensions = new ArrayList<Dimension>();
-				List<Map<String, Object>> dimensionGroups = new ArrayList<Map<String, Object>>();
-				List<Measure> measures = new ArrayList<Measure>();
+				List<Dimension> dimensions = new ArrayList<>();
+				List<Map<String, Object>> dimensionGroups = new ArrayList<>();
+				List<Measure> measures = new ArrayList<>();
 
 				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -411,8 +399,8 @@ public class DashAnyXmlParser implements XMLParser {
 			} else if (ItemType.DATA_GRID.toString().equals(itemType)) {
 				type = ItemType.DATA_GRID;
 				NodeList itemChildren = node.getChildNodes();
-				List<RootData> fields = new ArrayList<RootData>();
-				List<SparkLine> sparklines = new ArrayList<SparkLine>();
+				List<RootData> fields = new ArrayList<>();
+				List<SparkLine> sparklines = new ArrayList<>();
 
 				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -469,13 +457,13 @@ public class DashAnyXmlParser implements XMLParser {
 
 				}
 			}
-			Map<String, Object> meta = new HashMap<String, Object>();
+			Map<String, Object> meta = new HashMap<>();
 			meta.put("dataField", dataField);
 			meta.put("memo", memo);
 			meta.put("name", name);
 			meta.put("useCaption", name);
 
-			Map<String, Object> items = new HashMap<String, Object>();
+			Map<String, Object> items = new HashMap<>();
 			items.put("id", componentName);
 			items.put("type", type.toString());
 			items.put("meta", meta);
