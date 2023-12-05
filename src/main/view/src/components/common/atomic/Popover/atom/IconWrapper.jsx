@@ -11,11 +11,11 @@ const Wrap = styled.div`
   margin: 5px 0px 10px 10px;
 `;
 
-const IconWrap = ({children}) => {
+const IconWrapper = ({children}) => {
   return (
     <Wrap>
       {children}
     </Wrap>
   );
 };
-export default IconWrap;
+export default IconWrapper;

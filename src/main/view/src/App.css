@@ -47,7 +47,7 @@ a {
   }
 }
 
-#Popover {
+#popover {
   z-index: 100;
   padding: 0;
 }

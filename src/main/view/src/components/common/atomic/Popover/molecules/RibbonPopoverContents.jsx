@@ -6,7 +6,7 @@ import {
 } from '../atom/InnerContent';
 import InnerContentWrapper from '../atom/InnerContentWrapper';
 import PopoverTitlePanel from '../atom/PopoverTitlePanel';
-import IconWrap from '../atom/IconWrap';
+import IconWrap from '../atom/IconWrapper';
 import elementFactory from './ElementFactory';
 
 const StyledDiv = styled.div`

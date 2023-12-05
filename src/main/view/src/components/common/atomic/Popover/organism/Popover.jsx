@@ -10,7 +10,7 @@ const Popover = ({btn}) => {
 
   return (
     <Menu
-      id='Popover'
+      id='popover'
       menuButton={
         <MenuButton
           style={{ // 버튼 CSS 제거.
