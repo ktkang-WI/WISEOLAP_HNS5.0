@@ -118,6 +118,5 @@
   "selectFolder": "Select Folder",
   "folderList": "Folder List",
   "publicFolder": "Public Folder",
-  "privateFolder": "Private Folder",
-  "search": "Search"
+  "privateFolder": "Private Folder"
 }
