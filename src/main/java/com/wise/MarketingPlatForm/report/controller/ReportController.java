@@ -160,15 +160,14 @@ public class ReportController {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
-	}   
-    
+	}
+
     @PostMapping(value = "/save-report")
 	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
     	String reportNm = param.getOrDefault("name", "");
         String reportSubNm = param.getOrDefault("subName", "");
         String fldId = param.getOrDefault("fldId", "");
-        String fldNm = param.getOrDefault("fldName", "");
         String fldType = param.getOrDefault("fldType", "");
         String reportTag = param.getOrDefault("tag", "");
         String reportDescription = param.getOrDefault("description", "");
@@ -181,7 +180,7 @@ public class ReportController {
         String chartXML = param.getOrDefault("chartXML", "");
         String reportXML = param.getOrDefault("reportXML", "");
         String regUserNo = param.getOrDefault("regUserNo", "");
-        
+
         ReportMstrDTO reportMstrDTO = ReportMstrDTO.builder()
         .reportId(Integer.parseInt(reportId))
 		.reportNm(reportNm)
@@ -190,7 +189,7 @@ public class ReportController {
 	    .reportOrdinal(Integer.parseInt(reportOrder))
 	    .reportType(ReportType.DASH_ANY)
 	    .reportDesc(reportDescription)
-	    .reportXml(reportXML)  
+	    .reportXml(reportXML)
 	    .chartXml(chartXML)
 	    .layoutXml(layoutXML)
 	    .datasetXml(datasetXML)
@@ -198,15 +197,15 @@ public class ReportController {
 	    .reportTag(reportTag)
 	    .regUserNo(Integer.parseInt(regUserNo))
 	    .reportSubTitle(reportSubNm)
-	    .build();		
-        		
+	    .build();
+
         return reportService.addReport(reportMstrDTO);
 	}
-    
+
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
-        String userId = param.getOrDefault("userId", "");    	
-        		
+        String userId = param.getOrDefault("userId", "");
+
         return reportService.getReportFolderList(userId);
 	}
 }

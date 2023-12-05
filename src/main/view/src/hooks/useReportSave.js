@@ -1,5 +1,5 @@
-import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectDataset} from 'redux/selector/DatasetSelector';
+import {selectItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
@@ -9,6 +9,7 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
+import {selectLayout} from 'redux/selector/LayoutSelector';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
@@ -27,9 +28,9 @@ const useReportSave = () => {
     param.reportId = selectCurrentReportId(store.getState());
     param.reportType = 'DashAny';
     param.reportXML = JSON.stringify(selectCurrentReport(store.getState()));
-    param.chartXML = JSON.stringify(selectCurrentItem(store.getState()));
-    param.layoutXML = '';
-    param.datasetXML = JSON.stringify(selectCurrentDataset(store.getState()));
+    param.chartXML = JSON.stringify(selectItem(store.getState()));
+    param.layoutXML = JSON.stringify(selectLayout(store.getState()));
+    param.datasetXML = JSON.stringify(selectDataset(store.getState()));
     param.paramXML = '';
 
     param.regUserNo = '1001';

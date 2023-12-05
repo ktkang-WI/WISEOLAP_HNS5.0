@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wise.MarketingPlatForm.report.dao.ReportDAO">	
+<mapper namespace="com.wise.MarketingPlatForm.report.dao.ReportDAO">
     <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
         SELECT 	A.REPORT_ID as reportId
 				, A.REPORT_NM as reportNm
-				, A.FLD_ID as fldId   
+				, A.FLD_ID as fldId
 				, A.FLD_TYPE as fldType
 				, A.REPORT_ORDINAL as reportOrdinal
 				, A.REPORT_TYPE as reportType
@@ -30,7 +30,7 @@
 				, A.PROMPT_YN as promptYn
 				, A.REPORT_SUB_TITLE as reportSubTitle
 				, A.MOD_USER_NO as modUserNo
-				, C.USER_NM AS modUserNm							
+				, C.USER_NM AS modUserNm
 				, A.MOD_DT as modDt
 				, B.USER_NM as userNm
 				, A.PRIVACY_YN as privacyYn
@@ -43,7 +43,7 @@
                 AND A.REPORT_ID = #{reportId}
             </if>
     </select>
-    
+
     <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
 					FLD_NM 						AS fldNm,
@@ -57,7 +57,7 @@
         			AND AUTH_PUBLISH != 'N'
 		ORDER BY 	fldParentId, fldOrdinal
     </select>
-    
+
     <select id="selectPrivateReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT FLD_ID AS fldId,
 		FLD_NM AS fldNm,
@@ -68,17 +68,17 @@
 		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
-    
-    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">    		
-	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">	
+
+    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
+	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">
 	    		<if test='reportId == 0'>
                 	SELECT MAX(REPORT_ID) FROM REPORT_MSTR
             	</if>
             	<if test='reportId != 0'>
-                	SELECT REPORT_ID as reportId FROM REPORT_MSTR 
+                	SELECT REPORT_ID as reportId FROM REPORT_MSTR
             		WHERE REPORT_ID = #{reportId}
-            	</if>            						
-			</selectKey>       		
+            	</if>
+			</selectKey>
     	<!--  <if test = "dbType == 'Oracle'"> -->
 	    	MERGE INTO REPORT_MSTR
 	    	USING dual
@@ -112,6 +112,7 @@
 		       	REPORT_XML,
 		       	CHART_XML,
 		       	LAYOUT_XML,
+						DATASET_XML
 		       	PARAM_XML,
 		       	REG_USER_NO
 		       )
@@ -129,17 +130,18 @@
 		       	#{chartXml},
 		       	#{layoutXml},
 		       	#{paramXml},
-		       	#{regUserNo}       	
-		       )	    
+						#{datasetXml}
+		       	#{regUserNo}
+		       )
 		<!-- </if>  -->
-		
+
 		<!--  mysql, maria DB 일 경우 ON DUPLICATE KEY UPDATE 사용
 		<selectKey resultType="int" keyProperty="reportId" order="BEFORE">
-    		<if test='reportId == 0' > 
+    		<if test='reportId == 0' >
     			SELECT MAX(REPORT_ID)+1 FROM REPORT_MSTR
     		</if>
     	</selectKey>
-		
+
 	   INSERT INTO REPORT_MSTR
        (
        	REPORT_ID,
@@ -170,8 +172,8 @@
        	#{chartXml},
        	#{layoutXml},
        	#{paramXml},
-       	#{regUserNo}       	
-       )       
+       	#{regUserNo}
+       )
        ON DUPLICATE KEY
        UPDATE
        	REPORT_NM = #{reportNm},
@@ -185,7 +187,7 @@
        	CHART_XML = #{chartXml},
        	LAYOUT_XML = #{layoutXml},
        	PARAM_XML = #{paramXml},
-       	REG_USER_NO = #{regUserNo}			
+       	REG_USER_NO = #{regUserNo}
      -->
     </insert>
 </mapper>
