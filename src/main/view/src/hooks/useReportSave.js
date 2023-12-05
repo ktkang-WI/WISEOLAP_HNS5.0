@@ -12,7 +12,7 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
-  const {insertReport} = ReportSlice.actions;
+  const {updateReport, setSelectedReportId} = ReportSlice.actions;
   const {insertItemReportId} = ItemSlice.actions;
   const {insertLayoutReportId} = LayoutSlice.actions;
   const {insertDatasetReportId} = DatasetSlice.actions;
@@ -50,14 +50,18 @@ const useReportSave = () => {
         return;
       }
       const reportId = response.data.reportId;
+      const currentReportId = selectCurrentReportId(store.getState());
       const report = {
         reportId: reportId,
         options: {...response.data}
       };
-      dispatch(insertReport(report));
-      dispatch(insertItemReportId(report));
-      dispatch(insertLayoutReportId(report));
-      dispatch(insertDatasetReportId(report));
+      dispatch(updateReport(report));
+      if (currentReportId == 0) {
+        dispatch(insertItemReportId(report));
+        dispatch(insertLayoutReportId(report));
+        dispatch(insertDatasetReportId(report));
+        dispatch(setSelectedReportId(report));
+      }
     });
   };
 
