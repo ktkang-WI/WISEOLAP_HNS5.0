@@ -14,9 +14,9 @@ import {selectLayout} from 'redux/selector/LayoutSelector';
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {updateReport, setSelectedReportId} = ReportSlice.actions;
-  const {insertItemReportId} = ItemSlice.actions;
-  const {insertLayoutReportId} = LayoutSlice.actions;
-  const {insertDatasetReportId} = DatasetSlice.actions;
+  const {changeItemReportId} = ItemSlice.actions;
+  const {changeLayoutReportId} = LayoutSlice.actions;
+  const {changeDatasetReportId} = DatasetSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
@@ -62,9 +62,9 @@ const useReportSave = () => {
       };
       dispatch(updateReport(report));
       if (currentReportId == 0) {
-        dispatch(insertItemReportId(report));
-        dispatch(insertLayoutReportId(report));
-        dispatch(insertDatasetReportId(report));
+        dispatch(changeItemReportId(report));
+        dispatch(changeLayoutReportId(report));
+        dispatch(changeDatasetReportId(report));
         dispatch(setSelectedReportId(report));
       }
     });

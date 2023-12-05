@@ -62,10 +62,10 @@ const reducers = {
       }
     };
   },
-  insertLayoutReportId(state, actions) {
-    const newReport = state[0];
+  changeLayoutReportId(state, actions) {
+    const layout = state[0];
     delete state[0];
-    state[actions.payload.reportId] = {...newReport};
+    state[actions.payload.reportId] = layout;
   }
 };
 const extraReducers = {};
