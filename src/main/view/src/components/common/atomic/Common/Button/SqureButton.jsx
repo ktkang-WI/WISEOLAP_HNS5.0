@@ -34,9 +34,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const SqureButton = ({icon, label, width='100%', height='100%'}) => {
+const SqureButton = ({icon, label, width='100%', height='100%', onClick}) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       <SmallButtonImage src={icon}></SmallButtonImage>
       <SmallButtonLabel>{label}</SmallButtonLabel>
     </Wrapper>

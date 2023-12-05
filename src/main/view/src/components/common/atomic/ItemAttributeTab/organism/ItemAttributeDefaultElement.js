@@ -94,6 +94,14 @@ const ItemAttributeDefaultElement = () => {
           id: 'dimensionGroup',
           label: localizedString.dimensionGroup,
           icon: dimensionGroupImg
+        },
+        {
+          id: 'dimensionGroup',
+          label: '데이터하이라이트 테스트',
+          icon: dimensionGroupImg,
+          onClick: () => {
+            console.log('test');
+          }
         }
       ]
     }
