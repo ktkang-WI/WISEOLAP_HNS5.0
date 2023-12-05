@@ -164,40 +164,9 @@ public class ReportController {
 
     @PostMapping(value = "/save-report")
 	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
-        String reportId = param.getOrDefault("reportId", "");
-    	String reportNm = param.getOrDefault("name", "");
-        String reportSubNm = param.getOrDefault("subName", "");
-        String fldId = param.getOrDefault("fldId", "");
-        String fldType = param.getOrDefault("fldType", "");
-        String reportTag = param.getOrDefault("tag", "");
-        String reportDescription = param.getOrDefault("description", "");
-        String reportOrder = param.getOrDefault("order", "0");
-        // 우선 임시로 Dashboard로 고정 추후 수정
-        // String reportType = param.getOrDefault("reportType", "0");
-        String layoutXML = param.getOrDefault("layoutXML", "");
-        String paramXML = param.getOrDefault("paramXML", "");
-        String datasetXML = param.getOrDefault("datasetXML", "");
-        String chartXML = param.getOrDefault("chartXML", "");
-        String reportXML = param.getOrDefault("reportXML", "");
-        String regUserNo = param.getOrDefault("regUserNo", "");
-
-        ReportMstrDTO reportMstrDTO = ReportMstrDTO.builder()
-        .reportId(Integer.parseInt(reportId))
-		.reportNm(reportNm)
-	    .fldId(Integer.parseInt(fldId))
-	    .fldType(fldType)
-	    .reportOrdinal(Integer.parseInt(reportOrder))
-	    .reportType(ReportType.DASH_ANY)
-	    .reportDesc(reportDescription)
-	    .reportXml(reportXML)
-	    .chartXml(chartXML)
-	    .layoutXml(layoutXML)
-	    .datasetXml(datasetXML)
-	    .paramXml(paramXML)
-	    .reportTag(reportTag)
-	    .regUserNo(Integer.parseInt(regUserNo))
-	    .reportSubTitle(reportSubNm)
-	    .build();
+        Gson gson = new Gson();
+        ReportMstrDTO reportMstrDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
+        reportMstrDTO.setReportType(ReportType.DASH_ANY);
 
         return reportService.addReport(reportMstrDTO);
 	}

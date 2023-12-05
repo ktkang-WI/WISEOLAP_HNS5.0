@@ -23,18 +23,22 @@ const useReportSave = () => {
    * @return {JSON} parameter
    */
   const generateParameter = (dataSource) => {
-    const param = {...dataSource};
+    const param = {};
 
     param.reportId = selectCurrentReportId(store.getState());
-    param.reportType = 'DashAny';
-    param.reportXML = JSON.stringify(selectCurrentReport(store.getState()));
-    param.chartXML = JSON.stringify(selectItem(store.getState()));
-    param.layoutXML = JSON.stringify(selectLayout(store.getState()));
-    param.datasetXML = JSON.stringify(selectDataset(store.getState()));
-    param.paramXML = '';
-
-    param.regUserNo = '1001';
-    param.regDt = '2023-11-08:04:41:46';
+    param.reportNm = dataSource.name;
+    param.fldId = dataSource.fldId;
+    param.fldType = dataSource.fldType;
+    param.reportOrdinal = dataSource.order;
+    // param.reportType = 'DashAny';
+    param.reportTag = dataSource.tag;
+    param.reportDesc = dataSource.description;
+    param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
+    param.chartXml = JSON.stringify(selectItem(store.getState()));
+    param.layoutXml = JSON.stringify(selectLayout(store.getState()));
+    param.datasetXml = JSON.stringify(selectDataset(store.getState()));
+    param.paramXml = '{}';
+    param.reportSubTitle = dataSource.subName;
 
     return param;
   };

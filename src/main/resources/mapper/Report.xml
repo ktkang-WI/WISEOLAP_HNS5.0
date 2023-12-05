@@ -112,7 +112,7 @@
 		       	REPORT_XML,
 		       	CHART_XML,
 		       	LAYOUT_XML,
-						DATASET_XML
+						DATASET_XML,
 		       	PARAM_XML,
 		       	REG_USER_NO
 		       )
@@ -130,7 +130,7 @@
 		       	#{chartXml},
 		       	#{layoutXml},
 		       	#{paramXml},
-						#{datasetXml}
+						#{datasetXml},
 		       	#{regUserNo}
 		       )
 		<!-- </if>  -->
