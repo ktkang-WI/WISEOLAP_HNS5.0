@@ -3,6 +3,10 @@ import dashboard from '../../../../../assets/image/icon/button/dashboard.png';
 import dashboardActive
   from '../../../../../assets/image/icon/button/dashboard_active.png';
 import adhoc from '../../../../../assets/image/icon/button/adhoc.png';
+import spreadsheet
+  from '../../../../../assets/image/icon/button/spreadsheet.png';
+import spreadsheetActive
+  from '../../../../../assets/image/icon/button/spreadsheet_active.png';
 import adhocActive
   from '../../../../../assets/image/icon/button/adhoc_active.png';
 import dataset from '../../../../../assets/image/icon/button/dataset.png';
@@ -56,6 +60,15 @@ const SNBDefaultElement = () => {
           }
         });
         // openModal(SelectCubeModal);
+      }
+    },
+    'SpreadSheet': {
+      id: 'spreadsheet',
+      imgSrc: spreadsheet,
+      hoveredImgSrc: spreadsheetActive,
+      label: localizedString.spreadsheet,
+      onClick: (e) => {
+        nav('spreadsheet'); // new tab 띄우기 기능 찾는 중...
       }
     },
     'Preference': {

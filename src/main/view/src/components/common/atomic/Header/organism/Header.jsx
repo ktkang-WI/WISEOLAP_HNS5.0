@@ -10,6 +10,7 @@ import LabelImageButton from '../../Common/Button/LabelImageButton';
 import headerDefaultElement from './HeaderDefaultElement';
 import TextButton from '../../Common/Button/TextButton';
 import {Link} from 'react-router-dom';
+import OnlyImageButton from '../../Common/Button/OnlyImageButton';
 
 const theme = getTheme();
 
@@ -27,6 +28,7 @@ const Left = styled.div`
   height: 100%;
   text-align: left;
   float: left;
+  display: flex;
 `;
 
 const Right = styled.div`
@@ -105,6 +107,28 @@ const getHeaderItem = (item) => {
         <TextButton
           title={item.label}
           height={theme.size.headerHeight}
+          onClick={item.onClick}
+        >
+          {item.label}
+        </TextButton>
+      </HeaderPanel>
+    );
+  } else if (item.type === 'ImageAndTextButton') {
+    return (
+      <HeaderPanel
+        breakLine={item.index !== item.length - 1}
+        key={item.id}
+        width={'auto'}
+        position={item.position}>
+        <OnlyImageButton // 새로 만들기.
+          imgSrc={item.imgSrc}
+          title={item.label}
+          type={item.type}
+          height={item.height}
+          width={item.width}
+        />
+        <TextButton
+          title={item.label}
           onClick={item.onClick}
         >
           {item.label}
