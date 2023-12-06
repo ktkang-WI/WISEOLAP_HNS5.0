@@ -13,7 +13,7 @@ import {selectLayout} from 'redux/selector/LayoutSelector';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
-  const {updateReport, setSelectedReportId} = ReportSlice.actions;
+  const {updateReport, updateSelectedReportId} = ReportSlice.actions;
   const {changeItemReportId} = ItemSlice.actions;
   const {changeLayoutReportId} = LayoutSlice.actions;
   const {changeDatasetReportId} = DatasetSlice.actions;
@@ -72,7 +72,7 @@ const useReportSave = () => {
       dispatch(changeItemReportId(reportId));
       dispatch(changeLayoutReportId(reportId));
       dispatch(changeDatasetReportId(reportId));
-      dispatch(setSelectedReportId({reportId: reportId.newId}));
+      dispatch(updateSelectedReportId({reportId: reportId.newId}));
     });
   };
 

@@ -57,7 +57,7 @@ const reducers = {
   deleteAllReport(state, actions) {
     state.reports = [];
   },
-  setSelectedReportId(state, actions) {
+  updateSelectedReportId(state, actions) {
     state.selectedReportId = actions.payload.reportId;
   }
 };
