@@ -99,6 +99,7 @@ const RibbonButton = ({
   ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
+
   const onMouseOver = function() {
     setSrc(hoveredImgSrc);
   };
@@ -106,6 +107,7 @@ const RibbonButton = ({
   const onMouseOut = function() {
     setSrc(imgSrc);
   };
+
   const renderButtonContent = () => {
     return (
       <Button
@@ -125,7 +127,6 @@ const RibbonButton = ({
             width={width}
             height={height}
             hoveranimation={hoveredImgSrc ? '' : 'true'}
-            onClick={onClick}
             onMouseOver={hoveredImgSrc ? onMouseOver : null}
             onMouseOut={hoveredImgSrc ? onMouseOut : null}
             {...props}

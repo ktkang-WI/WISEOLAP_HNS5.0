@@ -1,6 +1,6 @@
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import localizedString from 'config/localization';
-import chartSeriesButtonIcon from 'assets/image/icon/item/chart_bar.png';
+import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
 
