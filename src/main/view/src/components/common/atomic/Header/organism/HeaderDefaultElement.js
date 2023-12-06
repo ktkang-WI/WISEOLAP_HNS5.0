@@ -66,17 +66,6 @@ const HeaderDefaultElement = () => {
       'id': 'designer',
       'label': localizedString.downloadReport,
       'type': 'TextButton'
-    },
-    'UserInfomation': {
-      'id': 'user_infomation',
-      'label': localizedString.userInfomation,
-      'imgSrc': newWindow,
-      'width': '200px',
-      'height': '50px',
-      'type': 'ImageAndTextButton',
-      'onClick': (e) => {
-        console.log('유저 정보 팝오버.');
-      }
     }
   };
 };

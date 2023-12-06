@@ -18,8 +18,7 @@ const Designer = () => {
           'Viewer',
           'ShowQuery',
           'ReportSetting',
-          'ReportProperty',
-          'UserInfomation'
+          'ReportProperty'
         ]}
       >
       </Header>
