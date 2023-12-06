@@ -33,6 +33,7 @@ const useReportSave = () => {
     param.fldId = dataSource.fldId;
     param.fldType = dataSource.fldType;
     param.reportOrdinal = dataSource.order;
+    // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
     // param.reportType = 'DashAny';
     param.reportTag = dataSource.tag;
     param.reportDesc = dataSource.description;
@@ -64,7 +65,7 @@ const useReportSave = () => {
       };
       const report = {
         reportId: reportId.newId,
-        options: {...response.data}
+        options: response.data
       };
 
       dispatch(updateReport(report));
