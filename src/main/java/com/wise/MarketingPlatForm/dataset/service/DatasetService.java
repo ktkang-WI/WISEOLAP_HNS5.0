@@ -327,7 +327,7 @@ public class DatasetService {
         // 리스트 조회
         if ("TABLE".equals(listParameterDTO.getDataSourceType())) {
             query = "SELECT " + listParameterDTO.getItemKey() + ", " + listParameterDTO.getItemCaption() +
-                    (StringUtil.isBlank(listParameterDTO.getSortBy()) ? ", " + listParameterDTO.getSortBy() : "") +
+                    (StringUtil.isBlank(listParameterDTO.getSortBy()) ? "" : ", " + listParameterDTO.getSortBy()) +
                     " FROM " + listParameterDTO.getDataSource();
         } else {
             query = listParameterDTO.getDataSource();

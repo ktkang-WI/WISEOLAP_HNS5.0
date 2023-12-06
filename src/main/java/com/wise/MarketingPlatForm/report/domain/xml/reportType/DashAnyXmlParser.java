@@ -456,20 +456,78 @@ public class DashAnyXmlParser implements XMLParser {
 					}
 
 				}
+			} else if(ItemType.PIVOT_GRID.toString().equals(itemType)) {
+				type = ItemType.PIVOT_GRID;
+				NodeList itemChildren = node.getChildNodes();
+				List<Map<String, Object>> row = new ArrayList<>();
+				List<Map<String, Object>> column = new ArrayList<>();
+				List<Map<String, Object>> measure = new ArrayList<>();
+
+				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
+					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
+						continue;
+
+					Node itemChild = itemChildren.item(itemChildrenIndex);
+					if ("DataItems".equals(itemChild.getNodeName())) {
+						NodeList datas = itemChild.getChildNodes();
+
+						for (int datasIndex = 0; datasIndex < datas.getLength(); datasIndex++) {
+							if (datas.item(datasIndex).getNodeType() != Node.ELEMENT_NODE)
+								continue;
+
+							Node data = datas.item(datasIndex);
+							if (DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap dimensionNodes = data.getAttributes();
+								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> dimensionNodes.getNamedItem("DataMember").getTextContent());
+								String dimName = dimensionNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
+								DataFieldType dataType = DataFieldType.DIMENSION;
+
+								Dimension dimensoion = Dimension.builder().caption(caption)
+										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
+										.type(dataType).uniqueName(dimName).build();
+
+								fields.add(dimensoion);
+							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+								NamedNodeMap measureNodes = data.getAttributes();
+
+								String caption = Optional.ofNullable(measureNodes.getNamedItem("Name"))
+										.map(Node::getTextContent)
+										.orElseGet(() -> measureNodes.getNamedItem("DataMember").getTextContent());
+								SummaryType summaryType = SummaryType
+										.fromString(
+												measureNodes.getNamedItem("SummaryType").getTextContent().toUpperCase())
+										.get();
+								String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
+								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
+								DataFieldType dataType = DataFieldType.MEASURE;
+
+								Measure measure = Measure.builder().caption(caption)
+										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
+										.type(dataType).uniqueName(meaName).summaryType(summaryType).build();
+								fields.add(measure);
+							}
+							dataField.put("datasetId", datasetId);
+							dataField.put("field", fields);
+							dataField.put("sparkline", new ArrayList<String>());
+						}
+					}
+				}
 			}
 			Map<String, Object> meta = new HashMap<>();
 			meta.put("dataField", dataField);
 			meta.put("memo", memo);
 			meta.put("name", name);
 			meta.put("useCaption", name);
-
+			
 			Map<String, Object> items = new HashMap<>();
 			items.put("id", componentName);
 			items.put("type", type.toString());
 			items.put("meta", meta);
 			itemsList.add(items);
 		}
-		
 		this.item.put("itemQuantity", itemsList.size());
 		this.item.put("selectedItemId", itemsList.get(0).get("id"));
 		this.item.put("items", itemsList);

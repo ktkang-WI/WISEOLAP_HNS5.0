@@ -4,6 +4,7 @@ import * as DSView from './dataset/DSView';
 import * as DBInfo from './dataset/DBInfo';
 import * as Item from './report/Item';
 import * as Parameter from './dataset/Parameter';
+import * as Report from './report/Report';
 
 export default {
   DataSource,
@@ -11,5 +12,6 @@ export default {
   DSView,
   DBInfo,
   Item,
-  Parameter
+  Parameter,
+  Report
 };
