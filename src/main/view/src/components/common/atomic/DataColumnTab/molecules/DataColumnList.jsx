@@ -5,7 +5,8 @@ import resetImg from 'assets/image/icon/button/reset_layout.png';
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {selectCurrentDataField, selectCurrentDataFieldOption}
+  from 'redux/selector/ItemSelector';
 import {useSelector, useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
@@ -61,11 +62,25 @@ const DataColumnList = ({
   id, icon, label, type, placeholder,
   useButton, buttonIcon, onClick, buttonEvent, key
 }) => {
-  const {updateItemField} = ItemSlice.actions;
+  const {setItemField} = ItemSlice.actions;
   const reportId = selectCurrentReportId(store.getState());
   const dataFields = useSelector(selectCurrentDataField);
+  const dataFieldOptions = useSelector(selectCurrentDataFieldOption);
   const columns = dataFields[id];
   const dispatch = useDispatch();
+  let sortItems = [];
+
+  for (const key in dataFieldOptions) {
+    if (dataFields[key].length > 0) {
+      const option = dataFieldOptions[key];
+      if (option.type == 'MEA') {
+        sortItems = sortItems.concat(dataFields[key].map((field) => ({
+          text: field.caption,
+          value: field.name
+        })));
+      }
+    }
+  }
 
   const resetDataColumn = () => {
     const temp = {
@@ -73,7 +88,7 @@ const DataColumnList = ({
       [id]: []
     };
 
-    dispatch(updateItemField({reportId, dataField: temp}));
+    dispatch(setItemField({reportId, dataField: temp}));
   };
 
   return (
@@ -98,6 +113,7 @@ const DataColumnList = ({
                 index={index}>
                 {(provided) => (
                   <DataColumn
+                    reportId={reportId}
                     type={type}
                     sortOrder={column.sortOrder}
                     showContextMenu={true}
@@ -107,6 +123,7 @@ const DataColumnList = ({
                     useButton={useButton}
                     buttonEvent={buttonEvent}
                     buttonIcon={buttonIcon}
+                    sortItems={sortItems}
                   >
                     {column.name}
                   </DataColumn>

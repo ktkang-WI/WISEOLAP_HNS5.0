@@ -99,9 +99,8 @@ const reducers = {
       }
     });
   },
-  updateItemField(state, actions) {
+  setItemField(state, actions) {
     const reportId = actions.payload.reportId;
-
     const dataField = actions.payload.dataField;
 
     const itemIndex = state[reportId].items.findIndex(
@@ -110,6 +109,25 @@ const reducers = {
 
     if (itemIndex >= 0) {
       state[reportId].items[itemIndex].meta.dataField = dataField;
+    }
+  },
+  updateItemField(state, actions) {
+    const reportId = actions.payload.reportId;
+    const dataField = actions.payload.dataField;
+
+    const itemIndex = state[reportId].items.findIndex(
+        (item) => item.id == state[reportId].selectedItemId
+    );
+
+    if (itemIndex >= 0) {
+      state[reportId].items[itemIndex].meta.dataField[dataField.category] =
+          state[reportId].items[itemIndex].meta.dataField[dataField.category]
+              .map((field) => {
+                if (field.fieldId == dataField.fieldId) {
+                  return dataField;
+                }
+                return field;
+              });
     }
   },
   setItems(state, actions) {
