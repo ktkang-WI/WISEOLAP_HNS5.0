@@ -13,7 +13,7 @@ const Popover = ({btn}) => {
       id='popover'
       menuButton={
         <MenuButton
-          style={{ // 버튼 CSS 제거.
+          style={{ // 버튼 스타일 제거.
             border: 0,
             backgroundColor: 'transparent',
             padding: 0
@@ -22,6 +22,7 @@ const Popover = ({btn}) => {
           {btn}
         </MenuButton>}
       position='initial'
+      gap={-14} // 버튼과 팝오버 사이에 간격 조절
     >
       {Component ?
         <Component
