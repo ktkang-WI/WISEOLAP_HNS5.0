@@ -25,6 +25,9 @@ const useReportSave = () => {
   const generateParameter = (dataSource) => {
     const param = {};
 
+    // TODO: 추후 저장/다른이름으로 저장 팝오버 mergy 후
+    // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
+    // reportId 를 0 으로 하여 무조건 insert 하게 한다.
     param.reportId = selectCurrentReportId(store.getState());
     param.reportNm = dataSource.name;
     param.fldId = dataSource.fldId;
@@ -54,19 +57,22 @@ const useReportSave = () => {
       if (response.status != 200) {
         return;
       }
-      const reportId = response.data.reportId;
       const currentReportId = selectCurrentReportId(store.getState());
+      const reportId = {
+        prevId: currentReportId,
+        newId: response.data.reportId
+      };
       const report = {
-        reportId: reportId,
+        reportId: reportId.newId,
         options: {...response.data}
       };
+
       dispatch(updateReport(report));
-      if (currentReportId == 0) {
-        dispatch(changeItemReportId(report));
-        dispatch(changeLayoutReportId(report));
-        dispatch(changeDatasetReportId(report));
-        dispatch(setSelectedReportId(report));
-      }
+
+      dispatch(changeItemReportId(reportId));
+      dispatch(changeLayoutReportId(reportId));
+      dispatch(changeDatasetReportId(reportId));
+      dispatch(setSelectedReportId({reportId: reportId.newId}));
     });
   };
 

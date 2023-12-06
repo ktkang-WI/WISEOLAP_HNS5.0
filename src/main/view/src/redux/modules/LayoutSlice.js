@@ -63,9 +63,14 @@ const reducers = {
     };
   },
   changeLayoutReportId(state, actions) {
-    const layout = state[0];
-    delete state[0];
-    state[actions.payload.reportId] = layout;
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const layout = state[prevId];
+      delete state[prevId];
+      state[newId] = layout;
+    }
   }
 };
 const extraReducers = {};

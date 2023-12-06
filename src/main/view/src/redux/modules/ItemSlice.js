@@ -20,9 +20,14 @@ const reducers = {
     state = initialState;
   },
   changeItemReportId(state, actions) {
-    const item = state[0];
-    delete state[0];
-    state[actions.payload.reportId] = item;
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const item = state[prevId];
+      delete state[prevId];
+      state[newId] = item;
+    }
   },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {

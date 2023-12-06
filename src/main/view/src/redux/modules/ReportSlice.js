@@ -43,6 +43,10 @@ const reducers = {
     if (index > 0) {
       state.reports[index] = actions.payload;
     } else {
+      if (state.selectedReportId == 0) {
+        state.reports = state.reports.filter(
+            (report) => report.reportId != 0);
+      }
       state.reports = state.reports.concat(actions.payload);
     }
   },
