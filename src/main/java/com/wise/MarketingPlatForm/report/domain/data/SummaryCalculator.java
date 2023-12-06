@@ -88,6 +88,7 @@ public class SummaryCalculator {
                 break;
             case COUNTDISTINCT:
                 countDistinctSet.add(newValue);
+                decimalValue = BigDecimal.valueOf(countDistinctSet.size());
                 break;
             case MAX:
                 if (!isStringData) {

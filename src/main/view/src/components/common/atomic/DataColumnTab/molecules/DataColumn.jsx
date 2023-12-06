@@ -92,7 +92,7 @@ const DataColumn = ({
     },
     {
       'text': localizedString.distinctCount,
-      'value': 'DISTINCT_COUNT',
+      'value': 'COUNTDISTINCT',
       'type': 'SummaryType'
     },
     {
