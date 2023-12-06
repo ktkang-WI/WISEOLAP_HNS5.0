@@ -1,5 +1,6 @@
 import localizedString from 'config/localization';
 import newReport from 'assets/image/icon/button/new.png';
+import dataset from 'assets/image/icon/button/dataset.png';
 import loadReport from 'assets/image/icon/button/load.png';
 import saveReport from 'assets/image/icon/button/save.png';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
@@ -28,14 +29,16 @@ import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import usePopover from 'hooks/usePopover';
+import PopoverUI from '../../Popover/organism/PopoverUI';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
+  const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
   const {openModal} = useModal();
-
   return {
     'NewReport': {
       id: 'new_report',
@@ -45,7 +48,31 @@ const RibbonDefaultElement = () => {
       imgSrc: newReport,
       width: 'auto',
       height: '45px',
-      useArrowButton: false
+      useArrowButton: false,
+      onClick: (e) => {
+        console.log(e);
+      }
+    },
+    'Dataset': {
+      id: 'dataset',
+      title: localizedString.dataset,
+      label: localizedString.dataset,
+      type: 'RibbonButton',
+      imgSrc: dataset,
+      width: 'auto',
+      height: '45px',
+      usePopover: true,
+      useArrowButton: false,
+      onClick: (ref) => {
+        const config = {
+          width: 'max-content',
+          height: 'auto',
+          popoverType: 'onlyTextBtn',
+          titlePanel: false,
+          id: 'dataset'
+        };
+        openedPopover(PopoverUI, config);
+      }
     },
     'LoadReport': {
       id: 'load_report',
@@ -68,7 +95,19 @@ const RibbonDefaultElement = () => {
       'imgSrc': saveReport,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': true
+      'usePopover': true,
+      'useArrowButton': true,
+      'onClick': (ref) => {
+        const props = {
+          width: 'max-content',
+          height: 'auto',
+          popoverType: 'onlyTextBtn',
+          titlePanel: false,
+          id: 'save_report'
+        };
+        openedPopover(PopoverUI, props);
+        console.log('clicked');
+      }
     },
     'DeleteReport': {
       'id': 'delete_report',
@@ -78,7 +117,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': deleteReport,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (ref) => {
+        console.log(ref);
+      }
     },
     'DownloadReport': {
       'id': 'download_report',
@@ -88,7 +130,18 @@ const RibbonDefaultElement = () => {
       'imgSrc': downloadReport,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': true
+      'usePopover': true,
+      'useArrowButton': true,
+      'onClick': (ref) => {
+        const props = {
+          width: '200px',
+          height: 'auto',
+          popoverType: 'subMenuBtn',
+          titlePanel: false,
+          id: 'download_report'
+        };
+        openedPopover(PopoverUI, props);
+      }
     },
     'ConnectReport': {
       'id': 'connect_report',
@@ -98,7 +151,9 @@ const RibbonDefaultElement = () => {
       'imgSrc': connectReport,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+      }
     },
     'AddContainer': {
       'id': 'add_container',
@@ -108,7 +163,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': addContainer,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'AddChart': {
       'id': 'add_default_chart',
@@ -118,9 +176,18 @@ const RibbonDefaultElement = () => {
       'imgSrc': addChart,
       'width': 'auto',
       'height': '45px',
+      'usePopover': true,
       'useArrowButton': true,
-      'onClick': (e) => {
-        insertFlexLayout(selectedReportId, 'chart');
+      'onClick': (ref) => {
+        console.log('AddChart~~!');
+        const props = {
+          width: '500px',
+          height: 'auto',
+          popoverType: 'labelImages',
+          titlePanel: true,
+          id: 'add_default_chart'
+        };
+        openedPopover(PopoverUI, props);
       }
     },
     'AddPivotGrid': {
@@ -157,7 +224,19 @@ const RibbonDefaultElement = () => {
       'imgSrc': addChart,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': true
+      'usePopover': true,
+      'useArrowButton': true,
+      'onClick': (ref) => {
+        console.log('AddCustomChart');
+        const props = {
+          width: '900px',
+          height: 'auto',
+          popoverType: 'labelImages',
+          titlePanel: true,
+          id: 'add_custom_chart'
+        };
+        openedPopover(PopoverUI, props);
+      }
     },
     'CaptionView': {
       'id': 'caption_view',
@@ -201,7 +280,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': rotate,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'XAxisSetting': {
       'id': 'xAxis_setting',
@@ -211,7 +293,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': xAxisSetting,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'YAxisSetting': {
       'id': 'yAxis_setting',
@@ -221,7 +306,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': yAxisSetting,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'ExtraAxisSetting': {
       'id': 'extra_setting',
@@ -231,7 +319,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': yAxisSetting,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'ShowColorLegend': {
       'id': 'show_color_legend',
@@ -241,7 +332,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': showColorLegend,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'SeriesType': {
       'id': 'bar_two',
@@ -251,7 +345,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': seriesType,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'Palette': {
       'id': 'palette',
@@ -261,7 +358,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': palette,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'ColorEdit': {
       'id': 'color_edit',
@@ -271,7 +371,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': colorEdit,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'PointLabel': {
       'id': 'point_label',
@@ -281,7 +384,10 @@ const RibbonDefaultElement = () => {
       'imgSrc': pointLabel,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': false
+      'useArrowButton': false,
+      'onClick': (e) => {
+        console.log(e);
+      }
     },
     'QuerySearch': {
       'id': 'query_search',

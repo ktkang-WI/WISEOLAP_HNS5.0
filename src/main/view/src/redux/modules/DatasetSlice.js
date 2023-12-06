@@ -54,8 +54,7 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
-    state[reportId].datasets =
-    state[reportId].datasets.filter(
+    state[reportId].datasets = state[reportId].datasets.filter(
         (ds) => ds.datasetId != datasetId
     );
   },

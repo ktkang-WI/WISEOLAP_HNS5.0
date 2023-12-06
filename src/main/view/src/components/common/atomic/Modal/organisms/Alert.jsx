@@ -38,8 +38,9 @@ const Alert = ({
             >
               <Content width={width} height={height}>
                 <Header>
-                  {type == 'alert'?
-                    localizedString.alert : localizedString.warning}
+                  {type == 'alert'? localizedString.alert :
+                    type == 'warning' ? localizedString.warning :
+                    type == 'confirm' ? localizedString.confirm : ''}
                 </Header>
                 <Inner>
                   {message}
