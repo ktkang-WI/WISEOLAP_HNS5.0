@@ -87,4 +87,17 @@ public class DataSanitizerTest {
     List<Map<String, Object>> result = sanitizer.paging(pagingOption).getData();
     assertEquals(result.size(), 20);
   }
+
+  @Test
+  public void basicFunctionTest() {
+    DataSanitizer sanitizer = new DataSanitizer(data);
+    List<Map<String, Object>> result = sanitizer
+        .groupBy(measures, dimensions)
+        .orderBy(dimensions)
+        .columnFiltering(measures, dimensions)
+        .paging(pagingOption)
+        .getData();
+    assertEquals(result.get(0).get("category"), "0");
+    assertEquals(result.get(0).get("bigCategory"), "0");
+  }
 }
