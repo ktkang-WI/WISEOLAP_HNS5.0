@@ -12,8 +12,10 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import {selectLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectParameter} from 'redux/selector/ParameterSelector';
+import useModal from './useModal';
 
 const useReportSave = () => {
+  const {alert} = useModal();
   const dispatch = useDispatch();
   const {updateReport, updateSelectedReportId} = ReportSlice.actions;
   const {changeItemReportId} = ItemSlice.actions;
@@ -78,6 +80,7 @@ const useReportSave = () => {
       dispatch(changeDatasetReportId(reportId));
       dispatch(changeParameterReportId(reportId));
       dispatch(updateSelectedReportId({reportId: reportId.newId}));
+      alert('보고서를 저장했습니다.');
     });
   };
 

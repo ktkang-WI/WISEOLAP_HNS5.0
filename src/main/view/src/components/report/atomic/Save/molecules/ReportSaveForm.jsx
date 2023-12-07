@@ -36,7 +36,10 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
         editorType='dxTextBox'
         dataField='reportNm'
         editorOptions={{
-          height: theme.size.labelTextBoxHeight
+          height: theme.size.labelTextBoxHeight,
+          elementAttr: {
+            id: 'reportNm'
+          }
         }}
       >
         <Label>
@@ -64,7 +67,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
           text: dataSource.path,
           buttons: [dataSrcSearchBtn],
           elementAttr: {
-            id: 'searchFileText'
+            id: 'fldName'
           },
           onValueChanged: (e) => {
             const elementAttr = e.component.option('elementAttr');

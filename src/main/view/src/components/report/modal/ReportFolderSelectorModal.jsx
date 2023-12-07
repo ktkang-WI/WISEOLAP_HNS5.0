@@ -69,7 +69,7 @@ const ReportFolderSelectorModal = ({...props}) => {
 
   const onClick = () => {
     const textBoxInstance =
-    textBox.getInstance(document.getElementById('searchFileText'));
+    textBox.getInstance(document.getElementById('fldName'));
     textBoxInstance.option('elementAttr', selectedFolder);
     textBoxInstance.option('value', selectedFolder.path);
   };

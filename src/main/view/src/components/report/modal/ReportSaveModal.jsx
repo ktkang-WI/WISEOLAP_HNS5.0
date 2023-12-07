@@ -8,6 +8,8 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import useReportSave from 'hooks/useReportSave';
+import textBox from 'devextreme/ui/text_box';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -30,6 +32,7 @@ const StyledModalPanel = styled(ModalPanel)`
   `;
 
 const ReportSaveModal = ({...props}) => {
+  const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
   const {saveReport} = useReportSave();
@@ -50,10 +53,25 @@ const ReportSaveModal = ({...props}) => {
       height={theme.size.bigModalHeight}
       width={theme.size.middleModalHeight}
       onSubmit={(e) => {
-        // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
-        // reportId 를 0 으로 하여 무조건 insert 하게 한다.
-        dataSource.reportId = 0;
-        saveReport(dataSource);
+        if (!dataSource.reportNm?.trim()) {
+          const reportNmInstance =
+          textBox.getInstance(document.getElementById('reportNm'));
+          reportNmInstance.focus();
+          alert('보고서명을 입력해 주세요.');
+        } else if (!dataSource.fldName?.trim()) {
+          const fldNameInstance =
+          textBox.getInstance(document.getElementById('fldName'));
+          fldNameInstance.focus();
+          alert('폴더를 선택해 주세요.');
+        } else {
+          // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
+          // reportId 를 0 으로 하여 무조건 insert 하게 한다.
+          dataSource.reportId = 0;
+          saveReport(dataSource);
+          return;
+        }
+
+        return true;
       }}
       {...props}
     >
