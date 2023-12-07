@@ -29,7 +29,7 @@ const StyledModalPanel = styled(ModalPanel)`
     }
   `;
 
-const SaveReportModal = ({...props}) => {
+const ReportSaveModal = ({...props}) => {
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
   const {saveReport} = useReportSave();
@@ -50,6 +50,9 @@ const SaveReportModal = ({...props}) => {
       height={theme.size.bigModalHeight}
       width={theme.size.middleModalHeight}
       onSubmit={(e) => {
+        // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
+        // reportId 를 0 으로 하여 무조건 insert 하게 한다.
+        dataSource.reportId = 0;
         saveReport(dataSource);
       }}
       {...props}
@@ -64,4 +67,4 @@ const SaveReportModal = ({...props}) => {
   );
 };
 
-export default SaveReportModal;
+export default ReportSaveModal;

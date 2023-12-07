@@ -97,6 +97,16 @@ const reducers = {
 
           return acc;
         }, []);
+  },
+  changeParameterReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const parameter = state[prevId];
+      delete state[prevId];
+      state[newId] = parameter;
+    }
   }
 };
 

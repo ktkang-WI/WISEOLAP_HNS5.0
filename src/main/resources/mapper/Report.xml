@@ -129,8 +129,8 @@
 		       	#{reportXml},
 		       	#{chartXml},
 		       	#{layoutXml},
-		       	#{paramXml},
 						#{datasetXml},
+		       	#{paramXml},
 		       	#{regUserNo}
 		       )
 		<!-- </if>  -->
