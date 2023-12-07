@@ -103,19 +103,9 @@ public final class DataSanitizer {
     public final DataSanitizer columnFiltering(List<Measure> measures, List<Dimension> dimensions) {
         Set<String> columnNames = getAllColumnNames(measures, dimensions);
 
-        data = data.stream()
-                .map(v -> {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    Iterator<String> iterator = columnNames.iterator();
-
-                    while (iterator.hasNext()) {
-                        String key = iterator.next();
-                        map.put(key, v.get(key));
-                    }
-
-                    return map;
-                })
-                .collect(Collectors.toList());
+        data.forEach(map -> {
+            map.keySet().retainAll(columnNames);
+        });
 
         return this;
     }
