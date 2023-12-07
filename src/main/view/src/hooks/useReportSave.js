@@ -31,6 +31,7 @@ const useReportSave = () => {
     param.reportNm = dataSource.reportNm;
     param.fldId = dataSource.fldId;
     param.fldType = dataSource.fldType;
+    param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
     // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
     // param.reportType = 'DashAny';
