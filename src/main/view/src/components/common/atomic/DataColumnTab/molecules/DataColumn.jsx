@@ -30,7 +30,7 @@ const Column = styled.div`
   font: ${theme.font.dataColumn};
   border: 1px solid ${theme.color.dataColumnBorder};
   border-radius: 2px;
-  line-height: ${theme.size.dataColumn};
+  line-height: calc(${theme.size.dataColumn} - 4px);
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -60,6 +60,7 @@ const Arrow = styled.img `
     top: calc(50% - 7px);
     width: auto;
     height: 13px;
+    ${(props) => props.direction == 'DESC' && 'transform: rotate(180deg);'}
 `;
 
 const OtherMenuButton = styled.img `
@@ -150,7 +151,15 @@ const DataColumn = ({
       {...props}
     >
       <Column
-        onClick={onClick}
+        onClick={() => {
+          if (sortOrder) {
+            dispatch(updateItemField({reportId,
+              dataField: {
+                ...data,
+                sortOrder: sortOrder == 'ASC'? 'DESC' : 'ASC'
+              }}));
+          }
+        }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
         {sortOrder &&
           <Arrow src={arrowImg} direction={sortOrder}/>
