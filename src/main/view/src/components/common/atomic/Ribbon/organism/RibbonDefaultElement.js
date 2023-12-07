@@ -28,7 +28,6 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
-import ReportSaveModal from 'components/report/organisms/Modal/ReportSaveModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 
