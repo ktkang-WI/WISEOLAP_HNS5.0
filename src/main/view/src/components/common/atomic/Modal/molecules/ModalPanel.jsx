@@ -14,13 +14,17 @@ const Content = styled.div`
   width: 100%;
   padding-top: 10px;
   box-sizing: border-box;
+  overflow-x: clip;
+  text-wrap: nowrap;
 `;
 
 
-const ModalPanel = ({title, children, padding = '10', ...props}) => {
+const ModalPanel = ({
+  title, children, padding = '10', headerButtons, footerButtons, ...props
+}) => {
   return (
     <StyledWrapper padding={padding} {...props}>
-      <ModalPanelTitle>{title}</ModalPanelTitle>
+      <ModalPanelTitle buttons={headerButtons}>{title}</ModalPanelTitle>
       <Content>
         {children}
       </Content>

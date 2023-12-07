@@ -8,7 +8,7 @@ import {
 } from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import './itemBoard.css';
-import download from '../../../assets/image/icon/button/download_new.png';
+import download from 'assets/image/icon/button/download_new.png';
 import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -16,10 +16,10 @@ import flexLayoutDefault from './FlexLayoutDefault';
 import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
-import Chart from '../item/chart/Chart';
+import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
-import PivotGrid from '../item/pivot/PivotGrid';
-import DataGrid from '../item/grid/DataGrid';
+import PivotGrid from 'components/report/item/pivot/PivotGrid';
+import DataGrid from 'components/report/item/grid/DataGrid';
 
 const StyledBoard = styled.div`
   height: 100%;

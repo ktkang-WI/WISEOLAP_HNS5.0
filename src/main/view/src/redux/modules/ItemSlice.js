@@ -90,6 +90,25 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId].selectedItemId = actions.payload.itemId;
   },
+  // 파라미터로 reportId, datasetId.
+  // 넘어온 datasetId 사용하는 아이템 dataField 초기화
+  initItemByDatsetId(state, actions) {
+    const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
+
+    state[reportId].items.map((i) => {
+      if (i.meta.dataField.datasetId == datasetId) {
+        for (const fields in i.meta.dataField) {
+          if (typeof i.meta.dataField[fields] === 'object') {
+            i.meta.dataField[fields] = [];
+          }
+        }
+
+        delete i.meta.dataField.datasetId;
+        i.meta.dataField.dataFieldQuantity = 0;
+      }
+    });
+  },
   updateItemField(state, actions) {
     const reportId = actions.payload.reportId;
 
@@ -103,7 +122,7 @@ const reducers = {
       state[reportId].items[itemIndex].meta.dataField = dataField;
     }
   },
-  setItem(state, actions) {
+  setItems(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
   }

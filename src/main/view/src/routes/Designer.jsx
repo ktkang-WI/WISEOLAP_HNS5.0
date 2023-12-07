@@ -11,7 +11,7 @@ const Designer = () => {
       >
       </Header>
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc', 'Dataset', 'Preference']}
+        content={['Dashboard', 'AdHoc', 'Preference']}
       />
       <Outlet/>
     </div>

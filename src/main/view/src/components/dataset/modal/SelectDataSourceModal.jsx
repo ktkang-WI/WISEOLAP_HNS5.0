@@ -3,7 +3,6 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {Column, Selection} from 'devextreme-react/data-grid';
 import {useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
-import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import _ from 'lodash';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
 import models from 'models';
@@ -12,6 +11,7 @@ import {styled} from 'styled-components';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from '../../../config/localization';
 import {getTheme} from 'config/theme';
+import DatasetType from '../utils/DatasetType';
 
 const theme = getTheme();
 
@@ -22,10 +22,10 @@ const StyledWrapper = styled(Wrapper)`
 const SelectDataSourceModal = ({onSubmit, ...props}) => {
   const [selectedDataSource, setSelectedDataSource] = useState({});
   const [dataSource, setDataSource] = useState([]);
-  const {openModal} = useModal();
+  const {alert} = useModal();
 
   useEffect(() => {
-    models.DataSource.getByIdAndDsType('admin', 'DS_SQL')
+    models.DataSource.getByIdAndDsType('admin', DatasetType.DS_SQL)
         .then((data) => {
           setDataSource(data);
         });
@@ -37,9 +37,7 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
         if (!_.isEmpty(selectedDataSource)) {
           onSubmit(selectedDataSource);
         } else {
-          openModal(Alert, {
-            message: localizedString.dataSourceNotSelectedMsg
-          });
+          alert(localizedString.dataSourceNotSelectedMsg);
 
           return true;
         }

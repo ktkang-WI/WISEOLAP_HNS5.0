@@ -5,17 +5,21 @@ import ModalSlice from './ModalSlice';
 import DatasetSlice from './DatasetSlice';
 import LayoutSlice from './LayoutSlice';
 import ItemSlice from './ItemSlice';
+import PopoverSlice from './PopoverSlice';
+import ParameterSlice from './ParameterSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
   report: ReportSlice.reducer,
   dataset: DatasetSlice.reducer,
   layout: LayoutSlice.reducer,
-  item: ItemSlice.reducer
+  item: ItemSlice.reducer,
+  parameter: ParameterSlice.reducer
 });
 
 const systemReducer = combineReducers({
-  modal: ModalSlice.reducer
+  modal: ModalSlice.reducer,
+  popover: PopoverSlice.reducer
 });
 
 const configure = {

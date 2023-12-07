@@ -25,14 +25,10 @@ const reducers = {
     }
 
     state[reportId].datasetQuantity++;
-    const datasetId = 'dataset' + state[reportId].datasetQuantity;
-
-    actions.payload.dataset.datasetId = datasetId;
 
     state[reportId].datasets =
       state[reportId].datasets.concat(actions.payload.dataset);
-
-    state[reportId].selectedDatasetId = datasetId;
+    state[reportId].selectedDatasetId = dataset.datasetId;
   },
   // 파라미터로 reportId와 dataset
   updateDataset(state, actions) {
@@ -44,19 +40,21 @@ const reducers = {
     );
 
     if (datasetIndex >= 0) {
-      state[reportId].datasets[datasetIndex] = actions.payload;
+      state[reportId].datasets[datasetIndex] = dataset;
     } else {
       state[reportId].datasets =
-        state[reportId].datasets.concat(actions.payload);
+        state[reportId].datasets.concat(dataset);
+      state[reportId].datasetQuantity++;
     }
+
+    state[reportId].selectedDatasetId = dataset.datasetId;
   },
   // 파라미터로 reportId와 datsetId
   deleteDataset(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
-    state[reportId].datasets =
-    state[reportId].datasets.filter(
+    state[reportId].datasets = state[reportId].datasets.filter(
         (ds) => ds.datasetId != datasetId
     );
   },
