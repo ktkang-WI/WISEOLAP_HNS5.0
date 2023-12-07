@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
-import com.wise.MarketingPlatForm.report.domain.data.SummaryCalculator;
 
 import lombok.Getter;
 
