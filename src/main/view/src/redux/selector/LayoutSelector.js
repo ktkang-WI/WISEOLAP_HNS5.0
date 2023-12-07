@@ -1,6 +1,11 @@
 import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 
+export const selectLayout = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.layout,
+    (reportId, layout) => layout[reportId]
+);
 /**
  * flexLayout
  */

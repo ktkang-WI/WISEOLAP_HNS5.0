@@ -6,7 +6,7 @@
     <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
         SELECT 	A.REPORT_ID as reportId
 				, A.REPORT_NM as reportNm
-				, A.FLD_ID as fldId   
+				, A.FLD_ID as fldId
 				, A.FLD_TYPE as fldType
 				, A.REPORT_ORDINAL as reportOrdinal
 				, A.REPORT_TYPE as reportType
@@ -30,7 +30,7 @@
 				, A.PROMPT_YN as promptYn
 				, A.REPORT_SUB_TITLE as reportSubTitle
 				, A.MOD_USER_NO as modUserNo
-				, C.USER_NM AS modUserNm							
+				, C.USER_NM AS modUserNm
 				, A.MOD_DT as modDt
 				, B.USER_NM as userNm
 				, A.PRIVACY_YN as privacyYn
@@ -43,4 +43,151 @@
                 AND A.REPORT_ID = #{reportId}
             </if>
     </select>
+
+    <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+        SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
+					FLD_NM 						AS fldNm,
+					FLD_PARENT_ID 				AS fldParentId,
+					FLD_ORDINAL 				AS fldOrdinal
+		FROM  		GRP_AUTH_REPORT_MSTR
+					INNER JOIN USER_MSTR 		ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+					INNER JOIN PUB_FLD_MSTR 	ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
+		WHERE 		USER_MSTR.USER_ID = #{userId}
+					AND USER_MSTR.DEL_YN = 'N'
+        			AND AUTH_PUBLISH != 'N'
+		ORDER BY 	fldParentId, fldOrdinal
+    </select>
+
+    <select id="selectPrivateReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+        SELECT FLD_ID AS fldId,
+		FLD_NM AS fldNm,
+		FLD_PARENT_ID AS fldParentId,
+		FLD_ORDINAL AS fldOrdinal
+		FROM USER_FLD_MSTR
+		INNER JOIN USER_MSTR
+		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
+		WHERE USER_MSTR.USER_ID = #{userId}
+    </select>
+
+    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
+	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">
+	    		<if test='reportId == 0'>
+                	SELECT MAX(REPORT_ID) FROM REPORT_MSTR
+            	</if>
+            	<if test='reportId != 0'>
+                	SELECT REPORT_ID as reportId FROM REPORT_MSTR
+            		WHERE REPORT_ID = #{reportId}
+            	</if>
+			</selectKey>
+    	<!--  <if test = "dbType == 'Oracle'"> -->
+	    	MERGE INTO REPORT_MSTR
+	    	USING dual
+	    	ON (#{reportId} != 0)
+	    	WHEN MATCHED THEN
+	    		UPDATE SET
+	    		REPORT_NM = #{reportNm},
+		       	REPORT_SUB_TITLE = #{reportSubTitle},
+		       	FLD_ID = #{fldId},
+		       	FLD_TYPE = #{fldType},
+		       	REPORT_ORDINAL = #{reportOrdinal},
+		       	REPORT_TYPE = #{reportType},
+		       	REPORT_DESC = #{reportDesc},
+		       	REPORT_XML = #{reportXml},
+		       	CHART_XML = #{chartXml},
+		       	LAYOUT_XML = #{layoutXml},
+		       	PARAM_XML = #{paramXml},
+		       	REG_USER_NO = #{regUserNo}
+		       	WHERE REPORT_ID = #{reportId}
+	    	WHEN NOT MATCHED THEN
+		    	INSERT
+		       (
+		       	REPORT_ID,
+		       	REPORT_NM,
+		       	REPORT_SUB_TITLE,
+		       	FLD_ID,
+		       	FLD_TYPE,
+		       	REPORT_ORDINAL,
+		       	REPORT_TYPE,
+		       	REPORT_DESC,
+		       	REPORT_XML,
+		       	CHART_XML,
+		       	LAYOUT_XML,
+						DATASET_XML,
+		       	PARAM_XML,
+		       	REG_USER_NO
+		       )
+		       VALUES
+		       (
+		       	REPORT_MSTR_REPORT_ID_SEQ.NEXTVAL,
+		        #{reportNm},
+		        #{reportSubTitle},
+		       	#{fldId},
+		       	#{fldType},
+		       	#{reportOrdinal},
+		       	#{reportType},
+		       	#{reportDesc},
+		       	#{reportXml},
+		       	#{chartXml},
+		       	#{layoutXml},
+		       	#{paramXml},
+						#{datasetXml},
+		       	#{regUserNo}
+		       )
+		<!-- </if>  -->
+
+		<!--  mysql, maria DB 일 경우 ON DUPLICATE KEY UPDATE 사용
+		<selectKey resultType="int" keyProperty="reportId" order="BEFORE">
+    		<if test='reportId == 0' >
+    			SELECT MAX(REPORT_ID)+1 FROM REPORT_MSTR
+    		</if>
+    	</selectKey>
+
+	   INSERT INTO REPORT_MSTR
+       (
+       	REPORT_ID,
+       	REPORT_NM,
+       	REPORT_SUB_TITLE,
+       	FLD_ID,
+       	FLD_TYPE,
+       	REPORT_ORDINAL,
+       	REPORT_TYPE,
+       	REPORT_DESC,
+       	REPORT_XML,
+       	CHART_XML,
+       	LAYOUT_XML,
+       	PARAM_XML,
+       	REG_USER_NO
+       )
+       VALUES
+       (
+       	#{reportId},
+        #{reportNm},
+        #{reportSubTitle},
+       	#{fldId},
+       	#{fldType},
+       	#{reportOrdinal},
+       	#{reportType},
+       	#{reportDesc},
+       	#{reportXml},
+       	#{chartXml},
+       	#{layoutXml},
+       	#{paramXml},
+       	#{regUserNo}
+       )
+       ON DUPLICATE KEY
+       UPDATE
+       	REPORT_NM = #{reportNm},
+       	REPORT_SUB_TITLE = #{reportSubTitle},
+       	FLD_ID = #{fldId},
+       	FLD_TYPE = #{fldType},
+       	REPORT_ORDINAL = #{reportOrdinal},
+       	REPORT_TYPE = #{reportType},
+       	REPORT_DESC = #{reportDesc},
+       	REPORT_XML = #{reportXml},
+       	CHART_XML = #{chartXml},
+       	LAYOUT_XML = #{layoutXml},
+       	PARAM_XML = #{paramXml},
+       	REG_USER_NO = #{regUserNo}
+     -->
+    </insert>
 </mapper>

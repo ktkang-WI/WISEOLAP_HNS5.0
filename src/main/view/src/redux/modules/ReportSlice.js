@@ -6,10 +6,23 @@ const initialState = {
   reports: [{
     reportId: 0,
     options: {
-      reportNm: localizedString.defaultReportName,
-      reportDesc: '',
-      reportPath: '', // 해당 경로 비어있을 경우 새 보고서
-      order: 0
+      name: localizedString.defaultReportName,
+      subName: '',
+      fldId: 0,
+      fldName: '',
+      fldType: '',
+      order: 0,
+      tag: '',
+      description: '',
+      path: '', // 해당 경로 비어있을 경우 새 보고서
+      chartXML: '',
+      datasetXML: '',
+      layoutXML: '',
+      reportXML: '',
+      paramXML: '',
+      regDt: '',
+      regUserNo: '',
+      reportType: ''
     }
   }]
 };
@@ -21,6 +34,7 @@ const reducers = {
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
+    state.selectedReportId = actions.payload.reportId;
   },
   updateReport(state, actions) {
     const index = state.reports.findIndex(
@@ -29,6 +43,10 @@ const reducers = {
     if (index > 0) {
       state.reports[index] = actions.payload;
     } else {
+      if (state.selectedReportId == 0) {
+        state.reports = state.reports.filter(
+            (report) => report.reportId != 0);
+      }
       state.reports = state.reports.concat(actions.payload);
     }
   },
@@ -38,6 +56,9 @@ const reducers = {
   },
   deleteAllReport(state, actions) {
     state.reports = [];
+  },
+  updateSelectedReportId(state, actions) {
+    state.selectedReportId = actions.payload.reportId;
   }
 };
 

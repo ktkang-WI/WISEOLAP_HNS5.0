@@ -8,8 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -17,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
-import com.wise.MarketingPlatForm.data.list.CloseableList;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -36,7 +36,6 @@ import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
 import com.wise.MarketingPlatForm.global.util.XMLParser;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.report.controller.ReportController;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
@@ -62,6 +61,7 @@ import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
@@ -371,6 +371,23 @@ public class ReportService {
                 throw new ServiceTimeoutException("ReportController timed out: " + curDuration + "ms.");
             }
         }
+    }
+    
+    public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
+        reportDAO.addReport(reportMstrDTO);
+        return reportMstrDTO;
+    }
+    
+    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
+    	Map<String, List<FolderMasterVO>> result = new HashMap<>();
+    	
+    	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
+    	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+    	    	 
+	    result.put("publicFolder", publicFolderList);
+	    result.put("privateFolder", privateFolderList);
+
+        return result;
     }
 }
 
