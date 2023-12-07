@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import ReportFolderSelectorModal
-  from '../organisms/Modal/ReportFolderSelectorModal';
+  from 'components/report/modal/ReportFolderSelectorModal';
 
 const theme = getTheme();
 
@@ -34,7 +34,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
     >
       <Item
         editorType='dxTextBox'
-        dataField='name'
+        dataField='reportNm'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -45,7 +45,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='subName'
+        dataField='reportSubTitle'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -81,7 +81,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxNumberBox'
-        dataField='order'
+        dataField='reportOrdinal'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -92,7 +92,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='tag'
+        dataField='reportTag'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -103,7 +103,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextArea'
-        dataField='description'
+        dataField='reportDesc'
         editorOptions={{
           height: theme.size.labelTextAreaHeight
         }}

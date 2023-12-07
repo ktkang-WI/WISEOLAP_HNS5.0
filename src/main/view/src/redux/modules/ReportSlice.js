@@ -6,14 +6,14 @@ const initialState = {
   reports: [{
     reportId: 0,
     options: {
-      name: localizedString.defaultReportName,
-      subName: '',
+      reportNm: localizedString.defaultReportName,
+      reportSubTitle: '',
       fldId: 0,
       fldName: '',
       fldType: '',
-      order: 0,
-      tag: '',
-      description: '',
+      reportOrdinal: 0,
+      reportTag: '',
+      reportDesc: '',
       path: '', // 해당 경로 비어있을 경우 새 보고서
       chartXML: '',
       datasetXML: '',
@@ -40,7 +40,7 @@ const reducers = {
     const index = state.reports.findIndex(
         (report) => report.reportId == actions.payload.reportId
     );
-    if (index > 0) {
+    if (index >= 0) {
       state.reports[index] = actions.payload;
     } else {
       if (state.selectedReportId == 0) {
