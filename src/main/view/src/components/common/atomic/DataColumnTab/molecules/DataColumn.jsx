@@ -167,18 +167,26 @@ const DataColumn = ({
             showEvent='click'
             target={'#' + otherMenuId}
             itemRender={(e) => {
-              const icon = '\u2713';
+              const checkIcon = '\u2713';
+              const childrenIcon = '\u25B6';
               const iconStyle = {
                 position: 'absolute',
                 display: 'inline-block',
                 right: '5px'
               };
 
+              const expandIconStyle = {
+                ...iconStyle,
+                fontSize: '10px',
+                top: 'calc(50% - 10px)'
+              };
+
               return (
                 <>
                   <span className='dx-menu-item-text'>{e.text}</span>
                   {data.summaryType && data.summaryType == e.value &&
-                    <div style={iconStyle}>{icon}</div>}
+                    <div style={iconStyle}>{checkIcon}</div>}
+                  {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
                 </>
               );
             }}
