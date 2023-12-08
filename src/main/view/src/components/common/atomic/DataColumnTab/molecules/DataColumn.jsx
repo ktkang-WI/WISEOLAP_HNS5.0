@@ -151,8 +151,8 @@ const DataColumn = ({
       {...props}
     >
       <Column
-        onClick={() => {
-          if (sortOrder) {
+        onClick={(e) => {
+          if (sortOrder && e.target.tagName != 'IMG') {
             dispatch(updateItemField({reportId,
               dataField: {
                 ...data,
