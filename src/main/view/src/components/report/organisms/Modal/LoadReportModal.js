@@ -15,6 +15,8 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
+import meaImg from 'assets/image/icon/dataSource/measure.png';
+import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
@@ -63,7 +65,7 @@ const LoadReportModal = ({...props}) => {
                     items: data.item
                   }));
                   data.dataset.datasets.forEach((i) => {
-                    i.fields = i.fields.map((f) => {
+                    i.fields = i.fields.map((field) => {
                       const isMea = field.columnTypeName == 'decimal';
                       return {
                         icon: isMea ? meaImg : dimImg,
@@ -71,7 +73,7 @@ const LoadReportModal = ({...props}) => {
                         uniqueName: field.columnName,
                         name: field.columnName,
                         type: isMea ? 'MEA' : 'DIM',
-                        ...f
+                        ...field
                       };
                     });
                     i.fields.unshift({
