@@ -1,6 +1,5 @@
-package com.wise.MarketingPlatForm.report.util;
+package com.wise.MarketingPlatForm.report.domain.data;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
@@ -35,7 +36,11 @@ public final class DataSanitizer {
 
         // 사용하는 컬럼 이름만 담기
         for (Measure measure : measures) {
-            columnNames.add(measure.getName());
+            if (StringUtils.isNotBlank(measure.getSummaryName())) {
+                columnNames.add(measure.getSummaryName());
+            } else {
+                columnNames.add(measure.getName());
+            }
         }
 
         for (Dimension dimension : dimensions) {
@@ -56,24 +61,40 @@ public final class DataSanitizer {
             return sb.toString();
         })).entrySet().stream()
                 .map(e -> e.getValue().stream()
-                        .reduce(new HashMap<String, Object>(), (acc, value) -> {
+                        .reduce(new HashMap<String, Object>(), (acc, row) -> {
                             if (acc.keySet().size() == 0) {
-                                acc = value;
+                                acc = row;
+                                
                                 for (Measure measure : measures) {
                                     String name = measure.getName();
-                                    acc.put(name, new BigDecimal(String.valueOf(value.get(name))));
+                                    Object value = row.get(name);
+                                    measure.setSummaryName(measure.getSummaryType().toString() + "_" + name);
+                                    // TODO: 추후 정렬 기준 항목 추가시 보수 필요
+                                    acc.put(measure.getSummaryName(), new SummaryCalculator(measure.getSummaryType(), value));
                                 }
                             } else {
                                 for (Measure measure : measures) {
                                     String name = measure.getName();
-                                    BigDecimal target = new BigDecimal(String.valueOf(value.get(name)));
-                                    acc.put(name, ((BigDecimal) acc.get(name)).add(target));
+                                    Object value = row.get(name);
+                                    SummaryCalculator sv = (SummaryCalculator)acc.get(measure.getSummaryName());
+
+                                    acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));
                                 }
                             }
 
                             return acc;
-                        }))
-                .collect(Collectors.toList());
+                        })).map((row) -> {
+                            for (Measure measure : measures) {
+                                String name = measure.getSummaryName();
+                                if (row.get(name) instanceof SummaryCalculator) {
+                                    SummaryCalculator sv = (SummaryCalculator)row.get(name);
+
+                                    row.put(name, sv.getSummaryValue());
+                                }
+                            }
+                            return row;
+                        })
+                        .collect(Collectors.toList());
 
         grpDataLenth = data.size();
         return this;
@@ -82,19 +103,9 @@ public final class DataSanitizer {
     public final DataSanitizer columnFiltering(List<Measure> measures, List<Dimension> dimensions) {
         Set<String> columnNames = getAllColumnNames(measures, dimensions);
 
-        data = data.stream()
-                .map(v -> {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    Iterator<String> iterator = columnNames.iterator();
-
-                    while (iterator.hasNext()) {
-                        String key = iterator.next();
-                        map.put(key, v.get(key));
-                    }
-
-                    return map;
-                })
-                .collect(Collectors.toList());
+        data.forEach(map -> {
+            map.keySet().retainAll(columnNames);
+        });
 
         return this;
     }
@@ -123,21 +134,23 @@ public final class DataSanitizer {
 
     public final DataSanitizer paging(PagingOption pagingOption) {
         if (pagingOption != null && pagingOption.isPagingEnabled()) {
-            List<Map<String, Object>> tempList = new ArrayList<>();
-
             int start = pagingOption.getStart();
             int size = pagingOption.getSize();
-            int rows = Math.min(start + size, data.size());
-
-            for (int i = start; i < rows; i++) {
-                tempList.add(data.get(i));
-            }
-
+            int end = Math.min(start + size, data.size());
             maxPage = data.size() / pagingOption.getSize();
+
+            List<Map<String, Object>> tempList;
+
+            if (start >= data.size()) {
+                tempList = Collections.emptyList();
+            } else {
+                tempList = data.subList(start, end);
+            }
 
             if (data.size() % pagingOption.getSize() > 0) {
                 maxPage += 1;
             }
+            
             data = tempList;
         }
 
