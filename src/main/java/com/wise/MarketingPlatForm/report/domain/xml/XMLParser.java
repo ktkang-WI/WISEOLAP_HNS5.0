@@ -44,6 +44,10 @@ public abstract class XMLParser {
 	protected Map<Integer, String> dsIdNDsType = new HashMap<>();
 	
 	
+	/**
+	 * filter의 경우 모든 보고서에 공통으로 적용됨으로 불필요한 코드량을 줄이기 위하여 여기에 선언
+	 * @param paramXml
+	 */
 	protected void getParamXmlDTO(String paramXml) {
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder(); 

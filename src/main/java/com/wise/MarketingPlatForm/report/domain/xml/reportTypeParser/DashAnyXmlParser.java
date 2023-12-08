@@ -499,7 +499,7 @@ public class DashAnyXmlParser extends XMLParser {
 								fields.add(measure);
 							}
 						}
-					} else if ("Columns".equals(itemChild.getNodeName())) {
+					} else if ("Rows".equals(itemChild.getNodeName())) {
 						NodeList columnNodes = itemChild.getChildNodes();
 						for (int columnNodesIndex = 0; columnNodesIndex < columnNodes.getLength(); columnNodesIndex++) {
 							if (columnNodes.item(columnNodesIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -507,7 +507,7 @@ public class DashAnyXmlParser extends XMLParser {
 							String colUniNm = columnNodes.item(columnNodesIndex).getAttributes().getNamedItem("UniqueName").getTextContent();
 							this.rowNCol.put(colUniNm, "col");
 						}
-					} else if ("Rows".equals(itemChild.getNodeName())) {
+					} else if ("Columns".equals(itemChild.getNodeName())) {
 						NodeList rowNodes = itemChild.getChildNodes();
 						for (int rowNodesIndex = 0; rowNodesIndex < rowNodes.getLength(); rowNodesIndex++) {
 							if (rowNodes.item(rowNodesIndex).getNodeType() != Node.ELEMENT_NODE)
