@@ -63,6 +63,17 @@ const LoadReportModal = ({...props}) => {
                     items: data.item
                   }));
                   data.dataset.datasets.forEach((i) => {
+                    i.fields = i.fields.map((f) => {
+                      const isMea = field.columnTypeName == 'decimal';
+                      return {
+                        icon: isMea ? meaImg : dimImg,
+                        parentId: '0',
+                        uniqueName: field.columnName,
+                        name: field.columnName,
+                        type: isMea ? 'MEA' : 'DIM',
+                        ...f
+                      };
+                    });
                     i.fields.unshift({
                       name: localizedString.defaultDatasetName,
                       type: 'FLD',

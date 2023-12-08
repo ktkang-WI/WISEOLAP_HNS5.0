@@ -24,6 +24,7 @@ import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
+import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
@@ -135,6 +136,7 @@ public class DashAnyXmlParser extends XMLParser {
 	@Override
 	public void getDatasetXmlDTO(String datasetXml, String userId) {
 		try {
+			datasetXml = "<DATASET_XML><DATASET_ELEMENT><DATASET><DATASET_SEQ>2e41d3d5-3a5d-4ef4-9a76-6f74da8d5eb6</DATASET_SEQ><DATASET_NM>AC전체</DATASET_NM><DATASRC_ID>2026</DATASRC_ID><DATASRC_TYPE>DS_SQL</DATASRC_TYPE><DATASET_TYPE>DataSetSQL</DATASET_TYPE><DATASET_XML><DATA_SET><SQL_QUERY>U0VMRUNUICogRlJPTSBGX0tNX1dIT0xFX0FD</SQL_QUERY><PARAM_ELEMENT/><DATASET_NM>AC전체</DATASET_NM></DATA_SET></DATASET_XML><DATASET_QUERY>SELECT * FROM F_KM_WHOLE_AC</DATASET_QUERY></DATASET><DATASET><DATASET_SEQ>320134a9-0b49-4529-8481-86d8f6a5f889</DATASET_SEQ><DATASET_NM>수주전체</DATASET_NM><DATASRC_ID>2026</DATASRC_ID><DATASRC_TYPE>DS_SQL</DATASRC_TYPE><DATASET_TYPE>DataSetSQL</DATASET_TYPE><DATASET_XML><DATA_SET><SQL_QUERY>U0VMRUNUICogRlJPTSBEQVRBU0VUX+yImOyjvOyghOyytA==</SQL_QUERY><PARAM_ELEMENT/><DATASET_NM>수주전체</DATASET_NM></DATA_SET></DATASET_XML><DATASET_QUERY>SELECT * FROM DATASET_수주전체</DATASET_QUERY></DATASET></DATASET_ELEMENT></DATASET_XML>";
 	        JSONObject root = XML.toJSONObject(datasetXml);
 	        JSONPointer pointer = new JSONPointer("/DATASET_XML/DATASET_ELEMENT/DATASET");
 	        Object result = pointer.queryFrom(root);
@@ -159,7 +161,7 @@ public class DashAnyXmlParser extends XMLParser {
 	        	String datasrcType = datasetJson.getString("DATASRC_TYPE");
 	        	String datasetQuery = datasetJson.getString("DATASET_QUERY");
 	        	JSONObject datasetField = datasetJson.optJSONObject("DATASET_FIELD");
-	        	List<RootFieldVO> fields = new ArrayList<>();
+	        	List<Object> fields = new ArrayList<>();
 	        	if(datasetField != null) {
 	        		JSONArray fieldsArray = datasetField.getJSONArray("LIST");
 	        		for(int fieldsIndex = 1; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
@@ -197,9 +199,10 @@ public class DashAnyXmlParser extends XMLParser {
 	        	} else {
 	        		if(datasrcType.equals(DsType.CUBE.toString())) {
 	        			// 추후 추가
-	        			fields = cubeService.getCubeFields();
+	        			fields.add(cubeService.getCubeFields());
 					} else if(datasrcType.equals(DsType.DS_SQL.toString())) {
-						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery, null);
+						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery);
+						fields.add(martDTO.getMetaData());
 					}
 	        	}
 	        	
