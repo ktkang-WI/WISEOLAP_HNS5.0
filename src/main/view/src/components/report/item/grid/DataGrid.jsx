@@ -16,7 +16,7 @@ const DataGrid = ({id, mart}) => {
       {mart.data.columns.map((column, index) =>
         <Column
           key={column.name}
-          dataField={column.caption}
+          dataField={column.name}
           allowEditing={column.allowEditing}
         />
       )}
