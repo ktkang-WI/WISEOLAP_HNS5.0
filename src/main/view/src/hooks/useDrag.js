@@ -42,7 +42,8 @@ const useDrag = () => {
         uniqueName: sourceField.uniqueName,
         caption: sourceField.name,
         category: dest.droppableId,
-        type: dataFieldOption[dest.droppableId].type
+        fieldType: sourceField.type, // 데이터 항목 원본 타입
+        type: dataFieldOption[dest.droppableId].type // 실제 조회할 때 적용되어야 할 type
       };
 
       const dimensionOption = {
@@ -88,6 +89,8 @@ const useDrag = () => {
         const sourceField = selectedDataset.fields.find((field) =>
           field.uniqueName == targetId
         );
+
+        if (sourceField.type == 'FLD') return;
 
         const tempField = getNewDataField(sourceField);
 

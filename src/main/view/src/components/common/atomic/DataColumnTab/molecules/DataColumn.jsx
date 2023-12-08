@@ -152,7 +152,8 @@ const DataColumn = ({
     >
       <Column
         onClick={(e) => {
-          if (sortOrder && e.target.tagName != 'IMG') {
+          if (sortOrder && e.target.tagName != 'IMG' &&
+              e.target.className.indexOf('dx-menu') == -1) {
             dispatch(updateItemField({reportId,
               dataField: {
                 ...data,
