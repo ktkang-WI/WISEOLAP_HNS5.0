@@ -77,13 +77,13 @@ public abstract class XMLParser {
 						} else if ("KEY_VALUE_ITEM".equals(configNode.getNodeName())) {
 							information.put("itemKey", configNode.getTextContent());
 						} else if ("DEFAULT_VALUE".equals(configNode.getNodeName())) {
-							Object defaultValue = null;
-							if (configNode.getTextContent().matches("\\d+")) {
-								defaultValue = Integer.parseInt(configNode.getTextContent());
+							if(dataSrcType.equals("CAND")) {
+								information.put("defaultValue", new ArrayList<Object>() {{
+									add(configNode.getTextContent());
+								}});
 							} else {
-								defaultValue = configNode.getTextContent();
+								information.put("defaultValue", configNode.getTextContent());
 							}
-							information.put("defaultValue", defaultValue);
 						} else if ("CAPTION_WIDTH".equals(configNode.getNodeName())) {
 							information.put("captionWidth", Double.parseDouble(configNode.getTextContent()));
 						} else if ("DS_ID".equals(configNode.getNodeName())) {
@@ -115,8 +115,21 @@ public abstract class XMLParser {
 						} else if ("SORT_TYPE".equals(configNode.getNodeName())) {
 							information.put("sortOrder", configNode.getTextContent());
 						}
-					
+						
 					} 
+					if(dataSrcType.equals("CAND")) {
+						information.put("calendarDefaultType", "NOW");
+						information.put("calendarDefaultType", new ArrayList() {{
+							add("YEAR");
+							add("");
+						}});
+						information.put("calendarKeyFormat", "yyyy");
+						information.put("calendarCaptionFormat", "yyyy");
+						information.put("calendarPeriodValue", new ArrayList() {{
+							add(-1);
+							add("");
+						}});
+					}
 					information.put("dsType", this.dsIdNDsType.get((Integer) information.get("dsId")));
 					this.informations.add(information);
 //				추후 추가 예정
