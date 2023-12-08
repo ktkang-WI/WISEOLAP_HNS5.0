@@ -63,6 +63,7 @@ import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
+import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -393,6 +394,23 @@ public class ReportService {
                 throw new ServiceTimeoutException("ReportController timed out: " + curDuration + "ms.");
             }
         }
+    }
+    
+    public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
+        reportDAO.addReport(reportMstrDTO);
+        return reportMstrDTO;
+    }
+    
+    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
+    	Map<String, List<FolderMasterVO>> result = new HashMap<>();
+    	
+    	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
+    	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+    	    	 
+	    result.put("publicFolder", publicFolderList);
+	    result.put("privateFolder", privateFolderList);
+
+        return result;
     }
 
     public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
