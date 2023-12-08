@@ -134,21 +134,23 @@ public final class DataSanitizer {
 
     public final DataSanitizer paging(PagingOption pagingOption) {
         if (pagingOption != null && pagingOption.isPagingEnabled()) {
-            List<Map<String, Object>> tempList = new ArrayList<>();
-
             int start = pagingOption.getStart();
             int size = pagingOption.getSize();
-            int rows = Math.min(start + size, data.size());
-
-            for (int i = start; i < rows; i++) {
-                tempList.add(data.get(i));
-            }
-
+            int end = Math.min(start + size, data.size());
             maxPage = data.size() / pagingOption.getSize();
+
+            List<Map<String, Object>> tempList;
+
+            if (start >= data.size()) {
+                tempList = Collections.emptyList();
+            } else {
+                tempList = data.subList(start, end);
+            }
 
             if (data.size() % pagingOption.getSize() > 0) {
                 maxPage += 1;
             }
+            
             data = tempList;
         }
 

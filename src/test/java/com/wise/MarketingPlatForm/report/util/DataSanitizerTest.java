@@ -86,6 +86,7 @@ public class DataSanitizerTest {
     DataSanitizer sanitizer = new DataSanitizer(data);
     List<Map<String, Object>> result = sanitizer.paging(pagingOption).getData();
     assertEquals(result.size(), 20);
+    assertEquals(result.get(0).get("id"), "0");
   }
 
   @Test
