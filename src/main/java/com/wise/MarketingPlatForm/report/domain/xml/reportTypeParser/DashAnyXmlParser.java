@@ -167,7 +167,7 @@ public class DashAnyXmlParser extends XMLParser {
 	        			JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
 	        			String dataType = fieldObject.getString("DATA_TYPE");
 	        			String name = fieldObject.getString("CAPTION");
-	        			String uniqueName = fieldObject.getString("UNI_NM");
+	        			String uniqueName = fieldObject.optString("UNI_NM");
 	        			String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
 	        			Integer order = fieldObject.getInt("ORDER");
 	        			DataFieldType type = "MEA".equals(fieldObject.getString("TYPE"))
