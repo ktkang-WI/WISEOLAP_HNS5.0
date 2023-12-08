@@ -12,6 +12,8 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import QueryDataSourceDesignerModal
+  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();

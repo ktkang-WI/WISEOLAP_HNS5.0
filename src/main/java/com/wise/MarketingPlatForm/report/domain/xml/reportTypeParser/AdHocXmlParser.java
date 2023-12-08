@@ -1,10 +1,10 @@
-package com.wise.MarketingPlatForm.report.domain.xml.reportType;
+package com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser;
 
 import java.util.Map;
 import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public class AdHocXmlParser implements XMLParser{
+public class AdHocXmlParser extends XMLParser{
 
 	@Override
 	public void getReportXmlDTO(String reportXml) {
@@ -36,4 +36,9 @@ public class AdHocXmlParser implements XMLParser{
 		return null;
 	}
 
+	@Override
+	public void getParamXmlDTO(String paramXml) {
+		// TODO Auto-generated method stub
+		
+	}
 }

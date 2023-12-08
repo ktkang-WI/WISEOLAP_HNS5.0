@@ -17,6 +17,7 @@ import {useDispatch} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import useQueryExecute from 'hooks/useQueryExecute';
+import ParameterSlice from 'redux/modules/ParameterSlice';
 
 const theme = getTheme();
 
@@ -27,9 +28,10 @@ const LoadReportModal = ({...props}) => {
   const dispatch = useDispatch();
 
   const {setReports, selectReport} = ReportSlice.actions;
-  const {setItem} = ItemSlice.actions;
+  const {setItems} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
   const {setDataset} = DatasetSlice.actions;
+  const {setParameterInformation} = ParameterSlice.actions;
   const {executeItems} = useQueryExecute();
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const LoadReportModal = ({...props}) => {
                   data.item.items.forEach((i) => {
                     i.mart = makeMart(i);
                   });
-                  dispatch(setItem({
+                  dispatch(setItems({
                     reportId: selectedReport.id,
                     items: data.item
                   }));
@@ -71,6 +73,10 @@ const LoadReportModal = ({...props}) => {
                   dispatch(setDataset({
                     reportId: selectedReport.id,
                     dataset: data.dataset
+                  }));
+                  dispatch(setParameterInformation({
+                    reportId: selectedReport.id,
+                    informations: data.informations
                   }));
                   executeItems();
                 });

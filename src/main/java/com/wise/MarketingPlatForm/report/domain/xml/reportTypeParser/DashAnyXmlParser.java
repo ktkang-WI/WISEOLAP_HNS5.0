@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.domain.xml.reportType;
+package com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -7,21 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPointer;
 import org.json.XML;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
@@ -41,28 +35,24 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public class DashAnyXmlParser implements XMLParser {
-
-	private static Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
-
-	private Map<String, Object> dataset = new HashMap<>();
-	private Map<String, Object> item = new HashMap<>();
-	private Map<String, Object> layout = new HashMap<>();
-	private Map<String, Object> returnReport = new HashMap<>();
+public class DashAnyXmlParser extends XMLParser {
 
 	private JSONArray datasetJsonArray = new JSONArray();
 
-	private List<String> datasetType = new ArrayList<>();
-	private List<String> datasrcType = new ArrayList<>();
-	private List<Integer> datasrcId = new ArrayList<>();
-	private List<String> datasetNm = new ArrayList<>();
+//	private List<String> datasetNm = new ArrayList<>();
+//	private List<String> datasetType = new ArrayList<>();
+//	private List<Integer> datasrcId = new ArrayList<>();
+//	private List<String> datasrcType = new ArrayList<>();
 	
+	
+	// LAYOUT_XML의  DataSource태그의 데이터를 사용하기 위하여 선언 bjsong
 	private Map<String, String> datasources = new HashMap<>();
+	// pivot_gird 아이템에서 row와 column 정보를 저장하기 위하여 선언 bjsong
+	private Map<String, String> rowNCol = new HashMap<>();
 
 	private CubeService cubeService;
 	private DatasetService datasetService;
 
-	static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	
 	public DashAnyXmlParser(CubeService cubeService, DatasetService datasetService) {
 		this.cubeService = cubeService;
@@ -83,7 +73,6 @@ public class DashAnyXmlParser implements XMLParser {
 	public void getlayoutXmlDTO(String layoutXml) {
 		Map<String, Object> layoutConfig = new HashMap<>();
 		
-		Document document;
 		LayoutTabWrapperVO layoutWrapper = LayoutTabWrapperVO.builder()
 				.type("row")
 				.weight((double) 100)
@@ -125,7 +114,7 @@ public class DashAnyXmlParser implements XMLParser {
 						// key = name
 						String Name = datasourceNode.getAttributes().getNamedItem("Name").getTextContent();
 						
-						datasources.put(Name, componentName);
+						this.datasources.put(Name, componentName);
 					}
 					break;
 				case "Items":
@@ -155,7 +144,7 @@ public class DashAnyXmlParser implements XMLParser {
 	        } else if (result instanceof JSONArray) {
 	        	this.datasetJsonArray = (JSONArray) result;
 	        } else {
-	            log.error("DATA_SET not found or has unexpected format.");
+	            super.log.error("DATA_SET not found or has unexpected format.");
 	        }
 	        
 	        List<Map<String, Object>> datasets = new ArrayList<>();
@@ -173,18 +162,18 @@ public class DashAnyXmlParser implements XMLParser {
 	        	List<RootFieldVO> fields = new ArrayList<>();
 	        	if(datasetField != null) {
 	        		JSONArray fieldsArray = datasetField.getJSONArray("LIST");
-	        		for(int fieldsIndex = 0; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
+	        		for(int fieldsIndex = 1; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
 	        			RootFieldVO field = null;
 	        			JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
 	        			String dataType = fieldObject.getString("DATA_TYPE");
 	        			String name = fieldObject.getString("CAPTION");
 	        			String uniqueName = fieldObject.getString("UNI_NM");
-	        			String parentId = fieldObject.getString("PARENT_ID");
+	        			String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
 	        			Integer order = fieldObject.getInt("ORDER");
 	        			DataFieldType type = "MEA".equals(fieldObject.getString("TYPE"))
 								? DataFieldType.MEASURE : DataFieldType.DIMENSION;
 	        			
-		        		if(datasrcType.equals(DsType.CUBE)) {
+		        		if(datasrcType.equals(DsType.CUBE.toString())) {
 		        			// 추후 추가
 		        			field = CubeFieldVO.builder()
 									.dataType(dataType)
@@ -194,7 +183,7 @@ public class DashAnyXmlParser implements XMLParser {
 									.parentId(parentId)
 									.order(order)
 									.build();
-		        		} else if (datasrcType.equals(DsType.DS_SQL)) {
+		        		} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
 		        			field = QueryFieldVO.builder()
 									.dataType(dataType)
 									.name(name)
@@ -214,21 +203,23 @@ public class DashAnyXmlParser implements XMLParser {
 					}
 	        	}
 	        	
-	        	this.datasetNm.add(datasetNm);
-	        	this.datasrcId.add(datasrcId);
-	        	this.datasetType.add(datasetType);
-	        	this.datasrcType.add(datasrcType);
+//	        	this.datasetNm.add(datasetNm);
+//	        	this.datasrcId.add(datasrcId);
+//	        	this.datasetType.add(datasetType);
+//	        	this.datasrcType.add(datasrcType);
+	        	
+	        	this.dsIdNDsType.put(datasrcId, datasrcType);
 	        	
 	        	dataset.put("dataSrcId", datasrcId);
 	        	dataset.put("datasetNm", datasetNm);
 	        	dataset.put("datasetQuery", datasetQuery);
 	        	dataset.put("datasetType", datasrcType);
-	        	dataset.put("datasetId", datasources.get(datasetNm));
+	        	dataset.put("datasetId", this.datasources.get(datasetNm));
 	        	dataset.put("fields", fields);
 	        	datasets.add(dataset);
 			}
 	        
-			this.dataset.put("selectedDatasetId", datasources.values().iterator().next());
+			this.dataset.put("selectedDatasetId", this.datasources.values().iterator().next());
 			this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
 			this.dataset.put("datasets", datasets);
 		} catch (Exception e) {
@@ -328,12 +319,15 @@ public class DashAnyXmlParser implements XMLParser {
 			Map<String, Object> dataField = new HashMap<String, Object>();
 			
 			// factory로 전환 부분(ItemType별로)
+			List<RootData> fields = new ArrayList<>();
+			List<SparkLine> sparklines = new ArrayList<>();
+			List<Dimension> dimensions = new ArrayList<>();
+			List<Map<String, Object>> dimensionGroups = new ArrayList<>();
+			List<Measure> measures = new ArrayList<>();
+			
 			if (ItemType.CHART.toString().equals(itemType)) {
 				type = ItemType.CHART;
 				NodeList itemChildren = node.getChildNodes();
-				List<Dimension> dimensions = new ArrayList<>();
-				List<Map<String, Object>> dimensionGroups = new ArrayList<>();
-				List<Measure> measures = new ArrayList<>();
 
 				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -399,8 +393,6 @@ public class DashAnyXmlParser implements XMLParser {
 			} else if (ItemType.DATA_GRID.toString().equals(itemType)) {
 				type = ItemType.DATA_GRID;
 				NodeList itemChildren = node.getChildNodes();
-				List<RootData> fields = new ArrayList<>();
-				List<SparkLine> sparklines = new ArrayList<>();
 
 				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -424,11 +416,11 @@ public class DashAnyXmlParser implements XMLParser {
 								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
 								DataFieldType dataType = DataFieldType.DIMENSION;
 
-								Dimension dimensoion = Dimension.builder().caption(caption)
+								Dimension dimension = Dimension.builder().caption(caption)
 										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
 										.type(dataType).uniqueName(dimName).build();
 
-								fields.add(dimensoion);
+								fields.add(dimension);
 							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap measureNodes = data.getAttributes();
 
@@ -459,9 +451,6 @@ public class DashAnyXmlParser implements XMLParser {
 			} else if(ItemType.PIVOT_GRID.toString().equals(itemType)) {
 				type = ItemType.PIVOT_GRID;
 				NodeList itemChildren = node.getChildNodes();
-				List<Map<String, Object>> row = new ArrayList<>();
-				List<Map<String, Object>> column = new ArrayList<>();
-				List<Map<String, Object>> measure = new ArrayList<>();
 
 				for (int itemChildrenIndex = 0; itemChildrenIndex < itemChildren.getLength(); itemChildrenIndex++) {
 					if (itemChildren.item(itemChildrenIndex).getNodeType() != Node.ELEMENT_NODE)
@@ -485,11 +474,11 @@ public class DashAnyXmlParser implements XMLParser {
 								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
 								DataFieldType dataType = DataFieldType.DIMENSION;
 
-								Dimension dimensoion = Dimension.builder().caption(caption)
+								Dimension dimension = Dimension.builder().caption(caption)
 										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
 										.type(dataType).uniqueName(dimName).build();
 
-								fields.add(dimensoion);
+								fields.add(dimension);
 							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap measureNodes = data.getAttributes();
 
@@ -509,12 +498,49 @@ public class DashAnyXmlParser implements XMLParser {
 										.type(dataType).uniqueName(meaName).summaryType(summaryType).build();
 								fields.add(measure);
 							}
-							dataField.put("datasetId", datasetId);
-							dataField.put("field", fields);
-							dataField.put("sparkline", new ArrayList<String>());
+						}
+					} else if ("Columns".equals(itemChild.getNodeName())) {
+						NodeList columnNodes = itemChild.getChildNodes();
+						for (int columnNodesIndex = 0; columnNodesIndex < columnNodes.getLength(); columnNodesIndex++) {
+							if (columnNodes.item(columnNodesIndex).getNodeType() != Node.ELEMENT_NODE)
+								continue;
+							String colUniNm = columnNodes.item(columnNodesIndex).getAttributes().getNamedItem("UniqueName").getTextContent();
+							this.rowNCol.put(colUniNm, "col");
+						}
+					} else if ("Rows".equals(itemChild.getNodeName())) {
+						NodeList rowNodes = itemChild.getChildNodes();
+						for (int rowNodesIndex = 0; rowNodesIndex < rowNodes.getLength(); rowNodesIndex++) {
+							if (rowNodes.item(rowNodesIndex).getNodeType() != Node.ELEMENT_NODE)
+								continue;
+							String rowUniNm = rowNodes.item(rowNodesIndex).getAttributes().getNamedItem("UniqueName").getTextContent();	
+							this.rowNCol.put(rowUniNm, "row");
 						}
 					}
 				}
+				List<Object> measure = new ArrayList<>(); 
+				List<Object> column = new ArrayList<>(); 
+				List<Object> row = new ArrayList<>(); 
+				
+				for(int fieldsIndex = 0; fieldsIndex<fields.size(); fieldsIndex++) {
+					RootData field = (RootData) fields.get(fieldsIndex);
+					if(field instanceof Dimension) {
+						String pivotType = this.rowNCol.get(((Dimension) field).getFieldId());
+						if(pivotType.equals("col")) {
+							column.add(field);
+						} else if(pivotType.equals("row")) {
+							row.add(field);
+						}
+					} else if (field instanceof Measure) {
+						measure.add(field);
+					}
+				}
+				
+				dataField.put("row", row);
+				dataField.put("column", column);
+				dataField.put("measure", measure);
+				dataField.put("dataFieldQuantity", fields.size());
+				dataField.put("datasetId", datasetId);
+				
 			}
 			Map<String, Object> meta = new HashMap<>();
 			meta.put("dataField", dataField);
@@ -535,14 +561,16 @@ public class DashAnyXmlParser implements XMLParser {
 
 	@Override
 	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
-		getlayoutXmlDTO(dto.getLayoutXml());
-        getDatasetXmlDTO(dto.getDatasetXml(), userId);
-        getChartXmlDTO(dto.getChartXml());
-        getReportXmlDTO(dto.getReportXml());
-        
+		this.getlayoutXmlDTO(dto.getLayoutXml());
+		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
+		this.getChartXmlDTO(dto.getChartXml());
+		this.getReportXmlDTO(dto.getReportXml());
+		this.getParamXmlDTO(dto.getParamXml());
+		
 		this.returnReport.put("dataset", this.dataset);
 		this.returnReport.put("item", this.item);
 		this.returnReport.put("layout", this.layout);
+		this.returnReport.put("informations", this.informations);
 		return returnReport;
 	}
 }

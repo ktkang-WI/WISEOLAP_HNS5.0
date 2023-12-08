@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
-import com.wise.MarketingPlatForm.report.domain.xml.reportType.AdHocXmlParser;
-import com.wise.MarketingPlatForm.report.domain.xml.reportType.DashAnyXmlParser;
-import com.wise.MarketingPlatForm.report.domain.xml.reportType.ExcelXmlParser;
+import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.AdHocXmlParser;
+import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.DashAnyXmlParser;
+import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlParser;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 
 @Component
