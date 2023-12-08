@@ -29,6 +29,14 @@ const reducers = {
       state[newId] = item;
     }
   },
+  deleteItemNInit(state, actions) {
+    delete state[actions.payload];
+    state[0] = {
+      selectedItemId: 'item1',
+      itemQuantity: 1,
+      items: [item]
+    };
+  },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {
     const reportId = actions.payload.reportId;

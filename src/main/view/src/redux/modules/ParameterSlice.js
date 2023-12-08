@@ -107,6 +107,14 @@ const reducers = {
       delete state[prevId];
       state[newId] = parameter;
     }
+  },
+  deleteParameterNInit(state, actions) {
+    delete state[actions.payload];
+    state[0] = {
+      informations: [],
+      values: {},
+      filterSearchComplete: []
+    };
   }
 };
 

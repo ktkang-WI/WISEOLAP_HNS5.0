@@ -77,6 +77,14 @@ const reducers = {
       delete state[prevId];
       state[newId] = dataset;
     }
+  },
+  deleteDatasetNInit(state, actions) {
+    delete state[actions.payload];
+    state[0] = {
+      selectedDatasetId: '',
+      datasetQuantity: 0,
+      datasets: []
+    };
   }
 };
 

@@ -71,6 +71,19 @@ const reducers = {
       delete state[prevId];
       state[newId] = layout;
     }
+  },
+  deleteLayoutNInit(state, actions) {
+    delete state[actions.payload];
+    state[0] = {
+      layoutQuantity: 1,
+      layoutConfig: {
+        global: {tabEnableClose: false},
+        layout: {
+          type: 'row',
+          children: []
+        }
+      }
+    };
   }
 };
 const extraReducers = {};

@@ -30,6 +30,7 @@ import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
+import useReportSave from 'hooks/useReportSave';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -37,7 +38,8 @@ const RibbonDefaultElement = () => {
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
-  const {openModal} = useModal();
+  const {openModal, confirm} = useModal();
+  const {removeReport} = useReportSave();
   return {
     'NewReport': {
       id: 'new_report',
@@ -119,6 +121,11 @@ const RibbonDefaultElement = () => {
       'useArrowButton': false,
       'onClick': (ref) => {
         console.log(ref);
+        if (selectedReportId !== 0) {
+          confirm('보고서를 삭제하시겠습니까?', () => {
+            removeReport(selectedReportId);
+          });
+        };
       }
     },
     'DownloadReport': {

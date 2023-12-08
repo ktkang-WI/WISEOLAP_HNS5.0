@@ -3,7 +3,7 @@ import {selectItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
-import {addReport} from 'models/report/Report';
+import {addReport, deleteReport} from 'models/report/Report';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -17,11 +17,13 @@ import useModal from './useModal';
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {updateReport, updateSelectedReportId} = ReportSlice.actions;
-  const {changeItemReportId} = ItemSlice.actions;
-  const {changeLayoutReportId} = LayoutSlice.actions;
-  const {changeDatasetReportId} = DatasetSlice.actions;
-  const {changeParameterReportId} = ParameterSlice.actions;
+  const {updateReport, updateSelectedReportId, deleteReportNInit} =
+  ReportSlice.actions;
+  const {changeItemReportId, deleteItemNInit} = ItemSlice.actions;
+  const {changeLayoutReportId, deleteLayoutNInit} = LayoutSlice.actions;
+  const {changeDatasetReportId, deleteDatasetNInit} = DatasetSlice.actions;
+  const {changeParameterReportId, deleteParameterNInit} =
+  ParameterSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
@@ -84,8 +86,25 @@ const useReportSave = () => {
     });
   };
 
+  const removeReport = (reportId) => {
+    const param = {reportId: reportId};
+    deleteReport(param, (response) => {
+      if (response.status != 200) {
+        return;
+      }
+      dispatch(deleteReportNInit(reportId));
+      dispatch(deleteItemNInit(reportId));
+      dispatch(deleteLayoutNInit(reportId));
+      dispatch(deleteDatasetNInit(reportId));
+      dispatch(deleteParameterNInit(reportId));
+      dispatch(updateSelectedReportId({reportId: 0}));
+      alert('보고서를 삭제했습니다.');
+    });
+  };
+
   return {
-    saveReport
+    saveReport,
+    removeReport
   };
 };
 

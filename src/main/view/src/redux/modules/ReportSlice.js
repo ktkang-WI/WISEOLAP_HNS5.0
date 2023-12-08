@@ -59,6 +59,33 @@ const reducers = {
   },
   updateSelectedReportId(state, actions) {
     state.selectedReportId = actions.payload.reportId;
+  },
+  deleteReportNInit(state, actions) {
+    const report = {
+      reportId: 0,
+      options: {
+        reportNm: localizedString.defaultReportName,
+        reportSubTitle: '',
+        fldId: 0,
+        fldName: '',
+        fldType: '',
+        reporoptOrdinal: 0,
+        reportTag: '',
+        reportDesc: '',
+        path: '', // 해당 경로 비어있을 경우 새 보고서
+        chartXML: '',
+        datasetXML: '',
+        layoutXML: '',
+        reportXML: '',
+        paramXML: '',
+        regDt: '',
+        regUserNo: '',
+        reportType: ''
+      }
+    };
+    state.reports = state.reports.filter(
+        (report) => report.reportId != actions.payload);
+    state.reports.push(report);
   }
 };
 
