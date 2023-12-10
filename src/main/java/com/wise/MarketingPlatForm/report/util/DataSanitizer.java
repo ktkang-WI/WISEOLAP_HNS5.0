@@ -46,48 +46,44 @@ public final class DataSanitizer {
     }
 
     public final DataSanitizer groupBy(List<Measure> measures, List<Dimension> dimensions) {
-        data = data.stream().collect(Collectors.groupingBy(map -> {
-            StringBuilder sb = new StringBuilder();
+    	data = data.stream().collect(Collectors.groupingBy(map -> {
+    	    StringBuilder sb = new StringBuilder();
 
-            for (Dimension dimension : dimensions) {
-                sb.append(String.valueOf(map.get(dimension.getName())));
-            }
+    	    for (Dimension dimension : dimensions) {
+    	        sb.append(String.valueOf(map.get(dimension.getName())));
+    	    }
 
-            return sb.toString();
-        })).entrySet().stream()
-                .map(e -> e.getValue().stream()
-                        .reduce(new HashMap<String, Object>(), (acc, value) -> {
-                            if (acc.keySet().size() == 0) {
-                                acc = value;
-                                for (Measure measure : measures) {
-                                	String name = measure.getName();
-                                	if(name != null) {
-                                		Object valueObj = value.get(name);
-                                		if (valueObj != null && "".equals(valueObj)) {
-                                			acc.put(name, new BigDecimal(String.valueOf(valueObj)));
-                                		} else {
-                                			acc.put(name, BigDecimal.ZERO);
-                                		}
-                                	}
-                                }
-                            } else {
-                                for (Measure measure : measures) {
-                                	String name = measure.getName();
-                                    Object valueObj = value.get(name);
-                                    if (valueObj != null && "".equals(valueObj)) {
-                                        BigDecimal target = new BigDecimal(String.valueOf(valueObj));
-                                        BigDecimal currentValue = (BigDecimal) acc.get(name);
-                                        if (currentValue == null) {
-                                            currentValue = BigDecimal.ZERO;
-                                        }
-                                        acc.put(name, currentValue.add(target));
-                                    }
-                                }
-                            }
+    	    return sb.toString();
+    	})).entrySet().stream()
+    	    .map(e -> e.getValue().stream()
+    	        .reduce(new HashMap<String, Object>(), (acc, value) -> {
+    	            if (acc.isEmpty()) {
+    	                acc.putAll(value);
+    	                for (Measure measure : measures) {
+    	                    String name = measure.getName();
+    	                    Object valueObj = value.get(name);
+    	                    if (valueObj != null && !"".equals(name)) {
+    	                        acc.put(name, new BigDecimal(String.valueOf(valueObj)));
+    	                    }
+    	                }
+    	            } else {
+    	                for (Measure measure : measures) {
+    	                    String name = measure.getName();
+    	                    Object valueObj = value.get(name);
+    	                    if (valueObj != null && !"".equals(name)) {
+    	                        BigDecimal target = new BigDecimal(String.valueOf(valueObj));
+    	                        BigDecimal currentValue = (BigDecimal) acc.get(name);
+    	                        if (currentValue == null) {
+    	                            currentValue = BigDecimal.ZERO;
+    	                        }
+    	                        acc.put(name, currentValue.add(target));
+    	                    }
+    	                }
+    	            }
 
-                            return acc;
-                        }))
-                .collect(Collectors.toList());
+    	            return acc;
+    	        }))
+    	    .collect(Collectors.toList());
 
         grpDataLenth = data.size();
         return this;
