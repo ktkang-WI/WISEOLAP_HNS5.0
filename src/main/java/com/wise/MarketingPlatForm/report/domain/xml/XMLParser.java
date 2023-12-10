@@ -24,8 +24,8 @@ public abstract class XMLParser {
 	/**
 	 * 모든 보고서에서 공통으로 필드
 	 */
-	protected static Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
-	protected static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	protected Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
+	protected DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	protected Document document;
 	
 	protected Map<String, Object> dataset = new HashMap<>();
