@@ -60,14 +60,21 @@ public final class DataSanitizer {
                             if (acc.keySet().size() == 0) {
                                 acc = value;
                                 for (Measure measure : measures) {
-                                    String name = measure.getName();
-                                    acc.put(name, new BigDecimal(String.valueOf(value.get(name))));
+                                	String name = measure.getName();
+                                    Object valueObj = value.get(name);
+                                    if (valueObj != null) {
+                                        acc.put(name, new BigDecimal(String.valueOf(valueObj)));
+                                    }
                                 }
                             } else {
                                 for (Measure measure : measures) {
                                     String name = measure.getName();
                                     BigDecimal target = new BigDecimal(String.valueOf(value.get(name)));
-                                    acc.put(name, ((BigDecimal) acc.get(name)).add(target));
+                                    if(acc.get(name) == null) {
+                                    	acc.put(name, BigDecimal.ZERO);
+                                    } else {
+                                    	acc.put(name, ((BigDecimal) acc.get(name)).add(target));                                    	
+                                    }
                                 }
                             }
 
