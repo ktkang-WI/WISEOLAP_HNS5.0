@@ -64,6 +64,8 @@ public final class DataSanitizer {
                                     Object valueObj = value.get(name);
                                     if (valueObj != null) {
                                         acc.put(name, new BigDecimal(String.valueOf(valueObj)));
+                                    } else {
+                                        acc.put(name, BigDecimal.ZERO);
                                     }
                                 }
                             } else {
