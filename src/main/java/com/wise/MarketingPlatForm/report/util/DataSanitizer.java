@@ -63,7 +63,7 @@ public final class DataSanitizer {
                                 	String name = measure.getName();
                                 	if(name != null) {
                                 		Object valueObj = value.get(name);
-                                		if (valueObj != null) {
+                                		if (valueObj != null && "".equals(valueObj)) {
                                 			acc.put(name, new BigDecimal(String.valueOf(valueObj)));
                                 		} else {
                                 			acc.put(name, BigDecimal.ZERO);
