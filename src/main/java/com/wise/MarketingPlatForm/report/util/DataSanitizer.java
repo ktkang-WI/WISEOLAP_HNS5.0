@@ -68,12 +68,15 @@ public final class DataSanitizer {
                                 }
                             } else {
                                 for (Measure measure : measures) {
-                                    String name = measure.getName();
-                                    BigDecimal target = new BigDecimal(String.valueOf(value.get(name)));
-                                    if(acc.get(name) == null) {
-                                    	acc.put(name, BigDecimal.ZERO);
-                                    } else {
-                                    	acc.put(name, ((BigDecimal) acc.get(name)).add(target));                                    	
+                                	String name = measure.getName();
+                                    Object valueObj = value.get(name);
+                                    if (valueObj != null) {
+                                        BigDecimal target = new BigDecimal(String.valueOf(valueObj));
+                                        BigDecimal currentValue = (BigDecimal) acc.get(name);
+                                        if (currentValue == null) {
+                                            currentValue = BigDecimal.ZERO;
+                                        }
+                                        acc.put(name, currentValue.add(target));
                                     }
                                 }
                             }
