@@ -74,7 +74,7 @@ public final class DataSanitizer {
                                 for (Measure measure : measures) {
                                 	String name = measure.getName();
                                     Object valueObj = value.get(name);
-                                    if (valueObj != null) {
+                                    if (valueObj != null && "".equals(valueObj)) {
                                         BigDecimal target = new BigDecimal(String.valueOf(valueObj));
                                         BigDecimal currentValue = (BigDecimal) acc.get(name);
                                         if (currentValue == null) {
