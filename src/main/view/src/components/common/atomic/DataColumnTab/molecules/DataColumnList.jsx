@@ -49,8 +49,8 @@ const getRenderItem = (items) => {
   const getDraggableItem = (provided, snapshot, rubric) => {
     const item = items[rubric.source.index];
     return (
-      <DataColumn column={item} provided={provided} index={rubric.source.index}>
-        {item.name}
+      <DataColumn provided={provided} index={rubric.source.index}>
+        {item.caption}
       </DataColumn>
     );
   };
@@ -125,7 +125,7 @@ const DataColumnList = ({
                     buttonIcon={buttonIcon}
                     sortItems={sortItems}
                   >
-                    {column.name}
+                    {column.caption}
                   </DataColumn>
                 )}
               </Draggable>

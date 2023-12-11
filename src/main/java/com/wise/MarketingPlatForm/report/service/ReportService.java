@@ -74,17 +74,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReportService {
 
-  private final ReportDAO reportDAO;
-  private final MartConfig martConfig;
-  private final MartDAO martDAO;
-  private final DatasetService datasetService;
-  private final XMLParser xmlParser;
-  private final QueryResultCacheManager queryResultCacheManager;
-  private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
+    private final ReportDAO reportDAO;
+    private final MartConfig martConfig;
+    private final MartDAO martDAO;
+    private final DatasetService datasetService;
+    private final XMLParser xmlParser;
+    private final QueryResultCacheManager queryResultCacheManager;
+    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
-  private static final long MAX_CACHEABLE_SUMMARY_MATRIX_SIZE = 100L * 1024L * 1024L; // 100MB
+    private static final long MAX_CACHEABLE_SUMMARY_MATRIX_SIZE = 100L * 1024L * 1024L; // 100MB
 
-  private static final long DEFAULT_SERVICE_TIME_OUT = 20L * 60L * 1000L; // 20 minutes
+    private static final long DEFAULT_SERVICE_TIME_OUT = 20L * 60L * 1000L; // 20 minutes
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -100,7 +100,7 @@ public class ReportService {
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
-        this.xmlParser = xmlParser;   
+        this.xmlParser = xmlParser;
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -109,35 +109,37 @@ public class ReportService {
     }
 
     public MetaVO getReport(String reportId, String userId) {
-	ReportMstrEntity temp = reportDAO.selectReport(reportId);
-	ReportMstrDTO dto = temp.toDTO(temp);
-	
-	MetaVO metaVO =  MetaVO.builder().build();
-	
-	// report
-	ReportOptionsVO reportOptions = ReportOptionsVO.builder()
-		.order(dto.getReportOrdinal())
-		.reportDesc(dto.getReportDesc())
-		.reportNm(dto.getReportNm())
-		.reportPath(null)
-		.build();
-	ReportVO reports = ReportVO.builder()
-			.reportId(dto.getReportId())
-			.options(reportOptions)
-			.build();
-	metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {{
-		add(reports);
-	}});
-	
-	// dataset
-	List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-	metaVO.getDatasets().put(dto.getReportId(), datasetVO);
-	
-	// layout
-	metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
+        ReportMstrEntity temp = reportDAO.selectReport(reportId);
+        ReportMstrDTO dto = temp.toDTO(temp);
 
-	return metaVO;
-  }
+        MetaVO metaVO = MetaVO.builder().build();
+
+        // report
+        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
+                .order(dto.getReportOrdinal())
+                .reportDesc(dto.getReportDesc())
+                .reportNm(dto.getReportNm())
+                .reportPath(null)
+                .build();
+        ReportVO reports = ReportVO.builder()
+                .reportId(dto.getReportId())
+                .options(reportOptions)
+                .build();
+        metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {
+            {
+                add(reports);
+            }
+        });
+
+        // dataset
+        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
+        metaVO.getDatasets().put(dto.getReportId(), datasetVO);
+
+        // layout
+        metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
+
+        return metaVO;
+    }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
         ReportResult result;
@@ -372,22 +374,21 @@ public class ReportService {
             }
         }
     }
-    
+
     public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
         reportDAO.addReport(reportMstrDTO);
         return reportMstrDTO;
     }
-    
+
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
-    	Map<String, List<FolderMasterVO>> result = new HashMap<>();
-    	
-    	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
-    	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
-    	    	 
-	    result.put("publicFolder", publicFolderList);
-	    result.put("privateFolder", privateFolderList);
+        Map<String, List<FolderMasterVO>> result = new HashMap<>();
+
+        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
+        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+
+        result.put("publicFolder", publicFolderList);
+        result.put("privateFolder", privateFolderList);
 
         return result;
     }
 }
-
