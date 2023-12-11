@@ -119,12 +119,13 @@ const RibbonDefaultElement = () => {
       'width': 'auto',
       'height': '45px',
       'useArrowButton': false,
-      'onClick': (ref) => {
-        console.log(ref);
+      'onClick': () => {
         if (selectedReportId !== 0) {
-          confirm('보고서를 삭제하시겠습니까?', () => {
+          confirm(localizedString.reportDeleteMsg, () => {
             removeReport(selectedReportId);
           });
+        } else {
+          alert(localizedString.reportNotDeleteMsg);
         };
       }
     },
