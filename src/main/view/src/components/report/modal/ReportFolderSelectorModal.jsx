@@ -67,12 +67,16 @@ const ReportFolderSelectorModal = ({...props}) => {
   };
 
   const onClick = () => {
-    props.formRef.itemOption('fldName', {
-      editorOptions: {
-        elementAttr: selectedFolder,
-        value: selectedFolder.path
-      }
-    });
+    if (selectedFolder.hasOwnProperty('path')) {
+      props.formRef.itemOption('fldName', {
+        editorOptions: {
+          elementAttr: selectedFolder,
+          value: selectedFolder.path
+        }
+      });
+      return;
+    }
+    return true;
   };
 
   return (
