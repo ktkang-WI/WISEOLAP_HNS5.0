@@ -9,8 +9,8 @@ const theme = getTheme();
 
 const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
   const {openModal} = useModal();
-  const dataSrcSearchBtn = {
-    name: 'dataSrcSearchBtn',
+  const folderSearchBtn = {
+    name: 'folderSearchBtn',
     location: 'after',
     options: {
       visible: true,
@@ -65,7 +65,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
           height: theme.size.labelTextBoxHeight,
           readOnly: true,
           text: dataSource.path,
-          buttons: [dataSrcSearchBtn],
+          buttons: [folderSearchBtn],
           elementAttr: {
             id: 'fldName'
           },
