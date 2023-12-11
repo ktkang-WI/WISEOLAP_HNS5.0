@@ -108,13 +108,12 @@ const reducers = {
       state[newId] = parameter;
     }
   },
-  deleteParameterNInit(state, actions) {
+  deleteParameterForDesigner(state, actions) {
     delete state[actions.payload];
-    state[0] = {
-      informations: [],
-      values: {},
-      filterSearchComplete: []
-    };
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   }
 };
 

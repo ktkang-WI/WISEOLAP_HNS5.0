@@ -29,13 +29,12 @@ const reducers = {
       state[newId] = item;
     }
   },
-  deleteItemNInit(state, actions) {
+  deleteItemForDesigner(state, actions) {
     delete state[actions.payload];
-    state[0] = {
-      selectedItemId: 'item1',
-      itemQuantity: 1,
-      items: [item]
-    };
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {

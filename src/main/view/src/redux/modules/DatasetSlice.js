@@ -78,13 +78,12 @@ const reducers = {
       state[newId] = dataset;
     }
   },
-  deleteDatasetNInit(state, actions) {
+  deleteDatasetForDesigner(state, actions) {
     delete state[actions.payload];
-    state[0] = {
-      selectedDatasetId: '',
-      datasetQuantity: 0,
-      datasets: []
-    };
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   }
 };
 
