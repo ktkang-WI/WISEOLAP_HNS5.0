@@ -11,18 +11,19 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {selectLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectParameter} from 'redux/selector/ParameterSelector';
+import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
 
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {updateReport, updateSelectedReportId, deleteReportNInit} =
+  const {updateReport, updateSelectedReportId, deleteReportForDesigner} =
   ReportSlice.actions;
-  const {changeItemReportId, deleteItemNInit} = ItemSlice.actions;
-  const {changeLayoutReportId, deleteLayoutNInit} = LayoutSlice.actions;
-  const {changeDatasetReportId, deleteDatasetNInit} = DatasetSlice.actions;
-  const {changeParameterReportId, deleteParameterNInit} =
+  const {changeItemReportId, deleteItemForDesigner} = ItemSlice.actions;
+  const {changeLayoutReportId, deleteLayoutForDesigner} = LayoutSlice.actions;
+  const {changeDatasetReportId, deleteDatasetForDesigner} =
+  DatasetSlice.actions;
+  const {changeParameterReportId, deleteParameterForDesigner} =
   ParameterSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
@@ -44,7 +45,7 @@ const useReportSave = () => {
     param.chartXml = JSON.stringify(selectItem(store.getState()));
     param.layoutXml = JSON.stringify(selectLayout(store.getState()));
     param.datasetXml = JSON.stringify(selectDataset(store.getState()));
-    param.paramXml = JSON.stringify(selectParameter(store.getState()));
+    param.paramXml = JSON.stringify(selectCurrentParameters(store.getState()));
     param.reportSubTitle = dataSource.reportSubTitle;
     param.reportXml = JSON.stringify({
       reportId: param.reportId,
@@ -92,11 +93,11 @@ const useReportSave = () => {
       if (response.status != 200) {
         return;
       }
-      dispatch(deleteReportNInit(reportId));
-      dispatch(deleteItemNInit(reportId));
-      dispatch(deleteLayoutNInit(reportId));
-      dispatch(deleteDatasetNInit(reportId));
-      dispatch(deleteParameterNInit(reportId));
+      dispatch(deleteReportForDesigner(reportId));
+      dispatch(deleteItemForDesigner(reportId));
+      dispatch(deleteLayoutForDesigner(reportId));
+      dispatch(deleteDatasetForDesigner(reportId));
+      dispatch(deleteParameterForDesigner(reportId));
       dispatch(updateSelectedReportId({reportId: 0}));
       alert('보고서를 삭제했습니다.');
     });
