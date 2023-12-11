@@ -98,7 +98,6 @@ const useReportSave = () => {
       dispatch(deleteLayoutForDesigner(reportId));
       dispatch(deleteDatasetForDesigner(reportId));
       dispatch(deleteParameterForDesigner(reportId));
-      dispatch(updateSelectedReportId({reportId: 0}));
       alert('보고서를 삭제했습니다.');
     });
   };

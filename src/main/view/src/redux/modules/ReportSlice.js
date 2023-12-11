@@ -65,8 +65,11 @@ const reducers = {
         (report) => report.reportId != actions.payload);
     if (state.reports.length == 0) {
       state.reports = initialState.reports;
+      state.selectedReportId = 0;
+    } else {
+      // 보고서를 닫은 후에도 보고서가 남아있을 경우 가장 앞에 있는 보고서 선택
+      state.selectedReportId = state.reports[0].reportId;
     }
-    console.log(initialState);
   }
 };
 
