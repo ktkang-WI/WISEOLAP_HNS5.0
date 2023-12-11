@@ -64,7 +64,9 @@ const RibbonDefaultElement = () => {
       'imgSrc': saveReport,
       'width': 'auto',
       'height': '45px',
-      'useArrowButton': true
+      'useArrowButton': true,
+      'onClick': () => {
+      }
     },
     'DeleteReport': {
       'id': 'delete_report',

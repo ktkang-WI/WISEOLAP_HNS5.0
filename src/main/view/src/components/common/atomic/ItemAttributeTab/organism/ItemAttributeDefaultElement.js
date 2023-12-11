@@ -13,9 +13,13 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import useModal from 'hooks/useModal';
+import DataHighLightModal
+  from 'components/report/item/pivot/modal/DataHighLightModal';
 
 
 const ItemAttributeDefaultElement = () => {
+  const {openModal} = useModal();
   return {
     Filtering: {
       title: localizedString.filtering,
@@ -100,7 +104,7 @@ const ItemAttributeDefaultElement = () => {
           label: '데이터하이라이트 테스트',
           icon: dimensionGroupImg,
           onClick: () => {
-            console.log('test');
+            openModal(DataHighLightModal);
           }
         }
       ]

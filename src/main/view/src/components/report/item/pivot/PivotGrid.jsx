@@ -2,7 +2,7 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 
 const PivotGrid = ({id, mart}) => {
   if (!mart.init) {
@@ -35,12 +35,18 @@ const PivotGrid = ({id, mart}) => {
     };
   }, []);
 
+  const test = useCallback(({cell, area, cellElement}) => {
+    console.log('cell', cellElement);
+    // console.log('area', area);
+  });
+
   return (
     <DevPivotGrid
       ref={ref}
       id={id}
       dataSource={mart.dataSourceConfig}
       wordWrapEnabled={false}
+      onCellPrepared={test}
     >
       <FieldChooser enabled={false}> </FieldChooser>
       <Scrolling mode="virtual" />

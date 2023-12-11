@@ -10,6 +10,9 @@
   "preference": "Preference",
   "dataSource": "Data Source",
   "field": "Field",
+  "fieldName": "Field Name",
+  "condition": "Condition",
+  "conditionValue":"Condition Value",
   "attribute": "Attribute",
   "addCustomField": "add custom field",
   "dataSourceModify": "data source modify",
@@ -149,5 +152,8 @@
   "year": "year",
   "month": "month",
   "day": "day",
-  "datasetNotSelected": "Dataset is not selected."
+  "datasetNotSelected": "Dataset is not selected.",
+  "datahighlight": "Data High Light",
+  "datahighlightList": "High Light List",
+  "datahighlightInfo": "High Light Info"
 }

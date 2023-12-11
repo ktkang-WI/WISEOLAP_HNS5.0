@@ -109,6 +109,9 @@
   "rowPlaceholder": "새 열",
   "columnPlaceholder": "새 행",
   "fieldPlaceholder": "새 필드",
+  "fieldName": "필드명",
+  "condition": "조건",
+  "conditionValue":"조건값",
   "sparkline": "스파크 라인",
   "sparklinePlaceholder": "새 스파크 라인",
   "editParameter": "매개변수 편집",
@@ -149,5 +152,8 @@
   "year": "년도",
   "month": "월",
   "day": "일",
-  "datasetNotSelected": "데이터집합이 선택되지 않았습니다."
+  "datasetNotSelected": "데이터집합이 선택되지 않았습니다.",
+  "datahighlight": "데이터하이라이트",
+  "datahighlightList": "하이라이트 목록",
+  "datahighlightInfo": "하이라이트 정보"
 }
