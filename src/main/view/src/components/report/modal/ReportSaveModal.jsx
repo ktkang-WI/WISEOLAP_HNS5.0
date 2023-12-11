@@ -8,8 +8,8 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import useReportSave from 'hooks/useReportSave';
-import textBox from 'devextreme/ui/text_box';
 import useModal from 'hooks/useModal';
+import {useRef} from 'react';
 
 const theme = getTheme();
 
@@ -36,7 +36,7 @@ const ReportSaveModal = ({...props}) => {
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
   const {saveReport} = useReportSave();
-
+  const ref = useRef();
   /**
    * SaveReportModal state(dataSource) 값 설정
    * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
@@ -53,15 +53,13 @@ const ReportSaveModal = ({...props}) => {
       height={theme.size.bigModalHeight}
       width={theme.size.middleModalHeight}
       onSubmit={(e) => {
+        const formInstance = ref.current.instance;
+
         if (!dataSource.reportNm?.trim()) {
-          const reportNmInstance =
-          textBox.getInstance(document.getElementById('reportNm'));
-          reportNmInstance.focus();
+          formInstance.getEditor('reportNm').focus();
           alert('보고서명을 입력해 주세요.');
         } else if (!dataSource.fldName?.trim()) {
-          const fldNameInstance =
-          textBox.getInstance(document.getElementById('fldName'));
-          fldNameInstance.focus();
+          formInstance.getEditor('fldName').focus();
           alert('폴더를 선택해 주세요.');
         } else {
           // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
@@ -79,6 +77,7 @@ const ReportSaveModal = ({...props}) => {
         <ReportSaveForm
           dataSource={dataSource}
           createDataSource={createDataSource}
+          formRef={ref}
         />
       </StyledModalPanel>
     </Modal>

@@ -4,13 +4,12 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import ReportFolderSelectorModal
   from 'components/report/modal/ReportFolderSelectorModal';
-import {useRef} from 'react';
 
 const theme = getTheme();
 
-const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
+const ReportSaveForm = ({dataSource, createDataSource, formRef,
+  ...props}) => {
   const {openModal} = useModal();
-  const ref = useRef();
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -23,7 +22,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       disabled: false,
       onClick: (e) => {
         openModal(ReportFolderSelectorModal, {
-          formInstance: ref.current.instance
+          formInstance: formRef.current.instance
         });
       }
     }
@@ -35,7 +34,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       labelLocation='top'
       formData={dataSource}
       readOnly={_.isEmpty(dataSource)}
-      ref={ref}
+      ref={formRef}
       {...props}
     >
       <Item
