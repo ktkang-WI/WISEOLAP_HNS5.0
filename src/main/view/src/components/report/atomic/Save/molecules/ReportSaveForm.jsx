@@ -22,7 +22,9 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       type: 'default',
       disabled: false,
       onClick: (e) => {
-        openModal(ReportFolderSelectorModal, {formRef: ref.current.instance});
+        openModal(ReportFolderSelectorModal, {
+          formInstance: ref.current.instance
+        });
       }
     }
   };

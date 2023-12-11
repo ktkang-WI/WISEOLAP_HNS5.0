@@ -68,7 +68,7 @@ const ReportFolderSelectorModal = ({...props}) => {
 
   const onClick = () => {
     if (selectedFolder.hasOwnProperty('path')) {
-      props.formRef.itemOption('fldName', {
+      props.formInstance.itemOption('fldName', {
         editorOptions: {
           elementAttr: selectedFolder,
           value: selectedFolder.path
