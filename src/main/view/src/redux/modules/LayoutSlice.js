@@ -76,7 +76,7 @@ const reducers = {
     delete state[actions.payload];
 
     if (Object.keys(state).length == 0) {
-      state[0] = initialState[0];
+      state = initialState;
     }
   }
 };
