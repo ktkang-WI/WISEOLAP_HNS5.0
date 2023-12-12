@@ -182,4 +182,11 @@ public class ReportController {
 
         return reportService.getReportFolderList(userId);
 	}
+
+    @PostMapping(value = "/delete-report")
+	public int deleteReport(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+
+        return reportService.deleteReport(Integer.parseInt(reportId));
+	}
 }

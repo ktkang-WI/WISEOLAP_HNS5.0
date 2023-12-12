@@ -204,5 +204,7 @@
   "card": "Card",
   "rectangleArea": "Rectangle Area",
   "pivotgrid": "Pivotgrid",
-  "nomalGrid": "Grid"
+  "nomalGrid": "Grid",
+  "reportNotDeleteMsg": "This report has not been saved.",
+  "reportDeleteMsg": "Are you sure you want to delete the report?"
 }

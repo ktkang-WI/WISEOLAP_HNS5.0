@@ -13,6 +13,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 public interface ReportDAO {
     public ReportMstrEntity selectReport(String reportId);
     public int addReport(ReportMstrDTO reportMstrDTO);
+    public int deleteReport(int reportId);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
 }

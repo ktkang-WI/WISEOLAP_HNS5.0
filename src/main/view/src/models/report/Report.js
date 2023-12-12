@@ -26,3 +26,13 @@ export const getFolderList = (param, callback) => {
   axios.post(path + '/report-folder-list', param)
       .then(callback);
 };
+
+/**
+ * 보고서 삭제
+ * @param {JSON} param
+ * @param {function} callback
+ */
+export const deleteReport = (param, callback) => {
+  axios.post(path + '/delete-report', param)
+      .then(callback);
+};

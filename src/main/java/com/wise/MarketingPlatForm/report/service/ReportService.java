@@ -100,7 +100,7 @@ public class ReportService {
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
-        this.xmlParser = xmlParser;   
+        this.xmlParser = xmlParser;
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -111,9 +111,9 @@ public class ReportService {
     public MetaVO getReport(String reportId, String userId) {
 	ReportMstrEntity temp = reportDAO.selectReport(reportId);
 	ReportMstrDTO dto = temp.toDTO(temp);
-	
+
 	MetaVO metaVO =  MetaVO.builder().build();
-	
+
 	// report
 	ReportOptionsVO reportOptions = ReportOptionsVO.builder()
 		.order(dto.getReportOrdinal())
@@ -128,11 +128,11 @@ public class ReportService {
 	metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {{
 		add(reports);
 	}});
-	
+
 	// dataset
 	List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
 	metaVO.getDatasets().put(dto.getReportId(), datasetVO);
-	
+
 	// layout
 	metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
 
@@ -372,18 +372,22 @@ public class ReportService {
             }
         }
     }
-    
+
     public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
         reportDAO.addReport(reportMstrDTO);
         return reportMstrDTO;
     }
-    
+
+    public int deleteReport(int reportId) {
+        return reportDAO.deleteReport(reportId);
+    }
+
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
     	Map<String, List<FolderMasterVO>> result = new HashMap<>();
-    	
+
     	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
     	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
-    	    	 
+
 	    result.put("publicFolder", publicFolderList);
 	    result.put("privateFolder", privateFolderList);
 
