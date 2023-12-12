@@ -380,6 +380,10 @@ public class ReportService {
         return reportMstrDTO;
     }
 
+    public int deleteReport(int reportId) {
+        return reportDAO.deleteReport(reportId);
+    }
+
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
         Map<String, List<FolderMasterVO>> result = new HashMap<>();
 

@@ -29,6 +29,13 @@ const reducers = {
       state[newId] = item;
     }
   },
+  deleteItemForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
+  },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {
     const reportId = actions.payload.reportId;

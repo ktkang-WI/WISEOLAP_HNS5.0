@@ -129,8 +129,8 @@
 		       	#{reportXml},
 		       	#{chartXml},
 		       	#{layoutXml},
-		       	#{paramXml},
 						#{datasetXml},
+		       	#{paramXml},
 		       	#{regUserNo}
 		       )
 		<!-- </if>  -->
@@ -190,4 +190,9 @@
        	REG_USER_NO = #{regUserNo}
      -->
     </insert>
+		<update id="deleteReport" parameterType="int">
+			UPDATE REPORT_MSTR
+			SET DEL_YN = 'Y'
+			WHERE REPORT_ID = #{reportId}
+		</update>
 </mapper>

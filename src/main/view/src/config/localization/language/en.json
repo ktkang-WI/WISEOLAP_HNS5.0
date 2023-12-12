@@ -206,5 +206,7 @@
   "pivotgrid": "Pivotgrid",
   "nomalGrid": "Grid",
   "editFieldName": "Edit Field Name",
-  "fieldName": "Field Name"
+  "fieldName": "Field Name",
+  "reportNotDeleteMsg": "This report has not been saved.",
+  "reportDeleteMsg": "Are you sure you want to delete the report?"
 }
