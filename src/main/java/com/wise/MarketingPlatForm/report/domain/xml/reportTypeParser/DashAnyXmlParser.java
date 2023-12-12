@@ -439,7 +439,7 @@ public class DashAnyXmlParser extends XMLParser {
 
 								Measure measure = Measure.builder().caption(caption)
 										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
-										.type(dataType).uniqueName(meaName).summaryType(summaryType).build();
+										.uniqueName(meaName).summaryType(summaryType).build();
 								fields.add(measure);
 							}
 							// else if(sparkLine 추후 추가)
@@ -497,7 +497,7 @@ public class DashAnyXmlParser extends XMLParser {
 
 								Measure measure = Measure.builder().caption(caption)
 										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
-										.type(dataType).uniqueName(meaName).summaryType(summaryType).build();
+										.uniqueName(meaName).summaryType(summaryType).build();
 								fields.add(measure);
 							}
 						}
