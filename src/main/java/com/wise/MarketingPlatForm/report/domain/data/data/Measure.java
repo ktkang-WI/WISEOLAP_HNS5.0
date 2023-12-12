@@ -20,5 +20,14 @@ public class Measure implements RootData{
   SummaryType summaryType;
   String fieldId;
   String category;
-  DataFieldType type;
+  String summaryName;
+  
+  public Measure (String caption, String name, String uniqueName, SummaryType summaryType, String fieldId, String category) {
+    this.caption = caption;
+    this.name = name;
+    this.uniqueName = uniqueName;
+    this.summaryType = summaryType;
+    this.fieldId = fieldId;
+    this.category = category;
+  }
 }

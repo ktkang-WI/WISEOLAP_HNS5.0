@@ -76,6 +76,7 @@ public class ReportService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
+    private final XMLParser xmlParser;
     private final QueryResultCacheManager queryResultCacheManager;
     private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
@@ -99,7 +100,8 @@ public class ReportService {
     private XMLParserFactory xmlParserFactory;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager) {
+            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
+        this.xmlParser = xmlParser;
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -107,59 +109,37 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public Map<String, Object> getReport(String reportId, String userId) {
+    public MetaVO getReport(String reportId, String userId) {
         ReportMstrEntity temp = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
+        ReportMstrDTO dto = temp.toDTO(temp);
 
-//        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
-        XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        
-        List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-        Map<String, Object> report = new HashMap<String, Object>();
-        Map<String, Object> options = new HashMap<String, Object>();
-//        report.put("reportId", reportId);
-        options.put("order", dto.getReportOrdinal());
-        options.put("reportNm", dto.getReportNm());
-        options.put("reportDesc", dto.getReportDesc());
-        options.put("reportPath", null);
-        
-        report.put("reportId", reportId);
-        report.put("options", options);
-        
-        reports.add(report);
-        
-        Map<String, Object> returnReport = xmlParser.getReport(dto, userId);
-        returnReport.put("reports", reports);
+        MetaVO metaVO = MetaVO.builder().build();
+
         // report
-//        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
-//                .order(dto.getReportOrdinal())
-//                .reportDesc(dto.getReportDesc())
-//                .reportNm(dto.getReportNm())
-//                .reportPath(null)
-//                .build();
-//        ReportVO reports = ReportVO.builder()
-//                .reportId(dto.getReportId())
-//                .options(reportOptions)
-//                .build();
-//        reportMetaDTO.getReport().add(reports);
-//        
-        // layout
-        // item
-//        LayoutDTO layoutWrapperDTO = new LayoutDTO();
-//        reportMetaDTO.setLayout(layoutWrapperDTO);
-//        reportMetaDTO = xmlParser.layoutParser(dto.getReportId(), reportMetaDTO, dto.getLayoutXml());
-        
+        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
+                .order(dto.getReportOrdinal())
+                .reportDesc(dto.getReportDesc())
+                .reportNm(dto.getReportNm())
+                .reportPath(null)
+                .build();
+        ReportVO reports = ReportVO.builder()
+                .reportId(dto.getReportId())
+                .options(reportOptions)
+                .build();
+        metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {
+            {
+                add(reports);
+            }
+        });
+
         // dataset
-//        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-//        DatasetVO datasetWrapper = DatasetVO.builder()
-//        		.datasetQuantity(datasetVO.size())
-//        		.selectedDatasetId(datasetVO.get(0).getDatasetId())
-//        		.datasets(datasetVO)
-//        		.build();
-//        reportMetaDTO.setDataset(datasetWrapper);
-        
-//        return reportMetaDTO;
-        return returnReport;
+        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
+        metaVO.getDatasets().put(dto.getReportId(), datasetVO);
+
+        // layout
+        metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
+
+        return metaVO;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
@@ -395,33 +375,24 @@ public class ReportService {
             }
         }
     }
-    
+
     public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
         reportDAO.addReport(reportMstrDTO);
         return reportMstrDTO;
     }
-    
-    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
-    	Map<String, List<FolderMasterVO>> result = new HashMap<>();
-    	
-    	List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
-    	List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
-    	    	 
-	    result.put("publicFolder", publicFolderList);
-	    result.put("privateFolder", privateFolderList);
 
-        return result;
+    public int deleteReport(int reportId) {
+        return reportDAO.deleteReport(reportId);
     }
 
-    public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
-        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
-                editMode.toString());
-        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
-                editMode.toString());
+    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
+        Map<String, List<FolderMasterVO>> result = new HashMap<>();
 
-        Map<String, List<ReportListDTO>> result = new HashMap<>();
-        result.put("publicReport", pubList);
-        result.put("privateReport", priList);
+        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
+        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+
+        result.put("publicFolder", publicFolderList);
+        result.put("privateFolder", privateFolderList);
 
         return result;
     }

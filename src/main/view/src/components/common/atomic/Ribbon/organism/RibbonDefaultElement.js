@@ -31,6 +31,7 @@ import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
+import useReportSave from 'hooks/useReportSave';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -38,7 +39,8 @@ const RibbonDefaultElement = () => {
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
-  const {openModal} = useModal();
+  const {openModal, confirm} = useModal();
+  const {removeReport} = useReportSave();
   return {
     'NewReport': {
       id: 'new_report',
@@ -118,8 +120,14 @@ const RibbonDefaultElement = () => {
       'width': 'auto',
       'height': '45px',
       'useArrowButton': false,
-      'onClick': (ref) => {
-        console.log(ref);
+      'onClick': () => {
+        if (selectedReportId !== 0) {
+          confirm(localizedString.reportDeleteMsg, () => {
+            removeReport(selectedReportId);
+          });
+        } else {
+          alert(localizedString.reportNotDeleteMsg);
+        };
       }
     },
     'DownloadReport': {

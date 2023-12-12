@@ -72,6 +72,13 @@ const reducers = {
       delete state[prevId];
       state[newId] = layout;
     }
+  },
+  deleteLayoutForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   }
 };
 const extraReducers = {};

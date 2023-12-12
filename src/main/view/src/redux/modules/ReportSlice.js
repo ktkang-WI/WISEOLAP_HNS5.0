@@ -6,14 +6,14 @@ const initialState = {
   reports: [{
     reportId: 0,
     options: {
-      name: localizedString.defaultReportName,
-      subName: '',
+      reportNm: localizedString.defaultReportName,
+      reportSubTitle: '',
       fldId: 0,
       fldName: '',
       fldType: '',
-      order: 0,
-      tag: '',
-      description: '',
+      reportOrdinal: 0,
+      reportTag: '',
+      reportDesc: '',
       path: '', // 해당 경로 비어있을 경우 새 보고서
       chartXML: '',
       datasetXML: '',
@@ -46,7 +46,7 @@ const reducers = {
     const index = state.reports.findIndex(
         (report) => report.reportId == actions.payload.reportId
     );
-    if (index > 0) {
+    if (index >= 0) {
       state.reports[index] = actions.payload;
     } else {
       if (state.selectedReportId == 0) {
@@ -65,6 +65,17 @@ const reducers = {
   },
   updateSelectedReportId(state, actions) {
     state.selectedReportId = actions.payload.reportId;
+  },
+  deleteReportForDesigner(state, actions) {
+    state.reports = state.reports.filter(
+        (report) => report.reportId != actions.payload);
+    if (state.reports.length == 0) {
+      state.reports = initialState.reports;
+      state.selectedReportId = 0;
+    } else {
+      // 보고서를 닫은 후에도 보고서가 남아있을 경우 가장 앞에 있는 보고서 선택
+      state.selectedReportId = state.reports[0].reportId;
+    }
   }
 };
 

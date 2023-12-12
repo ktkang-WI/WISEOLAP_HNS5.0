@@ -11,7 +11,7 @@ import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
 import ItemType from 'components/report/item/util/ItemType';
-import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
@@ -93,7 +93,7 @@ const useQueryExecute = () => {
   const executeItems = () => {
     const items = selectCurrentItems(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
-    const parameters = selectCurrentParameters(store.getState());
+    const parameters = selectRootParameter(store.getState());
 
     items.map((item) => executeItem(item, datasets, parameters));
   };
@@ -107,7 +107,7 @@ const useQueryExecute = () => {
   const executeLinkageFilter = async (param, linkageFilter) => {
     return await new Promise((resolve) => {
       const wait = setInterval(() => {
-        const parameters = selectCurrentParameters(store.getState());
+        const parameters = selectRootParameter(store.getState());
         const requiredFilterLength = linkageFilter.
             filter((filterName) => !parameters.values[filterName]).length;
         if (requiredFilterLength == 0) {
@@ -126,7 +126,7 @@ const useQueryExecute = () => {
   };
 
   const setListValues = async (param, linkageFilter) => {
-    const parameters = selectCurrentParameters(store.getState());
+    const parameters = selectRootParameter(store.getState());
     try {
       let linkageValues = null;
       if (linkageFilter) {
@@ -183,7 +183,7 @@ const useQueryExecute = () => {
   };
 
   const executeParameters = () => {
-    const parameters = selectCurrentParameters(store.getState());
+    const parameters = selectRootParameter(store.getState());
     const reportId = selectCurrentReportId(store.getState());
 
     const setDefaultValue = (name, value) => {

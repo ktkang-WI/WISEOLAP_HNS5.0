@@ -3,14 +3,16 @@ import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import ReportFolderSelectorModal
-  from '../organisms/Modal/ReportFolderSelectorModal';
+  from 'components/report/modal/ReportFolderSelectorModal';
 
 const theme = getTheme();
 
-const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
+const ReportSaveForm = ({dataSource, createDataSource, formRef,
+  ...props}) => {
   const {openModal} = useModal();
-  const dataSrcSearchBtn = {
-    name: 'dataSrcSearchBtn',
+
+  const folderSearchBtn = {
+    name: 'folderSearchBtn',
     location: 'after',
     options: {
       visible: true,
@@ -19,7 +21,9 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       type: 'default',
       disabled: false,
       onClick: (e) => {
-        openModal(ReportFolderSelectorModal);
+        openModal(ReportFolderSelectorModal, {
+          formInstance: formRef.current.instance
+        });
       }
     }
   };
@@ -30,13 +34,17 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       labelLocation='top'
       formData={dataSource}
       readOnly={_.isEmpty(dataSource)}
+      ref={formRef}
       {...props}
     >
       <Item
         editorType='dxTextBox'
-        dataField='name'
+        dataField='reportNm'
         editorOptions={{
-          height: theme.size.labelTextBoxHeight
+          height: theme.size.labelTextBoxHeight,
+          elementAttr: {
+            id: 'reportNm'
+          }
         }}
       >
         <Label>
@@ -45,7 +53,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='subName'
+        dataField='reportSubTitle'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -62,9 +70,9 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
           height: theme.size.labelTextBoxHeight,
           readOnly: true,
           text: dataSource.path,
-          buttons: [dataSrcSearchBtn],
+          buttons: [folderSearchBtn],
           elementAttr: {
-            id: 'searchFileText'
+            id: 'fldName'
           },
           onValueChanged: (e) => {
             const elementAttr = e.component.option('elementAttr');
@@ -81,7 +89,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxNumberBox'
-        dataField='order'
+        dataField='reportOrdinal'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -92,7 +100,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextBox'
-        dataField='tag'
+        dataField='reportTag'
         editorOptions={{
           height: theme.size.labelTextBoxHeight
         }}
@@ -103,7 +111,7 @@ const ReportSaveForm = ({dataSource, createDataSource, ...props}) => {
       </Item>
       <Item
         editorType='dxTextArea'
-        dataField='description'
+        dataField='reportDesc'
         editorOptions={{
           height: theme.size.labelTextAreaHeight
         }}

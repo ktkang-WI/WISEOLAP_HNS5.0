@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
@@ -30,20 +30,22 @@ public class DataSanitizerTest {
     measures = new ArrayList<>();
     pagingOption = new PagingOption(0, 20, true);
 
-    dimensions.add(new Dimension("category", "category", "uniqueName", "category", "dataItem1", DataFieldType.DIMENSION));
-    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "uniqueName2", "dataItem2", DataFieldType.DIMENSION));
-    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3", "category", DataFieldType.DIMENSION));
+    dimensions.add(new Dimension("category", "category", "category", "dataItem1", "dimension"));
+    dimensions.add(new Dimension("bigCategory", "bigCategory", "bigCategory", "dataItem2", "dimension"));
+    measures.add(new Measure("price", "price", "price", SummaryType.SUM, "dataItem3", "category"));
+    measures.add(new Measure("price", "price", "price", SummaryType.AVG, "dataItem4", "category"));
+    measures.add(new Measure("price", "price", "price", SummaryType.COUNT, "dataItem4", "category"));
   }
 
   @BeforeEach
   void before() {
     data = new ArrayList<Map<String, Object>> ();
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 1000000; i++) {
       Map<String, Object> map = new HashMap<String, Object>();
 
       map.put("id", String.valueOf(i));
-      map.put("price", i * 100);
+      map.put("price", new BigDecimal(i).multiply(new BigDecimal(100)));
       map.put("category", String.valueOf(i % 5));
       map.put("bigCategory", String.valueOf(i % 3));
       data.add(map);
@@ -57,7 +59,9 @@ public class DataSanitizerTest {
     List<Map<String, Object>> result = sanitizer.groupBy(measures, dimensions).getData();
 
     assertEquals(result.size(), 15);
-    assertEquals(result.get(0).get("price"), new BigDecimal(333299900));
+    assertEquals(result.get(0).get("SUM_price"), new BigDecimal("3333329999900"));
+    assertEquals(result.get(0).get("AVG_price"), new BigDecimal("49999700.00000"));
+    assertEquals(result.get(0).get("COUNT_price"), new BigDecimal("66667"));
   }
 
   @Test
@@ -65,7 +69,7 @@ public class DataSanitizerTest {
     DataSanitizer sanitizer = new DataSanitizer(data);
     List<Map<String, Object>> result = sanitizer.orderBy(dimensions).getData();
 
-    assertEquals(result.size(), 10000);
+    assertEquals(result.size(), 1000000);
     assertEquals(result.get(0).get("category"), "0");
     assertEquals(result.get(0).get("bigCategory"), "0");
   }
@@ -82,5 +86,19 @@ public class DataSanitizerTest {
     DataSanitizer sanitizer = new DataSanitizer(data);
     List<Map<String, Object>> result = sanitizer.paging(pagingOption).getData();
     assertEquals(result.size(), 20);
+    assertEquals(result.get(0).get("id"), "0");
+  }
+
+  @Test
+  public void basicFunctionTest() {
+    DataSanitizer sanitizer = new DataSanitizer(data);
+    List<Map<String, Object>> result = sanitizer
+        .groupBy(measures, dimensions)
+        .orderBy(dimensions)
+        .columnFiltering(measures, dimensions)
+        .paging(pagingOption)
+        .getData();
+    assertEquals(result.get(0).get("category"), "0");
+    assertEquals(result.get(0).get("bigCategory"), "0");
   }
 }

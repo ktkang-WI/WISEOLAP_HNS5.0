@@ -5,7 +5,6 @@ import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 import ReportListTab
   from 'components/common/atomic/ReportTab/organism/ReportListTab';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
-import textBox from 'devextreme/ui/text_box';
 import {getFolderList} from 'models/report/Report';
 import {useEffect, useState} from 'react';
 
@@ -68,10 +67,16 @@ const ReportFolderSelectorModal = ({...props}) => {
   };
 
   const onClick = () => {
-    const textBoxInstance =
-    textBox.getInstance(document.getElementById('searchFileText'));
-    textBoxInstance.option('elementAttr', selectedFolder);
-    textBoxInstance.option('value', selectedFolder.path);
+    if (selectedFolder.hasOwnProperty('path')) {
+      props.formInstance.itemOption('fldName', {
+        editorOptions: {
+          elementAttr: selectedFolder,
+          value: selectedFolder.path
+        }
+      });
+      return;
+    }
+    return true;
   };
 
   return (

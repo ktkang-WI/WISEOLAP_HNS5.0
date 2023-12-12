@@ -216,5 +216,9 @@
   "textBox": "텍스트 상자",
   "choropleth": "코로플레스",
   "card": "카드",
-  "rectangleArea": "네모영역"
+  "rectangleArea": "네모영역",
+  "editFieldName": "필드 명 수정",
+  "fieldName": "필드 명",
+  "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
+  "reportDeleteMsg": "보고서를 삭제하시겠습니까?"
 }
