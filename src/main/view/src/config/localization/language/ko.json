@@ -220,5 +220,7 @@
   "editFieldName": "필드 명 수정",
   "fieldName": "필드 명",
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
-  "reportDeleteMsg": "보고서를 삭제하시겠습니까?"
+  "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
+  "sortByItem": "정렬 기준 항목",
+  "newSortByItem": "새 정렬 기준 항목"
 }
