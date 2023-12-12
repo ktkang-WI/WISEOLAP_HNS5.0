@@ -1,5 +1,5 @@
-import {selectDataset} from 'redux/selector/DatasetSelector';
-import {selectItem} from 'redux/selector/ItemSelector';
+import {selectRootDataset} from 'redux/selector/DatasetSelector';
+import {selectRootItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
@@ -9,9 +9,9 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
-import {selectLayout} from 'redux/selector/LayoutSelector';
+import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
 
 const useReportSave = () => {
@@ -42,10 +42,10 @@ const useReportSave = () => {
     // param.reportType = 'DashAny';
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
-    param.chartXml = JSON.stringify(selectItem(store.getState()));
-    param.layoutXml = JSON.stringify(selectLayout(store.getState()));
-    param.datasetXml = JSON.stringify(selectDataset(store.getState()));
-    param.paramXml = JSON.stringify(selectCurrentParameters(store.getState()));
+    param.chartXml = JSON.stringify(selectRootItem(store.getState()));
+    param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
+    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
+    param.paramXml = JSON.stringify(selectRootParameter(store.getState()));
     param.reportSubTitle = dataSource.reportSubTitle;
     param.reportXml = JSON.stringify({
       reportId: param.reportId,
