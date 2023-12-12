@@ -60,7 +60,7 @@ public final class SummaryMatrixUtils {
                 target.addSum(source.getSum());
             }
             if (target.getSum() != null && target.getCount() > 0) {
-                target.setValue(target.getSum().divide(BigDecimal.valueOf(target.getCount())));
+                target.setValue(target.getSum().divide(BigDecimal.valueOf(target.getCount()), 5, BigDecimal.ROUND_HALF_UP));
             }
             break;
         case COUNT:

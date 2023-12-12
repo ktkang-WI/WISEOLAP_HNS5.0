@@ -24,7 +24,7 @@ const generateItem = (item, param) => {
   });
   const datas = dataField.measure.map((r, i) => {
     const temp = getField(r, 'data', dataField.column.length - 1 != i);
-    temp.summaryType = 'sum';
+    temp.summaryType = r.summaryType;
     return temp;
   });
 
@@ -143,9 +143,7 @@ const generateItem = (item, param) => {
                         }
 
                         cells[i][0].vs.map((cell, j) => {
-                          if (typeof cell.s != 'undefined') {
-                            summary.push(cell.s);
-                          }
+                          summary.push(cell.s || cell.v || cell.c);
                         });
 
                         arr.push({
@@ -169,9 +167,7 @@ const generateItem = (item, param) => {
                         }
 
                         cells[rowIdx][i].vs.map((cell, j) => {
-                          if (typeof cell.s != 'undefined') {
-                            summary.push(cell.s);
-                          }
+                          summary.push(cell.s || cell.v || cell.c);
                         });
 
                         arr.push({

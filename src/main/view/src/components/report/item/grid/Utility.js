@@ -24,8 +24,8 @@ const generateItem = (item, data) => {
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
-  param.dimension = dataField.field.filter((field)=>field.type === 'dim');
-  param.measure = dataField.field.filter((field)=>field.type === 'mea');
+  param.dimension = dataField.field.filter((field) => field.type === 'DIM');
+  param.measure = dataField.field.filter((field) => field.type === 'MEA');
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);

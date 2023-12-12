@@ -9,6 +9,8 @@ import localizedString from 'config/localization';
 import uuid from 'react-uuid';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
+import useModal from 'hooks/useModal';
+import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 
 const theme = getTheme();
 
@@ -83,6 +85,7 @@ const DataColumn = ({
 }) => {
   const otherMenuId = 'a' + uuid();
   const dispatch = useDispatch();
+  const {openModal} = useModal();
   const {updateItemField} = ItemSlice.actions;
 
   const measureMenuItems = [
@@ -118,11 +121,13 @@ const DataColumn = ({
     },
     {
       'text': localizedString.format,
-      'value': 'FORMAT'
+      'value': 'FORMAT',
+      'type': 'Format'
     },
     {
       'text': localizedString.rename,
-      'value': 'RENAME'
+      'value': 'RENAME',
+      'type': 'Rename'
     }
   ];
 
@@ -138,9 +143,54 @@ const DataColumn = ({
       'text': localizedString.topN
     },
     {
-      'text': localizedString.rename
+      'text': localizedString.rename,
+      'value': 'RENAME',
+      'type': 'Rename'
     }
   ];
+
+  const contextItemRender = (e) => {
+    const checkIcon = '\u2713';
+    const childrenIcon = '\u25B6';
+    const iconStyle = {
+      position: 'absolute',
+      display: 'inline-block',
+      right: '5px'
+    };
+
+    const expandIconStyle = {
+      ...iconStyle,
+      fontSize: '10px',
+      top: 'calc(50% - 10px)'
+    };
+
+    return (
+      <>
+        <span className='dx-menu-item-text'>{e.text}</span>
+        {data.summaryType && data.summaryType == e.value &&
+          <div style={iconStyle}>{checkIcon}</div>}
+        {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
+      </>
+    );
+  };
+
+  const contextMenuFunction = {
+    'SummaryType': (e) => {
+      dispatch(updateItemField({reportId,
+        dataField: {...data, summaryType: e.itemData.value}}));
+    },
+    'Rename': (e) => {
+      openModal(SimpleInputModal, {
+        modalTitle: localizedString.editFieldName,
+        label: localizedString.fieldName,
+        defaultValue: data.caption,
+        onSubmit: (caption) => {
+          dispatch(updateItemField({reportId,
+            dataField: {...data, caption: caption}}));
+        }
+      });
+    }
+  };
 
   return (
     <ColumnWrapper
@@ -176,35 +226,11 @@ const DataColumn = ({
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}
-            itemRender={(e) => {
-              const checkIcon = '\u2713';
-              const childrenIcon = '\u25B6';
-              const iconStyle = {
-                position: 'absolute',
-                display: 'inline-block',
-                right: '5px'
-              };
-
-              const expandIconStyle = {
-                ...iconStyle,
-                fontSize: '10px',
-                top: 'calc(50% - 10px)'
-              };
-
-              return (
-                <>
-                  <span className='dx-menu-item-text'>{e.text}</span>
-                  {data.summaryType && data.summaryType == e.value &&
-                    <div style={iconStyle}>{checkIcon}</div>}
-                  {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
-                </>
-              );
-            }}
+            itemRender={contextItemRender}
             onItemClick={(e) => {
-              console.log(e);
-              if (e.itemData.type == 'SummaryType') {
-                dispatch(updateItemField({reportId,
-                  dataField: {...data, summaryType: e.itemData.value}}));
+              const func = contextMenuFunction[e.itemData.type];
+              if (func) {
+                func(e);
               }
             }}
           />

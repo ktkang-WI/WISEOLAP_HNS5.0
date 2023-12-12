@@ -1,10 +1,8 @@
 package com.wise.MarketingPlatForm.report.domain.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,18 +68,25 @@ public final class DataSanitizer {
                                     Object value = row.get(name);
                                     measure.setSummaryName(measure.getSummaryType().toString() + "_" + name);
                                     // TODO: 추후 정렬 기준 항목 추가시 보수 필요
-                                    acc.put(measure.getSummaryName(), new SummaryCalculator(measure.getSummaryType(), value));
+                                    if (value != null) {
+                                        acc.put(measure.getSummaryName(), new SummaryCalculator(measure.getSummaryType(), value));
+                                    }
+                                    
                                 }
                             } else {
                                 for (Measure measure : measures) {
                                     String name = measure.getName();
                                     Object value = row.get(name);
-                                    SummaryCalculator sv = (SummaryCalculator)acc.get(measure.getSummaryName());
-
-                                    acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));
+                                    if (value != null) {
+                                        if (acc.containsKey(name)) {
+                                            SummaryCalculator sv = (SummaryCalculator)acc.get(measure.getSummaryName());
+                                            acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));
+                                        } else {
+                                            acc.put(measure.getSummaryName(), new SummaryCalculator(measure.getSummaryType(), value));
+                                        }
+                                    }
                                 }
                             }
-
                             return acc;
                         })).map((row) -> {
                             for (Measure measure : measures) {
@@ -150,7 +155,7 @@ public final class DataSanitizer {
             if (data.size() % pagingOption.getSize() > 0) {
                 maxPage += 1;
             }
-            
+
             data = tempList;
         }
 
