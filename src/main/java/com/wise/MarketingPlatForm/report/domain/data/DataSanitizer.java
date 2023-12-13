@@ -77,7 +77,7 @@ public final class DataSanitizer {
                                 for (Measure measure : measures) {
                                     String name = measure.getName();
                                     Object value = row.get(name);
-                                    if (value != null) {
+                                    if (value != null || !"".equals(value)) {
                                         if (acc.containsKey(name)) {
                                             SummaryCalculator sv = (SummaryCalculator)acc.get(measure.getSummaryName());
                                             acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));

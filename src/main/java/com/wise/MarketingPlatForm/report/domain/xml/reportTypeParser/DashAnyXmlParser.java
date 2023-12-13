@@ -322,6 +322,7 @@ public class DashAnyXmlParser extends XMLParser {
 			
 			// factory로 전환 부분(ItemType별로)
 			List<RootData> fields = new ArrayList<>();
+			List<Map<String, Object>> gridHashMap = new ArrayList<>();
 			List<SparkLine> sparklines = new ArrayList<>();
 			List<Dimension> dimensions = new ArrayList<>();
 			List<Map<String, Object>> dimensionGroups = new ArrayList<>();
@@ -409,6 +410,7 @@ public class DashAnyXmlParser extends XMLParser {
 								continue;
 
 							Node data = datas.item(datasIndex);
+							// dataGrid fields -> HashMap으로 변경
 							if (DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap dimensionNodes = data.getAttributes();
 								String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name"))
@@ -418,11 +420,18 @@ public class DashAnyXmlParser extends XMLParser {
 								String fieldId = dimensionNodes.getNamedItem("UniqueName").getTextContent();
 								DataFieldType dataType = DataFieldType.DIMENSION;
 
-								Dimension dimension = Dimension.builder().caption(caption)
-										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
-										.type(dataType).uniqueName(dimName).build();
-
-								fields.add(dimension);
+//								Dimension dimension = Dimension.builder().caption(caption)
+//										.category(DataFieldType.FIELD.toString()).fieldId(fieldId).name(dimName)
+//										.type(dataType).uniqueName(dimName).build();
+//								fields.add(dimension);
+								Map<String, Object> field = new HashMap<>();
+								field.put("caption", caption);
+								field.put("category", DataFieldType.FIELD.toString());
+								field.put("fieldId", fieldId);
+								field.put("name", dimName);
+								field.put("type", dataType);
+								field.put("uniqueName", dimName);
+								gridHashMap.add(field);
 							} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
 								NamedNodeMap measureNodes = data.getAttributes();
 
@@ -437,14 +446,24 @@ public class DashAnyXmlParser extends XMLParser {
 								String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
 								DataFieldType dataType = DataFieldType.MEASURE;
 
-								Measure measure = Measure.builder().caption(caption)
-										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
-										.uniqueName(meaName).summaryType(summaryType).build();
-								fields.add(measure);
+//								Measure measure = Measure.builder().caption(caption)
+//										.category(DataFieldType.MEASURE.toString()).fieldId(fieldId).name(meaName)
+//										.uniqueName(meaName).summaryType(summaryType).build();
+//								fields.add(measure);
+								Map<String, Object> field = new HashMap<>();
+								field.put("caption", caption);
+								field.put("category", DataFieldType.FIELD.toString());
+								field.put("fieldId", fieldId);
+								field.put("dimName", dimName);
+								field.put("type", dataType);
+								field.put("summaryType", summaryType);
+								field.put("uniqueName", dimName);
+								gridHashMap.add(field);
 							}
 							// else if(sparkLine 추후 추가)
 							dataField.put("datasetId", datasetId);
-							dataField.put("field", fields);
+//							dataField.put("field", fields);
+							dataField.put("field", gridHashMap);
 							dataField.put("sparkline", new ArrayList<String>());
 						}
 					}
