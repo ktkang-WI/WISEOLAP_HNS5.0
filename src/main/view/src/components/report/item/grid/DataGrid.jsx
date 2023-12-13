@@ -18,7 +18,8 @@ const DataGrid = ({id, mart}) => {
         <Column
           key={i}
           caption={column.caption}
-          dataField={column.name}
+          dataField={column.type === 'MEASURE' ?
+            column.summaryType + '_' + column.name : column.name}
         />
       )}
     </DevDataGrid>
