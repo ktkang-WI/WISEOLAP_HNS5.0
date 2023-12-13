@@ -23,7 +23,7 @@ const Designer = () => {
       >
       </Header>
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc', 'SpreadSheet', 'Preference']}
+        content={['Dashboard', 'AdHoc', 'Spreadsheet', 'Preference']}
       />
       <Outlet/>
     </div>

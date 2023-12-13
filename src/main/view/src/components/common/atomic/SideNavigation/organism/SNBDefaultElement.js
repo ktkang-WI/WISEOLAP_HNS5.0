@@ -36,13 +36,13 @@ const SNBDefaultElement = () => {
         nav('adhoc');
       }
     },
-    'SpreadSheet': {
+    'Spreadsheet': {
       id: 'spreadsheet',
       imgSrc: spreadsheet,
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
       onClick: (e) => {
-        nav('spreadsheet'); // new tab 띄우기 기능 찾는 중...
+        nav('spreadsheet'); // TO DO: router에 new tab 띄우기 기능 추가 예정
       }
     },
     'Preference': {
