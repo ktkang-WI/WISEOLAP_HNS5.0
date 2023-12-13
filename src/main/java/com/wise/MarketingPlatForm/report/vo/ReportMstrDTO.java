@@ -20,6 +20,7 @@ public class ReportMstrDTO {
     String reportNm;
     int fldId;
     String fldType;
+    String fldName;
     int reportOrdinal;
     ReportType reportType;
     String reportTag;
@@ -62,7 +63,7 @@ public class ReportMstrDTO {
     	String encodedLayoutXml = null;
     	String encodedParamXml = null;
     	String encodedDatasetQuery = null;
-    	
+
     	if(reportMstrDTO.getReportXml() != null) {
     		encodedReportXml = encodeBase64(reportMstrDTO.getReportXml());
         }
@@ -78,7 +79,7 @@ public class ReportMstrDTO {
     	if(reportMstrDTO.getDatasetQuery() != null) {
     		encodedDatasetQuery = encodeBase64(reportMstrDTO.getDatasetQuery());
     	}
-    	
+
         return ReportMstrEntity.builder()
         .reportId(reportMstrDTO.getReportId())
         .reportNm(reportMstrDTO.getReportNm())
@@ -93,7 +94,7 @@ public class ReportMstrDTO {
         .datasrcId(reportMstrDTO.getDatasrcId())
         .datasrcType(reportMstrDTO.getDatasrcType())
         .datasetType(reportMstrDTO.getDatasetType())
-        .reportXml(encodedReportXml)  
+        .reportXml(encodedReportXml)
         .chartXml(encodedChartXml)
         .layoutXml(encodedLayoutXml)
         .paramXml(encodedParamXml)

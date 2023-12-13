@@ -61,6 +61,23 @@ const reducers = {
         )
       }
     };
+  },
+  changeLayoutReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const layout = state[prevId];
+      delete state[prevId];
+      state[newId] = layout;
+    }
+  },
+  deleteLayoutForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   }
 };
 const extraReducers = {};

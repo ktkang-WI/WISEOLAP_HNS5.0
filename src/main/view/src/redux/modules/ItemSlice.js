@@ -19,6 +19,23 @@ const reducers = {
   initItems(state, actions) {
     state = initialState;
   },
+  changeItemReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const item = state[prevId];
+      delete state[prevId];
+      state[newId] = item;
+    }
+  },
+  deleteItemForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
+  },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {
     const reportId = actions.payload.reportId;
@@ -99,9 +116,8 @@ const reducers = {
       }
     });
   },
-  updateItemField(state, actions) {
+  setItemField(state, actions) {
     const reportId = actions.payload.reportId;
-
     const dataField = actions.payload.dataField;
 
     const itemIndex = state[reportId].items.findIndex(
@@ -110,6 +126,25 @@ const reducers = {
 
     if (itemIndex >= 0) {
       state[reportId].items[itemIndex].meta.dataField = dataField;
+    }
+  },
+  updateItemField(state, actions) {
+    const reportId = actions.payload.reportId;
+    const dataField = actions.payload.dataField;
+
+    const itemIndex = state[reportId].items.findIndex(
+        (item) => item.id == state[reportId].selectedItemId
+    );
+
+    if (itemIndex >= 0) {
+      state[reportId].items[itemIndex].meta.dataField[dataField.category] =
+          state[reportId].items[itemIndex].meta.dataField[dataField.category]
+              .map((field) => {
+                if (field.fieldId == dataField.fieldId) {
+                  return dataField;
+                }
+                return field;
+              });
     }
   },
   setItems(state, actions) {

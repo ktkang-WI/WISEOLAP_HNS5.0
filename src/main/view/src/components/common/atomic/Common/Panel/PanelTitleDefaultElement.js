@@ -1,8 +1,6 @@
 import customFieldImg from 'assets/image/icon/button/custom_field.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
-import QueryDataSourceDesignerModal
-  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import store from 'redux/modules';
@@ -14,6 +12,8 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import QueryDataSourceDesignerModal
+  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -26,7 +26,6 @@ const PanelTitleDefaultElement = () => {
     CustomField: {
       id: 'custom_field',
       onClick: () => {
-        console.log('눌렸어요!');
       },
       src: customFieldImg,
       label: localizedString.addCustomField,

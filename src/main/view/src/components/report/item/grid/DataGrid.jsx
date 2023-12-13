@@ -12,12 +12,13 @@ const DataGrid = ({id, mart}) => {
       height='100%'
       id={id}
       dataSource={mart.data.data}
+      sorting={false}
     >
-      {mart.data.columns.map((column, index) =>
+      {mart.data.columns.map((column, i) =>
         <Column
-          key={column.name}
-          dataField={column.caption}
-          allowEditing={column.allowEditing}
+          key={i}
+          caption={column.caption}
+          dataField={column.name}
         />
       )}
     </DevDataGrid>

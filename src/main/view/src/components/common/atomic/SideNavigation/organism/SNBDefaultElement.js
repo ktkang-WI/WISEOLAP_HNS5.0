@@ -9,23 +9,13 @@ import spreadsheetActive
   from '../../../../../assets/image/icon/button/spreadsheet_active.png';
 import adhocActive
   from '../../../../../assets/image/icon/button/adhoc_active.png';
-import dataset from '../../../../../assets/image/icon/button/dataset.png';
-import datasetActive
-  from '../../../../../assets/image/icon/button/dataset_active.png';
 import preference from '../../../../../assets/image/icon/button/preference.png';
 import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
-import useModal from 'hooks/useModal';
-// import SelectCubeModal from '../../../../dataset/modal/SelectCubeModal';
-import SelectDataSourceModal
-  from 'components/dataset/modal/SelectDataSourceModal';
-import QueryDataSourceDesignerModal
-  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 
 const SNBDefaultElement = () => {
   const nav = useNavigate();
-  const {openModal} = useModal();
 
   return {
     'Dashboard': {
@@ -44,22 +34,6 @@ const SNBDefaultElement = () => {
       label: localizedString.adhoc,
       onClick: (e) => {
         nav('adhoc');
-      }
-    },
-    'Dataset': {
-      id: 'dataset',
-      imgSrc: dataset,
-      hoveredImgSrc: datasetActive,
-      label: localizedString.dataset,
-      onClick: (e) => {
-        openModal(SelectDataSourceModal, {
-          onSubmit: (dataSource) => {
-            openModal(QueryDataSourceDesignerModal,
-                {selectedDataSource: dataSource}
-            );
-          }
-        });
-        // openModal(SelectCubeModal);
       }
     },
     'SpreadSheet': {

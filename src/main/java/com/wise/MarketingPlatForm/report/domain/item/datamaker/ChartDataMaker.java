@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -13,28 +14,35 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.report.util.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 
 public class ChartDataMaker implements ItemDataMaker {
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        DataSanitizer sanitizer = new DataSanitizer(data);
+        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+
+        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+
+        List<Measure> allMeasure = new ArrayList<>();
+
+        allMeasure.addAll(measures);
+        allMeasure.addAll(sortByItems);
 
         // 데이터 기본 가공
         data = sanitizer
-            .groupBy(measures, dimensions)
-            .columnFiltering(measures, dimensions)
-            .orderBy(dimensions)
-            .getData();
+                .groupBy()
+                .orderBy()
+                .columnFiltering()
+                .getData();
 
         // 차트 데이터 가공
         List<String> dimNames = new ArrayList<>();
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
-        Set<String> seriesDimensionNames = new LinkedHashSet<>();
-        Set<String> seriesDimensionCaptions = new LinkedHashSet<>();
+        List<String> seriesDimensionNames = new ArrayList<>();
+        List<String> seriesDimensionCaptions = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
@@ -44,7 +52,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 dimGrpNames.add(dim.getName());
             }
         }
-        
+
         for (Map<String, Object> row : data) {
             if (dimNames.size() == 0) {
                 row.put("arg", "Grand Total");
@@ -57,49 +65,50 @@ public class ChartDataMaker implements ItemDataMaker {
             if (dimNames.size() >= 2) {
                 List<String> args = new ArrayList<>();
                 for (String name : dimNames) {
-                args.add(String.valueOf(row.get(name)));
+                    args.add(String.valueOf(row.get(name)));
                 }
+                Collections.reverse(args);
                 row.put("arg", String.join("<br/>", args));
             }
 
             if (dimGrpNames.size() > 0) {
                 List<String> args = new ArrayList<>();
                 for (String name : dimGrpNames) {
-                args.add(String.valueOf(row.get(name)));
+                    args.add(String.valueOf(row.get(name)));
                 }
 
                 String argStr = String.join("-", args);
                 dimensionGroupNames.add(argStr);
 
                 for (Measure measure : measures) {
-                StringBuilder sb = new StringBuilder(argStr);
-                sb.append("-");
-                sb.append(measure.getName());
+                    StringBuilder sb = new StringBuilder(argStr);
+                    sb.append("-");
+                    sb.append(measure.getSummaryName());
 
-                row.put(sb.toString(), row.get(measure.getName()));
-                row.remove(measure.getName());
-                }
-            } else {
-                for (Measure measure : measures) {
-                seriesDimensionNames.add(measure.getName());
-                seriesDimensionCaptions.add(measure.getCaption());
+                    row.put(sb.toString(), row.get(measure.getSummaryName()));
+                    row.remove(measure.getSummaryName());
                 }
             }
         }
 
-        if (dimGrpNames.size() > 0) {
+        if (dimGrpNames.size() == 0) {
+            for (Measure measure : measures) {
+                seriesDimensionNames.add(measure.getSummaryName());
+                seriesDimensionCaptions.add(measure.getCaption());
+            }
+        } else {
             for (Measure measure : measures) {
                 Iterator<String> iter = dimensionGroupNames.iterator();
 
                 while (iter.hasNext()) {
-                String name = iter.next();
-                seriesDimensionNames.add(name + "-" + measure.getName());
-                seriesDimensionCaptions.add(name + "-" + measure.getCaption());
+                    String name = iter.next();
+                    seriesDimensionNames.add(name + "-" + measure.getSummaryName());
+                    seriesDimensionCaptions.add(name + "-" + measure.getCaption());
                 }
             }
             if (measures.size() == 1) {
-                seriesDimensionCaptions = dimensionGroupNames;
-            } 
+                seriesDimensionCaptions = new ArrayList<>(dimensionGroupNames);
+            }
         }
 
         info.put("seriesDimensionNames", seriesDimensionNames);
