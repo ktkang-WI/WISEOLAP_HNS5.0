@@ -76,7 +76,7 @@ const DataColumnList = ({
       if (option.type == 'MEA') {
         sortItems = sortItems.concat(dataFields[key].map((field) => ({
           text: field.caption,
-          value: field.name,
+          value: field.fieldId,
           type: 'SortBy'
         })));
       }

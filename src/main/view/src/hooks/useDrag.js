@@ -53,7 +53,7 @@ const useDrag = () => {
 
       const measureOption = {
         format: {},
-        summaryType: 'SUM'
+        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
       };
 
       // 필드아이디가 있는 경우 기존 아이템 이동

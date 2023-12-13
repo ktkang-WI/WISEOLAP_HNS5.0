@@ -103,7 +103,7 @@ export const getContextMenu = (data, sortItems = []) => {
       'items': [{
         text: 'Value',
         type: 'SortBy',
-        value: data? data.name : ''
+        value: data? data.fieldId : ''
       }].concat(sortItems)
     };
 
