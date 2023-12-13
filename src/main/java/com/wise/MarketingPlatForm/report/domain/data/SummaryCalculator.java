@@ -78,30 +78,34 @@ public class SummaryCalculator {
 
     public SummaryCalculator calculateSummaryValue(Object newValue) {
         dataLength++;
-        switch (summaryType) {
-            case SUM:
-            case AVG:
-                decimalValue = decimalValue.add(new BigDecimal(String.valueOf(newValue)));
-                break;
-            case COUNT:
-                decimalValue = decimalValue.add(one);
-                break;
-            case COUNTDISTINCT:
-                countDistinctSet.add(newValue);
-                decimalValue = BigDecimal.valueOf(countDistinctSet.size());
-                break;
-            case MAX:
-                if (!isStringData) {
-                    decimalValue = decimalValue.max(new BigDecimal(String.valueOf(newValue)));
-                }
-                break;
-            case MIN:
-                if (!isStringData) {
-                    decimalValue = decimalValue.min(new BigDecimal(String.valueOf(newValue)));
-                }
-                break;
-            default:
-                break;
+        if(!"".equals(newValue)) {
+        	switch (summaryType) {
+        	case SUM:
+        	case AVG:
+        		decimalValue = decimalValue.add(new BigDecimal(String.valueOf(newValue)));
+        		break;
+        	case COUNT:
+        		decimalValue = decimalValue.add(one);
+        		break;
+        	case COUNTDISTINCT:
+        		countDistinctSet.add(newValue);
+        		decimalValue = BigDecimal.valueOf(countDistinctSet.size());
+        		break;
+        	case MAX:
+        		if (!isStringData) {
+        			decimalValue = decimalValue.max(new BigDecimal(String.valueOf(newValue)));
+        		}
+        		break;
+        	case MIN:
+        		if (!isStringData) {
+        			decimalValue = decimalValue.min(new BigDecimal(String.valueOf(newValue)));
+        		}
+        		break;
+        	default:
+        		break;
+        	}
+        } else {
+        	decimalValue = BigDecimal.ZERO;
         }
 
         return this;
