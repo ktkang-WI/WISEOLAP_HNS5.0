@@ -454,10 +454,10 @@ public class DashAnyXmlParser extends XMLParser {
 								field.put("caption", caption);
 								field.put("category", DataFieldType.FIELD.toString());
 								field.put("fieldId", fieldId);
-								field.put("dimName", dimName);
+								field.put("name", meaName);
 								field.put("type", dataType);
 								field.put("summaryType", summaryType);
-								field.put("uniqueName", dimName);
+								field.put("uniqueName", meaName);
 								gridHashMap.add(field);
 							}
 							// else if(sparkLine 추후 추가)
