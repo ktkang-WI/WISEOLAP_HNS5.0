@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.Getter;
@@ -91,12 +92,22 @@ public class SummaryCalculator {
                 decimalValue = BigDecimal.valueOf(countDistinctSet.size());
                 break;
             case MAX:
-                if (!isStringData) {
+                if (isStringData) {
+                    String newStr = (String)newValue;
+                    if (StringCompareUtils.compare(stringValue, newStr) < 0) {
+                        stringValue = newStr;
+                    }
+                } else {
                     decimalValue = decimalValue.max(new BigDecimal(String.valueOf(newValue)));
                 }
                 break;
             case MIN:
-                if (!isStringData) {
+                if (isStringData) {
+                    String newStr = (String)newValue;
+                    if (StringCompareUtils.compare(stringValue, newStr) > 0) {
+                        stringValue = newStr;
+                    }
+                } else {
                     decimalValue = decimalValue.min(new BigDecimal(String.valueOf(newValue)));
                 }
                 break;
