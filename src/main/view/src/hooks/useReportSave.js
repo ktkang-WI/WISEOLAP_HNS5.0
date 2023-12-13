@@ -87,7 +87,7 @@ const useReportSave = () => {
     });
   };
 
-  const removeReport = (reportId) => {
+  const removeReport = (reportId, reportType) => {
     const param = {reportId: reportId};
     deleteReport(param, (response) => {
       if (response.status != 200) {
@@ -95,7 +95,9 @@ const useReportSave = () => {
       }
       dispatch(deleteReportForDesigner(reportId));
       dispatch(deleteItemForDesigner(reportId));
-      dispatch(deleteLayoutForDesigner(reportId));
+      dispatch(deleteLayoutForDesigner(
+          {reportId: reportId, reportType: reportType}
+      ));
       dispatch(deleteDatasetForDesigner(reportId));
       dispatch(deleteParameterForDesigner(reportId));
       alert('보고서를 삭제했습니다.');

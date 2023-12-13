@@ -7,8 +7,8 @@ export default function useLayout() {
   const flexLayout = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
 
-  const defaultFlexLayout = (reportType) => {
-    dispatch(flexLayout.defaultFlexLayout(reportType));
+  const initFlexLayout = (reportType) => {
+    dispatch(flexLayout.initFlexLayout(reportType));
   };
 
   const setLayout = (reportId, layout) => {
@@ -64,7 +64,7 @@ export default function useLayout() {
     insertFlexLayout,
     setLayout,
     deleteFlexLayout,
-    defaultFlexLayout,
+    initFlexLayout,
     setMovedLayout,
     convertCaptionVisible,
     editItemName
