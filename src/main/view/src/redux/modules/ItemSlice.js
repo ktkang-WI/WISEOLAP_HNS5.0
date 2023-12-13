@@ -96,6 +96,19 @@ const reducers = {
   setItem(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
+  },
+  dataHighlight(state, actions) {
+    const reportId = actions.payload.reportId;
+
+    const highlight = actions.payload.highlight;
+
+    const itemIndex = state[reportId].items.findIndex(
+        (item) => item.id == state[reportId].selectedItemId
+    );
+
+    if (itemIndex >= 0) {
+      state[reportId].items[itemIndex].meta.highlight = highlight;
+    }
   }
 };
 

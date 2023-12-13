@@ -18,7 +18,8 @@ const makeItem = (orgItem) => {
         useCaption: true,
         dataField: {
           dataFieldQuantity: 0
-        }
+        },
+        highlight: []
       }
     };
   }

@@ -1,7 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  openedModals: []
+  openedModals: [],
+  highLightList: []
 };
 
 const reducers = {
@@ -14,6 +15,9 @@ const reducers = {
     state.openedModals = state.openedModals.filter((modal, index) => {
       return index !== actions.payload;
     });
+  },
+  setHighLight(state, actions) {
+    state.highLightList = state.highLightList.concat(actions.payload);
   }
 };
 

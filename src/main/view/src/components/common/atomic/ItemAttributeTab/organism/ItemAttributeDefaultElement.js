@@ -15,7 +15,7 @@ import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
 import useModal from 'hooks/useModal';
 import DataHighLightModal
-  from 'components/report/item/pivot/modal/DataHighLightModal';
+  from 'components/report/item/pivot/modal/organism/DataHighLightModal';
 
 
 const ItemAttributeDefaultElement = () => {

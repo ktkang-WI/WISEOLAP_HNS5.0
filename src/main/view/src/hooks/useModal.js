@@ -44,10 +44,15 @@ export default function useModal() {
     });
   };
 
+  const setHighLight = (highLight) => {
+    dispatch(modalActions.setHighLight(highLight));
+  };
+
   return {
     openModal,
     closeModal,
     alert,
-    warning
+    warning,
+    setHighLight
   };
 };
