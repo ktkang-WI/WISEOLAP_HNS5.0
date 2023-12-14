@@ -1,8 +1,5 @@
 import localizedString from 'config/localization';
 import {useNavigate} from 'react-router';
-import newWindow from '../../../../../assets/image/icon/button/new_window.png';
-import newWindowActive
-  from '../../../../../assets/image/icon/button/new_window_active.png';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -21,12 +18,8 @@ const HeaderDefaultElement = () => {
     },
     'NewWindow': {
       'id': 'new_window',
-      'title': localizedString.newWindow,
-      'type': 'AnimatedImageButton',
-      'width': '40px',
-      'height': '40px',
-      'imgSrc': newWindow,
-      'hoveredImgSrc': newWindowActive,
+      'label': localizedString.newWindow,
+      'type': 'TextButton',
       'onClick': (e) => {
         window.open('dashboard');
       }

@@ -1,14 +1,9 @@
 import Header from 'components/common/atomic/Header/organism/Header';
 import SideNavigationBar
   from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
-import {Outlet, useLocation} from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 const Designer = () => {
-  const pageLoaction = useLocation();
-  let left = ['Logo', 'NewWindow', 'ReportTabs'];
-
-  if (pageLoaction.pathname.includes('spreadsheet')) {
-    left = ['Logo', 'NewWindow'];
-  }
+  const left = ['Logo', 'ReportTabs'];
 
   return (
     <div>
@@ -16,8 +11,8 @@ const Designer = () => {
         left={left}
         right={[
           'Viewer',
+          'NewWindow',
           'ShowQuery',
-          'ReportSetting',
           'ReportProperty'
         ]}
       >
