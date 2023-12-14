@@ -1,5 +1,8 @@
 import localizedString from 'config/localization';
 import {useNavigate} from 'react-router';
+import newWindow from '../../../../../assets/image/icon/button/new_window.png';
+import newWindowActive
+  from '../../../../../assets/image/icon/button/new_window_active.png';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -19,9 +22,11 @@ const HeaderDefaultElement = () => {
     'NewWindow': {
       'id': 'new_window',
       'title': localizedString.newWindow,
-      'type': 'TextButton',
-      'width': '45px',
-      'height': '45px',
+      'type': 'AnimatedImageButton',
+      'width': '40px',
+      'height': '40px',
+      'imgSrc': newWindow,
+      'hoveredImgSrc': newWindowActive,
       'onClick': (e) => {
         window.open('dashboard');
       }
@@ -37,6 +42,11 @@ const HeaderDefaultElement = () => {
     'ShowQuery': {
       'id': 'show_query',
       'label': localizedString.showQuery,
+      'type': 'TextButton'
+    },
+    'ReportSetting': {
+      'id': 'report_setting',
+      'label': localizedString.reportSetting,
       'type': 'TextButton'
     },
     'ReportProperty': {

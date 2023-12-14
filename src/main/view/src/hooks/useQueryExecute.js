@@ -50,6 +50,7 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
     ItemUtilityFactory[item.type].generateParameter(item, param);
 
     return param;

@@ -11,6 +11,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import {getContextMenu} from '../utils/contextMenu';
 
 const theme = getTheme();
 
@@ -88,67 +89,6 @@ const DataColumn = ({
   const {openModal} = useModal();
   const {updateItemField} = ItemSlice.actions;
 
-  const measureMenuItems = [
-    {
-      'text': localizedString.count,
-      'value': 'COUNT',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.distinctCount,
-      'value': 'COUNTDISTINCT',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.sum,
-      'value': 'SUM',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.min,
-      'value': 'MIN',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.max,
-      'value': 'MAX',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.average,
-      'value': 'AVG',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.format,
-      'value': 'FORMAT',
-      'type': 'Format'
-    },
-    {
-      'text': localizedString.rename,
-      'value': 'RENAME',
-      'type': 'Rename'
-    }
-  ];
-
-  const dimensionMenuItems = [
-    {
-      'text': localizedString.sortBy,
-      'items': [{
-        text: 'Value',
-        value: data? data.name : ''
-      }].concat(sortItems)
-    },
-    {
-      'text': localizedString.topN
-    },
-    {
-      'text': localizedString.rename,
-      'value': 'RENAME',
-      'type': 'Rename'
-    }
-  ];
-
   const contextItemRender = (e) => {
     const checkIcon = '\u2713';
     const childrenIcon = '\u25B6';
@@ -164,10 +104,13 @@ const DataColumn = ({
       top: 'calc(50% - 10px)'
     };
 
+    const summaryType = data && data.type == 'MEA' ? data.summaryType : '';
+    const sortBy = data && data.type == 'DIM' ? data.sortBy : '';
+
     return (
       <>
         <span className='dx-menu-item-text'>{e.text}</span>
-        {data.summaryType && data.summaryType == e.value &&
+        {(summaryType || sortBy) == e.value &&
           <div style={iconStyle}>{checkIcon}</div>}
         {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
       </>
@@ -189,6 +132,10 @@ const DataColumn = ({
             dataField: {...data, caption: caption}}));
         }
       });
+    },
+    'SortBy': (e) => {
+      dispatch(updateItemField({reportId,
+        dataField: {...data, sortBy: e.itemData.value}}));
     }
   };
 
@@ -212,7 +159,7 @@ const DataColumn = ({
           }
         }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
-        {sortOrder &&
+        {type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         {children}
@@ -222,8 +169,7 @@ const DataColumn = ({
         {showContextMenu &&
           <ContextMenu
             className='other-menu'
-            dataSource={type === 'DIMENSION'?
-            dimensionMenuItems : measureMenuItems}
+            dataSource={getContextMenu(data, sortItems)}
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}

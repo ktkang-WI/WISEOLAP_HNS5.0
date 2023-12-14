@@ -3,6 +3,10 @@ import dashboard from '../../../../../assets/image/icon/button/dashboard.png';
 import dashboardActive
   from '../../../../../assets/image/icon/button/dashboard_active.png';
 import adhoc from '../../../../../assets/image/icon/button/adhoc.png';
+import spreadsheet
+  from '../../../../../assets/image/icon/button/spreadsheet.png';
+import spreadsheetActive
+  from '../../../../../assets/image/icon/button/spreadsheet_active.png';
 import adhocActive
   from '../../../../../assets/image/icon/button/adhoc_active.png';
 import preference from '../../../../../assets/image/icon/button/preference.png';
@@ -30,6 +34,15 @@ const SNBDefaultElement = () => {
       label: localizedString.adhoc,
       onClick: (e) => {
         nav('adhoc');
+      }
+    },
+    'Spreadsheet': {
+      id: 'spreadsheet',
+      imgSrc: spreadsheet,
+      hoveredImgSrc: spreadsheetActive,
+      label: localizedString.spreadsheet,
+      onClick: (e) => {
+        nav('spreadsheet'); // TO DO: router에 new tab 띄우기 기능 추가 예정
       }
     },
     'Preference': {

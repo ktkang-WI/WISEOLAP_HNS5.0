@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.Getter;
@@ -78,34 +79,40 @@ public class SummaryCalculator {
 
     public SummaryCalculator calculateSummaryValue(Object newValue) {
         dataLength++;
-        if(!"".equals(newValue)) {
-        	switch (summaryType) {
-        	case SUM:
-        	case AVG:
-        		decimalValue = decimalValue.add(new BigDecimal(String.valueOf(newValue)));
-        		break;
-        	case COUNT:
-        		decimalValue = decimalValue.add(one);
-        		break;
-        	case COUNTDISTINCT:
-        		countDistinctSet.add(newValue);
-        		decimalValue = BigDecimal.valueOf(countDistinctSet.size());
-        		break;
-        	case MAX:
-        		if (!isStringData) {
-        			decimalValue = decimalValue.max(new BigDecimal(String.valueOf(newValue)));
-        		}
-        		break;
-        	case MIN:
-        		if (!isStringData) {
-        			decimalValue = decimalValue.min(new BigDecimal(String.valueOf(newValue)));
-        		}
-        		break;
-        	default:
-        		break;
-        	}
-        } else {
-        	decimalValue = BigDecimal.ZERO;
+        switch (summaryType) {
+            case SUM:
+            case AVG:
+                decimalValue = decimalValue.add(new BigDecimal(String.valueOf(newValue)));
+                break;
+            case COUNT:
+                decimalValue = decimalValue.add(one);
+                break;
+            case COUNTDISTINCT:
+                countDistinctSet.add(newValue);
+                decimalValue = BigDecimal.valueOf(countDistinctSet.size());
+                break;
+            case MAX:
+                if (isStringData) {
+                    String newStr = (String)newValue;
+                    if (StringCompareUtils.compare(stringValue, newStr) < 0) {
+                        stringValue = newStr;
+                    }
+                } else {
+                    decimalValue = decimalValue.max(new BigDecimal(String.valueOf(newValue)));
+                }
+                break;
+            case MIN:
+                if (isStringData) {
+                    String newStr = (String)newValue;
+                    if (StringCompareUtils.compare(stringValue, newStr) > 0) {
+                        stringValue = newStr;
+                    }
+                } else {
+                    decimalValue = decimalValue.min(new BigDecimal(String.valueOf(newValue)));
+                }
+                break;
+            default:
+                break;
         }
 
         return this;

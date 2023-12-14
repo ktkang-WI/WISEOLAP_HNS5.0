@@ -3,10 +3,13 @@
   "newWindow": "새 창 열기",
   "viewer": "뷰어",
   "showQuery": "쿼리보기",
+  "reportSetting": "보고서 설정",
   "addDsSQL": "쿼리 직접 입력",
   "reportProperty": "보고서 속성",
+  "userInfomation": "사용자 정보",
   "dashboard": "대시보드",
   "adhoc": "비정형 보고서",
+  "spreadsheet": "스프레드 시트",
   "dataset": "데이터집합",
   "preference": "환경설정",
   "dataSource": "데이터 원본",
@@ -220,5 +223,7 @@
   "editFieldName": "필드 명 수정",
   "fieldName": "필드 명",
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
-  "reportDeleteMsg": "보고서를 삭제하시겠습니까?"
+  "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
+  "sortByItem": "정렬 기준 항목",
+  "newSortByItem": "새 정렬 기준 항목"
 }

@@ -1,6 +1,5 @@
 package com.wise.MarketingPlatForm.report.domain.data.data;
 
-import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +17,6 @@ public class Dimension implements RootData {
     String uniqueName;
     String fieldId;
     String category;
-    DataFieldType type;
+    String sortBy;
+    String sortOrder;
 }

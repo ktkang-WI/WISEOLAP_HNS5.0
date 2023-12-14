@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -20,13 +21,20 @@ public class ChartDataMaker implements ItemDataMaker {
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        DataSanitizer sanitizer = new DataSanitizer(data);
+        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+
+        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+
+        List<Measure> allMeasure = new ArrayList<>();
+
+        allMeasure.addAll(measures);
+        allMeasure.addAll(sortByItems);
 
         // 데이터 기본 가공
         data = sanitizer
-                .groupBy(measures, dimensions)
-                .columnFiltering(measures, dimensions)
-                .orderBy(dimensions)
+                .groupBy()
+                .orderBy()
+                .columnFiltering()
                 .getData();
 
         // 차트 데이터 가공
@@ -59,6 +67,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 for (String name : dimNames) {
                     args.add(String.valueOf(row.get(name)));
                 }
+                Collections.reverse(args);
                 row.put("arg", String.join("<br/>", args));
             }
 
