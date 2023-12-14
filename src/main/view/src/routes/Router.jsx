@@ -2,12 +2,12 @@ import {createBrowserRouter} from 'react-router-dom';
 import Designer from './Designer';
 import Dashboard from 'components/designer/Dashboard';
 import Adhoc from 'components/designer/Adhoc';
-import Spreadsheet from 'components/designer/Spreadsheet';
 import Viewer from './Viewer';
 import Config from './Config';
 import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
+import Spreadsheet from 'components/designer/SpreadSheet';
 
 const contextPath = '/editds';
 
