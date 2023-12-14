@@ -9,6 +9,8 @@ import store from 'redux/modules';
 import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import DatasetType from 'components/dataset/utils/DatasetType';
 import models from 'models';
+import UserDefinedDataModal
+  from 'components/dataset/modal/CustomData/CustomDataModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert} = useModal();
@@ -17,6 +19,7 @@ const PanelTitleDefaultElement = () => {
       id: 'custom_field',
       onClick: () => {
         console.log('눌렸어요!');
+        openModal(UserDefinedDataModal);
       },
       src: customFieldImg,
       label: localizedString.addCustomField,

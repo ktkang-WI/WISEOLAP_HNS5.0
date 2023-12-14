@@ -1,7 +1,13 @@
 a {
   text-decoration: none;
 }
-
+.custom-cursor-column {
+    cursor: pointer;
+    -webkit-user-select: none !important; 
+    -moz-user-select: -moz-none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
 .App {
   text-align: center;
   width: 100vw;
