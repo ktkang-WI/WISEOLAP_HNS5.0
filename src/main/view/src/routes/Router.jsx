@@ -2,7 +2,7 @@ import {createBrowserRouter} from 'react-router-dom';
 import Designer from './Designer';
 import Dashboard from 'components/designer/Dashboard';
 import Adhoc from 'components/designer/Adhoc';
-import SpreadSheet from 'components/designer/SpreadSheet';
+import Spreadsheet from 'components/designer/Spreadsheet';
 import Viewer from './Viewer';
 import Config from './Config';
 import Login from './Login';
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'spreadsheet',
-        element: <SpreadSheet/>
+        element: <Spreadsheet/>
       }
     ]
   },

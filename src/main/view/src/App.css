@@ -52,3 +52,12 @@ a {
     transform: rotate(360deg);
   }
 }
+
+#popover {
+  z-index: 100;
+  padding: 0;
+}
+
+#subMenu {
+  padding-left: 15px;
+}

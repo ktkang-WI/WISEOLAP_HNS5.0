@@ -1,6 +1,12 @@
 import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 
+export const selectRootItem = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.item,
+    (reportId, item) => item[reportId]
+);
+
 export const selectSelectedItemId = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,

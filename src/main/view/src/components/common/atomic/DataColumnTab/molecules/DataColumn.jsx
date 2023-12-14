@@ -7,52 +7,13 @@ import otherMenuImg
 import {ContextMenu} from 'devextreme-react';
 import localizedString from 'config/localization';
 import uuid from 'react-uuid';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {useDispatch} from 'react-redux';
+import useModal from 'hooks/useModal';
+import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import {getContextMenu} from '../utils/contextMenu';
 
 const theme = getTheme();
-
-const measureMenuItems = [
-  {
-    'text': localizedString.count
-  },
-  {
-    'text': localizedString.distinctCount
-  },
-  {
-    'text': localizedString.sum
-  },
-  {
-    'text': localizedString.min
-  },
-  {
-    'text': localizedString.max
-  },
-  {
-    'text': localizedString.average
-  },
-  {
-    'text': localizedString.format
-  },
-  {
-    'text': localizedString.rename
-  }
-];
-
-const dimensionMenuItems = [
-  {
-    'text': localizedString.sortBy,
-    'items': [
-      // TODO: 추후 redux로 교체
-      {'text': '금액'},
-      {'text': '소계'}
-    ]
-  },
-  {
-    'text': localizedString.topN
-  },
-  {
-    'text': localizedString.rename
-  }
-];
 
 const ColumnWrapper = styled.div`
   display: flex;
@@ -72,7 +33,7 @@ const Column = styled.div`
   font: ${theme.font.dataColumn};
   border: 1px solid ${theme.color.dataColumnBorder};
   border-radius: 2px;
-  line-height: ${theme.size.dataColumn};
+  line-height: calc(${theme.size.dataColumn} - 4px);
   text-align: center;
   justify-content: center;
   align-items: center;
@@ -102,6 +63,7 @@ const Arrow = styled.img `
     top: calc(50% - 7px);
     width: auto;
     height: 13px;
+    ${(props) => props.direction == 'DESC' && 'transform: rotate(180deg);'}
 `;
 
 const OtherMenuButton = styled.img `
@@ -119,10 +81,64 @@ const OtherMenuButton = styled.img `
 `;
 
 const DataColumn = ({
-  data, children, provided, onClick, showContextMenu, type,
-  useButton, buttonEvent, buttonIcon, sortOrder, fixed, ...props
+  data, children, provided, onClick, showContextMenu, type, useButton,
+  buttonEvent, buttonIcon, sortOrder, fixed, sortItems, reportId, ...props
 }) => {
   const otherMenuId = 'a' + uuid();
+  const dispatch = useDispatch();
+  const {openModal} = useModal();
+  const {updateItemField} = ItemSlice.actions;
+
+  const contextItemRender = (e) => {
+    const checkIcon = '\u2713';
+    const childrenIcon = '\u25B6';
+    const iconStyle = {
+      position: 'absolute',
+      display: 'inline-block',
+      right: '5px'
+    };
+
+    const expandIconStyle = {
+      ...iconStyle,
+      fontSize: '10px',
+      top: 'calc(50% - 10px)'
+    };
+
+    const summaryType = data && data.type == 'MEA' ? data.summaryType : '';
+    const sortBy = data && data.type == 'DIM' ? data.sortBy : '';
+
+    return (
+      <>
+        <span className='dx-menu-item-text'>{e.text}</span>
+        {(summaryType || sortBy) == e.value &&
+          <div style={iconStyle}>{checkIcon}</div>}
+        {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
+      </>
+    );
+  };
+
+  const contextMenuFunction = {
+    'SummaryType': (e) => {
+      dispatch(updateItemField({reportId,
+        dataField: {...data, summaryType: e.itemData.value}}));
+    },
+    'Rename': (e) => {
+      openModal(SimpleInputModal, {
+        modalTitle: localizedString.editFieldName,
+        label: localizedString.fieldName,
+        defaultValue: data.caption,
+        onSubmit: (caption) => {
+          dispatch(updateItemField({reportId,
+            dataField: {...data, caption: caption}}));
+        }
+      });
+    },
+    'SortBy': (e) => {
+      dispatch(updateItemField({reportId,
+        dataField: {...data, sortBy: e.itemData.value}}));
+    }
+  };
+
   return (
     <ColumnWrapper
       fixed={fixed}
@@ -132,9 +148,18 @@ const DataColumn = ({
       {...props}
     >
       <Column
-        onClick={onClick}
+        onClick={(e) => {
+          if (sortOrder && e.target.tagName != 'IMG' &&
+              e.target.className.indexOf('dx-menu') == -1) {
+            dispatch(updateItemField({reportId,
+              dataField: {
+                ...data,
+                sortOrder: sortOrder == 'ASC'? 'DESC' : 'ASC'
+              }}));
+          }
+        }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
-        {sortOrder &&
+        {type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         {children}
@@ -144,10 +169,17 @@ const DataColumn = ({
         {showContextMenu &&
           <ContextMenu
             className='other-menu'
-            dataSource={type === 'DIM'? dimensionMenuItems : measureMenuItems}
+            dataSource={getContextMenu(data, sortItems)}
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}
+            itemRender={contextItemRender}
+            onItemClick={(e) => {
+              const func = contextMenuFunction[e.itemData.type];
+              if (func) {
+                func(e);
+              }
+            }}
           />
         }
       </Column>

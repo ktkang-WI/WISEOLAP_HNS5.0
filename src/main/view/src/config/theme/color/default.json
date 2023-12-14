@@ -19,5 +19,8 @@
     "selectedTabHeader": "#ececec",
     "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#577df6), to(#2b5eff))",
     "filterBar": "#f6f6f6",
-    "filterBarExpand": "#f6f6f6"
+    "filterBarExpand": "#f6f6f6",
+    "popoverBackground": "#fff",
+    "boxShadow": "0 0 5px 0 rgba(51, 51, 51, 0.3)",
+    "popoverTitleBackground": "linear-gradient(#ececed, #fafafa, #ececed)"
 }

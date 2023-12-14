@@ -1,8 +1,6 @@
 import customFieldImg from 'assets/image/icon/button/custom_field.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
-import QueryDataSourceDesignerModal
-  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import store from 'redux/modules';
@@ -11,9 +9,21 @@ import DatasetType from 'components/dataset/utils/DatasetType';
 import models from 'models';
 import UserDefinedDataModal
   from 'components/dataset/modal/CustomData/CustomDataModal';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import ParameterSlice from 'redux/modules/ParameterSlice';
+import {useDispatch} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import QueryDataSourceDesignerModal
+  from 'components/dataset/modal/QueryDataSourceDesignerModal';
 
 const PanelTitleDefaultElement = () => {
-  const {openModal, alert} = useModal();
+  const {openModal, alert, confirm} = useModal();
+  const dispatch = useDispatch();
+  const {deleteDataset} = DatasetSlice.actions;
+  const {deleteParameterByDatsetId} = ParameterSlice.actions;
+  const {initItemByDatsetId} = ItemSlice.actions;
+
   return {
     CustomField: {
       id: 'custom_field',
@@ -50,7 +60,14 @@ const PanelTitleDefaultElement = () => {
     DataSourceRemove: {
       id: 'data_source_remove',
       onClick: () => {
-        console.log('눌렸어요!3');
+        const dataset = selectCurrentDataset(store.getState());
+        const reportId = selectCurrentReportId(store.getState());
+        confirm('데이터 집합을 삭제하시겠습니까?', () => {
+          const datasetId = dataset.datasetId;
+          dispatch(deleteDataset({datasetId, reportId}));
+          dispatch(deleteParameterByDatsetId({reportId, datasetId}));
+          dispatch(initItemByDatsetId({reportId, datasetId}));
+        });
       },
       src: removeImg,
       label: localizedString.dataSourceRemove

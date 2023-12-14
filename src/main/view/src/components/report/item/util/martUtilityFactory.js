@@ -1,6 +1,6 @@
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import localizedString from 'config/localization';
-import chartSeriesButtonIcon from 'assets/image/icon/item/chart_bar.png';
+import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
 
@@ -69,6 +69,12 @@ const dataFieldSparkline = {
   placeholder: localizedString.sparklinePlaceholder
 };
 
+const dataFieldSortByItem = {
+  ...defaultMeasure,
+  label: localizedString.sortByItem,
+  placeholder: localizedString.newSortByItem
+};
+
 const dataFieldOptionChild = {
   [DataFieldType.MEASURE]: dataFieldMeasure,
   [DataFieldType.DIMENSION]: dataFieldDimension,
@@ -76,7 +82,8 @@ const dataFieldOptionChild = {
   [DataFieldType.COLUMN]: dataFieldColumn,
   [DataFieldType.ROW]: dataFieldRow,
   [DataFieldType.FIELD]: dataFieldField,
-  [DataFieldType.SPARKLINE]: dataFieldSparkline
+  [DataFieldType.SPARKLINE]: dataFieldSparkline,
+  [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
 };
 
 /**
@@ -105,6 +112,9 @@ const makeDataFieldOptions = (dataFieldTypes) => {
   const dataFieldOptions = {};
   dataFieldTypes.forEach((type) =>
     Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
+
+  Object.assign(dataFieldOptions,
+      makeDataFieldOptionChild(DataFieldType.SORT_BY_ITEM));
 
   return dataFieldOptions;
 };

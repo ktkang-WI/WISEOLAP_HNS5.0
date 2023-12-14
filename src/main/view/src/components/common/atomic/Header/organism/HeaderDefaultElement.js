@@ -18,10 +18,8 @@ const HeaderDefaultElement = () => {
     },
     'NewWindow': {
       'id': 'new_window',
-      'title': localizedString.newWindow,
+      'label': localizedString.newWindow,
       'type': 'TextButton',
-      'width': '45px',
-      'height': '45px',
       'onClick': (e) => {
         window.open('dashboard');
       }
@@ -37,6 +35,11 @@ const HeaderDefaultElement = () => {
     'ShowQuery': {
       'id': 'show_query',
       'label': localizedString.showQuery,
+      'type': 'TextButton'
+    },
+    'ReportSetting': {
+      'id': 'report_setting',
+      'label': localizedString.reportSetting,
       'type': 'TextButton'
     },
     'ReportProperty': {

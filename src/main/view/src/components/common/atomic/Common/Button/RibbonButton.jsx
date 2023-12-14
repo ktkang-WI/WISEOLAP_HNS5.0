@@ -20,7 +20,7 @@ const Button = styled.div`
   position: relative;
   box-sizing: border-box;
   border-radius: 10%;
-  
+
   ${(props) => props.rightButton && css`
     padding-right: 20px;
   `}
@@ -34,7 +34,7 @@ const Button = styled.div`
     outline: 1px solid ${theme.color.dataColumnBorder};
     background: ${theme.color.ribbonHover};
     box-sizing: border-box;
-  
+
 
     div {
       border-left: 1px solid ${theme.color.ribbonHoverBorder};
@@ -99,6 +99,7 @@ const RibbonButton = ({
   ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
+
   const onMouseOver = function() {
     setSrc(hoveredImgSrc);
   };
@@ -106,6 +107,7 @@ const RibbonButton = ({
   const onMouseOut = function() {
     setSrc(imgSrc);
   };
+
   const renderButtonContent = () => {
     return (
       <Button
@@ -125,7 +127,6 @@ const RibbonButton = ({
             width={width}
             height={height}
             hoveranimation={hoveredImgSrc ? '' : 'true'}
-            onClick={onClick}
             onMouseOver={hoveredImgSrc ? onMouseOver : null}
             onMouseOut={hoveredImgSrc ? onMouseOut : null}
             {...props}

@@ -14,5 +14,6 @@
     "modalTitle": "600 normal 16px \"Noto Sans\"",
     "filterContent": "500 normal 14px \"Noto Sans\"",
     "button": "500 normal 14px \"Noto Sans\"",
-    "modalFirstTitle": "600 normal 15px \"Noto Sans\""
+    "modalFirstTitle": "600 normal 15px \"Noto Sans\"",
+    "labelTitle": "600 normal 19px \"Noto Sans\""
 }

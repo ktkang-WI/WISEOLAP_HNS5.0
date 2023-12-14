@@ -27,6 +27,7 @@ const Left = styled.div`
   height: 100%;
   text-align: left;
   float: left;
+  display: flex;
 `;
 
 const Right = styled.div`
