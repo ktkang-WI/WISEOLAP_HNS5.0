@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wise.MarketingPlatForm.global.diagnos.WDC;
+import com.wise.MarketingPlatForm.global.diagnos.WdcTask;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -99,7 +102,7 @@ public class ReportController {
                     "}")
     }))
     @PostMapping(value = "/item-data")
-    public ReportResult getItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
+    public ReportResult getItemData(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
@@ -139,13 +142,9 @@ public class ReportController {
                 .build();
 
         if (itemType == ItemType.PIVOT_GRID) {
-            final String pagingParamValue = param.get("paging");
-            final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
-                    ? (ObjectNode) objectMapper.readTree(pagingParamValue)
-                    : null;
-            final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
-
-            return reportService.getPivotData(param, pagingParam, dataAggreagtion);
+            try(WdcTask task = WDC.getCurrentTask().startSubtask("pivotSummaryMatrix")){
+			    reportService.internalPivotSummaryMatrix(response, request, param);
+            }
         } else {
             return reportService.getItemData(dataAggreagtion);
         }

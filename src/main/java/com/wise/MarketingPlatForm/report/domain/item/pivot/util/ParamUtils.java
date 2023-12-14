@@ -38,10 +38,16 @@ public final class ParamUtils {
 
         if ("and".equals(operator) || "or".equals(operator)) {
             rootFilter = new FilterParam(operator);
-            final ArrayNode firstFilterNodeWrapper = (ArrayNode) filterParamsNode.get(0);
-            final ArrayNode secondFilterNodeWrapper = (ArrayNode) filterParamsNode.get(2);
-            addChildFilterParam(rootFilter, unwrapDoubleArrayNode(firstFilterNodeWrapper));
-            addChildFilterParam(rootFilter, unwrapDoubleArrayNode(secondFilterNodeWrapper));
+//            final ArrayNode firstFilterNodeWrapper = (ArrayNode) filterParamsNode.get(0);
+//            final ArrayNode secondFilterNodeWrapper = (ArrayNode) filterParamsNode.get(2);
+//            addChildFilterParam(rootFilter, unwrapDoubleArrayNode(firstFilterNodeWrapper));
+//            addChildFilterParam(rootFilter, unwrapDoubleArrayNode(secondFilterNodeWrapper));
+            
+            for (int i = 0; i < size; i++) {
+            	if((i % 2) == 0) {
+            		addChildFilterParam(rootFilter, unwrapDoubleArrayNode((ArrayNode) filterParamsNode.get(i)));
+            	}
+            }
         }
         else {
             rootFilter = new FilterParam();
@@ -76,8 +82,12 @@ public final class ParamUtils {
 
         if ("and".equals(operator) || "or".equals(operator)) {
             final FilterParam childFilter = filterParam.addChild(operator, null, null);
-            addChildFilterParam(childFilter, (ArrayNode) childFilterParamNode.get(0));
-            addChildFilterParam(childFilter, (ArrayNode) childFilterParamNode.get(2));
+            
+            for (int i = 0; i < size; i++) {
+            	if((i % 2) == 0) {
+            		addChildFilterParam(childFilter, (ArrayNode) childFilterParamNode.get(i));
+            	}
+            }
         }
         else {
             final String selector = childFilterParamNode.get(0).asText();
@@ -128,7 +138,7 @@ public final class ParamUtils {
         final SummaryParam summaryParam = new SummaryParam();
 
         final String selector = summaryParamNode.has("selector")
-                ? summaryParamNode.get("selector").asText() : null;
+                ? summaryParamNode.get("selector").asText() : "temp";
 
         if (StringUtils.isBlank(selector)) {
             throw new IllegalArgumentException("Blank selector for the summary param.");
@@ -150,6 +160,24 @@ public final class ParamUtils {
                 summaryParam.setSummaryType(summaryType);
             }
         }
+        
+        final String precision = summaryParamNode.has("precision")
+                ? summaryParamNode.get("precision").asText() : "0";
+
+        if (StringUtils.isBlank(precision)) {
+            throw new IllegalArgumentException("Blank selector for the precision param.");
+        }
+        
+        summaryParam.setPrecision(precision);
+        
+        final String precisionOption = summaryParamNode.has("precisionOption")
+                ? summaryParamNode.get("precisionOption").asText() : "반올림";
+
+        if (StringUtils.isBlank(precisionOption)) {
+            throw new IllegalArgumentException("Blank selector for the precision param.");
+        }
+        
+        summaryParam.setPrecisionOption(precisionOption);
 
         return summaryParam;
     }
@@ -180,11 +208,11 @@ public final class ParamUtils {
         }
 
         if (pagingParam.getOffset() < 0) {
-            pagingParam.setOffset(0);
+        	pagingParam.setOffset(0);
         }
 
         if (pagingParam.getLimit() <= 0) {
-            pagingParam.setLimit(DEFAULT_PAGE_LIMIT);
+        	pagingParam.setLimit(DEFAULT_PAGE_LIMIT);
         }
 
         return pagingParam;

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Striped;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryMatrix;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryMatrixUtils;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.impl.SummaryMatrixUtils;
 
 @Service
 public class SummaryMatrixFileWriterService {

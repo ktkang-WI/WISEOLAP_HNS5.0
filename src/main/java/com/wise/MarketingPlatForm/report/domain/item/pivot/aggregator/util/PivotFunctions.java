@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.util;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,6 +66,16 @@ public final class PivotFunctions {
     public BigDecimal Var(final Object o) {
         final double variance = StatUtils.variance(extractNumberArray(o));
         return BigDecimal.valueOf(variance);
+    }
+    /*dogfoot shlim 20220908 수정*/
+    public Object Iif(final Object n1, final Object n2, final Object n3) {
+    	Object rtlVal = "";
+    	if(n1.equals(true)) {
+    		rtlVal = n2;
+    	}else {
+    		rtlVal = n3;
+    	}
+         return rtlVal;
     }
 
     public boolean IsNull(final Object o) {
@@ -166,9 +177,15 @@ public final class PivotFunctions {
     }
 
     public BigDecimal Round(final Object n) {
-        final BigDecimal num = n instanceof BigDecimal ? (BigDecimal) n
-                : new BigDecimal(n.toString());
-        return BigDecimal.valueOf(Math.round(num.doubleValue()));
+        return Round(n, BigDecimal.valueOf(0));
+    }
+    
+    public BigDecimal Round(final Object n1, final Object n2) {
+    	final BigDecimal num = n1 instanceof BigDecimal ? (BigDecimal) n1
+                : new BigDecimal(n1.toString());
+    	final int scale = n2 instanceof BigDecimal ? ((BigDecimal) n2).intValue()
+                : new BigDecimal(n2.toString()).intValue();
+    	return num.setScale(scale, RoundingMode.HALF_UP);
     }
 
     public BigDecimal Sign(final Object n) {
@@ -354,3 +371,4 @@ public final class PivotFunctions {
         return ArrayUtils.EMPTY_DOUBLE_ARRAY;
     }
 }
+

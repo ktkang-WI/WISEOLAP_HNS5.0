@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -36,7 +37,8 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
     private Map<String, DataGroup> childDataGroupsMap;
 
     private boolean visible;
-
+    private boolean isOtherData;
+    
     private String path = "";
 
     public AbstractSummaryContainer() {
@@ -172,7 +174,15 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-
+    
+    public boolean getIsOtherData() {
+    	return isOtherData;
+    }
+    
+    public void setIsOtherData(boolean isOtherData) {
+    	this.isOtherData = isOtherData;
+    }
+    
     public String getPath() {
         return path;
     }
@@ -189,7 +199,7 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
 
         final AbstractSummaryContainer<?> that = (AbstractSummaryContainer<?>) o;
 
-        if (!Objects.equals(key, that.key)) {
+        if (!StringUtils.equals(key, that.key)) {
             return false;
         }
 
@@ -205,7 +215,7 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
             return false;
         }
 
-        if (!Objects.equals(childDataGroupKey, that.childDataGroupKey)) {
+        if (!StringUtils.equals(childDataGroupKey, that.childDataGroupKey)) {
             return false;
         }
 
@@ -230,4 +240,3 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
                 .append("visible", visible).toString();
     }
 }
-

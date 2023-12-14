@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.map.LazyMap;
 import org.apache.commons.jexl3.JexlBuilder;
@@ -23,6 +25,12 @@ public class ExpressionEngine {
 
     private static Logger log = LoggerFactory.getLogger(ExpressionEngine.class);
 
+    private static ExpressionEngine currentExpressionEngine;
+    
+    public static ExpressionEngine getCurrentExpressionEngine() {
+    	return currentExpressionEngine;
+    }
+
     private JexlEngine jexl;
 
     private Map<String, JexlExpression> expressionsCache = Collections.synchronizedMap(new WeakHashMap<>());
@@ -32,6 +40,11 @@ public class ExpressionEngine {
         globalNamespace.put(null, new PivotFunctions());
 
         jexl = new JexlBuilder().namespaces(globalNamespace).create();
+    }
+
+    @PostConstruct
+    public void init() {
+    	currentExpressionEngine = this;
     }
 
     public Object evaluate(final Map<String, Object> context, final String expression,
@@ -59,12 +72,13 @@ public class ExpressionEngine {
                         }
                     });
 
+            
             jexlContext.set("_fields", fields);
 
-            ret = expr.evaluate(jexlContext);
+           	ret = expr.evaluate(jexlContext);            
         }
         catch (Exception e) {
-            log.warn("Error occurred while evaluating an expression: {}", expression, e);
+            //log.warn("Error occurred while evaluating an expression: {}", expression, e.toString());
         }
 
         return ret != null ? ret : defaultValue;

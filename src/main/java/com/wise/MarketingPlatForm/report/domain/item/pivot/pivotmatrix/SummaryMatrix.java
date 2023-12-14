@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wise.MarketingPlatForm.report.domain.item.pivot.param.GroupParam;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.param.SummaryParam;
@@ -32,5 +33,15 @@ public interface SummaryMatrix {
     public List<GroupParam> getColGroupParams();
 
     public List<SummaryParam> getSummaryParams();
+
+    public String getCacheKey();
+
+    public String getAttribute(final String name);
+    
+    public void setAttribute(final String name, final String value);
+    
+    public Map<String, String> getAttributes();
+
+    public void setAttributes(final Map<String, String> attributes);
 
 }

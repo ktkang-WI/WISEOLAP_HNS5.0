@@ -122,29 +122,70 @@ const generateItem = (item, param) => {
               // 그룹 데이터 계산
               if (loadOptions.group) {
                 const tempData = [];
+                const addSummary = (cells, summary) => {
+                  cells.map((cell, j) => {
+                    const type = cell.t;
+                    switch (type) {
+                      case 'COUNT':
+                        summary.push(cell.c);
+                        break;
+                      case 'COUNTDISTINCT':
+                        summary.push(cell.dv.length);
+                        break;
+                      case 'SUM':
+                      case 'CUSTOM':
+                        summary.push(cell.s);
+                        break;
+                      case 'AVG':
+                        if (cell.s == 0 && cell.c == 0) {
+                          // if (userJsonObject.showNullValue) {
+                          //   summary.push(null);
+                          // } else {
+                          summary.push(0);
+                          // }
+                        } else if (cell.s == 0 && cell.c > 0) {
+                          summary.push(0);
+                        } else if (!cell.s) {
+                          summary.push(null);
+                        } else {
+                          summary.push(cell.s / cell.c);
+                        }
+                        break;
+                      case 'MIN':
+                      case 'MAX':
+                        if (cell.v == 9223372036854776000) {
+                          summary.push(0);
+                        } else {
+                          summary.push(cell.v);
+                        }
+                        break;
+                      default:
+                        summary.push(cell.v || cell.s);
+                        break;
+                    }
+                  });
+                };
+
                 const makeTreeData = (arr, curColDepth, maxColDepth,
                     curRowDepth, maxRowDepth, parentKey, rowIdx) => {
                   const cells = matrixInfo.matrix.cells;
-                  const meta = matrixInfo.matrix;
+                  const meta = matrixInfo.meta;
 
                   if (curRowDepth <= maxRowDepth) {
                     meta.rowFlattendSummaryDimensions.map((dim, i) => {
                       if (dim.depth == curRowDepth &&
-                          (dim.path.split('~|_').indexOf(parentKey) > -1 ||
-                          !parentKey)) {
-                        let items = [];
+                        (dim.parentPath == parentKey || !parentKey)) {
+                        const items = [];
                         const summary = [];
                         if (curRowDepth < maxRowDepth || maxRowDepth > 0) {
                           makeTreeData(items, curColDepth, maxColDepth,
-                              curRowDepth + 1, maxRowDepth, dim.key, i);
+                              curRowDepth + 1, maxRowDepth, dim.path, i);
                         }
                         if (items.length == 0) {
                           items = null;
                         }
 
-                        cells[i][0].vs.map((cell, j) => {
-                          summary.push(cell.s || cell.v || cell.c);
-                        });
+                        addSummary(cells[i][0].vs, summary);
 
                         arr.push({
                           key: dim.key, summary: summary, items: items
@@ -154,21 +195,19 @@ const generateItem = (item, param) => {
                   } else if (curColDepth <= maxColDepth) {
                     meta.colFlattendSummaryDimensions.map((dim, i) => {
                       if (dim.depth == curColDepth &&
-                          (dim.path.split('~|_').indexOf(parentKey) > -1 ||
-                          !parentKey || curColDepth == 1)) {
-                        let items = [];
+                          (dim.parentPath == parentKey || !parentKey ||
+                            curColDepth == 1)) {
+                        const items = [];
                         const summary = [];
                         if (curColDepth < maxColDepth) {
                           makeTreeData(items, curColDepth + 1, maxColDepth,
-                              curRowDepth, maxRowDepth, dim.key, rowIdx);
+                              curRowDepth, maxRowDepth, dim.path, rowIdx);
                         }
                         if (items.length == 0) {
                           items = null;
                         }
 
-                        cells[rowIdx][i].vs.map((cell, j) => {
-                          summary.push(cell.s || cell.v || cell.c);
-                        });
+                        addSummary(cells[rowIdx][i].vs, summary);
 
                         arr.push({
                           key: dim.key, summary: summary, items: items
@@ -212,7 +251,7 @@ const generateItem = (item, param) => {
               const tempResult = makeDataByMatrix();
               resolve(tempResult);
             } else {
-              const matrixLoadWaitFunc = setInterval(function() {
+              const matrixLoadWaitFunc = setInterval(() => {
                 if (matrixInfo) {
                   try {
                     const result = makeDataByMatrix();
@@ -261,6 +300,7 @@ const generateParameter = (item, param) => {
       sortByField: dim.name
     };
   });
+
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
   param.sortInfo = JSON.stringify(param.sortInfo);

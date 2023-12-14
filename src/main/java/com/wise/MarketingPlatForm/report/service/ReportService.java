@@ -187,11 +187,7 @@ public class ReportService {
 
         final SummaryMatrix pagedMatrix;
 
-        if (!paging.isPagingEnabled() || (paging.getOffset() == 0 && matrix.getRows() <= paging.getLimit())) {
-            pagedMatrix = matrix;
-        } else {
-            pagedMatrix = SummaryMatrixFactory.slicePageSummaryMatrix(matrix, paging);
-        }
+        pagedMatrix = SummaryMatrixFactory.slicePageSummaryMatrix(matrix, paging).get();
 
         PivotResult result = new PivotResult();
 

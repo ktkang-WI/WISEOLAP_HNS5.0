@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class Paging {
 
-    private boolean pagingEnabled;
     private int offset;
     private int limit;
     private int count;
