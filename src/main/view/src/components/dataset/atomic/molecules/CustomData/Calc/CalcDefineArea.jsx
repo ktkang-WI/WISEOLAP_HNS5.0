@@ -1,4 +1,4 @@
-import {useContext, useEffect, useRef} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import QueryEditor from '../../QueryEditor';
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
@@ -11,11 +11,15 @@ const CalcDefineArea = ({...props}) => {
   const getContext = useContext(CustomDataCalContext);
   const queryEditorRef = useRef();
   const [customData, setCustomData] = getContext.state.customData;
+  const [isDragEvent, setIsDragEvent] = useState(false);
   // #################################### 변수 선언 종료
   // #################################### 초기화 시작
   useEffect(()=>{
     // 입력창 커서 맨뒤로 이동
-    moveToEnd();
+    if (isDragEvent) moveToEnd();
+    return () => {
+      setIsDragEvent(false);
+    };
   }, [customData]);
   // #################################### 초기화 종료
   // #################################### 함수 시작
@@ -45,6 +49,7 @@ const CalcDefineArea = ({...props}) => {
           prev.calculation + ev.dataTransfer.getData('value')
       };
     });
+    setIsDragEvent(true);
   };
   const handleQueryEditor = () => {
     setCustomData((prev) => {
