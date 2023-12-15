@@ -13,7 +13,7 @@ const CalcObjectList = () => {
   // 열,상수,연산자,함수 내부 값
   const [objectListContents, setObjectListContents] = useState([]);
   // 열,상수,연산자,함수 내부 값 사용설명
-  const [explain, setExplain] = useState('');
+  const [explanation, setExplanation] = useState('');
 
   useEffect(()=>{
     setObjectList(dataSource.map((item) => item.key));
@@ -37,7 +37,7 @@ const CalcObjectList = () => {
       if (item.key === selectedObjectList) {
         item.collection.map((item) => {
           if (item.key === e.itemData) {
-            setExplain(item.explain);
+            setExplanation(item.explanation);
           }
         });
       }
@@ -89,7 +89,7 @@ const CalcObjectList = () => {
         <TextArea
           width='100%'
           height='100%'
-          value={explain}
+          value={explanation}
           stylingMode="outlined"
           focusStateEnabled={false}
           hoverStateEnabled={false}
