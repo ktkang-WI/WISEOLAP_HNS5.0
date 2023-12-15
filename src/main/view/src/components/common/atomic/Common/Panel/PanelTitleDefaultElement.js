@@ -28,7 +28,6 @@ const PanelTitleDefaultElement = () => {
     CustomField: {
       id: 'custom_field',
       onClick: () => {
-        console.log('눌렸어요!');
         openModal(UserDefinedDataModal);
       },
       src: customFieldImg,
