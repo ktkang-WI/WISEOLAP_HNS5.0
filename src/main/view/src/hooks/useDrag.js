@@ -52,6 +52,7 @@ const useDrag = () => {
       };
 
       const measureOption = {
+        // 포멧옵션
         format: {},
         summaryType: 'SUM'
       };

@@ -220,5 +220,16 @@
   "editFieldName": "필드 명 수정",
   "fieldName": "필드 명",
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
-  "reportDeleteMsg": "보고서를 삭제하시겠습니까?"
+  "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
+  "numberFormat": "숫자 형식",
+  "formatUnit": "포멧 단위",
+  "digitUnit": "자리수 단위",
+  "customSuffix"  : "사용자 지정 접미사",
+  "suffixO": "O",
+  "suffixK": "K",
+  "suffixM": "M",
+  "suffixB": "B",
+  "decimalUnit": "정도",
+  "roundUnit": "정도 옵션",
+  "includesGroupDistinction" : "그룹 구분 포함"
 }

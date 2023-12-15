@@ -208,5 +208,16 @@
   "editFieldName": "Edit Field Name",
   "fieldName": "Field Name",
   "reportNotDeleteMsg": "This report has not been saved.",
-  "reportDeleteMsg": "Are you sure you want to delete the report?"
+  "reportDeleteMsg": "Are you sure you want to delete the report?",
+  "NumberFormat": "Number Format",
+  "formatUnit": "Format Unit",
+  "digitUnit": "Digit Unit",
+  "customSuffix"  : "Custom Suffix",
+  "suffixO": "O",
+  "suffixK": "K",
+  "suffixM": "M",
+  "suffixB": "B",
+  "decimalUnit": "Decimal Unit",
+  "roundUnit": "Round Unit",
+  "includesGroupDistinction" : "Includes Group Distinction"
 }

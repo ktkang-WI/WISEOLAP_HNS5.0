@@ -11,6 +11,8 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import NumberFormatModal
+  from 'components/report/atomic/Format/organisms/NumberFormatModal';
 
 const theme = getTheme();
 
@@ -122,7 +124,10 @@ const DataColumn = ({
     {
       'text': localizedString.format,
       'value': 'FORMAT',
-      'type': 'Format'
+      'type': 'Format',
+      'onClick': () => {
+        openModal(NumberFormatModal);
+      }
     },
     {
       'text': localizedString.rename,

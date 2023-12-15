@@ -16,5 +16,7 @@
     "bigModalHeight" : "90%",
     "bigModalWidth" : "70%",
     "labelTextBoxHeight" : "36px",
-    "labelTextAreaHeight" : "80px"
+    "labelTextAreaHeight" : "80px",
+    "numberFormatWidth" : "420px",
+    "numberFormatHeight" : "700px"
 }
