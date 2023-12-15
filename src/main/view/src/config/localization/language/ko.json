@@ -1,10 +1,6 @@
 {
   "userDefinedData":{
-    "title":"사용자 정의 데이터",
-    "styles":{
-      "width":"750px",
-      "height":"450px"
-    }
+    "title":"사용자 정의 데이터"
   },
   "test": "테스트",
   "newWindow": "새 창 열기",

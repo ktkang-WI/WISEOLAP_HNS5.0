@@ -172,8 +172,8 @@ const CustomDataModal = ({...props}) =>{
         onClose={()=>{
           return handleCancel();
         }}
-        height={localizedString.userDefinedData.styles.height}
-        width={localizedString.userDefinedData.styles.width}
+        height='450px'
+        width='750px'
         modalTitle={localizedString.userDefinedData.title}
       >
         <Wrapper display="flex" direction="row">
