@@ -53,7 +53,7 @@ const CalcObjectList = ({...props}) => {
     <>
       <Wrapper>
         <List
-          // TODO: 스타일 위치 변경해야함. 회의 필요.
+          // TODO: 스타일 위치 변경해야함. 회의 필요. ? Styled-componentd? 위치는?
           style={{
             border: '1px dashed darkgray',
             borderRadius: '8px',
@@ -67,7 +67,7 @@ const CalcObjectList = ({...props}) => {
       </Wrapper>
       <Wrapper>
         <List
-          // TODO: 스타일 위치 변경해야함. 회의 필요.
+          // TODO: 스타일 위치 변경해야함. 회의 필요. ? Styled-componentd? 위치는?
           style={{
             border: '1px dashed darkgray',
             borderRadius: '8px',

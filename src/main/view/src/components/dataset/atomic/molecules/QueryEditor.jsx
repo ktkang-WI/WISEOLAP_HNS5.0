@@ -4,6 +4,11 @@ import 'ace-builds/src-noconflict/ext-inline_autocomplete';
 
 const QueryEditor = ({editorRef, ...props}) => {
   return (
+    /**
+     * @Author : KJH
+     * @Explain : Drag and Drop 을 적용하기 위해 추가 작성
+     * @Date : 20231214
+     */
     <div style={{width: '100%', height: '100%'}}
       onDragOver={props.onDragOver}
       onDrop={props.onDrop}>
