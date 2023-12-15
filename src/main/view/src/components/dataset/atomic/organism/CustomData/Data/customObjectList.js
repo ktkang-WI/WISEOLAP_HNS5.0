@@ -1,3 +1,8 @@
+export const typeData = [
+  {id: 'VARCHAR', text: 'VARCHAR'},
+  {id: 'INTEGER', text: 'INTEGER'}
+];
+
 export const dataSource = [
   {
     key: '열',

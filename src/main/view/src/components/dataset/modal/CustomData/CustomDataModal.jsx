@@ -2,14 +2,15 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import localizedString from '../../../../config/localization';
 import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import CustomDataList
-  from 'components/dataset/atomic/molecules/CustomData/CustomDataList';
+import CustomData
+  from 'components/dataset/atomic/organism/CustomData/CustomData';
 import {createContext, useEffect, useState} from 'react';
 import CustomDataCalcModal from './CustomDataCalcModal';
 
 /* 사용자 정의 데이터
 @Autor : KIM JAE HYEON
 @Date : 20231214 */
+// TODO: 리덕스 데이터 가져오기 구현
 export const CustomDataContext = createContext();
 
 const CustomDataModal = ({...props}) =>{
@@ -23,7 +24,6 @@ const CustomDataModal = ({...props}) =>{
     };
   };
   const {openModal, alert} = useModal();
-  // TODO: 리덕스 데이터 가져오기 구현
   const [customDataList, setCustomDataList] = useState([]);
   const [moveToPage, setMoveToPage] = useState(false);
   const [customData, setCustomData] = useState(customDataInitial);
@@ -131,7 +131,7 @@ const CustomDataModal = ({...props}) =>{
     let isok = true;
     // 사용자 정의 데이터 NULL 체크
     customDataList.forEach((item)=>{
-      isok = nullCheck(item.fieldName, item.calculation);
+      isok = nullCheck(item.fieldName, item.calculation, item.type);
       if (isok === false) {
         return isok;
       }
@@ -143,10 +143,10 @@ const CustomDataModal = ({...props}) =>{
   // 리덕스 STATE 저장
   // TODO: 데이터베이스 값 저장은 보고서 저장 클릭시 진행
   const handleConfirm = () => {
-    let isok = true;
+    let isok = false;
     if (!handleException()) {
-      alert('필드명,계산식의 빈값이 있습니다.');
-      isok = false;
+      alert('필드명,계산식,타입이 빈값이 있습니다.');
+      isok = true;
     };
     return isok;
   };
@@ -163,10 +163,10 @@ const CustomDataModal = ({...props}) =>{
     >
       <Modal
         onSubmit={() => {
-          if (!handleConfirm()) {
-            return false;
-          } else {
+          if (handleConfirm()) {
             return true;
+          } else {
+            return false;
           }
         }}
         onClose={()=>{
@@ -178,7 +178,7 @@ const CustomDataModal = ({...props}) =>{
       >
         <Wrapper display="flex" direction="row">
           <Wrapper size="100%">
-            <CustomDataList
+            <CustomData
               allowColumnReordering={true}
               rowAlternationEnabled={true}
               showBorders={true}
