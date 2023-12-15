@@ -4,29 +4,29 @@ import {useContext} from 'react';
 import {ButtonGroup} from 'devextreme-react';
 
 
-const CustomDataBtn = ({...props}) => {
-  // #################################### 변수 선언 시작
+const CustomDataBtn = () => {
   const getContext = useContext(CustomDataContext);
   const [moveToPage, setMoveToPage] = getContext.state.moveToPage;
   const fontStyles = [{
     icon: 'plus',
     hint: '추가',
-    style: 'bold'
+    style: 'bold',
+    id: 'plus'
   }];
-  // #################################### 변수 선언 종료
-  // #################################### 함수 시작
-  const handleCalculator = () =>{
+  const ActionPage = {
+    plus: () => moveToCalculator()
+  };
+
+  const moveToCalculator = () =>{
     setMoveToPage(!moveToPage);
   };
   // 사용자 정의 데이터 항목 추가.
-  // TODO: 추가 하드코딩값 상의후 변경 예정
   const handleItemClick = (event) => {
-    const clickedItem = event.itemData.hint;
-    if ( clickedItem === '추가') {
-      handleCalculator();
-    };
+    const Action = event.itemData.id;
+    ActionPage[Action] ?
+    ActionPage[Action]() : console.error('clickedItem is null');
   };
-  // #################################### 변수 선언 종료
+
   return (
     <>
       <ButtonGroup

@@ -5,9 +5,7 @@ import CalcDefineArea from
 import CalcObjectList
   from '../../molecules/CustomData/Calc/CalcObjectList';
 
-/* 사용자 정의 데이터 계산식 매개변수,열,함수 등등을 이용하여 계산식을 정의합니다.
-@Autor : KIM JAE HYEON
-@Date : 20231214 */
+// 사용자 정의 데이터 계산식 매개변수,열,함수 등등을 이용하여 계산식을 정의합니다.
 const CustomDataCalc = ({...props}) => {
   return (
     <>

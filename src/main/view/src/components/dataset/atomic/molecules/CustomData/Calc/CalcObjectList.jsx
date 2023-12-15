@@ -4,11 +4,8 @@ import {dataSource}
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 
-/* 사용자 정의 데이터 객체 정보 및 설명
-@Autor : KIM JAE HYEON
-@Date : 20231215 */
-const CalcObjectList = ({...props}) => {
-  // #################################### 변수 선언 시작
+// 사용자 정의 데이터 객체 정보 및 설명
+const CalcObjectList = () => {
   // 열,상수,연산자,함수 값 저장
   const [objectList, setObjectList] = useState();
   // 열,상수,연산자,함수 클릭값
@@ -17,13 +14,11 @@ const CalcObjectList = ({...props}) => {
   const [objectListContents, setObjectListContents] = useState([]);
   // 열,상수,연산자,함수 내부 값 사용설명
   const [explain, setExplain] = useState('');
-  // #################################### 변수 선언 종료
-  // #################################### 초기화 시작
+
   useEffect(()=>{
-    setObjectList(dataSource.map((item)=>item.key));
+    setObjectList(dataSource.map((item) => item.key));
   }, []);
-  // #################################### 초기화 종료
-  // #################################### 함수 시작
+
   const handleFromDragStart = (e) => {
     e.dataTransfer.setData('value', e.target.innerText);
   };
@@ -32,7 +27,7 @@ const CalcObjectList = ({...props}) => {
     dataSource.forEach((item) => {
       if (item.key === e.itemData) {
         setSelectedObjectList(item.key);
-        setObjectListContents(item.collection.map((item)=>item.key));
+        setObjectListContents(item.collection.map((item) => item.key));
       }
     });
   };
@@ -48,7 +43,7 @@ const CalcObjectList = ({...props}) => {
       }
     });
   };
-  // #################################### 함수 종료
+
   return (
     <>
       <Wrapper>

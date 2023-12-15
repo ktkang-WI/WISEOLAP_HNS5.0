@@ -7,11 +7,8 @@ import {Button, LoadIndicator, SelectBox, TextBox} from 'devextreme-react';
 import useModal from 'hooks/useModal';
 import {useContext, useRef, useState} from 'react';
 
-/* 사용자 정의 데이터 계산식 상단 버튼 부분
-@Autor : KIM JAE HYEON
-@Date : 20231215 */
-const TopBtns = ({...props}) => {
-  // #################################### 변수 선언 시작
+// 사용자 정의 데이터 계산식 상단 버튼 부분
+const TopBtns = () => {
   const getContext = useContext(CustomDataCalContext);
   const [customData, setCustomData] = getContext.state.customData;
   const textBoxRef = useRef();
@@ -19,8 +16,7 @@ const TopBtns = ({...props}) => {
   const [onLoading, setOnLoading] = useState(false);
   const {alert} = useModal();
   const [checkForSaving, setCheckForSaving] = getContext.state.checkForSaving;
-  // #################################### 변수 선언 종료
-  // #################################### 함수 시작
+
   const handleTextBox = (data) => {
     setCustomData((prev) => {
       return {
@@ -57,7 +53,7 @@ const TopBtns = ({...props}) => {
       if (!checkForSaving.type) alert('유효하지않습니다.');
     }, 1000);
   };
-  // #################################### 함수 종료
+
   return (
     <>
       <Wrapper size="65%">

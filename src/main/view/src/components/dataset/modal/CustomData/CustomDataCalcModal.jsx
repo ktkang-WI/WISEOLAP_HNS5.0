@@ -9,13 +9,10 @@ import CustomDataCalc
 import useModal from 'hooks/useModal';
 
 
-/* 사용자 정의 데이터 계산식 화면
-@Autor : KIM JAE HYEON
-@Date : 20231214 */
+// 사용자 정의 데이터 계산식 화면
 export const CustomDataCalContext = createContext();
 
 const CustomDataCalcModal = ({...props}) => {
-  // #################################### 변수 선언 시작
   const {alert} = useModal();
   const getCustomData = props.customData;
   const [checkForSaving, setCheckForSaving] = useState({
@@ -40,40 +37,40 @@ const CustomDataCalcModal = ({...props}) => {
       ]
     }
   };
-  // #################################### 변수 선언 종료
-  // #################################### 함수 시작
+
   // TODO: NULL 공용 함수로 이동유무 결정
   const nullCheck = (...args) => {
-    let isok = true;
-    args.forEach((item)=>{
-      if (item === null || item === '' || item === undefined) {
-        isok = false;
+    let isOk = true;
+    args.forEach((item) => {
+      if (!item) {
+        isOk = false;
       }
     });
-    return isok;
+    return isOk;
   };
   const handleException = () => {
-    let isok = true;
+    let isOk = true;
     // 사용자 정의 데이터 NULL 체크
-    isok = nullCheck(customData.fieldName,
+    isOk = nullCheck(
+        customData.fieldName,
         customData.calculation,
         customData.type);
-    if (isok === false) {
+    if (isOk === false) {
       alert('필드명,계산식,타입이 빈값이 있습니다.');
-      return isok;
+      return isOk;
     }
     if (checkForSaving.inspection === false) {
       alert('계산식이 검증되지 않았습니다.');
-      isok = false;
+      isOk = false;
     }
-    return isok;
+    return isOk;
   };
   const handleConfirm = () => {
-    let isok = false;
+    let isOk = false;
     if (!handleException()) {
-      isok = true;
+      isOk = true;
     };
-    return isok;
+    return isOk;
   };
   // #################################### 함수 시작
   return (

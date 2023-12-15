@@ -5,13 +5,12 @@ import {useContext} from 'react';
 import {typeData} from '../../organism/CustomData/Data/customObjectList';
 
 
-const CustomDataList = ({...props}) => {
-  // #################################### 변수 선언 시작
+const CustomDataList = () => {
   const getContext = useContext(CustomDataContext);
   const [moveToPage, setMoveToPage] = getContext.state.moveToPage;
   const [dataSource] = getContext.state.customDataList;
   const [, setCustomData] = getContext.state.customData;
-  // #################################### 변수 선언 종료
+
   const handleCalculator = () =>{
     setMoveToPage(!moveToPage);
   };
@@ -32,7 +31,7 @@ const CustomDataList = ({...props}) => {
       handleCalculator();
     };
   };
-  // #################################### 변수 선언 종료
+
   return (
     <>
       <DataGrid
