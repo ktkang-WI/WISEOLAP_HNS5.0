@@ -15,9 +15,6 @@ const reducers = {
     state.openedModals = state.openedModals.filter((modal, index) => {
       return index !== actions.payload;
     });
-  },
-  setHighLight(state, actions) {
-    state.highLightList = state.highLightList.concat(actions.payload);
   }
 };
 

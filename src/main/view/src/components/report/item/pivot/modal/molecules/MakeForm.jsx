@@ -6,9 +6,7 @@ import EmojiArr from './EmojiArr';
 
 const MakeForm = ({formData, measureNames}, ref) => {
   const [showField, setShowField] = useState(false);
-  // console.log(formData);
   const [selectedIcon, setSelectedIcon] = useState('');
-  // let selectedItcon = {};
 
   const emojiSelectBox = (src) => {
     if (src !== '') {
@@ -100,7 +98,6 @@ const MakeForm = ({formData, measureNames}, ref) => {
           dropDownButtonTemplate: 'conditionalIcon',
           onSelectionChanged: (e) => {
             setSelectedIcon(e.selectedItem ? e.selectedItem.icon : '');
-            // selectedItcon = e.selectedItem?.icon;
           }
         }}>
         <Template
