@@ -39,8 +39,12 @@ const PivotGrid = ({id, mart}) => {
     <DevPivotGrid
       ref={ref}
       id={id}
+      width={'100%'}
+      height={'100%'}
       dataSource={mart.dataSourceConfig}
       wordWrapEnabled={false}
+      allowSorting={false}
+      allowSortingBySummary={false}
     >
       <FieldChooser enabled={false}> </FieldChooser>
       <Scrolling mode="virtual" />

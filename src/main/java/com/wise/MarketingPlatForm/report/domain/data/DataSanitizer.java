@@ -54,11 +54,38 @@ public final class DataSanitizer {
         orgDataLength = data.size();
     }
 
+    final Set<String> getAllColumnNamesExceptSortByItem() {
+        Set<String> columnNames = new HashSet<>();
+
+        // 사용하는 컬럼 이름만 담기
+        for (Measure measure : measures) {
+            if (StringUtils.isNotBlank(measure.getSummaryName())) {
+                columnNames.add(measure.getSummaryName());
+            } else {
+                columnNames.add(measure.getName());
+            }
+        }
+
+        for (Dimension dimension : dimensions) {
+            columnNames.add(dimension.getName());
+        }
+
+        return columnNames;
+    }
+
     final Set<String> getAllColumnNames() {
         Set<String> columnNames = new HashSet<>();
 
         // 사용하는 컬럼 이름만 담기
         for (Measure measure : measures) {
+            if (StringUtils.isNotBlank(measure.getSummaryName())) {
+                columnNames.add(measure.getSummaryName());
+            } else {
+                columnNames.add(measure.getName());
+            }
+        }
+
+        for (Measure measure : sortByItems) {
             if (StringUtils.isNotBlank(measure.getSummaryName())) {
                 columnNames.add(measure.getSummaryName());
             } else {
@@ -85,6 +112,7 @@ public final class DataSanitizer {
 
             for (Dimension dimension : dimensions) {
                 sb.append(String.valueOf(map.get(dimension.getName())));
+                sb.append("-wise-split-");
             }
 
             return sb.toString();
@@ -139,7 +167,7 @@ public final class DataSanitizer {
         grpDataLenth = data.size();
         return this;
     }
-
+    
     /**
      * <p>
      * 필요한 컬럼의 데이터만 필터링합니다.
@@ -151,7 +179,28 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer columnFiltering() {
-        Set<String> columnNames = getAllColumnNames();
+        return columnFiltering(false);
+    }
+    
+    /**
+     * <p>
+     * 필요한 컬럼의 데이터만 필터링합니다.
+     * </p>
+     * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
+     * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
+     * name으로 된 데이터가 남습니다.
+     * 
+     * @param includeSortByItem sortByItem을 포함 할지 여부입니다.
+     * @return DataSanitizer
+     */
+    public final DataSanitizer columnFiltering(boolean includeSortByItem) {
+        Set<String> columnNames;
+        if (includeSortByItem) {
+            columnNames = getAllColumnNames();
+        } else {
+            columnNames = getAllColumnNamesExceptSortByItem();
+        }
+        
 
         data.forEach(map -> {
             map.keySet().retainAll(columnNames);

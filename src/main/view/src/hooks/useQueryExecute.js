@@ -10,7 +10,6 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
-import ItemType from 'components/report/item/util/ItemType';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
@@ -67,25 +66,26 @@ const useQueryExecute = () => {
     const param = generateParameter(tempItem, datasets, parameters);
     const reportId = selectCurrentReportId(store.getState());
 
-    if (item.type == ItemType.PIVOT_GRID) {
+    // TODO: 추후 PivotMatrix 적용할 때 해제
+    // if (item.type == ItemType.PIVOT_GRID) {
+    //   tempItem.mart.init = true;
+    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+
+    //   dispatch(updateItem({reportId, item: tempItem}));
+    // } else {
+    models.Item.getItemData(param, (response) => {
+      if (response.status != 200) {
+        return;
+      }
+
       tempItem.mart.init = true;
-      ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+      tempItem.mart.data = response.data;
+
+      ItemUtilityFactory[tempItem.type].generateItem(tempItem);
 
       dispatch(updateItem({reportId, item: tempItem}));
-    } else {
-      models.Item.getItemData(param, (response) => {
-        if (response.status != 200) {
-          return;
-        }
-
-        tempItem.mart.init = true;
-        tempItem.mart.data = response.data;
-
-        ItemUtilityFactory[tempItem.type].generateItem(tempItem);
-
-        dispatch(updateItem({reportId, item: tempItem}));
-      });
-    }
+    });
+    // }
   };
 
   /**
