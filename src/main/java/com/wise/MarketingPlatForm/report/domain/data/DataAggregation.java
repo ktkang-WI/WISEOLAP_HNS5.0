@@ -20,6 +20,7 @@ public class DataAggregation {
     String userId;
     List<Measure> measures;
     List<Dimension> dimensions;
+    List<Measure> sortByItems;
     ItemType itemType;
     Dataset dataset;
     PagingOption pagingOption;

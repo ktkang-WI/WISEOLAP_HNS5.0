@@ -32,6 +32,7 @@ const Wrapper = styled.div`
 `;
 
 const RibbonPanel = ({
+  id='',
   width='auto',
   height='100%',
   leftborder,
@@ -42,6 +43,7 @@ const RibbonPanel = ({
 }) => {
   return (
     <Panel
+      id={id}
       width={width}
       height={height}
       leftborder={leftborder}

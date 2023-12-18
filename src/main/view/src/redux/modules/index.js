@@ -5,6 +5,7 @@ import ModalSlice from './ModalSlice';
 import DatasetSlice from './DatasetSlice';
 import LayoutSlice from './LayoutSlice';
 import ItemSlice from './ItemSlice';
+import PopoverSlice from './PopoverSlice';
 import ParameterSlice from './ParameterSlice';
 
 const metaReducer = combineReducers({
@@ -17,7 +18,8 @@ const metaReducer = combineReducers({
 });
 
 const systemReducer = combineReducers({
-  modal: ModalSlice.reducer
+  modal: ModalSlice.reducer,
+  popover: PopoverSlice.reducer
 });
 
 const configure = {

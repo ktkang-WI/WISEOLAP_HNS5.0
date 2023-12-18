@@ -19,6 +19,23 @@ const reducers = {
   initItems(state, actions) {
     state = initialState;
   },
+  changeItemReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const item = state[prevId];
+      delete state[prevId];
+      state[newId] = item;
+    }
+  },
+  deleteItemForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
+  },
   // 파라미터로 reportId와 item
   insertItem(state, actions) {
     const reportId = actions.payload.reportId;
@@ -80,9 +97,27 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId].selectedItemId = actions.payload.itemId;
   },
-  updateItemField(state, actions) {
+  // 파라미터로 reportId, datasetId.
+  // 넘어온 datasetId 사용하는 아이템 dataField 초기화
+  initItemByDatsetId(state, actions) {
     const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
 
+    state[reportId].items.map((i) => {
+      if (i.meta.dataField.datasetId == datasetId) {
+        for (const fields in i.meta.dataField) {
+          if (typeof i.meta.dataField[fields] === 'object') {
+            i.meta.dataField[fields] = [];
+          }
+        }
+
+        delete i.meta.dataField.datasetId;
+        i.meta.dataField.dataFieldQuantity = 0;
+      }
+    });
+  },
+  setItemField(state, actions) {
+    const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
     const itemIndex = state[reportId].items.findIndex(
@@ -93,7 +128,26 @@ const reducers = {
       state[reportId].items[itemIndex].meta.dataField = dataField;
     }
   },
-  setItem(state, actions) {
+  updateItemField(state, actions) {
+    const reportId = actions.payload.reportId;
+    const dataField = actions.payload.dataField;
+
+    const itemIndex = state[reportId].items.findIndex(
+        (item) => item.id == state[reportId].selectedItemId
+    );
+
+    if (itemIndex >= 0) {
+      state[reportId].items[itemIndex].meta.dataField[dataField.category] =
+          state[reportId].items[itemIndex].meta.dataField[dataField.category]
+              .map((field) => {
+                if (field.fieldId == dataField.fieldId) {
+                  return dataField;
+                }
+                return field;
+              });
+    }
+  },
+  setItems(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
   },

@@ -34,18 +34,27 @@ export default function useModal() {
   };
 
   /**
+   * 확인, 취소 버튼이 있는 알림창을 엽니다.
+   * @param {string} msg
+   * @param {funciton} onSubmit
+   */
+  const confirm = (msg, onSubmit) => {
+    openModal(Alert, {
+      type: 'confirm',
+      message: msg,
+      onSubmit
+    });
+  };
+
+  /**
    * 경고창을 엽니다.
    * @param {string} msg
    */
   const warning = (msg) => {
     openModal(Alert, {
-      teyp: 'warning',
+      type: 'warning',
       message: msg
     });
-  };
-
-  const setHighLight = (highLight) => {
-    dispatch(modalActions.setHighLight(highLight));
   };
 
   return {
@@ -53,6 +62,6 @@ export default function useModal() {
     closeModal,
     alert,
     warning,
-    setHighLight
+    confirm
   };
 };

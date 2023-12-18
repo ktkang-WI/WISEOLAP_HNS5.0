@@ -2,7 +2,7 @@ import {Droppable} from 'react-beautiful-dnd';
 import Filter from './Filter';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
-import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import {useSelector, useDispatch} from 'react-redux';
 import {useEffect} from 'react';
 import useQueryExecute from 'hooks/useQueryExecute';
@@ -27,7 +27,7 @@ const StyledFilterBarWrapper = styled.div`
   `;
 
 const FilterBarWrapper = (props) => {
-  const parameters = useSelector(selectCurrentParameters);
+  const parameters = useSelector(selectRootParameter);
   const reportId = selectCurrentReportId(store.getState());
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
   const {setParameterValues} = ParameterSlice.actions;

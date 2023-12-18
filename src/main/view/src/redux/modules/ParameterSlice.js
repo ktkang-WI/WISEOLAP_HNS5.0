@@ -76,6 +76,44 @@ const reducers = {
     const filterId = actions.payload.id;
     state[reportId].filterSearchComplete =
         state[reportId].filterSearchComplete.concat([filterId]);
+  },
+  deleteParameterByDatsetId(state, actions) {
+    const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
+
+    state[reportId].informations = state[reportId].informations
+        .reduce((acc, info) => {
+          const datasetArr = info.dataset;
+          const idx = datasetArr.indexOf(datasetId);
+
+          if (idx >= 0) {
+            if (datasetArr.length > 1) {
+              datasetArr.splice(idx, 1);
+              acc.push({...info, dataset: datasetArr});
+            }
+          } else {
+            acc.push(info);
+          }
+
+          return acc;
+        }, []);
+  },
+  changeParameterReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const parameter = state[prevId];
+      delete state[prevId];
+      state[newId] = parameter;
+    }
+  },
+  deleteParameterForDesigner(state, actions) {
+    delete state[actions.payload];
+
+    if (Object.keys(state).length == 0) {
+      state[0] = initialState[0];
+    }
   }
 };
 

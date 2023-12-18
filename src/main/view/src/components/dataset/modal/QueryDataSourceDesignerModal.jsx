@@ -21,7 +21,7 @@ import {selectCurrentDatasets, selectDatasetQuantity}
 import QueryDataFieldList from '../atomic/molecules/QueryDataFieldList';
 import EditParamterModal from './EditParamterModal';
 import ParameterList from '../atomic/molecules/ParameterList';
-import {selectCurrentParameters} from 'redux/selector/ParameterSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetType from '../utils/DatasetType';
@@ -65,7 +65,7 @@ const QueryDataSourceDesignerModal = ({
   // selector
   const selectedReportId = useSelector(selectCurrentReportId);
   const datasets = useSelector(selectCurrentDatasets);
-  const parameters = useSelector(selectCurrentParameters);
+  const parameters = useSelector(selectRootParameter);
   const datasetQuantity = useSelector(selectDatasetQuantity);
 
   // local

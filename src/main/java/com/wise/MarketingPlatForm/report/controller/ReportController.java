@@ -3,7 +3,9 @@ package com.wise.MarketingPlatForm.report.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,11 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
+import com.wise.MarketingPlatForm.report.type.ReportType;
+import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
+import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -96,18 +102,22 @@ public class ReportController {
     public ReportResult getItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
-        String dimensionsStr = param.getOrDefault("dimension", "");
-        String measuresStr = param.getOrDefault("measure", "");
-        String datasetStr = param.getOrDefault("dataset", "");
-        String parameterStr = param.getOrDefault("parameter", "");
-        String ItemTypeStr = param.getOrDefault("itemType", "");
-        String userId = param.getOrDefault("userId", "");
+        String dimensionsStr = param.getOrDefault("dimension", "[]");
+        String measuresStr = param.getOrDefault("measure", "[]");
+        String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
+        String datasetStr = param.get("dataset");
+        String parameterStr = param.getOrDefault("parameter", "[]");
+        String ItemTypeStr = param.get("itemType");
+        String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
                 }.getType());
         List<Measure> measures = gson.fromJson(measuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
         List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
@@ -121,6 +131,7 @@ public class ReportController {
                 .dataset(dataset)
                 .measures(measures)
                 .dimensions(dimensions)
+                .sortByItems(sortByItems)
                 .itemType(itemType)
                 .userId(userId)
                 .parameters(parameters)
@@ -159,5 +170,28 @@ public class ReportController {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
         return reportService.getReport(reportId, userId);
-	}   
+	}
+
+    @PostMapping(value = "/save-report")
+	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
+        Gson gson = new Gson();
+        ReportMstrDTO reportMstrDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
+        reportMstrDTO.setReportType(ReportType.DASH_ANY);
+
+        return reportService.addReport(reportMstrDTO);
+	}
+
+    @PostMapping(value = "/report-folder-list")
+	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
+        String userId = param.getOrDefault("userId", "");
+
+        return reportService.getReportFolderList(userId);
+	}
+
+    @PostMapping(value = "/delete-report")
+	public int deleteReport(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+
+        return reportService.deleteReport(Integer.parseInt(reportId));
+	}
 }
