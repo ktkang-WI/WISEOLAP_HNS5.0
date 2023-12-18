@@ -10,12 +10,12 @@ const MakeForm = ({formData, measureNames}, ref) => {
   const [selectedIcon, setSelectedIcon] = useState('');
   // let selectedItcon = {};
 
-  const emojiSelectBox = (e) => {
-    if (e !== '') {
+  const emojiSelectBox = (src) => {
+    if (src !== '') {
       return (
         <img
           alt='Custom icon'
-          src={e}
+          src={src}
           className='custom-icon'
         />
       );
@@ -61,7 +61,7 @@ const MakeForm = ({formData, measureNames}, ref) => {
           items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
         }}
         validationRules={validationRules.validation}>
-        <Label>{localizedString.condition}: </Label>
+        <Label>{localizedString.conditionType}: </Label>
       </Item>
       <Item
         name='backgroundColor'

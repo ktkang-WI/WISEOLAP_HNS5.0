@@ -53,12 +53,11 @@ const DataHighLightModal = ({...props}) => {
       (mea) => mea.name
   ), []);
 
-  const onClick = () => {
-    // 1. 같은 필드명 추가 불가. 2. 이미 추가된 필드명을 다시 선택 후 내용 변경 시 업데이트만, 필드명 변경시 새로 추가.
+  const onClick = () => { // 하이라이트 추가 부분.
     const copyHighlight = [...highlightList];
     const formData = _.cloneDeep(ref.current.props.formData);
 
-    const idx = measureNames.findIndex((measure, idx) =>
+    const idx = measureNames.findIndex((measure) =>
       measure == formData.dataItem
     );
 
@@ -94,14 +93,17 @@ const DataHighLightModal = ({...props}) => {
       }
     }
   };
-  const deleteHighlightList = (e) => {
-    if (e[0] && highlightList.length != 0) {
+
+  const deleteHighlightList = (data) => {
+    if (data[0] && highlightList.length != 0) {
       const deletedHighlight = highlightList.filter(
-          (highlight)=> highlight.dataItem !== e[0].key.dataItem
+          (highlight)=> highlight.dataItem !== data[0].key.dataItem
       );
+
       setHighlightList(deletedHighlight);
     }
   };
+
   return (
     <Modal
       onSubmit={ async () => {
@@ -135,6 +137,7 @@ const DataHighLightModal = ({...props}) => {
               const rowData = _.cloneDeep(e.row ?
                 e.row.data :
                 {applyCell: true, applyTotal: true, applyGrandTotal: true});
+
               setData(rowData);
             }}
           >
@@ -158,7 +161,6 @@ const DataHighLightModal = ({...props}) => {
           title={localizedString.datahighlightInfo}
           width='40%'
           padding='10'>
-          {/* molecule에서 정리 */}
           <MakeForm ref={ref} formData={data} measureNames={measureNames}/>
         </ModalPanel>
       </StyledWrapper>
