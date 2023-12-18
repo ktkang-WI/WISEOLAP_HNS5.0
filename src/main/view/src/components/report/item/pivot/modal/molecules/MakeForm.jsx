@@ -1,22 +1,36 @@
-import {Form} from 'devextreme-react';
-import {GroupItem, Item} from 'devextreme-react/form';
+import {Form, Template} from 'devextreme-react';
+import {Item, Label} from 'devextreme-react/form';
+import localizedString from '../../../../../../config/localization';
 import React, {useState} from 'react';
 import EmojiArr from './EmojiArr';
 
 const MakeForm = ({formData, measureNames}, ref) => {
-  console.log(formData);
   const [showField, setShowField] = useState(false);
+  // console.log(formData);
+  const [selectedIcon, setSelectedIcon] = useState('');
+  // let selectedItcon = {};
+
+  const emojiSelectBox = (e) => {
+    if (e !== '') {
+      return (
+        <img
+          alt='Custom icon'
+          src={e}
+          className='custom-icon'
+        />
+      );
+    }
+    return (
+      <div className='dx-dropdowneditor-icon'></div>
+    );
+  };
+
   const validationRules = {
-    valueFrom: [
-      {type: 'required'}
-    ],
-    fieldName: [
-      {type: 'required'}
-    ],
-    condition: [
+    validation: [
       {type: 'required'}
     ]
   };
+
   return (
     <Form
       formData={formData}
@@ -29,76 +43,99 @@ const MakeForm = ({formData, measureNames}, ref) => {
         }
       }}
     >
-      <GroupItem colCount={1}>
-        <Item
-          name='fieldName'
-          dataField='fieldName'
-          caption='데이터항목'
-          editorType='dxSelectBox'
-          editorOptions={{
-            items: measureNames
-          }}
-          validationRules={validationRules.fieldName}>
-        </Item>
-        <Item
-          name='condition'
-          dataField='condition'
-          caption='조건 유형'
-          editorType='dxSelectBox'
-          editorOptions={{
-            items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
-          }}
-          validationRules={validationRules.condition}>
-        </Item>
-        <Item
-          name='backgroundColor'
-          dataField='backgroundColor'
-          editorType='dxColorBox'>
-        </Item>
-        <Item
-          name='fontColor'
-          dataField='fontColor'
-          editorType='dxColorBox'>
-        </Item>
-        <Item
-          name='valueFrom'
-          dataField='valueFrom'
-          editorType='dxTextBox'
-          validationRules={validationRules.valueFrom}>
-        </Item>
-        {showField && <Item // Between 일 때만 보임.
-          name='valueTo'
-          dataField='valueTo'
-          editorType='dxTextBox'
-          validationRules={showField && validationRules.valueFrom}>
-        </Item>}
-        <Item
-          name='emojiList'
-          dataField='emojiList'
-          editorType='dxSelectBox'
-          editorOptions={{
-            items: EmojiArr
-          }}>
-        </Item>
-        <Item
-          name='applyCell'
-          dataField='applyCell'
-          editorType='dxCheckBox'
-          editorOptions={{
-            elementAttr: {check: true}
-          }}>
-        </Item>
-        <Item
-          name='applyTotal'
-          dataField='applyTotal'
-          editorType='dxCheckBox'>
-        </Item>
-        <Item
-          name='applyGrandTotal'
-          dataField='applyGrandTotal'
-          editorType='dxCheckBox'>
-        </Item>
-      </GroupItem>
+      <Item
+        name='dataItem'
+        dataField='dataItem'
+        editorType='dxSelectBox'
+        editorOptions={{
+          items: measureNames
+        }}
+        validationRules={validationRules.validation}>
+        <Label>{localizedString.dataItem}: </Label>
+      </Item>
+      <Item
+        name='condition'
+        dataField='condition'
+        editorType='dxSelectBox'
+        editorOptions={{
+          items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
+        }}
+        validationRules={validationRules.validation}>
+        <Label>{localizedString.condition}: </Label>
+      </Item>
+      <Item
+        name='backgroundColor'
+        dataField='backgroundColor'
+        editorType='dxColorBox'>
+        <Label>{localizedString.backgroundColor}: </Label>
+      </Item>
+      <Item
+        name='fontColor'
+        dataField='fontColor'
+        editorType='dxColorBox'>
+        <Label>{localizedString.fontColor}: </Label>
+      </Item>
+      <Item
+        name='valueFrom'
+        dataField='valueFrom'
+        editorType='dxTextBox'
+        validationRules={validationRules.validation}>
+        <Label>{localizedString.valueFrom}: </Label>
+      </Item>
+      {showField && <Item // show in Between.
+        name='valueTo'
+        dataField='valueTo'
+        editorType='dxTextBox'
+        validationRules={validationRules.validation}>
+        <Label>{localizedString.valueTo}: </Label>
+      </Item>}
+      <Item
+        name='emojiList'
+        dataField='emojiList'
+        editorType='dxSelectBox'
+        editorOptions={{
+          dataSource: EmojiArr,
+          displayExpr: 'id',
+          valueExpr: 'id',
+          dropDownButtonTemplate: 'conditionalIcon',
+          onSelectionChanged: (e) => {
+            setSelectedIcon(e.selectedItem ? e.selectedItem.icon : '');
+            // selectedItcon = e.selectedItem?.icon;
+          }
+        }}>
+        <Template
+          name="conditionalIcon"
+          render={() => emojiSelectBox(selectedIcon)}
+        />
+        <Label>{localizedString.emojiList}: </Label>
+      </Item>
+      <Item
+        name='applyCell'
+        dataField='applyCell'
+        editorType='dxCheckBox'
+        editorOptions={{
+          value: true
+        }}>
+        <Label>{localizedString.applyCell}: </Label>
+      </Item>
+      <Item
+        name='applyTotal'
+        dataField='applyTotal'
+        editorType='dxCheckBox'
+        editorOptions={{
+          value: true
+        }}>
+        <Label>{localizedString.applyTotal}: </Label>
+      </Item>
+      <Item
+        name='applyGrandTotal'
+        dataField='applyGrandTotal'
+        editorType='dxCheckBox'
+        editorOptions={{
+          value: true
+        }}>
+        <Label>{localizedString.applyGrandTotal}: </Label>
+      </Item>
     </Form>
   );
 };

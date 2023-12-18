@@ -5,7 +5,7 @@ const GetCssStyle = (highlight, cellElement, cell) => {
     if (highlight.emojiList) {
       cellElement.innerHTML =
         '<img src='+
-          EmojiArr[highlight.emojiList.idx].icon +
+          EmojiArr[highlight.emojiList].icon +
         ' style="float:left" />'+
         cellElement.innerHTML;
     }
@@ -18,7 +18,7 @@ const GetCssStyle = (highlight, cellElement, cell) => {
     };
   };
 
-  if (highlight.idx == cellElement.cellIndex) { // 조건 형식 추가.
+  if (highlight.idx == cell.dataIndex) { // 조건 형식 추가.
     if (highlight.condition === '>') {
       if (Number(highlight.valueFrom) < cell.value) {
         isEmoji();

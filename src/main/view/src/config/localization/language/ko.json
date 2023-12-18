@@ -155,5 +155,15 @@
   "datasetNotSelected": "데이터집합이 선택되지 않았습니다.",
   "datahighlight": "데이터하이라이트",
   "datahighlightList": "하이라이트 목록",
-  "datahighlightInfo": "하이라이트 정보"
+  "datahighlightInfo": "하이라이트 정보",
+  "measureList": "측정값 목록",
+  "conditionType": "조건 유형",
+  "valueFrom": "조건 값(From)",
+  "valueTo": "조건 값(To)",
+  "backgroundColor": "배경 색상",
+  "fontColor": "글꼴 색상",
+  "applyCell": "셀",
+  "applyTotal": "합계 셀",
+  "applyGrandTotal": "총계 셀",
+  "emojiList": "이모티콘"
 }

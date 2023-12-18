@@ -155,5 +155,15 @@
   "datasetNotSelected": "Dataset is not selected.",
   "datahighlight": "Data High Light",
   "datahighlightList": "High Light List",
-  "datahighlightInfo": "High Light Info"
+  "datahighlightInfo": "High Light Info",
+  "measureList": "Measure List",
+  "conditionType": "Condition Type",
+  "valueFrom": "Value(From)",
+  "valueTo": "Value(To)",
+  "backgroundColor": "Background Color",
+  "fontColor": "Font Color",
+  "applyCell": "Cell",
+  "applyTotal": "Total Cell",
+  "applyGrandTotal": "Grand Total Cell",
+  "emojiList": "Emoji List"
 }

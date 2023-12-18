@@ -97,7 +97,7 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
   },
-  dataHighlight(state, actions) {
+  insertDataHighlight(state, actions) {
     const reportId = actions.payload.reportId;
 
     const highlight = actions.payload.highlight;
