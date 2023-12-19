@@ -31,11 +31,12 @@ public final class ListParameterUtils {
             ListParameterDTO listParameterDTO) {
 
         if (StringUtil.isNotBlank(listParameterDTO.getSortBy())) {
+            int weight = listParameterDTO.getSortOrder().equals("ASC") ? 1 : -1;
             Collections.sort(data, (o1, o2) -> {
                 String value1 = String.valueOf(o1.get(listParameterDTO.getSortBy()));
                 String value2 = String.valueOf(o2.get(listParameterDTO.getSortBy()));
 
-                return value1.compareTo(value2);
+                return value1.compareTo(value2) * weight;
             });
         }
 
