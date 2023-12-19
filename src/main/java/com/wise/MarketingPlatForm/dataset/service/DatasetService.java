@@ -318,9 +318,10 @@ public class DatasetService {
 
         // 리스트 조회
         if ("TABLE".equals(listParameterDTO.getDataSourceType())) {
-            query = "SELECT " + listParameterDTO.getItemKey() + ", " + listParameterDTO.getItemCaption() +
-                    (StringUtil.isBlank(listParameterDTO.getSortBy()) ? ", " + listParameterDTO.getSortBy() : "") +
-                    " FROM " + listParameterDTO.getDataSource();
+            String column = listParameterDTO.getItemKey() + ", " + listParameterDTO.getItemCaption() +
+                    (!StringUtil.isBlank(listParameterDTO.getSortBy()) ? ", " + listParameterDTO.getSortBy() : "");
+            query = "SELECT " + column +
+                    " FROM " + listParameterDTO.getDataSource() + " GROUP BY " + column;
         } else {
             query = listParameterDTO.getDataSource();
             query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);

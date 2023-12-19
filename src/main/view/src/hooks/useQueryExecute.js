@@ -169,7 +169,7 @@ const useQueryExecute = () => {
       const query = param.dataSource;
       const linkageFilter = ParamUtils.getParameterNamesInQuery(query);
 
-      if (linkageFilter.length > 0) {
+      if (linkageFilter && linkageFilter.length > 0) {
         return await executeLinkageFilter(param, linkageFilter);
       } else {
         return await setListValues(param);
