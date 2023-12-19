@@ -165,6 +165,7 @@ public class ReportService {
         String query = queryGenerator.getQuery(dataAggreagtion);
 
         MartResultDTO martResultDTO = martDAO.select(query);
+        
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
 

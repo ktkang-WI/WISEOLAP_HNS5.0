@@ -111,6 +111,7 @@ const useQueryExecute = () => {
         const parameters = selectRootParameter(store.getState());
         const requiredFilterLength = linkageFilter.
             filter((filterName) => !parameters.values[filterName]).length;
+
         if (requiredFilterLength == 0) {
           setListValues(param, linkageFilter).then((data) => {
             resolve(data);
@@ -145,6 +146,7 @@ const useQueryExecute = () => {
       }
 
       const values = await models.Parameter.getListItems(param, linkageValues);
+
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }
@@ -152,6 +154,7 @@ const useQueryExecute = () => {
       return values;
     } catch (e) {
       console.error(e);
+
       return {
         listItems: [],
         value: ''
@@ -203,6 +206,7 @@ const useQueryExecute = () => {
 
     parameters.informations.map((param) => {
       try {
+        // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {
           executeListParameter(param).then((data) => {
             if (data) {
@@ -211,16 +215,18 @@ const useQueryExecute = () => {
           });
         } else {
           if (param.defaultValueUseSql && param.calendarDefaultType != 'NOW') {
+            // defaultValue 쿼리일 경우 쿼리 실행
             executeParameterDefaultValueQuery(param).then((data) => {
               setValues(param.name, data);
             });
           } else if (param.calendarDefaultType == 'NOW') {
+            // defaultValue calendarDefaultType 현재일 경우 계산
             const defaultValue = [];
 
             param.calendarPeriodBase.map((base, i) => {
               const value = param.calendarPeriodValue[i];
               const date = ParamUtils.getCalendarNowDefaultValue(base, value);
-              // TODO: 달력 필터 기본값 만들기
+
               defaultValue.push(
                   ParamUtils.parseStringFromDate(date, param.calendarKeyFormat)
               );
