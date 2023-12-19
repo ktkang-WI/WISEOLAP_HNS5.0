@@ -17,13 +17,25 @@ import useModal from './useModal';
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {updateReport, updateSelectedReportId, deleteReportForDesigner} =
-  ReportSlice.actions;
-  const {changeItemReportId, deleteItemForDesigner} = ItemSlice.actions;
-  const {changeLayoutReportId, deleteLayoutForDesigner} = LayoutSlice.actions;
-  const {changeDatasetReportId, deleteDatasetForDesigner} =
+  const {
+    updateReport,
+    updateSelectedReportId,
+    deleteReportForDesigner,
+    initReport
+  } = ReportSlice.actions;
+  const {
+    changeItemReportId,
+    deleteItemForDesigner,
+    initItems
+  } = ItemSlice.actions;
+  const {
+    changeLayoutReportId,
+    deleteLayoutForDesigner,
+    initLayout
+  } = LayoutSlice.actions;
+  const {changeDatasetReportId, deleteDatasetForDesigner, initDatasets} =
   DatasetSlice.actions;
-  const {changeParameterReportId, deleteParameterForDesigner} =
+  const {changeParameterReportId, deleteParameterForDesigner, initParameter} =
   ParameterSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
@@ -102,9 +114,18 @@ const useReportSave = () => {
     });
   };
 
+  const reload = () => {
+    dispatch(initReport());
+    dispatch(initItems());
+    dispatch(initLayout());
+    dispatch(initDatasets());
+    dispatch(initParameter());
+  };
+
   return {
     saveReport,
-    removeReport
+    removeReport,
+    reload
   };
 };
 

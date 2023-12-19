@@ -37,14 +37,14 @@ const DownloadImage = styled.img`
 
 const ItemBoard = () => {
   const location = useLocation();
-  const {defaultFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
     const defaultLayout = location.pathname.includes('dashboard')?
     flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
-    defaultFlexLayout(defaultLayout);
+    initLayout(defaultLayout);
   }, [location]);
 
   const layoutConfig = useSelector(selectFlexLayoutConfig);

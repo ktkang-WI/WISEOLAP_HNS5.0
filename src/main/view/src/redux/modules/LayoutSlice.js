@@ -13,8 +13,8 @@ const initialState = {
   }
 };
 const reducers = {
-  // defaultFlexLayout -> dashboard, adhoc Layout 다르게.
-  defaultFlexLayout(state, actions) {
+  // initLayout -> dashboard, adhoc Layout 다르게.
+  initLayout(state, actions) {
     state[0].layoutConfig = actions.payload;
   },
   setLayout(state, actions) {

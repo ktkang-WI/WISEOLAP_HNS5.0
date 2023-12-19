@@ -39,7 +39,7 @@ const RibbonDefaultElement = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
-  const {removeReport} = useReportSave();
+  const {removeReport, reload} = useReportSave();
   return {
     'NewReport': {
       id: 'new_report',
@@ -52,6 +52,7 @@ const RibbonDefaultElement = () => {
       useArrowButton: false,
       onClick: (e) => {
         console.log(e);
+        reload();
       }
     },
     'Dataset': {
