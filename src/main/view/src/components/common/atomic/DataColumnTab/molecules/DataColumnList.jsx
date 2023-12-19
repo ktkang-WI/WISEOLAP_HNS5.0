@@ -123,7 +123,10 @@ const DataColumnList = ({
                     index={index}
                     useButton={useButton}
                     buttonEvent={buttonEvent}
-                    buttonIcon={buttonIcon}
+                    buttonIcon={
+                      typeof buttonIcon === 'function' ?
+                      buttonIcon(column) : buttonIcon
+                    }
                     sortItems={sortItems}
                   >
                     {column.caption}
