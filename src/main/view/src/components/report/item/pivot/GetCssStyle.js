@@ -1,7 +1,7 @@
 import EmojiArr from './modal/molecules/EmojiArr';
 
 const GetCssStyle = (highlight, cellElement, cell) => {
-  const isEmoji = () => {
+  const isEmoji = () => { // 이모지 적용.
     if (highlight.emojiList) {
       cellElement.innerHTML =
         '<img src='+
@@ -11,7 +11,7 @@ const GetCssStyle = (highlight, cellElement, cell) => {
     }
   };
 
-  const colorStyle = (highlight) => {
+  const colorStyle = (highlight) => { // 배경 및 글자색 적용.
     return {
       'background-color': highlight.backgroundColor,
       'color': highlight.fontColor

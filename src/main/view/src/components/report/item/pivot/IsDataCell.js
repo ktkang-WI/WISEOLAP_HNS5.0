@@ -1,20 +1,20 @@
 const IsDataCell = (cell, area, highlight) => {
   const arr = [];
   const map = new Map();
-  if (highlight.applyCell) {
+  if (highlight.applyCell) { // 셀 선택 시
     map.set('applyCell', {'D': true});
     arr.push('applyCell');
   }
-  if (highlight.applyTotal) {
+  if (highlight.applyTotal) { // 합계 셀 선택 시
     map.set('applyTotal', {'T': true});
     arr.push('applyTotal');
   }
-  if (highlight.applyGrandTotal) {
+  if (highlight.applyGrandTotal) { // 총계 셀 선택 시
     map.set('applyGrandTotal', {'GT': true});
     arr.push('applyGrandTotal');
   }
 
-  if (area === 'data' && arr.length == 1) { // Type 하나만 선택 시.
+  if (area === 'data' && arr.length == 1) { // 합계, 총계, 셀 중 하나만 선택 시.
     if (arr[0] === 'applyCell') {
       return (
         map.get('applyCell') && (
@@ -36,7 +36,7 @@ const IsDataCell = (cell, area, highlight) => {
         )
       );
     }
-  } else if (area === 'data' && arr.length == 2) { // 없는 Type 찾기.
+  } else if (area === 'data' && arr.length == 2) { // 합계, 총계, 셀 중 없는 Type 찾기.
     if (arr[0] === 'applyCell' && arr[1] === 'applyTotal') {
       return (
         !(cell.columnType == 'GT' || cell.rowType == 'GT')

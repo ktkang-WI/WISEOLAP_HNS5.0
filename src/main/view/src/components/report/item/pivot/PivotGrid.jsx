@@ -41,15 +41,15 @@ const PivotGrid = ({id, mart}) => {
 
   const selectedItemId = useSelector(selectCurrentItem);
 
-  // highlight 추가, 변경 시 repaint
+  // highlight 추가, 변경 시 repaint(컴포넌트를 다시 그려줌)
   useEffect(() => {
     ref.current.instance.repaint();
   }, [selectedItemId.meta.highlight]);
-
+  // 하이라이트를 가져옴.
   const highlight = useMemo(() => {
     return selectedItemId.meta.highlight;
   }, [selectedItemId.meta.highlight]);
-
+  // 하이라이트를 hashMap으로 만들어서 사용.
   const highlightMap = useMemo(() => {
     const map = new Map();
 

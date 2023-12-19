@@ -37,26 +37,27 @@ const AddBtn = styled.img`
   }
 `;
 
-const DataHighLightModal = ({...props}) => {
+const DataHighlightModal = ({...props}) => {
   const dispatch = useDispatch();
   const {alert} = useModal();
-  const selectedItem = useSelector(selectCurrentItem);
+  const selectedItem = useSelector(selectCurrentItem); // 현재 선택한 item 정보 가져옴.
   const reportId = selectCurrentReportId(store.getState());
-  const {insertDataHighlight} = ItemSlice.actions;
-  const [highlightList, setHighlightList] =
+  const {insertDataHighlight} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
+  const [highlightList, setHighlightList] = // 모달 창에서만 사용 하므로 useState로 목록을 보여줌.
     useState(
       selectedItem.meta.highlight.lengh !=0 ? selectedItem.meta.highlight : []
-    );
-  const [data, setData] = useState({});
+    ); // 이미 하이라이트 목록이 있다면 모달창을 불러올 때 같이 불러옴.
+  const [data, setData] = useState({}); // 하이라이트 목록 중 하나를 선택 시 선택 정보를 보여줌.
   const ref = useRef(null);
   const measureNames = useMemo(() => selectedItem.meta.dataField.measure.map(
       (mea) => mea.name
-  ), []);
+  ), []); // 데이터항목에 올라간 측정값을 가져옴.
 
   const onClick = () => { // 하이라이트 추가 부분.
     const copyHighlight = [...highlightList];
     const formData = _.cloneDeep(ref.current.props.formData);
 
+    // 선택한 측정값의 인덱스를 가져옴.
     const idx = measureNames.findIndex((measure) =>
       measure == formData.dataItem
     );
@@ -65,7 +66,7 @@ const DataHighLightModal = ({...props}) => {
 
     const findIdx = copyHighlight.findIndex((highlight) =>
       highlight.dataItem == formData.dataItem
-    );
+    ); // 추가 된 하이라이트 정보가 있는지 찾음.
 
     if (copyHighlight.length == 0) { // 첫 추가
       copyHighlight.push(highlightData);
@@ -75,6 +76,7 @@ const DataHighLightModal = ({...props}) => {
       copyHighlight[findIdx] = {...highlightData};
     }
 
+    // 유효성 검사.
     if (formData.dataItem === undefined ||
         formData.condition === undefined ||
         formData.valueFrom === undefined) {
@@ -94,6 +96,7 @@ const DataHighLightModal = ({...props}) => {
     }
   };
 
+  // 하이라이트 삭제 부분.
   const deleteHighlightList = (data) => {
     if (data[0] && highlightList.length != 0) {
       const deletedHighlight = highlightList.filter(
@@ -106,7 +109,7 @@ const DataHighLightModal = ({...props}) => {
 
   return (
     <Modal
-      onSubmit={ async () => {
+      onSubmit={() => {
         if (highlightList.length == 0) {
           // Alert
           alert('하이라이트 목록을 추가해 주세요.');
@@ -132,8 +135,8 @@ const DataHighLightModal = ({...props}) => {
           <AddBtn src={addHighLightIcon} onClick={onClick}/>
           <CommonDataGrid
             width='100%'
-            dataSource={highlightList} // 클론으로 변경. idx도 가죠옴.
-            onCellClick={(e) => {
+            dataSource={highlightList}
+            onCellClick={(e) => { // 추가된 하이라이트 목록을 클릭 할 때 동작.
               const rowData = _.cloneDeep(e.row ?
                 e.row.data :
                 {applyCell: true, applyTotal: true, applyGrandTotal: true});
@@ -161,10 +164,11 @@ const DataHighLightModal = ({...props}) => {
           title={localizedString.datahighlightInfo}
           width='40%'
           padding='10'>
+          {/* <Form>이 정리 된 곳. */}
           <MakeForm ref={ref} formData={data} measureNames={measureNames}/>
         </ModalPanel>
       </StyledWrapper>
     </Modal>
   );
 };
-export default DataHighLightModal;
+export default DataHighlightModal;

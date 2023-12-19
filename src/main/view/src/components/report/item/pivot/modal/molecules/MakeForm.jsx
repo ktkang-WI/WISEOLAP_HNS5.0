@@ -5,8 +5,8 @@ import React, {useState} from 'react';
 import EmojiArr from './EmojiArr';
 
 const MakeForm = ({formData, measureNames}, ref) => {
-  const [showField, setShowField] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState('');
+  const [showField, setShowField] = useState(false); // between 선택 시 조건값 To 보여줌.
+  const [selectedIcon, setSelectedIcon] = useState(''); // 선택한 아이콘 보여줌.
 
   const emojiSelectBox = (src) => {
     if (src !== '') {
@@ -92,7 +92,7 @@ const MakeForm = ({formData, measureNames}, ref) => {
         dataField='emojiList'
         editorType='dxSelectBox'
         editorOptions={{
-          dataSource: EmojiArr,
+          dataSource: EmojiArr, // 이모지 모아둔 js파일.
           displayExpr: 'id',
           valueExpr: 'id',
           dropDownButtonTemplate: 'conditionalIcon',

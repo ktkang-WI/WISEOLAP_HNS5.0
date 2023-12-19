@@ -225,5 +225,6 @@
   "reportNotDeleteMsg": "This report has not been saved.",
   "reportDeleteMsg": "Are you sure you want to delete the report?",
   "sortByItem": "Sort By Item",
-  "newSortByItem": "New Sort By Item"
+  "newSortByItem": "New Sort By Item",
+  "dataHighlight": "Data Highlight"
 }

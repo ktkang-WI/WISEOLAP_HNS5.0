@@ -13,9 +13,11 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import dataHighlightImg
+  from '../../../../../assets/image/icon/highlight/ico_CHightLight.png';
 import useModal from 'hooks/useModal';
-import DataHighLightModal
-  from 'components/report/item/pivot/modal/organism/DataHighLightModal';
+import DataHighlightModal
+  from 'components/report/item/pivot/modal/organism/DataHighlightModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -101,10 +103,10 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'dimensionGroup',
-          label: '데이터하이라이트 테스트',
-          icon: dimensionGroupImg,
+          label: localizedString.dataHighlight,
+          icon: dataHighlightImg,
           onClick: () => {
-            openModal(DataHighLightModal);
+            openModal(DataHighlightModal);
           }
         }
       ]
