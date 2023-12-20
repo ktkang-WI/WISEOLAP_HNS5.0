@@ -3,7 +3,7 @@ import {selectRootItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
-import {addReport, deleteReport} from 'models/report/Report';
+import {deleteReport} from 'models/report/Report';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -57,34 +57,28 @@ const useReportSave = () => {
 
   /**
    * 보고서 저장
-   * @param {JSON} dataSource 저장에 필요한 Modal dataSource
+   * @param {JSON} response 저장에 필요한 Modal dataSource
    */
-  const saveReport = (dataSource) => {
-    const param = generateParameter(dataSource);
+  const saveReport = (response) => {
+    const currentReportId = selectCurrentReportId(store.getState());
+    const reportId = {
+      prevId: currentReportId,
+      newId: response.data.reportId
+    };
+    const report = {
+      prevId: currentReportId,
+      reportId: reportId.newId,
+      options: response.data
+    };
 
-    addReport(param, (response) => {
-      if (response.status != 200) {
-        return;
-      }
-      const currentReportId = selectCurrentReportId(store.getState());
-      const reportId = {
-        prevId: currentReportId,
-        newId: response.data.reportId
-      };
-      const report = {
-        reportId: reportId.newId,
-        options: response.data
-      };
+    dispatch(updateReport(report));
 
-      dispatch(updateReport(report));
-
-      dispatch(changeItemReportId(reportId));
-      dispatch(changeLayoutReportId(reportId));
-      dispatch(changeDatasetReportId(reportId));
-      dispatch(changeParameterReportId(reportId));
-      dispatch(updateSelectedReportId({reportId: reportId.newId}));
-      alert('보고서를 저장했습니다.');
-    });
+    dispatch(changeItemReportId(reportId));
+    dispatch(changeLayoutReportId(reportId));
+    dispatch(changeDatasetReportId(reportId));
+    dispatch(changeParameterReportId(reportId));
+    dispatch(updateSelectedReportId({reportId: reportId.newId}));
+    alert('보고서를 저장했습니다.');
   };
 
   const removeReport = (reportId) => {
@@ -103,6 +97,7 @@ const useReportSave = () => {
   };
 
   return {
+    generateParameter,
     saveReport,
     removeReport
   };

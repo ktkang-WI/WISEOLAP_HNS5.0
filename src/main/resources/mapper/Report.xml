@@ -70,14 +70,14 @@
     </select>
 
     <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
-	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">
-	    		<if test='reportId == 0'>
-                	SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-            	</if>
-            	<if test='reportId != 0'>
-                	SELECT REPORT_ID as reportId FROM REPORT_MSTR
-            		WHERE REPORT_ID = #{reportId}
-            	</if>
+			<selectKey keyProperty="reportId" resultType="int" order="AFTER">
+				<if test='reportId == 0'>
+								SELECT MAX(REPORT_ID) FROM REPORT_MSTR
+				</if>
+				<if test='reportId != 0'>
+						SELECT REPORT_ID as reportId FROM REPORT_MSTR
+					WHERE REPORT_ID = #{reportId}
+				</if>
 			</selectKey>
     	<!--  <if test = "dbType == 'Oracle'"> -->
 	    	MERGE INTO REPORT_MSTR
@@ -195,4 +195,13 @@
 			SET DEL_YN = 'Y'
 			WHERE REPORT_ID = #{reportId}
 		</update>
+
+		<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO"
+			resultType="hashmap">
+			SELECT REPORT_NM
+			FROM REPORT_MSTR
+			WHERE REPORT_NM = #{reportNm}
+			AND FLD_ID = #{fldId}
+			AND DEL_YN = 'N'
+		</select>
 </mapper>
