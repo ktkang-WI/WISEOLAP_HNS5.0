@@ -92,11 +92,11 @@
 		       	REPORT_ORDINAL = #{reportOrdinal},
 		       	REPORT_TYPE = #{reportType},
 		       	REPORT_DESC = #{reportDesc},
-		       	REPORT_XML = #{reportXml},
-		       	CHART_XML = #{chartXml},
-		       	LAYOUT_XML = #{layoutXml},
 		       	PARAM_XML = #{paramXml},
-		       	REG_USER_NO = #{regUserNo}
+		       	REG_USER_NO = #{regUserNo},
+						REPORT_XML = NVL(#{reportXml:VARCHAR}, EMPTY_CLOB()),
+		       	CHART_XML = NVL(#{chartXml:VARCHAR}, EMPTY_CLOB()),
+		       	LAYOUT_XML = NVL(#{layoutXml:VARCHAR}, EMPTY_CLOB())
 		       	WHERE REPORT_ID = #{reportId}
 	    	WHEN NOT MATCHED THEN
 		    	INSERT
@@ -109,12 +109,12 @@
 		       	REPORT_ORDINAL,
 		       	REPORT_TYPE,
 		       	REPORT_DESC,
-		       	REPORT_XML,
-		       	CHART_XML,
-		       	LAYOUT_XML,
 						DATASET_XML,
 		       	PARAM_XML,
-		       	REG_USER_NO
+		       	REG_USER_NO,
+						REPORT_XML,
+		       	CHART_XML,
+		       	LAYOUT_XML
 		       )
 		       VALUES
 		       (
@@ -126,12 +126,12 @@
 		       	#{reportOrdinal},
 		       	#{reportType},
 		       	#{reportDesc},
-		       	#{reportXml},
-		       	#{chartXml},
-		       	#{layoutXml},
 						#{datasetXml},
 		       	#{paramXml},
-		       	#{regUserNo}
+		       	#{regUserNo},
+						NVL(#{reportXml:VARCHAR}, EMPTY_CLOB()),
+		       	NVL(#{chartXml:VARCHAR}, EMPTY_CLOB()),
+		       	NVL(#{layoutXml:VARCHAR}, EMPTY_CLOB())
 		       )
 		<!-- </if>  -->
 
