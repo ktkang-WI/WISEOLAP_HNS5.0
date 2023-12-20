@@ -1,43 +1,48 @@
 // NumberFormatUtility.js
 
 const NumberFormatUtility = {
-  formatNumber: function (
-    _value,
-    _type,
-    _unit,
-    _precision,
-    _separator,
-    _prefix,
-    _suffix,
-    _suffixEnabled,
-    _precisionType
+  unitNum: {
+    O: 1,
+    K: 1000,
+    M: 1000000,
+    B: 1000000000
+  },
+
+  formatNumber: function(
+      _value,
+      _type,
+      _unit,
+      _precision,
+      _useDigitSeparator,
+      _prefix,
+      _suffix,
+      _suffixEnabled,
+      _precisionType
   ) {
-    var value = 0,
-      type = 'Number',
-      unit,
-      precision = 0,
-      separator = '',
-      prefix = '',
-      suffix = {
-        O: '',
-        K: 'K',
-        M: 'M',
-        B: 'B',
-      },
-      precisionType = '반올림',
-      currency = '₩',
-      _currency = 'KRW';
+    let value = 0;
+    let type = 'Number';
+    let unit;
+    let precision = 0;
+    let useDigitSeparator = '';
+    let prefix = '';
+    let suffix = {
+      O: '',
+      K: 'K',
+      M: 'M',
+      B: 'B'
+    };
+    let precisionType = '반올림';
+    let currency = '₩';
+    const _currency = 'KRW';
 
     if (typeof _value !== 'undefined') {
       value = _value;
-    } 
-    // else {
-    //   return userJsonObject.showNullValue ? userJsonObject.nullValueString : '';
-    // }
+    }
 
     if (
       typeof _type !== 'undefined' &&
-      ['Auto', 'General', 'Number', 'Currency', 'Scientific', 'Percent'].indexOf(_type) !== -1
+      ['Auto', 'General', 'Number', 'Currency',
+        'Scientific', 'Percent'].indexOf(_type) !== -1
     ) {
       type = _type;
     }
@@ -82,10 +87,10 @@ const NumberFormatUtility = {
       precisionType = _precisionType;
     }
 
-    if (typeof _separator !== 'undefined') {
-      separator = _separator ? ',' : '';
-    } else if (typeof _separator === 'undefined') {
-      separator = ',';
+    if (typeof _useDigitSeparator !== 'undefined') {
+      useDigitSeparator = _useDigitSeparator ? ',' : '';
+    } else if (typeof _useDigitSeparator === 'undefined') {
+      useDigitSeparator = ',';
     }
 
     if (typeof _prefix !== 'undefined') {
@@ -116,48 +121,78 @@ const NumberFormatUtility = {
         O: '',
         K: 'K',
         M: 'M',
-        B: 'B',
+        B: 'B'
       };
       currency = '₩';
     }
 
-    // number formatter
-    var fn = {
-      unitNum: {
-        O: 1,
-        K: 1000,
-        M: 1000000,
-        B: 1000000000,
-      },
-      Auto: function (_v, _u, _p, _po, _s, _r, _f, _c) {
-        var numText = $.number(_v / this.unitNum[_u], 2, '.', ',').toString();
-        var numDecimal = numText.split('.');
+    // Number formatter
+    const formatNumber = (num, options) => {
+      return new Intl.NumberFormat('en-US', options).format(num);
+    };
+
+    const fn = {
+      Auto: function(_v, _u, _p, _po, _s, _r, _f, _c) {
+        const numText = formatNumber(_v / NumberFormatUtility.unitNum[_u], {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).toString();
+        const numDecimal = numText.split('.');
         if (numDecimal.length === 2 && numDecimal[1] === '00') {
           return _c + numDecimal[0] + ' ' + _f;
         }
         return _c + numText + ' ' + _f;
       },
-      General: function (_v, _u, _p, _po, _s, _r, _f, _c) {
+      General: function(_v, _u, _p, _po, _s, _r, _f, _c) {
         return _v.toString();
       },
-      Number: function (_v, _u, _p, _po, _s, _r, _f, _c) {
-        return _r + $.number(_v / this.unitNum[_u], _p, _po, '.', _s).toString() + ' ' + _f;
+      Number: function(_v, _u, _p, _po, _s, _r, _f, _c) {
+        console.log(
+            'Options inside Number:',
+            'v:', _v, 'u:', _u, 'p:', _p, 'po:', _po, 's:', _s,
+            'r:', _r, 'f:', _f, 'c:', _c);
+        return (
+          _r +
+          formatNumber(_v / NumberFormatUtility.unitNum[_u], {
+            minimumFractionDigits: _p,
+            maximumFractionDigits: _p,
+            useGrouping: _useDigitSeparator
+          }).toString() +
+          ' ' +
+          _f
+        );
       },
-      Currency: function (_v, _u, _p, _po, _s, _r, _f, _c) {
-        return _r + _c + $.number(_v / this.unitNum[_u], _p, _po, '.', _s).toString() + ' ' + _f;
+      Currency: function(_v, _u, _p, _po, _s, _r, _f, _c) {
+        return (
+          _r +
+          _c +
+          formatNumber(_v / NumberFormatUtility.unitNum[_u], {
+            minimumFractionDigits: _p,
+            maximumFractionDigits: _p,
+            useGrouping: _useDigitSeparator
+          }).toString() +
+          ' ' +
+          _f
+        );
       },
-      Scientific: function (_v, _u, _p, _po, _s, _r, _f, _c) {
+      Scientific: function(_v, _u, _p, _po, _s, _r, _f, _c) {
         return _r + _v.toExponential(_p).toUpperCase();
       },
-      Percent: function (_v, _u, _p, _po, _s, _r, _f, _c) {
-        return _r + $.number(_v * 100, _p, _po, '.', _s).toString() + '%';
-      },
+      Percent: function(_v, _u, _p, _po, _s, _r, _f, _c) {
+        return (
+          _r +
+          formatNumber(_v * 100, {
+            minimumFractionDigits: _p,
+            maximumFractionDigits: _p,
+            useGrouping: _useDigitSeparator
+          }).toString() +
+          '%'
+        );
+      }
     };
 
-    // auto unit
     if (typeof _unit === 'undefined' || unit === 'A') {
-      // 20210708 AJKIM 카드 Auto 오류 수정 dogfoot
-      var valueText = value.toString().replace('-', '').split('.')[0];
+      const valueText = value.toString().replace('-', '').split('.')[0];
       if (valueText.length >= 10) {
         unit = 'B';
       } else if (valueText.length < 10 && valueText.length >= 7) {
@@ -172,8 +207,10 @@ const NumberFormatUtility = {
         unit = 'O';
       }
     }
-    return fn[type](value, unit, precision, precisionType, separator, prefix, suffix[unit], currency);
-  },
+    return fn[type](value, unit, precision, precisionType,
+        useDigitSeparator, prefix, suffix[unit], currency);
+  }
 };
 
 export default NumberFormatUtility;
+

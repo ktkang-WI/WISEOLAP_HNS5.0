@@ -8,6 +8,7 @@ import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 import FormatOptionForm from '../molecules/FormatOptionForm';
 import PageWrapper from 'components/common/atomic/Modal/atoms/PageWrapper';
+// import {useState} from 'react';
 
 const theme = getTheme();
 
@@ -17,21 +18,22 @@ const StyledWrapper = styled(Wrapper)`
 `;
 //   display: flex;
 
-const NumberFormatModal = () => {
+const NumberFormatModal = ({onSubmit, ...props}) => {
   const formatOptions = {
-    FormatType: 'Number',
-    Unit: 'Ones',
-    SuffixEnabled: false,
-    Suffix: {
+    formatType: 'Number',
+    unit: 'Ones',
+    suffixEnabled: false,
+    suffix: {
       O: '',
-      K: '',
-      M: '',
-      B: ''
+      K: '천',
+      M: '백만',
+      B: '십억'
     },
-    Precision: 0,
-    PrecisionOption: '반올림',
-    IncludeGroupSeparator: true
+    precision: 0,
+    precisionType: '반올림',
+    useDigitSeparator: true
   };
+
   return (
     <Modal
       onSubmit={()=> {
@@ -40,10 +42,13 @@ const NumberFormatModal = () => {
       height={theme.size.numberFormatHeight}
       width={theme.size.numberFormatWidth}
       modalTitle={localizedString.numberFormat}
+      {...props}
     >
       <PageWrapper>
         <StyledWrapper>
-          <FormatOptionForm formatOptions={formatOptions}/>
+          <FormatOptionForm
+            formatOptions={formatOptions}
+          />
         </StyledWrapper>
       </PageWrapper>
     </Modal>
