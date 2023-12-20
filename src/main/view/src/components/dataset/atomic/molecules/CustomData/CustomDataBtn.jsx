@@ -20,6 +20,7 @@ const CustomDataBtn = () => {
   const moveToCalculator = () =>{
     setMoveToPage(!moveToPage);
   };
+
   // 사용자 정의 데이터 항목 추가.
   const handleItemClick = (event) => {
     const Action = event.itemData.id;

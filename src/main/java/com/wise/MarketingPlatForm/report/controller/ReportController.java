@@ -137,7 +137,9 @@ public class ReportController {
                 .parameters(parameters)
                 .pagingOption(pagingOption)
                 .build();
-
+        
+        ReportResult result = null;
+        
         if (itemType == ItemType.PIVOT_GRID) {
             final String pagingParamValue = param.get("paging");
             final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
@@ -145,10 +147,12 @@ public class ReportController {
                     : null;
             final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
 
-            return reportService.getPivotData(param, pagingParam, dataAggreagtion);
+            result = reportService.getPivotData(param, pagingParam, dataAggreagtion);
         } else {
-            return reportService.getItemData(dataAggreagtion);
+            result = reportService.getItemData(dataAggreagtion);
         }
+
+        return result;
     }
 
     @Operation(

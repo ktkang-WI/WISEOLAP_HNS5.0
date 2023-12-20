@@ -7,6 +7,7 @@ import {
 import CustomDataCalc
   from 'components/dataset/atomic/organism/CustomData/CustomDataCalc';
 import useModal from 'hooks/useModal';
+import localizedString from '../../../../config/localization';
 
 
 // 사용자 정의 데이터 계산식 화면
@@ -22,7 +23,7 @@ const CustomDataCalcModal = ({...props}) => {
   const [customData, setCustomData] = useState({
     fieldId: getCustomData.fieldId,
     fieldName: getCustomData.fieldName,
-    calculation: getCustomData.calculation,
+    expression: getCustomData.expression,
     type: getCustomData.type
   });
   const context = {
@@ -53,14 +54,14 @@ const CustomDataCalcModal = ({...props}) => {
     // 사용자 정의 데이터 NULL 체크
     isOk = nullCheck(
         customData.fieldName,
-        customData.calculation,
+        customData.expression,
         customData.type);
     if (isOk === false) {
-      alert('필드명,계산식,타입이 빈값이 있습니다.');
+      alert(localizedString.alertInfo.customDataCalc.empty);
       return isOk;
     }
     if (checkForSaving.inspection === false) {
-      alert('계산식이 검증되지 않았습니다.');
+      alert(localizedString.alertInfo.customDataCalc.Inspection);
       isOk = false;
     }
     return isOk;
@@ -72,7 +73,7 @@ const CustomDataCalcModal = ({...props}) => {
     };
     return isOk;
   };
-  // #################################### 함수 시작
+
   return (
     <CustomDataCalContext.Provider
       value={context}
@@ -90,7 +91,7 @@ const CustomDataCalcModal = ({...props}) => {
         }}
         height='650px'
         width='1050px'
-        modalTitle='계산식 편집'
+        modalTitle={localizedString.customDataCalc.title}
       >
         <Wrapper display='flex' direction='row'>
           <Wrapper size="100%" display='flex' direction='column'>

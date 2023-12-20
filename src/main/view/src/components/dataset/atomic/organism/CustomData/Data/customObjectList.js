@@ -1,11 +1,11 @@
 export const typeData = [
-  {id: 'VARCHAR', text: 'VARCHAR'},
-  {id: 'INTEGER', text: 'INTEGER'}
+  {id: 'varchar2', text: 'VARCHAR2'},
+  {id: 'decimal', text: 'DECIMAL'}
 ];
 
 export const dataSource = [
   {
-    key: '열',
+    key: '데이터 항목',
     collection: [
       {
       }

@@ -25,18 +25,20 @@ const CalcDefineArea = () => {
     const column = doc.getLine(doc.getLength() - 1).length;
     editor.gotoLine(row, column);
   };
+
   const handleToAllowDrop = (ev) => {
     ev.preventDefault();
   };
+
   const handleToDrop = (ev) => {
     ev.preventDefault();
     setCustomData((prev) => {
       return {
         ...prev,
-        calculation:
-          (!prev.calculation) ?
+        expression:
+          (!prev.expression) ?
           ev.dataTransfer.getData('value') :
-          prev.calculation + ev.dataTransfer.getData('value')
+          prev.expression + ev.dataTransfer.getData('value')
       };
     });
     setIsDragEvent(true);
@@ -45,7 +47,7 @@ const CalcDefineArea = () => {
     setCustomData((prev) => {
       return {
         ...prev,
-        calculation: queryEditorRef.current.editor.getValue()
+        expression: queryEditorRef.current.editor.getValue()
       };
     });
   };
@@ -54,7 +56,7 @@ const CalcDefineArea = () => {
     <>
       <QueryEditor
         editorRef={queryEditorRef}
-        value={customData.calculation}
+        value={customData.expression}
         onDrop={handleToDrop}
         onDragOver={handleToAllowDrop}
         onChange={handleQueryEditor}

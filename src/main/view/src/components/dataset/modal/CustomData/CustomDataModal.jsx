@@ -7,19 +7,16 @@ import CustomData
 import {createContext, useEffect, useState} from 'react';
 import CustomDataCalcModal from './CustomDataCalcModal';
 
-/* 사용자 정의 데이터
-@Autor : KIM JAE HYEON
-@Date : 20231214 */
+
 // TODO: 리덕스 데이터 가져오기 구현
 export const CustomDataContext = createContext();
 
 const CustomDataModal = ({...props}) =>{
-  // #################################### 변수 선언 시작
   const customDataInitial = () => {
     return {
       fieldId: 1,
       fieldName: '',
-      calculation: '',
+      expression: '',
       type: ''
     };
   };
@@ -43,23 +40,19 @@ const CustomDataModal = ({...props}) =>{
       ]
     }
   };
-  // #################################### 변수 선언 종료
-  // #################################### 초기화 시작
+
   useEffect(()=>{
     if (moveToPage) handleModal();
     return () => {
       setMoveToPage(false);
     };
   }, [moveToPage]);
-  // #################################### 초기화 종료
-  // #################################### 함수 시작
+
   // TODO: NULL 공용 함수로 이동유무 결정
   const nullCheck = (...args) => {
     let isok = true;
     args.forEach((item)=>{
-      if (item === null || item === '' || item === undefined) {
-        isok = false;
-      }
+      (!item) ? isok = false: isok = true;
     });
     return isok;
   };
@@ -78,7 +71,7 @@ const CustomDataModal = ({...props}) =>{
   };
   // 추가 , 업데이트 로직
   const customDataService = (customData) => {
-    const isNull = nullCheck(customData.calculation);
+    const isNull = nullCheck(customData.expression);
     if (isNull) {
       const isUpdate = customDataUpdate(customData);
       if (!isUpdate) {
@@ -127,11 +120,12 @@ const CustomDataModal = ({...props}) =>{
     }
     return isUpdate;
   };
+
   const handleException = () => {
     let isok = true;
     // 사용자 정의 데이터 NULL 체크
     customDataList.forEach((item)=>{
-      isok = nullCheck(item.fieldName, item.calculation, item.type);
+      isok = nullCheck(item.fieldName, item.expression, item.type);
       if (isok === false) {
         return isok;
       }
@@ -145,7 +139,7 @@ const CustomDataModal = ({...props}) =>{
   const handleConfirm = () => {
     let isok = false;
     if (!handleException()) {
-      alert('필드명,계산식,타입이 빈값이 있습니다.');
+      alert(localizedString.alertInfo.customData.empty);
       isok = true;
     };
     return isok;
@@ -155,7 +149,6 @@ const CustomDataModal = ({...props}) =>{
   const handleCancel = () => {
     return props.onClose();
   };
-  // #################################### 함수 종료
 
   return (
     <CustomDataContext.Provider
@@ -174,7 +167,7 @@ const CustomDataModal = ({...props}) =>{
         }}
         height='450px'
         width='750px'
-        modalTitle={localizedString.userDefinedData.title}
+        modalTitle={localizedString.customData.title}
       >
         <Wrapper display="flex" direction="row">
           <Wrapper size="100%">

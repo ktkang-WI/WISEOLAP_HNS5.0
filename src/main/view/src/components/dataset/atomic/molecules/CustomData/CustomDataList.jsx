@@ -3,7 +3,16 @@ import {CustomDataContext}
 import DataGrid, {Column, Editing} from 'devextreme-react/data-grid';
 import {useContext} from 'react';
 import {typeData} from '../../organism/CustomData/Data/customObjectList';
+import styled from 'styled-components';
+import localizedString from '../../../../../config/localization';
 
+const Cursor = styled.div`
+    cursor: pointer;
+    -webkit-user-select: none !important; 
+    -moz-user-select: -moz-none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+`;
 
 const CustomDataList = () => {
   const getContext = useContext(CustomDataContext);
@@ -14,17 +23,18 @@ const CustomDataList = () => {
   const handleCalculator = () =>{
     setMoveToPage(!moveToPage);
   };
+
   // 계산식 수정 CELL 클릭시 계산식화면 이동
   const handleRowDoubleClick = (e) => {
     if (e.rowIndex === -1) return;
-    if (e.column.dataField === 'calculation') {
+    if (e.column.caption === localizedString.customData.list.expression) {
       // 선택된 row CustomData 업데이트
-      setCustomData((prev)=>{
+      setCustomData((prev) => {
         return {
           ...prev,
           fieldName: e.data.fieldName,
           fieldId: e.data.fieldId,
-          calculation: e.data.calculation,
+          expression: e.data.expression,
           type: e.data.type
         };
       });
@@ -46,20 +56,30 @@ const CustomDataList = () => {
           mode="row"
           allowUpdating={true}
           allowDeleting={true}/>
-        <Column dataField='fieldName' caption='필드명' allowEditing={true}/>
-        <Column dataField='calculation' caption='계산식' allowEditing={false}
+        <Column
+          dataField='fieldName'
+          caption={localizedString.customData.list.fieldName}
+          allowEditing={true}/>
+        <Column
+          dataField='expression'
+          caption={localizedString.customData.list.expression}
+          allowEditing={false}
           cellRender={(data) => {
             return (
-              <div className="custom-cursor-column">
+              <Cursor>
                 {data.text}
-              </div>
+              </Cursor>
             );
           }}/>
-        <Column dataField='type' caption='데이터형식' lookup={{
-          dataSource: typeData,
-          valueExpr: 'id',
-          displayExpr: 'text'
-        }}/>
+        <Column
+          dataField='type'
+          caption={localizedString.customData.list.type}
+          lookup={{
+            dataSource: typeData,
+            valueExpr: 'id',
+            displayExpr: 'text'
+          }}
+        />
       </DataGrid>
     </>
   );
