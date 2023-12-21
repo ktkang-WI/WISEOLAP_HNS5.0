@@ -165,7 +165,7 @@ public class ReportService {
         String query = queryGenerator.getQuery(dataAggreagtion);
 
         MartResultDTO martResultDTO = martDAO.select(query);
-        
+
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
 
@@ -377,12 +377,24 @@ public class ReportService {
     }
 
     public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
-        reportDAO.addReport(reportMstrDTO);
+        if (reportMstrDTO.getReportId() == 0) {
+            reportMstrDTO.setDupleYn(checkDuplicatedReport(reportMstrDTO));
+        }
+
+        if (reportMstrDTO.getDupleYn() != "Y") {
+            reportDAO.addReport(reportMstrDTO);
+        }
+
         return reportMstrDTO;
     }
 
     public int deleteReport(int reportId) {
         return reportDAO.deleteReport(reportId);
+    }
+
+    public String checkDuplicatedReport(ReportMstrDTO reportMstrDTO) {
+        List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrDTO);
+        return result.size() > 0 ? "Y" : "N";
     }
 
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
