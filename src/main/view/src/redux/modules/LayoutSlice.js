@@ -23,18 +23,6 @@ const reducers = {
       layoutQuantity: 1,
       layoutConfig: flexLayoutDefault()[actions.payload.designer]
     };
-    // if (actions.payload.reportId == 0) {
-    //   state[actions.payload.reportId] = {
-    //     layoutQuantity: 1,
-    //     layoutConfig: flexLayoutDefault()[actions.payload.designer]
-    //   };
-    // } else {
-    //   delete state[actions.payload.reportId];
-    //   state[0] = {
-    //     layoutQuantity: 1,
-    //     layoutConfig: flexLayoutDefault()[actions.payload.designer]
-    //   };
-    // }
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;

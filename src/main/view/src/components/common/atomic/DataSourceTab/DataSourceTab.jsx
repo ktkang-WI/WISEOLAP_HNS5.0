@@ -31,12 +31,11 @@ const DataSourceTab = () => {
   const {selectDataset} = DatasetSlice.actions;
 
   const onValueChanged = useCallback((e) => {
-    console.log(selectedReportId);
     dispatch(selectDataset({
       reportId: selectedReportId,
       datasetId: e.value? e.value.datasetId : ''
     }));
-  }, [selectedReportId]);
+  }, [selectedDataset]);
 
   return (
     <Wrapper>
