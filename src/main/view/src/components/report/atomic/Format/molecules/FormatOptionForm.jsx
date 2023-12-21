@@ -10,7 +10,6 @@ import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 
 const FormatOptionForm = ({formatOptions}) => {
   const prefix = undefined;
-
   const formatValue = (options) => {
     const value = 1234567890.123;
     console.log('Options inside formatValue:', options);
@@ -62,34 +61,23 @@ const FormatOptionForm = ({formatOptions}) => {
   );
   const [checkBoxValue, setCheckBoxValue] = useState(false);
   const updateFormControls = () => {
-    //
     const isAutoOrGeneral = formatType === 'Auto' || formatType === 'General';
-    //
     const isNumberOrCurrency =
       formatType === 'Number' || formatType === 'Currency';
-    //
     const isScientificOrPercent =
       formatType === 'Scientific' || formatType === 'Percent';
-    //
     const isSuffixEnabled = suffixEnabled;
 
     const updatedControls = {
-      unit: isNumberOrCurrency ? false : true,
-      suffixEnabled: isNumberOrCurrency ? false : true,
-      suffixO:
-        isNumberOrCurrency && isSuffixEnabled && checkBoxValue ? false : true,
-      suffixK:
-        isNumberOrCurrency && isSuffixEnabled && checkBoxValue ? false : true,
-      suffixM:
-        isNumberOrCurrency && isSuffixEnabled && checkBoxValue ? false : true,
-      suffixB:
-        isNumberOrCurrency && isSuffixEnabled && checkBoxValue ? false : true,
-      precision:
-        isScientificOrPercent ? false : isNumberOrCurrency ? false : true,
-      precisionType:
-        isScientificOrPercent ? false : isNumberOrCurrency ? false : true,
-      useDigitSeparator:
-        isAutoOrGeneral ? true : isScientificOrPercent ? true : false
+      unit: !isNumberOrCurrency,
+      suffixEnabled: !isNumberOrCurrency,
+      suffixO: isSuffixEnabled && checkBoxValue,
+      suffixK: isSuffixEnabled && checkBoxValue,
+      suffixM: isSuffixEnabled && checkBoxValue,
+      suffixB: isSuffixEnabled && checkBoxValue,
+      precision: !isScientificOrPercent && !isNumberOrCurrency,
+      precisionType: !isScientificOrPercent && !isNumberOrCurrency,
+      useDigitSeparator: isAutoOrGeneral || isScientificOrPercent
     };
 
     setFormControls(updatedControls);
@@ -138,15 +126,15 @@ const FormatOptionForm = ({formatOptions}) => {
   });
 
   const GrayBackgroundTextArea = styled.textarea`
-  background-color: lightgray; /* Set the background color to gray */
-  border: 1px solid #ccc; /* Add a border for better visibility */
-  resize: none; /* Disable textarea resizing */
-  width: 100%; /* Set the width to 100% or a specific value */
-  height: 70px; /* Set the height to a specific value */
-  padding: 5px; /* Add some padding for spacing */
-  font-size: 40px; /* Change the font size to your desired value */
-  text-align: center; /* Align the text to the center */
-`;
+    background-color: lightgray;
+    border: 1px solid #ccc;
+    resize: none;
+    width: 100%;
+    height: 70px;
+    padding: 5px;
+    font-size: 40px;
+    text-align: center;
+  `;
 
   return (
     <Form
