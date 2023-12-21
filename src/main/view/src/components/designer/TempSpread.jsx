@@ -43,7 +43,10 @@ GC.Spread.Sheets.Designer.LicenseKey = 'intelligence.wise.co.kr,' +
 'lWORRkYOZWTNpEUQ34YolDNFVlero4c1RiV';
 
 const config = GC.Spread.Sheets.Designer.DefaultConfig;
+const sheets = GC.Spread.Sheets;
 const initRibbon = (spreadRef) => {
+  console.log(config.commandMap);
+  console.log(sheets);
   // add new tab
   const newTab = {
     id: 'operate',
@@ -52,7 +55,6 @@ const initRibbon = (spreadRef) => {
   };
   // delete config.fileMenu;
   config.ribbon.unshift(newTab);
-  console.log(config);
   return config;
 };
 
