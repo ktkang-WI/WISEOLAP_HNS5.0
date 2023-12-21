@@ -210,5 +210,11 @@
   "reportNotDeleteMsg": "This report has not been saved.",
   "reportDeleteMsg": "Are you sure you want to delete the report?",
   "sortByItem": "Sort By Item",
-  "newSortByItem": "New Sort By Item"
+  "newSortByItem": "New Sort By Item",
+  "fieldOptionSetting": "Field Option Setting",
+  "fieldType": "Field Type",
+  "visibility": "Visibility",
+  "detailSetting": "Detail Setting",
+  "value": "value",
+  "bar": "bar"
 }
