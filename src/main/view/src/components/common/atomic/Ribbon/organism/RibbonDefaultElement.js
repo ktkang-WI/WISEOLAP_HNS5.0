@@ -31,6 +31,7 @@ import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
+import {useLocation} from 'react-router';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -40,6 +41,7 @@ const RibbonDefaultElement = () => {
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
+  const location = useLocation();
   return {
     'NewReport': {
       id: 'new_report',
@@ -50,9 +52,12 @@ const RibbonDefaultElement = () => {
       width: 'auto',
       height: '45px',
       useArrowButton: false,
-      onClick: (e) => {
-        console.log(e);
-        reload();
+      onClick: () => {
+        const designer =
+          location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
+        confirm(localizedString.reloadConfirmMsg, () => {
+          reload(selectedReportId, designer);
+        });
       }
     },
     'Dataset': {

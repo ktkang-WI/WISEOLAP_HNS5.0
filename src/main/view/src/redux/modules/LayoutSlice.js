@@ -1,4 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
+import flexLayoutDefault
+  from 'components/report/atomic/ItemBoard/organisms/FlexLayoutDefault';
 
 const initialState = {
   0: {
@@ -15,7 +17,24 @@ const initialState = {
 const reducers = {
   // initLayout -> dashboard, adhoc Layout 다르게.
   initLayout(state, actions) {
-    state[0].layoutConfig = actions.payload;
+    actions.payload.reportId != 0 && delete state[actions.payload.reportId];
+
+    state[0] = {
+      layoutQuantity: 1,
+      layoutConfig: flexLayoutDefault()[actions.payload.designer]
+    };
+    // if (actions.payload.reportId == 0) {
+    //   state[actions.payload.reportId] = {
+    //     layoutQuantity: 1,
+    //     layoutConfig: flexLayoutDefault()[actions.payload.designer]
+    //   };
+    // } else {
+    //   delete state[actions.payload.reportId];
+    //   state[0] = {
+    //     layoutQuantity: 1,
+    //     layoutConfig: flexLayoutDefault()[actions.payload.designer]
+    //   };
+    // }
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;

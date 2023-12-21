@@ -7,8 +7,8 @@ export default function useLayout() {
   const flexLayout = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
 
-  const initLayout = (reportType) => {
-    dispatch(flexLayout.initLayout(reportType));
+  const initLayout = (reportTypes) => {
+    dispatch(flexLayout.initLayout(reportTypes));
   };
 
   const setLayout = (reportId, layout) => {
