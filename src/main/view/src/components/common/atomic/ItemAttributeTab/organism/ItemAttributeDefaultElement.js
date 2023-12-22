@@ -94,6 +94,14 @@ const ItemAttributeDefaultElement = () => {
           id: 'dimensionGroup',
           label: localizedString.dimensionGroup,
           icon: dimensionGroupImg
+        },
+        {
+          id: 'dimensionGroup',
+          label: localizedString.dataHighlight,
+          icon: dataHighlightImg,
+          onClick: () => {
+            openModal(DataHighlightModal);
+          }
         }
       ]
     }

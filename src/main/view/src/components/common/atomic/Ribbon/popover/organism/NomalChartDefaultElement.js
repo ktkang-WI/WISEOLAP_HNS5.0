@@ -70,7 +70,11 @@ const NomalChartDefaultElement = () => {
       },
       {
         imgSrc: bar,
-        label: 'aaa'
+        label: 'aaa',
+        onClick: () => {
+          insertFlexLayout(selectedReportId, 'pie');
+          closePopover();
+        }
       },
       {
         imgSrc: bar,

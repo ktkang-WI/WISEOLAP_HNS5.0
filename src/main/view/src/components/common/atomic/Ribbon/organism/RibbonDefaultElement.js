@@ -186,7 +186,6 @@ const RibbonDefaultElement = () => {
       'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
-        console.log('AddChart~~!');
         const props = {
           width: '500px',
           height: 'auto',

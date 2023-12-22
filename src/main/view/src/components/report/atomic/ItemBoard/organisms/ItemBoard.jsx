@@ -20,6 +20,7 @@ import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import Pie from 'components/report/item/pie/Pie';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -57,7 +58,8 @@ const ItemBoard = () => {
   const itemFactory = {
     chart: Chart,
     pivot: PivotGrid,
-    grid: DataGrid
+    grid: DataGrid,
+    pie: Pie
   };
 
   /**
