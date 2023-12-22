@@ -7,6 +7,7 @@ import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
 import * as ExcelIO from '@grapecity/spread-excelio';
 import '@grapecity/spread-sheets-designer';
+import {forwardRef, useEffect, useRef, useState} from 'react';
 GC.Spread.Common.CultureManager.culture('ko-kr');
 // license keys
 const sjsLicense = 'intelligence.wise.co.kr,5962557' +
@@ -282,10 +283,17 @@ const initRibbon = (spreadRef) => {
   return config;
 };
 
-const SpreadBoard = ({height}) => {
-  const spreadRef = {spread: undefined};
+const SpreadBoard = ({}, ref) => {
+  const spreadRef = useRef();
+  const [designerHeight, setDesignerHeight] = useState();
+
+  useEffect(() => {
+    if (ref.current) return;
+    setDesignerHeight(ref.current?.clientHeight);
+    console.log(designerHeight);
+  }, [ref?.current]);
+
   const config = initRibbon(spreadRef);
-  const styleInfo = {width: '100%', height: height};
   const designerInitialized = (e) => {
     setTimeout(function() {
     }, 3000);
@@ -294,11 +302,12 @@ const SpreadBoard = ({height}) => {
 
   return (
     <Designer
-      styleInfo={styleInfo}
+      ref={spreadRef}
+      styleInfo={{width: '100%', height: '100%'}}
       config={config}
       designerInitialized={designerInitialized}
     ></Designer>
   );
 };
 
-export default SpreadBoard;
+export default forwardRef(SpreadBoard);
