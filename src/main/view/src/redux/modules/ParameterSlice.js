@@ -65,11 +65,6 @@ const reducers = {
   },
   // 파라미터로 reportId
   initParameter(state, actions) {
-    // state[actions.payload] = {
-    //   informations: [],
-    //   values: {},
-    //   filterSearchComplete: []
-    // };
     delete state[actions.payload];
 
     state[0] = initialState[0];
