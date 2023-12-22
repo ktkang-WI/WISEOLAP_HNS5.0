@@ -27,16 +27,26 @@ import {Connector, Label, Series, Size} from 'devextreme-react/pie-chart';
 //   area: 55
 // }];
 
-const Pie = () => {
+const Pie = ({id, mart}) => {
+  if (!mart.init) {
+    return <></>;
+  }
+  const customizeText = (e) => { // utility로
+    console.log(e);
+    return e.argumentText;
+  };
   return (
     <PieChart
-      dataSource={[]} // mart
+      dataSource={mart.data.data} // mart
     >
       <Series
-        argumentField="country"
-        valueField="area"
+        argumentField='고객직업군' // 백단에서 가져오기.
+        valueField='SUM_고객코드'
       >
-        <Label visible={true}>
+        <Label visible={true}
+          position='outside' // 옵션에 따라 바뀌게.
+          customizeText={customizeText}
+        >
           <Connector
             visible={true}
             width={1}
