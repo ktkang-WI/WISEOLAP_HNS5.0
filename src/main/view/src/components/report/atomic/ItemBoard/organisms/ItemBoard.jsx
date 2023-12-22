@@ -12,7 +12,6 @@ import download from 'assets/image/icon/button/download_new.png';
 import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import flexLayoutDefault from './FlexLayoutDefault';
 import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
@@ -37,14 +36,14 @@ const DownloadImage = styled.img`
 
 const ItemBoard = () => {
   const location = useLocation();
-  const {defaultFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {initFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
     const defaultLayout = location.pathname.includes('dashboard')?
-    flexLayoutDefault()['dashboard'] : flexLayoutDefault()['adhoc'];
-    defaultFlexLayout(defaultLayout);
+    'dashboard' : 'adhoc';
+    initFlexLayout(defaultLayout);
   }, [location]);
 
   const layoutConfig = useSelector(selectFlexLayoutConfig);
