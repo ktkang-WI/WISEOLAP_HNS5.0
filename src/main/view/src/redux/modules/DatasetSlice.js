@@ -11,7 +11,9 @@ const initialState = {
 const reducers = {
   /* REPORT */
   initDatasets(state, actions) {
-    state = initialState;
+    delete state[actions.payload];
+
+    state[0] = initialState[0];
   },
   // 파라미터로 reportId와 dataset
   insertDataset(state, actions) {

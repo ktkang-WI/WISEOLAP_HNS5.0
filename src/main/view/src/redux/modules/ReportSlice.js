@@ -30,6 +30,7 @@ const initialState = {
 const reducers = {
   /* REPORT */
   initReport(state, actions) {
+    state.selectedReportId = 0;
     state.reports = initialState.reports;
   },
   insertReport(state, actions) {

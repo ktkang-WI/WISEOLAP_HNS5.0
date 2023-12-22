@@ -225,5 +225,6 @@
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
   "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
   "sortByItem": "정렬 기준 항목",
-  "newSortByItem": "새 정렬 기준 항목"
+  "newSortByItem": "새 정렬 기준 항목",
+  "reloadConfirmMsg": "저장이 안된 경우 작업내용이 사라질 수 있습니다. 새로 만드시겠습니까?"
 }

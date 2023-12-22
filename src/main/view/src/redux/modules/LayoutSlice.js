@@ -18,8 +18,14 @@ const initialState = {
   }
 };
 const reducers = {
-  initFlexLayout(state, actions) {
-    state[0].layoutConfig = flexLayoutDefault()[actions.payload];
+  // initLayout -> dashboard, adhoc Layout 다르게.
+  initLayout(state, actions) {
+    actions.payload.reportId != 0 && delete state[actions.payload.reportId];
+
+    state[0] = {
+      layoutQuantity: 1,
+      layoutConfig: flexLayoutDefault()[actions.payload.designer]
+    };
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;

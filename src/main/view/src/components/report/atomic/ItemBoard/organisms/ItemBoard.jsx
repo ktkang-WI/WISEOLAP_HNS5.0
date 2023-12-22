@@ -36,14 +36,15 @@ const DownloadImage = styled.img`
 
 const ItemBoard = () => {
   const location = useLocation();
-  const {initFlexLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
     const defaultLayout = location.pathname.includes('dashboard')?
-    'dashboard' : 'adhoc';
-    initFlexLayout(defaultLayout);
+    {reportId: selectedReportId, designer: 'dashboard'} :
+    {reportId: selectedReportId, designer: 'adhoc'};
+    initLayout(defaultLayout);
   }, [location]);
 
   const layoutConfig = useSelector(selectFlexLayoutConfig);

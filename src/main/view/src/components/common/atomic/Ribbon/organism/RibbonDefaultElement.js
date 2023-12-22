@@ -41,7 +41,7 @@ const RibbonDefaultElement = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
-  const {removeReport} = useReportSave();
+  const {removeReport, reload} = useReportSave();
 
   return {
     'NewReport': {
@@ -53,8 +53,12 @@ const RibbonDefaultElement = () => {
       width: 'auto',
       height: '45px',
       useArrowButton: false,
-      onClick: (e) => {
-        console.log(e);
+      onClick: () => {
+        const designer =
+          location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
+        confirm(localizedString.reloadConfirmMsg, () => {
+          reload(selectedReportId, designer);
+        });
       }
     },
     'Dataset': {

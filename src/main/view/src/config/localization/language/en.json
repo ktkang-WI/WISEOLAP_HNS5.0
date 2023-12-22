@@ -210,5 +210,6 @@
   "reportNotDeleteMsg": "This report has not been saved.",
   "reportDeleteMsg": "Are you sure you want to delete the report?",
   "sortByItem": "Sort By Item",
-  "newSortByItem": "New Sort By Item"
+  "newSortByItem": "New Sort By Item",
+  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?"
 }
