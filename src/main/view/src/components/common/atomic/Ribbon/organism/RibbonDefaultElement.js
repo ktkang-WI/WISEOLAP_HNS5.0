@@ -34,6 +34,7 @@ import useReportSave from 'hooks/useReportSave';
 import {useLocation} from 'react-router';
 
 const RibbonDefaultElement = () => {
+  const location = useLocation();
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
@@ -41,7 +42,7 @@ const RibbonDefaultElement = () => {
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
-  const location = useLocation();
+
   return {
     'NewReport': {
       id: 'new_report',
@@ -126,9 +127,12 @@ const RibbonDefaultElement = () => {
       'height': '45px',
       'useArrowButton': false,
       'onClick': () => {
+        const reportType =
+          location.pathname.includes('dashboard') ? 'dashboard': 'adhoc';
+
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(selectedReportId);
+            removeReport(selectedReportId, reportType);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);

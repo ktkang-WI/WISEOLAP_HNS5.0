@@ -81,6 +81,13 @@ public final class DataSanitizer {
      */
     public final DataSanitizer groupBy() {
         data = data.stream().collect(Collectors.groupingBy(map -> {
+            // row data에서 key List<Map> 형태로 반환
+            // key는 dimention 모든 키들이 "-" 로 붙여져있음.
+            // List<Map> [{측정값 명 : value}]
+            // [기아-K3: [
+            //     {회사: 기아, 자동차명: K3, 금액: 3}
+            //         ...
+            // ]]
             StringBuilder sb = new StringBuilder();
 
             for (Dimension dimension : dimensions) {
@@ -91,6 +98,7 @@ public final class DataSanitizer {
         })).entrySet().stream()
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
+                            // 그룹화 된 값을 집계 기준으로 측정값을 변경
                             if (acc.keySet().size() == 0) {
                                 acc = row;
 

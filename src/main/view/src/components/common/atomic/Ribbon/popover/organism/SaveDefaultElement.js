@@ -5,10 +5,11 @@ import {selectCurrentReport}
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import {useSelector} from 'react-redux';
+import models from 'models';
 
 const SaveDefaultElement = () => {
   const {openModal} = useModal();
-  const {saveReport} = useReportSave();
+  const {saveReport, generateParameter} = useReportSave();
   const currentReport = useSelector(selectCurrentReport);
 
   return {
@@ -22,7 +23,14 @@ const SaveDefaultElement = () => {
             openModal(ReportSaveModal);
           } else {
             dataSource.reportId = currentReport.reportId;
-            saveReport(dataSource);
+            const param = generateParameter(dataSource);
+            models.Report.addReport(param).then((res) => {
+              if (res.status != 200) {
+                alert('보고서 저장에 실패했습니다. 관리자에게 문의하세요.');
+                return;
+              }
+              saveReport(res);
+            });
           };
         }
       },
