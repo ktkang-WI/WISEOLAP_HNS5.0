@@ -13,7 +13,7 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
       const lines = props.value.split('\n');
       lines.forEach((line, index) => {
         line = line.replaceAll(/\[.*?\]/gmi, '');
-        line = line.replaceAll(/[\*+-\/\s\d]/gmi, '');
+        line = line.replaceAll(/[\*+-\/\s\d()]/gmi, '');
 
         if (line.length > 0) {
           newAnnotations.push({
