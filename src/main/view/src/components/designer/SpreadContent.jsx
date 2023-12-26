@@ -9,16 +9,12 @@ import {getTheme} from 'config/theme';
 import {DragDropContext} from 'react-beautiful-dnd';
 import useDrag from 'hooks/useDrag';
 import SpreadBoard from '../report/atomic/spreadBoard/organisms/SpreadBoard';
-import useSpread from 'hooks/useSpread';
 
 const theme = getTheme();
 
 const SpreadContent = () => {
   // draggable을 사용할지 안할지 논의
   const {onDragEnd, onDragStart} = useDrag();
-  const {setSpreadJSConfig} = useSpread();
-  // 라이센스 키 등록 및 전역 객체 등록
-  setSpreadJSConfig();
 
   return (
     <Content

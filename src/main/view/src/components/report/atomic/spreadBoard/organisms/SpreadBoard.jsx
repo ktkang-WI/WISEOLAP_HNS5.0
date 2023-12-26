@@ -1,16 +1,12 @@
-import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
-import '@grapecity/spread-sheets-resources-ko';
-import '@grapecity/spread-sheets-designer-resources-ko';
-import {Designer} from '@grapecity/spread-sheets-designer-react';
-import
-'@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
-import '@grapecity/spread-sheets-designer';
+
 import {useCallback, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useSelector} from 'react-redux';
 import useSpread from 'hooks/useSpread';
+import {Designer} from '@grapecity/spread-sheets-designer-react';
+import './spreadBoard.css';
 
 const SpreadBoard = () => {
   const spreadRef = useRef();
