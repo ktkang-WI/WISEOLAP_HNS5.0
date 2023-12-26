@@ -9,6 +9,11 @@ import {
 import spreadDefaultElement from
   'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import useModal from './useModal';
+import ReportFolderSelectorModal
+  from 'components/report/modal/ReportFolderSelectorModal';
+import ReportSaveForm
+  from 'components/report/atomic/Save/molecules/ReportSaveForm';
 
 const GC = require('@grapecity/spread-sheets');
 const ExcelIO = require('@grapecity/spread-excelio');
@@ -51,6 +56,7 @@ const excelIO = new GC.Spread.Excel.IO();
 export const useSpread = () => {
   const dispatch = useDispatch();
   const spreadSlice = SpreadSlice.actions;
+  const {openModal, confirm, alert} = useModal();
 
   const setSpreadJSConfig = () => {
     dispatch(spreadSlice.setLibrariesObject({
@@ -75,15 +81,20 @@ export const useSpread = () => {
     const commandMap = ribbonCommandMap();
     // ribbon download modal 정의
     const downlaodReportDialog = downlaodReportModel;
-    GC.Spread.Sheets.Designer.registerTemplate('downlaodReportDialog'
-        , downlaodReportDialog);
+    // Template 기능 추가.
+    addSpreadTemplate('downlaodReportDialog', downlaodReportDialog);
     config.commandMap = commandMap;
     return config;
   };
 
+  const addSpreadTemplate = (templateName, templateMethod) => {
+    GC.Spread.Sheets.Designer.registerTemplate(templateName, templateMethod);
+  };
+
   const newReport = () => {
-    const sheets = selectSheets(store.getState());
-    console.log(sheets);
+    confirm('test', () => {
+      console.log('test');
+    });
   };
 
   const openReportLocal =(context) => {
@@ -93,7 +104,7 @@ export const useSpread = () => {
   };
 
   const openReport = () => {
-
+    openModal(ReportFolderSelectorModal);
   };
 
   const saveReport = () => {
@@ -101,7 +112,7 @@ export const useSpread = () => {
   };
 
   const saveAsReport = () => {
-
+    openModal(ReportSaveForm);
   };
 
   const deleteReport = () => {
@@ -109,14 +120,13 @@ export const useSpread = () => {
   };
 
   const downloadReportXLSX = () => {
-    const reportNm = selectCurrentReport(store.getState()).options.reportNm;
+    let reportNm = selectCurrentReport(store.getState()).options.reportNm;
     const sheets = selectSheets(store.getState());
     const spreadJS = selectCurrentSpreadJS(store.getState());
     const excelIO = selectExcelIO(store.getState());
-    reportNm
-        .replace( /\s/gi, '_')
-        .replace(/\//g, '_')
-        .replace(/\\/g, '_');
+
+    reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
+    // 예외 처리 및  메소드 분리.
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',
@@ -124,21 +134,27 @@ export const useSpread = () => {
           spreadJS: spreadJS,
           excelIO: excelIO
         },
-        (e) => {
-          let fileName = e.fileName;
-          const json = JSON.stringify(
-              e.spreadJS.toJSON({includeBindingSource: true}));
-          if (fileName
-              .substr(-e.extName.length, e.extName.length) !== e.extName) {
-            fileName += '.xlsx';
-          }
-          e.excelIO.save(json, (blob) => {
-            saveAs(blob, fileName);
-          }, (e) => {
-            console.log(e);
-          });
-        }
+        xlsxDownload
     );
+  };
+
+  const xlsxDownload = (e) => {
+    if (e.fileName === '') {
+      alert('파일명을 입력해 주세요.');
+    } else {
+      if (e.fileName
+          .substr(-e.extName.length, e.extName.length) !== e.extName) {
+        e.fileName += e.extName;
+      }
+      const fileName = e.fileName;
+      const json = JSON.stringify(
+          e.spreadJS.toJSON({includeBindingSource: true}));
+      e.excelIO.save(json, (blob) => {
+        saveAs(blob, fileName);
+      }, (e) => {
+        console.log(e);
+      });
+    }
   };
 
   const downloadReportTXT = () => {
