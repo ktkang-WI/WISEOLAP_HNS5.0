@@ -20,13 +20,31 @@ const Label = styled.label`
 const TopBtns = () => {
   const getContext = useContext(CustomDataCalContext);
   const [customData, setCustomData] = getContext.state.customData;
+  const [allFields] = getContext.state.allFields;
   const textBoxRef = useRef();
   const selectBoxRef = useRef();
   const [onLoading, setOnLoading] = useState(false);
   const {alert} = useModal();
   const [checkForSaving, setCheckForSaving] = getContext.state.checkForSaving;
 
+  const inputValidation = (value) => {
+    const dupplicatedNaming =
+      allFields.find((item) => item.uniqueName === value);
+    if (dupplicatedNaming) return true;
+    return false;
+  };
+
   const handleTextBox = (data) => {
+    if (inputValidation(data.value)) {
+      setCustomData((prev) => {
+        return {
+          ...prev,
+          fieldName: ''
+        };
+      });
+      alert('필드명이 열값과 사용자 정의 데이터와 겹칩니다. : '+data.value);
+      return;
+    }
     setCustomData((prev) => {
       return {
         ...prev,
@@ -89,6 +107,7 @@ const TopBtns = () => {
           dataSource={typeData}
           valueExpr="id"
           displayExpr="text"
+          value={customData.type}
           onValueChanged={handleSelectBox}
         />
       </Wrapper>

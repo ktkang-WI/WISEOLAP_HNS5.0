@@ -14,11 +14,16 @@ import localizedString from '../../../../config/localization';
 export const CustomDataCalContext = createContext();
 
 const CustomDataCalcModal = ({...props}) => {
+  // Modal
   const {alert} = useModal();
+
+  // CustomData Toss
   const getCustomData = props.customData;
+
+  // UseState
   const [checkForSaving, setCheckForSaving] = useState({
     inspection: false,
-    type: false
+    type: (getCustomData.type) ? true : false
   });
   const [customData, setCustomData] = useState({
     fieldId: getCustomData.fieldId,
@@ -26,6 +31,8 @@ const CustomDataCalcModal = ({...props}) => {
     expression: getCustomData.expression,
     type: getCustomData.type
   });
+
+  // Context
   const context = {
     state: {
       customData: [
@@ -35,11 +42,14 @@ const CustomDataCalcModal = ({...props}) => {
       checkForSaving: [
         checkForSaving,
         setCheckForSaving
+      ],
+      allFields: [
+        props.allFields,
+        null
       ]
     }
   };
 
-  // TODO: NULL 공용 함수로 이동유무 결정
   const nullCheck = (...args) => {
     let isOk = true;
     args.forEach((item) => {
@@ -49,6 +59,7 @@ const CustomDataCalcModal = ({...props}) => {
     });
     return isOk;
   };
+
   const handleException = () => {
     let isOk = true;
     // 사용자 정의 데이터 NULL 체크
@@ -66,6 +77,7 @@ const CustomDataCalcModal = ({...props}) => {
     }
     return isOk;
   };
+
   const handleConfirm = () => {
     let isOk = false;
     if (!handleException()) {

@@ -6,24 +6,65 @@ import CustomData
   from 'components/dataset/atomic/organism/CustomData/CustomData';
 import {createContext, useEffect, useState} from 'react';
 import CustomDataCalcModal from './CustomDataCalcModal';
+import meaImg from 'assets/image/icon/dataSource/measure.png';
+import folderImg from 'assets/image/icon/report/folder_load.png';
+import {useDispatch} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {useSelector} from 'react-redux';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 
-
-// TODO: 리덕스 데이터 가져오기 구현
 export const CustomDataContext = createContext();
 
-const CustomDataModal = ({...props}) =>{
+const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
+  // TODO: 직접쿼리 입력과 틀 맞춤
+  const generateFields = (tempFields) => {
+    let generatedFields = null;
+    generatedFields = tempFields.map((field) => {
+      return {
+        isCustomData: true,
+        icon: meaImg,
+        parentId: '987654321',
+        uniqueName: field.fieldName,
+        name: field.fieldName,
+        expression: field.expression,
+        type: 'MEA'
+      };
+    });
+    generatedFields.unshift({
+      name: '계산된 필드',
+      type: 'FLD',
+      uniqueName: '987654321',
+      icon: folderImg
+    });
+    return generatedFields;
+  };
+
   const customDataInitial = () => {
     return {
       fieldId: 1,
       fieldName: '',
       expression: '',
-      type: ''
+      type: 'decimal'
     };
   };
-  const {openModal, alert} = useModal();
+
+  // UseState
   const [customDataList, setCustomDataList] = useState([]);
   const [moveToPage, setMoveToPage] = useState(false);
   const [customData, setCustomData] = useState(customDataInitial);
+  const [dataset] = useState(_.cloneDeep(orgDataset));
+
+  // Dispatch and Modal
+  const dispatch = useDispatch();
+  const {openModal, alert} = useModal();
+
+  // Actions
+  const {updateDataset} = DatasetSlice.actions;
+
+  // Selector
+  const selectedReportId = useSelector(selectCurrentReportId);
+
+  // Context
   const context = {
     state: {
       moveToPage: [
@@ -41,14 +82,77 @@ const CustomDataModal = ({...props}) =>{
     }
   };
 
-  useEffect(()=>{
+  // 초기화
+  useEffect(() => {
+    // redux 사용자 정의 데이터 가져오기.
+    reduxFetchCustomDataList(dataset);
+  }, []);
+
+  // Modal 이동 감지기
+  useEffect(() => {
     if (moveToPage) handleModal();
     return () => {
       setMoveToPage(false);
     };
   }, [moveToPage]);
 
-  // TODO: NULL 공용 함수로 이동유무 결정
+  // 데이터 집합 및 사용자 정의 데이터 필드
+  const getAllCurrentFields = () => {
+    return dataset.fields.filter((item) => item.type != 'FLD');
+  };
+
+  // 데이터 집합 필드
+  const getCurrentFields = () => {
+    return dataset.fields.filter((item) =>
+      item.uniqueName != '987654321' && item.parentId != '987654321');
+  };
+
+  // TODO: 함수명 이름추천 해주면 좋을듯 합니다.
+  const reduxFetchCustomDataList = (dataset) => {
+    if (dataset.fields) {
+      const fetchCustomDataList =
+        dataset.fields.filter((item) =>
+          item.type != 'FLD' && item.parentId == '987654321');
+      fetchCustomDataList.forEach((item, index) => {
+        setCustomDataList((prev) => {
+          return [
+            ...prev,
+            {
+              fieldId: index + 1,
+              fieldName: item.uniqueName,
+              expression: item.expression,
+              type: 'decimal'
+            }
+          ];
+        });
+      });
+      setCustomData((prev) => {
+        return {
+          ...prev,
+          fieldId: fetchCustomDataList.length + 1
+        };
+      });
+    }
+  };
+
+  // TODO: 함수명 이름추천 해주면 좋을듯 합니다.
+  const reduxUpdateCustomDataList = (tempFields) => {
+    const fields = getCurrentFields();
+
+    let isok = false;
+    if (tempFields) {
+      dispatch(updateDataset({
+        reportId: selectedReportId,
+        dataset: {
+          ...dataset,
+          fields: [...fields, ...tempFields]
+        }
+      }));
+      isok = true;
+    };
+    return isok;
+  };
+
   const nullCheck = (...args) => {
     let isok = true;
     args.forEach((item)=>{
@@ -56,11 +160,13 @@ const CustomDataModal = ({...props}) =>{
     });
     return isok;
   };
+
   // 계산식 이동
   const handleModal = () => {
     if ( moveToPage ) {
       openModal(CustomDataCalcModal, {
         customData,
+        allFields: getAllCurrentFields(),
         onSubmit: (returedCustomData) => {
           // 사용자 정의 데이터 추가 OR 업데이트
           customDataService(returedCustomData);
@@ -69,6 +175,7 @@ const CustomDataModal = ({...props}) =>{
       setMoveToPage(!moveToPage);
     }
   };
+
   // 추가 , 업데이트 로직
   const customDataService = (customData) => {
     const isNull = nullCheck(customData.expression);
@@ -142,6 +249,13 @@ const CustomDataModal = ({...props}) =>{
       alert(localizedString.alertInfo.customData.empty);
       isok = true;
     };
+    const tempFields = generateFields(customDataList);
+
+    if (!reduxUpdateCustomDataList(tempFields)) {
+      alert(localizedString.alertInfo.customData.empty);
+      isok = true;
+    };
+
     return isok;
   };
 

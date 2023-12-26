@@ -1,7 +1,7 @@
 import {useContext, useEffect, useRef, useState} from 'react';
-import QueryEditor from '../../QueryEditor';
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
+import CalcQueryEditor from './CalcQueryEditor/CalcQueryEditor';
 
 // 사용자 정의 데이터 표현식정의
 const CalcDefineArea = () => {
@@ -54,7 +54,7 @@ const CalcDefineArea = () => {
 
   return (
     <>
-      <QueryEditor
+      <CalcQueryEditor
         editorRef={queryEditorRef}
         value={customData.expression}
         onDrop={handleToDrop}

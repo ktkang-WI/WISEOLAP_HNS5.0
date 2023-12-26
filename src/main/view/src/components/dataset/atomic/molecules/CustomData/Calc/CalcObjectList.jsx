@@ -4,7 +4,7 @@ import {dataSource}
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 
 
 const ListStyled = {
@@ -22,28 +22,50 @@ const TextAreaStyled = {
 
 // 사용자 정의 데이터 객체 정보 및 설명
 const CalcObjectList = () => {
-  // 열,상수,연산자,함수 클릭값
+  // UseState
   const [selectedObjectList, setSelectedObjectList] = useState();
-  // 열,상수,연산자,함수 내부 값 사용설명
   const [explanation, setExplanation] = useState('');
-  const selectedDataset = useSelector(selectCurrentDataset);
 
-  // 임시용 코드
+  // Selector
+  const selectedCurrentDataField = useSelector(selectCurrentDataField);
+
+  // 초기화
   useEffect(() => {
     initColumns();
   }, []);
 
+  const locatedFields = (selectedCurrentDataField) => {
+    const measure = selectedCurrentDataField.measure;
+    let selectedMeasureFields = null;
+
+    if (measure.length === 0) return null;
+
+    selectedMeasureFields =
+      measure.filter((item) => item.expression == null)
+          .map((item) => {
+            return {
+              key: item.name,
+              explanation: item.type === 'DIM' ? 'varchar2' : 'decimal'
+            };
+          });
+
+    if (selectedMeasureFields.length == 0) return null;
+
+    return selectedMeasureFields;
+  };
+
   const initColumns = () => {
+    const fields = locatedFields(selectedCurrentDataField);
+
+    if (!fields) return;
     // Get dataItems
-    const dataItems = selectedDataset.fields.
-        filter((item) => item.uniqueName != 0).
-        map((item) => {
-          return {
-            key: `[${item.uniqueName}]`,
-            explanation: item.columnTypeName
-          };
-        });
-    // init
+    const dataItems = fields.map((item) => {
+      return {
+        key: `[${item.key}]`,
+        explanation: item.explanation
+      };
+    });
+
     dataSource[0].collection = dataItems;
   };
 

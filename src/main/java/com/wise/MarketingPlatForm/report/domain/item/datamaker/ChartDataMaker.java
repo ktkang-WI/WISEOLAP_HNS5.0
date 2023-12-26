@@ -15,6 +15,7 @@ import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 
 public class ChartDataMaker implements ItemDataMaker {
     @Override
@@ -22,7 +23,7 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-
+      
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
         List<Measure> allMeasure = new ArrayList<>();
@@ -36,6 +37,23 @@ public class ChartDataMaker implements ItemDataMaker {
                 .orderBy()
                 .columnFiltering()
                 .getData();
+
+        DataPickUpMake customData = new DataPickUpMake(data);
+
+        // 사용자 정의 데이터 가공
+        List<Map<String, Object>> tempData = null;
+        try {
+            tempData = customData.setDimension(dimensions)
+                         .setMeasure(measures)
+                         .builder();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tempData = null;
+        }
+
+        if(tempData != null) {
+            data = tempData;
+        }
 
         // 차트 데이터 가공
         List<String> dimNames = new ArrayList<>();

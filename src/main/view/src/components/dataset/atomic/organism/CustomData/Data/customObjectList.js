@@ -1,9 +1,37 @@
 export const typeData = [
-  {id: 'varchar2', text: 'VARCHAR2'},
   {id: 'decimal', text: 'DECIMAL'}
 ];
-
 export const dataSource = [
+  {
+    key: '데이터 항목',
+    collection: [
+      {
+      }
+    ]
+  },
+  {
+    key: '연산자',
+    collection: [
+      {
+        key: '+',
+        explanation: '더하기'
+      },
+      {
+        key: '-',
+        explanation: '빼기'
+      },
+      {
+        key: '*',
+        explanation: '곱하기'
+      },
+      {
+        key: '/',
+        explanation: '나누기'
+      }
+    ]
+  }
+];
+export const dataSourceTemp = [
   {
     key: '데이터 항목',
     collection: [

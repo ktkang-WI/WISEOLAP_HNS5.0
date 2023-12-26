@@ -36,6 +36,12 @@ const useDrag = () => {
     const source = e.source;
     const targetId = e.draggableId;
 
+    const isCustomDatas = (field, sourceField) => {
+      if (!sourceField.isCustomData) return null;
+      field.expression = sourceField.expression;
+      return field;
+    };
+
     const getNewDataField = (sourceField) => {
       let tempField = {
         name: sourceField.name,
@@ -45,6 +51,9 @@ const useDrag = () => {
         fieldType: sourceField.type, // 데이터 항목 원본 타입
         type: dataFieldOption[dest.droppableId].type // 실제 조회할 때 적용되어야 할 type
       };
+      const customDatas = isCustomDatas(tempField, sourceField);
+
+      if (customDatas) tempField = customDatas;
 
       const dimensionOption = {
         sortBy: sourceField.name,

@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
-import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
-import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
-import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
