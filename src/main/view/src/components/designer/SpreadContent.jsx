@@ -10,18 +10,16 @@ import {DragDropContext} from 'react-beautiful-dnd';
 import useDrag from 'hooks/useDrag';
 import SpreadBoard from '../report/atomic/spreadBoard/organisms/SpreadBoard';
 import useSpread from 'hooks/useSpread';
-import {} from 'react';
 
 const theme = getTheme();
 
 const SpreadContent = () => {
   // draggable을 사용할지 안할지 논의
   const {onDragEnd, onDragStart} = useDrag();
-  const {setRibbonSetting, setSpreadJSConfig} = useSpread();
+  const {setSpreadJSConfig} = useSpread();
   // 라이센스 키 등록 및 전역 객체 등록
   setSpreadJSConfig();
-  // Ribbon custom 등록
-  const config = setRibbonSetting();
+
   return (
     <Content
       snbWidth={theme.size.snbWidth}
@@ -32,7 +30,7 @@ const SpreadContent = () => {
           <FilterBar/>
           <Wrapper>
             {/* reportId 별로 그리기*/}
-            <SpreadBoard config={config}/>
+            <SpreadBoard/>
           </Wrapper>
         </CustomDrawer>
       </DragDropContext>

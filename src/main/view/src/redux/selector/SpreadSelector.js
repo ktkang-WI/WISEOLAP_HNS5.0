@@ -7,8 +7,8 @@ export const selectSheets = createSelector(
 );
 
 export const selectExcelIO = createSelector(
-    (state) => state.meta.spread.ExcelIO,
-    (ExcelIO) => ExcelIO
+    (state) => state.meta.spread.excelIO,
+    (excelIO ) => excelIO
 );
 
 export const selectCurrentSpreadJS = createSelector(

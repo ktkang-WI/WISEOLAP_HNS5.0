@@ -10,16 +10,19 @@ import {useDispatch} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useSelector} from 'react-redux';
+import useSpread from 'hooks/useSpread';
 
-const SpreadBoard = ({config}) => {
+const SpreadBoard = () => {
   const spreadRef = useRef();
   const dispatch = useDispatch();
   const spreadSlice = SpreadSlice.actions;
   const selectedReportId = useSelector(selectCurrentReportId);
+  const {setRibbonSetting} = useSpread();
+
+  // Ribbon custom 등록
+  const config = setRibbonSetting();
 
   const designerInitialized = useCallback((e) => {
-    setTimeout(() => {
-    }, 3000);
     dispatch(spreadSlice.setSpreadJS({
       reportId: selectedReportId,
       spreadJS: e.getWorkbook()
@@ -31,7 +34,7 @@ const SpreadBoard = ({config}) => {
       ref={spreadRef}
       styleInfo={{width: '100%', height: 'calc(100% - 40px)'}}
       config={config}
-      designerInitialized={() => designerInitialized}
+      designerInitialized={designerInitialized}
     ></Designer>
   );
 };

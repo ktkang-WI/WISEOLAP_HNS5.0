@@ -23,3 +23,4 @@ export const selectCurrentReportId = createSelector(
     (state) => state.meta.report.selectedReportId,
     (selectedReportId) => selectedReportId
 );
+
