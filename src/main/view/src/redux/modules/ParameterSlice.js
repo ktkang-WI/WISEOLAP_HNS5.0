@@ -63,12 +63,7 @@ const reducers = {
     const values = actions.payload.values;
     state[reportId].values = Object.assign(state[reportId].values, values);
   },
-  // 파라미터로 reportId
-  initParameter(state, actions) {
-    delete state[actions.payload];
-
-    state[0] = initialState[0];
-  },
+  initParameter: () => initialState,
   filterSearchComplete(state, actions) {
     const reportId = actions.payload.reportId;
     const filterId = actions.payload.id;

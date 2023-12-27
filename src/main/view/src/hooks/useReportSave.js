@@ -118,12 +118,12 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (reportId, designer) => {
-    dispatch(initReport(reportId));
-    dispatch(initDatasets(reportId));
-    dispatch(initItems(reportId));
-    dispatch(initLayout({reportId: reportId, designer: designer}));
-    dispatch(initParameter(reportId));
+  const reload = (designerMode) => {
+    dispatch(initReport());
+    dispatch(initDatasets());
+    dispatch(initItems(designerMode));
+    dispatch(initLayout(designerMode));
+    dispatch(initParameter());
   };
 
   return {

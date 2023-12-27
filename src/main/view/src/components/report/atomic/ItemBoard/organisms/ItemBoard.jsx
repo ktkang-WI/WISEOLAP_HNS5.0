@@ -9,10 +9,8 @@ import {
 import ItemSlice from 'redux/modules/ItemSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
-import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 import Chart from 'components/report/item/chart/Chart';
@@ -35,17 +33,9 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
-  const location = useLocation();
-  const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const selectedReportId = useSelector(selectCurrentReportId);
-
-  useEffect(() => {
-    const defaultLayout = location.pathname.includes('dashboard')?
-    {reportId: selectedReportId, designer: 'dashboard'} :
-    {reportId: selectedReportId, designer: 'adhoc'};
-    initLayout(defaultLayout);
-  }, [location]);
 
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;

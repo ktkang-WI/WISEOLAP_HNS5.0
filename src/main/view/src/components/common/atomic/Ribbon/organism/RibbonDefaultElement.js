@@ -32,6 +32,7 @@ import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
 import {useLocation} from 'react-router';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const RibbonDefaultElement = () => {
   const location = useLocation();
@@ -39,6 +40,7 @@ const RibbonDefaultElement = () => {
   const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
@@ -54,10 +56,9 @@ const RibbonDefaultElement = () => {
       height: '45px',
       useArrowButton: false,
       onClick: () => {
-        const designer =
-          location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
         confirm(localizedString.reloadConfirmMsg, () => {
-          reload(selectedReportId, designer);
+          console.log(designerMode);
+          reload(designerMode);
         });
       }
     },

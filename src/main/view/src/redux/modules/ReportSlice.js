@@ -29,10 +29,7 @@ const initialState = {
 
 const reducers = {
   /* REPORT */
-  initReport(state, actions) {
-    state.selectedReportId = 0;
-    state.reports = initialState.reports;
-  },
+  initReport: () => initialState,
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
     state.selectedReportId = actions.payload.reportId;

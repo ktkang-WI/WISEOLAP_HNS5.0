@@ -1,27 +1,78 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {makeItem} from 'components/report/item/util/ItemFactory';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
 
-const item = makeItem({
-  id: 'item1',
-  type: 'chart'
-});
+const getItems = (designerMode) => {
+  const mode = designerMode || ConfigSlice.getInitialState.designerMode;
+  const items = [];
+
+  const chartItem = makeItem({
+    id: 'item1',
+    type: 'chart'
+  });
+
+  items.push(chartItem);
+
+  if (mode === 'adhoc') {
+    const pivotItem = makeItem({
+      id: 'item2',
+      type: 'pivot'
+    });
+    items.push(pivotItem);
+  }
+
+  return items;
+};
+
+const dashboardInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: getItems('designer')
+  }
+};
+
+const adhocInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: getItems('adhoc')
+  }
+};
 
 const initialState = {
   0: {
     selectedItemId: 'item1',
     itemQuantity: 1,
-    items: [item]
+    items: getItems()
+  }
+};
+
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === 'dashboard') {
+    return dashboardInitialState;
+  }
+
+  if (mode === 'adhoc') {
+    return adhocInitialState;
   }
 };
 
 const reducers = {
   /* REPORT */
-  initItems(state, actions) { // 저장 전이라 reportId 0으로 초기화 가능.
-    // 저장 후 reportId는 바뀌므로 이방법으로 초기화 불가능.
-    // reportId를 가져와서 초기화 해도 어짜피 0: {...} 이런식으로 만들어야함.
-    delete state[actions.payload];
+  initItems: (state, actions) => {
+    const mode = actions.payload;
 
-    state[0] = initialState[0];
+    if (mode === DesignerMode['DASHBOARD']) {
+      return dashboardInitialState;
+    }
+
+    if (mode === DesignerMode['ADHOC']) {
+      return adhocInitialState;
+    }
   },
   changeItemReportId(state, actions) {
     const prevId = actions.payload.prevId;
@@ -161,7 +212,7 @@ const extraReducers = {};
 
 const ItemSlice = createSlice({
   name: 'Item',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });
