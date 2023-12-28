@@ -613,7 +613,7 @@ public class DashAnyXmlParser extends XMLParser {
       this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
       this.getChartXmlDTO(dto.getChartXml());
       this.getReportXmlDTO(dto.getReportXml());
-//      this.getParamXmlDTO(dto.getParamXml());
+      this.getParamXmlDTO(dto.getParamXml());
       
       this.returnReport.put("dataset", this.dataset);
       this.returnReport.put("item", this.item);
