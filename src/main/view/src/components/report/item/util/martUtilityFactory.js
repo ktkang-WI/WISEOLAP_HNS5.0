@@ -3,6 +3,7 @@ import localizedString from 'config/localization';
 import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
+import ItemManager from './ItemManager';
 
 // 기본값
 const defaultDimension = {
@@ -94,12 +95,13 @@ const dataFieldOptionChild = {
 const makeMart = (item) => {
   const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   const dataFieldOptions = makeDataFieldOptions(dataFieldTypes);
+  const ribbonItems = ItemManager.getRibbonItems(item.type);
   return {
     ...defaultMart,
     dataFieldOption: {
       ...dataFieldOptions
     },
-    ribbonItem: []
+    ribbonItems: ribbonItems
   };
 };
 

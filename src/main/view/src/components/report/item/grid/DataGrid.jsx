@@ -1,7 +1,9 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
 import React from 'react';
 
-const DataGrid = ({id, mart}) => {
+const DataGrid = ({id, item}) => {
+  const mart = item ? item.mart : null;
+
   if (!mart.init) {
     return <></>;
   }
