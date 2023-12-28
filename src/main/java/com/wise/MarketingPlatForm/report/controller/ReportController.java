@@ -3,9 +3,7 @@ package com.wise.MarketingPlatForm.report.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +193,7 @@ public class ReportController {
 	)
 	@PostMapping(value = "/report-list")
     public Map<String, List<ReportListDTO>> getReportList(@RequestBody Map<String, String> param) {
+    	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
         String userId = param.getOrDefault("userId", "");
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");

@@ -1,8 +1,8 @@
 package com.wise.MarketingPlatForm.global.util;
 
-public class StringSwapper {
+public class DBDataUtility {
 	
-	public static boolean YNToBoolean (String YN) {
+	public static boolean parseBooleanByString (String YN) {
 		if(YN.equals("Y")) {
 			return true;
 		} else {

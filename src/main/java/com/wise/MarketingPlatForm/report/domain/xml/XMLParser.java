@@ -16,8 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
-import com.wise.MarketingPlatForm.dataset.type.paramDSType;
-import com.wise.MarketingPlatForm.global.util.StringSwapper;
+import com.wise.MarketingPlatForm.global.util.DBDataUtility;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 public abstract class XMLParser {
@@ -95,9 +94,9 @@ public abstract class XMLParser {
 						} else if ("WHERE_CLAUSE".equals(configNode.getNodeName())) {
 							information.put("exceptionValue", configNode.getTextContent());
 						} else if ("DEFAULT_VALUE_USE_SQL_SCRIPT".equals(configNode.getNodeName())) {
-							information.put("defaultValueUseSql", StringSwapper.YNToBoolean(configNode.getTextContent()));
+							information.put("defaultValueUseSql", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
 						} else if ("MULTI_SEL".equals(configNode.getNodeName())) {
-							information.put("multiselect", StringSwapper.YNToBoolean(configNode.getTextContent()));
+							information.put("multiselect", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
 						} else if ("PARAM_NM".equals(configNode.getNodeName())) {
 							information.put("name", configNode.getTextContent());
 						} else if ("OPER".equals(configNode.getNodeName())) {
@@ -105,15 +104,15 @@ public abstract class XMLParser {
 						} else if ("ORDER".equals(configNode.getNodeName())) {
 							information.put("order", configNode.getTextContent());
 						} else if ("PARAM_TYPE".equals(configNode.getNodeName())) {
-							information.put("paramType", paramDSType.fromString(configNode.getTextContent()));
+							information.put("paramType", configNode.getTextContent());
 						} else if ("ALL_YN".equals(configNode.getNodeName())) {
-							information.put("useAll", StringSwapper.YNToBoolean(configNode.getTextContent()));
+							information.put("useAll", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
 						} else if ("VISIBLE".equals(configNode.getNodeName())) {
-							information.put("visible", StringSwapper.YNToBoolean(configNode.getTextContent()));
+							information.put("visible", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
 						} else if ("WIDTH".equals(configNode.getNodeName())) {
 							information.put("width", Double.parseDouble(configNode.getTextContent()));
 						} else if ("CAPTION_WIDTH_VISIBLE".equals(configNode.getNodeName())) {
-							information.put("useCaptionWidth", StringSwapper.YNToBoolean(configNode.getTextContent()));
+							information.put("useCaptionWidth", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
 						} else if ("SORT_VALUE_ITEM".equals(configNode.getNodeName())) {
 							information.put("sortBy", configNode.getTextContent());
 						} else if ("SORT_TYPE".equals(configNode.getNodeName())) {

@@ -5,7 +5,6 @@ import * as DBInfo from './dataset/DBInfo';
 import * as Item from './report/Item';
 import * as Report from './report/Report';
 import * as Parameter from './dataset/Parameter';
-import * as Report from './report/Report';
 
 export default {
   DataSource,
