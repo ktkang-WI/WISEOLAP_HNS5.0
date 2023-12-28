@@ -4,6 +4,9 @@ import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
 import ItemManager from './ItemManager';
+import fieldIcon from 'assets/image/icon/button/ico_axis.png';
+import FieldOptionModal
+  from 'components/common/atomic/DataColumnTab/modal/FieldOptionModal';
 
 // 기본값
 const defaultDimension = {
@@ -61,7 +64,15 @@ const dataFieldRow = {
 const dataFieldField = {
   ...defaultDimension,
   label: localizedString.field,
-  placeholder: localizedString.fieldPlaceholder
+  placeholder: localizedString.fieldPlaceholder,
+  // 열 옵션 설정 버튼 추가
+  useButton: true,
+  buttonIcon: function(column) {
+    return column.type === 'DIM' ? fieldIcon : measureIcon;
+  },
+  buttonEvent: function(data, openModal) {
+    openModal(FieldOptionModal, data);
+  }
 };
 
 const dataFieldSparkline = {

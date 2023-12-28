@@ -17,7 +17,9 @@ const generateItem = (item) => {
   const columns = item.meta.dataField.field.map((field) => {
     return {
       ...field,
-      ...columnsConfig
+      ...columnsConfig,
+      name: field.type === 'MEA' ?
+      field.summaryType + '_' + field.name : field.name
     };
   });
 

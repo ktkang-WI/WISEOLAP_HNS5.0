@@ -1,5 +1,6 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
 import React from 'react';
+import DataGridBullet from './DataGridBullet';
 
 const DataGrid = ({id, item}) => {
   const mart = item ? item.mart : null;
@@ -21,6 +22,11 @@ const DataGrid = ({id, item}) => {
           key={i}
           caption={column.caption}
           dataField={column.name}
+          visible={column.visible}
+          cellRender={
+            column.detailSetting === 'bar' &&
+            DataGridBullet
+          }
         />
       )}
     </DevDataGrid>

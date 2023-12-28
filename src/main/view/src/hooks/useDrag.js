@@ -10,6 +10,8 @@ import {
 } from 'redux/selector/ReportSelector';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
+import {makeMetaDataField, metaDataField}
+  from 'components/report/item/util/metaUtilityFactory';
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
 
@@ -37,13 +39,21 @@ const useDrag = () => {
     const targetId = e.draggableId;
 
     const getNewDataField = (sourceField) => {
+      const getDataFieldType = () => {
+        const category = dest.droppableId;
+        if (category === 'field') {
+          return sourceField.type;
+        }
+        return dataFieldOption[category].type;
+      };
+
       let tempField = {
         name: sourceField.name,
         uniqueName: sourceField.uniqueName,
         caption: sourceField.name,
         category: dest.droppableId,
         fieldType: sourceField.type, // 데이터 항목 원본 타입
-        type: dataFieldOption[dest.droppableId].type // 실제 조회할 때 적용되어야 할 type
+        type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
 
       const dimensionOption = {
@@ -71,7 +81,9 @@ const useDrag = () => {
           tempField = {...tempField, ...dimensionOption};
         }
       }
-
+      if (metaDataField[tempField.category]) {
+        tempField = makeMetaDataField(tempField, tempField.category);
+      }
       return tempField;
     };
 

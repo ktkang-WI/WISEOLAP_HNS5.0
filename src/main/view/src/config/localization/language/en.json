@@ -211,7 +211,6 @@
   "reportDeleteMsg": "Are you sure you want to delete the report?",
   "sortByItem": "Sort By Item",
   "newSortByItem": "New Sort By Item",
-  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?",
   "initState": "Init State",
   "expandRowGroup": "Expand Row Group",
   "expandColumnGroup": "Expand Column Group",
@@ -233,5 +232,12 @@
   "layout": "Layout",
   "treeLayout": "Tree",
   "standardLayout": "Standard",
-  "autoSize": "Auto Size"
+  "autoSize": "Auto Size",
+  "fieldOptionSetting": "Field Option Setting",
+  "fieldType": "Field Type",
+  "visibility": "Visibility",
+  "detailSetting": "Detail Setting",
+  "value": "value",
+  "bar": "bar",
+  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?"
 }
