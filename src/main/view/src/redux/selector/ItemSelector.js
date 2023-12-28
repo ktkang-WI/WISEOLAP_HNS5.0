@@ -28,10 +28,24 @@ export const selectCurrentItems = createSelector(
 
 export const selectCurrentDataField = createSelector(
     selectCurrentItem,
-    (selectedItem) => selectedItem.meta.dataField
+    selectCurrentReportId,
+    (state) => state.meta.item,
+    (selectedItem, reportId, item) => {
+      if (item[reportId].adhocOption) {
+        return item[reportId].adhocOption.dataField;
+      }
+      return selectedItem.meta.dataField;
+    }
 );
 
 export const selectCurrentDataFieldOption = createSelector(
     selectCurrentItem,
-    (selectedItem) => selectedItem ? selectedItem.mart.dataFieldOption : []
+    selectCurrentReportId,
+    (state) => state.meta.item,
+    (selectedItem, reportId, item) => {
+      if (item[reportId].adhocOption) {
+        return item[reportId].adhocOption.dataFieldOption;
+      }
+      return selectedItem ? selectedItem.mart.dataFieldOption : [];
+    }
 );

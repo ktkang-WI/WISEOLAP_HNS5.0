@@ -119,7 +119,7 @@ const useReportSave = () => {
   };
 
   const reload = (designerMode) => {
-    dispatch(initReport());
+    dispatch(initReport(designerMode));
     dispatch(initDatasets());
     dispatch(initItems(designerMode));
     dispatch(initLayout(designerMode));

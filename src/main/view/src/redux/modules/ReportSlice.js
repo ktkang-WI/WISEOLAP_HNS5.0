@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 
 const initialState = {
@@ -22,14 +23,21 @@ const initialState = {
       paramXML: '',
       regDt: '',
       regUserNo: '',
-      reportType: ''
+      reportType: DesignerMode['DASHBOARD']
     }
   }]
 };
 
 const reducers = {
   /* REPORT */
-  initReport: () => initialState,
+  initReport: (state, actions) => {
+    const mode = actions.payload;
+
+    if (mode === DesignerMode['ADHOC']) {
+      state.reports[0].options.reportType = DesignerMode['ADHOC'];
+    }
+    return state;
+  },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
     state.selectedReportId = actions.payload.reportId;

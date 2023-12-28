@@ -103,6 +103,13 @@ const makeMart = (item) => {
   };
 };
 
+const makeAdhocItemMart = () => {
+  return {
+    ...defaultMart,
+    ribbonItem: []
+  };
+};
+
 /**
  * 한 item 의 모든 dataFieldOption 생성
  * @param {string[]} dataFieldTypes dataFieldType 배열
@@ -128,5 +135,7 @@ const makeDataFieldOptionChild = (type) =>
   ({[type]: dataFieldOptionChild[type]});
 
 export {
-  makeMart
+  makeMart,
+  makeAdhocItemMart,
+  makeDataFieldOptions
 };
