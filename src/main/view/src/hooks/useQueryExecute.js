@@ -1,4 +1,3 @@
-import ItemUtilityFactory from 'components/report/item/util/ItemUtilityFactory';
 import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
@@ -14,6 +13,7 @@ import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 
 const useQueryExecute = () => {
@@ -50,7 +50,7 @@ const useQueryExecute = () => {
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
-    ItemUtilityFactory[item.type].generateParameter(item, param);
+    ItemManager.generateParameter(item, param);
 
     return param;
   };
@@ -81,7 +81,7 @@ const useQueryExecute = () => {
       tempItem.mart.init = true;
       tempItem.mart.data = response.data;
 
-      ItemUtilityFactory[tempItem.type].generateItem(tempItem);
+      ItemManager.generateItem(tempItem);
 
       dispatch(updateItem({reportId, item: tempItem}));
     });
