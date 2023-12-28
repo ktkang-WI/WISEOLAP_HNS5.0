@@ -19,8 +19,8 @@ const DataFieldTypeOfItemType = {
   ],
   [ItemType.PIVOT_GRID]: [
     DataFieldType.MEASURE,
-    DataFieldType.COLUMN,
-    DataFieldType.ROW],
+    DataFieldType.ROW,
+    DataFieldType.COLUMN],
   [ItemType.DATA_GRID]: [
     DataFieldType.FIELD,
     DataFieldType.SPARKLINE

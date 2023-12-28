@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
@@ -24,8 +22,6 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -126,6 +122,7 @@ public class ReportController {
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
+        boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
 
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
@@ -135,20 +132,24 @@ public class ReportController {
                 .itemType(itemType)
                 .userId(userId)
                 .parameters(parameters)
+                .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
                 .build();
 
-        if (itemType == ItemType.PIVOT_GRID) {
-            final String pagingParamValue = param.get("paging");
-            final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
-                    ? (ObjectNode) objectMapper.readTree(pagingParamValue)
-                    : null;
-            final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
+        // 추후 PivotMatrix 적용시 주석 해제
+        // if (itemType == ItemType.PIVOT_GRID) {
+        //     final String pagingParamValue = param.get("paging");
+        //     final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
+        //             ? (ObjectNode) objectMapper.readTree(pagingParamValue)
+        //             : null;
+        //     final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
 
-            return reportService.getPivotData(param, pagingParam, dataAggreagtion);
-        } else {
-            return reportService.getItemData(dataAggreagtion);
-        }
+        //     return reportService.getPivotData(param, pagingParam, dataAggreagtion);
+        // } else {
+        //     return reportService.getItemData(dataAggreagtion);
+        // }
+        
+        return reportService.getItemData(dataAggreagtion);
     }
 
     @Operation(
@@ -169,6 +170,7 @@ public class ReportController {
 	public MetaVO getReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
+
         return reportService.getReport(reportId, userId);
 	}
 
