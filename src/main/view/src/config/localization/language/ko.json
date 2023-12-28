@@ -109,8 +109,8 @@
   "owner": "소유자",
   "dbId": "접속 ID",
   "description": "설명",
-  "row": "열",
-  "column": "행",
+  "row": "행",
+  "column": "열",
   "rowPlaceholder": "새 열",
   "columnPlaceholder": "새 행",
   "fieldPlaceholder": "새 필드",
@@ -231,5 +231,6 @@
   "visibility": "표시 여부",
   "detailSetting": "세부 설정",
   "value": "값",
-  "bar": "바"
+  "bar": "바",
+  "reloadConfirmMsg": "저장이 안된 경우 작업내용이 사라질 수 있습니다. 새로 만드시겠습니까?"
 }

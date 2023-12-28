@@ -216,5 +216,6 @@
   "visibility": "Visibility",
   "detailSetting": "Detail Setting",
   "value": "value",
-  "bar": "bar"
+  "bar": "bar",
+  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?"
 }
