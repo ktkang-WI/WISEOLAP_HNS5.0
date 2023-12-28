@@ -66,7 +66,7 @@ const ItemBoard = () => {
 
     return (
       <Item>
-        <ItemComponent mart={item.mart} id={item.id}/>
+        <ItemComponent item={item} id={item.id}/>
       </Item>
     );
   }

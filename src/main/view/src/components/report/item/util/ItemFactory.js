@@ -1,6 +1,7 @@
 import {makeAdhocItemMart, makeDataFieldOptions, makeMart}
   from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+import ItemManager from './ItemManager';
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -30,6 +31,7 @@ const makeItem = (orgItem) => {
 
   if (!orgItem.meta) {
     initDataFieldMeta(item);
+    ItemManager.generateMeta(item);
   };
 
   return item;

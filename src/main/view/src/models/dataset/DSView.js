@@ -8,10 +8,8 @@ const contextRoot =
 const path = document.location.origin + contextRoot + '/dataset';
 
 
-export const getByUserId = async (userId) => {
-  const res = await axios.post(path + '/ds-views', {
+export const getByUserId = (userId) => {
+  return axios.post(path + '/ds-views', {
     userId: userId
   });
-
-  return res.data;
 };

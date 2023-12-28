@@ -1,16 +1,25 @@
 /**
+ * 아이템 객체에 meta 기본 데이터를 세팅합니다.
+ * @param {*} item 옵션을 삽입할 아이템 객체
+ */
+const generateMeta = (item) => {
+
+};
+
+/**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
- * @param {*} data 조회된 데이터
  */
-const generateItem = (item, data) => {
+const generateItem = (item) => {
   const columnsConfig = {
     allowEditing: false
   };
   const columns = item.meta.dataField.field.map((field) => {
     return {
       ...field,
-      ...columnsConfig
+      ...columnsConfig,
+      name: field.type === 'MEA' ?
+      field.summaryType + '_' + field.name : field.name
     };
   });
 
@@ -31,7 +40,20 @@ const generateParameter = (item, param) => {
   param.measure = JSON.stringify(param.measure);
 };
 
+/**
+ * 리본 영역 아이템 배열을 반환합니다.
+ * @return {Array} ribbonItems
+ */
+const getRibbonItems = () => {
+  return [
+    'CaptionView',
+    'NameEdit'
+  ];
+};
+
 export default {
+  generateMeta,
   generateItem,
-  generateParameter
+  generateParameter,
+  getRibbonItems
 };
