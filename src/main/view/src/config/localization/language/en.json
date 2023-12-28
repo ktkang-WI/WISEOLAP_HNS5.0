@@ -210,5 +210,15 @@
   "reportNotDeleteMsg": "This report has not been saved.",
   "reportDeleteMsg": "Are you sure you want to delete the report?",
   "sortByItem": "Sort By Item",
-  "newSortByItem": "New Sort By Item"
+  "newSortByItem": "New Sort By Item",
+  "dataLabelEdit": "Data Label Edit",
+  "labelPosition": "Label Position",
+  "tooltip": "tooltip",
+  "pieChartStyle": "Pie Chart Style",
+  "inputTxt": "Input Text",
+  "inside": "Inside",
+  "outside": "Outside",
+  "columnType": "Column",
+  "pieType": "PieType",
+  "donutType": "DonutType"
 }

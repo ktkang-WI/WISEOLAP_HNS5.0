@@ -225,5 +225,15 @@
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
   "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
   "sortByItem": "정렬 기준 항목",
-  "newSortByItem": "새 정렬 기준 항목"
+  "newSortByItem": "새 정렬 기준 항목",
+  "dataLabelEdit": "라벨 편집",
+  "labelPosition": "라벨 위치",
+  "tooltip": "툴팁",
+  "pieChartStyle": "파이차트 스타일",
+  "inputTxt": "텍스트 입력",
+  "inside": "내부",
+  "outside": "외부",
+  "columnType": "컬럼",
+  "pieType": "파이",
+  "donutType": "도넛"
 }
