@@ -12,13 +12,15 @@ import download from 'assets/image/icon/button/download_new.png';
 import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import {Popover} from 'devextreme-react';
+import {Type, exportToFile} from 'components/utils/DataExport';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -33,6 +35,7 @@ const DownloadImage = styled.img`
   height: 20px;
   width: 20px;
 `;
+
 
 const ItemBoard = () => {
   const location = useLocation();
@@ -53,11 +56,44 @@ const ItemBoard = () => {
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
+  const [itemExports, setItemExports] = useState([]);
 
   const itemFactory = {
     chart: Chart,
     pivot: PivotGrid,
     grid: DataGrid
+  };
+
+  const itemExportsPicker = (id) => {
+    return itemExports.filter((item) => item.id == id)[0];
+  };
+
+  const exportExceptionHandle = (pickItem) => {
+    let isOk = true;
+    if (!pickItem) {
+      isOk = false;
+      return isOk;
+    }
+    // 임시 예외처리 차트용만 다운로드 구현
+    if (pickItem.type !== 'CHART') {
+      isOk = false;
+    }
+    return isOk;
+  };
+
+  const exportFile = (e, type) => {
+    const pickItem = itemExportsPicker(e);
+    if (!exportExceptionHandle(pickItem)) {
+      console.error('아이템 및 데이터가 그려지지 않았습니다.');
+      return;
+    };
+    if (Type.CSV === type) {
+      exportToFile(e, pickItem.data, Type.CSV);
+    } else if (Type.TXT === type) {
+      exportToFile(e, pickItem.data, Type.TXT);
+    } else if (Type.IMG === type) {
+      pickItem.ref.current.instance.exportTo(e, 'png');
+    }
   };
 
   /**
@@ -69,14 +105,14 @@ const ItemBoard = () => {
     const component = node.getComponent();
     const id = node.getId();
     const ItemComponent = itemFactory[component];
-
     const item = items.find((i) => id == i.id);
-
     if (!item) return <></>;
+
 
     return (
       <Item>
-        <ItemComponent mart={item.mart} id={item.id}/>
+        <ItemComponent setItemExports={setItemExports}
+          mart={item.mart} id={item.id}/>
       </Item>
     );
   }
@@ -166,10 +202,22 @@ const ItemBoard = () => {
           <button
             key="download"
             title="Download"
-            onClick={() => {
-            }}
           >
-            <DownloadImage src={download}/>
+            <DownloadImage id={tabNode._attributes.id+'btn'} src={download}/>
+            <Popover
+              target={'#'+tabNode._attributes.id+'btn'}
+              showEvent="click"
+            >
+              <button onClick={() => {
+                exportFile(tabNode._attributes.id, Type.IMG);
+              }}>img</button>
+              <button onClick={() => {
+                exportFile(tabNode._attributes.id, Type.CSV);
+              }}>csv</button>
+              <button onClick={() => {
+                exportFile(tabNode._attributes.id, Type.TXT);
+              }}>txt</button>
+            </Popover>
           </button>
       );
     }
@@ -195,5 +243,14 @@ const ItemBoard = () => {
   );
 };
 
+// 아이템 별 저장아이템
+export const itemExportsObject = (id, itemRef, type, data) => {
+  return {
+    id: id,
+    ref: itemRef,
+    type: type,
+    data: data
+  };
+};
 
 export default ItemBoard;
