@@ -2,6 +2,7 @@ import {makeAdhocItemMart, makeDataFieldOptions, makeMart}
   from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import ItemManager from './ItemManager';
+import {initDataFieldMeta, makeAdhocItemMeta} from './metaUtilityFactory';
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -38,18 +39,6 @@ const makeItem = (orgItem) => {
 };
 
 /**
- * 비정형 아이템의 meta값 세팅
- * @return {JSON} 생성된 비정형 아이템의 meta 정보
- */
-const makeAdhocItemMeta = () => {
-  return {
-    name: '아이템',
-    memo: '',
-    useCaption: true
-  };
-};
-
-/**
  * 비정형 아이템의 세팅
  * @param {*} orgItem 아이템 객체
  * @return {JSON} 생성된 비정형 아이템의 정보
@@ -76,16 +65,6 @@ const makeAdhocOption = () => {
     dataFieldOption: makeDataFieldOptions(dataFieldTypes),
     dataField: dataField
   };
-};
-
-/**
- * item.meta.dataField 데이터 초기화
- * @param {JSON} item 아이템 객체
- */
-const initDataFieldMeta = (item) => {
-  const dataFieldTypes = DataFieldTypeOfItemType[item.type];
-  dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
-  item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];
 };
 
 export {

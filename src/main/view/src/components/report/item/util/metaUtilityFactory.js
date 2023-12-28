@@ -1,4 +1,4 @@
-import {DataFieldType} from './dataFieldType';
+import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 
 // meta.dataField.dimension 설정
 const getDimensionOption = (fieldOption) => {
@@ -72,8 +72,32 @@ const makeMetaDataField = (defaultMetaDataField, category) => {
   };
 };
 
+/**
+ * item.meta.dataField 데이터 초기화
+ * @param {JSON} item 아이템 객체
+ */
+const initDataFieldMeta = (item) => {
+  const dataFieldTypes = DataFieldTypeOfItemType[item.type];
+  dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
+  item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];
+};
+
+/**
+ * 비정형 아이템의 meta값 세팅
+ * @return {JSON} 생성된 비정형 아이템의 meta 정보
+ */
+const makeAdhocItemMeta = () => {
+  return {
+    name: '아이템',
+    memo: '',
+    useCaption: true
+  };
+};
+
 export {
   metaDataField,
   makeMetaDataField,
-  makeFieldOption
+  makeFieldOption,
+  initDataFieldMeta,
+  makeAdhocItemMeta
 };
