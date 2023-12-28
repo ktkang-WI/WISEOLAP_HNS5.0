@@ -41,11 +41,10 @@ export const getList = async (userId, reportType, editMode) => {
 /**
  * 보고서 저장
  * @param {JSON} param
- * @param {function} callback
+ * @return {promise}
  */
-export const addReport = (param, callback) => {
-  axios.post(path + '/save-report', param)
-      .then(callback);
+export const addReport = async (param) => {
+  return await axios.post(path + '/save-report', param);
 };
 
 /**

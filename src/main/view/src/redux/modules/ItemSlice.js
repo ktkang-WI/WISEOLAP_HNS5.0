@@ -16,8 +16,12 @@ const initialState = {
 
 const reducers = {
   /* REPORT */
-  initItems(state, actions) {
-    state = initialState;
+  initItems(state, actions) { // 저장 전이라 reportId 0으로 초기화 가능.
+    // 저장 후 reportId는 바뀌므로 이방법으로 초기화 불가능.
+    // reportId를 가져와서 초기화 해도 어짜피 0: {...} 이런식으로 만들어야함.
+    delete state[actions.payload];
+
+    state[0] = initialState[0];
   },
   changeItemReportId(state, actions) {
     const prevId = actions.payload.prevId;

@@ -14,6 +14,7 @@ public interface ReportDAO {
     public List<ReportListDTO> selectPrivateReportList(String userId, List<String> reportTypes, String editMode);
     public int addReport(ReportMstrDTO reportMstrDTO);
     public int deleteReport(int reportId);
+    public List<ReportMstrEntity> checkDuplicatedReport(ReportMstrDTO reportMstrDTO);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
 }

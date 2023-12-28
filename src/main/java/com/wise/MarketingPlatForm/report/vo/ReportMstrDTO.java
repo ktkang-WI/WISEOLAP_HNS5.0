@@ -43,6 +43,7 @@ public class ReportMstrDTO {
     Date modDt;
     String privacyYn;
     String layoutConfig;
+    String dupleYn;
 
     private static String encodeBase64(String string) {
         byte[] encodedBytes = Base64.getEncoder().encode(string.getBytes());

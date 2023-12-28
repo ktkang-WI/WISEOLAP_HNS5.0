@@ -140,17 +140,20 @@ public class ReportController {
                 .pagingOption(pagingOption)
                 .build();
 
-        if (itemType == ItemType.PIVOT_GRID) {
-            final String pagingParamValue = param.get("paging");
-            final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
-                    ? (ObjectNode) objectMapper.readTree(pagingParamValue)
-                    : null;
-            final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
+        // 추후 PivotMatrix 적용시 주석 해제
+        // if (itemType == ItemType.PIVOT_GRID) {
+        //     final String pagingParamValue = param.get("paging");
+        //     final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
+        //             ? (ObjectNode) objectMapper.readTree(pagingParamValue)
+        //             : null;
+        //     final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
 
-            return reportService.getPivotData(param, pagingParam, dataAggreagtion);
-        } else {
-            return reportService.getItemData(dataAggreagtion);
-        }
+        //     return reportService.getPivotData(param, pagingParam, dataAggreagtion);
+        // } else {
+        //     return reportService.getItemData(dataAggreagtion);
+        // }
+        
+        return reportService.getItemData(dataAggreagtion);
     }
 
     @Operation(
@@ -171,6 +174,7 @@ public class ReportController {
 	public Map<String, Object> getReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
+
         return reportService.getReport(reportId, userId);
 	}
 

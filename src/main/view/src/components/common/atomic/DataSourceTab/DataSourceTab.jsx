@@ -10,6 +10,7 @@ import {selectCurrentDataset, selectCurrentDatasets}
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import _ from 'lodash';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {useCallback} from 'react';
 
 const theme = getTheme();
 
@@ -28,6 +29,13 @@ const DataSourceTab = () => {
   const selectedReportId = useSelector(selectCurrentReportId, shallowEqual);
   const dispatch = useDispatch();
   const {selectDataset} = DatasetSlice.actions;
+
+  const onValueChanged = useCallback((e) => {
+    dispatch(selectDataset({
+      reportId: selectedReportId,
+      datasetId: e.value? e.value.datasetId : ''
+    }));
+  }, [selectedDataset]);
 
   return (
     <Wrapper>
@@ -48,12 +56,7 @@ const DataSourceTab = () => {
         dataSource={datasets}
         displayExpr='datasetNm'
         searchEnabled={false}
-        onValueChanged={(e) => {
-          dispatch(selectDataset({
-            reportId: selectedReportId,
-            datasetId: e.value? e.value.datasetId : ''
-          }));
-        }}
+        onValueChanged={onValueChanged}
       />
       {!_.isEmpty(selectedDataset) &&
         <DataSourceFoldableList dataset={selectedDataset}/>
