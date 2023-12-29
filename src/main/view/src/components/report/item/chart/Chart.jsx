@@ -7,7 +7,6 @@ import React from 'react';
 
 const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
-  console.log(adHocOption);
 
   if (!mart.init) {
     return <></>;
