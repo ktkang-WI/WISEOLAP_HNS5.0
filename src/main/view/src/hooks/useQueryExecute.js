@@ -59,6 +59,13 @@ const useQueryExecute = () => {
     return param;
   };
 
+  /**
+   * 비정형 조회에 필요한 파라미터 생성
+   * @param {JSON} rootItem State(item) (itemState 최상단)
+   * @param {JSON} datasets 조회할 비정형 보고서의 datasets
+   * @param {JSON} parameters 조회할 비정형 보고서의 parameters
+   * @return {JSON} parameter
+   */
   const generateAdHocParamter = (rootItem, datasets, parameters) => {
     const param = {};
 
@@ -88,6 +95,12 @@ const useQueryExecute = () => {
     return param;
   };
 
+  /**
+   * 매개변수로 전달받은 모든 비정형 보고서 아이템 조회
+   * @param {JSON} rootItem State(item) (itemState 최상단)
+   * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
+   * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     const tempItem = _.cloneDeep(rootItem);
     const chartItem = tempItem.items[0];
