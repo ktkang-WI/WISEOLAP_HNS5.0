@@ -15,11 +15,8 @@ import nameEdit from 'assets/image/icon/button/name_edit.png';
 import rotate from 'assets/image/icon/button/rotate.png';
 import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
 import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
-import showColorLegend from 'assets/image/icon/button/show_color_legend.png';
 import seriesType from 'assets/image/icon/button/series_type.png';
-import palette from 'assets/image/icon/button/global_color.png';
-import colorEdit from 'assets/image/icon/button/edit_color.png';
-import pointLabel from 'assets/image/icon/button/point_labels.png';
+import inputTxt from 'assets/image/icon/button/inputTxt.png';
 import querySearch from 'assets/image/icon/button/query_search.png';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
@@ -32,6 +29,7 @@ import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
 import {useLocation} from 'react-router';
+import itemOptionManager from 'components/report/item/ItemOptionManager';
 
 const RibbonDefaultElement = () => {
   const location = useLocation();
@@ -42,18 +40,17 @@ const RibbonDefaultElement = () => {
   const {executeItems} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
+  // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
+  const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
 
   return {
     'NewReport': {
-      id: 'new_report',
-      title: localizedString.newReport,
-      label: localizedString.newReport,
-      type: 'RibbonButton',
-      imgSrc: newReport,
-      width: 'auto',
-      height: '45px',
-      useArrowButton: false,
-      onClick: () => {
+      ...commonRibbonButton,
+      'id': 'new_report',
+      'label': localizedString.newReport,
+      'imgSrc': newReport,
+      'onClick': () => {
         const designer =
           location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
         confirm(localizedString.reloadConfirmMsg, () => {
@@ -61,17 +58,14 @@ const RibbonDefaultElement = () => {
         });
       }
     },
-    'Dataset': {
-      id: 'dataset',
-      title: localizedString.dataset,
-      label: localizedString.dataset,
-      type: 'RibbonButton',
-      imgSrc: dataset,
-      width: 'auto',
-      height: '45px',
-      usePopover: true,
-      useArrowButton: false,
-      onClick: (ref) => {
+    'Dataset': { // 팝오버 버튼으로 추후 교체
+      ...commonRibbonButton,
+      'id': 'dataset',
+      'label': localizedString.dataset,
+      'imgSrc': dataset,
+      'width': 'auto',
+      'usePopover': true,
+      'onClick': (ref) => {
         const config = {
           width: 'max-content',
           height: 'auto',
@@ -83,28 +77,21 @@ const RibbonDefaultElement = () => {
       }
     },
     'LoadReport': {
-      id: 'load_report',
-      title: localizedString.loadReport,
-      label: localizedString.loadReport,
-      type: 'RibbonButton',
-      imgSrc: loadReport,
-      width: 'auto',
-      height: '45px',
-      useArrowButton: false,
-      onClick: (e) => {
+      ...commonRibbonButton,
+      'id': 'load_report',
+      'label': localizedString.loadReport,
+      'imgSrc': loadReport,
+      'onClick': (e) => {
         console.log(e);
       }
     },
     'SaveReport': {
+      ...commonRibbonButton,
       'id': 'save_report',
-      'title': localizedString.saveReport,
       'label': localizedString.saveReport,
-      'type': 'RibbonButton',
       'imgSrc': saveReport,
-      'width': 'auto',
-      'height': '45px',
-      'usePopover': true,
       'useArrowButton': true,
+      'usePopover': true,
       'onClick': (ref) => {
         const props = {
           width: 'max-content',
@@ -114,18 +101,13 @@ const RibbonDefaultElement = () => {
           id: 'save_report'
         };
         openedPopover(PopoverUI, props);
-        console.log('clicked');
       }
     },
     'DeleteReport': {
+      ...commonRibbonButton,
       'id': 'delete_report',
-      'title': localizedString.deleteReport,
       'label': localizedString.deleteReport,
-      'type': 'RibbonButton',
       'imgSrc': deleteReport,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': () => {
         const reportType =
           location.pathname.includes('dashboard') ? 'dashboard': 'adhoc';
@@ -140,15 +122,12 @@ const RibbonDefaultElement = () => {
       }
     },
     'DownloadReport': {
+      ...commonRibbonButton,
       'id': 'download_report',
-      'title': localizedString.downloadReport,
       'label': localizedString.downloadReport,
-      'type': 'RibbonButton',
       'imgSrc': downloadReport,
-      'width': 'auto',
-      'height': '45px',
-      'usePopover': true,
       'useArrowButton': true,
+      'usePopover': true,
       'onClick': (ref) => {
         const props = {
           width: '200px',
@@ -161,38 +140,27 @@ const RibbonDefaultElement = () => {
       }
     },
     'ConnectReport': {
+      ...commonRibbonButton,
       'id': 'connect_report',
-      'title': localizedString.connectReport,
       'label': localizedString.connectReport,
-      'type': 'RibbonButton',
       'imgSrc': connectReport,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
       }
     },
     'AddContainer': {
+      ...commonRibbonButton,
       'id': 'add_container',
-      'title': localizedString.addContainer,
       'label': localizedString.addContainer,
-      'type': 'RibbonButton',
       'imgSrc': addContainer,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
     'AddChart': {
+      ...commonRibbonButton,
       'id': 'add_default_chart',
-      'title': localizedString.addChart,
       'label': localizedString.addChart,
-      'type': 'RibbonButton',
       'imgSrc': addChart,
-      'width': 'auto',
-      'height': '45px',
       'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
@@ -207,39 +175,28 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddPivotGrid': {
+      ...commonRibbonButton,
       'id': 'add_pivotGrid',
-      'title': localizedString.addPivotGrid,
       'label': localizedString.addPivotGrid,
-      'type': 'RibbonButton',
       'imgSrc': addPivotGrid,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         insertFlexLayout(selectedReportId, 'pivot');
       }
     },
     'AddGrid': {
+      ...commonRibbonButton,
       'id': 'add_grid',
-      'title': localizedString.addGrid,
       'label': localizedString.addGrid,
-      'type': 'RibbonButton',
       'imgSrc': addGrid,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         insertFlexLayout(selectedReportId, 'grid');
       }
     },
     'AddCustomChart': {
+      ...commonRibbonButton,
       'id': 'add_custom_chart',
-      'title': localizedString.addCustomChart,
       'label': localizedString.addCustomChart,
-      'type': 'RibbonButton',
       'imgSrc': addChart,
-      'width': 'auto',
-      'height': '45px',
       'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
@@ -255,27 +212,19 @@ const RibbonDefaultElement = () => {
       }
     },
     'CaptionView': {
+      ...commonRibbonButton,
       'id': 'caption_view',
-      'title': localizedString.captionView,
       'label': localizedString.captionView,
-      'type': 'RibbonButton',
       'imgSrc': captionView,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': () => {
         convertCaptionVisible(selectedReportId, selectedItem);
       }
     },
     'NameEdit': {
+      ...commonRibbonButton,
       'id': 'name_edit',
-      'title': localizedString.nameEdit,
       'label': localizedString.nameEdit,
-      'type': 'RibbonButton',
       'imgSrc': nameEdit,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': () => {
         openModal(SimpleInputModal,
             {
@@ -289,125 +238,60 @@ const RibbonDefaultElement = () => {
       }
     },
     'Rotate': {
+      ...commonRibbonButton,
       'id': 'rotate',
-      'title': localizedString.rotate,
       'label': localizedString.rotate,
-      'type': 'RibbonButton',
       'imgSrc': rotate,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
     'XAxisSetting': {
+      ...commonRibbonButton,
       'id': 'xAxis_setting',
-      'title': localizedString.xAxisSetting,
       'label': localizedString.xAxisSetting,
-      'type': 'RibbonButton',
       'imgSrc': xAxisSetting,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
     'YAxisSetting': {
+      ...commonRibbonButton,
       'id': 'yAxis_setting',
-      'title': localizedString.yAxisSetting,
       'label': localizedString.yAxisSetting,
-      'type': 'RibbonButton',
       'imgSrc': yAxisSetting,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
     'ExtraAxisSetting': {
+      ...commonRibbonButton,
       'id': 'extra_setting',
-      'title': localizedString.extraAxisSetting,
       'label': localizedString.extraAxisSetting,
-      'type': 'RibbonButton',
       'imgSrc': yAxisSetting,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'ShowColorLegend': {
-      'id': 'show_color_legend',
-      'title': localizedString.showColorLegend,
-      'label': localizedString.showColorLegend,
-      'type': 'RibbonButton',
-      'imgSrc': showColorLegend,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
     'SeriesType': {
+      ...commonPopoverButton,
       'id': 'bar_two',
-      'title': localizedString.seriesType,
       'label': localizedString.seriesType,
-      'type': 'RibbonButton',
       'imgSrc': seriesType,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
       'onClick': (e) => {
         console.log(e);
       }
     },
-    'Palette': {
-      'id': 'palette',
-      'title': localizedString.palette,
-      'label': localizedString.palette,
-      'type': 'RibbonButton',
-      'imgSrc': palette,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'ColorEdit': {
-      'id': 'color_edit',
-      'title': localizedString.colorEdit,
-      'label': localizedString.colorEdit,
-      'type': 'RibbonButton',
-      'imgSrc': colorEdit,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'PointLabel': {
-      'id': 'point_label',
-      'title': localizedString.pointLabel,
-      'label': localizedString.pointLabel,
-      'type': 'RibbonButton',
-      'imgSrc': pointLabel,
-      'width': 'auto',
-      'height': '45px',
-      'useArrowButton': false,
-      'onClick': (e) => {
-        console.log(e);
+    'InputTxt': {
+      ...commonRibbonButton,
+      'id': 'input_text',
+      'label': localizedString.inputTxt,
+      'imgSrc': inputTxt,
+      'onClick': () => {
       }
     },
     'QuerySearch': {
       'id': 'query_search',
-      'title': localizedString.querySearch,
       'label': localizedString.querySearch,
       'type': 'CommonButton',
       'imgSrc': querySearch,
