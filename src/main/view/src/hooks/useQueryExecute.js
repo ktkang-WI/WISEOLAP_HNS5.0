@@ -76,10 +76,6 @@ const useQueryExecute = () => {
     param.dataset.dsType = orgDataset.datasetType;
     param.dataset.query = orgDataset.datasetQuery;
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
-
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
 
