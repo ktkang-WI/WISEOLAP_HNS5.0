@@ -1,3 +1,4 @@
+import ItemManager from './ItemManager';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 
 // meta.dataField.dimension 설정
@@ -84,13 +85,17 @@ const initDataFieldMeta = (item) => {
 
 /**
  * 비정형 아이템의 meta값 세팅
+ * @param {JSON} orgItem 아이템 객체
  * @return {JSON} 생성된 비정형 아이템의 meta 정보
  */
-const makeAdhocItemMeta = () => {
+const makeAdHocItemMeta = (orgItem) => {
+  orgItem.meta = {};
+  ItemManager.generateMeta(orgItem);
   return {
     name: '아이템',
     memo: '',
-    useCaption: true
+    useCaption: true,
+    ...orgItem.meta
   };
 };
 
@@ -99,5 +104,5 @@ export {
   makeMetaDataField,
   makeFieldOption,
   initDataFieldMeta,
-  makeAdhocItemMeta
+  makeAdHocItemMeta
 };

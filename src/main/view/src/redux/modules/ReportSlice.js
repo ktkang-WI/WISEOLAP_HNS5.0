@@ -32,10 +32,7 @@ const reducers = {
   /* REPORT */
   initReport: (state, actions) => {
     const mode = actions.payload;
-
-    if (mode === DesignerMode['ADHOC']) {
-      state.reports[0].options.reportType = DesignerMode['ADHOC'];
-    }
+    state.reports[0].options.reportType = mode;
     return state;
   },
   insertReport(state, actions) {

@@ -116,7 +116,7 @@ const makeMart = (item) => {
   };
 };
 
-const makeAdhocItemMart = () => {
+const makeAdHocItemMart = () => {
   return {
     ...defaultMart,
     ribbonItem: []
@@ -149,6 +149,6 @@ const makeDataFieldOptionChild = (type) =>
 
 export {
   makeMart,
-  makeAdhocItemMart,
+  makeAdHocItemMart,
   makeDataFieldOptions
 };

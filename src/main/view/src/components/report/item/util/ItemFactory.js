@@ -1,8 +1,8 @@
-import {makeAdhocItemMart, makeDataFieldOptions, makeMart}
+import {makeAdHocItemMart, makeDataFieldOptions, makeMart}
   from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import ItemManager from './ItemManager';
-import {initDataFieldMeta, makeAdhocItemMeta} from './metaUtilityFactory';
+import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -43,9 +43,9 @@ const makeItem = (orgItem) => {
  * @param {*} orgItem 아이템 객체
  * @return {JSON} 생성된 비정형 아이템의 정보
  */
-const makeAdhocItem = (orgItem) => {
-  const meta = !orgItem.meta ? makeAdhocItemMeta() : orgItem.meta;
-  const mart = !orgItem.mart ? makeAdhocItemMart() : orgItem.mart;
+const makeAdHocItem = (orgItem) => {
+  const meta = !orgItem.meta ? makeAdHocItemMeta(orgItem) : orgItem.meta;
+  const mart = !orgItem.mart ? makeAdHocItemMart() : orgItem.mart;
 
   return {
     ...orgItem,
@@ -54,7 +54,7 @@ const makeAdhocItem = (orgItem) => {
   };
 };
 
-const makeAdhocOption = () => {
+const makeAdHocOption = () => {
   const dataFieldTypes = DataFieldTypeOfItemType['pivot'];
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
@@ -69,6 +69,6 @@ const makeAdhocOption = () => {
 
 export {
   makeItem,
-  makeAdhocItem,
-  makeAdhocOption
+  makeAdHocItem,
+  makeAdHocOption
 };

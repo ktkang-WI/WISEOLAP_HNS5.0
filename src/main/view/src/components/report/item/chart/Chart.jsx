@@ -5,8 +5,10 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import React from 'react';
 
-const Chart = ({id, item}) => {
+const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
+  console.log(adHocOption);
+
   if (!mart.init) {
     return <></>;
   }

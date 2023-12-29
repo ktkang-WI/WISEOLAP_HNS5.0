@@ -46,7 +46,7 @@ public class ChartDataMaker implements ItemDataMaker {
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
-            if ("dimension".equals(dim.getCategory())) {
+            if ("dimension".equals(dim.getCategory()) || "row".equals(dim.getCategory())) {
                 dimNames.add(dim.getName());
             } else {
                 dimGrpNames.add(dim.getName());

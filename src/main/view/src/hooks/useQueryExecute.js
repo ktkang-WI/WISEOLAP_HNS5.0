@@ -2,9 +2,10 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItems
+  selectCurrentItems, selectRootItem
 } from 'redux/selector/ItemSelector';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReport, selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
@@ -14,10 +15,13 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {DesignerMode} from 'components/config/configType';
+import useModal from './useModal';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
 
@@ -53,6 +57,66 @@ const useQueryExecute = () => {
     ItemManager.generateParameter(item, param);
 
     return param;
+  };
+
+  const generateAdHocParamter = (rootItem, datasets, parameters) => {
+    const param = {};
+
+    // TODO: 로그인 추가 후 유저 아이디 수정
+    param.userId = 'admin';
+    param.dataset = {};
+
+    // dataset
+    const orgDataset = datasets.find(
+        (dataset) => rootItem.adHocOption.dataField.datasetId ==
+        dataset.datasetId
+    );
+
+    param.dataset.dsId = orgDataset.dataSrcId;
+    param.dataset.dsType = orgDataset.datasetType;
+    param.dataset.query = orgDataset.datasetQuery;
+
+    param.dataset.dsId = orgDataset.dataSrcId;
+    param.dataset.dsType = orgDataset.datasetType;
+    param.dataset.query = orgDataset.datasetQuery;
+
+    const parameter = ParamUtils.
+        generateParameterForQueryExecute(parameters);
+
+    param.parameter = JSON.stringify(parameter);
+    param.dataset = JSON.stringify(param.dataset);
+    param.sortByItem =
+    JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
+    ItemManager.generateAdHocParameter(rootItem, param);
+
+    return param;
+  };
+
+  const executeAdHocItem = (rootItem, datasets, parameters) => {
+    const tempItem = _.cloneDeep(rootItem);
+    const chartItem = tempItem.items[0];
+    const pivotItem = tempItem.items[1];
+    const param = generateAdHocParamter(tempItem, datasets, parameters);
+    const reportId = selectCurrentReportId(store.getState());
+
+    models.Item.getAdHocItemData(param).then((response) => {
+      if (response.status != 200) {
+        alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
+        return;
+      }
+
+      chartItem.mart.init = true;
+      chartItem.mart.data = response.data[0];
+
+      pivotItem.mart.init = true;
+      pivotItem.mart.data = response.data[1];
+
+      ItemManager.generateItem(chartItem);
+      ItemManager.generateItem(pivotItem, tempItem);
+
+      dispatch(updateItem({reportId, item: chartItem}));
+      dispatch(updateItem({reportId, item: pivotItem}));
+    });
   };
 
   /**
@@ -92,11 +156,19 @@ const useQueryExecute = () => {
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    */
   const executeItems = () => {
+    const rootItem = selectRootItem(store.getState());
     const items = selectCurrentItems(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
+    const report = selectCurrentReport(store.getState());
 
-    items.map((item) => executeItem(item, datasets, parameters));
+    if (report.options.reportType === DesignerMode['DASHBOARD']) {
+      items.map((item) => executeItem(item, datasets, parameters));
+    }
+
+    if (report.options.reportType === DesignerMode['ADHOC']) {
+      executeAdHocItem(rootItem, datasets, parameters);
+    }
   };
 
   /**

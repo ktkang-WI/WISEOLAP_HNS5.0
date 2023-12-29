@@ -61,6 +61,7 @@ import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
@@ -197,6 +198,33 @@ public class ReportService {
         PivotResult result = new PivotResult();
 
         result.setMatrix(pagedMatrix);
+        return result;
+    }
+
+    public List<ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        List<ReportResult> result = new ArrayList<ReportResult>();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggreagtion);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
+        List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
+
+        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
+        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
+        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
+
+        // clone으로 넘겨서
+        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
+        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+
         return result;
     }
 

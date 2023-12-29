@@ -148,8 +148,91 @@ public class ReportController {
         // } else {
         //     return reportService.getItemData(dataAggreagtion);
         // }
-        
+
         return reportService.getItemData(dataAggreagtion);
+    }
+
+    @Operation(summary = "adhoc-item-data", description = "아이템의 데이터를 조회합니다.")
+    @Parameters({
+            @Parameter(name = "dataset", description = "데이터 집합 정보"),
+            @Parameter(name = "dimensions", description = "차원 데이터 항목 목록"),
+            @Parameter(name = "measures", description = "측정값 데이터 항목 목록"),
+            @Parameter(name = "userId", description = "현재 접속한 유저의 아이디"),
+            @Parameter(name = "itemType", description = "아이템 타입"),
+            @Parameter(name = "pagingOption", description = "적용할 페이징 옵션"),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\r\n" + //
+                    "    \"dataset\": \"{ \\\"dsId\\\": 2144, \\\"dsType\\\": \\\"DS_SQL\\\", \\\"query\\\": \\\"SELECT  Sum([F_자동차_작업일지].[금액]) AS [금액],\\n"
+                    + //
+                    "        Sum([F_자동차_작업일지].[부가세]) AS [부가세],\\n" + //
+                    "        Sum([F_자동차_작업일지].[소계]) AS [소계],\\n" + //
+                    "        D_생산회사.[생산회사코드] AS [생산회사코드],\\n" + //
+                    "        D_생산회사.[생산회사이름] AS [생산회사이름],\\n" + //
+                    "        D_자동차종류.[자동차코드] AS [자동차코드],\\n" + //
+                    "        D_자동차종류.[자동차명] AS [자동차명],\\n" + //
+                    "        D_결재구분.[결재코드] AS [결재코드],\\n" + //
+                    "        D_결재구분.[결재구분명] AS [결재구분명] \\n" + //
+                    "FROM    F_자동차_작업일지  INNER JOIN D_자동차종류 D_자동차종류 ON F_자동차_작업일지.[자동차] = D_자동차종류.[자동차코드]\\n" + //
+                    "        INNER JOIN D_생산회사 D_생산회사 ON D_자동차종류.[생산회사코드] = D_생산회사.[생산회사코드]\\n" + //
+                    "        INNER JOIN D_결재구분 D_결재구분 ON F_자동차_작업일지.[결재구분] = D_결재구분.[결재코드]\\n" + //
+                    "        \\n" + //
+                    "WHERE   (1=1)\\n" + //
+                    "\\t\\n" + //
+                    "GROUP BY\\tD_생산회사.[생산회사코드],\\n" + //
+                    "\\t\\tD_생산회사.[생산회사이름],\\n" + //
+                    "\\t\\tD_자동차종류.[자동차코드],\\n" + //
+                    "\\t\\tD_자동차종류.[자동차명],\\n" + //
+                    "\\t\\tD_결재구분.[결재코드],\\n" + //
+                    "\\t\\tD_결재구분.[결재구분명]\\\"}\",\r\n" + //
+                    "    \"userId\": \"admin\",\r\n" + //
+                    "    \"measure\": \"[{\\\"name\\\": \\\"금액\\\", \\\"uniqueName\\\": \\\"금액\\\", \\\"caption\\\": \\\"금액\\\", \\\"fieldId\\\": \\\"dataItem0\\\", \\\"summaryType\\\": \\\"SUM\\\"}]\",\r\n"
+                    + //
+                    "    \"dimension\": \"[{\\\"name\\\":\\\"생산회사이름\\\",\\\"uniqueName\\\":\\\"생산회사이름\\\",\\\"caption\\\":\\\"생산회사이름\\\",\\\"fieldId\\\":\\\"dataItem1\\\"},{\\\"name\\\":\\\"결재구분명\\\",\\\"uniqueName\\\":\\\"결재구분명\\\",\\\"caption\\\":\\\"결재구분명\\\",\\\"fieldId\\\":\\\"dataItem2\\\"}]\",\r\n"
+                    + //
+                    "    \"pagingOption\": \"{\\\"pagingEnabled\\\": true, \\\"start\\\": 0, \\\"size\\\": 3}\"\r\n" + //
+                    "}")
+    }))
+    @PostMapping(value = "/adhoc-item-data")
+    public List<ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
+            throws Exception {
+        Gson gson = new Gson();
+        String dimensionsStr = param.getOrDefault("dimension", "[]");
+        String measuresStr = param.getOrDefault("measure", "[]");
+        String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
+        String datasetStr = param.get("dataset");
+        String parameterStr = param.getOrDefault("parameter", "[]");
+        String userId = param.get("userId");
+        String pagingOptionStr = param.getOrDefault("pagingOption", "");
+
+        List<Dimension> dimensions = gson.fromJson(dimensionsStr,
+                new TypeToken<ArrayList<Dimension>>() {
+                }.getType());
+        List<Measure> measures = gson.fromJson(measuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+                }.getType());
+        Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
+        PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
+        boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
+
+        DataAggregation dataAggreagtion = DataAggregation.builder()
+                .dataset(dataset)
+                .measures(measures)
+                .dimensions(dimensions)
+                .sortByItems(sortByItems)
+                .userId(userId)
+                .parameters(parameters)
+                .removeNullData(removeNullData)
+                .pagingOption(pagingOption)
+                .build();
+
+        return reportService.getAdHocItemData(dataAggreagtion);
     }
 
     @Operation(

@@ -26,7 +26,7 @@ const FlexLayoutDefault = () => {
         ]
       }
     },
-    adhoc: {
+    adHoc: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false

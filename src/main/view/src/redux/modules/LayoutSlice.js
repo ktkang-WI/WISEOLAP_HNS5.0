@@ -36,7 +36,7 @@ const dashboardInitialState = {
   }
 };
 
-const adhocInitialState = {
+const adHocInitialState = {
   0: {
     layoutQuantity: 1,
     layoutConfig: {
@@ -93,8 +93,8 @@ const getInitialState = () => {
     return dashboardInitialState;
   }
 
-  if (mode === 'adhoc') {
-    return adhocInitialState;
+  if (mode === 'adHoc') {
+    return adHocInitialState;
   }
 };
 
@@ -108,7 +108,7 @@ const reducers = {
     }
 
     if (mode === DesignerMode['ADHOC']) {
-      return adhocInitialState;
+      return adHocInitialState;
     }
   },
   setLayout(state, actions) {

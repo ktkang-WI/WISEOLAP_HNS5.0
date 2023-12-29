@@ -4,6 +4,7 @@ import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   selectCurrentItems,
+  selectRootItem,
   selectSelectedItemId
 } from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -40,6 +41,7 @@ const ItemBoard = () => {
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
+  const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
@@ -61,12 +63,13 @@ const ItemBoard = () => {
     const ItemComponent = itemFactory[component];
 
     const item = items.find((i) => id == i.id);
+    const adHocOption = rootItem.adHocOption;
 
     if (!item) return <></>;
 
     return (
       <Item>
-        <ItemComponent item={item} id={item.id}/>
+        <ItemComponent item={item} adHocOption={adHocOption} id={item.id}/>
       </Item>
     );
   }

@@ -35,10 +35,11 @@ const generateMeta = (item) => {
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} rootItem root item
  */
-const generateItem = (item) => {
+const generateItem = (item, rootItem) => {
   const fields = [];
-  const metaFields = item.meta.dataField;
+  const metaFields = item.meta.dataField || rootItem.adHocOption.dataField;
 
   const allMeasure = metaFields.measure.concat(metaFields.sortByItem);
   const getMeasureByFieldId = allMeasure.reduce((acc, data) => {

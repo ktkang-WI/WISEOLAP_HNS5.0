@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {makeAdhocItem, makeAdhocOption, makeItem}
+import {makeAdHocItem, makeAdHocOption, makeItem}
   from 'components/report/item/util/ItemFactory';
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
@@ -9,12 +9,12 @@ const item = makeItem({
   type: 'chart'
 });
 
-const adhocChartItem = makeAdhocItem({
+const adHocChartItem = makeAdHocItem({
   id: 'item1',
   type: 'chart'
 });
 
-const adhocPivotItem = makeAdhocItem({
+const adHocPivotItem = makeAdHocItem({
   id: 'item2',
   type: 'pivot'
 });
@@ -27,12 +27,12 @@ const dashboardInitialState = {
   }
 };
 
-const adhocInitialState = {
+const adHocInitialState = {
   0: {
     selectedItemId: 'item1',
     itemQuantity: 1,
-    items: [adhocChartItem, adhocPivotItem],
-    adhocOption: makeAdhocOption()
+    items: [adHocChartItem, adHocPivotItem],
+    adHocOption: makeAdHocOption()
   }
 };
 
@@ -52,7 +52,7 @@ const getInitialState = () => {
   }
 
   if (mode === DesignerMode['ADHOC']) {
-    return adhocInitialState;
+    return adHocInitialState;
   }
 };
 
@@ -66,7 +66,7 @@ const reducers = {
     }
 
     if (mode === DesignerMode['ADHOC']) {
-      return adhocInitialState;
+      return adHocInitialState;
     }
   },
   changeItemReportId(state, actions) {
@@ -153,8 +153,8 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
-    if (state[reportId].adhocOption) {
-      const dataField = state[reportId].adhocOption.dataField;
+    if (state[reportId].adHocOption) {
+      const dataField = state[reportId].adHocOption.dataField;
       if (dataField.datasetId == datasetId) {
         for (const fields in dataField) {
           if (typeof dataField[fields] === 'object') {
@@ -183,8 +183,8 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
-    if (state[reportId].adhocOption) {
-      state[reportId].adhocOption.dataField = dataField;
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField = dataField;
     } else {
       const itemIndex = state[reportId].items.findIndex(
           (item) => item.id == state[reportId].selectedItemId
@@ -199,9 +199,9 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
-    if (state[reportId].adhocOption) {
-      state[reportId].adhocOption.dataField[dataField.category] =
-        state[reportId].adhocOption.dataField[dataField.category]
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField[dataField.category] =
+        state[reportId].adHocOption.dataField[dataField.category]
             .map((field) => {
               if (field.fieldId == dataField.fieldId) {
                 return dataField;
