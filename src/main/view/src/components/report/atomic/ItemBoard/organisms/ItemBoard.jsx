@@ -147,6 +147,7 @@ const ItemBoard = () => {
     const tabNode = tabSetNode.getSelectedNode();
     if (tabNode) {
       renderValues.buttons.push(
+          !rootItem.adHocOption &&
           <button
             key="delete"
             title="Delete tabset"
