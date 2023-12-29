@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.report.domain.xml;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
@@ -47,6 +48,7 @@ public abstract class XMLParser {
 	// parameter의 information에서 dsId와 DsType을 추가하기 위하여 사용하는 필드.
 	protected Map<Integer, String> dsIdNDsType = new HashMap<>();
 	
+	
 	/**
 	 * filter의 경우 모든 보고서에 공통으로 적용됨으로 불필요한 코드량을 줄이기 위하여 여기에 선언
 	 * @param String paramXml : REPORT_MSTR 의 PARAM_XML 컬럼.
@@ -54,24 +56,25 @@ public abstract class XMLParser {
 	protected void getParamXmlDTO(String paramXml) {
 		try {
 			JSONObject root = XML.toJSONObject(paramXml);
-			log.debug(root.toString());
-			JSONObject param_xml = root.optJSONObject("PARAM_XML");
-			if(param_xml == null) return;
+			JSONObject paramObject = root.optJSONObject("PARAM_XML");
+			if(paramObject == null) return;
 			
-			Object params = root.get("PARAM");
-			
-			if (result instanceof JSONObject) {
-	        	this.datasetJsonArray.put((JSONObject) result);
-	        } else if (result instanceof JSONArray) {
-	        	this.datasetJsonArray = (JSONArray) result;
+			Object paramsArr = paramObject.opt("PARAM");
+						
+			if (paramsArr instanceof JSONObject) {
+				getParameter((JSONObject) paramsArr);
+	        } else if (paramsArr instanceof JSONArray) {
+	        	((JSONArray) paramsArr).forEach((paramObj) -> {
+	        		getParameter((JSONObject) paramObj);
+	        	});
 	        }
-			
-	        Object result = pointer.queryFrom(root);
-			if(params == null) return; 
-			
-			params.forEach((param) -> {
-				log.debug(param.toString());
-			});
+//			
+//	        Object result = pointer.queryFrom(root);
+//			if(params == null) return; 
+//			
+//			params.forEach((param) -> {
+//				log.debug(param.toString());
+//			});
 //			DocumentBuilder builder = factory.newDocumentBuilder(); 
 //			this.document = builder.parse(new InputSource(new StringReader(paramXml)));
 //			Element root = document.getDocumentElement();
@@ -169,6 +172,33 @@ public abstract class XMLParser {
 		}
 		
 	};
+	
+	private void getParameter (JSONObject paramObj) {
+		Iterator<String> paramKeys = paramObj.keys();
+		Map<String, Object> information = new HashMap<>();
+		
+		while (paramKeys.hasNext()) {
+			String paramKey = paramKeys.next();
+			Object param = paramObj.get(paramKey);
+			if("".equals(param) || param == null) continue;
+			
+			String camelCaseKey = DBDataUtility.convertUpperSnakeToCamel(paramKey);
+			if("Y".equals(param) || "N".equals(param)) {
+				param = DBDataUtility.parseBooleanByString((String)param);
+			}
+			information.put(camelCaseKey, param);
+		}
+		
+		this.informations.add(information);
+	};
+	
+	private String stringValueChanger (String orgValue) {
+		String newValue = null;
+		if("TBL".equals(orgValue)) {
+			newValue = "TABLE";
+		}
+		return newValue;
+	}
 	
 	public abstract Map<String, Object> getReport(ReportMstrDTO dto, String userId);
 }
