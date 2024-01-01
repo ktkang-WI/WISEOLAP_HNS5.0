@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.domain.xml;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.Map;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPointer;
@@ -45,9 +45,20 @@ public abstract class XMLParser {
 	protected abstract void getlayoutXmlDTO(String layoutXml);
 	protected abstract void getDatasetXmlDTO(String datasetXml, String userId);
 	
-	// parameter의 information에서 dsId와 DsType을 추가하기 위하여 사용하는 필드.
-	protected Map<Integer, String> dsIdNDsType = new HashMap<>();
+	// dataSource에 관련된 정보를 저장
+	/** 데이터 구조
+	 * { dsNm : {
+	 * 			dataSource: dataset1,
+	 * 			dsId: 3512,
+	 * 			dsType: DS_SQL
+	 * 			}
+	 * LayoutXml에서 dsNm을 키값으로 dataSource을 파싱하여 저장 이후에 datasetXml에서 dsType, dsId를 저장
+	 */
+	protected Map<String, HashMap<String, Object>> dsNmWithInfo = new HashMap<>();
 	
+	// param의 information의 변경된 키캆을 가지는 Mapper
+	private Map<String, String> informationKeyMapper = keyMapperCreator();
+	private Map<String, String> operationMapper = operationMapperCreator();
 	
 	/**
 	 * filter의 경우 모든 보고서에 공통으로 적용됨으로 불필요한 코드량을 줄이기 위하여 여기에 선언
@@ -68,105 +79,6 @@ public abstract class XMLParser {
 	        		getParameter((JSONObject) paramObj);
 	        	});
 	        }
-//			
-//	        Object result = pointer.queryFrom(root);
-//			if(params == null) return; 
-//			
-//			params.forEach((param) -> {
-//				log.debug(param.toString());
-//			});
-//			DocumentBuilder builder = factory.newDocumentBuilder(); 
-//			this.document = builder.parse(new InputSource(new StringReader(paramXml)));
-//			Element root = document.getDocumentElement();
-//			
-//			NodeList paramList = root.getElementsByTagName("PARAM");
-			
-//			for(int paramIndex = 0; paramIndex < paramList.getLength(); paramIndex++) {
-//				Map<String, Object> information = new HashMap<>();
-//				Node paramNode = paramList.item(paramIndex);
-//				if(paramNode.getNodeType() != Node.ELEMENT_NODE) continue;
-//				Element paramElement = (Element) paramNode;
-//				String dataSrcType = paramElement.getElementsByTagName("DATASRC_TYPE").item(0).getTextContent();
-//				
-//					NodeList paramConfigNodes = paramNode.getChildNodes();
-//					for(int configIndex = 0; configIndex < paramConfigNodes.getLength(); configIndex++) {
-//						Node configNode = paramConfigNodes.item(configIndex);
-//						if(configNode.getNodeType() != Node.ELEMENT_NODE) continue;
-//						
-//						if("PARAM_CAPTION".equals(configNode.getNodeName())) {
-//							information.put("caption", configNode.getTextContent());
-//						} else if ("DATA_TYPE".equals(configNode.getNodeName())) {
-//							information.put("dataType", configNode.getTextContent());
-//						} else if ("DATASRC_TYPE".equals(configNode.getNodeName())) {
-//							information.put("dataSourceType", configNode.getTextContent());
-//						} else if ("DATASRC".equals(configNode.getNodeName())) {
-//							information.put("dataSource", configNode.getTextContent());
-//						} else if ("CAPTION_VALUE_ITEM".equals(configNode.getNodeName())) {
-//							information.put("itemCaption", configNode.getTextContent());
-//						} else if ("KEY_VALUE_ITEM".equals(configNode.getNodeName())) {
-//							information.put("itemKey", configNode.getTextContent());
-//						} else if ("DEFAULT_VALUE".equals(configNode.getNodeName())) {
-//							if(dataSrcType.equals("CAND")) {
-//								information.put("defaultValue", new ArrayList<Object>() {{
-//									add(configNode.getTextContent());
-//								}});
-//							} else {
-//								information.put("defaultValue", configNode.getTextContent());
-//							}
-//						} else if ("CAPTION_WIDTH".equals(configNode.getNodeName())) {
-//							information.put("captionWidth", Double.parseDouble(configNode.getTextContent()));
-//						} else if ("DS_ID".equals(configNode.getNodeName())) {
-//							information.put("dsId", Integer.parseInt(configNode.getTextContent()));
-//						} else if ("WHERE_CLAUSE".equals(configNode.getNodeName())) {
-//							information.put("exceptionValue", configNode.getTextContent());
-//						} else if ("DEFAULT_VALUE_USE_SQL_SCRIPT".equals(configNode.getNodeName())) {
-//							information.put("defaultValueUseSql", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
-//						} else if ("MULTI_SEL".equals(configNode.getNodeName())) {
-//							information.put("multiselect", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
-//						} else if ("PARAM_NM".equals(configNode.getNodeName())) {
-//							information.put("name", configNode.getTextContent());
-//						} else if ("OPER".equals(configNode.getNodeName())) {
-//							information.put("operation", configNode.getTextContent().toUpperCase());
-//						} else if ("ORDER".equals(configNode.getNodeName())) {
-//							information.put("order", configNode.getTextContent());
-//						} else if ("PARAM_TYPE".equals(configNode.getNodeName())) {
-//							information.put("paramType", configNode.getTextContent());
-//						} else if ("ALL_YN".equals(configNode.getNodeName())) {
-//							information.put("useAll", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
-//						} else if ("VISIBLE".equals(configNode.getNodeName())) {
-//							information.put("visible", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
-//						} else if ("WIDTH".equals(configNode.getNodeName())) {
-//							information.put("width", Double.parseDouble(configNode.getTextContent()));
-//						} else if ("CAPTION_WIDTH_VISIBLE".equals(configNode.getNodeName())) {
-//							information.put("useCaptionWidth", DBDataUtility.parseBooleanByString(configNode.getTextContent()));
-//						} else if ("SORT_VALUE_ITEM".equals(configNode.getNodeName())) {
-//							information.put("sortBy", configNode.getTextContent());
-//						} else if ("SORT_TYPE".equals(configNode.getNodeName())) {
-//							information.put("sortOrder", configNode.getTextContent());
-//						}
-//						
-//					} 
-//					if(dataSrcType.equals("CAND")) {
-//						information.put("calendarDefaultType", "NOW");
-//						information.put("calendarDefaultType", new ArrayList() {{
-//							add("YEAR");
-//							add("");
-//						}});
-//						information.put("calendarKeyFormat", "yyyy");
-//						information.put("calendarCaptionFormat", "yyyy");
-//						information.put("calendarPeriodValue", new ArrayList() {{
-//							add(-1);
-//							add("");
-//						}});
-//					}
-//					information.put("dsType", this.dsIdNDsType.get((Integer) information.get("dsId")));
-//					this.informations.add(information);
-//				추후 추가 예정
-//				else if() {
-//					
-//				}
-				
-//			}
 		} catch (Exception e) {
 			 e.printStackTrace();
 		}
@@ -180,24 +92,87 @@ public abstract class XMLParser {
 		while (paramKeys.hasNext()) {
 			String paramKey = paramKeys.next();
 			Object param = paramObj.get(paramKey);
-			if("".equals(param) || param == null) continue;
 			
-			String camelCaseKey = DBDataUtility.convertUpperSnakeToCamel(paramKey);
+			if("".equals(param) || param == null) continue;
+			if(this.informationKeyMapper.get(paramKey) == null) continue;
+			
+			if("TBL".equals(param)) param = "TABLE";
+			
+			if("OPER".equals(paramKey)) {
+				param = this.operationMapper.get(param);
+			}
+			
+			if("DEFAULT_VALUE".equals(paramKey)) {
+				String strParam = (String) param;
+				ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(strParam.split(",")));
+				if(arrayList.size() == 1) {
+					arrayList.add("");
+				}
+				param = arrayList;
+			}
+			
 			if("Y".equals(param) || "N".equals(param)) {
 				param = DBDataUtility.parseBooleanByString((String)param);
 			}
-			information.put(camelCaseKey, param);
+			
+			Object dsType = null;
+			if("DS_ID".equals(paramKey)) {
+				dsType = this.dsNmWithInfo.values()
+					    .stream()
+					    .filter(dataSourceInfo -> dataSourceInfo.get("dsId").equals(paramObj.get(paramKey)))
+					    .map(dataSourceInfo -> dataSourceInfo.get("dsType"))
+						.findFirst();
+				
+				information.put("dsType", dsType);
+			}
+			information.put(this.informationKeyMapper.get(paramKey), param);
 		}
 		
 		this.informations.add(information);
 	};
 	
-	private String stringValueChanger (String orgValue) {
-		String newValue = null;
-		if("TBL".equals(orgValue)) {
-			newValue = "TABLE";
-		}
-		return newValue;
+	
+	private HashMap<String, String> operationMapperCreator () {
+		return new HashMap<String, String> (){{
+			put("In", "IN");
+			put("NotIn", "NOT_IN");
+			put("Equals", "EQUALS");
+			put("Between", "BETWEEN");
+		}};
+	};
+	
+	private HashMap<String, String> keyMapperCreator () {
+		return new HashMap<String, String> (){{
+			put("PARAM_NM", "name");
+			put("PARAM_CAPTION", "caption");
+			put("DATA_TYPE", "dataType");
+			put("PARAM_TYPE", "paramType");
+			put("OPER", "operation");
+			put("ORDER", "order");
+			put("LINE_BREAK", "lineBreak");
+			put("SEARCH_YN", "useSearch");
+			put("WIDTH", "width");
+			put("VISIBLE", "visible");
+			put("CAPTION_WIDTH_VISIBLE", "useCaptionWidth");
+			put("CAPTION_WIDTH", "captionWidth");
+			put("DEFAULT_VALUE", "defaultValue");
+			put("DEFAULT_VALUE_USE_SQL_SCRIPT", "defaultValueUseSql");
+			put("WHERE_CLAUSE", "exceptionValue");
+			put("DS_ID", "dsId");
+			put("DATASRC_TYPE", "dataSourceType");
+			put("DATASRC", "dataSource");
+			put("CAPTION_VALUE_ITEM", "itemCaption");
+			put("KEY_VALUE_ITEM", "itemKey");
+			put("ORDERBY_KEY", "sortBy");
+			put("SORT_TYPE", "sortOrder");
+			put("MULTI_SEL", "multiSelect");
+			put("ALL_YN", "useAll");
+			put("CAND_DEFAULT_TYPE", "calendarDefaultType");
+			put("CAND_PERIOD_BASE", "calendarPeriodBase");
+			put("KEY_FORMAT", "calendarKeyFormat");
+			put("CAPTION_FORMAT", "calendarCaptionFormat");
+			put("CAND_PERIOD_VALUE", "calendarPeriodValue");
+		}};
 	}
 	
 	public abstract Map<String, Object> getReport(ReportMstrDTO dto, String userId);

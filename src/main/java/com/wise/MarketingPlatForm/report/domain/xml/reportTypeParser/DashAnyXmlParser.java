@@ -47,7 +47,6 @@ public class DashAnyXmlParser extends XMLParser {
    
    
    // LAYOUT_XML의  DataSource태그의 데이터를 사용하기 위하여 선언 bjsong
-   private Map<String, String> datasources = new HashMap<>();
    // pivot_gird 아이템에서 row와 column 정보를 저장하기 위하여 선언 bjsong
    private Map<String, String> rowNCol = new HashMap<>();
 
@@ -110,12 +109,11 @@ public class DashAnyXmlParser extends XMLParser {
                for(int datasourceIndex = 0; datasourceIndex < datasourceNodes.getLength(); datasourceIndex++) {
                   Node datasourceNode = datasourceNodes.item(datasourceIndex);
                   if(datasourceNode.getNodeType() != Node.ELEMENT_NODE) continue;
-                  // value = id
                   String componentName = datasourceNode.getAttributes().getNamedItem("ComponentName").getTextContent();
-                  // key = name
                   String Name = datasourceNode.getAttributes().getNamedItem("Name").getTextContent();
-                  
-                  this.datasources.put(Name, componentName);
+                  HashMap<String, Object> dataSourceInfo = new HashMap<>();
+                  dataSourceInfo.put("dataSource", componentName);
+                  this.dsNmWithInfo.put(Name, dataSourceInfo);
                }
                break;
             case "Items":
@@ -205,23 +203,19 @@ public class DashAnyXmlParser extends XMLParser {
                }
               }
               
-//              this.datasetNm.add(datasetNm);
-//              this.datasrcId.add(datasrcId);
-//              this.datasetType.add(datasetType);
-//              this.datasrcType.add(datasrcType);
-              
-              this.dsIdNDsType.put(datasrcId, datasrcType);
+              this.dsNmWithInfo.get(datasetNm).put("dsId", datasrcId);
+              this.dsNmWithInfo.get(datasetNm).put("dsType", datasrcType);
               
               dataset.put("dataSrcId", datasrcId);
               dataset.put("datasetNm", datasetNm);
               dataset.put("datasetQuery", datasetQuery);
               dataset.put("datasetType", datasrcType);
-              dataset.put("datasetId", this.datasources.get(datasetNm));
+              dataset.put("datasetId", this.dsNmWithInfo.get(datasetNm).get("dataSource"));
               dataset.put("fields", fields);
               datasets.add(dataset);
          }
            
-         this.dataset.put("selectedDatasetId", this.datasources.values().iterator().next());
+         this.dataset.put("selectedDatasetId", this.dsNmWithInfo.values().iterator().next().get("dataSource"));
          this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
          this.dataset.put("datasets", datasets);
       } catch (Exception e) {
@@ -378,6 +372,7 @@ public class DashAnyXmlParser extends XMLParser {
                                     .get();
                         String meaName = measureNodes.getNamedItem("DataMember").getTextContent();
                         String fieldId = measureNodes.getNamedItem("UniqueName").getTextContent();
+                        String sortBy = measureNodes.getNamedItem("SortByMeasure").getTextContent();
 
                         HashMap<String, Object> measure = new HashMap<>();
                         measure.put("caption", caption);
@@ -386,13 +381,19 @@ public class DashAnyXmlParser extends XMLParser {
                         measure.put("name", meaName);
                         measure.put("uniqueName", meaName);
                         measure.put("summaryType", summaryType);
-                        // 임시로 데이터 저장 - 추후 변경되야함 bjsong
-                        measure.put("sortBy", meaName);
+                        if("".equals(sortBy) || sortBy == null) {
+                        	sortBy = meaName;
+                        }
+                        measure.put("sortBy", sortBy);
                         measure.put("sortOrder", "ASC");
                         
                         measures.add(measure);
                      }
                   }
+               } else if("HiddenMeasures".equals(itemChild.getNodeName())) {
+            	   
+               }  else if("SeriesDimensions".equals(itemChild.getNodeName())) {
+            	   
                }
             }
             dataField.put("datasetId", datasetId);
