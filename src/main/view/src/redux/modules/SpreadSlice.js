@@ -54,8 +54,8 @@ const initialState = {
       row: 0,
       column: 0
     },
-    useHeader: false
-    // useBorder: false
+    useHeader: false,
+    useBorder: false
   }
 };
 

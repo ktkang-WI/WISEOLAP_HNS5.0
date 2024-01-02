@@ -1,9 +1,10 @@
 import useSpread from 'hooks/useSpread';
+import localizedString from 'config/localization';
 
 const SpreadDefaultElement = () => {
   const SpreadRibbonDefaultElement = {
     id: 'fileMenu',
-    text: '파일',
+    text: localizedString.file,
     buttonGroups: [
       {
         commandGroup: {
@@ -90,14 +91,14 @@ const SpreadDefaultElement = () => {
       deleteReport,
       downloadReportXLSX,
       downloadReportTXT,
-      dataset,
+      datasetBinder,
       print
     } = useSpread();
 
     return {
       newReport: {
-        title: '새로만들기',
-        text: '새로만들기',
+        title: localizedString.newReport,
+        text: localizedString.newReport,
         iconClass: 'ribbon-button-new-report',
         bigButton: 'true',
         commandName: 'newReport',
@@ -106,8 +107,8 @@ const SpreadDefaultElement = () => {
         }
       },
       openReportLocal: {
-        title: '로컬 열기',
-        text: '로컬 열기',
+        title: localizedString.importFileFromPC,
+        text: localizedString.importFileFromPC,
         iconClass: 'ribbon-button-open-report-local',
         bigButton: 'true',
         commandName: 'openReportLocal',
@@ -116,8 +117,8 @@ const SpreadDefaultElement = () => {
         }
       },
       openReport: {
-        title: '열기',
-        text: '열기',
+        title: localizedString.loadReport,
+        text: localizedString.loadReport,
         iconClass: 'ribbon-button-open-report',
         bigButton: 'true',
         commandName: 'openReport',
@@ -126,8 +127,8 @@ const SpreadDefaultElement = () => {
         }
       },
       saveReport: {
-        title: '저장',
-        text: '저장',
+        title: localizedString.saveReport,
+        text: localizedString.saveReport,
         iconClass: 'ribbon-button-save-report',
         bigButton: 'true',
         commandName: 'saveReport',
@@ -136,8 +137,8 @@ const SpreadDefaultElement = () => {
         }
       },
       saveAsReport: {
-        title: '다른 이름으로 저장',
-        text: '다른 이름으로 저장',
+        title: localizedString.saveAs,
+        text: localizedString.saveAs,
         iconClass: 'ribbon-button-save-as-report',
         bigButton: 'true',
         commandName: 'saveAsReport',
@@ -146,8 +147,8 @@ const SpreadDefaultElement = () => {
         }
       },
       deleteReport: {
-        title: '보고서 삭제',
-        text: '보고서 삭제',
+        title: localizedString.deleteReport,
+        text: localizedString.deleteReport,
         iconClass: 'ribbon-button-delete-report',
         bigButton: 'true',
         commandName: 'deleteReport',
@@ -156,8 +157,8 @@ const SpreadDefaultElement = () => {
         }
       },
       downloadReport: {
-        title: '다운로드',
-        text: '다운로드',
+        title: localizedString.downloadReport,
+        text: localizedString.downloadReport,
         iconClass: 'ribbon-button-download-report',
         bigButton: 'true',
         commandName: 'downloadReport'
@@ -179,18 +180,18 @@ const SpreadDefaultElement = () => {
         }
       },
       dataset: {
-        title: '데이터집합 연동',
-        text: '데이터집합 연동',
+        title: localizedString.datasetBinding,
+        text: localizedString.datasetBinding,
         iconClass: 'ribbon-button-dataset',
         bigButton: 'true',
         commandName: 'dataset',
         execute: (context, propertyName, fontItalicChecked) => {
-          dataset();
+          datasetBinder();
         }
       },
       print: {
-        title: '프린트',
-        text: '프린트',
+        title: localizedString.print,
+        text: localizedString.print,
         iconClass: 'ribbon-button-print',
         bigButton: 'true',
         commandName: 'print',

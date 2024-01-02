@@ -12,6 +12,8 @@ import ReportFolderSelectorModal
   from 'components/report/modal/ReportFolderSelectorModal';
 import ReportSaveForm
   from 'components/report/atomic/Save/molecules/ReportSaveForm';
+import DatasetLinkerModal
+  from 'components/report/atomic/spreadBoard/modal/DatasetLinkerModal';
 
 export const useSpread = () => {
   const {openModal, confirm, alert} = useModal();
@@ -114,8 +116,8 @@ export const useSpread = () => {
 
   };
 
-  const dataset = () => {
-
+  const datasetBinder = () => {
+    openModal(DatasetLinkerModal);
   };
 
   const print = () => {
@@ -138,7 +140,7 @@ export const useSpread = () => {
     deleteReport,
     downloadReportXLSX,
     downloadReportTXT,
-    dataset,
+    datasetBinder,
     print
   };
 };
