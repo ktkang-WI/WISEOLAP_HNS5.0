@@ -17,4 +17,6 @@ public class Dimension {
     String uniqueName;
     String fieldId;
     String category;
+    String sortBy;
+    String sortOrder;
 }

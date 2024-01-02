@@ -1,5 +1,6 @@
 import {makeMart} from './martUtilityFactory';
-import {DataFieldTypeOfItemType} from './dataFieldType';
+import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+import ItemManager from './ItemManager';
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -29,6 +30,7 @@ const makeItem = (orgItem) => {
 
   if (!orgItem.meta) {
     initDataFieldMeta(item);
+    ItemManager.generateMeta(item);
   };
 
   return item;
@@ -41,6 +43,7 @@ const makeItem = (orgItem) => {
 const initDataFieldMeta = (item) => {
   const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
+  item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];
 };
 
 export {makeItem};

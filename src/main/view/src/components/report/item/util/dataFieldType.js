@@ -7,7 +7,8 @@ const DataFieldType = {
   COLUMN: 'column',
   ROW: 'row',
   FIELD: 'field',
-  SPARKLINE: 'sparkline'
+  SPARKLINE: 'sparkline',
+  SORT_BY_ITEM: 'sortByItem'
 };
 
 const DataFieldTypeOfItemType = {
@@ -18,8 +19,8 @@ const DataFieldTypeOfItemType = {
   ],
   [ItemType.PIVOT_GRID]: [
     DataFieldType.MEASURE,
-    DataFieldType.COLUMN,
-    DataFieldType.ROW],
+    DataFieldType.ROW,
+    DataFieldType.COLUMN],
   [ItemType.DATA_GRID]: [
     DataFieldType.FIELD,
     DataFieldType.SPARKLINE

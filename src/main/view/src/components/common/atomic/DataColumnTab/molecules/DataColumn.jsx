@@ -13,6 +13,8 @@ import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import NumberFormatModal
   from 'components/report/atomic/Format/organisms/NumberFormatModal';
+import {getContextMenu} from '../utils/contextMenu';
+
 
 const theme = getTheme();
 
@@ -23,7 +25,7 @@ const ColumnWrapper = styled.div`
   margin: 5px;
   ${(props) => props.fixed &&
   'transform: none !important;'}
-  
+
 `;
 
 const Column = styled.div`
@@ -172,10 +174,13 @@ const DataColumn = ({
       top: 'calc(50% - 10px)'
     };
 
+    const summaryType = data && data.type == 'MEA' ? data.summaryType : '';
+    const sortBy = data && data.type == 'DIM' ? data.sortBy : '';
+
     return (
       <>
         <span className='dx-menu-item-text'>{e.text}</span>
-        {data.summaryType && data.summaryType == e.value &&
+        {(summaryType || sortBy) == e.value &&
           <div style={iconStyle}>{checkIcon}</div>}
         {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
       </>
@@ -197,6 +202,18 @@ const DataColumn = ({
             dataField: {...data, caption: caption}}));
         }
       });
+    },
+    'SortBy': (e) => {
+      dispatch(updateItemField({reportId,
+        dataField: {...data, sortBy: e.itemData.value}}));
+    }
+  };
+
+  const buttonEventFunction = (e) => {
+    if (data.category === 'field') {
+      buttonEvent(data, openModal);
+    } else {
+      buttonEvent(data, e);
     }
   };
 
@@ -220,7 +237,7 @@ const DataColumn = ({
           }
         }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
-        {sortOrder &&
+        {data?.type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         {children}
@@ -230,7 +247,7 @@ const DataColumn = ({
         {showContextMenu &&
           <ContextMenu
             className='other-menu'
-            dataSource={type === 'DIM'? dimensionMenuItems : measureMenuItems}
+            dataSource={getContextMenu(data, sortItems)}
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}
@@ -246,7 +263,7 @@ const DataColumn = ({
       </Column>
       {useButton &&
         <Button onClick={(e) => {
-          buttonEvent(data, e);
+          buttonEventFunction(e);
         }}>
           <IconImg src={buttonIcon}/>
         </Button>

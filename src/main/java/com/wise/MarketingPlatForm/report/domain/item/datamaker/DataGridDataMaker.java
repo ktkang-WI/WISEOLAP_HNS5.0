@@ -18,14 +18,15 @@ public class DataGridDataMaker implements ItemDataMaker {
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
+        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
         PagingOption pagingOption = dataAggreagtion.getPagingOption();
 
-        DataSanitizer sanitizer = new DataSanitizer(data);
+        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
         data = sanitizer
-                .groupBy(measures, dimensions)
-                .columnFiltering(measures, dimensions)
-                .orderBy(dimensions)
+                .groupBy()
+                .orderBy()
+                .columnFiltering()
                 .paging(pagingOption)
                 .getData();
 

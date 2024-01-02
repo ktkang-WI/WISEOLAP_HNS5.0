@@ -3,15 +3,22 @@ import SideNavigationBar
   from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {Outlet} from 'react-router-dom';
 const Designer = () => {
+  const left = ['Logo', 'ReportTabs'];
+
   return (
     <div>
       <Header
-        left={['Logo', 'ReportTabs']}
-        right={['Viewer', 'ShowQuery', 'ReportProperty']}
+        left={left}
+        right={[
+          'Viewer',
+          'NewWindow',
+          'ShowQuery',
+          'ReportProperty'
+        ]}
       >
       </Header>
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc', 'Preference']}
+        content={['Dashboard', 'AdHoc', 'Spreadsheet', 'Preference']}
       />
       <Outlet/>
     </div>

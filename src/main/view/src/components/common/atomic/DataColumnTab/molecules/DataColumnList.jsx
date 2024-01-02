@@ -70,13 +70,15 @@ const DataColumnList = ({
   const dispatch = useDispatch();
   let sortItems = [];
 
+  // TODO: 소스개선 필요 (일정 외 사항 참고)
   for (const key in dataFieldOptions) {
     if (dataFields[key].length > 0) {
       const option = dataFieldOptions[key];
       if (option.type == 'MEA') {
         sortItems = sortItems.concat(dataFields[key].map((field) => ({
           text: field.caption,
-          value: field.name
+          value: field.fieldId,
+          type: 'SortBy'
         })));
       }
     }
@@ -122,7 +124,10 @@ const DataColumnList = ({
                     index={index}
                     useButton={useButton}
                     buttonEvent={buttonEvent}
-                    buttonIcon={buttonIcon}
+                    buttonIcon={
+                      typeof buttonIcon === 'function' ?
+                      buttonIcon(column) : buttonIcon
+                    }
                     sortItems={sortItems}
                   >
                     {column.caption}

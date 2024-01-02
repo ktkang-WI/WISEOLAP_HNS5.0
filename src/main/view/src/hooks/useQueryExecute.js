@@ -1,4 +1,3 @@
-import ItemUtilityFactory from 'components/report/item/util/ItemUtilityFactory';
 import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
@@ -10,11 +9,11 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
-import ItemType from 'components/report/item/util/ItemType';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 
 const useQueryExecute = () => {
@@ -50,7 +49,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
-    ItemUtilityFactory[item.type].generateParameter(item, param);
+    param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
+    ItemManager.generateParameter(item, param);
 
     return param;
   };
@@ -66,25 +66,26 @@ const useQueryExecute = () => {
     const param = generateParameter(tempItem, datasets, parameters);
     const reportId = selectCurrentReportId(store.getState());
 
-    if (item.type == ItemType.PIVOT_GRID) {
+    // TODO: 추후 PivotMatrix 적용할 때 해제
+    // if (item.type == ItemType.PIVOT_GRID) {
+    //   tempItem.mart.init = true;
+    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+
+    //   dispatch(updateItem({reportId, item: tempItem}));
+    // } else {
+    models.Item.getItemData(param, (response) => {
+      if (response.status != 200) {
+        return;
+      }
+
       tempItem.mart.init = true;
-      ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+      tempItem.mart.data = response.data;
+
+      ItemManager.generateItem(tempItem);
 
       dispatch(updateItem({reportId, item: tempItem}));
-    } else {
-      models.Item.getItemData(param, (response) => {
-        if (response.status != 200) {
-          return;
-        }
-
-        tempItem.mart.init = true;
-        tempItem.mart.data = response.data;
-
-        ItemUtilityFactory[tempItem.type].generateItem(tempItem);
-
-        dispatch(updateItem({reportId, item: tempItem}));
-      });
-    }
+    });
+    // }
   };
 
   /**
@@ -110,6 +111,7 @@ const useQueryExecute = () => {
         const parameters = selectRootParameter(store.getState());
         const requiredFilterLength = linkageFilter.
             filter((filterName) => !parameters.values[filterName]).length;
+
         if (requiredFilterLength == 0) {
           setListValues(param, linkageFilter).then((data) => {
             resolve(data);
@@ -144,6 +146,7 @@ const useQueryExecute = () => {
       }
 
       const values = await models.Parameter.getListItems(param, linkageValues);
+
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }
@@ -151,6 +154,7 @@ const useQueryExecute = () => {
       return values;
     } catch (e) {
       console.error(e);
+
       return {
         listItems: [],
         value: ''
@@ -168,7 +172,7 @@ const useQueryExecute = () => {
       const query = param.dataSource;
       const linkageFilter = ParamUtils.getParameterNamesInQuery(query);
 
-      if (linkageFilter.length > 0) {
+      if (linkageFilter && linkageFilter.length > 0) {
         return await executeLinkageFilter(param, linkageFilter);
       } else {
         return await setListValues(param);
@@ -202,6 +206,7 @@ const useQueryExecute = () => {
 
     parameters.informations.map((param) => {
       try {
+        // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {
           executeListParameter(param).then((data) => {
             if (data) {
@@ -210,16 +215,18 @@ const useQueryExecute = () => {
           });
         } else {
           if (param.defaultValueUseSql && param.calendarDefaultType != 'NOW') {
+            // defaultValue 쿼리일 경우 쿼리 실행
             executeParameterDefaultValueQuery(param).then((data) => {
               setValues(param.name, data);
             });
           } else if (param.calendarDefaultType == 'NOW') {
+            // defaultValue calendarDefaultType 현재일 경우 계산
             const defaultValue = [];
 
             param.calendarPeriodBase.map((base, i) => {
               const value = param.calendarPeriodValue[i];
               const date = ParamUtils.getCalendarNowDefaultValue(base, value);
-              // TODO: 달력 필터 기본값 만들기
+
               defaultValue.push(
                   ParamUtils.parseStringFromDate(date, param.calendarKeyFormat)
               );

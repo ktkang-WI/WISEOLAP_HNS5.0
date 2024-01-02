@@ -15,7 +15,8 @@ import {
 } from 'redux/selector/ItemSelector';
 import store from 'redux/modules';
 
-const Chart = ({id, mart}) => {
+const Chart = ({id, item}) => {
+  const mart = item ? item.mart : null;
   if (!mart.init) {
     return <></>;
   }
