@@ -102,8 +102,8 @@ public abstract class XMLParser {
 				param = this.operationMapper.get(param);
 			}
 			
-			if("DEFAULT_VALUE".equals(paramKey)) {
-				String strParam = (String) param;
+			if("DEFAULT_VALUE".equals(paramKey) || "CAND_PERIOD_BASE".equals(paramKey)) {
+				String strParam = param.toString();
 				ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(strParam.split(",")));
 				if(arrayList.size() == 1) {
 					arrayList.add("");

@@ -20,6 +20,7 @@ import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const theme = getTheme();
 
@@ -59,6 +60,7 @@ const LoadReportModal = ({...props}) => {
                   dispatch(setReports(data.reports));
                   data.item.items.forEach((i) => {
                     i.mart = makeMart(i);
+                    ItemManager.generateMeta(i);
                   });
                   dispatch(setItems({
                     reportId: selectedReport.id,
