@@ -126,7 +126,10 @@ const DataColumn = ({
       'value': 'FORMAT',
       'type': 'Format',
       'onClick': () => {
-        openModal(NumberFormatModal);
+        openModal(NumberFormatModal, {
+          dataField: data,
+          reportId: reportId
+        });
       }
     },
     {
