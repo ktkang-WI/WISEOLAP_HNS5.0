@@ -1,7 +1,10 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
 import React from 'react';
+import DataGridBullet from './DataGridBullet';
 
-const DataGrid = ({id, mart}) => {
+const DataGrid = ({id, item}) => {
+  const mart = item ? item.mart : null;
+
   if (!mart.init) {
     return <></>;
   }
@@ -18,8 +21,12 @@ const DataGrid = ({id, mart}) => {
         <Column
           key={i}
           caption={column.caption}
-          dataField={column.type === 'MEASURE' ?
-            column.summaryType + '_' + column.name : column.name}
+          dataField={column.name}
+          visible={column.visible}
+          cellRender={
+            column.detailSetting === 'bar' &&
+            DataGridBullet
+          }
         />
       )}
     </DevDataGrid>
