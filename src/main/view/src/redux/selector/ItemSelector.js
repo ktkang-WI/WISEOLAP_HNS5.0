@@ -31,6 +31,11 @@ export const selectCurrentDataField = createSelector(
     (selectedItem) => selectedItem.meta.dataField
 );
 
+export const selectCurrentDataMeasure = createSelector(
+    selectCurrentItem,
+    (selectedItem) => selectedItem.meta.dataField.measure
+);
+
 export const selectCurrentDataFieldOption = createSelector(
     selectCurrentItem,
     (selectedItem) => selectedItem ? selectedItem.mart.dataFieldOption : []

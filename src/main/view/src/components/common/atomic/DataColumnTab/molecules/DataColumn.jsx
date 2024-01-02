@@ -12,6 +12,8 @@ import {useDispatch} from 'react-redux';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import {getContextMenu} from '../utils/contextMenu';
+import DataColumnSeriesOptions
+  from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
 
 const theme = getTheme();
 
@@ -139,6 +141,12 @@ const DataColumn = ({
     }
   };
 
+  const handleSeriesOptionClick = (e) => {
+    openModal(DataColumnSeriesOptions, {
+
+    });
+  };
+
   return (
     <ColumnWrapper
       fixed={fixed}
@@ -185,7 +193,8 @@ const DataColumn = ({
       </Column>
       {useButton &&
         <Button onClick={(e) => {
-          buttonEvent(data, e);
+          // buttonEvent(data, e);
+          handleSeriesOptionClick(e);
         }}>
           <IconImg src={buttonIcon}/>
         </Button>
