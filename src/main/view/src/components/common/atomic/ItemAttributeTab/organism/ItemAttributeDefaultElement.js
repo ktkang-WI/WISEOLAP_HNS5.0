@@ -17,6 +17,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -24,6 +25,8 @@ const ItemAttributeDefaultElement = () => {
   const focusedItem = useSelector(selectCurrentItem);
   const reportId = useSelector(selectCurrentReportId);
   const {updateInteractiveOption} = ItemSlice.actions;
+  const {filterItem} = useQueryExecute();
+
   const MASTER_FILTER_MODE = {
     SINGLE: 'single',
     MULTIPLE: 'multiple'
@@ -115,9 +118,19 @@ const ItemAttributeDefaultElement = () => {
           onClick: () => {
             const ignoreMasterFilter = !option.ignoreMasterFilter;
 
-            dispatch(updateInteractiveOption({
-              reportId, option: {ignoreMasterFilter}
-            }));
+            const tempItem = {
+              ...focusedItem,
+              meta: {
+                ...focusedItem.meta,
+                interactiveOption: {
+                  ...option,
+                  ignoreMasterFilter
+                }
+              }
+            };
+
+            filterItem(tempItem,
+              ignoreMasterFilter ? {} : focusedItem.mart.filter);
           }
         }
       ]

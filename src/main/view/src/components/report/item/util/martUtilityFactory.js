@@ -113,6 +113,7 @@ const makeMart = (item) => {
     dataFieldOption: {
       ...dataFieldOptions
     },
+    filter: {},
     ribbonItems: ribbonItems,
     attributeItems: attributeItems
   };
