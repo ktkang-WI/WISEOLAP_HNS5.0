@@ -46,10 +46,15 @@ export const useSpread = () => {
     sheets.Designer.registerTemplate(templateName, templateMethod);
   };
 
-  const newReport = () => {
-    confirm('test', () => {
-      console.log('test');
-    });
+  const newReport = (context) => {
+    const executeNew = (context) => {
+      const sheets = selectSheets(store.getState());
+      context.destroy();
+      new sheets.Designer.Designer(
+          document.getElementsByClassName('ss')[0], config);
+    };
+
+    confirm('test', () => executeNew(context));
   };
 
   const openReportLocal =(context) => {

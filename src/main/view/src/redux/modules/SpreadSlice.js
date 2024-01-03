@@ -46,14 +46,13 @@ GC.Spread.Sheets.Designer.LicenseKey ='intelligence.wise.co.kr,' +
 const excelIO = new GC.Spread.Excel.IO();
 
 const initialState = {
-  Sheets: GC.Spread.Sheets,
+  sheets: GC.Spread.Sheets,
   excelIO: excelIO,
+  // Workbook의 instance 객체
+  workbook: undefined,
   0: {
-    spreadJS: new GC.Spread.Sheets.Workbook(),
-    dataPosition: {
-      row: 0,
-      column: 0
-    },
+    row: 0,
+    column: 0,
     useHeader: false,
     useBorder: false
   }

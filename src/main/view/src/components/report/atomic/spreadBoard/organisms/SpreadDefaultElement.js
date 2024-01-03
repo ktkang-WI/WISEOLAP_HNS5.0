@@ -103,7 +103,7 @@ const SpreadDefaultElement = () => {
         bigButton: 'true',
         commandName: 'newReport',
         execute: (context, propertyName, fontItalicChecked) => {
-          newReport();
+          newReport(context);
         }
       },
       openReportLocal: {

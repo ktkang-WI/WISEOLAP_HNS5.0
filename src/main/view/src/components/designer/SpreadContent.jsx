@@ -15,7 +15,6 @@ const theme = getTheme();
 const SpreadContent = () => {
   // draggable을 사용할지 안할지 논의
   const {onDragEnd, onDragStart} = useDrag();
-
   return (
     <Content
       snbWidth={theme.size.snbWidth}
@@ -25,7 +24,6 @@ const SpreadContent = () => {
         <CustomDrawer index={0} component={DataSourceTab}>
           <FilterBar/>
           <Wrapper>
-            {/* reportId 별로 그리기*/}
             <SpreadBoard/>
           </Wrapper>
         </CustomDrawer>
