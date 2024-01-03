@@ -26,7 +26,7 @@ const ItemOptionManager = () => {
   };
 
   const commonRibbonBtn = {
-    'ShowColorLegend': {
+    'ShowColorLegend': { // 범례
       ...commonPopoverButtonElement,
       'id': 'show_color_legend',
       'label': localizedString.showColorLegend,

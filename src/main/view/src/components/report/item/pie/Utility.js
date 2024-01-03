@@ -11,6 +11,33 @@ const generateMeta = (item) => {
 
   setMeta('pieChartStyle', 'pie');
   setMeta('labelPosition', 'columns');
+  setMeta('tooltip', {
+    bilions: 'B',
+    customPrefix: false,
+    customSuffix: false,
+    degreeOption: '반올림',
+    inputPrefix: '',
+    format: '값',
+    milions: 'M',
+    thousands: 'K',
+    unit: 'Ones',
+    degree: 0,
+    ones: ''
+  });
+  setMeta('labelEdit', {
+    showTitle: true,
+    bilions: 'B',
+    customPrefix: false,
+    customSuffix: false,
+    degreeOption: '반올림',
+    inputPrefix: '',
+    format: '값',
+    milions: 'M',
+    thousands: 'K',
+    unit: 'Ones',
+    degree: 0,
+    ones: ''
+  });
 };
 
 const generateItem = () => {

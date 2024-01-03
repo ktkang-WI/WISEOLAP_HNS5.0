@@ -13,12 +13,15 @@ import {useSelector} from 'react-redux';
 import CustomEventUtility from './CusomEventUtility';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import useModal from 'hooks/useModal';
+import ItemOptionModal from './itemOptionModal/ItemOptionModal';
 
 const useCustomEvent = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const dispatch = useDispatch();
   const {updateItem} = ItemSlice.actions;
   const reportId = useSelector(selectCurrentReportId);
+  const {openModal} = useModal();
   // 팝오버 버튼의 공통 요소 집합
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
@@ -51,7 +54,12 @@ const useCustomEvent = () => {
       'label': localizedString.dataLabelEdit,
       'imgSrc': dataLabelEdit,
       'onClick': () => {
-        console.log('test');
+        openModal(ItemOptionModal,
+            {
+              popupName: 'labelEdit',
+              modalTitle: localizedString.labelDataEdit
+            }
+        );
       }
     },
     'LabelPosition': {
@@ -71,7 +79,13 @@ const useCustomEvent = () => {
       'id': 'tootip',
       'label': localizedString.tooltip,
       'imgSrc': tooltip,
-      'renderContent': () => {
+      'onClick': () => {
+        openModal(ItemOptionModal,
+            {
+              popupName: 'tooltip',
+              modalTitle: localizedString.tooltip
+            }
+        );
       }
     },
     'PieChartStyle': {
@@ -79,7 +93,7 @@ const useCustomEvent = () => {
       'id': 'pie_chart_style',
       'label': localizedString.pieChartStyle,
       'imgSrc': pieStyle,
-      'renderContent': () => { // 나중에 따로 뺴기.
+      'renderContent': () => {
         return getRadioPopover(
             'pieChartStyle',
             selectedItem.meta.pieChartStyle
@@ -95,7 +109,6 @@ const useCustomEvent = () => {
   };
 
   const setMeta = (item, key, value) => {
-    console.log(value);
     return {
       ...item,
       meta: {
