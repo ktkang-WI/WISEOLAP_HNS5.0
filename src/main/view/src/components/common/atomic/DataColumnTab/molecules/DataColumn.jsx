@@ -15,7 +15,6 @@ import NumberFormatModal
   from 'components/report/atomic/Format/organisms/NumberFormatModal';
 import {getContextMenu} from '../utils/contextMenu';
 
-
 const theme = getTheme();
 
 const ColumnWrapper = styled.div`
@@ -25,7 +24,7 @@ const ColumnWrapper = styled.div`
   margin: 5px;
   ${(props) => props.fixed &&
   'transform: none !important;'}
-
+  
 `;
 
 const Column = styled.div`
@@ -92,73 +91,6 @@ const DataColumn = ({
   const {openModal} = useModal();
   const {updateItemField} = ItemSlice.actions;
 
-  const measureMenuItems = [
-    {
-      'text': localizedString.count,
-      'value': 'COUNT',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.distinctCount,
-      'value': 'COUNTDISTINCT',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.sum,
-      'value': 'SUM',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.min,
-      'value': 'MIN',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.max,
-      'value': 'MAX',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.average,
-      'value': 'AVG',
-      'type': 'SummaryType'
-    },
-    {
-      'text': localizedString.format,
-      'value': 'FORMAT',
-      'type': 'Format',
-      'onClick': () => {
-        openModal(NumberFormatModal, {
-          dataField: data,
-          reportId: reportId
-        });
-      }
-    },
-    {
-      'text': localizedString.rename,
-      'value': 'RENAME',
-      'type': 'Rename'
-    }
-  ];
-
-  const dimensionMenuItems = [
-    {
-      'text': localizedString.sortBy,
-      'items': [{
-        text: 'Value',
-        value: data? data.name : ''
-      }].concat(sortItems)
-    },
-    {
-      'text': localizedString.topN
-    },
-    {
-      'text': localizedString.rename,
-      'value': 'RENAME',
-      'type': 'Rename'
-    }
-  ];
-
   const contextItemRender = (e) => {
     const checkIcon = '\u2713';
     const childrenIcon = '\u25B6';
@@ -201,6 +133,12 @@ const DataColumn = ({
           dispatch(updateItemField({reportId,
             dataField: {...data, caption: caption}}));
         }
+      });
+    },
+    'Format': (e) => {
+      openModal(NumberFormatModal, {
+        dataField: data,
+        reportId: reportId
       });
     },
     'SortBy': (e) => {

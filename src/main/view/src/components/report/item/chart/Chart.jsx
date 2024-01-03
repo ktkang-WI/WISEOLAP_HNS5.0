@@ -7,26 +7,27 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import React from 'react';
 import customizeTooltip from '../util/customizeTooltip';
-import {
-  selectCurrentDatasets
-} from 'redux/selector/DatasetSelector';
-import {
-  selectCurrentItems
-} from 'redux/selector/ItemSelector';
-import store from 'redux/modules';
+import {selectCurrentDataField}
+  from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
 
 const Chart = ({id, item}) => {
   const mart = item ? item.mart : null;
   if (!mart.init) {
     return <></>;
   }
-  const items = selectCurrentItems(store.getState());
-  const datasets = selectCurrentDatasets(store.getState());
-  console.log('Chart items', items);
-  console.log('Chart datasets', datasets);
 
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
+  const dataFields = useSelector(selectCurrentDataField);
+  console.log('dataFields:', dataFields);
+
+  const formatiOptions = dataFields.measure.map((measure) => ({
+    format: measure.format,
+    uniqueName: measure.uniqueName
+  }));
+
+  console.log('formatiOptions:', formatiOptions);
 
   return (
     <DevChart
@@ -45,7 +46,9 @@ const Chart = ({id, item}) => {
       <Tooltip
         enabled={true}
         location='edge'
-        customizeTooltip={customizeTooltip}
+        customizeTooltip={
+          (info) => customizeTooltip(info, false, formatiOptions)
+        }
       ></Tooltip>
       {
         seriesNames.map(
@@ -61,7 +64,9 @@ const Chart = ({id, item}) => {
                   visible={true}
                   position='outside'
                   offset={50}
-                  customizeText={(info) => customizeTooltip(info, true)}
+                  customizeText={
+                    (info) => customizeTooltip(info, true, formatiOptions)
+                  }
                   // backgroundColor='rgba(0, 0, 0, 0)'
                   // font={{color: 'rgb(29, 178, 245)'}}
                 />

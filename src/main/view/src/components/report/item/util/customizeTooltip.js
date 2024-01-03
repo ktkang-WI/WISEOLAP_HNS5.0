@@ -1,14 +1,30 @@
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 
-const customizeTooltip = (info, isLabel) => {
-  console.log('info', info);
-  const labelFormat = 'Number';
-  const labelUnit = 'Ones';
-  const labelPrecision = 0;
-  const labelPrecisionOption = '반올림';
-  const labelSeparator = true;
-  const labelSuffixEnabled = false;
-  const labelSuffix = {
+const customizeTooltip = (info, isLabel, formatOptions) => {
+  // console.log('info', info);
+  // console.log('isLabel', isLabel);
+  console.log('formatOptions', formatOptions);
+  console.log('info.seriesName:', info.seriesName);
+  console.log('formatOptions.uniqueName', formatOptions.uniqueName);
+  const matchingFormatOption =
+  formatOptions.find(
+      (option) => option.uniqueName === info.seriesName);
+  console.log('matchingFormatOption:', matchingFormatOption);
+  const labelFormat =
+  matchingFormatOption?.format?.formatType || 'Number';
+  const labelUnit =
+  matchingFormatOption?.format?.unit || 'Ones';
+  const labelPrecision =
+  matchingFormatOption?.format?.precision || 0;
+  const labelPrecisionOption =
+  matchingFormatOption?.format?.precisionType || '반올림';
+  const labelSeparator =
+  matchingFormatOption?.format?.useDigitSeparator !==
+  undefined ? matchingFormatOption.useDigitSeparator : true;
+  const labelSuffixEnabled =
+  matchingFormatOption?.format?.suffixEnabled !==
+  undefined ? matchingFormatOption.suffixEnabled : false;
+  const labelSuffix = matchingFormatOption?.suffix || {
     O: '',
     K: '천',
     M: '백만',
