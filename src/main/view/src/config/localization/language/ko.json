@@ -264,5 +264,13 @@
   "visibility": "표시 여부",
   "detailSetting": "세부 설정",
   "value": "값",
-  "bar": "바"
+  "bar": "바",
+  "round": "반올림",
+  "ceil": "올림",
+  "floor": "버림",
+  "formatItems": ["없음", "인수", "값", "%", "인수 및 값", "값 및 %",
+    "인수 및 %", "인수, 값 및 %"],
+  "degreeOptions": ["반올림", "올림", "버림"],
+  "labelDataEdit": "라벨 데이터 편집"
+
 }

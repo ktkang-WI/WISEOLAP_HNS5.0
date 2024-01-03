@@ -249,5 +249,13 @@
   "detailSetting": "Detail Setting",
   "value": "value",
   "bar": "bar",
-  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?"
+  "reloadConfirmMsg": "If it is not saved, your work may be lost. Would you like to create a new one?",
+  "round": "Round",
+  "ceil": "Round Up",
+  "floor": "Round Down",
+  "formatItems": ["none", "Argument", "Value", "%", "Argument & Value", "Value & %",
+    "Argument & %", "Argument, Value & %"],
+  "degreeOptions": ["Round", "Round Up", "Round Down"],
+  "labelDataEdit": "Label Edit"
+
 }
