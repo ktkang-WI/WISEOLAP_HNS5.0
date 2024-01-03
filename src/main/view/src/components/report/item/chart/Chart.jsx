@@ -20,14 +20,10 @@ const Chart = ({id, item}) => {
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
   const dataFields = useSelector(selectCurrentDataField);
-  console.log('dataFields:', dataFields);
-
   const formatiOptions = dataFields.measure.map((measure) => ({
     format: measure.format,
     uniqueName: measure.uniqueName
   }));
-
-  console.log('formatiOptions:', formatiOptions);
 
   return (
     <DevChart

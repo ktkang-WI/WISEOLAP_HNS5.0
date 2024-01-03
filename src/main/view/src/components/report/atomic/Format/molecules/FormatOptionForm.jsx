@@ -2,138 +2,44 @@ import SelectBox from 'devextreme-react/select-box';
 import CheckBox from 'devextreme-react/check-box';
 import TextBox from 'devextreme-react/text-box';
 import NumberBox from 'devextreme-react/number-box';
-import Form, {Item, Label} from 'devextreme-react/form';
 import localizedString from 'config/localization';
-import {useState, useEffect} from 'react';
 import {styled} from 'styled-components';
-import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import Form, {Item, Label} from 'devextreme-react/form';
 
-const FormatOptionForm = ({formatOptions}) => {
-  const prefix = undefined;
-  const formatValue = (options) => {
-    const value = 1234567890.123;
-    console.log('Options inside formatValue:', options);
-    const formatted = NumberFormatUtility.formatNumber(
-        value,
-        options.formatType,
-        options.unit,
-        options.precision,
-        options.useDigitSeparator,
-        prefix,
-        options.suffix,
-        options.suffixEnabled,
-        options.precisionType
-    );
-
-    return formatted;
-  };
-  const [suffixEnabled, setSuffixEnabled] = useState(
-      formatOptions.suffixEnabled || false
-  );
-  const [formatType, setFormatType] = useState(
-      formatOptions.formatType || 'Number'
-  );
-  const [unit, setUnit] = useState(
-      formatOptions.unit || 'Ones'
-  );
-  const [precision, setPrecision] = useState(formatOptions.precision || 0);
-  const [precisionType, setPrecisionType] = useState(
-      formatOptions.precisionType || '반올림'
-  );
-  const [useDigitSeparator, setUseDigitSeparator] = useState(
-      formatOptions.useDigitSeparator || false
-  );
-  const [suffixO, setSuffixO] = useState(formatOptions.suffix.O || '');
-  const [suffixK, setSuffixK] = useState(formatOptions.suffix.K || '천');
-  const [suffixM, setSuffixM] = useState(formatOptions.suffix.M || '백만');
-  const [suffixB, setSuffixB] = useState(formatOptions.suffix.B || '십억');
-  const [formattedValue, setFormattedValue] = useState(
-      formatValue({
-        formatType,
-        unit,
-        precision,
-        precisionType,
-        useDigitSeparator,
-        prefix,
-        suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-        suffixEnabled
-      })
-  );
-  const [checkBoxValue, setCheckBoxValue] = useState(false);
-  const updateFormControls = () => {
-    const isAutoOrGeneral = formatType === 'Auto' || formatType === 'General';
-    const isNumberOrCurrency =
-      formatType === 'Number' || formatType === 'Currency';
-    const isScientificOrPercent =
-      formatType === 'Scientific' || formatType === 'Percent';
-    const isSuffixEnabled = suffixEnabled;
-
-    const updatedControls = {
-      unit: !isNumberOrCurrency,
-      suffixEnabled: !isNumberOrCurrency,
-      suffixO: isSuffixEnabled && checkBoxValue,
-      suffixK: isSuffixEnabled && checkBoxValue,
-      suffixM: isSuffixEnabled && checkBoxValue,
-      suffixB: isSuffixEnabled && checkBoxValue,
-      precision: !isScientificOrPercent && !isNumberOrCurrency,
-      precisionType: !isScientificOrPercent && !isNumberOrCurrency,
-      useDigitSeparator: isAutoOrGeneral || isScientificOrPercent
-    };
-
-    setFormControls(updatedControls);
-  };
-
-  useEffect(() => {
-    updateFormControls();
-    const newValue = formatValue({
-      formatType,
-      unit,
-      precision,
-      precisionType,
-      useDigitSeparator,
-      prefix,
-      suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-      suffixEnabled
-    });
-    setFormattedValue(newValue);
-    console.log('Formatted Value:', newValue); // Add this line
-  }, [formatType, suffixEnabled, checkBoxValue, unit,
-    suffixO, suffixK, suffixM, suffixB,
-    precision, precisionType, useDigitSeparator]);
-  //
-  const handleCheckBoxValueChanged = (name, value) => {
-    if (name === 'suffixEnabled') {
-      setSuffixEnabled(value);
-      // Update the state of suffix controls when suffixEnabled checkbox changes
-      if (!value) {
-        setCheckBoxValue(false);
-      } else {
-        setCheckBoxValue(true);
-      }
-    }
-  };
-
-  const [formControls, setFormControls] = useState({
-    unit: false,
-    suffixEnabled: false,
-    suffixO: false,
-    suffixK: false,
-    suffixM: false,
-    suffixB: false,
-    precision: false,
-    precisionType: false,
-    useDigitSeparator: false
-  });
-
-  const GrayBackgroundTextArea = styled.textarea`
-    background-color: lightgray;
-    border: 1px solid #ccc;
-    resize: none;
-    width: 100%;
-    height: 70px;
-    padding: 5px;
-    font-size: 40px;
-    text-align: center;
+const FormatOptionForm = ({
+  formatOptions,
+  formatType,
+  unit,
+  precision,
+  precisionType,
+  suffixEnabled,
+  checkBoxValue,
+  suffixO,
+  suffixK,
+  suffixM,
+  suffixB,
+  useDigitSeparator,
+  setFormatType,
+  setUnit,
+  handleCheckBoxValueChanged,
+  setSuffixO,
+  setSuffixK,
+  setSuffixM,
+  setSuffixB,
+  setPrecision,
+  setPrecisionType,
+  setUseDigitSeparator,
+  formattedValue,
+  formControls}) => {
+  const PreView = styled.textarea`
+  background-color: lightgray;
+  border: 1px solid #ccc;
+  resize: none;
+  width: 100%;
+  height: 70px;
+  padding: 5px;
+  font-size: 40px;
+  text-align: center;
   `;
 
   return (
@@ -270,11 +176,10 @@ const FormatOptionForm = ({formatOptions}) => {
       </Item>
       <Item
         editorType='dxTextArea'
-        disabled={true} // Set to true to make it readonly
+        disabled={true}
       >
-        <GrayBackgroundTextArea
+        <PreView
           defaultValue={formattedValue}
-          //  {formattedValue}
           readOnly
         />
       </Item>

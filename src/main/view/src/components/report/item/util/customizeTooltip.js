@@ -1,15 +1,9 @@
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 
 const customizeTooltip = (info, isLabel, formatOptions) => {
-  // console.log('info', info);
-  // console.log('isLabel', isLabel);
-  console.log('formatOptions', formatOptions);
-  console.log('info.seriesName:', info.seriesName);
-  console.log('formatOptions.uniqueName', formatOptions.uniqueName);
   const matchingFormatOption =
   formatOptions.find(
       (option) => option.uniqueName === info.seriesName);
-  console.log('matchingFormatOption:', matchingFormatOption);
   const labelFormat =
   matchingFormatOption?.format?.formatType || 'Number';
   const labelUnit =
