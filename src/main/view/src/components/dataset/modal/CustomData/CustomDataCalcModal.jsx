@@ -71,10 +71,12 @@ const CustomDataCalcModal = ({...props}) => {
       alert(localizedString.alertInfo.customDataCalc.empty);
       return isOk;
     }
+    /*
     if (checkForSaving.inspection === false) {
       alert(localizedString.alertInfo.customDataCalc.Inspection);
       isOk = false;
     }
+    */
     return isOk;
   };
 

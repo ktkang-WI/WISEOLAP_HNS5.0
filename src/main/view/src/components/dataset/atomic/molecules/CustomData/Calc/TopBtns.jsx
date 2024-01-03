@@ -3,10 +3,18 @@ import {typeData}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
-import {Button, LoadIndicator, SelectBox, TextBox} from 'devextreme-react';
+import {
+  // Button,
+  // LoadIndicator,
+  SelectBox,
+  TextBox} from 'devextreme-react';
 import useModal from 'hooks/useModal';
 import localizedString from '../../../../../../config/localization';
-import {useContext, useRef, useState} from 'react';
+import {
+  useContext,
+  useRef
+  // useState
+} from 'react';
 import styled from 'styled-components';
 
 const Label = styled.label`
@@ -23,9 +31,9 @@ const TopBtns = () => {
   const [allFields] = getContext.state.allFields;
   const textBoxRef = useRef();
   const selectBoxRef = useRef();
-  const [onLoading, setOnLoading] = useState(false);
+  // const [onLoading, setOnLoading] = useState(false);
   const {alert} = useModal();
-  const [checkForSaving, setCheckForSaving] = getContext.state.checkForSaving;
+  const [, setCheckForSaving] = getContext.state.checkForSaving;
 
   const inputValidation = (value) => {
     const dupplicatedNaming =
@@ -69,6 +77,7 @@ const TopBtns = () => {
   };
 
   // 테스트용 코드 기능 미구현
+  /*
   const handleLoading = () => {
     setOnLoading(true);
     setTimeout(() => {
@@ -82,10 +91,11 @@ const TopBtns = () => {
       if (!checkForSaving.type) alert(localizedString.common.invalid);
     }, 1000);
   };
+  */
 
   return (
     <>
-      <Wrapper size="65%">
+      <Wrapper size="80%">
         <Wrapper display='flex' flex-direction='row'>
           <Wrapper size="40%" display='flex' flex-direction='row'>
             <Label htmlFor="fieldName">
@@ -111,6 +121,7 @@ const TopBtns = () => {
           onValueChanged={handleSelectBox}
         />
       </Wrapper>
+      {/*
       <Wrapper size="15%">
         <Button
           id="button"
@@ -126,6 +137,7 @@ const TopBtns = () => {
           </span>
         </Button>
       </Wrapper>
+      */}
     </>
   );
 };
