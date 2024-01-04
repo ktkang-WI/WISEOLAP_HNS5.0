@@ -56,22 +56,22 @@ const useDrag = () => {
         type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
 
-      const dimensionOption = {
-        sortBy: sourceField.name,
-        sortOrder: 'ASC'
-      };
-
-      const measureOption = {
-        format: {},
-        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
-      };
-
       // 필드아이디가 있는 경우 기존 아이템 이동
       if (sourceField.fieldId) {
         tempField = {...sourceField, ...tempField};
       } else {
         tempField.fieldId = 'dataItem' + (dataField.dataFieldQuantity++);
       }
+
+      const measureOption = {
+        format: {},
+        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
+      };
+
+      const dimensionOption = {
+        sortBy: tempField.fieldId,
+        sortOrder: 'ASC'
+      };
 
       if (!sourceField.fieldId ||
         (sourceField.fieldId && sourceField.type != tempField.type)) {
