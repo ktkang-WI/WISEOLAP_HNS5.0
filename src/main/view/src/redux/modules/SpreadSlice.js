@@ -51,10 +51,13 @@ const initialState = {
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
     workbook: undefined,
-    row: 0,
-    column: 0,
-    useHeader: false,
-    useBorder: false
+    bindingInfos: [{
+      datasetId: undefined,
+      rowIndex: 0,
+      columnIndex: 0,
+      useHeader: false,
+      useBorder: false
+    }]
   }
 };
 

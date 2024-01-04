@@ -1,7 +1,46 @@
-import useSpread from 'hooks/useSpread';
+import ReportFolderSelectorModal
+  from 'components/report/modal/ReportFolderSelectorModal';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
+import {useDispatch} from 'react-redux';
+import store from 'redux/modules';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentWorkbook, selectExcelIO, selectSheets}
+  from 'redux/selector/SpreadSelector';
+import ReportSaveForm from '../../Save/molecules/ReportSaveForm';
+import DatasetLinkerModal from '../modal/DatasetLinkerModal';
 
 const SpreadDefaultElement = () => {
+  const {openModal, confirm, alert} = useModal();
+  const dispatch = useDispatch();
+  const spreadSlice = SpreadSlice.actions;
+
+  const setRibbonSetting = () => {
+    const sheets = selectSheets(store.getState());
+    const config = sheets.Designer.DefaultConfig;
+    // csutomtab 메뉴 생성
+    const newTab = SpreadRibbonDefaultElement;
+
+    // 불필요 메뉴 삭제
+    delete config.fileMenu;
+    config.ribbon.unshift(newTab);
+
+    // customtab 메뉴 메소드 정의
+    const commandMap = ribbonCommandMap();
+    // ribbon download modal 정의
+    const downlaodReportDialog = downlaodReportModel;
+    // Template 기능 추가.
+    addSpreadTemplate('downlaodReportDialog', downlaodReportDialog);
+    config.commandMap = commandMap;
+    return config;
+  };
+
+  const addSpreadTemplate = (templateName, templateMethod) => {
+    const sheets = selectSheets(store.getState());
+    sheets.Designer.registerTemplate(templateName, templateMethod);
+  };
+
   const SpreadRibbonDefaultElement = {
     id: 'fileMenu',
     text: localizedString.file,
@@ -80,20 +119,104 @@ const SpreadDefaultElement = () => {
       }
     ]
   };
-
+  // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
-    const {
-      newReport,
-      openReportLocal,
-      openReport,
-      saveReport,
-      saveAsReport,
-      deleteReport,
-      downloadReportXLSX,
-      downloadReportTXT,
-      datasetBinder,
-      print
-    } = useSpread();
+    const newReport = (context) => {
+      const sheets = selectSheets(store.getState());
+      const selectedReportId = selectCurrentReportId(store.getState());
+      const executeNew = (context) => {
+        const config = setRibbonSetting();
+        // 기존 workbook 제거
+        context.destroy();
+        // 새로운 workbook 생성 및 등록
+        const newWorkbook =
+          new sheets.Designer.Designer(document.getElementById('test'), config);
+        dispatch(spreadSlice.setWorkbook({
+          reportId: selectedReportId,
+          workbook: newWorkbook
+        }));
+      };
+
+      confirm('test', () => executeNew(context));
+    };
+
+    const openReportLocal =(context) => {
+      const sheets = selectSheets(store.getState());
+      sheets.Designer.getCommand('fileMenuPanel')
+          .execute(context, 'button_import_excel', null);
+    };
+
+    const openReport = () => {
+      openModal(ReportFolderSelectorModal);
+    };
+
+    const saveReport = () => {
+
+    };
+
+    const saveAsReport = () => {
+      openModal(ReportSaveForm);
+    };
+
+    const deleteReport = () => {
+
+    };
+
+    const downloadReportXLSX = () => {
+      let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+      const sheets = selectSheets(store.getState());
+      const workbook = selectCurrentWorkbook(store.getState());
+      const excelIO = selectExcelIO(store.getState());
+
+      reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
+      // 예외 처리 및  메소드 분리.
+      sheets.Designer.showDialog('downlaodReportDialog',
+          {
+            extName: '.xlsx',
+            fileName: reportNm,
+            workbook: workbook,
+            excelIO: excelIO
+          },
+          xlsxDownload
+      );
+    };
+
+    const xlsxDownload = (e) => {
+      if (e.fileName === '') {
+        alert('파일명을 입력해 주세요.');
+      } else {
+        if (e.fileName
+            .substr(-e.extName.length, e.extName.length) !== e.extName) {
+          e.fileName += e.extName;
+        }
+        const fileName = e.fileName;
+        const json = JSON.stringify(
+            e.workbook.toJSON({includeBindingSource: true}));
+        e.excelIO.save(json, (blob) => {
+          saveAs(blob, fileName);
+        }, (e) => {
+          console.log(e);
+        });
+      }
+    };
+
+    const downloadReportTXT = () => {
+
+    };
+
+    const datasetBinder = () => {
+      openModal(DatasetLinkerModal);
+    };
+
+    const print = () => {
+      const workbook = selectCurrentWorkbook(store.getState());
+      const activeSheet = workbook.getActiveSheet();
+      activeSheet.printInfo().margin(
+          {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
+      );
+      const index = workbook.getActiveSheetIndex();
+      workbook.print(index);
+    };
 
     return {
       newReport: {
@@ -234,7 +357,7 @@ const SpreadDefaultElement = () => {
       }]
     }]
   };
-  return {SpreadRibbonDefaultElement, ribbonCommandMap, downlaodReportModel};
+  return {setRibbonSetting};
 };
 
 export default SpreadDefaultElement;

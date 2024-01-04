@@ -1,135 +1,58 @@
 import store from 'redux/modules';
-import {
-  selectCurrentWorkbook,
-  selectExcelIO,
-  selectSheets
-} from 'redux/selector/SpreadSelector';
-import {selectCurrentReport,
-  selectCurrentReportId} from 'redux/selector/ReportSelector';
-import useModal from './useModal';
-import ReportFolderSelectorModal
-  from 'components/report/modal/ReportFolderSelectorModal';
-import ReportSaveForm
-  from 'components/report/atomic/Save/molecules/ReportSaveForm';
-import DatasetLinkerModal
-  from 'components/report/atomic/spreadBoard/modal/DatasetLinkerModal';
-import {useDispatch} from 'react-redux';
-import SpreadSlice from 'redux/modules/SpreadSlice';
-import useSpreadConfig from
-  'components/report/atomic/spreadBoard/useSpreadConfig';
+import {selectCurrentWorkbook,
+  selectSheets} from 'redux/selector/SpreadSelector';
 
 export default function useSpread() {
-  const {openModal, confirm, alert} = useModal();
-  const {setRibbonSetting} = useSpreadConfig();
-  const config = setRibbonSetting();
-  const dispatch = useDispatch();
-  const spreadSlice = SpreadSlice.actions;
+  const bindData = () => {
+    const workbook = selectCurrentWorkbook(store.getState);
+    const sheets = selectSheets(store.getState);
+    const bindingInfo = selectCurrentBindingInfo(store.getState));
+    // 추후 메게변수로 가져와야함.
+    const sheetIndex = 1;
+    const activeSheet = sheets.getSheet(sheetIndex);
+    const {columns, header} = generateColumns;
 
-  const newReport = (context) => {
-    const sheets = selectSheets(store.getState());
-    const selectedReportId = selectCurrentReportId(store.getState());
-    const executeNew = (context) => {
-      const newWorkbook =
-        new sheets.Designer.Designer(document.getElementById('test'), config);
-      context.destroy();
-      dispatch(spreadSlice.setWorkbook({
-        reportId: selectedReportId,
-        workbook: newWorkbook
-      }));
-    };
-
-    confirm('test', () => executeNew(context));
+    if((columns.length + self.bindingColRow[sheetNm].columns + 1) > activeSheet.getColumnCount() || (_data.length + self.bindingColRow[sheetNm].rows + 1) > activeSheet.getRowCount()){
+			if((columns.length + self.bindingColRow[sheetNm].columns + 1) > activeSheet.getColumnCount() ){
+				activeSheet.addColumns(activeSheet.getColumnCount(), ((columns.length + self.bindingColRow[sheetNm].columns + 1) - activeSheet.getColumnCount()));
+			}
+			
+			if( (_data.length + self.bindingColRow[sheetNm].rows + 1) > activeSheet.getRowCount() ){
+				activeSheet.addRows(activeSheet.getRowCount(), ((_data.length + self.bindingColRow[sheetNm].rows + 1) - activeSheet.getRowCount()));
+			}
+		}
   };
 
-  const openReportLocal =(context) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.getCommand('fileMenuPanel')
-        .execute(context, 'button_import_excel', null);
+  const generateColumns = (dataSources) => {
+    const sheets = selectSheets(store.getState);
+    const columns = [];
+    const header = [];
+    dataSources.foreach((dataSource, index) => {
+      const spreadColumnObj = new sheets.Tables.TableColumn();
+      const columnKey = Object.keys(_dataSources[0]);
+      spreadColumnObj.name(columnKey[index]);
+      spreadColumnObj.dataField(columnKey[index]);
+
+      columns.push(spreadColumnObj);
+      header[columnKey[_i]] = columnKey[_i];
+    });
+
+    return {columns: columns, header: header};
   };
 
-  const openReport = () => {
-    openModal(ReportFolderSelectorModal);
+  const createColumnName = () => {
+    const preAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const alphabetLength = preAlphabet.length + 1;
+    const preAlphabetIndex = Math.floor(index / alphabetLength);
+    return preAlphabetIndex;
   };
 
-  const saveReport = () => {
+  const testData = [{
+    1: '2',
+    3: '4'
+  }];
 
-  };
 
-  const saveAsReport = () => {
-    openModal(ReportSaveForm);
-  };
-
-  const deleteReport = () => {
-
-  };
-
-  const downloadReportXLSX = () => {
-    let reportNm = selectCurrentReport(store.getState()).options.reportNm;
-    const sheets = selectSheets(store.getState());
-    const workbook = selectCurrentWorkbook(store.getState());
-    const excelIO = selectExcelIO(store.getState());
-
-    reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
-    // 예외 처리 및  메소드 분리.
-    sheets.Designer.showDialog('downlaodReportDialog',
-        {
-          extName: '.xlsx',
-          fileName: reportNm,
-          workbook: workbook,
-          excelIO: excelIO
-        },
-        xlsxDownload
-    );
-  };
-
-  const xlsxDownload = (e) => {
-    if (e.fileName === '') {
-      alert('파일명을 입력해 주세요.');
-    } else {
-      if (e.fileName
-          .substr(-e.extName.length, e.extName.length) !== e.extName) {
-        e.fileName += e.extName;
-      }
-      const fileName = e.fileName;
-      const json = JSON.stringify(
-          e.workbook.toJSON({includeBindingSource: true}));
-      e.excelIO.save(json, (blob) => {
-        saveAs(blob, fileName);
-      }, (e) => {
-        console.log(e);
-      });
-    }
-  };
-
-  const downloadReportTXT = () => {
-
-  };
-
-  const datasetBinder = () => {
-    openModal(DatasetLinkerModal);
-  };
-
-  const print = () => {
-    const workbook = selectCurrentWorkbook(store.getState());
-    const activeSheet = workbook.getActiveSheet();
-    activeSheet.printInfo().margin(
-        {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
-    );
-    const index = workbook.getActiveSheetIndex();
-    workbook.print(index);
-  };
-
-  return {
-    newReport,
-    openReportLocal,
-    openReport,
-    saveReport,
-    saveAsReport,
-    deleteReport,
-    downloadReportXLSX,
-    downloadReportTXT,
-    datasetBinder,
-    print
-  };
+  return {bindData};
 };
 
