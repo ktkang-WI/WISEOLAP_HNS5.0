@@ -4,6 +4,7 @@ import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import bar from '../../../../../../assets/image/icon/button/series_type.png';
+import pie from '../../../../../../assets/image/icon/button/pieChart.png';
 
 const NomalChartDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
@@ -69,8 +70,8 @@ const NomalChartDefaultElement = () => {
         label: 'ddd'
       },
       {
-        imgSrc: bar,
-        label: 'aaa',
+        imgSrc: pie,
+        label: localizedString.pieChart,
         onClick: () => {
           insertFlexLayout(selectedReportId, 'pie');
           closePopover();

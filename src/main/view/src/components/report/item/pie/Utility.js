@@ -1,37 +1,33 @@
+import {setMeta} from '../util/metaUtilityFactory';
+
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
-  const setMeta = (id, data) => {
-    if (!item.meta[id]) {
-      item.meta[id] = data;
-    }
-  };
-
-  setMeta('pieChartStyle', 'pie');
-  setMeta('labelPosition', 'columns');
-  setMeta('tooltip', {
+  setMeta(item, 'pieChartStyle', 'pie');
+  setMeta(item, 'labelPosition', 'columns');
+  setMeta(item, 'tooltip', {
     bilions: 'B',
     customPrefix: false,
     customSuffix: false,
-    degreeOption: '반올림',
+    degreeOption: 'round',
     inputPrefix: '',
-    format: '값',
+    format: 'value',
     milions: 'M',
     thousands: 'K',
     unit: 'Ones',
     degree: 0,
     ones: ''
   });
-  setMeta('labelEdit', {
+  setMeta(item, 'labelEdit', {
     showTitle: true,
     bilions: 'B',
     customPrefix: false,
     customSuffix: false,
-    degreeOption: '반올림',
+    degreeOption: 'round',
     inputPrefix: '',
-    format: '값',
+    format: 'value',
     milions: 'M',
     thousands: 'K',
     unit: 'Ones',

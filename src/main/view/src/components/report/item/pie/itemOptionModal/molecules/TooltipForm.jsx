@@ -1,5 +1,5 @@
 import localizedString from 'config/localization';
-import Form, {Item} from 'devextreme-react/form';
+import Form, {Item, Label} from 'devextreme-react/form';
 import _ from 'lodash';
 import React from 'react';
 
@@ -13,9 +13,13 @@ const TooltipForm = ({selectedItem}, ref) => {
         dataField='format'
         editorType='dxSelectBox'
         editorOptions={{
-          items: localizedString.formatItems
+          items: localizedString.formatItems,
+          displayExpr: 'caption',
+          valueExpr: 'name'
         }}
-      ></Item>
+      >
+        <Label>{localizedString.formatType}</Label>
+      </Item>
       <Item
         dataField='unit'
         editorType='dxSelectBox'
@@ -23,7 +27,7 @@ const TooltipForm = ({selectedItem}, ref) => {
           items: ['Auto', 'Ones', 'Thousands', 'Milions', 'Bilions']
         }}
       >
-
+        <Label>{localizedString.unit}</Label>
       </Item>
       <Item
         dataField='customPrefix'
@@ -31,7 +35,7 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
-
+        <Label>{localizedString.customPrefix}</Label>
       </Item>
       <Item
         dataField='inputPrefix'
@@ -39,6 +43,7 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
+        <Label>{localizedString.inputPrefix}</Label>
       </Item>
       <Item
         dataField='customSuffix'
@@ -46,6 +51,7 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
+        <Label>{localizedString.customSuffix}</Label>
       </Item>
       <Item
         dataField='ones'
@@ -53,43 +59,48 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
+        <Label>{localizedString.ones}</Label>
       </Item>
       <Item
         dataField='thousands'
         editorType='dxTextBox'
         editorOptions={{
-          value: 'K'
         }}
       >
+        <Label>{localizedString.thousands}</Label>
       </Item>
       <Item
         dataField='milions'
         editorType='dxTextBox'
         editorOptions={{
-          value: 'M'
         }}
       >
+        <Label>{localizedString.milions}</Label>
       </Item>
       <Item
         dataField='bilions'
         editorType='dxTextBox'
         editorOptions={{
-          value: 'B'
         }}
       >
+        <Label>{localizedString.bilions}</Label>
       </Item>
       <Item
         dataField='degree'
         editorType='dxNumberBox'
       >
+        <Label>{localizedString.degree}</Label>
       </Item>
       <Item
         dataField='degreeOption'
         editorType='dxSelectBox'
         editorOptions={{
-          items: localizedString.degreeOptions
+          dataSource: localizedString.degreeOptions,
+          displayExpr: 'caption',
+          valueExpr: 'name'
         }}
       >
+        <Label>{localizedString.degreeOption}</Label>
       </Item>
     </Form>
   );

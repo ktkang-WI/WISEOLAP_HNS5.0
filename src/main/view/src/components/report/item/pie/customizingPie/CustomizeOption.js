@@ -1,4 +1,3 @@
-import localizedString from 'config/localization';
 import customizeSuffixPercent
   from './suffix/CustomizeSuffix_percent';
 import customizeSuffixValue
@@ -6,44 +5,38 @@ import customizeSuffixValue
 
 // 툴팁 및 라벨에 적용
 const CustomizeOption = (e, pieOption, type) => {
-  let text = '';
-  const prefix = pieOption.customPrefix ? pieOption.inputPrefix : '';
-  if (pieOption.format == localizedString.formatItems[1]) {
-    text = e.argument;
-  }
-  if (pieOption.format == localizedString.formatItems[2]) { // 값 표현.
-    text = prefix + customizeSuffixValue(e.value, pieOption);
-  }
-  if (pieOption.format == localizedString.formatItems[3]) { // 퍼센트 표현.
-    text = customizeSuffixPercent(e.percent, pieOption);
-  }
-  if (pieOption.format == localizedString.formatItems[4]) {
-    text =
-      e.argument + ': '+
-      prefix +
-      customizeSuffixValue(e.value, pieOption);
-  }
-  if (pieOption.format == localizedString.formatItems[5]) {
-    text =
-      prefix +
-      customizeSuffixValue(e.value, pieOption)+ ' (' +
-      customizeSuffixPercent(e.percent, pieOption) + ')';
-  }
-  if (pieOption.format == localizedString.formatItems[6]) {
-    text =
-      e.argument + ': ' + '(' +
-      customizeSuffixPercent(e.percent, pieOption) + ')';
-  }
-  if (pieOption.format == localizedString.formatItems[7]) {
-    text =
-      e.argument + ': ' +
-      prefix +
-      customizeSuffixValue(e.value, pieOption) +
-      ' ('+customizeSuffixPercent(e.percent, pieOption)+')';
-  }
-  if (pieOption.format == localizedString.formatItems[0]) {
+  // let text = '';
+  const format = pieOption.format;
+  const formatStrings = format.split('&');
+  if (format === 'none') {
     return null;
   }
+
+  const text = formatStrings.reduce((acc, curr) => {
+    let value = '';
+    // 접두사 사용 여부에 따른 접두사 추가.
+    const prefix = pieOption.customPrefix ? pieOption.inputPrefix : '';
+
+    if (curr.toLowerCase() === 'argument') {
+      value = e.argument;
+    } else if (curr.toLowerCase() === 'value') {
+      value = prefix + customizeSuffixValue(e.value, pieOption);
+    } else {
+      value = customizeSuffixPercent(e.percent, pieOption);
+    };
+
+    if (formatStrings.length > 1) {
+      if (curr.toLowerCase() == 'argument') {
+        value += ': ';
+      } else if (curr.toLowerCase() == 'percent') {
+        value = ' (' + value + ')';
+      }
+    };
+
+    acc += value;
+    return acc;
+  }, '');
+
   // 툴팁이면 툴팁박스 반환.
   if (type === 'tooltip') {
     return (<div>{text}</div>);

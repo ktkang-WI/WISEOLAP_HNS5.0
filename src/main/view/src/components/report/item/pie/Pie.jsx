@@ -7,6 +7,7 @@ import {
   Size,
   Tooltip} from 'devextreme-react/pie-chart';
 import customizeOption from './customizingPie/CustomizeOption';
+import React from 'react';
 
 const Pie = ({item}) => {
   const mart = item ? item.mart : null;
@@ -69,4 +70,4 @@ const Pie = ({item}) => {
     </div>
   );
 };
-export default Pie;
+export default React.memo(Pie);
