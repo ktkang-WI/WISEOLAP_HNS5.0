@@ -88,16 +88,19 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: '막대',
+          type: 'bar',
           checked: false,
           src: barImg
         },
         {
           title: '스택막대',
+          type: 'stackedbar',
           checked: false,
           src: barImg
         },
         {
           title: '풀스택막대',
+          type: 'fullstackedbar',
           checked: false,
           src: barImg
         }
@@ -108,31 +111,37 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: '점',
+          type: 'scatter',
           checked: false,
           src: barImg
         },
         {
           title: '선',
+          type: 'line',
           checked: false,
           src: barImg
         },
         {
           title: '스택선',
+          type: 'stackedline',
           checked: false,
           src: barImg
         },
         {
           title: '풀스택선',
+          type: 'fullstackedline',
           checked: false,
           src: barImg
         },
         {
           title: '계단',
+          type: 'stepline',
           checked: false,
           src: barImg
         },
         {
           title: '곡선',
+          type: 'spline',
           checked: false,
           src: barImg
         }
@@ -143,36 +152,43 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: '영역',
+          type: 'area',
           checked: false,
           src: barImg
         },
         {
           title: '스택영역',
+          type: 'stackedarea',
           checked: false,
           src: barImg
         },
         {
           title: '풀스택영역',
+          type: 'fullstackedarea',
           checked: false,
           src: barImg
         },
         {
           title: '계단영역',
+          type: 'steparea',
           checked: false,
           src: barImg
         },
         {
           title: '곡선영역',
+          type: 'splinearea',
           checked: false,
           src: barImg
         },
         {
           title: '스택곡선영역',
+          type: 'stackedsplinearea',
           checked: false,
           src: barImg
         },
         {
           title: '풀스택곡선영역',
+          type: 'fullstackedsplinearea',
           checked: false,
           src: barImg
         }
@@ -183,6 +199,7 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: '버블',
+          type: 'bubble',
           checked: false,
           src: barImg
         }

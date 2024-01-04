@@ -5,7 +5,8 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import React from 'react';
 
-const Chart = ({id, mart}) => {
+const Chart = ({id, item}) => {
+  const mart = item ? item.mart : null;
   if (!mart.init) {
     return <></>;
   }

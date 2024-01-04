@@ -24,5 +24,6 @@ public class DataAggregation {
     ItemType itemType;
     Dataset dataset;
     PagingOption pagingOption;
+    boolean removeNullData;
     List<Parameter> parameters;
 }

@@ -1,6 +1,8 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import CreateRibbonBtns from '../molecules/CreateRibbonBtns';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
 
 const theme = getTheme();
 
@@ -14,6 +16,8 @@ const StyledRibbon = styled.div`
 `;
 
 const Ribbon = () => {
+  const focustedItem = useSelector(selectCurrentItem);
+
   return (
     <StyledRibbon>
       <CreateRibbonBtns
@@ -37,19 +41,8 @@ const Ribbon = () => {
         ]}
       />
       <CreateRibbonBtns
-        items={[
-          'CaptionView',
-          'NameEdit',
-          'Rotate',
-          'XAxisSetting',
-          'YAxisSetting',
-          'ExtraAxisSetting',
-          'ShowColorLegend',
-          'SeriesType',
-          'Palette',
-          'ColorEdit',
-          'PointLabel'
-        ]}
+        targetItem={focustedItem}
+        items={!focustedItem ? [] : focustedItem.mart.ribbonItems}
       />
       <CreateRibbonBtns
         items={[
