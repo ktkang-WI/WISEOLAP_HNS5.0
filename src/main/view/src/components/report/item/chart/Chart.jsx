@@ -32,7 +32,7 @@ const Chart = ({id, item}) => {
 
   useEffect(() => {
     filterItems(item, {});
-  }, [interactiveOption.targetDimension]);
+  }, [interactiveOption.targetDimension, interactiveOption.mode]);
 
   useEffect(() => {
     clearAllFilter(item);
