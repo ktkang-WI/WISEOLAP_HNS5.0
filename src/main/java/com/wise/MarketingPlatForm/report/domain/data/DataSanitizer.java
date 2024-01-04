@@ -11,13 +11,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
+import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
@@ -30,6 +34,7 @@ public final class DataSanitizer {
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     List<Measure> allMeasures;
+
     int orgDataLength;
     int grpDataLenth;
     int maxPage;
@@ -101,10 +106,18 @@ public final class DataSanitizer {
         return columnNames;
     }
 
+    public final DataSanitizer topBottom(TopBottomInfo topBottomInfo) {
+        if (topBottomInfo != null) {
+            data = topBottomInfo.getTopBottomData(data, measures, dimensions);
+        }
+
+        return this;
+    }
+
     /**
      * 차원(Dimension) 이름을 기준으로 데이터를 그룹화하여 측정값(Measure)을 집계합니다.
      * 이 과정에서 "SummaryType_측정값명"으로 집계 컬럼이 추가됩니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer groupBy() {
@@ -179,7 +192,7 @@ public final class DataSanitizer {
         grpDataLenth = data.size();
         return this;
     }
-    
+
     /**
      * <p>
      * 필요한 컬럼의 데이터만 필터링합니다.
@@ -187,13 +200,13 @@ public final class DataSanitizer {
      * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
      * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
      * name으로 된 데이터가 남습니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer columnFiltering() {
         return columnFiltering(false);
     }
-    
+
     /**
      * <p>
      * 필요한 컬럼의 데이터만 필터링합니다.
@@ -201,7 +214,7 @@ public final class DataSanitizer {
      * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
      * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
      * name으로 된 데이터가 남습니다.
-     * 
+     *
      * @param includeSortByItem sortByItem을 포함 할지 여부입니다.
      * @return DataSanitizer
      */
@@ -212,7 +225,7 @@ public final class DataSanitizer {
         } else {
             columnNames = getAllColumnNamesExceptSortByItem();
         }
-        
+
 
         data.forEach(map -> {
             map.keySet().retainAll(columnNames);
@@ -253,7 +266,7 @@ public final class DataSanitizer {
      * 측정값의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명) 기준으로 정렬되고, 아니라면 name
      * 기준으로 정렬됩니다.
      * </p>
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer orderBy() {
@@ -264,7 +277,7 @@ public final class DataSanitizer {
                 .map((dim) -> {
                     Measure measure = measureLookup.getOrDefault(dim.getSortBy(), null);
                     String sortBy;
-                    
+
                     if (measure != null) {
                         sortBy = StringUtils.isNotBlank(measure.getSummaryName()) ? measure.getSummaryName()
                                 : measure.getName();
@@ -304,7 +317,7 @@ public final class DataSanitizer {
 
     /**
      * 데이터를 입력된 pagingOption 만큼 자릅니다.
-     * 
+     *
      * @param pagingOption
      * @return DataSanitizer
      */

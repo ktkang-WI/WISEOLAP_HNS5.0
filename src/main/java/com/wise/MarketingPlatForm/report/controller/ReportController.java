@@ -22,6 +22,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -221,6 +222,8 @@ public class ReportController {
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
 
+        TopBottomInfo topBottomInfo = new TopBottomInfo();
+
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -230,6 +233,7 @@ public class ReportController {
                 .parameters(parameters)
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
+                .topBottomInfo(topBottomInfo)
                 .build();
 
         return reportService.getAdHocItemData(dataAggreagtion);

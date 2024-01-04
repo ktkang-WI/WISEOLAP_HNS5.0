@@ -7,6 +7,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 import lombok.Builder;
@@ -26,4 +27,5 @@ public class DataAggregation {
     PagingOption pagingOption;
     boolean removeNullData;
     List<Parameter> parameters;
+    TopBottomInfo topBottomInfo;
 }

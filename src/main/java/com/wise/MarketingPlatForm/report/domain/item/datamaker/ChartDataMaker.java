@@ -11,6 +11,7 @@ import java.util.List;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
@@ -22,6 +23,7 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+        TopBottomInfo topBottomInfo = dataAggreagtion.getTopBottomInfo();
 
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
@@ -33,6 +35,7 @@ public class ChartDataMaker implements ItemDataMaker {
         // 데이터 기본 가공
         data = sanitizer
                 .groupBy()
+                .topBottom(topBottomInfo)
                 .orderBy()
                 .columnFiltering()
                 .getData();
