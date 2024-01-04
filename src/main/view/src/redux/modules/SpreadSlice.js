@@ -48,9 +48,9 @@ const excelIO = new GC.Spread.Excel.IO();
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
-  // Workbook의 instance 객체
-  workbook: undefined,
+  // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
+    workbook: undefined,
     row: 0,
     column: 0,
     useHeader: false,
@@ -63,9 +63,9 @@ const reducers = {
     delete state[actions.payload];
     state[0] = initialState[0];
   },
-  setSpreadJS(state, actions) {
+  setWorkbook(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].spreadJS = actions.payload.spreadJS;
+    state[reportId].workbook = actions.payload.workbook;
   }
 };
 

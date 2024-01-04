@@ -1,12 +1,11 @@
 import store from 'redux/modules';
 import {
-  selectCurrentSpreadJS,
+  selectCurrentWorkbook,
   selectExcelIO,
   selectSheets
 } from 'redux/selector/SpreadSelector';
-import spreadDefaultElement from
-  'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentReport,
+  selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useModal from './useModal';
 import ReportFolderSelectorModal
   from 'components/report/modal/ReportFolderSelectorModal';
@@ -14,44 +13,29 @@ import ReportSaveForm
   from 'components/report/atomic/Save/molecules/ReportSaveForm';
 import DatasetLinkerModal
   from 'components/report/atomic/spreadBoard/modal/DatasetLinkerModal';
+import {useDispatch} from 'react-redux';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import useSpreadConfig from
+  'components/report/atomic/spreadBoard/useSpreadConfig';
 
-export const useSpread = () => {
+export default function useSpread() {
   const {openModal, confirm, alert} = useModal();
-
-  // Ribbon Custom
-  const setRibbonSetting = () => {
-    const sheets = selectSheets(store.getState());
-    const {SpreadRibbonDefaultElement, ribbonCommandMap, downlaodReportModel} =
-      spreadDefaultElement();
-    const config = sheets.Designer.DefaultConfig;
-    // csutomtab 메뉴 생성
-    const newTab = SpreadRibbonDefaultElement;
-
-    // 불필요 메뉴 삭제
-    delete config.fileMenu;
-    config.ribbon.unshift(newTab);
-
-    // customtab 메뉴 메소드 정의
-    const commandMap = ribbonCommandMap();
-    // ribbon download modal 정의
-    const downlaodReportDialog = downlaodReportModel;
-    // Template 기능 추가.
-    addSpreadTemplate('downlaodReportDialog', downlaodReportDialog);
-    config.commandMap = commandMap;
-    return config;
-  };
-
-  const addSpreadTemplate = (templateName, templateMethod) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.registerTemplate(templateName, templateMethod);
-  };
+  const {setRibbonSetting} = useSpreadConfig();
+  const config = setRibbonSetting();
+  const dispatch = useDispatch();
+  const spreadSlice = SpreadSlice.actions;
 
   const newReport = (context) => {
+    const sheets = selectSheets(store.getState());
+    const selectedReportId = selectCurrentReportId(store.getState());
     const executeNew = (context) => {
-      const sheets = selectSheets(store.getState());
+      const newWorkbook =
+        new sheets.Designer.Designer(document.getElementById('test'), config);
       context.destroy();
-      new sheets.Designer.Designer(
-          document.getElementsByClassName('ss')[0], config);
+      dispatch(spreadSlice.setWorkbook({
+        reportId: selectedReportId,
+        workbook: newWorkbook
+      }));
     };
 
     confirm('test', () => executeNew(context));
@@ -82,7 +66,7 @@ export const useSpread = () => {
   const downloadReportXLSX = () => {
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
     const sheets = selectSheets(store.getState());
-    const spreadJS = selectCurrentSpreadJS(store.getState());
+    const workbook = selectCurrentWorkbook(store.getState());
     const excelIO = selectExcelIO(store.getState());
 
     reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
@@ -91,7 +75,7 @@ export const useSpread = () => {
         {
           extName: '.xlsx',
           fileName: reportNm,
-          spreadJS: spreadJS,
+          workbook: workbook,
           excelIO: excelIO
         },
         xlsxDownload
@@ -108,7 +92,7 @@ export const useSpread = () => {
       }
       const fileName = e.fileName;
       const json = JSON.stringify(
-          e.spreadJS.toJSON({includeBindingSource: true}));
+          e.workbook.toJSON({includeBindingSource: true}));
       e.excelIO.save(json, (blob) => {
         saveAs(blob, fileName);
       }, (e) => {
@@ -126,17 +110,16 @@ export const useSpread = () => {
   };
 
   const print = () => {
-    const spreadJS = selectCurrentSpreadJS(store.getState());
-    const activeSheet = spreadJS.getActiveSheet();
+    const workbook = selectCurrentWorkbook(store.getState());
+    const activeSheet = workbook.getActiveSheet();
     activeSheet.printInfo().margin(
         {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
     );
-    const index = spreadJS.getActiveSheetIndex();
-    spreadJS.print(index);
+    const index = workbook.getActiveSheetIndex();
+    workbook.print(index);
   };
 
   return {
-    setRibbonSetting,
     newReport,
     openReportLocal,
     openReport,
@@ -150,4 +133,3 @@ export const useSpread = () => {
   };
 };
 
-export default useSpread;

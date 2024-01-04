@@ -2,8 +2,8 @@ import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 
 export const selectSheets = createSelector(
-    (state) => state.meta.spread.Sheets,
-    (Sheets) => Sheets
+    (state) => state.meta.spread.sheets,
+    (sheets) => sheets
 );
 
 export const selectExcelIO = createSelector(
@@ -11,26 +11,8 @@ export const selectExcelIO = createSelector(
     (excelIO ) => excelIO
 );
 
-export const selectCurrentSpreadJS = createSelector(
+export const selectCurrentWorkbook = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].spreadJS
-);
-
-export const selectCurrentDataPosition = createSelector(
-    selectCurrentReportId,
-    (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].dataPosition
-);
-
-export const selectCurrentUseHeader = createSelector(
-    selectCurrentReportId,
-    (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].useHeader
-);
-
-export const selectCurrentUseBoarder = createSelector(
-    selectCurrentReportId,
-    (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].useBoarder
+    (reportId, spread) => spread[reportId].workbook
 );
