@@ -42,6 +42,7 @@ const StyledWrapper = styled(Wrapper)`
 const SelectCubeModal = ({onSubmit, ...props}) => {
   const [dsViewList, setDsViewList] = useState([]);
   const [selectedCubeList, setSelectedCubeList] = useState([]);
+  const [selectedDsView, setSelectedDsView] = useState({});
   const [selectedCube, setSelectedCube] = useState({});
   const selectedReportId = useSelector(selectCurrentReportId);
   const userId = 'admin';
@@ -86,6 +87,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                 dispatch(insertDataset({
                   reportId: selectedReportId,
                   dataset: {
+                    ...selectedDsView,
                     ...selectedCube,
                     fields: data.fields,
                     datasetNm: selectedCube.cubeNm,
@@ -117,6 +119,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                         e.selectedRowsData[0].dsViewId)
                         .then((data) => {
                           setSelectedCubeList(data);
+                          setSelectedDsView(e.selectedRowsData[0]);
                         });
                   } else {
                     setSelectedCubeList([]);

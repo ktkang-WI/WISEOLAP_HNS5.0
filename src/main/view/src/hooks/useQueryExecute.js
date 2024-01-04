@@ -40,9 +40,20 @@ const useQueryExecute = () => {
         (dataset) => item.meta.dataField.datasetId == dataset.datasetId
     );
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
 
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
