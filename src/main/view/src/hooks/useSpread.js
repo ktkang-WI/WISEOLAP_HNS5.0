@@ -1,33 +1,49 @@
 import store from 'redux/modules';
-import {selectCurrentWorkbook,
+import {selectBindingInfos, selectCurrentDesigner,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 export default function useSpread() {
-  const bindData = () => {
-    const workbook = selectCurrentWorkbook(store.getState);
-    const sheets = selectSheets(store.getState);
-    const bindingInfo = selectCurrentBindingInfo(store.getState));
-    // 추후 메게변수로 가져와야함.
-    const sheetIndex = 1;
-    const activeSheet = sheets.getSheet(sheetIndex);
-    const {columns, header} = generateColumns;
+  const sheets = selectSheets(store.getState());
 
-    if((columns.length + self.bindingColRow[sheetNm].columns + 1) > activeSheet.getColumnCount() || (_data.length + self.bindingColRow[sheetNm].rows + 1) > activeSheet.getRowCount()){
-			if((columns.length + self.bindingColRow[sheetNm].columns + 1) > activeSheet.getColumnCount() ){
-				activeSheet.addColumns(activeSheet.getColumnCount(), ((columns.length + self.bindingColRow[sheetNm].columns + 1) - activeSheet.getColumnCount()));
-			}
-			
-			if( (_data.length + self.bindingColRow[sheetNm].rows + 1) > activeSheet.getRowCount() ){
-				activeSheet.addRows(activeSheet.getRowCount(), ((_data.length + self.bindingColRow[sheetNm].rows + 1) - activeSheet.getRowCount()));
-			}
-		}
+  const bindData = (data) => {
+    const designer = selectCurrentDesigner((store.getState()));
+    const bindingInfos = selectBindingInfos((store.getState()));
+    // 추후 메게변수로 가져와야함.
+    const {columns} = generateColumns;
+    const datasetNames = Object.keys(bindingInfos);
+
+    datasetNames.forEach((datasetName) => {
+      designer.getWorkbook().addSheet(0, new sheets.Worksheet('Sheet2'));
+      const bindedSheet = designer.getWorkbook()
+          .getSheet(bindingInfos[datasetName].datasetId);
+
+      const bindedSheetColumnNum = bindedSheet.getColumnCount();
+      const dataLengthWithColumnPosition =
+       columns.length + bindingInfos[datasetName].columnIndex;
+
+      const bindedSheetRowNum = bindedSheet.getRowCount();
+      const dataLengthWithRowPosition =
+       columns.length + bindingInfos[datasetName].rowIndex;
+
+      if (dataLengthWithColumnPosition > bindedSheetColumnNum) {
+        bindedSheet.addColumns(bindedSheetColumnNum,
+            dataLengthWithColumnPosition - bindedSheetColumnNum);
+      };
+
+      if (dataLengthWithRowPosition > bindedSheetRowNum) {
+        bindedSheet.addRows(bindedSheetRowNum,
+            dataLengthWithRowPosition - bindedSheetRowNum);
+      }
+
+      // const dataSource = new sheets.Bindings.CellBindingSource(testData);
+    });
   };
 
   const generateColumns = (dataSources) => {
-    const sheets = selectSheets(store.getState);
+    const sheets = selectSheets(store.getState());
     const columns = [];
     const header = [];
-    dataSources.foreach((dataSource, index) => {
+    dataSources.forEach((dataSource, index) => {
       const spreadColumnObj = new sheets.Tables.TableColumn();
       const columnKey = Object.keys(_dataSources[0]);
       spreadColumnObj.name(columnKey[index]);
@@ -40,19 +56,39 @@ export default function useSpread() {
     return {columns: columns, header: header};
   };
 
-  const createColumnName = () => {
-    const preAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const alphabetLength = preAlphabet.length + 1;
-    const preAlphabetIndex = Math.floor(index / alphabetLength);
-    return preAlphabetIndex;
+  const sheetNameChangedListener = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    designer.getWorkbook().bind(sheets.Events.SheetChanged, renameSheet);
   };
 
-  const testData = [{
-    1: '2',
-    3: '4'
-  }];
+  const renameSheet = (e, args) => {
+    console.log(e);
+    console.log(args);
+  };
 
+  const deletedSheet = (e, args) => {
+    if (args.propertyName === 'deleteSheet') {
+      console.log(e);
+      console.log(args);
+    }
+  };
 
-  return {bindData};
+  const sheetDeletedListener = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
+        deletedSheet);
+  };
+
+  // const createColumnName = () => {
+  //   const preAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  //   const alphabetLength = preAlphabet.length + 1;
+  //   const preAlphabetIndex = Math.floor(index / alphabetLength);
+  //   return preAlphabetIndex;
+  // };
+
+  return {bindData,
+    sheetNameChangedListener,
+    sheetDeletedListener
+  };
 };
 

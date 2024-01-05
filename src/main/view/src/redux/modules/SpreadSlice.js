@@ -50,25 +50,24 @@ const initialState = {
   excelIO: excelIO,
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
-    workbook: undefined,
-    bindingInfos: [{
-      datasetId: undefined,
-      rowIndex: 0,
-      columnIndex: 0,
-      useHeader: false,
-      useBorder: false
-    }]
+    designer: undefined,
+    bindingInfos: {
+      Sheet1: {}
+    }
   }
 };
 
 const reducers = {
   initSpread(state, actions) {
     delete state[actions.payload];
-    state[0] = initialState[0];
+    state[actions.payload] = initialState[0];
   },
-  setWorkbook(state, actions) {
+  setDesigner(state, actions) {
+    state[actions.payload.reportId].designer = actions.payload.designer;
+  },
+  setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].workbook = actions.payload.workbook;
+    state[reportId].designer = actions.payload.bindingInfos;
   }
 };
 

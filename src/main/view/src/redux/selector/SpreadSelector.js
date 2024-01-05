@@ -11,13 +11,13 @@ export const selectExcelIO = createSelector(
     (excelIO ) => excelIO
 );
 
-export const selectCurrentWorkbook = createSelector(
+export const selectCurrentDesigner = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].workbook
+    (reportId, spread) => spread[reportId].designer
 );
 
-export const selectCurrentBindingInfos = createSelector(
+export const selectBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
     (reportId, spread) => spread[reportId].bindingInfos

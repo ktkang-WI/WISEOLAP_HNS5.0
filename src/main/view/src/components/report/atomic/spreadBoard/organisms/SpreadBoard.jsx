@@ -8,28 +8,28 @@ import {Designer} from '@grapecity/spread-sheets-designer-react';
 import './spreadBoard.css';
 import spreadDefaultElement from './SpreadDefaultElement';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-// import {selectCurrentWorkbook,
-//   selectSheets} from 'redux/selector/SpreadSelector';
-// import store from 'redux/modules';
+import useSpread from 'hooks/useSpread';
 
 const SpreadBoard = () => {
   const dispatch = useDispatch();
+  const {sheetDeletedListener} = useSpread();
   const spreadSlice = SpreadSlice.actions;
   const selectedReportId = useSelector(selectCurrentReportId);
   const {setRibbonSetting} = spreadDefaultElement();
   const config = setRibbonSetting();
 
   const designerInitialized = useCallback((e) => {
-    dispatch(spreadSlice.setWorkbook({
+    dispatch(spreadSlice.setDesigner({
       reportId: selectedReportId,
-      workbook: e
+      designer: e
     }));
+    sheetDeletedListener();
   }, [selectedReportId]);
 
   return (
-    <Wrapper id='test'>
+    <Wrapper id='test' style={{width: '100%', height: 'calc(100% - 40px)'}}>
       <Designer
-        styleInfo={{width: '100%', height: 'calc(100% - 40px)'}}
+        styleInfo={{width: '100%', height: '100%'}}
         config={config}
         designerInitialized={designerInitialized}
       >

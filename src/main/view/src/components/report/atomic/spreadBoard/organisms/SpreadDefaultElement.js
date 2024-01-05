@@ -5,11 +5,14 @@ import useModal from 'hooks/useModal';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentWorkbook, selectExcelIO, selectSheets}
+import {selectCurrentReport,
+  selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
 import ReportSaveForm from '../../Save/molecules/ReportSaveForm';
 import DatasetLinkerModal from '../modal/DatasetLinkerModal';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+
 
 const SpreadDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
@@ -41,84 +44,6 @@ const SpreadDefaultElement = () => {
     sheets.Designer.registerTemplate(templateName, templateMethod);
   };
 
-  const SpreadRibbonDefaultElement = {
-    id: 'fileMenu',
-    text: localizedString.file,
-    buttonGroups: [
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'newReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'openReportLocal'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'openReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'saveReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'saveAsReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'deleteReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              command: 'downloadReport',
-              children: ['downloadReportXLSX', 'downloadReportTXT'],
-              type: 'dropdown'
-            }
-          ]
-        }
-      },
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'dataset'
-              ]
-            }
-          ]
-        }
-      },
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'print'
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  };
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
     const newReport = (context) => {
@@ -129,11 +54,11 @@ const SpreadDefaultElement = () => {
         // 기존 workbook 제거
         context.destroy();
         // 새로운 workbook 생성 및 등록
-        const newWorkbook =
+        const newDesigner =
           new sheets.Designer.Designer(document.getElementById('test'), config);
-        dispatch(spreadSlice.setWorkbook({
+        dispatch(spreadSlice.setDesigner({
           reportId: selectedReportId,
-          workbook: newWorkbook
+          designer: newDesigner
         }));
       };
 
@@ -165,7 +90,7 @@ const SpreadDefaultElement = () => {
     const downloadReportXLSX = () => {
       let reportNm = selectCurrentReport(store.getState()).options.reportNm;
       const sheets = selectSheets(store.getState());
-      const workbook = selectCurrentWorkbook(store.getState());
+      const designer = selectCurrentDesigner(store.getState());
       const excelIO = selectExcelIO(store.getState());
 
       reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
@@ -174,7 +99,7 @@ const SpreadDefaultElement = () => {
           {
             extName: '.xlsx',
             fileName: reportNm,
-            workbook: workbook,
+            designer: designer,
             excelIO: excelIO
           },
           xlsxDownload
@@ -191,7 +116,7 @@ const SpreadDefaultElement = () => {
         }
         const fileName = e.fileName;
         const json = JSON.stringify(
-            e.workbook.toJSON({includeBindingSource: true}));
+            e.designer.getWorkbook().toJSON({includeBindingSource: true}));
         e.excelIO.save(json, (blob) => {
           saveAs(blob, fileName);
         }, (e) => {
@@ -205,11 +130,18 @@ const SpreadDefaultElement = () => {
     };
 
     const datasetBinder = () => {
+      const datasets = selectCurrentDatasets(store.getState());
+      if (datasets.length == 0) {
+        alert('길이 0');
+      } else {
+        alert('길이 1 이상');
+      }
       openModal(DatasetLinkerModal);
     };
 
     const print = () => {
-      const workbook = selectCurrentWorkbook(store.getState());
+      const designer = selectCurrentDesigner(store.getState());
+      const workbook = designer.getWorkbook();
       const activeSheet = workbook.getActiveSheet();
       activeSheet.printInfo().margin(
           {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
@@ -357,6 +289,86 @@ const SpreadDefaultElement = () => {
       }]
     }]
   };
+
+  const SpreadRibbonDefaultElement = {
+    id: 'fileMenu',
+    text: localizedString.file,
+    buttonGroups: [
+      {
+        commandGroup: {
+          children: [
+            {
+              direction: 'vertical',
+              commands: [
+                'newReport'
+              ]
+            },
+            {
+              direction: 'vertical',
+              commands: [
+                'openReportLocal'
+              ]
+            },
+            {
+              direction: 'vertical',
+              commands: [
+                'openReport'
+              ]
+            },
+            {
+              direction: 'vertical',
+              commands: [
+                'saveReport'
+              ]
+            },
+            {
+              direction: 'vertical',
+              commands: [
+                'saveAsReport'
+              ]
+            },
+            {
+              direction: 'vertical',
+              commands: [
+                'deleteReport'
+              ]
+            },
+            {
+              direction: 'vertical',
+              command: 'downloadReport',
+              children: ['downloadReportXLSX', 'downloadReportTXT'],
+              type: 'dropdown'
+            }
+          ]
+        }
+      },
+      {
+        commandGroup: {
+          children: [
+            {
+              direction: 'vertical',
+              commands: [
+                'dataset'
+              ]
+            }
+          ]
+        }
+      },
+      {
+        commandGroup: {
+          children: [
+            {
+              direction: 'vertical',
+              commands: [
+                'print'
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  };
+
   return {setRibbonSetting};
 };
 
