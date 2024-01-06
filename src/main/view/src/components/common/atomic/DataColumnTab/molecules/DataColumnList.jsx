@@ -80,6 +80,20 @@ const DataColumnList = ({
           value: field.fieldId,
           type: 'SortBy'
         })));
+      } else if (option.type == 'ANY') {
+        sortItems = sortItems.concat(dataFields[key].reduce((acc, field) => {
+          if (field.type == 'MEA') {
+            const tempField = {
+              text: field.caption,
+              value: field.fieldId,
+              type: 'SortBy'
+            };
+
+            acc.push(tempField);
+          }
+
+          return acc;
+        }, []));
       }
     }
   }
