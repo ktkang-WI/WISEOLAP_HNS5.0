@@ -36,6 +36,7 @@ public abstract class XMLParser {
 	protected Map<String, Object> dataset = new HashMap<>();
 	protected Map<String, Object> item = new HashMap<>();
 	protected Map<String, Object> layout = new HashMap<>();
+	protected Map<String, Object> spread = new HashMap<>();
 	protected List<Object> informations = new ArrayList<>();
 	protected Map<String, Object> returnReport = new HashMap<>();
 	

@@ -24,7 +24,7 @@ public class XMLParserFactory {
             return new DashAnyXmlParser(cubeService, datasetService);
         }
         if (reportType == ReportType.EXCEL) {
-        	return new ExcelXmlParser();
+        	return new ExcelXmlParser(cubeService, datasetService);
         }
         if (reportType == ReportType.AD_HOC) {
         	return new AdHocXmlParser();

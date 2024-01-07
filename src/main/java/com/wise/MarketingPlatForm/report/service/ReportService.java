@@ -14,6 +14,8 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
+import javaxt.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -110,26 +113,48 @@ public class ReportService {
     public Map<String, Object> getReport(String reportId, String userId) {
     	ReportMstrEntity temp = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
-
+        Map<String, Object> returnReport = new HashMap<>();
+        if(dto.getDatasetXml().indexOf("<DATA_SET") > -1) {
 //        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
-        XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        
-        List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-        Map<String, Object> report = new HashMap<String, Object>();
-        Map<String, Object> options = new HashMap<String, Object>();
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+        	
+        	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+        	Map<String, Object> report = new HashMap<String, Object>();
+        	Map<String, Object> options = new HashMap<String, Object>();
 //        report.put("reportId", reportId);
-        options.put("order", dto.getReportOrdinal());
-        options.put("reportNm", dto.getReportNm());
-        options.put("reportDesc", dto.getReportDesc());
-        options.put("reportPath", null);
+        	options.put("order", dto.getReportOrdinal());
+        	options.put("reportNm", dto.getReportNm());
+        	options.put("reportDesc", dto.getReportDesc());
+        	options.put("reportPath", null);
+        	
+        	report.put("reportId", reportId);
+        	report.put("options", options);
+        	
+        	reports.add(report);
+        	returnReport = xmlParser.getReport(dto, userId);        	
+        	returnReport.put("reports", reports);
+        	returnReport.put("isNew", false);
+        } else {
+        	JSONParser jsonParser = new JSONParser();
+        	JSONObject  report = null;
+        	JSONObject  item = null;
+        	JSONObject  dataset = null;
+        	JSONObject  layout = null;
+        	try {
+	        	report = (JSONObject) jsonParser.parse(dto.getReportXml());
+	        	item = (JSONObject) jsonParser.parse(dto.getChartXml());
+	        	dataset = (JSONObject) jsonParser.parse(dto.getDatasetXml());
+	        	layout = (JSONObject) jsonParser.parse(dto.getLayoutXml());
+        	} catch (ParseException e) {
+        		e.printStackTrace();
+        	}
+        	returnReport.put("report", report);
+        	returnReport.put("item", item);
+        	returnReport.put("dataset", dataset);
+        	returnReport.put("layout", layout);
+        	returnReport.put("isNew", true);
+        }
         
-        report.put("reportId", reportId);
-        report.put("options", options);
-        
-        reports.add(report);
-        
-        Map<String, Object> returnReport = xmlParser.getReport(dto, userId);
-        returnReport.put("reports", reports);
         
         return returnReport;
     }

@@ -24,6 +24,7 @@ public enum ReportType {
    * @return ReportType
    */
   public static Optional<ReportType> fromString(String symbol) {
+	  if("Spread".equals(symbol)) return Optional.ofNullable(stringToEnum.get("Excel"));
     return Optional.ofNullable(stringToEnum.get(symbol));
   }
 
