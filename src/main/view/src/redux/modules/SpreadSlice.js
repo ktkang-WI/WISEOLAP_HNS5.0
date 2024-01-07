@@ -52,7 +52,13 @@ const initialState = {
   0: {
     designer: undefined,
     bindingInfos: {
-      Sheet1: {}
+      test: {
+        sheetNm: 'Sheet1',
+        rowIndex: 0,
+        columnIndex: 18,
+        useHeader: false,
+        useBoarder: false
+      }
     }
   }
 };

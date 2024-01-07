@@ -19,6 +19,7 @@ const SpreadContent = () => {
     <Content
       snbWidth={theme.size.snbWidth}
       headerHeight={theme.size.headerHeight}
+      ribbonHeight={theme.size.ribbonHeight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>

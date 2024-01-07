@@ -17,7 +17,7 @@ export const selectCurrentDesigner = createSelector(
     (reportId, spread) => spread[reportId].designer
 );
 
-export const selectBindingInfos = createSelector(
+export const selectCurrentBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
     (reportId, spread) => spread[reportId].bindingInfos
