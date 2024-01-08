@@ -161,12 +161,6 @@ const ItemBoard = () => {
             onClick={(e) => {
               // flexLayout 커스텀 삭제 버튼 기능.
               model.doAction(Actions.deleteTab(tabNode._attributes.id));
-
-              deleteFlexLayout(
-                  selectedReportId,
-                  tabNode._attributes.id,
-                  model.toJson()
-              );
             }}
           >
           &#128473;&#xFE0E;
@@ -188,7 +182,11 @@ const ItemBoard = () => {
       setMovedLayout(reportId, model.toJson());
     } else if (action.type == 'FlexLayout_DeleteTab') {
       // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
-      setMovedLayout(reportId, model.toJson());
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
     }
   };
 
