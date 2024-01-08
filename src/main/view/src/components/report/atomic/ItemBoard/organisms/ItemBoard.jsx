@@ -19,6 +19,7 @@ import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 
 const StyledBoard = styled.div`
@@ -59,7 +60,8 @@ const ItemBoard = () => {
   const itemFactory = {
     chart: Chart,
     pivot: PivotGrid,
-    grid: DataGrid
+    grid: DataGrid,
+    pie: Pie
   };
 
   /**
@@ -165,7 +167,7 @@ const ItemBoard = () => {
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
-              deleteFlexLayout(selectedReportId, tabNode._attributes.id);
+              deleteFlexLayout(selectedReportId, id);
             }}
           >
           &#128473;&#xFE0E;
