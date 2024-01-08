@@ -112,12 +112,15 @@ const makeMart = (item) => {
   const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   const dataFieldOptions = makeDataFieldOptions(dataFieldTypes);
   const ribbonItems = ItemManager.getRibbonItems(item.type);
+  const attributeItems = ItemManager.getAttributeItems(item.type);
   return {
     ...defaultMart,
     dataFieldOption: {
       ...dataFieldOptions
     },
-    ribbonItems: ribbonItems
+    filter: {},
+    ribbonItems: ribbonItems,
+    attributeItems: attributeItems
   };
 };
 

@@ -28,6 +28,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         sanitizer
+            .dataFiltering(dataAggreagtion.getFilter())
             .groupBy()
             .orderBy()
             .columnFiltering(true);
