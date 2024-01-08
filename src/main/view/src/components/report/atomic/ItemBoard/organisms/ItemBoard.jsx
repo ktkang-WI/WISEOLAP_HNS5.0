@@ -1,5 +1,5 @@
 import {styled} from 'styled-components';
-import {Layout, Model} from 'flexlayout-react';
+import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -148,7 +148,7 @@ const ItemBoard = () => {
       };
 
       setWeight(modelJson.layout);
-      setMovedLayout(modelJson);
+      setMovedLayout(reportId, modelJson);
       return;
     }
     return action;
@@ -156,6 +156,7 @@ const ItemBoard = () => {
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
+
     if (tabNode) {
       const type = tabNode.getComponent();
       const id = tabNode.getId();
@@ -167,7 +168,8 @@ const ItemBoard = () => {
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
-              deleteFlexLayout(selectedReportId, id);
+              // flexLayout 커스텀 삭제 버튼 기능.
+              model.doAction(Actions.deleteTab(id));
             }}
           >
           &#128473;&#xFE0E;
@@ -187,7 +189,14 @@ const ItemBoard = () => {
 
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
-      setMovedLayout(model.toJson());
+      setMovedLayout(reportId, model.toJson());
+    } else if (action.type == 'FlexLayout_DeleteTab') {
+      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
     }
   };
 
