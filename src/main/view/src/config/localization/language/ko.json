@@ -307,5 +307,7 @@
   "precision": "정도",
   "degreeOption": "정도 옵션",
   "precisionOption": "정도 옵션",
-  "unit": "단위"
+  "unit": "단위",
+  "bar": "바",
+  "all": "전체"
 }
