@@ -15,10 +15,10 @@ export default function useLayout() {
     dispatch(flexLayout.setLayout({reportId: reportId, layout: layout}));
   };
 
-  const setMovedLayout = (reportId, action) => {
-    const param = {reportId: reportId, layout: action};
+  const setMovedLayout = (reportId, model) => {
+    const param = {reportId: reportId, layout: model};
 
-    dispatch(flexLayout.setMovedLayout(param));
+    dispatch(flexLayout.updataFlexLayout(param));
   };
 
   const insertFlexLayout = (reportId, component) => {
@@ -38,18 +38,18 @@ export default function useLayout() {
     const itemSliceParam = {reportId: reportId, itemId: itemId};
     const layoutSliceParam = {
       reportId: reportId,
-      model: model
+      layout: model
     };
 
     // layout 전부 삭제 시 비어있는 layout이 state에 존재.
     // layout이 전부 비어 있을 경우 children의 값을 빈 배열로 반환.
-    const emptyCheck = layoutSliceParam.model.layout.children;
+    const emptyCheck = layoutSliceParam.layout.layout.children;
 
     if (emptyCheck.length == 1 && emptyCheck[0].children.length == 0) {
-      layoutSliceParam.model.layout.children = [];
+      layoutSliceParam.layout.layout.children = [];
     }
 
-    dispatch(flexLayout.deleteFlexLayout(layoutSliceParam));
+    dispatch(flexLayout.updataFlexLayout(layoutSliceParam));
     dispatch(itemSlice.deleteItem(itemSliceParam));
   };
 
