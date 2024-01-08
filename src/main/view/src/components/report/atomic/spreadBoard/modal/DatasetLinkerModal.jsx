@@ -18,7 +18,7 @@ const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
   const [dataSources, setDataSources] = useState([]);
   const reportId = selectCurrentReportId(store.getState());
-  const {positionConverterAsObject} = useSpread();
+  const {positionConverterAsObject, positionConverterAsString} = useSpread();
   const sheetNames = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
@@ -34,37 +34,46 @@ const DatasetLinkerModal = ({...props}) => {
     if (_.isEmpty(bindingInfos)) {
       const dataSources = datasets.map((dataset) => {
         return {
+          datasetId: dataset.datasetId,
           datasetNm: dataset.datasetNm,
           sheetName: undefined,
           useHeader: false,
-          useBoarder: false
+          useBoarder: false,
+          useBinding: false
         };
       });
       setDataSources(dataSources);
     } else {
-      const dataSources = Object.keys(bindingInfos).map((datasrcId) => {
+      const dataSources = Object.keys(bindingInfos).map((datasetId) => {
+        const position = positionConverterAsString(
+            bindingInfos[datasetId].columnIndex,
+            bindingInfos[datasetId].rowIndex);
         return {
-          datasetNm: bindingInfos[datasrcId].datasetNm,
-          sheetName: bindingInfos[datasrcId].sheetName,
-          useHeader: bindingInfos[datasrcId].useHeader,
-          useBoarder: bindingInfos[datasrcId].useBoarder
+          datasetId: datasetId,
+          datasetNm: bindingInfos[datasetId].datasetNm,
+          sheetName: bindingInfos[datasetId].sheetName,
+          position: position,
+          useHeader: bindingInfos[datasetId].useHeader,
+          useBoarder: bindingInfos[datasetId].useBoarder,
+          useBinding: bindingInfos[datasetId].useBinding
         };
       });
-      setDataSourcs(dataSources);
+      setDataSources(dataSources);
     }
-  }, []);
+  }, [setBindingInfos]);
 
   const onSubmit = useCallback(() => {
     const returnObj = {};
     dataSources.map((dataSource) => {
       const colNRow = positionConverterAsObject(dataSource.position);
-      returnObj[dataSource.datasrcId] = {
-        columnIndex: colNRow.columnIndex,
-        rowIndexIndex: colNRow.rowIndex,
+      returnObj[dataSource.datasetId] = {
+        datasetNm: dataSource.datasetNm,
         sheetName: dataSource.sheetName,
+        columnIndex: colNRow.columnIndex,
+        rowIndex: colNRow.rowIndex,
         useHeader: dataSource.useHeader,
         useBoarder: dataSource.useBoarder,
-        usebinding: createUseBind(dataSource)
+        useBinding: createUseBind(dataSource)
       };
       return null;
     });
@@ -75,8 +84,7 @@ const DatasetLinkerModal = ({...props}) => {
   }, [dataSources]);
 
   const createUseBind = (dataSource) => {
-    if (dataSource.sheetName === '' || dataSource.sheetName === null ||
-     dataSource.position === '' || dataSource.position === null) {
+    if (_.isEmpty(dataSource.sheetName) || _.isEmpty(dataSource.position)) {
       return false;
     } else {
       return true;

@@ -2,18 +2,16 @@ import store from 'redux/modules';
 import {selectBindingInfos, selectCurrentDesigner,
   selectSheets} from 'redux/selector/SpreadSelector';
 
-export default function useSpread() {
+const useSpread = () => {
   const sheets = selectSheets(store.getState());
 
   const bindData = ({dataset, datas}) => {
-    dataset.datasrcId = 'test';
     const designer = selectCurrentDesigner((store.getState()));
     const bindingInfos = selectBindingInfos((store.getState()));
-    const bindingInfo = bindingInfos[dataset.datasrcId];
+    const bindingInfo = bindingInfos[dataset.datasetId];
     // foreach로 bindingInfos에서 datasetId로 찾아서 진행
     // 추후 메게변수로 가져와야함.
     const {columns} = generateColumns(datas);
-
     let bindedSheet = designer.getWorkbook()
         .getSheetFromName(bindingInfo.sheetName);
 
@@ -24,13 +22,11 @@ export default function useSpread() {
           .getSheetFromName(bindingInfo.sheetName);
     }
 
-    createColumnsAndRows(columns, bindedSheet, bindingInfo);
-
     const {invoice, dataSource} = dataSourceMaker(datas);
+    createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
+    deleteTables(bindedSheet);
 
     designer.getWorkbook().suspendPaint();
-
-    deleteTables(bindedSheet);
 
     const table = bindedSheet.tables.add('table'+ bindingInfo.sheetName,
         bindingInfo.rowIndex,
@@ -40,13 +36,11 @@ export default function useSpread() {
         createBoarderStyle(bindingInfo.useBoarder));
 
     table.showHeader(true);
-    // 테이블 컬럼 자동 생성
     table.autoGenerateColumns(false);
     table.bindColumns(columns);
     table.bindingPath('records');
     table.bandRows(false);
     table.bandColumns(false);
-    // 그리드 라인 설정 옵션
     bindedSheet.options.gridline.showHorizontalGridline = true;
     bindedSheet.options.gridline.showVerticalGridline = true;
     bindedSheet.invalidateLayout();
@@ -57,13 +51,13 @@ export default function useSpread() {
     designer.getWorkbook().resumePaint();
   };
 
-  const createColumnsAndRows = (columns, bindedSheet, bindingInfo) => {
+  const createColumnsAndRows = (columns, invoice, bindedSheet, bindingInfo) => {
     const bindedSheetColumnNum = bindedSheet.getColumnCount();
     const dataLengthWithColumnPosition =
      columns.length + bindingInfo.columnIndex;
     const bindedSheetRowNum = bindedSheet.getRowCount();
     const dataLengthWithRowPosition =
-     columns.length + bindingInfo.rowIndex;
+      invoice.records.length + bindingInfo.rowIndex + 1;
     if (dataLengthWithColumnPosition > bindedSheetColumnNum) {
       bindedSheet.addColumns(bindedSheetColumnNum,
           dataLengthWithColumnPosition - bindedSheetColumnNum);
@@ -147,34 +141,49 @@ export default function useSpread() {
   };
 
   const positionConverterAsObject = (str) => {
-    const regExp = new RegExp('([a-zA-Z]+)(\\d+)');
-    const match = regExp.exec(str);
-    if (match) {
-      const str = match[1];
-      const rowIndex = Number(match[2]);
-      let columnIndex = 0;
-      for (let i = 0; i < str.length; i++) {
-        columnIndex *= 26;
-        columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
-      }
-      return {
-        columnIndex: columnIndex - 1,
-        rowIndex: rowIndex
-      };
+    if (_.isEmpty(str)) {
+      return {rowIndex: null, columnIndex: null};
     } else {
-      throw new Error('position Coverter Error');
+      const regExp = new RegExp('([a-zA-Z]+)([\\d]+)');
+      const match = regExp.exec(str);
+      if (match) {
+        const str = match[1];
+        const rowIndex = Number(match[2]);
+        let columnIndex = 0;
+        for (let i = 0; i < str.length; i++) {
+          columnIndex *= 26;
+          columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
+        }
+        return {
+          columnIndex: columnIndex - 1,
+          rowIndex: rowIndex -1
+        };
+      } else {
+        return {
+          columnIndex: 0,
+          rowIndex: 0
+        };
+      }
     }
   };
 
-  const positionConverterAsString = (columnIndex) => {
-    columnIndex -= 1;
-    let columnName = '';
-    while (number > 0) {
-      const remainder = (number - 1) % 26;
-      columnName = String.fromCharCode(65 + remainder) + columnName;
-      number = Math.floor((number - 1) / 26);
+  /**
+   * @param {number} columnIndex
+   * @param {number} rowIndex
+   * @return {string}
+   */
+  const positionConverterAsString = (columnIndex, rowIndex) => {
+    let position = '';
+    if (!_.isNil(columnIndex) && !_.isNil(rowIndex)) {
+      columnIndex += 1;
+      while (columnIndex > 0) {
+        const remainder = (columnIndex - 1) % 26;
+        position = String.fromCharCode(65 + remainder) + position;
+        columnIndex = Math.floor((columnIndex - 1) / 26);
+      }
+      position += (rowIndex + 1);
     }
-    return columnName;
+    return position;
   };
 
   const createBoarderStyle = (useBoarder) => {
@@ -199,3 +208,4 @@ export default function useSpread() {
   };
 };
 
+export default useSpread;

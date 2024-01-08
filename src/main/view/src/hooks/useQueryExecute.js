@@ -14,10 +14,13 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
+import useSpread from './useSpread';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
 
@@ -247,7 +250,9 @@ const useQueryExecute = () => {
   const excuteSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
     const rootParameters = selectRootParameter(store.getState());
-    const promises = datasets.map(async (dataset) => {
+    const bindingInfos = selectBindingInfos((store.getState()));
+    datasets.map(async (dataset) => {
+      if (!bindingInfos[dataset.datasetId].useBinding) return;
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       const paramInfo = rootParameters.informations.filter((information) => {
@@ -255,15 +260,16 @@ const useQueryExecute = () => {
           return information;
         }
       });
-      const parameters = {
-        informations: paramInfo,
-        values: {}
-      };
-      return await models.DBInfo.
+      const parameters = paramInfo.map((information) => {
+        return {
+          informations: information,
+          values: rootParameters.values[information.name]
+        };
+      });
+      const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
+      bindData({dataset: dataset, datas: datas.rowData});
     });
-    const response = await Promise.all(promises);
-    console.log(response);
   };
 
   return {
