@@ -32,6 +32,9 @@ import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
 import {useLocation} from 'react-router';
+import store from 'redux/modules';
+import ReportType from 'components/designer/util/ReportType';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 
 const RibbonDefaultElement = () => {
   const location = useLocation();
@@ -39,11 +42,12 @@ const RibbonDefaultElement = () => {
   const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
-  const {executeItems} = useQueryExecute();
+  const {executeItems, excuteSpread} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
+  const reportType = useSelector(selectCurrentReportType);
 
-  return {
+  const defaultElement = {
     'NewReport': {
       id: 'new_report',
       title: localizedString.newReport,
@@ -416,10 +420,24 @@ const RibbonDefaultElement = () => {
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {
-        executeItems();
+        const reportType = selectCurrentReportType(store.getState());
+        if (reportType !== ReportType.EXCEL) {
+          executeItems();
+        } else {
+          excuteSpread();
+        }
       }
     }
   };
+
+  if (reportType !== ReportType.EXCEL) {
+    return defaultElement;
+  } else {
+    return {
+      'Dataset': defaultElement.Dataset,
+      'QuerySearch': defaultElement.QuerySearch
+    };
+  }
 };
 
 export default RibbonDefaultElement;

@@ -1,5 +1,5 @@
 import store from 'redux/modules';
-import {selectCurrentBindingInfos, selectCurrentDesigner,
+import {selectBindingInfos, selectCurrentDesigner,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 export default function useSpread() {
@@ -8,20 +8,20 @@ export default function useSpread() {
   const bindData = ({dataset, datas}) => {
     dataset.datasrcId = 'test';
     const designer = selectCurrentDesigner((store.getState()));
-    const bindingInfos = selectCurrentBindingInfos((store.getState()));
+    const bindingInfos = selectBindingInfos((store.getState()));
     const bindingInfo = bindingInfos[dataset.datasrcId];
     // foreach로 bindingInfos에서 datasetId로 찾아서 진행
     // 추후 메게변수로 가져와야함.
     const {columns} = generateColumns(datas);
 
     let bindedSheet = designer.getWorkbook()
-        .getSheetFromName(bindingInfo.sheetNm);
+        .getSheetFromName(bindingInfo.sheetName);
 
     if (bindedSheet == undefined) {
       designer.getWorkbook().addSheet(0,
-          new sheets.Worksheet(bindingInfo.sheetNm));
+          new sheets.Worksheet(bindingInfo.sheetName));
       bindedSheet = designer.getWorkbook()
-          .getSheetFromName(bindingInfo.sheetNm);
+          .getSheetFromName(bindingInfo.sheetName);
     }
 
     createColumnsAndRows(columns, bindedSheet, bindingInfo);
@@ -32,7 +32,7 @@ export default function useSpread() {
 
     deleteTables(bindedSheet);
 
-    const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
+    const table = bindedSheet.tables.add('table'+ bindingInfo.sheetName,
         bindingInfo.rowIndex,
         bindingInfo.columnIndex,
         invoice.records.length+1,
@@ -145,12 +145,37 @@ export default function useSpread() {
       }
     });
   };
-  // const createColumnName = () => {
-  //   const preAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  //   const alphabetLength = preAlphabet.length + 1;
-  //   const preAlphabetIndex = Math.floor(index / alphabetLength);
-  //   return preAlphabetIndex;
-  // };
+
+  const positionConverterAsObject = (str) => {
+    const regExp = new RegExp('([a-zA-Z]+)(\\d+)');
+    const match = regExp.exec(str);
+    if (match) {
+      const str = match[1];
+      const rowIndex = Number(match[2]);
+      let columnIndex = 0;
+      for (let i = 0; i < str.length; i++) {
+        columnIndex *= 26;
+        columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
+      }
+      return {
+        columnIndex: columnIndex - 1,
+        rowIndex: rowIndex
+      };
+    } else {
+      throw new Error('position Coverter Error');
+    }
+  };
+
+  const positionConverterAsString = (columnIndex) => {
+    columnIndex -= 1;
+    let columnName = '';
+    while (number > 0) {
+      const remainder = (number - 1) % 26;
+      columnName = String.fromCharCode(65 + remainder) + columnName;
+      number = Math.floor((number - 1) / 26);
+    }
+    return columnName;
+  };
 
   const createBoarderStyle = (useBoarder) => {
     const sheets = selectSheets(store.getState());
@@ -165,9 +190,12 @@ export default function useSpread() {
     return tableStyle;
   };
 
-  return {bindData,
+  return {
+    bindData,
     sheetNameChangedListener,
-    sheetDeletedListener
+    sheetDeletedListener,
+    positionConverterAsObject,
+    positionConverterAsString
   };
 };
 

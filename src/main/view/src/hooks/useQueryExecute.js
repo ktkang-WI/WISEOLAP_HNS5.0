@@ -244,12 +244,35 @@ const useQueryExecute = () => {
     });
   };
 
+  const excuteSpread = async () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const rootParameters = selectRootParameter(store.getState());
+    const promises = datasets.map(async (dataset) => {
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      const paramInfo = rootParameters.informations.filter((information) => {
+        if (information.dataset[0] === dataset.datasetId) {
+          return information;
+        }
+      });
+      const parameters = {
+        informations: paramInfo,
+        values: {}
+      };
+      return await models.DBInfo.
+          getDataByQueryMart(dsId, query, parameters, 0);
+    });
+    const response = await Promise.all(promises);
+    console.log(response);
+  };
+
   return {
     generateParameter,
     executeItem,
     executeItems,
     executeParameters,
-    executeLinkageFilter
+    executeLinkageFilter,
+    excuteSpread
   };
 };
 

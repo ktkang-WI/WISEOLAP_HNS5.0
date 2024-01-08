@@ -1,11 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
+import ReportType from 'components/designer/util/ReportType';
 
 const initialState = {
+  reportType: ReportType.DASHANY
 };
 
 const reducers = {
   updateConfig(state, actions) {
     Object.assign(state, actions.payload);
+  },
+  setReportType(state, actions) {
+    state.reportType = actions.payload;
   }
 };
 

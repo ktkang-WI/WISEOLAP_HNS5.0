@@ -45,21 +45,23 @@ GC.Spread.Sheets.Designer.LicenseKey ='intelligence.wise.co.kr,' +
 'lWORRkYOZWTNpEUQ34YolDNFVlero4c1RiV';
 const excelIO = new GC.Spread.Excel.IO();
 
+// test: {
+//   sheetName: 'Sheet1',
+//   rowIndex: 0,
+//   columnIndex: 18,
+//   useHeader: false,
+//   useBoarder: false,
+//   useBind: false,
+//   datasetId: dataset1 -- filter랑 연동외어있어서 필요
+// }
+
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
     designer: undefined,
-    bindingInfos: {
-      test: {
-        sheetNm: 'Sheet1',
-        rowIndex: 0,
-        columnIndex: 18,
-        useHeader: false,
-        useBoarder: false
-      }
-    }
+    bindingInfos: {}
   }
 };
 
@@ -73,7 +75,7 @@ const reducers = {
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].designer = actions.payload.bindingInfos;
+    state[reportId].bindingInfos = actions.payload.bindingInfos;
   }
 };
 

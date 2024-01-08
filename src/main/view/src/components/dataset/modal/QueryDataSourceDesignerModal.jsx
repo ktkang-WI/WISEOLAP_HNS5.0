@@ -177,7 +177,7 @@ const QueryDataSourceDesignerModal = ({
           };
 
           const response = await models.DBInfo.
-              getDataByQueryMart(selectedDataSource.dsId, query, parameters);
+              getDataByQueryMart(selectedDataSource.dsId, query, parameters, 1);
           if (!response.rowData[0].error) {
             let tempFields = response.metaData;
 

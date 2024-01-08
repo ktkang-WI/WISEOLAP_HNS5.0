@@ -132,9 +132,8 @@ const SpreadDefaultElement = () => {
     const datasetBinder = () => {
       const datasets = selectCurrentDatasets(store.getState());
       if (datasets.length == 0) {
-        alert('길이 0');
-      } else {
-        alert('길이 1 이상');
+        alert(localizedString.dataSourceNotSelectedMsg);
+        return;
       }
       openModal(DatasetLinkerModal);
     };
