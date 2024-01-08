@@ -21,8 +21,8 @@ export default function CustomizeSuffixValue(value, options) {
   const suffix = {
     [options.ones]: 1,
     [options.thousands]: 10 ** 3,
-    [options.milions]: 10 ** 6,
-    [options.bilions]: 10 ** 9
+    [options.millions]: 10 ** 6,
+    [options.billions]: 10 ** 9
   };
   const unit = options.unit.toLowerCase();
   const customSuffix = suffix[options[unit]];

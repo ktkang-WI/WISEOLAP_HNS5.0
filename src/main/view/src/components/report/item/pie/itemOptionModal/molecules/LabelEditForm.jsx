@@ -33,7 +33,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         dataField='unit'
         editorType='dxSelectBox'
         editorOptions={{
-          items: ['Auto', 'Ones', 'Thousands', 'Milions', 'Bilions']
+          items: ['Auto', 'Ones', 'Thousands', 'Millions', 'Billions']
         }}
       >
         <Label>{localizedString.unit}</Label>
@@ -79,20 +79,20 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.thousands}</Label>
       </Item>
       <Item
-        dataField='milions'
+        dataField='millions'
         editorType='dxTextBox'
         editorOptions={{
         }}
       >
-        <Label>{localizedString.milions}</Label>
+        <Label>{localizedString.millions}</Label>
       </Item>
       <Item
-        dataField='bilions'
+        dataField='billions'
         editorType='dxTextBox'
         editorOptions={{
         }}
       >
-        <Label>{localizedString.bilions}</Label>
+        <Label>{localizedString.billions}</Label>
       </Item>
       <Item
         dataField='degree'

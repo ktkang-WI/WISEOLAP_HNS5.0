@@ -8,13 +8,13 @@ const generateMeta = (item) => {
   setMeta(item, 'pieChartStyle', 'pie');
   setMeta(item, 'labelPosition', 'columns');
   setMeta(item, 'tooltip', {
-    bilions: 'B',
+    billions: 'B',
     customPrefix: false,
     customSuffix: false,
     degreeOption: 'round',
     inputPrefix: '',
     format: 'value',
-    milions: 'M',
+    millions: 'M',
     thousands: 'K',
     unit: 'Ones',
     degree: 0,
@@ -22,13 +22,13 @@ const generateMeta = (item) => {
   });
   setMeta(item, 'labelEdit', {
     showTitle: true,
-    bilions: 'B',
+    billions: 'B',
     customPrefix: false,
     customSuffix: false,
     degreeOption: 'round',
     inputPrefix: '',
     format: 'value',
-    milions: 'M',
+    millions: 'M',
     thousands: 'K',
     unit: 'Ones',
     degree: 0,
