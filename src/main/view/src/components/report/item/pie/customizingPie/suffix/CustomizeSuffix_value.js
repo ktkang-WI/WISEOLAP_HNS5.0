@@ -11,7 +11,7 @@ const treatedNumber = (value, customSuffix, degree, degreeOption) => {
 
   return (
     parseFloat(
-        (mathRoundFunc[degreeOption](value/suffixValue)*suffixValue)/
+        (mathRoundFunc[degreeOption](value / suffixValue) * suffixValue) /
           customSuffix
     ).toFixed(degree)
   );
