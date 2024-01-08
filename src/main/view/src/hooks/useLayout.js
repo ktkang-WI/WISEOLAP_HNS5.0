@@ -15,8 +15,10 @@ export default function useLayout() {
     dispatch(flexLayout.setLayout({reportId: reportId, layout: layout}));
   };
 
-  const setMovedLayout = (action) => {
-    dispatch(flexLayout.setMovedLayout(action));
+  const setMovedLayout = (reportId, action) => {
+    const param = {reportId: reportId, layout: action};
+
+    dispatch(flexLayout.setMovedLayout(param));
   };
 
   const insertFlexLayout = (reportId, component) => {
@@ -32,11 +34,23 @@ export default function useLayout() {
     }));
   };
 
-  const deleteFlexLayout = (reportId, itemId) => {
-    const param = {reportId: reportId, itemId: itemId};
+  const deleteFlexLayout = (reportId, itemId, model) => {
+    const itemSliceParam = {reportId: reportId, itemId: itemId};
+    const layoutSliceParam = {
+      reportId: reportId,
+      model: model
+    };
 
-    dispatch(flexLayout.deleteFlexLayout(param));
-    dispatch(itemSlice.deleteItem(param));
+    // layout 전부 삭제 시 비어있는 layout이 state에 존재.
+    // layout이 전부 비어 있을 경우 children의 값을 빈 배열로 반환.
+    const emptyCheck = layoutSliceParam.model.layout.children;
+
+    if (emptyCheck.length == 1 && emptyCheck[0].children.length == 0) {
+      layoutSliceParam.model.layout.children = [];
+    }
+
+    dispatch(flexLayout.deleteFlexLayout(layoutSliceParam));
+    dispatch(itemSlice.deleteItem(itemSliceParam));
   };
 
   // 캡션 보기 활성화, 비활성화.
