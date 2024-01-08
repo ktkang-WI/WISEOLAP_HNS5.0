@@ -80,7 +80,7 @@ const CheckBoxs = ({onValueChanged, checkboxs, ...props}) => {
         <CheckBox
           key={index}
           title={item.title}
-          id={item.title}
+          id={item.type}
           src={item.src}
           onValueChanged={onValueChanged}
           checked={item.checked}/>

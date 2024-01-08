@@ -1,3 +1,11 @@
+import {
+  generalData,
+  generalKeyName,
+  overlappingModeData,
+  pointLabelDirectionData,
+  pointLabelNotationData,
+  pointerMarkerName
+} from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import barImg from '../../../../../../../assets/image/icon/item/bar.png';
 import DataColumnOption
   from '../../../molecules/DataColumnSeriesOptions/DataColumnOption';
@@ -24,36 +32,46 @@ export const dataSource = [
 export const generalOptionsData = [
   {
     id: 0,
-    label: '보조 축의 구성',
-    checked: true
+    name: generalKeyName.auxiliaryAxis,
+    label: generalData.auxiliaryAxis
   },
   {
     id: 1,
-    label: '빈 포인트 무시',
-    checked: true
+    name: generalKeyName.ignoreEmptyPoints,
+    label: generalData.ignoreEmptyPoints
   },
   {
     id: 2,
-    label: '포인트 마커 표시',
-    checked: true
+    name: generalKeyName.pointerMarker,
+    label: generalData.pointerMarker
   },
   {
     id: 3,
-    label: '역순으로 보기',
-    checked: true
+    name: generalKeyName.reverseView,
+    label: generalData.reverseView
   }
 ];
 
 const pointLabelSelectBoxData = {
   selectBox: {
     inscriptionFormItems: [
-      '없음', '인수', '측정값 명', '값', '인수 및 측정값 명', '측정값 명 및 값', '인수,측정값 명 및 값'
+      pointLabelNotationData.none,
+      pointLabelNotationData.argument,
+      pointLabelNotationData.measureName,
+      pointLabelNotationData.value,
+      pointLabelNotationData.argumentMeasureName,
+      pointLabelNotationData.measureNameValue,
+      pointLabelNotationData.argumentMeasureNameValue
     ],
     overlappingModeItems: [
-      '기본', '없음', '중복 레이블 위치 변경'
+      overlappingModeData.default,
+      overlappingModeData.hidden,
+      overlappingModeData.overlappingLabelReLocate
     ],
     directionItems: [
-      '기본', '왼쪽으로 회전', '오른쪽으로 회전'
+      pointLabelDirectionData.default,
+      pointLabelDirectionData.left,
+      pointLabelDirectionData.right
     ]
   }
 };
@@ -63,19 +81,19 @@ export const pointLabelData = {
     {
       id: 0,
       label: '표기형식',
-      value: '없음',
+      name: pointerMarkerName.Notation,
       items: pointLabelSelectBoxData.selectBox.inscriptionFormItems
     },
     {
       id: 1,
       label: '겹침모드',
-      value: '중복 레이블 위치 변경',
+      name: pointerMarkerName.overlayMode,
       items: pointLabelSelectBoxData.selectBox.overlappingModeItems
     },
     {
       id: 2,
       label: '방향',
-      value: '기본',
+      name: pointerMarkerName.direction,
       items: pointLabelSelectBoxData.selectBox.directionItems
     }
   ]

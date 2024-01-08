@@ -1,20 +1,29 @@
-import {useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {ImgCheckBox} from './Common/ImgCheckBox';
 import {dataColumnTypeData}
   from '../../organism/DataColumnSeriesOptions/metaData/SeriesOptionData';
+import {DataColumnSeriesOptionsContext}
+  from '../../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
 
 const DataColumnType = () => {
+  const getContext = useContext(DataColumnSeriesOptionsContext);
+  const [type, setType] = getContext.state.type;
   const [dataColumnType, setDataColumnType] =
     useState(dataColumnTypeData.dataColumnType);
 
-  const dataColumnTypeCheckBoxCheck = (itemTitle) => {
+  useEffect(() => {
+    dataColumnTypeCheckBoxCheck(type);
+  }, []);
+
+  const dataColumnTypeCheckBoxCheck = (type) => {
     setDataColumnType((prev) => {
       const result = prev.map((item) => {
         return {
           ...item,
           checkboxs: item.checkboxs.map((checkbox, index) => {
-            if (itemTitle === checkbox.title) {
+            if (type === checkbox.type) {
               checkbox.checked = true;
+              setType((prev) => checkbox.type);
             } else {
               checkbox.checked = false;
             }

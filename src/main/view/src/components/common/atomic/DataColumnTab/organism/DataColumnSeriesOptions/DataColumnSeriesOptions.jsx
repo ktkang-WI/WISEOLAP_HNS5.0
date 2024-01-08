@@ -1,7 +1,17 @@
 import {TabPanel} from 'devextreme-react';
 import Modal from '../../../Modal/organisms/Modal';
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import {dataSource} from './metaData/SeriesOptionData';
+import {
+  seriesOptionFetch}
+  from 'redux/modules/SeriesOption/SeriesOptionSlice';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {getSeriesOptionFetchFormat}
+  from 'redux/modules/SeriesOption/SeriesOptionFormat';
+import {selectSeriesOption}
+  from 'redux/selector/SeriesOption/SeriesOptionSelector';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
@@ -11,10 +21,36 @@ const TabPanelItem = ({children}) => {
   );
 };
 
-const DataColumnSeriesOptions = ({onClose, parameterInfo, onSubmit}) => {
+const DataColumnSeriesOptions = (
+    {fieldId, onClose, parameterInfo, onSubmit}) => {
   // useState
   const [tabPanelItem, setTabPanelItem] = useState(dataSource[0].component);
+  const dispatch = useDispatch();
 
+  // TODO: Get Data from Redux
+  const [type, setType] = useState('');
+  const [general, setGeneral] = useState({});
+  const [pointLabel, setPointLabel] = useState({});
+
+  const currentReportId = useSelector(selectCurrentReportId);
+  const seriesOptions = useSelector(selectSeriesOption);
+
+  useEffect(() => {
+    const seriesOption =
+      seriesOptions.filter((item) => item.fieldId === fieldId)[0];
+    setType(seriesOption.type);
+    setGeneral(seriesOption.general);
+    setPointLabel(seriesOption.pointLabel);
+  }, []);
+
+  // setting context
+  const context = {
+    state: {
+      type: [type, setType],
+      general: [general, setGeneral],
+      pointLabel: [pointLabel, setPointLabel]
+    }
+  };
 
   const handleTabPanelItem = (e) => {
     const panelTitle = e.itemData.title;
@@ -26,14 +62,24 @@ const DataColumnSeriesOptions = ({onClose, parameterInfo, onSubmit}) => {
     });
   };
 
+  const handleSeriesOptionFetch = () => {
+    const tempSeriesOption = getSeriesOptionFetchFormat();
+    tempSeriesOption.reportId = currentReportId;
+    tempSeriesOption.fieldId = fieldId;
+    tempSeriesOption.seriesOptions.general = general;
+    tempSeriesOption.seriesOptions.type = type;
+    tempSeriesOption.seriesOptions.pointLabel = pointLabel;
+    // update
+    dispatch(seriesOptionFetch(tempSeriesOption));
+  };
+
   return (
     <DataColumnSeriesOptionsContext.Provider
-      value='none'
+      value={context}
     >
       <Modal
         onSubmit={() => {
-          console.log('DataColumnSeriesOptions open !!');
-          // onSubmit(newParamInfo);
+          handleSeriesOptionFetch();
         }}
         height='700px'
         width='500px'

@@ -142,8 +142,9 @@ const DataColumn = ({
   };
 
   const handleSeriesOptionClick = (e) => {
+    const fieldId = data.fieldId;
     openModal(DataColumnSeriesOptions, {
-
+      fieldId
     });
   };
   const buttonEventFunction = (e) => {
