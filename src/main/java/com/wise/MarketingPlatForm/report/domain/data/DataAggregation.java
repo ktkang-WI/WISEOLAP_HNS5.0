@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.data;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -28,4 +29,5 @@ public class DataAggregation {
     boolean removeNullData;
     List<Parameter> parameters;
     TopBottomInfo topBottomInfo;
+    Map<String, List<String>> filter;
 }

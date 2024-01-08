@@ -2,7 +2,7 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import {useCallback, useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 
 const PivotGrid = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -53,18 +53,14 @@ const PivotGrid = ({id, adHocOption, item}) => {
     showTotalsPrior = 'none';
   }
 
-  // 조회할 때만 필터 표시 반영하기 위해 useCallback 사용
-  const getFieldPanel = useCallback(() => {
-    return {
-      allowFieldDragging: false,
-      showColumnFields: dataField.column.length > 0,
-      showDataFields: false,
-      showFilterFields: false,
-      showRowFields: dataField.row.length > 0,
-      visible: meta.showFilter
-    };
-  }, [mart]);
-
+  const fieldPanel = {
+    allowFieldDragging: false,
+    showColumnFields: dataField.column.length > 0,
+    showDataFields: false,
+    showFilterFields: false,
+    showRowFields: dataField.row.length > 0,
+    visible: meta.showFilter
+  };
 
   return (
     <DevPivotGrid
@@ -80,7 +76,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
       rowHeaderLayout={meta.layout}
       dataFieldArea={meta.positionOption.dataPosition}
       allowFiltering={meta.showFilter}
-      fieldPanel={getFieldPanel()}
+      fieldPanel={fieldPanel}
       showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
       allowSorting={false}

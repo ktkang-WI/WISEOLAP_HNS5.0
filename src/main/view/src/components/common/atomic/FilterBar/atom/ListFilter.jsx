@@ -5,8 +5,11 @@ import Wrapper from '../../Common/Wrap/Wrapper';
 import CommonButton from '../../Common/Button/CommonButton';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
+
+const allText = localizedString.all;
 
 const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
   const index = isTo ? 1 : 0;
@@ -33,7 +36,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     if (tempText.length > 0) {
       tempText = tempText.substring(0, tempText.length - 2);
     } else {
-      return '전체';
+      return allText;
     }
 
     return tempText;
@@ -45,8 +48,10 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     if (!value || !value.value) {
       setText('');
     } else if (!keys || keys == '[All]') {
-      keys = value.listItems.map((item) => item.name);
-      setText('전체');
+      if (info.multiSelect) {
+        keys = value.listItems.map((item) => item.name);
+      }
+      setText(allText);
     } else {
       keys = keys.split(', ');
       setText(generateCaptionText(keys));
@@ -74,15 +79,18 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
       const selectionKeys = listRef.current.instance.option('selectedItemKeys');
       let selection;
       if (selectionKeys.length == 0 ||
-          selectionKeys.length == dataSource.length) {
+          selectionKeys.length == dataSource.length ||
+          (info.useAll && !info.multiSelect &&
+          selectionKeys.length == dataSource.length - 1)) {
         selection = '[All]';
+        setText(allText);
       } else {
         selection = selectionKeys.join(', ');
+        setText(generateCaptionText(selectionKeys));
       }
 
       onValueChanged(info.name, selection, index);
       setSelectionKeys(selectionKeys);
-      setText(generateCaptionText(selectionKeys));
       popOverRef.current.instance.hide();
     };
 
@@ -98,7 +106,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     } else if (info.useAll) {
       dataSource.unshift({
         name: '[All]',
-        caption: '전체'
+        caption: allText
       });
     }
 
@@ -107,7 +115,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
         <StyledList
           selectionMode={selectionMode}
           showSelectionControls={true}
-          selectAllText='전체'
+          selectAllText={allText}
           selectAllMode={'allPage'}
           selectedByClick={true}
           height='200px'
@@ -116,6 +124,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
           ref={listRef}
           defaultSelectedItemKeys={selectionKeys}
           dataSource={dataSource}
+          searchEnabled={info.useSearch}
         >
         </StyledList>
         <Footer>
