@@ -255,5 +255,6 @@
   "detailSetting": "세부 설정",
   "value": "값",
   "bar": "바",
-  "all": "전체"
+  "all": "전체",
+  "colRowSwitch": "행/열 변환"
 }

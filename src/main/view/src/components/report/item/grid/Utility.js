@@ -63,10 +63,15 @@ const getAttributeItems = () => {
   ];
 };
 
+const getTabHeaderItems = () => {
+  return [];
+};
+
 export default {
   generateMeta,
   generateItem,
   generateParameter,
   getRibbonItems,
-  getAttributeItems
+  getAttributeItems,
+  getTabHeaderItems
 };
