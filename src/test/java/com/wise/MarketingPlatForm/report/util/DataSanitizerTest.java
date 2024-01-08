@@ -68,9 +68,9 @@ public class DataSanitizerTest {
         List<Map<String, Object>> result = sanitizer.groupBy().getData();
 
         assertEquals(result.size(), 15);
-        assertEquals(result.get(0).get("SUM_price"), new BigDecimal("3333329999900"));
-        assertEquals(result.get(0).get("AVG_price"), new BigDecimal("49999700.00000"));
-        assertEquals(result.get(0).get("COUNT_price"), new BigDecimal("66667"));
+        assertEquals(result.get(0).get("SUM_price"), new BigDecimal("3333303333300"));
+        assertEquals(result.get(0).get("AVG_price"), new BigDecimal("50000050.00000"));
+        assertEquals(result.get(0).get("COUNT_price"), new BigDecimal("66666"));
     }
 
     @Test

@@ -16,6 +16,13 @@ const defaultDimension = {
   type: 'DIM'
 };
 
+const defaultAnyField = {
+  icon: dimensionIcon,
+  label: localizedString.field,
+  placeholder: localizedString.fieldPlaceholder,
+  type: 'ANY'
+};
+
 const defaultMeasure = {
   label: localizedString.measure,
   icon: measureIcon,
@@ -62,9 +69,7 @@ const dataFieldRow = {
 };
 
 const dataFieldField = {
-  ...defaultDimension,
-  label: localizedString.field,
-  placeholder: localizedString.fieldPlaceholder,
+  ...defaultAnyField,
   // 열 옵션 설정 버튼 추가
   useButton: true,
   buttonIcon: function(column) {
