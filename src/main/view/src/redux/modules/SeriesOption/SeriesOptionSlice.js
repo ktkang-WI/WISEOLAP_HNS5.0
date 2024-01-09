@@ -76,18 +76,18 @@ export const removedSeriesOptions = (state, reportId, fetchFieldId) => {
 };
 
 const generatePointLabel =
-   (pointLabel, overlayMode) => {
+   (Notation, direction, overlayMode) => {
      const tempPointLabel = getSeriesOptionPointLabelFormat();
-     tempPointLabel.Notation = pointLabel.Notation;
-     tempPointLabel.direction = pointLabel.direction;
+     tempPointLabel.Notation = Notation;
+     tempPointLabel.direction = direction;
      tempPointLabel.overlayMode = overlayMode;
      return tempPointLabel;
    };
 
 const generateGeneralOption =
-   (general, ignoreEmptyPoints, pointerMarker, reverseView) => {
+   (auxiliaryAxis, ignoreEmptyPoints, pointerMarker, reverseView) => {
      const tempGeneral = getSeriesOptionGeneralFormat();
-     tempGeneral.auxiliaryAxis = general.auxiliaryAxis;
+     tempGeneral.auxiliaryAxis = auxiliaryAxis;
      tempGeneral.ignoreEmptyPoints = ignoreEmptyPoints;
      tempGeneral.pointerMarker = pointerMarker;
      tempGeneral.reverseView = reverseView;
@@ -105,11 +105,12 @@ const seriesOptionsSynchronization = (
   dataField.seriesOptions.forEach((item) => {
     item.pointLabel =
       generatePointLabel(
-          item.pointLabel,
+          item.pointLabel.Notation,
+          item.pointLabel.direction,
           tempPointGeneralOption.pointLabel.overlayMode);
     item.general =
       generateGeneralOption(
-          item.general,
+          item.general.auxiliaryAxis,
           tempPointGeneralOption.general.ignoreEmptyPoints,
           tempPointGeneralOption.general.pointerMarker,
           tempPointGeneralOption.general.reverseView);
