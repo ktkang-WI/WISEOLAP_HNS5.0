@@ -12,18 +12,19 @@ import useSpread from 'hooks/useSpread';
 
 const SpreadBoard = () => {
   const dispatch = useDispatch();
-  const {sheetDeletedListener} = useSpread();
   const spreadSlice = SpreadSlice.actions;
   const selectedReportId = useSelector(selectCurrentReportId);
   const {setRibbonSetting} = spreadDefaultElement();
   const config = setRibbonSetting();
+  const {sheetNameChangedListener, sheetChangedListener} = useSpread();
 
   const designerInitialized = useCallback((e) => {
     dispatch(spreadSlice.setDesigner({
       reportId: selectedReportId,
       designer: e
     }));
-    sheetDeletedListener();
+    sheetNameChangedListener();
+    sheetChangedListener();
   }, [selectedReportId]);
 
   return (

@@ -15,6 +15,7 @@ const theme = getTheme();
 const SpreadContent = () => {
   // draggable을 사용할지 안할지 논의
   const {onDragEnd, onDragStart} = useDrag();
+
   return (
     <Content
       snbWidth={theme.size.snbWidth}

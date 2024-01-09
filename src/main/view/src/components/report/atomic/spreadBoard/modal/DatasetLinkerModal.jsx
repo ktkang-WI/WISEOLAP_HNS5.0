@@ -13,13 +13,14 @@ import {selectBindingInfos, selectCurrentDesigner} from
   'redux/selector/SpreadSelector';
 
 const DatasetLinkerModal = ({...props}) => {
-  const designer = useSelector(selectCurrentDesigner);
-  const {setBindingInfos} = SpreadSlice.actions;
   const disptch = useDispatch();
+  const designer = useSelector(selectCurrentDesigner);
   const [dataSources, setDataSources] = useState([]);
-  const reportId = selectCurrentReportId(store.getState());
+  const {setBindingInfos} = SpreadSlice.actions;
   const {positionConverterAsObject, positionConverterAsString} = useSpread();
-  const sheetNames = designer.getWorkbook().sheets.map((sheet) => {
+  const datasets = selectCurrentDatasets(store.getState());
+  const reportId = selectCurrentReportId(store.getState());
+  const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
 
@@ -29,14 +30,14 @@ const DatasetLinkerModal = ({...props}) => {
   ];
 
   useEffect(() => {
-    const datasets = selectCurrentDatasets(store.getState());
     const bindingInfos = selectBindingInfos(store.getState());
     if (_.isEmpty(bindingInfos)) {
       const dataSources = datasets.map((dataset) => {
         return {
           datasetId: dataset.datasetId,
           datasetNm: dataset.datasetNm,
-          sheetName: undefined,
+          sheetNm: undefined,
+          position: undefined,
           useHeader: false,
           useBoarder: false,
           useBinding: false
@@ -51,7 +52,7 @@ const DatasetLinkerModal = ({...props}) => {
         return {
           datasetId: datasetId,
           datasetNm: bindingInfos[datasetId].datasetNm,
-          sheetName: bindingInfos[datasetId].sheetName,
+          sheetNm: bindingInfos[datasetId].sheetNm,
           position: position,
           useHeader: bindingInfos[datasetId].useHeader,
           useBoarder: bindingInfos[datasetId].useBoarder,
@@ -60,7 +61,7 @@ const DatasetLinkerModal = ({...props}) => {
       });
       setDataSources(dataSources);
     }
-  }, [setBindingInfos]);
+  }, []);
 
   const onSubmit = useCallback(() => {
     const returnObj = {};
@@ -68,7 +69,7 @@ const DatasetLinkerModal = ({...props}) => {
       const colNRow = positionConverterAsObject(dataSource.position);
       returnObj[dataSource.datasetId] = {
         datasetNm: dataSource.datasetNm,
-        sheetName: dataSource.sheetName,
+        sheetNm: dataSource.sheetNm,
         columnIndex: colNRow.columnIndex,
         rowIndex: colNRow.rowIndex,
         useHeader: dataSource.useHeader,
@@ -84,7 +85,7 @@ const DatasetLinkerModal = ({...props}) => {
   }, [dataSources]);
 
   const createUseBind = (dataSource) => {
-    if (_.isEmpty(dataSource.sheetName) || _.isEmpty(dataSource.position)) {
+    if (_.isEmpty(dataSource.sheetNm) || _.isEmpty(dataSource.position)) {
       return false;
     } else {
       return true;
@@ -107,11 +108,9 @@ const DatasetLinkerModal = ({...props}) => {
           mode: 'cell'
         }}
       >
-        <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}>
-          <Lookup dataSource={sheetNames} />
-        </Column>
-        <Column dataField='sheetName' caption='Sheet 명'>
-          <Lookup dataSource={sheetNames} />
+        <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}/>
+        <Column dataField='sheetNm' caption='Sheet 명'>
+          <Lookup dataSource={sheetNms} />
         </Column>
         <Column dataField='position' caption='데이터 연동 위치'/>
         <Column

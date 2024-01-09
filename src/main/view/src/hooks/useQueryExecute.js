@@ -4,6 +4,7 @@ import {
 import {
   selectCurrentItems
 } from 'redux/selector/ItemSelector';
+import localizedString from 'config/localization';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
@@ -16,10 +17,12 @@ import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import useModal from './useModal';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {alert} = useModal();
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
@@ -249,10 +252,16 @@ const useQueryExecute = () => {
 
   const excuteSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
+    if (_.isEmpty(datasets)) {
+      alert(localizedString.dataSourceNotSelectedMsg); return;
+    }
     const rootParameters = selectRootParameter(store.getState());
     const bindingInfos = selectBindingInfos((store.getState()));
     datasets.map(async (dataset) => {
-      if (!bindingInfos[dataset.datasetId].useBinding) return;
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+       !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot); return;
+      }
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       const paramInfo = rootParameters.informations.filter((information) => {
@@ -260,12 +269,18 @@ const useQueryExecute = () => {
           return information;
         }
       });
-      const parameters = paramInfo.map((information) => {
-        return {
-          informations: information,
-          values: rootParameters.values[information.name]
-        };
-      });
+      let parameters = {
+        informations: [],
+        values: {}
+      };
+      if (!_.isEmpty(paramInfo)) {
+        parameters = paramInfo.map((information) => {
+          return {
+            informations: information,
+            values: rootParameters.values[information.name] || {}
+          };
+        });
+      }
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
       bindData({dataset: dataset, datas: datas.rowData});

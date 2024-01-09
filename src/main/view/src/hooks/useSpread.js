@@ -1,25 +1,30 @@
+import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos, selectCurrentDesigner,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 const useSpread = () => {
   const sheets = selectSheets(store.getState());
+  const dispatch = useDispatch();
+  const {setBindingInfo} = SpreadSlice.actions;
 
   const bindData = ({dataset, datas}) => {
-    const designer = selectCurrentDesigner((store.getState()));
+    const designer = selectCurrentDesigner(store.getState());
     const bindingInfos = selectBindingInfos((store.getState()));
     const bindingInfo = bindingInfos[dataset.datasetId];
     // foreach로 bindingInfos에서 datasetId로 찾아서 진행
     // 추후 메게변수로 가져와야함.
     const {columns} = generateColumns(datas);
     let bindedSheet = designer.getWorkbook()
-        .getSheetFromName(bindingInfo.sheetName);
+        .getSheetFromName(bindingInfo.sheetNm);
 
     if (bindedSheet == undefined) {
       designer.getWorkbook().addSheet(0,
-          new sheets.Worksheet(bindingInfo.sheetName));
+          new sheets.Worksheet(bindingInfo.sheetNm));
       bindedSheet = designer.getWorkbook()
-          .getSheetFromName(bindingInfo.sheetName);
+          .getSheetFromName(bindingInfo.sheetNm);
     }
 
     const {invoice, dataSource} = dataSourceMaker(datas);
@@ -28,7 +33,7 @@ const useSpread = () => {
 
     designer.getWorkbook().suspendPaint();
 
-    const table = bindedSheet.tables.add('table'+ bindingInfo.sheetName,
+    const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
         bindingInfo.rowIndex,
         bindingInfo.columnIndex,
         invoice.records.length+1,
@@ -69,7 +74,6 @@ const useSpread = () => {
   };
 
   const generateColumns = (datas) => {
-    const sheets = selectSheets(store.getState());
     const columns = [];
     const header = [];
     const columnKeys = Object.keys(datas[0]);
@@ -85,27 +89,56 @@ const useSpread = () => {
     return {columns: columns, header: header};
   };
 
-  const sheetNameChangedListener = () => {
+  const sheetChangedListener = () => {
     const designer = selectCurrentDesigner(store.getState());
-    designer.getWorkbook().bind(sheets.Events.SheetChanged, renameSheet);
+    designer.getWorkbook().bind(sheets.Events.SheetChanged, changSheet);
   };
 
-  const renameSheet = (e, args) => {
-    console.log(e);
-    console.log(args);
-  };
-
-  const sheetDeletedListener = () => {
-    const designer = selectCurrentDesigner(store.getState());
-    designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
-        deletedSheet);
+  const changSheet = (e, args) => {
+    if (args.propertyName === 'deleteSheet') {
+      deletedSheet(e, args);
+    }
   };
 
   const deletedSheet = (e, args) => {
-    if (args.propertyName === 'deleteSheet') {
-      console.log(e);
-      console.log(args);
-    }
+    const bindingInfos = selectBindingInfos(store.getState());
+    const reportId = selectCurrentReportId(store.getState());
+    const datasetNms = Object.keys(bindingInfos);
+    if (!_.isEmpty(bindingInfos)) return null;
+    datasetNms.map((datasetId) => {
+      if (bindingInfos[datasetId].sheetNm === args.sheetName) {
+        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
+        newBindingInfo.sheetNm = undefined;
+        newBindingInfo.useBind = false;
+        dispatch(setBindingInfo({
+          reportId: reportId,
+          datasetId: datasetId,
+          bindingInfo: newBindingInfo
+        }));
+      }
+    });
+  };
+
+  const sheetNameChangedListener = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
+        renameSheet);
+  };
+
+  const renameSheet = (e, args) => {
+    const reportId = selectCurrentReportId(store.getState());
+    const bindingInfos = selectBindingInfos(store.getState());
+    Object.keys(bindingInfos).forEach((datasetId) => {
+      if (bindingInfos[datasetId].sheetNm === args.oldValue) {
+        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
+        newBindingInfo.sheetNm = args.newValue;
+        dispatch(setBindingInfo({
+          reportId: reportId,
+          datasetId: datasetId,
+          bindingInfo: newBindingInfo
+        }));
+      }
+    });
   };
 
   const dataSourceMaker = (datas) => {
@@ -201,8 +234,8 @@ const useSpread = () => {
 
   return {
     bindData,
+    sheetChangedListener,
     sheetNameChangedListener,
-    sheetDeletedListener,
     positionConverterAsObject,
     positionConverterAsString
   };

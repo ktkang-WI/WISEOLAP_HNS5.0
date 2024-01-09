@@ -243,5 +243,6 @@
   "datasetBinding": "Dataset Binding",
   "file": "file",
   "importFileFromPC": "Import File From PC",
-  "print": "Print"
+  "print": "Print",
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
 }
