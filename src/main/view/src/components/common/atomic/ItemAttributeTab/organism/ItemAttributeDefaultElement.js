@@ -13,10 +13,57 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import {useSelector, useDispatch} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 
 const ItemAttributeDefaultElement = () => {
+  const dispatch = useDispatch();
+  const focusedItem = useSelector(selectCurrentItem);
+  const reportId = useSelector(selectCurrentReportId);
+  const {updateInteractiveOption} = ItemSlice.actions;
+  const {filterItem} = useQueryExecute();
+
+  const MASTER_FILTER_MODE = {
+    SINGLE: 'single',
+    MULTIPLE: 'multiple'
+  };
+  const option = focusedItem?.meta.interactiveOption || {};
+
+  const masterFilterEvent = (mode) => {
+    let enabled = true;
+
+    if (option.enabled && option.mode == mode) {
+      enabled = false;
+    }
+
+    dispatch(updateInteractiveOption({reportId, option: {enabled, mode}}));
+  };
+
+  const masterFilters = [{
+    id: 'singleMasterFilter',
+    label: localizedString.singleMasterFilter,
+    active: option.enabled && option.mode == MASTER_FILTER_MODE.SINGLE,
+    icon: singleMasterFilterImg,
+    onClick: () => {
+      masterFilterEvent(MASTER_FILTER_MODE.SINGLE);
+    }
+  },
+  {
+    id: 'multiMasterFilter',
+    active: option.enabled && option.mode == MASTER_FILTER_MODE.MULTIPLE,
+    label: localizedString.multiMasterFilter,
+    icon: multiMaseterFilterImg,
+    onClick: () => {
+      masterFilterEvent(MASTER_FILTER_MODE.MULTIPLE);
+    }
+  }];
+
   return {
+    // TODO: 추후 필터 편집 기능 추가시 onClick 이벤트 추가
     Filtering: {
       title: localizedString.filtering,
       items: [
@@ -35,16 +82,7 @@ const ItemAttributeDefaultElement = () => {
     Interaction: {
       title: localizedString.interaction,
       items: [
-        {
-          id: 'singleMasterFilter',
-          label: localizedString.singleMasterFilter,
-          icon: singleMasterFilterImg
-        },
-        {
-          id: 'multiMasterFilter',
-          label: localizedString.multiMasterFilter,
-          icon: multiMaseterFilterImg
-        },
+        ...masterFilters,
         {
           id: 'drillDown',
           label: localizedString.drillDown,
@@ -54,18 +92,7 @@ const ItemAttributeDefaultElement = () => {
     },
     InteractionNoDrillDown: {
       title: localizedString.interaction,
-      items: [
-        {
-          id: 'singleMasterFilter',
-          label: localizedString.singleMasterFilter,
-          icon: singleMasterFilterImg
-        },
-        {
-          id: 'multiMasterFilter',
-          label: localizedString.multiMasterFilter,
-          icon: multiMaseterFilterImg
-        }
-      ]
+      items: masterFilters
     },
     InteractionConfiguration: {
       title: localizedString.interactionConfiguration,
@@ -73,12 +100,38 @@ const ItemAttributeDefaultElement = () => {
         {
           id: 'crossDataSourceFiltering',
           label: localizedString.crossDataSourceFiltering,
-          icon: crossDataSourceFilteringImg
+          active: option.crossDataSource,
+          icon: crossDataSourceFilteringImg,
+          onClick: () => {
+            const crossDataSource = !option.crossDataSource;
+
+            dispatch(updateInteractiveOption({
+              reportId, option: {crossDataSource}
+            }));
+          }
         },
         {
-          id: 'ignoreMasterFilterImg',
+          id: 'ignoreMasterFilter',
           label: localizedString.ignoreMasterFilter,
-          icon: ignoreMasterFilterImg
+          active: option.ignoreMasterFilter,
+          icon: ignoreMasterFilterImg,
+          onClick: () => {
+            const ignoreMasterFilter = !option.ignoreMasterFilter;
+
+            const tempItem = {
+              ...focusedItem,
+              meta: {
+                ...focusedItem.meta,
+                interactiveOption: {
+                  ...option,
+                  ignoreMasterFilter
+                }
+              }
+            };
+
+            filterItem(tempItem,
+              ignoreMasterFilter ? {} : focusedItem.mart.filter);
+          }
         }
       ]
     },
@@ -88,12 +141,28 @@ const ItemAttributeDefaultElement = () => {
         {
           id: 'dimension',
           label: localizedString.dimension,
-          icon: dimensionImg
+          active: option.targetDimension == 'dimension',
+          icon: dimensionImg,
+          onClick: () => {
+            const targetDimension = 'dimension';
+
+            dispatch(updateInteractiveOption({
+              reportId, option: {targetDimension}
+            }));
+          }
         },
         {
           id: 'dimensionGroup',
           label: localizedString.dimensionGroup,
-          icon: dimensionGroupImg
+          icon: dimensionGroupImg,
+          active: option.targetDimension == 'dimensionGroup',
+          onClick: () => {
+            const targetDimension = 'dimensionGroup';
+
+            dispatch(updateInteractiveOption({
+              reportId, option: {targetDimension}
+            }));
+          }
         }
       ]
     }

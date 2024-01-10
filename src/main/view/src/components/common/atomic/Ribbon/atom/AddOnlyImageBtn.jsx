@@ -7,7 +7,7 @@ const AddOnlyImageBtn = () => {
       <OnlyImageButton
         label={item.label}
         imgSrc={item.imgSrc}
-        title={item.title}
+        title={item.label}
         width={item.width}
         height={item.height}
         onClick={item.onClick}

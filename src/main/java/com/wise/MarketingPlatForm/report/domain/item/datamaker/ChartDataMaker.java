@@ -32,6 +32,7 @@ public class ChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
+                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .orderBy()
                 .columnFiltering()

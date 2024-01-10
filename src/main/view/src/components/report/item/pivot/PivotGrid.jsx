@@ -4,7 +4,10 @@ import DevPivotGrid, {
 } from 'devextreme-react/pivot-grid';
 import {useEffect, useRef} from 'react';
 
-const PivotGrid = ({id, mart}) => {
+const PivotGrid = ({id, item}) => {
+  const mart = item ? item.mart : null;
+  const meta = item ? item.meta : null;
+
   if (!mart.init) {
     return <></>;
   }
@@ -35,6 +38,29 @@ const PivotGrid = ({id, mart}) => {
     };
   }, []);
 
+  let showTotalsPrior = 'both';
+  const rowTotalPos = meta.positionOption.row.position == 'top';
+  const columnTotalPos = meta.positionOption.column.position == 'left';
+
+  if (rowTotalPos && columnTotalPos) {
+    showTotalsPrior = 'both';
+  } else if (rowTotalPos && !columnTotalPos) {
+    showTotalsPrior = 'rows';
+  } else if (!rowTotalPos && columnTotalPos) {
+    showTotalsPrior = 'columns';
+  } else {
+    showTotalsPrior = 'none';
+  }
+
+  const fieldPanel = {
+    allowFieldDragging: false,
+    showColumnFields: meta.dataField.column.length > 0,
+    showDataFields: false,
+    showFilterFields: false,
+    showRowFields: meta.dataField.row.length > 0,
+    visible: meta.showFilter
+  };
+
   return (
     <DevPivotGrid
       ref={ref}
@@ -42,6 +68,15 @@ const PivotGrid = ({id, mart}) => {
       width={'100%'}
       height={'100%'}
       dataSource={mart.dataSourceConfig}
+      showColumnTotals={meta.positionOption.column.totalVisible}
+      showRowTotals={meta.positionOption.row.totalVisible}
+      showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
+      showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
+      rowHeaderLayout={meta.layout}
+      dataFieldArea={meta.positionOption.dataPosition}
+      allowFiltering={meta.showFilter}
+      fieldPanel={fieldPanel}
+      showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
       allowSorting={false}
       allowSortingBySummary={false}

@@ -16,6 +16,9 @@ import store from 'redux/modules';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import models from 'models';
+import {makeMetaDataField, metaDataField}
+  from 'components/report/item/util/metaUtilityFactory';
+
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
 
@@ -45,23 +48,21 @@ const useDrag = () => {
     const datasetId = selectedDataset.datasetId;
 
     const getNewDataField = (sourceField) => {
+      const getDataFieldType = () => {
+        const category = dest.droppableId;
+        if (category === 'field') {
+          return sourceField.type;
+        }
+        return dataFieldOption[category].type;
+      };
+
       let tempField = {
         name: sourceField.name,
         uniqueName: sourceField.uniqueName,
         caption: sourceField.name,
         category: dest.droppableId,
         fieldType: sourceField.type, // 데이터 항목 원본 타입
-        type: dataFieldOption[dest.droppableId].type // 실제 조회할 때 적용되어야 할 type
-      };
-
-      const dimensionOption = {
-        sortBy: sourceField.name,
-        sortOrder: 'ASC'
-      };
-
-      const measureOption = {
-        format: {},
-        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
+        type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
 
       // 필드아이디가 있는 경우 기존 아이템 이동
@@ -71,6 +72,16 @@ const useDrag = () => {
         tempField.fieldId = 'dataItem' + (dataField.dataFieldQuantity++);
       }
 
+      const measureOption = {
+        format: {},
+        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
+      };
+
+      const dimensionOption = {
+        sortBy: tempField.fieldId,
+        sortOrder: 'ASC'
+      };
+
       if (!sourceField.fieldId ||
         (sourceField.fieldId && sourceField.type != tempField.type)) {
         if (tempField.type == 'MEA') {
@@ -79,7 +90,9 @@ const useDrag = () => {
           tempField = {...tempField, ...dimensionOption};
         }
       }
-
+      if (metaDataField[tempField.category]) {
+        tempField = makeMetaDataField(tempField, tempField.category);
+      }
       return tempField;
     };
 

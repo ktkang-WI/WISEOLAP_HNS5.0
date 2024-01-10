@@ -27,11 +27,18 @@ public class PivotGridDataMaker implements ItemDataMaker {
         allMeasure.addAll(sortByItems);
 
         // 데이터 기본 가공
-        data = sanitizer
-                .groupBy()
-                .orderBy()
-                .columnFiltering(true)
-                .getData();
+        sanitizer
+            .dataFiltering(dataAggreagtion.getFilter())
+            .groupBy()
+            .orderBy()
+            .columnFiltering(true);
+
+
+        if (dataAggreagtion.isRemoveNullData()) {
+            sanitizer.removeNullData();
+        }
+
+        data = sanitizer.getData();
 
         CommonResult result = new CommonResult(data, "", null);
 
