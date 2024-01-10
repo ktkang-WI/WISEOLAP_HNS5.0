@@ -33,9 +33,10 @@ const generateItem = (item) => {
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
-  param.dimension = dataField.field.filter((field) => field.type === 'DIM');
-  param.measure = dataField.field.filter((field) => field.type === 'MEA');
-
+  param.dimension = dataField.field.filter((field) =>
+    field.type === 'DIMENSION');
+  param.measure = dataField.field.filter((field) =>
+    field.type === 'MEASURE');
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
 };
