@@ -24,7 +24,7 @@ const customizeTooltip = (info, isLabel, formatOptions) => {
     M: '백만',
     B: '십억'
   };
-
+  // Label과 Tooltip을 구분하여 Label인 경우 실수값으로 반환
   if (isLabel) {
     return NumberFormatUtility.formatNumber(
         info.value,
