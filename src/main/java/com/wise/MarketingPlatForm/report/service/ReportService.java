@@ -11,15 +11,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -33,7 +33,6 @@ import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
-import com.wise.MarketingPlatForm.global.util.XMLParser;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
@@ -60,14 +59,16 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
+import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.type.EditMode;
+import com.wise.MarketingPlatForm.report.type.ReportType;
+import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
-import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
-import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
-import com.wise.MarketingPlatForm.report.vo.ReportVO;
-import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
 
+import javaxt.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -78,7 +79,6 @@ public class ReportService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
-    private final XMLParser xmlParser;
     private final QueryResultCacheManager queryResultCacheManager;
     private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
@@ -97,10 +97,12 @@ public class ReportService {
 
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
+    
+    @Autowired
+    private XMLParserFactory xmlParserFactory;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
-        this.xmlParser = xmlParser;
+            QueryResultCacheManager queryResultCacheManager) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -108,37 +110,53 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public MetaVO getReport(String reportId, String userId) {
-        ReportMstrEntity temp = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = temp.toDTO(temp);
-
-        MetaVO metaVO = MetaVO.builder().build();
-
-        // report
-        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
-                .order(dto.getReportOrdinal())
-                .reportDesc(dto.getReportDesc())
-                .reportNm(dto.getReportNm())
-                .reportPath(null)
-                .build();
-        ReportVO reports = ReportVO.builder()
-                .reportId(dto.getReportId())
-                .options(reportOptions)
-                .build();
-        metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {
-            {
-                add(reports);
-            }
-        });
-
-        // dataset
-        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-        metaVO.getDatasets().put(dto.getReportId(), datasetVO);
-
-        // layout
-        metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
-
-        return metaVO;
+    public Map<String, Object> getReport(String reportId, String userId) {
+    	ReportMstrEntity temp = reportDAO.selectReport(reportId);
+        ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
+        Map<String, Object> returnReport = new HashMap<>();
+        if(dto.getDatasetXml().indexOf("<DATA_SET") > -1) {
+//        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+        	
+        	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+        	Map<String, Object> report = new HashMap<String, Object>();
+        	Map<String, Object> options = new HashMap<String, Object>();
+//        report.put("reportId", reportId);
+        	options.put("order", dto.getReportOrdinal());
+        	options.put("reportNm", dto.getReportNm());
+        	options.put("reportDesc", dto.getReportDesc());
+        	options.put("reportPath", null);
+        	
+        	report.put("reportId", reportId);
+        	report.put("options", options);
+        	
+        	reports.add(report);
+        	returnReport = xmlParser.getReport(dto, userId);        	
+        	returnReport.put("reports", reports);
+        	returnReport.put("isNew", false);
+        } else {
+        	JSONParser jsonParser = new JSONParser();
+        	JSONObject  report = null;
+        	JSONObject  item = null;
+        	JSONObject  dataset = null;
+        	JSONObject  layout = null;
+        	try {
+	        	report = (JSONObject) jsonParser.parse(dto.getReportXml());
+	        	item = (JSONObject) jsonParser.parse(dto.getChartXml());
+	        	dataset = (JSONObject) jsonParser.parse(dto.getDatasetXml());
+	        	layout = (JSONObject) jsonParser.parse(dto.getLayoutXml());
+        	} catch (ParseException e) {
+        		e.printStackTrace();
+        	}
+        	returnReport.put("report", report);
+        	returnReport.put("item", item);
+        	returnReport.put("dataset", dataset);
+        	returnReport.put("layout", layout);
+        	returnReport.put("isNew", true);
+        }
+        
+        
+        return returnReport;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
@@ -392,6 +410,17 @@ public class ReportService {
         return reportDAO.deleteReport(reportId);
     }
 
+    public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
+        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
+                editMode.toString());
+        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
+                editMode.toString());
+        Map<String, List<ReportListDTO>> result = new HashMap<>();
+        result.put("publicReport", pubList);
+        result.put("privateReport", priList);
+        return result;
+    }
+    
     public String checkDuplicatedReport(ReportMstrDTO reportMstrDTO) {
         List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrDTO);
         return result.size() > 0 ? "Y" : "N";
@@ -402,7 +431,6 @@ public class ReportService {
 
         List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
         List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
-
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
 

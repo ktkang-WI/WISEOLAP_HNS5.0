@@ -51,7 +51,7 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, ...props}) => {
                 onValueChanged(info.name, str, index);
               }
             } else if ((value && !e.value && value.value) || !value) {
-              onValueChanged(info.name, '', index);
+              onValueChanged(info.name, value, index);
             }
           }}
           useMaskBehavior={true}
