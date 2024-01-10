@@ -3,7 +3,7 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import localizedString from 'config/localization';
 import {Column, Lookup} from 'devextreme-react/data-grid';
 import useSpread from 'hooks/useSpread';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
@@ -20,6 +20,8 @@ const DatasetLinkerModal = ({...props}) => {
   const {positionConverterAsObject, positionConverterAsString} = useSpread();
   const datasets = selectCurrentDatasets(store.getState());
   const reportId = selectCurrentReportId(store.getState());
+  const sheetNmRef = useRef();
+  const positionRef = useRef();
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
@@ -92,6 +94,16 @@ const DatasetLinkerModal = ({...props}) => {
     }
   };
 
+  const updateDataSources = (value, currentRowData, key) => {
+    const newDataSources = _.cloneDeep(dataSources);
+    newDataSources.map((dataSource) => {
+      if (dataSource.datasetNm === currentRowData.datasetNm) {
+        dataSource[key] = value;
+      }
+    });
+    setDataSources(newDataSources);
+  };
+
   return (
     <Modal
       modalTitle={localizedString.datasetBinding}
@@ -103,16 +115,21 @@ const DatasetLinkerModal = ({...props}) => {
       <CommonDataGrid
         dataSource={dataSources}
         useFilter={false}
+        repaintChangesOnly={true}
         editing={{
           allowUpdating: true,
           mode: 'cell'
         }}
       >
         <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}/>
-        <Column dataField='sheetNm' caption='Sheet 명'>
+        <Column dataField='sheetNm' caption='Sheet 명' setCellValue={
+          (newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'sheetNm')}>
           <Lookup dataSource={sheetNms} />
         </Column>
-        <Column dataField='position' caption='데이터 연동 위치'/>
+        <Column dataField='position' caption='데이터 연동 위치'setCellValue={
+          (newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'position')}/>
         <Column
           dataField='useHeader'
           caption='헤더 표시 여부'

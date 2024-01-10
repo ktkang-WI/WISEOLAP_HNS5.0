@@ -80,6 +80,12 @@ const reducers = {
   setBindingInfo(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
+    const keys1 = Object.keys(actions.payload.bindingInfo).sort();
+    const keys2 = Object.keys(defaultBindInfo).sort();
+    if (keys1.length === keys2.length &&
+        keys1.every((key, index) => key === keys2[index])) {
+      new Error('setBindingInfo의 bindingInfo의 key가 다릅니다.');
+    }
     state[reportId].bindingInfos[datasetId] = actions.payload.bindingInfo;
   }
 };
