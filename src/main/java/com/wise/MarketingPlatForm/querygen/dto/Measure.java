@@ -1,5 +1,8 @@
 package com.wise.MarketingPlatForm.querygen.dto;
 
+import org.apache.ibatis.type.Alias;
+
+@Alias("QueryGenMeasure")
 public class Measure extends DataTable{
 
 	private String DIM_UNI_NM;

@@ -21,6 +21,8 @@ import {useEffect, useState} from 'react';
 import models from 'models';
 import _ from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
+import {selectDatasetQuantity}
+  from 'redux/selector/DatasetSelector';
 
 
 const theme = getTheme();
@@ -50,6 +52,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
   const {alert} = useModal();
   const dispatch = useDispatch();
   const {insertDataset} = DatasetSlice.actions;
+
+  const datasetQuantity = useSelector(selectDatasetQuantity);
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
@@ -84,6 +88,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   return field;
                 });
 
+                const datasetId = 'dataset' + (datasetQuantity + 1);
+
                 dispatch(insertDataset({
                   reportId: selectedReportId,
                   dataset: {
@@ -91,6 +97,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     ...selectedCube,
                     fields: data.fields,
                     datasetNm: selectedCube.cubeNm,
+                    datasetId: datasetId,
                     datasetType: 'CUBE'
                   }
                 }));

@@ -32,7 +32,7 @@ const newParamInformation = (name, dsId, dsType, order = 1) => {
 
     // CUBE or DS_SINGLE Only Use
     orgField: '', // 주제영역, 단일 테이블의 경우 조회를 위해 원본 데이터 항목 키값 저장
-
+    uniqueName: name.substring(1),
     // List Type Value
     dataSourceType: 'TABLE', // 데이터 원본 타입 (QUERY, TABLE)
     dataSource: '', // 데이터 원본
@@ -41,6 +41,52 @@ const newParamInformation = (name, dsId, dsType, order = 1) => {
     sortBy: '', // 정렬 기준 항목
     sortOrder: 'ASC', // 정렬 방법(ASC, DESC)
     multiSelect: false, // 다중 선택
+    useAll: true, // 전체 항목 표시 여부
+    linkageFilters: [] // 연계 필터를 사용하는 경우 매개변수 이름을 담아놓는 배열
+  };
+};
+
+const newCubeParamInformation = (name, dsId, dsType,
+    order = 1, cubeColumnInfo) => {
+  return {
+    name: name, // 매개변수 명
+    caption: cubeColumnInfo.physicalColumnName, // 매개변수 캡션
+    dataType: 'STRING', // 데이터 유형(STRING, NUMBER, DATE)
+    paramType: 'LIST', // 매개변수 유형(LIST, INPUT, CALENDAR)
+    operation: 'IN', // 조건 명(IN, NOT_IN, EQUALS, BETWEEN)
+    order: order, // 매개변수 순서
+    lineBreak: false, // 줄바꿈 여부
+    useSearch: false, // 데이터 검색(리스트 매개변수 내 검색)
+    width: 300, // 넓이
+    visible: true, // 매개변수 표시 여부
+    useCaptionWidth: false, // 캡션 넓이 커스텀 지정 여부
+    captionWidth: null, // useCaptionWidth가 true일시 지정되는 값
+    defaultValue: ['', ''], // 기본값(타입마다 다름)
+    defaultValueUseSql: false, // 기본값 Sql 쿼리 사용
+    // 기존 where_clause, 전체나 비어있는 값 입력시 들어가는 값
+    exceptionValue: cubeColumnInfo.physicalTableName + '.' +
+       cubeColumnInfo.physicalColumnKey,
+    dsId: dsId, // 데이터 원본 정보, 주제영역 사용시 CUBE_ID로 사용
+    dsType: dsType, // 데이터 원본 타입
+    dataset: [], // 필터를 사용하는 데이터집합
+
+    // CUBE or DS_SINGLE Only Use
+    orgField: '', // 주제영역, 단일 테이블의 경우 조회를 위해 원본 데이터 항목 키값 저장
+    uniqueName: cubeColumnInfo.logicalColumnName,
+    // List Type Value
+    dataSourceType: 'TABLE', // 데이터 원본 타입 (QUERY, TABLE)
+    dataSource: cubeColumnInfo.physicalTableName, // 데이터 원본
+    itemCaption: cubeColumnInfo.physicalColumnName != '' ?
+        cubeColumnInfo.physicalColumnName :
+        cubeColumnInfo.physicalColumnKey, // 리스트에 보여줄 값
+    itemKey: cubeColumnInfo.physicalColumnKey, // 조회할 때 실제로 쿼리에 들어가는 값
+    sortBy: cubeColumnInfo.orderBy != 'Null'?
+        cubeColumnInfo.orderBy == 'Key Column'?
+        cubeColumnInfo.physicalColumnKey :
+        cubeColumnInfo.physicalColumnName :
+        cubeColumnInfo.physicalColumnKey, // 정렬 기준 항목
+    sortOrder: 'ASC', // 정렬 방법(ASC, DESC)
+    multiSelect: true, // 다중 선택
     useAll: true, // 전체 항목 표시 여부
     linkageFilters: [] // 연계 필터를 사용하는 경우 매개변수 이름을 담아놓는 배열
   };
@@ -99,6 +145,15 @@ const getParameterNamesInQuery = (query) => {
   return query.match(/@[^()\s]+/g);
 };
 
+const getCubeParameterNamesCube = (paramInfo, paramName) => {
+  const paramNames = [];
+  paramInfo.filter((info) => {
+    paramNames.push(info.name);
+  }, []);
+  paramNames.push(paramName);
+  return paramNames;
+};
+
 /**
  * 문자열로 된 날짜를 Date로 바꿔 반환합니다.
  * @param {string} str 날짜 문자열
@@ -143,7 +198,7 @@ const parseStringFromDate = (date, format) => {
  * @param {*} parameters 매개변수 목록
  * @return {string} parameter
  */
-const generateParameterForQueryExecute = (parameters) => {
+const generateParameterForQueryExecute = (parameters,) => {
   const parameter = parameters.informations.map((p) => {
     let values = [];
 
@@ -172,7 +227,12 @@ const generateParameterForQueryExecute = (parameters) => {
       dataType: p.dataType,
       operation: p.operation,
       dsType: p.dsType,
-      dsId: p.dsId
+      dsId: p.dsId,
+      uniqueName: p.uniqueName,
+      caption: p.cpation,
+      paramType: p.paramType,
+      itemCaption: p.itemCaption,
+      itemKey: p.itemKey
     };
   });
 
@@ -210,5 +270,7 @@ export default {
   parseDateFromString,
   parseStringFromDate,
   generateParameterForQueryExecute,
-  getCalendarNowDefaultValue
+  getCalendarNowDefaultValue,
+  newCubeParamInformation,
+  getCubeParameterNamesCube
 };

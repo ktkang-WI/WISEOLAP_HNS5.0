@@ -21,6 +21,7 @@ import com.wise.MarketingPlatForm.querygen.dto.SelectCubeMeasure;
 import com.wise.MarketingPlatForm.querygen.dto.SelectCubeOrder;
 import com.wise.MarketingPlatForm.querygen.dto.SelectCubeWhere;
 import com.wise.MarketingPlatForm.querygen.dto.TblAlias;
+import com.wise.MarketingPlatForm.querygen.model.QueryGenAggregation;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.DB2BLUSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.IMPALASetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.MSSQLSetting;
@@ -1777,6 +1778,21 @@ public class QuerySettingEx {
 			ArrayList<SelectCubeOrder> aDtOrder, String aDBMSType,
 			ArrayList<Relation> aDtCubeRel, ArrayList<Relation> aDtDsViewRel,
 			ArrayList<SelectCubeEtc> aDtEtc) {
+		return CubeQuerySetting(aDtSel, aDtSelHIe, aDtSelMea, aDtWhere, aDtOrder, aDBMSType, aDtCubeRel, aDtDsViewRel,
+				aDtEtc, aDtSelHIe,"");
+	}
+
+	public String CubeQuerySetting(QueryGenAggregation queygenAggregation) {
+		ArrayList<SelectCube> aDtSel = queygenAggregation.getCubeSelectAll();
+		ArrayList<Hierarchy> aDtSelHIe = queygenAggregation.getCubeHie();
+		ArrayList<SelectCubeMeasure> aDtSelMea = queygenAggregation.getCubeSelectMeasures();
+		ArrayList<SelectCubeWhere> aDtWhere = queygenAggregation.getCubeWhere();
+		ArrayList<SelectCubeOrder> aDtOrder = queygenAggregation.getCubeOrder();
+		String aDBMSType = "DB2";
+		ArrayList<Relation> aDtCubeRel = queygenAggregation.getCubeRelations();
+		ArrayList<Relation> aDtDsViewRel = queygenAggregation.getDsViewRelations();
+		ArrayList<SelectCubeEtc> aDtEtc = queygenAggregation.getCubeEtc();
+
 		return CubeQuerySetting(aDtSel, aDtSelHIe, aDtSelMea, aDtWhere, aDtOrder, aDBMSType, aDtCubeRel, aDtDsViewRel,
 				aDtEtc, aDtSelHIe,"");
 	}
@@ -4993,4 +5009,5 @@ public class QuerySettingEx {
 	public void setItemType(String itemType) {
 		this.itemType = itemType;
 	}
+
 }

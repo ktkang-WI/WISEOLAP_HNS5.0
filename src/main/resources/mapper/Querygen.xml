@@ -56,4 +56,139 @@
    		  WHERE	  1 = 1
    		  AND C.CUBE_ID = #{cubeId}
     </select>
+
+    <select id="selectDsViewRelation" parameterType="java.util.HashMap" resultType="com.wise.MarketingPlatForm.querygen.dto.Relation">
+        SELECT	A.DS_ID
+
+                ,B.DS_VIEW_ID 
+
+                ,C.CONST_NM 
+
+                ,C.FK_TBL_NM 
+
+                ,C.FK_COL_NM 
+
+                ,C.PK_TBL_NM 
+
+                ,C.PK_COL_NM 
+
+                ,C.JOIN_TYPE 
+
+                ,C.JOIN_SET_OWNER 
+
+                ,'''' AS MODIFY_TAG 
+
+            FROM	 DS_MSTR A
+
+                INNER JOIN DS_VIEW_MSTR B ON A.DS_ID = B.DS_ID
+
+                INNER JOIN DS_VIEW_REL_MSTR C ON B.DS_VIEW_ID = C.DS_VIEW_ID 
+
+          WHERE	 1 = 1  
+          AND B.DS_VIEW_ID  = (select DS_VIEW_ID from CUBE_MSTR T2 WHERE T2.CUBE_ID = #{cubeId})
+          <choose>
+            <when test="measures.size != 0">
+              AND C.FK_TBL_NM IN 
+              <foreach collection="measures" item="measure" index="index" separator="," open="(" close=")">
+                #{measure}
+              </foreach>
+            </when>
+          </choose>
+	</select>
+  <select id="selectColumnInfomationList" parameterType="java.util.HashMap" resultType="com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn">
+			SELECT  T2.DS_VIEW_ID AS dsViewId
+		       ,${cubeId} AS cubeId
+		       ,T1.COL_TYPE AS columnType
+		       ,T1.MEA_GRP_UNI_NM AS logicalTableName
+		       ,T1.MEA_UNI_NM AS logicalColumnName
+		       ,T1.MEA_CAPTION AS columnCaption
+		       ,T1.MEA_AGG AS aggregationType
+		       ,CASE WHEN T2.COL_EXPRESS IS NULL OR TO_CHAR( T2.COL_EXPRESS) = '' 
+			         THEN TO_CHAR(T1.HIE_DSP_FLD)
+			         ELSE 'CUSTOM' 
+			    END AS displayType
+		       ,T2.COL_EXPRESS AS expression
+		       ,T2.TBL_NM AS physicalTableName
+		       ,T2.COL_NM AS physicalColumnKey
+		       ,T1.COL_NM2 AS physicalColumnName
+		       ,T2.DATA_TYPE AS dataType
+		       ,T2.LENGTH AS dataLength
+		       ,T2.PK_YN AS primaryKeyYN
+		       ,T1."visible"
+		       ,T1.orderBy
+			FROM    DS_VIEW_COL_MSTR T2 
+		          LEFT OUTER JOIN (
+		          				   SELECT  'measure' AS COL_TYPE
+		          						  ,X.CUBE_ID
+		                                  ,X.MEA_GRP_UNI_NM
+		                                  ,X.MEA_UNI_NM
+		                                  ,X.MEA_CAPTION
+		                                   ,TO_CHAR(X.MEA_AGG)as MEA_AGG 
+				                          ,null as HIE_DSP_FLD
+				                         , X.MEA_TBL_NM AS TBL_NM
+				                          ,X.MEA_COL_NM AS COL_NM
+				                         , TO_CHAR(X.MEA_COL_NM) AS COL_NM2
+				                         , X.MEA_IS_VISIBLE as "visible"
+		                                  ,'Null' as orderBy
+		                           FROM   CUBE_MEA_MSTR X
+		                           WHERE  X.CUBE_ID = #{cubeId}
+		                           UNION ALL
+		                           SELECT  'dimension' AS COL_TYPE
+		                                  ,X.CUBE_ID
+		                                  ,X.DIM_UNI_NM
+		                                  ,X.HIE_UNI_NM
+		                                  ,X.HIE_CAPTION
+		                                  ,'Count' AS MEA_AGG
+		                                  ,CASE WHEN Y.HIE_DSP_FLD IS NULL or Y.HIE_DSP_FLD = '' 
+		                                  		THEN 
+		                                    		CASE WHEN Y.TBL_NM IS NULL OR Y.TBL_NM = '' 
+		                                    			 THEN NULL 
+		                                    			 ELSE CASE WHEN CONCAT('[',CONCAT(Y.TBL_NM,']')) <![CDATA[<>]]> X.DIM_DIM_UNI_NM THEN 'SF' END
+		                                   			END
+		                                  		ELSE TO_CHAR(Y.HIE_DSP_FLD) 
+		                                   END AS HIE_DSP_FLD
+		                                  ,Y.TBL_NM
+		                                  ,Y.KEY_COL AS COL_NM
+	                                   	  ,TO_CHAR(Y.NAME_COL) AS COL_NM2
+				                          ,X.HIE_IS_VISIBLE as "visible"
+				                          ,TO_CHAR(Y.ORDER_BY) as orderBy
+		                           FROM   CUBE_HIE_MSTR X
+		                                    INNER JOIN DS_VIEW_HIE_MSTR Y
+		                                      ON X.DIM_DIM_UNI_NM = Y.DIM_UNI_NM
+		                                      AND X.HIE_HIE_UNI_NM = Y.HIE_UNI_NM
+		                           WHERE  X.CUBE_ID = #{cubeId}
+		                           AND    Y.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		                           AND    X.HIE_HIE_UNI_NM NOT IN (SELECT LVL_UNI_NM FROM DS_VIEW_LVL_MSTR WHERE DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId}))
+		                           UNION ALL
+		                           SELECT  'dimension' AS COL_TYPE
+		                                  ,${cubeId} AS CUBE_ID
+		                                  ,X.DIM_UNI_NM
+		                                  ,X.LVL_UNI_NM
+		                                  ,X.LVL_CAPTION
+		                                  ,'Count' AS MEA_AGG
+		                                  ,'LEVEL_LEAF' AS HIE_DSP_FLD
+		                                  ,Y.TBL_NM
+		                                  ,Y.KEY_COL AS COL_NM
+		                                  ,TO_CHAR(Y.NAME_COL) AS COL_NM2
+		                                  ,1 as "visible"
+		                                  ,TO_CHAR(Y.ORDER_BY) as orderBy
+		                           FROM   DS_VIEW_LVL_MSTR X
+		                                    INNER JOIN DS_VIEW_HIE_MSTR Y
+		                                      ON X.DS_VIEW_ID = Y.DS_VIEW_ID 
+		                                      AND X.DIM_UNI_NM = Y.DIM_UNI_NM 
+		                                      AND X.LVL_UNI_NM = Y.HIE_UNI_NM
+		                           WHERE  X.DS_VIEW_ID  = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+		                           ) T1
+		            ON T2.TBL_NM = T1.TBL_NM
+		            AND T2.COL_NM = T1.COL_NM  
+			WHERE T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
+			<choose>
+   		  	<when test="columns.size != 0">
+   		  		AND T1.MEA_GRP_UNI_NM IN 
+   		  		<foreach collection="columns" item="column" index="index" separator="," open="(" close=")">
+   		  			#{column}
+   		  		</foreach>
+   		  	</when>
+   		  </choose>
+	</select>
 </mapper>

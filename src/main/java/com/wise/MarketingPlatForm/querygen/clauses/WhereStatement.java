@@ -383,8 +383,7 @@ public class WhereStatement extends ArrayList<ArrayList<WhereClause>> {
             if (comparisonOperator == "In" || comparisonOperator == "NotIn")
             {
                 String[] result;
-//                String[] charSeparators = new String[] { "," };
-                String[] charSeparators = new String[] { "splitstring" };
+                String[] charSeparators = new String[] { "," };
                 
                 if(((String)someValue.toString().replace("'", "''")).toString().indexOf("splitstring") > -1) {
                 	charSeparators = new String[] { "splitstring" };

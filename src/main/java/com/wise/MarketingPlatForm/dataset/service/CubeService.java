@@ -1,7 +1,9 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
 
 @Service
@@ -132,5 +135,17 @@ public class CubeService {
 
   List<DatasetFieldVO> getCubeFields() {
     return null;
+  }
+
+  public CubeTableColumn getCubeColumInformation(String cubeId, String userId, String uniqueName) {
+
+
+    Map<String, String> param = new HashMap<String, String>();
+
+    param.put("cubeId", cubeId);
+    param.put("uniqueName", uniqueName);
+    
+    CubeTableColumn cubeTableColumn = cubeDAO.selectCubeColumnInfomationList(param);
+    return cubeTableColumn;
   }
 }
