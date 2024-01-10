@@ -5,18 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.AuthDataDTO;
 import com.wise.MarketingPlatForm.auth.vo.AuthMemVO;
-import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
-import com.wise.MarketingPlatForm.global.context.BeanContext;
 import com.wise.MarketingPlatForm.querygen.aggregator.QueryGenAggregator;
 import com.wise.MarketingPlatForm.querygen.dao.QuerygenDAO;
 import com.wise.MarketingPlatForm.querygen.dto.Relation;
@@ -24,52 +21,47 @@ import com.wise.MarketingPlatForm.querygen.model.CubeParamSet;
 import com.wise.MarketingPlatForm.querygen.model.QueryGenAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
-import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
-import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.querygen.util.CubeParamSetUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Service("queryGenService")
 public class QueryGenService {
     
     private final QuerygenDAO querygenDAO;
-    private final DatasetService datasetService;
-    private final CubeService cubeService;
     private final AuthService authService;
-
     private final QueryGenAggregator queryGenAggregator;
 
-    QueryGenService(QuerygenDAO querygenDAO, DatasetService datasetService, CubeService cubeService, AuthService authService,
-                    QueryGenAggregator queryGenAggregator) {
+    QueryGenService(QuerygenDAO querygenDAO, AuthService authService, QueryGenAggregator queryGenAggregator) {
         this.querygenDAO = querygenDAO;
-        this.datasetService = datasetService;
-        this.cubeService = cubeService;
         this.authService = authService;
         this.queryGenAggregator = queryGenAggregator;
     }
 
     @Transactional
-    public String createCubeQuery(DataAggregation dataAggreagtion) {
-
+    public String createCubeParamSet(DataAggregation dataAggreagtion) {
+        // 주제 영역 쿼리 생성을 위한 Param 사전 준비 작업
         QuerySettingEx sqlQenQuery = new QuerySettingEx();
         String cubeQueryString = null;
         try{
+            //
             CubeParamSet cubeParamSet = new CubeParamSet(dataAggreagtion);
 
+            //주제영역 관계 조회
             updateCubeRelation(cubeParamSet);
 
+            //유저 차원 설정 조회
             updateAuthData(cubeParamSet);
 
+            //주제영역 컬럼을 가져오기 위한 작업
             CubeParamSetUtil.makeCubeDataFieldList(cubeParamSet);
 
+            //주제영역 컬럼 조회
             updateColumnInfoList(cubeParamSet);
 
+            //데이터 원본뷰 관계 조회
             updateDsViewRelation(cubeParamSet);
 
+            //QueryGen 에서 필요한 변수 집합 및 집합 생성 부분
             QueryGenAggregation queygenAggregation; 
-
             queygenAggregation =  queryGenAggregator.createQueryGenAggregation(cubeParamSet);
 
             
@@ -78,9 +70,6 @@ public class QueryGenService {
         }catch(Exception E){
             System.out.println(E);
         }
-        System.out.println("##################################");
-        System.out.println("주제영역 쿼리 : " + cubeQueryString);
-        System.out.println("##################################");
 
         return cubeQueryString;
     }

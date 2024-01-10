@@ -21,8 +21,9 @@ import {useEffect, useState} from 'react';
 import models from 'models';
 import _ from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectDatasetQuantity}
+import {selectRootDataset, selectDatasetQuantity}
   from 'redux/selector/DatasetSelector';
+import store from 'redux/modules';
 
 
 const theme = getTheme();
@@ -51,7 +52,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
 
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {insertDataset} = DatasetSlice.actions;
+  const {updateDataset} = DatasetSlice.actions;
 
   const datasetQuantity = useSelector(selectDatasetQuantity);
 
@@ -59,7 +60,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
     // TODO: 추후 접속중인 유저 ID로 변경
     models.DSView.getByUserId(userId)
         .then((data) => {
-          setDsViewList(data);
+          setDsViewList(data.data);
         });
   }, []);
 
@@ -69,38 +70,45 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
         if (!_.isEmpty(selectedCube)) {
           models.Cube.getByCubeId(userId, selectedCube.cubeId)
               .then((data) => {
-                data.fields = data.fields.map((field) => {
-                  // 그룹일 경우
-                  if (!field.parentId) {
-                    if (field.type == 'DIMENSION') {
-                      field.icon = cubeDimGrpImg;
-                    } else if (field.type == 'MEASURE') {
-                      field.icon = cubeMeaGrpImg;
+                const datasets =
+                    selectRootDataset(store.getState());
+
+                const dupleCheck = datasets.datasets.find((ds) =>
+                  ds.cubeId == selectedCube.cubeId);
+                if (!dupleCheck) {
+                  const datasetId = 'dataset' + (datasetQuantity + 1);
+
+                  data.fields = data.fields.map((field) => {
+                    // 그룹일 경우
+                    if (!field.parentId) {
+                      if (field.type == 'DIMENSION') {
+                        field.icon = cubeDimGrpImg;
+                      } else if (field.type == 'MEASURE') {
+                        field.icon = cubeMeaGrpImg;
+                      }
+                    } else {
+                      if (field.type == 'DIMENSION') {
+                        field.icon = dimImg;
+                      } else if (field.type == 'MEASURE') {
+                        field.icon = meaImg;
+                      }
                     }
-                  } else {
-                    if (field.type == 'DIMENSION') {
-                      field.icon = dimImg;
-                    } else if (field.type == 'MEASURE') {
-                      field.icon = meaImg;
+
+                    return field;
+                  });
+
+                  dispatch(updateDataset({
+                    reportId: selectedReportId,
+                    dataset: {
+                      ...selectedDsView,
+                      ...selectedCube,
+                      fields: data.fields,
+                      datasetNm: selectedCube.cubeNm,
+                      datasetId: datasetId,
+                      datasetType: 'CUBE'
                     }
-                  }
-
-                  return field;
-                });
-
-                const datasetId = 'dataset' + (datasetQuantity + 1);
-
-                dispatch(insertDataset({
-                  reportId: selectedReportId,
-                  dataset: {
-                    ...selectedDsView,
-                    ...selectedCube,
-                    fields: data.fields,
-                    datasetNm: selectedCube.cubeNm,
-                    datasetId: datasetId,
-                    datasetType: 'CUBE'
-                  }
-                }));
+                  }));
+                }
               });
         } else {
           alert('주제영역을 선택하지 않았습니다.');

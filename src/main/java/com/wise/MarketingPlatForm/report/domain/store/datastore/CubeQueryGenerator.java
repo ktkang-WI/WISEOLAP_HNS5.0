@@ -16,13 +16,13 @@ public class CubeQueryGenerator implements QueryGenerator {
     @Override
     public String getQuery(DataAggregation dataAggreagtion) {
         queryGenService = BeanContext.getBean(QueryGenService.class);
-        String query = queryGenService.createCubeQuery(dataAggreagtion);
+        String query = queryGenService.createCubeParamSet(dataAggreagtion);
         return query;
     }
 
     @Override
     public String applyParameter(List<Parameter> parameters, String query) {
-        // TODO Auto-generated method stub
+        // QueryGen 패키지에서 처리 Override 만 시켜 둔다.
         return null;
     }
 

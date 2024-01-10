@@ -287,7 +287,9 @@ public final class DataSanitizer {
                 if (v1 instanceof String) {
                     compareResult = StringCompareUtils.compare((String) v1, (String) v2);
                 } else {
-                    compareResult = ((BigDecimal) v1).compareTo((BigDecimal) v2);
+                    BigDecimal bv1 = new BigDecimal(v1.toString());
+                    BigDecimal bv2 = new BigDecimal(v2.toString());
+                    compareResult = (bv1).compareTo(bv2);
                 }
 
                 if (compareResult != 0) {

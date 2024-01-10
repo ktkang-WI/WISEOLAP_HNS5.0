@@ -40,21 +40,25 @@ public class QueryGenAggregator {
         List<CubeTableColumn> columnInfoList = cubeParamSet.getColumnInfoList();
         
         try {
+            //Relation Update (주제영역관계, 원본뷰 관계)
             updateCubeRelation(queryGenAggregation,cubeParamSet);
 
             for(CubeTableColumn columnInfo : columnInfoList){
 
+                //차원에 포함되어있는지 확인
                 if(isIncludeByDimensions(columnInfo,dimensions)){
                     updateCubeSelectAll(queryGenAggregation, cubeParamSet, columnInfo, "dimension");
                     updateCubeHie(queryGenAggregation, cubeParamSet, columnInfo);
                     //updateCubeOrder(queryGenAggregation, cubeParamSet, columnInfo, "dimension");
                 }
 
+                //측정값에 포함되어있는지 확인
                 if(isIncludeByMeasures(columnInfo,measures)){
                     updateCubeSelectAll(queryGenAggregation,cubeParamSet, columnInfo, "measure");
                     updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo);
                 }
                 
+                //필터에 포함되어있는지 확인
                 Parameter inCludeParam = isIncludeByParams(columnInfo,params);
                 if(inCludeParam != null){
                     updateCubeWhere(queryGenAggregation, cubeParamSet, columnInfo, inCludeParam);
@@ -193,6 +197,7 @@ public class QueryGenAggregator {
 
         Parameter inCludeParam = null;
 
+        //key 값과 같은가? 설정된 Key/Name이 다른경우
         if(columnInfo.getLogicalColumnName() != null){
             for(Parameter param : params){
                 if(param.getUniqueName() == null) continue;
@@ -204,10 +209,13 @@ public class QueryGenAggregator {
         return inCludeParam;
     }
 
+    // 추후 정렬 기능이 필요할 경우 ?
     private void updateCubeOrder(QueryGenAggregation queryGenAggregation, CubeParamSet cubeParamSet,
                  CubeTableColumn columnInfo, String dataTpye) {
         SelectCubeOrder cubeOrder = QueryGenAggregationUtil.makeCubeOrder(cubeParamSet,columnInfo);
 
-        queryGenAggregation.addCubeOrder(cubeOrder);
+        if (cubeOrder != null) {
+            queryGenAggregation.addCubeOrder(cubeOrder);
+        }
     }
 }
