@@ -15,7 +15,9 @@ const NumberFormatModal = ({
   const theme = getTheme();
   const dispatch = useDispatch();
   const {updateItemField} = ItemSlice.actions;
+  // 초기값 불러오기
   const FormatState = dataField.format;
+  // 각 형식 값을 통해 계산하는 함수
   const formatValue = (options) => {
     const value = 1234567890.123;
     const formatted = NumberFormatUtility.formatNumber(
@@ -31,7 +33,7 @@ const NumberFormatModal = ({
     );
     return formatted;
   };
-
+  // 포멧에서 사용하는 state
   const [state, setState] = useState({
     ...FormatState,
     suffixO: FormatState.suffix.O || '',
@@ -52,6 +54,7 @@ const NumberFormatModal = ({
       useDigitSeparator: false
     }
   });
+  // 포멧 타입이 바뀔 때마다 formControls를 업데이트
   const updateFormControls = () => {
     const isAutoOrGeneral =
     state.formatType === 'Auto' || state.formatType === 'General';
@@ -65,9 +68,7 @@ const NumberFormatModal = ({
       isSuffixEnabled = false;
       isCheckBoxValue = false;
     }
-    console.log('isSuffixEnabled', isSuffixEnabled);
-    console.log('isCheckBoxValue', isCheckBoxValue);
-    console.log('confirm', !(isSuffixEnabled && isCheckBoxValue));
+    // 포멧 타입에 따라 사용 가능한 컨트롤을 업데이트
     const updatedControls = {
       unit: !isNumberOrCurrency,
       suffixEnabled: !isNumberOrCurrency,
@@ -84,7 +85,7 @@ const NumberFormatModal = ({
       formControls: updatedControls
     }));
   };
-
+  // 포멧 타입이 바뀔 때마다 포멧 값을 업데이트
   useEffect(() => {
     updateFormControls();
     const newFormatState = {
@@ -121,6 +122,7 @@ const NumberFormatModal = ({
     state.precisionType,
     state.useDigitSeparator
   ]);
+  // suffixEnabled가 바뀔 때마다 checkBoxValue를 업데이트
   const handleCheckBoxValueChanged = (name, value) => {
     if (name === 'suffixEnabled') {
       setState((prevState) => ({

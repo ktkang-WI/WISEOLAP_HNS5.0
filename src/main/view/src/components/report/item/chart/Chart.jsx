@@ -5,7 +5,6 @@ import DevChart, {
   Label
 //  ValueAxis
 } from 'devextreme-react/chart';
-import React from 'react';
 import customizeTooltip from '../util/customizeTooltip';
 import {selectCurrentDataField}
   from 'redux/selector/ItemSelector';

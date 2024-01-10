@@ -1,13 +1,11 @@
-// NumberFormatUtility.js
-
 const NumberFormatUtility = {
+  // 단위변환에 필요한 숫자 정의
   unitNum: {
     O: 1,
     K: 1000,
     M: 1000000,
     B: 1000000000
   },
-
   formatNumber: function(
       _value,
       _type,
@@ -126,11 +124,11 @@ const NumberFormatUtility = {
       currency = '₩';
     }
 
-    // Number formatter
     const formatNumber = (num, options) => {
       return new Intl.NumberFormat('en-US', options).format(num);
     };
 
+    // 포멧 타입에 따라 분기 처리
     const fn = {
       Auto: function(_v, _u, _p, _po, _s, _r, _f, _c) {
         const numText = formatNumber(_v / NumberFormatUtility.unitNum[_u], {
