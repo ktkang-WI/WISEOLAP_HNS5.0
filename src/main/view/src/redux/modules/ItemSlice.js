@@ -135,7 +135,6 @@ const reducers = {
   updateItemField(state, actions) {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
-
     const itemIndex = state[reportId].items.findIndex(
         (item) => item.id == state[reportId].selectedItemId
     );

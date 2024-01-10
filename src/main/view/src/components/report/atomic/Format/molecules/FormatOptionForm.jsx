@@ -7,31 +7,11 @@ import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
 
 const FormatOptionForm = ({
-  formatOptions,
-  formatType,
-  unit,
-  precision,
-  precisionType,
-  suffixEnabled,
-  checkBoxValue,
-  suffixO,
-  suffixK,
-  suffixM,
-  suffixB,
-  useDigitSeparator,
-  setFormatType,
-  setUnit,
-  handleCheckBoxValueChanged,
-  setSuffixO,
-  setSuffixK,
-  setSuffixM,
-  setSuffixB,
-  setPrecision,
-  setPrecisionType,
-  setUseDigitSeparator,
-  formattedValue,
-  formControls}) => {
-  const PreView = styled.textarea`
+  state,
+  setState,
+  handleCheckBoxValueChanged
+}) => {
+  const Preview = styled.textarea`
   background-color: lightgray;
   border: 1px solid #ccc;
   resize: none;
@@ -46,7 +26,7 @@ const FormatOptionForm = ({
     <Form
       labelMode='outside'
       labelLocation='left'
-      formData={formatOptions}
+      formData={state.formatOptions}
     >
       <Item
         dataField='formatType'
@@ -64,81 +44,112 @@ const FormatOptionForm = ({
               'Percent'
             ]
           }
-          defaultValue={formatType}
-          onValueChanged={(e) => setFormatType(e.value)}
+          defaultValue={state.formatType}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              formatType: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='unit'
         editorType='dxSelectBox'
-        disabled={formControls.unit}
+        disabled={state.formControls.unit}
       >
         <Label>{localizedString.digitUnit}: </Label>
         <SelectBox
           items={['Auto', 'Ones', 'Thousands', 'Millions', 'Billions']}
-          defaultValue={unit}
-          onValueChanged={(e) => setUnit(e.value)}
+          defaultValue={state.unit}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              unit: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='suffixEnabled'
         editorType='dxCheckBox'
-        disabled={formControls.suffixEnabled}
+        disabled={state.formControls.suffixEnabled}
       >
         <Label>{localizedString.customSuffix}: </Label>
         <CheckBox
-          value={suffixEnabled}
-          onValueChanged={
-            (e) => handleCheckBoxValueChanged('suffixEnabled', e.value)}/>
+          value={state.suffixEnabled}
+          onValueChanged={(e) => {
+            handleCheckBoxValueChanged('suffixEnabled', e.value);
+          }}/>
       </Item>
       <Item
         dataField='suffixO'
         editorType='dxTextBox'
-        disabled={!suffixEnabled || !checkBoxValue}
+        disabled={state.formControls.suffixO}
       >
         <Label>{localizedString.suffixO}: </Label>
         <TextBox
-          defaultValue={suffixO}
-          onValueChanged={(e) => setSuffixO(e.value)}
+          defaultValue={state.suffixO}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              suffixO: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='suffixK'
         editorType='dxTextBox'
-        disabled={!suffixEnabled || !checkBoxValue}
+        disabled={state.formControls.suffixK}
       >
         <Label>{localizedString.suffixK}: </Label>
         <TextBox
-          defaultValue={suffixK}
-          onValueChanged={(e) => setSuffixK(e.value)}
+          defaultValue={state.suffixK}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              suffixK: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='suffixM'
         editorType='dxTextBox'
-        disabled={!suffixEnabled || !checkBoxValue}
+        disabled={state.formControls.suffixM}
       >
         <Label>{localizedString.suffixM}: </Label>
         <TextBox
-          defaultValue={suffixM}
-          onValueChanged={(e) => setSuffixM(e.value)}
+          defaultValue={state.suffixM}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              suffixM: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='suffixB'
         editorType='dxTextBox'
-        disabled={!suffixEnabled || !checkBoxValue}
+        disabled={state.formControls.suffixB}
       >
         <Label>{localizedString.suffixB}: </Label>
         <TextBox
-          defaultValue={suffixB}
-          onValueChanged={(e) => setSuffixB(e.value)}
+          defaultValue={state.suffixB}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              suffixB: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='precision'
         editorType='dxNumberBox'
-        disabled={formControls.precision}
+        disabled={state.formControls.precision}
       >
         <Label>{localizedString.decimalUnit}: </Label>
         <NumberBox
@@ -147,39 +158,54 @@ const FormatOptionForm = ({
           max={5}
           format="#"
           showSpinButtons={true}
-          defaultValue={precision}
-          onValueChanged={(e) => setPrecision(e.value)}
+          defaultValue={state.precision}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              precision: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='precisionType'
         editorType='dxSelectBox'
-        disabled={formControls.precisionType}
+        disabled={state.formControls.precisionType}
       >
         <Label>{localizedString.roundUnit}: </Label>
         <SelectBox
           items={['반올림', '올림', '버림']}
-          defaultValue={precisionType}
-          onValueChanged={(e) => setPrecisionType(e.value)}
+          defaultValue={state.precisionType}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              precisionType: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         dataField='useDigitSeparator'
         editorType='dxCheckBox'
-        disabled={formControls.useDigitSeparator}
+        disabled={state.formControls.useDigitSeparator}
       >
         <Label>{localizedString.includesGroupDistinction}: </Label>
         <CheckBox
-          defaultValue={useDigitSeparator}
-          onValueChanged={(e) => setUseDigitSeparator(e.value)}
+          defaultValue={state.useDigitSeparator}
+          onValueChanged={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              useDigitSeparator: e.value
+            }));
+          }}
         />
       </Item>
       <Item
         editorType='dxTextArea'
         disabled={true}
       >
-        <PreView
-          defaultValue={formattedValue}
+        <Preview
+          defaultValue={state.formattedValue}
           readOnly
         />
       </Item>

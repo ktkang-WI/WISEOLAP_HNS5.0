@@ -62,8 +62,21 @@ const useDrag = () => {
       };
 
       const measureOption = {
-        // 포멧옵션
-        format: {},
+        // 240110 포멧 초기값
+        format: {
+          formatType: 'Number',
+          unit: 'Ones',
+          suffixEnabled: false,
+          suffix: {
+            O: '',
+            K: '천',
+            M: '백만',
+            B: '십억'
+          },
+          precision: 0,
+          precisionType: '반올림',
+          useDigitSeparator: true
+        },
         summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
       };
 

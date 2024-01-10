@@ -12,35 +12,10 @@ import FormatOptionForm from '../molecules/FormatOptionForm';
 
 const NumberFormatModal = ({
   dataField, reportId, ...props}) => {
-  const data = dataField;
   const theme = getTheme();
   const dispatch = useDispatch();
   const {updateItemField} = ItemSlice.actions;
-
-  function isEmptyObject(obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        return false;
-      }
-    }
-    return true;
-  }
-  const formatOptions = dataField.format && !isEmptyObject(dataField.format)?
-   dataField.format: {
-     formatType: 'Number',
-     unit: 'Ones',
-     suffixEnabled: false,
-     suffix: {
-       O: '',
-       K: '천',
-       M: '백만',
-       B: '십억'
-     },
-     precision: 0,
-     precisionType: '반올림',
-     useDigitSeparator: true
-   };
-  const prefix = undefined;
+  const FormatState = dataField.format;
   const formatValue = (options) => {
     const value = 1234567890.123;
     const formatted = NumberFormatUtility.formatNumber(
@@ -49,130 +24,113 @@ const NumberFormatModal = ({
         options.unit,
         options.precision,
         options.useDigitSeparator,
-        prefix,
+        undefined,
         options.suffix,
         options.suffixEnabled,
         options.precisionType
     );
-
     return formatted;
   };
-  const [suffixEnabled, setSuffixEnabled] = useState(
-      formatOptions.suffixEnabled || false
-  );
-  const [formatType, setFormatType] = useState(
-      formatOptions.formatType || 'Number'
-  );
-  const [unit, setUnit] = useState(
-      formatOptions.unit || 'Ones'
-  );
-  const [precision, setPrecision] = useState(formatOptions.precision || 0);
-  const [precisionType, setPrecisionType] = useState(
-      formatOptions.precisionType || '반올림'
-  );
-  const [useDigitSeparator, setUseDigitSeparator] = useState(
-      formatOptions.useDigitSeparator || false
-  );
-  const [suffixO, setSuffixO] = useState(formatOptions.suffix.O || '');
-  const [suffixK, setSuffixK] = useState(formatOptions.suffix.K || '천');
-  const [suffixM, setSuffixM] = useState(formatOptions.suffix.M || '백만');
-  const [suffixB, setSuffixB] = useState(formatOptions.suffix.B || '십억');
-  const [formattedValue, setFormattedValue] = useState(
-      formatValue({
-        formatType,
-        unit,
-        precision,
-        precisionType,
-        useDigitSeparator,
-        prefix,
-        suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-        suffixEnabled
-      })
-  );
-  // Define confirmedFormat state
-  const [confirmedFormat, setConfirmedFormat] = useState({
-    formatType,
-    unit,
-    precision,
-    precisionType,
-    useDigitSeparator,
-    suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-    suffixEnabled
-  });
-  const [checkBoxValue, setCheckBoxValue] = useState(false);
-  const updateFormControls = () => {
-    const isAutoOrGeneral = formatType === 'Auto' || formatType === 'General';
-    const isNumberOrCurrency =
-      formatType === 'Number' || formatType === 'Currency';
-    const isScientificOrPercent =
-      formatType === 'Scientific' || formatType === 'Percent';
-    const isSuffixEnabled = suffixEnabled;
 
+  const [state, setState] = useState({
+    ...FormatState,
+    suffixO: FormatState.suffix.O || '',
+    suffixK: FormatState.suffix.K || '천',
+    suffixM: FormatState.suffix.M || '백만',
+    suffixB: FormatState.suffix.B || '십억',
+    formattedValue: formatValue(FormatState),
+    checkBoxValue: FormatState.suffixEnabled,
+    formControls: {
+      unit: false,
+      suffixEnabled: false,
+      suffixO: false,
+      suffixK: false,
+      suffixM: false,
+      suffixB: false,
+      precision: false,
+      precisionType: false,
+      useDigitSeparator: false
+    }
+  });
+  const updateFormControls = () => {
+    const isAutoOrGeneral =
+    state.formatType === 'Auto' || state.formatType === 'General';
+    const isNumberOrCurrency =
+    state.formatType === 'Number' || state.formatType === 'Currency';
+    const isScientificOrPercent =
+    state.formatType === 'Scientific' || state.formatType === 'Percent';
+    let isSuffixEnabled = state.suffixEnabled;
+    let isCheckBoxValue = state.checkBoxValue;
+    if (isAutoOrGeneral || isScientificOrPercent) {
+      isSuffixEnabled = false;
+      isCheckBoxValue = false;
+    }
+    console.log('isSuffixEnabled', isSuffixEnabled);
+    console.log('isCheckBoxValue', isCheckBoxValue);
+    console.log('confirm', !(isSuffixEnabled && isCheckBoxValue));
     const updatedControls = {
       unit: !isNumberOrCurrency,
       suffixEnabled: !isNumberOrCurrency,
-      suffixO: isSuffixEnabled && checkBoxValue,
-      suffixK: isSuffixEnabled && checkBoxValue,
-      suffixM: isSuffixEnabled && checkBoxValue,
-      suffixB: isSuffixEnabled && checkBoxValue,
+      suffixO: !(isSuffixEnabled && isCheckBoxValue),
+      suffixK: !(isSuffixEnabled && isCheckBoxValue),
+      suffixM: !(isSuffixEnabled && isCheckBoxValue),
+      suffixB: !(isSuffixEnabled && isCheckBoxValue),
       precision: !isScientificOrPercent && !isNumberOrCurrency,
       precisionType: !isScientificOrPercent && !isNumberOrCurrency,
       useDigitSeparator: isAutoOrGeneral || isScientificOrPercent
     };
-
-    setFormControls(updatedControls);
+    setState((prevState) => ({
+      ...prevState,
+      formControls: updatedControls
+    }));
   };
 
   useEffect(() => {
     updateFormControls();
-    const newValue = formatValue({
-      formatType,
-      unit,
-      precision,
-      precisionType,
-      useDigitSeparator,
-      prefix,
-      suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-      suffixEnabled
-    });
-    setFormattedValue(newValue);
-
-    const newConfirmedFormat = {
-      formatType,
-      unit,
-      precision,
-      precisionType,
-      useDigitSeparator,
-      suffix: {O: suffixO, K: suffixK, M: suffixM, B: suffixB},
-      suffixEnabled
+    const newFormatState = {
+      formatType: state.formatType,
+      unit: state.unit,
+      precision: state.precision,
+      precisionType: state.precisionType,
+      useDigitSeparator: state.useDigitSeparator,
+      undefined,
+      suffix: {
+        O: state.suffixO,
+        K: state.suffixK,
+        M: state.suffixM,
+        B: state.suffixB
+      },
+      suffixEnabled: state.suffixEnabled
     };
-    setConfirmedFormat(newConfirmedFormat);
-  }, [formatType, suffixEnabled, checkBoxValue, unit,
-    suffixO, suffixK, suffixM, suffixB,
-    precision, precisionType, useDigitSeparator]);
-  //
+    const newValue = formatValue(newFormatState);
+    setState((prevState) => ({
+      ...prevState,
+      formattedValue: newValue,
+      FormatState: newFormatState
+    }));
+  }, [
+    state.formatType,
+    state.suffixEnabled,
+    state.checkBoxValue,
+    state.unit,
+    state.suffixO,
+    state.suffixK,
+    state.suffixM,
+    state.suffixB,
+    state.precision,
+    state.precisionType,
+    state.useDigitSeparator
+  ]);
   const handleCheckBoxValueChanged = (name, value) => {
     if (name === 'suffixEnabled') {
-      setSuffixEnabled(value);
-      if (!value) {
-        setCheckBoxValue(false);
-      } else {
-        setCheckBoxValue(true);
-      }
+      setState((prevState) => ({
+        ...prevState,
+        suffixEnabled: value,
+        checkBoxValue: value
+      }));
     }
   };
 
-  const [formControls, setFormControls] = useState({
-    unit: false,
-    suffixEnabled: false,
-    suffixO: false,
-    suffixK: false,
-    suffixM: false,
-    suffixB: false,
-    precision: false,
-    precisionType: false,
-    useDigitSeparator: false
-  });
   const StyledWrapper = styled(Wrapper)`
   width: 100%;
   height: 100%;
@@ -181,9 +139,8 @@ const NumberFormatModal = ({
   return (
     <Modal
       onSubmit={()=> {
-        // console.log('data', data);
         dispatch(updateItemField({reportId,
-          dataField: {...data, format: confirmedFormat}}));
+          dataField: {...dataField, format: state.FormatState}}));
       }}
       height={theme.size.numberFormatHeight}
       width={theme.size.numberFormatWidth}
@@ -193,30 +150,9 @@ const NumberFormatModal = ({
       <PageWrapper>
         <StyledWrapper>
           <FormatOptionForm
-            formatOptions={formatOptions}
-            formatType={formatType}
-            unit={unit}
-            precision={precision}
-            precisionType={precisionType}
-            suffixEnabled={suffixEnabled}
-            checkBoxValue={checkBoxValue}
-            suffixO={suffixO}
-            suffixK={suffixK}
-            suffixM={suffixM}
-            suffixB={suffixB}
-            useDigitSeparator={useDigitSeparator}
-            setFormatType={setFormatType}
-            setUnit={setUnit}
+            state={state}
+            setState={setState}
             handleCheckBoxValueChanged={handleCheckBoxValueChanged}
-            setSuffixO={setSuffixO}
-            setSuffixK={setSuffixK}
-            setSuffixM={setSuffixM}
-            setSuffixB={setSuffixB}
-            setPrecision={setPrecision}
-            setPrecisionType={setPrecisionType}
-            setUseDigitSeparator={setUseDigitSeparator}
-            formattedValue={formattedValue}
-            formControls={formControls}
           />
         </StyledWrapper>
       </PageWrapper>

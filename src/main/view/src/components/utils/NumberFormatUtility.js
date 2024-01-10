@@ -147,10 +147,6 @@ const NumberFormatUtility = {
         return _v.toString();
       },
       Number: function(_v, _u, _p, _po, _s, _r, _f, _c) {
-        console.log(
-            'Options inside Number:',
-            'v:', _v, 'u:', _u, 'p:', _p, 'po:', _po, 's:', _s,
-            'r:', _r, 'f:', _f, 'c:', _c);
         return (
           _r +
           formatNumber(_v / NumberFormatUtility.unitNum[_u], {

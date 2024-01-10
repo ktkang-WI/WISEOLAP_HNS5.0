@@ -13,11 +13,11 @@ const customizeTooltip = (info, isLabel, formatOptions) => {
   const labelPrecisionOption =
   matchingFormatOption?.format?.precisionType || '반올림';
   const labelSeparator =
-  matchingFormatOption?.format?.useDigitSeparator !==
-  undefined ? matchingFormatOption.useDigitSeparator : true;
+  matchingFormatOption?.format?.useDigitSeparator!==undefined?
+  matchingFormatOption?.format?.useDigitSeparator:true;
   const labelSuffixEnabled =
-  matchingFormatOption?.format?.suffixEnabled !==
-  undefined ? matchingFormatOption.suffixEnabled : false;
+  matchingFormatOption?.format?.suffixEnabled!==undefined?
+  matchingFormatOption?.format?.suffixEnabled:false;
   const labelSuffix = matchingFormatOption?.suffix || {
     O: '',
     K: '천',
