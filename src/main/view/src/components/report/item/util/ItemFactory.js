@@ -14,6 +14,15 @@ const makeItem = (orgItem) => {
     item = {
       ...orgItem,
       meta: {
+        interactiveOption: {
+          mode: 'single', // 마스터 필터 모드 'signle' or 'multiple'
+          enabled: false, // 마스터 필터 사용 여부
+          ignoreMasterFilter: false, // 마스터 필터 무시
+          // 교차 데이터 소스 필터링 (마스터 필터가 enable 돼 있는데 해당 옵션 true면
+          // 데이터 집합 관계없이 마스터 필터 일괄 적용)
+          crossDataSource: false,
+          targetDimension: 'dimension' // 대상 차원
+        },
         name: '아이템',
         memo: '',
         useCaption: true,

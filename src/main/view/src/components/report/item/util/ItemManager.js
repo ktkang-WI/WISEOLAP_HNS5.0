@@ -43,6 +43,10 @@ const getRibbonItems = (type) => {
   return utility[type].getRibbonItems();
 };
 
+const getAttributeItems = (type) => {
+  return utility[type].getAttributeItems();
+};
+
 // 아이템별 커스텀 메서드를 관리하기 위한 hook
 const useCustomEvent = () => {
   const customEvent = {};
@@ -86,5 +90,6 @@ export default {
   generateItem,
   generateParameter,
   getRibbonItems,
+  getAttributeItems,
   useCustomEvent
 };

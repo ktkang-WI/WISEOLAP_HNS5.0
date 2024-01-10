@@ -5,7 +5,7 @@ const AddCommonBtn = ({item}) => {
     <RibbonPanel key={item.id} position={item.position}>
       <CommonButton
         label={item.label}
-        title={item.title}
+        title={item.label}
         width={item.width}
         height={item.height}
         onClick={item.onClick}

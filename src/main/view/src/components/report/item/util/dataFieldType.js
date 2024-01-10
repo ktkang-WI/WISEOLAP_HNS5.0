@@ -24,6 +24,11 @@ const DataFieldTypeOfItemType = {
   [ItemType.DATA_GRID]: [
     DataFieldType.FIELD,
     DataFieldType.SPARKLINE
+  ],
+  [ItemType.PIE_CHART]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION,
+    DataFieldType.DIMENSION_GROUP
   ]
 };
 
