@@ -26,9 +26,10 @@ const useQueryExecute = () => {
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   * @param {JSON} filter 아이템에 적용할 필터
    * @return {JSON} parameter
    */
-  const generateParameter = (item, datasets, parameters) => {
+  const generateParameter = (item, datasets, parameters, filter={}) => {
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -50,6 +51,7 @@ const useQueryExecute = () => {
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
+    param.filter = JSON.stringify(filter);
     ItemManager.generateParameter(item, param);
 
     return param;
@@ -60,10 +62,11 @@ const useQueryExecute = () => {
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   * @param {JSON} filter 아이템에 적용할 필터
    */
-  const executeItem = (item, datasets, parameters) => {
+  const executeItem = (item, datasets, parameters, filter) => {
     const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets, parameters);
+    const param = generateParameter(tempItem, datasets, parameters, filter);
     const reportId = selectCurrentReportId(store.getState());
 
     // TODO: 추후 PivotMatrix 적용할 때 해제
@@ -73,6 +76,7 @@ const useQueryExecute = () => {
 
     //   dispatch(updateItem({reportId, item: tempItem}));
     // } else {
+
     models.Item.getItemData(param, (response) => {
       if (response.status != 200) {
         return;
@@ -80,12 +84,105 @@ const useQueryExecute = () => {
 
       tempItem.mart.init = true;
       tempItem.mart.data = response.data;
+      tempItem.mart.currentFilter = filter || {};
 
       ItemManager.generateItem(tempItem);
 
       dispatch(updateItem({reportId, item: tempItem}));
     });
     // }
+  };
+
+  /**
+   * 마스터 필터를 적용합니다.
+   * @param {*} targetItem 마스터 필터를 사용한 아이템
+   * @param {*} filter 마스터 필터 적용 대상 데이터 목록
+   */
+  const filterItems = (targetItem, filter) => {
+    const reportId = selectCurrentReportId(store.getState());
+    const items = selectCurrentItems(store.getState());
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+    const meta = targetItem.meta;
+
+    items.forEach((item) => {
+      if (!item.mart || !item.mart.init) return;
+
+      if (targetItem.id != item.id) {
+        if (meta.interactiveOption.crossDataSource ||
+            item.meta.dataField.datasetId == meta.dataField.datasetId) {
+          if (JSON.stringify(item.mart.currentFilter) !=
+              JSON.stringify(filter)) {
+            // 마스터 필터 무시 켜져 있는 아이템의 경우 필터 정보만 저장
+            const tempItem = {
+              ...item,
+              mart: {
+                ...item.mart,
+                filter: filter
+              }
+            };
+
+            if (item.meta.interactiveOption.ignoreMasterFilter) {
+              dispatch(updateItem({reportId, item: tempItem}));
+            } else {
+              executeItem(tempItem, datasets, parameters, filter);
+            }
+          }
+        }
+      }
+    });
+  };
+
+  /**
+   * 단일 아이템에 마스터 필터를 겁니다.
+   * @param {*} item
+   * @param {*} filter
+   */
+  const filterItem = (item, filter) => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+
+    if (item && item.mart?.init &&
+      JSON.stringify(item.mart.currentFilter) != JSON.stringify(filter)) {
+      executeItem(item, datasets, parameters, filter);
+    } else {
+      const reportId = selectCurrentReportId(store.getState());
+      dispatch(updateItem({reportId, item: item}));
+    }
+  };
+
+  /**
+   * targetItem을 제외한 모든 아이템의 마스터 필터를 제거합니다.
+   * @param {*} targetItem
+   */
+  const clearAllFilter = (targetItem) => {
+    const reportId = selectCurrentReportId(store.getState());
+    const items = selectCurrentItems(store.getState());
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+    const filter = {};
+
+    items.forEach((item) => {
+      if (!item.mart || !item.mart.init) return;
+      if (targetItem.id != item.id) {
+        const tempItem = {
+          ...item,
+          mart: {
+            ...item.mart,
+            filter: filter
+          }
+        };
+
+        // 현재 적용된 필터가 있는 경우 제거
+        if (JSON.stringify(item.mart.currentFilter) != '{}') {
+          // 마스터 필터 무시 켜져 있는 아이템의 경우 필터 정보만 저장
+          executeItem(tempItem, datasets, parameters, filter);
+        } else {
+          // 현재 적용된 필터가 없는 경우 filter 값 업데이트
+          dispatch(updateItem({reportId, item: tempItem}));
+        }
+      }
+    });
   };
 
   /**
@@ -96,7 +193,7 @@ const useQueryExecute = () => {
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
 
-    items.map((item) => executeItem(item, datasets, parameters));
+    items.forEach((item) => executeItem(item, datasets, parameters));
   };
 
   /**
@@ -248,6 +345,9 @@ const useQueryExecute = () => {
     generateParameter,
     executeItem,
     executeItems,
+    filterItem,
+    filterItems,
+    clearAllFilter,
     executeParameters,
     executeLinkageFilter
   };

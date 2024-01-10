@@ -24,6 +24,7 @@ public class DataGridDataMaker implements ItemDataMaker {
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
         data = sanitizer
+                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .orderBy()
                 .columnFiltering()

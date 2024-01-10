@@ -72,8 +72,21 @@ const makeMetaDataField = (defaultMetaDataField, category) => {
   };
 };
 
+/**
+ * item > meta에 데이터 추가.
+ * @param {*} item 현재 선택된 item을 가져옴.(파이차트의 meta, mart 등, 일반차트의 meta, mart 등)
+ * @param {*} id meta에 추가된 값 (itemOption : ex(pieStyle, labelEdit 등))
+ * @param {*} data meta에 추가될 데이터 ('pieChartStyle': 'pie' 등)
+ */
+const setMeta = (item, id, data) => {
+  if (!item.meta[id]) {
+    item.meta[id] = data;
+  }
+};
+
 export {
   metaDataField,
   makeMetaDataField,
-  makeFieldOption
+  makeFieldOption,
+  setMeta
 };
