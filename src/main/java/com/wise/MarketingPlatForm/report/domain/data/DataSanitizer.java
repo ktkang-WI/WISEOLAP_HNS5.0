@@ -113,8 +113,8 @@ public final class DataSanitizer {
             // key는 dimention 모든 키들이 "-wise-split-" 로 붙여져있음.
             // List<Map> [{측정값 명 : value}]
             // [기아-wise-split-K3: [
-            //     {회사: 기아, 자동차명: K3, 금액: 3}
-            //         ...
+            // {회사: 기아, 자동차명: K3, 금액: 3}
+            // ...
             // ]]
             StringBuilder sb = new StringBuilder();
 
@@ -138,8 +138,7 @@ public final class DataSanitizer {
                                     // TODO: 추후 정렬 기준 항목 추가시 보수 필요
                                     if (value == null) {
                                         acc.put(measure.getSummaryName(), null);
-                                    }
-                                    else {
+                                    } else {
                                         acc.put(measure.getSummaryName(),
                                                 new SummaryCalculator(measure.getSummaryType(), value));
                                     }
@@ -179,7 +178,7 @@ public final class DataSanitizer {
         grpDataLenth = data.size();
         return this;
     }
-    
+
     /**
      * <p>
      * 필요한 컬럼의 데이터만 필터링합니다.
@@ -193,7 +192,7 @@ public final class DataSanitizer {
     public final DataSanitizer columnFiltering() {
         return columnFiltering(false);
     }
-    
+
     /**
      * <p>
      * 필요한 컬럼의 데이터만 필터링합니다.
@@ -212,7 +211,6 @@ public final class DataSanitizer {
         } else {
             columnNames = getAllColumnNamesExceptSortByItem();
         }
-        
 
         data.forEach(map -> {
             map.keySet().retainAll(columnNames);
@@ -223,6 +221,7 @@ public final class DataSanitizer {
 
     /**
      * null값이 포함된 row가 있을 경우 해당 row를 삭제합니다.
+     * 
      * @return DataSanitizer
      */
     public final DataSanitizer removeNullData() {
@@ -264,7 +263,7 @@ public final class DataSanitizer {
                 .map((dim) -> {
                     Measure measure = measureLookup.getOrDefault(dim.getSortBy(), null);
                     String sortBy;
-                    
+
                     if (measure != null) {
                         sortBy = StringUtils.isNotBlank(measure.getSummaryName()) ? measure.getSummaryName()
                                 : measure.getName();
@@ -328,6 +327,24 @@ public final class DataSanitizer {
             }
 
             data = tempList;
+        }
+
+        return this;
+    }
+
+    /**
+     * 데이터에 필터(마스터 필터)를 적용한 결과를 반환합니다.
+     * @param filter
+     * @return DataSanitizer
+     */
+    public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
+        // 필터가 존재하는 경우에만 필터링
+        if (filter.size() > 0) {
+            data = data.stream()
+                    .filter(map -> filter.entrySet().stream()
+                            .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
+                                    entry.getValue().toArray(new CharSequence[0]))))
+                    .collect(Collectors.toList());
         }
 
         return this;

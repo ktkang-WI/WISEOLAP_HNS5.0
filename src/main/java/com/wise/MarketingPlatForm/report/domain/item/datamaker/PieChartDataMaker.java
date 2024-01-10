@@ -1,24 +1,25 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 
-public class ChartDataMaker implements ItemDataMaker {
-    @Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
+public class PieChartDataMaker implements ItemDataMaker {
+	@Override
+	public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
@@ -32,7 +33,6 @@ public class ChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .orderBy()
                 .columnFiltering()
@@ -43,7 +43,6 @@ public class ChartDataMaker implements ItemDataMaker {
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
         List<String> seriesDimensionNames = new ArrayList<>();
-        List<String> seriesDimensionCaptions = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
@@ -69,7 +68,7 @@ public class ChartDataMaker implements ItemDataMaker {
                     args.add(String.valueOf(row.get(name)));
                 }
                 Collections.reverse(args);
-                row.put("arg", String.join("<br/>", args));
+                row.put("arg", String.join(",", args));
             }
 
             if (dimGrpNames.size() > 0) {
@@ -95,7 +94,6 @@ public class ChartDataMaker implements ItemDataMaker {
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
                 seriesDimensionNames.add(measure.getSummaryName());
-                seriesDimensionCaptions.add(measure.getCaption());
             }
         } else {
             for (Measure measure : measures) {
@@ -104,19 +102,14 @@ public class ChartDataMaker implements ItemDataMaker {
                 while (iter.hasNext()) {
                     String name = iter.next();
                     seriesDimensionNames.add(name + "-" + measure.getSummaryName());
-                    seriesDimensionCaptions.add(name + "-" + measure.getCaption());
                 }
-            }
-            if (measures.size() == 1) {
-                seriesDimensionCaptions = new ArrayList<>(dimensionGroupNames);
             }
         }
 
         info.put("seriesDimensionNames", seriesDimensionNames);
-        info.put("seriesDimensionCaptions", seriesDimensionCaptions);
 
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
-    }
+	}
 }
