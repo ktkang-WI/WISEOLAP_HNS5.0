@@ -4,20 +4,32 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
-import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReport,
   selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
-import ReportSaveForm from '../../Save/molecules/ReportSaveForm';
 import DatasetLinkerModal from '../modal/DatasetLinkerModal';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import useReportSave from 'hooks/useReportSave';
+import saveDefaultElement from
+  'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import ribbonDefaultElement from
+  'components/common/atomic/Ribbon/organism/Ribbon';
+import useSpread from 'hooks/useSpread';
+import useFile from 'components/utils/useFile';
 
 
 const SpreadDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
+  const {setDesigner} = SpreadSlice.actions;
   const dispatch = useDispatch();
-  const spreadSlice = SpreadSlice.actions;
+  const {reload} = useReportSave();
+  const {save} = saveDefaultElement();
+  const ribbonElement = ribbonDefaultElement();
+  const {createReportBlob} = useSpread();
+  const {fileUpload} = useFile();
 
   const setRibbonSetting = () => {
     const sheets = selectSheets(store.getState());
@@ -49,14 +61,16 @@ const SpreadDefaultElement = () => {
     const newReport = (context) => {
       const sheets = selectSheets(store.getState());
       const selectedReportId = selectCurrentReportId(store.getState());
+      const designer = selectCurrentReportType;
       const executeNew = (context) => {
         const config = setRibbonSetting();
+        reload(selectedReportId, designer);
         // 기존 workbook 제거
         context.destroy();
         // 새로운 workbook 생성 및 등록
         const newDesigner =
           new sheets.Designer.Designer(document.getElementById('test'), config);
-        dispatch(spreadSlice.setDesigner({
+        dispatch(setDesigner({
           reportId: selectedReportId,
           designer: newDesigner
         }));
@@ -72,19 +86,21 @@ const SpreadDefaultElement = () => {
     };
 
     const openReport = () => {
+      createReportBlob().then((bolb) => fileUpload(
+          bolb, {fileName: 'test.xlsx'}));
       openModal(ReportFolderSelectorModal);
     };
 
     const saveReport = () => {
-
+      save[0].onClick();
     };
 
     const saveAsReport = () => {
-      openModal(ReportSaveForm);
+      save[1].onClick();
     };
 
     const deleteReport = () => {
-
+      ribbonElement[DeleteReport].onClick();
     };
 
     const downloadReportXLSX = () => {

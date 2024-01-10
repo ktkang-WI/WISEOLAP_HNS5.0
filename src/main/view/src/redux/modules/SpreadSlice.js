@@ -68,7 +68,7 @@ const initialState = {
 const reducers = {
   initSpread(state, actions) {
     delete state[actions.payload];
-    state[actions.payload] = initialState[0];
+    state[0] = initialState[0];
   },
   setDesigner(state, actions) {
     state[actions.payload.reportId].designer = actions.payload.designer;

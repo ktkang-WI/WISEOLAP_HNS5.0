@@ -4,19 +4,19 @@ import {selectCurrentReport}
   from 'redux/selector/ReportSelector';
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
-import {useSelector} from 'react-redux';
 import models from 'models';
+import store from 'redux/modules';
 
 const SaveDefaultElement = () => {
   const {openModal} = useModal();
   const {saveReport, generateParameter} = useReportSave();
-  const currentReport = useSelector(selectCurrentReport);
 
   return {
     save: [
       {
         label: localizedString.saveReport, // 저장
         onClick: () => {
+          const currentReport = selectCurrentReport(store.getState());
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {

@@ -3,6 +3,7 @@ import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos, selectCurrentDesigner,
+  selectExcelIO,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 const useSpread = () => {
@@ -232,12 +233,23 @@ const useSpread = () => {
     return tableStyle;
   };
 
+  const createReportBlob = async () => {
+    const excelIO = selectExcelIO(store.getState());
+    const designer = selectCurrentDesigner(store.getState());
+    const json = designer.getWorkbook().toJSON({includeBindingSource: false});
+    const blob = await new Promise((resolve, reject) => {
+      excelIO.save(JSON.stringify(json), resolve, reject);
+    });
+    return blob;
+  };
+
   return {
     bindData,
     sheetChangedListener,
     sheetNameChangedListener,
     positionConverterAsObject,
-    positionConverterAsString
+    positionConverterAsString,
+    createReportBlob
   };
 };
 
