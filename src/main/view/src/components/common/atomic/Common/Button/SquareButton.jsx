@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  margin: 0px 5px;
   border: 1px solid ${theme.color.breakLine};
   flex-direction: column;
   word-break: keep-all;
@@ -32,15 +32,27 @@ const Wrapper = styled.div`
   img + div {
     margin-top: 5px;
   }
+
+  ${(props) => props.active && `
+    box-shadow: inset 0 0 0px 0.5px ${theme.color.primary};
+    border: 1px solid ${theme.color.primary};
+  `}
 `;
 
-const SqureButton = ({icon, label, width='100%', height='100%'}) => {
+const SquareButton = ({
+  icon,
+  label,
+  width='100%',
+  height='100%',
+  onClick,
+  active
+}) => {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick} active={active}>
       <SmallButtonImage src={icon}></SmallButtonImage>
       <SmallButtonLabel>{label}</SmallButtonLabel>
     </Wrapper>
   );
 };
 
-export default SqureButton;
+export default SquareButton;

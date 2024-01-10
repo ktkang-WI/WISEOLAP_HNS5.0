@@ -154,6 +154,16 @@ const reducers = {
   setItems(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
+  },
+  updateInteractiveOption(state, actions) {
+    const reportId = actions.payload.reportId;
+
+    const itemIndex = state[reportId].items.findIndex(
+        (item) => item.id == state[reportId].selectedItemId
+    );
+
+    Object.assign(state[reportId].items[itemIndex].meta.interactiveOption,
+        actions.payload.option);
   }
 };
 

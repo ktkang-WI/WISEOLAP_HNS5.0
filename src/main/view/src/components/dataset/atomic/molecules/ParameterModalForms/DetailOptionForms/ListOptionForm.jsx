@@ -213,7 +213,14 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
         <Label>{localizedString.multiSelect}</Label>
       </Item>
       <Item
-        colSpan={1}
+        colSpan={2}
+        editorType='dxCheckBox'
+        dataField='useAll'
+      >
+        <Label>{localizedString.useAll}</Label>
+      </Item>
+      <Item
+        colSpan={2}
         editorType='dxTextBox'
         dataField='exceptionValue'
       >

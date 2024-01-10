@@ -1,8 +1,10 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
-import SqureButton from '../../Common/Button/SqureButton';
+import SquareButton from '../../Common/Button/SquareButton';
 import itemAttributeDefaultElement from './ItemAttributeDefaultElement';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
 
 const theme = getTheme();
 
@@ -35,12 +37,11 @@ const ButtonWrapper = styled.div`
 
 const ItemAttributeTab = () => {
   const defaultElement = itemAttributeDefaultElement();
-
-  // TODO: 추후 리덕스 적용
-  const tempData = ['Filtering', 'Interaction',
-    'InteractionConfiguration', 'TargetDimension'];
+  const focusedItem = useSelector(selectCurrentItem);
 
   const generateAttribute = (attributes) => {
+    if (!attributes) return;
+
     return attributes.map((data) => {
       const attributeGrp = defaultElement[data];
 
@@ -54,11 +55,9 @@ const ItemAttributeTab = () => {
           <ButtonWrapper>
             {
               attributeGrp.items.map((item) =>
-                <SqureButton
+                <SquareButton
                   key={item.id}
-                  label={item.label}
-                  icon={item.icon}
-                  onClick={item.onClick}
+                  {...item}
                 />
               )
             }
@@ -70,7 +69,7 @@ const ItemAttributeTab = () => {
 
   return (
     <Wrapper>
-      {generateAttribute(tempData)}
+      {generateAttribute(focusedItem?.mart.attributeItems || [])}
     </Wrapper>
   );
 };

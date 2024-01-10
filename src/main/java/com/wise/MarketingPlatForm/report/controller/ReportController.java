@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -106,6 +107,7 @@ public class ReportController {
         String ItemTypeStr = param.get("itemType");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
+        String filterStr = param.getOrDefault("filter", "{}");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -118,6 +120,9 @@ public class ReportController {
                 }.getType());
         List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
                 new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+                }.getType());
+        Map<String, List<String>> filter = gson.fromJson(filterStr,
+                new TypeToken<HashMap<String, ArrayList<String>>> () {
                 }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
@@ -134,6 +139,7 @@ public class ReportController {
                 .parameters(parameters)
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
+                .filter(filter)
                 .build();
 
         // 추후 PivotMatrix 적용시 주석 해제

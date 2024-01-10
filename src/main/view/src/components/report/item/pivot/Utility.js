@@ -1,17 +1,12 @@
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
+import {setMeta} from '../util/metaUtilityFactory';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
-  const setMeta = (id, data) => {
-    if (!item.meta[id]) {
-      item.meta[id] = data;
-    }
-  };
-
-  setMeta('positionOption', {
+  setMeta(item, 'positionOption', {
     column: {
       totalVisible: true, // 열 합계 표시
       grandTotalVisible: true, // 열 총 합계 표시
@@ -27,9 +22,9 @@ const generateMeta = (item) => {
     dataPosition: 'row' // 측정값 위치
   });
 
-  setMeta('layout', 'standard');
-  setMeta('removeNullData', false);
-  setMeta('showFilter', false);
+  setMeta(item, 'layout', 'standard');
+  setMeta(item, 'removeNullData', false);
+  setMeta(item, 'showFilter', false);
 };
 
 /**
@@ -148,9 +143,21 @@ const getRibbonItems = () => {
   ];
 };
 
+/**
+ * 속셩 영역 아이템 배열을 반환합니다.
+ * @return {Array} attributeItems
+ */
+const getAttributeItems = () => {
+  return [
+    'InteractionConfiguration',
+    'TargetDimension'
+  ];
+};
+
 export default {
   generateMeta,
   generateItem,
   generateParameter,
-  getRibbonItems
+  getRibbonItems,
+  getAttributeItems
 };
