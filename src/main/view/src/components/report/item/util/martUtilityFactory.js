@@ -13,7 +13,7 @@ const defaultDimension = {
   label: localizedString.dimension,
   icon: dimensionIcon,
   placeholder: localizedString.dimensionPlaceholder,
-  type: 'DIMENSION'
+  type: 'DIM'
 };
 
 const defaultAnyField = {
@@ -27,7 +27,7 @@ const defaultMeasure = {
   label: localizedString.measure,
   icon: measureIcon,
   placeholder: localizedString.measurePlaceholder,
-  type: 'MEASURE'
+  type: 'MEA'
 };
 
 const defaultMart = {
