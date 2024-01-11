@@ -35,7 +35,7 @@ const LoadReportModal = ({...props}) => {
   const {setReports, selectReport} = ReportSlice.actions;
   const {setItems} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
-  const {setDataset} = DatasetSlice.actions;
+  const {setDatasets} = DatasetSlice.actions;
   const {setParameterInformation} = ParameterSlice.actions;
   const {executeItems} = useQueryExecute();
   const reportType = useSelector(selectCurrentReportType);
@@ -55,52 +55,48 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then((data) => {
-                  if (data.isNew) {
-                    console.log('test');
-                  } else {
-                    dispatch(setLayout({
-                      reportId: selectedReport.id,
-                      layout: data.layout
-                    }));
-                    dispatch(selectReport(selectedReport.id));
-                    dispatch(setReports(data.reports));
-                    data.item.items.forEach((i) => {
-                      i.mart = makeMart(i);
-                      ItemManager.generateMeta(i);
+                  dispatch(setLayout({
+                    reportId: selectedReport.id,
+                    layout: data.layout
+                  }));
+                  dispatch(selectReport(selectedReport.id));
+                  dispatch(setReports(data.reports));
+                  data.items.forEach((i) => {
+                    i.mart = makeMart(i);
+                    ItemManager.generateMeta(i);
+                  });
+                  dispatch(setItems({
+                    reportId: selectedReport.id,
+                    items: data.item
+                  }));
+                  data.datasets.forEach((i) => {
+                    i.fields = i.fields.map((field) => {
+                      const isMea = field.columnTypeName == 'decimal';
+                      return {
+                        icon: isMea ? meaImg : dimImg,
+                        parentId: '0',
+                        uniqueName: field.columnName,
+                        name: field.columnName,
+                        type: isMea ? 'MEA' : 'DIM',
+                        ...field
+                      };
                     });
-                    dispatch(setItems({
-                      reportId: selectedReport.id,
-                      items: data.item
-                    }));
-                    data.dataset.datasets.forEach((i) => {
-                      i.fields = i.fields.map((field) => {
-                        const isMea = field.columnTypeName == 'decimal';
-                        return {
-                          icon: isMea ? meaImg : dimImg,
-                          parentId: '0',
-                          uniqueName: field.columnName,
-                          name: field.columnName,
-                          type: isMea ? 'MEA' : 'DIM',
-                          ...field
-                        };
-                      });
-                      i.fields.unshift({
-                        name: localizedString.defaultDatasetName,
-                        type: 'FLD',
-                        uniqueName: '0',
-                        icon: folderImg
-                      });
+                    i.fields.unshift({
+                      name: localizedString.defaultDatasetName,
+                      type: 'FLD',
+                      uniqueName: '0',
+                      icon: folderImg
                     });
-                    dispatch(setDataset({
-                      reportId: selectedReport.id,
-                      dataset: data.dataset
-                    }));
-                    dispatch(setParameterInformation({
-                      reportId: selectedReport.id,
-                      informations: data.informations
-                    }));
-                    executeItems();
-                  }
+                  });
+                  dispatch(setDatasets({
+                    reportId: selectedReport.id,
+                    dataset: data.dataset
+                  }));
+                  dispatch(setParameterInformation({
+                    reportId: selectedReport.id,
+                    informations: data.informations
+                  }));
+                  executeItems();
                 });
           } else {
             openModal(Alert, {

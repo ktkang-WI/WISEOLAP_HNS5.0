@@ -1,6 +1,4 @@
-import {selectRootDataset} from 'redux/selector/DatasetSelector';
-import {selectRootItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReportId}
+import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import {deleteReport} from 'models/report/Report';
@@ -9,10 +7,13 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
-import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import {selectCurrentItems} from 'redux/selector/ItemSelector';
+import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
@@ -59,19 +60,16 @@ const useReportSave = () => {
     param.fldType = dataSource.fldType;
     param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
-    // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
     param.reportType = reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
-    param.chartXml = JSON.stringify(selectRootItem(store.getState()));
-    param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
-    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
-    param.paramXml = JSON.stringify(selectRootParameter(store.getState()));
+    param.chartXml = JSON.stringify(selectCurrentItems(store.getState()));
+    param.layoutXml = JSON.stringify(selectFlexLayoutConfig(store.getState()));
+    param.datasetXml = JSON.stringify(selectCurrentDatasets(store.getState()));
+    param.paramXml = JSON.stringify(
+        selectCurrentInformationas(store.getState()));
     param.reportSubTitle = dataSource.reportSubTitle;
-    param.reportXml = JSON.stringify({
-      reportId: param.reportId,
-      options: param
-    });
+    param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
 
     return param;
   };

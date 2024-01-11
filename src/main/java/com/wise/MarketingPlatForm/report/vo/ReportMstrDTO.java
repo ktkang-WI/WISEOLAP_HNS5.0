@@ -107,6 +107,7 @@ public class ReportMstrDTO {
         .modDt(reportMstrDTO.getModDt())
         .privacyYn(reportMstrDTO.getPrivacyYn())
         .layoutConfig(reportMstrDTO.getLayoutConfig())
+        .dupleYn(reportMstrDTO.getDupleYn())
         .build();
     }
 }
