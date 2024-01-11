@@ -53,7 +53,9 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
       }
       setText(allText);
     } else {
-      keys = keys.split(', ');
+      keys = keys.split(', ').map((key) => {
+        return isNaN(Number(key)) ? key : Number(key);
+      });
       setText(generateCaptionText(keys));
     }
     setSelectionKeys(keys);

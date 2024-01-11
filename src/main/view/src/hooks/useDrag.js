@@ -144,10 +144,18 @@ const useDrag = () => {
       if (dest.droppableId == 'filter-bar') {
         const parameters = selectRootParameter(store.getState());
         const paramInfo = parameters.informations;
+        let sourceField = null;
+        if (source.droppableId == 'dataSource') {
+          sourceField = selectedDataset.fields.find((field) =>
+            field.uniqueName == targetId
+          );
+        } else {
+          sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+          sourceField = sourceField[0];
 
-        const sourceField = selectedDataset.fields.find((field) =>
-          field.uniqueName == targetId
-        );
+          dispatch(setItemField({reportId, dataField}));
+        }
 
         const regExp = /[\[\]]/gi;
         const uniName = sourceField.uniqueName.replace(regExp, '')
