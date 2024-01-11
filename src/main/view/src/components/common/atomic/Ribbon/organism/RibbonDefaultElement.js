@@ -25,6 +25,7 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
@@ -82,7 +83,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.loadReport,
       'imgSrc': loadReport,
       'onClick': (e) => {
-        console.log(e);
+        openModal(LoadReportModal);
       }
     },
     'SaveReport': {

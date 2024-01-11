@@ -291,5 +291,6 @@
   "precision": "Precision",
   "degreeOption": "Degree Option",
   "precisionOption": "Precision Option",
-  "all": "all"
+  "all": "all",
+  "colRowSwitch": "Transpose"
 }

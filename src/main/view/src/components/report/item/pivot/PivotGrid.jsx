@@ -2,7 +2,7 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 const PivotGrid = ({id, item}) => {
   const mart = item ? item.mart : null;
@@ -52,12 +52,16 @@ const PivotGrid = ({id, item}) => {
     showTotalsPrior = 'none';
   }
 
+  const fields = mart.dataSourceConfig.fields();
+  const column = fields.filter((field) => field.area == 'column');
+  const row = fields.filter((field) => field.area == 'row');
+
   const fieldPanel = {
     allowFieldDragging: false,
-    showColumnFields: meta.dataField.column.length > 0,
+    showColumnFields: column.length > 0,
     showDataFields: false,
     showFilterFields: false,
-    showRowFields: meta.dataField.row.length > 0,
+    showRowFields: row.length > 0,
     visible: meta.showFilter
   };
 
@@ -87,4 +91,4 @@ const PivotGrid = ({id, item}) => {
   );
 };
 
-export default PivotGrid;
+export default React.memo(PivotGrid);

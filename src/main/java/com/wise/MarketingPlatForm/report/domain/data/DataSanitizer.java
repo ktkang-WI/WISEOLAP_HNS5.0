@@ -165,7 +165,7 @@ public final class DataSanitizer {
                 .map((row) -> {
                     for (Measure measure : allMeasures) {
                         String name = measure.getSummaryName();
-                        if (row.get(name) instanceof SummaryCalculator) {
+                        if (row.get(name) != null && row.get(name) instanceof SummaryCalculator) {
                             SummaryCalculator sv = (SummaryCalculator) row.get(name);
 
                             row.put(name, sv.getSummaryValue());

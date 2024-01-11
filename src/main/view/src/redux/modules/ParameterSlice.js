@@ -14,6 +14,8 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const informations = actions.payload.informations;
 
+    if (state[reportId] === undefined) state[reportId] = {};
+
     state[reportId].informations = informations;
     state[reportId].values = {};
     state[reportId].filterSearchComplete = [];

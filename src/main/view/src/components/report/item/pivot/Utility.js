@@ -64,7 +64,7 @@ const generateItem = (item) => {
     fields.push({
       caption: field.caption,
       dataField: field.name,
-      area: 'row',
+      area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
       expanded: item.meta.positionOption.row.expand
     });
@@ -94,7 +94,7 @@ const generateItem = (item) => {
     fields.push({
       caption: field.caption,
       dataField: field.name,
-      area: 'column',
+      area: item.meta.colRowSwitch? 'row' : 'column',
       sortOrder: field.sortOrder.toLowerCase(),
       expanded: item.meta.positionOption.column.expand,
       ...sortBy
@@ -154,10 +154,15 @@ const getAttributeItems = () => {
   ];
 };
 
+const getTabHeaderItems = () => {
+  return ['ColRowSwitch'];
+};
+
 export default {
   generateMeta,
   generateItem,
   generateParameter,
   getRibbonItems,
-  getAttributeItems
+  getAttributeItems,
+  getTabHeaderItems
 };

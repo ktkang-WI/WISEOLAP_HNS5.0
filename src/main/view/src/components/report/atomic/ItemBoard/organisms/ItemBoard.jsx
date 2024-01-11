@@ -20,6 +20,7 @@ import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
 import Pie from 'components/report/item/pie/Pie';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -39,6 +40,7 @@ const ItemBoard = () => {
   const location = useLocation();
   const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
+  const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
@@ -156,13 +158,18 @@ const ItemBoard = () => {
     const tabNode = tabSetNode.getSelectedNode();
 
     if (tabNode) {
+      const type = tabNode.getComponent();
+      const id = tabNode.getId();
+      const buttons = ItemManager.getTabHeaderItems(type)
+          .map((key) => getTabHeaderButtons(type, key, id));
+
       renderValues.buttons.push(
           <button
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
               // flexLayout 커스텀 삭제 버튼 기능.
-              model.doAction(Actions.deleteTab(tabNode._attributes.id));
+              model.doAction(Actions.deleteTab(id));
             }}
           >
           &#128473;&#xFE0E;
@@ -174,7 +181,8 @@ const ItemBoard = () => {
             }}
           >
             <DownloadImage src={download}/>
-          </button>
+          </button>,
+          ...buttons
       );
     }
   }

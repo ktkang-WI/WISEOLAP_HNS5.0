@@ -1,11 +1,7 @@
 import localizedString from 'config/localization';
 import CommonTab from '../../Common/Interactive/CommonTab';
-import CommonToolbar from '../../Common/CommonToolbar';
 import Wrapper from '../../Common/Wrap/Wrapper';
-import refresh from '../../../../../assets/image/icon/button/refresh.png';
-
 import ReportListTab from './ReportListTab';
-import SmallImageButton from '../../Common/Button/SmallImageButton';
 
 const ReportTabSource = [
   {
@@ -18,30 +14,27 @@ const ReportTabSource = [
   }
 ];
 
-const ToolbarItems = [
-  {
-    location: 'after',
-    key: '2',
-    render: () => {
-      return <SmallImageButton src={refresh}/>;
-    }
-  }
-];
-
-const ReportTabs = () => {
+const DesignerReportTabs = ({reportList, onSelectionChanged}) => {
   const getTabContent = ({data}) => {
-    return <ReportListTab items={[]}/>;
+    return <ReportListTab
+      items={reportList? reportList[data.id] : []}
+      width='100%'
+      onSelectionChanged={onSelectionChanged}
+      selectionMode='single'
+      selectByClick={true}
+      selectNodesRecursive={false}
+    />;
   };
 
   return (
     <Wrapper>
-      <CommonToolbar items={ToolbarItems}/>
       <CommonTab
         dataSource={ReportTabSource}
         itemComponent={getTabContent}
+        width='100%'
       />
     </Wrapper>
   );
 };
 
-export default ReportTabs;
+export default DesignerReportTabs;
