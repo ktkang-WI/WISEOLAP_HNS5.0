@@ -117,8 +117,8 @@ public class CubeParamSetUtil {
         for (Parameter param : params) {
         	String paramString = null;
         	String paramStringReple = null;
-        	if(param.getName() != null) {
-        		paramString = param.getName();
+        	if(param.getUniqueName() != null) {
+        		paramString = param.getUniqueName();
         		paramString = paramString.split("\\.")[0];
         		paramStringReple = paramString.replaceAll("\\[", "").replaceAll("\\]", "");
                 //.replaceAll("[0-9]", "");
