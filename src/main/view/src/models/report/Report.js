@@ -17,7 +17,9 @@ export const getReportById = async (userId, reportId) => {
     reportId: reportId,
     userId: userId
   });
-
+  Object.keys(res.data).forEach((key) => {
+    res.data[key] = JSON.parse(res.data[key]);
+  });
   return res.data;
 };
 

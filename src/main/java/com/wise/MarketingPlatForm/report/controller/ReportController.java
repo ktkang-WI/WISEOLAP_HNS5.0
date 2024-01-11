@@ -174,7 +174,7 @@ public class ReportController {
 	    )
 	)
     @PostMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestBody Map<String, String> param) {
+	public Map<String, String> getReport(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
         String userId = param.getOrDefault("userId", "");
 

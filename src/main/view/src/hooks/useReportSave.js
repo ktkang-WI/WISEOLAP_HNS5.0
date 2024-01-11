@@ -12,8 +12,8 @@ import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
 import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 import {selectCurrentItems} from 'redux/selector/ItemSelector';
-import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
-import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import {selectRootLayout} from 'redux/selector/LayoutSelector';
+import {selectRootDataset} from 'redux/selector/DatasetSelector';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
@@ -64,8 +64,8 @@ const useReportSave = () => {
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
     param.chartXml = JSON.stringify(selectCurrentItems(store.getState()));
-    param.layoutXml = JSON.stringify(selectFlexLayoutConfig(store.getState()));
-    param.datasetXml = JSON.stringify(selectCurrentDatasets(store.getState()));
+    param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
+    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
     param.reportSubTitle = dataSource.reportSubTitle;

@@ -108,10 +108,10 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public Map<String, Object> getReport(String reportId, String userId) {
+    public Map<String, String> getReport(String reportId, String userId) {
     	ReportMstrEntity entity = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
-        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, String> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
         	Map<String, Object> report = new HashMap<String, Object>();
         	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
@@ -120,7 +120,6 @@ public class ReportService {
         	reports.add(report);
         	returnMap = xmlParser.getReport(dto, userId);
         	
-        	returnMap.put("reports", reports);
         	Map<String, Object> options = new HashMap<String, Object>();
             options.put("order", entity.getReportOrdinal());
         	options.put("reportNm", entity.getReportNm());
@@ -129,17 +128,23 @@ public class ReportService {
             
         	report.put("reportId", reportId);
         	report.put("options", options);
+        	returnMap.put("reports", reports.toString());
         } else {
-        	JSONObject reports =  new JSONObject(entity.getReportXml());
+        	JSONObject reportObj = new JSONObject(entity.getReportXml());
+        	reportObj.set("reportId", entity.getReportId());
+        	final String reportStr = reportObj.toString();
+        	List<JSONObject> reports =  new ArrayList<JSONObject>() {{
+        		add(new JSONObject(reportStr));
+        	}};
         	JSONArray items = new JSONArray(entity.getChartXml());
-        	JSONArray datasets = new JSONArray(entity.getDatasetXml());
+        	JSONObject dataset = new JSONObject(entity.getDatasetXml());
         	JSONObject layout = new JSONObject(entity.getLayoutXml());
         	JSONArray informations = new JSONArray(entity.getParamXml());
-        	returnMap.put("reports", reports);
-        	returnMap.put("items", items);
-        	returnMap.put("datasets", datasets);
-        	returnMap.put("layout", layout);
-        	returnMap.put("informations", informations);
+        	returnMap.put("reports", reports.toString());
+        	returnMap.put("items", items.toString());
+        	returnMap.put("dataset", dataset.toString());
+        	returnMap.put("layout", layout.toString());
+        	returnMap.put("informations", informations.toString());
         }
         
         return returnMap;

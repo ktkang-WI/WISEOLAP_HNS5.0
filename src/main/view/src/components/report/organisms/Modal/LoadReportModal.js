@@ -31,7 +31,6 @@ const LoadReportModal = ({...props}) => {
   const [reportList, setReportList] = useState();
   const {openModal} = useModal();
   const dispatch = useDispatch();
-
   const {setReports, selectReport} = ReportSlice.actions;
   const {setItems} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
@@ -48,6 +47,7 @@ const LoadReportModal = ({...props}) => {
     });
   }, []);
 
+
   return (
     <Modal
       onSubmit={() => {
@@ -55,23 +55,18 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then((data) => {
-                  dispatch(setLayout({
-                    reportId: selectedReport.id,
-                    layout: data.layout
-                  }));
-                  dispatch(selectReport(selectedReport.id));
                   dispatch(setReports(data.reports));
+                  dispatch(selectReport(selectedReport.id));
                   data.items.forEach((i) => {
                     i.mart = makeMart(i);
                     ItemManager.generateMeta(i);
                   });
-                  dispatch(setItems({
-                    reportId: selectedReport.id,
-                    items: data.item
-                  }));
-                  data.datasets.forEach((i) => {
+                  const selectedDatasetId = data.dataset.selectedDatasetId;
+                  data.dataset.datasets.forEach((i) => {
+                    let uniqueNameChk = true;
                     i.fields = i.fields.map((field) => {
                       const isMea = field.columnTypeName == 'decimal';
+                      if (field.uniqueName == 0) uniqueNameChk = false;
                       return {
                         icon: isMea ? meaImg : dimImg,
                         parentId: '0',
@@ -81,16 +76,34 @@ const LoadReportModal = ({...props}) => {
                         ...field
                       };
                     });
-                    i.fields.unshift({
-                      name: localizedString.defaultDatasetName,
-                      type: 'FLD',
-                      uniqueName: '0',
-                      icon: folderImg
-                    });
+                    if (uniqueNameChk) {
+                      i.fields.unshift({
+                        name: localizedString.defaultDatasetName,
+                        type: 'FLD',
+                        uniqueName: '0',
+                        icon: folderImg
+                      });
+                    }
                   });
                   dispatch(setDatasets({
                     reportId: selectedReport.id,
-                    dataset: data.dataset
+                    datasets: data.dataset
+                  }));
+                  let selectedItemId = null;
+                  for (const item of data.items) {
+                    if (item.meta?.dataField?.datasetId === selectedDatasetId) {
+                      selectedItemId = selectedDatasetId;
+                      break;
+                    }
+                  }
+                  dispatch(setItems({
+                    reportId: selectedReport.id,
+                    selectedItemId: selectedItemId,
+                    items: data.items
+                  }));
+                  dispatch(setLayout({
+                    reportId: selectedReport.id,
+                    layout: data.layout
                   }));
                   dispatch(setParameterInformation({
                     reportId: selectedReport.id,

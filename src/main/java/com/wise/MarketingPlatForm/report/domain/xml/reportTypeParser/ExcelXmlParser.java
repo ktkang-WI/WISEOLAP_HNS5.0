@@ -204,9 +204,9 @@ public class ExcelXmlParser extends XMLParser{
 	}
 
 	@Override
-	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
+	public Map<String, String> getReport(ReportMstrDTO dto, String userId) {
 		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
-		this.returnReport.put("dataset", this.dataset);
+		this.returnReport.put("dataset", this.dataset.toString());
 		return returnReport;
 	}
 

@@ -73,7 +73,6 @@ const reducers = {
   setDatasets(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.datasets;
-    state[reportId] = actions.payload.datasets[0].datasetId;
   },
   changeDatasetReportId(state, actions) {
     const prevId = actions.payload.prevId;

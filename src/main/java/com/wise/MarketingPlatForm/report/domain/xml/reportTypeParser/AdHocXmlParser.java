@@ -31,7 +31,7 @@ public class AdHocXmlParser extends XMLParser{
 	}
 
 	@Override
-	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
+	public Map<String, String> getReport(ReportMstrDTO dto, String userId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
