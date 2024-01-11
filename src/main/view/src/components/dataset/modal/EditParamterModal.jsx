@@ -49,7 +49,8 @@ const ScrollableColumnWrapper = styled.div`
 
 const HeightAutoModalPanel = styled.div`
   height: auto;
-  min-height: ${(props) => props.minHeight};
+  min-height: ${(props) => props.minHeight ||
+    'calc(100% - ' + INFO_HEIGHT + ')'};
   padding: ${PADDING + 'px'};
   box-sizing: border-box;
   width: 100%;

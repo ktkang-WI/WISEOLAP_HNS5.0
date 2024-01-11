@@ -2,6 +2,8 @@ package com.wise.MarketingPlatForm.global.context;
 
 import org.springframework.context.ApplicationContext;
 
+import com.wise.MarketingPlatForm.global.provider.ApplicationContextProvider;
+
 public class BeanContext {
     private static ApplicationContext context;
 
@@ -11,5 +13,10 @@ public class BeanContext {
 
     public static <T> T get(Class<T> clazz) {
         return context.getBean(clazz);
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+        return applicationContext.getBean(clazz);
     }
 }
