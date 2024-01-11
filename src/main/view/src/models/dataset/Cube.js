@@ -33,11 +33,7 @@ export const getByDsViewId = async (userId, dsViewId) => {
 
   return res.data;
 };
-/**
- * @param {JSON} param
- * @param {function} callback
- */
-export const getCubeInfo = (param, callback) => {
-  axios.post(path + '/cube-column', param)
-      .then(callback);
+
+export const getCubeInfo = (param) => {
+  return axios.post(path + '/cube-column', param);
 };

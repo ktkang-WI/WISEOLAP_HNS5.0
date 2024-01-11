@@ -21,9 +21,14 @@ import com.wise.MarketingPlatForm.querygen.model.CubeParamSet;
 import com.wise.MarketingPlatForm.querygen.model.QueryGenAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.wise.MarketingPlatForm.querygen.util.CubeParamSetUtil;
 
+
 @Service("queryGenService")
+@Slf4j
 public class QueryGenService {
     
     private final QuerygenDAO querygenDAO;

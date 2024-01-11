@@ -102,33 +102,34 @@ const useDrag = () => {
         userId: 'admin', // 추후 userId 받아서
         uniqueName: sourceField.uniqueName
       };
-      models.Cube.getCubeInfo(param, (response) => {
-        if (response.status != 200) {
-          return;
-        }
+      models.Cube.getCubeInfo(param)
+          .then((response) => {
+            if (response.status != 200) {
+              return;
+            }
 
-        const cubeColumnInfo = response.data;
-        const newParam =
-          ParamUtils.newCubeParamInformation(
-              name,
-              selectedDataset.dsId,
-              selectedDataset.datasetType,
-              order ++,
-              cubeColumnInfo);
-        newParam.dataset = [datasetId];
+            const cubeColumnInfo = response.data;
+            const newParam =
+              ParamUtils.newCubeParamInformation(
+                  name,
+                  selectedDataset.dsId,
+                  selectedDataset.datasetType,
+                  order ++,
+                  cubeColumnInfo);
+            newParam.dataset = [datasetId];
 
-        newParamInfo.push(newParam);
-        newParamInfo.sort((a, b) => a.order - b.order);
+            newParamInfo.push(newParam);
+            newParamInfo.sort((a, b) => a.order - b.order);
 
-        newParamInfo = newParamInfo.
-            map((param) => ParamUtils.sanitizeParamInformation(param));
+            newParamInfo = newParamInfo.
+                map((param) => ParamUtils.sanitizeParamInformation(param));
 
-        dispatch(updateParameterInformation({
-          datasetId: datasetId,
-          reportId: reportId,
-          informations: newParamInfo
-        }));
-      });
+            dispatch(updateParameterInformation({
+              datasetId: datasetId,
+              reportId: reportId,
+              informations: newParamInfo
+            }));
+          });
     };
 
     // 목적지와 이동 위치가 같거나 dataSource에서 허공으로 떨구는 경우우
@@ -171,7 +172,7 @@ const useDrag = () => {
             return true;
           }
           return false;
-        }, []);
+        });
 
         for (name of paramNames) {
           const org = parameters.informations.find((info) => info.name == name);
