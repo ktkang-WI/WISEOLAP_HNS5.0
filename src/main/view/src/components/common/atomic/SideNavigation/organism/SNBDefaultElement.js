@@ -53,6 +53,26 @@ const SNBDefaultElement = () => {
       onClick: (e) => {
         nav('config');
       }
+    },
+    // TODO: 임시용 입니다.
+    '환경 설정': {
+      id: '환경 설정',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.preference,
+      onClick: (e) => {
+        nav('config');
+      }
+    },
+    // TODO: 임시용 입니다.
+    '사용자/그룹관리': {
+      id: '사용자/그룹관리',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '사용자/그룹관리',
+      onClick: (e) => {
+        nav('usergroup');
+      }
     }
   };
 };

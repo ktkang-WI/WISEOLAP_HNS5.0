@@ -8,6 +8,13 @@ import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
 import Spreadsheet from 'components/designer/Spreadsheet';
+import UserGroupManagement
+  from 'components/config/organisms/userGroupManagement/UserGroupManagement';
+import GeneralConfigure
+  from 'components/config/organisms/generalConfigure/GeneralConfigure';
+import {
+  generalConfigure as generalLoader,
+  userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 
 const contextPath = '/editds';
 
@@ -50,7 +57,19 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/config',
-    element: <Config/>
+    element: <Config/>,
+    children: [
+      {
+        path: 'config',
+        element: <GeneralConfigure/>,
+        loader: generalLoader
+      },
+      {
+        path: 'usergroup',
+        element: <UserGroupManagement/>,
+        loader: userGroupLoader
+      }
+    ]
   }
 ]);
 

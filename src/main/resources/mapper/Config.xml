@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.config.dao.ConfigDAO">
+    
+    <resultMap id="ConfigGeneralDTO" type="com.wise.MarketingPlatForm.config.dto.GeneralDTO">
+      <result column="MAIN_TITLE" property="mainTitle" javaType="String"/>
+      <result column="LICENSES_KEY" property="licensesKey" javaType="String"/>
+      <result column="WEB_URL" property="webUrl" javaType="String"/>
+      <result column="LOGIN_IMAGE" property="loginImage" javaType="String"/>
+      <result column="LOGO" property="logo" javaType="String"/>
+      <result column="SPREAD_JS_LICENSE" property="spreadJsLicense" javaType="String"/>
+      <result column="SPREAD_JS_DESIGNER_LICENSE" property="spreadJsDesignLicense" javaType="String"/>
+      <result column="KAKAO_MAP_API_KEY" property="kakaoMapApiKey" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserGroupDTO" type="com.wise.MarketingPlatForm.config.dto.UserGroupDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="E_MAIL1" property="eMail1" javaType="String"/>
+      <result column="E_MAIL2" property="eMail2" javaType="String"/>
+      <result column="TEL_NO" property="telNo" javaType="String"/>
+      <result column="USER_RUN_MODE" property="userRunMode" javaType="String"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+    </resultMap>
+
+		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
+			SELECT
+        CONFIG_MSTR.MAIN_TITLE,
+        CONFIG_MSTR.LICENSES_KEY,
+        CONFIG_MSTR.WEB_URL,
+        WB_CONFIG_MSTR.LOGIN_IMAGE,
+        WB_CONFIG_MSTR.LOGO,
+        WB_CONFIG_MSTR.SPREAD_JS_LICENSE,
+        WB_CONFIG_MSTR.SPREAD_JS_DESIGNER_LICENSE,
+        WB_CONFIG_MSTR.KAKAO_MAP_API_KEY
+        FROM CONFIG_MSTR INNER JOIN WB_CONFIG_MSTR ON 1 = 1
+		</select>
+
+    <select id="selectListGroupData" resultMap="UserGroupDTO">
+			SELECT
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_NM,
+        USER_MSTR.E_MAIL1,
+        USER_MSTR.E_MAIL2,
+        USER_MSTR.TEL_NO,
+        USER_MSTR.RUN_MODE AS USER_RUN_MODE,
+        USER_MSTR.USER_DESC,
+        GRP_MSTR.GRP_ID,
+        GRP_MSTR.GRP_NM,
+        GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,
+        GRP_MSTR.GRP_DESC
+        FROM USER_MSTR INNER JOIN GRP_MSTR
+            ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+            WHERE 1 = 1 
+            AND USER_MSTR.DEL_YN = 'N'
+            AND GRP_MSTR.DEL_YN = 'N'
+		</select>
+</mapper>
