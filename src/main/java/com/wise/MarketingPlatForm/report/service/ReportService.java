@@ -108,44 +108,44 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public Map<String, String> getReport(String reportId, String userId) {
+    public Map<String, Object> getReport(String reportId, String userId) {
     	ReportMstrEntity entity = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
-        Map<String, String> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
-        	Map<String, Object> report = new HashMap<String, Object>();
         	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
-        	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-        	
-        	reports.add(report);
         	returnMap = xmlParser.getReport(dto, userId);
-        	
-        	Map<String, Object> options = new HashMap<String, Object>();
-            options.put("order", entity.getReportOrdinal());
-        	options.put("reportNm", entity.getReportNm());
-        	options.put("reportDesc", entity.getReportDesc());
-        	options.put("reportPath", null);
-            
-        	report.put("reportId", reportId);
-        	report.put("options", options);
-        	returnMap.put("reports", reports.toString());
         } else {
-        	JSONObject reportObj = new JSONObject(entity.getReportXml());
-        	reportObj.set("reportId", entity.getReportId());
-        	final String reportStr = reportObj.toString();
-        	List<JSONObject> reports =  new ArrayList<JSONObject>() {{
-        		add(new JSONObject(reportStr));
-        	}};
+//        	JSONObject reportObj = new JSONObject(entity.getReportXml());
+//        	reportObj.set("reportId", entity.getReportId());
+//        	final String reportStr = reportObj.toString();
+//        	List<JSONObject> reports =  new ArrayList<JSONObject>() {{
+//        		add(new JSONObject(reportStr));
+//        	}};
         	JSONArray items = new JSONArray(entity.getChartXml());
         	JSONObject dataset = new JSONObject(entity.getDatasetXml());
         	JSONObject layout = new JSONObject(entity.getLayoutXml());
         	JSONArray informations = new JSONArray(entity.getParamXml());
-        	returnMap.put("reports", reports.toString());
+//        	returnMap.put("reports", reports.toString());
         	returnMap.put("items", items.toString());
         	returnMap.put("dataset", dataset.toString());
         	returnMap.put("layout", layout.toString());
         	returnMap.put("informations", informations.toString());
         }
+        Map<String, Object> report = new HashMap<String, Object>();
+    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+    	
+    	reports.add(report);
+    	
+    	Map<String, Object> options = new HashMap<String, Object>();
+        options.put("order", entity.getReportOrdinal());
+    	options.put("reportNm", entity.getReportNm());
+    	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportPath", null);
+        
+    	report.put("reportId", reportId);
+    	report.put("options", options);
+    	returnMap.put("reports", reports);
         
         return returnMap;
     }

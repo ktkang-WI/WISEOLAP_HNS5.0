@@ -34,9 +34,10 @@ public enum ReportType {
         for (ReportType val : values()) {
             list.add(val.toString());
         }
-        list.add("SPREAD");
+        list.add("Spread");
     } else if (this.equals(EXCEL)) {
-        list.add("SPREAD");
+        list.add("Spread");
+        list.add(this.symbol);
     } else {
         list.add(this.toString());
     }

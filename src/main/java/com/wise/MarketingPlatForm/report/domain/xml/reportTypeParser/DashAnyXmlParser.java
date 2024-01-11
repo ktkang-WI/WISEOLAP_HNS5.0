@@ -579,17 +579,17 @@ public class DashAnyXmlParser extends XMLParser {
 		return dimensions;
 	}
 	@Override
-	public Map<String, String> getReport(ReportMstrDTO dto, String userId) {
+	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
 		this.getlayoutXmlDTO(dto.getLayoutXml());
 		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
 		this.getChartXmlDTO(dto.getChartXml());
 		this.getReportXmlDTO(dto.getReportXml());
 		this.getParamXmlDTO(dto.getParamXml());
 
-		this.returnReport.put("dataset", this.dataset.toString());
-		this.returnReport.put("item", this.item.toString());
-		this.returnReport.put("layout", this.layout.toString());
-		this.returnReport.put("informations", this.informations.toString());
+		this.returnReport.put("dataset", this.dataset);
+		this.returnReport.put("item", this.item);
+		this.returnReport.put("layout", this.layout);
+		this.returnReport.put("informations", this.informations);
 		return returnReport;
 	}
 }

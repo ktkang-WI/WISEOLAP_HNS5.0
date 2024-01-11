@@ -23,6 +23,8 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import ReportType from 'components/designer/util/ReportType';
 
 const theme = getTheme();
 
@@ -45,7 +47,7 @@ const LoadReportModal = ({...props}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
     });
-  }, []);
+  }, [reportType]);
 
 
   return (
@@ -55,6 +57,7 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then((data) => {
+                  const reportType = selectCurrentReportType(store.getState());
                   dispatch(setReports(data.reports));
                   dispatch(selectReport(selectedReport.id));
                   data.items.forEach((i) => {
@@ -63,27 +66,25 @@ const LoadReportModal = ({...props}) => {
                   });
                   const selectedDatasetId = data.dataset.selectedDatasetId;
                   data.dataset.datasets.forEach((i) => {
-                    let uniqueNameChk = true;
                     i.fields = i.fields.map((field) => {
                       const isMea = field.columnTypeName == 'decimal';
-                      if (field.uniqueName == 0) uniqueNameChk = false;
-                      return {
-                        icon: isMea ? meaImg : dimImg,
-                        parentId: '0',
-                        uniqueName: field.columnName,
-                        name: field.columnName,
-                        type: isMea ? 'MEA' : 'DIM',
-                        ...field
-                      };
+                      if (field.uniqueName != 0) {
+                        return {
+                          icon: isMea ? meaImg : dimImg,
+                          parentId: '0',
+                          uniqueName: field.columnName,
+                          name: field.columnName,
+                          type: isMea ? 'MEA' : 'DIM',
+                          ...field
+                        };
+                      } else return;
+                    }).filter(Boolean);
+                    i.fields.unshift({
+                      name: localizedString.defaultDatasetName,
+                      type: 'FLD',
+                      uniqueName: '0',
+                      icon: folderImg
                     });
-                    if (uniqueNameChk) {
-                      i.fields.unshift({
-                        name: localizedString.defaultDatasetName,
-                        type: 'FLD',
-                        uniqueName: '0',
-                        icon: folderImg
-                      });
-                    }
                   });
                   dispatch(setDatasets({
                     reportId: selectedReport.id,
@@ -92,18 +93,18 @@ const LoadReportModal = ({...props}) => {
                   let selectedItemId = null;
                   for (const item of data.items) {
                     if (item.meta?.dataField?.datasetId === selectedDatasetId) {
-                      selectedItemId = selectedDatasetId;
+                      selectedItemId = item.id;
                       break;
                     }
                   }
+                  dispatch(setLayout({
+                    reportId: selectedReport.id,
+                    layout: data.layout
+                  }));
                   dispatch(setItems({
                     reportId: selectedReport.id,
                     selectedItemId: selectedItemId,
                     items: data.items
-                  }));
-                  dispatch(setLayout({
-                    reportId: selectedReport.id,
-                    layout: data.layout
                   }));
                   dispatch(setParameterInformation({
                     reportId: selectedReport.id,

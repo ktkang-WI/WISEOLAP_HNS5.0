@@ -38,7 +38,7 @@ public abstract class XMLParser {
 	protected Map<String, Object> layout = new HashMap<>();
 	protected Map<String, Object> spread = new HashMap<>();
 	protected List<Object> informations = new ArrayList<>();
-	protected Map<String, String> returnReport = new HashMap<>();
+	protected Map<String, Object> returnReport = new HashMap<>();
 	
 	// 추상클래스
 	protected abstract void getReportXmlDTO(String reportXml);
@@ -176,5 +176,5 @@ public abstract class XMLParser {
 		}};
 	}
 	
-	public abstract Map<String, String> getReport(ReportMstrDTO dto, String userId);
+	public abstract Map<String, Object> getReport(ReportMstrDTO dto, String userId);
 }

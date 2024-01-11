@@ -20,6 +20,7 @@ const DatasetLinkerModal = ({...props}) => {
   const {positionConverterAsObject, positionConverterAsString} = useSpread();
   const datasets = selectCurrentDatasets(store.getState());
   const reportId = selectCurrentReportId(store.getState());
+  const bindingInfos = useSelector(selectBindingInfos);
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
@@ -30,7 +31,6 @@ const DatasetLinkerModal = ({...props}) => {
   ];
 
   useEffect(() => {
-    const bindingInfos = selectBindingInfos(store.getState());
     if (_.isEmpty(bindingInfos)) {
       const dataSources = datasets.map((dataset) => {
         return {
@@ -61,7 +61,7 @@ const DatasetLinkerModal = ({...props}) => {
       });
       setDataSources(dataSources);
     }
-  }, []);
+  }, [bindingInfos]);
 
   const onSubmit = useCallback(() => {
     const returnObj = {};

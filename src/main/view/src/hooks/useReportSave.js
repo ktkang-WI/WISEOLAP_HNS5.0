@@ -14,11 +14,18 @@ import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 import {selectCurrentItems} from 'redux/selector/ItemSelector';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import {selectRootDataset} from 'redux/selector/DatasetSelector';
+import ReportType from 'components/designer/util/ReportType';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import useSpread from './useSpread';
+import useFile from 'components/utils/useFile';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
+  const {createReportBlob} = useSpread();
+  const {fileUpload} = useFile();
   const {
     updateReport,
     updateSelectedReportId,
@@ -45,6 +52,9 @@ const useReportSave = () => {
     deleteParameterForDesigner,
     initParameter
   } = ParameterSlice.actions;
+  const {
+    initSpread
+  } = SpreadSlice.actions;
   // const reportId = useSelector(selectCurrentReportId);
   /**
    * 저장에 필요한 파라미터 생성
@@ -63,14 +73,17 @@ const useReportSave = () => {
     param.reportType = reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
+    param.reportSubTitle = dataSource.reportSubTitle;
     param.chartXml = JSON.stringify(selectCurrentItems(store.getState()));
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
-    param.reportSubTitle = dataSource.reportSubTitle;
-    param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
-
+    if (reportType === ReportType.EXCEL) {
+      param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
+    } else {
+      param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
+    }
     return param;
   };
 
@@ -79,6 +92,10 @@ const useReportSave = () => {
    * @param {JSON} response 저장에 필요한 Modal dataSource
    */
   const saveReport = (response) => {
+    if (response.data.reportType === ReportType.EXCEL) {
+      createReportBlob().then((bolb) => fileUpload(
+          bolb, {fileName: response.data.reportId + '.xlsx'}));
+    }
     const currentReportId = selectCurrentReportId(store.getState());
     const reportId = {
       prevId: currentReportId,
@@ -123,6 +140,7 @@ const useReportSave = () => {
     dispatch(initItems(reportId));
     dispatch(initLayout({reportId: reportId, designer: designer}));
     dispatch(initParameter(reportId));
+    dispatch(initSpread(reportId));
   };
 
   return {

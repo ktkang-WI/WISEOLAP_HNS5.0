@@ -1,5 +1,3 @@
-import ReportFolderSelectorModal
-  from 'components/report/modal/ReportFolderSelectorModal';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {useDispatch} from 'react-redux';
@@ -17,9 +15,7 @@ import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ribbonDefaultElement from
   'components/common/atomic/Ribbon/organism/Ribbon';
-import useSpread from 'hooks/useSpread';
-import useFile from 'components/utils/useFile';
-
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 
 const SpreadDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
@@ -28,13 +24,12 @@ const SpreadDefaultElement = () => {
   const {reload} = useReportSave();
   const {save} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
-  const {createReportBlob} = useSpread();
-  const {fileUpload} = useFile();
 
   const setRibbonSetting = () => {
     const sheets = selectSheets(store.getState());
     const config = sheets.Designer.DefaultConfig;
     // csutomtab 메뉴 생성
+    if (config.commandMap) return config;
     const newTab = SpreadRibbonDefaultElement;
 
     // 불필요 메뉴 삭제
@@ -86,9 +81,7 @@ const SpreadDefaultElement = () => {
     };
 
     const openReport = () => {
-      createReportBlob().then((bolb) => fileUpload(
-          bolb, {fileName: 'test.xlsx'}));
-      openModal(ReportFolderSelectorModal);
+      openModal(LoadReportModal);
     };
 
     const saveReport = () => {

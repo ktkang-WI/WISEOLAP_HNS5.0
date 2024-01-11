@@ -67,6 +67,13 @@ const FlexLayoutDefault = () => {
           }
         ]
       }
+    },
+    [ReportType.EXCEL]: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      layout: {}
     }
   };
 };
