@@ -76,7 +76,7 @@ const SpreadDefaultElement = () => {
         }));
       };
 
-      confirm('test', () => executeNew(context));
+      confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
     };
 
     const openReportLocal =(context) => {

@@ -13,7 +13,7 @@ const Adhoc = () => {
 
   useEffect(() => {
     dispatch(initReport());
-    dispatch(setReportType(ReportType.ADHOC));
+    dispatch(setReportType(ReportType.AD_HOC));
   }, []);
 
 

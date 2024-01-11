@@ -51,6 +51,7 @@ const useReportSave = () => {
    * @return {JSON} parameter
    */
   const generateParameter = (dataSource) => {
+    const reportType = selectCurrentReportType(store.getState());
     const param = {};
     param.reportId = dataSource.reportId;
     param.reportNm = dataSource.reportNm;
@@ -59,7 +60,7 @@ const useReportSave = () => {
     param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
     // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
-    // param.reportType = 'DashAny';
+    param.reportType = reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
     param.chartXml = JSON.stringify(selectRootItem(store.getState()));

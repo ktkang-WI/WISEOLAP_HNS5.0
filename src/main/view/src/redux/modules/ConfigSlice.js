@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import ReportType from 'components/designer/util/ReportType';
 
 const initialState = {
-  reportType: ReportType.DASHANY
+  reportType: ReportType.DASH_ANY
 };
 
 const reducers = {

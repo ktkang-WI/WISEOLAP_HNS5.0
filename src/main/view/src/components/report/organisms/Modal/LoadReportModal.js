@@ -21,6 +21,8 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 
 const theme = getTheme();
 
@@ -36,9 +38,10 @@ const LoadReportModal = ({...props}) => {
   const {setDataset} = DatasetSlice.actions;
   const {setParameterInformation} = ParameterSlice.actions;
   const {executeItems} = useQueryExecute();
+  const reportType = useSelector(selectCurrentReportType);
 
   useEffect(() => {
-    models.Report.getList('admin', 'DashAny', 'designer').then((data) => {
+    models.Report.getList('admin', reportType, 'designer').then((data) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);

@@ -254,7 +254,7 @@ public class DatasetService {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
         
-        return this.getQueryData(dsId, query);
+        return this.getQueryData(dsId, query, rowNum);
     }
     
     public MartResultDTO getQueryData(int dsId, String query, int rowNum) {

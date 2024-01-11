@@ -20,6 +20,8 @@ import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
 import Pie from 'components/report/item/pie/Pie';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -42,9 +44,8 @@ const ItemBoard = () => {
   const selectedReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
-    const defaultLayout = location.pathname.includes('dashboard')?
-    {reportId: selectedReportId, designer: 'dashboard'} :
-    {reportId: selectedReportId, designer: 'adhoc'};
+    const designer = selectCurrentReportType(store.getState());
+    const defaultLayout = {reportId: selectedReportId, designer: designer};
     initLayout(defaultLayout);
   }, [location]);
 

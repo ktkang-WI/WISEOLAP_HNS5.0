@@ -1,5 +1,5 @@
 export default {
-  DASHANY: 'DashAny',
+  DASH_ANY: 'DashAny',
   EXCEL: 'Excel',
-  ADHOC: 'adHoc'
+  AD_HOC: 'AdHoc'
 };

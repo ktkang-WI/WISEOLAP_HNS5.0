@@ -20,10 +20,10 @@ public class FileUploacController {
 	
 	@PostMapping("/import")
 	public void fileUpload(
-			HttpServletRequest httpServletRequest,
+			HttpServletRequest request,
 			@RequestPart("file") MultipartFile file, 
 			@RequestPart("param") Map<String, String> param) {
 		String fileName = param.get("fileName");
-		fileUploadService.saveFile(file, fileName);
+		fileUploadService.saveFile(request, file, fileName);
     }
 }

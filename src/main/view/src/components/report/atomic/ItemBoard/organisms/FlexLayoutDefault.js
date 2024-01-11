@@ -1,6 +1,9 @@
+import ReportType from 'components/designer/util/ReportType';
+
+
 const FlexLayoutDefault = () => {
   return {
-    dashboard: {
+    [ReportType.DASH_ANY]: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false
@@ -27,7 +30,7 @@ const FlexLayoutDefault = () => {
         ]
       }
     },
-    adhoc: {
+    [ReportType.AD_HOC]: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false

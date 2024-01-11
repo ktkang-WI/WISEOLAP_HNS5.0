@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import javax.servlet.http.HttpServletRequest;
+import com.wise.MarketingPlatForm.global.util.WebFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -23,16 +25,10 @@ public class FileUploadService {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	public void saveFile(MultipartFile file, String fileName) {
+	public void saveFile(HttpServletRequest request, MultipartFile file, String fileName) {
         try (InputStream input = file.getInputStream()) {
-        	Resource folderResource = resourceLoader.getResource(uploadPath);
-        	if (!folderResource.exists()) {
-        		File uploadFolder = ResourceUtils.getFile(uploadPath);
-        		uploadFolder.mkdirs();
-        	}
-        	Resource fileResource = resourceLoader.getResource(uploadPath + fileName);
-			Files.copy(input,
-				fileResource.getFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+        	File folder = WebFileUtils.getWebFolder(request, true, "UploadFiles", fileName);
+			Files.copy(input, folder.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
         	e.printStackTrace();
         } 

@@ -13,7 +13,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(initReport());
-    dispatch(setReportType(ReportType.DASHANY));
+    dispatch(setReportType(ReportType.DASH_ANY));
   }, []);
 
   return (
