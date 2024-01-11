@@ -1,5 +1,5 @@
 import {styled} from 'styled-components';
-import {Layout, Model} from 'flexlayout-react';
+import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -18,6 +18,8 @@ import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import Pie from 'components/report/item/pie/Pie';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -36,6 +38,7 @@ const DownloadImage = styled.img`
 const ItemBoard = () => {
   const {deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
+  const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
 
   const layoutConfig = useSelector(selectFlexLayoutConfig);
@@ -49,7 +52,8 @@ const ItemBoard = () => {
   const itemFactory = {
     chart: Chart,
     pivot: PivotGrid,
-    grid: DataGrid
+    grid: DataGrid,
+    pie: Pie
   };
 
   /**
@@ -137,7 +141,7 @@ const ItemBoard = () => {
       };
 
       setWeight(modelJson.layout);
-      setMovedLayout(modelJson);
+      setMovedLayout(reportId, modelJson);
       return;
     }
     return action;
@@ -145,14 +149,21 @@ const ItemBoard = () => {
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
+
     if (tabNode) {
+      const type = tabNode.getComponent();
+      const id = tabNode.getId();
+      const buttons = ItemManager.getTabHeaderItems(type)
+          .map((key) => getTabHeaderButtons(type, key, id));
+
       renderValues.buttons.push(
           !rootItem.adHocOption &&
           <button
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
-              deleteFlexLayout(selectedReportId, tabNode._attributes.id);
+              // flexLayout 커스텀 삭제 버튼 기능.
+              model.doAction(Actions.deleteTab(id));
             }}
           >
           &#128473;&#xFE0E;
@@ -164,14 +175,22 @@ const ItemBoard = () => {
             }}
           >
             <DownloadImage src={download}/>
-          </button>
+          </button>,
+          ...buttons
       );
     }
   }
 
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
-      setMovedLayout(model.toJson());
+      setMovedLayout(reportId, model.toJson());
+    } else if (action.type == 'FlexLayout_DeleteTab') {
+      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
     }
   };
 

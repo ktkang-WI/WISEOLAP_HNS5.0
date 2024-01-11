@@ -1,17 +1,12 @@
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
+import {setMeta} from '../util/metaUtilityFactory';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
-  const setMeta = (id, data) => {
-    if (!item.meta[id]) {
-      item.meta[id] = data;
-    }
-  };
-
-  setMeta('positionOption', {
+  setMeta(item, 'positionOption', {
     column: {
       totalVisible: true, // 열 합계 표시
       grandTotalVisible: true, // 열 총 합계 표시
@@ -27,9 +22,9 @@ const generateMeta = (item) => {
     dataPosition: 'row' // 측정값 위치
   });
 
-  setMeta('layout', 'standard');
-  setMeta('removeNullData', false);
-  setMeta('showFilter', false);
+  setMeta(item, 'layout', 'standard');
+  setMeta(item, 'removeNullData', false);
+  setMeta(item, 'showFilter', false);
 };
 
 /**
@@ -70,7 +65,7 @@ const generateItem = (item, rootItem) => {
     fields.push({
       caption: field.caption,
       dataField: field.name,
-      area: 'row',
+      area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
       expanded: item.meta.positionOption.row.expand
     });
@@ -100,7 +95,7 @@ const generateItem = (item, rootItem) => {
     fields.push({
       caption: field.caption,
       dataField: field.name,
-      area: 'column',
+      area: item.meta.colRowSwitch? 'row' : 'column',
       sortOrder: field.sortOrder.toLowerCase(),
       expanded: item.meta.positionOption.column.expand,
       ...sortBy
@@ -160,10 +155,15 @@ const getAttributeItems = () => {
   ];
 };
 
+const getTabHeaderItems = () => {
+  return ['ColRowSwitch'];
+};
+
 export default {
   generateMeta,
   generateItem,
   generateParameter,
   getRibbonItems,
-  getAttributeItems
+  getAttributeItems,
+  getTabHeaderItems
 };

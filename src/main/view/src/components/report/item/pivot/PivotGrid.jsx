@@ -2,7 +2,7 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 const PivotGrid = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -88,4 +88,4 @@ const PivotGrid = ({id, adHocOption, item}) => {
   );
 };
 
-export default PivotGrid;
+export default React.memo(PivotGrid);

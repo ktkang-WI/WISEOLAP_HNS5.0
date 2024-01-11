@@ -1,7 +1,9 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,9 @@ import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
-import com.wise.MarketingPlatForm.dataset.vo.DatasetFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
+import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 
 @Service
 public class CubeService {
@@ -57,14 +61,14 @@ public class CubeService {
 
   public CubeInfoDTO getCube(String cubeId, String userId) {
     AuthDataDTO auth = authService.getAuthData(userId);
-    List<DatasetFieldVO> fields = new ArrayList<DatasetFieldVO> ();
+    List<RootFieldVO> fields = new ArrayList<RootFieldVO> ();
     CubeInfoDTO cubeInfo = new CubeInfoDTO();
 
     
     // 측정값 그룹 불러오기
     List<CubeTblEntity> cubeMeaTblEntities = cubeDAO.selectCubeMeaTables(cubeId);
     for (CubeTblEntity entity : cubeMeaTblEntities) {
-      fields.add(DatasetFieldVO.builder()
+      fields.add(CubeFieldVO.builder()
         .type(DataFieldType.MEASURE)
         .order(entity.getOrder())
         .uniqueName(entity.getUniqueName())
@@ -79,7 +83,7 @@ public class CubeService {
 
     for (CubeMeaColEntity entity : cubeMeaColEntities) {
       // 권한 있는 차원의 컬럼만 추가
-      fields.add(DatasetFieldVO.builder()
+      fields.add(CubeFieldVO.builder()
         .type(DataFieldType.MEASURE)
         .order(entity.getMeaOrder())
         .name(entity.getCaptionName())
@@ -96,7 +100,7 @@ public class CubeService {
     for (CubeTblEntity entity : cubeDimTblEntities) {
       if(auth.hasAuthDim(entity.getDsViewId(), entity.getPhysicalName())) {
         authDimNames.add(entity.getPhysicalName());
-        fields.add(DatasetFieldVO.builder()
+        fields.add(CubeFieldVO.builder()
           .type(DataFieldType.DIMENSION)
           .order(entity.getOrder())
           .uniqueName(entity.getUniqueName())
@@ -113,7 +117,7 @@ public class CubeService {
     for (CubeDimColEntity entity : cubeDimColEntities) {
       // 권한 있는 차원의 컬럼만 추가
       if (authDimNames.contains(entity.getTableName())) {
-        fields.add(DatasetFieldVO.builder()
+        fields.add(CubeFieldVO.builder()
           .type(DataFieldType.DIMENSION)
           .order(entity.getOrder())
           .name(entity.getCaptionName())
@@ -130,7 +134,19 @@ public class CubeService {
     return cubeInfo;
   }
 
-  List<DatasetFieldVO> getCubeFields() {
+  public List<RootFieldVO> getCubeFields() {
     return null;
+  }
+
+  public CubeTableColumn getCubeColumInformation(String cubeId, String userId, String uniqueName) {
+
+
+    Map<String, String> param = new HashMap<String, String>();
+
+    param.put("cubeId", cubeId);
+    param.put("uniqueName", uniqueName);
+    
+    CubeTableColumn cubeTableColumn = cubeDAO.selectCubeColumnInfomationList(param);
+    return cubeTableColumn;
   }
 }

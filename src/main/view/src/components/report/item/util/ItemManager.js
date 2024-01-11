@@ -84,6 +84,15 @@ const getTopBottomInfo = () => {
   };
 };
 
+/**
+ * 탭 헤더 영역 아이템을 반환합니다.
+ * @param {ItemType} type 아이템 타입
+ * @return {Array} ribbonItems
+ */
+const getTabHeaderItems = (type) => {
+  return utility[type].getTabHeaderItems();
+};
+
 // 아이템별 커스텀 메서드를 관리하기 위한 hook
 const useCustomEvent = () => {
   const customEvent = {};
@@ -115,12 +124,23 @@ const useCustomEvent = () => {
     });
   };
 
+  /**
+   * felxLayout Header 영역에 그려지는 버튼 집합을 리턴합니다.
+   * @param {String} type
+   * @param {String} key
+   * @param {String} id itemId
+   * @return {Array} tabButtons
+   */
+  const getTabHeaderButtons = (type, key, id) => {
+    return customEvent[type].getTabHeaderButton(key, id);
+  };
+
   return {
     getRibbonItemConfig,
-    getRibbonItemsConfig
+    getRibbonItemsConfig,
+    getTabHeaderButtons
   };
 };
-
 
 export default {
   generateMeta,
@@ -131,5 +151,7 @@ export default {
   getAttributeItems,
   useCustomEvent,
   getAdHocAttributeItems,
-  getTopBottomInfo
+  getTopBottomInfo,
+  getTabHeaderItems,
+  useCustomEvent
 };

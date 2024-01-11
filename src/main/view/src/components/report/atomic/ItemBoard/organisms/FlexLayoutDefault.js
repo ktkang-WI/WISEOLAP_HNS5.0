@@ -8,6 +8,7 @@ const FlexLayoutDefault = () => {
       borders: [],
       layout: {
         type: 'row',
+        id: 'root', // layout 전부 삭제 시 임의로 id 가 자동 생성됨. 변화가 필요없다고 생각하여 id 고정.
         children: [
           {
             type: 'tabset',
@@ -33,6 +34,7 @@ const FlexLayoutDefault = () => {
       },
       layout: {
         type: 'row',
+        id: 'root',
         children: [
           {
             type: 'row',

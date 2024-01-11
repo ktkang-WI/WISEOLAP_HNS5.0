@@ -5,24 +5,30 @@ import layoutImg from 'assets/image/icon/button/layout.png';
 import removeNullDataImg from 'assets/image/icon/button/remove_null_data.png';
 import rowTotalPosImg from 'assets/image/icon/button/row_total_position.png';
 import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
+import colRowSwitchImg from 'assets/image/icon/button/col_row_switch.png';
 import filterImg from 'assets/image/icon/report/filter.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectCurrentItems}
+  from 'redux/selector/ItemSelector';
 import localizedString from 'config/localization';
 import {CheckBox, RadioGroup} from 'devextreme-react';
 import ItemType from '../util/ItemType';
 import CustomEventUtility from './CustomEventUtility';
 import Utility from './Utility';
+import itemOptionManager from '../ItemOptionManager';
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
+  const items = useSelector(selectCurrentItems);
   const {updateItem} = ItemSlice.actions;
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   let formItems = {};
 
+  // Ribbon 영역 CustomEvent
   // Ribbon 렌더링에 사용되는 dataSource
   if (selectedItem && selectedItem.type == ItemType.PIVOT_GRID) {
     formItems = CustomEventUtility.getFormItems(selectedItem);
@@ -67,21 +73,11 @@ const useCustomEvent = () => {
     </>;
   };
 
-  const CommonPopoverButton = {
-    'type': 'PopoverButton',
-    'width': 'auto',
-    'height': '45px',
-    'useArrowButton': false,
-    'popoverWidth': '200px',
-    'popoverHeight': 'auto'
-  };
-
   // ribbon Element 객체
   const ribbonConfig = {
     'InitState': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'init_state',
-      'title': localizedString.initState,
       'label': localizedString.initState,
       'imgSrc': initStateImg,
       'renderContent': () => {
@@ -89,7 +85,7 @@ const useCustomEvent = () => {
       }
     },
     'Total': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'total',
       'label': localizedString.total,
       'imgSrc': totalImg,
@@ -98,7 +94,7 @@ const useCustomEvent = () => {
       }
     },
     'GrandTotal': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'grand_total',
       'label': localizedString.grandTotal,
       'imgSrc': grandTotalImg,
@@ -107,7 +103,7 @@ const useCustomEvent = () => {
       }
     },
     'Layout': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'layout',
       'label': localizedString.layout,
       'imgSrc': layoutImg,
@@ -116,7 +112,7 @@ const useCustomEvent = () => {
       }
     },
     'RowTotalPosition': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'row_total_position',
       'label': localizedString.rowTotalPosition,
       'imgSrc': rowTotalPosImg,
@@ -126,7 +122,7 @@ const useCustomEvent = () => {
       }
     },
     'ColumnTotalPosition': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'column_total_position',
       'label': localizedString.columnTotalPosition,
       'imgSrc': colTotalPosImg,
@@ -136,7 +132,7 @@ const useCustomEvent = () => {
       }
     },
     'DataPosition': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'data_position',
       'label': localizedString.dataPosition,
       'imgSrc': colTotalPosImg,
@@ -146,7 +142,7 @@ const useCustomEvent = () => {
       }
     },
     'RemoveNullData': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'remove_null_data',
       'label': localizedString.removeNullData,
       'imgSrc': removeNullDataImg,
@@ -155,7 +151,7 @@ const useCustomEvent = () => {
       }
     },
     'ShowFilter': {
-      ...CommonPopoverButton,
+      ...commonPopoverButton,
       'id': 'show_filter',
       'label': localizedString.showFilter,
       'imgSrc': filterImg,
@@ -236,7 +232,41 @@ const useCustomEvent = () => {
     }
   };
 
-  return {ribbonConfig};
+  // TabButton CustomEvent
+  const tabButtonConfig = {
+    'ColRowSwitch': {
+      title: localizedString.colRowSwitch,
+      onClick: (id) => {
+        const item = _.cloneDeep(items.find((i) => id == i.id));
+
+        item.meta.colRowSwitch = !item.meta.colRowSwitch;
+        Utility.generateItem(item, item.mart.data);
+
+        dispatch(updateItem({reportId, item}));
+      },
+      icon: <img width={'100%'} src={colRowSwitchImg}></img>
+    }
+  };
+
+  /**
+   * Tab Header Button element를 리턴합니다.
+   * @param {*} key tabButton key
+   * @param {*} id item id
+   * @return {JSONObject} button config
+   */
+  const getTabHeaderButton = (key, id) => {
+    return (
+      <button
+        key={key}
+        title={tabButtonConfig[key].title}
+        onClick={() => tabButtonConfig[key].onClick(id)}
+      >
+        {tabButtonConfig[key].icon}
+      </button>
+    );
+  };
+
+  return {ribbonConfig, getTabHeaderButton};
 };
 
 export default useCustomEvent;

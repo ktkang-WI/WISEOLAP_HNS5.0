@@ -115,23 +115,12 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.layout;
   },
-  setMovedLayout(state, actions) {
-    state[0].layoutConfig = actions.payload;
-  },
-  // deleteFlexLayout
-  deleteFlexLayout(state, actions) {
+  // delete 및 layout 배치 변경 등.
+  updataFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
-    const itemId = actions.payload.itemId;
+    const layout = actions.payload.layout;
 
-    state[reportId].layoutConfig = {
-      ...state[reportId].layoutConfig,
-      layout: {
-        ...state[reportId].layoutConfig.layout,
-        children: state[reportId].layoutConfig.layout.children.filter(
-            (child) => child.children[0].id != itemId
-        )
-      }
-    };
+    state[reportId].layoutConfig = layout;
   },
   // insertFlexLayout
   insertFlexLayout(state, actions) {
