@@ -318,5 +318,6 @@
   "suffixB": "B",
   "decimalUnit": "정도",
   "roundUnit": "정도 옵션",
-  "includesGroupDistinction" : "그룹 구분 포함"
+  "includesGroupDistinction" : "그룹 구분 포함",
+  "colRowSwitch": "행/열 변환"
 }

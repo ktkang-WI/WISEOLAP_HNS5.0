@@ -25,7 +25,7 @@ public class ReportMstrDTO {
     String reportDesc;
     String reportLayout;
     String gridInfo;
-    int datasrcId;
+    int dataSrcId;
     String datasrcType;
     String datasetType;
     String reportXml;
@@ -90,7 +90,7 @@ public class ReportMstrDTO {
         .reportDesc(reportMstrDTO.getReportDesc())
         .reportLayout(reportMstrDTO.getReportLayout())
         .gridInfo(reportMstrDTO.getGridInfo())
-        .datasrcId(reportMstrDTO.getDatasrcId())
+        .dataSrcId(reportMstrDTO.getDataSrcId())
         .datasrcType(reportMstrDTO.getDatasrcType())
         .datasetType(reportMstrDTO.getDatasetType())
         .reportXml(encodedReportXml)

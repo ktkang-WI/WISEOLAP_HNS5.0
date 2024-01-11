@@ -301,5 +301,6 @@
   "suffixB": "B",
   "decimalUnit": "Decimal Unit",
   "roundUnit": "Round Unit",
-  "includesGroupDistinction" : "Includes Group Distinction"
+  "includesGroupDistinction" : "Includes Group Distinction",
+  "colRowSwitch": "Transpose"
 }
