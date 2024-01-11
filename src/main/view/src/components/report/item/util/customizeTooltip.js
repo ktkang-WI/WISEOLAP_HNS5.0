@@ -1,8 +1,8 @@
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 
-const customizeTooltip = (info, isLabel, formatOptions) => {
+const customizeTooltip = (info, isLabel, Formdata) => {
   const matchingFormatOption =
-  formatOptions.find(
+  Formdata.find(
       (option) => option.uniqueName === info.seriesName);
   const labelFormat =
   matchingFormatOption?.format?.formatType || 'Number';

@@ -22,7 +22,7 @@ const Chart = ({id, item}) => {
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
   const dataFields = useSelector(selectCurrentDataField);
-  const formatiOptions = dataFields.measure.map((measure) => ({
+  const Formdata = dataFields.measure.map((measure) => ({
     format: measure.format,
     uniqueName: measure.uniqueName
   }));
@@ -160,7 +160,7 @@ const Chart = ({id, item}) => {
         enabled={true}
         location='edge'
         customizeTooltip={
-          (info) => customizeTooltip(info, false, formatiOptions)
+          (info) => customizeTooltip(info, false, Formdata)
         }
       ></Tooltip>
       {
@@ -178,7 +178,7 @@ const Chart = ({id, item}) => {
                   position='outside'
                   offset={50}
                   customizeText={
-                    (info) => customizeTooltip(info, true, formatiOptions)
+                    (info) => customizeTooltip(info, true, Formdata)
                   }
                   // backgroundColor='rgba(0, 0, 0, 0)'
                   // font={{color: 'rgb(29, 178, 245)'}}

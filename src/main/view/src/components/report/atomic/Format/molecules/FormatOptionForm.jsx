@@ -1,15 +1,12 @@
-import SelectBox from 'devextreme-react/select-box';
-import CheckBox from 'devextreme-react/check-box';
-import TextBox from 'devextreme-react/text-box';
-import NumberBox from 'devextreme-react/number-box';
 import localizedString from 'config/localization';
 import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
+import {useState} from 'react';
+import {formatValue, updateFomatType, updateSuffix} from './FormatFunction';
 
 const FormatOptionForm = ({
-  state,
-  setState,
-  handleCheckBoxValueChanged
+  Formdata,
+  Formref
 }) => {
   const Preview = styled.textarea`
   background-color: lightgray;
@@ -21,191 +18,147 @@ const FormatOptionForm = ({
   font-size: 40px;
   text-align: center;
   `;
+  const [preview, setPreview] = useState(formatValue(Formdata));
 
   return (
     <Form
       labelMode='outside'
       labelLocation='left'
-      formData={state.formatOptions}
+      formData={Formdata}
+      ref={Formref}
+      onFieldDataChanged={(e) => {
+        const updatedFormData = {
+          ...Formdata,
+          [e.dataField]: e.value
+        };
+        updatedFormData.suffix = {
+          O: updatedFormData.suffixO,
+          K: updatedFormData.suffixK,
+          M: updatedFormData.suffixM,
+          B: updatedFormData.suffixB
+        };
+        setPreview(formatValue(updatedFormData));
+        if (e.dataField === 'formatType') {
+          updateFomatType(e, e.value);
+        } else if (e.dataField === 'suffixEnabled') {
+          updateSuffix(e, e.value);
+        }
+      }}
     >
       <Item
-        dataField='formatType'
         editorType='dxSelectBox'
+        dataField='formatType'
+        editorOptions={
+          {
+            dataSource: [
+              {value: 'Auto', caption: 'Auto'},
+              {value: 'General', caption: 'General'},
+              {value: 'Number', caption: 'Number'},
+              {value: 'Currency', caption: 'Currency'},
+              {value: 'Scientific', caption: 'Scientific'},
+              {value: 'Percent', caption: 'Percent'}
+            ],
+            valueExpr: 'value',
+            displayExpr: 'caption'
+          }
+        }
       >
         <Label>{localizedString.formatUnit}: </Label>
-        <SelectBox
-          items={
-            [
-              'Auto',
-              'General',
-              'Number',
-              'Currency',
-              'Scientific',
-              'Percent'
-            ]
-          }
-          defaultValue={state.formatType}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              formatType: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='unit'
         editorType='dxSelectBox'
-        disabled={state.formControls.unit}
+        dataField='unit'
+        editorOptions={
+          {
+            dataSource: [
+              {value: 'Auto', caption: 'Auto'},
+              {value: 'Ones', caption: 'Ones'},
+              {value: 'Thousands', caption: 'Thousands'},
+              {value: 'Millions', caption: 'Millions'},
+              {value: 'Billions', caption: 'Billions'}
+            ],
+            valueExpr: 'value',
+            displayExpr: 'caption'
+          }
+        }
       >
         <Label>{localizedString.digitUnit}: </Label>
-        <SelectBox
-          items={['Auto', 'Ones', 'Thousands', 'Millions', 'Billions']}
-          defaultValue={state.unit}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              unit: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='suffixEnabled'
         editorType='dxCheckBox'
-        disabled={state.formControls.suffixEnabled}
+        dataField='suffixEnabled'
       >
         <Label>{localizedString.customSuffix}: </Label>
-        <CheckBox
-          value={state.suffixEnabled}
-          onValueChanged={(e) => {
-            handleCheckBoxValueChanged('suffixEnabled', e.value);
-          }}/>
       </Item>
       <Item
-        dataField='suffixO'
         editorType='dxTextBox'
-        disabled={state.formControls.suffixO}
+        dataField='suffixO'
       >
         <Label>{localizedString.suffixO}: </Label>
-        <TextBox
-          defaultValue={state.suffixO}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              suffixO: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='suffixK'
         editorType='dxTextBox'
-        disabled={state.formControls.suffixK}
+        dataField='suffixK'
       >
         <Label>{localizedString.suffixK}: </Label>
-        <TextBox
-          defaultValue={state.suffixK}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              suffixK: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='suffixM'
         editorType='dxTextBox'
-        disabled={state.formControls.suffixM}
+        dataField='suffixM'
       >
         <Label>{localizedString.suffixM}: </Label>
-        <TextBox
-          defaultValue={state.suffixM}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              suffixM: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='suffixB'
         editorType='dxTextBox'
-        disabled={state.formControls.suffixB}
+        dataField='suffixB'
       >
         <Label>{localizedString.suffixB}: </Label>
-        <TextBox
-          defaultValue={state.suffixB}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              suffixB: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
-        dataField='precision'
         editorType='dxNumberBox'
-        disabled={state.formControls.precision}
+        dataField='precision'
+        editorOptions={
+          {
+            value: Formdata.precision
+          }
+        }
       >
         <Label>{localizedString.decimalUnit}: </Label>
-        <NumberBox
-          step={1}
-          min={0}
-          max={5}
-          format="#"
-          showSpinButtons={true}
-          defaultValue={state.precision}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              precision: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
         dataField='precisionType'
         editorType='dxSelectBox'
-        disabled={state.formControls.precisionType}
+        editorOptions={
+          {
+            dataSource: [
+              {value: '반올림', caption: '반올림'},
+              {value: '올림', caption: '올림'},
+              {value: '버림', caption: '버림'}
+            ],
+            valueExpr: 'value',
+            displayExpr: 'caption'
+          }
+        }
       >
         <Label>{localizedString.roundUnit}: </Label>
-        <SelectBox
-          items={['반올림', '올림', '버림']}
-          defaultValue={state.precisionType}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              precisionType: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
         dataField='useDigitSeparator'
         editorType='dxCheckBox'
-        disabled={state.formControls.useDigitSeparator}
+        editorOptions={
+          {
+            value: Formdata.useDigitSeparator
+          }
+        }
       >
         <Label>{localizedString.includesGroupDistinction}: </Label>
-        <CheckBox
-          defaultValue={state.useDigitSeparator}
-          onValueChanged={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              useDigitSeparator: e.value
-            }));
-          }}
-        />
       </Item>
       <Item
         editorType='dxTextArea'
         disabled={true}
       >
         <Preview
-          defaultValue={state.formattedValue}
+          value={preview}
           readOnly
         />
       </Item>
