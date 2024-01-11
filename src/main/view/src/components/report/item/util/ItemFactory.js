@@ -69,10 +69,14 @@ const makeAdHocOption = () => {
   dataFieldTypes.forEach((type) => dataField[type] = []);
   dataField[DataFieldType.SORT_BY_ITEM] = [];
   dataField.dataFieldQuantity = 0;
+  const attributeItems = ItemManager.getAdHocAttributeItems();
+  const topBottomInfo = ItemManager.getTopBottomInfo();
 
   return {
     dataFieldOption: makeDataFieldOptions(dataFieldTypes),
-    dataField: dataField
+    dataField: dataField,
+    attributeItems: attributeItems,
+    topBottomInfo: topBottomInfo
   };
 };
 

@@ -182,7 +182,7 @@ const useQueryExecute = () => {
       if (!item.mart || !item.mart.init) return;
 
       if (targetItem.id != item.id) {
-        if (meta.interactiveOption.crossDataSource ||
+        if (meta.interactiveOption?.crossDataSource ||
             item.meta.dataField.datasetId == meta.dataField.datasetId) {
           if (JSON.stringify(item.mart.currentFilter) !=
               JSON.stringify(filter)) {
@@ -195,7 +195,7 @@ const useQueryExecute = () => {
               }
             };
 
-            if (item.meta.interactiveOption.ignoreMasterFilter) {
+            if (item.meta.interactiveOption?.ignoreMasterFilter) {
               dispatch(updateItem({reportId, item: tempItem}));
             } else {
               executeItem(tempItem, datasets, parameters, filter);
@@ -275,7 +275,7 @@ const useQueryExecute = () => {
     if (report.options.reportType === DesignerMode['ADHOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
-    items.forEach((item) => executeItem(item, datasets, parameters));
+    // items.forEach((item) => executeItem(item, datasets, parameters));
   };
 
   /**

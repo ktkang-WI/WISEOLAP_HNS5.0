@@ -238,6 +238,12 @@ const reducers = {
 
     Object.assign(state[reportId].items[itemIndex].meta.interactiveOption,
         actions.payload.option);
+  },
+  updateTopBottomInfo(state, actions) {
+    const reportId = actions.payload.reportId;
+    const topBottomInfo = actions.payload.topBottomInfo;
+
+    state[reportId].adHocOption.topBottomInfo = topBottomInfo;
   }
 };
 

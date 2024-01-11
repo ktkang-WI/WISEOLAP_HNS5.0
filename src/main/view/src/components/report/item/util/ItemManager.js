@@ -41,16 +41,19 @@ const generateParameter = (item, param) => {
  */
 const generateAdHocParameter = (rootItem, param) => {
   const dataField = rootItem.adHocOption.dataField;
+  const topBottomInfo = rootItem.adHocOption.topBottomInfo;
   // const chartItem = rootItem.items[0];
   const pivotItem = rootItem.items[1];
 
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
+  param.topBottomInfo = topBottomInfo;
 
   param.removeNullData = pivotItem.meta.removeNullData;
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
+  param.topBottomInfo = JSON.stringify(param.topBottomInfo);
 };
 
 /**
@@ -64,6 +67,21 @@ const getRibbonItems = (type) => {
 
 const getAttributeItems = (type) => {
   return utility[type].getAttributeItems();
+};
+
+const getAdHocAttributeItems = () => {
+  return ['AdHocOptions'];
+};
+
+const getTopBottomInfo = () => {
+  return {
+    dataFieldId: '',
+    applyFieldId: '',
+    topBottomType: 'TOP',
+    topBottomCount: 0,
+    isPercent: false,
+    isShowOthers: false
+  };
 };
 
 // 아이템별 커스텀 메서드를 관리하기 위한 hook
@@ -111,5 +129,7 @@ export default {
   generateAdHocParameter,
   getRibbonItems,
   getAttributeItems,
-  useCustomEvent
+  useCustomEvent,
+  getAdHocAttributeItems,
+  getTopBottomInfo
 };

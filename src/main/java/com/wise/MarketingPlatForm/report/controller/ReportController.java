@@ -211,6 +211,7 @@ public class ReportController {
         String parameterStr = param.getOrDefault("parameter", "[]");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
+        String topBottomInfoStr = param.get("topBottomInfo");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -228,7 +229,7 @@ public class ReportController {
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
 
-        TopBottomInfo topBottomInfo = new TopBottomInfo();
+        TopBottomInfo topBottomInfo = gson.fromJson(topBottomInfoStr, TopBottomInfo.class);
 
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
