@@ -29,31 +29,32 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
-import {useLocation} from 'react-router';
+import store from 'redux/modules';
+import ReportType from 'components/designer/util/ReportType';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 
 const RibbonDefaultElement = () => {
-  const location = useLocation();
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
-  const {executeItems} = useQueryExecute();
+  const {executeItems, excuteSpread} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+  const reportType = useSelector(selectCurrentReportType);
 
-  return {
+  const defaultElement = {
     'NewReport': {
       ...commonRibbonButton,
       'id': 'new_report',
       'label': localizedString.newReport,
       'imgSrc': newReport,
       'onClick': () => {
-        const designer =
-          location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
+        const designer = selectCurrentReportType(store.getState());
         confirm(localizedString.reloadConfirmMsg, () => {
           reload(selectedReportId, designer);
         });
@@ -110,8 +111,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
-        const reportType =
-          location.pathname.includes('dashboard') ? 'dashboard': 'adhoc';
+        const reportType = selectCurrentReportType(store.getState());
 
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
@@ -300,10 +300,24 @@ const RibbonDefaultElement = () => {
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {
-        executeItems();
+        const reportType = selectCurrentReportType(store.getState());
+        if (reportType !== ReportType.EXCEL) {
+          executeItems();
+        } else {
+          excuteSpread();
+        }
       }
     }
   };
+
+  if (reportType !== ReportType.EXCEL) {
+    return defaultElement;
+  } else {
+    return {
+      'Dataset': defaultElement.Dataset,
+      'QuerySearch': defaultElement.QuerySearch
+    };
+  }
 };
 
 export default RibbonDefaultElement;

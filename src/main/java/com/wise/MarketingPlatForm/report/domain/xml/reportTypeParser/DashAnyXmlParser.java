@@ -180,7 +180,7 @@ public class DashAnyXmlParser extends XMLParser {
 						// 추후 추가
 						fields.add(cubeService.getCubeFields());
 					} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
-						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery);
+						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery, 1);
 						fields.add(martDTO.getMetaData());
 					}
 				}

@@ -24,6 +24,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -207,12 +208,11 @@ public class ReportController {
         return reportService.getReportList(userId, reportType, editMode);
     }
     @PostMapping(value = "/save-report")
-	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
+	public ReportMstrEntity addReport(@RequestBody Map<String, String> param) {
         Gson gson = new Gson();
-        ReportMstrDTO reportMstrDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
-        reportMstrDTO.setReportType(ReportType.DASH_ANY);
+        ReportMstrEntity reportMstrEntity = gson.fromJson(gson.toJson(param), ReportMstrEntity.class);
 
-        return reportService.addReport(reportMstrDTO);
+        return reportService.addReport(reportMstrEntity);
 	}
 
     @PostMapping(value = "/report-folder-list")

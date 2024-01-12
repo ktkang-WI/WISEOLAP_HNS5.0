@@ -153,7 +153,10 @@ const reducers = {
   },
   setItems(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId] = actions.payload.items;
+    state[reportId] = {};
+    state[reportId].items = actions.payload.items;
+    state[reportId].selectedItemId = actions.payload.selectedItemId;
+    state[reportId].itemQuantity = actions.payload.items.length;
   },
   updateInteractiveOption(state, actions) {
     const reportId = actions.payload.reportId;
