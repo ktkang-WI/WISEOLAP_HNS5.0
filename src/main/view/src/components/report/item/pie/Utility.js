@@ -69,9 +69,27 @@ const getRibbonItems = () => {
   ];
 };
 
+/**
+ * 속셩 영역 아이템 배열을 반환합니다.
+ * @return {Array} attributeItems
+ */
+const getAttributeItems = () => {
+  return [
+    'InteractionNoDrillDown',
+    'InteractionConfiguration',
+    'TargetDimension'
+  ];
+};
+
+const getTabHeaderItems = () => {
+  return [];
+};
+
 export default {
   generateMeta,
   generateItem,
   generateParameter,
-  getRibbonItems
+  getRibbonItems,
+  getAttributeItems,
+  getTabHeaderItems
 };
