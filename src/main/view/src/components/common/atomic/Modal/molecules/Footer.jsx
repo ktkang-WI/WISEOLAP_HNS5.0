@@ -16,18 +16,13 @@ const ButtonWrapper = styled.div`
 `;
 
 const Footer = ({
-  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage,
-  onDelete, ...props
+  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, buttons,
+  ...props
 }) => {
   const onConfirm = async () => {
     if (!await onSubmit()) {
       onClose();
     }
-  };
-
-  const onRemove = () => {
-    onDelete();
-    onClose();
   };
 
   return (
@@ -51,10 +46,14 @@ const Footer = ({
       <CommonButton width="60px" onClick={onClose}>
         {onSubmit? localizedString.cancel : localizedString.confirm}
       </CommonButton>
-      { onDelete &&
-      <CommonButton width="60px" onClick={onRemove}>
-        {onDelete? '삭제' : '삭제'}
-      </CommonButton>
+      {
+        {buttons} &&
+        <CommonButton width="60px" onClick={() => {
+          buttons[0].onClick();
+          onClose();
+        }}>
+          {localizedString.deleteReport}
+        </CommonButton>
       }
     </ButtonWrapper>
   );

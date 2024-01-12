@@ -17,7 +17,7 @@ const Modal = ({
   usePage=false,
   width='50%', height='50%',
   modalTitle='',
-  onDelete,
+  buttons,
   ...props
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,9 +65,9 @@ const Modal = ({
                   onNext={() => {
                     changePage(currentPage + 1);
                   }}
-                  onDelete={onDelete}
                   onSubmit={onSubmit}
                   onClose={onClose}
+                  buttons={buttons}
                 />
               </Content>
             </motion.div>

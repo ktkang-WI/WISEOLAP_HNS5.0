@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GroupingUtils;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.AllArgsConstructor;
@@ -121,23 +122,10 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer groupBy() {
-        data = data.stream().collect(Collectors.groupingBy(map -> {
-            // row data에서 key List<Map> 형태로 반환
-            // key는 dimention 모든 키들이 "-wise-split-" 로 붙여져있음.
-            // List<Map> [{측정값 명 : value}]
-            // [기아-wise-split-K3: [
-            // {회사: 기아, 자동차명: K3, 금액: 3}
-            // ...
-            // ]]
-            StringBuilder sb = new StringBuilder();
-
-            for (Dimension dimension : dimensions) {
-                sb.append(String.valueOf(map.get(dimension.getName())));
-                sb.append("-wise-split-");
-            }
-
-            return sb.toString();
-        })).entrySet().stream()
+        data = data.stream().collect(Collectors
+        .groupingBy(GroupingUtils.groupingDimensionsMapper(dimensions)))
+        .entrySet()
+        .stream()
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
                             // 그룹화 된 값을 집계 기준으로 측정값을 변경

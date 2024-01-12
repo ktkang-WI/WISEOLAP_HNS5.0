@@ -55,7 +55,6 @@ const RibbonDefaultElement = () => {
       'imgSrc': newReport,
       'onClick': () => {
         confirm(localizedString.reloadConfirmMsg, () => {
-          console.log(designerMode);
           reload(designerMode);
         });
       }

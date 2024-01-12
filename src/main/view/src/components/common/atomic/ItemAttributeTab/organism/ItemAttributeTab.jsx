@@ -39,6 +39,9 @@ const ItemAttributeTab = () => {
   const defaultElement = itemAttributeDefaultElement();
   const focusedItem = useSelector(selectCurrentItem);
   const rootItem = useSelector(selectRootItem);
+  const attributeItems = rootItem.adHocOption ?
+  rootItem.adHocOption.attributeItems :
+  focusedItem?.mart.attributeItems;
 
   const generateAttribute = (attributes) => {
     if (!attributes) return;
@@ -70,8 +73,7 @@ const ItemAttributeTab = () => {
 
   return (
     <Wrapper>
-      {generateAttribute(focusedItem?.mart.attributeItems ||
-        rootItem.adHocOption.attributeItems)}
+      {generateAttribute(attributeItems || [])}
     </Wrapper>
   );
 };

@@ -8,6 +8,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
@@ -57,7 +58,10 @@ const TopBottomModal = ({topBottomInfo, ...props}) => {
       height={theme.size.middleModalHeight}
       width={theme.size.middleModalHeight}
       onSubmit={onSubmit}
-      onDelete={onDelete}
+      buttons={[{
+        text: localizedString.deleteReport,
+        onClick: () => onDelete()
+      }]}
       {...props}
     >
       <TopBottomForm
