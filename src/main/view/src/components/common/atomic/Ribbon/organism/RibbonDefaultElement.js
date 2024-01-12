@@ -29,12 +29,10 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
-import {useLocation} from 'react-router';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 
 const RibbonDefaultElement = () => {
-  const location = useLocation();
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const {openedPopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
@@ -110,12 +108,9 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
-        const reportType =
-          location.pathname.includes('dashboard') ? 'dashboard': 'adhoc';
-
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(selectedReportId, reportType);
+            removeReport(selectedReportId, designerMode);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);

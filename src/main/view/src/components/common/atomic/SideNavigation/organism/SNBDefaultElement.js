@@ -29,7 +29,7 @@ const SNBDefaultElement = () => {
 
   // local
   const onClick = (designerMode) => {
-    nav(designerMode);
+    nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     reload(designerMode);
   };

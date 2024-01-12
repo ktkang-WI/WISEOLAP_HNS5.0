@@ -1,7 +1,7 @@
 const DesignerMode = {
-  DASHBOARD: 'dashboard',
-  ADHOC: 'adhoc',
-  SPREADSHEET: 'spreadSheet'
+  DASHBOARD: 'DashAny',
+  ADHOC: 'AdHoc',
+  SPREADSHEET: 'Excel'
 };
 
 const RunMode = {

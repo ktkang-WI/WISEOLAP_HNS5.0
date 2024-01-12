@@ -28,12 +28,41 @@ const initialState = {
   }]
 };
 
+const getInitialState = (designerMode) => {
+  const state = {
+    selectedReportId: 0,
+    reports: [{
+      reportId: 0,
+      options: {
+        reportNm: localizedString.defaultReportName,
+        reportSubTitle: '',
+        fldId: 0,
+        fldName: '',
+        fldType: '',
+        reportOrdinal: 0,
+        reportTag: '',
+        reportDesc: '',
+        path: '', // 해당 경로 비어있을 경우 새 보고서
+        chartXML: '',
+        datasetXML: '',
+        layoutXML: '',
+        reportXML: '',
+        paramXML: '',
+        regDt: '',
+        regUserNo: '',
+        reportType: ''
+      }
+    }]
+  };
+  state.reports[0].reportType = designerMode;
+  return state;
+};
+
 const reducers = {
   /* REPORT */
   initReport: (state, actions) => {
-    const mode = actions.payload;
-    state.reports[0].options.reportType = mode;
-    return state;
+    const designerMode = actions.payload;
+    return getInitialState(designerMode);
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);

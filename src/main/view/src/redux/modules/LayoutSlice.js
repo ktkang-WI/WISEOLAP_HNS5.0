@@ -1,6 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import flexLayoutDefault
-  from 'components/report/atomic/ItemBoard/organisms/FlexLayoutDefault';
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
 
@@ -89,11 +87,11 @@ const adHocInitialState = {
 const getInitialState = () => {
   const mode = ConfigSlice.getInitialState().designerMode;
 
-  if (mode === 'dashboard') {
+  if (mode === DesignerMode['DASHBOARD']) {
     return dashboardInitialState;
   }
 
-  if (mode === 'adHoc') {
+  if (mode === DesignerMode['ADHOC']) {
     return adHocInitialState;
   }
 };
@@ -159,10 +157,7 @@ const reducers = {
     delete state[actions.payload.reportId];
 
     if (Object.keys(state).length == 0) {
-      state[0] = {
-        ...getInitialState,
-        layoutConfig: flexLayoutDefault()[actions.payload.reportType]
-      };
+      state = getInitialState();
     }
   }
 };

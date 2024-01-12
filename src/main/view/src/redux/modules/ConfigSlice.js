@@ -1,9 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  designerMode: 'dashboard',
-  runMode: 'designer',
-  initialDisplay: 'dashboard' // 'adHoc',
+  designerMode: 'DashAny',
+  runMode: 'DashAny',
+  initialDisplay: 'DashAny' // 'adHoc',
   // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 

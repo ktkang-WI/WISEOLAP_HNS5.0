@@ -1,6 +1,8 @@
+import {DesignerMode} from 'components/config/configType';
+
 const FlexLayoutDefault = () => {
   return {
-    dashboard: {
+    [DesignerMode.DASHBOARD]: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false
@@ -27,7 +29,7 @@ const FlexLayoutDefault = () => {
         ]
       }
     },
-    adHoc: {
+    [DesignerMode.DASHBOARD]: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false

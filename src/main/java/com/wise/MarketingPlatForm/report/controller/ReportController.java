@@ -298,8 +298,9 @@ public class ReportController {
 	public ReportMstrDTO addReport(@RequestBody Map<String, String> param) {
         Gson gson = new Gson();
         ReportMstrDTO reportMstrDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
-        reportMstrDTO.setReportType(ReportType.DASH_ANY);
-
+        String reportTypeStr = param.getOrDefault("reportType", "");
+        ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
+        reportMstrDTO.setReportType(reportType);
         return reportService.addReport(reportMstrDTO);
 	}
 

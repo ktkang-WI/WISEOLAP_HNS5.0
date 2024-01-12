@@ -2,6 +2,7 @@ import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link} from 'react-router-dom';
 import TextButton from 'components/common/atomic/Common/Button/CommonButton';
+import {DesignerMode} from 'components/config/configType';
 
 const StyledForm = styled.form.attrs(() => ({
   action: 'http://localhost:3000/editds'
@@ -94,7 +95,7 @@ const createFormBtn = (contents) => {
     } else {
       return (
         <Link
-          to={btnText === '로그인' ? '/editds/dashboard' : ''}
+          to={btnText === '로그인' ? DesignerMode['DASHBOARD'].toLowerCase() : ''}
           key={index}
         >
           <TextButton
