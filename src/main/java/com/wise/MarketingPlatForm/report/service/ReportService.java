@@ -116,17 +116,15 @@ public class ReportService {
         	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
         	returnMap = xmlParser.getReport(dto, userId);
         } else {
-//        	JSONObject reportObj = new JSONObject(entity.getReportXml());
-//        	reportObj.set("reportId", entity.getReportId());
-//        	final String reportStr = reportObj.toString();
-//        	List<JSONObject> reports =  new ArrayList<JSONObject>() {{
-//        		add(new JSONObject(reportStr));
-//        	}};
+
         	JSONArray items = new JSONArray(entity.getChartXml());
         	JSONObject dataset = new JSONObject(entity.getDatasetXml());
         	JSONObject layout = new JSONObject(entity.getLayoutXml());
         	JSONArray informations = new JSONArray(entity.getParamXml());
-//        	returnMap.put("reports", reports.toString());
+        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+        		JSONObject spread = new JSONObject(entity.getReportXml());
+        		returnMap.put("spread", spread.toString());
+        	}
         	returnMap.put("items", items.toString());
         	returnMap.put("dataset", dataset.toString());
         	returnMap.put("layout", layout.toString());

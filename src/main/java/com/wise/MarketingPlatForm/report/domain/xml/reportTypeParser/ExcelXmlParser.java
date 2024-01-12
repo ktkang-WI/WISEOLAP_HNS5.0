@@ -71,8 +71,6 @@ public class ExcelXmlParser extends XMLParser{
 					}
 				});
 			}	
-		}
-
 		this.spread.put("spread", returnSheet);
 	}
 	
@@ -207,11 +205,5 @@ public class ExcelXmlParser extends XMLParser{
 		this.returnReport.put("spread", this.spread);
 		this.returnReport.put("dataset", this.dataset);
 		return returnReport;
-	}
-
-	@Override
-	public void getParamXmlDTO(String paramXml) {
-		// TODO Auto-generated method stub
-		
 	}
 }

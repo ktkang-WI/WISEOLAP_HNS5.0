@@ -18,13 +18,18 @@ import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
-import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
 import ReportType from 'components/designer/util/ReportType';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import spreadDefaultElement from
+  'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
+import {selectSheets} from 'redux/selector/SpreadSelector';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 
 const theme = getTheme();
 
@@ -37,8 +42,10 @@ const LoadReportModal = ({...props}) => {
   const {setItems} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
   const {setDatasets} = DatasetSlice.actions;
+  const {setSpread} = SpreadSlice.actions;
   const {setParameterInformation} = ParameterSlice.actions;
-  const {executeItems} = useQueryExecute();
+  const {setRibbonSetting} = spreadDefaultElement();
+  const ribbonElement = ribbonDefaultElement();
   const reportType = useSelector(selectCurrentReportType);
 
   useEffect(() => {
@@ -110,7 +117,19 @@ const LoadReportModal = ({...props}) => {
                     reportId: selectedReport.id,
                     informations: data.informations
                   }));
-                  executeItems();
+                  const sheets = selectSheets(store.getState());
+                  const config = setRibbonSetting();
+                  const designer =
+                      new sheets.Designer
+                          .Designer(document.getElementById('test'), config);
+                  if (reportType === ReportType.EXCEL) {
+                    dispatch(setSpread({
+                      reportId: selectedReport.id,
+                      bindingInfos: data.spread,
+                      designer: designer
+                    }));
+                  }
+                  ribbonElement['QuerySearch'].onClick();
                 });
           } else {
             openModal(Alert, {

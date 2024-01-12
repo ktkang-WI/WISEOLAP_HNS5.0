@@ -70,6 +70,13 @@ const reducers = {
     delete state[actions.payload];
     state[0] = initialState[0];
   },
+  setSpread(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId] = {};
+    state[reportId].bindingInfos = actions.payload.bindingInfos;
+    state[reportId].reportId = reportId;
+    state[reportId].designer = actions.payload.designer;
+  },
   setDesigner(state, actions) {
     state[actions.payload.reportId].designer = actions.payload.designer;
   },

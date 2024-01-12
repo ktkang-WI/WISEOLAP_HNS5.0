@@ -80,9 +80,9 @@ const useReportSave = () => {
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
     if (reportType === ReportType.EXCEL) {
-      param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
-    } else {
       param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
+    } else {
+      param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
     }
     return param;
   };
