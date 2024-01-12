@@ -62,20 +62,15 @@ public class TopBottomInfo {
         }
     }
 
-    for (int i=0; i<dimList.size(); i++) {
-        boolean skip = false;
+    list.add(dimList.get(0));
+    for (int i = 1; i < dimList.size(); i++) {
         Dimension dimension = dimList.get(i);
 
         if (dimension.getFieldId().equals(applyFieldId)) {
-            skip = true;
             depth = i;
+            break;
         }
-
-        if (!skip || i == 0) {
-            list.add(dimension);
-        }
-
-        if (skip) break;
+        list.add(dimension);
     }
 
     return list;
