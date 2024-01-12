@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.domain.item.pivot.util;
+package com.wise.MarketingPlatForm.global.util;
 
 import java.util.List;
 import java.util.Map;

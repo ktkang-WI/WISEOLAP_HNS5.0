@@ -1,20 +1,13 @@
 package com.wise.MarketingPlatForm.report.domain.data.data;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
-import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
-import com.wise.MarketingPlatForm.report.domain.data.SummaryCalculator;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GroupingUtils;
+import com.wise.MarketingPlatForm.global.util.GroupingUtils;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.TopBottomUtils;
-import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

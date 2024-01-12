@@ -11,20 +11,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GroupingUtils;
-import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
+import com.wise.MarketingPlatForm.global.util.GroupingUtils;
 import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 
