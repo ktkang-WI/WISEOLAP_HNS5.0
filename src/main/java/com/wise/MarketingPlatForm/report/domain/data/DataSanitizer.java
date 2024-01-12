@@ -354,14 +354,12 @@ public final class DataSanitizer {
      */
     public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
         // 필터가 존재하는 경우에만 필터링
-        if (filter != null) {
-            if (filter.size() > 0) {
-                data = data.stream()
-                        .filter(map -> filter.entrySet().stream()
-                                .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
-                                        entry.getValue().toArray(new CharSequence[0]))))
-                        .collect(Collectors.toList());
-            }
+        if (filter != null && filter.size() > 0) {
+            data = data.stream()
+                    .filter(map -> filter.entrySet().stream()
+                            .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
+                                    entry.getValue().toArray(new CharSequence[0]))))
+                    .collect(Collectors.toList());
         }
 
         return this;
