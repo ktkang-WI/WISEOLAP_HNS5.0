@@ -47,7 +47,7 @@ const Footer = ({
         {onSubmit? localizedString.cancel : localizedString.confirm}
       </CommonButton>
       {
-        {buttons} &&
+        buttons &&
         <CommonButton width="60px" onClick={() => {
           buttons[0].onClick();
           onClose();
