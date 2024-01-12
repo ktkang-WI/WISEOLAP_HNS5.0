@@ -160,7 +160,7 @@ const reducers = {
 
     if (Object.keys(state).length == 0) {
       state[0] = {
-        ...initialState[0],
+        ...getInitialState,
         layoutConfig: flexLayoutDefault()[actions.payload.reportType]
       };
     }
