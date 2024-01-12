@@ -175,12 +175,11 @@ public class DatasetController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
             @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
     }))
-    @PostMapping(value = "/query-dataset-datas")
+    @PostMapping(value = "/query-dataset-fields")
     public MartResultDTO getValidate(@RequestBody Map<String, String> datasource) {
         String query = datasource.get("query");
         int dsId = Integer.parseInt(datasource.get("dsId"));
         String parameterStr = datasource.getOrDefault("parameter", "");
-        int rowNum = Integer.parseInt(datasource.get("rowNum"));
 
         Gson gson = new Gson();
 
@@ -188,7 +187,7 @@ public class DatasetController {
                 new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
                 }.getType());
                 
-        return datasetService.getQueryData(dsId, query, parameters, rowNum);
+        return datasetService.getQueryData(dsId, query, parameters);
     }
 
     @Operation(summary = "get List Parameter Items", description = "리스트형 매개변수의 리스트 목록 및 defautlValue를 조회함.")

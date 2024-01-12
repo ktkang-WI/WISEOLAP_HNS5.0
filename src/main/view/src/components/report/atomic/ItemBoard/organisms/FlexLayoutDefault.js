@@ -1,9 +1,6 @@
-import ReportType from 'components/designer/util/ReportType';
-
-
 const FlexLayoutDefault = () => {
   return {
-    [ReportType.DASH_ANY]: {
+    dashboard: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false
@@ -30,7 +27,7 @@ const FlexLayoutDefault = () => {
         ]
       }
     },
-    [ReportType.AD_HOC]: {
+    adHoc: {
       global: {
         tabEnableClose: false,
         tabEnableRename: false
@@ -40,40 +37,40 @@ const FlexLayoutDefault = () => {
         id: 'root',
         children: [
           {
-            type: 'tabset',
+            type: 'row',
             weight: 50,
             selected: 0,
             children: [
               {
-                id: 'item1',
-                type: 'tab',
-                name: 'Chart',
-                component: 'chart'
-              }
-            ]
-          },
-          {
-            type: 'tabset',
-            weight: 50,
-            selected: 0,
-            children: [
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item1',
+                    type: 'tab',
+                    name: 'Chart',
+                    component: 'chart'
+                  }
+                ]
+              },
               {
-                id: 'item2',
-                type: 'tab',
-                name: 'PivotGrid',
-                component: 'pivot'
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item2',
+                    type: 'tab',
+                    name: 'PivotGrid',
+                    component: 'pivot'
+                  }
+                ]
               }
             ]
           }
         ]
       }
-    },
-    [ReportType.EXCEL]: {
-      global: {
-        tabEnableClose: false,
-        tabEnableRename: false
-      },
-      layout: {}
     }
   };
 };

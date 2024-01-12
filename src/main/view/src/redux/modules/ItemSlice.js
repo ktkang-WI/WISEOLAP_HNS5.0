@@ -1,10 +1,40 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {makeItem} from 'components/report/item/util/ItemFactory';
+import {makeAdHocItem, makeAdHocOption, makeItem}
+  from 'components/report/item/util/ItemFactory';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
 
 const item = makeItem({
   id: 'item1',
   type: 'chart'
 });
+
+const adHocChartItem = makeAdHocItem({
+  id: 'item1',
+  type: 'chart'
+});
+
+const adHocPivotItem = makeAdHocItem({
+  id: 'item2',
+  type: 'pivot'
+});
+
+const dashboardInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: [item]
+  }
+};
+
+const adHocInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: [adHocChartItem, adHocPivotItem],
+    adHocOption: makeAdHocOption()
+  }
+};
 
 const initialState = {
   0: {
@@ -14,14 +44,30 @@ const initialState = {
   }
 };
 
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === DesignerMode['DASHBOARD']) {
+    return dashboardInitialState;
+  }
+
+  if (mode === DesignerMode['ADHOC']) {
+    return adHocInitialState;
+  }
+};
+
 const reducers = {
   /* REPORT */
-  initItems(state, actions) { // 저장 전이라 reportId 0으로 초기화 가능.
-    // 저장 후 reportId는 바뀌므로 이방법으로 초기화 불가능.
-    // reportId를 가져와서 초기화 해도 어짜피 0: {...} 이런식으로 만들어야함.
-    delete state[actions.payload];
+  initItems: (state, actions) => {
+    const mode = actions.payload;
 
-    state[0] = initialState[0];
+    if (mode === DesignerMode['DASHBOARD']) {
+      return dashboardInitialState;
+    }
+
+    if (mode === DesignerMode['ADHOC']) {
+      return adHocInitialState;
+    }
   },
   changeItemReportId(state, actions) {
     const prevId = actions.payload.prevId;
@@ -107,56 +153,81 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
-    state[reportId].items.map((i) => {
-      if (i.meta.dataField.datasetId == datasetId) {
-        for (const fields in i.meta.dataField) {
-          if (typeof i.meta.dataField[fields] === 'object') {
-            i.meta.dataField[fields] = [];
+    if (state[reportId].adHocOption) {
+      const dataField = state[reportId].adHocOption.dataField;
+      if (dataField.datasetId == datasetId) {
+        for (const fields in dataField) {
+          if (typeof dataField[fields] === 'object') {
+            dataField[fields] = [];
           }
         }
-
-        delete i.meta.dataField.datasetId;
-        i.meta.dataField.dataFieldQuantity = 0;
+        delete dataField.datasetId;
+        dataField.dataFieldQuantity = 0;
       }
-    });
+    } else {
+      state[reportId].items.map((i) => {
+        if (i.meta.dataField.datasetId == datasetId) {
+          for (const fields in i.meta.dataField) {
+            if (typeof i.meta.dataField[fields] === 'object') {
+              i.meta.dataField[fields] = [];
+            }
+          }
+
+          delete i.meta.dataField.datasetId;
+          i.meta.dataField.dataFieldQuantity = 0;
+        }
+      });
+    }
   },
   setItemField(state, actions) {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
-    const itemIndex = state[reportId].items.findIndex(
-        (item) => item.id == state[reportId].selectedItemId
-    );
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField = dataField;
+    } else {
+      const itemIndex = state[reportId].items.findIndex(
+          (item) => item.id == state[reportId].selectedItemId
+      );
 
-    if (itemIndex >= 0) {
-      state[reportId].items[itemIndex].meta.dataField = dataField;
+      if (itemIndex >= 0) {
+        state[reportId].items[itemIndex].meta.dataField = dataField;
+      }
     }
   },
   updateItemField(state, actions) {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
-    const itemIndex = state[reportId].items.findIndex(
-        (item) => item.id == state[reportId].selectedItemId
-    );
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField[dataField.category] =
+        state[reportId].adHocOption.dataField[dataField.category]
+            .map((field) => {
+              if (field.fieldId == dataField.fieldId) {
+                return dataField;
+              }
+              return field;
+            });
+    } else {
+      const itemIndex = state[reportId].items.findIndex(
+          (item) => item.id == state[reportId].selectedItemId
+      );
 
-    if (itemIndex >= 0) {
-      state[reportId].items[itemIndex].meta.dataField[dataField.category] =
-          state[reportId].items[itemIndex].meta.dataField[dataField.category]
-              .map((field) => {
-                if (field.fieldId == dataField.fieldId) {
-                  return dataField;
-                }
-                return field;
-              });
+      if (itemIndex >= 0) {
+        state[reportId].items[itemIndex].meta.dataField[dataField.category] =
+            state[reportId].items[itemIndex].meta.dataField[dataField.category]
+                .map((field) => {
+                  if (field.fieldId == dataField.fieldId) {
+                    return dataField;
+                  }
+                  return field;
+                });
+      }
     }
   },
   setItems(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId] = {};
-    state[reportId].items = actions.payload.items;
-    state[reportId].selectedItemId = actions.payload.selectedItemId;
-    state[reportId].itemQuantity = actions.payload.items.length;
+    state[reportId] = actions.payload.items;
   },
   updateInteractiveOption(state, actions) {
     const reportId = actions.payload.reportId;
@@ -167,6 +238,12 @@ const reducers = {
 
     Object.assign(state[reportId].items[itemIndex].meta.interactiveOption,
         actions.payload.option);
+  },
+  updateTopBottomInfo(state, actions) {
+    const reportId = actions.payload.reportId;
+    const topBottomInfo = actions.payload.topBottomInfo;
+
+    state[reportId].adHocOption.topBottomInfo = topBottomInfo;
   }
 };
 
@@ -174,7 +251,7 @@ const extraReducers = {};
 
 const ItemSlice = createSlice({
   name: 'Item',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });

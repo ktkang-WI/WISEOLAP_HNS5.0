@@ -107,7 +107,9 @@ const DataSourceFoldableList = ({dataset}) => {
               focusStateEnabled={false}
             />
           </Wrapper>
-        )}
+        )
+        }
+
       </Droppable>
     </Wrapper>
   );

@@ -1,6 +1,6 @@
-import {createSelector} from '@reduxjs/toolkit/dist';
+import {createSelector} from 'reselect';
 
-export const selectCurrentReportType = createSelector(
-    (state) => state.meta.config,
-    (config) => config.reportType
+export const selectCurrentDesignerMode = createSelector(
+    (state) => state.meta.config.designerMode,
+    (designerMode) => designerMode
 );

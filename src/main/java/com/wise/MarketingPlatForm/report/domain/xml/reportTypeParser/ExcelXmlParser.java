@@ -38,12 +38,18 @@ public class ExcelXmlParser extends XMLParser{
 	
 	@Override
 	public void getReportXmlDTO(String reportXml) {
+		
+		
+	}
+
+	@Override
+	public void getChartXmlDTO(String chartXml) {
 		JSONObject returnSheet = new JSONObject();
-		JSONObject root = XML.toJSONObject(reportXml);
-		JSONPointer exdendedNamePointer = new JSONPointer("/EXCEL_XML/DATASET_ELEMENT/DATASET");
-//		String exdendedName = (String) exdendedNamePointer.queryFrom(root);
-//		if(exdendedName != null) {
-//			JSONPointer sheetsePointer = new JSONPointer("/EXCEL_XML/SHEET_ELEMENT/VISIBLE_SHEET");
+		JSONObject root = XML.toJSONObject(chartXml);
+		JSONPointer exdendedNamePointer = new JSONPointer("/EXCEL_XML/FILE_EXT_ELEMENT/FILE_EXT");
+		String exdendedName = (String) exdendedNamePointer.queryFrom(root);
+		if(exdendedName != null) {
+			JSONPointer sheetsePointer = new JSONPointer("/EXCEL_XML/SHEET_ELEMENT/VISIBLE_SHEET");
 			Object sheets = exdendedNamePointer.queryFrom(root);
 			
 			JSONArray sheetsArray = new JSONArray();
@@ -61,7 +67,7 @@ public class ExcelXmlParser extends XMLParser{
 				((List<Map<String, Object>>) this.dataset.get("datasets")).forEach((dataset) -> {
 					if(sheet.get("SHEET_ID").equals(dataset.get("datasetNm"))) {
 						JSONObject innerObj = new JSONObject();
-//						innerObj.put("visible", sheet.get("VISIBLE"));
+						innerObj.put("visible", sheet.get("VISIBLE"));
 						Map<String, Integer> position = positionConvertor((String) sheet.get("START_POS"));
 						innerObj.put("columnIndex", position.get("columnIndex"));
 						innerObj.put("rowIndex", position.get("rowIndex"));
@@ -71,9 +77,9 @@ public class ExcelXmlParser extends XMLParser{
 					}
 				});
 			}	
+		}
 		this.spread.put("spread", returnSheet);
 	}
-	
 	
 	private boolean stringToBoolean(String str) {
 		if(str.equals("표시")) {
@@ -110,13 +116,9 @@ public class ExcelXmlParser extends XMLParser{
 	}
 
 	@Override
-	public void getChartXmlDTO(String chartXml) {
-	}
-	
-	
-	@Override
 	public void getlayoutXmlDTO(String layoutXml) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -176,23 +178,26 @@ public class ExcelXmlParser extends XMLParser{
 						// 추후 추가
 						fields.add(cubeService.getCubeFields());
 					} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
-						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery, 1);
+						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery);
 						fields.add(martDTO.getMetaData());
 					}
 				}
-				String datasetId = "dataset" + datasetArrayIndex;
+
 				dataset.put("dataSrcId", datasrcId);
+				dataset.put("datasetNm", datasetNm);
 				dataset.put("datasetQuery", datasetQuery);
 				dataset.put("datasetType", datasrcType);
 				dataset.put("datasetNm", datasetNm);
-				dataset.put("datasetId", datasetId);
+				// spread보고서는 datasetId가 없음.
+//				dataset.put("datasetId", this.dsNmWithInfo.get(datasetNm).get("dataSource"));
 				dataset.put("fields", fields);
 				datasets.add(dataset);
 			}
-
+			
+			// spread보고서는 datasetId가 없음.
 			this.dataset.put("selectedDatasetId", datasets.get(0).get("datasetId"));
 			this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
-			this.dataset.put("bindingInfos", datasets);
+			this.dataset.put("datasets", datasets);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -201,9 +206,13 @@ public class ExcelXmlParser extends XMLParser{
 	@Override
 	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
 		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
-		this.getReportXmlDTO(dto.getDatasetXml());
-		this.returnReport.put("spread", this.spread);
 		this.returnReport.put("dataset", this.dataset);
 		return returnReport;
+	}
+
+	@Override
+	public void getParamXmlDTO(String paramXml) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,4 +1,6 @@
-import {selectCurrentReport, selectCurrentReportId}
+import {selectRootDataset} from 'redux/selector/DatasetSelector';
+import {selectRootItem} from 'redux/selector/ItemSelector';
+import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import {deleteReport} from 'models/report/Report';
@@ -7,25 +9,15 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
-import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
-import useModal from './useModal';
-import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
-import {selectCurrentItems} from 'redux/selector/ItemSelector';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
-import {selectRootDataset} from 'redux/selector/DatasetSelector';
-import ReportType from 'components/designer/util/ReportType';
-import SpreadSlice from 'redux/modules/SpreadSlice';
-import {selectBindingInfos} from 'redux/selector/SpreadSelector';
-import useSpread from './useSpread';
-import useFile from 'components/utils/useFile';
+import ParameterSlice from 'redux/modules/ParameterSlice';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import useModal from './useModal';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {createReportBlob} = useSpread();
-  const {fileUpload} = useFile();
   const {
     updateReport,
     updateSelectedReportId,
@@ -52,9 +44,6 @@ const useReportSave = () => {
     deleteParameterForDesigner,
     initParameter
   } = ParameterSlice.actions;
-  const {
-    initSpread
-  } = SpreadSlice.actions;
   // const reportId = useSelector(selectCurrentReportId);
   /**
    * 저장에 필요한 파라미터 생성
@@ -62,7 +51,6 @@ const useReportSave = () => {
    * @return {JSON} parameter
    */
   const generateParameter = (dataSource) => {
-    const reportType = selectCurrentReportType(store.getState());
     const param = {};
     param.reportId = dataSource.reportId;
     param.reportNm = dataSource.reportNm;
@@ -70,20 +58,20 @@ const useReportSave = () => {
     param.fldType = dataSource.fldType;
     param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
-    param.reportType = reportType;
+    // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
+    // param.reportType = 'DashAny';
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
-    param.reportSubTitle = dataSource.reportSubTitle;
-    param.chartXml = JSON.stringify(selectCurrentItems(store.getState()));
+    param.chartXml = JSON.stringify(selectRootItem(store.getState()));
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
-    param.paramXml = JSON.stringify(
-        selectCurrentInformationas(store.getState()));
-    if (reportType === ReportType.EXCEL) {
-      param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
-    } else {
-      param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
-    }
+    param.paramXml = JSON.stringify(selectRootParameter(store.getState()));
+    param.reportSubTitle = dataSource.reportSubTitle;
+    param.reportXml = JSON.stringify({
+      reportId: param.reportId,
+      options: param
+    });
+
     return param;
   };
 
@@ -92,10 +80,6 @@ const useReportSave = () => {
    * @param {JSON} response 저장에 필요한 Modal dataSource
    */
   const saveReport = (response) => {
-    if (response.data.reportType === ReportType.EXCEL) {
-      createReportBlob().then((bolb) => fileUpload(
-          bolb, {fileName: response.data.reportId + '.xlsx'}));
-    }
     const currentReportId = selectCurrentReportId(store.getState());
     const reportId = {
       prevId: currentReportId,
@@ -134,13 +118,12 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (reportId, designer) => {
-    dispatch(initReport(reportId));
-    dispatch(initDatasets(reportId));
-    dispatch(initItems(reportId));
-    dispatch(initLayout({reportId: reportId, designer: designer}));
-    dispatch(initParameter(reportId));
-    dispatch(initSpread(reportId));
+  const reload = (designerMode) => {
+    dispatch(initReport(designerMode));
+    dispatch(initDatasets());
+    dispatch(initItems(designerMode));
+    dispatch(initLayout(designerMode));
+    dispatch(initParameter());
   };
 
   return {

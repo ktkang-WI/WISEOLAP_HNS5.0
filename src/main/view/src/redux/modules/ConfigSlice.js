@@ -1,16 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
-import ReportType from 'components/designer/util/ReportType';
 
 const initialState = {
-  reportType: ReportType.DASH_ANY
+  designerMode: 'dashboard',
+  runMode: 'designer',
+  initialDisplay: 'dashboard' // 'adHoc',
+  // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 
 const reducers = {
   updateConfig(state, actions) {
     Object.assign(state, actions.payload);
   },
-  setReportType(state, actions) {
-    state.reportType = actions.payload;
+  setDesignerMode(state, actions) {
+    state.designerMode = actions.payload;
   }
 };
 
