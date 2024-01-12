@@ -292,5 +292,7 @@
   "degreeOption": "Degree Option",
   "precisionOption": "Precision Option",
   "all": "all",
-  "colRowSwitch": "Transpose"
+  "colRowSwitch": "Transpose",
+  "showGrid": "View as a grid",
+  "detailedData": "Detailed Data"
 }

@@ -12,6 +12,15 @@
     <result column="REPORT_TYPE" property="reportType" javaType="String"/>
     <result column="TYPE" property="type" javaType="String"/>
 	</resultMap>
+
+  <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
+    <result column="CUBE_ID" property="cubeId" javaType="int"/>
+    <result column="ACT_ID" property="actId" javaType="int"/>
+    <result column="ACT_NM" property="actNm" javaType="String"/>
+    <result column="UNI_NM" property="uniNm" javaType="String"/>
+    <result column="RTN_ITEM_UNI_NM" property="rtnItemUniNm" javaType="String"/>
+    <result column="TYPE" property="type" javaType="String"/>
+  </resultMap>
   <!-- Query -->
     <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
         SELECT 	A.REPORT_ID as reportId
@@ -320,4 +329,55 @@
 			AND FLD_ID = #{fldId}
 			AND DEL_YN = 'N'
 		</select>
+
+    <select id="selectDetailedDataItem" resultMap="DetailedDataItem">
+      SELECT
+          T.CUBE_ID AS CUBE_ID,
+          T.ACT_ID AS ACT_ID,
+          T.ACT_NM AS ACT_NM,
+          T.UNI_NM AS UNI_NM,
+          T.RTN_ITEM_UNI_NM AS RTN_ITEM_UNI_NM,
+          T.ORDINAL AS ORDINAL,
+          CASE
+              WHEN EXISTS (
+                  SELECT 1
+                  FROM CUBE_HIE_MSTR A
+                  WHERE A.CUBE_ID = T.CUBE_ID
+                  AND T.RTN_ITEM_UNI_NM = A.HIE_UNI_NM
+              ) OR EXISTS (
+                  SELECT 1
+                  FROM CUBE_MEA_MSTR A
+                  WHERE A.CUBE_ID = T.CUBE_ID
+                  AND T.RTN_ITEM_UNI_NM = A.MEA_UNI_NM
+                  AND A.MEA_AGG IS NULL
+              ) THEN 'dimension'
+              WHEN EXISTS (
+                  SELECT 1
+                  FROM CUBE_MEA_MSTR A
+                  WHERE A.CUBE_ID = T.CUBE_ID
+                  AND T.RTN_ITEM_UNI_NM = A.MEA_UNI_NM
+                  AND A.MEA_AGG IS NOT NULL
+              ) THEN 'measure'
+              ELSE NULL
+          END AS TYPE
+      FROM (
+          SELECT
+              X.CUBE_ID,
+              X.ACT_ID,
+              X.ACT_NM,
+              Y.UNI_NM,
+              Y.RTN_ITEM_UNI_NM,
+              Y.ORDINAL
+          FROM
+              CUBE_ACT_MSTR X
+          INNER JOIN CUBE_ACT_RTN_ITEM Y
+              ON X.CUBE_ID = Y.CUBE_ID
+              AND X.ACT_ID = Y.ACT_ID
+          WHERE
+              X.CUBE_ID = #{cubeId}
+              AND X.ACT_ID = #{actId}
+      ) T
+      ORDER BY
+          T.ORDINAL
+    </select>
 </mapper>

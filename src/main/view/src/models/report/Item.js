@@ -22,3 +22,7 @@ export const getPivotData = async (param) => {
 
   return res.data;
 };
+
+export const getDetailedData = (param) => {
+  return axios.post(path + '/detailed-data', param);
+};

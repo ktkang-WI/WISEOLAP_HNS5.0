@@ -60,8 +60,8 @@ const newCubeParamInformation = (name, dsId, dsType,
         cubeColumnInfo.physicalColumnName :
         cubeColumnInfo.physicalColumnKey, // 리스트에 보여줄 값
     itemKey: cubeColumnInfo.physicalColumnKey, // 조회할 때 실제로 쿼리에 들어가는 값
-    sortBy: cubeColumnInfo.orderBy != 'Null'?
-        cubeColumnInfo.orderBy == 'Key Column'?
+    sortBy: cubeColumnInfo.orderBy != 'Null' ?
+        cubeColumnInfo.orderBy == 'Key Column' ?
         cubeColumnInfo.physicalColumnKey :
         cubeColumnInfo.physicalColumnName :
         cubeColumnInfo.physicalColumnKey, // 정렬 기준 항목

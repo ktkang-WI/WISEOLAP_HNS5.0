@@ -308,7 +308,8 @@
   "degreeOption": "정도 옵션",
   "precisionOption": "정도 옵션",
   "unit": "단위",
-  "bar": "바",
   "all": "전체",
-  "colRowSwitch": "행/열 변환"
+  "colRowSwitch": "행/열 변환",
+  "showGrid": "그리드로 보기",
+  "detailedData": "상세데이터"
 }
