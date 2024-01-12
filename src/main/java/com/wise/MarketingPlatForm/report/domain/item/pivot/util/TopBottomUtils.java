@@ -56,22 +56,7 @@ public class TopBottomUtils {
 
   public static void sortList(List<Map<String, Object>> list, String sortBy) {
     Collections.sort(list, (o1, o2) -> {
-        Object v1 = o1.get(sortBy);
-        Object v2 = o2.get(sortBy);
-
-        int compareResult = 0;
-
-        if (v1 instanceof String) {
-            compareResult = StringCompareUtils.compare((String) v1, (String) v2);
-        } else {
-            compareResult = ((BigDecimal) v1).compareTo((BigDecimal) v2);
-        }
-
-        if (compareResult != 0) {
-            return compareResult;
-        }
-
-        return 0;
+        return ((BigDecimal)o1.get(sortBy)).compareTo((BigDecimal)o2.get(sortBy));
     });
   }
 
