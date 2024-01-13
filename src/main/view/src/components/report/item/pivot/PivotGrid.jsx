@@ -7,8 +7,13 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import getCssStyle from './GetCssStyle';
 import isDataCell from './IsDataCell';
+import React from 'react';
 
-const PivotGrid = ({id, mart}) => {
+const PivotGrid = ({id, adHocOption, item}) => {
+  const mart = item ? item.mart : null;
+  const meta = item ? item.meta : null;
+  const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
+
   if (!mart.init) {
     return <></>;
   }
@@ -73,14 +78,49 @@ const PivotGrid = ({id, mart}) => {
       }
     }
   };
+  let showTotalsPrior = 'both';
+  const rowTotalPos = meta.positionOption.row.position == 'top';
+  const columnTotalPos = meta.positionOption.column.position == 'left';
+
+  if (rowTotalPos && columnTotalPos) {
+    showTotalsPrior = 'both';
+  } else if (rowTotalPos && !columnTotalPos) {
+    showTotalsPrior = 'rows';
+  } else if (!rowTotalPos && columnTotalPos) {
+    showTotalsPrior = 'columns';
+  } else {
+    showTotalsPrior = 'none';
+  }
+
+  const fieldPanel = {
+    allowFieldDragging: false,
+    showColumnFields: dataField.column.length > 0,
+    showDataFields: false,
+    showFilterFields: false,
+    showRowFields: dataField.row.length > 0,
+    visible: meta.showFilter
+  };
 
   return (
     <DevPivotGrid
       ref={ref}
       id={id}
+      width={'100%'}
+      height={'100%'}
       dataSource={mart.dataSourceConfig}
+      showColumnTotals={meta.positionOption.column.totalVisible}
+      showRowTotals={meta.positionOption.row.totalVisible}
+      showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
+      showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
+      rowHeaderLayout={meta.layout}
+      dataFieldArea={meta.positionOption.dataPosition}
+      allowFiltering={meta.showFilter}
+      fieldPanel={fieldPanel}
+      showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
       onCellPrepared={pivoCellPrepared}
+      allowSorting={false}
+      allowSortingBySummary={false}
     >
       <FieldChooser enabled={false}> </FieldChooser>
       <Scrolling mode="virtual" />
@@ -88,4 +128,4 @@ const PivotGrid = ({id, mart}) => {
   );
 };
 
-export default PivotGrid;
+export default React.memo(PivotGrid);

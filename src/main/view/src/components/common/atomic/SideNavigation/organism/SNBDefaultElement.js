@@ -13,9 +13,26 @@ import preference from '../../../../../assets/image/icon/button/preference.png';
 import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
+import {useDispatch} from 'react-redux';
+import {DesignerMode} from 'components/config/configType';
+import ConfigSlice from 'redux/modules/ConfigSlice';
+import useReportSave from 'hooks/useReportSave';
 
 const SNBDefaultElement = () => {
+  // actions
+  const {setDesignerMode} = ConfigSlice.actions;
+
+  // hook
+  const dispatch = useDispatch();
   const nav = useNavigate();
+  const {reload} = useReportSave();
+
+  // local
+  const onClick = (designerMode) => {
+    nav(designerMode.toLowerCase());
+    dispatch(setDesignerMode(designerMode));
+    reload(designerMode);
+  };
 
   return {
     'Dashboard': {
@@ -24,7 +41,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: dashboardActive,
       label: localizedString.dashboard,
       onClick: (e) => {
-        nav('dashboard');
+        onClick(DesignerMode['DASHBOARD']);
       }
     },
     'AdHoc': {
@@ -33,7 +50,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: adhocActive,
       label: localizedString.adhoc,
       onClick: (e) => {
-        nav('adhoc');
+        onClick(DesignerMode['ADHOC']);
       }
     },
     'Spreadsheet': {

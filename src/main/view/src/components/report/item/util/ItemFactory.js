@@ -1,5 +1,8 @@
-import {makeMart} from './martUtilityFactory';
+import {makeAdHocItemMart, makeDataFieldOptions, makeMart}
+  from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+import ItemManager from './ItemManager';
+import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -13,6 +16,15 @@ const makeItem = (orgItem) => {
     item = {
       ...orgItem,
       meta: {
+        interactiveOption: {
+          mode: 'single', // 마스터 필터 모드 'signle' or 'multiple'
+          enabled: false, // 마스터 필터 사용 여부
+          ignoreMasterFilter: false, // 마스터 필터 무시
+          // 교차 데이터 소스 필터링 (마스터 필터가 enable 돼 있는데 해당 옵션 true면
+          // 데이터 집합 관계없이 마스터 필터 일괄 적용)
+          crossDataSource: false,
+          targetDimension: 'dimension' // 대상 차원
+        },
         name: '아이템',
         memo: '',
         useCaption: true,
@@ -30,19 +42,47 @@ const makeItem = (orgItem) => {
 
   if (!orgItem.meta) {
     initDataFieldMeta(item);
+    ItemManager.generateMeta(item);
   };
 
   return item;
 };
 
 /**
- * item.meta.dataField 데이터 초기화
- * @param {JSON} item 아이템 객체
+ * 비정형 아이템의 세팅
+ * @param {*} orgItem 아이템 객체
+ * @return {JSON} 생성된 비정형 아이템의 정보
  */
-const initDataFieldMeta = (item) => {
-  const dataFieldTypes = DataFieldTypeOfItemType[item.type];
-  dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
-  item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];
+const makeAdHocItem = (orgItem) => {
+  const meta = !orgItem.meta ? makeAdHocItemMeta(orgItem) : orgItem.meta;
+  const mart = !orgItem.mart ? makeAdHocItemMart() : orgItem.mart;
+
+  return {
+    ...orgItem,
+    meta: meta,
+    mart: mart
+  };
 };
 
-export {makeItem};
+const makeAdHocOption = () => {
+  const dataFieldTypes = DataFieldTypeOfItemType['pivot'];
+  const dataField = {};
+  dataFieldTypes.forEach((type) => dataField[type] = []);
+  dataField[DataFieldType.SORT_BY_ITEM] = [];
+  dataField.dataFieldQuantity = 0;
+  const attributeItems = ItemManager.getAdHocAttributeItems();
+  const topBottomInfo = ItemManager.getTopBottomInfo();
+
+  return {
+    dataFieldOption: makeDataFieldOptions(dataFieldTypes),
+    dataField: dataField,
+    attributeItems: attributeItems,
+    topBottomInfo: topBottomInfo
+  };
+};
+
+export {
+  makeItem,
+  makeAdHocItem,
+  makeAdHocOption
+};

@@ -14,6 +14,8 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const informations = actions.payload.informations;
 
+    if (state[reportId] === undefined) state[reportId] = {};
+
     state[reportId].informations = informations;
     state[reportId].values = {};
     state[reportId].filterSearchComplete = [];
@@ -63,14 +65,7 @@ const reducers = {
     const values = actions.payload.values;
     state[reportId].values = Object.assign(state[reportId].values, values);
   },
-  // 파라미터로 reportId
-  initParameter(state, actions) {
-    state[actions.payload] = {
-      informations: [],
-      values: {},
-      filterSearchComplete: []
-    };
-  },
+  initParameter: () => initialState,
   filterSearchComplete(state, actions) {
     const reportId = actions.payload.reportId;
     const filterId = actions.payload.id;

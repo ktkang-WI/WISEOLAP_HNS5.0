@@ -1,43 +1,124 @@
 import {createSlice} from '@reduxjs/toolkit';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
 
-const initialState = {
+const dashboardInitialState = {
   0: {
     layoutQuantity: 1,
     layoutConfig: {
-      global: {tabEnableClose: false},
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      borders: [],
       layout: {
         type: 'row',
-        children: []
+        children: [
+          {
+            type: 'tabset',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                className: 'item1',
+                id: 'item1',
+                type: 'tab',
+                name: 'Chart 1',
+                component: 'chart'
+              }
+            ]
+          }
+        ]
       }
     }
   }
 };
+
+const adHocInitialState = {
+  0: {
+    layoutQuantity: 1,
+    layoutConfig: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      layout: {
+        type: 'row',
+        children: [
+          {
+            type: 'row',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item1',
+                    type: 'tab',
+                    name: 'Chart',
+                    component: 'chart'
+                  }
+                ]
+              },
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item2',
+                    type: 'tab',
+                    name: 'PivotGrid',
+                    component: 'pivot'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+};
+
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === DesignerMode['DASHBOARD']) {
+    return dashboardInitialState;
+  }
+
+  if (mode === DesignerMode['ADHOC']) {
+    return adHocInitialState;
+  }
+};
+
 const reducers = {
-  // defaultFlexLayout -> dashboard, adhoc Layout 다르게.
-  defaultFlexLayout(state, actions) {
-    state[0].layoutConfig = actions.payload;
+  // initLayout -> dashboard, adhoc Layout 다르게.
+  initLayout: (state, actions) => {
+    const mode = actions.payload;
+
+    if (mode === DesignerMode['DASHBOARD']) {
+      return dashboardInitialState;
+    }
+
+    if (mode === DesignerMode['ADHOC']) {
+      return adHocInitialState;
+    }
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.layout;
   },
-  setMovedLayout(state, actions) {
-    state[0].layoutConfig = actions.payload;
-  },
-  // deleteFlexLayout
-  deleteFlexLayout(state, actions) {
+  // delete 및 layout 배치 변경 등.
+  updataFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
-    const itemId = actions.payload.itemId;
+    const layout = actions.payload.layout;
 
-    state[reportId].layoutConfig = {
-      ...state[reportId].layoutConfig,
-      layout: {
-        ...state[reportId].layoutConfig.layout,
-        children: state[reportId].layoutConfig.layout.children.filter(
-            (child) => child.children[0].id != itemId
-        )
-      }
-    };
+    state[reportId].layoutConfig = layout;
   },
   // insertFlexLayout
   insertFlexLayout(state, actions) {
@@ -73,10 +154,10 @@ const reducers = {
     }
   },
   deleteLayoutForDesigner(state, actions) {
-    delete state[actions.payload];
+    delete state[actions.payload.reportId];
 
     if (Object.keys(state).length == 0) {
-      state[0] = initialState[0];
+      state = getInitialState();
     }
   }
 };
@@ -84,7 +165,7 @@ const extraReducers = {};
 
 const LayoutSlice = createSlice({
   name: 'Layout',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });

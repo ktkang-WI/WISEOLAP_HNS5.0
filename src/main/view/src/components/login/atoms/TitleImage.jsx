@@ -9,6 +9,7 @@ const StyledLoginImg = styled.h1.attrs((props) => ({
   background-size: contain;
   margin: 0px;
 `;
+
 const TitleImage = ({type}) => {
   return (
     <StyledLoginImg src={type === 'login' ? loginTitleImg : loginTitleImg}>

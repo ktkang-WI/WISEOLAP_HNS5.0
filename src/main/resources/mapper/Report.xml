@@ -3,6 +3,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wise.MarketingPlatForm.report.dao.ReportDAO">
+  <!-- Mapper -->
+  <resultMap id="ReportList" type="com.wise.MarketingPlatForm.report.vo.ReportListDTO">
+		<result column="ID" property="id" javaType="int"/>
+    <result column="TEXT" property="name" javaType="String"/>
+    <result column="UPPERID" property="upperId" javaType="int"/>
+    <result column="ORDINAL" property="ordinal" javaType="int"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+    <result column="TYPE" property="type" javaType="String"/>
+	</resultMap>
+  <!-- Query -->
     <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
         SELECT 	A.REPORT_ID as reportId
 				, A.REPORT_NM as reportNm
@@ -14,7 +24,7 @@
 				, A.REPORT_DESC as reportDesc
 				, A.REPORT_LAYOUT as reportLayout
 				, A.GRID_INFO as gridInfo
-				, A.DATASRC_ID as datasrcId
+				, A.DATASRC_ID as dataSrcId
 				, A.DATASRC_TYPE as datasrcType
 				, A.DATASET_TYPE as datasetType
 				, A.REPORT_XML as reportXml
@@ -44,6 +54,111 @@
             </if>
     </select>
 
+    <select id="selectPublicReportList" resultMap="ReportList">
+        SELECT 	DISTINCT ID,
+            TEXT,
+            UPPERID,
+            ORDINAL,
+            REPORT_TYPE,
+            TYPE,
+            REG_DT
+        FROM ((SELECT DISTINCT 	PUB_FLD_MSTR.FLD_ID				AS ID,
+                      PUB_FLD_MSTR.FLD_NM				AS TEXT,
+                            PUB_FLD_MSTR.FLD_PARENT_ID 		AS UPPERID,
+                            PUB_FLD_MSTR.FLD_ORDINAL   		AS ORDINAL,
+                            NULL 							AS REPORT_TYPE,
+                            'FOLDER'                   		AS TYPE,
+                            NULL						  	AS REG_DT
+              FROM   				USER_AUTH_REPORT_MSTR
+            INNER JOIN 			USER_MSTR 						ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
+            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID
+            <if test='editMode == "designer"'>
+              WHERE  				USER_MSTR.USER_ID = #{userId}
+              AND 				AUTH_PUBLISH != 'N'
+            </if>
+            <if test='editMode == "viewer"'>
+              WHERE  				USER_MSTR.USER_ID = #{userId}
+              AND 				AUTH_VIEW != 'N'
+            </if>
+            )
+                UNION ALL
+              (SELECT DISTINCT 	PUB_FLD_MSTR.FLD_ID        		AS ID,
+                            PUB_FLD_MSTR.FLD_NM       		AS TEXT,
+                            PUB_FLD_MSTR.FLD_PARENT_ID 		AS UPPERID,
+                            PUB_FLD_MSTR.FLD_ORDINAL   		AS ORDINAL,
+                            NULL 							AS REPORT_TYPE,
+                            'FOLDER'                  	 	AS TYPE,
+                            NULL						  	AS REG_DT
+            FROM   				GRP_AUTH_REPORT_MSTR
+            INNER JOIN 			USER_MSTR 						ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
+            <if test='editMode == "designer"'>
+              WHERE  				USER_MSTR.USER_ID = #{userId}
+              AND 				AUTH_PUBLISH != 'N'
+            </if>
+            <if test='editMode == "viewer"'>
+              WHERE  				USER_MSTR.USER_ID = #{userId}
+              AND 				AUTH_VIEW != 'N'
+            </if>
+            )
+              UNION ALL
+            (SELECT 			REPORT_MSTR.REPORT_ID			AS ID,
+                          REPORT_MSTR.REPORT_NM			AS TEXT,
+                      REPORT_MSTR.FLD_ID 				AS UPPERID,
+                          REPORT_MSTR.REPORT_ORDINAL 		AS ORDINAL,
+                          REPORT_MSTR.REPORT_TYPE 		AS REPORT_TYPE,
+                          'REPORT'           				AS TYPE,
+                          REPORT_MSTR.REG_DT				AS REG_DT
+            FROM   				REPORT_MSTR
+            INNER JOIN 			PUB_FLD_MSTR 					ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
+            WHERE  				REPORT_MSTR.DEL_YN != 'Y'
+        <if test="reportTypes != null">
+            AND 				REPORT_MSTR.REPORT_TYPE IN 
+            <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
+             #{type}
+            </foreach>
+        </if>
+        ) ) A
+        ORDER BY UPPERID, TYPE, ORDINAL
+    </select>
+
+    <select id="selectPrivateReportList" resultMap="ReportList">
+      SELECT *
+      FROM  (( SELECT DISTINCT USER_FLD_MSTR.FLD_ID       AS ID,
+                     USER_FLD_MSTR.FLD_NM        			AS TEXT,
+                     USER_FLD_MSTR.FLD_PARENT_ID 			AS UPPERID,
+                     USER_FLD_MSTR.FLD_ORDINAL   			AS ORDINAL,
+                     NULL 								AS REPORT_TYPE,
+                     'FOLDER'                   			AS TYPE,
+                   NULL						  			AS REG_DT
+              FROM   USER_FLD_MSTR
+                     INNER JOIN USER_MSTR
+                             ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
+              WHERE  USER_MSTR.USER_ID = #{userId}
+                )
+             UNION ALL
+             (SELECT REPORT_MSTR.REPORT_ID          		AS ID,
+                     REPORT_MSTR.REPORT_NM          		AS TEXT,
+                     REPORT_MSTR.FLD_ID 					AS UPPERID,
+                     REPORT_MSTR.REPORT_ORDINAL     		AS ORDINAL,
+                     REPORT_MSTR.REPORT_TYPE 				AS REPORT_TYPE,
+                     'REPORT'           					AS TYPE,
+                 REPORT_MSTR.REG_DT					AS REG_DT
+              FROM   REPORT_MSTR
+                     INNER JOIN USER_FLD_MSTR
+                             ON REPORT_MSTR.FLD_ID = USER_FLD_MSTR.FLD_ID
+              WHERE  				REPORT_MSTR.DEL_YN != 'Y'
+              <if test="reportTypes != null">
+                  AND 				REPORT_MSTR.REPORT_TYPE IN 
+                  <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
+                  #{type}
+                  </foreach>
+              </if>
+              ) ) A
+      ORDER  BY UPPERID,
+                TYPE,
+                ORDINAL
+    </select>
     <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
 					FLD_NM 						AS fldNm,
@@ -70,14 +185,14 @@
     </select>
 
     <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
-	    	<selectKey keyProperty="reportId" resultType="int" order="AFTER">
-	    		<if test='reportId == 0'>
-                	SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-            	</if>
-            	<if test='reportId != 0'>
-                	SELECT REPORT_ID as reportId FROM REPORT_MSTR
-            		WHERE REPORT_ID = #{reportId}
-            	</if>
+			<selectKey keyProperty="reportId" resultType="int" order="AFTER">
+				<if test='reportId == 0'>
+								SELECT MAX(REPORT_ID) FROM REPORT_MSTR
+				</if>
+				<if test='reportId != 0'>
+						SELECT REPORT_ID as reportId FROM REPORT_MSTR
+					WHERE REPORT_ID = #{reportId}
+				</if>
 			</selectKey>
     	<!--  <if test = "dbType == 'Oracle'"> -->
 	    	MERGE INTO REPORT_MSTR
@@ -92,11 +207,12 @@
 		       	REPORT_ORDINAL = #{reportOrdinal},
 		       	REPORT_TYPE = #{reportType},
 		       	REPORT_DESC = #{reportDesc},
-		       	REPORT_XML = #{reportXml},
-		       	CHART_XML = #{chartXml},
-		       	LAYOUT_XML = #{layoutXml},
+				DATASET_XML = #{datasetXml},
 		       	PARAM_XML = #{paramXml},
-		       	REG_USER_NO = #{regUserNo}
+		       	REG_USER_NO = #{regUserNo},
+						REPORT_XML = #{reportXml},
+		       	CHART_XML = #{chartXml},
+		       	LAYOUT_XML = #{layoutXml}
 		       	WHERE REPORT_ID = #{reportId}
 	    	WHEN NOT MATCHED THEN
 		    	INSERT
@@ -109,12 +225,12 @@
 		       	REPORT_ORDINAL,
 		       	REPORT_TYPE,
 		       	REPORT_DESC,
-		       	REPORT_XML,
+		       	PARAM_XML,
+		       	REG_USER_NO,
 		       	CHART_XML,
 		       	LAYOUT_XML,
-						DATASET_XML,
-		       	PARAM_XML,
-		       	REG_USER_NO
+				REPORT_XML,
+				DATASET_XML
 		       )
 		       VALUES
 		       (
@@ -126,12 +242,12 @@
 		       	#{reportOrdinal},
 		       	#{reportType},
 		       	#{reportDesc},
-		       	#{reportXml},
+		       	#{paramXml},
+		       	#{regUserNo},
 		       	#{chartXml},
 		       	#{layoutXml},
-						#{datasetXml},
-		       	#{paramXml},
-		       	#{regUserNo}
+				#{reportXml},
+				#{datasetXml}
 		       )
 		<!-- </if>  -->
 
@@ -195,4 +311,13 @@
 			SET DEL_YN = 'Y'
 			WHERE REPORT_ID = #{reportId}
 		</update>
+
+		<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO"
+			resultType="hashmap">
+			SELECT REPORT_NM
+			FROM REPORT_MSTR
+			WHERE REPORT_NM = #{reportNm}
+			AND FLD_ID = #{fldId}
+			AND DEL_YN = 'N'
+		</select>
 </mapper>

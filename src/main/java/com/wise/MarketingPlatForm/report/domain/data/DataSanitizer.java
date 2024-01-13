@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,10 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import com.wise.MarketingPlatForm.global.util.GroupingUtils;
 import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 
@@ -29,6 +32,7 @@ public final class DataSanitizer {
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     List<Measure> allMeasures;
+
     int orgDataLength;
     int grpDataLenth;
     int maxPage;
@@ -54,7 +58,7 @@ public final class DataSanitizer {
         orgDataLength = data.size();
     }
 
-    final Set<String> getAllColumnNames() {
+    final Set<String> getAllColumnNamesExceptSortByItem() {
         Set<String> columnNames = new HashSet<>();
 
         // 사용하는 컬럼 이름만 담기
@@ -73,24 +77,55 @@ public final class DataSanitizer {
         return columnNames;
     }
 
+    final Set<String> getAllColumnNames() {
+        Set<String> columnNames = new HashSet<>();
+
+        // 사용하는 컬럼 이름만 담기
+        for (Measure measure : measures) {
+            if (StringUtils.isNotBlank(measure.getSummaryName())) {
+                columnNames.add(measure.getSummaryName());
+            } else {
+                columnNames.add(measure.getName());
+            }
+        }
+
+        for (Measure measure : sortByItems) {
+            if (StringUtils.isNotBlank(measure.getSummaryName())) {
+                columnNames.add(measure.getSummaryName());
+            } else {
+                columnNames.add(measure.getName());
+            }
+        }
+
+        for (Dimension dimension : dimensions) {
+            columnNames.add(dimension.getName());
+        }
+
+        return columnNames;
+    }
+
+    public final DataSanitizer topBottom(TopBottomInfo topBottomInfo) {
+        if (topBottomInfo != null && !topBottomInfo.getApplyFieldId().equals("")) {
+            data = topBottomInfo.getTopBottomData(data, measures, dimensions);
+        }
+
+        return this;
+    }
+
     /**
      * 차원(Dimension) 이름을 기준으로 데이터를 그룹화하여 측정값(Measure)을 집계합니다.
      * 이 과정에서 "SummaryType_측정값명"으로 집계 컬럼이 추가됩니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer groupBy() {
-        data = data.stream().collect(Collectors.groupingBy(map -> {
-            StringBuilder sb = new StringBuilder();
-
-            for (Dimension dimension : dimensions) {
-                sb.append(String.valueOf(map.get(dimension.getName())));
-            }
-
-            return sb.toString();
-        })).entrySet().stream()
+        data = data.stream().collect(Collectors
+        .groupingBy(GroupingUtils.groupingDimensionsMapper(dimensions)))
+        .entrySet()
+        .stream()
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
+                            // 그룹화 된 값을 집계 기준으로 측정값을 변경
                             if (acc.keySet().size() == 0) {
                                 acc = row;
 
@@ -99,7 +134,9 @@ public final class DataSanitizer {
                                     Object value = row.get(name);
                                     measure.setSummaryName(measure.getSummaryType().toString() + "_" + name);
                                     // TODO: 추후 정렬 기준 항목 추가시 보수 필요
-                                    if (value != null) {
+                                    if (value == null) {
+                                        acc.put(measure.getSummaryName(), null);
+                                    } else {
                                         acc.put(measure.getSummaryName(),
                                                 new SummaryCalculator(measure.getSummaryType(), value));
                                     }
@@ -110,7 +147,7 @@ public final class DataSanitizer {
                                     String name = measure.getName();
                                     Object value = row.get(name);
                                     if (value != null) {
-                                        if (acc.containsKey(name)) {
+                                        if (acc.get(measure.getSummaryName()) != null) {
                                             SummaryCalculator sv = (SummaryCalculator) acc
                                                     .get(measure.getSummaryName());
                                             acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));
@@ -126,7 +163,7 @@ public final class DataSanitizer {
                 .map((row) -> {
                     for (Measure measure : allMeasures) {
                         String name = measure.getSummaryName();
-                        if (row.get(name) instanceof SummaryCalculator) {
+                        if (row.get(name) != null && row.get(name) instanceof SummaryCalculator) {
                             SummaryCalculator sv = (SummaryCalculator) row.get(name);
 
                             row.put(name, sv.getSummaryValue());
@@ -147,15 +184,57 @@ public final class DataSanitizer {
      * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
      * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
      * name으로 된 데이터가 남습니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer columnFiltering() {
-        Set<String> columnNames = getAllColumnNames();
+        return columnFiltering(false);
+    }
+
+    /**
+     * <p>
+     * 필요한 컬럼의 데이터만 필터링합니다.
+     * </p>
+     * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
+     * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
+     * name으로 된 데이터가 남습니다.
+     *
+     * @param includeSortByItem sortByItem을 포함 할지 여부입니다.
+     * @return DataSanitizer
+     */
+    public final DataSanitizer columnFiltering(boolean includeSortByItem) {
+        Set<String> columnNames;
+        if (includeSortByItem) {
+            columnNames = getAllColumnNames();
+        } else {
+            columnNames = getAllColumnNamesExceptSortByItem();
+        }
 
         data.forEach(map -> {
             map.keySet().retainAll(columnNames);
         });
+
+        return this;
+    }
+
+    /**
+     * null값이 포함된 row가 있을 경우 해당 row를 삭제합니다.
+     *
+     * @return DataSanitizer
+     */
+    public final DataSanitizer removeNullData() {
+        Iterator<Map<String, Object>> iterator = data.iterator();
+
+        while (iterator.hasNext()) {
+            Map<String, Object> map = iterator.next();
+
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getValue() == null) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
 
         return this;
     }
@@ -171,7 +250,7 @@ public final class DataSanitizer {
      * 측정값의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명) 기준으로 정렬되고, 아니라면 name
      * 기준으로 정렬됩니다.
      * </p>
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer orderBy() {
@@ -182,7 +261,7 @@ public final class DataSanitizer {
                 .map((dim) -> {
                     Measure measure = measureLookup.getOrDefault(dim.getSortBy(), null);
                     String sortBy;
-                    
+
                     if (measure != null) {
                         sortBy = StringUtils.isNotBlank(measure.getSummaryName()) ? measure.getSummaryName()
                                 : measure.getName();
@@ -206,7 +285,9 @@ public final class DataSanitizer {
                 if (v1 instanceof String) {
                     compareResult = StringCompareUtils.compare((String) v1, (String) v2);
                 } else {
-                    compareResult = ((BigDecimal) v1).compareTo((BigDecimal) v2);
+                    BigDecimal bv1 = new BigDecimal(v1.toString());
+                    BigDecimal bv2 = new BigDecimal(v2.toString());
+                    compareResult = (bv1).compareTo(bv2);
                 }
 
                 if (compareResult != 0) {
@@ -222,7 +303,7 @@ public final class DataSanitizer {
 
     /**
      * 데이터를 입력된 pagingOption 만큼 자릅니다.
-     * 
+     *
      * @param pagingOption
      * @return DataSanitizer
      */
@@ -246,6 +327,24 @@ public final class DataSanitizer {
             }
 
             data = tempList;
+        }
+
+        return this;
+    }
+
+    /**
+     * 데이터에 필터(마스터 필터)를 적용한 결과를 반환합니다.
+     * @param filter
+     * @return DataSanitizer
+     */
+    public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
+        // 필터가 존재하는 경우에만 필터링
+        if (filter != null && filter.size() > 0) {
+            data = data.stream()
+                    .filter(map -> filter.entrySet().stream()
+                            .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
+                                    entry.getValue().toArray(new CharSequence[0]))))
+                    .collect(Collectors.toList());
         }
 
         return this;

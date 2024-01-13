@@ -22,7 +22,7 @@ const ColumnWrapper = styled.div`
   margin: 5px;
   ${(props) => props.fixed &&
   'transform: none !important;'}
-  
+
 `;
 
 const Column = styled.div`
@@ -139,6 +139,14 @@ const DataColumn = ({
     }
   };
 
+  const buttonEventFunction = (e) => {
+    if (data.category === 'field') {
+      buttonEvent(data, openModal);
+    } else {
+      buttonEvent(data, e);
+    }
+  };
+
   return (
     <ColumnWrapper
       fixed={fixed}
@@ -159,7 +167,7 @@ const DataColumn = ({
           }
         }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
-        {type === 'DIM' &&
+        {data?.type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         {children}
@@ -185,7 +193,7 @@ const DataColumn = ({
       </Column>
       {useButton &&
         <Button onClick={(e) => {
-          buttonEvent(data, e);
+          buttonEventFunction(e);
         }}>
           <IconImg src={buttonIcon}/>
         </Button>

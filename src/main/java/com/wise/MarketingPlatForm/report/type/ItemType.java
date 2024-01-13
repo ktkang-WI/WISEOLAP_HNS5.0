@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ItemType {
-    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid");
+    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid"), PIE_CHART("pie");
 
     private final String symbol;
 

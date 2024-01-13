@@ -2,12 +2,13 @@ import {createBrowserRouter} from 'react-router-dom';
 import Designer from './Designer';
 import Dashboard from 'components/designer/Dashboard';
 import Adhoc from 'components/designer/Adhoc';
-import Spreadsheet from 'components/designer/Spreadsheet';
 import Viewer from './Viewer';
 import Config from './Config';
 import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
+import Spreadsheet from 'components/designer/Spreadsheet';
+import {DesignerMode} from 'components/config/configType';
 
 const contextPath = '/editds';
 
@@ -31,15 +32,15 @@ const router = createBrowserRouter([
     element: <Designer/>,
     children: [
       {
-        path: 'dashboard',
+        path: DesignerMode['DASHBOARD'].toLowerCase(),
         element: <Dashboard/>
       },
       {
-        path: 'adhoc',
+        path: DesignerMode['ADHOC'].toLowerCase(),
         element: <Adhoc/>
       },
       {
-        path: 'spreadsheet',
+        path: DesignerMode['SPREADSHEET'].toLowerCase(),
         element: <Spreadsheet/>
       }
     ]

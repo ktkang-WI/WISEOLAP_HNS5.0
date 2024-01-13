@@ -14,6 +14,8 @@ import lombok.Setter;
 public class Dataset {
     // 주제영역일 경우 해당 컬럼 cubeId로 사용
     int dsId;
+    int cubeId;
+    int dsViewId;
     String query;
     DsType dsType;
 }

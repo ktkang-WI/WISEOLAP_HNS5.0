@@ -2,19 +2,15 @@ package com.wise.MarketingPlatForm.report.entity;
 
 import java.sql.Date;
 import java.util.Base64;
-import java.util.Optional;
 
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +25,7 @@ public class ReportMstrEntity {
     String reportDesc;
     String reportLayout;
     String gridInfo;
-    int datasrcId;
+    int dataSrcId;
     String datasrcType;
     String datasetType;
     String reportXml;
@@ -48,7 +44,7 @@ public class ReportMstrEntity {
     String privacyYn;
     String layoutConfig;
 
-    private static String decodeBase64(String base64) {
+    private static String decodeBase64(String base64, boolean datasetCheck) {
         byte[] decodedBytes = Base64.getDecoder().decode(
             base64.replaceAll("\\R", ""));
         String decodedString = "";
@@ -57,11 +53,13 @@ public class ReportMstrEntity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        decodedString.replaceAll("&lt;", "<");
-        decodedString.replaceAll("&gt;", ">");
+        if(!datasetCheck) {
+        	decodedString = decodedString.replaceAll("&lt;", "<");
+        	decodedString = decodedString.replaceAll("&gt;", ">");
+        }
         return decodedString;
     }
-
+    
     public static ReportMstrDTO toDTO(ReportMstrEntity reportMstrEntity) {
     	String decodedReportXml = null;
     	String decodedChartXml = null;
@@ -71,22 +69,22 @@ public class ReportMstrEntity {
     	String decodedDatasetXml = null;
     	
     	if(reportMstrEntity.getReportXml() != null) {
-    		decodedReportXml = decodeBase64(reportMstrEntity.getReportXml());
+    		decodedReportXml = decodeBase64(reportMstrEntity.getReportXml(), false);
         }
     	if(reportMstrEntity.getChartXml() != null) {
-    		decodedChartXml = decodeBase64(reportMstrEntity.getChartXml());
+    		decodedChartXml = decodeBase64(reportMstrEntity.getChartXml(), false);
     	}
     	if(reportMstrEntity.getLayoutXml() != null) {
-    		decodedLayoutXml = decodeBase64(reportMstrEntity.getLayoutXml());
+    		decodedLayoutXml = decodeBase64(reportMstrEntity.getLayoutXml(), false);
     	}
     	if(reportMstrEntity.getParamXml() != null) {
-    		decodedParamXml = decodeBase64(reportMstrEntity.getParamXml());
+    		decodedParamXml = decodeBase64(reportMstrEntity.getParamXml(), false);
     	}
     	if(reportMstrEntity.getDatasetQuery() != null) {
-    		decodedDatasetQuery = decodeBase64(reportMstrEntity.getDatasetQuery());
+    		decodedDatasetQuery = decodeBase64(reportMstrEntity.getDatasetQuery(), false);
     	}
     	if(reportMstrEntity.getDatasetXml() != null) {
-    		decodedDatasetXml = decodeBase64(reportMstrEntity.getDatasetXml());
+    		decodedDatasetXml = decodeBase64(reportMstrEntity.getDatasetXml(), true);
     	}
         
         return ReportMstrDTO.builder()
@@ -100,7 +98,7 @@ public class ReportMstrEntity {
 	        .reportDesc(reportMstrEntity.getReportDesc())
 	        .reportLayout(reportMstrEntity.getReportLayout())
 	        .gridInfo(reportMstrEntity.getGridInfo())
-	        .datasrcId(reportMstrEntity.getDatasrcId())
+	        .dataSrcId(reportMstrEntity.getDataSrcId())
 	        .datasrcType(reportMstrEntity.getDatasrcType())
 	        .datasetType(reportMstrEntity.getDatasetType())
 	        .reportXml(decodedReportXml)  

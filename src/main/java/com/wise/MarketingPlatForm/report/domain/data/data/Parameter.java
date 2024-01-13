@@ -21,4 +21,9 @@ public class Parameter {
     DsType dsType;
     String exceptionValue;
     List<String> values;
+    String uniqueName;
+    String caption;
+    String paramType;
+    String itemCaption;
+    String itemKey;
 }

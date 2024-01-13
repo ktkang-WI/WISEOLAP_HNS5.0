@@ -11,6 +11,7 @@ import java.util.List;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
@@ -22,6 +23,7 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+        TopBottomInfo topBottomInfo = dataAggreagtion.getTopBottomInfo();
 
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
@@ -32,7 +34,9 @@ public class ChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
+                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .topBottom(topBottomInfo)
                 .orderBy()
                 .columnFiltering()
                 .getData();
@@ -46,7 +50,8 @@ public class ChartDataMaker implements ItemDataMaker {
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
-            if ("dimension".equals(dim.getCategory())) {
+            // 비정형 보고서에서 조회 시, 행(row) -> 차원(dimension), 열(column) -> 차원그룹(dimensionGroup)
+            if ("dimension".equals(dim.getCategory()) || "row".equals(dim.getCategory())) {
                 dimNames.add(dim.getName());
             } else {
                 dimGrpNames.add(dim.getName());

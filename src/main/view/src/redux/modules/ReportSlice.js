@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 
 const initialState = {
@@ -22,19 +23,56 @@ const initialState = {
       paramXML: '',
       regDt: '',
       regUserNo: '',
-      reportType: ''
+      reportType: DesignerMode['DASHBOARD']
     }
   }]
 };
 
+const getInitialState = (designerMode) => {
+  const state = {
+    selectedReportId: 0,
+    reports: [{
+      reportId: 0,
+      options: {
+        reportNm: localizedString.defaultReportName,
+        reportSubTitle: '',
+        fldId: 0,
+        fldName: '',
+        fldType: '',
+        reportOrdinal: 0,
+        reportTag: '',
+        reportDesc: '',
+        path: '', // 해당 경로 비어있을 경우 새 보고서
+        chartXML: '',
+        datasetXML: '',
+        layoutXML: '',
+        reportXML: '',
+        paramXML: '',
+        regDt: '',
+        regUserNo: '',
+        reportType: ''
+      }
+    }]
+  };
+  state.reports[0].reportType = designerMode;
+  return state;
+};
+
 const reducers = {
   /* REPORT */
-  initReport(state, actions) {
-    state.reports = initialState.reports;
+  initReport: (state, actions) => {
+    const designerMode = actions.payload;
+    return getInitialState(designerMode);
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);
     state.selectedReportId = actions.payload.reportId;
+  },
+  setReports(state, actions) {
+    state.reports = actions.payload;
+  },
+  selectReport(state, actions) {
+    state.selectedReportId = actions.payload;
   },
   updateReport(state, actions) {
     const index = state.reports.findIndex(
@@ -65,11 +103,13 @@ const reducers = {
         (report) => report.reportId != actions.payload);
     if (state.reports.length == 0) {
       state.reports = initialState.reports;
-      state.selectedReportId = 0;
-    } else {
-      // 보고서를 닫은 후에도 보고서가 남아있을 경우 가장 앞에 있는 보고서 선택
-      state.selectedReportId = state.reports[0].reportId;
+      // state.selectedReportId = 0;
     }
+    // 보고서를 닫은 후에도 보고서가 남아있을 경우 가장 앞에 있는 보고서 선택 (뷰어 일때)
+    // else {
+    // state.selectedReportId = state.reports[0].reportId;
+    // }
+    state.selectedReportId = 0;
   }
 };
 
