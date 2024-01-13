@@ -45,9 +45,8 @@ const RibbonDefaultElement = () => {
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
-  const reportType = useSelector(selectCurrentReportType);
 
-  const defaultElement = {
+  return {
     'NewReport': {
       ...commonRibbonButton,
       'id': 'new_report',
@@ -309,15 +308,6 @@ const RibbonDefaultElement = () => {
       }
     }
   };
-
-  if (reportType !== ReportType.EXCEL) {
-    return defaultElement;
-  } else {
-    return {
-      'Dataset': defaultElement.Dataset,
-      'QuerySearch': defaultElement.QuerySearch
-    };
-  }
 };
 
 export default RibbonDefaultElement;

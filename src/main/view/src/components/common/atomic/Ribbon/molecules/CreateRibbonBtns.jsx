@@ -6,6 +6,9 @@ import RibbonBtnWrap from '../atom/RibbonBtnWrap';
 import Popover from '../../Popover/organism/Popover';
 import ItemManager from 'components/report/item/util/ItemManager';
 import RibbonPopoverBtn from '../atom/RIbbonPopoverBtn';
+import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import ReportType from 'components/designer/util/ReportType';
+import store from 'redux/modules';
 
 const CreateRibbonBtns = ({items, targetItem}) => {
   const eventManager = ItemManager.useCustomEvent();
@@ -54,11 +57,21 @@ const CreateRibbonBtns = ({items, targetItem}) => {
     });
   };
 
-  const ribbonDefaultItems = ribbonDefaultElement();
-
+  const ribbonDefaultItems = () => {
+    const reportType = selectCurrentReportType(store.getState());
+    const ribbonDefault = ribbonDefaultElement();
+    let returnDefault;
+    if (reportType === ReportType.EXCEL) {
+      const {Dataset, QuerySearch} = ribbonDefault;
+      returnDefault = {Dataset, QuerySearch};
+    } else {
+      returnDefault = ribbonDefault;
+    }
+    return returnDefault;
+  };
   return (
     <RibbonBtnWrap>
-      {itemIterator(ribbonDefaultItems, items)}
+      {itemIterator(ribbonDefaultItems(), items)}
     </RibbonBtnWrap>
   );
 };

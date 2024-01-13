@@ -93,7 +93,7 @@ const SpreadDefaultElement = () => {
     };
 
     const deleteReport = () => {
-      ribbonElement[DeleteReport].onClick();
+      ribbonElement['DeleteReport'].onClick();
     };
 
     const downloadReportXLSX = () => {
