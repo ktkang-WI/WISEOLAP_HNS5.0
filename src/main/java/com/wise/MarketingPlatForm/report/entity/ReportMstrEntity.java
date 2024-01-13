@@ -9,11 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Builder
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportMstrEntity {
@@ -45,16 +43,15 @@ public class ReportMstrEntity {
     Date modDt;
     String privacyYn;
     String layoutConfig;
-    String dupleYn;
 
     private static String decodeBase64(String base64, boolean datasetCheck) {
-    	String decodedString = "";
-    	try {
-	        byte[] decodedBytes = Base64.getDecoder().decode(
-	        base64.replaceAll("\\R", ""));
+        byte[] decodedBytes = Base64.getDecoder().decode(
+            base64.replaceAll("\\R", ""));
+        String decodedString = "";
+        try {
         	decodedString = new String(decodedBytes, "UTF-8");
         } catch (Exception e) {
-            return decodedString = "newReport";
+            e.printStackTrace();
         }
         if(!datasetCheck) {
         	decodedString = decodedString.replaceAll("&lt;", "<");
@@ -119,7 +116,6 @@ public class ReportMstrEntity {
 	        .modDt(reportMstrEntity.getModDt())
 	        .privacyYn(reportMstrEntity.getPrivacyYn())
 	        .layoutConfig(reportMstrEntity.getLayoutConfig())
-	        .dupleYn(reportMstrEntity.getDupleYn())
 	        .build();
     }
 }

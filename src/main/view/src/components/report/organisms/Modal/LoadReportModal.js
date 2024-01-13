@@ -18,18 +18,9 @@ import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
+import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
-import {useSelector} from 'react-redux';
-import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
-import ReportType from 'components/designer/util/ReportType';
-import SpreadSlice from 'redux/modules/SpreadSlice';
-import spreadDefaultElement from
-  'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
-import {selectSheets} from 'redux/selector/SpreadSelector';
-import ribbonDefaultElement
-  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 
 const theme = getTheme();
 
@@ -38,24 +29,21 @@ const LoadReportModal = ({...props}) => {
   const [reportList, setReportList] = useState();
   const {openModal} = useModal();
   const dispatch = useDispatch();
+
   const {setReports, selectReport} = ReportSlice.actions;
   const {setItems} = ItemSlice.actions;
   const {setLayout} = LayoutSlice.actions;
-  const {setDatasets} = DatasetSlice.actions;
-  const {setSpread} = SpreadSlice.actions;
+  const {setDataset} = DatasetSlice.actions;
   const {setParameterInformation} = ParameterSlice.actions;
-  const {setRibbonSetting} = spreadDefaultElement();
-  const ribbonElement = ribbonDefaultElement();
-  const reportType = useSelector(selectCurrentReportType);
+  const {executeItems} = useQueryExecute();
 
   useEffect(() => {
-    models.Report.getList('admin', reportType, 'designer').then((data) => {
+    models.Report.getList('admin', 'DashAny', 'designer').then((data) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);
     });
-  }, [reportType]);
-
+  }, []);
 
   return (
     <Modal
@@ -64,18 +52,26 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then((data) => {
-                  const reportType = selectCurrentReportType(store.getState());
-                  dispatch(setReports(data.reports));
-                  dispatch(selectReport(selectedReport.id));
-                  data.items.forEach((i) => {
-                    i.mart = makeMart(i);
-                    ItemManager.generateMeta(i);
-                  });
-                  const selectedDatasetId = data.dataset.selectedDatasetId;
-                  data.dataset.datasets.forEach((i) => {
-                    i.fields = i.fields.map((field) => {
-                      const isMea = field.columnTypeName == 'decimal';
-                      if (field.uniqueName != 0) {
+                  if (data.isNew) {
+                    console.log('test');
+                  } else {
+                    dispatch(setLayout({
+                      reportId: selectedReport.id,
+                      layout: data.layout
+                    }));
+                    dispatch(selectReport(selectedReport.id));
+                    dispatch(setReports(data.reports));
+                    data.item.items.forEach((i) => {
+                      i.mart = makeMart(i);
+                      ItemManager.generateMeta(i);
+                    });
+                    dispatch(setItems({
+                      reportId: selectedReport.id,
+                      items: data.item
+                    }));
+                    data.dataset.datasets.forEach((i) => {
+                      i.fields = i.fields.map((field) => {
+                        const isMea = field.columnTypeName == 'decimal';
                         return {
                           icon: isMea ? meaImg : dimImg,
                           parentId: '0',
@@ -84,52 +80,24 @@ const LoadReportModal = ({...props}) => {
                           type: isMea ? 'MEA' : 'DIM',
                           ...field
                         };
-                      } else return;
-                    }).filter(Boolean);
-                    i.fields.unshift({
-                      name: localizedString.defaultDatasetName,
-                      type: 'FLD',
-                      uniqueName: '0',
-                      icon: folderImg
+                      });
+                      i.fields.unshift({
+                        name: localizedString.defaultDatasetName,
+                        type: 'FLD',
+                        uniqueName: '0',
+                        icon: folderImg
+                      });
                     });
-                  });
-                  dispatch(setDatasets({
-                    reportId: selectedReport.id,
-                    datasets: data.dataset
-                  }));
-                  let selectedItemId = null;
-                  for (const item of data.items) {
-                    if (item.meta?.dataField?.datasetId === selectedDatasetId) {
-                      selectedItemId = item.id;
-                      break;
-                    }
-                  }
-                  dispatch(setLayout({
-                    reportId: selectedReport.id,
-                    layout: data.layout
-                  }));
-                  dispatch(setItems({
-                    reportId: selectedReport.id,
-                    selectedItemId: selectedItemId,
-                    items: data.items
-                  }));
-                  dispatch(setParameterInformation({
-                    reportId: selectedReport.id,
-                    informations: data.informations
-                  }));
-                  const sheets = selectSheets(store.getState());
-                  const config = setRibbonSetting();
-                  const designer =
-                      new sheets.Designer
-                          .Designer(document.getElementById('test'), config);
-                  if (reportType === ReportType.EXCEL) {
-                    dispatch(setSpread({
+                    dispatch(setDataset({
                       reportId: selectedReport.id,
-                      bindingInfos: data.spread,
-                      designer: designer
+                      dataset: data.dataset
                     }));
+                    dispatch(setParameterInformation({
+                      reportId: selectedReport.id,
+                      informations: data.informations
+                    }));
+                    executeItems();
                   }
-                  ribbonElement['QuerySearch'].onClick();
                 });
           } else {
             openModal(Alert, {

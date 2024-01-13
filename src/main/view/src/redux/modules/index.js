@@ -7,7 +7,6 @@ import LayoutSlice from './LayoutSlice';
 import ItemSlice from './ItemSlice';
 import PopoverSlice from './PopoverSlice';
 import ParameterSlice from './ParameterSlice';
-import SpreadSlice from './SpreadSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
@@ -15,8 +14,7 @@ const metaReducer = combineReducers({
   dataset: DatasetSlice.reducer,
   layout: LayoutSlice.reducer,
   item: ItemSlice.reducer,
-  parameter: ParameterSlice.reducer,
-  spread: SpreadSlice.reducer
+  parameter: ParameterSlice.reducer
 });
 
 const systemReducer = combineReducers({

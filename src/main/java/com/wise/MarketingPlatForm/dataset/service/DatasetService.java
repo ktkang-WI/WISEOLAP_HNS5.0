@@ -243,21 +243,15 @@ public class DatasetService {
 
         return tbl_Col;
     }
-    /**
-     * @param dsId
-     * @param query
-     * @param parameters
-     * @param rowNum convetTop에서 가져올 데이터 수, 0일 경우 전부 가져옴.
-     * @return
-     */
-    public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters, int rowNum) {
+    
+    public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
         
-        return this.getQueryData(dsId, query, rowNum);
+        return this.getQueryData(dsId, query);
     }
     
-    public MartResultDTO getQueryData(int dsId, String query, int rowNum) {
+    public MartResultDTO getQueryData(int dsId, String query) {
     	 DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
 
          DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
@@ -276,7 +270,7 @@ public class DatasetService {
 
          martConfig.setMartDataSource(dsMstrDTO);
          
-         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), rowNum);
+         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
          MartResultDTO resultDTO = new MartResultDTO();
 
          try {
@@ -301,13 +295,11 @@ public class DatasetService {
     }
 
     private String convertTopN(String sql, String dbType, int rowNum) {
-    	if(rowNum != 0) {
-    		if ("MS_SQL".equals(dbType)) {
-    			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
-    		} else {
-    			sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
-    		}    		
-    	}
+        if ("MS_SQL".equals(dbType)) {
+            sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
+        } else {
+            sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
+        }
         return sql;
     }
 

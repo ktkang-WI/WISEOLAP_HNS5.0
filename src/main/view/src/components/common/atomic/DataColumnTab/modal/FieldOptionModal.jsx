@@ -49,7 +49,7 @@ const FieldOptionModal = ({...props}) => {
   return (
     <Modal
       modalTitle={localizedString.fieldOptionSetting}
-      height={theme.size.smallModalHeight}
+      height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
       onSubmit={onSubmit}
       {...props}

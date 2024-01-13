@@ -34,22 +34,13 @@ export const getTablesByMart = async (dsId) => {
   return res.data;
 };
 
-/* eslint-disable valid-jsdoc */
-/**
- * @param {*} dsId
- * @param {*} query
- * @param {*} parameters
- * @param {*} rowNum data를 가져올 row수 0일 경우 전부 가져옴
- * @returns
- */
-export const getDataByQueryMart = async (dsId, query, parameters, rowNum) => {
+export const getDataByQueryMart = async (dsId, query, parameters) => {
   const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
 
-  const res = await axios.post(path + '/query-dataset-datas', {
+  const res = await axios.post(path + '/query-dataset-fields', {
     dsId: parseInt(dsId),
     query: query,
-    parameter: JSON.stringify(parameter),
-    rowNum: rowNum
+    parameter: JSON.stringify(parameter)
   });
 
   return res.data;

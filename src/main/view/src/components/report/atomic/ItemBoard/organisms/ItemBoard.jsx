@@ -4,15 +4,14 @@ import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   selectCurrentItems,
+  selectRootItem,
   selectSelectedItemId
 } from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
-import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {useEffect} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 import Chart from 'components/report/item/chart/Chart';
@@ -20,8 +19,6 @@ import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
 import Pie from 'components/report/item/pie/Pie';
-import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
 import ItemManager from 'components/report/item/util/ItemManager';
 
 const StyledBoard = styled.div`
@@ -39,21 +36,15 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
-  const location = useLocation();
-  const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {deleteFlexLayout, setMovedLayout} = useLayout();
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
 
-  useEffect(() => {
-    const designer = selectCurrentReportType(store.getState());
-    const defaultLayout = {reportId: selectedReportId, designer: designer};
-    initLayout(defaultLayout);
-  }, [location]);
-
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
+  const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
@@ -76,12 +67,13 @@ const ItemBoard = () => {
     const ItemComponent = itemFactory[component];
 
     const item = items.find((i) => id == i.id);
+    const adHocOption = rootItem.adHocOption;
 
     if (!item) return <></>;
 
     return (
       <Item>
-        <ItemComponent item={item} id={item.id}/>
+        <ItemComponent item={item} adHocOption={adHocOption} id={item.id}/>
       </Item>
     );
   }
@@ -165,6 +157,7 @@ const ItemBoard = () => {
           .map((key) => getTabHeaderButtons(type, key, id));
 
       renderValues.buttons.push(
+          !rootItem.adHocOption &&
           <button
             key="delete"
             title="Delete tabset"
