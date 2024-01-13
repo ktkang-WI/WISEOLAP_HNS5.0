@@ -279,11 +279,11 @@ const useQueryExecute = () => {
     const parameters = selectRootParameter(store.getState());
     const report = selectCurrentReport(store.getState());
 
-    if (report.options.reportType === DesignerMode['DASHBOARD']) {
+    if (report.reportType === DesignerMode['DASHBOARD']) {
       items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (report.options.reportType === DesignerMode['ADHOC']) {
+    if (report.reportType === DesignerMode['ADHOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
