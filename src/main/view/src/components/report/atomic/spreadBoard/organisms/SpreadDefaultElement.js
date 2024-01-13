@@ -11,7 +11,7 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useReportSave from 'hooks/useReportSave';
 import saveDefaultElement from
   'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
-import {selectCurrentReportType} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ribbonDefaultElement from
   'components/common/atomic/Ribbon/organism/Ribbon';
@@ -56,7 +56,7 @@ const SpreadDefaultElement = () => {
     const newReport = (context) => {
       const sheets = selectSheets(store.getState());
       const selectedReportId = selectCurrentReportId(store.getState());
-      const designer = selectCurrentReportType;
+      const designer = selectCurrentDesignerMode;
       const executeNew = (context) => {
         const config = setRibbonSetting();
         reload(selectedReportId, designer);
