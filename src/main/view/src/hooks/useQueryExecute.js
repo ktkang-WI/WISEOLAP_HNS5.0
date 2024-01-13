@@ -279,7 +279,7 @@ const useQueryExecute = () => {
     const parameters = selectRootParameter(store.getState());
     const report = selectCurrentReport(store.getState());
 
-    if (report.reportType === DesignerMode['DASHBOARD']) {
+    if (report.options.reportType === DesignerMode['DASHBOARD']) {
       items.map((item) => executeItem(item, datasets, parameters));
     }
 
