@@ -225,9 +225,9 @@ const reducers = {
       }
     }
   },
-  setItems(state, actions) {
+  setItem(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId] = actions.payload.items;
+    state[reportId] = actions.payload.item;
   },
   updateInteractiveOption(state, actions) {
     const reportId = actions.payload.reportId;

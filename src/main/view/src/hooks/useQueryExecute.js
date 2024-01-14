@@ -4,7 +4,7 @@ import {
 import {
   selectCurrentItems, selectRootItem
 } from 'redux/selector/ItemSelector';
-import {selectCurrentReport, selectCurrentReportId}
+import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
@@ -17,11 +17,16 @@ import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
+import localizedString from 'config/localization';
+import useSpread from './useSpread';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
   const {alert} = useModal();
+  const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
 
@@ -274,16 +279,15 @@ const useQueryExecute = () => {
    */
   const executeItems = () => {
     const rootItem = selectRootItem(store.getState());
-    const items = selectCurrentItems(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
-    const report = selectCurrentReport(store.getState());
+    const reportType = selectCurrentDesignerMode(store.getState());
 
-    if (report.options.reportType === DesignerMode['DASHBOARD']) {
-      items.map((item) => executeItem(item, datasets, parameters));
+    if (reportType === DesignerMode['DASHBOARD']) {
+      rootItem.items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (report.options.reportType === DesignerMode['ADHOC']) {
+    if (reportType === DesignerMode['ADHOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
@@ -434,6 +438,43 @@ const useQueryExecute = () => {
     });
   };
 
+  const excuteSpread = async () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    if (_.isEmpty(datasets)) {
+      alert(localizedString.dataSourceNotSelectedMsg); return;
+    }
+    const rootParameters = selectRootParameter(store.getState());
+    const bindingInfos = selectBindingInfos((store.getState()));
+    datasets.map(async (dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+       !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot); return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      const paramInfo = rootParameters.informations.filter((information) => {
+        if (information.dataset[0] === dataset.datasetId) {
+          return information;
+        }
+      });
+      let parameters = {
+        informations: [],
+        values: {}
+      };
+      if (!_.isEmpty(paramInfo)) {
+        parameters = paramInfo.map((information) => {
+          return {
+            informations: information,
+            values: rootParameters.values[information.name] || {}
+          };
+        });
+      }
+      const datas = await models.DBInfo.
+          getDataByQueryMart(dsId, query, parameters, 0);
+      bindData({dataset: dataset, datas: datas.rowData});
+    });
+  };
+
   return {
     generateParameter,
     executeItem,
@@ -442,7 +483,8 @@ const useQueryExecute = () => {
     filterItems,
     clearAllFilter,
     executeParameters,
-    executeLinkageFilter
+    executeLinkageFilter,
+    excuteSpread
   };
 };
 

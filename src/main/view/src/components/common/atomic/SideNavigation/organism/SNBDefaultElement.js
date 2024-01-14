@@ -59,7 +59,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
       onClick: (e) => {
-        nav('spreadsheet'); // TO DO: router에 new tab 띄우기 기능 추가 예정
+        onClick(DesignerMode['SPREADSHEET']);
       }
     },
     'Preference': {

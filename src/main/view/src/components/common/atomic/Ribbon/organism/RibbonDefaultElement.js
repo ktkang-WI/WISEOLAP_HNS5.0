@@ -31,6 +31,8 @@ import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
+import store from 'redux/modules';
+import {DesignerMode} from 'components/config/configType';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -38,7 +40,7 @@ const RibbonDefaultElement = () => {
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const {executeItems} = useQueryExecute();
+  const {executeItems, excuteSpread} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
@@ -295,7 +297,12 @@ const RibbonDefaultElement = () => {
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {
-        executeItems();
+        const reportType = selectCurrentDesignerMode(store.getState());
+        if (reportType !== DesignerMode['SPREADSHEET']) {
+          executeItems();
+        } else {
+          excuteSpread();
+        }
       }
     }
   };

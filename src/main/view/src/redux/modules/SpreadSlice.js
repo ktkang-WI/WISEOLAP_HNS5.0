@@ -59,7 +59,6 @@ const initialState = {
   excelIO: excelIO,
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
-    reportId: 0,
     designer: undefined,
     bindingInfos: {}
   }

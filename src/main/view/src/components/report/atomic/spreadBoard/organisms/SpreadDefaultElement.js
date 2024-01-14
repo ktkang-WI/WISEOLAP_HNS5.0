@@ -6,7 +6,6 @@ import {selectCurrentReport,
   selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
-import DatasetLinkerModal from '../modal/DatasetLinkerModal';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useReportSave from 'hooks/useReportSave';
 import saveDefaultElement from
@@ -16,6 +15,7 @@ import SpreadSlice from 'redux/modules/SpreadSlice';
 import ribbonDefaultElement from
   'components/common/atomic/Ribbon/organism/Ribbon';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import DatasetLinkerModal from '../modal/DataLinkerModal';
 
 const SpreadDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
@@ -64,7 +64,8 @@ const SpreadDefaultElement = () => {
         context.destroy();
         // 새로운 workbook 생성 및 등록
         const newDesigner =
-          new sheets.Designer.Designer(document.getElementById('test'), config);
+          new sheets.Designer.Designer(document
+              .getElementById('spreadWrapper'), config);
         dispatch(setDesigner({
           reportId: selectedReportId,
           designer: newDesigner

@@ -14,7 +14,7 @@ import {selectBindingInfos, selectCurrentDesigner} from
 
 const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
-  const designer = useSelector(selectCurrentDesigner);
+  const designer = selectCurrentDesigner(store.getState());
   const [dataSources, setDataSources] = useState([]);
   const {setBindingInfos} = SpreadSlice.actions;
   const {positionConverterAsObject, positionConverterAsString} = useSpread();
