@@ -29,8 +29,18 @@ const useFile = () => {
     }
   };
 
+  const fileDelete = async (param) => {
+    try {
+      const response = await axios.post(path + '/delete', param);
+      console.log('File delete successfully:', response.data);
+    } catch (error) {
+      console.error('Error delete file:', error);
+    }
+  };
+
   return {
-    fileUpload
+    fileUpload,
+    fileDelete
   };
 };
 

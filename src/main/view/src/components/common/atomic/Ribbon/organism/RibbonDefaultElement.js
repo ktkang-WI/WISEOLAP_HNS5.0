@@ -110,6 +110,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': deleteReport,
       'onClick': () => {
         const selectedReportId = selectCurrentReportId(store.getState());
+        const designerMode = selectCurrentDesignerMode(store.getState());
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
             removeReport(selectedReportId, designerMode);

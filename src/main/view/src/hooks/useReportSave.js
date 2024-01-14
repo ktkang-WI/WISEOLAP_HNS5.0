@@ -25,7 +25,7 @@ const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
   const {createReportBlob} = useSpread();
-  const {fileUpload} = useFile();
+  const {fileUpload, fileDelete} = useFile();
   const {
     updateReport,
     updateSelectedReportId,
@@ -54,7 +54,8 @@ const useReportSave = () => {
   } = ParameterSlice.actions;
   const {
     initSpread,
-    deleteSpread
+    deleteSpread,
+    changeSpreadReportId
   } = SpreadSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
@@ -120,6 +121,7 @@ const useReportSave = () => {
     dispatch(changeDatasetReportId(reportId));
     dispatch(changeParameterReportId(reportId));
     dispatch(updateSelectedReportId({reportId: reportId.newId}));
+    dispatch(changeSpreadReportId(reportId));
     alert('보고서를 저장했습니다.');
   };
 
@@ -138,6 +140,9 @@ const useReportSave = () => {
       dispatch(deleteParameterForDesigner(reportId));
       dispatch(deleteSpread(reportId));
       reload(reportType);
+      if (reportType === DesignerMode['SPREADSHEET']) {
+        fileDelete({fileName: reportId + '.xlsx'});
+      }
       alert('보고서를 삭제했습니다.');
     });
   };

@@ -73,10 +73,6 @@ const reducers = {
     state[reportId].reportId = reportId;
     state[reportId].designer = actions.payload.designer;
   },
-  setDesigner(state, actions) {
-    const reportId = actions.payload.reportId;
-    state[reportId].designer = actions.payload.designer;
-  },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId].bindingInfos = actions.payload.bindingInfos;
@@ -93,10 +89,20 @@ const reducers = {
     state[reportId].bindingInfos[datasetId] = actions.payload.bindingInfo;
   },
   deleteSpread(state, actions) {
-    if (actions.payload) {
+    if (actions.payload == 0) {
       return initialState;
     } else {
       delete state[actions.payload];
+    }
+  },
+  changeSpreadReportId(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+
+    if (prevId != newId) {
+      const spread = state[prevId];
+      delete state[prevId];
+      state[newId] = spread;
     }
   }
 };

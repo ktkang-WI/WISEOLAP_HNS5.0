@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.fileUpload.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
@@ -33,4 +34,15 @@ public class FileUploadService {
         	e.printStackTrace();
         } 
     }
+
+	public void deleteFile(HttpServletRequest request, String fileName) {
+		try {
+			File file = WebFileUtils.getWebFolder(request, false, "UploadFiles", fileName);
+			if (!file.delete()) {
+				new Exception("spread File delete Exception");
+			}
+		} catch (Exception e) {
+        	e.printStackTrace();
+        } 
+	}
 }
