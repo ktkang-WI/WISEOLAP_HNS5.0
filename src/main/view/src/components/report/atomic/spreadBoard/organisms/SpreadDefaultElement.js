@@ -2,28 +2,29 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
-import {selectCurrentReport,
-  selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useReportSave from 'hooks/useReportSave';
 import saveDefaultElement from
   'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-import ribbonDefaultElement from
-  'components/common/atomic/Ribbon/organism/Ribbon';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
+import useSpread from 'hooks/useSpread';
 
 const SpreadDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
-  const {setDesigner} = SpreadSlice.actions;
+  const {setSpread} = SpreadSlice.actions;
   const dispatch = useDispatch();
   const {reload} = useReportSave();
   const {save} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
+  const {sheetNameChangedListener,
+    sheetChangedListener} = useSpread();
 
   const setRibbonSetting = () => {
     const sheets = selectSheets(store.getState());
@@ -55,21 +56,22 @@ const SpreadDefaultElement = () => {
   const ribbonCommandMap = () => {
     const newReport = (context) => {
       const sheets = selectSheets(store.getState());
-      const selectedReportId = selectCurrentReportId(store.getState());
-      const designer = selectCurrentDesignerMode;
       const executeNew = (context) => {
         const config = setRibbonSetting();
-        reload(selectedReportId, designer);
+        reload();
         // 기존 workbook 제거
         context.destroy();
         // 새로운 workbook 생성 및 등록
         const newDesigner =
           new sheets.Designer.Designer(document
               .getElementById('spreadWrapper'), config);
-        dispatch(setDesigner({
-          reportId: selectedReportId,
-          designer: newDesigner
+        dispatch(setSpread({
+          reportId: 0,
+          designer: newDesigner,
+          bindingInfos: {}
         }));
+        sheetNameChangedListener();
+        sheetChangedListener();
       };
 
       confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
@@ -378,7 +380,9 @@ const SpreadDefaultElement = () => {
     ]
   };
 
-  return {setRibbonSetting};
+  return {
+    setRibbonSetting
+  };
 };
 
 export default SpreadDefaultElement;

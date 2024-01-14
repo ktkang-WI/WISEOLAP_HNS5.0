@@ -28,6 +28,8 @@ import ribbonDefaultElement
 import spreadDefaultElement from
   'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
 import {selectSheets} from 'redux/selector/SpreadSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import useSpread from 'hooks/useSpread';
 
 const theme = getTheme();
 
@@ -43,6 +45,9 @@ const LoadReportModal = ({...props}) => {
   const {setParameterInformation} = ParameterSlice.actions;
   const ribbonElement = ribbonDefaultElement();
   const {setRibbonSetting} = spreadDefaultElement();
+  const {setSpread} = SpreadSlice.actions;
+  const {sheetNameChangedListener,
+    sheetChangedListener} = useSpread();
 
   useEffect(() => {
     const reportType = selectCurrentDesignerMode(store.getState());
@@ -122,12 +127,15 @@ const LoadReportModal = ({...props}) => {
                       const config = setRibbonSetting();
                       const designer =
                       new sheets.Designer
-                          .Designer(document.getElementById('test'), config);
+                          .Designer(document.getElementById('spreadWrapper'),
+                              config);
                       dispatch(setSpread({
                         reportId: selectedReport.id,
                         bindingInfos: data.spread,
                         designer: designer
                       }));
+                      sheetNameChangedListener();
+                      sheetChangedListener();
                     }
                     ribbonElement['QuerySearch'].onClick();
                   }

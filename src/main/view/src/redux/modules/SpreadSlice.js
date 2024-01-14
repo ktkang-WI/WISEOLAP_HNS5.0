@@ -65,10 +65,7 @@ const initialState = {
 };
 
 const reducers = {
-  initSpread(state, actions) {
-    delete state[actions.payload];
-    state[0] = initialState[0];
-  },
+  initSpread: () => initialState,
   setSpread(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = {};
@@ -77,7 +74,8 @@ const reducers = {
     state[reportId].designer = actions.payload.designer;
   },
   setDesigner(state, actions) {
-    state[actions.payload.reportId].designer = actions.payload.designer;
+    const reportId = actions.payload.reportId;
+    state[reportId].designer = actions.payload.designer;
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
@@ -93,6 +91,13 @@ const reducers = {
       new Error('setBindingInfo의 bindingInfo의 key가 다릅니다.');
     }
     state[reportId].bindingInfos[datasetId] = actions.payload.bindingInfo;
+  },
+  deleteSpread(state, actions) {
+    if (actions.payload) {
+      return initialState;
+    } else {
+      delete state[actions.payload];
+    }
   }
 };
 

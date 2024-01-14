@@ -1,6 +1,6 @@
 import {selectRootDataset} from 'redux/selector/DatasetSelector';
 import {selectRootItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReport, selectCurrentReportId}
+import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import {deleteReport} from 'models/report/Report';
@@ -53,7 +53,8 @@ const useReportSave = () => {
     initParameter
   } = ParameterSlice.actions;
   const {
-    initSpread
+    initSpread,
+    deleteSpread
   } = SpreadSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
@@ -83,14 +84,12 @@ const useReportSave = () => {
     if (reportType === DesignerMode['SPREADSHEET']) {
       param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
     } else {
-      param.reportXml = JSON.stringify(selectCurrentReport(store.getState()));
+      param.reportXml = JSON.stringify({
+        reportId: param.reportId,
+        options: param
+      });
     }
     param.reportSubTitle = dataSource.reportSubTitle;
-    param.reportXml = JSON.stringify({
-      reportId: param.reportId,
-      options: param
-    });
-
     return param;
   };
 
@@ -137,19 +136,19 @@ const useReportSave = () => {
       ));
       dispatch(deleteDatasetForDesigner(reportId));
       dispatch(deleteParameterForDesigner(reportId));
+      dispatch(deleteSpread(reportId));
       reload(reportType);
       alert('보고서를 삭제했습니다.');
     });
   };
 
   const reload = (designerMode) => {
-    const reportId = selectCurrentReportId(store.getState());
     dispatch(initReport(designerMode));
     dispatch(initDatasets());
     dispatch(initItems(designerMode));
     dispatch(initLayout(designerMode));
     dispatch(initParameter());
-    dispatch(initSpread(reportId));
+    dispatch(initSpread());
   };
 
   return {

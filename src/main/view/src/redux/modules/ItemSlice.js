@@ -62,11 +62,11 @@ const reducers = {
     const mode = actions.payload;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return dashboardInitialState;
-    }
-
-    if (mode === DesignerMode['ADHOC']) {
+      dashboardInitialState;
+    } else if (mode === DesignerMode['ADHOC']) {
       return adHocInitialState;
+    } else if (mode === DesignerMode['EXCEL']) {
+      dashboardInitialState;
     }
   },
   changeItemReportId(state, actions) {

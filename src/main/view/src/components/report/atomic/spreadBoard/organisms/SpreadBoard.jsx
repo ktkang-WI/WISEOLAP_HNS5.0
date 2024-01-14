@@ -30,7 +30,7 @@ const SpreadBoard = () => {
 
     sheetNameChangedListener();
     sheetChangedListener();
-  });
+  }, []);
 
   return (
     <Wrapper id='spreadWrapper'

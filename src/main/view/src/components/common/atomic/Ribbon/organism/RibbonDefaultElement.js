@@ -37,7 +37,6 @@ import {DesignerMode} from 'components/config/configType';
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const {openedPopover} = usePopover();
-  const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const {executeItems, excuteSpread} = useQueryExecute();
@@ -110,6 +109,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
             removeReport(selectedReportId, designerMode);
@@ -178,6 +178,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.addPivotGrid,
       'imgSrc': addPivotGrid,
       'onClick': (e) => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         insertFlexLayout(selectedReportId, 'pivot');
       }
     },
@@ -187,6 +188,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.addGrid,
       'imgSrc': addGrid,
       'onClick': (e) => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         insertFlexLayout(selectedReportId, 'grid');
       }
     },
@@ -215,6 +217,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.captionView,
       'imgSrc': captionView,
       'onClick': () => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         convertCaptionVisible(selectedReportId, selectedItem);
       }
     },
@@ -229,6 +232,8 @@ const RibbonDefaultElement = () => {
               modalTitle: localizedString.nameEdit,
               defaultValue: selectedItem.meta.name,
               onSubmit: (value) => {
+                const selectedReportId =
+                  selectCurrentReportId(store.getState());
                 editItemName(selectedReportId, selectedItem, value);
               }
             }
