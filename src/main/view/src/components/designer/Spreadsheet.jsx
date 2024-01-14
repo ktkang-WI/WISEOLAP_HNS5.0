@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {useEffect} from 'react';
 import DatasetSlice from 'redux/modules/DatasetSlice';
+import {DesignerMode} from 'components/config/configType';
 
 // ribbon height = 147px
 const Spreadsheet = () => {
@@ -13,7 +14,7 @@ const Spreadsheet = () => {
 
   useEffect(() => {
     dispatch(initDatasets());
-    dispatch(setDesignerMode('Excel'));
+    dispatch(setDesignerMode(DesignerMode['SPREADSHEET']));
   });
 
   return (
