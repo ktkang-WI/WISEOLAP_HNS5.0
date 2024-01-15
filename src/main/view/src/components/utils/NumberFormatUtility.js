@@ -29,7 +29,7 @@ const NumberFormatUtility = {
       M: 'M',
       B: 'B'
     };
-    let precisionType = '반올림';
+    let precisionType = 'round';
     let currency = '₩';
     const _currency = 'KRW';
 

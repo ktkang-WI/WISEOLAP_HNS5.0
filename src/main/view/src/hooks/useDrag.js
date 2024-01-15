@@ -74,7 +74,6 @@ const useDrag = () => {
       }
 
       const measureOption = {
-        // 240110 포멧 초기값
         format: {
           formatType: 'Number',
           unit: 'Ones',
@@ -86,7 +85,7 @@ const useDrag = () => {
             B: localizedString.b
           },
           precision: 0,
-          precisionType: '반올림',
+          precisionType: 'round',
           useDigitSeparator: true
         },
         summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'

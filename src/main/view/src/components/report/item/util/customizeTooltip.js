@@ -12,7 +12,7 @@ const customizeTooltip = (info, isLabel, formData) => {
   const labelPrecision =
   matchingFormatOption?.format?.precision || 0;
   const labelPrecisionOption =
-  matchingFormatOption?.format?.precisionType || '반올림';
+  matchingFormatOption?.format?.precisionType || 'round';
   const labelSeparator =
   matchingFormatOption?.format?.useDigitSeparator!==undefined?
   matchingFormatOption?.format?.useDigitSeparator:true;

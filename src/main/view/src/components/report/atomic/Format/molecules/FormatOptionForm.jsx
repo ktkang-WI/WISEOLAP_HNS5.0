@@ -130,13 +130,9 @@ const FormatOptionForm = ({
         editorType='dxSelectBox'
         editorOptions={
           {
-            dataSource: [
-              {value: '반올림', caption: '반올림'},
-              {value: '올림', caption: '올림'},
-              {value: '버림', caption: '버림'}
-            ],
-            valueExpr: 'value',
-            displayExpr: 'caption'
+            dataSource: localizedString.degreeOptions,
+            displayExpr: 'caption',
+            valueExpr: 'name'
           }
         }
       >
