@@ -1,8 +1,40 @@
 import {createSlice} from '@reduxjs/toolkit';
-import flexLayoutDefault
-  from 'components/report/atomic/ItemBoard/organisms/FlexLayoutDefault';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
 
-const initialState = {
+const dashboardInitialState = {
+  0: {
+    layoutQuantity: 1,
+    layoutConfig: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      borders: [],
+      layout: {
+        type: 'row',
+        children: [
+          {
+            type: 'tabset',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                className: 'item1',
+                id: 'item1',
+                type: 'tab',
+                name: 'Chart 1',
+                component: 'chart'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+};
+
+const adHocInitialState = {
   0: {
     layoutQuantity: 1,
     layoutConfig: {
@@ -12,20 +44,70 @@ const initialState = {
       },
       layout: {
         type: 'row',
-        children: []
+        children: [
+          {
+            type: 'row',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item1',
+                    type: 'tab',
+                    name: 'Chart',
+                    component: 'chart'
+                  }
+                ]
+              },
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                children: [
+                  {
+                    id: 'item2',
+                    type: 'tab',
+                    name: 'PivotGrid',
+                    component: 'pivot'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     }
   }
 };
+
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === DesignerMode['DASHBOARD']) {
+    return dashboardInitialState;
+  }
+
+  if (mode === DesignerMode['ADHOC']) {
+    return adHocInitialState;
+  }
+};
+
 const reducers = {
   // initLayout -> dashboard, adhoc Layout 다르게.
-  initLayout(state, actions) {
-    actions.payload.reportId != 0 && delete state[actions.payload.reportId];
+  initLayout: (state, actions) => {
+    const mode = actions.payload;
 
-    state[0] = {
-      layoutQuantity: 1,
-      layoutConfig: flexLayoutDefault()[actions.payload.designer]
-    };
+    if (mode === DesignerMode['DASHBOARD']) {
+      return dashboardInitialState;
+    }
+
+    if (mode === DesignerMode['ADHOC']) {
+      return adHocInitialState;
+    }
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;
@@ -75,10 +157,7 @@ const reducers = {
     delete state[actions.payload.reportId];
 
     if (Object.keys(state).length == 0) {
-      state[0] = {
-        ...initialState[0],
-        layoutConfig: flexLayoutDefault()[actions.payload.reportType]
-      };
+      state = getInitialState();
     }
   }
 };
@@ -86,7 +165,7 @@ const extraReducers = {};
 
 const LayoutSlice = createSlice({
   name: 'Layout',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });

@@ -62,6 +62,7 @@ import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFact
 import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
@@ -97,7 +98,7 @@ public class ReportService {
 
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
-    
+
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
@@ -117,7 +118,7 @@ public class ReportService {
         if(dto.getDatasetXml().indexOf("<DATA_SET") > -1) {
 //        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
         	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        	
+
         	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
         	Map<String, Object> report = new HashMap<String, Object>();
         	Map<String, Object> options = new HashMap<String, Object>();
@@ -126,12 +127,12 @@ public class ReportService {
         	options.put("reportNm", dto.getReportNm());
         	options.put("reportDesc", dto.getReportDesc());
         	options.put("reportPath", null);
-        	
+
         	report.put("reportId", reportId);
         	report.put("options", options);
-        	
+
         	reports.add(report);
-        	returnReport = xmlParser.getReport(dto, userId);        	
+        	returnReport = xmlParser.getReport(dto, userId);
         	returnReport.put("reports", reports);
         	returnReport.put("isNew", false);
         } else {
@@ -154,8 +155,8 @@ public class ReportService {
         	returnReport.put("layout", layout);
         	returnReport.put("isNew", true);
         }
-        
-        
+
+
         return returnReport;
     }
 
@@ -215,6 +216,33 @@ public class ReportService {
         PivotResult result = new PivotResult();
 
         result.setMatrix(pagedMatrix);
+        return result;
+    }
+
+    public List<ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        List<ReportResult> result = new ArrayList<ReportResult>();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggreagtion);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
+        List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
+
+        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
+        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
+        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
+
+        // clone으로 넘겨서
+        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
+        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+
         return result;
     }
 
@@ -420,7 +448,7 @@ public class ReportService {
         result.put("privateReport", priList);
         return result;
     }
-    
+
     public String checkDuplicatedReport(ReportMstrDTO reportMstrDTO) {
         List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrDTO);
         return result.size() > 0 ? "Y" : "N";

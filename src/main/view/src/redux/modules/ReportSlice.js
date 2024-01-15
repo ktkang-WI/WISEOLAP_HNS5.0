@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 
 const initialState = {
@@ -22,16 +23,46 @@ const initialState = {
       paramXML: '',
       regDt: '',
       regUserNo: '',
-      reportType: ''
+      reportType: DesignerMode['DASHBOARD']
     }
   }]
 };
 
+const getInitialState = (designerMode) => {
+  const state = {
+    selectedReportId: 0,
+    reports: [{
+      reportId: 0,
+      options: {
+        reportNm: localizedString.defaultReportName,
+        reportSubTitle: '',
+        fldId: 0,
+        fldName: '',
+        fldType: '',
+        reportOrdinal: 0,
+        reportTag: '',
+        reportDesc: '',
+        path: '', // 해당 경로 비어있을 경우 새 보고서
+        chartXML: '',
+        datasetXML: '',
+        layoutXML: '',
+        reportXML: '',
+        paramXML: '',
+        regDt: '',
+        regUserNo: '',
+        reportType: ''
+      }
+    }]
+  };
+  state.reports[0].reportType = designerMode;
+  return state;
+};
+
 const reducers = {
   /* REPORT */
-  initReport(state, actions) {
-    state.selectedReportId = 0;
-    state.reports = initialState.reports;
+  initReport: (state, actions) => {
+    const designerMode = actions.payload;
+    return getInitialState(designerMode);
   },
   insertReport(state, actions) {
     state.reports = state.reports.concat(actions.payload);

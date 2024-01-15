@@ -4,9 +4,10 @@ import DevPivotGrid, {
 } from 'devextreme-react/pivot-grid';
 import React, {useEffect, useRef} from 'react';
 
-const PivotGrid = ({id, item}) => {
+const PivotGrid = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
+  const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
 
   if (!mart.init) {
     return <></>;
@@ -52,16 +53,12 @@ const PivotGrid = ({id, item}) => {
     showTotalsPrior = 'none';
   }
 
-  const fields = mart.dataSourceConfig.fields();
-  const column = fields.filter((field) => field.area == 'column');
-  const row = fields.filter((field) => field.area == 'row');
-
   const fieldPanel = {
     allowFieldDragging: false,
-    showColumnFields: column.length > 0,
+    showColumnFields: dataField.column.length > 0,
     showDataFields: false,
     showFilterFields: false,
-    showRowFields: row.length > 0,
+    showRowFields: dataField.row.length > 0,
     visible: meta.showFilter
   };
 

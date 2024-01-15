@@ -21,30 +21,24 @@ const useReportSave = () => {
   const {
     updateReport,
     updateSelectedReportId,
-    deleteReportForDesigner,
     initReport
   } = ReportSlice.actions;
   const {
     changeItemReportId,
-    deleteItemForDesigner,
     initItems
   } = ItemSlice.actions;
   const {
     changeLayoutReportId,
-    deleteLayoutForDesigner,
     initLayout
   } = LayoutSlice.actions;
   const {
     changeDatasetReportId,
-    deleteDatasetForDesigner,
     initDatasets
   } = DatasetSlice.actions;
   const {
     changeParameterReportId,
-    deleteParameterForDesigner,
     initParameter
   } = ParameterSlice.actions;
-  // const reportId = useSelector(selectCurrentReportId);
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
@@ -58,8 +52,7 @@ const useReportSave = () => {
     param.fldType = dataSource.fldType;
     param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
-    // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
-    // param.reportType = 'DashAny';
+    param.reportType = dataSource.reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
     param.chartXml = JSON.stringify(selectRootItem(store.getState()));
@@ -107,23 +100,17 @@ const useReportSave = () => {
       if (response.status != 200) {
         return;
       }
-      dispatch(deleteReportForDesigner(reportId));
-      dispatch(deleteItemForDesigner(reportId));
-      dispatch(deleteLayoutForDesigner(
-          {reportId: reportId, reportType: reportType}
-      ));
-      dispatch(deleteDatasetForDesigner(reportId));
-      dispatch(deleteParameterForDesigner(reportId));
+      reload(reportType);
       alert('보고서를 삭제했습니다.');
     });
   };
 
-  const reload = (reportId, designer) => {
-    dispatch(initReport(reportId));
-    dispatch(initDatasets(reportId));
-    dispatch(initItems(reportId));
-    dispatch(initLayout({reportId: reportId, designer: designer}));
-    dispatch(initParameter(reportId));
+  const reload = (designerMode) => {
+    dispatch(initReport(designerMode));
+    dispatch(initDatasets());
+    dispatch(initItems(designerMode));
+    dispatch(initLayout(designerMode));
+    dispatch(initParameter());
   };
 
   return {

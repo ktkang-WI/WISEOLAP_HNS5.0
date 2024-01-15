@@ -12,22 +12,25 @@ import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
 import React, {useRef, useEffect} from 'react';
 
-
-const Chart = ({id, item}) => {
+const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
+
   if (!mart.init) {
     return <></>;
   }
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
+
   const dataFields = useSelector(selectCurrentDataField);
   const Formdata = dataFields.measure.map((measure) => ({
     format: measure.format,
     uniqueName: measure.uniqueName
   }));
 
-  const interactiveOption = meta.interactiveOption;
+  const interactiveOption = adHocOption ?
+  {} : meta.interactiveOption;
+
 
   const {filterItems, clearAllFilter} = useQueryExecute();
 
@@ -38,15 +41,21 @@ const Chart = ({id, item}) => {
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {
-    dxRef.current.instance.clearSelection();
+    if (!adHocOption) {
+      dxRef.current.instance.clearSelection();
+    }
   }, [interactiveOption]);
 
   useEffect(() => {
-    filterItems(item, {});
+    if (!adHocOption) {
+      filterItems(item, {});
+    }
   }, [interactiveOption.targetDimension, interactiveOption.mode]);
 
   useEffect(() => {
-    clearAllFilter(item);
+    if (!adHocOption) {
+      clearAllFilter(item);
+    }
   }, [interactiveOption.crossDataSource]);
 
   /**
