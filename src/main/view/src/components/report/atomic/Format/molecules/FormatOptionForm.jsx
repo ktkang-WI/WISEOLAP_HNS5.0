@@ -18,7 +18,7 @@ const FormatOptionForm = ({
   font-size: 40px;
   text-align: center;
   `;
-  const [preview, setPreview] = useState(formatValue(Formdata));
+  const [preview, setPreview] = useState(formatValue(formData));
 
   return (
     <Form
@@ -28,7 +28,7 @@ const FormatOptionForm = ({
       ref={formRef}
       onFieldDataChanged={(e) => {
         const updatedFormData = {
-          ...Formdata,
+          ...formData,
           [e.dataField]: e.value
         };
         updatedFormData.suffix = {
@@ -119,7 +119,7 @@ const FormatOptionForm = ({
         dataField='precision'
         editorOptions={
           {
-            value: Formdata.precision
+            value: formData.precision
           }
         }
       >
@@ -147,7 +147,7 @@ const FormatOptionForm = ({
         editorType='dxCheckBox'
         editorOptions={
           {
-            value: Formdata.useDigitSeparator
+            value: formData.useDigitSeparator
           }
         }
       >

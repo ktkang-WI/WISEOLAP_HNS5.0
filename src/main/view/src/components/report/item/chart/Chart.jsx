@@ -22,7 +22,7 @@ const Chart = ({id, adHocOption, item}) => {
   const seriesNames = mart.data.info.seriesDimensionNames;
 
   const dataFields = useSelector(selectCurrentDataField);
-  const Formdata = dataFields.measure.map((measure) => ({
+  const formData = dataFields.measure.map((measure) => ({
     format: measure.format,
     uniqueName: measure.uniqueName
   }));
@@ -167,7 +167,7 @@ const Chart = ({id, adHocOption, item}) => {
         enabled={true}
         location='edge'
         customizeTooltip={
-          (info) => customizeTooltip(info, false, Formdata)
+          (info) => customizeTooltip(info, false, formData)
         }
       ></Tooltip>
       {
@@ -185,7 +185,7 @@ const Chart = ({id, adHocOption, item}) => {
                   position='outside'
                   offset={50}
                   customizeText={
-                    (info) => customizeTooltip(info, true, Formdata)
+                    (info) => customizeTooltip(info, true, formData)
                   }
                 />
               </Series>

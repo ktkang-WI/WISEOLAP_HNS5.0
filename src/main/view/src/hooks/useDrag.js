@@ -19,6 +19,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import models from 'models';
 import {makeMetaDataField, metaDataField}
   from 'components/report/item/util/metaUtilityFactory';
+import localizedString from 'config/localization';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -80,9 +81,9 @@ const useDrag = () => {
           suffixEnabled: false,
           suffix: {
             O: '',
-            K: '천',
-            M: '백만',
-            B: '십억'
+            K: localizedString.k,
+            M: localizedString.m,
+            B: localizedString.b
           },
           precision: 0,
           precisionType: '반올림',

@@ -19,9 +19,9 @@ const NumberFormatModal = ({
   const formData ={
     ...format,
     suffixO: format.suffix.O || '',
-    suffixK: format.suffix.K || '천',
-    suffixM: format.suffix.M || '백만',
-    suffixB: format.suffix.B || '십억',
+    suffixK: format.suffix.K || localizedString.k,
+    suffixM: format.suffix.M || localizedString.m,
+    suffixB: format.suffix.B || localizedString.b,
     checkBoxValue: format.suffixEnabled,
     formControls: {
       unit: false,

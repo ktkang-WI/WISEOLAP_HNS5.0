@@ -1,8 +1,9 @@
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import localizedString from 'config/localization';
 
-const customizeTooltip = (info, isLabel, Formdata) => {
+const customizeTooltip = (info, isLabel, formData) => {
   const matchingFormatOption =
-  Formdata.find(
+  formData.find(
       (option) => option.uniqueName === info.seriesName);
   const labelFormat =
   matchingFormatOption?.format?.formatType || 'Number';
@@ -20,9 +21,9 @@ const customizeTooltip = (info, isLabel, Formdata) => {
   matchingFormatOption?.format?.suffixEnabled:false;
   const labelSuffix = matchingFormatOption?.suffix || {
     O: '',
-    K: '천',
-    M: '백만',
-    B: '십억'
+    K: localizedString.k,
+    M: localizedString.m,
+    B: localizedString.b
   };
   // Label과 Tooltip을 구분하여 Label인 경우 실수값으로 반환
   if (isLabel) {

@@ -319,5 +319,8 @@
   "decimalUnit": "정도",
   "roundUnit": "정도 옵션",
   "includesGroupDistinction" : "그룹 구분 포함",
-  "colRowSwitch": "행/열 변환"
+  "colRowSwitch": "행/열 변환",
+  "k": "천",
+  "m": "백만",
+  "b": "십억"
 }

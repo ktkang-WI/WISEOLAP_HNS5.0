@@ -302,5 +302,8 @@
   "decimalUnit": "Decimal Unit",
   "roundUnit": "Round Unit",
   "includesGroupDistinction" : "Includes Group Distinction",
-  "colRowSwitch": "Transpose"
+  "colRowSwitch": "Transpose",
+  "k": "K",
+  "m": "M",
+  "b": "B"
 }
