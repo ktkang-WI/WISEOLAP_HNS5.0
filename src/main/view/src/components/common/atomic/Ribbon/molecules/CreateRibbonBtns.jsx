@@ -11,6 +11,7 @@ import store from 'redux/modules';
 
 const CreateRibbonBtns = ({items, targetItem}) => {
   const eventManager = ItemManager.useCustomEvent();
+  const ribbonDefault = ribbonDefaultElement();
 
   const getRibbonItem = (item) => {
     if (item.type === 'RibbonButton' && !item.usePopover) {
@@ -58,7 +59,6 @@ const CreateRibbonBtns = ({items, targetItem}) => {
 
   const ribbonDefaultItems = () => {
     const reportType = selectCurrentDesignerMode(store.getState());
-    const ribbonDefault = ribbonDefaultElement();
     let returnDefault;
     if (reportType === 'Spread' || reportType === 'Excel') {
       const {Dataset, QuerySearch} = ribbonDefault;
