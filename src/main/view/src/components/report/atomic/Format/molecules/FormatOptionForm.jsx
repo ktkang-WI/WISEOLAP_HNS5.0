@@ -5,8 +5,8 @@ import {useState} from 'react';
 import {formatValue, updateFomatType, updateSuffix} from './FormatFunction';
 
 const FormatOptionForm = ({
-  Formdata,
-  Formref
+  formData,
+  formRef
 }) => {
   const Preview = styled.textarea`
   background-color: lightgray;
@@ -24,8 +24,8 @@ const FormatOptionForm = ({
     <Form
       labelMode='outside'
       labelLocation='left'
-      formData={Formdata}
-      ref={Formref}
+      formData={formData}
+      ref={formRef}
       onFieldDataChanged={(e) => {
         const updatedFormData = {
           ...Formdata,

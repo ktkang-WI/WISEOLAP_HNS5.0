@@ -15,8 +15,8 @@ const NumberFormatModal = ({
   const dispatch = useDispatch();
   const {updateItemField} = ItemSlice.actions;
   const format = dataField.format;
-  const Formref = useRef();
-  const Formdata ={
+  const formRef = useRef();
+  const formData ={
     ...format,
     suffixO: format.suffix.O || '',
     suffixK: format.suffix.K || '천',
@@ -43,7 +43,7 @@ const NumberFormatModal = ({
     <Modal
       onSubmit={()=> {
         dispatch(updateItemField({reportId,
-          dataField: {...dataField, format: Formdata}}));
+          dataField: {...dataField, format: formData}}));
       }}
       height={theme.size.numberFormatHeight}
       width={theme.size.numberFormatWidth}
@@ -53,8 +53,8 @@ const NumberFormatModal = ({
       <PageWrapper>
         <StyledWrapper>
           <FormatOptionForm
-            Formdata={Formdata}
-            Formref={Formref}
+            formData={formData}
+            formRef={formRef}
           />
         </StyledWrapper>
       </PageWrapper>
