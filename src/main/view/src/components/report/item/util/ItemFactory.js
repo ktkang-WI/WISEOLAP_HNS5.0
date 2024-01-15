@@ -31,7 +31,7 @@ const makeItem = (orgItem) => {
         dataField: {
           dataFieldQuantity: 0
         },
-        highlight: []
+        dataHighlight: []
       }
     };
   }

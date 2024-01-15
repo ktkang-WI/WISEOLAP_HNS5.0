@@ -2,7 +2,7 @@ import EmojiArr from './modal/molecules/EmojiArr';
 
 const GetCssStyle = (highlight, cellElement, cell) => {
   const isEmoji = () => { // 이모지 적용.
-    if (highlight.emojiList) {
+    if (highlight.emojiList >= 0) {
       cellElement.innerHTML =
         '<img src='+
           EmojiArr[highlight.emojiList].icon +

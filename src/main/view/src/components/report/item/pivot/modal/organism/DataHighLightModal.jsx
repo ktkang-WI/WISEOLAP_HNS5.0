@@ -10,7 +10,8 @@ import addHighLightIcon
   from '../../../../../../assets/image/icon/button/ico_zoom.png';
 import {useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectCurrentItems, selectRootItem}
+  from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
@@ -18,6 +19,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import _ from 'lodash';
 import MakeForm from '../molecules/MakeForm';
 import useModal from 'hooks/useModal';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const theme = getTheme();
 
@@ -37,21 +39,40 @@ const AddBtn = styled.img`
   }
 `;
 
-const DataHighlightModal = ({...props}) => {
+const selectedReportTypeHighlight = (selectedItem, reportType) => {
+  if (reportType === 'AdHoc') {
+    return selectedItem[1].meta.dataHighlight.lengh !=0 ?
+          selectedItem[1].meta.dataHighlight : [];
+  } else if (reportType === 'DashAny') {
+    return selectedItem.meta.dataHighlight.lengh !=0 ?
+          selectedItem.meta.dataHighlight : [];
+  };
+};
+
+const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
   const dispatch = useDispatch();
   const {alert} = useModal();
-  const selectedItem = useSelector(selectCurrentItem); // 현재 선택한 item 정보 가져옴.
+  const rootItem = useSelector(selectRootItem);
+  const reportType = selectCurrentDesignerMode(store.getState());
+  const selectedItem = reportType === 'AdHoc' ?
+      useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
+  // const selectedItem = useSelector(selectCurrentItem); // 현재 선택한 item 정보 가져옴.
   const reportId = selectCurrentReportId(store.getState());
-  const {insertDataHighlight} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
+  const {updateItem} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
   const [highlightList, setHighlightList] = // 모달 창에서만 사용 하므로 useState로 목록을 보여줌.
     useState(
-      selectedItem.meta.highlight.lengh !=0 ? selectedItem.meta.highlight : []
+        [...selectedReportTypeHighlight(selectedItem, reportType)]
     ); // 이미 하이라이트 목록이 있다면 모달창을 불러올 때 같이 불러옴.
-  const [data, setData] = useState({}); // 하이라이트 목록 중 하나를 선택 시 선택 정보를 보여줌.
+  const [data, setData] = useState({}); // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
+  const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
-  const measureNames = useMemo(() => selectedItem.meta.dataField.measure.map(
-      (mea) => mea.name
-  ), []); // 데이터항목에 올라간 측정값을 가져옴.
+  const measureNames = useMemo(() => {
+    if (reportType === 'AdHoc') {
+      return rootItem.adHocOption.dataField.measure.map((mea) => mea.name);
+    } else if (reportType === 'DashAny') {
+      return selectedItem.meta.dataField.measure.map((mea) => mea.name);
+    }
+  }, []); // 데이터항목에 올라간 측정값을 가져옴.
 
   const onClick = () => { // 하이라이트 추가 부분.
     const copyHighlight = [...highlightList];
@@ -96,35 +117,46 @@ const DataHighlightModal = ({...props}) => {
     }
   };
 
+  const setMeta = (item, key, value) => {
+    return {
+      ...item,
+      meta: {
+        ...item.meta,
+        [key]: value
+      }
+    };
+  };
+
   // 하이라이트 삭제 부분.
   const deleteHighlightList = (data) => {
     if (data[0] && highlightList.length != 0) {
       const deletedHighlight = highlightList.filter(
           (highlight)=> highlight.dataItem !== data[0].key.dataItem
       );
-
+      setData({});
       setHighlightList(deletedHighlight);
+      setIsUpdate(true);
     }
   };
 
   return (
     <Modal
       onSubmit={() => {
-        if (highlightList.length == 0) {
+        if (highlightList.length == 0 && !isUpdate) {
           // Alert
           alert('하이라이트 목록을 추가해 주세요.');
           return true;
         } else {
-          dispatch(
-              insertDataHighlight(
-                  {reportId: reportId, highlight: highlightList})
-          );
+          const selectItem =
+            Array.isArray(selectedItem) ? selectedItem[1] : selectedItem;
+          const item = setMeta(selectItem, popupName, highlightList);
+          dispatch(updateItem({reportId: reportId, item: item}));
           return;
         }
       }}
       height={theme.size.bigModalHeight}
       width={'calc(' + theme.size.bigModalWidth + ' - 70px)'}
-      modalTitle={localizedString.datahighlight}
+      modalTitle={modalTitle}
       {...props}
     >
       <StyledWrapper>

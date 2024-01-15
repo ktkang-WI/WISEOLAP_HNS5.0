@@ -229,13 +229,6 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.items;
   },
-  insertDataHighlight(state, actions) {
-    const reportId = actions.payload.reportId;
-
-    const highlight = actions.payload.highlight;
-    console.log(reportId);
-    console.log(highlight);
-  },
   updateInteractiveOption(state, actions) {
     const reportId = actions.payload.reportId;
 

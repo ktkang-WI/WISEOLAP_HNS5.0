@@ -174,6 +174,26 @@ const ItemAttributeDefaultElement = () => {
         }
       ]
     },
+    DashAnyPivotOption: {
+      title: '피벗그리드 옵션',
+      items: [
+        {
+          id: 'dataHighlight',
+          label: localizedString.datahighlight,
+          icon: dataHighlightImg,
+          active: option.dataHighlight == 'dataHighlight',
+          onClick: () => {
+            // 데이터 하이라이트
+            openModal(DataHighlightModal,
+                {
+                  popupName: 'dataHighlight',
+                  modalTitle: localizedString.datahighlight
+                }
+            );
+          }
+        }
+      ]
+    },
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
@@ -193,7 +213,12 @@ const ItemAttributeDefaultElement = () => {
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
             // 데이터 하이라이트
-            openModal(DataHighlightModal);
+            openModal(DataHighlightModal,
+                {
+                  popupName: 'dataHighlight',
+                  modalTitle: localizedString.datahighlight
+                }
+            );
           }
         },
         {

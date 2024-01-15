@@ -25,6 +25,7 @@ const generateMeta = (item) => {
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
+  setMeta(item, 'dataHighlight', []);
 };
 
 /**
@@ -151,7 +152,8 @@ const getRibbonItems = () => {
 const getAttributeItems = () => {
   return [
     'InteractionConfiguration',
-    'TargetDimension'
+    'TargetDimension',
+    'DashAnyPivotOption'
   ];
 };
 

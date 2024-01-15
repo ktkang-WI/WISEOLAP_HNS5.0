@@ -3,8 +3,6 @@ import DevPivotGrid, {
   Scrolling
 } from 'devextreme-react/pivot-grid';
 import {useEffect, useMemo, useRef} from 'react';
-import {useSelector} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import getCssStyle from './GetCssStyle';
 import isDataCell from './IsDataCell';
 import React from 'react';
@@ -44,16 +42,15 @@ const PivotGrid = ({id, adHocOption, item}) => {
     };
   }, []);
 
-  const selectedItemId = useSelector(selectCurrentItem);
 
   // highlight 추가, 변경 시 repaint(컴포넌트를 다시 그려줌)
   useEffect(() => {
     ref.current.instance.repaint();
-  }, [selectedItemId.meta.highlight]);
+  }, [meta.dataHighlight]);
   // 하이라이트를 가져옴.
   const highlight = useMemo(() => {
-    return selectedItemId.meta.highlight;
-  }, [selectedItemId.meta.highlight]);
+    return meta.dataHighlight;
+  }, [meta.dataHighlight]);
   // 하이라이트를 hashMap으로 만들어서 사용.
   const highlightMap = useMemo(() => {
     const map = new Map();
@@ -62,7 +59,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
       map.set(highlight[i].idx, highlight[i]);
     }
     return map;
-  }, [selectedItemId.meta.highlight]);
+  }, [meta.dataHighlight]);
 
   const pivoCellPrepared = ({cell, area, cellElement}) => {
     if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
