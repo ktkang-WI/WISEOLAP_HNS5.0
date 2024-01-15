@@ -15,6 +15,7 @@ export const formatValue = (options) => {
   );
   return formatted;
 };
+
 export const updateFomatType = (e, value) => {
   const isAutoOrGeneral =
   value === 'Auto' || value === 'General';
@@ -55,6 +56,7 @@ export const updateFomatType = (e, value) => {
     e.component.getEditor('useDigitSeparator').option('disabled', false);
   }
 };
+
 export const updateSuffix = (e, value) => {
   if (!value) {
     e.component.getEditor('suffixO').option('disabled', true);
