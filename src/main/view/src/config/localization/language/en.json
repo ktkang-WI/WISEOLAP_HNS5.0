@@ -292,5 +292,11 @@
   "degreeOption": "Degree Option",
   "precisionOption": "Precision Option",
   "all": "all",
-  "colRowSwitch": "Transpose"
+  "colRowSwitch": "Transpose",
+  "datasetBinding": "Dataset Binding",
+  "file": "file",
+  "importFileFromPC": "Import File From PC",
+  "print": "Print",
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
+
 }

@@ -4,13 +4,14 @@ import {Lookup} from 'devextreme-react';
 import localizedString from '../../../../config/localization';
 import PanelTitle from '../Common/Panel/PanelTitle';
 import DataSourceFoldableList from './molecules/DataSourceFoldableList';
-import {useSelector, useDispatch, shallowEqual} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentDataset, selectCurrentDatasets}
   from 'redux/selector/DatasetSelector';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import _ from 'lodash';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useCallback} from 'react';
+import store from 'redux/modules';
 
 const theme = getTheme();
 
@@ -26,13 +27,13 @@ const Wrapper = styled.div`
 const DataSourceTab = () => {
   const datasets = useSelector(selectCurrentDatasets);
   const selectedDataset = useSelector(selectCurrentDataset);
-  const selectedReportId = useSelector(selectCurrentReportId, shallowEqual);
   const dispatch = useDispatch();
   const {selectDataset} = DatasetSlice.actions;
 
   const onValueChanged = useCallback((e) => {
+    const reportId = selectCurrentReportId(store.getState());
     dispatch(selectDataset({
-      reportId: selectedReportId,
+      reportId: reportId,
       datasetId: e.value? e.value.datasetId : ''
     }));
   }, [selectedDataset]);

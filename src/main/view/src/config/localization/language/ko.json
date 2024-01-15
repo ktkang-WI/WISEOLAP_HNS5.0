@@ -308,7 +308,11 @@
   "degreeOption": "정도 옵션",
   "precisionOption": "정도 옵션",
   "unit": "단위",
-  "bar": "바",
   "all": "전체",
-  "colRowSwitch": "행/열 변환"
+  "colRowSwitch": "행/열 변환",
+  "datasetBinding": "데이터집합 연동",
+  "file": "파일",
+  "importFileFromPC": "파일 불러오기",
+  "print": "프린트",
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
 }
