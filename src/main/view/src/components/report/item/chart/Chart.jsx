@@ -3,7 +3,6 @@ import DevChart, {
   Tooltip,
   Series,
   Label
-//  ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import {selectCurrentDataField}
@@ -158,7 +157,6 @@ const Chart = ({id, adHocOption, item}) => {
       pointSelectionMode={'multiple'}
       seriesSelectionMode={interactiveOption.mode}
     >
-      {/* <ValueAxis min={0} max={99999999999999} /> */}
       <Legend
         visible={true}
         position='outside'
@@ -189,8 +187,6 @@ const Chart = ({id, adHocOption, item}) => {
                   customizeText={
                     (info) => customizeTooltip(info, true, Formdata)
                   }
-                  // backgroundColor='rgba(0, 0, 0, 0)'
-                  // font={{color: 'rgb(29, 178, 245)'}}
                 />
               </Series>
         )
