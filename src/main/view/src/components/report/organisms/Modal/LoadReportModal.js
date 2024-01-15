@@ -122,7 +122,7 @@ const LoadReportModal = ({...props}) => {
                       reportId: selectedReport.id,
                       informations: data.informations
                     }));
-                    if (reportType === DesignerMode.SPREADSHEET) {
+                    if (reportType === DesignerMode.SPREAD_SHEET) {
                       const sheets = selectSheets(store.getState());
                       const config = setRibbonSetting();
                       const designer =

@@ -287,7 +287,7 @@ const useQueryExecute = () => {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (reportType === DesignerMode['ADHOC']) {
+    if (reportType === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));

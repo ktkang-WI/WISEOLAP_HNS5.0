@@ -51,7 +51,7 @@ const getInitialState = () => {
     return dashboardInitialState;
   }
 
-  if (mode === DesignerMode['ADHOC']) {
+  if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
   }
 };
@@ -63,7 +63,7 @@ const reducers = {
 
     if (mode === DesignerMode['DASHBOARD']) {
       dashboardInitialState;
-    } else if (mode === DesignerMode['ADHOC']) {
+    } else if (mode === DesignerMode['AD_HOC']) {
       return adHocInitialState;
     } else if (mode === DesignerMode['EXCEL']) {
       dashboardInitialState;

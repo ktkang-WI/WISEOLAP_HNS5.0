@@ -419,7 +419,7 @@ public class ReportService {
 	        	reportMstrEntity.setDupleYn(checkDuplicatedReport(reportMstrEntity));
 	        }
 	
-	        if (!"Y".equals(reportMstrEntity.getDupleYn())) {
+	        if ("N".equals(reportMstrEntity.getDupleYn())) {
 	        	reportDAO.addReport(reportMstrEntity);
 	        }
 	        return reportMstrEntity;

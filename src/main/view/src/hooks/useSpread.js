@@ -39,7 +39,7 @@ const useSpread = () => {
         bindingInfo.columnIndex,
         invoice.records.length+1,
         columns.length,
-        createBoarderStyle(bindingInfo.useBoarder));
+        createBorderStyle(bindingInfo.useBorder));
 
     table.showHeader(true);
     table.autoGenerateColumns(false);
@@ -220,11 +220,11 @@ const useSpread = () => {
     return position;
   };
 
-  const createBoarderStyle = (useBoarder) => {
+  const createBorderStyle = (useBorder) => {
     const sheets = selectSheets(store.getState());
     const tableStyle = new sheets.Tables.TableTheme();
     const thinBorder = undefined;
-    if (useBoarder) {
+    if (useBorder) {
       thinBorder = new sheets.LineBorder('black', 1);
     }
     tableStyle.wholeTableStyle(new sheets.Tables.TableStyle(

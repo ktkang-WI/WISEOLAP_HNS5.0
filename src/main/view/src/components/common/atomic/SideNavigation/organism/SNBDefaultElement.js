@@ -50,7 +50,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: adhocActive,
       label: localizedString.adhoc,
       onClick: (e) => {
-        onClick(DesignerMode['ADHOC']);
+        onClick(DesignerMode['AD_HOC']);
       }
     },
     'Spreadsheet': {
@@ -59,7 +59,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
       onClick: (e) => {
-        onClick(DesignerMode['SPREADSHEET']);
+        onClick(DesignerMode['SPREAD_SHEET']);
       }
     },
     'Preference': {

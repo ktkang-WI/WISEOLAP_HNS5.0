@@ -36,11 +36,11 @@ const router = createBrowserRouter([
         element: <Dashboard/>
       },
       {
-        path: DesignerMode['ADHOC'].toLowerCase(),
+        path: DesignerMode['AD_HOC'].toLowerCase(),
         element: <Adhoc/>
       },
       {
-        path: DesignerMode['SPREADSHEET'].toLowerCase(),
+        path: DesignerMode['SPREAD_SHEET'].toLowerCase(),
         element: <Spreadsheet/>
       }
     ]

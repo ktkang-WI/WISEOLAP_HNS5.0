@@ -82,7 +82,7 @@ const useReportSave = () => {
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
-    if (reportType === DesignerMode['SPREADSHEET']) {
+    if (reportType === DesignerMode['SPREAD_SHEET']) {
       param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
     } else {
       param.reportXml = JSON.stringify({
@@ -99,7 +99,7 @@ const useReportSave = () => {
    * @param {JSON} response 저장에 필요한 Modal dataSource
    */
   const saveReport = (response) => {
-    if (response.data.reportType === DesignerMode['SPREADSHEET']) {
+    if (response.data.reportType === DesignerMode['SPREAD_SHEET']) {
       createReportBlob().then((bolb) => fileUpload(
           bolb, {fileName: response.data.reportId + '.xlsx'}));
     }
@@ -140,7 +140,7 @@ const useReportSave = () => {
       dispatch(deleteParameterForDesigner(reportId));
       dispatch(deleteSpread(reportId));
       reload(reportType);
-      if (reportType === DesignerMode['SPREADSHEET']) {
+      if (reportType === DesignerMode['SPREAD_SHEET']) {
         fileDelete({fileName: reportId + '.xlsx'});
       }
       alert('보고서를 삭제했습니다.');

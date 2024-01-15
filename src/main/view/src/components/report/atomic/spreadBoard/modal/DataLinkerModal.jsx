@@ -39,7 +39,7 @@ const DatasetLinkerModal = ({...props}) => {
           sheetNm: undefined,
           position: undefined,
           useHeader: false,
-          useBoarder: false,
+          useBorder: false,
           useBinding: false
         };
       });
@@ -55,7 +55,7 @@ const DatasetLinkerModal = ({...props}) => {
           sheetNm: bindingInfos[datasetId].sheetNm,
           position: position,
           useHeader: bindingInfos[datasetId].useHeader,
-          useBoarder: bindingInfos[datasetId].useBoarder,
+          useBorder: bindingInfos[datasetId].useBorder,
           useBinding: bindingInfos[datasetId].useBinding
         };
       });
@@ -73,7 +73,7 @@ const DatasetLinkerModal = ({...props}) => {
         columnIndex: colNRow.columnIndex,
         rowIndex: colNRow.rowIndex,
         useHeader: dataSource.useHeader,
-        useBoarder: dataSource.useBoarder,
+        useBorder: dataSource.useBorder,
         useBinding: createUseBind(dataSource)
       };
       return null;
@@ -139,7 +139,7 @@ const DatasetLinkerModal = ({...props}) => {
           />
         </Column>
         <Column
-          dataField='useBoarder'
+          dataField='useBorder'
           caption='테두리 표시 여부'
         >
           <Lookup

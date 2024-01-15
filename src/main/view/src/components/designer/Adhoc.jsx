@@ -9,7 +9,7 @@ const Adhoc = () => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   useEffect(() => {
-    dispatch(setDesignerMode(DesignerMode['ADHOC']));
+    dispatch(setDesignerMode(DesignerMode['AD_HOC']));
   });
   return (
     <>

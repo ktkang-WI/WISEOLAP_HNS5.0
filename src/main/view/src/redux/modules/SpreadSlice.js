@@ -48,7 +48,7 @@ const defaultBindInfo = {
   rowIndex: 0,
   columnIndex: 0,
   useHeader: false,
-  useBoarder: false,
+  useBorder: false,
   useBind: false,
   sheetNm: undefined,
   datasetNm: undefined

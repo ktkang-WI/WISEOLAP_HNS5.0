@@ -304,7 +304,7 @@ const RibbonDefaultElement = () => {
       'useArrowButton': false,
       'onClick': () => {
         const reportType = selectCurrentDesignerMode(store.getState());
-        if (reportType !== DesignerMode['SPREADSHEET']) {
+        if (reportType !== DesignerMode['SPREAD_SHEET']) {
           executeItems();
         } else {
           excuteSpread();
