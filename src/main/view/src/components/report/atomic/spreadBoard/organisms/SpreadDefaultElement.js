@@ -17,8 +17,9 @@ import DatasetLinkerModal from '../modal/DataLinkerModal';
 import useSpread from 'hooks/useSpread';
 
 const SpreadDefaultElement = () => {
-  const {openModal, confirm, alert} = useModal();
   const {setSpread} = SpreadSlice.actions;
+
+  const {openModal, confirm, alert} = useModal();
   const dispatch = useDispatch();
   const {reload} = useReportSave();
   const {save} = saveDefaultElement();
