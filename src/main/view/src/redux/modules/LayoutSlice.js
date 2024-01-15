@@ -84,6 +84,19 @@ const adHocInitialState = {
   }
 };
 
+const excelInitialState = {
+  0: {
+    layoutQuantity: 1,
+    layoutConfig: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      layout: {}
+    }
+  }
+};
+
 const getInitialState = () => {
   const mode = ConfigSlice.getInitialState().designerMode;
 
@@ -91,8 +104,12 @@ const getInitialState = () => {
     return dashboardInitialState;
   }
 
-  if (mode === DesignerMode['ADHOC']) {
+  if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
+  }
+
+  if (mode === DesignerMode['EXCEL']) {
+    return excelInitialState;
   }
 };
 
@@ -105,8 +122,12 @@ const reducers = {
       return dashboardInitialState;
     }
 
-    if (mode === DesignerMode['ADHOC']) {
+    if (mode === DesignerMode['AD_HOC']) {
       return adHocInitialState;
+    }
+
+    if (mode === DesignerMode['EXCEL']) {
+      return excelInitialState;
     }
   },
   setLayout(state, actions) {
