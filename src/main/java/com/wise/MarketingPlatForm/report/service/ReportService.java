@@ -117,9 +117,9 @@ public class ReportService {
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
         Map<String, Object> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
-        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
         	returnMap = xmlParser.getReport(dto, userId);
-        } else {	
+        } else {
         	JSONObject items = new JSONObject(entity.getChartXml());
         	JSONObject dataset = new JSONObject(entity.getDatasetXml());
         	JSONObject layout = new JSONObject(entity.getLayoutXml());
@@ -135,19 +135,19 @@ public class ReportService {
         }
         Map<String, Object> report = new HashMap<String, Object>();
     	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-    	
+
     	reports.add(report);
-    	
+
     	Map<String, Object> options = new HashMap<String, Object>();
         options.put("order", entity.getReportOrdinal());
     	options.put("reportNm", entity.getReportNm());
     	options.put("reportDesc", entity.getReportDesc());
     	options.put("reportPath", null);
-        
+
     	report.put("reportId", reportId);
     	report.put("options", options);
     	returnMap.put("reports", reports);
-        
+
         return returnMap;
     }
 
@@ -418,9 +418,14 @@ public class ReportService {
 	        if (reportMstrEntity.getReportId() == 0) {
 	        	reportMstrEntity.setDupleYn(checkDuplicatedReport(reportMstrEntity));
 	        }
-	
+
 	        if ("N".equals(reportMstrEntity.getDupleYn())) {
 	        	reportDAO.addReport(reportMstrEntity);
+                reportMstrEntity.setChartXml("");
+                reportMstrEntity.setLayoutXml("");
+                reportMstrEntity.setReportXml("");
+                reportMstrEntity.setParamXml("");
+                reportMstrEntity.setDatasetXml("");
 	        }
 	        return reportMstrEntity;
 	    } catch (Exception e) {

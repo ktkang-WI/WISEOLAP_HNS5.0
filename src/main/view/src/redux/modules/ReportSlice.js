@@ -23,7 +23,8 @@ const initialState = {
       paramXML: '',
       regDt: '',
       regUserNo: '',
-      reportType: DesignerMode['DASHBOARD']
+      reportType: DesignerMode['DASHBOARD'],
+      dupleYn: 'N'
     }
   }]
 };
@@ -50,7 +51,8 @@ const getInitialState = (designerMode) => {
         paramXML: '',
         regDt: '',
         regUserNo: '',
-        reportType: ''
+        reportType: '',
+        dupleYn: 'N'
       }
     }]
   };

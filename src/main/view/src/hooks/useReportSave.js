@@ -91,6 +91,7 @@ const useReportSave = () => {
       });
     }
     param.reportSubTitle = dataSource.reportSubTitle;
+    param.dupleYn = dataSource.dupleYn;
     return param;
   };
 
