@@ -150,7 +150,7 @@
   "width": "넓이",
   "useCaptionWidth": "캡션 넓이 사용",
   "captionWidth": "캡션 넓이",
-  "lineBreak": "즐바꿈",
+  "lineBreak": "줄바꿈",
   "itemCaption": "Caption 항목",
   "itemKey": "Key 항목",
   "defaultParameter": "매개변수 기본값",
@@ -322,5 +322,10 @@
   "colRowSwitch": "행/열 변환",
   "k": "천",
   "m": "백만",
-  "b": "십억"
+  "b": "십억",
+  "datasetBinding": "데이터집합 연동",
+  "file": "파일",
+  "importFileFromPC": "파일 불러오기",
+  "print": "프린트",
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
 }

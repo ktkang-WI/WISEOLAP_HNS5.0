@@ -21,7 +21,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.newWindow,
       'type': 'TextButton',
       'onClick': (e) => {
-        window.open('dashboard');
+        window.open('dashany');
       }
     },
     'Viewer': {
@@ -52,7 +52,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.designer,
       'type': 'TextButton',
       'onClick': (e) => {
-        nav('/editds/dashboard');
+        nav('/editds/dashany');
       }
     },
     'DownloadReport': {

@@ -305,5 +305,10 @@
   "colRowSwitch": "Transpose",
   "k": "K",
   "m": "M",
-  "b": "B"
+  "b": "B",
+  "datasetBinding": "Dataset Binding",
+  "file": "file",
+  "importFileFromPC": "Import File From PC",
+  "print": "Print",
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
 }
