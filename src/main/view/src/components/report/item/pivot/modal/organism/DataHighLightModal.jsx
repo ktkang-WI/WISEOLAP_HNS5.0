@@ -20,7 +20,7 @@ import _ from 'lodash';
 import MakeForm from '../molecules/MakeForm';
 import useModal from 'hooks/useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode} from '../../../../../config/configType';
 
 const theme = getTheme();
 
@@ -55,7 +55,7 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
   const {alert} = useModal();
   const rootItem = useSelector(selectRootItem);
   const reportType = selectCurrentDesignerMode(store.getState());
-  const selectedItem = reportType === DesignerMode['AdHoc'] ?
+  const selectedItem = reportType === DesignerMode['AD_HOC'] ?
       useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
   const reportId = selectCurrentReportId(store.getState());
   const {updateItem} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
@@ -63,7 +63,9 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
     useState(
         [...selectedReportTypeHighlight(selectedItem, reportType)]
     ); // 이미 하이라이트 목록이 있다면 모달창을 불러올 때 같이 불러옴.
-  const [data, setData] = useState({}); // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
+  const [data, setData] = useState({
+    'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true
+  }); // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
   const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
   const measureNames = useMemo(() => {
