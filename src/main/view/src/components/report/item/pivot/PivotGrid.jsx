@@ -63,6 +63,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
 
   const pivoCellPrepared = ({cell, area, cellElement}) => {
     if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
+      // isDataCell -> 셀, 합계 셀, 총계 셀 체크 안된경우 분기처리
       if (isDataCell(cell, area, highlightMap.get(cell.dataIndex)) ) {
         Object.assign(
             cellElement.style,

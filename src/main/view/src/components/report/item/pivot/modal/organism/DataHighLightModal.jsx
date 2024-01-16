@@ -20,6 +20,7 @@ import _ from 'lodash';
 import MakeForm from '../molecules/MakeForm';
 import useModal from 'hooks/useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -54,9 +55,8 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
   const {alert} = useModal();
   const rootItem = useSelector(selectRootItem);
   const reportType = selectCurrentDesignerMode(store.getState());
-  const selectedItem = reportType === 'AdHoc' ?
+  const selectedItem = reportType === DesignerMode['AdHoc'] ?
       useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
-  // const selectedItem = useSelector(selectCurrentItem); // 현재 선택한 item 정보 가져옴.
   const reportId = selectCurrentReportId(store.getState());
   const {updateItem} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
   const [highlightList, setHighlightList] = // 모달 창에서만 사용 하므로 useState로 목록을 보여줌.
@@ -98,9 +98,7 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
     }
 
     // 유효성 검사.
-    if (formData.dataItem === undefined ||
-        formData.condition === undefined ||
-        formData.valueFrom === undefined) {
+    if (!formData.dataItem ||! formData.condition ||!formData.valueFrom) {
       alert('데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다.');
     } else if (isNaN(Number(formData.valueFrom))) {
       alert('조건 값은 숫자만 입력해 주세요.');
