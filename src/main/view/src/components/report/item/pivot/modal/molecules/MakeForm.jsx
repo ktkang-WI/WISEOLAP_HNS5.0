@@ -111,7 +111,6 @@ const MakeForm = ({formData, measureNames}, ref) => {
         dataField='applyCell'
         editorType='dxCheckBox'
         editorOptions={{
-          value: true
         }}>
         <Label>{localizedString.applyCell}: </Label>
       </Item>
@@ -120,7 +119,6 @@ const MakeForm = ({formData, measureNames}, ref) => {
         dataField='applyTotal'
         editorType='dxCheckBox'
         editorOptions={{
-          value: true
         }}>
         <Label>{localizedString.applyTotal}: </Label>
       </Item>
@@ -129,7 +127,6 @@ const MakeForm = ({formData, measureNames}, ref) => {
         dataField='applyGrandTotal'
         editorType='dxCheckBox'
         editorOptions={{
-          value: true
         }}>
         <Label>{localizedString.applyGrandTotal}: </Label>
       </Item>

@@ -25,7 +25,7 @@ const GetCssStyle = (highlight, cellElement, cell) => {
         return colorStyle(highlight);
       }
     } else if (highlight.condition === '>=') {
-      if (Number(highlight.valueFrom) >= cell.value) {
+      if (Number(highlight.valueFrom) <= cell.value) {
         isEmoji();
         return colorStyle(highlight);
       }
@@ -35,7 +35,7 @@ const GetCssStyle = (highlight, cellElement, cell) => {
         return colorStyle(highlight);
       }
     } else if (highlight.condition === '<=') {
-      if (Number(highlight.valueFrom) <= cell.value) {
+      if (Number(highlight.valueFrom) >= cell.value) {
         isEmoji();
         return colorStyle(highlight);
       }
