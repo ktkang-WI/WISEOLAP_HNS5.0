@@ -2,6 +2,7 @@ import GroupManagement
   from 'components/config/molecules/userGroupManagement/GroupManagement';
 import UserManagement
   from 'components/config/molecules/userGroupManagement/UserManagement';
+import localizedString from 'config/localization';
 
 export const Mode = {
   USER: 'USER',
@@ -11,12 +12,12 @@ export const Mode = {
 export const dataSource = [
   {
     mode: Mode.USER,
-    title: '사용자 관리',
+    title: localizedString.userManagement,
     component: <UserManagement/>
   },
   {
     mode: Mode.GROUP,
-    title: '그룹 관리',
+    title: localizedString.groupManagement,
     component: <GroupManagement/>
   }
 ];

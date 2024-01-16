@@ -10,11 +10,11 @@ import SignIn from 'components/login/organisms/SignIn';
 import Spreadsheet from 'components/designer/Spreadsheet';
 import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
-import GeneralConfigure
-  from 'components/config/organisms/generalConfigure/GeneralConfigure';
 import {
   generalConfigure as generalLoader,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
+import ConfigurationSetting
+  from 'components/config/organisms/configurationSetting/ConfigurationSetting';
 
 const contextPath = '/editds';
 
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'config',
-        element: <GeneralConfigure/>,
+        element: <ConfigurationSetting/>,
         loader: generalLoader
       },
       {
