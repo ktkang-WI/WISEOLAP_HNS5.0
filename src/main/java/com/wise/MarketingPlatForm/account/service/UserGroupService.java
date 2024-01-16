@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.config.service;
+package com.wise.MarketingPlatForm.account.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,24 +6,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
-import com.wise.MarketingPlatForm.config.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.UsersGroupsModel;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.GroupsModel.GroupDetailInfoModel;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.GroupsModel.GroupMemberUserModel;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.GroupsModel.GroupsModel;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.UsersModel.UserDetailInfoModel;
-import com.wise.MarketingPlatForm.config.model.UserGroupFormat.UsersModel.UsersFormatModel;
+import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.model.UsersGroupsModel;
+import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupDetailInfoModel;
+import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupMemberUserModel;
+import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupsModel;
+import com.wise.MarketingPlatForm.account.model.UsersModel.UserDetailInfoModel;
+import com.wise.MarketingPlatForm.account.model.UsersModel.UsersFormatModel;
 
 @Service
 public class UserGroupService {
 
   @Autowired
-  private ConfigDAO configDAO;
+  private AccountDAO accountDAO;
 
   public UsersGroupsModel getUserGroupData() {
     
-    List<UserGroupDTO> userGroupVO = configDAO.selectListGroupData();
+    List<UserGroupDTO> userGroupVO = accountDAO.selectListGroupData();
 
     List<UsersFormatModel> usersFormat = generateUsersObject(userGroupVO);
     List<GroupsModel> groupsFormat = generateGroupsObject(userGroupVO);

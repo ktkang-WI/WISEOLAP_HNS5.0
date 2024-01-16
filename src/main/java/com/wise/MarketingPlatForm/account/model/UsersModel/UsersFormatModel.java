@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.config.model.UserGroupFormat.UsersModel;
+package com.wise.MarketingPlatForm.account.model.UsersModel;
 
 import lombok.Builder;
 import lombok.Getter;

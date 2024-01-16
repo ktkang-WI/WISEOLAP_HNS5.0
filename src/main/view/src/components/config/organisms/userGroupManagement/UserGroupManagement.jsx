@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
+import {updateGroupTest} from 'models/config/userGroupManagement.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -45,12 +46,17 @@ const UserGroupManagement = () => {
     );
   };
 
+  const handleBtnClick = (e) => {
+    // getUserGroupManagementTEST();
+    updateGroupTest();
+  };
+
   const navBarItems = (mode) => {
     if (mode === Mode.USER) {
       return (
         btns.map((item, index) => (
           <NavBarItem key={index}>
-            <Button icon={item}></Button>
+            <Button icon={item} onClick={handleBtnClick}></Button>
           </NavBarItem>
         ))
       );
@@ -59,7 +65,7 @@ const UserGroupManagement = () => {
         btns.filter((item) => item !== 'key')
             .map((item, index) => (
               <NavBarItem icon={item} key={index}>
-                <Button icon={item}></Button>
+                <Button icon={item} onClick={handleBtnClick}></Button>
               </NavBarItem>
             ))
       );

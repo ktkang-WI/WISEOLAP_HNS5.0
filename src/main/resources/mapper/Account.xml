@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.account.dao.AccountDAO">
+    
+    <resultMap id="UserGroupDTO" type="com.wise.MarketingPlatForm.account.dto.UserGroupDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="E_MAIL1" property="eMail1" javaType="String"/>
+      <result column="E_MAIL2" property="eMail2" javaType="String"/>
+      <result column="TEL_NO" property="telNo" javaType="String"/>
+      <result column="USER_RUN_MODE" property="userRunMode" javaType="String"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+    </resultMap>
+
+    <select id="selectListGroupData" resultMap="UserGroupDTO">
+			SELECT
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_NM,
+        USER_MSTR.E_MAIL1,
+        USER_MSTR.E_MAIL2,
+        USER_MSTR.TEL_NO,
+        USER_MSTR.RUN_MODE AS USER_RUN_MODE,
+        USER_MSTR.USER_DESC,
+        GRP_MSTR.GRP_ID,
+        GRP_MSTR.GRP_NM,
+        GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,
+        GRP_MSTR.GRP_DESC
+        FROM USER_MSTR INNER JOIN GRP_MSTR
+            ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+            WHERE 1 = 1 
+            AND USER_MSTR.DEL_YN = 'N'
+            AND GRP_MSTR.DEL_YN = 'N'
+		</select>
+
+    <!-- TODO: 디비별 분기 처리-->
+    <insert id="createUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      INSERT INTO
+        USER_MSTR(
+            USER_NO,
+            GRP_ID,
+            USER_ID,
+            USER_NM,
+            PASSWD,
+            E_MAIL1,
+            E_MAIL2,
+            DEL_YN,
+            HP_NO,
+            TEL_NO,
+            USER_REL_CD,
+            USER_DESC,
+            RUN_MODE,
+            PW_CHANGE_DT,
+            COMP_CD,
+            LOCK_CNT,
+            HASH_YN
+        )
+        VALUES(
+            USER_MSTR_USER_NO_SEQ.NEXTVAL,
+            #{grpId, jdbcType=INTEGER},
+            #{userId, jdbcType=VARCHAR},
+            #{userNm, jdbcType=VARCHAR},
+            #{passwd, jdbcType=VARCHAR},
+            #{eMail1, jdbcType=VARCHAR},
+            #{eMail2, jdbcType=VARCHAR},
+            'N',
+            NULL,
+            #{telNo, jdbcType=VARCHAR},
+            NULL,
+            #{userDesc, jdbcType=VARCHAR},
+            #{userRunMode, jdbcType=VARCHAR},
+            NULL,
+            NULL,
+            NULL,
+            NULL
+        )
+    </insert>
+
+    <update id="updateUserDefaultGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE USER_MSTR_TMP
+          SET GRP_ID = 0
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+        UPDATE USER_MSTR
+          SET 
+              <if test='grpId != 0'>
+                GRP_ID = #{grpId, jdbcType=INTEGER},
+              </if>
+              <if test='userId != ""'>
+                USER_ID = #{userId, jdbcType=VARCHAR},
+              </if>
+              <if test='userNm != ""'>
+                USER_NM = #{userNm, jdbcType=VARCHAR},
+              </if>
+              <if test='eMail1 != ""'>
+                E_MAIL1 = #{eMail1, jdbcType=VARCHAR},
+              </if>
+              <if test='eMail2 != ""'>
+                E_MAIL2 = #{eMail2, jdbcType=VARCHAR},
+              </if>
+              <if test='telNo != ""'>
+                TEL_NO = #{telNo, jdbcType=VARCHAR},
+              </if>
+              <if test='userDesc != ""'>
+                USER_DESC = #{userDesc, jdbcType=VARCHAR},
+              </if>
+              <if test='userRunMode != ""'>
+                RUN_MODE = #{userRunMode, jdbcType=VARCHAR},
+              </if>
+              PASSWD = PASSWD
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateUsers" parameterType="java.util.List">
+      UPDATE USER_MSTR_TMP
+        SET 
+        <if test='list[0].grpId != 0'>
+          GRP_ID = #{list[0].grpId, jdbcType=INTEGER},
+        </if>
+          PASSWD = PASSWD
+          WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </update>
+
+    <update id="updateUserPasswd" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      UPDATE USER_MSTR
+          SET PASSWD = #{passwd, jdbcType=VARCHAR}
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <update id="deleteUser"  parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      UPDATE USER_MSTR
+          SET DEL_YN = 'Y'
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <insert 
+      id="createGroup" 
+      parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+      INSERT INTO
+        GRP_MSTR(
+            GRP_ID,
+            GRP_NM,
+            GRP_DESC,
+            GRP_REL_CD,
+            DEL_YN,
+            RUN_MODE
+        )
+        VALUES(
+            GRP_MSTR_GRP_ID_SEQ.NEXTVAL,
+            #{grpNm, jdbcType=VARCHAR},
+            #{grpDesc, jdbcType=VARCHAR},
+            NULL,
+            'N',
+            #{grpRunMode, jdbcType=VARCHAR}
+        )
+      <selectKey resultType="int" keyProperty="grpId" order="AFTER">
+        SELECT GRP_MSTR_GRP_ID_SEQ.CURRVAL AS grpId FROM DUAL
+      </selectKey>
+    </insert>
+
+    <update id="updateGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE GRP_MSTR
+          SET 
+              <if test='grpNm != ""'>
+                GRP_NM = #{grpNm, jdbcType=VARCHAR},
+              </if>
+              <if test='grpDesc != ""'>
+                GRP_DESC = #{grpDesc, jdbcType=VARCHAR},
+              </if>
+              <if test='grpRunMode != ""'>
+                RUN_MODE = #{grpRunMode, jdbcType=VARCHAR},
+              </if>
+              DEL_YN = DEL_YN
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+    <update id="deleteGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE GRP_MSTR
+          SET DEL_YN = 'Y'
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+</mapper>

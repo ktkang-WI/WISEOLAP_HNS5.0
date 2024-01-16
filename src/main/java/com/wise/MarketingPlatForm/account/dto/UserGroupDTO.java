@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.config.dto;
+package com.wise.MarketingPlatForm.account.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

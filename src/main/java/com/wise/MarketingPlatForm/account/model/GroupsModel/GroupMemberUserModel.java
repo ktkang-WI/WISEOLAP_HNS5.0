@@ -1,9 +1,11 @@
-package com.wise.MarketingPlatForm.config.model.UserGroupFormat.GroupsModel;
+package com.wise.MarketingPlatForm.account.model.GroupsModel;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 public class GroupMemberUserModel {
   int userNo;

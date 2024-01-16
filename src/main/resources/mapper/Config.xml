@@ -15,21 +15,6 @@
       <result column="KAKAO_MAP_API_KEY" property="kakaoMapApiKey" javaType="String"/>
     </resultMap>
 
-    <resultMap id="UserGroupDTO" type="com.wise.MarketingPlatForm.config.dto.UserGroupDTO">
-      <result column="USER_NO" property="userNo" javaType="int"/>
-      <result column="USER_ID" property="userId" javaType="String"/>
-      <result column="USER_NM" property="userNm" javaType="String"/>
-      <result column="E_MAIL1" property="eMail1" javaType="String"/>
-      <result column="E_MAIL2" property="eMail2" javaType="String"/>
-      <result column="TEL_NO" property="telNo" javaType="String"/>
-      <result column="USER_RUN_MODE" property="userRunMode" javaType="String"/>
-      <result column="USER_DESC" property="userDesc" javaType="String"/>
-      <result column="GRP_ID" property="grpId" javaType="int"/>
-      <result column="GRP_NM" property="grpNm" javaType="String"/>
-      <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
-      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
-    </resultMap>
-
 		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
 			SELECT
         CONFIG_MSTR.MAIN_TITLE,
@@ -43,24 +28,42 @@
         FROM CONFIG_MSTR INNER JOIN WB_CONFIG_MSTR ON 1 = 1
 		</select>
 
-    <select id="selectListGroupData" resultMap="UserGroupDTO">
-			SELECT
-        USER_MSTR.USER_NO,
-        USER_MSTR.USER_ID,
-        USER_MSTR.USER_NM,
-        USER_MSTR.E_MAIL1,
-        USER_MSTR.E_MAIL2,
-        USER_MSTR.TEL_NO,
-        USER_MSTR.RUN_MODE AS USER_RUN_MODE,
-        USER_MSTR.USER_DESC,
-        GRP_MSTR.GRP_ID,
-        GRP_MSTR.GRP_NM,
-        GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,
-        GRP_MSTR.GRP_DESC
-        FROM USER_MSTR INNER JOIN GRP_MSTR
-            ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-            WHERE 1 = 1 
-            AND USER_MSTR.DEL_YN = 'N'
-            AND GRP_MSTR.DEL_YN = 'N'
-		</select>
+    <update id="updateConfig" parameterType="com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity">
+      UPDATE CONFIG_MSTR
+          SET 
+              <if test='mainTitle != ""'>
+                MAIN_TITLE = #{mainTitle, jdbcType=VARCHAR},
+              </if>
+              <if test='licensesKey != ""'>
+                LICENSES_KEY = #{licensesKey, jdbcType=VARCHAR},
+              </if>
+              <if test='webUrl != ""'>
+                WEB_URL = #{webUrl, jdbcType=VARCHAR},
+              </if>
+              MAIN_TAB_EX = MAIN_TAB_EX
+          WHERE 1 = 1
+    </update>
+
+    <update id="updateWbConfig" parameterType="com.wise.MarketingPlatForm.config.entity.WbConfigMstrEntity">
+        UPDATE WB_CONFIG_MSTR
+          SET 
+              <if test='loginImage != ""'>
+                LOGIN_IMAGE = #{loginImage, jdbcType=VARCHAR},
+              </if>
+              <if test='logo != ""'>
+                LOGO = #{logo, jdbcType=VARCHAR},
+              </if>
+              <if test='spreadJsLicense != ""'>
+                SPREAD_JS_LICENSE = #{spreadJsLicense, jdbcType=VARCHAR},
+              </if>
+              <if test='spreadJsDesignLicense != ""'>
+                SPREAD_JS_DESIGNER_LICENSE = #{spreadJsDesignLicense, jdbcType=VARCHAR},
+              </if>
+              <if test='kakaoMapApiKey != ""'>
+                KAKAO_MAP_API_KEY = #{kakaoMapApiKey, jdbcType=VARCHAR},
+              </if>
+              REPORT_DIRECT_VIEW = REPORT_DIRECT_VIEW
+          WHERE 1 = 1
+    </update>
+
 </mapper>

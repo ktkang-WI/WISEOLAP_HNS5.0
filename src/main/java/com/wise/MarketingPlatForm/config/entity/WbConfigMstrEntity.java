@@ -1,16 +1,13 @@
-package com.wise.MarketingPlatForm.config.dto;
+package com.wise.MarketingPlatForm.config.entity;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @Builder
-public class GeneralDTO {
-  String mainTitle;
-  String licensesKey;
-  String webUrl;
+public class WbConfigMstrEntity {
   String loginImage;
   String logo;
   String spreadJsLicense;

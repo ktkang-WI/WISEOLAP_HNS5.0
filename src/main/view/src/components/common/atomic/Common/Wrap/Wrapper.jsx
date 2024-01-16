@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
   flex: 0 0 ${(props)=>props.size ? props.size : 1};
   justify-content: ${(props)=>props.center ? props.center : 'start'};
+  align-items: ${(props)=>props.center ? props.center : 'start'};
 `;
 
 export default Wrapper;
