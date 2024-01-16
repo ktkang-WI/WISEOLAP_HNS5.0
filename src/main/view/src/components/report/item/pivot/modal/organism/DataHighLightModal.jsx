@@ -69,9 +69,9 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
   const measureNames = useMemo(() => {
-    if (reportType === 'AdHoc') {
+    if (reportType === DesignerMode['AD_HOC']) {
       return rootItem.adHocOption.dataField.measure.map((mea) => mea.name);
-    } else if (reportType === 'DashAny') {
+    } else if (reportType === DesignerMode['DASHBOARD']) {
       return selectedItem.meta.dataField.measure.map((mea) => mea.name);
     }
   }, []); // 데이터항목에 올라간 측정값을 가져옴.
