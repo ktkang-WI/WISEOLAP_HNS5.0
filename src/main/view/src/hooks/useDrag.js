@@ -3,7 +3,8 @@ import {
   selectCurrentDataset
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItem
+  selectCurrentDataField,
+  selectCurrentDataFieldOption
 } from 'redux/selector/ItemSelector';
 import {
   selectCurrentReportId
@@ -37,11 +38,11 @@ const useDrag = () => {
   };
 
   const onDragEnd = (e) => {
-    const selectedItem = selectCurrentItem(store.getState());
     const selectedDataset = selectCurrentDataset(store.getState());
     const reportId = selectCurrentReportId(store.getState());
-    const dataField = _.cloneDeep(selectedItem.meta.dataField);
-    const dataFieldOption = _.cloneDeep(selectedItem.mart.dataFieldOption);
+    const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
+    const dataFieldOption =
+    _.cloneDeep(selectCurrentDataFieldOption(store.getState()));
     const dest = e.destination;
     const source = e.source;
     const targetId = e.draggableId;

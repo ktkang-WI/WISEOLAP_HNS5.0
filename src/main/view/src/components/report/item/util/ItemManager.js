@@ -35,6 +35,28 @@ const generateParameter = (item, param) => {
 };
 
 /**
+ * 비정형 아이템 파라미터 생성
+ * @param {JSON} rootItem root Item state (비정형)
+ * @param {JSON} param 파라미터 정보를 삽입할 객체
+ */
+const generateAdHocParameter = (rootItem, param) => {
+  const dataField = rootItem.adHocOption.dataField;
+  const topBottomInfo = rootItem.adHocOption.topBottomInfo;
+  // const chartItem = rootItem.items[0];
+  const pivotItem = rootItem.items[1];
+
+  param.dimension = dataField.row.concat(dataField.column);
+  param.measure = dataField.measure;
+  param.topBottomInfo = topBottomInfo;
+
+  param.removeNullData = pivotItem.meta.removeNullData;
+
+  param.dimension = JSON.stringify(param.dimension);
+  param.measure = JSON.stringify(param.measure);
+  param.topBottomInfo = JSON.stringify(param.topBottomInfo);
+};
+
+/**
  * 리본 영역 아이템 배열을 반환합니다.
  * @param {ItemType} type 아이템 타입
  * @return {Array} ribbonItems
@@ -45,6 +67,21 @@ const getRibbonItems = (type) => {
 
 const getAttributeItems = (type) => {
   return utility[type].getAttributeItems();
+};
+
+const getAdHocAttributeItems = () => {
+  return ['AdHocOptions'];
+};
+
+const getTopBottomInfo = () => {
+  return {
+    dataFieldId: '',
+    applyFieldId: '',
+    topBottomType: 'TOP',
+    topBottomCount: 0,
+    isPercent: false,
+    isShowOthers: false
+  };
 };
 
 /**
@@ -105,13 +142,16 @@ const useCustomEvent = () => {
   };
 };
 
-
 export default {
   generateMeta,
   generateItem,
   generateParameter,
+  generateAdHocParameter,
   getRibbonItems,
   getAttributeItems,
+  useCustomEvent,
+  getAdHocAttributeItems,
+  getTopBottomInfo,
   getTabHeaderItems,
   useCustomEvent
 };

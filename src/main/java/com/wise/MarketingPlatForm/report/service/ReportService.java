@@ -14,6 +14,7 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
@@ -62,6 +63,7 @@ import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFact
 import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
@@ -97,7 +99,7 @@ public class ReportService {
 
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
-    
+
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
@@ -111,52 +113,42 @@ public class ReportService {
     }
 
     public Map<String, Object> getReport(String reportId, String userId) {
-    	ReportMstrEntity temp = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = ReportMstrEntity.toDTO(temp);
-        Map<String, Object> returnReport = new HashMap<>();
-        if(dto.getDatasetXml().indexOf("<DATA_SET") > -1) {
-//        ReportMetaDTO reportMetaDTO = new ReportMetaDTO();
-        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        	
-        	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-        	Map<String, Object> report = new HashMap<String, Object>();
-        	Map<String, Object> options = new HashMap<String, Object>();
-//        report.put("reportId", reportId);
-        	options.put("order", dto.getReportOrdinal());
-        	options.put("reportNm", dto.getReportNm());
-        	options.put("reportDesc", dto.getReportDesc());
-        	options.put("reportPath", null);
-        	
-        	report.put("reportId", reportId);
-        	report.put("options", options);
-        	
-        	reports.add(report);
-        	returnReport = xmlParser.getReport(dto, userId);        	
-        	returnReport.put("reports", reports);
-        	returnReport.put("isNew", false);
-        } else {
-        	JSONParser jsonParser = new JSONParser();
-        	JSONObject  report = null;
-        	JSONObject  item = null;
-        	JSONObject  dataset = null;
-        	JSONObject  layout = null;
-        	try {
-	        	report = (JSONObject) jsonParser.parse(dto.getReportXml());
-	        	item = (JSONObject) jsonParser.parse(dto.getChartXml());
-	        	dataset = (JSONObject) jsonParser.parse(dto.getDatasetXml());
-	        	layout = (JSONObject) jsonParser.parse(dto.getLayoutXml());
-        	} catch (ParseException e) {
-        		e.printStackTrace();
+    	ReportMstrEntity entity = reportDAO.selectReport(reportId);
+        ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
+        Map<String, Object> returnMap = new HashMap<>();
+        if(!"newReport".equals(dto.getDatasetXml())) {
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
+        	returnMap = xmlParser.getReport(dto, userId);
+        } else {	
+        	JSONObject items = new JSONObject(entity.getChartXml());
+        	JSONObject dataset = new JSONObject(entity.getDatasetXml());
+        	JSONObject layout = new JSONObject(entity.getLayoutXml());
+        	JSONArray informations = new JSONArray(entity.getParamXml());
+        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+        		JSONObject spread = new JSONObject(entity.getReportXml());
+        		returnMap.put("spread", spread.toString());
         	}
-        	returnReport.put("report", report);
-        	returnReport.put("item", item);
-        	returnReport.put("dataset", dataset);
-        	returnReport.put("layout", layout);
-        	returnReport.put("isNew", true);
+        	returnMap.put("item", items.toString());
+        	returnMap.put("dataset", dataset.toString());
+        	returnMap.put("layout", layout.toString());
+        	returnMap.put("informations", informations.toString());
         }
+        Map<String, Object> report = new HashMap<String, Object>();
+    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+    	
+    	reports.add(report);
+    	
+    	Map<String, Object> options = new HashMap<String, Object>();
+        options.put("order", entity.getReportOrdinal());
+    	options.put("reportNm", entity.getReportNm());
+    	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportPath", null);
         
+    	report.put("reportId", reportId);
+    	report.put("options", options);
+    	returnMap.put("reports", reports);
         
-        return returnReport;
+        return returnMap;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
@@ -215,6 +207,33 @@ public class ReportService {
         PivotResult result = new PivotResult();
 
         result.setMatrix(pagedMatrix);
+        return result;
+    }
+
+    public List<ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        List<ReportResult> result = new ArrayList<ReportResult>();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggreagtion);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
+        List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
+
+        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
+        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
+        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
+
+        // clone으로 넘겨서
+        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
+        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+
         return result;
     }
 
@@ -394,16 +413,21 @@ public class ReportService {
         }
     }
 
-    public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
-        if (reportMstrDTO.getReportId() == 0) {
-            reportMstrDTO.setDupleYn(checkDuplicatedReport(reportMstrDTO));
-        }
-
-        if (reportMstrDTO.getDupleYn() != "Y") {
-            reportDAO.addReport(reportMstrDTO);
-        }
-
-        return reportMstrDTO;
+    public ReportMstrEntity addReport(ReportMstrEntity reportMstrEntity) {
+    try {
+	        if (reportMstrEntity.getReportId() == 0) {
+	        	reportMstrEntity.setDupleYn(checkDuplicatedReport(reportMstrEntity));
+	        }
+	
+	        if ("N".equals(reportMstrEntity.getDupleYn())) {
+	        	reportDAO.addReport(reportMstrEntity);
+	        }
+	        return reportMstrEntity;
+	    } catch (Exception e) {
+	        // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+	        e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+	        throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+    	}
     }
 
     public int deleteReport(int reportId) {
@@ -420,9 +444,9 @@ public class ReportService {
         result.put("privateReport", priList);
         return result;
     }
-    
-    public String checkDuplicatedReport(ReportMstrDTO reportMstrDTO) {
-        List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrDTO);
+
+    public String checkDuplicatedReport(ReportMstrEntity reportMstrEntity) {
+        List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrEntity);
         return result.size() > 0 ? "Y" : "N";
     }
 

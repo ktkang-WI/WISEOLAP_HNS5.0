@@ -14,18 +14,22 @@ import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
 import {useSelector, useDispatch} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
+import useModal from 'hooks/useModal';
+import TopBottomModal from '../modal/TopBottomModal';
 
 
 const ItemAttributeDefaultElement = () => {
   const dispatch = useDispatch();
   const focusedItem = useSelector(selectCurrentItem);
+  const rootItem = useSelector(selectRootItem);
   const reportId = useSelector(selectCurrentReportId);
   const {updateInteractiveOption} = ItemSlice.actions;
   const {filterItem} = useQueryExecute();
+  const {openModal} = useModal();
 
   const MASTER_FILTER_MODE = {
     SINGLE: 'single',
@@ -162,6 +166,49 @@ const ItemAttributeDefaultElement = () => {
             dispatch(updateInteractiveOption({
               reportId, option: {targetDimension}
             }));
+          }
+        }
+      ]
+    },
+    AdHocOptions: {
+      title: '비정형 옵션',
+      items: [
+        {
+          id: 'deltaValue',
+          label: '변동 측정값',
+          active: option.deltaValue == 'deltaValue',
+          icon: dimensionImg,
+          onClick: () => {
+            // 변동 측정값
+          }
+        },
+        {
+          id: 'dataHighlight',
+          label: '데이터 하이라이트',
+          icon: dimensionGroupImg,
+          active: option.dataHighlight == 'dataHighlight',
+          onClick: () => {
+            // 데이터 하이라이트
+          }
+        },
+        {
+          id: 'topBottom',
+          label: 'Top/Bottom값 설정',
+          icon: dimensionGroupImg,
+          active: option.topBottom == 'topBottom',
+          onClick: () => {
+            const dataField = rootItem.adHocOption.dataField;
+            if (dataField.measure.length === 0) {
+              return;
+            }
+
+            if (dataField.row.length === 0 && dataField.column.length === 0) {
+              return;
+            }
+
+            openModal(TopBottomModal, {
+              topBottomInfo: rootItem.adHocOption.topBottomInfo
+            });
           }
         }
       ]

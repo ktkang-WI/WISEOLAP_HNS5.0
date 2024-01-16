@@ -72,7 +72,7 @@ public class ExcelXmlParser extends XMLParser{
 						innerObj.put("columnIndex", position.get("columnIndex"));
 						innerObj.put("rowIndex", position.get("rowIndex"));
 						innerObj.put("useHeader", stringToBoolean((String) sheet.get("SHOW_HEADER")));
-						innerObj.put("useBoarder", stringToBoolean((String) sheet.get("SHOW_LINE")));
+						innerObj.put("useBorder", stringToBoolean((String) sheet.get("SHOW_LINE")));
 						returnSheet.put((String) sheet.get("SHEET_ID"), innerObj);
 					}
 				});

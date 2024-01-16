@@ -184,7 +184,7 @@
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
 
-    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO">
+    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
 			<selectKey keyProperty="reportId" resultType="int" order="AFTER">
 				<if test='reportId == 0'>
 								SELECT MAX(REPORT_ID) FROM REPORT_MSTR
@@ -312,7 +312,7 @@
 			WHERE REPORT_ID = #{reportId}
 		</update>
 
-		<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.vo.ReportMstrDTO"
+		<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity"
 			resultType="hashmap">
 			SELECT REPORT_NM
 			FROM REPORT_MSTR

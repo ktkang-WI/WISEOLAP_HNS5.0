@@ -1,17 +1,16 @@
-import {useEffect} from 'react';
 import DesignerContent from './DesignerContent';
 import Ribbon from 'components/common/atomic/Ribbon/organism/Ribbon';
+import {DesignerMode} from 'components/config/configType';
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import ReportSlice from 'redux/modules/ReportSlice';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const {initReport} = ReportSlice.actions;
-
+  const {setDesignerMode} = ConfigSlice.actions;
   useEffect(() => {
-    dispatch(initReport());
-  }, []);
-
+    dispatch(setDesignerMode(DesignerMode['DASHBOARD']));
+  });
   return (
     <>
       <Ribbon/>

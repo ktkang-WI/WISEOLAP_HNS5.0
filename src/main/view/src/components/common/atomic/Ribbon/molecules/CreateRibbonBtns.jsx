@@ -6,9 +6,12 @@ import RibbonBtnWrap from '../atom/RibbonBtnWrap';
 import Popover from '../../Popover/organism/Popover';
 import ItemManager from 'components/report/item/util/ItemManager';
 import RibbonPopoverBtn from '../atom/RIbbonPopoverBtn';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
 
 const CreateRibbonBtns = ({items, targetItem}) => {
   const eventManager = ItemManager.useCustomEvent();
+  const ribbonDefault = ribbonDefaultElement();
 
   const getRibbonItem = (item) => {
     if (item.type === 'RibbonButton' && !item.usePopover) {
@@ -54,11 +57,20 @@ const CreateRibbonBtns = ({items, targetItem}) => {
     });
   };
 
-  const ribbonDefaultItems = ribbonDefaultElement();
-
+  const ribbonDefaultItems = () => {
+    const reportType = selectCurrentDesignerMode(store.getState());
+    let returnDefault;
+    if (reportType === 'Spread' || reportType === 'Excel') {
+      const {Dataset, QuerySearch} = ribbonDefault;
+      returnDefault = {Dataset, QuerySearch};
+    } else {
+      returnDefault = ribbonDefault;
+    }
+    return returnDefault;
+  };
   return (
     <RibbonBtnWrap>
-      {itemIterator(ribbonDefaultItems, items)}
+      {itemIterator(ribbonDefaultItems(), items)}
     </RibbonBtnWrap>
   );
 };
