@@ -105,7 +105,8 @@ public final class DataSanitizer {
     }
 
     public final DataSanitizer topBottom(TopBottomInfo topBottomInfo) {
-        if (topBottomInfo != null && !topBottomInfo.getApplyFieldId().equals("")) {
+        if (topBottomInfo != null && 
+        	(topBottomInfo.getApplyFieldId() != null && !"".equals(topBottomInfo.getApplyFieldId()))) {
             data = topBottomInfo.getTopBottomData(data, measures, dimensions);
         }
 

@@ -51,7 +51,7 @@ const getInitialState = () => {
     return dashboardInitialState;
   }
 
-  if (mode === DesignerMode['ADHOC']) {
+  if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
   }
 };
@@ -62,11 +62,11 @@ const reducers = {
     const mode = actions.payload;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return dashboardInitialState;
-    }
-
-    if (mode === DesignerMode['ADHOC']) {
+      dashboardInitialState;
+    } else if (mode === DesignerMode['AD_HOC']) {
       return adHocInitialState;
+    } else if (mode === DesignerMode['EXCEL']) {
+      dashboardInitialState;
     }
   },
   changeItemReportId(state, actions) {
@@ -225,9 +225,9 @@ const reducers = {
       }
     }
   },
-  setItems(state, actions) {
+  setItem(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId] = actions.payload.items;
+    state[reportId] = actions.payload.item;
   },
   updateInteractiveOption(state, actions) {
     const reportId = actions.payload.reportId;
