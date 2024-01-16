@@ -18,45 +18,44 @@ const Chart = ({id, adHocOption, item}) => {
   if (!mart.init) {
     return <></>;
   }
-  const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
-
+  const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const dataFields = useSelector(selectCurrentDataField);
-  const formData = dataFields.measure.map((measure) => ({
-    format: measure.format,
-    uniqueName: measure.uniqueName
-  }));
-
+  const formData = dataFields.measure.reduce((result, measure) => {
+    const matchingCaptions = seriesCaptions.reduce((captions, caption) => {
+      if (caption.includes(measure.caption)) {
+        captions.push(caption);
+      }
+      return captions;
+    }, []);
+    result.push({
+      format: measure.format,
+      seriesName: matchingCaptions
+    });
+    return result;
+  }, []);
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
-
-
   const {filterItems, clearAllFilter} = useQueryExecute();
-
   const dxRef = useRef();
-
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
-
   // 마스터 필터 관련 useEffect
   useEffect(() => {
     if (!adHocOption) {
       dxRef.current.instance.clearSelection();
     }
   }, [interactiveOption]);
-
   useEffect(() => {
     if (!adHocOption) {
       filterItems(item, {});
     }
   }, [interactiveOption.targetDimension, interactiveOption.mode]);
-
   useEffect(() => {
     if (!adHocOption) {
       clearAllFilter(item);
     }
   }, [interactiveOption.crossDataSource]);
-
   /**
    * selectedData 기반으로 필터 정보를 반환합니다.
    * @return {Array} filters
@@ -65,7 +64,6 @@ const Chart = ({id, adHocOption, item}) => {
     const targetDiemnsion = interactiveOption.targetDimension;
     const dim = meta.dataField.dimension;
     const dimGrp = meta.dataField.dimensionGroup;
-
     // 선택된 데이터 '차원명': Set 형태로 가공
     const filters = selectedData.reduce((acc, filter) => {
       if (targetDiemnsion == 'dimension') {
@@ -88,23 +86,18 @@ const Chart = ({id, adHocOption, item}) => {
           }
         });
       }
-
       return acc;
     }, {});
-
     // Set Array로 변환
     for (const filter in filters) {
       if (filters[filter]) {
         filters[filter] = [...filters[filter]];
       }
     }
-
     return filters;
   };
-
   const onPointClick = ({target, component}) => {
     if (!interactiveOption.enabled) return;
-
     // 대상 차원이 차원일 경우
     if (interactiveOption.targetDimension == 'dimension') {
       // 단일 마스터 필터일 경우 초기화
@@ -116,7 +109,6 @@ const Chart = ({id, adHocOption, item}) => {
         }
         component.clearSelection();
       }
-
       if (target.isSelected()) {
         component.getAllSeries().forEach((series) => {
           series.getPointsByArg(target.argument).forEach((point) => {
@@ -142,10 +134,8 @@ const Chart = ({id, adHocOption, item}) => {
         selectedData.push(target.series.name);
       }
     }
-
     filterItems(item, getFilter());
   };
-
   return (
     <DevChart
       dataSource={mart.data.data}
@@ -175,6 +165,7 @@ const Chart = ({id, adHocOption, item}) => {
             (valueField, i) =>
               <Series
                 key={valueField}
+                // tag={Math.floor(i / seriesLength)}
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}

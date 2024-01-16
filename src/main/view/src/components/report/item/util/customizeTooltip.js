@@ -2,9 +2,13 @@ import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 import localizedString from 'config/localization';
 
 const customizeTooltip = (info, isLabel, formData) => {
-  const matchingFormatOption =
-  formData.find(
-      (option) => option.uniqueName === info.seriesName);
+  const matchingFormatOption = formData.reduce((result, option) => {
+    if (!result && option.seriesName.reduce((found, name) =>
+      found || info.seriesName === name, false)) {
+      return option;
+    }
+    return result;
+  }, null);
   const labelFormat =
   matchingFormatOption?.format?.formatType || 'Number';
   const labelUnit =
