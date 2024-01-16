@@ -3,7 +3,7 @@ import {selectRootItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
-import {deleteReport} from 'models/report/Report';
+import models from 'models';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -30,6 +30,7 @@ const useReportSave = () => {
     updateReport,
     updateSelectedReportId,
     deleteReportForDesigner,
+    deleteReport,
     initReport
   } = ReportSlice.actions;
   const {
@@ -115,6 +116,9 @@ const useReportSave = () => {
     };
 
     dispatch(updateReport(report));
+    if (currentReportId != reportId.newId) {
+      dispatch(deleteReport({reportId: currentReportId}));
+    }
 
     dispatch(changeItemReportId(reportId));
     dispatch(changeLayoutReportId(reportId));
@@ -127,7 +131,7 @@ const useReportSave = () => {
 
   const removeReport = (reportId, reportType) => {
     const param = {reportId: reportId};
-    deleteReport(param, (response) => {
+    models.Report.deleteReport(param, (response) => {
       if (response.status != 200) {
         return;
       }
