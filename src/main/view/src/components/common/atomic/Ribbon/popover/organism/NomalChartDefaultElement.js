@@ -6,69 +6,113 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import bar from '../../../../../../assets/image/icon/button/series_type.png';
 import pie from '../../../../../../assets/image/icon/button/pieChart.png';
 
-const NomalChartDefaultElement = () => {
+const NomalChartDefaultElement = ({changeChartTypeMode = false}) => {
   const {insertFlexLayout} = useLayout();
   const {closePopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
+  const chart = 'chart';
+  const onClickChartItem = (selectedReportId, chart, chartType) => {
+    if (!changeChartTypeMode) {
+      insertFlexLayout(selectedReportId, chart, chartType);
+      closePopover();
+    } else {
+      console.log('test');
+    }
+  };
+
   return {
     barChart: [
       {
         imgSrc: bar,
         label: localizedString.barChart,
-        onClick: () => {
-          insertFlexLayout(selectedReportId, 'chart');
-          closePopover();
-        }
+        onClick: () => onClickChartItem(selectedReportId, chart, 'bar')
       },
       {
         imgSrc: bar,
-        label: 'aaa',
-        onClick: () => {
-          console.log('test');
-        }
+        label: localizedString.stackedBarChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedBar')
       },
       {
         imgSrc: bar,
-        label: 'ccc'
-      },
-      {
-        imgSrc: bar,
-        label: 'dddd'
+        label: localizedString.fullStackedBarChart,
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, 'fullStackedBar')
       }
     ],
     lineChart: [
       {
         imgSrc: bar,
-        label: 'ddd'
+        label: localizedString.pointChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'point')
       },
       {
         imgSrc: bar,
-        label: 'aaa'
+        label: localizedString.lineChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'line')
       },
       {
         imgSrc: bar,
-        label: 'ccc'
+        label: localizedString.stackedLineChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedLine')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.fullStackedLineChart,
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, 'fullStackedLine')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.stepLineChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stepLine')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.splineChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'spline')
       }
     ],
     areaChart: [
       {
         imgSrc: bar,
-        label: 'ddd'
+        label: localizedString.stackChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stack')
       },
       {
         imgSrc: bar,
-        label: 'aaa'
+        label: localizedString.stackedAreaChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedArea')
       },
       {
         imgSrc: bar,
-        label: 'ccc'
+        label: localizedString.fullStackedAreaChart,
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, 'fullStackedArea')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.stepAreaChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'stepArea')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.splineAreaChart,
+        onClick: () => onClickChartItem(selectedReportId, chart, 'splineArea')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.stackedSplineAreaChart,
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, 'stackedSplineArea')
+      },
+      {
+        imgSrc: bar,
+        label: localizedString.fullStackedSplineAreaChart,
+        onClick: () => onClickChartItem(selectedReportId, chart,
+            'fullStackedSplineArea')
       }
     ],
     restChart: [
-      {
-        imgSrc: bar,
-        label: 'ddd'
-      },
       {
         imgSrc: pie,
         label: localizedString.pieChart,

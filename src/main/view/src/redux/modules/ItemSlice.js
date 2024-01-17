@@ -244,6 +244,10 @@ const reducers = {
     const topBottomInfo = actions.payload.topBottomInfo;
 
     state[reportId].adHocOption.topBottomInfo = topBottomInfo;
+  },
+  updateChartType(state, actions) {
+    // const reportId = actions.payload.reportId;
+    // state[reportId].items
   }
 };
 

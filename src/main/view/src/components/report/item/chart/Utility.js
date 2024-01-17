@@ -1,9 +1,42 @@
+import {setMeta} from '../util/metaUtilityFactory';
+
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  const defaultAxis = {
+    format: 'Number',
+    unit: 'Ones',
+    useShowZero: true,
+    useYxAxis: true,
+    customText: false,
+    customSuffix: false,
+    ones: '',
+    thousands: '천',
+    millions: '백만',
+    billions: '십억',
+    decimalPoint: 0,
+    Round: 'roundUp',
+    useComma: true
+  };
 
+  setMeta(item, 'axisSetting', {
+    xAxis: {
+      useXAxis: true,
+      xAxisCaption: undefined,
+      xAxisInclination: 0
+    },
+    yAxis: defaultAxis,
+    supplyAxis: defaultAxis
+  });
+
+  setMeta(item, 'legend', {
+    useLegend: true,
+    legendPosition: ''
+  });
+
+  setMeta(item, 'useRotate', false);
 };
 
 /**

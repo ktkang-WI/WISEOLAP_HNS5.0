@@ -10,6 +10,9 @@ import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
  */
 const makeItem = (orgItem) => {
   let item = {};
+  if (orgItem.type !== 'chart') {
+    delete orgItem.chartType;
+  }
   // meta 값 있는 경우 불러오기로 간주
   if (!orgItem.meta) {
     // 기본 값 세팅
