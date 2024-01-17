@@ -21,19 +21,13 @@ const Chart = ({id, adHocOption, item}) => {
   const seriesNames = mart.data.info.seriesDimensionNames;
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const dataFields = useSelector(selectCurrentDataField);
-  const formData = dataFields.measure.reduce((result, measure) => {
-    const matchingCaptions = seriesCaptions.reduce((captions, caption) => {
-      if (caption.includes(measure.caption)) {
-        captions.push(caption);
-      }
-      return captions;
-    }, []);
-    result.push({
-      format: measure.format,
-      seriesName: matchingCaptions
-    });
-    return result;
-  }, []);
+  const meaLength = dataFields.measure.length;
+  const seriesLength = seriesNames.length / meaLength;
+
+  const formData = dataFields.measure.map((measure) => ({
+    format: measure.format
+  }));
+
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
   const {filterItems, clearAllFilter} = useQueryExecute();
@@ -165,7 +159,7 @@ const Chart = ({id, adHocOption, item}) => {
             (valueField, i) =>
               <Series
                 key={valueField}
-                // tag={Math.floor(i / seriesLength)}
+                tag={Math.floor(i / seriesLength)}
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
