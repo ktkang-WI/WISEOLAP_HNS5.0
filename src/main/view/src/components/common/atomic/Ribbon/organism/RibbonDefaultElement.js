@@ -22,7 +22,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
@@ -33,10 +33,17 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
+import {RadioGroup} from 'devextreme-react';
 
 const RibbonDefaultElement = () => {
-  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
+  const {
+    insertFlexLayout,
+    convertCaptionVisible,
+    editItemName,
+    adHocLayoutUpdate
+  } = useLayout();
   const {openedPopover} = usePopover();
+  const rootItem = useSelector(selectRootItem);
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const {executeItems, excuteSpread} = useQueryExecute();
@@ -45,6 +52,25 @@ const RibbonDefaultElement = () => {
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+
+  const data = [
+    {id: 'onlyChart', text: '차트만 보기'},
+    {id: 'onlyPivot', text: '피벗그리드만 보기'},
+    {id: 'chart&pivot', text: '차트, 피벗 전부 보기'}
+  ];
+
+  const tempPopoverData = (reportId) => {
+    return <RadioGroup
+      onValueChanged={(e) => {
+        // const item = ribbonEvent[key](e);
+        adHocLayoutUpdate(reportId, rootItem, e.value);
+        console.log(e);
+      }}
+      valueExpr={'id'}
+      displayExpr={'text'}
+      value={rootItem.adHocOption.layoutSetting}
+      items={data}/>;
+  };
 
   return {
     'NewReport': {
@@ -144,6 +170,17 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
+      }
+    },
+    'AdHocLayout': {
+      ...commonPopoverButton,
+      'id': 'adHoc_layout',
+      'label': '비정형 레이아웃',
+      'imgSrc': addGrid,
+      'renderContent': (e) => {
+        // 임시 추가.
+        const selectedReportId = selectCurrentReportId(store.getState());
+        return tempPopoverData(selectedReportId);
       }
     },
     'AddContainer': {

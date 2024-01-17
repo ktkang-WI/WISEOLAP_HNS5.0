@@ -40,7 +40,8 @@ const adHocInitialState = {
     layoutConfig: {
       global: {
         tabEnableClose: false,
-        tabEnableRename: false
+        tabEnableRename: false,
+        tabSetEnableMaximize: false
       },
       layout: {
         type: 'row',
@@ -54,6 +55,7 @@ const adHocInitialState = {
                 type: 'tabset',
                 weight: 50,
                 selected: 0,
+                maximized: false,
                 children: [
                   {
                     id: 'item1',
@@ -67,6 +69,7 @@ const adHocInitialState = {
                 type: 'tabset',
                 weight: 50,
                 selected: 0,
+                maximized: false,
                 children: [
                   {
                     id: 'item2',
@@ -180,6 +183,14 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state = getInitialState();
     }
+  },
+  adHocLayoutUpdate(state, actions) {
+    // const layoutType = actions.payload.layoutType;
+    // const reportId = actions.payload.reportId;
+    // const rootItem = actions.payload.rootItem;
+
+    // state[reportId] =
+    console.log(state);
   }
 };
 const extraReducers = {};

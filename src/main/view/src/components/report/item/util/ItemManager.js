@@ -84,6 +84,14 @@ const getTopBottomInfo = () => {
   };
 };
 
+const getLayoutSetting = () => {
+  const layoutType = {
+    'onlyChart': 'onlyChart',
+    'onlyPivot': 'onlyPivot',
+    'chart&pivot': 'chart&pivot'
+  };
+  return layoutType;
+};
 /**
  * 탭 헤더 영역 아이템을 반환합니다.
  * @param {ItemType} type 아이템 타입
@@ -153,5 +161,6 @@ export default {
   getAdHocAttributeItems,
   getTopBottomInfo,
   getTabHeaderItems,
-  useCustomEvent
+  useCustomEvent,
+  getLayoutSetting
 };

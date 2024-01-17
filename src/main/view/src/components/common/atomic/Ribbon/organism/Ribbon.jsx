@@ -33,6 +33,7 @@ const Ribbon = () => {
       />
       <CreateRibbonBtns
         items={[
+          'AdHocLayout',
           'AddContainer',
           'AddChart',
           'AddPivotGrid',
