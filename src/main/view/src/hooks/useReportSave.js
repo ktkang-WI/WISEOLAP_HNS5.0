@@ -1,9 +1,8 @@
 import {selectRootDataset} from 'redux/selector/DatasetSelector';
 import {selectRootItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReportId}
+import {selectCurrentReportId, selectReports}
   from 'redux/selector/ReportSelector';
-import store from 'redux/modules';
-import {deleteReport} from 'models/report/Report';
+import store, {getReportInitialState} from 'redux/modules';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -18,7 +17,8 @@ import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import useSpread from './useSpread';
 import useFile from './useFile';
-import {DesignerMode} from 'components/config/configType';
+import {ConvertDesignerMode, DesignerMode} from 'components/config/configType';
+import models from 'models';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
@@ -27,10 +27,11 @@ const useReportSave = () => {
   const {createReportBlob} = useSpread();
   const {fileUpload, fileDelete} = useFile();
   const {
+    insertReport,
     updateReport,
     updateSelectedReportId,
-    deleteReportForDesigner,
-    initReport
+    initReport,
+    deleteReport
   } = ReportSlice.actions;
   const {
     changeItemReportId,
@@ -57,6 +58,7 @@ const useReportSave = () => {
     deleteSpread,
     changeSpreadReportId
   } = SpreadSlice.actions;
+
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
@@ -91,31 +93,69 @@ const useReportSave = () => {
       });
     }
     param.reportSubTitle = dataSource.reportSubTitle;
-    param.dupleYn = dataSource.dupleYn;
+
     return param;
   };
 
   /**
-   * 보고서 저장
-   * @param {JSON} response 저장에 필요한 Modal dataSource
+   * 저장 후 새로운 ReportSlice 의 state 를 생성해줍니다.
+   * ReportSlice state 초기값 (initialState)의 구조에 맞게 state를 생성해줍니다.
+   * @param {JSON} data 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
+   * @return {JSON} report 새로 추가되거나 업데이트 할 ReportSlice 의 state
    */
-  const saveReport = (response) => {
-    if (response.data.reportType === DesignerMode['SPREAD_SHEET']) {
+  const generateReport = (data) => {
+    const report = _.cloneDeep(getReportInitialState());
+
+    const generateOptions = () => {
+      const options = report.reports[0].options;
+
+      options.reportNm = data.reportNm;
+      options.reportSubTitle = data.reportSubTitle;
+      options.fldId = data.fldId;
+      options.fldName = data.fldName;
+      options.fldType = data.fldType;
+      options.reportOrdinal = data.reportOrdinal;
+      options.reportTag = data.reportTag;
+      options.reportDesc = data.reportDesc;
+      options.path = data.path;
+      options.reportType = ConvertDesignerMode[data.reportType];
+
+      return options;
+    };
+
+    const generateReports = () => {
+      const reports = report.reports;
+
+      reports[0].reportId = data.reportId;
+      reports[0].options = generateOptions();
+
+      return reports;
+    };
+
+    report.selectedReportId = data.reportId;
+    report.reports = generateReports();
+
+    return report;
+  };
+
+  /**
+   * 보고서 저장 (새로운 보고서를 추가 합니다.)
+   * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
+   */
+  const addReport = (response) => {
+    if (response.report.reportType === DesignerMode['SPREAD_SHEET']) {
       createReportBlob().then((bolb) => fileUpload(
-          bolb, {fileName: response.data.reportId + '.xlsx'}));
+          bolb, {fileName: response.report.reportId + '.xlsx'}));
     }
     const currentReportId = selectCurrentReportId(store.getState());
     const reportId = {
       prevId: currentReportId,
-      newId: response.data.reportId
-    };
-    const report = {
-      prevId: currentReportId,
-      reportId: reportId.newId,
-      options: response.data
+      newId: response.report.reportId
     };
 
-    dispatch(updateReport(report));
+    const report = generateReport(response.report);
+
+    dispatch(insertReport(report));
 
     dispatch(changeItemReportId(reportId));
     dispatch(changeLayoutReportId(reportId));
@@ -123,16 +163,45 @@ const useReportSave = () => {
     dispatch(changeParameterReportId(reportId));
     dispatch(updateSelectedReportId({reportId: reportId.newId}));
     dispatch(changeSpreadReportId(reportId));
-    alert('보고서를 저장했습니다.');
   };
 
-  const removeReport = (reportId, reportType) => {
-    const param = {reportId: reportId};
-    deleteReport(param, (response) => {
-      if (response.status != 200) {
+  /**
+   * 보고서 저장 (새로운 보고서를 패치 합니다.)
+   * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
+   */
+  const patchReport = (response) => {
+    const report = generateReport(response.report);
+    dispatch(updateReport(report));
+  };
+
+  const removeReport = (dataSource) => {
+    const param = generateParameter(dataSource);
+    const reports = selectReports(store.getState());
+
+    models.Report.deleteReport(param).then((res) => {
+      const data = res.data;
+      const msg = data.msg;
+      const result = data.result;
+
+      const report = generateReport(data.report);
+      const reportType = report.reports[0].options.reportType;
+      const reportId = report.reports[0].reportId;
+      console.log(reportType);
+
+      if (res.status != 200) {
         return;
       }
-      dispatch(deleteReportForDesigner(reportId));
+
+      if (result) {
+        alert(msg);
+      }
+
+      if (reports.length > 1) {
+        dispatch(deleteReport(report));
+      } else {
+        reload(reportType);
+      }
+
       dispatch(deleteItemForDesigner(reportId));
       dispatch(deleteLayoutForDesigner(
           {reportId: reportId, reportType: reportType}
@@ -144,7 +213,6 @@ const useReportSave = () => {
       if (reportType === DesignerMode['SPREAD_SHEET']) {
         fileDelete({fileName: reportId + '.xlsx'});
       }
-      alert('보고서를 삭제했습니다.');
     });
   };
 
@@ -159,8 +227,9 @@ const useReportSave = () => {
 
   return {
     generateParameter,
-    saveReport,
+    addReport,
     removeReport,
+    patchReport,
     reload
   };
 };

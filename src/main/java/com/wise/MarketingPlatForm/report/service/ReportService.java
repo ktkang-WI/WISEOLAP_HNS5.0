@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -413,30 +414,118 @@ public class ReportService {
         }
     }
 
-    public ReportMstrEntity addReport(ReportMstrEntity reportMstrEntity) {
-    try {
-	        if (reportMstrEntity.getReportId() == 0) {
-	        	reportMstrEntity.setDupleYn(checkDuplicatedReport(reportMstrEntity));
-	        }
+    public Map<String, Object> insertReport(ReportMstrDTO reportMstrDTO) throws SQLException{
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
 
-	        if ("N".equals(reportMstrEntity.getDupleYn())) {
-	        	reportDAO.addReport(reportMstrEntity);
-                reportMstrEntity.setChartXml("");
-                reportMstrEntity.setLayoutXml("");
-                reportMstrEntity.setReportXml("");
-                reportMstrEntity.setParamXml("");
-                reportMstrEntity.setDatasetXml("");
-	        }
-	        return reportMstrEntity;
-	    } catch (Exception e) {
-	        // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
-	        e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
-	        throw new RuntimeException("Add report failed: " + e.getMessage(), e);
-    	}
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
+
+        String duplicationStatus = checkDuplicatedReport(reportMstrEntity);
+
+        try {
+            if ("N".equals(duplicationStatus)) {
+                result = reportDAO.insertReport(reportMstrEntity);
+
+                if (result) {
+                    reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                    map.put("msg", "보고서를 저장했습니다.");
+                } else {
+                    map.put("msg", "보고서 저장을 실패했습니다.\n 관리자에게 문의하세요");
+                }
+            } else {
+                reportMstrDTO.setDupleYn(duplicationStatus);
+                map.put("msg", "보고서 저장을 실패했습니다.\n 중복된 보고서가 있습니다.");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+        return map;
     }
 
-    public int deleteReport(int reportId) {
-        return reportDAO.deleteReport(reportId);
+    public Map<String, Object> updateReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
+
+        try {
+            result = reportDAO.updateReport(reportMstrEntity);
+
+            if (result) {
+                reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                map.put("msg", "보고서를 저장했습니다.");
+            } else {
+                map.put("msg", "보고서 저장을 실패했습니다.\n 관리자에게 문의하세요");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+
+        return map;
+    }
+
+    public Map<String, Object> deleteReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+        int reportId = reportMstrDTO.getReportId();
+
+        try {
+            result = reportDAO.deleteReport(reportId);
+
+            if (result) {
+                map.put("report", reportMstrDTO);
+                map.put("msg", "보고서를 삭제했습니다.");
+            } else {
+                map.put("msg", "보고서 삭제를 실패했습니다.\n 관리자에게 문의하세요");
+            }
+            map.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Delete report failed: " + e.getMessage(), e);
+        }
+        return map;
     }
 
     public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {

@@ -15,60 +15,24 @@ const initialState = {
       reportOrdinal: 0,
       reportTag: '',
       reportDesc: '',
-      path: '', // 해당 경로 비어있을 경우 새 보고서
-      chartXML: '',
-      datasetXML: '',
-      layoutXML: '',
-      reportXML: '',
-      paramXML: '',
-      regDt: '',
-      regUserNo: '',
-      reportType: DesignerMode['DASHBOARD'],
-      dupleYn: 'N'
+      path: '', // 해당 경로 비어있을 경우 새 보고서 다시 확인
+      reportType: DesignerMode['DASHBOARD']
     }
   }]
 };
 
-const getInitialState = (designerMode) => {
-  const state = {
-    selectedReportId: 0,
-    reports: [{
-      reportId: 0,
-      options: {
-        reportNm: localizedString.defaultReportName,
-        reportSubTitle: '',
-        fldId: 0,
-        fldName: '',
-        fldType: '',
-        reportOrdinal: 0,
-        reportTag: '',
-        reportDesc: '',
-        path: '', // 해당 경로 비어있을 경우 새 보고서
-        chartXML: '',
-        datasetXML: '',
-        layoutXML: '',
-        reportXML: '',
-        paramXML: '',
-        regDt: '',
-        regUserNo: '',
-        reportType: '',
-        dupleYn: 'N'
-      }
-    }]
-  };
-  state.reports[0].reportType = designerMode;
-  return state;
-};
-
 const reducers = {
+  getInitialState: () => initialState,
   /* REPORT */
   initReport: (state, actions) => {
     const designerMode = actions.payload;
-    return getInitialState(designerMode);
+    const cloneState = _.cloneDeep(state);
+    cloneState.reports[0].reportType = designerMode;
+    return cloneState;
   },
   insertReport(state, actions) {
-    state.reports = state.reports.concat(actions.payload);
-    state.selectedReportId = actions.payload.reportId;
+    state.selectedReportId = actions.payload.selectedReportId;
+    state.reports = state.reports.concat(actions.payload.reports);
   },
   setReports(state, actions) {
     state.reports = actions.payload;
@@ -77,41 +41,24 @@ const reducers = {
     state.selectedReportId = actions.payload;
   },
   updateReport(state, actions) {
-    const index = state.reports.findIndex(
-        (report) => report.reportId == actions.payload.reportId
-    );
-    if (index >= 0) {
-      state.reports[index] = actions.payload;
-    } else {
-      if (state.selectedReportId == 0) {
-        state.reports = state.reports.filter(
-            (report) => report.reportId != 0);
-      }
-      state.reports = state.reports.concat(actions.payload);
-    }
+    const updateId = actions.payload.reports[0].reportId;
+
+    state.selectedReportId = actions.payload.selectedReportId;
+    state.reports.filter((report) => report.reportId === updateId)
+        .options = actions.payload.reports[0].options;
   },
   deleteReport(state, actions) {
+    const deleteReportId = actions.payload.reports[0].reportId;
+    const lastIndex = state.reports.length - 2;
+    state.selectedReportId = state.reports[lastIndex].reportId;
     state.reports = state.reports.filter(
-        (report) => report.reportId != actions.payload);
+        (report) => report.reportId != deleteReportId);
   },
   deleteAllReport(state, actions) {
     state.reports = [];
   },
   updateSelectedReportId(state, actions) {
     state.selectedReportId = actions.payload.reportId;
-  },
-  deleteReportForDesigner(state, actions) {
-    state.reports = state.reports.filter(
-        (report) => report.reportId != actions.payload);
-    if (state.reports.length == 0) {
-      state.reports = initialState.reports;
-      // state.selectedReportId = 0;
-    }
-    // 보고서를 닫은 후에도 보고서가 남아있을 경우 가장 앞에 있는 보고서 선택 (뷰어 일때)
-    // else {
-    // state.selectedReportId = state.reports[0].reportId;
-    // }
-    state.selectedReportId = 0;
   }
 };
 

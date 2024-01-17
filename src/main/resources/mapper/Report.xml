@@ -113,7 +113,7 @@
             INNER JOIN 			PUB_FLD_MSTR 					ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
             WHERE  				REPORT_MSTR.DEL_YN != 'Y'
         <if test="reportTypes != null">
-            AND 				REPORT_MSTR.REPORT_TYPE IN 
+            AND 				REPORT_MSTR.REPORT_TYPE IN
             <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
              #{type}
             </foreach>
@@ -149,7 +149,7 @@
                              ON REPORT_MSTR.FLD_ID = USER_FLD_MSTR.FLD_ID
               WHERE  				REPORT_MSTR.DEL_YN != 'Y'
               <if test="reportTypes != null">
-                  AND 				REPORT_MSTR.REPORT_TYPE IN 
+                  AND 				REPORT_MSTR.REPORT_TYPE IN
                   <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
                   #{type}
                   </foreach>
@@ -184,128 +184,65 @@
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
 
-    <insert id="addReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+		<insert id = "insertReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
 			<selectKey keyProperty="reportId" resultType="int" order="AFTER">
-				<if test='reportId == 0'>
-								SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-				</if>
-				<if test='reportId != 0'>
-						SELECT REPORT_ID as reportId FROM REPORT_MSTR
-					WHERE REPORT_ID = #{reportId}
-				</if>
+				SELECT MAX(REPORT_ID) FROM REPORT_MSTR
 			</selectKey>
-    	<!--  <if test = "dbType == 'Oracle'"> -->
-	    	MERGE INTO REPORT_MSTR
-	    	USING dual
-	    	ON (#{reportId} != 0)
-	    	WHEN MATCHED THEN
-	    		UPDATE SET
-	    		REPORT_NM = #{reportNm},
-		       	REPORT_SUB_TITLE = #{reportSubTitle},
-		       	FLD_ID = #{fldId},
-		       	FLD_TYPE = #{fldType},
-		       	REPORT_ORDINAL = #{reportOrdinal},
-		       	REPORT_TYPE = #{reportType},
-		       	REPORT_DESC = #{reportDesc},
-				DATASET_XML = #{datasetXml},
-		       	PARAM_XML = #{paramXml},
-		       	REG_USER_NO = #{regUserNo},
-						REPORT_XML = #{reportXml},
-		       	CHART_XML = #{chartXml},
-		       	LAYOUT_XML = #{layoutXml}
-		       	WHERE REPORT_ID = #{reportId}
-	    	WHEN NOT MATCHED THEN
-		    	INSERT
-		       (
-		       	REPORT_ID,
-		       	REPORT_NM,
-		       	REPORT_SUB_TITLE,
-		       	FLD_ID,
-		       	FLD_TYPE,
-		       	REPORT_ORDINAL,
-		       	REPORT_TYPE,
-		       	REPORT_DESC,
-		       	PARAM_XML,
-		       	REG_USER_NO,
-		       	CHART_XML,
-		       	LAYOUT_XML,
-				REPORT_XML,
-				DATASET_XML
-		       )
-		       VALUES
-		       (
-		       	REPORT_MSTR_REPORT_ID_SEQ.NEXTVAL,
-		        #{reportNm},
-		        #{reportSubTitle},
-		       	#{fldId},
-		       	#{fldType},
-		       	#{reportOrdinal},
-		       	#{reportType},
-		       	#{reportDesc},
-		       	#{paramXml},
-		       	#{regUserNo},
-		       	#{chartXml},
-		       	#{layoutXml},
-				#{reportXml},
-				#{datasetXml}
-		       )
-		<!-- </if>  -->
+			INSERT INTO REPORT_MSTR
+				(
+					REPORT_ID,
+					REPORT_NM,
+					REPORT_SUB_TITLE,
+					FLD_ID,
+					FLD_TYPE,
+					REPORT_ORDINAL,
+					REPORT_TYPE,
+					REPORT_DESC,
+					PARAM_XML,
+					REG_USER_NO,
+					CHART_XML,
+					LAYOUT_XML,
+					REPORT_XML,
+					DATASET_XML
+				)
+			VALUES
+				(
+					REPORT_MSTR_REPORT_ID_SEQ.NEXTVAL,
+					#{reportNm},
+					#{reportSubTitle},
+					#{fldId},
+					#{fldType},
+					#{reportOrdinal},
+					#{reportType},
+					#{reportDesc},
+					#{paramXml},
+					#{regUserNo},
+					#{chartXml},
+					#{layoutXml},
+					#{reportXml},
+					#{datasetXml}
+				)
+		</insert>
 
-		<!--  mysql, maria DB 일 경우 ON DUPLICATE KEY UPDATE 사용
-		<selectKey resultType="int" keyProperty="reportId" order="BEFORE">
-    		<if test='reportId == 0' >
-    			SELECT MAX(REPORT_ID)+1 FROM REPORT_MSTR
-    		</if>
-    	</selectKey>
+		<update id = "updateReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+			UPDATE REPORT_MSTR
+			SET
+			REPORT_NM = #{reportNm},
+			REPORT_SUB_TITLE = #{reportSubTitle},
+			FLD_ID = #{fldId},
+			FLD_TYPE = #{fldType},
+			REPORT_ORDINAL = #{reportOrdinal},
+			REPORT_TYPE = #{reportType},
+			REPORT_DESC = #{reportDesc},
+			DATASET_XML = #{datasetXml},
+			PARAM_XML = #{paramXml},
+			REG_USER_NO = #{regUserNo},
+			REPORT_XML = #{reportXml},
+			CHART_XML = #{chartXml},
+			LAYOUT_XML = #{layoutXml}
+			WHERE REPORT_ID = #{reportId}
+		</update>
 
-	   INSERT INTO REPORT_MSTR
-       (
-       	REPORT_ID,
-       	REPORT_NM,
-       	REPORT_SUB_TITLE,
-       	FLD_ID,
-       	FLD_TYPE,
-       	REPORT_ORDINAL,
-       	REPORT_TYPE,
-       	REPORT_DESC,
-       	REPORT_XML,
-       	CHART_XML,
-       	LAYOUT_XML,
-       	PARAM_XML,
-       	REG_USER_NO
-       )
-       VALUES
-       (
-       	#{reportId},
-        #{reportNm},
-        #{reportSubTitle},
-       	#{fldId},
-       	#{fldType},
-       	#{reportOrdinal},
-       	#{reportType},
-       	#{reportDesc},
-       	#{reportXml},
-       	#{chartXml},
-       	#{layoutXml},
-       	#{paramXml},
-       	#{regUserNo}
-       )
-       ON DUPLICATE KEY
-       UPDATE
-       	REPORT_NM = #{reportNm},
-       	REPORT_SUB_TITLE = #{reportSubTitle},
-       	FLD_ID = #{fldId},
-       	FLD_TYPE = #{fldType},
-       	REPORT_ORDINAL = #{reportOrdinal},
-       	REPORT_TYPE = #{reportType},
-       	REPORT_DESC = #{reportDesc},
-       	REPORT_XML = #{reportXml},
-       	CHART_XML = #{chartXml},
-       	LAYOUT_XML = #{layoutXml},
-       	PARAM_XML = #{paramXml},
-       	REG_USER_NO = #{regUserNo}
-     -->
-    </insert>
 		<update id="deleteReport" parameterType="int">
 			UPDATE REPORT_MSTR
 			SET DEL_YN = 'Y'
