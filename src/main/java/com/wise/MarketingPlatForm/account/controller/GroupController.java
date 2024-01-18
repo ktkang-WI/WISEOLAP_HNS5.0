@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,13 @@ import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.dto.GroupDTO;
 import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupMemberUserModel;
 import com.wise.MarketingPlatForm.account.service.GroupService;
+import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "user-group", description = "환경설정 관련 유저 정보를 관리합니다.")
 @RestController
-@RequestMapping("/config/group")
+@RequestMapping("/account/group")
 public class GroupController {
   // private static final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
@@ -36,14 +38,20 @@ public class GroupController {
   private Gson gson = new Gson();
 
   @PostMapping
-  public boolean createGroup(
+  public ResponseEntity<RestAPIVO> createGroup(
       @RequestParam(required = true) String grpNm,
       @RequestParam(required = false, defaultValue = "") String grpDesc,
       @RequestParam(required = true, defaultValue = "") String grpRunMode,
-      @RequestParam(required = false, defaultValue = "") String grpMemberUser,
+      @RequestParam(required = false, defaultValue = "") String grpMemberUserKey,
       @RequestBody Map<String, Object> body
   ) throws SQLException{
-    String grpMemberUserData = body.get(grpMemberUser).toString();
+
+    String grpMemberUserData = body.get(grpMemberUserKey).toString();
+
+    if (!body.containsKey(grpMemberUserKey)) {
+        return RestAPIVO.badRequest(false);
+    }
+
     List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData,grpMemberUserType);
     
     GroupDTO groupDTO = GroupDTO.builder()
@@ -53,19 +61,28 @@ public class GroupController {
       .grpMemberUser(groupmemberUser)
       .build();
 
-    return groupService.createGroup(groupDTO);
+    boolean result = groupService.createGroup(groupDTO);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+
+    return RestAPIVO.okResponse(true);
   }
 
   @PatchMapping
-  public boolean updateGroup(
+  public ResponseEntity<RestAPIVO> updateGroup(
       @RequestParam(required = true) int grpId,
       @RequestParam(required = false, defaultValue = "") String grpNm,
       @RequestParam(required = false, defaultValue = "") String grpDesc,
       @RequestParam(required = false, defaultValue = "") String grpRunMode,
-      @RequestParam(required = false, defaultValue = "") String grpMemberUser,
+      @RequestParam(required = false, defaultValue = "") String grpMemberUserKey,
       @RequestBody Map<String, Object> body
   ) throws SQLException{
-    String grpMemberUserData = body.get(grpMemberUser).toString();
+    String grpMemberUserData = body.get(grpMemberUserKey).toString();
+
+    if (!body.containsKey(grpMemberUserKey)) {
+      return RestAPIVO.badRequest(false);
+    }
+
     List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData,grpMemberUserType);
     
     GroupDTO groupDTO = GroupDTO.builder()
@@ -75,12 +92,16 @@ public class GroupController {
       .grpRunMode(grpRunMode)
       .grpMemberUser(groupmemberUser)
       .build();
-    
-    return groupService.updateGroup(groupDTO);
+  
+    boolean result = groupService.updateGroup(groupDTO);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+
+    return RestAPIVO.okResponse(true);
   }
 
   @DeleteMapping
-  public boolean deleteGroup(
+  public ResponseEntity<RestAPIVO> deleteGroup(
     @RequestParam(required = true) int grpId
   ) throws SQLException{
 
@@ -88,7 +109,12 @@ public class GroupController {
       .grpId(grpId)
       .build();
 
-    return groupService.deleteGroup(groupDTO);
+    boolean result = groupService.deleteGroup(groupDTO);
+
+    if (!result) return RestAPIVO.conflictResponse(false, "The data doesn't update");
+  
+    return RestAPIVO.okResponse(true);
+
   }
 
 }

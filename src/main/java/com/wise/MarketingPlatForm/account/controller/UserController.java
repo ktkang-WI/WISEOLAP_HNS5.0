@@ -1,10 +1,9 @@
 package com.wise.MarketingPlatForm.account.controller;
 
-import java.lang.reflect.Type;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,29 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
-import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupMemberUserModel;
 import com.wise.MarketingPlatForm.account.service.UserService;
+import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Tag(name = "user", description = "환경설정 관련 유저 정보를 관리합니다.")
 @RestController
-@RequestMapping("/config/user")
+@RequestMapping("/account/user")
 public class UserController {
   
   @Autowired
   private UserService userService;
 
-  private Type grpMemberUserType = new TypeToken<ArrayList<GroupMemberUserModel>>() {}.getType();
-  private Gson gson = new Gson();
-
-
   @PostMapping
-  public boolean createUser(
+  public ResponseEntity<RestAPIVO> createUser(
       @RequestParam(required = true) String userId,
       @RequestParam(required = true) String userNm,
       @RequestParam(required = false, defaultValue = "") String email_1,
@@ -62,11 +55,15 @@ public class UserController {
       .passwd(passwd)
       .build();
     
-    return userService.createUser(userMstr);
+    boolean result = userService.createUser(userMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+
+    return RestAPIVO.okResponse(true);
   }
 
   @PatchMapping
-  public boolean updateUser(
+  public ResponseEntity<RestAPIVO> updateUser(
     @RequestParam(required = true) int userNo,
     @RequestParam(required = false, defaultValue = "") String userId,
     @RequestParam(required = false, defaultValue = "") String userNm,
@@ -94,11 +91,16 @@ public class UserController {
       .userDesc(userDesc)
       .build();
     
-    return userService.updateUser(userMstr);
+    boolean result = userService.updateUser(userMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+  
+    return RestAPIVO.okResponse(true);
+
   }
 
   @PatchMapping(value="/password")
-  public boolean updateGroup(
+  public ResponseEntity<RestAPIVO> updateGroup(
       @RequestParam(required = true) int userNo,
       @RequestParam(required = false, defaultValue = "") String passwd
   ) throws SQLException{
@@ -108,11 +110,15 @@ public class UserController {
       .passwd(passwd)
       .build();
     
-    return userService.updateUserPasswd(userMstr);
+    boolean result = userService.updateUserPasswd(userMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+  
+    return RestAPIVO.okResponse(true);
   }
 
   @DeleteMapping
-  public boolean deleteGroup(
+  public ResponseEntity<RestAPIVO> deleteGroup(
     @RequestParam(required = true) int userNo
   ) throws SQLException{
 
@@ -120,7 +126,11 @@ public class UserController {
       .userNo(userNo)
       .build();
 
-    return userService.deleteUser(userMstr);
+    boolean result = userService.deleteUser(userMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+  
+    return RestAPIVO.okResponse(true);
   }
 
 
