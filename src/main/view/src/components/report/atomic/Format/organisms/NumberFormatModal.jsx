@@ -1,6 +1,6 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {getTheme} from 'config/theme';
+// import {getTheme} from 'config/theme';
 import PageWrapper from 'components/common/atomic/Modal/atoms/PageWrapper';
 import localizedString from 'config/localization';
 import {useRef} from 'react';
@@ -11,29 +11,23 @@ import FormatOptionForm from '../molecules/FormatOptionForm';
 
 const NumberFormatModal = ({
   dataField, reportId, ...props}) => {
-  const theme = getTheme();
+  // const theme = getTheme();
   const dispatch = useDispatch();
   const {updateItemField} = ItemSlice.actions;
   const format = dataField.format;
   const formRef = useRef();
   const formData ={
     ...format,
-    suffixO: format.suffix.O || '',
-    suffixK: format.suffix.K || localizedString.k,
-    suffixM: format.suffix.M || localizedString.m,
-    suffixB: format.suffix.B || localizedString.b,
-    checkBoxValue: format.suffixEnabled,
-    formControls: {
-      unit: false,
-      suffixEnabled: false,
-      suffixO: false,
-      suffixK: false,
-      suffixM: false,
-      suffixB: false,
-      precision: false,
-      precisionType: false,
-      useDigitSeparator: false
-    }
+    suffix: {
+      O: format.suffixO,
+      K: format.suffixK,
+      M: format.suffixM,
+      B: format.suffixB
+    },
+    suffixO: format.suffixO || '',
+    suffixK: format.suffixK || localizedString.k,
+    suffixM: format.suffixM || localizedString.m,
+    suffixB: format.suffixB || localizedString.b
   };
   const StyledWrapper = styled(Wrapper)`
   width: 100%;
@@ -45,8 +39,8 @@ const NumberFormatModal = ({
         dispatch(updateItemField({reportId,
           dataField: {...dataField, format: formData}}));
       }}
-      height={theme.size.numberFormatHeight}
-      width={theme.size.numberFormatWidth}
+      height="700px"
+      width="420px"
       modalTitle={localizedString.numberFormat}
       {...props}
     >

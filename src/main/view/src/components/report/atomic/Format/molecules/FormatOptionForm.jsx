@@ -1,8 +1,8 @@
 import localizedString from 'config/localization';
 import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
-import {useState} from 'react';
-import {formatValue, updateFomatType, updateSuffix} from './FormatFunction';
+import {useEffect, useState} from 'react';
+import {formatValue, updateFomatType} from './FormatFunction';
 
 const FormatOptionForm = ({
   formData,
@@ -19,7 +19,16 @@ const FormatOptionForm = ({
   text-align: center;
   `;
   const [preview, setPreview] = useState(formatValue(formData));
-
+  useEffect(() => {
+    if (formRef.current) {
+      const e = {
+        component: formRef.current.instance,
+        dataField: formData,
+        value: formData.formatType
+      };
+      updateFomatType(e);
+    }
+  }, [formRef]);
   return (
     <Form
       labelMode='outside'
@@ -38,11 +47,7 @@ const FormatOptionForm = ({
           B: updatedFormData.suffixB
         };
         setPreview(formatValue(updatedFormData));
-        if (e.dataField === 'formatType') {
-          updateFomatType(e, e.value);
-        } else if (e.dataField === 'suffixEnabled') {
-          updateSuffix(e, e.value);
-        }
+        updateFomatType(e);
       }}
     >
       <Item
@@ -93,24 +98,28 @@ const FormatOptionForm = ({
       <Item
         editorType='dxTextBox'
         dataField='suffixO'
+        className='suffixO'
       >
         <Label>{localizedString.suffixO}: </Label>
       </Item>
       <Item
         editorType='dxTextBox'
         dataField='suffixK'
+        className='suffixK'
       >
         <Label>{localizedString.suffixK}: </Label>
       </Item>
       <Item
         editorType='dxTextBox'
         dataField='suffixM'
+        className='suffixM'
       >
         <Label>{localizedString.suffixM}: </Label>
       </Item>
       <Item
         editorType='dxTextBox'
         dataField='suffixB'
+        className='suffixB'
       >
         <Label>{localizedString.suffixB}: </Label>
       </Item>
@@ -130,9 +139,13 @@ const FormatOptionForm = ({
         editorType='dxSelectBox'
         editorOptions={
           {
-            dataSource: localizedString.degreeOptions,
-            displayExpr: 'caption',
-            valueExpr: 'name'
+            dataSource: [
+              {value: localizedString.round, caption: localizedString.round},
+              {value: localizedString.ceil, caption: localizedString.ceil},
+              {value: localizedString.floor, caption: localizedString.floor}
+            ],
+            valueExpr: 'value',
+            displayExpr: 'caption'
           }
         }
       >

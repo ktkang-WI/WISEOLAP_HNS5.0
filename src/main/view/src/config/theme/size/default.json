@@ -13,12 +13,9 @@
     "smallModalWidth" : "500px",
     "middleModalHeight" : "70vh",
     "smallModalHeight" : "50vh",
-    "smallModalWidth" : "500px",
     "middleModalWidth" : "50vw",
     "bigModalHeight" : "90%",
     "bigModalWidth" : "70%",
     "labelTextBoxHeight" : "36px",
-    "labelTextAreaHeight" : "80px",
-    "numberFormatWidth" : "420px",
-    "numberFormatHeight" : "700px"
+    "labelTextAreaHeight" : "80px"
 }

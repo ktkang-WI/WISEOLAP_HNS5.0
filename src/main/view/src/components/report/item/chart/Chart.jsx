@@ -14,7 +14,6 @@ import React, {useRef, useEffect} from 'react';
 const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
-
   if (!mart.init) {
     return <></>;
   }
@@ -23,11 +22,9 @@ const Chart = ({id, adHocOption, item}) => {
   const dataFields = useSelector(selectCurrentDataField);
   const meaLength = dataFields.measure.length;
   const seriesLength = seriesNames.length / meaLength;
-
-  const formData = dataFields.measure.map((measure) => ({
+  const formats = dataFields.measure.map((measure) => ({
     format: measure.format
   }));
-
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
   const {filterItems, clearAllFilter} = useQueryExecute();
@@ -151,7 +148,7 @@ const Chart = ({id, adHocOption, item}) => {
         enabled={true}
         location='edge'
         customizeTooltip={
-          (info) => customizeTooltip(info, false, formData)
+          (info) => customizeTooltip(info, false, formats)
         }
       ></Tooltip>
       {
@@ -170,7 +167,7 @@ const Chart = ({id, adHocOption, item}) => {
                   position='outside'
                   offset={50}
                   customizeText={
-                    (info) => customizeTooltip(info, true, formData)
+                    (info) => customizeTooltip(info, true, formats)
                   }
                 />
               </Series>

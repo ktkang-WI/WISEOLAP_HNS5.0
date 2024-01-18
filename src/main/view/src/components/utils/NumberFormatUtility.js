@@ -1,3 +1,5 @@
+import localizedString from 'config/localization';
+
 const NumberFormatUtility = {
   // 단위변환에 필요한 숫자 정의
   unitNum: {
@@ -29,7 +31,7 @@ const NumberFormatUtility = {
       M: 'M',
       B: 'B'
     };
-    let precisionType = 'round';
+    let precisionType = localizedString.round;
     let currency = '₩';
     const _currency = 'KRW';
 
