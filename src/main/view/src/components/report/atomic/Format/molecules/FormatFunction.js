@@ -37,18 +37,18 @@ export const updateFomatType = ({component, dataField, value}) => {
     component.getEditor('precision').option('disabled', value);
     component.getEditor('precisionType').option('disabled', value);
   };
-
-  if (['Auto', 'General'].includes(value)) {
-    setDigitOption(true);
-    setFloatOption(true);
-  } else if (['Scientific', 'Percent'].includes(value)) {
-    setDigitOption(true);
-    setFloatOption(false);
-  } else if (['Number', 'Currency'].includes(value)) {
-    setDigitOption(false);
-    setFloatOption(false);
-  }
   if (dataField == 'suffixEnabled') {
     setSuffixOption(!value);
+  } else if (dataField == 'formatType') {
+    if (['Auto', 'General'].includes(value)) {
+      setDigitOption(true);
+      setFloatOption(true);
+    } else if (['Scientific', 'Percent'].includes(value)) {
+      setDigitOption(true);
+      setFloatOption(false);
+    } else if (['Number', 'Currency'].includes(value)) {
+      setDigitOption(false);
+      setFloatOption(false);
+    }
   }
 };
