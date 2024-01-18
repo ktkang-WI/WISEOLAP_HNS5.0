@@ -1,23 +1,33 @@
+import React from 'react';
 import localizedString from 'config/localization';
 import Form, {Item, Label} from 'devextreme-react/form';
 import _ from 'lodash';
 
-const YAxisExtraAxisForm = () => {
+const YAxisExtraAxisForm = ({selectedItem}, ref) => {
+  const sampleNum = 1234567890;
+  const axisNumberFormatList =
+    ['Auto', 'General', 'Number', 'Currency', 'Scientific', 'Percent'];
+
+  const formData = _.cloneDeep(selectedItem.meta.yAxis);
+  formData.sampleNum = sampleNum;
+
   return (
     <Form
       ref={ref}
-      formData={_.cloneDeep(selectedItem.meta.tooltip)}
+      formData={formData}
     >
       <Item
         dataField='format'
         editorType='dxSelectBox'
         editorOptions={{
-          items: localizedString.formatItems,
-          displayExpr: 'caption',
-          valueExpr: 'name'
+          items: axisNumberFormatList,
+          onValueChanged: (e) => {
+            console.log(e);
+            console.log(ref);
+          }
         }}
       >
-        <Label>{localizedString.formatType}</Label>
+        <Label>{localizedString.axisNumberFormat}</Label>
       </Item>
       <Item
         dataField='unit'
@@ -29,20 +39,28 @@ const YAxisExtraAxisForm = () => {
         <Label>{localizedString.unit}</Label>
       </Item>
       <Item
-        dataField='customPrefix'
+        dataField='useShowZero'
         editorType='dxCheckBox'
         editorOptions={{
         }}
       >
-        <Label>{localizedString.customPrefix}</Label>
+        <Label>{localizedString.formatZeroMark}</Label>
       </Item>
       <Item
-        dataField='inputPrefix'
-        editorType='dxTextBox'
+        dataField='useYxAxis'
+        editorType='dxCheckBox'
         editorOptions={{
         }}
       >
-        <Label>{localizedString.inputPrefix}</Label>
+        <Label>{localizedString.yAxisMark}</Label>
+      </Item>
+      <Item
+        dataField='customText'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.axisCutomText}</Label>
       </Item>
       <Item
         dataField='customSuffix'
@@ -82,16 +100,16 @@ const YAxisExtraAxisForm = () => {
         editorOptions={{
         }}
       >
-        <Label>{localizedString.billions}</Label>
+        <Label>{localizedString.bilions}</Label>
       </Item>
       <Item
-        dataField='degree'
+        dataField='decimalPoint'
         editorType='dxNumberBox'
       >
         <Label>{localizedString.degree}</Label>
       </Item>
       <Item
-        dataField='degreeOption'
+        dataField='round'
         editorType='dxSelectBox'
         editorOptions={{
           dataSource: localizedString.degreeOptions,
@@ -101,8 +119,25 @@ const YAxisExtraAxisForm = () => {
       >
         <Label>{localizedString.degreeOption}</Label>
       </Item>
+      <Item
+        dataField='useComma'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.numberSeperator}</Label>
+      </Item>
+      <Item
+        dataField='sampleNum'
+        editorType='dxTextBox'
+        disabled={true}
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.NumberPreview}</Label>
+      </Item>
     </Form>
   );
 };
 
-export default YAxisExtraAxisForm;
+export default React.forwardRef(YAxisExtraAxisForm);

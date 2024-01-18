@@ -17,19 +17,17 @@ const generateMeta = (item) => {
     millions: '백만',
     billions: '십억',
     decimalPoint: 0,
-    Round: 'roundUp',
+    round: 'roundUp',
     useComma: true
   };
 
-  setMeta(item, 'axisSetting', {
-    xAxis: {
-      useXAxis: true,
-      xAxisCaption: undefined,
-      xAxisInclination: 0
-    },
-    yAxis: defaultAxis,
-    supplyAxis: defaultAxis
+  setMeta(item, 'xAxis', {
+    useXAxis: true,
+    xAxisCaption: undefined,
+    xAxisInclination: 0
   });
+  setMeta(item, 'yAxis', defaultAxis);
+  setMeta(item, 'supplyAxis', defaultAxis);
 
   setMeta(item, 'legend', {
     useLegend: true,

@@ -329,5 +329,11 @@
   "file": "파일",
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
-  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "axisNumberFormat": "숫자 표기 형식",
+  "formatZeroMark": "'0' 데이터 표시 여부",
+  "yAxisMark": "Y축 표시",
+  "axisCutomText": "Y축 라벨",
+  "numberSeperator": "숫자 구분 표시(',')",
+  "NumberPreview": "미리보기"
 }
