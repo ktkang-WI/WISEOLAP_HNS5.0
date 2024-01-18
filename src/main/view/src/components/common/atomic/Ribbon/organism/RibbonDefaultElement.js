@@ -12,10 +12,6 @@ import addPivotGrid from 'assets/image/icon/button/pivot_grid.png';
 import addGrid from 'assets/image/icon/button/basic_grid.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
 import nameEdit from 'assets/image/icon/button/name_edit.png';
-import rotate from 'assets/image/icon/button/rotate.png';
-import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
-import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
-import seriesType from 'assets/image/icon/button/series_type.png';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
 import querySearch from 'assets/image/icon/button/query_search.png';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -33,8 +29,6 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
-import RibbonPopoverContents
-  from '../../Popover/molecules/RibbonPopoverContents';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -44,7 +38,6 @@ const RibbonDefaultElement = () => {
   const {executeItems, excuteSpread} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
-  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
 
@@ -241,56 +234,6 @@ const RibbonDefaultElement = () => {
               }
             }
         );
-      }
-    },
-    'Rotate': {
-      ...commonRibbonButton,
-      'id': 'rotate',
-      'label': localizedString.rotate,
-      'imgSrc': rotate,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'XAxisSetting': {
-      ...commonRibbonButton,
-      'id': 'xAxis_setting',
-      'label': localizedString.xAxisSetting,
-      'imgSrc': xAxisSetting,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'YAxisSetting': {
-      ...commonRibbonButton,
-      'id': 'yAxis_setting',
-      'label': localizedString.yAxisSetting,
-      'imgSrc': yAxisSetting,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'ExtraAxisSetting': {
-      ...commonRibbonButton,
-      'id': 'extra_setting',
-      'label': localizedString.extraAxisSetting,
-      'imgSrc': yAxisSetting,
-      'onClick': (e) => {
-        console.log(e);
-      }
-    },
-    'SeriesType': {
-      ...commonPopoverButton,
-      'id': 'seriesType',
-      'label': localizedString.seriesType,
-      'imgSrc': seriesType,
-      'renderContent': () => {
-        return <RibbonPopoverContents
-          popoverType={'labelImages'}
-          titlePanel={true}
-          id={'add_default_chart'}
-          seriesTypeCompact={true}
-        />;
       }
     },
     'InputTxt': {

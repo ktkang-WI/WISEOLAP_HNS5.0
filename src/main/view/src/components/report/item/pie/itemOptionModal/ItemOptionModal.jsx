@@ -9,6 +9,7 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LabelEditForm from './molecules/LabelEditForm';
+import YAxisExtraAxisForm from '../../chart/molecules/YAxisExtraAxisForm';
 
 const theme = getTheme();
 
@@ -50,6 +51,12 @@ const ItemOptionModal = ({popupName, ...props}) => {
       }
       {popupName === 'labelEdit' &&
         <LabelEditForm
+          selectedItem={selectedItem}
+          ref={ref}
+        />
+      }
+      {(popupName === 'supplyAxis' || popupName === 'yAxis') &&
+        <YAxisExtraAxisForm
           selectedItem={selectedItem}
           ref={ref}
         />

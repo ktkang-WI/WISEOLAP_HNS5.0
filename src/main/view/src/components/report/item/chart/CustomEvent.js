@@ -1,92 +1,82 @@
-import initStateImg from 'assets/image/icon/button/init_state.png';
-import totalImg from 'assets/image/icon/button/total.png';
-import grandTotalImg from 'assets/image/icon/button/grand_total.png';
-import layoutImg from 'assets/image/icon/button/layout.png';
-import rowTotalPosImg from 'assets/image/icon/button/row_total_position.png';
-import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
-import {useDispatch, useSelector} from 'react-redux';
-import ItemSlice from 'redux/modules/ItemSlice';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentItem}
-  from 'redux/selector/ItemSelector';
 import localizedString from 'config/localization';
-import {RadioGroup} from 'devextreme-react';
 import itemOptionManager from '../ItemOptionManager';
+import rotate from 'assets/image/icon/button/rotate.png';
+import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
+import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
+import seriesType from 'assets/image/icon/button/series_type.png';
+import RibbonPopoverContents
+  from 'components/common/atomic/Popover/molecules/RibbonPopoverContents';
+import useModal from 'hooks/useModal';
+import ItemOptionModal from '../pie/itemOptionModal/ItemOptionModal';
 
 const useCustomEvent = () => {
-  const dispatch = useDispatch();
-  const reportId = useSelector(selectCurrentReportId);
-  const selectedItem = useSelector(selectCurrentItem);
-  const {updateItem} = ItemSlice.actions;
+  const {openModal} = useModal();
+  const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
-  const getRadioPopover = (key, value) => {
-    return <RadioGroup
-      onValueChanged={(e) => {
-        const item = ribbonEvent[key](e);
-
-        dispatch(updateItem({reportId, item}));
-      }}
-      valueExpr={'id'}
-      displayExpr={'text'}
-      value={value}
-      items={formItems[key]}/>;
-  };
 
   const ribbonConfig = {
-    'rotate': {
-      ...commonPopoverButton,
-      'id': 'init_state',
-      'label': localizedString.initState,
-      'imgSrc': initStateImg,
-      'renderContent': () => {
-        return getCheckBoxPopover('initState');
+    'Rotate': {
+      ...commonRibbonButton,
+      'id': 'rotate',
+      'label': localizedString.rotate,
+      'imgSrc': rotate,
+      'onClick': () => {
       }
     },
-    'xAxis': {
-      ...commonPopoverButton,
-      'id': 'total',
-      'label': localizedString.total,
-      'imgSrc': totalImg,
-      'renderContent': () => {
-        return getCheckBoxPopover('total');
+    'XAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'xAxis_setting',
+      'label': localizedString.xAxisSetting,
+      'imgSrc': xAxisSetting,
+      'onClick': () => {
+        openModal(ItemOptionModal,
+            {
+              popupName: 'labelEdit',
+              modalTitle: localizedString.labelDataEdit
+            }
+        );
       }
     },
-    'yAxis': {
-      ...commonPopoverButton,
-      'id': 'grand_total',
-      'label': localizedString.grandTotal,
-      'imgSrc': grandTotalImg,
-      'renderContent': () => {
-        return getCheckBoxPopover('grandTotal');
+    'YAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'yAxis_setting',
+      'label': localizedString.yAxisSetting,
+      'imgSrc': yAxisSetting,
+      'onClick': () => {
+        openModal(ItemOptionModal,
+            {
+              popupName: 'yAxis',
+              modalTitle: localizedString.labelDataEdit
+            }
+        );
       }
     },
-    'supportAxis': {
-      ...commonPopoverButton,
-      'id': 'layout',
-      'label': localizedString.layout,
-      'imgSrc': layoutImg,
-      'renderContent': () => {
-        return getRadioPopover('layout', selectedItem.meta.layout);
+    'ExtraAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'extra_setting',
+      'label': localizedString.extraAxisSetting,
+      'imgSrc': yAxisSetting,
+      'onClick': () => {
+        openModal(ItemOptionModal,
+            {
+              popupName: 'supplyAxis',
+              modalTitle: localizedString.labelDataEdit
+            }
+        );
       }
     },
-    'legend': {
+    'SeriesType': {
       ...commonPopoverButton,
-      'id': 'row_total_position',
-      'label': localizedString.rowTotalPosition,
-      'imgSrc': rowTotalPosImg,
+      'id': 'seriesType',
+      'label': localizedString.seriesType,
+      'imgSrc': seriesType,
       'renderContent': () => {
-        return getRadioPopover('rowTotalPosition',
-            selectedItem.meta.positionOption.row.position);
-      }
-    },
-    'chartType': {
-      ...commonPopoverButton,
-      'id': 'column_total_position',
-      'label': localizedString.columnTotalPosition,
-      'imgSrc': colTotalPosImg,
-      'renderContent': () => {
-        return getRadioPopover('columnTotalPosition',
-            selectedItem.meta.positionOption.column.position);
+        return <RibbonPopoverContents
+          popoverType={'labelImages'}
+          titlePanel={true}
+          id={'add_default_chart'}
+          seriesTypeCompact={true}
+        />;
       }
     }
   };
