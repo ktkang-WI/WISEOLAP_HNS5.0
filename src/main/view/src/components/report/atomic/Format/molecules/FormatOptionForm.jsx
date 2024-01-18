@@ -24,7 +24,6 @@ const FormatOptionForm = ({
     if (formRef.current) {
       const e = {
         component: formRef.current.instance,
-        dataField: formData,
         value: formData.formatType
       };
 

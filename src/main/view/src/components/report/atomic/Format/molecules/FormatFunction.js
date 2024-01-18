@@ -17,11 +17,13 @@ export const formatValue = (options) => {
 };
 
 export const updateFomatType = ({component, dataField, value}) => {
+  const formData = component.option('formData');
   // 옵션을 목적별로 분리하여 일괄 처리
   const setDigitOption = (value) => {
     component.getEditor('unit').option('disabled', value);
     component.getEditor('useDigitSeparator').option('disabled', value);
     component.getEditor('suffixEnabled').option('disabled', value);
+    setSuffixOption(value ? true : !formData.suffixEnabled);
   };
 
   const setSuffixOption = (value) => {
@@ -38,29 +40,15 @@ export const updateFomatType = ({component, dataField, value}) => {
 
   if (['Auto', 'General'].includes(value)) {
     setDigitOption(true);
-    setSuffixOption(true);
     setFloatOption(true);
   } else if (['Scientific', 'Percent'].includes(value)) {
     setDigitOption(true);
-    setSuffixOption(true);
     setFloatOption(false);
   } else if (['Number', 'Currency'].includes(value)) {
     setDigitOption(false);
-    if (!dataField.suffixEnabled) {
-      setSuffixOption(true);
-    } else if (dataField.suffixEnabled) {
-      setSuffixOption(false);
-    }
     setFloatOption(false);
-  } else if (dataField == 'suffixEnabled' && !value) {
-    component.getEditor('suffixO').option('disabled', true);
-    component.getEditor('suffixK').option('disabled', true);
-    component.getEditor('suffixM').option('disabled', true);
-    component.getEditor('suffixB').option('disabled', true);
-  } else if (dataField == 'suffixEnabled' && value) {
-    component.getEditor('suffixO').option('disabled', false);
-    component.getEditor('suffixK').option('disabled', false);
-    component.getEditor('suffixM').option('disabled', false);
-    component.getEditor('suffixB').option('disabled', false);
+  }
+  if (dataField == 'suffixEnabled') {
+    setSuffixOption(!value);
   }
 };
