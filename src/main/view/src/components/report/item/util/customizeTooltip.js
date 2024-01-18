@@ -15,6 +15,7 @@ const customizeTooltip = (info, isLabel, formats) => {
     M: localizedString.m,
     B: localizedString.b
   };
+
   if (formData) {
     labelFormat = formData.format.formatType;
     labelUnit = formData.format.unit;
@@ -29,10 +30,10 @@ const customizeTooltip = (info, isLabel, formats) => {
       B: formData.format.suffixB
     };
   };
-  // Label과 Tooltip을 구분하여 Label인 경우 실수값으로 반환
-  if (isLabel) {
+
+  const formatNumber = (value) => {
     return NumberFormatUtility.formatNumber(
-        info.value,
+        value,
         labelFormat,
         labelUnit,
         labelPrecision,
@@ -42,93 +43,26 @@ const customizeTooltip = (info, isLabel, formats) => {
         labelSuffixEnabled,
         labelPrecisionOption
     );
+  };
+
+  // Label과 Tooltip을 구분하여 Label인 경우 실수값으로 반환
+  if (isLabel) {
+    return formatNumber(info.value);
   }
 
-  let text;
-  if (info.rangeValue1Text !== undefined) {
-    text =
-      '<b>' +
-      info.argumentText +
-      '</b>' +
-      '<br/>' +
-      '<b>' +
-      info.seriesName +
-      '</b>: ' +
-      NumberFormatUtility.formatNumber(
-          info.rangeValue1,
-          labelFormat,
-          labelUnit,
-          labelPrecision,
-          labelSeparator,
-          undefined,
-          labelSuffix,
-          labelSuffixEnabled,
-          labelPrecisionOption
-      ) +
-      ' - ' +
-      NumberFormatUtility.formatNumber(
-          info.rangeValue2,
-          labelFormat,
-          labelUnit,
-          labelPrecision,
-          labelSeparator,
-          undefined,
-          labelSuffix,
-          labelSuffixEnabled,
-          labelPrecisionOption
-      );
-  } else if (info.sizeText !== undefined) {
-    text =
-      '<b>' +
-      info.argumentText +
-      '</b>' +
-      '<br/>' +
-      '<b>' +
-      info.seriesName +
-      '</b>: ' +
-      NumberFormatUtility.formatNumber(
-          info.value,
-          labelFormat,
-          labelUnit,
-          labelPrecision,
-          labelSeparator,
-          undefined,
-          labelSuffix,
-          labelSuffixEnabled,
-          labelPrecisionOption
-      ) +
-      ' - ' +
-      NumberFormatUtility.formatNumber(
-          info.size,
-          labelFormat,
-          labelUnit,
-          labelPrecision,
-          labelSeparator,
-          undefined,
-          labelSuffix,
-          labelSuffixEnabled,
-          labelPrecisionOption
-      );
+  let text = '<b>' + info.argumentText + '</b>' +
+           '<br/><b>' + info.seriesName + '</b>: ';
+
+  if (info.rangeValue1Text && info.rangeValue2Text) {
+    text += formatNumber(info.rangeValue1);
+    text += ' - ';
+    text += formatNumber(info.rangeValue2);
   } else {
-    text =
-      '<div>' +
-      info.argumentText +
-      '</div>' +
-      '<div><b>' +
-      info.seriesName +
-      '</b>: ' +
-      NumberFormatUtility.formatNumber(
-          info.value,
-          labelFormat,
-          labelUnit,
-          labelPrecision,
-          labelSeparator,
-          undefined,
-          labelSuffix,
-          labelSuffixEnabled,
-          labelPrecisionOption
-      ) +
-      '</div>';
+    text += formatNumber(info.value);
+    if (info.sizeText) {
+      text += ' - ';
+      text += formatNumber(info.size);
+    }
   }
   return {
     html: text
