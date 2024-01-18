@@ -33,6 +33,8 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
+import RibbonPopoverContents
+  from '../../Popover/molecules/RibbonPopoverContents';
 
 const RibbonDefaultElement = () => {
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
@@ -164,7 +166,7 @@ const RibbonDefaultElement = () => {
       'useArrowButton': true,
       'onClick': (ref) => {
         const props = {
-          width: '500px',
+          width: '600px',
           height: 'auto',
           popoverType: 'labelImages',
           titlePanel: true,
@@ -279,11 +281,16 @@ const RibbonDefaultElement = () => {
     },
     'SeriesType': {
       ...commonPopoverButton,
-      'id': 'bar_two',
+      'id': 'seriesType',
       'label': localizedString.seriesType,
       'imgSrc': seriesType,
-      'onClick': (e) => {
-        console.log(e);
+      'renderContent': () => {
+        return <RibbonPopoverContents
+          popoverType={'labelImages'}
+          titlePanel={true}
+          id={'add_default_chart'}
+          seriesTypeCompact={true}
+        />;
       }
     },
     'InputTxt': {
@@ -292,6 +299,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.inputTxt,
       'imgSrc': inputTxt,
       'onClick': () => {
+
       }
     },
     'QuerySearch': {

@@ -9,8 +9,6 @@ import React, {useRef, useEffect} from 'react';
 const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
-  console.log(adHocOption);
-
   if (!mart.init) {
     return <></>;
   }
@@ -165,7 +163,7 @@ const Chart = ({id, adHocOption, item}) => {
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
-                type="bar"
+                type={meta.seriesType}
               />
         )
       }

@@ -22,7 +22,7 @@ const RibbonPopoverBtn = ({item}) => {
         showEvent={'click'}
         minWidth="200px"
         height={item.popoverHeight}
-        width={item.popoverWidth}
+        width={item.id === 'seriesType' ? '600px': item.popoverWidth}
         hideOnOutsideClick
         contentRender={item.renderContent}
       ></Popover>
