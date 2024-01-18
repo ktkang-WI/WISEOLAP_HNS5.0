@@ -85,7 +85,7 @@ const useDrag = () => {
             B: localizedString.b
           },
           precision: 0,
-          precisionType: localizedString.round,
+          precisionType: 'round',
           useDigitSeparator: true
         },
         summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'

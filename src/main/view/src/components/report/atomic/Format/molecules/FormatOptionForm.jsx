@@ -4,20 +4,21 @@ import Form, {Item, Label} from 'devextreme-react/form';
 import {useEffect, useState} from 'react';
 import {formatValue, updateFomatType} from './FormatFunction';
 
+const Preview = styled.textarea`
+background-color: lightgray;
+border: 1px solid #ccc;
+resize: none;
+width: 100%;
+height: 70px;
+padding: 5px;
+font-size: 40px;
+text-align: center;
+`;
+
 const FormatOptionForm = ({
   formData,
   formRef
 }) => {
-  const Preview = styled.textarea`
-  background-color: lightgray;
-  border: 1px solid #ccc;
-  resize: none;
-  width: 100%;
-  height: 70px;
-  padding: 5px;
-  font-size: 40px;
-  text-align: center;
-  `;
   const [preview, setPreview] = useState(formatValue(formData));
   useEffect(() => {
     if (formRef.current) {
@@ -26,9 +27,11 @@ const FormatOptionForm = ({
         dataField: formData,
         value: formData.formatType
       };
+
       updateFomatType(e);
     }
   }, [formRef]);
+
   return (
     <Form
       labelMode='outside'
@@ -140,9 +143,9 @@ const FormatOptionForm = ({
         editorOptions={
           {
             dataSource: [
-              {value: localizedString.round, caption: localizedString.round},
-              {value: localizedString.ceil, caption: localizedString.ceil},
-              {value: localizedString.floor, caption: localizedString.floor}
+              {value: 'round', caption: localizedString.round},
+              {value: 'ceil', caption: localizedString.ceil},
+              {value: 'floor', caption: localizedString.floor}
             ],
             valueExpr: 'value',
             displayExpr: 'caption'

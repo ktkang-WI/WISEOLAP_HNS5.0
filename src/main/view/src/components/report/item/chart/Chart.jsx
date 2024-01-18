@@ -17,6 +17,7 @@ const Chart = ({id, adHocOption, item}) => {
   if (!mart.init) {
     return <></>;
   }
+
   const seriesNames = mart.data.info.seriesDimensionNames;
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const dataFields = useSelector(selectCurrentDataField);
@@ -27,26 +28,33 @@ const Chart = ({id, adHocOption, item}) => {
   }));
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
+
   const {filterItems, clearAllFilter} = useQueryExecute();
+
   const dxRef = useRef();
+
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
+
   // 마스터 필터 관련 useEffect
   useEffect(() => {
     if (!adHocOption) {
       dxRef.current.instance.clearSelection();
     }
   }, [interactiveOption]);
+
   useEffect(() => {
     if (!adHocOption) {
       filterItems(item, {});
     }
   }, [interactiveOption.targetDimension, interactiveOption.mode]);
+
   useEffect(() => {
     if (!adHocOption) {
       clearAllFilter(item);
     }
   }, [interactiveOption.crossDataSource]);
+
   /**
    * selectedData 기반으로 필터 정보를 반환합니다.
    * @return {Array} filters

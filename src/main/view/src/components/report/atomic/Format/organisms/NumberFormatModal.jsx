@@ -1,6 +1,5 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-// import {getTheme} from 'config/theme';
 import PageWrapper from 'components/common/atomic/Modal/atoms/PageWrapper';
 import localizedString from 'config/localization';
 import {useRef} from 'react';
@@ -9,13 +8,17 @@ import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import FormatOptionForm from '../molecules/FormatOptionForm';
 
+const StyledWrapper = styled(Wrapper)`
+width: 100%;
+height: 100%;
+`;
+
 const NumberFormatModal = ({
   dataField, reportId, ...props}) => {
-  // const theme = getTheme();
   const dispatch = useDispatch();
+  const formRef = useRef();
   const {updateItemField} = ItemSlice.actions;
   const format = dataField.format;
-  const formRef = useRef();
   const formData ={
     ...format,
     suffix: {
@@ -29,10 +32,7 @@ const NumberFormatModal = ({
     suffixM: format.suffixM || localizedString.m,
     suffixB: format.suffixB || localizedString.b
   };
-  const StyledWrapper = styled(Wrapper)`
-  width: 100%;
-  height: 100%;
-  `;
+
   return (
     <Modal
       onSubmit={()=> {
