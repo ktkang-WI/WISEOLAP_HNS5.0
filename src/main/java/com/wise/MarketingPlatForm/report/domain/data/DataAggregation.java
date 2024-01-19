@@ -30,4 +30,7 @@ public class DataAggregation {
     List<Parameter> parameters;
     TopBottomInfo topBottomInfo;
     Map<String, List<String>> filter;
+    String layoutSetting;
+    boolean chartData;
+    boolean pivotData;
 }

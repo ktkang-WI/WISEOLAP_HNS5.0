@@ -34,6 +34,7 @@ import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
 import {RadioGroup} from 'devextreme-react';
+import _ from 'lodash';
 
 const RibbonDefaultElement = () => {
   const {
@@ -62,9 +63,16 @@ const RibbonDefaultElement = () => {
   const tempPopoverData = (reportId) => {
     return <RadioGroup
       onValueChanged={(e) => {
-        // const item = ribbonEvent[key](e);
-        adHocLayoutUpdate(reportId, rootItem, e.value);
-        console.log(e);
+        const chartData = rootItem.items[0].mart.data;
+        const pivotData = rootItem.items[1].mart.data;
+        const isHaveEachData = (!_.isEmpty(chartData) && !_.isEmpty(pivotData));
+
+        adHocLayoutUpdate(reportId, e.value);
+
+        if ((!_.isEmpty(chartData) || !_.isEmpty(pivotData)) &&
+          !isHaveEachData) {
+          executeItems();
+        }
       }}
       valueExpr={'id'}
       displayExpr={'text'}

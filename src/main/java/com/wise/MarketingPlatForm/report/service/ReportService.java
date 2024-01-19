@@ -227,12 +227,20 @@ public class ReportService {
         List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
 
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
-        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
 
         // clone으로 넘겨서
-        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
-        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+        if ("onlyChart".equals(dataAggreagtion.getLayoutSetting())) {
+            ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
+            result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
+        } else if ("onlyPivot".equals(dataAggreagtion.getLayoutSetting())) {
+            ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
+            result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+        } else if ("chart&pivot".equals(dataAggreagtion.getLayoutSetting())) {
+            ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
+            ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
+            result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
+            result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
+        }
 
         return result;
     }

@@ -74,19 +74,14 @@ export default function useLayout() {
     dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
   };
 
-  const adHocLayoutUpdate = (reportId, rootItem, value) => {
-    const itemSliceParam = {
+  const adHocLayoutUpdate = (reportId, value) => {
+    const param = {
       reportId: reportId,
       layoutType: value
     };
-    const layoutParam = {
-      rootItem: rootItem,
-      reportId: reportId,
-      layoutType: value
-    };
-    dispatch(itemSlice.updateLayoutSetting(itemSliceParam));
-    dispatch(flexLayout.adHocLayoutUpdate(layoutParam));
-    console.log(rootItem);
+
+    dispatch(itemSlice.updateLayoutSetting(param));
+    dispatch(flexLayout.adHocLayoutUpdate(param));
   };
 
   return {

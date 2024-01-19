@@ -213,6 +213,9 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String topBottomInfoStr = param.get("topBottomInfo");
+        String layoutSetting = param.get("layoutSetting");
+        String chartData = param.get("chartData");
+        String pivotData = param.get("pivotData");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -242,6 +245,9 @@ public class ReportController {
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
                 .topBottomInfo(topBottomInfo)
+                .chartData(Boolean.parseBoolean(chartData))
+                .pivotData(Boolean.parseBoolean(pivotData))
+                .layoutSetting(layoutSetting)
                 .build();
 
         return reportService.getAdHocItemData(dataAggreagtion);

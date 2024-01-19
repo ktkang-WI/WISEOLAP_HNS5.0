@@ -26,8 +26,7 @@ const CreateRibbonBtns = ({items, targetItem}) => {
       return (<AddOnlyImageBtn item={item}/>);
     } else if (item.type === 'CommonButton') {
       return (<AddCommonBtn item={item}/>);
-    } else if (!reportType === DesignerMode['AD_HOC'] &&
-      item.type === 'PopoverButton') {
+    } else if (item.id !== 'adHoc_layout' && item.type === 'PopoverButton') {
       return (<RibbonPopoverBtn item={item}/>);
     } else if (reportType === DesignerMode['AD_HOC'] &&
       item.id === 'adHoc_layout') {

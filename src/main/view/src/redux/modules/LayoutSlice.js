@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
+import adHocLayoutSetting from 'components/utils/AdhocLayoutSetting';
 
 const dashboardInitialState = {
   0: {
@@ -185,12 +186,10 @@ const reducers = {
     }
   },
   adHocLayoutUpdate(state, actions) {
-    // const layoutType = actions.payload.layoutType;
-    // const reportId = actions.payload.reportId;
-    // const rootItem = actions.payload.rootItem;
+    const reportId = actions.payload.reportId;
+    const layoutType = actions.payload.layoutType;
 
-    // state[reportId] =
-    console.log(state);
+    state[reportId] = adHocLayoutSetting(layoutType, reportId, state);
   }
 };
 const extraReducers = {};
