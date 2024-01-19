@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "user-group", description = "환경설정 관련 유저 정보를 관리합니다.")
 @RestController
-@RequestMapping("/account/userGroup")
+@RequestMapping("/account/user-group")
 public class UserGroupController {
   
   // private static final Logger logger = LoggerFactory.getLogger(ConfigController.class);
