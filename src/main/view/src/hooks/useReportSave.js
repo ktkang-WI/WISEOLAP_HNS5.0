@@ -26,38 +26,12 @@ const useReportSave = () => {
   const dispatch = useDispatch();
   const {createReportBlob} = useSpread();
   const {fileUpload, fileDelete} = useFile();
-  const {
-    insertReport,
-    updateReport,
-    updateSelectedReportId,
-    initReport,
-    deleteReport
-  } = ReportSlice.actions;
-  const {
-    changeItemReportId,
-    deleteItemForDesigner,
-    initItems
-  } = ItemSlice.actions;
-  const {
-    changeLayoutReportId,
-    deleteLayoutForDesigner,
-    initLayout
-  } = LayoutSlice.actions;
-  const {
-    changeDatasetReportId,
-    deleteDatasetForDesigner,
-    initDatasets
-  } = DatasetSlice.actions;
-  const {
-    changeParameterReportId,
-    deleteParameterForDesigner,
-    initParameter
-  } = ParameterSlice.actions;
-  const {
-    initSpread,
-    deleteSpread,
-    changeSpreadReportId
-  } = SpreadSlice.actions;
+  const reportActions = ReportSlice.actions;
+  const itemActions = ItemSlice.actions;
+  const layoutActions = LayoutSlice.actions;
+  const datasetActions = DatasetSlice.actions;
+  const parameterActions = ParameterSlice.actions;
+  const spreadActions = SpreadSlice.actions;
 
   /**
    * 저장에 필요한 파라미터 생성
@@ -155,14 +129,14 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(insertReport(report));
+    dispatch(reportActions.insertReport(report));
 
-    dispatch(changeItemReportId(reportId));
-    dispatch(changeLayoutReportId(reportId));
-    dispatch(changeDatasetReportId(reportId));
-    dispatch(changeParameterReportId(reportId));
-    dispatch(updateSelectedReportId({reportId: reportId.newId}));
-    dispatch(changeSpreadReportId(reportId));
+    dispatch(itemActions.changeItemReportId(reportId));
+    dispatch(layoutActions.changeLayoutReportId(reportId));
+    dispatch(datasetActions.changeDatasetReportId(reportId));
+    dispatch(parameterActions.changeParameterReportId(reportId));
+    dispatch(reportActions.updateSelectedReportId({reportId: reportId.newId}));
+    dispatch(spreadActions.changeSpreadReportId(reportId));
   };
 
   /**
@@ -171,7 +145,7 @@ const useReportSave = () => {
    */
   const patchReport = (response) => {
     const report = generateReport(response.report);
-    dispatch(updateReport(report));
+    dispatch(reportActions.updateReport(report));
   };
 
   const removeReport = (dataSource) => {
@@ -186,7 +160,6 @@ const useReportSave = () => {
       const report = generateReport(data.report);
       const reportType = report.reports[0].options.reportType;
       const reportId = report.reports[0].reportId;
-      console.log(reportType);
 
       if (res.status != 200) {
         return;
@@ -197,18 +170,18 @@ const useReportSave = () => {
       }
 
       if (reports.length > 1) {
-        dispatch(deleteReport(report));
+        dispatch(reportActions.deleteReport(report));
       } else {
         reload(reportType);
       }
 
-      dispatch(deleteItemForDesigner(reportId));
-      dispatch(deleteLayoutForDesigner(
+      dispatch(itemActions.deleteItemForDesigner(reportId));
+      dispatch(layoutActions.deleteLayoutForDesigner(
           {reportId: reportId, reportType: reportType}
       ));
-      dispatch(deleteDatasetForDesigner(reportId));
-      dispatch(deleteParameterForDesigner(reportId));
-      dispatch(deleteSpread(reportId));
+      dispatch(datasetActions.deleteDatasetForDesigner(reportId));
+      dispatch(parameterActions.deleteParameterForDesigner(reportId));
+      dispatch(spreadActions.deleteSpread(reportId));
       reload(reportType);
       if (reportType === DesignerMode['SPREAD_SHEET']) {
         fileDelete({fileName: reportId + '.xlsx'});
@@ -217,12 +190,12 @@ const useReportSave = () => {
   };
 
   const reload = (designerMode) => {
-    dispatch(initReport(designerMode));
-    dispatch(initDatasets());
-    dispatch(initItems(designerMode));
-    dispatch(initLayout(designerMode));
-    dispatch(initParameter());
-    dispatch(initSpread());
+    dispatch(reportActions.initReport(designerMode));
+    dispatch(datasetActions.initDatasets());
+    dispatch(itemActions.initItems(designerMode));
+    dispatch(layoutActions.initLayout(designerMode));
+    dispatch(parameterActions.initParameter());
+    dispatch(spreadActions.initSpread());
   };
 
   return {

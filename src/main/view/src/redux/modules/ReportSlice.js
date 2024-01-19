@@ -44,7 +44,7 @@ const reducers = {
     const updateId = actions.payload.reports[0].reportId;
 
     state.selectedReportId = actions.payload.selectedReportId;
-    state.reports.filter((report) => report.reportId === updateId)
+    state.reports.find((report) => report.reportId === updateId)
         .options = actions.payload.reports[0].options;
   },
   deleteReport(state, actions) {
