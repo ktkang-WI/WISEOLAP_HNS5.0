@@ -69,7 +69,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
       onSubmit={()=> {
         if (!_.isEmpty(selectedCube)) {
           models.Cube.getByCubeId(userId, selectedCube.cubeId)
-              .then((data) => {
+              .then(({data}) => {
                 const datasets =
                     selectRootDataset(store.getState());
 
@@ -133,7 +133,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   if (e.selectedRowsData.length > 0) {
                     models.Cube.getByDsViewId(userId,
                         e.selectedRowsData[0].dsViewId)
-                        .then((data) => {
+                        .then(({data}) => {
                           setSelectedCubeList(data);
                           setSelectedDsView(e.selectedRowsData[0]);
                         });

@@ -51,7 +51,7 @@ const LoadReportModal = ({...props}) => {
 
   useEffect(() => {
     const reportType = selectCurrentDesignerMode(store.getState());
-    models.Report.getList('admin', reportType, 'designer').then((data) => {
+    models.Report.getList('admin', reportType, 'designer').then(({data}) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);
@@ -64,7 +64,7 @@ const LoadReportModal = ({...props}) => {
         if (!_.isEmpty(selectedReport)) {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
-                .then((data) => {
+                .then(({data}) => {
                   if (data.isNew) {
                     console.log('test');
                   } else {
