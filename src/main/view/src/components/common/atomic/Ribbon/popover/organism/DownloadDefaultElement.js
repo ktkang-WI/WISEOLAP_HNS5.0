@@ -1,6 +1,19 @@
 import localizedString from 'config/localization';
+import store from 'redux/modules';
+import {useSelector} from 'react-redux';
+import {selectCurrentItems} from 'redux/selector/ItemSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+// import {downloadSet} from 'components/report/util/ReportDownload';
 
 const DownloadDefaultElement = () => {
+  const items = selectCurrentItems(store.getState());
+  const parameters = selectRootParameter(store.getState());
+  const reportType = selectCurrentDesignerMode(store.getState());
+  const currentReport = useSelector(selectCurrentReport);
+  const dataSource = _.cloneDeep(currentReport.options);
+
   return {
     download: [
       {
@@ -11,6 +24,12 @@ const DownloadDefaultElement = () => {
             label: localizedString.excelXlsx,
             visible: true,
             onClick: () => {
+              console.log('items', items);
+              console.log('parameters', parameters);
+              console.log('reportType', reportType);
+              console.log('dataSource', dataSource);
+              // downloadSet(0, dataSource, items,
+              // reportType, parameters, 'xlsx');
             }
           },
           {
