@@ -95,21 +95,21 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.billions}</Label>
       </Item>
       <Item
-        dataField='degree'
+        dataField='precsion'
         editorType='dxNumberBox'
       >
-        <Label>{localizedString.degree}</Label>
+        <Label>{localizedString.precsion}</Label>
       </Item>
       <Item
-        dataField='degreeOption'
+        dataField='precsionOption'
         editorType='dxSelectBox'
         editorOptions={{
-          items: localizedString.degreeOptions,
+          items: localizedString.precsionOptions,
           valueExpr: 'name',
           displayExpr: 'caption'
         }}
       >
-        <Label>{localizedString.degreeOption}</Label>
+        <Label>{localizedString.precsionOption}</Label>
       </Item>
     </Form>
   );

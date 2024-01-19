@@ -11,13 +11,13 @@ const generateMeta = (item) => {
     billions: 'B',
     customPrefix: false,
     customSuffix: false,
-    degreeOption: 'round',
+    precsionOption: 'round',
     inputPrefix: '',
     format: 'value',
     millions: 'M',
     thousands: 'K',
     unit: 'Ones',
-    degree: 0,
+    precsion: 0,
     ones: ''
   });
   setMeta(item, 'labelEdit', {
@@ -25,13 +25,13 @@ const generateMeta = (item) => {
     billions: 'B',
     customPrefix: false,
     customSuffix: false,
-    degreeOption: 'round',
+    precsionOption: 'round',
     inputPrefix: '',
     format: 'value',
     millions: 'M',
     thousands: 'K',
     unit: 'Ones',
-    degree: 0,
+    precsion: 0,
     ones: ''
   });
 };
