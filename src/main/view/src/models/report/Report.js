@@ -1,28 +1,18 @@
-import axios from 'axios';
+import instance from 'models/instance';
 
-import {getConfig} from 'config/config';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/report';
+const path = '/report';
 
 /**
  * 보고서 조회
  * @param {string} userId
  * @param {string} reportId
+ * @return {axios}
  */
-export const getReportById = async (userId, reportId) => {
-  const res = await axios.post(path + '/report', {
+export const getReportById = (userId, reportId) => {
+  return instance.post(path + '/report', {
     reportId: reportId,
     userId: userId
   });
-  Object.keys(res.data).forEach((key) => {
-    if (typeof res.data[key] === 'string') {
-      res.data[key] = JSON.parse(res.data[key]);
-    }
-  });
-  return res.data;
 };
 
 
@@ -32,41 +22,38 @@ export const getReportById = async (userId, reportId) => {
  * @param {string} userId
  * @param {string} reportType
  * @param {string} editMode
+ * @return {axios}
  */
-export const getList = async (userId, reportType, editMode) => {
-  const res = await axios.post(path + '/report-list', {
+export const getList = (userId, reportType, editMode) => {
+  return instance.post(path + '/report-list', {
     editMode: editMode,
     reportType: reportType,
     userId: userId
   });
-
-  return res.data;
 };
 /**
  * 보고서 저장
  * @param {JSON} param
- * @return {promise}
+ * @return {axios}
  */
-export const addReport = async (param) => {
-  return await axios.post(path + '/save-report', param);
+export const addReport = (param) => {
+  return instance.post(path + '/save-report', param);
 };
 
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
- * @param {function} callback
+ * @return {axios}
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = (param) => {
+  return instance.post(path + '/report-folder-list', param);
 };
 
 /**
  * 보고서 삭제
  * @param {JSON} param
- * @param {function} callback
+ * @return {axios}
  */
-export const deleteReport = (param, callback) => {
-  axios.post(path + '/delete-report', param)
-      .then(callback);
+export const deleteReport = (param) => {
+  return instance.post(path + '/delete-report', param);
 };

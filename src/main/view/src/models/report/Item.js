@@ -1,33 +1,25 @@
-import axios from 'axios';
+import instance from 'models/instance';
 
-import {getConfig} from 'config/config';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/report';
+const path = '/report';
 
 /**
  * 아이템 조회
  * @param {JSON} param
- * @param {function} callback
+ * @return {axios}
  */
-export const getItemData = (param, callback) => {
-  axios.post(path + '/item-data', param)
-      .then(callback);
+export const getItemData = (param) => {
+  return instance.post(path + '/item-data', param);
 };
 
 export const getPivotData = async (param) => {
-  const res = await axios.post(path + '/item-data', param);
-
-  return res.data;
+  return instance.post(path + '/item-data', param);
 };
 
 /**
  * 비정형 아이템 조회
  * @param {JSON} param
- * @param {JSON} response data
+ * @return {axios}
  */
-export const getAdHocItemData = async (param) => {
-  return await axios.post(path + '/adhoc-item-data', param);
+export const getAdHocItemData = (param) => {
+  return instance.post(path + '/adhoc-item-data', param);
 };
