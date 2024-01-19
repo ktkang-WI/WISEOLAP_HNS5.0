@@ -5,15 +5,16 @@ import {getConfig} from 'config/config';
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
-const path = document.location.origin + contextRoot + '/config';
+const configPath = document.location.origin + contextRoot + '/config';
+const accountPath = document.location.origin + contextRoot + '/account';
 
 export const getGeneralConfig = async () => {
-  const res = await axios.get(path + '/general');
+  const res = await axios.get(configPath + '/general');
   return res;
 };
 
 export const getUserGroupManagement = async () => {
-  const res = await axios.get(path + '/usergroup');
+  const res = await axios.get(accountPath + '/user-group');
   return res;
 };
 

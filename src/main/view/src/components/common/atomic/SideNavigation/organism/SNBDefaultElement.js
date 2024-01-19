@@ -61,7 +61,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
       onClick: (e) => {
-        nav('config');
+        nav('general');
       }
     },
     // TODO: 임시용 입니다.
@@ -71,7 +71,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: preferenceActive,
       label: '사용자/그룹관리',
       onClick: (e) => {
-        nav('usergroup');
+        nav('user-group');
       }
     }
   };

@@ -60,12 +60,12 @@ const router = createBrowserRouter([
     element: <Config/>,
     children: [
       {
-        path: 'config',
+        path: 'general',
         element: <ConfigurationSetting/>,
         loader: generalLoader
       },
       {
-        path: 'usergroup',
+        path: 'user-group',
         element: <UserGroupManagement/>,
         loader: userGroupLoader
       }
