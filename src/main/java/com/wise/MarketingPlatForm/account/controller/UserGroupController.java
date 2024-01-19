@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wise.MarketingPlatForm.account.model.UsersGroupsModel;
+import com.wise.MarketingPlatForm.account.model.common.UsersGroupsModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 

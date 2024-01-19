@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.account.model.UsersGroupsModel;
-import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupDetailInfoModel;
-import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupMemberUserModel;
-import com.wise.MarketingPlatForm.account.model.GroupsModel.GroupsModel;
-import com.wise.MarketingPlatForm.account.model.UsersModel.UserDetailInfoModel;
-import com.wise.MarketingPlatForm.account.model.UsersModel.UsersFormatModel;
+import com.wise.MarketingPlatForm.account.model.common.UsersGroupsModel;
+import com.wise.MarketingPlatForm.account.model.groups.GroupDetailInfoModel;
+import com.wise.MarketingPlatForm.account.model.groups.GroupMemberUserModel;
+import com.wise.MarketingPlatForm.account.model.groups.GroupsModel;
+import com.wise.MarketingPlatForm.account.model.user.UserDetailInfoModel;
+import com.wise.MarketingPlatForm.account.model.user.UsersModel;
 
 @Service
 public class UserGroupService {
@@ -23,10 +23,10 @@ public class UserGroupService {
 
   public UsersGroupsModel getUserGroupData() {
     
-    List<UserGroupDTO> userGroupVO = accountDAO.selectListGroupData();
+    List<UserGroupDTO> userGroupDTO = accountDAO.selectListGroupData();
 
-    List<UsersFormatModel> usersFormat = generateUsersObject(userGroupVO);
-    List<GroupsModel> groupsFormat = generateGroupsObject(userGroupVO);
+    List<UsersModel> usersFormat = generateUsersObject(userGroupDTO);
+    List<GroupsModel> groupsFormat = generateGroupsObject(userGroupDTO);
 
     UsersGroupsModel usersGroupsFormat = UsersGroupsModel.builder()
       .usersFormat(usersFormat)
@@ -120,11 +120,11 @@ public class UserGroupService {
   };
 
 
-  private List<UsersFormatModel> generateUsersObject(List<UserGroupDTO> userGroups) {
-    List<UsersFormatModel> result = new ArrayList<>();
+  private List<UsersModel> generateUsersObject(List<UserGroupDTO> userGroups) {
+    List<UsersModel> result = new ArrayList<>();
     
     for (UserGroupDTO userGroup : userGroups) {
-      UsersFormatModel usersFormat = UsersFormatModel.builder()
+      UsersModel usersFormat = UsersModel.builder()
         .userId(userGroup.getUserId())
         .userNm(userGroup.getUserNm())
         .userNo(userGroup.getUserNo())

@@ -15,6 +15,26 @@
       <result column="KAKAO_MAP_API_KEY" property="kakaoMapApiKey" javaType="String"/>
     </resultMap>
 
+    <resultMap id="ConfigFolderDatasetDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO">
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="PARENT_FLD_ID" property="parentFldId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOridinal" javaType="int"/>
+    </resultMap>
+
+    <resultMap id="ConfigFolderDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOridinal" javaType="int"/>
+      <result column="AUTH_VIEW" property="authView" javaType="String"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="String"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
+    </resultMap>
+
 		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
 			SELECT
         CONFIG_MSTR.MAIN_TITLE,
@@ -26,6 +46,39 @@
         WB_CONFIG_MSTR.SPREAD_JS_DESIGNER_LICENSE,
         WB_CONFIG_MSTR.KAKAO_MAP_API_KEY
         FROM CONFIG_MSTR INNER JOIN WB_CONFIG_MSTR ON 1 = 1
+		</select>
+
+    <select id="selectConfigFolderDataset" resultMap="ConfigFolderDatasetDTO">
+			SELECT
+        FLD_ID,
+        FLD_NM,
+        PARENT_FLD_ID,
+        FLD_ORDINAL
+        FROM DATASET_FLD_MSTR
+        ORDER BY
+            FLD_ID,
+            FLD_ORDINAL
+		</select>
+    
+    <select id="selectConfigFolder" resultMap="ConfigFolderDTO">
+			SELECT
+        GRP_AUTH_REPORT_MSTR.GRP_ID,
+        PUB_FLD_MSTR.FLD_ID,
+        PUB_FLD_MSTR.FLD_NM,
+        PUB_FLD_MSTR.FLD_LVL,
+        PUB_FLD_MSTR.FLD_PARENT_ID,
+        PUB_FLD_MSTR.FLD_ORDINAL,
+        GRP_AUTH_REPORT_MSTR.AUTH_VIEW,
+        GRP_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+        GRP_AUTH_REPORT_MSTR.AUTH_DATAITEM,
+        GRP_AUTH_REPORT_MSTR.AUTH_EXPORT
+        FROM PUB_FLD_MSTR INNER JOIN GRP_AUTH_REPORT_MSTR
+        ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
+        ORDER BY 
+            GRP_AUTH_REPORT_MSTR.GRP_ID,
+            PUB_FLD_MSTR.FLD_ID DESC, 
+            PUB_FLD_MSTR.FLD_LVL ASC, 
+            PUB_FLD_MSTR.FLD_ORDINAL ASC
 		</select>
 
     <update id="updateConfig" parameterType="com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity">
