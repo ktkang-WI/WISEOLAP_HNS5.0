@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.entity.AuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 
@@ -34,7 +34,7 @@ public class GroupFolderService {
     List<GroupFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    GroupMstrEntity group = null;
+    UserGroupDTO group = null;
     GroupFolderModel groupFolderModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -55,7 +55,7 @@ public class GroupFolderService {
       }
 
       if (!isGroupContained) {
-        group = GroupMstrEntity.builder()
+        group = UserGroupDTO.builder()
         .grpId(grpId)
         .grpNm(groupData.getGrpNm())
         .grpDesc(groupData.getGrpDesc())

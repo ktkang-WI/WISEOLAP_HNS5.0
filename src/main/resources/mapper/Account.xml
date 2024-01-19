@@ -3,7 +3,18 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wise.MarketingPlatForm.account.dao.AccountDAO">
-    
+
+    <resultMap id="UserMstrEntity" type="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="E_MAIL1" property="eMail1" javaType="String"/>
+      <result column="E_MAIL2" property="eMail2" javaType="String"/>
+      <result column="TEL_NO" property="telNo" javaType="String"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+    </resultMap>
+
     <resultMap id="UserGroupDTO" type="com.wise.MarketingPlatForm.account.dto.UserGroupDTO">
       <result column="USER_NO" property="userNo" javaType="int"/>
       <result column="USER_ID" property="userId" javaType="String"/>
@@ -106,6 +117,19 @@
       <result column="FLD_NM" property="fldNm" javaType="String"/>
       <result column="PARENT_FLD_ID" property="parentFldId" javaType="int"/>
     </resultMap>
+
+    <select id="selectUserMstr" resultMap="UserMstrEntity">
+      SELECT
+        USER_NO,
+        USER_ID,
+        USER_NM,
+        E_MAIL1,
+        E_MAIL2,
+        TEL_NO,
+        GRP_ID,
+        USER_DESC
+        FROM USER_MSTR
+    </select>
 
     <select id="selectListGroupData" resultMap="UserGroupDTO">
 			SELECT
@@ -308,7 +332,7 @@
             #{telNo, jdbcType=VARCHAR},
             NULL,
             #{userDesc, jdbcType=VARCHAR},
-            #{userRunMode, jdbcType=VARCHAR},
+            #{runMode, jdbcType=VARCHAR},
             NULL,
             NULL,
             NULL,
@@ -346,8 +370,8 @@
               <if test='userDesc != ""'>
                 USER_DESC = #{userDesc, jdbcType=VARCHAR},
               </if>
-              <if test='userRunMode != ""'>
-                RUN_MODE = #{userRunMode, jdbcType=VARCHAR},
+              <if test='runMode != ""'>
+                RUN_MODE = #{runMode, jdbcType=VARCHAR},
               </if>
               PASSWD = PASSWD
           WHERE USER_NO = #{userNo, jdbcType=INTEGER}

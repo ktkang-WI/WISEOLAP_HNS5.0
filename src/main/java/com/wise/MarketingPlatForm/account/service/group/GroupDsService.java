@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
-import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.ds.GroupDsModel;
-import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
@@ -34,7 +33,7 @@ public class GroupDsService {
     List<GroupDsModel> result = new ArrayList<>();
     List<DsMstrEntity> dsList = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    GroupMstrEntity group = null;
+    UserGroupDTO group = null;
     GroupDsModel groupDsModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -55,7 +54,7 @@ public class GroupDsService {
       }
 
       if (!isGroupContained) {
-        group = GroupMstrEntity.builder()
+        group = UserGroupDTO.builder()
         .grpId(grpId)
         .grpNm(groupDs.getGrpNm())
         .grpDesc(groupDs.getGrpDesc())

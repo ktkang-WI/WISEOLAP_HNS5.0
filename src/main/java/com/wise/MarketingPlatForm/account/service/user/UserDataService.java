@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
@@ -37,7 +38,7 @@ public class UserDataService {
     
     for (UserDataDTO userData : userDataDTO) {
 
-      UserMstrEntity user = UserMstrEntity.builder()
+      UserGroupDTO user = UserGroupDTO.builder()
         .userNo(userData.getUserNo())
         .userId(userData.getUserId())
         .userNm(userData.getUserNm())

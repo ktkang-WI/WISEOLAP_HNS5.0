@@ -1,16 +1,19 @@
 package com.wise.MarketingPlatForm.account.controller.user;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.service.user.UserService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -26,6 +29,16 @@ public class UserController {
   @Autowired
   private UserService userService;
 
+  @GetMapping
+  public ResponseEntity<RestAPIVO> getUser() throws Exception{
+
+    List<UserMstrEntity> model = userService.selectUserMstr();
+
+    if (model == null) return RestAPIVO.conflictResponse(null);
+
+    return RestAPIVO.okResponse(model);
+  }
+
   @PostMapping
   public ResponseEntity<RestAPIVO> createUser(
       @RequestParam(required = true) String userId,
@@ -34,23 +47,19 @@ public class UserController {
       @RequestParam(required = false, defaultValue = "") String email_2,
       @RequestParam(required = false, defaultValue = "") String telNo,
       @RequestParam(required = false, defaultValue = "0") int grpId,
-      @RequestParam(required = false, defaultValue = "") String grpNm,
       @RequestParam(required = true) String userRunMode,
-      @RequestParam(required = false, defaultValue = "") String grpRunMode,
       @RequestParam(required = false, defaultValue = "") String userDesc,
       @RequestParam(required = false, defaultValue = "") String passwd
   ) throws SQLException{
 
-    UserMstrEntity userMstr = UserMstrEntity.builder()
+    UserGroupDTO userMstr = UserGroupDTO.builder()
       .userId(userId)
       .userNm(userNm)
       .eMail1(email_1)
       .eMail2(email_2)
       .telNo(telNo)
       .grpId(grpId)
-      .grpNm(grpNm)
       .userRunMode(userRunMode)
-      .grpRunMode(grpRunMode)
       .userDesc(userDesc)
       .passwd(passwd)
       .build();
@@ -71,13 +80,11 @@ public class UserController {
     @RequestParam(required = false, defaultValue = "") String email_2,
     @RequestParam(required = false, defaultValue = "") String telNo,
     @RequestParam(required = false, defaultValue = "0") int grpId,
-    @RequestParam(required = false, defaultValue = "") String grpNm,
     @RequestParam(required = false, defaultValue = "") String userRunMode,
-    @RequestParam(required = false, defaultValue = "") String grpRunMode,
     @RequestParam(required = false, defaultValue = "") String userDesc
   ) throws SQLException{
 
-    UserMstrEntity userMstr = UserMstrEntity.builder()
+    UserGroupDTO userMstr = UserGroupDTO.builder()
       .userNo(userNo)
       .userId(userId)
       .userNm(userNm)
@@ -85,9 +92,7 @@ public class UserController {
       .eMail2(email_2)
       .telNo(telNo)
       .grpId(grpId)
-      .grpNm(grpNm)
       .userRunMode(userRunMode)
-      .grpRunMode(grpRunMode)
       .userDesc(userDesc)
       .build();
     
@@ -105,7 +110,7 @@ public class UserController {
       @RequestParam(required = false, defaultValue = "") String passwd
   ) throws SQLException{
 
-    UserMstrEntity userMstr = UserMstrEntity.builder()
+    UserGroupDTO userMstr = UserGroupDTO.builder()
       .userNo(userNo)
       .passwd(passwd)
       .build();
@@ -122,7 +127,7 @@ public class UserController {
     @RequestParam(required = true) int userNo
   ) throws SQLException{
 
-    UserMstrEntity userMstr = UserMstrEntity.builder()
+    UserGroupDTO userMstr = UserGroupDTO.builder()
       .userNo(userNo)
       .build();
 

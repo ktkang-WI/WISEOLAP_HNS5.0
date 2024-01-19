@@ -7,14 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
-import com.wise.MarketingPlatForm.account.model.groups.dataset.GroupDatasetModel;
 import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
-import com.wise.MarketingPlatForm.account.model.user.ds.UserDsModel;
 
 @Service
 public class UserDatasetService {
@@ -36,7 +32,7 @@ public class UserDatasetService {
     List<UserDatasetModel> result = new ArrayList<>();
     List<FldMstrEntity> datasetList = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserMstrEntity user = null;
+    UserGroupDTO user = null;
     UserDatasetModel userDatasetModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -57,7 +53,7 @@ public class UserDatasetService {
       }
 
       if (!isUserContained) {
-        user = UserMstrEntity.builder()
+        user = UserGroupDTO.builder()
         .userNo(userDatasetData.getUserNo())
         .userId(userDatasetData.getUserId())
         .userNm(userDatasetData.getUserNm())

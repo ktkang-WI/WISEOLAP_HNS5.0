@@ -13,6 +13,7 @@ public class UserGroupDTO {
   int userNo;
   String userId;
   String userNm;
+  String passwd;
   String eMail1;
   String eMail2;
   String telNo;

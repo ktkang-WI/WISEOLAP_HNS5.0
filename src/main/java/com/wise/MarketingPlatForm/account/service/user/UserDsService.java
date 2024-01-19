@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.ds.UserDsModel;
-import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
@@ -32,7 +32,7 @@ public class UserDsService {
     List<UserDsModel> result = new ArrayList<>();
     List<DsMstrEntity> dsList = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserMstrEntity user = null;
+    UserGroupDTO user = null;
     UserDsModel userDsModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -53,7 +53,7 @@ public class UserDsService {
       }
 
       if (!isUserContained) {
-        user = UserMstrEntity.builder()
+        user = UserGroupDTO.builder()
         .userNo(userDs.getUserNo())
         .userId(userDs.getUserId())
         .userDesc(userDs.getUserDesc())

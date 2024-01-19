@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
 import com.wise.MarketingPlatForm.account.entity.AuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
@@ -34,7 +35,7 @@ public class UserFolderService {
     List<UserFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserMstrEntity user = null;
+    UserGroupDTO user = null;
     UserFolderModel userFolderModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -55,7 +56,7 @@ public class UserFolderService {
       }
 
       if (!isUserContained) {
-        user = UserMstrEntity.builder()
+        user = UserGroupDTO.builder()
           .userNo(userData.getUserNo())
           .userId(userData.getUserId())
           .grpNm(userData.getGrpNm())

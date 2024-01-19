@@ -18,6 +18,7 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
 @Mapper
 public interface AccountDAO {
+  public List<UserMstrEntity> selectUserMstr();
   public List<UserGroupDTO> selectListGroupData();
   public List<UserDataDTO> selectUserData();
   public List<UserFolderDTO> selectUserFolder();

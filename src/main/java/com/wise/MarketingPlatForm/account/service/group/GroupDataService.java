@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
+import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO;
-import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.data.GroupDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
 
@@ -36,7 +36,7 @@ public class GroupDataService {
     
     for (GroupDataDTO groupData : groupDataDTO) {
 
-      GroupMstrEntity group = GroupMstrEntity.builder()
+      UserGroupDTO group = UserGroupDTO.builder()
         .grpId(groupData.getGrpId())
         .grpNm(groupData.getGrpNm())
         .grpDesc(groupData.getGrpDesc())
