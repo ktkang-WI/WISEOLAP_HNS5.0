@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.user.UserDataService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "user-data", description = "유저정보 데이터를 관리합니다.")
 @RestController
 @RequestMapping("/account/user/data")
 public class UserDataController{

@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 import com.wise.MarketingPlatForm.account.service.group.GroupFolderService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "group-folder", description = "그룹정보 폴더정보를 관리합니다.")
 @RestController
 @RequestMapping("/account/group/folder")
 public class GroupFolderController {

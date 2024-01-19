@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.service.ds.DatasetDsService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "dataset-ds", description = "데이터원본을 관리합니다.")
 @RestController
 @RequestMapping("/dataset/ds")
 public class DataSetDsController {

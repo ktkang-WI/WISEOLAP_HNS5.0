@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
 import com.wise.MarketingPlatForm.account.service.user.UserDatasetService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "user-dataset", description = "유저 정보 데이터셋을 관리합니다.")
 @RestController
 @RequestMapping("/account/user/dataset")
 public class UserDatasetController {

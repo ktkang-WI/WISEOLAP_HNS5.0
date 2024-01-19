@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.model.groups.ds.GroupDsModel;
 import com.wise.MarketingPlatForm.account.service.group.GroupDsService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "group-ds", description = "그룹정보 데이터원본을 관리합니다.")
 @RestController
 @RequestMapping("/account/group/ds")
 public class GroupDsController {

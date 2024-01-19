@@ -19,6 +19,11 @@ public class GroupService {
 
     @Autowired
     private AccountDAO accountDAO;
+    
+
+    public List<GroupMstrEntity> getGroup() {
+      return accountDAO.selectGroupMstr();
+    } 
 
     @Transactional
     public boolean createGroup(GroupDTO groupDTO) throws SQLException{

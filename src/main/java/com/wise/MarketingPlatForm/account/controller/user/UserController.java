@@ -21,7 +21,7 @@ import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
-@Tag(name = "user", description = "환경설정 관련 유저 정보를 관리합니다.")
+@Tag(name = "user", description = "유저 정보를 관리합니다.")
 @RestController
 @RequestMapping("/account/user")
 public class UserController {

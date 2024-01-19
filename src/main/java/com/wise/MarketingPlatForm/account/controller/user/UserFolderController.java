@@ -12,6 +12,9 @@ import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
 import com.wise.MarketingPlatForm.account.service.user.UserFolderService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "user-ds", description = "유저가 가지고 있는 폴더를 관리합니다.")
 @RestController
 @RequestMapping("/account/user/folder")
 public class UserFolderController {

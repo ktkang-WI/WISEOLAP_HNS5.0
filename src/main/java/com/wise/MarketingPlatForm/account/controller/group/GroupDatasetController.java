@@ -12,6 +12,10 @@ import com.wise.MarketingPlatForm.account.model.groups.dataset.GroupDatasetModel
 import com.wise.MarketingPlatForm.account.service.group.GroupDatasetService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+
+@Tag(name = "group-dataset", description = "그룹정보 데이터셋를 관리합니다.")
 @RestController
 @RequestMapping("/account/group/dataset")
 public class GroupDatasetController {
