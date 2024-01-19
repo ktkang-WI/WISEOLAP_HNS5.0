@@ -14,24 +14,20 @@ export default function useAxiosSetting() {
 
   axios.interceptors.request.use(
       (config) => {
-        // TODO: 로딩 증가
         dispatch(actions.startJob());
         return config;
       },
       (error) => {
-        // TODO: 로딩 증가
         return error;
       }
   );
 
   axios.interceptors.response.use(
       (response) => {
-        // TODO: 로딩 감소
         dispatch(actions.endJob());
         return response;
       },
       (error) => {
-        // TODO: 로딩 감소
         dispatch(actions.endJob());
         return error;
       }
