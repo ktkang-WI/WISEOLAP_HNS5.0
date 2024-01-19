@@ -23,6 +23,10 @@ export const getPivotData = async (param) => {
   return res.data;
 };
 
+export const getDetailedData = (param) => {
+  return axios.post(path + '/detailed-data', param);
+};
+
 /**
  * 비정형 아이템 조회
  * @param {JSON} param

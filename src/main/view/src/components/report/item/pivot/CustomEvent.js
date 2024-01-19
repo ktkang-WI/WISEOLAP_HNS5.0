@@ -6,6 +6,7 @@ import removeNullDataImg from 'assets/image/icon/button/remove_null_data.png';
 import rowTotalPosImg from 'assets/image/icon/button/row_total_position.png';
 import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
 import colRowSwitchImg from 'assets/image/icon/button/col_row_switch.png';
+import showGridImg from 'assets/image/icon/button/show_grid.png';
 import filterImg from 'assets/image/icon/report/filter.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -18,9 +19,13 @@ import ItemType from '../util/ItemType';
 import CustomEventUtility from './CustomEventUtility';
 import Utility from './Utility';
 import itemOptionManager from '../ItemOptionManager';
+import useModal from 'hooks/useModal';
+import ShowDataModal
+  from 'components/common/atomic/Modal/organisms/ShowDataModal';
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
+  const {openModal} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
@@ -244,7 +249,29 @@ const useCustomEvent = () => {
 
         dispatch(updateItem({reportId, item}));
       },
-      icon: <img width={'100%'} src={colRowSwitchImg}></img>
+      icon: <img width={'20px'} src={colRowSwitchImg}></img>
+    },
+    'ShowGrid': {
+      title: localizedString.showGrid,
+      onClick: (id) => {
+        const item = items.find((i) => id == i.id);
+        const columns = [];
+
+        columns.push(...item.meta.dataField.column);
+        columns.push(...item.meta.dataField.row);
+        columns.push(...item.meta.dataField.measure.map((mea) => ({
+          name: mea.summaryType + '_' + mea.name,
+          caption: mea.caption
+        })));
+
+        // TODO: 피벗 matrix 적용시 재조회하는 방식으로 바꿔야 함.
+        openModal(ShowDataModal, {
+          modalTitle: localizedString.showGrid + ' - ' + item.meta.name,
+          data: item.mart.data.data,
+          columns: columns
+        });
+      },
+      icon: <img width={'17px'} src={showGridImg}></img>
     }
   };
 

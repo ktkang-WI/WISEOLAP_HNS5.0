@@ -102,6 +102,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     dataset: {
                       ...selectedDsView,
                       ...selectedCube,
+                      detailedData: data.detailedData,
                       fields: data.fields,
                       datasetNm: selectedCube.cubeNm,
                       datasetId: datasetId,

@@ -156,7 +156,8 @@ const getAttributeItems = () => {
 };
 
 const getTabHeaderItems = () => {
-  return ['ColRowSwitch'];
+  // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
+  return ['ColRowSwitch', 'ShowGrid'];
 };
 
 export default {
