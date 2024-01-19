@@ -6,19 +6,21 @@ import {setMeta} from '../util/metaUtilityFactory';
  */
 const generateMeta = (item) => {
   const defaultAxis = {
-    format: 'Number',
+    formatType: 'Number',
     unit: 'Ones',
-    useShowZero: true,
+    axisStartToZero: true,
     useYxAxis: true,
     customText: false,
-    customSuffix: false,
-    ones: '',
-    thousands: '천',
-    millions: '백만',
-    billions: '십억',
-    decimalPoint: 0,
-    round: 'roundUp',
-    useComma: true
+    suffixEnabled: false,
+    suffix: {
+      O: '',
+      K: '천',
+      M: '백만',
+      B: '십억'
+    },
+    precision: 0,
+    precisionType: 'roundUp',
+    useDigitSeparator: true
   };
 
   setMeta(item, 'xAxis', {

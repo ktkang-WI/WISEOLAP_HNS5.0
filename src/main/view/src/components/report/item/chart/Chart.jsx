@@ -2,7 +2,8 @@ import DevChart, {
   Legend,
   Tooltip,
   Series,
-  Label
+  Label,
+  ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import {selectCurrentDataField}
@@ -146,6 +147,13 @@ const Chart = ({id, adHocOption, item}) => {
       pointSelectionMode={'multiple'}
       seriesSelectionMode={interactiveOption.mode}
     >
+      <ValueAxis
+        position='right'
+      >
+        <Label
+          customizeText={(e) => console.log(e)}
+        />
+      </ValueAxis>
       <Legend
         visible={true}
         position='outside'

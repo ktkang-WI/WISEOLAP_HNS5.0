@@ -31,7 +31,7 @@ const useCustomEvent = () => {
       'onClick': () => {
         openModal(ItemOptionModal,
             {
-              popupName: 'labelEdit',
+              popupName: 'xAxis',
               modalTitle: localizedString.labelDataEdit
             }
         );

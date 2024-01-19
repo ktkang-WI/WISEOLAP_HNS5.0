@@ -3,7 +3,8 @@ import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
 import {useEffect, useState} from 'react';
 import {formatValue, updateFomatType} from './FormatFunction';
-
+import {farmatType, unitType, precisionType}
+  from 'components/report/item/util/fomatDefaultElement';
 const Preview = styled.textarea`
 background-color: lightgray;
 border: 1px solid #ccc;
@@ -57,14 +58,7 @@ const FormatOptionForm = ({
         dataField='formatType'
         editorOptions={
           {
-            dataSource: [
-              {value: 'Auto', caption: 'Auto'},
-              {value: 'General', caption: 'General'},
-              {value: 'Number', caption: 'Number'},
-              {value: 'Currency', caption: 'Currency'},
-              {value: 'Scientific', caption: 'Scientific'},
-              {value: 'Percent', caption: 'Percent'}
-            ],
+            dataSource: farmatType,
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -77,13 +71,7 @@ const FormatOptionForm = ({
         dataField='unit'
         editorOptions={
           {
-            dataSource: [
-              {value: 'Auto', caption: 'Auto'},
-              {value: 'Ones', caption: 'Ones'},
-              {value: 'Thousands', caption: 'Thousands'},
-              {value: 'Millions', caption: 'Millions'},
-              {value: 'Billions', caption: 'Billions'}
-            ],
+            dataSource: unitType,
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -141,11 +129,7 @@ const FormatOptionForm = ({
         editorType='dxSelectBox'
         editorOptions={
           {
-            dataSource: [
-              {value: 'round', caption: localizedString.round},
-              {value: 'ceil', caption: localizedString.ceil},
-              {value: 'floor', caption: localizedString.floor}
-            ],
+            dataSource: precisionType,
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -170,7 +154,7 @@ const FormatOptionForm = ({
       >
         <Preview
           value={preview}
-          readOnly
+          readOnly={true}
         />
       </Item>
     </Form>

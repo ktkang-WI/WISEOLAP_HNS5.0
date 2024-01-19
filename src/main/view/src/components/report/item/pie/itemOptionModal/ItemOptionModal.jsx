@@ -9,8 +9,10 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LabelEditForm from './molecules/LabelEditForm';
-import YAxisExtraAxisForm from '../../chart/molecules/YAxisExtraAxisForm';
+// import YAxisExtraAxisForm from '../../chart/molecules/YAxisExtraAxisForm';
 import XAxisForm from '../../chart/molecules/XAxisForm';
+import FormatOptionForm
+  from 'components/report/atomic/Format/molecules/FormatOptionForm';
 
 const theme = getTheme();
 
@@ -57,9 +59,9 @@ const ItemOptionModal = ({popupName, ...props}) => {
         />
       }
       {(popupName === 'supplyAxis' || popupName === 'yAxis') &&
-        <YAxisExtraAxisForm
-          selectedItem={selectedItem}
-          ref={ref}
+        <FormatOptionForm
+          formData={_.cloneDeep(selectedItem.meta.yAxis)}
+          formRef={ref}
         />
       }
       {(popupName === 'xAxis') &&
