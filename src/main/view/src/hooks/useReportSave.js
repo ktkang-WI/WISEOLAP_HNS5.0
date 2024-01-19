@@ -11,13 +11,21 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import useSpread from './useSpread';
+import useFile from './useFile';
+import {DesignerMode} from 'components/config/configType';
 // import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
   const {alert} = useModal();
   const dispatch = useDispatch();
+  const {createReportBlob} = useSpread();
+  const {fileUpload, fileDelete} = useFile();
   const {
     updateReport,
     updateSelectedReportId,
@@ -44,13 +52,18 @@ const useReportSave = () => {
     deleteParameterForDesigner,
     initParameter
   } = ParameterSlice.actions;
-  // const reportId = useSelector(selectCurrentReportId);
+  const {
+    initSpread,
+    deleteSpread,
+    changeSpreadReportId
+  } = SpreadSlice.actions;
   /**
    * 저장에 필요한 파라미터 생성
    * @param {JSON} dataSource 저장에 필요한 instance 배열
    * @return {JSON} parameter
    */
   const generateParameter = (dataSource) => {
+    const reportType = selectCurrentDesignerMode(store.getState());
     const param = {};
     param.reportId = dataSource.reportId;
     param.reportNm = dataSource.reportNm;
@@ -58,20 +71,26 @@ const useReportSave = () => {
     param.fldType = dataSource.fldType;
     param.fldName = dataSource.fldName;
     param.reportOrdinal = dataSource.reportOrdinal;
-    // TODO: reportType 비정형 개발 시 고려 우선 'DashAny' 로 하드 코딩
-    // param.reportType = 'DashAny';
+    param.reportType = reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
-    param.chartXml = JSON.stringify(selectRootItem(store.getState()));
+    const chartXml = selectRootItem(store.getState());
+    const newChartXml = _.cloneDeep(chartXml);
+    newChartXml.items.forEach((item) => delete item['mart']);
+    param.chartXml = JSON.stringify(newChartXml);
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
-    param.paramXml = JSON.stringify(selectRootParameter(store.getState()));
+    param.paramXml = JSON.stringify(
+        selectCurrentInformationas(store.getState()));
+    if (reportType === DesignerMode['SPREAD_SHEET']) {
+      param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
+    } else {
+      param.reportXml = JSON.stringify({
+        reportId: param.reportId,
+        options: param
+      });
+    }
     param.reportSubTitle = dataSource.reportSubTitle;
-    param.reportXml = JSON.stringify({
-      reportId: param.reportId,
-      options: param
-    });
-
     return param;
   };
 
@@ -80,6 +99,10 @@ const useReportSave = () => {
    * @param {JSON} response 저장에 필요한 Modal dataSource
    */
   const saveReport = (response) => {
+    if (response.data.reportType === DesignerMode['SPREAD_SHEET']) {
+      createReportBlob().then((bolb) => fileUpload(
+          bolb, {fileName: response.data.reportId + '.xlsx'}));
+    }
     const currentReportId = selectCurrentReportId(store.getState());
     const reportId = {
       prevId: currentReportId,
@@ -98,6 +121,7 @@ const useReportSave = () => {
     dispatch(changeDatasetReportId(reportId));
     dispatch(changeParameterReportId(reportId));
     dispatch(updateSelectedReportId({reportId: reportId.newId}));
+    dispatch(changeSpreadReportId(reportId));
     alert('보고서를 저장했습니다.');
   };
 
@@ -114,16 +138,22 @@ const useReportSave = () => {
       ));
       dispatch(deleteDatasetForDesigner(reportId));
       dispatch(deleteParameterForDesigner(reportId));
+      dispatch(deleteSpread(reportId));
+      reload(reportType);
+      if (reportType === DesignerMode['SPREAD_SHEET']) {
+        fileDelete({fileName: reportId + '.xlsx'});
+      }
       alert('보고서를 삭제했습니다.');
     });
   };
 
-  const reload = (reportId, designer) => {
-    dispatch(initReport(reportId));
-    dispatch(initDatasets(reportId));
-    dispatch(initItems(reportId));
-    dispatch(initLayout({reportId: reportId, designer: designer}));
-    dispatch(initParameter(reportId));
+  const reload = (designerMode) => {
+    dispatch(initReport(designerMode));
+    dispatch(initDatasets());
+    dispatch(initItems(designerMode));
+    dispatch(initLayout(designerMode));
+    dispatch(initParameter());
+    dispatch(initSpread());
   };
 
   return {

@@ -16,10 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import com.wise.MarketingPlatForm.global.util.GroupingUtils;
 import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 
@@ -30,6 +32,7 @@ public final class DataSanitizer {
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     List<Measure> allMeasures;
+
     int orgDataLength;
     int grpDataLenth;
     int maxPage;
@@ -101,30 +104,26 @@ public final class DataSanitizer {
         return columnNames;
     }
 
+    public final DataSanitizer topBottom(TopBottomInfo topBottomInfo) {
+        if (topBottomInfo != null && 
+        	(topBottomInfo.getApplyFieldId() != null && !"".equals(topBottomInfo.getApplyFieldId()))) {
+            data = topBottomInfo.getTopBottomData(data, measures, dimensions);
+        }
+
+        return this;
+    }
+
     /**
      * 차원(Dimension) 이름을 기준으로 데이터를 그룹화하여 측정값(Measure)을 집계합니다.
      * 이 과정에서 "SummaryType_측정값명"으로 집계 컬럼이 추가됩니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer groupBy() {
-        data = data.stream().collect(Collectors.groupingBy(map -> {
-            // row data에서 key List<Map> 형태로 반환
-            // key는 dimention 모든 키들이 "-wise-split-" 로 붙여져있음.
-            // List<Map> [{측정값 명 : value}]
-            // [기아-wise-split-K3: [
-            // {회사: 기아, 자동차명: K3, 금액: 3}
-            // ...
-            // ]]
-            StringBuilder sb = new StringBuilder();
-
-            for (Dimension dimension : dimensions) {
-                sb.append(String.valueOf(map.get(dimension.getName())));
-                sb.append("-wise-split-");
-            }
-
-            return sb.toString();
-        })).entrySet().stream()
+        data = data.stream().collect(Collectors
+        .groupingBy(GroupingUtils.groupingDimensionsMapper(dimensions)))
+        .entrySet()
+        .stream()
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
                             // 그룹화 된 값을 집계 기준으로 측정값을 변경
@@ -186,7 +185,7 @@ public final class DataSanitizer {
      * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
      * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
      * name으로 된 데이터가 남습니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer columnFiltering() {
@@ -200,7 +199,7 @@ public final class DataSanitizer {
      * 차원(Dimension)의 경우 name으로 된 데이터가 남습니다.
      * 측정값(Measure)의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명)이 남고, 아니라면
      * name으로 된 데이터가 남습니다.
-     * 
+     *
      * @param includeSortByItem sortByItem을 포함 할지 여부입니다.
      * @return DataSanitizer
      */
@@ -221,7 +220,7 @@ public final class DataSanitizer {
 
     /**
      * null값이 포함된 row가 있을 경우 해당 row를 삭제합니다.
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer removeNullData() {
@@ -252,7 +251,7 @@ public final class DataSanitizer {
      * 측정값의 경우 groupBy()를 실행했던 데이터라면 집계 컬럼(SummaryType_측정값명) 기준으로 정렬되고, 아니라면 name
      * 기준으로 정렬됩니다.
      * </p>
-     * 
+     *
      * @return DataSanitizer
      */
     public final DataSanitizer orderBy() {
@@ -305,7 +304,7 @@ public final class DataSanitizer {
 
     /**
      * 데이터를 입력된 pagingOption 만큼 자릅니다.
-     * 
+     *
      * @param pagingOption
      * @return DataSanitizer
      */
@@ -341,7 +340,7 @@ public final class DataSanitizer {
      */
     public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
         // 필터가 존재하는 경우에만 필터링
-        if (filter.size() > 0) {
+        if (filter != null && filter.size() > 0) {
             data = data.stream()
                     .filter(map -> filter.entrySet().stream()
                             .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),

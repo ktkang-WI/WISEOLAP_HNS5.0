@@ -150,7 +150,7 @@
   "width": "넓이",
   "useCaptionWidth": "캡션 넓이 사용",
   "captionWidth": "캡션 넓이",
-  "lineBreak": "즐바꿈",
+  "lineBreak": "줄바꿈",
   "itemCaption": "Caption 항목",
   "itemKey": "Key 항목",
   "defaultParameter": "매개변수 기본값",
@@ -286,7 +286,7 @@
     {"name": "argument&Percent", "caption": "인수 및 %"},
     {"name": "argument&Value&Percent", "caption": "인수, 값 및 %"}
   ],
-  "degreeOptions": [
+  "precsionOptions": [
     {"name": "round", "caption": "반올림"},
     {"name": "roundUp", "caption": "올림"},
     {"name": "roundDown", "caption": "버림"}
@@ -303,13 +303,28 @@
   "thousands": "천 단위",
   "milions": "백만 단위",
   "bilions": "십억 단위",
-  "degree": "정도",
-  "precision": "정도",
-  "degreeOption": "정도 옵션",
-  "precisionOption": "정도 옵션",
+  "precsion": "정도",
+  "precsionOption": "정도 옵션",
   "unit": "단위",
   "all": "전체",
   "colRowSwitch": "행/열 변환",
   "showGrid": "그리드로 보기",
-  "detailedData": "상세데이터"
+  "detailedData": "상세데이터",
+  "numberFormat": "숫자 형식",
+  "formatUnit": "포맷 단위",
+  "digitUnit": "자리수 단위",
+  "suffixO": "O",
+  "suffixK": "K",
+  "suffixM": "M",
+  "suffixB": "B",
+  "digitSeparator" : "그룹 구분 포함",
+  "colRowSwitch": "행/열 변환",
+  "k": "천",
+  "m": "백만",
+  "b": "십억",
+  "datasetBinding": "데이터집합 연동",
+  "file": "파일",
+  "importFileFromPC": "파일 불러오기",
+  "print": "프린트",
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
 }

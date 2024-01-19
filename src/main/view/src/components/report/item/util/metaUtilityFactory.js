@@ -1,4 +1,5 @@
-import {DataFieldType} from './dataFieldType';
+import ItemManager from './ItemManager';
+import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 
 // meta.dataField.dimension 설정
 const getDimensionOption = (fieldOption) => {
@@ -73,7 +74,32 @@ const makeMetaDataField = (defaultMetaDataField, category) => {
 };
 
 /**
- * item > meta에 데이터 추가.
+ * item.meta.dataField 데이터 초기화
+ * @param {JSON} item 아이템 객체
+ */
+const initDataFieldMeta = (item) => {
+  const dataFieldTypes = DataFieldTypeOfItemType[item.type];
+  dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
+  item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];
+};
+
+/**
+ * 비정형 아이템의 meta값 세팅
+ * @param {JSON} orgItem 아이템 객체
+ * @return {JSON} 생성된 비정형 아이템의 meta 정보
+ */
+const makeAdHocItemMeta = (orgItem) => {
+  orgItem.meta = {};
+  ItemManager.generateMeta(orgItem);
+  return {
+    name: '아이템',
+    memo: '',
+    useCaption: true,
+    ...orgItem.meta
+  };
+};
+
+/* item > meta에 데이터 추가.
  * @param {*} item 현재 선택된 item을 가져옴.(파이차트의 meta, mart 등, 일반차트의 meta, mart 등)
  * @param {*} id meta에 추가된 값 (itemOption : ex(pieStyle, labelEdit 등))
  * @param {*} data meta에 추가될 데이터 ('pieChartStyle': 'pie' 등)
@@ -88,5 +114,7 @@ export {
   metaDataField,
   makeMetaDataField,
   makeFieldOption,
+  initDataFieldMeta,
+  makeAdHocItemMeta,
   setMeta
 };

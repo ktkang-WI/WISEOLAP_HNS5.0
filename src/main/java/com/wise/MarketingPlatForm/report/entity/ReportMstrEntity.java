@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,19 +45,21 @@ public class ReportMstrEntity {
     Date modDt;
     String privacyYn;
     String layoutConfig;
+    String dupleYn;
 
     private static String decodeBase64(String base64, boolean datasetCheck) {
-        byte[] decodedBytes = Base64.getDecoder().decode(
+    	byte[] decodedBytes = null;
+    	String decodedString = "";
+    	try {
+        decodedBytes = Base64.getDecoder().decode(
             base64.replaceAll("\\R", ""));
-        String decodedString = "";
-        try {
         	decodedString = new String(decodedBytes, "UTF-8");
+        	if(!datasetCheck) {
+        		decodedString = decodedString.replaceAll("&lt;", "<");
+        		decodedString = decodedString.replaceAll("&gt;", ">");
+        	}
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(!datasetCheck) {
-        	decodedString = decodedString.replaceAll("&lt;", "<");
-        	decodedString = decodedString.replaceAll("&gt;", ">");
+        	return decodedString = "newReport";
         }
         return decodedString;
     }
@@ -114,6 +118,7 @@ public class ReportMstrEntity {
 	        .reportSubTitle(reportMstrEntity.getReportSubTitle())
 	        .modUserNo(reportMstrEntity.getModUserNo())
 	        .modDt(reportMstrEntity.getModDt())
+	        .dupleYn(reportMstrEntity.getDupleYn())
 	        .privacyYn(reportMstrEntity.getPrivacyYn())
 	        .layoutConfig(reportMstrEntity.getLayoutConfig())
 	        .build();

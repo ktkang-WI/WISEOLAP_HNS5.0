@@ -3,7 +3,8 @@ import {
   selectCurrentDataset
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItem
+  selectCurrentDataField,
+  selectCurrentDataFieldOption
 } from 'redux/selector/ItemSelector';
 import {
   selectCurrentReportId
@@ -18,6 +19,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import models from 'models';
 import {makeMetaDataField, metaDataField}
   from 'components/report/item/util/metaUtilityFactory';
+import localizedString from 'config/localization';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -37,11 +39,11 @@ const useDrag = () => {
   };
 
   const onDragEnd = (e) => {
-    const selectedItem = selectCurrentItem(store.getState());
     const selectedDataset = selectCurrentDataset(store.getState());
     const reportId = selectCurrentReportId(store.getState());
-    const dataField = _.cloneDeep(selectedItem.meta.dataField);
-    const dataFieldOption = _.cloneDeep(selectedItem.mart.dataFieldOption);
+    const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
+    const dataFieldOption =
+    _.cloneDeep(selectCurrentDataFieldOption(store.getState()));
     const dest = e.destination;
     const source = e.source;
     const targetId = e.draggableId;
@@ -64,7 +66,6 @@ const useDrag = () => {
         fieldType: sourceField.type, // 데이터 항목 원본 타입
         type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
-
       // 필드아이디가 있는 경우 기존 아이템 이동
       if (sourceField.fieldId) {
         tempField = {...sourceField, ...tempField};
@@ -73,7 +74,20 @@ const useDrag = () => {
       }
 
       const measureOption = {
-        format: {},
+        format: {
+          formatType: 'Number',
+          unit: 'Ones',
+          suffixEnabled: false,
+          suffix: {
+            O: '',
+            K: localizedString.k,
+            M: localizedString.m,
+            B: localizedString.b
+          },
+          precision: 0,
+          precisionType: 'round',
+          useDigitSeparator: true
+        },
         summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
       };
 

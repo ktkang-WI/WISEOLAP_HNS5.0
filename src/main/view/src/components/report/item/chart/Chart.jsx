@@ -1,22 +1,33 @@
 import DevChart, {
   Legend,
+  Tooltip,
   Series,
-  Tooltip
+  Label
 } from 'devextreme-react/chart';
+import customizeTooltip from '../util/customizeTooltip';
+import {selectCurrentDataField}
+  from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
 import React, {useRef, useEffect} from 'react';
 
-const Chart = ({id, item}) => {
+const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
-
   if (!mart.init) {
     return <></>;
   }
 
-  const seriesCaptions = mart.data.info.seriesDimensionCaptions;
   const seriesNames = mart.data.info.seriesDimensionNames;
-  const interactiveOption = meta.interactiveOption;
+  const seriesCaptions = mart.data.info.seriesDimensionCaptions;
+  const dataFields = useSelector(selectCurrentDataField);
+  const meaLength = dataFields.measure.length;
+  const seriesLength = seriesNames.length / meaLength;
+  const formats = dataFields.measure.map((measure) => ({
+    format: measure.format
+  }));
+  const interactiveOption = adHocOption ?
+  {} : meta.interactiveOption;
 
   const {filterItems, clearAllFilter} = useQueryExecute();
 
@@ -27,15 +38,21 @@ const Chart = ({id, item}) => {
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {
-    dxRef.current.instance.clearSelection();
+    if (!adHocOption) {
+      dxRef.current.instance.clearSelection();
+    }
   }, [interactiveOption]);
 
   useEffect(() => {
-    filterItems(item, {});
+    if (!adHocOption) {
+      filterItems(item, {});
+    }
   }, [interactiveOption.targetDimension, interactiveOption.mode]);
 
   useEffect(() => {
-    clearAllFilter(item);
+    if (!adHocOption) {
+      clearAllFilter(item);
+    }
   }, [interactiveOption.crossDataSource]);
 
   /**
@@ -46,7 +63,6 @@ const Chart = ({id, item}) => {
     const targetDiemnsion = interactiveOption.targetDimension;
     const dim = meta.dataField.dimension;
     const dimGrp = meta.dataField.dimensionGroup;
-
     // 선택된 데이터 '차원명': Set 형태로 가공
     const filters = selectedData.reduce((acc, filter) => {
       if (targetDiemnsion == 'dimension') {
@@ -69,23 +85,18 @@ const Chart = ({id, item}) => {
           }
         });
       }
-
       return acc;
     }, {});
-
     // Set Array로 변환
     for (const filter in filters) {
       if (filters[filter]) {
         filters[filter] = [...filters[filter]];
       }
     }
-
     return filters;
   };
-
   const onPointClick = ({target, component}) => {
     if (!interactiveOption.enabled) return;
-
     // 대상 차원이 차원일 경우
     if (interactiveOption.targetDimension == 'dimension') {
       // 단일 마스터 필터일 경우 초기화
@@ -97,7 +108,6 @@ const Chart = ({id, item}) => {
         }
         component.clearSelection();
       }
-
       if (target.isSelected()) {
         component.getAllSeries().forEach((series) => {
           series.getPointsByArg(target.argument).forEach((point) => {
@@ -123,10 +133,8 @@ const Chart = ({id, item}) => {
         selectedData.push(target.series.name);
       }
     }
-
     filterItems(item, getFilter());
   };
-
   return (
     <DevChart
       dataSource={mart.data.data}
@@ -144,24 +152,35 @@ const Chart = ({id, item}) => {
         horizontalAlignment='right'
         verticalAlignment='top'
       />
-
       <Tooltip
         enabled={true}
         location='edge'
+        customizeTooltip={
+          (info) => customizeTooltip(info, false, formats)
+        }
       ></Tooltip>
       {
         seriesNames.map(
             (valueField, i) =>
               <Series
                 key={valueField}
+                tag={Math.floor(i / seriesLength)}
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
                 type="bar"
-              />
+              >
+                <Label
+                  visible={true}
+                  position='outside'
+                  offset={50}
+                  customizeText={
+                    (info) => customizeTooltip(info, true, formats)
+                  }
+                />
+              </Series>
         )
       }
-
     </DevChart>
   );
 };

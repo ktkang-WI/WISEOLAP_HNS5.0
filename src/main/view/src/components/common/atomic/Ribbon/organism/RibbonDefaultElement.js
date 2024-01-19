@@ -29,16 +29,17 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
-import {useLocation} from 'react-router';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
+import store from 'redux/modules';
+import {DesignerMode} from 'components/config/configType';
 
 const RibbonDefaultElement = () => {
-  const location = useLocation();
   const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
   const {openedPopover} = usePopover();
-  const selectedReportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
-  const {executeItems} = useQueryExecute();
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  const {executeItems, excuteSpread} = useQueryExecute();
   const {openModal, confirm} = useModal();
   const {removeReport, reload} = useReportSave();
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
@@ -52,10 +53,8 @@ const RibbonDefaultElement = () => {
       'label': localizedString.newReport,
       'imgSrc': newReport,
       'onClick': () => {
-        const designer =
-          location.pathname.includes('dashboard') ? 'dashboard' : 'adhoc';
         confirm(localizedString.reloadConfirmMsg, () => {
-          reload(selectedReportId, designer);
+          reload(designerMode);
         });
       }
     },
@@ -110,12 +109,11 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
-        const reportType =
-          location.pathname.includes('dashboard') ? 'dashboard': 'adhoc';
-
+        const selectedReportId = selectCurrentReportId(store.getState());
+        const designerMode = selectCurrentDesignerMode(store.getState());
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(selectedReportId, reportType);
+            removeReport(selectedReportId, designerMode);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);
@@ -181,6 +179,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.addPivotGrid,
       'imgSrc': addPivotGrid,
       'onClick': (e) => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         insertFlexLayout(selectedReportId, 'pivot');
       }
     },
@@ -190,6 +189,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.addGrid,
       'imgSrc': addGrid,
       'onClick': (e) => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         insertFlexLayout(selectedReportId, 'grid');
       }
     },
@@ -218,6 +218,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.captionView,
       'imgSrc': captionView,
       'onClick': () => {
+        const selectedReportId = selectCurrentReportId(store.getState());
         convertCaptionVisible(selectedReportId, selectedItem);
       }
     },
@@ -232,6 +233,8 @@ const RibbonDefaultElement = () => {
               modalTitle: localizedString.nameEdit,
               defaultValue: selectedItem.meta.name,
               onSubmit: (value) => {
+                const selectedReportId =
+                  selectCurrentReportId(store.getState());
                 editItemName(selectedReportId, selectedItem, value);
               }
             }
@@ -300,7 +303,12 @@ const RibbonDefaultElement = () => {
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {
-        executeItems();
+        const reportType = selectCurrentDesignerMode(store.getState());
+        if (reportType !== DesignerMode['SPREAD_SHEET']) {
+          executeItems();
+        } else {
+          excuteSpread();
+        }
       }
     }
   };

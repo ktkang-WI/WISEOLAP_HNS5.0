@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux';
 import models from 'models';
 
 const SaveDefaultElement = () => {
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   const {saveReport, generateParameter} = useReportSave();
   const currentReport = useSelector(selectCurrentReport);
 

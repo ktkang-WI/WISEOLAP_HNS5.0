@@ -12,15 +12,24 @@ import {setIconReportList} from 'components/report/util/ReportUtility';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
-import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
 import dimImg from 'assets/image/icon/dataSource/dimension.png';
 import folderImg from 'assets/image/icon/report/folder_load.png';
-import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {DesignerMode} from 'components/config/configType';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
+import spreadDefaultElement from
+  'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
+import {selectSheets} from 'redux/selector/SpreadSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import useSpread from 'hooks/useSpread';
 
 const theme = getTheme();
 
@@ -29,16 +38,20 @@ const LoadReportModal = ({...props}) => {
   const [reportList, setReportList] = useState();
   const {openModal} = useModal();
   const dispatch = useDispatch();
-
-  const {setReports, selectReport} = ReportSlice.actions;
-  const {setItems} = ItemSlice.actions;
-  const {setLayout} = LayoutSlice.actions;
   const {setDataset} = DatasetSlice.actions;
+  const {setReports, selectReport} = ReportSlice.actions;
+  const {setItem} = ItemSlice.actions;
+  const {setLayout} = LayoutSlice.actions;
   const {setParameterInformation} = ParameterSlice.actions;
-  const {executeItems} = useQueryExecute();
+  const ribbonElement = ribbonDefaultElement();
+  const {setRibbonSetting} = spreadDefaultElement();
+  const {setSpread} = SpreadSlice.actions;
+  const {sheetNameChangedListener,
+    sheetChangedListener} = useSpread();
 
   useEffect(() => {
-    models.Report.getList('admin', 'DashAny', 'designer').then((data) => {
+    const reportType = selectCurrentDesignerMode(store.getState());
+    models.Report.getList('admin', reportType, 'designer').then((data) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);
@@ -55,32 +68,29 @@ const LoadReportModal = ({...props}) => {
                   if (data.isNew) {
                     console.log('test');
                   } else {
-                    dispatch(setLayout({
-                      reportId: selectedReport.id,
-                      layout: data.layout
-                    }));
-                    dispatch(selectReport(selectedReport.id));
+                    const reportType =
+                        selectCurrentDesignerMode(store.getState());
                     dispatch(setReports(data.reports));
+                    dispatch(selectReport(selectedReport.id));
                     data.item.items.forEach((i) => {
                       i.mart = makeMart(i);
                       ItemManager.generateMeta(i);
                     });
-                    dispatch(setItems({
-                      reportId: selectedReport.id,
-                      items: data.item
-                    }));
+                    // const selectedDatasetId = data.dataset.selectedDatasetId;
                     data.dataset.datasets.forEach((i) => {
                       i.fields = i.fields.map((field) => {
                         const isMea = field.columnTypeName == 'decimal';
-                        return {
-                          icon: isMea ? meaImg : dimImg,
-                          parentId: '0',
-                          uniqueName: field.columnName,
-                          name: field.columnName,
-                          type: isMea ? 'MEA' : 'DIM',
-                          ...field
-                        };
-                      });
+                        if (field.uniqueName != 0) {
+                          return {
+                            icon: isMea ? meaImg : dimImg,
+                            parentId: '0',
+                            uniqueName: field.columnName,
+                            name: field.columnName,
+                            type: isMea ? 'MEA' : 'DIM',
+                            ...field
+                          };
+                        } else return;
+                      }).filter(Boolean);
                       i.fields.unshift({
                         name: localizedString.defaultDatasetName,
                         type: 'FLD',
@@ -92,11 +102,42 @@ const LoadReportModal = ({...props}) => {
                       reportId: selectedReport.id,
                       dataset: data.dataset
                     }));
+                    // let selectedItemId = null;
+                    // for (const item of data.item.items) {
+                    //   if (item.meta?.dataField?.datasetId ===
+                    //       selectedDatasetId) {
+                    //     selectedItemId = item.id;
+                    //     break;
+                    //   }
+                    // }
+                    dispatch(setLayout({
+                      reportId: selectedReport.id,
+                      layout: data.layout
+                    }));
+                    dispatch(setItem({
+                      reportId: selectedReport.id,
+                      item: data.item
+                    }));
                     dispatch(setParameterInformation({
                       reportId: selectedReport.id,
                       informations: data.informations
                     }));
-                    executeItems();
+                    if (reportType === DesignerMode.SPREAD_SHEET) {
+                      const sheets = selectSheets(store.getState());
+                      const config = setRibbonSetting();
+                      const designer =
+                      new sheets.Designer
+                          .Designer(document.getElementById('spreadWrapper'),
+                              config);
+                      dispatch(setSpread({
+                        reportId: selectedReport.id,
+                        bindingInfos: data.spread,
+                        designer: designer
+                      }));
+                      sheetNameChangedListener();
+                      sheetChangedListener();
+                    }
+                    ribbonElement['QuerySearch'].onClick();
                   }
                 });
           } else {

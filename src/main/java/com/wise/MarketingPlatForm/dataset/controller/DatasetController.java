@@ -175,7 +175,7 @@ public class DatasetController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
             @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
     }))
-    @PostMapping(value = "/query-dataset-fields")
+    @PostMapping(value = "/query-dataset-datas")
     public MartResultDTO getValidate(@RequestBody Map<String, String> datasource) {
         String query = datasource.get("query");
         int dsId = Integer.parseInt(datasource.get("dsId"));
