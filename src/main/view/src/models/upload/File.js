@@ -1,9 +1,9 @@
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/upload';
 
 export const uploadFile = (param) => {
-  return instance.post(path + '/import', param, {
+  return axios.post(path + '/import', param, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -11,5 +11,5 @@ export const uploadFile = (param) => {
 };
 
 export const deleteFile = (param) => {
-  return instance.post(path + '/delete', param);
+  return axios.post(path + '/delete', param);
 };

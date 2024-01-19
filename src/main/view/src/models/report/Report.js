@@ -1,4 +1,4 @@
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/report';
 
@@ -9,7 +9,7 @@ const path = '/report';
  * @return {axios}
  */
 export const getReportById = (userId, reportId) => {
-  return instance.post(path + '/report', {
+  return axios.post(path + '/report', {
     reportId: reportId,
     userId: userId
   });
@@ -25,7 +25,7 @@ export const getReportById = (userId, reportId) => {
  * @return {axios}
  */
 export const getList = (userId, reportType, editMode) => {
-  return instance.post(path + '/report-list', {
+  return axios.post(path + '/report-list', {
     editMode: editMode,
     reportType: reportType,
     userId: userId
@@ -37,7 +37,7 @@ export const getList = (userId, reportType, editMode) => {
  * @return {axios}
  */
 export const addReport = (param) => {
-  return instance.post(path + '/save-report', param);
+  return axios.post(path + '/save-report', param);
 };
 
 /**
@@ -46,7 +46,7 @@ export const addReport = (param) => {
  * @return {axios}
  */
 export const getFolderList = (param) => {
-  return instance.post(path + '/report-folder-list', param);
+  return axios.post(path + '/report-folder-list', param);
 };
 
 /**
@@ -55,5 +55,5 @@ export const getFolderList = (param) => {
  * @return {axios}
  */
 export const deleteReport = (param) => {
-  return instance.post(path + '/delete-report', param);
+  return axios.post(path + '/delete-report', param);
 };

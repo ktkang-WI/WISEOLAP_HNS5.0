@@ -1,24 +1,24 @@
 import ParamUtils from 'components/dataset/utils/ParamUtils';
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/dataset';
 
 export const dbTables = (dsId, search) => {
-  return instance.post(path + '/db-tables', {
+  return axios.post(path + '/db-tables', {
     dsId: dsId,
     search: search
   });
 };
 
 export const dbColumns = (dsId, table, search) => {
-  return instance.post(path + '/db-columns', {
+  return axios.post(path + '/db-columns', {
     dsId: dsId,
     table: table
   });
 };
 
 export const getTablesByMart = (dsId) => {
-  return instance.post(path + '/query-dataset-tables', {
+  return axios.post(path + '/query-dataset-tables', {
     dsId: parseInt(dsId)
   });
 };
@@ -33,7 +33,7 @@ export const getTablesByMart = (dsId) => {
 export const getDataByQueryMart = (dsId, query, parameters, rowNum) => {
   const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
 
-  return instance.post(path + '/query-dataset-datas', {
+  return axios.post(path + '/query-dataset-datas', {
     dsId: parseInt(dsId),
     query: query,
     parameter: JSON.stringify(parameter),

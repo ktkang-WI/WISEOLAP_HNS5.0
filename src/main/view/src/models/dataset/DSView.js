@@ -1,9 +1,9 @@
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/dataset';
 
 export const getByUserId = (userId) => {
-  return instance.post(path + '/ds-views', {
+  return axios.post(path + '/ds-views', {
     userId: userId
   });
 };

@@ -1,4 +1,4 @@
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/report';
 
@@ -8,11 +8,11 @@ const path = '/report';
  * @return {axios}
  */
 export const getItemData = (param) => {
-  return instance.post(path + '/item-data', param);
+  return axios.post(path + '/item-data', param);
 };
 
 export const getPivotData = async (param) => {
-  return instance.post(path + '/item-data', param);
+  return axios.post(path + '/item-data', param);
 };
 
 /**
@@ -21,5 +21,5 @@ export const getPivotData = async (param) => {
  * @return {axios}
  */
 export const getAdHocItemData = (param) => {
-  return instance.post(path + '/adhoc-item-data', param);
+  return axios.post(path + '/adhoc-item-data', param);
 };

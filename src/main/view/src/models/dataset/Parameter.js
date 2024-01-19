@@ -1,4 +1,4 @@
-import instance from 'models/instance';
+import axios from 'axios';
 
 const path = '/dataset';
 
@@ -10,7 +10,7 @@ export const getDefaultValue = (param) => {
     defaultValue = [defaultValue[0]];
   }
 
-  return instance.post(path + '/param-default-value', {
+  return axios.post(path + '/param-default-value', {
     dsId: param.dsId,
     defaultValue: JSON.stringify(defaultValue)
   });
@@ -23,7 +23,7 @@ export const getListItems = (param, linkageValues) => {
     defaultValue = [defaultValue[0]];
   }
 
-  return instance.post(path + '/param-list-items', {
+  return axios.post(path + '/param-list-items', {
     dsId: param.dsId,
     dataSourceType: param.dataSourceType,
     dataSource: param.dataSource,
