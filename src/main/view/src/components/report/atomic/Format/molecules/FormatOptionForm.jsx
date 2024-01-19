@@ -134,7 +134,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.decimalUnit}: </Label>
+        <Label>{localizedString.degree}: </Label>
       </Item>
       <Item
         dataField='precisionType'
@@ -151,7 +151,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.roundUnit}: </Label>
+        <Label>{localizedString.degreeOption}: </Label>
       </Item>
       <Item
         dataField='useDigitSeparator'
@@ -162,7 +162,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.includesGroupDistinction}: </Label>
+        <Label>{localizedString.digitSeparator}: </Label>
       </Item>
       <Item
         editorType='dxTextArea'
