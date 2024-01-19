@@ -131,7 +131,7 @@ const useReportSave = () => {
 
   const removeReport = (reportId, reportType) => {
     const param = {reportId: reportId};
-    models.Report.deleteReport(param, (response) => {
+    deleteReport(param).then((response) => {
       if (response.status != 200) {
         return;
       }

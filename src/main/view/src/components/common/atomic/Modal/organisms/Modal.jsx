@@ -2,7 +2,7 @@ import Footer from '../molecules/Footer';
 import Header from '../molecules/Header';
 import Draggable from 'react-draggable';
 import Content from '../atoms/Content';
-import Overlay from '../atoms/Overlay';
+import Overlay from '../../Common/Wrap/Overlay';
 import Inner from '../atoms/Inner';
 import {useState} from 'react';
 import {motion} from 'framer-motion';
