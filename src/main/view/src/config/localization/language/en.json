@@ -315,7 +315,7 @@
   "print": "Print",
   "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
   "axisNumberFormat": "Number Format",
-  "formatZeroMark": "'0' Data Display",
+  "yAsixStartPoint": "Y Axis Starting Data Level",
   "yAxisMark": "Y Axis Display",
   "axisCutomText": "Y Axis Label",
   "numberSeperator": "Number Seperator(',') Display",

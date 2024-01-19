@@ -44,7 +44,7 @@ const YAxisExtraAxisForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
-        <Label>{localizedString.formatZeroMark}</Label>
+        <Label>{localizedString.yAsixStartPoint}</Label>
       </Item>
       <Item
         dataField='useYxAxis'
