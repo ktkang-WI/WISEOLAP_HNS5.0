@@ -134,7 +134,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.degree}: </Label>
+        <Label>{localizedString.precsion}: </Label>
       </Item>
       <Item
         dataField='precisionType'
@@ -151,7 +151,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.degreeOption}: </Label>
+        <Label>{localizedString.precsionOption}: </Label>
       </Item>
       <Item
         dataField='useDigitSeparator'

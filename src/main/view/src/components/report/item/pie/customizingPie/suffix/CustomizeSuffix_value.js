@@ -1,8 +1,8 @@
 const regularExpression = (num) => { // 정규식으로 천의 자리마다 , 생성.
   return ((num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','));
 };
-const treatedNumber = (value, customSuffix, degree, degreeOption) => {
-  const suffixValue = customSuffix / 10 ** (degree);
+const treatedNumber = (value, customSuffix, precsion, precsionOption) => {
+  const suffixValue = customSuffix / 10 ** (precsion);
   const mathRoundFunc = {
     round: Math.round,
     roundUp: Math.ceil,
@@ -11,9 +11,9 @@ const treatedNumber = (value, customSuffix, degree, degreeOption) => {
 
   return (
     parseFloat(
-        (mathRoundFunc[degreeOption](value / suffixValue) * suffixValue) /
+        (mathRoundFunc[precsionOption](value / suffixValue) * suffixValue) /
           customSuffix
-    ).toFixed(degree)
+    ).toFixed(precsion)
   );
 };
 
@@ -26,10 +26,10 @@ export default function CustomizeSuffixValue(value, options) {
   };
   const unit = options.unit.toLowerCase();
   const customSuffix = suffix[options[unit]];
-  const degree = options.degree;
+  const precsion = options.precsion;
 
   const num = treatedNumber(
-      value, customSuffix, degree, options.degreeOption
+      value, customSuffix, precsion, options.precsionOption
   );
 
   if (options.customSuffix) {
