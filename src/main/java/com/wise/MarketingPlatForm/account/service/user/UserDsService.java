@@ -34,13 +34,16 @@ public class UserDsService {
     List<Integer> userkeys = new ArrayList<>();
     UserMstrEntity user = null;
     UserDsModel userDsModel = null;
-    int prevUserId = 0;
+    int prevUserNo = 0;
+    boolean isThereToSave = false;
     
     for (UserDsDTO userDs : userDsDTO) {
 
       int userNo = userDs.getUserNo();
+      boolean lastUserIdNumber = ((prevUserNo != userNo) && prevUserNo != 0);
+      boolean isUserContained = userkeys.contains(userNo);
 
-      if ((prevUserId != userNo) && prevUserId != 0) {
+      if (lastUserIdNumber) {
         userDsModel = UserDsModel.builder()
         .user(user)
         .ds(dsList)
@@ -49,7 +52,7 @@ public class UserDsService {
         dsList = new ArrayList<>();
       }
 
-      if (!userkeys.contains(userNo)) {
+      if (!isUserContained) {
         user = UserMstrEntity.builder()
         .userNo(userDs.getUserNo())
         .userId(userDs.getUserId())
@@ -70,10 +73,12 @@ public class UserDsService {
 
       dsList.add(ds);
 
-      prevUserId = userNo;
+      prevUserNo = userNo;
     }
 
-    if (dsList.size() > 0) {
+    isThereToSave = dsList.size() > 0;
+
+    if (isThereToSave) {
       userDsModel = UserDsModel.builder()
         .user(user)
         .ds(dsList)

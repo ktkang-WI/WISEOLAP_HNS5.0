@@ -36,13 +36,16 @@ public class GroupDsService {
     List<Integer> groupkeys = new ArrayList<>();
     GroupMstrEntity group = null;
     GroupDsModel groupDsModel = null;
-    int prevGrpId = 0;
-    
+    int prevGroupId = 0;
+    boolean isThereToSave = false;
+
     for (GroupDsDTO groupDs : groupDsDTO) {
 
       int grpId = groupDs.getGrpId();
+      boolean lastGroupIdNumber = ((prevGroupId != grpId) && prevGroupId != 0);
+      boolean isGroupContained = groupkeys.contains(grpId);
 
-      if ((prevGrpId != grpId) && prevGrpId != 0) {
+      if (lastGroupIdNumber) {
         groupDsModel = GroupDsModel.builder()
         .group(group)
         .ds(dsList)
@@ -51,7 +54,7 @@ public class GroupDsService {
         dsList = new ArrayList<>();
       }
 
-      if (!groupkeys.contains(grpId)) {
+      if (!isGroupContained) {
         group = GroupMstrEntity.builder()
         .grpId(grpId)
         .grpNm(groupDs.getGrpNm())
@@ -72,10 +75,12 @@ public class GroupDsService {
 
       dsList.add(ds);
 
-      prevGrpId = grpId;
+      prevGroupId = grpId;
     }
 
-    if (dsList.size() > 0) {
+    isThereToSave = dsList.size() > 0;
+
+    if (isThereToSave) {
       groupDsModel = GroupDsModel.builder()
         .group(group)
         .ds(dsList)

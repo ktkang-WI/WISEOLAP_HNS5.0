@@ -37,12 +37,15 @@ public class GroupDatasetService {
     GroupMstrEntity group = null;
     GroupDatasetModel groupDatasetModel = null;
     int prevGroupId = 0;
+    boolean isThereToSave = false;
     
     for (GroupDatasetDTO groupDatasetData : groupDatasetDTO) {
 
       int grpId = groupDatasetData.getGrpId();
+      boolean lastGroupIdNumber = ((prevGroupId != grpId) && prevGroupId != 0);
+      boolean isGroupContained = groupkeys.contains(grpId);
 
-      if ((prevGroupId != grpId) && prevGroupId != 0) {
+      if (lastGroupIdNumber) {
         groupDatasetModel = GroupDatasetModel.builder()
         .group(group)
         .dataset(datasetList)
@@ -51,7 +54,7 @@ public class GroupDatasetService {
         datasetList = new ArrayList<>();
       }
 
-      if (!groupkeys.contains(grpId)) {
+      if (!isGroupContained) {
         group = GroupMstrEntity.builder()
         .grpId(groupDatasetData.getGrpId())
         .grpNm(groupDatasetData.getGrpNm())
@@ -72,7 +75,9 @@ public class GroupDatasetService {
       prevGroupId = grpId;
     }
 
-    if (datasetList.size() > 0) {
+    isThereToSave = datasetList.size() > 0;
+
+    if (isThereToSave) {
       groupDatasetModel = GroupDatasetModel.builder()
         .group(group)
         .dataset(datasetList)

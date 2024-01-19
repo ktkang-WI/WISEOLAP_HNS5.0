@@ -36,13 +36,16 @@ public class GroupFolderService {
     List<Integer> groupkeys = new ArrayList<>();
     GroupMstrEntity group = null;
     GroupFolderModel groupFolderModel = null;
-    int prevGrpId = 0;
+    int prevGroupId = 0;
+    boolean isThereToSave = false;
 
     for (GroupFolderDTO groupData : groupFolderDTO) {
 
       int grpId = groupData.getGrpId();
-
-      if ((prevGrpId != grpId) && prevGrpId != 0) {
+      boolean lastGroupIdNumber = ((prevGroupId != grpId) && prevGroupId != 0);
+      boolean isGroupContained = groupkeys.contains(grpId);
+      
+      if (lastGroupIdNumber) {
         groupFolderModel = GroupFolderModel.builder()
         .group(group)
         .folderList(folderListMode)
@@ -51,7 +54,7 @@ public class GroupFolderService {
         folderListMode = new ArrayList<>();
       }
 
-      if (!groupkeys.contains(grpId)) {
+      if (!isGroupContained) {
         group = GroupMstrEntity.builder()
         .grpId(grpId)
         .grpNm(groupData.getGrpNm())
@@ -82,10 +85,12 @@ public class GroupFolderService {
       
       folderListMode.add(folderListModel);
 
-      prevGrpId = grpId;
+      prevGroupId = grpId;
     }
 
-    if (folderListMode.size() > 0) {
+    isThereToSave = folderListMode.size() > 0;
+
+    if (isThereToSave) {
       groupFolderModel = GroupFolderModel.builder()
         .group(group)
         .folderList(folderListMode)

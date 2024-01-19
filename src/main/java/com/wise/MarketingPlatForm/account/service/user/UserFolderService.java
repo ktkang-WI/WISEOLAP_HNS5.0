@@ -36,13 +36,16 @@ public class UserFolderService {
     List<Integer> userkeys = new ArrayList<>();
     UserMstrEntity user = null;
     UserFolderModel userFolderModel = null;
-    int prevUserId = 0;
+    int prevUserNo = 0;
+    boolean isThereToSave = false;
 
     for (UserFolderDTO userData : userFolderDTO) {
 
       int userNo = userData.getUserNo();
+      boolean lastUserIdNumber = ((prevUserNo != userNo) && prevUserNo != 0);
+      boolean isUserContained = userkeys.contains(userNo);
 
-      if ((prevUserId != userNo) && prevUserId != 0) {
+      if (lastUserIdNumber) {
         userFolderModel = UserFolderModel.builder()
           .user(user)
           .folderList(folderListMode)
@@ -51,7 +54,7 @@ public class UserFolderService {
         folderListMode = new ArrayList<>();
       }
 
-      if (!userkeys.contains(userNo)) {
+      if (!isUserContained) {
         user = UserMstrEntity.builder()
           .userNo(userData.getUserNo())
           .userId(userData.getUserId())
@@ -82,10 +85,12 @@ public class UserFolderService {
       
       folderListMode.add(folderListModel);
 
-      prevUserId = userNo;
+      prevUserNo = userNo;
     }
 
-    if (folderListMode.size() > 0) {
+    isThereToSave = folderListMode.size() > 0;
+
+    if (isThereToSave) {
       userFolderModel = UserFolderModel.builder()
         .user(user)
         .folderList(folderListMode)

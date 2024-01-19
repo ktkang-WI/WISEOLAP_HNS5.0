@@ -39,12 +39,15 @@ public class UserDatasetService {
     UserMstrEntity user = null;
     UserDatasetModel userDatasetModel = null;
     int prevUserNo = 0;
+    boolean isThereToSave = false;
     
     for (UserDatasetDTO userDatasetData : userDatasetDTO) {
 
       int userNo = userDatasetData.getUserNo();
+      boolean lastUserIdNumber = ((prevUserNo != userNo) && prevUserNo != 0);
+      boolean isUserContained = userkeys.contains(userNo);
 
-      if ((prevUserNo != userNo) && prevUserNo != 0) {
+      if (lastUserIdNumber) {
         userDatasetModel = UserDatasetModel.builder()
         .user(user)
         .dataset(datasetList)
@@ -53,7 +56,7 @@ public class UserDatasetService {
         datasetList = new ArrayList<>();
       }
 
-      if (!userkeys.contains(userNo)) {
+      if (!isUserContained) {
         user = UserMstrEntity.builder()
         .userNo(userDatasetData.getUserNo())
         .userId(userDatasetData.getUserId())
@@ -75,7 +78,9 @@ public class UserDatasetService {
       prevUserNo = userNo;
     }
 
-    if (datasetList.size() > 0) {
+    isThereToSave = datasetList.size() > 0;
+
+    if (isThereToSave) {
       userDatasetModel = UserDatasetModel.builder()
         .user(user)
         .dataset(datasetList)
