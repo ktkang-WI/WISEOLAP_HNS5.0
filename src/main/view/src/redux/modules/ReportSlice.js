@@ -30,9 +30,13 @@ const reducers = {
     cloneState.reports[0].reportType = designerMode;
     return cloneState;
   },
+  /*
+   * 보고서 추가
+   * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
+   */
   insertReport(state, actions) {
-    state.selectedReportId = actions.payload.selectedReportId;
-    state.reports = state.reports.concat(actions.payload.reports);
+    state.selectedReportId = actions.payload.reportId;
+    state.reports = state.reports.concat(actions.payload);
   },
   setReports(state, actions) {
     state.reports = actions.payload;
@@ -40,15 +44,23 @@ const reducers = {
   selectReport(state, actions) {
     state.selectedReportId = actions.payload;
   },
+  /*
+   * 보고서 수정
+   * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
+   */
   updateReport(state, actions) {
-    const updateId = actions.payload.reports[0].reportId;
+    const updateId = actions.payload.reportId;
 
-    state.selectedReportId = actions.payload.selectedReportId;
+    state.selectedReportId = updateId;
     state.reports.find((report) => report.reportId === updateId)
-        .options = actions.payload.reports[0].options;
+        .options = actions.payload.options;
   },
+  /*
+   * 보고서 삭제
+   * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
+   */
   deleteReport(state, actions) {
-    const deleteReportId = actions.payload.reports[0].reportId;
+    const deleteReportId = actions.payload.reportId;
     const lastIndex = state.reports.length - 2;
     state.selectedReportId = state.reports[lastIndex].reportId;
     state.reports = state.reports.filter(

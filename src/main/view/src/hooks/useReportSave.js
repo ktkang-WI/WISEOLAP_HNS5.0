@@ -129,7 +129,7 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.insertReport(report));
+    dispatch(reportActions.insertReport(report.reports[0]));
 
     dispatch(itemActions.changeItemReportId(reportId));
     dispatch(layoutActions.changeLayoutReportId(reportId));
@@ -170,7 +170,7 @@ const useReportSave = () => {
       }
 
       if (reports.length > 1) {
-        dispatch(reportActions.deleteReport(report));
+        dispatch(reportActions.deleteReport(report.reports[0]));
       } else {
         reload(reportType);
       }
