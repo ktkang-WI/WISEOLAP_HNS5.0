@@ -19,7 +19,6 @@ import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import useSpread from './useSpread';
 import useFile from './useFile';
 import {DesignerMode} from 'components/config/configType';
-// import { useSelector } from 'react-redux';
 
 const useReportSave = () => {
   const {alert} = useModal();
@@ -131,7 +130,7 @@ const useReportSave = () => {
 
   const removeReport = (reportId, reportType) => {
     const param = {reportId: reportId};
-    deleteReport(param).then((response) => {
+    models.Report.deleteReport(param).then((response) => {
       if (response.status != 200) {
         return;
       }
