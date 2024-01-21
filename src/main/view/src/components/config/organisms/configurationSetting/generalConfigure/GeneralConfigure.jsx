@@ -3,19 +3,20 @@ import Form, {
 } from 'devextreme-react/form';
 import {Button} from 'devextreme-react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
-import CusTomFileUploader from '../userGroupManagement/common/FileUploader';
-import {useLoaderData} from 'react-router-dom';
+import CusTomFileUploader from '../../userGroupManagement/common/FileUploader';
+import {useContext} from 'react';
+import {ConfigureContext} from '../ConfigurationSetting';
 
 
 const GeneralConfigure = () => {
-  const {generalConfigure} = useLoaderData();
+  const getContext = useContext(ConfigureContext);
+  const [general] = getContext.state.general;
 
-  console.log(generalConfigure);
   const nameEditorOptions = {disabled: false};
 
   return (
     <Form
-      formData={generalConfigure}>
+      formData={general}>
       <GroupItem colCount={1}>
         <Item
           dataField="licensesKey"
@@ -47,7 +48,7 @@ const GeneralConfigure = () => {
             <Wrapper size="1" display='flex' direction='row'>
               <Wrapper display='flex' direction='column'>
                 <CusTomFileUploader
-                  defaultImage={generalConfigure.loginImage}
+                  defaultImage={general.loginImage}
                   title='로그인 이미지'
                   id='login'/>
                 <Button>기본 이미지로 변경</Button>
@@ -56,7 +57,7 @@ const GeneralConfigure = () => {
             <Wrapper size="1" display='flex' direction='row'>
               <Wrapper display='flex' direction='column'>
                 <CusTomFileUploader
-                  defaultImage={generalConfigure.logo}
+                  defaultImage={general.logo}
                   title='아이콘 이미지'
                   id='icon'/>
                 <Button>기본 이미지로 변경</Button>

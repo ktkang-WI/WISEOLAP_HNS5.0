@@ -256,6 +256,7 @@
   "value": "값",
   "bar": "바",
   "generateConfigure": "일반 설정",
+  "reportConfigure": "보고서 설정",
   "userManagement": "사용자 관리",
   "groupManagement": "그룹 관리"
 }

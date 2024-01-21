@@ -13,6 +13,13 @@ export const getGeneralConfig = async () => {
   return res;
 };
 
+export const updateGeneralConfig = async (general) => {
+  const res = await axios.patch(configPath + '/general', null, {
+    params: general
+  });
+  return res;
+};
+
 export const getUserGroupManagement = async () => {
   const res = await axios.get(accountPath + '/user-group');
   return res;
