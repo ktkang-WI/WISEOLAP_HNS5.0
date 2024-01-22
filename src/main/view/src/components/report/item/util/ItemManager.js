@@ -1,4 +1,6 @@
 import ItemType from './ItemType';
+import {DataFieldType} from './dataFieldType';
+import {dataFieldSortByItem} from './martUtilityFactory';
 
 const utility = {};
 
@@ -44,6 +46,11 @@ const generateDataFieldOption = (item) => {
 
   Object.keys(dataFieldOptionChild).forEach((type) =>
     Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
+
+  // 정렬 기준 항목
+  Object.assign(dataFieldOptions, {
+    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+  });
 
   return dataFieldOptions;
 };

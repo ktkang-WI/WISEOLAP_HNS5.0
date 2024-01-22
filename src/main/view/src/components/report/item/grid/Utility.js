@@ -1,4 +1,4 @@
-import {defaultDimension, defaultMeasure, defaultAnyField}
+import {defaultDimension, defaultAnyField}
   from 'components/report/item/util/martUtilityFactory';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
@@ -54,16 +54,9 @@ const getDataFieldOptionChild = () => {
     placeholder: localizedString.sparklinePlaceholder
   };
 
-  const dataFieldSortByItem = {
-    ...defaultMeasure,
-    label: localizedString.sortByItem,
-    placeholder: localizedString.newSortByItem
-  };
-
   return {
     [DataFieldType.FIELD]: dataFieldField,
-    [DataFieldType.SPARKLINE]: dataFieldSparkline,
-    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+    [DataFieldType.SPARKLINE]: dataFieldSparkline
   };
 };
 

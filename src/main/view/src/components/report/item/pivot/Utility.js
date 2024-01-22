@@ -118,8 +118,7 @@ const generateItem = (item, rootItem) => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
-    ...defaultMeasure,
-    useButton: true
+    ...defaultMeasure
   };
 
   const dataFieldColumn = {
@@ -134,17 +133,10 @@ const getDataFieldOptionChild = () => {
     placeholder: localizedString.rowPlaceholder
   };
 
-  const dataFieldSortByItem = {
-    ...defaultMeasure,
-    label: localizedString.sortByItem,
-    placeholder: localizedString.newSortByItem
-  };
-
   return {
     [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.ROW]: dataFieldRow,
-    [DataFieldType.COLUMN]: dataFieldColumn,
-    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+    [DataFieldType.COLUMN]: dataFieldColumn
   };
 };
 

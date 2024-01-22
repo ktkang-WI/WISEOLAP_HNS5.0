@@ -25,6 +25,12 @@ export const defaultMeasure = {
   type: 'MEA'
 };
 
+export const dataFieldSortByItem = {
+  ...defaultMeasure,
+  label: localizedString.sortByItem,
+  placeholder: localizedString.newSortByItem
+};
+
 const defaultMart = {
   data: [],
   init: false

@@ -70,17 +70,10 @@ const getDataFieldOptionChild = () => {
     placeholder: localizedString.dimensionGroupPlaceholder
   };
 
-  const dataFieldSortByItem = {
-    ...defaultMeasure,
-    label: localizedString.sortByItem,
-    placeholder: localizedString.newSortByItem
-  };
-
   return {
     [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.DIMENSION]: dataFieldDimension,
-    [DataFieldType.DIMENSION_GROUP]: dataFieldDimensionGroup,
-    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+    [DataFieldType.DIMENSION_GROUP]: dataFieldDimensionGroup
   };
 };
 
