@@ -329,5 +329,10 @@
   "file": "파일",
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
-  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "addHighlightMsg": "하이라이트 목록을 추가해 주세요.",
+  "highlightBetweenValueCompareMsg": "조건 값(To)이 조건 값(From)보다 커야 합니다.",
+  "highlightBetweenValueEssentialMsg": "조건유형 Between은 조건 값(To)도 필수 입력입니다.",
+  "highlightOnlyNumberMsg": "조건 값은 숫자만 입력해 주세요.",
+  "highlightInputEssentialValueMsg": "데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다."
 }

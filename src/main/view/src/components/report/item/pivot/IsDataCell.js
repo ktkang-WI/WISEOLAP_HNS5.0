@@ -1,4 +1,4 @@
-const IsDataCell = (cell, area, highlight) => {
+const isDataCell = (cell, area, highlight) => {
   const arr = [];
   const map = new Map();
   if (highlight.applyCell) { // 셀 선택 시
@@ -61,4 +61,4 @@ const IsDataCell = (cell, area, highlight) => {
     return true;
   }
 };
-export default IsDataCell;
+export default isDataCell;

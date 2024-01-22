@@ -313,6 +313,10 @@
   "file": "file",
   "importFileFromPC": "Import File From PC",
   "print": "Print",
-  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
-
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
+  "addHighlightMsg": "Please add a list of highlights.",
+  "highlightBetweenValueCompareMsg": "The condition value (To) must be greater than the condition value (From).",
+  "highlightBetweenValueEssentialMsg": "조건유형 Between은 조건 값(To)도 필수 입력입니다.",
+  "highlightOnlyNumberMsg": "For the condition type Between, the condition value (To) is also required.",
+  "highlightInputEssentialValueMsg": "Data item, condition type, and condition value are required input items."
 }

@@ -61,7 +61,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
     return map;
   }, [meta.dataHighlight]);
 
-  const pivoCellPrepared = ({cell, area, cellElement}) => {
+  const pivotCellPrepared = ({cell, area, cellElement}) => {
     if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
       // isDataCell -> 셀, 합계 셀, 총계 셀 체크 안된경우 분기처리
       if (isDataCell(cell, area, highlightMap.get(cell.dataIndex)) ) {
@@ -116,7 +116,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
       fieldPanel={fieldPanel}
       showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
-      onCellPrepared={pivoCellPrepared}
+      onCellPrepared={pivotCellPrepared}
       allowSorting={false}
       allowSortingBySummary={false}
     >

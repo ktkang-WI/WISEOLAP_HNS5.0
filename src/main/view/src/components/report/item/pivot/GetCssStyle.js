@@ -1,7 +1,8 @@
 import EmojiArr from './modal/molecules/EmojiArr';
 
-const GetCssStyle = (highlight, cellElement, cell) => {
-  const isEmoji = () => { // 이모지 적용.
+const getCssStyle = (highlight, cellElement, cell) => {
+  // 이모지 적용.
+  const isEmoji = () => {
     if (highlight.emojiList >= 0) {
       cellElement.innerHTML =
         '<img src='+
@@ -11,14 +12,16 @@ const GetCssStyle = (highlight, cellElement, cell) => {
     }
   };
 
-  const colorStyle = (highlight) => { // 배경 및 글자색 적용.
+  // 배경 및 글자색 적용.
+  const colorStyle = (highlight) => {
     return {
       'background-color': highlight.backgroundColor,
       'color': highlight.fontColor
     };
   };
 
-  if (highlight.idx == cell.dataIndex) { // 조건 형식 추가.
+  // 조건 형식 추가.
+  if (highlight.idx == cell.dataIndex) {
     if (highlight.condition === '>') {
       if (Number(highlight.valueFrom) < cell.value) {
         isEmoji();
@@ -58,4 +61,4 @@ const GetCssStyle = (highlight, cellElement, cell) => {
     }
   }
 };
-export default GetCssStyle;
+export default getCssStyle;

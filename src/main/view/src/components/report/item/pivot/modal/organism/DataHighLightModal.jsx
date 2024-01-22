@@ -14,7 +14,6 @@ import {selectCurrentItem, selectCurrentItems, selectRootItem}
   from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
-import store from 'redux/modules';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import _ from 'lodash';
 import MakeForm from '../molecules/MakeForm';
@@ -50,33 +49,38 @@ const selectedReportTypeHighlight = (selectedItem, reportType) => {
   };
 };
 
-const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
+const DataHighlightModal = ({...props}) => {
   const dispatch = useDispatch();
   const {alert} = useModal();
+  const reportId = useSelector(selectCurrentReportId);
+  const reportType = useSelector(selectCurrentDesignerMode);
   const rootItem = useSelector(selectRootItem);
-  const reportType = selectCurrentDesignerMode(store.getState());
   const selectedItem = reportType === DesignerMode['AD_HOC'] ?
       useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
-  const reportId = selectCurrentReportId(store.getState());
-  const {updateItem} = ItemSlice.actions; // state에 dataHighligh 목록 추가.
-  const [highlightList, setHighlightList] = // 모달 창에서만 사용 하므로 useState로 목록을 보여줌.
+  const {updateItem} = ItemSlice.actions;
+  // meta에 데이터하이라트 목록을 가져옴. meta에 없으면 빈 배열을 반환.
+  const [highlightList, setHighlightList] =
     useState(
         [...selectedReportTypeHighlight(selectedItem, reportType)]
-    ); // 이미 하이라이트 목록이 있다면 모달창을 불러올 때 같이 불러옴.
+    );
+  // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
   const [data, setData] = useState({
     'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true
-  }); // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
+  });
+  // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
   const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
+  // 데이터항목에 올라간 측정값의 name을 가져옴.
   const measureNames = useMemo(() => {
     if (reportType === DesignerMode['AD_HOC']) {
       return rootItem.adHocOption.dataField.measure.map((mea) => mea.name);
     } else if (reportType === DesignerMode['DASHBOARD']) {
       return selectedItem.meta.dataField.measure.map((mea) => mea.name);
     }
-  }, []); // 데이터항목에 올라간 측정값을 가져옴.
+  }, []);
 
-  const onClick = () => { // 하이라이트 추가 부분.
+  // 하이라이트 추가 부분.
+  const onClick = () => {
     const copyHighlight = [...highlightList];
     const formData = _.cloneDeep(ref.current.props.formData);
 
@@ -91,24 +95,27 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
       highlight.dataItem == formData.dataItem
     ); // 추가 된 하이라이트 정보가 있는지 찾음.
 
-    if (copyHighlight.length == 0) { // 첫 추가
+    if (copyHighlight.length == 0) {
+      // 첫 추가
       copyHighlight.push(highlightData);
-    } else if (findIdx == -1) { // 2번째 추가 부터 같은 fieldName이 없으면 새로 추가
+    } else if (findIdx == -1) {
+      // 2번째 추가 부터 같은 fieldName이 없으면 새로 추가
       copyHighlight.push(highlightData);
-    } else { // 같은 fieldName있으면 변경.
+    } else {
+      // 같은 fieldName있으면 내용만 변경.
       copyHighlight[findIdx] = {...highlightData};
     }
 
     // 유효성 검사.
-    if (!formData.dataItem ||! formData.condition ||!formData.valueFrom) {
-      alert('데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다.');
+    if (!formData.dataItem || !formData.condition || !formData.valueFrom) {
+      alert(localizedString.highlightInputEssentialValueMsg);
     } else if (isNaN(Number(formData.valueFrom))) {
-      alert('조건 값은 숫자만 입력해 주세요.');
+      alert(localizedString.highlightOnlyNumberMsg);
     } else {
       if (formData.condition === 'Between' && formData.valueTo === undefined) {
-        alert('조건유형 Between은 조건 값(To)도 필수 입력입니다.');
+        alert(localizedString.highlightBetweenValueEssentialMsg);
       } else if (Number(formData.valueFrom) > Number(formData.valueTo)) {
-        alert('조건 값(To)가 조건 값(From)보다 커야 합니다.');
+        alert(localizedString.highlightBetweenValueCompareMsg);
       } else {
         setHighlightList(copyHighlight);
         const init = {applyCell: true, applyTotal: true, applyGrandTotal: true};
@@ -142,9 +149,9 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
   return (
     <Modal
       onSubmit={() => {
+        const popupName = 'dataHighlight';
         if (highlightList.length == 0 && !isUpdate) {
-          // Alert
-          alert('하이라이트 목록을 추가해 주세요.');
+          alert(localizedString.addHighlightMsg);
           return true;
         } else {
           const selectItem =
@@ -156,7 +163,7 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
       }}
       height={theme.size.bigModalHeight}
       width={'calc(' + theme.size.bigModalWidth + ' - 70px)'}
-      modalTitle={modalTitle}
+      modalTitle={localizedString.datahighlight}
       {...props}
     >
       <StyledWrapper>
@@ -168,7 +175,8 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
           <CommonDataGrid
             width='100%'
             dataSource={highlightList}
-            onCellClick={(e) => { // 추가된 하이라이트 목록을 클릭 할 때 동작.
+            onCellClick={(e) => {
+              // 추가된 하이라이트 목록을 클릭 할 때 동작. -> 하이라이트 정보에 내용 출력.
               const rowData = _.cloneDeep(e.row ?
                 e.row.data :
                 {applyCell: true, applyTotal: true, applyGrandTotal: true});
@@ -196,7 +204,7 @@ const DataHighlightModal = ({popupName, modalTitle, ...props}) => {
           title={localizedString.datahighlightInfo}
           width='40%'
           padding='10'>
-          {/* <Form>이 정리 된 곳. */}
+          {/* 하이라이트 정보를 구성. dev의 <Form> 사용. */}
           <MakeForm ref={ref} formData={data} measureNames={measureNames}/>
         </ModalPanel>
       </StyledWrapper>

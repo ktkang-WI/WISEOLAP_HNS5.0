@@ -184,12 +184,7 @@ const ItemAttributeDefaultElement = () => {
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
             // 데이터 하이라이트
-            openModal(DataHighlightModal,
-                {
-                  popupName: 'dataHighlight',
-                  modalTitle: localizedString.datahighlight
-                }
-            );
+            openModal(DataHighlightModal);
           }
         }
       ]
@@ -213,12 +208,7 @@ const ItemAttributeDefaultElement = () => {
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
             // 데이터 하이라이트
-            openModal(DataHighlightModal,
-                {
-                  popupName: 'dataHighlight',
-                  modalTitle: localizedString.datahighlight
-                }
-            );
+            openModal(DataHighlightModal);
           }
         },
         {
