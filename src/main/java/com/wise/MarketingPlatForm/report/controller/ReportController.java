@@ -202,7 +202,7 @@ public class ReportController {
                     "}")
     }))
     @PostMapping(value = "/adhoc-item-data")
-    public List<ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
+    public Map<String, ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");

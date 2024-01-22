@@ -132,35 +132,20 @@ const useQueryExecute = () => {
         return;
       }
 
-      // if (!response.data['chart']) {
-      //   return
-      // }
+      if (!response.data['chart'] && !response.data['pivot']) {
+        return;
+      }
 
-      // if(!response.data['pivot']) {
-      //   return
-      // }
-
-
-      if (tempItem.adHocOption.layoutSetting === 'onlyChart') {
+      if (response.data['chart']) {
         chartItem.mart.init = true;
-        chartItem.mart.data = response.data[0];
+        chartItem.mart.data = response.data['chart'];
         ItemManager.generateItem(chartItem);
         dispatch(updateItem({reportId, item: chartItem}));
-      } else if (tempItem.adHocOption.layoutSetting === 'onlyPivot') {
+      }
+      if (response.data['pivot']) {
         pivotItem.mart.init = true;
-        pivotItem.mart.data = response.data[0];
+        pivotItem.mart.data = response.data['pivot'];
         ItemManager.generateItem(pivotItem, tempItem);
-        dispatch(updateItem({reportId, item: pivotItem}));
-      } else if (tempItem.adHocOption.layoutSetting === 'chart&pivot') {
-        chartItem.mart.init = true;
-        chartItem.mart.data = response.data[0];
-        pivotItem.mart.init = true;
-        pivotItem.mart.data = response.data[1];
-
-        ItemManager.generateItem(chartItem);
-        ItemManager.generateItem(pivotItem, tempItem);
-
-        dispatch(updateItem({reportId, item: chartItem}));
         dispatch(updateItem({reportId, item: pivotItem}));
       }
     });
