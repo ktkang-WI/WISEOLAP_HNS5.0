@@ -30,11 +30,11 @@ const SaveDefaultElement = () => {
               const result = data.result;
 
               if (res.status != 200) {
-                alert('보고서 저장에 실패했습니다. 관리자에게 문의하세요.');
+                alert(localizedString.faildSaveReportMsg);
                 return;
               }
 
-              alert(msg);
+              alert(localizedString[msg]);
 
               if (result) {
                 patchReport(data);

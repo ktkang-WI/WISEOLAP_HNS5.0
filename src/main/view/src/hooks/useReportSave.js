@@ -19,7 +19,7 @@ import useSpread from './useSpread';
 import useFile from './useFile';
 import {ConvertDesignerMode, DesignerMode} from 'components/config/configType';
 import models from 'models';
-// import { useSelector } from 'react-redux';
+import localizedString from 'config/localization';
 
 const useReportSave = () => {
   const {alert} = useModal();
@@ -162,11 +162,12 @@ const useReportSave = () => {
       const reportId = report.reports[0].reportId;
 
       if (res.status != 200) {
+        alert(localizedString.failedDeleteReportMsg);
         return;
       }
 
       if (result) {
-        alert(msg);
+        alert(localizedString[msg]);
       }
 
       if (reports.length > 1) {

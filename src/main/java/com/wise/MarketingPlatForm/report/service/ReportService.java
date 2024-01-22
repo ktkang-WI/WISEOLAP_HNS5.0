@@ -444,13 +444,13 @@ public class ReportService {
 
                 if (result) {
                     reportMstrDTO.setReportId(reportMstrEntity.getReportId());
-                    map.put("msg", "보고서를 저장했습니다.");
+                    map.put("msg", "saveReportMsg");
                 } else {
-                    map.put("msg", "보고서 저장을 실패했습니다.\n 관리자에게 문의하세요");
+                    map.put("msg", "faildSaveReportMsg");
                 }
             } else {
                 reportMstrDTO.setDupleYn(duplicationStatus);
-                map.put("msg", "보고서 저장을 실패했습니다.\n 중복된 보고서가 있습니다.");
+                map.put("msg", "duplicatedSaveReportMsg");
             }
 
             map.put("report", reportMstrDTO);
@@ -490,9 +490,9 @@ public class ReportService {
 
             if (result) {
                 reportMstrDTO.setReportId(reportMstrEntity.getReportId());
-                map.put("msg", "보고서를 저장했습니다.");
+                map.put("msg", "saveReportMsg");
             } else {
-                map.put("msg", "보고서 저장을 실패했습니다.\n 관리자에게 문의하세요");
+                map.put("msg", "faildSaveReportMsg");
             }
 
             map.put("report", reportMstrDTO);
@@ -516,9 +516,9 @@ public class ReportService {
 
             if (result) {
                 map.put("report", reportMstrDTO);
-                map.put("msg", "보고서를 삭제했습니다.");
+                map.put("msg", "deleteReportMsg");
             } else {
-                map.put("msg", "보고서 삭제를 실패했습니다.\n 관리자에게 문의하세요");
+                map.put("msg", "failedDeleteReportMsg");
             }
             map.put("result", result);
         } catch (Exception e) {
