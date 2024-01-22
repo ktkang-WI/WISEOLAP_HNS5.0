@@ -93,7 +93,7 @@ const getLayoutSetting = () => {
   const layoutType = {
     'onlyChart': 'onlyChart',
     'onlyPivot': 'onlyPivot',
-    'chart&pivot': 'chart&pivot'
+    'chartPivot': 'chartPivot'
   };
   return layoutType;
 };

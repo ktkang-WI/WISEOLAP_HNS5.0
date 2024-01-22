@@ -57,7 +57,7 @@ const RibbonDefaultElement = () => {
   const data = [
     {id: 'onlyChart', text: '차트만 보기'},
     {id: 'onlyPivot', text: '피벗그리드만 보기'},
-    {id: 'chart&pivot', text: '차트, 피벗 전부 보기'}
+    {id: 'chartPivot', text: '차트, 피벗 전부 보기'}
   ];
 
   const tempPopoverData = (reportId) => {

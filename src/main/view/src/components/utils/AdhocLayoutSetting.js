@@ -56,7 +56,7 @@ const AdHocLayoutSetting = (layoutType, reportId, state) => {
   const selectedLayoutId = {
     'onlyChart': 'item1',
     'onlyPivot': 'item2',
-    'chart&pivot': 'init'
+    'chartPivot': 'init'
   };
   const tempState = state[reportId].layoutConfig.layout;
   const layoutPosition = {
