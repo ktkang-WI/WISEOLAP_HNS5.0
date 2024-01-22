@@ -13,7 +13,7 @@ import com.wise.MarketingPlatForm.dataset.entity.CubeDimMstrEntity;
 import com.wise.MarketingPlatForm.dataset.model.DatasetDsDsviewCubeModel;
 
 @Service
-public class DatasetDsDsviewCubeService {
+public class DataSetDsDsviewCubeService {
   
   @Autowired
   DatasetDAO datasetDAO;

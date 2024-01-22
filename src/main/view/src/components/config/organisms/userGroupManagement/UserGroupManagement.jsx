@@ -1,9 +1,10 @@
-import {createContext, useState} from 'react';
+import {createContext, useCallback, useState} from 'react';
 import styled from 'styled-components';
 import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import useModal from 'hooks/useModal.js';
+import {useLoaderData} from 'react-router-dom';
 
 const NavBar = styled.div`
   width:100%;
@@ -39,37 +40,99 @@ export const UserGroupContext = createContext();
 const UserGroupManagement = () => {
   const {alert} = useModal();
   const {userGroupManagement} = useLoaderData();
-
-  const btns = ['plus', 'save', 'remove', 'key'];
   const [groupsFormat, setGroupsFormat] =
   useState(userGroupManagement.groupsFormat);
+  const [groupDetailInfo, setGroupDetailInfo] = useState();
   const [usersFormat, setUsersFormat] =
   useState(userGroupManagement.usersFormat);
+  const [userDetailInfo, setUserDetailInfo] = useState();
+  const [groupMemberUsers, setGroupMemberUsers] = useState();
+  const [groupNotMemberUsers, setGroupNotMemberUsers] = useState();
+  const [mode, setMode] = useState(dataSource[0].mode);
+
+  const btns = ['plus', 'save', 'remove', 'key'];
 
   const context = {
     state: {
       groupsFormat: [groupsFormat, setGroupsFormat],
-      usersFormat: [usersFormat, setUsersFormat]
+      groupDetailInfo: [groupDetailInfo, setGroupDetailInfo],
+      usersFormat: [usersFormat, setUsersFormat],
+      userDetailInfo: [userDetailInfo, setUserDetailInfo],
+      groupMemberUsers: [groupMemberUsers, setGroupMemberUsers],
+      groupNotMemberUsers: [groupNotMemberUsers, setGroupNotMemberUsers]
     }
   };
-
-  let mode = dataSource[0].mode;
 
   const TabPanelItem = useCallback(({data}) => {
     return data.component;
   }, [groupsFormat, usersFormat]);
 
-  const handleBtnClick = (e) => {
+  const handleBtnClick = ({component}) => {
     // getUserGroupManagementTEST();
     // updateGroupTest();
+    console.log(component);
+    console.log(component.option('icon'));
+    const icon = component.option('icon');
+
+    switch (icon) {
+      case 'plus':
+        handlePlus();
+        break;
+      case 'save':
+        handleSave();
+        break;
+      case 'remove':
+        handleRemove();
+        break;
+      case 'key':
+        handleKey();
+        break;
+      default:
+        break;
+    }
     alert('클릭');
+  };
+
+  const handlePlus = () => {
+    if (mode === Mode.USER) {
+      setUserDetailInfo({});
+    }
+
+    if (mode === Mode.GROUP) {
+      setGroupDetailInfo({});
+      setGroupMemberUsers({});
+    }
+  };
+
+  const handleSave = () => {
+    if (mode === Mode.USER) {
+
+    }
+
+    if (mode === Mode.GROUP) {
+
+    }
+  };
+
+  const handleRemove = () => {
+    if (mode === Mode.USER) {
+
+    }
+
+    if (mode === Mode.GROUP) {
+
+    }
+  };
+
+  const handleKey = () => {
+
   };
 
   const handleTabPanelItem = ({itemData}) => {
     const panelTitle = itemData.title;
     dataSource.forEach((item) => {
       if (item.title === panelTitle) {
-        mode = item.mode;
+        setMode(item.mode);
         return;
       }
     });

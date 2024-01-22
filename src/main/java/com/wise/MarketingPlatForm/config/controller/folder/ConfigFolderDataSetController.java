@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO;
-import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderDatasetService;
+import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderDataSetService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "config-folder-dataset", description = "데이터원본을 관리합니다.")
 @RestController
 @RequestMapping("/config/folder/dataset")
-public class ConfigFolderDatasetController {
+public class ConfigFolderDataSetController {
   
   @Autowired
-  private ConfigFolderDatasetService configFolderDatasetService;
+  private ConfigFolderDataSetService configFolderDataSetService;
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getConfigFolderDatasetData() throws Exception {
 
-    List<ConfigFolderDatasetDTO> model = configFolderDatasetService.getConfigFolderDatasetData();
+    List<ConfigFolderDatasetDTO> model = configFolderDataSetService.getConfigFolderDatasetData();
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 

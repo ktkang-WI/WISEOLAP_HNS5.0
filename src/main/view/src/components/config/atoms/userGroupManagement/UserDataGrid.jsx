@@ -1,16 +1,19 @@
 
-import {UserManagementContext}
-  from 'components/config/molecules/userGroupManagement/UserManagement';
+import {UserGroupContext}
+  from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import DataGrid, {Column} from 'devextreme-react/data-grid';
-import {useContext} from 'react';
+import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
+import _ from 'lodash';
+import {useContext, useRef} from 'react';
 
 const UserDataGrid = () => {
-  const getContext = useContext(UserManagementContext);
+  const getContext = useContext(UserGroupContext);
 
   const [usersFormat] = getContext.state.usersFormat;
-  const [, setUserDetailInfo] = getContext.state.userDetailInfo;
+  const [userDetailInfo, setUserDetailInfo] = getContext.state.userDetailInfo;
+
+  const ref = useRef();
 
   const handleRowClick = (e) => {
     const userId = e.data.userId;
@@ -19,20 +22,20 @@ const UserDataGrid = () => {
     setUserDetailInfo(selectedUser);
   };
 
-  /*
-  const panelTitle = (title) => {
-    return '{1} + {2} = {3}'.format(4, 5, 9);
-  };
-  */
+  if (_.isEmpty(userDetailInfo)) {
+    ref.current?._instance.clearSelection();
+  }
 
   return (
-    <Panel title='사용자 (34명)'>
+    <Panel title={'사용자 (' + usersFormat.length + '명)'}>
       <DataGrid
         height={600}
         dataSource={usersFormat}
         showBorders={true}
         onRowClick={handleRowClick}
+        ref={ref}
       >
+        <Selection mode="single" />
         <Column
           dataField="userId"
           caption="사용자 ID"

@@ -9,7 +9,7 @@ import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO;
 
 @Service
-public class ConfigFolderDatasetService {
+public class ConfigFolderDataSetService {
   
 @Autowired
   ConfigDAO configDao;
