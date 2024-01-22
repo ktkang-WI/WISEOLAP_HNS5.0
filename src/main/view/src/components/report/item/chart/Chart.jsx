@@ -5,9 +5,6 @@ import DevChart, {
   Label
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
-import {selectCurrentDataField}
-  from 'redux/selector/ItemSelector';
-import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
 import React, {useRef, useEffect} from 'react';
 
@@ -20,7 +17,7 @@ const Chart = ({id, adHocOption, item}) => {
 
   const seriesNames = mart.data.info.seriesDimensionNames;
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
-  const dataFields = useSelector(selectCurrentDataField);
+  const dataFields = meta.dataField;
   const meaLength = dataFields.measure.length;
   const seriesLength = seriesNames.length / meaLength;
   const formats = dataFields.measure.map((measure) => ({

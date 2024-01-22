@@ -17,6 +17,9 @@ import {useDispatch} from 'react-redux';
 import {DesignerMode} from 'components/config/configType';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import useReportSave from 'hooks/useReportSave';
+import useModal from 'hooks/useModal';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
 
 const SNBDefaultElement = () => {
   // actions
@@ -26,9 +29,19 @@ const SNBDefaultElement = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const {reload} = useReportSave();
+  const {confirm} = useModal();
 
   // local
   const onClick = (designerMode) => {
+    const currentDesignerMode = selectCurrentDesignerMode(store.getState());
+    if (designerMode === currentDesignerMode) {
+      changeNav(designerMode);
+    } else {
+      confirm(localizedString.menuChangeConfirm, () => changeNav(designerMode));
+    }
+  };
+
+  const changeNav = (designerMode) => {
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     reload(designerMode);

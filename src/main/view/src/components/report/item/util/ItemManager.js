@@ -135,10 +135,25 @@ const useCustomEvent = () => {
     return customEvent[type].getTabHeaderButton(key, id);
   };
 
+  /**
+   * 아이템 별 데이터 항목을 검증합니다.
+   * @param {Object} item
+   */
+  const dataFieldValidator = (item) => {
+    let type;
+    if (item.type === ItemType.CHART || item.type === ItemType.PIE_CHART) {
+      type = ItemType.CHART;
+    } else {
+      type = item.type;
+    }
+    customEvent[type].dataFieldValidator(item);
+  };
+
   return {
     getRibbonItemConfig,
     getRibbonItemsConfig,
-    getTabHeaderButtons
+    getTabHeaderButtons,
+    dataFieldValidator
   };
 };
 

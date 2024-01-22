@@ -308,5 +308,11 @@
   "file": "file",
   "importFileFromPC": "Import File From PC",
   "print": "Print",
-  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
+  "noneDataItem": "There Isn't Data Item",
+  "noneDimensionItem": "There Isn't Dimension",
+  "noneMeasureItem": "There Isn't Measure",
+  "noneDataField": "There Isn't Field",
+  "reportCorrupted": "This Report is Corrupted, Please Conect to Manager",
+  "menuChangeConfirm": "If you Don't Save the Data, It'll be disappeared"
 }

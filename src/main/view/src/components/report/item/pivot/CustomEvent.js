@@ -293,7 +293,29 @@ const useCustomEvent = () => {
     );
   };
 
-  return {ribbonConfig, getTabHeaderButton};
+  const dataFieldValidator = (item) => {
+    const dataField = item.meta.dataField;
+    if (!dataField) {
+      throw Error(localizedString.noneDataItem);
+    }
+    const dimensionLength =
+      dataField.row.length + dataField.column;
+    const measureLength = dataField.measure.length;
+
+    if (dimensionLength == 0) {
+      throw Error(localizedString.noneDimensionItem);
+    }
+
+    if (measureLength == 0) {
+      throw Error(localizedString.noneMeasureItem);
+    }
+  };
+
+  return {
+    ribbonConfig,
+    getTabHeaderButton,
+    dataFieldValidator
+  };
 };
 
 export default useCustomEvent;

@@ -29,6 +29,7 @@ const useQueryExecute = () => {
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const dispatch = useDispatch();
+  const eventManager = ItemManager.useCustomEvent();
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -39,6 +40,7 @@ const useQueryExecute = () => {
    * @return {JSON} parameter
    */
   const generateParameter = (item, datasets, parameters, filter={}) => {
+    eventManager.dataFieldValidator(item);
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -121,6 +123,17 @@ const useQueryExecute = () => {
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     const tempItem = _.cloneDeep(rootItem);
+    const dataField = rootItem.adHocOption.dataField;
+    if (dataField.row + dataField.column == 0) {
+      alert(localizedString.noneDimensionItem);
+      return;
+    }
+
+    if (dataField.measure.length === 0) {
+      alert(localizedString.noneMeasureItem);
+      return;
+    }
+
     const chartItem = tempItem.items[0];
     const pivotItem = tempItem.items[1];
     const param = generateAdHocParamter(tempItem, datasets, parameters);
@@ -155,30 +168,36 @@ const useQueryExecute = () => {
    */
   const executeItem = (item, datasets, parameters, filter) => {
     const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets, parameters, filter);
-    const reportId = selectCurrentReportId(store.getState());
+    let param = {};
+    try {
+      param = generateParameter(tempItem, datasets, parameters, filter);
 
-    // TODO: 추후 PivotMatrix 적용할 때 해제
-    // if (item.type == ItemType.PIVOT_GRID) {
-    //   tempItem.mart.init = true;
-    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+      const reportId = selectCurrentReportId(store.getState());
 
-    //   dispatch(updateItem({reportId, item: tempItem}));
-    // } else {
+      // TODO: 추후 PivotMatrix 적용할 때 해제
+      // if (item.type == ItemType.PIVOT_GRID) {
+      //   tempItem.mart.init = true;
+      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
 
-    models.Item.getItemData(param).then((response) => {
-      if (response.status != 200) {
-        return;
-      }
+      //   dispatch(updateItem({reportId, item: tempItem}));
+      // } else {
 
-      tempItem.mart.init = true;
-      tempItem.mart.data = response.data;
-      tempItem.mart.currentFilter = filter || {};
+      models.Item.getItemData(param).then((response) => {
+        if (response.status != 200) {
+          return;
+        }
 
-      ItemManager.generateItem(tempItem);
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+        tempItem.mart.currentFilter = filter || {};
 
-      dispatch(updateItem({reportId, item: tempItem}));
-    });
+        ItemManager.generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -281,6 +300,11 @@ const useQueryExecute = () => {
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
     const reportType = selectCurrentDesignerMode(store.getState());
+
+    if (datasets.length === 0) {
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
+    };
 
     if (reportType === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
