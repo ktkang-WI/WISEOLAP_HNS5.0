@@ -150,8 +150,7 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
-    'InteractionConfiguration',
-    'TargetDimension'
+    'InteractionConfiguration'
   ];
 };
 
