@@ -11,13 +11,13 @@ import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
-public class DatasetDsService {
+public class DataSetDsService {
 
   @Autowired
   DatasetDAO datasetDAO;
 
   public List<DsMstrEntity> getDatasetDsData() {
-    
+
     List<DatasetDsDTO> datasetDsDTO = datasetDAO.selectDatasetDs();
 
     List<DsMstrEntity> datasetDsModel = generateDatasetDsObject(datasetDsDTO);
@@ -43,6 +43,6 @@ public class DatasetDsService {
     }
 
     return result;
-    
+
   };
 }

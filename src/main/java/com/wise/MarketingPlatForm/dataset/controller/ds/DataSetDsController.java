@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
-import com.wise.MarketingPlatForm.dataset.service.ds.DatasetDsService;
+import com.wise.MarketingPlatForm.dataset.service.ds.DataSetDsService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -18,9 +18,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/dataset/ds")
 public class DataSetDsController {
-  
+
   @Autowired
-  private DatasetDsService datasetDsService;
+  private DataSetDsService datasetDsService;
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getDs() throws Exception{

@@ -1,9 +1,9 @@
-import {useState} from 'react';
+import {createContext, useState} from 'react';
 import styled from 'styled-components';
 import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
-import {updateGroupTest} from 'models/config/userGroupManagement.js';
+import useModal from 'hooks/useModal.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -34,22 +34,47 @@ const Content = styled.div`
   flex: 0 0 1;
 `;
 
+export const UserGroupContext = createContext();
+
 const UserGroupManagement = () => {
+  const {alert} = useModal();
+  const {userGroupManagement} = useLoaderData();
+
   const btns = ['plus', 'save', 'remove', 'key'];
-  const [mode, setMode] = useState(Mode.USER);
-  const [tabPanelItem, setTabPanelItem] = useState(dataSource[0].component);
+  const [groupsFormat, setGroupsFormat] =
+  useState(userGroupManagement.groupsFormat);
+  const [usersFormat, setUsersFormat] =
+  useState(userGroupManagement.usersFormat);
 
-
-  const TabPanelItem = ({children}) => {
-    return (
-      <>{children}</>
-    );
+  const context = {
+    state: {
+      groupsFormat: [groupsFormat, setGroupsFormat],
+      usersFormat: [usersFormat, setUsersFormat]
+    }
   };
+
+  let mode = dataSource[0].mode;
+
+  const TabPanelItem = useCallback(({data}) => {
+    return data.component;
+  }, [groupsFormat, usersFormat]);
 
   const handleBtnClick = (e) => {
     // getUserGroupManagementTEST();
-    updateGroupTest();
+    // updateGroupTest();
+    alert('클릭');
   };
+
+  const handleTabPanelItem = ({itemData}) => {
+    const panelTitle = itemData.title;
+    dataSource.forEach((item) => {
+      if (item.title === panelTitle) {
+        mode = item.mode;
+        return;
+      }
+    });
+  };
+
 
   const navBarItems = (mode) => {
     if (mode === Mode.USER) {
@@ -71,42 +96,31 @@ const UserGroupManagement = () => {
       );
     };
   };
-  const handleTabPanelItem = (e) => {
-    const panelTitle = e.itemData.title;
-    dataSource.forEach((item) => {
-      if (item.title === panelTitle) {
-        setMode(item.mode);
-        setTabPanelItem(item.component);
-        return;
-      }
-    });
-  };
 
   return (
-    <Wrapper display='flex' direction='column'>
-      <Header>
-        <NavBar>
-          {navBarItems(mode)}
-        </NavBar>
-      </Header>
-      <Content>
-        <TabPanel
-          className='dx-theme-background-color'
-          width='100%'
-          height='100%'
-          dataSource={dataSource}
-          animationEnabled={false}
-          swipeEnabled={false}
-          onTitleClick={(e) => {
-            handleTabPanelItem(e);
-          }}
-          itemComponent={() => {
-            return <TabPanelItem>{tabPanelItem}</TabPanelItem>;
-          }}
-        >
-        </TabPanel>
-      </Content>
-    </Wrapper>
+    <UserGroupContext.Provider
+      value={context}>
+      <Wrapper display='flex' direction='column'>
+        <Header>
+          <NavBar>
+            {navBarItems(mode)}
+          </NavBar>
+        </Header>
+        <Content>
+          <TabPanel
+            className='dx-theme-background-color'
+            width='100%'
+            height='100%'
+            dataSource={dataSource}
+            animationEnabled={false}
+            swipeEnabled={false}
+            itemComponent={TabPanelItem}
+            onTitleClick={handleTabPanelItem}
+          >
+          </TabPanel>
+        </Content>
+      </Wrapper>
+    </UserGroupContext.Provider>
   );
 };
 
