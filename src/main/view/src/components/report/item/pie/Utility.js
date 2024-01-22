@@ -1,4 +1,9 @@
 import {setMeta} from '../util/metaUtilityFactory';
+import {defaultDimension, defaultMeasure}
+  from 'components/report/item/util/martUtilityFactory';
+import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import localizedString from 'config/localization';
+import {DataFieldType} from '../util/dataFieldType';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
@@ -38,6 +43,45 @@ const generateMeta = (item) => {
 
 const generateItem = () => {
 
+};
+
+/**
+ * 아이템 객체의 데이터 항목 옵션
+ * @return {JSON} dataFieldOption
+ */
+const getDataFieldOptionChild = () => {
+  const dataFieldMeasure = {
+    ...defaultMeasure,
+    useButton: true,
+    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
+    buttonIcon: chartSeriesButtonIcon,
+    buttonEvent: function(e) {
+      console.log(e);
+    }
+  };
+
+  const dataFieldDimension = {
+    ...defaultDimension
+  };
+
+  const dataFieldDimensionGroup = {
+    ...defaultDimension,
+    label: localizedString.dimensionGroup,
+    placeholder: localizedString.dimensionGroupPlaceholder
+  };
+
+  const dataFieldSortByItem = {
+    ...defaultMeasure,
+    label: localizedString.sortByItem,
+    placeholder: localizedString.newSortByItem
+  };
+
+  return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
+    [DataFieldType.DIMENSION]: dataFieldDimension,
+    [DataFieldType.DIMENSION_GROUP]: dataFieldDimensionGroup,
+    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+  };
 };
 
 const generateParameter = (item, param) => {
@@ -88,6 +132,7 @@ const getTabHeaderItems = () => {
 export default {
   generateMeta,
   generateItem,
+  getDataFieldOptionChild,
   generateParameter,
   getRibbonItems,
   getAttributeItems,

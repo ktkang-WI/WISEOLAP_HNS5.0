@@ -1,4 +1,4 @@
-import {makeAdHocItemMart, makeDataFieldOptions, makeMart}
+import {makeAdHocItemMart, makeMart}
   from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import ItemManager from './ItemManager';
@@ -73,7 +73,7 @@ const makeAdHocOption = () => {
   const topBottomInfo = ItemManager.getTopBottomInfo();
 
   return {
-    dataFieldOption: makeDataFieldOptions(dataFieldTypes),
+    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo

@@ -34,6 +34,20 @@ const generateParameter = (item, param) => {
   utility[item.type].generateParameter(item, param);
 };
 
+
+const generateDataFieldOption = (item) => {
+  const dataFieldOptions = {};
+  const dataFieldOptionChild =utility[item.type].getDataFieldOptionChild();
+
+  const makeDataFieldOptionChild = (type) =>
+    ({[type]: dataFieldOptionChild[type]});
+
+  Object.keys(dataFieldOptionChild).forEach((type) =>
+    Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
+
+  return dataFieldOptions;
+};
+
 /**
  * 비정형 아이템 파라미터 생성
  * @param {JSON} rootItem root Item state (비정형)
@@ -146,6 +160,7 @@ export default {
   generateMeta,
   generateItem,
   generateParameter,
+  generateDataFieldOption,
   generateAdHocParameter,
   getRibbonItems,
   getAttributeItems,
