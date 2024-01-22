@@ -17,17 +17,17 @@ const customizeTooltip = (info, isLabel, formats) => {
   };
 
   if (formData) {
-    labelFormat = formData.format.formatType;
-    labelUnit = formData.format.unit;
-    labelPrecision = formData.format.precision;
-    labelPrecisionOption = formData.format.precisionType;
-    labelSeparator = formData.format.useDigitSeparator;
-    labelSuffixEnabled = formData.format.suffixEnabled;
+    labelFormat = formData.formatType;
+    labelUnit = formData.unit;
+    labelPrecision = formData.precision;
+    labelPrecisionOption = formData.precisionType;
+    labelSeparator = formData.useDigitSeparator;
+    labelSuffixEnabled = formData.suffixEnabled;
     labelSuffix = {
-      O: formData.format.suffixO,
-      K: formData.format.suffixK,
-      M: formData.format.suffixM,
-      B: formData.format.suffixB
+      O: formData.suffixO,
+      K: formData.suffixK,
+      M: formData.suffixM,
+      B: formData.suffixB
     };
   };
 

@@ -11,7 +11,11 @@ const generateMeta = (item) => {
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateItem = (item) => {
-
+  const data = item.mart.data;
+  const measures = item.meta.dataField.measure;
+  const meaLength = measures.length;
+  item.mart.seriesLength = data.info.seriesDimensionNames.length / meaLength;
+  item.mart.formats = measures.map((mea) => mea.format);
 };
 
 /**
