@@ -30,7 +30,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
 
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
-    ds.datasetId == meta.dataField.datasetId);
+    ds.datasetId == dataField.datasetId);
   const detailedData = dataset.detailedData;
 
   useEffect(() => {

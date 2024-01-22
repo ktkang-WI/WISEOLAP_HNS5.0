@@ -2,6 +2,10 @@ import {defaultDimension, defaultAnyField}
   from 'components/report/item/util/martUtilityFactory';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
+import measureIcon from 'assets/image/icon/dataSource/measure.png';
+import fieldIcon from 'assets/image/icon/button/ico_axis.png';
+import FieldOptionModal
+  from 'components/common/atomic/DataColumnTab/modal/FieldOptionModal';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
