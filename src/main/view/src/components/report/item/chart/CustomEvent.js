@@ -8,9 +8,16 @@ import RibbonPopoverContents
   from 'components/common/atomic/Popover/molecules/RibbonPopoverContents';
 import useModal from 'hooks/useModal';
 import ItemOptionModal from '../pie/itemOptionModal/ItemOptionModal';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import store from 'redux/modules';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {useDispatch} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
 
 const useCustomEvent = () => {
   const {openModal} = useModal();
+  const dispatch = useDispatch();
+  const {updateItem} = ItemSlice.actions;
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
 
@@ -21,6 +28,13 @@ const useCustomEvent = () => {
       'label': localizedString.rotate,
       'imgSrc': rotate,
       'onClick': () => {
+        const reportId = selectCurrentReportId(store.getState());
+        const selectedItem = _.cloneDeep(selectCurrentItem(store.getState()));
+        selectedItem.meta.useRotate = !selectedItem.meta.useRotate;
+        dispatch(updateItem({
+          reportId: reportId,
+          item: selectedItem
+        }));
       }
     },
     'XAxisSetting': {

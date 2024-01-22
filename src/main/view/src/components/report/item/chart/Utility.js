@@ -9,7 +9,7 @@ const generateMeta = (item) => {
     formatType: 'Number',
     unit: 'Ones',
     axisStartToZero: true,
-    useYxAxis: true,
+    useAxis: true,
     customText: false,
     suffixEnabled: false,
     suffix: {

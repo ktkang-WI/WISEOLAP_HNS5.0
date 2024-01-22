@@ -18,7 +18,8 @@ text-align: center;
 
 const FormatOptionForm = ({
   formData,
-  formRef
+  formRef,
+  axisSetting = false
 }) => {
   const [preview, setPreview] = useState(formatValue(formData));
   useEffect(() => {
@@ -79,6 +80,30 @@ const FormatOptionForm = ({
       >
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
+      {axisSetting && <Item
+        dataField='useShowZero'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.yAsixStartPoint}</Label>
+      </Item>}
+      {axisSetting && <Item
+        dataField='useAxis'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.yAxisMark}</Label>
+      </Item>}
+      {axisSetting && <Item
+        dataField='customText'
+        editorType='dxTextBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{localizedString.axisCutomText}</Label>
+      </Item>}
       <Item
         editorType='dxCheckBox'
         dataField='suffixEnabled'

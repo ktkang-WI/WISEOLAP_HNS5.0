@@ -3,7 +3,8 @@ import DevChart, {
   Tooltip,
   Series,
   Label,
-  ValueAxis
+  ValueAxis,
+  Title
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import {selectCurrentDataField}
@@ -11,6 +12,7 @@ import {selectCurrentDataField}
 import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
 import React, {useRef, useEffect} from 'react';
+import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 
 const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -145,15 +147,52 @@ const Chart = ({id, adHocOption, item}) => {
       ref={dxRef}
       onPointClick={onPointClick}
       pointSelectionMode={'multiple'}
+      rotated={meta.useRotate}
       seriesSelectionMode={interactiveOption.mode}
     >
-      <ValueAxis
+      {meta.yAxis.useAxis && <ValueAxis
+        position='left'
+      >
+        <Label
+          customizeText={(e) =>
+            NumberFormatUtility.formatNumber(
+                e.value,
+                meta.yAxis.formatType,
+                meta.yAxis.unit,
+                meta.yAxis.precision,
+                meta.yAxis.useDigitSeparator,
+                undefined,
+                meta.yAxis.suffix,
+                meta.yAxis.suffixEnabled,
+                meta.yAxis.precisionType
+            )
+          }
+        />
+        <Title
+          text={meta.yAxis.customText}
+        />
+      </ValueAxis>}
+      {meta.supplyAxis.useAxis && <ValueAxis
         position='right'
       >
         <Label
-          customizeText={(e) => console.log(e)}
+          customizeText={(e) =>
+            NumberFormatUtility.formatNumber(
+                e.value,
+                meta.supplyAxis.formatType,
+                meta.supplyAxis.unit,
+                meta.supplyAxis.precision,
+                meta.supplyAxis.useDigitSeparator,
+                undefined,
+                meta.supplyAxis.suffix,
+                meta.supplyAxis.suffixEnabled,
+                meta.supplyAxis.precisionType
+            )}
         />
-      </ValueAxis>
+        <Title
+          text={meta.supplyAxis.customText}
+        />
+      </ValueAxis>}
       <Legend
         visible={true}
         position='outside'
