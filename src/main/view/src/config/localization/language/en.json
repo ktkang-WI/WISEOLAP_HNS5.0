@@ -329,5 +329,6 @@
   "yAxisMark": "Y Axis Display",
   "axisCutomText": "Y Axis Label",
   "numberSeperator": "Number Seperator(',') Display",
-  "NumberPreview": "PreView"
+  "NumberPreview": "PreView",
+  "loadingReportError": "On Loading the Report Occured Error. Please Connect to Manager"
 }

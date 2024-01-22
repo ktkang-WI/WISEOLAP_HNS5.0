@@ -345,5 +345,6 @@
   "yAxisMark": "Y축 표시",
   "axisCutomText": "Y축 라벨",
   "numberSeperator": "숫자 구분 표시(',')",
-  "NumberPreview": "미리보기"
+  "NumberPreview": "미리보기",
+  "loadingReportError": "보고서를 불러오는 동안 오류가 발생했습니다. 관리자에게 문의해주세요"
 }

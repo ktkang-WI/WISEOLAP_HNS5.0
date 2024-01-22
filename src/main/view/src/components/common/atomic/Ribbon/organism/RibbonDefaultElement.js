@@ -36,7 +36,7 @@ const RibbonDefaultElement = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const {executeItems, excuteSpread} = useQueryExecute();
-  const {openModal, confirm} = useModal();
+  const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;

@@ -36,7 +36,7 @@ const theme = getTheme();
 const LoadReportModal = ({...props}) => {
   let selectedReport = {};
   const [reportList, setReportList] = useState();
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   const dispatch = useDispatch();
   const {setDataset} = DatasetSlice.actions;
   const {setReports, selectReport} = ReportSlice.actions;
@@ -65,9 +65,7 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
-                  if (data.isNew) {
-                    console.log('test');
-                  } else {
+                  try {
                     const reportType =
                         selectCurrentDesignerMode(store.getState());
                     dispatch(setReports(data.reports));
@@ -76,7 +74,6 @@ const LoadReportModal = ({...props}) => {
                       i.mart = makeMart(i);
                       ItemManager.generateMeta(i);
                     });
-                    // const selectedDatasetId = data.dataset.selectedDatasetId;
                     data.dataset.datasets.forEach((i) => {
                       i.fields = i.fields.map((field) => {
                         const isMea = field.columnTypeName == 'decimal';
@@ -102,14 +99,6 @@ const LoadReportModal = ({...props}) => {
                       reportId: selectedReport.id,
                       dataset: data.dataset
                     }));
-                    // let selectedItemId = null;
-                    // for (const item of data.item.items) {
-                    //   if (item.meta?.dataField?.datasetId ===
-                    //       selectedDatasetId) {
-                    //     selectedItemId = item.id;
-                    //     break;
-                    //   }
-                    // }
                     dispatch(setLayout({
                       reportId: selectedReport.id,
                       layout: data.layout
@@ -138,6 +127,8 @@ const LoadReportModal = ({...props}) => {
                       sheetChangedListener();
                     }
                     ribbonElement['QuerySearch'].onClick();
+                  } catch {
+                    alert(localizedString.loadingReportError);
                   }
                 });
           } else {
