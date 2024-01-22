@@ -438,7 +438,7 @@ const useQueryExecute = () => {
     });
   };
 
-  const excuteSpread = async () => {
+  const executeSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
@@ -484,7 +484,7 @@ const useQueryExecute = () => {
     clearAllFilter,
     executeParameters,
     executeLinkageFilter,
-    excuteSpread
+    executeSpread
   };
 };
 

@@ -308,5 +308,6 @@
   "file": "file",
   "importFileFromPC": "Import File From PC",
   "print": "Print",
-  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
+  "requireReloadMsg": "This option applies when reloading."
 }
