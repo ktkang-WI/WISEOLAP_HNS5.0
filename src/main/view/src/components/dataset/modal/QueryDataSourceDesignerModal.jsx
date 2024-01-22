@@ -91,12 +91,6 @@ const QueryDataSourceDesignerModal = ({
     onClick: () => {
       const query = queryEditorRef.current.editor.getValue();
       const paramNames = ParamUtils.getParameterNamesInQuery(query) || [];
-      let order = paramInfo.reduce((acc, param) => {
-        if (acc <= param.order) {
-          acc = param.order + 1;
-        }
-        return acc;
-      }, 1);
 
       // 기존 데이터 필터링
       const newParamInfo = paramInfo.filter((info) => {
@@ -107,7 +101,14 @@ const QueryDataSourceDesignerModal = ({
           return true;
         }
         return false;
-      }, []);
+      });
+
+      let order = newParamInfo.reduce((acc, param) => {
+        if (acc <= param.order) {
+          acc = param.order + 1;
+        }
+        return acc;
+      }, 1);
 
       // 기존에 없던 필터
       for (name of paramNames) {
