@@ -119,10 +119,7 @@ const generateItem = (item, rootItem) => {
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
     ...defaultMeasure,
-    useButton: true,
-    buttonEvent: function(e) {
-      console.log(e);
-    }
+    useButton: true
   };
 
   const dataFieldColumn = {
