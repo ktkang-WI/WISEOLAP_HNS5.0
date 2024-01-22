@@ -119,7 +119,7 @@ const sanitizeParamInformation = (param) => {
  * @return {Array} names를 담은 배열
  */
 const getParameterNamesInQuery = (query) => {
-  return query.match(/@[^()\s]+/g);
+  return _.uniq(query.match(/@[^()\s]+/g));
 };
 
 const getCubeParameterNamesCube = (paramInfo, paramName) => {
