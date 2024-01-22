@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
+import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 
@@ -20,5 +21,7 @@ public interface DatasetDAO {
   public DsMstrEntity selectDataSource(int dsId);
 
   public List<DatasetDsDTO> selectDatasetDs();
+
+  public List<DatasetDsDsviewCubeDTO> selectDatasetDsviewCubeDs();
 
 }

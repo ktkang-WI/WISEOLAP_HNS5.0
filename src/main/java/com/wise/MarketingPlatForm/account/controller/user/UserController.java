@@ -49,7 +49,7 @@ public class UserController {
       @RequestParam(required = false, defaultValue = "0") int grpId,
       @RequestParam(required = true) String userRunMode,
       @RequestParam(required = false, defaultValue = "") String userDesc,
-      @RequestParam(required = false, defaultValue = "") String passwd
+      @RequestParam(required = true) String passwd
   ) throws SQLException{
 
     UserGroupDTO userMstr = UserGroupDTO.builder()

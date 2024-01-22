@@ -43,19 +43,19 @@
 	</resultMap>
 
 	<resultMap id="DatasetDsDsviewCubeDTO" type="com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO">
-		<result column="DS_CUBE_ID" property="dsId" javaType="int"/>
-	  <result column="DS_VIEW_ID" property="dsNm" javaType="String"/>
-	  <result column="DS_ID" property="dbmsType" javaType="String"/>
-	  <result column="CUBE_ID" property="ownerNm" javaType="String"/>
-	  <result column="DIM_UNI_NM" property="ip" javaType="String"/>
-		<result column="DS_VIEW_NM" property="dsId" javaType="int"/>
+		<result column="DS_CUBE_ID" property="dsCubeId" javaType="int"/>
+	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
+	  <result column="DS_ID" property="dsId" javaType="int"/>
+	  <result column="CUBE_ID" property="cubeId" javaType="int"/>
+	  <result column="DIM_UNI_NM" property="dimUniNm" javaType="String"/>
+		<result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
 	  <result column="DS_NM" property="dsNm" javaType="String"/>
 	  <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	  <result column="OWNER_NM" property="ownerNm" javaType="String"/>
 	  <result column="IP" property="ip" javaType="String"/>
-		<result column="DB_NM" property="dsId" javaType="int"/>
-	  <result column="CUBE_NM" property="dsNm" javaType="String"/>
-	  <result column="DIM_CAPTION" property="dbmsType" javaType="String"/>
+		<result column="DB_NM" property="dbNm" javaType="String"/>
+	  <result column="CUBE_NM" property="cubeNm" javaType="String"/>
+	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
 	</resultMap>
 <!-- Mapper End -->
 
