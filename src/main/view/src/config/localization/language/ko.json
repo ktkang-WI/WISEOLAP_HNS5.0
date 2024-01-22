@@ -325,5 +325,6 @@
   "file": "파일",
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
-  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다."
 }
