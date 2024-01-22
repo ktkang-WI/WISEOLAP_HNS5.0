@@ -1,8 +1,4 @@
-import axios from 'axios';
-import {getConfig} from 'config/config';
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-const path = document.location.origin + contextRoot + '/upload';
+import models from 'models';
 
 const useFile = () => {
   /**
@@ -17,11 +13,7 @@ const useFile = () => {
       formData.append('file', file);
       formData.append('param', newParam);
 
-      const response = await axios.post(path + '/import', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await models.File.uploadFile(formData);
 
       console.log('File uploaded successfully:', response.data);
     } catch (error) {
@@ -31,7 +23,7 @@ const useFile = () => {
 
   const fileDelete = async (param) => {
     try {
-      const response = await axios.post(path + '/delete', param);
+      const response = await models.File.deleteFile(param);
       console.log('File delete successfully:', response.data);
     } catch (error) {
       console.error('Error delete file:', error);

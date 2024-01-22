@@ -322,6 +322,8 @@
   "precsionOption": "정도 옵션",
   "unit": "단위",
   "all": "전체",
+  "showGrid": "그리드로 보기",
+  "detailedData": "상세데이터",
   "numberFormat": "숫자 형식",
   "formatUnit": "포맷 단위",
   "digitUnit": "자리수 단위",
