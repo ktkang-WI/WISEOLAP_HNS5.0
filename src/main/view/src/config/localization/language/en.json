@@ -314,5 +314,6 @@
   "noneMeasureItem": "There Isn't Measure",
   "noneDataField": "There Isn't Field",
   "reportCorrupted": "This Report is Corrupted, Please Conect to Manager",
-  "menuChangeConfirm": "If you Don't Save the Data, It'll be disappeared"
+  "menuChangeConfirm": "If you Don't Save the Data, It'll be disappeared",
+  "requireReloadMsg": "This option applies when reloading."
 }

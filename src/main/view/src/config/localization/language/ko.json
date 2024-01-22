@@ -36,7 +36,7 @@
   "interactionConfiguration": "상호작용 설정",
   "crossDataSourceFiltering": "교차 데이터 소스 필터링",
   "ignoreMasterFilter": "마스터 필터 무시",
-  "targetDimension": "차원",
+  "targetDimension": "대상 차원",
   "dimensionGroup": "차원 그룹",
   "count": "카운트",
   "distinctCount": "고유 카운트",
@@ -326,10 +326,5 @@
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
   "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
-  "noneDataItem": "데이터 항목값이 없습니다.",
-  "noneDimensionItem": "데이터 항목의 차원값이 없습니다.",
-  "noneMeasureItem": "데이터 항목의 측정값이 없습니다.",
-  "noneDataField": "데이터 항목의 필드값이 없습니다.",
-  "reportCorrupted": "해당 보고서의 양식이 올바르지 않습니다. 관리자에게 문의해주세요.",
-  "menuChangeConfirm": "데이터를 저장하지 않고 메뉴를 변경할 경우 데이터가 사라질 수 있습니다."
+  "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다."
 }

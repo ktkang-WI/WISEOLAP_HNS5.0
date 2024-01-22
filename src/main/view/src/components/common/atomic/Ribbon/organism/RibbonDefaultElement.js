@@ -39,7 +39,7 @@ const RibbonDefaultElement = () => {
   const {openedPopover} = usePopover();
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const {executeItems, excuteSpread} = useQueryExecute();
+  const {executeItems, executeSpread} = useQueryExecute();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
@@ -307,7 +307,7 @@ const RibbonDefaultElement = () => {
         if (reportType !== DesignerMode['SPREAD_SHEET']) {
           executeItems();
         } else {
-          excuteSpread();
+          executeSpread();
         }
       }
     }

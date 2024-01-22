@@ -25,7 +25,7 @@ import ShowDataModal
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
@@ -54,12 +54,7 @@ const useCustomEvent = () => {
 
   const getCheckBoxPopover = (key) => {
     const onValueChanged = (id, e) => {
-      let item = ribbonEvent[key](id, e);
-
-      if (key == 'initState') {
-        item = _.cloneDeep(item);
-        Utility.generateItem(item, item.mart.data);
-      }
+      const item = ribbonEvent[key](id, e);
 
       dispatch(updateItem({reportId, item}));
     };
@@ -209,6 +204,7 @@ const useCustomEvent = () => {
   // 값 변화가 탐지될 경우(onValueChanged) 이벤트
   const ribbonEvent = {
     'initState': (id, e) => {
+      alert(localizedString.requireReloadMsg);
       return editPositionOption(id, 'expand', e.value);
     },
     'total': (id, e) => {
