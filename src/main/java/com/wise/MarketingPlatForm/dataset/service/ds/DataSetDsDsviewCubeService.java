@@ -97,6 +97,8 @@ public class DatasetDsDsviewCubeService {
 
     }
 
+    isThereToSave = cubeMstrList.size() > 0 || cubeDimMstrList.size() > 0;
+
     if (isThereToSave) {
       datasetDsDSviewCubeModel = DatasetDsDsviewCubeModel.builder()
         .dsView(dsView)
