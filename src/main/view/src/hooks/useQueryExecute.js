@@ -124,7 +124,7 @@ const useQueryExecute = () => {
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     try {
-      requiredValueChecker(rootItem);
+      validateRequiredField(rootItem);
       const tempItem = _.cloneDeep(rootItem);
       const chartItem = tempItem.items[0];
       const pivotItem = tempItem.items[1];
@@ -163,7 +163,7 @@ const useQueryExecute = () => {
    */
   const executeItem = (item, datasets, parameters, filter) => {
     try {
-      requiredValueChecker(item);
+      validateRequiredField(item);
       const tempItem = _.cloneDeep(item);
       let param = {};
       param = generateParameter(tempItem, datasets, parameters, filter);
@@ -494,7 +494,7 @@ const useQueryExecute = () => {
     });
   };
 
-  const requiredValueChecker = (item) => {
+  const validateRequiredField = (item) => {
     let dataFieldOption;
     let dataField;
     if (designerMode === DesignerMode['DASHBOARD']) {
@@ -505,14 +505,10 @@ const useQueryExecute = () => {
       dataField = item.adHocOption.dataField;
     }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
-    const requiredValueKeys = dataFieldOptionKeys.filter((key) => {
-      return dataFieldOption[key].querySearchRequired;
-    });
-
-    if (requiredValueKeys.length === 0) return;
-
-    requiredValueKeys.forEach((requiredValueKey) => {
-      if (dataField[requiredValueKey].length === 0) {
+    dataFieldOptionKeys.forEach((key) => {
+      const isRequired = dataFieldOption[key].querySearchRequired;
+      const isLengthZero = dataField[requiredValueKey].length === 0;
+      if (isRequired && isLengthZero) {
         throw new Error(`${dataFieldOption[requiredValueKey].label}
          ${localizedString.requiredFieldNotExist}`);
       }
