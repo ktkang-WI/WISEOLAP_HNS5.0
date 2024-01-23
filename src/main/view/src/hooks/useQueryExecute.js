@@ -506,9 +506,9 @@ const useQueryExecute = () => {
     }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     dataFieldOptionKeys.forEach((key) => {
-      const isRequired = dataFieldOption[key].querySearchRequired;
-      const isLengthZero = dataField[key].length === 0;
-      if (isRequired && isLengthZero) {
+      const isRequired = dataFieldOption[key].required;
+      const isEmpty = dataField[key].length === 0;
+      if (isRequired && isEmpty) {
         throw new Error(`${dataFieldOption[key].label}
          ${localizedString.requiredFieldNotExist}`);
       }
