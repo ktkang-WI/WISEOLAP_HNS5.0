@@ -93,13 +93,24 @@ const useQueryExecute = () => {
 
     // dataset
     const orgDataset = datasets.find(
-        (dataset) => rootItem.adHocOption.dataField.datasetId ==
-        dataset.datasetId
+        (ds) => rootItem.adHocOption.dataField.datasetId ==
+        ds.datasetId
     );
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
 
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
