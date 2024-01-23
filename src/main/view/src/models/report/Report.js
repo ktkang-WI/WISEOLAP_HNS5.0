@@ -65,9 +65,8 @@ export const updateReport = async (param) => {
  * @param {JSON} param
  * @param {function} callback
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = async (param) => {
+  return await axios.post(path + '/report-folder-list', param);
 };
 
 /**
