@@ -111,7 +111,7 @@
   "fieldPlaceholder": "New Field",
   "sparkline": "Spark Line",
   "sparklinePlaceholder": "New Spark Line",
-  "reportTitle": "Report Title",
+  "reportName": "Report Title",
   "reportSubName": "Report Sub Title",
   "annotation": "Annotation",
   "displayOrder": "Display Order",
@@ -204,7 +204,7 @@
   "card": "Card",
   "rectangleArea": "Rectangle Area",
   "pivotgrid": "Pivotgrid",
-  "nomalGrid": "Grid",
+  "normalGrid": "Grid",
   "editFieldName": "Edit Field Name",
   "fieldName": "Field Name",
   "reportNotDeleteMsg": "This report has not been saved.",
@@ -262,7 +262,7 @@
     {"name": "argument&Percent", "caption": "Argument & %"},
     {"name": "argument&Value&Percent", "caption": "Argument, Value & %"}
   ],
-  "degreeOptions": [
+  "precsionOptions": [
     {"name": "round", "caption": "Round"},
     {"name": "roundUp", "caption": "Round Up"},
     {"name": "roundDown", "caption": "Round Down"}
@@ -287,16 +287,27 @@
   "thousands": "Unit of Thousands",
   "milions": "Unit of Milions",
   "bilions": "Unit of Bilions",
-  "degree": "Degree",
-  "precision": "Precision",
-  "degreeOption": "Degree Option",
-  "precisionOption": "Precision Option",
+  "precsion": "precsion",
+  "precsionOption": "precsion Option",
   "all": "all",
+  "showGrid": "View as a grid",
+  "detailedData": "Detailed Data",
+  "numberFormat": "Number Format",
+  "formatUnit": "Format Unit",
+  "digitUnit": "Digit Unit",
+  "suffixO": "O",
+  "suffixK": "K",
+  "suffixM": "M",
+  "suffixB": "B",
+  "digitSeparator" : "Digit Separator",
   "colRowSwitch": "Transpose",
+  "k": "K",
+  "m": "M",
+  "b": "B",
   "datasetBinding": "Dataset Binding",
   "file": "file",
   "importFileFromPC": "Import File From PC",
   "print": "Print",
-  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info."
-
+  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
+  "requireReloadMsg": "This option applies when reloading."
 }

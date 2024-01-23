@@ -30,7 +30,9 @@ import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
@@ -39,6 +41,10 @@ import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
@@ -66,6 +72,7 @@ import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
+import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
@@ -553,5 +560,45 @@ public class ReportService {
         result.put("privateFolder", privateFolderList);
 
         return result;
+    }
+
+    public MartResultDTO getDetailedData(String userId, String dsId, String cubeId,
+            String actId, List<Parameter> parameters) {
+
+        List<Dimension> dimensions = new ArrayList<>();
+        List<Measure> measures = new ArrayList<>();
+
+        List<DetailedDataItemVO> items = reportDAO.selectDetailedDataItem(cubeId, actId);
+
+        for (DetailedDataItemVO item : items) {
+            if ("measure".equals(item.getType())) {
+                measures.add(Measure.builder().uniqueName(item.getRtnItemUniNm()).build());
+            } else {
+                dimensions.add(Dimension.builder().uniqueName(item.getRtnItemUniNm()).build());
+            }
+        }
+
+        DataAggregation dataAggregation = DataAggregation.builder()
+                .dimensions(dimensions)
+                .measures(measures)
+                .parameters(parameters)
+                .dataset(new Dataset(Integer.parseInt(dsId), Integer.parseInt(cubeId), 0, "", DsType.CUBE))
+                .userId(userId)
+                .sortByItems(new ArrayList<>())
+                .itemType(ItemType.DATA_GRID)
+                .build();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(DsType.CUBE);
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(Integer.parseInt(dsId));
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggregation);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+
+        return martResultDTO;
     }
 }

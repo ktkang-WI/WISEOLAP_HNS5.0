@@ -2,6 +2,8 @@ package com.wise.MarketingPlatForm.report.dao;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
@@ -18,4 +20,5 @@ public interface ReportDAO {
     public List<ReportMstrEntity> checkDuplicatedReport(ReportMstrEntity reportMstrDTO);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
+    public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
 }

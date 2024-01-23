@@ -1,8 +1,9 @@
-import {makeAdHocItemMart, makeDataFieldOptions, makeMart}
+import {makeAdHocItemMart, makeMart}
   from './martUtilityFactory';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
+
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
@@ -73,7 +74,7 @@ const makeAdHocOption = () => {
   const topBottomInfo = ItemManager.getTopBottomInfo();
 
   return {
-    dataFieldOption: makeDataFieldOptions(dataFieldTypes),
+    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo

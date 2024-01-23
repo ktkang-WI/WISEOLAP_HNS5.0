@@ -29,7 +29,7 @@ const ReportFolderSelectorModal = ({...props}) => {
     // TODO: 추후 접속중인 유저 ID로 변경
     const param = {};
     param.userId = 'admin';
-    getFolderList(param, (response) => {
+    getFolderList(param).then((response) => {
       if (response.status != 200) {
         return;
       }

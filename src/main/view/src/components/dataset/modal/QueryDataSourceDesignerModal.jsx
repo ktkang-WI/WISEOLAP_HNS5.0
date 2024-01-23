@@ -178,8 +178,8 @@ const QueryDataSourceDesignerModal = ({
 
           const response = await models.DBInfo.
               getDataByQueryMart(selectedDataSource.dsId, query, parameters);
-          if (!response.rowData[0].error) {
-            let tempFields = response.metaData;
+          if (!response.data.rowData[0].error) {
+            let tempFields = response.data.metaData;
 
             tempFields = tempFields.map((field) => {
               const isMea = field.columnTypeName == 'decimal';

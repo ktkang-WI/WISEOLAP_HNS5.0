@@ -9,20 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -274,6 +270,47 @@ public class ReportController {
         String userId = param.getOrDefault("userId", "");
 
         return reportService.getReport(reportId, userId);
+	}
+
+    @Operation(
+	    summary = "get detailed data",
+	    description = "상세데이터 조회 결과를 반환합니다.")
+	@Parameters({
+	    @Parameter(name = "dsId", description = "dataSourceId", example = "2703", required = true),
+	    @Parameter(name = "userId", description = "user id", example = "admin", required = true),
+        @Parameter(name = "cubeId", description = "cube id", example = "3465", required = true),
+        @Parameter(name = "actId", description = "act id", example = "1001", required = true),
+        @Parameter(name = "parameter", description = "적용할 필터", example = "[]", required = true),
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+	    content = @Content(
+	        examples = {
+	            @ExampleObject(name = "example", value = "{\r\n" + //
+	                    "  \"dsId\": \"2703\",\r\n" + //
+	                    "  \"userId\": \"admin\",\r\n" + //
+	                    "  \"cubeId\": \"3465\",\r\n" + //
+	                    "  \"actId\": \"1001\",\r\n" + //
+	                    "  \"parameter\": \"[{\\\"dataType\\\":\\\"STRING\\\",\\\"dsId\\\":2703,\\\"dsType\\\":\\\"CUBE\\\",\\\"exceptionValue\\\":\\\"DEMO_06_D_유통_매출형태.SALES_FORM_NM\\\",\\\"dataSource\\\":\\\"DEMO_06_D_유통_매출형태\\\",\\\"itemCaption\\\":\\\"SALES_FORM_NM\\\",\\\"itemKey\\\":\\\"SALES_FORM_NM\\\",\\\"name\\\":\\\"@C_SALES_FORM_NM\\\",\\\"operation\\\":\\\"In\\\",\\\"paramType\\\":\\\"LIST\\\",\\\"uniqueName\\\":\\\"[DEMO_06_D_유통_매출형태].[SALES_FORM_NM]\\\",\\\"values\\\":[\\\"직접판매\\\"]},{\\\"dataType\\\":\\\"STRING\\\",\\\"dsId\\\":2703,\\\"dsType\\\":\\\"CUBE\\\",\\\"exceptionValue\\\":\\\"DEMO_06_D_유통_매장.STORE_NM\\\",\\\"dataSource\\\":\\\"DEMO_06_D_유통_매장\\\",\\\"itemCaption\\\":\\\"STORE_NM\\\",\\\"itemKey\\\":\\\"STORE_NM\\\",\\\"name\\\":\\\"@R_STORE_NM\\\",\\\"operation\\\":\\\"In\\\",\\\"paramType\\\":\\\"LIST\\\",\\\"uniqueName\\\":\\\"[DEMO_06_D_유통_매장].[STORE_NM]\\\",\\\"values\\\":[\\\"강릉점\\\"]},{\\\"name\\\":\\\"@DEMO_06_D_유통_매출형태_SALES_FORM_NM\\\",\\\"values\\\":[\\\"직접판매\\\"],\\\"exceptionValue\\\":\\\"DEMO_06_D_유통_매출형태.SALES_FORM_NM\\\",\\\"dataType\\\":\\\"STRING\\\",\\\"operation\\\":\\\"IN\\\",\\\"dsType\\\":\\\"CUBE\\\",\\\"dsId\\\":2703,\\\"uniqueName\\\":\\\"[DEMO_06_D_유통_매출형태].[SALES_FORM_NM]\\\",\\\"paramType\\\":\\\"LIST\\\",\\\"itemCaption\\\":\\\"SALES_FORM_NM\\\",\\\"itemKey\\\":\\\"SALES_FORM_NM\\\"}]\"\r\n" + //
+	                    "}")
+	        }
+	    )
+	)
+    @PostMapping(value = "/detailed-data")
+    public MartResultDTO getDetailedData(@RequestBody Map<String, String> param) {
+        Gson gson = new Gson();
+
+        String dsId = param.getOrDefault("dsId", "");
+        String cubeId = param.getOrDefault("cubeId", "");
+        String userId = param.getOrDefault("userId", "");
+        String actId = param.getOrDefault("actId", "");
+        String parameterStr = param.getOrDefault("parameter", "[]");
+
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+        new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+        }.getType());
+
+
+        return reportService.getDetailedData(userId, dsId, cubeId, actId, parameters);
 	}
 
     @Operation(

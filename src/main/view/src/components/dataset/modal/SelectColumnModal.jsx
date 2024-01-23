@@ -15,7 +15,7 @@ const SelectColumnModal = ({dsId, table, onSubmit, ...props}) => {
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
     models.DBInfo.dbColumns(dsId, table)
-        .then((data) => {
+        .then(({data}) => {
           setColumns(data);
         });
   }, []);

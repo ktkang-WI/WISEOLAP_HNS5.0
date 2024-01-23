@@ -1,4 +1,6 @@
 import ItemType from './ItemType';
+import {DataFieldType} from './dataFieldType';
+import {dataFieldSortByItem} from './martUtilityFactory';
 
 const utility = {};
 
@@ -32,6 +34,25 @@ const generateItem = (item, data) => {
  */
 const generateParameter = (item, param) => {
   utility[item.type].generateParameter(item, param);
+};
+
+
+const generateDataFieldOption = (item) => {
+  const dataFieldOptions = {};
+  const dataFieldOptionChild =utility[item.type].getDataFieldOptionChild();
+
+  const makeDataFieldOptionChild = (type) =>
+    ({[type]: dataFieldOptionChild[type]});
+
+  Object.keys(dataFieldOptionChild).forEach((type) =>
+    Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
+
+  // 정렬 기준 항목
+  Object.assign(dataFieldOptions, {
+    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+  });
+
+  return dataFieldOptions;
 };
 
 /**
@@ -146,6 +167,7 @@ export default {
   generateMeta,
   generateItem,
   generateParameter,
+  generateDataFieldOption,
   generateAdHocParameter,
   getRibbonItems,
   getAttributeItems,

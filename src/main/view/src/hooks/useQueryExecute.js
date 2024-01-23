@@ -166,7 +166,7 @@ const useQueryExecute = () => {
     //   dispatch(updateItem({reportId, item: tempItem}));
     // } else {
 
-    models.Item.getItemData(param, (response) => {
+    models.Item.getItemData(param).then((response) => {
       if (response.status != 200) {
         return;
       }
@@ -179,7 +179,6 @@ const useQueryExecute = () => {
 
       dispatch(updateItem({reportId, item: tempItem}));
     });
-    // }
   };
 
   /**
@@ -339,8 +338,8 @@ const useQueryExecute = () => {
         });
       }
 
-      const values = await models.Parameter.getListItems(param, linkageValues);
-
+      const res = await models.Parameter.getListItems(param, linkageValues);
+      const values = res.data;
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }
@@ -377,7 +376,8 @@ const useQueryExecute = () => {
   };
 
   const executeParameterDefaultValueQuery = async (param) => {
-    return await models.Parameter.getDefaultValue(param);
+    const res = await models.Parameter.getDefaultValue(param);
+    return res.data;
   };
 
   const executeParameters = () => {
@@ -438,7 +438,7 @@ const useQueryExecute = () => {
     });
   };
 
-  const excuteSpread = async () => {
+  const executeSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
@@ -471,7 +471,7 @@ const useQueryExecute = () => {
       }
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
-      bindData({dataset: dataset, datas: datas.rowData});
+      bindData({dataset: dataset, datas: datas.data.rowData});
     });
   };
 
@@ -484,7 +484,7 @@ const useQueryExecute = () => {
     clearAllFilter,
     executeParameters,
     executeLinkageFilter,
-    excuteSpread
+    executeSpread
   };
 };
 
