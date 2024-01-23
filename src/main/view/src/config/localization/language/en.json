@@ -309,7 +309,7 @@
   "importFileFromPC": "Import file from PC",
   "print": "Print",
   "spreadBindingInfoNot": "This report dosen't have dataset binding info.",
-  "reportCorrupted": "This report is corrupted, Please conect to manager.",
+  "reportCorrupted": "This report is corrupted, Please connect to manager.",
   "menuChangeConfirm": "Unsaved work may be lost. Do you want to move?",
   "requireReloadMsg": "This option applies when reloading.",
   "requiredFieldNotExist": "is a required value, Please check."
