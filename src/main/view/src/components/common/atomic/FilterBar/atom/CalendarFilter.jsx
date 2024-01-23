@@ -4,7 +4,7 @@ import ParamUtils from 'components/dataset/utils/ParamUtils';
 
 const theme = getTheme();
 
-const CalendarFilter = ({info, value, isTo, onValueChanged, ...props}) => {
+const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
   const index = isTo ? 1 : 0;
   let dateValue = '';
   const keyFormat = info.calendarKeyFormat;
@@ -37,33 +37,30 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, ...props}) => {
   }
 
   return (
-    <>
-      <div id={props.id + '_wrapper'}>
-        <DateBox
-          calendarOptions={{
-            ...zoomLevels
-          }}
-          onValueChanged={(e) => {
-            if (value && e.value) {
-              const str = ParamUtils.parseStringFromDate(e.value, keyFormat);
+    <DateBox
+      calendarOptions={{
+        ...zoomLevels
+      }}
+      onValueChanged={(e) => {
+        if (value && e.value) {
+          const str = ParamUtils.parseStringFromDate(e.value, keyFormat);
 
-              if (str != value.value[index]) {
-                onValueChanged(info.name, str, index);
-              }
-            } else if ((value && !e.value && value.value) || !value) {
-              onValueChanged(info.name, value, index);
-            }
-          }}
-          useMaskBehavior={true}
-          type="date"
-          focusStateEnabled={false}
-          hoverStateEnabled={false}
-          height={theme.size.filterHeight}
-          value={dateValue}
-          displayFormat={captionFormat}
-        />
-      </div>
-    </>
+          if (str != value.value[index]) {
+            onValueChanged(info.name, str, index);
+          }
+        } else if ((value && !e.value && value.value) || !value) {
+          onValueChanged(info.name, value, index);
+        }
+      }}
+      useMaskBehavior={true}
+      type="date"
+      focusStateEnabled={false}
+      hoverStateEnabled={false}
+      height={theme.size.filterHeight}
+      value={dateValue}
+      width={width}
+      displayFormat={captionFormat}
+    />
   );
 };
 
