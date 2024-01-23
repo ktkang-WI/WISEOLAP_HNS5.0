@@ -289,7 +289,10 @@ const useCustomEvent = () => {
     );
   };
 
-  return {ribbonConfig, getTabHeaderButton};
+  return {
+    ribbonConfig,
+    getTabHeaderButton
+  };
 };
 
 export default useCustomEvent;

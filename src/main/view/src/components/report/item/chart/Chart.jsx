@@ -18,7 +18,6 @@ const Chart = ({id, adHocOption, item}) => {
 
   const seriesNames = mart.data.info.seriesDimensionNames;
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
-
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
 

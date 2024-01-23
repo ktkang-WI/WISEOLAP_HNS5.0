@@ -36,7 +36,7 @@ const theme = getTheme();
 const LoadReportModal = ({...props}) => {
   let selectedReport = {};
   const [reportList, setReportList] = useState();
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   const dispatch = useDispatch();
   const {setDataset} = DatasetSlice.actions;
   const {setReports, selectReport} = ReportSlice.actions;
@@ -64,10 +64,8 @@ const LoadReportModal = ({...props}) => {
         if (!_.isEmpty(selectedReport)) {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
-                .then((data) => {
-                  if (data.isNew) {
-                    console.log('test');
-                  } else {
+                .then(({data}) => {
+                  try {
                     const reportType =
                         selectCurrentDesignerMode(store.getState());
                     dispatch(setReports(data.reports));
@@ -138,6 +136,8 @@ const LoadReportModal = ({...props}) => {
                       sheetChangedListener();
                     }
                     ribbonElement['QuerySearch'].onClick();
+                  } catch {
+                    alert(localizedString.reportCorrupted);
                   }
                 });
           } else {
