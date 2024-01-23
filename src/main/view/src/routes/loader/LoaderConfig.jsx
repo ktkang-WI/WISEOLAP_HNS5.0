@@ -19,7 +19,7 @@ export async function userGroupManagement() {
       return res.error;
     }
 
-    return res.data;
+    return res.data.data;
   });
   return {userGroupManagement};
 }

@@ -3,8 +3,8 @@ import {useDispatch} from 'react-redux';
 const useConfig = () => {
   const dispatch = useDispatch();
 
-  const save = () => {
-    console.log('config save');
+  const saveConfiguration = () => {
+    console.log('save configuration');
   };
 
   const remove = () => {

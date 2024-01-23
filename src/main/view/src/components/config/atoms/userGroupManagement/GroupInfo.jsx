@@ -1,5 +1,5 @@
-import {GroupManagementContext}
-  from 'components/config/molecules/userGroupManagement/GroupManagement';
+import {UserGroupContext}
+  from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import {TextArea} from 'devextreme-react';
@@ -9,7 +9,7 @@ import Form, {
 import {useContext} from 'react';
 
 const GroupInfo = () => {
-  const getContext = useContext(GroupManagementContext);
+  const getContext = useContext(UserGroupContext);
   const [groupDetailInfo] = getContext.state.groupDetailInfo;
 
   return (
