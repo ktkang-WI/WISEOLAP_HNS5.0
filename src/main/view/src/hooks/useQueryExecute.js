@@ -21,6 +21,7 @@ import localizedString from 'config/localization';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 
 const useQueryExecute = () => {
@@ -28,6 +29,7 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  const designerMode = useSelector(selectCurrentDesignerMode);
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -121,30 +123,35 @@ const useQueryExecute = () => {
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
-    const tempItem = _.cloneDeep(rootItem);
-    const chartItem = tempItem.items[0];
-    const pivotItem = tempItem.items[1];
-    const param = generateAdHocParamter(tempItem, datasets, parameters);
-    const reportId = selectCurrentReportId(store.getState());
+    try {
+      querySearchRequiredValueChecker(rootItem);
+      const tempItem = _.cloneDeep(rootItem);
+      const chartItem = tempItem.items[0];
+      const pivotItem = tempItem.items[1];
+      const param = generateAdHocParamter(tempItem, datasets, parameters);
+      const reportId = selectCurrentReportId(store.getState());
 
-    models.Item.getAdHocItemData(param).then((response) => {
-      if (response.status != 200) {
-        alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
-        return;
-      }
+      models.Item.getAdHocItemData(param).then((response) => {
+        if (response.status != 200) {
+          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
+          return;
+        }
 
-      chartItem.mart.init = true;
-      chartItem.mart.data = response.data[0];
+        chartItem.mart.init = true;
+        chartItem.mart.data = response.data[0];
 
-      pivotItem.mart.init = true;
-      pivotItem.mart.data = response.data[1];
+        pivotItem.mart.init = true;
+        pivotItem.mart.data = response.data[1];
 
-      ItemManager.generateItem(chartItem);
-      ItemManager.generateItem(pivotItem, tempItem);
+        ItemManager.generateItem(chartItem);
+        ItemManager.generateItem(pivotItem, tempItem);
 
-      dispatch(updateItem({reportId, item: chartItem}));
-      dispatch(updateItem({reportId, item: pivotItem}));
-    });
+        dispatch(updateItem({reportId, item: chartItem}));
+        dispatch(updateItem({reportId, item: pivotItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -288,18 +295,17 @@ const useQueryExecute = () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
-    const reportType = selectCurrentDesignerMode(store.getState());
 
     if (datasets.length === 0) {
       alert(localizedString.dataSourceNotSelectedMsg);
       return;
     };
 
-    if (reportType === DesignerMode['DASHBOARD']) {
+    if (designerMode === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (reportType === DesignerMode['AD_HOC']) {
+    if (designerMode === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
@@ -489,8 +495,15 @@ const useQueryExecute = () => {
   };
 
   const querySearchRequiredValueChecker = (item) => {
-    const dataFieldOption = item.mart.dataFieldOption;
-    const dataField = item.meta.dataField;
+    let dataFieldOption;
+    let dataField;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      dataFieldOption = item.mart.dataFieldOption;
+      dataField = item.meta.dataField;
+    } else if (designerMode === DesignerMode['AD_HOC']) {
+      dataFieldOption = item.adHocOption.dataFieldOption;
+      dataField = item.adHocOption.dataField;
+    }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     const requiredValueKeys = dataFieldOptionKeys.filter((key) => {
       return dataFieldOption[key].querySearchRequired;
@@ -500,7 +513,8 @@ const useQueryExecute = () => {
 
     requiredValueKeys.forEach((requiredValueKey) => {
       if (dataField[requiredValueKey].length === 0) {
-        throw new Error(`${requiredValueKey} test`);
+        throw new Error(`${dataFieldOption[requiredValueKey].label}
+         ${localizedString.noneQuerySearchRequiredValue}`);
       }
     });
   };

@@ -311,5 +311,6 @@
   "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
   "reportCorrupted": "This Report is Corrupted, Please Conect to Manager",
   "menuChangeConfirm": "If you Don't Save the Data, It'll be disappeared",
-  "requireReloadMsg": "This option applies when reloading."
+  "requireReloadMsg": "This option applies when reloading.",
+  "noneQuerySearchRequiredValue": "is a Required Value. Please Check,"
 }

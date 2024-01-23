@@ -19,7 +19,7 @@ const StyledRibbon = styled.div`
 
 const Ribbon = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const focustedItem = useSelector(selectCurrentItem);
+  const focusedItem = useSelector(selectCurrentItem);
 
   return (
     <StyledRibbon>
@@ -44,9 +44,9 @@ const Ribbon = () => {
         ]}
       />
       <CreateRibbonBtns
-        targetItem={focustedItem}
-        items={!focustedItem || designerMode === DesignerMode['SPREAD_SHEET'] ?
-         [] : focustedItem.mart.ribbonItems}
+        targetItem={focusedItem}
+        items={!focusedItem || designerMode === DesignerMode['SPREAD_SHEET'] ?
+         [] : focusedItem.mart.ribbonItems}
       />
       <CreateRibbonBtns
         items={[
