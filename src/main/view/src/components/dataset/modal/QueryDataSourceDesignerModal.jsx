@@ -1,9 +1,9 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
+// import meaImg from 'assets/image/icon/dataSource/measure.png';
+// import dimImg from 'assets/image/icon/dataSource/dimension.png';
+// import folderImg from 'assets/image/icon/report/folder_load.png';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';
@@ -25,6 +25,7 @@ import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetType from '../utils/DatasetType';
+import {makeFieldIcon} from '../utils/DatasetUtil';
 
 const theme = getTheme();
 
@@ -181,25 +182,7 @@ const QueryDataSourceDesignerModal = ({
               getDataByQueryMart(selectedDataSource.dsId, query, parameters);
           if (!response.data.rowData[0].error) {
             let tempFields = response.data.metaData;
-
-            tempFields = tempFields.map((field) => {
-              const isMea = field.columnTypeName == 'decimal';
-              return {
-                icon: isMea ? meaImg : dimImg,
-                parentId: '0',
-                uniqueName: field.columnName,
-                name: field.columnName,
-                type: isMea ? 'MEA' : 'DIM',
-                ...field
-              };
-            });
-
-            tempFields.unshift({
-              name: localizedString.defaultDatasetName,
-              type: 'FLD',
-              uniqueName: '0',
-              icon: folderImg
-            });
+            tempFields = makeFieldIcon(tempFields);
 
             dispatch(updateDataset({
               reportId: selectedReportId,

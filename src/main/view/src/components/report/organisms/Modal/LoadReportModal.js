@@ -14,9 +14,6 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {useDispatch} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
@@ -30,6 +27,7 @@ import spreadDefaultElement from
 import {selectSheets} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import useSpread from 'hooks/useSpread';
+import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 
 const theme = getTheme();
 
@@ -75,39 +73,13 @@ const LoadReportModal = ({...props}) => {
                       ItemManager.generateMeta(i);
                     });
                     // const selectedDatasetId = data.dataset.selectedDatasetId;
-                    data.dataset.datasets.forEach((i) => {
-                      i.fields = i.fields.map((field) => {
-                        const isMea = field.columnTypeName == 'decimal';
-                        if (field.uniqueName != 0) {
-                          return {
-                            icon: isMea ? meaImg : dimImg,
-                            parentId: '0',
-                            uniqueName: field.columnName,
-                            name: field.columnName,
-                            type: isMea ? 'MEA' : 'DIM',
-                            ...field
-                          };
-                        } else return;
-                      }).filter(Boolean);
-                      i.fields.unshift({
-                        name: localizedString.defaultDatasetName,
-                        type: 'FLD',
-                        uniqueName: '0',
-                        icon: folderImg
-                      });
+                    data.dataset.datasets.forEach((dataset) => {
+                      dataset = makeFieldIcon(dataset);
                     });
                     dispatch(setDataset({
                       reportId: selectedReport.id,
                       dataset: data.dataset
                     }));
-                    // let selectedItemId = null;
-                    // for (const item of data.item.items) {
-                    //   if (item.meta?.dataField?.datasetId ===
-                    //       selectedDatasetId) {
-                    //     selectedItemId = item.id;
-                    //     break;
-                    //   }
-                    // }
                     dispatch(setLayout({
                       reportId: selectedReport.id,
                       layout: data.layout
