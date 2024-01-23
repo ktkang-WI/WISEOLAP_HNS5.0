@@ -231,6 +231,7 @@ public class ReportController {
                 }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
+        ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
 
         TopBottomInfo topBottomInfo = gson.fromJson(topBottomInfoStr, TopBottomInfo.class);
@@ -240,6 +241,7 @@ public class ReportController {
                 .measures(measures)
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
+                .itemType(itemType)
                 .userId(userId)
                 .parameters(parameters)
                 .removeNullData(removeNullData)
