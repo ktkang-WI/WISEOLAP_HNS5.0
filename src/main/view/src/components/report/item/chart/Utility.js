@@ -14,11 +14,13 @@ const generateMeta = (item) => {
 
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
- * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} item 옵션을 삽입할 아이템
+ * @param {*} rootItem root item
  */
-const generateItem = (item) => {
+const generateItem = (item, rootItem) => {
+  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
   const data = item.mart.data;
-  const measures = item.meta.dataField.measure;
+  const measures = dataField.measure;
   const meaLength = measures.length;
   item.mart.seriesLength = data.info.seriesDimensionNames.length / meaLength;
   item.mart.formats = measures.map((mea) => mea.format);
