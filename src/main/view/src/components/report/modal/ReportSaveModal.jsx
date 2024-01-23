@@ -36,7 +36,7 @@ const ReportSaveModal = ({...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
-  const {saveReport, generateParameter} = useReportSave();
+  const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
   /**
    * SaveReportModal state(dataSource) 값 설정
@@ -59,22 +59,26 @@ const ReportSaveModal = ({...props}) => {
       formInstance.getEditor('fldName').focus();
       alert('폴더를 선택해 주세요.');
     } else {
-      // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
-      // reportId 를 0 으로 하여 무조건 insert 하게 한다.
-      dataSource.reportId = 0;
       const param = generateParameter(dataSource);
       let isOk = false;
-      await models.Report.addReport(param).then((res) => {
+      await models.Report.insertReport(param).then((res) => {
+        const data = res.data;
+        const msg = data.msg;
+        const result = data.result;
+
         if (res.status != 200) {
-          alert('보고서 저장에 실패했습니다. 관리자에게 문의하세요.');
+          alert(localizedString.faildSaveReportMsg);
           return;
         }
-        if (res.data.dupleYn === 'Y') {
-          alert('보고서 이름이 중복됩니다.');
+
+        alert(localizedString[msg]);
+
+        if (result) {
+          addReport(data);
+          isOk = true;
+        } else {
           return;
         }
-        isOk = true;
-        saveReport(res);
       });
       return !isOk;
     }

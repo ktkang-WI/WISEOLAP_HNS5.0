@@ -42,4 +42,6 @@ if (process.env.NODE_ENV == 'development') {
   window.WI = store;
 }
 
+export const getReportInitialState = () => ReportSlice.getInitialState();
+
 export default store;
