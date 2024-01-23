@@ -124,7 +124,7 @@ const useQueryExecute = () => {
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     try {
-      querySearchRequiredValueChecker(rootItem);
+      requiredValueChecker(rootItem);
       const tempItem = _.cloneDeep(rootItem);
       const chartItem = tempItem.items[0];
       const pivotItem = tempItem.items[1];
@@ -163,7 +163,7 @@ const useQueryExecute = () => {
    */
   const executeItem = (item, datasets, parameters, filter) => {
     try {
-      querySearchRequiredValueChecker(item);
+      requiredValueChecker(item);
       const tempItem = _.cloneDeep(item);
       let param = {};
       param = generateParameter(tempItem, datasets, parameters, filter);
@@ -494,7 +494,7 @@ const useQueryExecute = () => {
     });
   };
 
-  const querySearchRequiredValueChecker = (item) => {
+  const requiredValueChecker = (item) => {
     let dataFieldOption;
     let dataField;
     if (designerMode === DesignerMode['DASHBOARD']) {
@@ -514,7 +514,7 @@ const useQueryExecute = () => {
     requiredValueKeys.forEach((requiredValueKey) => {
       if (dataField[requiredValueKey].length === 0) {
         throw new Error(`${dataFieldOption[requiredValueKey].label}
-         ${localizedString.noneQuerySearchRequiredValue}`);
+         ${localizedString.noneRequiredValue}`);
       }
     });
   };
