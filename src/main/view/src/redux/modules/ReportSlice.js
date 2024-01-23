@@ -26,7 +26,7 @@ const reducers = {
   /* REPORT */
   initReport: (state, actions) => {
     const designerMode = actions.payload;
-    const cloneState = _.cloneDeep(state);
+    const cloneState = _.cloneDeep(initialState);
     cloneState.reports[0].reportType = designerMode;
     return cloneState;
   },
