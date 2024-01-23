@@ -20,6 +20,8 @@ public class DataSetDsService {
 
     List<DatasetDsDTO> datasetDsDTO = datasetDAO.selectDatasetDs();
 
+    if (datasetDsDTO == null) return null;
+
     List<DsMstrEntity> datasetDsModel = generateDatasetDsObject(datasetDsDTO);
 
     return datasetDsModel;

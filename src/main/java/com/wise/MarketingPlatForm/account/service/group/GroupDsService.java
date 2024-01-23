@@ -22,6 +22,8 @@ public class GroupDsService {
 
     List<GroupDsDTO> groupDsDTO = accountDAO.selectGroupDs();
 
+    if (groupDsDTO == null) return null;
+
     List<GroupDsModel> groupDsModel = generateGroupDsObject(groupDsDTO);
 
     return groupDsModel;

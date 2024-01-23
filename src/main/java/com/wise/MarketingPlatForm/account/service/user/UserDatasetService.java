@@ -22,6 +22,8 @@ public class UserDatasetService {
 
     List<UserDatasetDTO> userDatasetDTO = accountDAO.selectUserDataset();
 
+    if (userDatasetDTO == null) return null;
+
     List<UserDatasetModel> userDatasetModel = generateUserDatasetObject(userDatasetDTO);
 
     return userDatasetModel;

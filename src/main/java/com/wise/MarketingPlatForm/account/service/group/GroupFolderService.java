@@ -24,6 +24,8 @@ public class GroupFolderService {
 
     List<GroupFolderDTO> groupFolderDTO = accountDAO.selectGroupFolder();
 
+    if (groupFolderDTO == null) return null;
+
     List<GroupFolderModel> groupDataModel = generateGroupFolderObject(groupFolderDTO);
 
     return groupDataModel;

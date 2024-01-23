@@ -25,6 +25,8 @@ public class UserGroupService {
     
     List<UserGroupDTO> userGroupDTO = accountDAO.selectListGroupData();
 
+    if (userGroupDTO == null) return null;
+
     List<UsersModel> usersFormat = generateUsersObject(userGroupDTO);
     List<GroupsModel> groupsFormat = generateGroupsObject(userGroupDTO);
 

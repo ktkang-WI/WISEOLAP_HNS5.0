@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
-import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
 

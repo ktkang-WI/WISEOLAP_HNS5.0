@@ -22,6 +22,8 @@ public class DataSetDsDsviewCubeService {
 
     List<DatasetDsDsviewCubeDTO> datasetDsDsviewCube = datasetDAO.selectDatasetDsviewCubeDs();
 
+    if (datasetDsDsviewCube == null) return null;
+
     List<DatasetDsDsviewCubeModel> datasetDsDsviewCubeModel
       = generateDatasetDsDsviewCubeObject(datasetDsDsviewCube);
 

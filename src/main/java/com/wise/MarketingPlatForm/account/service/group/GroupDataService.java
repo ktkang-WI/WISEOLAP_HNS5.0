@@ -25,6 +25,8 @@ public class GroupDataService {
 
     List<GroupDataDTO> userGroupDTO = accountDAO.selectGroupData();
 
+    if (userGroupDTO == null) return null;
+
     List<GroupDataModel> groupDataModel = generateUserDataObject(userGroupDTO);
 
     return groupDataModel;

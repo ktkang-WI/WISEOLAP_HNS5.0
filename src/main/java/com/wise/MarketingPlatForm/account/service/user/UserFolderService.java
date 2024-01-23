@@ -11,7 +11,6 @@ import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
 import com.wise.MarketingPlatForm.account.entity.AuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
 
@@ -24,6 +23,8 @@ public class UserFolderService {
   public List<UserFolderModel> getUserFolderData() {
 
     List<UserFolderDTO> userFolderDTO = accountDAO.selectUserFolder();
+
+    if (userFolderDTO == null) return null;
 
     List<UserFolderModel> userDataModel = generateUserFolderObject(userFolderDTO);
 

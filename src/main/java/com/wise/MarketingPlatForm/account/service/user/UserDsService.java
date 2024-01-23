@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
-import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.ds.UserDsModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
@@ -21,6 +20,8 @@ public class UserDsService {
   public List<UserDsModel> getUserDs() {
 
     List<UserDsDTO> userDsDTO = accountDAO.selectUserDs();
+
+    if (userDsDTO == null) return null;
 
     List<UserDsModel> userDsModel = generateUserDsObject(userDsDTO);
 
