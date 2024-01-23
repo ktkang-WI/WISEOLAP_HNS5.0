@@ -15,6 +15,7 @@ export const defaultAnyField = {
   icon: dimensionIcon,
   label: localizedString.field,
   placeholder: localizedString.fieldPlaceholder,
+  querySearchRequired: true,
   type: 'ANY'
 };
 
@@ -22,13 +23,15 @@ export const defaultMeasure = {
   label: localizedString.measure,
   icon: measureIcon,
   placeholder: localizedString.measurePlaceholder,
+  querySearchRequired: true,
   type: 'MEA'
 };
 
 export const dataFieldSortByItem = {
   ...defaultMeasure,
   label: localizedString.sortByItem,
-  placeholder: localizedString.newSortByItem
+  placeholder: localizedString.newSortByItem,
+  querySearchRequired: false
 };
 
 const defaultMart = {

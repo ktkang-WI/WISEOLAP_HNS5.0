@@ -326,6 +326,7 @@
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
   "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "menuChangeConfirm": "데이터를 저장하지 않고 이동 할 경우 데이터가 사라집니다.",
   "saveReportMsg": "보고서를 저장했습니다.",
   "faildSaveReportMsg": "보고서 저장을 실패했습니다. \n 관리자에게 문의하세요",
   "duplicatedSaveReportMsg": "보고서 저장을 실패했습니다. \n 중복된 보고서가 있습니다.",

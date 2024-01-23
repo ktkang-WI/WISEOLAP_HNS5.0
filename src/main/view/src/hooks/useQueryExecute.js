@@ -28,8 +28,8 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
-  const eventManager = ItemManager.useCustomEvent();
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -40,7 +40,6 @@ const useQueryExecute = () => {
    * @return {JSON} parameter
    */
   const generateParameter = (item, datasets, parameters, filter={}) => {
-    eventManager.dataFieldValidator(item);
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -123,17 +122,6 @@ const useQueryExecute = () => {
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     const tempItem = _.cloneDeep(rootItem);
-    const dataField = rootItem.adHocOption.dataField;
-    if (dataField.row + dataField.column == 0) {
-      alert(localizedString.noneDimensionItem);
-      return;
-    }
-
-    if (dataField.measure.length === 0) {
-      alert(localizedString.noneMeasureItem);
-      return;
-    }
-
     const chartItem = tempItem.items[0];
     const pivotItem = tempItem.items[1];
     const param = generateAdHocParamter(tempItem, datasets, parameters);
@@ -167,9 +155,10 @@ const useQueryExecute = () => {
    * @param {JSON} filter 아이템에 적용할 필터
    */
   const executeItem = (item, datasets, parameters, filter) => {
-    const tempItem = _.cloneDeep(item);
-    let param = {};
     try {
+      querySearchRequiredValueChecker(item);
+      const tempItem = _.cloneDeep(item);
+      let param = {};
       param = generateParameter(tempItem, datasets, parameters, filter);
 
       const reportId = selectCurrentReportId(store.getState());
@@ -496,6 +485,23 @@ const useQueryExecute = () => {
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
       bindData({dataset: dataset, datas: datas.data.rowData});
+    });
+  };
+
+  const querySearchRequiredValueChecker = (item) => {
+    const dataFieldOption = item.mart.dataFieldOption;
+    const dataField = item.meta.dataField;
+    const dataFieldOptionKeys = Object.keys(dataFieldOption);
+    const requiredValueKeys = dataFieldOptionKeys.filter((key) => {
+      return dataFieldOption[key].querySearchRequired;
+    });
+
+    if (requiredValueKeys.length === 0) return;
+
+    requiredValueKeys.forEach((requiredValueKey) => {
+      if (dataField[requiredValueKey].length === 0) {
+        throw new Error(`${requiredValueKey} test`);
+      }
     });
   };
 
