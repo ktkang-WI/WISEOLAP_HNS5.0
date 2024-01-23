@@ -63,11 +63,10 @@ export const updateReport = async (param) => {
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
- * @param {function} callback
+ * @return {JSON}
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = (param) => {
+  return axios.post(path + '/report-folder-list', param);
 };
 
 /**
