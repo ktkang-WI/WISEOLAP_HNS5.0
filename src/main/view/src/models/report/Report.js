@@ -22,7 +22,7 @@ export const getReportById = async (userId, reportId) => {
       res.data[key] = JSON.parse(res.data[key]);
     }
   });
-  return res.data;
+  return res;
 };
 
 
@@ -40,7 +40,7 @@ export const getList = async (userId, reportType, editMode) => {
     userId: userId
   });
 
-  return res.data;
+  return res;
 };
 /**
  * 보고서 저장 / 새로운 보고서를 저장 합니다.(insert)
