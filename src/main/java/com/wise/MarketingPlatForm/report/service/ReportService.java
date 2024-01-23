@@ -221,24 +221,25 @@ public class ReportService {
         martConfig.setMartDataSource(dsMstrDTO);
 
         String query = queryGenerator.getQuery(dataAggreagtion);
-        
+        String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
+
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker chartDataMaker;
         ItemDataMaker pivotDataMaker;
 
         MartResultDTO martResultDTO = martDAO.select(query);
         List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
-
-        if ("onlyChart".equals(dataAggreagtion.getLayoutSetting())) {
+        
+        if ("onlyChart".equals(layoutType)) {
             chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
             
             result.put("chart", chartDataMaker.make(dataAggreagtion, chartRowData));
-        } else if ("onlyPivot".equals(dataAggreagtion.getLayoutSetting())) {
+        } else if ("onlyPivot".equals(layoutType)) {
             List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
             pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
             
             result.put("pivot", pivotDataMaker.make(dataAggreagtion, pivotRowData));
-        } else if ("chartPivot".equals(dataAggreagtion.getLayoutSetting())) {
+        } else if ("chartPivot".equals(layoutType)) {
             List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
             
             chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);

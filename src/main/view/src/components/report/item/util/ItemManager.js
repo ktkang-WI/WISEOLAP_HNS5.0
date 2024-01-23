@@ -41,24 +41,18 @@ const generateParameter = (item, param) => {
  */
 const generateAdHocParameter = (rootItem, param) => {
   const dataField = rootItem.adHocOption.dataField;
-  const topBottomInfo = rootItem.adHocOption.topBottomInfo;
+  const adHocOption = rootItem.adHocOption;
   const pivotItem = rootItem.items[1];
-  const chartData = rootItem.items[0].mart.data.length ? true : false;
-  const pivotData = pivotItem.mart.data.length ? true : false;
-  const layoutSetting = rootItem.adHocOption.layoutSetting;
 
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
-  param.topBottomInfo = topBottomInfo;
+  // param.topBottomInfo = topBottomInfo;
 
   param.removeNullData = pivotItem.meta.removeNullData;
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
-  param.topBottomInfo = JSON.stringify(param.topBottomInfo);
-  param.chartData = chartData;
-  param.pivotData = pivotData;
-  param.layoutSetting = layoutSetting;
+  param.adHocOption = JSON.stringify(adHocOption);
 };
 
 /**

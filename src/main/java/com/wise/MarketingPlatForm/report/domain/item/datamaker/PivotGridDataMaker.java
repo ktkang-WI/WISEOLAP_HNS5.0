@@ -19,7 +19,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-        TopBottomInfo topBottomInfo = dataAggreagtion.getTopBottomInfo();
+        TopBottomInfo topBottomInfo = dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
