@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +24,8 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-        TopBottomInfo topBottomInfo = dataAggreagtion.getAdHocOption().getTopBottomInfo();
+        TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
+        null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
