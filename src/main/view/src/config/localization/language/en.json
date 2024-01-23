@@ -310,7 +310,7 @@
   "print": "Print",
   "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
   "reportCorrupted": "This Report is Corrupted, Please Conect to Manager",
-  "menuChangeConfirm": "If you Don't Save the Data, It'll be disappeared",
+  "menuChangeConfirm": "Unsaved work may be lost. Do you want to move?",
   "requireReloadMsg": "This option applies when reloading.",
-  "noneRequiredValue": "is a Required Value. Please Check,"
+  "requiredFieldNotExist": "Is a Required Value. Please Check,"
 }

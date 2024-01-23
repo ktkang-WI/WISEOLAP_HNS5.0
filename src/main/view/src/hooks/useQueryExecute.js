@@ -514,7 +514,7 @@ const useQueryExecute = () => {
     requiredValueKeys.forEach((requiredValueKey) => {
       if (dataField[requiredValueKey].length === 0) {
         throw new Error(`${dataFieldOption[requiredValueKey].label}
-         ${localizedString.noneRequiredValue}`);
+         ${localizedString.requiredFieldNotExist}`);
       }
     });
   };
