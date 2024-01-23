@@ -125,10 +125,10 @@ const useQueryExecute = () => {
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     try {
       validateRequiredField(rootItem);
-      const tempItem = _.cloneDeep(rootItem);
-      const chartItem = tempItem.items[0];
-      const pivotItem = tempItem.items[1];
-      const param = generateAdHocParamter(tempItem, datasets, parameters);
+      const cloneItem = _.cloneDeep(rootItem);
+      const chartItem = cloneItem.items[0];
+      const pivotItem = cloneItem.items[1];
+      const param = generateAdHocParamter(cloneItem, datasets, parameters);
       const reportId = selectCurrentReportId(store.getState());
 
       models.Item.getAdHocItemData(param).then((response) => {
@@ -143,8 +143,8 @@ const useQueryExecute = () => {
         pivotItem.mart.init = true;
         pivotItem.mart.data = response.data[1];
 
-        ItemManager.generateItem(chartItem);
-        ItemManager.generateItem(pivotItem, tempItem);
+        ItemManager.generateItem(chartItem, cloneItem);
+        ItemManager.generateItem(pivotItem, cloneItem);
 
         dispatch(updateItem({reportId, item: chartItem}));
         dispatch(updateItem({reportId, item: pivotItem}));
