@@ -5,6 +5,8 @@ import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import useModal from 'hooks/useModal.js';
 import {useLoaderData} from 'react-router-dom';
+import UserPasswordModal
+  from 'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
 
 const NavBar = styled.div`
   width:100%;
@@ -39,6 +41,8 @@ export const UserGroupContext = createContext();
 
 const UserGroupManagement = () => {
   const {alert} = useModal();
+  const {openModal} = useModal();
+
   const {userGroupManagement} = useLoaderData();
   const [groupsFormat, setGroupsFormat] =
   useState(userGroupManagement.groupsFormat);
@@ -125,7 +129,12 @@ const UserGroupManagement = () => {
   };
 
   const handleKey = () => {
-
+    console.log(userDetailInfo);
+    const user =
+      usersFormat.find((user) => user.userId === userDetailInfo.userId);
+    openModal(UserPasswordModal, {
+      user: user
+    });
   };
 
   const handleTabPanelItem = ({itemData}) => {

@@ -25,6 +25,14 @@ export const getUserGroupManagement = async () => {
   return res;
 };
 
+export const updateUserPassword = async (user) => {
+  // const res = await axios.get(accountPath + '/user/password', null, {
+  //   params: user
+  // });
+  // return res;
+  return;
+};
+
 const body = {
   grpMemberUser: [
     {userNo: 2207, userId: 'adsasdasd', userNm: 'adsasdasd'}

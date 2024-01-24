@@ -258,5 +258,9 @@
   "generateConfigure": "일반 설정",
   "reportConfigure": "보고서 설정",
   "userManagement": "사용자 관리",
-  "groupManagement": "그룹 관리"
+  "groupManagement": "그룹 관리",
+  "passwordChange": "비밀번호 변경",
+  "currentPassword": "현재 비밀번호",
+  "newPassword": "새 비밀번호",
+  "passwordConfirm": "비밀번호 확인"
 }

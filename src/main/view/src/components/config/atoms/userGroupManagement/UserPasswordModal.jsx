@@ -1,0 +1,100 @@
+import localizedString from 'config/localization';
+import Modal from 'components/common/atomic/Modal/organisms/Modal';
+import {Form} from 'devextreme-react';
+import {Item, Label} from 'devextreme-react/form';
+import useModal from 'hooks/useModal';
+import {useRef} from 'react';
+import {getTheme} from 'config/theme';
+import {updateUserPassword} from 'models/config/userGroupManagement';
+
+const theme = getTheme();
+
+const UserPasswordModal = ({...props}) => {
+  const {alert} = useModal();
+  const user = props.user;
+  const ref = useRef();
+
+  console.log(user);
+
+  const validationCheck = () => {
+    const formInstance = ref.current._instance;
+    const newPassword = formInstance.getEditor('newPassword').option('value');
+    const confirmPassword =
+      formInstance.getEditor('passwordConfirm').option('value');
+
+    return newPassword === confirmPassword;
+  };
+
+  const onClick =() => {
+    const formInstance = ref.current._instance;
+    const currentPassword =
+      formInstance.getEditor('currentPassword').option('value');
+    const newPassword = formInstance.getEditor('newPassword').option('value');
+
+    if (!validationCheck()) {
+      alert('새 비밀번호화 비밀번호 확인이 일치하지 않습니다.');
+      return true;
+    }
+
+    const param = {};
+
+    param.userNo = user.userNo;
+    param.currentPassword = currentPassword;
+    param.newPassword = newPassword;
+
+    updateUserPassword(user).then((res) => {
+      if (res.status !== 200) {
+        alert('비밀번호 변경에 실패했습니다.');
+      }
+      alert('비밀번호를 변경했습니다.');
+    });
+  };
+
+  const editorOptions = {
+    mode: 'password'
+  };
+
+  return (
+    <Modal
+      modalTitle={localizedString.passwordChange}
+      height={theme.size.smallModalHeight}
+      width={theme.size.smallModalWidth}
+      onSubmit={onClick}
+      {...props}
+    >
+      <Form
+        ref={ref}
+      >
+        <Item
+          editorType='dxTextBox'
+          dataField='currentPassword'
+          editorOptions={editorOptions}
+        >
+          <Label>
+            {localizedString.currentPassword}
+          </Label>
+        </Item>
+        <Item
+          editorType='dxTextBox'
+          dataField='newPassword'
+          editorOptions={editorOptions}
+        >
+          <Label>
+            {localizedString.newPassword}
+          </Label>
+        </Item>
+        <Item
+          editorType='dxTextBox'
+          dataField='passwordConfirm'
+          editorOptions={editorOptions}
+        >
+          <Label>
+            {localizedString.passwordConfirm}
+          </Label>
+        </Item>
+      </Form>
+    </Modal>
+  );
+};
+
+export default UserPasswordModal;
