@@ -193,79 +193,79 @@
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
 
-		<insert id = "insertReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
-			<selectKey keyProperty="reportId" resultType="int" order="AFTER">
-				SELECT MAX(REPORT_ID) FROM REPORT_MSTR
-			</selectKey>
-			INSERT INTO REPORT_MSTR
-				(
-					REPORT_ID,
-					REPORT_NM,
-					REPORT_SUB_TITLE,
-					FLD_ID,
-					FLD_TYPE,
-					REPORT_ORDINAL,
-					REPORT_TYPE,
-					REPORT_DESC,
-					PARAM_XML,
-					REG_USER_NO,
-					CHART_XML,
-					LAYOUT_XML,
-					REPORT_XML,
-					DATASET_XML
-				)
-			VALUES
-				(
-					REPORT_MSTR_REPORT_ID_SEQ.NEXTVAL,
-					#{reportNm},
-					#{reportSubTitle},
-					#{fldId},
-					#{fldType},
-					#{reportOrdinal},
-					#{reportType},
-					#{reportDesc},
-					#{paramXml},
-					#{regUserNo},
-					#{chartXml},
-					#{layoutXml},
-					#{reportXml},
-					#{datasetXml}
-				)
-		</insert>
+	<insert id = "insertReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+		<selectKey keyProperty="reportId" resultType="int" order="AFTER">
+			SELECT MAX(REPORT_ID) FROM REPORT_MSTR
+		</selectKey>
+		INSERT INTO REPORT_MSTR
+			(
+				REPORT_ID,
+				REPORT_NM,
+				REPORT_SUB_TITLE,
+				FLD_ID,
+				FLD_TYPE,
+				REPORT_ORDINAL,
+				REPORT_TYPE,
+				REPORT_DESC,
+				PARAM_XML,
+				REG_USER_NO,
+				CHART_XML,
+				LAYOUT_XML,
+				REPORT_XML,
+				DATASET_XML
+			)
+		VALUES
+			(
+				REPORT_MSTR_REPORT_ID_SEQ.NEXTVAL,
+				#{reportNm},
+				#{reportSubTitle},
+				#{fldId},
+				#{fldType},
+				#{reportOrdinal},
+				#{reportType},
+				#{reportDesc},
+				#{paramXml},
+				#{regUserNo},
+				#{chartXml},
+				#{layoutXml},
+				#{reportXml},
+				#{datasetXml}
+			)
+	</insert>
 
-		<update id = "updateReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
-			UPDATE REPORT_MSTR
-			SET
-			REPORT_NM = #{reportNm},
-			REPORT_SUB_TITLE = #{reportSubTitle},
-			FLD_ID = #{fldId},
-			FLD_TYPE = #{fldType},
-			REPORT_ORDINAL = #{reportOrdinal},
-			REPORT_TYPE = #{reportType},
-			REPORT_DESC = #{reportDesc},
-			DATASET_XML = #{datasetXml},
-			PARAM_XML = #{paramXml},
-			REG_USER_NO = #{regUserNo},
-			REPORT_XML = #{reportXml},
-			CHART_XML = #{chartXml},
-			LAYOUT_XML = #{layoutXml}
-			WHERE REPORT_ID = #{reportId}
-		</update>
-
-		<update id="deleteReport" parameterType="int">
-			UPDATE REPORT_MSTR
-			SET DEL_YN = 'Y'
-			WHERE REPORT_ID = #{reportId}
-		</update>
-
-		<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity"
-			resultType="hashmap">
-			SELECT REPORT_NM
-			FROM REPORT_MSTR
-			WHERE REPORT_NM = #{reportNm}
-			AND FLD_ID = #{fldId}
-			AND DEL_YN = 'N'
-		</select>
+	<update id = "updateReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+		UPDATE REPORT_MSTR
+		SET
+		REPORT_NM = #{reportNm},
+		REPORT_SUB_TITLE = #{reportSubTitle},
+		FLD_ID = #{fldId},
+		FLD_TYPE = #{fldType},
+		REPORT_ORDINAL = #{reportOrdinal},
+		REPORT_TYPE = #{reportType},
+		REPORT_DESC = #{reportDesc},
+		DATASET_XML = #{datasetXml},
+		PARAM_XML = #{paramXml},
+		REG_USER_NO = #{regUserNo},
+		REPORT_XML = #{reportXml},
+		CHART_XML = #{chartXml},
+		LAYOUT_XML = #{layoutXml}
+		WHERE REPORT_ID = #{reportId}
+	</update>
+	
+	<update id="deleteReport" parameterType="int">
+		UPDATE REPORT_MSTR
+		SET DEL_YN = 'Y'
+		WHERE REPORT_ID = #{reportId}
+	</update>
+	
+	<select id="checkDuplicatedReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity"
+		resultType="hashmap">
+		SELECT REPORT_NM
+		FROM REPORT_MSTR
+		WHERE REPORT_NM = #{reportNm}
+		AND FLD_ID = #{fldId}
+		AND DEL_YN = 'N'
+	</select>
 
     <select id="selectDetailedDataItem" resultMap="DetailedDataItem">
       SELECT

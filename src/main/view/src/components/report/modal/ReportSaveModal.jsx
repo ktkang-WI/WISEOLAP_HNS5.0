@@ -11,6 +11,8 @@ import useReportSave from 'hooks/useReportSave';
 import {useRef} from 'react';
 import models from 'models';
 import useModal from 'hooks/useModal';
+import useSpread from 'hooks/useSpread';
+import useFile from 'hooks/useFile';
 
 const theme = getTheme();
 
@@ -36,8 +38,10 @@ const ReportSaveModal = ({...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
-  const {addReport, generateParameter} = useReportSave();
+  const {changeReportId, generateParameter} = useReportSave();
   const ref = useRef();
+  const {createReportBlob} = useSpread();
+  const {fileUpload} = useFile();
   /**
    * SaveReportModal state(dataSource) 값 설정
    * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
@@ -62,19 +66,23 @@ const ReportSaveModal = ({...props}) => {
       const param = generateParameter(dataSource);
       let isOk = false;
       await models.Report.insertReport(param).then((res) => {
-        const data = res.data;
-        const msg = data.msg;
-        const result = data.result;
-
         if (res.status != 200) {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
+        if (res.report.reportType === DesignerMode['SPREAD_SHEET']) {
+          createReportBlob().then((bolb) => fileUpload(
+              bolb, {fileName: response.report.reportId + '.xlsx'}));
+        }
+        const data = res.data;
+        const msg = data.msg;
+        const result = data.result;
+
 
         alert(localizedString[msg]);
 
         if (result) {
-          addReport(data);
+          changeReportId(data);
           isOk = true;
         } else {
           return;

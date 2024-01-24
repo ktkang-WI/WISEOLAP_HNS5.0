@@ -30,6 +30,16 @@ const reducers = {
     cloneState.reports[0].reportType = designerMode;
     return cloneState;
   },
+  changeReport(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+
+    if (prevId != newId) {
+      const report = state.report;
+      state.reports.filter((report) => report.reportId !== prevId);
+      state.reports.push(report);
+    }
+  },
   /*
    * 보고서 추가
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체

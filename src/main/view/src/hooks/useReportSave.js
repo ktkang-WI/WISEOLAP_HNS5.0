@@ -15,23 +15,31 @@ import useModal from './useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
-import useSpread from './useSpread';
-import useFile from './useFile';
 import {ConvertDesignerMode, DesignerMode} from 'components/config/configType';
 import models from 'models';
 import localizedString from 'config/localization';
+import useFile from './useFile';
+import {useSelector} from 'react-redux';
+import {makeMart} from 'components/report/item/util/martUtilityFactory';
+import ItemManager from 'components/report/item/util/ItemManager';
+import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
+import useQueryExecute from './useQueryExecute';
 
 const useReportSave = () => {
-  const {alert} = useModal();
   const dispatch = useDispatch();
-  const {createReportBlob} = useSpread();
-  const {fileUpload, fileDelete} = useFile();
+  const {alert} = useModal();
+  const {fileDelete} = useFile();
+  const {executeItems, executeSpread} = useQueryExecute();
+
   const reportActions = ReportSlice.actions;
   const itemActions = ItemSlice.actions;
   const layoutActions = LayoutSlice.actions;
   const datasetActions = DatasetSlice.actions;
   const parameterActions = ParameterSlice.actions;
   const spreadActions = SpreadSlice.actions;
+
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  const currentReportId = useSelector(selectCurrentReportId);
 
   /**
    * 저장에 필요한 파라미터 생성
@@ -116,12 +124,7 @@ const useReportSave = () => {
    * 보고서 저장 (새로운 보고서를 추가 합니다.)
    * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
    */
-  const addReport = (response) => {
-    if (response.report.reportType === DesignerMode['SPREAD_SHEET']) {
-      createReportBlob().then((bolb) => fileUpload(
-          bolb, {fileName: response.report.reportId + '.xlsx'}));
-    }
-    const currentReportId = selectCurrentReportId(store.getState());
+  const changeReportId = (response) => {
     const reportId = {
       prevId: currentReportId,
       newId: response.report.reportId
@@ -129,8 +132,10 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.insertReport(report.reports[0]));
-
+    dispatch(reportActions.changeReport({
+      reportId: reportId,
+      report: report.reports[0]
+    }));
     dispatch(itemActions.changeItemReportId(reportId));
     dispatch(layoutActions.changeLayoutReportId(reportId));
     dispatch(datasetActions.changeDatasetReportId(reportId));
@@ -199,12 +204,79 @@ const useReportSave = () => {
     dispatch(spreadActions.initSpread());
   };
 
+  // 보고서 불러오기 - 추후 뷰어 및 디자이너 분기 처리.
+  const loadReport = (data) => {
+    // 공통 데이터 가공
+    data.item.items.forEach((i) => {
+      i.mart = makeMart(i);
+      ItemManager.generateMeta(i);
+    });
+    data.dataset.datasets.forEach((dataset) => {
+      dataset.fields = makeFieldIcon(dataset.fields);
+    });
+
+    designerLoadReport(data);
+  };
+
+  // 디자이너 보고서 불러오기
+  const designerLoadReport = (data) => {
+    const newReportId = data.reports[0].reportId;
+    const reportId = {
+      prevId: currentReportId,
+      newId: newReportId
+    };
+    dispatch(reportActions.setReports(data.reports));
+    dispatch(reportActions.selectReport(newReportId));
+    dispatch(datasetActions.changeDataset({
+      reportId: reportId,
+      dataset: data.dataset
+    }));
+    dispatch(layoutActions.changeLayout({
+      reportId: reportId,
+      layout: data.layout
+    }));
+    dispatch(itemActions.changeItem({
+      reportId: reportId,
+      item: data.item
+    }));
+    dispatch(parameterActions.changeParameterInformation({
+      reportId: reportId,
+      informations: data.informations
+    }));
+    if (designerMode === DesignerMode.SPREAD_SHEET) {
+      const sheets = selectSheets(store.getState());
+      const config = setRibbonSetting();
+      const designer =
+      new sheets.Designer
+          .Designer(document.getElementById('spreadWrapper'),
+              config);
+      dispatch(spreadActions.setSpread({
+        reportId: newReportId,
+        bindingInfos: data.spread,
+        designer: designer
+      }));
+      sheetNameChangedListener();
+      sheetChangedListener();
+    }
+    querySearch();
+  };
+
+  const querySearch = () => {
+    if (designerMode !== DesignerMode['SPREAD_SHEET']) {
+      executeItems();
+    } else {
+      executeSpread();
+    }
+  };
+
   return {
     generateParameter,
-    addReport,
+    changeReportId,
     removeReport,
     patchReport,
-    reload
+    reload,
+    loadReport,
+    querySearch
   };
 };
 
