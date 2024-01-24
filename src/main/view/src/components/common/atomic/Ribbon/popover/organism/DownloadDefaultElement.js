@@ -3,17 +3,31 @@ import store from 'redux/modules';
 import {useSelector} from 'react-redux';
 import {selectCurrentItems} from 'redux/selector/ItemSelector';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
-// import {downloadSet} from 'components/report/util/ReportDownload';
+import models from 'models';
 
 const DownloadDefaultElement = () => {
   const items = selectCurrentItems(store.getState());
   const parameters = selectRootParameter(store.getState());
-  const reportType = selectCurrentDesignerMode(store.getState());
   const currentReport = useSelector(selectCurrentReport);
   const dataSource = _.cloneDeep(currentReport.options);
+  const downloadAllSet = {items, parameters, dataSource};
+  console.log('downloadAllSet', downloadAllSet);
 
+  function replacer(key, value) {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  }
+
+  const safeStringify = (obj) => JSON.stringify(obj, replacer());
   return {
     download: [
       {
@@ -24,12 +38,8 @@ const DownloadDefaultElement = () => {
             label: localizedString.excelXlsx,
             visible: true,
             onClick: () => {
-              console.log('items', items);
-              console.log('parameters', parameters);
-              console.log('reportType', reportType);
-              console.log('dataSource', dataSource);
-              // downloadSet(0, dataSource, items,
-              // reportType, parameters, 'xlsx');
+              models.Report.downloadReportAll(
+                  safeStringify(downloadAllSet), '.xlsx');
             }
           },
           {
