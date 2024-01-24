@@ -2,14 +2,11 @@ import DevDataGrid,
 {Column, Paging, Scrolling} from 'devextreme-react/data-grid';
 import React from 'react';
 import DataGridBullet from './DataGridBullet';
-import {useSelector} from 'react-redux';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {cellMerge, generateRowSpans} from './options/Merge';
 
 const DataGrid = ({id, item}) => {
   const mart = item ? item.mart : null;
-  const field = useSelector(selectCurrentDataField).field;
-  let dataSource = null;
+  let dataSource = _.cloneDeep(mart.data);
   let rowSpans = null;
 
   if (!mart.init) {
@@ -17,11 +14,18 @@ const DataGrid = ({id, item}) => {
   }
 
   const onCellPrepared = (e) => {
-    if (e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0) {
-      dataSource = _.cloneDeep(mart.data.data);
-      rowSpans = generateRowSpans(dataSource, field);
+    if (false) {
+      if (e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0) {
+        dataSource = _.cloneDeep(mart.data);
+        rowSpans =
+          _.cloneDeep(generateRowSpans(dataSource.data, dataSource.columns));
+      }
+      cellMerge(e, rowSpans, mart.data.columns);
     }
-    cellMerge(e, rowSpans, field);
+  };
+
+  const onContentReady = (e) => {
+    console.log(e);
   };
 
   return (
@@ -29,13 +33,16 @@ const DataGrid = ({id, item}) => {
       width='100%'
       height='100%'
       id={id}
-      dataSource={mart.data.data}
+      dataSource={dataSource.data}
       sorting={false}
       onCellPrepared={onCellPrepared}
+      onContentReady={onContentReady}
+      showColumnLines={true}
+      showRowLines={true}
     >
-      <Paging enabled={false} />
+      <Paging enabled={true} />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
-      {mart.data.columns.map((column, i) =>
+      {dataSource.columns.map((column, i) =>
         <Column
           key={i}
           caption={column.caption}

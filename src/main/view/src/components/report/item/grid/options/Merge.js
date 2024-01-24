@@ -5,33 +5,32 @@ const Node = {
   declared: false
 };
 
-const generateBaseKey = (Index) => {
+const generateBaseKey = (depth) => {
   let result = '';
-  result = result.concat(Index + '-');
+  result = result.concat(depth + '-');
   return result;
 };
 
+const generateKey = (baseKey, depth) => {
+  if (depth > 0) {
+    baseKey = baseKey.concat('-'+generateBaseKey(depth));
+  } else {
+    baseKey = baseKey.concat(generateBaseKey(depth));
+  }
+  return baseKey;
+};
+
+
 const generateRowSpan =
   (depth, baseKey, fields, data, structure) => {
-    const fieldsLen = fields.length;
-    if (depth === fieldsLen || data.length == 0) return structure;
-    if (depth > 0) {
-      baseKey = baseKey.concat('-'+generateBaseKey(depth));
-    } else {
-      baseKey = baseKey.concat(generateBaseKey(depth));
-    }
+    if (depth === fields.length || data.length == 0) return structure;
+    baseKey = generateKey(baseKey, depth);
 
     const pickedItem = data[0];
-    let fieldName = null;
-    if (fields[depth].type === 'MEA') {
-      fieldName =
-      fields[depth].summaryType + '_' + fields[depth].name;
-    } else {
-      fieldName = fields[depth].name;
-    }
-
+    const fieldName = fields[depth].name;
     const node = _.cloneDeep(Node);
     const key = baseKey.concat(pickedItem[fieldName]);
+
     if (structure[key]) {
       structure[key].value = structure[key].value + 1;
     } else {
@@ -59,23 +58,9 @@ export const generateRowSpans = (data, fields) => {
   return rowSpansStructure;
 };
 
-export const cellMerge = (e, rowSpans, fields) => {
-  if (!rowSpans) return;
-  if (e.rowType !== 'data') {
-    return;
-  }
-
+const getCellMergeKey = (columnIndex, values) => {
   let key = '';
-  const columnIndex = e.columnIndex;
-  const values = fields.map((item) => {
-    if (item.type === 'DIM') return e.data[item.name];
-    else return e.data[item.summaryType + '_' + item.name];
-  });
   const valuesLen = values.length;
-
-  if (!values) return;
-  if (columnIndex === fields.length) return;
-
   for (let index = 0; index < valuesLen; index++) {
     if (columnIndex < index) break;
 
@@ -83,6 +68,22 @@ export const cellMerge = (e, rowSpans, fields) => {
     key = index === 0 ?
     key.concat(index + '-' + value) : key.concat('-' + index + '-' + value);
   };
+  return key;
+};
+
+export const cellMerge = (e, rowSpans, fields) => {
+  if (!rowSpans) return;
+  if (e.rowType !== 'data') {
+    return;
+  }
+
+  const columnIndex = e.columnIndex;
+  const values = fields.map((item) => e.data[item.name]);
+
+  if (!values) return;
+  if (columnIndex === fields.length) return;
+
+  const key = getCellMergeKey(columnIndex, values);
 
   if (!key || !rowSpans[key]) return;
 
