@@ -24,11 +24,13 @@ import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
+import useSpread from './useSpread';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {fileDelete} = useFile();
+  const {createDesigner} = useSpread();
   const {executeItems, executeSpread} = useQueryExecute();
 
   const reportActions = ReportSlice.actions;
@@ -240,19 +242,7 @@ const useReportSave = () => {
       informations: data.informations
     }));
     if (designerMode === DesignerMode['EXCEL']) {
-      const sheets = selectSheets(store.getState());
-      const config = setRibbonSetting();
-      const designer =
-      new sheets.Designer
-          .Designer(document.getElementById('spreadWrapper'),
-              config);
-      dispatch(spreadActions.setSpread({
-        reportId: newReportId,
-        bindingInfos: data.spread,
-        designer: designer
-      }));
-      sheetNameChangedListener();
-      sheetChangedListener();
+      createDesigner();
     }
     querySearch();
   };
