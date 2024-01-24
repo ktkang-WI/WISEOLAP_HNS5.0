@@ -24,13 +24,14 @@ import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
-import useSpread from './useSpread';
+import spreadDefaultElement
+  from 'components/report/atomic/spreadBoard/organisms/SpreadDefaultElement';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {fileDelete} = useFile();
-  const {createDesigner} = useSpread();
+  const {createDesigner} = spreadDefaultElement();
   const {executeItems, executeSpread} = useQueryExecute();
 
   const reportActions = ReportSlice.actions;
@@ -242,7 +243,9 @@ const useReportSave = () => {
       informations: data.informations
     }));
     if (designerMode === DesignerMode['EXCEL']) {
-      createDesigner();
+      createDesigner({
+        reportId: newReportId,
+        bindingInfos: data.spread});
     }
     querySearch();
   };
