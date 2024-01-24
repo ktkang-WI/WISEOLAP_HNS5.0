@@ -1,10 +1,15 @@
 import DevPivotGrid, {
   FieldChooser,
-  Scrolling
+  Scrolling,
+  Export
 } from 'devextreme-react/pivot-grid';
 import React, {useEffect, useRef} from 'react';
+import {Workbook} from 'exceljs';
+import saveAs from 'file-saver';
+import {exportPivotGrid} from 'devextreme/excel_exporter';
 
 const PivotGrid = ({id, adHocOption, item}) => {
+  console.log('pivot grid id', id);
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -62,6 +67,26 @@ const PivotGrid = ({id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
+  function onExporting(e) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Main sheet');
+    const blobType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    exportPivotGrid({
+      component: e.component,
+      worksheet: worksheet
+    }).then(function() {
+      workbook.xlsx.writeBuffer().then(function(buffer) {
+        const blob = new Blob([buffer], {
+          type: blobType
+        });
+        saveAs(blob, 'PivotGrid.xlsx');
+        console.log('Blob size:', blob.size);
+        console.log('Blob type:', blob.type);
+      });
+    });
+  }
+
   return (
     <DevPivotGrid
       ref={ref}
@@ -81,7 +106,9 @@ const PivotGrid = ({id, adHocOption, item}) => {
       wordWrapEnabled={false}
       allowSorting={false}
       allowSortingBySummary={false}
+      onExporting={onExporting}
     >
+      <Export enabled={true} />
       <FieldChooser enabled={false}> </FieldChooser>
       <Scrolling mode="virtual" />
     </DevPivotGrid>
