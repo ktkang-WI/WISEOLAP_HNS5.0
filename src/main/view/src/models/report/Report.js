@@ -70,3 +70,27 @@ export const deleteReport = (param, callback) => {
   axios.post(path + '/delete-report', param)
       .then(callback);
 };
+
+/**
+ * 보고서 전체 다운로드
+ * @param {JSON} param
+ */
+export const downloadReportAll = (param) => {
+  axios.post(path + '/download-report-all', param, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    responseType: 'blob'
+  })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'new_Report.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Clean up
+      })
+      .catch((error) => console.error('Download error:', error));
+};
