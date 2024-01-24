@@ -55,3 +55,7 @@ a {
 #subMenu {
   padding-left: 15px;
 }
+
+.dx-selectbox-popup-wrapper {
+  z-index: 1800 !important;
+}
