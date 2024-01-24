@@ -111,6 +111,7 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
+        String adHocOptionStr = param.get("adHocOption");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -131,7 +132,8 @@ public class ReportController {
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
-
+        AdHocOption adHocOption = new AdHocOption(null, null);
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -143,6 +145,7 @@ public class ReportController {
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
                 .filter(filter)
+                .adHocOption(adHocOption)
                 .build();
 
         // 추후 PivotMatrix 적용시 주석 해제

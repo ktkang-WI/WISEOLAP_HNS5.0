@@ -10,4 +10,9 @@ import lombok.Setter;
 public class AdHocOption {
   TopBottomInfo topBottomInfo;
   String layoutSetting;
+
+  public AdHocOption(TopBottomInfo topBottomInfo, String layoutSetting) {
+    this.topBottomInfo = topBottomInfo;
+    this.layoutSetting = layoutSetting;
+  }
 }

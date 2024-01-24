@@ -46,7 +46,6 @@ const generateAdHocParameter = (rootItem, param) => {
 
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
-  // param.topBottomInfo = topBottomInfo;
 
   param.removeNullData = pivotItem.meta.removeNullData;
 
@@ -85,9 +84,9 @@ const getTopBottomInfo = () => {
 
 const getLayoutSetting = () => {
   const layoutType = {
-    'onlyChart': 'onlyChart',
-    'onlyPivot': 'onlyPivot',
-    'chartPivot': 'chartPivot'
+    'chart': 'chart',
+    'pivot': 'pivot',
+    'chart_pivot': 'chart_pivot'
   };
   return layoutType;
 };

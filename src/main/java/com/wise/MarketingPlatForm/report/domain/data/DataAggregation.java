@@ -29,6 +29,5 @@ public class DataAggregation {
     boolean removeNullData;
     List<Parameter> parameters;
     Map<String, List<String>> filter;
-    String layoutSetting;
     AdHocOption adHocOption;
 }

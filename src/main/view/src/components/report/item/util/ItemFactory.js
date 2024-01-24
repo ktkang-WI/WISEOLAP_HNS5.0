@@ -78,7 +78,7 @@ const makeAdHocOption = () => {
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,
-    layoutSetting: layoutType['chartPivot']
+    layoutSetting: layoutType['chart_pivot']
   };
 };
 

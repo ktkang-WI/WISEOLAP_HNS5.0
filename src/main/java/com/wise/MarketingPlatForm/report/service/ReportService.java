@@ -212,7 +212,10 @@ public class ReportService {
 
     public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
         Map<String, ReportResult> result = new HashMap<String, ReportResult>();
-
+        Map<String, ItemType> itemTypes = new HashMap<String, ItemType>() {{
+            put("chart", ItemType.CHART);
+            put("pivot", ItemType.PIVOT_GRID);
+        }};
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
         QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
 
@@ -222,31 +225,22 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion);
         String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
+        String[] items= new String["chart_pivot".equals(layoutType) ? 2 : 1];
 
-        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker chartDataMaker;
-        ItemDataMaker pivotDataMaker;
-
+        if ("chart_pivot".equals(layoutType)) {
+            items = layoutType.split("_");
+        } else {
+            items[0] = layoutType;
+        }
+        
         MartResultDTO martResultDTO = martDAO.select(query);
         List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
+        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         
-        if ("onlyChart".equals(layoutType)) {
-            chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
-            
-            result.put("chart", chartDataMaker.make(dataAggreagtion, chartRowData));
-        } else if ("onlyPivot".equals(layoutType)) {
-            List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
-            pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
-            
-            result.put("pivot", pivotDataMaker.make(dataAggreagtion, pivotRowData));
-        } else if ("chartPivot".equals(layoutType)) {
-            List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
-            
-            chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
-            pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
-            
-            result.put("chart", chartDataMaker.make(dataAggreagtion, chartRowData));
-            result.put("pivot", pivotDataMaker.make(dataAggreagtion, pivotRowData));
+        for (String item : items) {
+            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(itemTypes.get(item));
+            List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
+            result.put(item, dataMaker.make(dataAggreagtion, rowData));
         }
         
         return result;
