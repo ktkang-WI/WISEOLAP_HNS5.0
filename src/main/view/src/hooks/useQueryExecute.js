@@ -50,6 +50,8 @@ const useQueryExecute = () => {
         (dataset) => item.meta.dataField.datasetId == dataset.datasetId
     );
 
+    if (!orgDataset) return false;
+
     switch (orgDataset.datasetType) {
       case 'CUBE':
         param.dataset.dsId = orgDataset.dsId;

@@ -15,6 +15,10 @@ import _ from 'lodash';
 import DetailOptionForm
   from '../atomic/molecules/ParameterModalForms/DetailOptionForm';
 import ParamUtils from '../utils/ParamUtils';
+import {
+  selectCurrentDatasets
+} from 'redux/selector/DatasetSelector';
+import store from 'redux/modules';
 
 const theme = getTheme();
 
@@ -57,6 +61,7 @@ const HeightAutoModalPanel = styled.div`
 `;
 
 const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
+  const datasets = selectCurrentDatasets(store.getState());
   const [paramInfo, setParamInfo] = useState(parameterInfo);
   const [selectedParam, setSelectedParam] = useReducer(
       (prev, next) => {
@@ -110,6 +115,21 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
     setSelectedParam({[e.dataField]: e.value});
   };
 
+  const deleteParameter = {
+    text: '삭제',
+    onClick: () => {
+      const tempParam = paramInfo.filter((param) => {
+        const p = selectedParam.name == param.name;
+        return p ? false : true;
+      });
+      setSelectedParam(false);
+      setParamInfo(tempParam);
+    }
+  };
+
+  const paramterButtons =
+      datasets[0].datasetType == 'CUBE' ? [deleteParameter] : [];
+
   return (
     <Modal
       onSubmit={() => {
@@ -132,6 +152,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
       <RowWrapper>
         <ModalPanel
           title={localizedString.parameterList}
+          headerButtons={paramterButtons}
           minHeight={'100%'}
           padding={PADDING}
           width={PARAM_LIST_WIDTH}
