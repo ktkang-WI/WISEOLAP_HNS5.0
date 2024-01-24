@@ -21,26 +21,23 @@ const ListFilter = ({
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
-    const temp = _.cloneDeep(keys);
-    let tempText = '';
+    const keySet = new Set(keys);
+    const captionArr = [];
 
     for (const item of value.listItems) {
-      const index = temp.indexOf(item.name);
-      if (index >= 0) {
-        tempText += item.caption + ', ';
-        temp.splice(index, 1);
+      if (keySet.has(item.name)) {
+        captionArr.push(item.caption);
+        keySet.delete(item.name);
       }
-      if (temp.length == 0) {
+      if (keySet.size == 0) {
         break;
       }
     }
-    if (tempText.length > 0) {
-      tempText = tempText.substring(0, tempText.length - 2);
-    } else {
-      return allText;
+    if (captionArr.length > 0) {
+      return captionArr.join(', ');
     }
 
-    return tempText;
+    return allText;
   };
 
   useEffect(() => {
@@ -96,6 +93,7 @@ const ListFilter = ({
     };
 
     const cancel = () => {
+      listRef.current.instance.option('selectedItemKeys', selectionKeys);
       popOverRef.current.instance.hide();
     };
 
