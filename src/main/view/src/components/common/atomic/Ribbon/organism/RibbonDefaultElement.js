@@ -18,7 +18,8 @@ import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
 import seriesType from 'assets/image/icon/button/series_type.png';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
 import querySearch from 'assets/image/icon/button/query_search.png';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReport, selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
@@ -39,12 +40,13 @@ const RibbonDefaultElement = () => {
   const {openedPopover} = usePopover();
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const {executeItems, excuteSpread} = useQueryExecute();
-  const {openModal, confirm} = useModal();
+  const {executeItems, executeSpread} = useQueryExecute();
+  const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+  const currentReport = useSelector(selectCurrentReport);
 
   return {
     'NewReport': {
@@ -109,11 +111,13 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
+        const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
-        const designerMode = selectCurrentDesignerMode(store.getState());
+        dataSource.reportId = selectedReportId;
+
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(selectedReportId, designerMode);
+            removeReport(dataSource);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);
@@ -307,7 +311,7 @@ const RibbonDefaultElement = () => {
         if (reportType !== DesignerMode['SPREAD_SHEET']) {
           executeItems();
         } else {
-          excuteSpread();
+          executeSpread();
         }
       }
     }

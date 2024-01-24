@@ -9,7 +9,7 @@ import models from 'models';
 
 const SaveDefaultElement = () => {
   const {openModal, alert} = useModal();
-  const {saveReport, generateParameter} = useReportSave();
+  const {patchReport, generateParameter} = useReportSave();
   const currentReport = useSelector(selectCurrentReport);
 
   return {
@@ -24,12 +24,21 @@ const SaveDefaultElement = () => {
           } else {
             dataSource.reportId = currentReport.reportId;
             const param = generateParameter(dataSource);
-            models.Report.addReport(param).then((res) => {
+            models.Report.updateReport(param).then((res) => {
+              const data = res.data;
+              const msg = data.msg;
+              const result = data.result;
+
               if (res.status != 200) {
-                alert('보고서 저장에 실패했습니다. 관리자에게 문의하세요.');
+                alert(localizedString.faildSaveReportMsg);
                 return;
               }
-              saveReport(res);
+
+              alert(localizedString[msg]);
+
+              if (result) {
+                patchReport(data);
+              }
             });
           };
         }

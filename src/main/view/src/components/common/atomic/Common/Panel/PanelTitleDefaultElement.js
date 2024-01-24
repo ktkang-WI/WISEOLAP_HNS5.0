@@ -47,8 +47,9 @@ const PanelTitleDefaultElement = () => {
         }
 
         if (dataset.datasetType == DatasetType.DS_SQL) {
-          const dataSource = await models.
+          const dataSourceRes = await models.
               DataSource.getByDsId(dataset.dataSrcId);
+          const dataSource = dataSourceRes.data;
 
           openModal(QueryDataSourceDesignerModal,
               {selectedDataSource: dataSource, orgDataset: dataset}

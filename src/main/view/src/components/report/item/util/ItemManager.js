@@ -1,4 +1,6 @@
 import ItemType from './ItemType';
+import {DataFieldType} from './dataFieldType';
+import {dataFieldSortByItem} from './martUtilityFactory';
 
 const utility = {};
 
@@ -19,10 +21,10 @@ const generateMeta = (item) => {
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
- * @param {*} data 조회된 데이터
+ * @param {*} rootItem rootItem
  */
-const generateItem = (item, data) => {
-  utility[item.type].generateItem(item, data);
+const generateItem = (item, rootItem) => {
+  utility[item.type].generateItem(item, rootItem);
 };
 
 /**
@@ -32,6 +34,25 @@ const generateItem = (item, data) => {
  */
 const generateParameter = (item, param) => {
   utility[item.type].generateParameter(item, param);
+};
+
+
+const generateDataFieldOption = (item) => {
+  const dataFieldOptions = {};
+  const dataFieldOptionChild =utility[item.type].getDataFieldOptionChild();
+
+  const makeDataFieldOptionChild = (type) =>
+    ({[type]: dataFieldOptionChild[type]});
+
+  Object.keys(dataFieldOptionChild).forEach((type) =>
+    Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
+
+  // 정렬 기준 항목
+  Object.assign(dataFieldOptions, {
+    [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
+  });
+
+  return dataFieldOptions;
 };
 
 /**
@@ -146,6 +167,7 @@ export default {
   generateMeta,
   generateItem,
   generateParameter,
+  generateDataFieldOption,
   generateAdHocParameter,
   getRibbonItems,
   getAttributeItems,

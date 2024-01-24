@@ -4,6 +4,12 @@ const DesignerMode = {
   SPREAD_SHEET: 'Excel'
 };
 
+const ConvertDesignerMode = {
+  DASH_ANY: 'DashAny',
+  AD_HOC: 'AdHoc',
+  EXCEL: 'Excel'
+};
+
 const RunMode = {
   DESIGNER: 'designer',
   VIEWER: 'viewer'
@@ -11,5 +17,6 @@ const RunMode = {
 
 export {
   DesignerMode,
+  ConvertDesignerMode,
   RunMode
 };
