@@ -31,14 +31,7 @@ const reducers = {
     return cloneState;
   },
   changeReport(state, actions) {
-    const prevId = actions.payload.reportId.prevId;
-    const newId = actions.payload.reportId.newId;
-
-    if (prevId != newId) {
-      const report = state.report;
-      state.reports.filter((report) => report.reportId !== prevId);
-      state.reports.push(report);
-    }
+    state = actions.payload;
   },
   /*
    * 보고서 추가
@@ -59,11 +52,12 @@ const reducers = {
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
    */
   updateReport(state, actions) {
-    const updateId = actions.payload.reportId;
+    const report = actions.payload;
+    const updateId = report.reports[0].reportId;
 
     state.selectedReportId = updateId;
-    state.reports.find((report) => report.reportId === updateId)
-        .options = actions.payload.options;
+    state.reports.find((report) => report.reportId == updateId)
+        .options = report.reports[0].options;
   },
   /*
    * 보고서 삭제

@@ -13,6 +13,7 @@ import models from 'models';
 import useModal from 'hooks/useModal';
 import useSpread from 'hooks/useSpread';
 import useFile from 'hooks/useFile';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -38,7 +39,7 @@ const ReportSaveModal = ({...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
-  const {changeReportId, generateParameter} = useReportSave();
+  const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
   const {createReportBlob} = useSpread();
   const {fileUpload} = useFile();
@@ -70,7 +71,7 @@ const ReportSaveModal = ({...props}) => {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
-        if (res.report.reportType === DesignerMode['SPREAD_SHEET']) {
+        if (res.data.report.reportType === DesignerMode['SPREAD_SHEET']) {
           createReportBlob().then((bolb) => fileUpload(
               bolb, {fileName: response.report.reportId + '.xlsx'}));
         }
@@ -82,7 +83,7 @@ const ReportSaveModal = ({...props}) => {
         alert(localizedString[msg]);
 
         if (result) {
-          changeReportId(data);
+          addReport(data);
           isOk = true;
         } else {
           return;

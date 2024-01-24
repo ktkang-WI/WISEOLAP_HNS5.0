@@ -144,16 +144,22 @@ public class ReportService {
         Map<String, Object> report = new HashMap<String, Object>();
     	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
 
-    	reports.add(report);
-
     	Map<String, Object> options = new HashMap<String, Object>();
         options.put("order", entity.getReportOrdinal());
     	options.put("reportNm", entity.getReportNm());
+    	options.put("fldId", entity.getFldId());
+    	options.put("fldType", entity.getFldType());
+    	options.put("reportType", entity.getReportType());
+    	options.put("reportTag", entity.getReportTag());
     	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportSubTitle", entity.getReportSubTitle());
     	options.put("reportPath", null);
-
-    	report.put("reportId", reportId);
+    	
+    	report.put("reportId", Integer.parseInt(reportId));
     	report.put("options", options);
+    	
+    	reports.add(report);
+    	
     	returnMap.put("reports", reports);
 
         return returnMap;

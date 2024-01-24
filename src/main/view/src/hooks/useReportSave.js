@@ -124,7 +124,7 @@ const useReportSave = () => {
    * 보고서 저장 (새로운 보고서를 추가 합니다.)
    * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
    */
-  const changeReportId = (response) => {
+  const addReport = (response) => {
     const reportId = {
       prevId: currentReportId,
       newId: response.report.reportId
@@ -132,15 +132,11 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.changeReport({
-      reportId: reportId,
-      report: report.reports[0]
-    }));
+    dispatch(reportActions.insertReport(report.reports[0]));
     dispatch(itemActions.changeItemReportId(reportId));
     dispatch(layoutActions.changeLayoutReportId(reportId));
     dispatch(datasetActions.changeDatasetReportId(reportId));
     dispatch(parameterActions.changeParameterReportId(reportId));
-    dispatch(reportActions.updateSelectedReportId({reportId: reportId.newId}));
     dispatch(spreadActions.changeSpreadReportId(reportId));
   };
 
@@ -271,7 +267,7 @@ const useReportSave = () => {
 
   return {
     generateParameter,
-    changeReportId,
+    addReport,
     removeReport,
     patchReport,
     reload,

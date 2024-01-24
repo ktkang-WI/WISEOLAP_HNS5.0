@@ -236,19 +236,19 @@
 	<update id = "updateReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
 		UPDATE REPORT_MSTR
 		SET
-		REPORT_NM = #{reportNm},
-		REPORT_SUB_TITLE = #{reportSubTitle},
-		FLD_ID = #{fldId},
-		FLD_TYPE = #{fldType},
-		REPORT_ORDINAL = #{reportOrdinal},
-		REPORT_TYPE = #{reportType},
-		REPORT_DESC = #{reportDesc},
-		DATASET_XML = #{datasetXml},
-		PARAM_XML = #{paramXml},
-		REG_USER_NO = #{regUserNo},
-		REPORT_XML = #{reportXml},
-		CHART_XML = #{chartXml},
-		LAYOUT_XML = #{layoutXml}
+			REPORT_NM = #{reportNm},
+			REPORT_SUB_TITLE = #{reportSubTitle},
+			FLD_ID = #{fldId},
+			FLD_TYPE = #{fldType},
+			REPORT_ORDINAL = #{reportOrdinal},
+			REPORT_TYPE = #{reportType},
+			REPORT_DESC = #{reportDesc},
+			DATASET_XML = #{datasetXml},
+			PARAM_XML = #{paramXml},
+			REG_USER_NO = #{regUserNo},
+			REPORT_XML = #{reportXml},
+			CHART_XML = #{chartXml},
+			LAYOUT_XML = #{layoutXml}
 		WHERE REPORT_ID = #{reportId}
 	</update>
 	
