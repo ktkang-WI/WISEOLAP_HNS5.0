@@ -2,89 +2,33 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
-import {selectCurrentReport,
-  selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectBindingInfos, selectCurrentDesigner, selectExcelIO, selectSheets}
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import useReportSave from 'hooks/useReportSave';
+import saveDefaultElement from
+  'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
 import SpreadSlice from 'redux/modules/SpreadSlice';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
-import {useSelector} from 'react-redux';
+import useSpread from 'hooks/useSpread';
 
 const SpreadDefaultElement = () => {
   const {setSpread} = SpreadSlice.actions;
-  const sheets = useSelector(selectSheets);
-  const designer = useSelector(selectCurrentDesigner);
-  const bindingInfos = useSelector(selectBindingInfos);
-  const reportId = useSelector(selectCurrentReportId);
 
   const {openModal, confirm, alert} = useModal();
   const dispatch = useDispatch();
-
-
-  const createDesigner = ({reportId, bindingInfos}) => {
-    const config = setRibbonSetting();
-    const newDesigner =
-    new sheets.Designer
-        .Designer(document.getElementById('spreadWrapper'),
-            config);
-    dispatch(setSpread({
-      reportId: reportId,
-      bindingInfos: bindingInfos,
-      designer: newDesigner
-    }));
-    sheetNameChangedListener(newDesigner);
-    sheetChangedListener(newDesigner);
-  };
-
-  const sheetChangedListener = (designer) => {
-    designer.getWorkbook().bind(sheets.Events.SheetChanged, changSheet);
-  };
-
-  const changSheet = (e, args) => {
-    if (args.propertyName === 'deleteSheet') {
-      deletedSheet(e, args);
-    }
-  };
-
-  const deletedSheet = (e, args) => {
-    const datasetNms = Object.keys(bindingInfos);
-    if (!_.isEmpty(bindingInfos)) return null;
-    datasetNms.map((datasetId) => {
-      if (bindingInfos[datasetId].sheetNm === args.sheetName) {
-        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
-        newBindingInfo.sheetNm = undefined;
-        newBindingInfo.useBind = false;
-        dispatch(setBindingInfo({
-          reportId: reportId,
-          datasetId: datasetId,
-          bindingInfo: newBindingInfo
-        }));
-      }
-    });
-  };
-
-  const sheetNameChangedListener = (designer) => {
-    designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
-        renameSheet);
-  };
-
-  const renameSheet = (e, args) => {
-    Object.keys(bindingInfos).forEach((datasetId) => {
-      if (bindingInfos[datasetId].sheetNm === args.oldValue) {
-        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
-        newBindingInfo.sheetNm = args.newValue;
-        dispatch(setBindingInfo({
-          reportId: reportId,
-          datasetId: datasetId,
-          bindingInfo: newBindingInfo
-        }));
-      }
-    });
-  };
+  const {reload} = useReportSave();
+  const {save} = saveDefaultElement();
+  const ribbonElement = ribbonDefaultElement();
+  const {sheetNameChangedListener,
+    sheetChangedListener} = useSpread();
 
   const setRibbonSetting = () => {
+    const sheets = selectSheets(store.getState());
     const config = sheets.Designer.DefaultConfig;
     // csutomtab 메뉴 생성
     if (config.commandMap) return config;
@@ -105,12 +49,14 @@ const SpreadDefaultElement = () => {
   };
 
   const addSpreadTemplate = (templateName, templateMethod) => {
+    const sheets = selectSheets(store.getState());
     sheets.Designer.registerTemplate(templateName, templateMethod);
   };
 
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
     const newReport = (context) => {
+      const sheets = selectSheets(store.getState());
       const executeNew = (context) => {
         const config = setRibbonSetting();
         reload();
@@ -133,6 +79,7 @@ const SpreadDefaultElement = () => {
     };
 
     const openReportLocal =(context) => {
+      const sheets = selectSheets(store.getState());
       sheets.Designer.getCommand('fileMenuPanel')
           .execute(context, 'button_import_excel', null);
     };
@@ -142,16 +89,21 @@ const SpreadDefaultElement = () => {
     };
 
     const saveReport = () => {
+      save[0].onClick();
     };
 
     const saveAsReport = () => {
+      save[1].onClick();
     };
 
     const deleteReport = () => {
+      ribbonElement['DeleteReport'].onClick();
     };
 
     const downloadReportXLSX = () => {
       let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+      const sheets = selectSheets(store.getState());
+      const designer = selectCurrentDesigner(store.getState());
       const excelIO = selectExcelIO(store.getState());
 
       reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
@@ -200,6 +152,7 @@ const SpreadDefaultElement = () => {
     };
 
     const print = () => {
+      const designer = selectCurrentDesigner(store.getState());
       const workbook = designer.getWorkbook();
       const activeSheet = workbook.getActiveSheet();
       activeSheet.printInfo().margin(
@@ -429,10 +382,7 @@ const SpreadDefaultElement = () => {
   };
 
   return {
-    setRibbonSetting,
-    createDesigner,
-    sheetNameChangedListener,
-    sheetChangedListener
+    setRibbonSetting
   };
 };
 

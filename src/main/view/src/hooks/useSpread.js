@@ -1,15 +1,19 @@
-import {useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
+import SpreadSlice from 'redux/modules/SpreadSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos, selectCurrentDesigner,
   selectExcelIO,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 const useSpread = () => {
-  const sheets = useSelector(selectSheets);
-  const designer = useSelector(selectCurrentDesigner);
-  const bindingInfos = useSelector(selectBindingInfos);
+  const sheets = selectSheets(store.getState());
+  const dispatch = useDispatch();
+  const {setBindingInfo} = SpreadSlice.actions;
 
   const bindData = ({dataset, datas}) => {
+    const designer = selectCurrentDesigner(store.getState());
+    const bindingInfos = selectBindingInfos((store.getState()));
     const bindingInfo = bindingInfos[dataset.datasetId];
     // foreach로 bindingInfos에서 datasetId로 찾아서 진행
     // 추후 메게변수로 가져와야함.
@@ -86,13 +90,67 @@ const useSpread = () => {
     return {columns: columns, header: header};
   };
 
+  const sheetChangedListener = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    designer.getWorkbook().bind(sheets.Events.SheetChanged, changSheet);
+  };
+
+  const changSheet = (e, args) => {
+    if (args.propertyName === 'deleteSheet') {
+      deletedSheet(e, args);
+    }
+  };
+
+  const deletedSheet = (e, args) => {
+    const bindingInfos = selectBindingInfos(store.getState());
+    const reportId = selectCurrentReportId(store.getState());
+    const datasetNms = Object.keys(bindingInfos);
+    if (!_.isEmpty(bindingInfos)) return null;
+    datasetNms.map((datasetId) => {
+      if (bindingInfos[datasetId].sheetNm === args.sheetName) {
+        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
+        newBindingInfo.sheetNm = undefined;
+        newBindingInfo.useBind = false;
+        dispatch(setBindingInfo({
+          reportId: reportId,
+          datasetId: datasetId,
+          bindingInfo: newBindingInfo
+        }));
+      }
+    });
+  };
+
+  const sheetNameChangedListener = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
+        renameSheet);
+  };
+
+  const renameSheet = (e, args) => {
+    const reportId = selectCurrentReportId(store.getState());
+    const bindingInfos = selectBindingInfos(store.getState());
+    Object.keys(bindingInfos).forEach((datasetId) => {
+      if (bindingInfos[datasetId].sheetNm === args.oldValue) {
+        const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
+        newBindingInfo.sheetNm = args.newValue;
+        dispatch(setBindingInfo({
+          reportId: reportId,
+          datasetId: datasetId,
+          bindingInfo: newBindingInfo
+        }));
+      }
+    });
+  };
+
   const dataSourceMaker = (datas) => {
+    const sheet = selectSheets(store.getState());
+
     const recodes = datas.map((data) => {
       return new Record(data);
     });
     const invoice = new Invoice(recodes);
     return {invoice: invoice,
-      dataSource: new sheets.Bindings.CellBindingSource(invoice)};
+      dataSource: new sheet.Bindings.CellBindingSource(invoice)};
   };
 
   const Record = function(_data) {
@@ -163,6 +221,7 @@ const useSpread = () => {
   };
 
   const createBorderStyle = (useBorder) => {
+    const sheets = selectSheets(store.getState());
     const tableStyle = new sheets.Tables.TableTheme();
     const thinBorder = undefined;
     if (useBorder) {
@@ -176,6 +235,7 @@ const useSpread = () => {
 
   const createReportBlob = async () => {
     const excelIO = selectExcelIO(store.getState());
+    const designer = selectCurrentDesigner(store.getState());
     const json = designer.getWorkbook().toJSON({includeBindingSource: false});
     const blob = await new Promise((resolve, reject) => {
       excelIO.save(JSON.stringify(json), resolve, reject);
@@ -183,11 +243,30 @@ const useSpread = () => {
     return blob;
   };
 
+  const createDesigner = () => {
+    const sheets = selectSheets(store.getState());
+    const config = setRibbonSetting();
+    const designer =
+    new sheets.Designer
+        .Designer(document.getElementById('spreadWrapper'),
+            config);
+    dispatch(spreadActions.setSpread({
+      reportId: newReportId,
+      bindingInfos: data.spread,
+      designer: designer
+    }));
+    sheetNameChangedListener();
+    sheetChangedListener();
+  };
+
   return {
     bindData,
+    sheetChangedListener,
+    sheetNameChangedListener,
     positionConverterAsObject,
     positionConverterAsString,
-    createReportBlob
+    createReportBlob,
+    createDesigner
   };
 };
 

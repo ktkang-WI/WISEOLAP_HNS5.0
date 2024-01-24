@@ -57,9 +57,6 @@ const defaultBindInfo = {
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
-  // SpreadDefaultElement - createDesigner 메소드에서 생성
-  // SpreadDefaultElement에서 생성하는 Hook을 만들 경우 Hook이 순환참조되어 임시 state로 저장
-  config: undefined,
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
     designer: undefined,
