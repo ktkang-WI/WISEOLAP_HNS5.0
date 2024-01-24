@@ -66,7 +66,7 @@ const useReportSave = () => {
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
-    if (reportType === DesignerMode['SPREAD_SHEET']) {
+    if (reportType === DesignerMode['EXCEL']) {
       param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
     } else {
       param.reportXml = JSON.stringify({
@@ -185,7 +185,7 @@ const useReportSave = () => {
       dispatch(parameterActions.deleteParameterForDesigner(reportId));
       dispatch(spreadActions.deleteSpread(reportId));
       reload(reportType);
-      if (reportType === DesignerMode['SPREAD_SHEET']) {
+      if (reportType === DesignerMode['EXCEL']) {
         fileDelete({fileName: reportId + '.xlsx'});
       }
     });
@@ -239,7 +239,7 @@ const useReportSave = () => {
       reportId: reportId,
       informations: data.informations
     }));
-    if (designerMode === DesignerMode.SPREAD_SHEET) {
+    if (designerMode === DesignerMode['EXCEL']) {
       const sheets = selectSheets(store.getState());
       const config = setRibbonSetting();
       const designer =
@@ -258,7 +258,7 @@ const useReportSave = () => {
   };
 
   const querySearch = () => {
-    if (designerMode !== DesignerMode['SPREAD_SHEET']) {
+    if (designerMode !== DesignerMode['EXCEL']) {
       executeItems();
     } else {
       executeSpread();

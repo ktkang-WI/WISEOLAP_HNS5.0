@@ -119,15 +119,15 @@ const reducers = {
     const mode = actions.payload;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return dashboardInitialState;
+      state = dashboardInitialState;
     }
 
     if (mode === DesignerMode['AD_HOC']) {
-      return adHocInitialState;
+      state = adHocInitialState;
     }
 
     if (mode === DesignerMode['EXCEL']) {
-      return excelInitialState;
+      state = excelInitialState;
     }
   },
   setLayout(state, actions) {

@@ -71,7 +71,7 @@ const ReportSaveModal = ({...props}) => {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
-        if (res.data.report.reportType === DesignerMode['SPREAD_SHEET']) {
+        if (res.data.report.reportType === DesignerMode['EXCEL']) {
           createReportBlob().then((bolb) => fileUpload(
               bolb, {fileName: response.report.reportId + '.xlsx'}));
         }
