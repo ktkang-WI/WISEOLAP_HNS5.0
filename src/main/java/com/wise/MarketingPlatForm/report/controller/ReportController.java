@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.report.controller;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,14 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 @Tag(name = "report", description = "보고서와 관련된 요청을 처리합니다.")
 @RestController
@@ -318,4 +327,236 @@ public class ReportController {
 
         return reportService.deleteReport(Integer.parseInt(reportId));
 	}
+    
+    private int processColumns(XSSFSheet sheet, List<Map<String, Object>> columns, int startCol, int startRow) {
+        int currentCol = startCol;
+        XSSFRow headerRow = sheet.getRow(startRow);
+        if (headerRow == null) {
+            headerRow = sheet.createRow(startRow);
+        }
+        headerRow.createCell(currentCol).setCellValue("GRAND_TOTAL");
+
+        int maxDepth = 0;
+        for (Map<String, Object> column : columns) {
+            int depth = getDepth(column, 0);
+            maxDepth = Math.max(maxDepth, depth);
+        }
+
+        // Merge "GRAND_TOTAL" vertically
+        sheet.addMergedRegion(new CellRangeAddress(startRow, startRow + maxDepth, currentCol, currentCol));
+        currentCol++;
+
+        for (Map<String, Object> column : columns) {
+            String value = (String) column.get("value");
+            List<Map<String, Object>> children = (List<Map<String, Object>>) column.get("children");
+            if (!children.isEmpty() && children.size() > 1) {
+                headerRow.createCell(currentCol).setCellValue(value + " TOTAL");
+                sheet.addMergedRegion(new CellRangeAddress(startRow, startRow + maxDepth, currentCol, currentCol));
+                currentCol++;
+            }
+            headerRow.createCell(currentCol).setCellValue(value);
+            if (children.size() > 1) {
+                sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, currentCol, currentCol + children.size() - 1));
+            }
+            if (!children.isEmpty()) {
+                fillChildren(sheet, children, startRow + 1, currentCol);
+            }
+            currentCol += children.size() > 0 ? children.size() : 1;
+        }
+        return currentCol;
+    }
+
+    private void fillChildren(XSSFSheet sheet, List<Map<String, Object>> children, int row, int col) {
+        XSSFRow childrenRow = sheet.getRow(row);
+        if (childrenRow == null) {
+            childrenRow = sheet.createRow(row);
+        }
+        for (int i = 0; i < children.size(); i++) {
+            childrenRow.createCell(col + i).setCellValue(children.get(i).get("value").toString());
+            List<Map<String, Object>> subChildren = (List<Map<String, Object>>) children.get(i).get("children");
+            if (subChildren != null && !subChildren.isEmpty()) {
+                fillChildren(sheet, subChildren, row + 1, col + i);
+            }
+        }
+    }
+    private int getDepth(Map<String, Object> node, int currentDepth) {
+        List<Map<String, Object>> children = (List<Map<String, Object>>) node.get("children");
+        if (children.isEmpty()) {
+            return currentDepth;
+        }
+        int maxDepth = currentDepth;
+        for (Map<String, Object> child : children) {
+            int depth = getDepth(child, currentDepth + 1);
+            maxDepth = Math.max(maxDepth, depth);
+        }
+        return maxDepth;
+    }
+    
+    private int getColumnDepth(List<Map<String, Object>> columns) {
+        int maxDepth = 0;
+        for (Map<String, Object> column : columns) {
+            int depth = getDepth(column, 0);
+            maxDepth = Math.max(maxDepth, depth);
+        }
+        return maxDepth;
+    }
+
+    private int processRows(XSSFSheet sheet, List<Map<String, Object>> rows, List<Map<String, Object>> columns, int startRow, int startCol) {
+        int currentRow = startRow;
+        int maxDepth = 0;
+        for (Map<String, Object> row : rows) {
+            int depth = getDepth(row, 0);
+            maxDepth = Math.max(maxDepth, depth);
+        }
+        int maxColumnDepth = getColumnDepth(columns);
+        // Create a new cell for "grand_total" value and merge horizontally
+        XSSFRow emptyRow = sheet.createRow(currentRow);
+        XSSFCell emptyCell = emptyRow.createCell(startCol);
+        emptyCell.setCellValue("");
+        sheet.addMergedRegion(new CellRangeAddress(currentRow, currentRow + maxColumnDepth, startCol, startCol + maxDepth));       
+        currentRow += maxColumnDepth;
+        currentRow++;
+        XSSFRow grandTotalRow = sheet.createRow(currentRow);
+        XSSFCell grandTotalCell = grandTotalRow.createCell(startCol);
+        grandTotalCell.setCellValue("GRAND_TOTAL");
+        sheet.addMergedRegion(new CellRangeAddress(currentRow, currentRow, startCol, startCol + maxDepth));
+        currentRow++;
+
+        for (Map<String, Object> row : rows) {
+            String rowValue = (String) row.get("value");
+
+            // Create a new cell for rows.value + "total" and merge horizontally
+            XSSFRow totalRow = sheet.createRow(currentRow);
+            XSSFCell totalCell = totalRow.createCell(startCol);
+            totalCell.setCellValue(rowValue + " TOTAL");
+            sheet.addMergedRegion(new CellRangeAddress(currentRow, currentRow, startCol, startCol + maxDepth));
+            // Create a new cell for value
+            XSSFRow valueRow = sheet.createRow(currentRow + 1);
+            XSSFCell valueCell = valueRow.createCell(startCol);
+            valueCell.setCellValue(rowValue);
+
+            List<Map<String, Object>> children = (List<Map<String, Object>>) row.get("children");
+
+            // Check if there are children and they have values
+            if (children != null && !children.isEmpty()) {
+                int childRow = currentRow + 1; // Start from the row below valueRow
+                int childCol = startCol + 1; // Start from the cell to the right
+
+                for (Map<String, Object> child : children) {
+                    String childValue = (String) child.get("value");
+
+                    // Create a new cell for the child value
+                    XSSFRow childDataRow = sheet.getRow(childRow);
+                    if (childDataRow == null) {
+                        childDataRow = sheet.createRow(childRow);
+                    }
+                    XSSFCell childCell = childDataRow.createCell(childCol);
+                    childCell.setCellValue(childValue);
+
+                    // Move to the next row
+                    childRow++;
+                }
+
+                // Merge cells vertically for the number of children
+                sheet.addMergedRegion(new CellRangeAddress(currentRow + 1, currentRow + children.size(), startCol, startCol));
+
+                // Update currentRow to the next available row after children
+                currentRow = childRow;
+            } else {
+                // If no children, move to the next available row
+                currentRow += 2; // 2 because we have added rows.value + "total" and value
+            }
+        }
+
+        return currentRow;
+    }
+    
+    private int getRowDepth(List<Map<String, Object>> rows) {
+        int maxDepth = 0;
+        for (Map<String, Object> row : rows) {
+            int depth = getDepth(row, 0);
+            maxDepth = Math.max(maxDepth, depth);
+        }
+        return maxDepth;
+    }
+
+    @PostMapping(value = "/download-report-all")
+    public void downloadReportAll(@RequestBody Map<String, Object> requestData, HttpServletResponse response) {
+        String reportName = ((Map<String, String>) requestData.get("dataSource")).get("reportNm");
+        String reportType = ((Map<String, String>) requestData.get("dataSource")).get("reportType");
+        List<Map<String, Object>> items = (List<Map<String, Object>>) requestData.get("items");
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        for (Map<String, Object> item : items) {
+            String itemType = (String) item.get("type");
+            Map<String, Object> meta = (Map<String, Object>) item.get("meta");
+            String sheetName = (String) meta.get("name");
+            
+            if ("pivot".equals(itemType) || "grid".equals(itemType)) {
+                XSSFSheet sheet = workbook.createSheet(sheetName);
+
+                Map<String, Object> mart = (Map<String, Object>) item.get("mart");              
+                Map<String, Object> dataSourceConfig = (Map<String, Object>) mart.get("dataSourceConfig");
+                Map<String, Object> dataSourceConfigData = (Map<String, Object>) dataSourceConfig.get("_data");
+                List<Map<String, Object>> rows = (List<Map<String, Object>>) dataSourceConfigData.get("rows");
+                List<Map<String, Object>> columns = (List<Map<String, Object>>) dataSourceConfigData.get("columns");
+                List<Map<String, Object>> values = (List<Map<String, Object>>) dataSourceConfigData.get("values");
+                
+                int maxRowDepth = getRowDepth(rows);
+                 
+                processRows(sheet, rows, columns, 1, 0);
+                //processColumns(sheet, columns, maxRowDepth +1, 1);
+
+
+            } else if ("chart".equals(itemType)) {
+                // Handle chart type, e.g., convert chart data to an image and insert it into a sheet
+            }
+        }
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + "new_Report" + ".xlsx\"");
+        // Write the workbook to the response output stream
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            // Properly close the workbook
+            workbook.close();
+        } catch (Exception e) {
+            // Handle exceptions appropriately
+            e.printStackTrace();
+        }
+    }
+//  sheet.createRow(0).createCell(1).setCellValue("Grand_Total");
+//  sheet.createRow(1).createCell(0).setCellValue("Grand_Total");
+//  int rowIndex = 2; // Start from the third row in Excel (row index 2)
+//  for (Map<String, Object> row : rows) {
+//      XSSFRow excelRow = sheet.createRow(rowIndex++);
+//      // Assume 'index' and 'value' are keys in your row data map
+//      int index = (Integer) row.get("index");
+//      String value = (String) row.get("value");
+//      excelRow.createCell(0).setCellValue(value);
+//  }
+//  int columnIndex = 2; // Start from the third column in Excel (column index 2)
+//  XSSFRow headerRow = sheet.getRow(0); // Assuming the first row is your header
+//  for (Map<String, Object> column : columns) {
+//      // Assume 'index' and 'value' are keys in your column data map
+//      int index = (Integer) column.get("index");
+//      String value = (String) column.get("value");
+//      headerRow.createCell(columnIndex++).setCellValue(value);
+//  }    
+//  for (int r = 0; r < values.size(); r++) {
+//  List<List<Object>> valueRowList = (List<List<Object>>) values.get(r); // Cast each element to a List of Lists
+//  XSSFRow excelRow = sheet.getRow(r + 1); // Starting from row 2 in Excel (index 1)
+//  if (excelRow == null) {
+//      excelRow = sheet.createRow(r + 1); // Create a row if it doesn't exist
+//  }
+//
+//  int cellIndex = 1; // Starting from column B in Excel (index 1)
+//  for (List<Object> cellValueList : valueRowList) {
+//      // Assuming each sublist has only one element
+//      if (!cellValueList.isEmpty()) {
+//          Object cellValue = cellValueList.get(0); // Get the first element of the sublist
+//          excelRow.createCell(cellIndex++).setCellValue(cellValue.toString());
+//      }
+//  }
+//}
 }
+    
+
