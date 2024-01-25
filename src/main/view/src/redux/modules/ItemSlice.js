@@ -47,13 +47,15 @@ const initialState = {
 const getInitialState = () => {
   const mode = ConfigSlice.getInitialState().designerMode;
 
-  if (mode === DesignerMode['DASHBOARD'] || mode === DesignerMode['EXCEL']) {
+  if (mode === DesignerMode['DASHBOARD']) {
     return dashboardInitialState;
   }
 
   if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
   }
+
+  return dashboardInitialState;
 };
 
 const reducers = {
