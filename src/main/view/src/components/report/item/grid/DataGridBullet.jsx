@@ -1,12 +1,6 @@
 import {Bullet, Tooltip} from 'devextreme-react/bullet';
 
-const DataGridBullet = (
-    {component, value, column}) => {
-  const dataSource = component.option('dataSource');
-
-  const endScaleValue =
-  Math.max.apply(null, dataSource.map((data) => data[column.name]));
-
+const DataGridBullet = ({endScaleValue, value, column}) => {
   const customizeTooltip = () => {
     return {
       text: column.name + ': ' + value
