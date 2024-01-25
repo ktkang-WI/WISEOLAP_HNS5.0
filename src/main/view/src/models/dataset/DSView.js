@@ -1,12 +1,6 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/dataset';
-
+const path = '/dataset';
 
 export const getByUserId = (userId) => {
   return axios.post(path + '/ds-views', {

@@ -209,7 +209,7 @@ const generateItem = (item, param) => {
 
               const result = await getPivotData(parameter);
 
-              matrixInfo = result;
+              matrixInfo = result.data;
 
               const tempResult = makeDataByMatrix();
               resolve(tempResult);

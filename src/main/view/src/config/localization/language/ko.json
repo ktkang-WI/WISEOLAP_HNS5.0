@@ -36,7 +36,7 @@
   "interactionConfiguration": "상호작용 설정",
   "crossDataSourceFiltering": "교차 데이터 소스 필터링",
   "ignoreMasterFilter": "마스터 필터 무시",
-  "targetDimension": "차원",
+  "targetDimension": "대상 차원",
   "dimensionGroup": "차원 그룹",
   "count": "카운트",
   "distinctCount": "고유 카운트",
@@ -307,6 +307,8 @@
   "precsionOption": "정도 옵션",
   "unit": "단위",
   "all": "전체",
+  "showGrid": "그리드로 보기",
+  "detailedData": "상세데이터",
   "numberFormat": "숫자 형식",
   "formatUnit": "포맷 단위",
   "digitUnit": "자리수 단위",
@@ -323,5 +325,13 @@
   "file": "파일",
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
-  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "menuChangeConfirm": "저장되지 않은 작업 내용이 손실될 수 있습니다. 이동하시겠습니까?",
+  "saveReportMsg": "보고서를 저장했습니다.",
+  "faildSaveReportMsg": "보고서 저장을 실패했습니다. \n 관리자에게 문의하세요",
+  "duplicatedSaveReportMsg": "보고서 저장을 실패했습니다. \n 중복된 보고서가 있습니다.",
+  "deleteReportMsg": "보고서를 삭제했습니다.",
+  "failedDeleteReportMsg": "보고서 삭제를 실패했습니다. \n 관리자에게 문의하세요.",
+  "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다.",
+  "requiredFieldNotExist": "의 항목이 비어있습니다."
 }

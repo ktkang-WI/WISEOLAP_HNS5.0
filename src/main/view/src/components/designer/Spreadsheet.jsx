@@ -14,7 +14,7 @@ const Spreadsheet = () => {
 
   useEffect(() => {
     dispatch(initDatasets());
-    dispatch(setDesignerMode(DesignerMode['SPREAD_SHEET']));
+    dispatch(setDesignerMode(DesignerMode['EXCEL']));
   });
 
   return (

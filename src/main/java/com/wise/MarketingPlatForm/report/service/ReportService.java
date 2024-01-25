@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -29,7 +30,9 @@ import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
@@ -38,6 +41,10 @@ import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
@@ -65,6 +72,7 @@ import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
+import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
@@ -117,9 +125,9 @@ public class ReportService {
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
         Map<String, Object> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
-        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());	
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
         	returnMap = xmlParser.getReport(dto, userId);
-        } else {	
+        } else {
         	JSONObject items = new JSONObject(entity.getChartXml());
         	JSONObject dataset = new JSONObject(entity.getDatasetXml());
         	JSONObject layout = new JSONObject(entity.getLayoutXml());
@@ -135,19 +143,25 @@ public class ReportService {
         }
         Map<String, Object> report = new HashMap<String, Object>();
     	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-    	
-    	reports.add(report);
-    	
+
     	Map<String, Object> options = new HashMap<String, Object>();
         options.put("order", entity.getReportOrdinal());
     	options.put("reportNm", entity.getReportNm());
+    	options.put("fldId", entity.getFldId());
+    	options.put("fldType", entity.getFldType());
+    	options.put("reportType", entity.getReportType());
+    	options.put("reportTag", entity.getReportTag());
     	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportSubTitle", entity.getReportSubTitle());
     	options.put("reportPath", null);
-        
-    	report.put("reportId", reportId);
+    	
+    	report.put("reportId", Integer.parseInt(reportId));
     	report.put("options", options);
+    	
+    	reports.add(report);
+    	
     	returnMap.put("reports", reports);
-        
+
         return returnMap;
     }
 
@@ -413,25 +427,118 @@ public class ReportService {
         }
     }
 
-    public ReportMstrEntity addReport(ReportMstrEntity reportMstrEntity) {
-    try {
-	        if (reportMstrEntity.getReportId() == 0) {
-	        	reportMstrEntity.setDupleYn(checkDuplicatedReport(reportMstrEntity));
-	        }
-	
-	        if ("N".equals(reportMstrEntity.getDupleYn())) {
-	        	reportDAO.addReport(reportMstrEntity);
-	        }
-	        return reportMstrEntity;
-	    } catch (Exception e) {
-	        // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
-	        e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
-	        throw new RuntimeException("Add report failed: " + e.getMessage(), e);
-    	}
+    public Map<String, Object> insertReport(ReportMstrDTO reportMstrDTO) throws SQLException{
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
+
+        String duplicationStatus = checkDuplicatedReport(reportMstrEntity);
+
+        try {
+            if ("N".equals(duplicationStatus)) {
+                result = reportDAO.insertReport(reportMstrEntity);
+
+                if (result) {
+                    reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                    map.put("msg", "saveReportMsg");
+                } else {
+                    map.put("msg", "faildSaveReportMsg");
+                }
+            } else {
+                reportMstrDTO.setDupleYn(duplicationStatus);
+                map.put("msg", "duplicatedSaveReportMsg");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+        return map;
     }
 
-    public int deleteReport(int reportId) {
-        return reportDAO.deleteReport(reportId);
+    public Map<String, Object> updateReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
+
+        try {
+            result = reportDAO.updateReport(reportMstrEntity);
+
+            if (result) {
+                reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                map.put("msg", "saveReportMsg");
+            } else {
+                map.put("msg", "faildSaveReportMsg");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+
+        return map;
+    }
+
+    public Map<String, Object> deleteReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+        int reportId = reportMstrDTO.getReportId();
+
+        try {
+            result = reportDAO.deleteReport(reportId);
+
+            if (result) {
+                map.put("report", reportMstrDTO);
+                map.put("msg", "deleteReportMsg");
+            } else {
+                map.put("msg", "failedDeleteReportMsg");
+            }
+            map.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Delete report failed: " + e.getMessage(), e);
+        }
+        return map;
     }
 
     public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
@@ -459,5 +566,45 @@ public class ReportService {
         result.put("privateFolder", privateFolderList);
 
         return result;
+    }
+
+    public MartResultDTO getDetailedData(String userId, String dsId, String cubeId,
+            String actId, List<Parameter> parameters) {
+
+        List<Dimension> dimensions = new ArrayList<>();
+        List<Measure> measures = new ArrayList<>();
+
+        List<DetailedDataItemVO> items = reportDAO.selectDetailedDataItem(cubeId, actId);
+
+        for (DetailedDataItemVO item : items) {
+            if ("measure".equals(item.getType())) {
+                measures.add(Measure.builder().uniqueName(item.getRtnItemUniNm()).build());
+            } else {
+                dimensions.add(Dimension.builder().uniqueName(item.getRtnItemUniNm()).build());
+            }
+        }
+
+        DataAggregation dataAggregation = DataAggregation.builder()
+                .dimensions(dimensions)
+                .measures(measures)
+                .parameters(parameters)
+                .dataset(new Dataset(Integer.parseInt(dsId), Integer.parseInt(cubeId), 0, "", DsType.CUBE))
+                .userId(userId)
+                .sortByItems(new ArrayList<>())
+                .itemType(ItemType.DATA_GRID)
+                .build();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(DsType.CUBE);
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(Integer.parseInt(dsId));
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggregation);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+
+        return martResultDTO;
     }
 }

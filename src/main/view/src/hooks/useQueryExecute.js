@@ -21,6 +21,7 @@ import localizedString from 'config/localization';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 
 const useQueryExecute = () => {
@@ -28,6 +29,8 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
   /**
@@ -93,13 +96,24 @@ const useQueryExecute = () => {
 
     // dataset
     const orgDataset = datasets.find(
-        (dataset) => rootItem.adHocOption.dataField.datasetId ==
-        dataset.datasetId
+        (ds) => rootItem.adHocOption.dataField.datasetId ==
+        ds.datasetId
     );
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
 
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
@@ -120,30 +134,35 @@ const useQueryExecute = () => {
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
-    const tempItem = _.cloneDeep(rootItem);
-    const chartItem = tempItem.items[0];
-    const pivotItem = tempItem.items[1];
-    const param = generateAdHocParamter(tempItem, datasets, parameters);
-    const reportId = selectCurrentReportId(store.getState());
+    try {
+      validateRequiredField(rootItem);
+      const cloneItem = _.cloneDeep(rootItem);
+      const chartItem = cloneItem.items[0];
+      const pivotItem = cloneItem.items[1];
+      const param = generateAdHocParamter(cloneItem, datasets, parameters);
+      const reportId = selectCurrentReportId(store.getState());
 
-    models.Item.getAdHocItemData(param).then((response) => {
-      if (response.status != 200) {
-        alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
-        return;
-      }
+      models.Item.getAdHocItemData(param).then((response) => {
+        if (response.status != 200) {
+          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
+          return;
+        }
 
-      chartItem.mart.init = true;
-      chartItem.mart.data = response.data[0];
+        chartItem.mart.init = true;
+        chartItem.mart.data = response.data[0];
 
-      pivotItem.mart.init = true;
-      pivotItem.mart.data = response.data[1];
+        pivotItem.mart.init = true;
+        pivotItem.mart.data = response.data[1];
 
-      ItemManager.generateItem(chartItem);
-      ItemManager.generateItem(pivotItem, tempItem);
+        ItemManager.generateItem(chartItem, cloneItem);
+        ItemManager.generateItem(pivotItem, cloneItem);
 
-      dispatch(updateItem({reportId, item: chartItem}));
-      dispatch(updateItem({reportId, item: pivotItem}));
-    });
+        dispatch(updateItem({reportId, item: chartItem}));
+        dispatch(updateItem({reportId, item: pivotItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -154,32 +173,38 @@ const useQueryExecute = () => {
    * @param {JSON} filter 아이템에 적용할 필터
    */
   const executeItem = (item, datasets, parameters, filter) => {
-    const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets, parameters, filter);
-    const reportId = selectCurrentReportId(store.getState());
+    try {
+      validateRequiredField(item);
+      const tempItem = _.cloneDeep(item);
+      let param = {};
+      param = generateParameter(tempItem, datasets, parameters, filter);
 
-    // TODO: 추후 PivotMatrix 적용할 때 해제
-    // if (item.type == ItemType.PIVOT_GRID) {
-    //   tempItem.mart.init = true;
-    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+      const reportId = selectCurrentReportId(store.getState());
 
-    //   dispatch(updateItem({reportId, item: tempItem}));
-    // } else {
+      // TODO: 추후 PivotMatrix 적용할 때 해제
+      // if (item.type == ItemType.PIVOT_GRID) {
+      //   tempItem.mart.init = true;
+      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
 
-    models.Item.getItemData(param, (response) => {
-      if (response.status != 200) {
-        return;
-      }
+      //   dispatch(updateItem({reportId, item: tempItem}));
+      // } else {
 
-      tempItem.mart.init = true;
-      tempItem.mart.data = response.data;
-      tempItem.mart.currentFilter = filter || {};
+      models.Item.getItemData(param).then((response) => {
+        if (response.status != 200) {
+          return;
+        }
 
-      ItemManager.generateItem(tempItem);
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+        tempItem.mart.currentFilter = filter || {};
 
-      dispatch(updateItem({reportId, item: tempItem}));
-    });
-    // }
+        ItemManager.generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -281,13 +306,17 @@ const useQueryExecute = () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
-    const reportType = selectCurrentDesignerMode(store.getState());
 
-    if (reportType === DesignerMode['DASHBOARD']) {
+    if (datasets.length === 0) {
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
+    };
+
+    if (designerMode === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (reportType === DesignerMode['AD_HOC']) {
+    if (designerMode === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
@@ -339,8 +368,8 @@ const useQueryExecute = () => {
         });
       }
 
-      const values = await models.Parameter.getListItems(param, linkageValues);
-
+      const res = await models.Parameter.getListItems(param, linkageValues);
+      const values = res.data;
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }
@@ -377,7 +406,8 @@ const useQueryExecute = () => {
   };
 
   const executeParameterDefaultValueQuery = async (param) => {
-    return await models.Parameter.getDefaultValue(param);
+    const res = await models.Parameter.getDefaultValue(param);
+    return res.data;
   };
 
   const executeParameters = () => {
@@ -438,7 +468,7 @@ const useQueryExecute = () => {
     });
   };
 
-  const excuteSpread = async () => {
+  const executeSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
@@ -471,7 +501,28 @@ const useQueryExecute = () => {
       }
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
-      bindData({dataset: dataset, datas: datas.rowData});
+      bindData({dataset: dataset, datas: datas.data.rowData});
+    });
+  };
+
+  const validateRequiredField = (item) => {
+    let dataFieldOption;
+    let dataField;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      dataFieldOption = item.mart.dataFieldOption;
+      dataField = item.meta.dataField;
+    } else if (designerMode === DesignerMode['AD_HOC']) {
+      dataFieldOption = item.adHocOption.dataFieldOption;
+      dataField = item.adHocOption.dataField;
+    }
+    const dataFieldOptionKeys = Object.keys(dataFieldOption);
+    dataFieldOptionKeys.forEach((key) => {
+      const isRequired = dataFieldOption[key].required;
+      const isEmpty = dataField[key].length === 0;
+      if (isRequired && isEmpty) {
+        throw new Error(`${dataFieldOption[key].label}
+         ${localizedString.requiredFieldNotExist}`);
+      }
     });
   };
 
@@ -484,7 +535,7 @@ const useQueryExecute = () => {
     clearAllFilter,
     executeParameters,
     executeLinkageFilter,
-    excuteSpread
+    executeSpread
   };
 };
 

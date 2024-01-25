@@ -17,11 +17,10 @@ import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
 import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
 import seriesType from 'assets/image/icon/button/series_type.png';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
-import querySearch from 'assets/image/icon/button/query_search.png';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReport, selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
-import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
@@ -32,16 +31,18 @@ import useReportSave from 'hooks/useReportSave';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
-import {DesignerMode} from 'components/config/configType';
 
 const RibbonDefaultElement = () => {
-  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
-  const {openedPopover} = usePopover();
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const {executeItems, excuteSpread} = useQueryExecute();
-  const {openModal, confirm} = useModal();
+  const currentReport = useSelector(selectCurrentReport);
+
+  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
+  const {openedPopover} = usePopover();
+  const {querySearch} = useReportSave();
+  const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
+
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
@@ -109,11 +110,13 @@ const RibbonDefaultElement = () => {
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
       'onClick': () => {
+        const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
-        const designerMode = selectCurrentDesignerMode(store.getState());
+        dataSource.reportId = selectedReportId;
+
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(selectedReportId, designerMode);
+            removeReport(dataSource);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);
@@ -303,12 +306,7 @@ const RibbonDefaultElement = () => {
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {
-        const reportType = selectCurrentDesignerMode(store.getState());
-        if (reportType !== DesignerMode['SPREAD_SHEET']) {
-          executeItems();
-        } else {
-          excuteSpread();
-        }
+        querySearch();
       }
     }
   };

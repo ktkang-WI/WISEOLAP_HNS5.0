@@ -7,6 +7,18 @@ import React, {useEffect, useRef} from 'react';
 import {Workbook} from 'exceljs';
 import saveAs from 'file-saver';
 import {exportPivotGrid} from 'devextreme/excel_exporter';
+import useModal from 'hooks/useModal';
+import ShowDataModal
+  from 'components/common/atomic/Modal/organisms/ShowDataModal';
+import {useSelector} from 'react-redux';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import DetailedDataUtility from './DetailedDataUtility';
+import ParamUtils from 'components/dataset/utils/ParamUtils';
+import store from 'redux/modules';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import models from 'models';
+import localizedString from 'config/localization';
+
 
 const PivotGrid = ({id, adHocOption, item}) => {
   console.log('pivot grid id', id);
@@ -19,6 +31,13 @@ const PivotGrid = ({id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const {openModal} = useModal();
+  // const dispatch = useDispatch();
+
+  const datasets = useSelector(selectCurrentDatasets);
+  const dataset = datasets.find((ds) =>
+    ds.datasetId == dataField.datasetId);
+  const detailedData = dataset.detailedData;
 
   useEffect(() => {
     const item = ref.current;
@@ -104,13 +123,99 @@ const PivotGrid = ({id, adHocOption, item}) => {
       fieldPanel={fieldPanel}
       showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
-      allowSorting={false}
-      allowSortingBySummary={false}
+      allowSorting={true}
+      allowSortingBySummary={true}
       onExporting={onExporting}
+      onContextMenuPreparing={(e) => {
+        const contextMenu = [];
+
+        const isGrandTotal =
+          (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
+          e.cell.type == 'GT';
+
+        // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
+        // 상세데이터 contextMenu 시작
+        // row와 column 모두 총계인 셀은 선택 불가
+        if (detailedData && !isGrandTotal) {
+          // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
+          const regex = /\[([^\[\]]+)\]/;
+          const rowColFilters = [];
+          const detailedDataMenu = {
+            'text': localizedString.detailedData
+          };
+
+          const dims = meta.dataField.column.concat(meta.dataField.row);
+
+          // 클릭 이벤트 생성
+          detailedDataMenu.items = detailedData.filter((data) => {
+            return meta.dataField.measure.find((mea) => {
+              return data.targetTable == mea.uniqueName.match(regex)[0];
+            });
+          }).map((act) => ({
+            'text': act.actNm,
+            'onItemClick': async () => {
+              // 현재 선택된 row와 col 필터 generate
+              for (let i = 0; i < e.cell.columnPath.length; i++) {
+                const val = e.cell.columnPath[i];
+                const col = e.columnFields[i];
+
+                const dim = dims.find((d) => d.name == col.dataField);
+
+                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                    dataset.cubeId, dim.uniqueName);
+                const parameter = DetailedDataUtility.getParameterInformation(
+                    '@C_' + dim.name, dataset, cubeInfo, val);
+
+                rowColFilters.push(parameter);
+              }
+
+              for (let i = 0; i < e.cell.rowPath.length; i++) {
+                const val = e.cell.rowPath[i];
+                const row = e.rowFields[i];
+
+                const dim = dims.find((d) => d.name == row.dataField);
+
+                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                    dataset.cubeId, dim.uniqueName);
+                const parameter = DetailedDataUtility.getParameterInformation(
+                    '@R_' + dim.name, dataset, cubeInfo, val);
+
+                rowColFilters.push(parameter);
+              }
+
+              // 보고서에 적용된 필터와 합치기
+              const parameters = selectRootParameter(store.getState());
+              rowColFilters.push(
+                  ...ParamUtils.generateParameterForQueryExecute(parameters));
+
+              // 상세데이터 조회
+              const param = {
+                dsId: dataset.dsId,
+                cubeId: dataset.cubeId,
+                userId: 'admin',
+                actId: act.actId,
+                parameter: JSON.stringify(rowColFilters)
+              };
+
+              models.Item.getDetailedData(param).then((res) => {
+                openModal(ShowDataModal, {
+                  modalTitle: localizedString.detailedData + ' - ' + act.actNm,
+                  data: res.data.rowData
+                });
+              });
+            }
+          }));
+          if (detailedDataMenu.items.length > 0) {
+            contextMenu.push(detailedDataMenu);
+          }
+        }
+        // contextMenu 저장(리턴)
+        e.items = contextMenu;
+      }}
     >
       <Export enabled={true} />
       <FieldChooser enabled={false}> </FieldChooser>
-      <Scrolling mode="virtual" />
+      <Scrolling mode='virtual' />
     </DevPivotGrid>
   );
 };

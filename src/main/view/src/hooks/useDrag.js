@@ -156,6 +156,10 @@ const useDrag = () => {
     // Droppable 컴포넌트에 떨군 경우
     if (dest) {
       if (dest.droppableId == 'filter-bar') {
+        if (selectedDataset.datasetType != 'CUBE') {
+          return;
+        }
+
         const parameters = selectRootParameter(store.getState());
         const paramInfo = parameters.informations;
 

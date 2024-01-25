@@ -6,6 +6,7 @@ import removeNullDataImg from 'assets/image/icon/button/remove_null_data.png';
 import rowTotalPosImg from 'assets/image/icon/button/row_total_position.png';
 import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
 import colRowSwitchImg from 'assets/image/icon/button/col_row_switch.png';
+import showGridImg from 'assets/image/icon/button/show_grid.png';
 import filterImg from 'assets/image/icon/report/filter.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -18,9 +19,13 @@ import ItemType from '../util/ItemType';
 import CustomEventUtility from './CustomEventUtility';
 import Utility from './Utility';
 import itemOptionManager from '../ItemOptionManager';
+import useModal from 'hooks/useModal';
+import ShowDataModal
+  from 'components/common/atomic/Modal/organisms/ShowDataModal';
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
+  const {openModal, alert} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
@@ -49,12 +54,7 @@ const useCustomEvent = () => {
 
   const getCheckBoxPopover = (key) => {
     const onValueChanged = (id, e) => {
-      let item = ribbonEvent[key](id, e);
-
-      if (key == 'initState') {
-        item = _.cloneDeep(item);
-        Utility.generateItem(item, item.mart.data);
-      }
+      const item = ribbonEvent[key](id, e);
 
       dispatch(updateItem({reportId, item}));
     };
@@ -204,6 +204,7 @@ const useCustomEvent = () => {
   // 값 변화가 탐지될 경우(onValueChanged) 이벤트
   const ribbonEvent = {
     'initState': (id, e) => {
+      alert(localizedString.requireReloadMsg);
       return editPositionOption(id, 'expand', e.value);
     },
     'total': (id, e) => {
@@ -244,7 +245,29 @@ const useCustomEvent = () => {
 
         dispatch(updateItem({reportId, item}));
       },
-      icon: <img width={'100%'} src={colRowSwitchImg}></img>
+      icon: <img width={'20px'} src={colRowSwitchImg}></img>
+    },
+    'ShowGrid': {
+      title: localizedString.showGrid,
+      onClick: (id) => {
+        const item = items.find((i) => id == i.id);
+        const columns = [];
+
+        columns.push(...item.meta.dataField.column);
+        columns.push(...item.meta.dataField.row);
+        columns.push(...item.meta.dataField.measure.map((mea) => ({
+          name: mea.summaryType + '_' + mea.name,
+          caption: mea.caption
+        })));
+
+        // TODO: 피벗 matrix 적용시 재조회하는 방식으로 바꿔야 함.
+        openModal(ShowDataModal, {
+          modalTitle: localizedString.showGrid + ' - ' + item.meta.name,
+          data: item.mart.data.data,
+          columns: columns
+        });
+      },
+      icon: <img width={'17px'} src={showGridImg}></img>
     }
   };
 
@@ -266,7 +289,10 @@ const useCustomEvent = () => {
     );
   };
 
-  return {ribbonConfig, getTabHeaderButton};
+  return {
+    ribbonConfig,
+    getTabHeaderButton
+  };
 };
 
 export default useCustomEvent;

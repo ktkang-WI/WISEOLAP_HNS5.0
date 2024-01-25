@@ -24,7 +24,7 @@ const ElementFactory = (id) => {
   } else if (id === 'download_report') {
     return downloadDefaultElement();
   } else if (id === 'dataset') {
-    if (reportType === DesignerMode['SPREAD_SHEET']) {
+    if (reportType === DesignerMode['EXCEL']) {
       const elements = datasetDefaultElement();
       const datasets = elements.dataset.filter((element) => element.label ==
         localizedString.addDsSQL || element.label ==

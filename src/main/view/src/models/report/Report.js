@@ -22,7 +22,7 @@ export const getReportById = async (userId, reportId) => {
       res.data[key] = JSON.parse(res.data[key]);
     }
   });
-  return res.data;
+  return res;
 };
 
 
@@ -40,35 +40,41 @@ export const getList = async (userId, reportType, editMode) => {
     userId: userId
   });
 
-  return res.data;
+  return res;
 };
 /**
- * 보고서 저장
+ * 보고서 저장 / 새로운 보고서를 저장 합니다.(insert)
  * @param {JSON} param
  * @return {promise}
  */
-export const addReport = async (param) => {
-  return await axios.post(path + '/save-report', param);
+export const insertReport = async (param) => {
+  return await axios.post(path + '/report-save', param);
+};
+
+/**
+ * 보고서 저장 / 기존 보고서를 업데이트 합니다.(update)
+ * @param {JSON} param
+ * @return {promise}
+ */
+export const updateReport = async (param) => {
+  return await axios.patch(path + '/report-save', param);
 };
 
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
- * @param {function} callback
+ * @return {JSON}
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = (param) => {
+  return axios.post(path + '/report-folder-list', param);
 };
 
 /**
- * 보고서 삭제
+ * 보고서 삭제 / 보고서를 삭제 합니다. (delete)
  * @param {JSON} param
- * @param {function} callback
  */
-export const deleteReport = (param, callback) => {
-  axios.post(path + '/delete-report', param)
-      .then(callback);
+export const deleteReport = async (param) => {
+  return await axios.patch(path + '/report-delete', param);
 };
 
 /**

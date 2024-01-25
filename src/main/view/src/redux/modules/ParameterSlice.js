@@ -109,6 +109,18 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state[0] = initialState[0];
     }
+  },
+  changeParameterInformation(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    const informations = actions.payload.informations;
+
+    delete state[prevId];
+    state[newId] = {};
+
+    state[newId].informations = informations;
+    state[newId].values = {};
+    state[newId].filterSearchComplete = [];
   }
 };
 

@@ -1,11 +1,9 @@
 package com.wise.MarketingPlatForm.querygen.aggregator;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.querygen.dto.Hierarchy;
 import com.wise.MarketingPlatForm.querygen.dto.Relation;
