@@ -470,7 +470,8 @@ const useQueryExecute = () => {
             const defaultValue = [];
 
             param.calendarPeriodBase.map((base, i) => {
-              const value = param.calendarPeriodValue[i];
+              const value = param.calendarPeriodValue ?
+                param.calendarPeriodValue[i] : 0;
               const date = ParamUtils.getCalendarNowDefaultValue(base, value);
 
               defaultValue.push(
