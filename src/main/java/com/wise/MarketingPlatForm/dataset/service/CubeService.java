@@ -71,7 +71,7 @@ public class CubeService {
         List<CubeTblEntity> cubeMeaTblEntities = cubeDAO.selectCubeMeaTables(cubeId);
         for (CubeTblEntity entity : cubeMeaTblEntities) {
             fields.add(CubeFieldVO.builder()
-                    .type(DataFieldType.MEASURE)
+                    .type(DataFieldType.MEA)
                     .order(entity.getOrder())
                     .uniqueName(entity.getUniqueName())
                     .logicalName(entity.getLogicalName())
@@ -86,7 +86,7 @@ public class CubeService {
         for (CubeMeaColEntity entity : cubeMeaColEntities) {
             // 권한 있는 차원의 컬럼만 추가
             fields.add(CubeFieldVO.builder()
-                    .type(DataFieldType.MEASURE)
+                    .type(DataFieldType.MEA)
                     .order(entity.getMeaOrder())
                     .name(entity.getCaptionName())
                     .parentId(entity.getTableName())
@@ -103,7 +103,7 @@ public class CubeService {
             if (auth.hasAuthDim(entity.getDsViewId(), entity.getPhysicalName())) {
                 authDimNames.add(entity.getPhysicalName());
                 fields.add(CubeFieldVO.builder()
-                        .type(DataFieldType.DIMENSION)
+                        .type(DataFieldType.DIM)
                         .order(entity.getOrder())
                         .uniqueName(entity.getUniqueName())
                         .logicalName(entity.getLogicalName())
@@ -120,7 +120,7 @@ public class CubeService {
             // 권한 있는 차원의 컬럼만 추가
             if (authDimNames.contains(entity.getTableName())) {
                 fields.add(CubeFieldVO.builder()
-                        .type(DataFieldType.DIMENSION)
+                        .type(DataFieldType.DIM)
                         .order(entity.getOrder())
                         .name(entity.getCaptionName())
                         .parentId(entity.getTableName())
