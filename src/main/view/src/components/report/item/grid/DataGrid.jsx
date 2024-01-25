@@ -23,10 +23,8 @@ const DataGrid = ({id, item}) => {
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
-          cellRender={
-            column.detailSetting === 'bar' &&
-            DataGridBullet
-          }
+          cellRender={column.detailSetting === 'bar' &&
+          DataGridBullet}
         />
       )}
     </DevDataGrid>
