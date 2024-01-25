@@ -67,7 +67,6 @@ const CustomDataList = () => {
         <Editing
           mode="row"
           confirmDelete={false}
-          allowUpdating={true}
           allowDeleting={true}/>
         <Column
           dataField='fieldName'

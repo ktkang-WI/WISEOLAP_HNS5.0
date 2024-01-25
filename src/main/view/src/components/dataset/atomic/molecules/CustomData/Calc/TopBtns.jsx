@@ -76,23 +76,6 @@ const TopBtns = () => {
     });
   };
 
-  // 테스트용 코드 기능 미구현
-  /*
-  const handleLoading = () => {
-    setOnLoading(true);
-    setTimeout(() => {
-      setOnLoading(false);
-      setCheckForSaving((prev)=>{
-        return {
-          ...prev,
-          inspection: checkForSaving.type
-        };
-      });
-      if (!checkForSaving.type) alert(localizedString.common.invalid);
-    }, 1000);
-  };
-  */
-
   return (
     <>
       <Wrapper size="80%">
@@ -121,23 +104,6 @@ const TopBtns = () => {
           onValueChanged={handleSelectBox}
         />
       </Wrapper>
-      {/*
-      <Wrapper size="15%">
-        <Button
-          id="button"
-          width='100%'
-          type={checkForSaving.inspection ? 'success':''}
-          height={35}
-          onClick={handleLoading}
-        >
-          <LoadIndicator className="button-indicator"
-            visible={onLoading} />
-          <span className="dx-button-text">
-            {localizedString.customDataCalc.butons.Inspection}
-          </span>
-        </Button>
-      </Wrapper>
-      */}
     </>
   );
 };

@@ -43,7 +43,8 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
     const newAnnotations = [];
     let addedLine = '';
     lines.forEach((line, index) => {
-      const operPattern = /[\*+-\/]{2,}\s{0,}/g;
+      const operPatternCase1 = /[\*+-\/]{2,}\s{0,}/g;
+      const operPatternCase2 = /(\]\s{0,1}\d)|(\d\s{0,1}\[)/g;
       const numberPattern = /\d\s{1,}\d/g;
       const parenthesisEmpty = /\(\s*\)/g;
       let test = '';
@@ -55,9 +56,10 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
       const errorCheck =
         !handleParenthesisException(addedLine) ||
         test.length > 0 ||
-        operPattern.exec(addedLine) ||
+        operPatternCase1.exec(addedLine) ||
         numberPattern.exec(addedLine) ||
-        parenthesisEmpty.exec(addedLine);
+        parenthesisEmpty.exec(addedLine) ||
+        operPatternCase2.exec(addedLine);
 
       if (errorCheck) {
         newAnnotations.push({
@@ -73,13 +75,14 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
   };
 
   useEffect(() => {
-    const validateCode = () => {
-      const lines = props.value.split('\n');
-      handleLineException(lines);
-      handleCheck(true);
+    if (props.value) {
+      const validateCode = () => {
+        const lines = props.value.split('\n');
+        handleLineException(lines);
+        handleCheck(true);
+      };
+      validateCode();
     };
-
-    validateCode();
   }, [props.value]);
 
   useEffect(() => {
