@@ -1,10 +1,23 @@
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-monokai';
 import './mode-custom';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import {CustomDataCalContext}
+  from 'components/dataset/modal/CustomData/CustomDataCalcModal';
 
 const CalcQueryEditor = ({editorRef, ...props}) => {
   const [annotations, setAnnotations] = useState([]);
+  const getContext = useContext(CustomDataCalContext);
+  const [, setCheckForSaving] = getContext.state.checkForSaving;
+
+  const handleCheck = (isOk) => {
+    setCheckForSaving((prev) => {
+      return {
+        ...prev,
+        inspection: isOk
+      };
+    });
+  };
 
   useEffect(() => {
     const validateCode = () => {
@@ -22,9 +35,10 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
             type: 'error',
             text: '항목에 없는 식별값 입니다.'
           });
+          handleCheck(false);
         }
       });
-
+      handleCheck(true);
       setAnnotations(newAnnotations);
     };
 

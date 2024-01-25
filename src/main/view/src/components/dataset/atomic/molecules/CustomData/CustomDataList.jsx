@@ -5,14 +5,26 @@ import {useContext} from 'react';
 import {typeData} from '../../organism/CustomData/Data/customObjectList';
 import styled from 'styled-components';
 import localizedString from '../../../../../config/localization';
+import customFieldImg from 'assets/image/icon/button/inputTxt.png';
 
-const Cursor = styled.div`
-    cursor: pointer;
-    -webkit-user-select: none !important; 
-    -moz-user-select: -moz-none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
+const Img = styled.img`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  -webkit-user-select: none !important; 
+  -moz-user-select: -moz-none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 `;
+
+const Cell = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 
 const CustomDataList = () => {
   const getContext = useContext(CustomDataContext);
@@ -66,9 +78,10 @@ const CustomDataList = () => {
           allowEditing={false}
           cellRender={(data) => {
             return (
-              <Cursor>
+              <Cell>
                 {data.text}
-              </Cursor>
+                <Img src={customFieldImg}/>
+              </Cell>
             );
           }}/>
         <Column

@@ -44,7 +44,12 @@ const PanelTitleDefaultElement = () => {
 
           openModal(UserDefinedDataModal,
               {selectedDataSource: dataSource, orgDataset: dataset});
-        };
+        } else if (dataset.datasetType == 'CUBE') {
+          // const dataSource = await models.
+          //    DataSource.getByDsId(dataset.dataSrcId);
+          // openModal(UserDefinedDataModal,
+          //    {selectedDataSource: dataSource, orgDataset: dataset});
+        }
       },
       src: customFieldImg,
       label: localizedString.addCustomField,

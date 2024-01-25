@@ -6,7 +6,7 @@ import CalcObjectList
   from '../../molecules/CustomData/Calc/CalcObjectList';
 
 // 사용자 정의 데이터 계산식 매개변수,열,함수 등등을 이용하여 계산식을 정의합니다.
-const CustomDataCalc = ({...props}) => {
+const CustomDataCalc = () => {
   return (
     <>
       <Wrapper size="50%">
