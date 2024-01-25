@@ -33,12 +33,43 @@ const useReportSave = () => {
   const {createDesigner} = useSpread();
   const {executeItems, executeSpread} = useQueryExecute();
 
-  const reportActions = ReportSlice.actions;
-  const itemActions = ItemSlice.actions;
-  const layoutActions = LayoutSlice.actions;
-  const datasetActions = DatasetSlice.actions;
-  const parameterActions = ParameterSlice.actions;
-  const spreadActions = SpreadSlice.actions;
+  const {
+    insertReport,
+    updateReport,
+    deleteReport,
+    initReport,
+    setReports,
+    selectReport
+  } = ReportSlice.actions;
+  const {
+    changeItemReportId,
+    deleteItemForDesigner,
+    initItems,
+    changeItem
+  } = ItemSlice.actions;
+  const {
+    changeLayoutReportId,
+    deleteLayoutForDesigner,
+    initLayout,
+    changeLayout
+  } = LayoutSlice.actions;
+  const {
+    changeDatasetReportId,
+    deleteDatasetForDesigner,
+    initDatasets,
+    changeDataset
+  } = DatasetSlice.actions;
+  const {
+    changeParameterReportId,
+    deleteParameterForDesigner,
+    initParameter,
+    changeParameterInformation
+  } = ParameterSlice.actions;
+  const {
+    changeSpreadReportId,
+    deleteSpread,
+    initSpread
+  } = SpreadSlice.actions;
 
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReportId = useSelector(selectCurrentReportId);
@@ -134,12 +165,12 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.insertReport(report.reports[0]));
-    dispatch(itemActions.changeItemReportId(reportId));
-    dispatch(layoutActions.changeLayoutReportId(reportId));
-    dispatch(datasetActions.changeDatasetReportId(reportId));
-    dispatch(parameterActions.changeParameterReportId(reportId));
-    dispatch(spreadActions.changeSpreadReportId(reportId));
+    dispatch(insertReport(report.reports[0]));
+    dispatch(changeItemReportId(reportId));
+    dispatch(changeLayoutReportId(reportId));
+    dispatch(changeDatasetReportId(reportId));
+    dispatch(changeParameterReportId(reportId));
+    dispatch(changeSpreadReportId(reportId));
   };
 
   /**
@@ -148,7 +179,7 @@ const useReportSave = () => {
    */
   const patchReport = (response) => {
     const report = generateReport(response.report);
-    dispatch(reportActions.updateReport(report));
+    dispatch(updateReport(report));
   };
 
   const removeReport = (dataSource) => {
@@ -174,18 +205,18 @@ const useReportSave = () => {
       }
 
       if (reports.length > 1) {
-        dispatch(reportActions.deleteReport(report.reports[0]));
+        dispatch(deleteReport(report.reports[0]));
       } else {
         reload(reportType);
       }
 
-      dispatch(itemActions.deleteItemForDesigner(reportId));
-      dispatch(layoutActions.deleteLayoutForDesigner(
+      dispatch(deleteItemForDesigner(reportId));
+      dispatch(deleteLayoutForDesigner(
           {reportId: reportId, reportType: reportType}
       ));
-      dispatch(datasetActions.deleteDatasetForDesigner(reportId));
-      dispatch(parameterActions.deleteParameterForDesigner(reportId));
-      dispatch(spreadActions.deleteSpread(reportId));
+      dispatch(deleteDatasetForDesigner(reportId));
+      dispatch(deleteParameterForDesigner(reportId));
+      dispatch(deleteSpread(reportId));
       reload(reportType);
       if (reportType === DesignerMode['EXCEL']) {
         fileDelete({fileName: reportId + '.xlsx'});
@@ -194,12 +225,12 @@ const useReportSave = () => {
   };
 
   const reload = (designerMode) => {
-    dispatch(reportActions.initReport(designerMode));
-    dispatch(datasetActions.initDatasets());
-    dispatch(itemActions.initItems(designerMode));
-    dispatch(layoutActions.initLayout(designerMode));
-    dispatch(parameterActions.initParameter());
-    dispatch(spreadActions.initSpread());
+    dispatch(initReport(designerMode));
+    dispatch(initDatasets());
+    dispatch(initItems(designerMode));
+    dispatch(initLayout(designerMode));
+    dispatch(initParameter());
+    dispatch(initSpread());
   };
 
   // 보고서 불러오기 - 추후 뷰어 및 디자이너 분기 처리.
@@ -223,21 +254,21 @@ const useReportSave = () => {
       prevId: currentReportId,
       newId: newReportId
     };
-    dispatch(reportActions.setReports(data.reports));
-    dispatch(reportActions.selectReport(newReportId));
-    dispatch(datasetActions.changeDataset({
+    dispatch(setReports(data.reports));
+    dispatch(selectReport(newReportId));
+    dispatch(changeDataset({
       reportId: reportId,
       dataset: data.dataset
     }));
-    dispatch(layoutActions.changeLayout({
+    dispatch(changeLayout({
       reportId: reportId,
       layout: data.layout
     }));
-    dispatch(itemActions.changeItem({
+    dispatch(changeItem({
       reportId: reportId,
       item: data.item
     }));
-    dispatch(parameterActions.changeParameterInformation({
+    dispatch(changeParameterInformation({
       reportId: reportId,
       informations: data.informations
     }));
