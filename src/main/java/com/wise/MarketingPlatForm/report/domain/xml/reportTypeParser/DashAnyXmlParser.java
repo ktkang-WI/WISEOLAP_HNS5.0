@@ -162,9 +162,7 @@ public class DashAnyXmlParser extends XMLParser {
 						String uniqueName = fieldObject.optString("UNI_NM");
 						String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
 						Integer order = fieldObject.getInt("ORDER");
-						DataFieldType type = "MEA".equals(fieldObject.getString("TYPE")) ? DataFieldType.MEASURE
-								: DataFieldType.DIMENSION;
-
+						DataFieldType type = DataFieldType.fromString(fieldObject.getString("TYPE")).get();
 						if (datasrcType.equals(DsType.CUBE.toString())) {
 							// 추후 추가
 							field = CubeFieldVO.builder().dataType(dataType).name(name).type(type)
@@ -452,7 +450,7 @@ public class DashAnyXmlParser extends XMLParser {
 
 			Node data = datas.item(datasIndex);
 
-			if (DataFieldType.DIMENSION.toString().equals(data.getNodeName().toLowerCase())) {
+			if (DataFieldType.DIM.toString().equals(data.getNodeName().toLowerCase())) {
 				NamedNodeMap dimensionNodes = data.getAttributes();
 
 				String caption = Optional.ofNullable(dimensionNodes.getNamedItem("Name")).map(Node::getTextContent)
@@ -482,7 +480,7 @@ public class DashAnyXmlParser extends XMLParser {
 
 				dimensions.add(dimension);
 
-			} else if (DataFieldType.MEASURE.toString().equals(data.getNodeName().toLowerCase())) {
+			} else if (DataFieldType.MEA.toString().equals(data.getNodeName().toLowerCase())) {
 				NamedNodeMap measureNodes = data.getAttributes();
 
 				String caption = Optional.ofNullable(measureNodes.getNamedItem("Name")).map(Node::getTextContent)
