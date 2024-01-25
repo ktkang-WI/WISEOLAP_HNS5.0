@@ -41,7 +41,7 @@ const useQueryExecute = () => {
    * @param {JSON} filter 아이템에 적용할 필터
    * @return {JSON} parameter
    */
-  const generateParameter = (item, datasets, parameters, filter={}) => {
+  const generateParameter = async (item, datasets, parameters, filter={}) => {
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -71,10 +71,32 @@ const useQueryExecute = () => {
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
 
+    param.filter = JSON.stringify(filter);
+
+    // 주제영역 마스터 필터 있는 경우
+    // TODO: 추후 관계 검사 필요
+    if (orgDataset.datasetType == 'CUBE' && !_.isEmpty(filter)) {
+      for (const uniqueName in filter) {
+        if (filter[uniqueName]) {
+          const cubeInfoParam = {
+            cubeId: orgDataset.cubeId,
+            userId: 'admin', // 추후 userId 받아서
+            uniqueName: uniqueName
+          };
+
+          const response = await models.Cube.getCubeInfo(cubeInfoParam);
+
+          parameter.push(ParamUtils.filterToParameter(filter[uniqueName],
+              response.data, orgDataset.dsId));
+        }
+      };
+
+      param.filter = '{}';
+    }
+
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
-    param.filter = JSON.stringify(filter);
     ItemManager.generateParameter(item, param);
 
     return param;
@@ -172,12 +194,12 @@ const useQueryExecute = () => {
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    * @param {JSON} filter 아이템에 적용할 필터
    */
-  const executeItem = (item, datasets, parameters, filter) => {
+  const executeItem = async (item, datasets, parameters, filter) => {
     try {
       validateRequiredField(item);
       const tempItem = _.cloneDeep(item);
-      let param = {};
-      param = generateParameter(tempItem, datasets, parameters, filter);
+      const param =
+          await generateParameter(tempItem, datasets, parameters, filter);
 
       const reportId = selectCurrentReportId(store.getState());
 
