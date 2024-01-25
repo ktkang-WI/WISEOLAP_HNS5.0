@@ -54,6 +54,8 @@ const getInitialState = () => {
   if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
   }
+
+  return dashboardInitialState;
 };
 
 const reducers = {

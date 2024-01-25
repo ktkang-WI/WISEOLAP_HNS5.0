@@ -81,15 +81,15 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   data.fields = data.fields.map((field) => {
                     // 그룹일 경우
                     if (!field.parentId) {
-                      if (field.type == 'DIMENSION') {
+                      if (field.type == 'DIM') {
                         field.icon = cubeDimGrpImg;
-                      } else if (field.type == 'MEASURE') {
+                      } else if (field.type == 'MEA') {
                         field.icon = cubeMeaGrpImg;
                       }
                     } else {
-                      if (field.type == 'DIMENSION') {
+                      if (field.type == 'DIM') {
                         field.icon = dimImg;
-                      } else if (field.type == 'MEASURE') {
+                      } else if (field.type == 'MEA') {
                         field.icon = meaImg;
                       }
                     }
