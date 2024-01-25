@@ -23,9 +23,10 @@ const generateKey = (baseKey, depth) => {
 
 const generateRowSpan =
   (depth, baseKey, fields, data, structure) => {
-    if (depth === fields.length || data.length == 0) return structure;
-    baseKey = generateKey(baseKey, depth);
+    const isLastPoint = depth === fields.length || data.length == 0;
+    if (isLastPoint) return structure;
 
+    baseKey = generateKey(baseKey, depth);
     const pickedItem = data[0];
     const fieldName = fields[depth].name;
     const node = _.cloneDeep(Node);

@@ -86,7 +86,17 @@ const generateParameter = (item, param) => {
 const getRibbonItems = () => {
   return [
     'CaptionView',
-    'NameEdit'
+    'NameEdit',
+    'GridLine',
+    'BarPallet',
+    'BarColorEdit',
+    'CellMerging',
+    'ColumnHeader',
+    'Paging',
+    'AutoWrap',
+    'GridResiging',
+    'HeaderAdd',
+    'InputTxt'
   ];
 };
 

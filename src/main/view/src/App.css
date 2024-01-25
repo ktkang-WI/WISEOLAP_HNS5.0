@@ -2,6 +2,10 @@ a {
   text-decoration: none;
 }
 
+.dx-freespace-row {  
+  height: 0px !important;  
+}  
+
 .App {
   text-align: center;
   width: 100vw;
