@@ -42,7 +42,7 @@ public class PieChartDataMaker implements ItemDataMaker {
         List<String> dimNames = new ArrayList<>();
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
-        List<String> seriesDimensionNames = new ArrayList<>();
+        List<Map<String, String>> seriesDimensionNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
@@ -93,15 +93,25 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
-                seriesDimensionNames.add(measure.getSummaryName());
+                Map<String,String> seriesDimensions = new HashMap<>();
+                String caption = measure.getCaption() != null ?  measure.getCaption():  measure.getName();
+
+                seriesDimensions.put("summaryName", measure.getSummaryName());
+                seriesDimensions.put("caption", caption);
+                seriesDimensionNames.add(seriesDimensions);
             }
         } else {
             for (Measure measure : measures) {
                 Iterator<String> iter = dimensionGroupNames.iterator();
-
+                String caption = measure.getCaption() != null ?  measure.getCaption():  measure.getName();
+                
                 while (iter.hasNext()) {
                     String name = iter.next();
-                    seriesDimensionNames.add(name + "-" + measure.getSummaryName());
+                    Map<String,String> seriesDimensions = new HashMap<>();
+                    
+                    seriesDimensions.put("summaryName", name + "-" + measure.getSummaryName());
+                    seriesDimensions.put("caption", name + "-" + caption);
+                    seriesDimensionNames.add(seriesDimensions);
                 }
             }
         }
