@@ -30,8 +30,12 @@ const reducers = {
     cloneState.reports[0].reportType = designerMode;
     return cloneState;
   },
+  /*
+   * 보고서 추가 시 보고서 변경 (덮어쓰기) -> 대시보드에서 reports 추가되지 않고 덮어쓰기 해야함
+   * param {JSON} actions.payload initialState
+   */
   changeReport(state, actions) {
-    return {...actions.payload};
+    return actions.payload;
   },
   /*
    * 보고서 추가
