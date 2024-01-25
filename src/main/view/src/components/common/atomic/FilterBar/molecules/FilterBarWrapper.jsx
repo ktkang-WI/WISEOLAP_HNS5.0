@@ -1,4 +1,5 @@
 import {Droppable} from 'react-beautiful-dnd';
+import localizedString from 'config/localization';
 import Filter from './Filter';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
@@ -10,6 +11,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import _ from 'lodash';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -30,7 +32,8 @@ const FilterBarWrapper = (props) => {
   const parameters = useSelector(selectRootParameter);
   const reportId = selectCurrentReportId(store.getState());
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
-  const {setParameterValues} = ParameterSlice.actions;
+  const {setParameterValues, deleteParameter} = ParameterSlice.actions;
+  const {confirm} = useModal();
   const dispatch = useDispatch();
 
   // 매개변수 정보 수정되면 재조회
@@ -62,6 +65,12 @@ const FilterBarWrapper = (props) => {
     }
   };
 
+  const onDeleted = (name) => {
+    confirm(localizedString.deleteParameterMsg, () => {
+      dispatch(deleteParameter({reportId, name}));
+    });
+  };
+
   return (
     <Droppable droppableId="filter-bar">
       {(provided) => (
@@ -71,18 +80,23 @@ const FilterBarWrapper = (props) => {
         >
           {
             parameters.informations.reduce((acc, filter) => {
-              acc.push(<Filter
-                key={filter.name}
-                info={filter}
-                value={parameters.values[filter.name]}
-                onValueChanged={onValueChanged}/>);
+              const filterProps = {
+                key: filter.name,
+                info: filter,
+                value: parameters.values[filter.name],
+                onValueChanged
+              };
+
               if (filter.operation == 'BETWEEN') {
+                acc.push(<Filter {...filterProps}/>);
                 acc.push(<Filter
-                  key={filter.name}
-                  info={filter}
                   isTo={true}
-                  value={parameters.values[filter.name]}
-                  onValueChanged={onValueChanged}/>);
+                  {...filterProps}
+                  onDeleted={() => onDeleted(filter.name)}/>);
+              } else {
+                acc.push(<Filter
+                  {...filterProps}
+                  onDeleted={() => onDeleted(filter.name)}/>);
               }
 
               if (filter.lineBreak) {

@@ -72,7 +72,14 @@ const reducers = {
     state[reportId].filterSearchComplete =
         state[reportId].filterSearchComplete.concat([filterId]);
   },
-  deleteParameterByDatsetId(state, actions) {
+  deleteParameter(state, actions) {
+    const reportId = actions.payload.reportId;
+    const paramNm = actions.payload.name;
+    state[reportId].informations =
+      state[reportId].informations.filter((info) => info.name != paramNm);
+    delete state[reportId].values[paramNm];
+  },
+  deleteParameterByDatasetId(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
