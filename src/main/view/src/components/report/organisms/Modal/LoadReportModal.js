@@ -38,11 +38,11 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
-                  // try {
-                  loadReport(data);
-                  // } catch {
-                  //   alert(localizedString.reportCorrupted);
-                  // }
+                  try {
+                    loadReport(data);
+                  } catch {
+                    alert(localizedString.reportCorrupted);
+                  }
                 });
           } else {
             openModal(Alert, {
