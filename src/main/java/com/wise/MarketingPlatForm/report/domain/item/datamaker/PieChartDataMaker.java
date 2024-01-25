@@ -33,6 +33,7 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
+                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .orderBy()
                 .columnFiltering()
@@ -108,7 +109,7 @@ public class PieChartDataMaker implements ItemDataMaker {
                 while (iter.hasNext()) {
                     String name = iter.next();
                     Map<String,String> seriesDimensions = new HashMap<>();
-                    
+
                     seriesDimensions.put("summaryName", name + "-" + measure.getSummaryName());
                     seriesDimensions.put("caption", name + "-" + caption);
                     seriesDimensionNames.add(seriesDimensions);
