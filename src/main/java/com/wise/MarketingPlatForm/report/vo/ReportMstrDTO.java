@@ -2,9 +2,7 @@ package com.wise.MarketingPlatForm.report.vo;
 
 import java.sql.Date;
 import java.util.Base64;
-import java.util.Optional;
 
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 
@@ -27,7 +25,7 @@ public class ReportMstrDTO {
     String reportDesc;
     String reportLayout;
     String gridInfo;
-    int datasrcId;
+    int dataSrcId;
     String datasrcType;
     String datasetType;
     String reportXml;
@@ -45,6 +43,7 @@ public class ReportMstrDTO {
     Date modDt;
     String privacyYn;
     String layoutConfig;
+    String dupleYn;
 
     private static String encodeBase64(String string) {
         byte[] encodedBytes = Base64.getEncoder().encode(string.getBytes());
@@ -91,7 +90,7 @@ public class ReportMstrDTO {
         .reportDesc(reportMstrDTO.getReportDesc())
         .reportLayout(reportMstrDTO.getReportLayout())
         .gridInfo(reportMstrDTO.getGridInfo())
-        .datasrcId(reportMstrDTO.getDatasrcId())
+        .dataSrcId(reportMstrDTO.getDataSrcId())
         .datasrcType(reportMstrDTO.getDatasrcType())
         .datasetType(reportMstrDTO.getDatasetType())
         .reportXml(encodedReportXml)

@@ -16,6 +16,7 @@ public class AuthDataDTO {
     String dataXml;
     List<AuthCubeVO> authCube;
     List<AuthDimVO> authDim;
+    List<AuthMemVO> authMem;
 
     public boolean hasAuthCube(int dsViewId, int cubeId) {
         for (AuthCubeVO cubeVo : authCube) {

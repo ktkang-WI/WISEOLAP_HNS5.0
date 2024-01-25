@@ -21,6 +21,9 @@ import {useEffect, useState} from 'react';
 import models from 'models';
 import _ from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
+import {selectRootDataset, selectDatasetQuantity}
+  from 'redux/selector/DatasetSelector';
+import store from 'redux/modules';
 
 
 const theme = getTheme();
@@ -42,19 +45,22 @@ const StyledWrapper = styled(Wrapper)`
 const SelectCubeModal = ({onSubmit, ...props}) => {
   const [dsViewList, setDsViewList] = useState([]);
   const [selectedCubeList, setSelectedCubeList] = useState([]);
+  const [selectedDsView, setSelectedDsView] = useState({});
   const [selectedCube, setSelectedCube] = useState({});
   const selectedReportId = useSelector(selectCurrentReportId);
   const userId = 'admin';
 
   const {alert} = useModal();
   const dispatch = useDispatch();
-  const {insertDataset} = DatasetSlice.actions;
+  const {updateDataset} = DatasetSlice.actions;
+
+  const datasetQuantity = useSelector(selectDatasetQuantity);
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
     models.DSView.getByUserId(userId)
         .then((data) => {
-          setDsViewList(data);
+          setDsViewList(data.data);
         });
   }, []);
 
@@ -63,35 +69,47 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
       onSubmit={()=> {
         if (!_.isEmpty(selectedCube)) {
           models.Cube.getByCubeId(userId, selectedCube.cubeId)
-              .then((data) => {
-                data.fields = data.fields.map((field) => {
-                  // 그룹일 경우
-                  if (!field.parentId) {
-                    if (field.type == 'DIMENSION') {
-                      field.icon = cubeDimGrpImg;
-                    } else if (field.type == 'MEASURE') {
-                      field.icon = cubeMeaGrpImg;
-                    }
-                  } else {
-                    if (field.type == 'DIMENSION') {
-                      field.icon = dimImg;
-                    } else if (field.type == 'MEASURE') {
-                      field.icon = meaImg;
-                    }
-                  }
+              .then(({data}) => {
+                const datasets =
+                    selectRootDataset(store.getState());
 
-                  return field;
-                });
+                const dupleCheck = datasets.datasets.find((ds) =>
+                  ds.cubeId == selectedCube.cubeId);
+                if (!dupleCheck) {
+                  const datasetId = 'dataset' + (datasetQuantity + 1);
 
-                dispatch(insertDataset({
-                  reportId: selectedReportId,
-                  dataset: {
-                    ...selectedCube,
-                    fields: data.fields,
-                    datasetNm: selectedCube.cubeNm,
-                    datasetType: 'CUBE'
-                  }
-                }));
+                  data.fields = data.fields.map((field) => {
+                    // 그룹일 경우
+                    if (!field.parentId) {
+                      if (field.type == 'DIM') {
+                        field.icon = cubeDimGrpImg;
+                      } else if (field.type == 'MEA') {
+                        field.icon = cubeMeaGrpImg;
+                      }
+                    } else {
+                      if (field.type == 'DIM') {
+                        field.icon = dimImg;
+                      } else if (field.type == 'MEA') {
+                        field.icon = meaImg;
+                      }
+                    }
+
+                    return field;
+                  });
+
+                  dispatch(updateDataset({
+                    reportId: selectedReportId,
+                    dataset: {
+                      ...selectedDsView,
+                      ...selectedCube,
+                      detailedData: data.detailedData,
+                      fields: data.fields,
+                      datasetNm: selectedCube.cubeNm,
+                      datasetId: datasetId,
+                      datasetType: 'CUBE'
+                    }
+                  }));
+                }
               });
         } else {
           alert('주제영역을 선택하지 않았습니다.');
@@ -115,8 +133,9 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   if (e.selectedRowsData.length > 0) {
                     models.Cube.getByDsViewId(userId,
                         e.selectedRowsData[0].dsViewId)
-                        .then((data) => {
+                        .then(({data}) => {
                           setSelectedCubeList(data);
+                          setSelectedDsView(e.selectedRowsData[0]);
                         });
                   } else {
                     setSelectedCubeList([]);

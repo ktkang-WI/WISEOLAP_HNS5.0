@@ -7,15 +7,16 @@ const QueryDataFieldList = ({dataSource}) => {
 
   useEffect(() => {
     models.DBInfo.getTablesByMart(dataSource.dsId)
-        .then((response) => {
-          const tables = response.tables.rowData;
-          const columns = response.columns.rowData;
+        .then(({data}) => {
+          const tables = data.tables.rowData;
+          const columns = data.columns.rowData;
 
           const tableList = tables.concat(columns);
 
           setDatasource(tableList);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error(error);
           throw new Error('Data Loading Error');
         });
   }, []);

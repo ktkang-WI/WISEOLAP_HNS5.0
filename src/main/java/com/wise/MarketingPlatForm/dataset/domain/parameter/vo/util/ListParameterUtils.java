@@ -19,7 +19,18 @@ public final class ListParameterUtils {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         List<Parameter> params = new ArrayList<Parameter>();
         for (LinkageValue value : listParameterDTO.getLinkageValues()) {
-            Parameter param = new Parameter(0, value.getName(), null, value.getOperation(), null, value.getExceptionValue(), value.getValue());
+            Parameter param = new Parameter(0, value.getName(),
+                     null,
+                     value.getOperation(),
+                     null,
+                     value.getExceptionValue(),
+                     value.getValue(),
+                     null,
+                     null,
+                     null,
+                     null,
+                     null
+                     );
             params.add(param);
         }
 
@@ -31,11 +42,12 @@ public final class ListParameterUtils {
             ListParameterDTO listParameterDTO) {
 
         if (StringUtil.isNotBlank(listParameterDTO.getSortBy())) {
+            int weight = listParameterDTO.getSortOrder().equals("ASC") ? 1 : -1;
             Collections.sort(data, (o1, o2) -> {
                 String value1 = String.valueOf(o1.get(listParameterDTO.getSortBy()));
                 String value2 = String.valueOf(o2.get(listParameterDTO.getSortBy()));
 
-                return value1.compareTo(value2);
+                return value1.compareTo(value2) * weight;
             });
         }
 

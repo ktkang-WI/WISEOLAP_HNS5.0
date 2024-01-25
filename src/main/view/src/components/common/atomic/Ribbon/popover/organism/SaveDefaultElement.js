@@ -5,10 +5,11 @@ import {selectCurrentReport}
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import {useSelector} from 'react-redux';
+import models from 'models';
 
 const SaveDefaultElement = () => {
-  const {openModal} = useModal();
-  const {saveReport} = useReportSave();
+  const {openModal, alert} = useModal();
+  const {patchReport, generateParameter} = useReportSave();
   const currentReport = useSelector(selectCurrentReport);
 
   return {
@@ -22,7 +23,23 @@ const SaveDefaultElement = () => {
             openModal(ReportSaveModal);
           } else {
             dataSource.reportId = currentReport.reportId;
-            saveReport(dataSource);
+            const param = generateParameter(dataSource);
+            models.Report.updateReport(param).then((res) => {
+              const data = res.data;
+              const msg = data.msg;
+              const result = data.result;
+
+              if (res.status != 200) {
+                alert(localizedString.faildSaveReportMsg);
+                return;
+              }
+
+              alert(localizedString[msg]);
+
+              if (result) {
+                patchReport(data);
+              }
+            });
           };
         }
       },

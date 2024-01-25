@@ -1,5 +1,6 @@
 export default {
   CHART: 'chart',
   PIVOT_GRID: 'pivot',
-  DATA_GRID: 'grid'
+  DATA_GRID: 'grid',
+  PIE_CHART: 'pie'
 };

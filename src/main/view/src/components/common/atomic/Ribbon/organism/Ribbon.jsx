@@ -1,6 +1,10 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import CreateRibbonBtns from '../molecules/CreateRibbonBtns';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -14,6 +18,9 @@ const StyledRibbon = styled.div`
 `;
 
 const Ribbon = () => {
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  const focusedItem = useSelector(selectCurrentItem);
+
   return (
     <StyledRibbon>
       <CreateRibbonBtns
@@ -37,19 +44,9 @@ const Ribbon = () => {
         ]}
       />
       <CreateRibbonBtns
-        items={[
-          'CaptionView',
-          'NameEdit',
-          'Rotate',
-          'XAxisSetting',
-          'YAxisSetting',
-          'ExtraAxisSetting',
-          'ShowColorLegend',
-          'SeriesType',
-          'Palette',
-          'ColorEdit',
-          'PointLabel'
-        ]}
+        targetItem={focusedItem}
+        items={!focusedItem || designerMode === DesignerMode['EXCEL'] ?
+         [] : focusedItem.mart.ribbonItems}
       />
       <CreateRibbonBtns
         items={[

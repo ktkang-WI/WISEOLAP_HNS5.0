@@ -1,7 +1,9 @@
 package com.wise.MarketingPlatForm.report.domain.data.data;
 
-import com.wise.MarketingPlatForm.report.type.SummaryType;
+import org.apache.ibatis.type.Alias;
 
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+import com.wise.MarketingPlatForm.report.type.SummaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +15,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Measure {
+@Alias("ItemMeasure")
+public class Measure implements RootData{
   String caption;
   String name;
   String uniqueName;
