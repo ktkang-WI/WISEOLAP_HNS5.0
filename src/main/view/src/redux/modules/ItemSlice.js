@@ -47,7 +47,7 @@ const initialState = {
 const getInitialState = () => {
   const mode = ConfigSlice.getInitialState().designerMode;
 
-  if (mode === DesignerMode['DASHBOARD'] || mode === DesignerMode['EXCEL']) {
+  if (mode === DesignerMode['DASHBOARD']) {
     return dashboardInitialState;
   }
 
