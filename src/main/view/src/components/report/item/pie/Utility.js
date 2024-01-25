@@ -50,13 +50,7 @@ const generateItem = () => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
-    ...defaultMeasure,
-    useButton: false,
-    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-    buttonIcon: '',
-    buttonEvent: function(e) {
-      console.log(e);
-    }
+    ...defaultMeasure
   };
 
   const dataFieldDimension = {
