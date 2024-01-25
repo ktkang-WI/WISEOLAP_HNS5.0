@@ -181,7 +181,7 @@ const useReportSave = () => {
         reload(reportType);
       }
 
-      dispatch(itemActions.ddeleteItemForDesigner(reportId));
+      dispatch(itemActions.deleteItemForDesigner(reportId));
       dispatch(layoutActions.deleteLayoutForDesigner(
           {reportId: reportId, reportType: reportType}
       ));
