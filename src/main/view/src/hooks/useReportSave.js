@@ -34,7 +34,7 @@ const useReportSave = () => {
   const {executeItems, executeSpread} = useQueryExecute();
 
   const {
-    insertReport,
+    changeReport,
     updateReport,
     deleteReport,
     initReport,
@@ -165,7 +165,7 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(insertReport(report.reports[0]));
+    dispatch(changeReport(report));
     dispatch(changeItemReportId(reportId));
     dispatch(changeLayoutReportId(reportId));
     dispatch(changeDatasetReportId(reportId));

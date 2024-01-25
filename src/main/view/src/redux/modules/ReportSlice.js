@@ -31,7 +31,7 @@ const reducers = {
     return cloneState;
   },
   changeReport(state, actions) {
-    state = actions.payload;
+    return {...actions.payload};
   },
   /*
    * 보고서 추가

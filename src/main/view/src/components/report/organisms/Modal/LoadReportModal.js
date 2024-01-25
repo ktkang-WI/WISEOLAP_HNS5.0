@@ -43,7 +43,9 @@ const LoadReportModal = ({...props}) => {
                   } catch {
                     alert(localizedString.reportCorrupted);
                   }
-                }).catch(alert(localizedString.reportCorrupted));
+                }).catch(() => {
+                  alert(localizedString.reportCorrupted);
+                });
           } else {
             openModal(Alert, {
               message: '선택한 항목이 보고서가 아닙니다.'
