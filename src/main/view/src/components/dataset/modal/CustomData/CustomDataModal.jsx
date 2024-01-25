@@ -33,6 +33,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     generatedFields.unshift({
       name: '계산된 필드',
       type: 'FLD',
+      parentId: '0',
       uniqueName: '987654321',
       icon: folderImg
     });
