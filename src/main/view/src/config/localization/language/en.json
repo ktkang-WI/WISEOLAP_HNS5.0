@@ -312,5 +312,6 @@
   "reportCorrupted": "This report is corrupted, Please connect to manager.",
   "menuChangeConfirm": "Unsaved work may be lost. Do you want to move?",
   "requireReloadMsg": "This option applies when reloading.",
-  "requiredFieldNotExist": "is a required value, Please check."
+  "requiredFieldNotExist": "is a required value, Please check.",
+  "deleteParameterMsg": "Would you like to delete this parameter?"
 }

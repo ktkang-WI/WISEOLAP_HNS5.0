@@ -154,12 +154,12 @@ public class ReportService {
     	options.put("reportDesc", entity.getReportDesc());
     	options.put("reportSubTitle", entity.getReportSubTitle());
     	options.put("reportPath", null);
-    	
+
     	report.put("reportId", Integer.parseInt(reportId));
     	report.put("options", options);
-    	
+
     	reports.add(report);
-    	
+
     	returnMap.put("reports", reports);
 
         return returnMap;
@@ -441,6 +441,7 @@ public class ReportService {
             .reportOrdinal(reportMstrDTO.getReportOrdinal())
             .reportType(reportMstrDTO.getReportType().toString())
             .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
             .regUserNo(0)
             .chartXml(reportMstrDTO.getChartXml())
@@ -490,6 +491,7 @@ public class ReportService {
             .reportOrdinal(reportMstrDTO.getReportOrdinal())
             .reportType(reportMstrDTO.getReportType().toString())
             .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
             .regUserNo(0)
             .chartXml(reportMstrDTO.getChartXml())
