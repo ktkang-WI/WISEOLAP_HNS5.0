@@ -333,5 +333,6 @@
   "deleteReportMsg": "보고서를 삭제했습니다.",
   "failedDeleteReportMsg": "보고서 삭제를 실패했습니다. \n 관리자에게 문의하세요.",
   "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다.",
-  "requiredFieldNotExist": "의 항목이 비어있습니다."
+  "requiredFieldNotExist": "의 항목이 비어있습니다.",
+  "deleteParameterMsg": "매개변수를 삭제하시겠습니까?"
 }
