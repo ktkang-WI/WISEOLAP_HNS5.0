@@ -71,12 +71,22 @@ const PivotGrid = ({id, adHocOption, item}) => {
     showTotalsPrior = 'none';
   }
 
+  const fieldCount = mart.dataSourceConfig.fields().reduce((acc, f) => {
+    if (f.area == 'column') {
+      acc.column++;
+    }
+    if (f.area == 'row') {
+      acc.row++;
+    }
+    return acc;
+  }, {row: 0, column: 0});
+
   const fieldPanel = {
     allowFieldDragging: false,
-    showColumnFields: dataField.column.length > 0,
+    showColumnFields: fieldCount.column > 0,
     showDataFields: false,
     showFilterFields: false,
-    showRowFields: dataField.row.length > 0,
+    showRowFields: fieldCount.row > 0,
     visible: meta.showFilter
   };
 

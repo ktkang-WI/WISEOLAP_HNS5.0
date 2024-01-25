@@ -10,7 +10,8 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
+import {selectCurrentInformationas,
+  selectRootParameter} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
@@ -279,10 +280,35 @@ const useReportSave = () => {
   };
 
   const querySearch = () => {
-    if (designerMode !== DesignerMode['EXCEL']) {
-      executeItems();
+    let parameters = selectRootParameter(store.getState());
+
+    const execute = () => {
+      if (designerMode !== DesignerMode['EXCEL']) {
+        executeItems();
+      } else {
+        executeSpread();
+      }
+    };
+
+    if (parameters.informations.length ==
+      parameters.filterSearchComplete.length) {
+      execute();
     } else {
-      executeSpread();
+      let count = 0;
+      const wait = setInterval(() => {
+        count++;
+        parameters = selectRootParameter(store.getState());
+
+        if (parameters.informations.length ==
+          parameters.filterSearchComplete.length) {
+          execute();
+          clearInterval(wait);
+        }
+
+        if (count >= 100) {
+          clearInterval(wait);
+        }
+      }, 500);
     }
   };
 
