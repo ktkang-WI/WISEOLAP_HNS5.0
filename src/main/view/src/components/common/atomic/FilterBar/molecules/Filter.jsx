@@ -61,7 +61,7 @@ const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
         {isTo ? '~' : info.caption}
       </FilterLabel>
       {getFilter(info.paramType)}
-      {info.dsType == 'CUBE' && onDeleted &&
+      {onDeleted &&
         <DeleteButton onClick={() => {
           onDeleted();
         }}>X</DeleteButton>

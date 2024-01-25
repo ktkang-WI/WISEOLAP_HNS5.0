@@ -65,7 +65,7 @@ const FilterBarWrapper = (props) => {
     }
   };
 
-  const onDeleted = (name) => {
+  const deleteConfirm = (name) => {
     confirm(localizedString.deleteParameterMsg, () => {
       dispatch(deleteParameter({reportId, name}));
     });
@@ -87,16 +87,24 @@ const FilterBarWrapper = (props) => {
                 onValueChanged
               };
 
+              let onDeleted = undefined;
+
+              if (filter.dsType == 'CUBE') {
+                onDeleted = () => {
+                  deleteConfirm(filter.name);
+                };
+              }
+
               if (filter.operation == 'BETWEEN') {
                 acc.push(<Filter {...filterProps}/>);
                 acc.push(<Filter
                   isTo={true}
                   {...filterProps}
-                  onDeleted={() => onDeleted(filter.name)}/>);
+                  onDeleted={onDeleted}/>);
               } else {
                 acc.push(<Filter
                   {...filterProps}
-                  onDeleted={() => onDeleted(filter.name)}/>);
+                  onDeleted={onDeleted}/>);
               }
 
               if (filter.lineBreak) {
