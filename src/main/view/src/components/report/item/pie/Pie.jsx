@@ -9,7 +9,7 @@ import {
 import customizeOption from './customizingPie/CustomizeOption';
 import React from 'react';
 
-const Pie = ({item}) => {
+const Pie = ({id, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   if (!mart.init) {
@@ -21,6 +21,7 @@ const Pie = ({item}) => {
   const pies = seriesDimensionNames.map((dimension, idx) => {
     return (
       <PieChart
+        id={id}
         key={idx}
         type={meta.pieChartStyle}
         dataSource={mart.data.data} // mart
