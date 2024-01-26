@@ -10,12 +10,7 @@ const initialState = {
 
 const reducers = {
   /* REPORT */
-  initDatasets(state, actions) {
-    delete state[actions.payload];
-
-    state[0] = initialState[0];
-  },
-  // 파라미터로 reportId와 dataset
+  initDatasets: (state, actions) => initialState,
   insertDataset(state, actions) {
     const reportId = actions.payload.reportId;
     if (!state[reportId]) {
@@ -70,6 +65,10 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId].selectedDatasetId = actions.payload.datasetId;
   },
+  setDataset(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId] = actions.payload.dataset;
+  },
   changeDatasetReportId(state, actions) {
     const prevId = actions.payload.prevId;
     const newId = actions.payload.newId;
@@ -86,6 +85,12 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state[0] = initialState[0];
     }
+  },
+  changeDataset(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.dataset;
   }
 };
 

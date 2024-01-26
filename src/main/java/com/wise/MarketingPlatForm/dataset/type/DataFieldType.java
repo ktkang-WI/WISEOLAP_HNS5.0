@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum DataFieldType {
-  MEASURE("measure"), DIMENSION("dimension");
+  MEA("measure"), DIM("dimension");
 
   private final String symbol;
 

@@ -5,10 +5,14 @@ import Wrapper from '../../Common/Wrap/Wrapper';
 import CommonButton from '../../Common/Button/CommonButton';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
-const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
+const allText = localizedString.all;
+
+const ListFilter = ({
+  info, value, isTo, onValueChanged, width, id, ...props}) => {
   const index = isTo ? 1 : 0;
   const [selectionKeys, setSelectionKeys] = useState([]);
   const [text, setText] = useState('');
@@ -17,26 +21,23 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
-    const temp = _.cloneDeep(keys);
-    let tempText = '';
+    const keySet = new Set(keys);
+    const captionArr = [];
 
     for (const item of value.listItems) {
-      const index = temp.indexOf(item.name);
-      if (index >= 0) {
-        tempText += item.caption + ', ';
-        temp.splice(index, 1);
+      if (keySet.has(item.name)) {
+        captionArr.push(item.caption);
+        keySet.delete(item.name);
       }
-      if (temp.length == 0) {
+      if (keySet.size == 0) {
         break;
       }
     }
-    if (tempText.length > 0) {
-      tempText = tempText.substring(0, tempText.length - 2);
-    } else {
-      return '전체';
+    if (captionArr.length > 0) {
+      return captionArr.join(', ');
     }
 
-    return tempText;
+    return allText;
   };
 
   useEffect(() => {
@@ -45,8 +46,10 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     if (!value || !value.value) {
       setText('');
     } else if (!keys || keys == '[All]') {
-      keys = value.listItems.map((item) => item.name);
-      setText('전체');
+      if (info.multiSelect) {
+        keys = value.listItems.map((item) => item.name);
+      }
+      setText(allText);
     } else {
       keys = keys.split(', ');
       setText(generateCaptionText(keys));
@@ -74,19 +77,23 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
       const selectionKeys = listRef.current.instance.option('selectedItemKeys');
       let selection;
       if (selectionKeys.length == 0 ||
-          selectionKeys.length == dataSource.length) {
+          selectionKeys.length == dataSource.length ||
+          (info.useAll && !info.multiSelect &&
+          selectionKeys.length == dataSource.length - 1)) {
         selection = '[All]';
+        setText(allText);
       } else {
         selection = selectionKeys.join(', ');
+        setText(generateCaptionText(selectionKeys));
       }
 
       onValueChanged(info.name, selection, index);
       setSelectionKeys(selectionKeys);
-      setText(generateCaptionText(selectionKeys));
       popOverRef.current.instance.hide();
     };
 
     const cancel = () => {
+      listRef.current.instance.option('selectedItemKeys', selectionKeys);
       popOverRef.current.instance.hide();
     };
 
@@ -98,7 +105,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     } else if (info.useAll) {
       dataSource.unshift({
         name: '[All]',
-        caption: '전체'
+        caption: allText
       });
     }
 
@@ -107,7 +114,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
         <StyledList
           selectionMode={selectionMode}
           showSelectionControls={true}
-          selectAllText='전체'
+          selectAllText={allText}
           selectAllMode={'allPage'}
           selectedByClick={true}
           height='200px'
@@ -116,6 +123,9 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
           ref={listRef}
           defaultSelectedItemKeys={selectionKeys}
           dataSource={dataSource}
+          searchEnabled={info.useSearch}
+          searchMode='contains'
+          searchExpr={'caption'}
         >
         </StyledList>
         <Footer>
@@ -132,23 +142,25 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
 
   return (
     <>
-      <div id={props.id + '_wrapper'}>
+      <div id={id + '_wrapper'}>
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
           height={theme.size.filterHeight}
           readOnly={true}
           value={text}
+          width={width}
+          {...props}
         />
       </div>
       <Popover
-        target={'#' + props.id + '_wrapper'}
+        target={'#' + id + '_wrapper'}
         showEvent={'click'}
         minWidth="200px"
         height="300px"
         ref={popOverRef}
-        width={props.width}
-        maxWidth={props.width? props.width : '200px'}
+        width={width}
+        maxWidth={width || '200px'}
         hideOnOutsideClick
         contentRender={renderContent}
       >

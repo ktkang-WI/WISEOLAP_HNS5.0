@@ -1,12 +1,12 @@
 import Footer from '../molecules/Footer';
 import Content from '../atoms/Content';
-import Overlay from '../atoms/Overlay';
 import Inner from '../atoms/Inner';
 import {motion} from 'framer-motion';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import Header from '../molecules/Header';
 import localizedString from 'config/localization';
 import Draggable from 'react-draggable';
+import Overlay from '../../Common/Wrap/Overlay';
 
 const Alert = ({
   children,
@@ -19,7 +19,7 @@ const Alert = ({
 }) => {
   return (
     <motion.div
-      initial={{opacity: 0, zIndex: 30}}
+      initial={{opacity: 0, zIndex: 1600}}
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       style={{position: 'fixed'}}

@@ -8,6 +8,7 @@ import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
 import Spreadsheet from 'components/designer/Spreadsheet';
+import {DesignerMode} from 'components/config/configType';
 
 const contextPath = '/editds';
 
@@ -31,15 +32,15 @@ const router = createBrowserRouter([
     element: <Designer/>,
     children: [
       {
-        path: 'dashboard',
+        path: DesignerMode['DASHBOARD'].toLowerCase(),
         element: <Dashboard/>
       },
       {
-        path: 'adhoc',
+        path: DesignerMode['AD_HOC'].toLowerCase(),
         element: <Adhoc/>
       },
       {
-        path: 'spreadsheet',
+        path: DesignerMode['EXCEL'].toLowerCase(),
         element: <Spreadsheet/>
       }
     ]

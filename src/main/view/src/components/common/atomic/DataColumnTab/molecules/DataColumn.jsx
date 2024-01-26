@@ -11,6 +11,8 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import NumberFormatModal
+  from 'components/report/atomic/Format/organisms/NumberFormatModal';
 import {getContextMenu} from '../utils/contextMenu';
 import DataColumnSeriesOptions
   from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
@@ -24,7 +26,7 @@ const ColumnWrapper = styled.div`
   margin: 5px;
   ${(props) => props.fixed &&
   'transform: none !important;'}
-
+  
 `;
 
 const Column = styled.div`
@@ -133,6 +135,12 @@ const DataColumn = ({
           dispatch(updateItemField({reportId,
             dataField: {...data, caption: caption}}));
         }
+      });
+    },
+    'Format': (e) => {
+      openModal(NumberFormatModal, {
+        dataField: data,
+        reportId: reportId
       });
     },
     'SortBy': (e) => {
