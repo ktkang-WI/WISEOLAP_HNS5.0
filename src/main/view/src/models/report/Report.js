@@ -100,3 +100,8 @@ export const downloadReportAll = (param) => {
       })
       .catch((error) => console.error('Download error:', error));
 };
+
+export const downloadReportAllExceljs = (param) => {
+  axios.post(path + '/download-report-all-exceljs', param, {
+  });
+};
