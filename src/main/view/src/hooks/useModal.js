@@ -61,7 +61,7 @@ export default function useModal() {
     openModal,
     closeModal,
     alert,
-    confirm,
-    warning
+    warning,
+    confirm
   };
 };
