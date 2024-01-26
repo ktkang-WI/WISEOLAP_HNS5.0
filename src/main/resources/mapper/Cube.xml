@@ -47,6 +47,15 @@
     <result column="format" property="format" javaType="String"/>
     <result column="MEA_ORDER" property="meaOrder" javaType="int"/>
 	</resultMap>
+
+  <resultMap id="CubeActMstr" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeActMstrEntity">
+    <result column="CUBE_ID" property="cubeId" javaType="int"/>
+    <result column="ACT_ID" property="actId" javaType="int"/>
+    <result column="ACT_NM" property="actNm" javaType="String"/>
+    <result column="MEA_GRP_UNI_NM" property="meaGrpUniNm" javaType="String"/>
+    <result column="MAX_ROWS" property="maxRows" javaType="int"/>
+    <result column="ACT_DESC" property="actDesc" javaType="String"/>
+  </resultMap>
 	
 <!-- Mapper End -->
 
@@ -75,6 +84,13 @@
 		FROM	CUBE_DIM_MSTR T1
 		WHERE	CUBE_ID = #{cubeId}
 		AND 	T1.DIM_IS_VISIBLE = 1
+  </select>
+
+  <select id="selectDetailedData" parameterType="String" resultMap="CubeActMstr">
+    SELECT	*
+    FROM	CUBE_ACT_MSTR
+    WHERE	CUBE_ID = #{cubeId}
+    ORDER BY ACT_ID
   </select>
 
   <select id="selectCubeDimColumns" parameterType="String" resultMap="CubeDimColumn">

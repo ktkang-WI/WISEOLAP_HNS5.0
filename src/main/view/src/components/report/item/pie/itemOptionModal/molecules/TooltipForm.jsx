@@ -86,21 +86,21 @@ const TooltipForm = ({selectedItem}, ref) => {
         <Label>{localizedString.billions}</Label>
       </Item>
       <Item
-        dataField='degree'
+        dataField='precsion'
         editorType='dxNumberBox'
       >
-        <Label>{localizedString.degree}</Label>
+        <Label>{localizedString.precsion}</Label>
       </Item>
       <Item
-        dataField='degreeOption'
+        dataField='precsionOption'
         editorType='dxSelectBox'
         editorOptions={{
-          dataSource: localizedString.degreeOptions,
+          dataSource: localizedString.precsionOptions,
           displayExpr: 'caption',
           valueExpr: 'name'
         }}
       >
-        <Label>{localizedString.degreeOption}</Label>
+        <Label>{localizedString.precsionOption}</Label>
       </Item>
     </Form>
   );

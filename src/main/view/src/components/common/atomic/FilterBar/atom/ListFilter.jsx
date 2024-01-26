@@ -11,7 +11,8 @@ const theme = getTheme();
 
 const allText = localizedString.all;
 
-const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
+const ListFilter = ({
+  info, value, isTo, onValueChanged, width, id, ...props}) => {
   const index = isTo ? 1 : 0;
   const [selectionKeys, setSelectionKeys] = useState([]);
   const [text, setText] = useState('');
@@ -20,26 +21,23 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
-    const temp = _.cloneDeep(keys);
-    let tempText = '';
+    const keySet = new Set(keys);
+    const captionArr = [];
 
     for (const item of value.listItems) {
-      const index = temp.indexOf(item.name);
-      if (index >= 0) {
-        tempText += item.caption + ', ';
-        temp.splice(index, 1);
+      if (keySet.has(item.name)) {
+        captionArr.push(item.caption);
+        keySet.delete(item.name);
       }
-      if (temp.length == 0) {
+      if (keySet.size == 0) {
         break;
       }
     }
-    if (tempText.length > 0) {
-      tempText = tempText.substring(0, tempText.length - 2);
-    } else {
-      return allText;
+    if (captionArr.length > 0) {
+      return captionArr.join(', ');
     }
 
-    return tempText;
+    return allText;
   };
 
   useEffect(() => {
@@ -95,6 +93,7 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
     };
 
     const cancel = () => {
+      listRef.current.instance.option('selectedItemKeys', selectionKeys);
       popOverRef.current.instance.hide();
     };
 
@@ -125,6 +124,8 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
           defaultSelectedItemKeys={selectionKeys}
           dataSource={dataSource}
           searchEnabled={info.useSearch}
+          searchMode='contains'
+          searchExpr={'caption'}
         >
         </StyledList>
         <Footer>
@@ -141,23 +142,25 @@ const ListFilter = ({info, value, isTo, onValueChanged, ...props}) => {
 
   return (
     <>
-      <div id={props.id + '_wrapper'}>
+      <div id={id + '_wrapper'}>
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
           height={theme.size.filterHeight}
           readOnly={true}
           value={text}
+          width={width}
+          {...props}
         />
       </div>
       <Popover
-        target={'#' + props.id + '_wrapper'}
+        target={'#' + id + '_wrapper'}
         showEvent={'click'}
         minWidth="200px"
         height="300px"
         ref={popOverRef}
-        width={props.width}
-        maxWidth={props.width? props.width : '200px'}
+        width={width}
+        maxWidth={width || '200px'}
         hideOnOutsideClick
         contentRender={renderContent}
       >

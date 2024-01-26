@@ -69,7 +69,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
       onSubmit={()=> {
         if (!_.isEmpty(selectedCube)) {
           models.Cube.getByCubeId(userId, selectedCube.cubeId)
-              .then((data) => {
+              .then(({data}) => {
                 const datasets =
                     selectRootDataset(store.getState());
 
@@ -81,15 +81,15 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   data.fields = data.fields.map((field) => {
                     // 그룹일 경우
                     if (!field.parentId) {
-                      if (field.type == 'DIMENSION') {
+                      if (field.type == 'DIM') {
                         field.icon = cubeDimGrpImg;
-                      } else if (field.type == 'MEASURE') {
+                      } else if (field.type == 'MEA') {
                         field.icon = cubeMeaGrpImg;
                       }
                     } else {
-                      if (field.type == 'DIMENSION') {
+                      if (field.type == 'DIM') {
                         field.icon = dimImg;
-                      } else if (field.type == 'MEASURE') {
+                      } else if (field.type == 'MEA') {
                         field.icon = meaImg;
                       }
                     }
@@ -102,6 +102,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     dataset: {
                       ...selectedDsView,
                       ...selectedCube,
+                      detailedData: data.detailedData,
                       fields: data.fields,
                       datasetNm: selectedCube.cubeNm,
                       datasetId: datasetId,
@@ -132,7 +133,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                   if (e.selectedRowsData.length > 0) {
                     models.Cube.getByDsViewId(userId,
                         e.selectedRowsData[0].dsViewId)
-                        .then((data) => {
+                        .then(({data}) => {
                           setSelectedCubeList(data);
                           setSelectedDsView(e.selectedRowsData[0]);
                         });

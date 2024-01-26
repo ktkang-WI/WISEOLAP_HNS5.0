@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -19,17 +17,13 @@ import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResul
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.util.ListParameterUtils;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
-import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
-import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
-import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
-import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
 
@@ -278,7 +272,7 @@ public class DatasetService {
              List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
              for (MetaDTO metaDTO : metaDTOs) {
-                 if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER")) {
+                 if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
                      metaDTO.setColumnTypeName("decimal");
                  }
              }

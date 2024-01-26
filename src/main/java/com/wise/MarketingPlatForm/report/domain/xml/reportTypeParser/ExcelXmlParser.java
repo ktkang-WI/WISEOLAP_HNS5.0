@@ -160,8 +160,7 @@ public class ExcelXmlParser extends XMLParser{
 						String uniqueName = fieldObject.optString("UNI_NM");
 						String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
 						Integer order = fieldObject.getInt("ORDER");
-						DataFieldType type = "MEA".equals(fieldObject.getString("TYPE")) ? DataFieldType.MEASURE
-								: DataFieldType.DIMENSION;
+						DataFieldType type = DataFieldType.fromString(fieldObject.getString("TYPE")).get();
 
 						if (datasrcType.equals(DsType.CUBE.toString())) {
 							// 추후 추가
