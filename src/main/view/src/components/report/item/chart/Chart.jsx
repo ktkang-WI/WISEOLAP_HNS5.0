@@ -20,7 +20,8 @@ import {
   overlappingFormat
 } from './seriesOption/SeriesOption';
 
-const Chart = ({id, dataFields, adHocOption, item}) => {
+const Chart = ({id, adHocOption, item}) => {
+  const dataFields = item.meta.dataField;
   let seriesOptions = null;
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
   const {
