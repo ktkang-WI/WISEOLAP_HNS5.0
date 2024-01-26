@@ -11,6 +11,9 @@ import useReportSave from 'hooks/useReportSave';
 import {useRef} from 'react';
 import models from 'models';
 import useModal from 'hooks/useModal';
+import useSpread from 'hooks/useSpread';
+import useFile from 'hooks/useFile';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -36,8 +39,10 @@ const ReportSaveModal = ({...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
-  const {saveReport, generateParameter} = useReportSave();
+  const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
+  const {createReportBlob} = useSpread();
+  const {fileUpload} = useFile();
   /**
    * SaveReportModal state(dataSource) 값 설정
    * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
@@ -59,22 +64,30 @@ const ReportSaveModal = ({...props}) => {
       formInstance.getEditor('fldName').focus();
       alert('폴더를 선택해 주세요.');
     } else {
-      // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
-      // reportId 를 0 으로 하여 무조건 insert 하게 한다.
-      dataSource.reportId = 0;
       const param = generateParameter(dataSource);
       let isOk = false;
-      await models.Report.addReport(param).then((res) => {
+      await models.Report.insertReport(param).then((res) => {
         if (res.status != 200) {
-          alert('보고서 저장에 실패했습니다. 관리자에게 문의하세요.');
+          alert(localizedString.faildSaveReportMsg);
           return;
         }
-        if (res.data.dupleYn === 'Y') {
-          alert('보고서 이름이 중복됩니다.');
+        if (res.data.report.reportType === DesignerMode['EXCEL']) {
+          createReportBlob().then((bolb) => fileUpload(
+              bolb, {fileName: response.report.reportId + '.xlsx'}));
+        }
+        const data = res.data;
+        const msg = data.msg;
+        const result = data.result;
+
+
+        alert(localizedString[msg]);
+
+        if (result) {
+          addReport(data);
+          isOk = true;
+        } else {
           return;
         }
-        isOk = true;
-        saveReport(res);
       });
       return !isOk;
     }

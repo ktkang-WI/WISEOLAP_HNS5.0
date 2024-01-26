@@ -321,14 +321,18 @@
   "m": "M",
   "b": "B",
   "datasetBinding": "Dataset Binding",
-  "file": "file",
-  "importFileFromPC": "Import File From PC",
+  "file": "File",
+  "importFileFromPC": "Import file from PC",
   "print": "Print",
-  "spreadBindingInfoNot": "This Report Dosen't have Dataset Binding Info.",
-  "yAsixStartPoint": "Y Axis Draw From '0'",
+  "yAsixStartPoint": "Y Axis Drawing From '0'",
   "yAxisMark": "Y Axis Display",
   "axisCutomText": "Y Axis Label",
   "numberSeperator": "Number Seperator(',') Display",
   "NumberPreview": "PreView",
-  "loadingReportError": "On Loading the Report Occured Error. Please Connect to Manager"
+  "spreadBindingInfoNot": "This report doesn't have dataset binding info.",
+  "reportCorrupted": "This report is corrupted, Please connect to manager.",
+  "menuChangeConfirm": "Unsaved work may be lost. Do you want to move?",
+  "requireReloadMsg": "This option applies when reloading.",
+  "requiredFieldNotExist": "is a required value, Please check.",
+  "deleteParameterMsg": "Would you like to delete this parameter?"
 }

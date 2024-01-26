@@ -21,7 +21,7 @@ const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
   const dispatch = useDispatch();
   const {deleteDataset} = DatasetSlice.actions;
-  const {deleteParameterByDatsetId,
+  const {deleteParameterByDatasetId,
     updateParameterInformation
   } = ParameterSlice.actions;
   const {initItemByDatsetId} = ItemSlice.actions;
@@ -80,7 +80,7 @@ const PanelTitleDefaultElement = () => {
         confirm('데이터 집합을 삭제하시겠습니까?', () => {
           const datasetId = dataset.datasetId;
           dispatch(deleteDataset({datasetId, reportId}));
-          dispatch(deleteParameterByDatsetId({reportId, datasetId}));
+          dispatch(deleteParameterByDatasetId({reportId, datasetId}));
           dispatch(initItemByDatsetId({reportId, datasetId}));
         });
       },

@@ -7,12 +7,10 @@ import DevChart, {
   Title
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
-import {selectCurrentDataField}
-  from 'redux/selector/ItemSelector';
-import {useSelector} from 'react-redux';
 import useQueryExecute from 'hooks/useQueryExecute';
 import React, {useRef, useEffect} from 'react';
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import _ from 'lodash';
 
 const Chart = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -23,12 +21,6 @@ const Chart = ({id, adHocOption, item}) => {
 
   const seriesNames = mart.data.info.seriesDimensionNames;
   const seriesCaptions = mart.data.info.seriesDimensionCaptions;
-  const dataFields = useSelector(selectCurrentDataField);
-  const meaLength = dataFields.measure.length;
-  const seriesLength = seriesNames.length / meaLength;
-  const formats = dataFields.measure.map((measure) => ({
-    format: measure.format
-  }));
   const interactiveOption = adHocOption ?
   {} : meta.interactiveOption;
 
@@ -70,7 +62,7 @@ const Chart = ({id, adHocOption, item}) => {
     const filters = selectedData.reduce((acc, filter) => {
       if (targetDiemnsion == 'dimension') {
         filter.split('<br/>').reverse().forEach((v, i) => {
-          const name = dim[i].name;
+          const name = dim[i].uniqueName;
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -80,7 +72,7 @@ const Chart = ({id, adHocOption, item}) => {
       } else {
         filter.split('-').forEach((v, i) => {
           if (dimGrp.length <= i) return;
-          const name = dimGrp[i].name;
+          const name = dimGrp[i].uniqueName;
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -98,6 +90,7 @@ const Chart = ({id, adHocOption, item}) => {
     }
     return filters;
   };
+
   const onPointClick = ({target, component}) => {
     if (!interactiveOption.enabled) return;
     // 대상 차원이 차원일 경우
@@ -138,6 +131,7 @@ const Chart = ({id, adHocOption, item}) => {
     }
     filterItems(item, getFilter());
   };
+
   return (
     <DevChart
       dataSource={mart.data.data}
@@ -203,7 +197,7 @@ const Chart = ({id, adHocOption, item}) => {
         enabled={true}
         location='edge'
         customizeTooltip={
-          (info) => customizeTooltip(info, false, formats)
+          (info) => customizeTooltip(info, false, mart.formats)
         }
       ></Tooltip>
       {
@@ -211,7 +205,7 @@ const Chart = ({id, adHocOption, item}) => {
             (valueField, i) =>
               <Series
                 key={valueField}
-                tag={Math.floor(i / seriesLength)}
+                tag={Math.floor(i / mart.seriesLength)}
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
@@ -222,7 +216,7 @@ const Chart = ({id, adHocOption, item}) => {
                   position='outside'
                   offset={50}
                   customizeText={
-                    (info) => customizeTooltip(info, true, formats)
+                    (info) => customizeTooltip(info, true, mart.formats)
                   }
                 />
               </Series>
@@ -232,4 +226,11 @@ const Chart = ({id, adHocOption, item}) => {
   );
 };
 
-export default React.memo(Chart);
+const propsComparator = (prev, next) => {
+  return _.isEqual(prev.item.mart, next.item.mart) &&
+  _.isEqual(prev.item.meta.interactiveOption,
+      next.item.meta.interactiveOption) &&
+  _.isEqual(prev.adHocOption, next.adHocOption);
+};
+
+export default React.memo(Chart, propsComparator);

@@ -1,4 +1,8 @@
 import {setMeta} from '../util/metaUtilityFactory';
+import {defaultDimension, defaultMeasure}
+  from 'components/report/item/util/martUtilityFactory';
+import localizedString from 'config/localization';
+import {DataFieldType} from '../util/dataFieldType';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
@@ -38,6 +42,32 @@ const generateMeta = (item) => {
 
 const generateItem = () => {
 
+};
+
+/**
+ * 아이템 객체의 데이터 항목 옵션
+ * @return {JSON} dataFieldOption
+ */
+const getDataFieldOptionChild = () => {
+  const dataFieldMeasure = {
+    ...defaultMeasure
+  };
+
+  const dataFieldDimension = {
+    ...defaultDimension
+  };
+
+  const dataFieldDimensionGroup = {
+    ...defaultDimension,
+    label: localizedString.dimensionGroup,
+    placeholder: localizedString.dimensionGroupPlaceholder
+  };
+
+  return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
+    [DataFieldType.DIMENSION]: dataFieldDimension,
+    [DataFieldType.DIMENSION_GROUP]: dataFieldDimensionGroup
+  };
 };
 
 const generateParameter = (item, param) => {
@@ -88,6 +118,7 @@ const getTabHeaderItems = () => {
 export default {
   generateMeta,
   generateItem,
+  getDataFieldOptionChild,
   generateParameter,
   getRibbonItems,
   getAttributeItems,

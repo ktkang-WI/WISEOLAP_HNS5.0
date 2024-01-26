@@ -68,7 +68,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
         }
         return {...prev, ...next};
       },
-      {}
+      paramInfo.length > 0 ? paramInfo[0] : {}
   );
 
   const getNewParamInfo = () => {
@@ -138,17 +138,19 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
           height='100%'>
           <ParameterList
             compact={true}
-            // TODO: 해당 부분 추후 데이터 집합 수정 추가시 dataset에 해당하는 param만 보이게 필터 걸어야함.
             dataSource={paramInfo}
-            d={selectedParam}
+            selectedRowKeys={
+              _.isEmpty(selectedParam) ? [] : [selectedParam.name]
+            }
+            keyExpr='name'
             selection={{mode: 'single'}}
             onSelectionChanged={(e) => {
               if (!_.isEmpty(selectedParam)) {
+                if (selectedParam.name == e.selectedRowsData[0].name) return;
+
                 const newParamInfo = getNewParamInfo();
                 setParamInfo(newParamInfo);
               }
-
-              if (selectedParam.name == e.selectedRowsData[0].name) return;
 
               if (e.selectedRowsData.length > 0) {
                 setSelectedParam(e.selectedRowsData[0]);

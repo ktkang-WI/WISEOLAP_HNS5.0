@@ -1,3 +1,4 @@
+
 on:
   workflow_dispatch:
 
@@ -28,10 +29,10 @@ jobs:
           chmod -R 777 ./
           ./mvnw clean install
       - name: Undeploy Application
-        run: curl -u 'wise:wise1012' "http://3.37.38.145:38080/manager/text/undeploy?path=/editds"
+        run: curl -u 'wise:wise1012' "http://intelligence.wise.co.kr:58080/manager/text/undeploy?path=/editds"
 
       - name: Deploy Application
         run: |
           cd target
           mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds.war
-          curl -u 'wise:wise1012' -X PUT --upload-file editds.war "http://3.37.38.145:38080/manager/text/deploy?path=/editds"
+          curl -u 'wise:wise1012' -X PUT --upload-file editds.war "http://intelligence.wise.co.kr:58080/manager/text/deploy?path=/editds"

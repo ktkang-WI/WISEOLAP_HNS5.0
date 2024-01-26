@@ -72,7 +72,14 @@ const reducers = {
     state[reportId].filterSearchComplete =
         state[reportId].filterSearchComplete.concat([filterId]);
   },
-  deleteParameterByDatsetId(state, actions) {
+  deleteParameter(state, actions) {
+    const reportId = actions.payload.reportId;
+    const paramNm = actions.payload.name;
+    state[reportId].informations =
+      state[reportId].informations.filter((info) => info.name != paramNm);
+    delete state[reportId].values[paramNm];
+  },
+  deleteParameterByDatasetId(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
@@ -109,6 +116,18 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state[0] = initialState[0];
     }
+  },
+  changeParameterInformation(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    const informations = actions.payload.informations;
+
+    delete state[prevId];
+    state[newId] = {};
+
+    state[newId].informations = informations;
+    state[newId].values = {};
+    state[newId].filterSearchComplete = [];
   }
 };
 

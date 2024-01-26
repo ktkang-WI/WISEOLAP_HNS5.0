@@ -95,7 +95,9 @@ const useCustomEvent = () => {
     }
   };
 
-  return {ribbonConfig};
+  return {
+    ribbonConfig
+  };
 };
 
 export default useCustomEvent;

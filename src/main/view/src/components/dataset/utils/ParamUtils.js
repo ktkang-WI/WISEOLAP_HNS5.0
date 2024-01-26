@@ -119,7 +119,7 @@ const sanitizeParamInformation = (param) => {
  * @return {Array} names를 담은 배열
  */
 const getParameterNamesInQuery = (query) => {
-  return query.match(/@[^()\s]+/g);
+  return _.uniq(query.match(/@[^()\s]+/g));
 };
 
 const getCubeParameterNamesCube = (paramInfo, paramName) => {
@@ -165,6 +165,25 @@ const parseStringFromDate = (date, format) => {
   return str;
 };
 
+const filterToParameter = (values, columnInfo, dsId) => {
+  const name = '@WISE_F_' + columnInfo.physicalTableName +
+      '_' + columnInfo.physicalColumnKey;
+
+  return {
+    name: name,
+    values: values,
+    caption: columnInfo.physicalColumnName,
+    exceptionValue: columnInfo.physicalTableName + '.' +
+        columnInfo.physicalColumnKey,
+    uniqueName: columnInfo.logicalColumnName,
+    dataType: 'STRING',
+    operation: 'IN',
+    dsType: 'CUBE',
+    dsId: dsId,
+    paramType: 'LIST'
+  };
+};
+
 /**
  * 쿼리 실행에 필요한 Request Body 생성
  * @param {*} parameters 매개변수 목록
@@ -185,7 +204,6 @@ const generateParameterForQueryExecute = (parameters) => {
       p.calendarPeriodBase.map((base, i) => {
         const value = p.calendarPeriodValue ? p.calendarPeriodValue[i] : 0;
         const date = getCalendarNowDefaultValue(base, value);
-        // TODO: 달력 필터 기본값 만들기
         values.push(
             parseStringFromDate(date, p.calendarKeyFormat)
         );
@@ -202,9 +220,7 @@ const generateParameterForQueryExecute = (parameters) => {
       dsId: p.dsId,
       uniqueName: p.uniqueName,
       caption: p.cpation,
-      paramType: p.paramType,
-      itemCaption: p.itemCaption,
-      itemKey: p.itemKey
+      paramType: p.paramType
     };
   });
 
@@ -244,5 +260,6 @@ export default {
   generateParameterForQueryExecute,
   getCalendarNowDefaultValue,
   newCubeParamInformation,
-  getCubeParameterNamesCube
+  getCubeParameterNamesCube,
+  filterToParameter
 };

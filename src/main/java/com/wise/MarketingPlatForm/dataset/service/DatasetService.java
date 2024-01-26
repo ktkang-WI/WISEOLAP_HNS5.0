@@ -272,7 +272,7 @@ public class DatasetService {
              List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
              for (MetaDTO metaDTO : metaDTOs) {
-                 if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER")) {
+                 if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
                      metaDTO.setColumnTypeName("decimal");
                  }
              }
