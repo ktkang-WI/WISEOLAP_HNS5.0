@@ -222,7 +222,7 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion);
         String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
-        String[] items= layoutType.split("_");
+        String[] items = layoutType.split("_");
 
         MartResultDTO martResultDTO = martDAO.select(query);
         List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
