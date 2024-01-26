@@ -44,7 +44,7 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
     let addedLine = '';
     lines.forEach((line, index) => {
       const operPatternCase1 = /[\*+-\/]{2,}\s{0,}/g;
-      const operPatternCase2 = /(\]\s{0,1}\d)|(\d\s{0,1}\[)/g;
+      const operPatternCase2 = /(\]\s{0,}\d)|(\d\s{0,}\[)/g;
       const numberPattern = /\d\s{1,}\d/g;
       const parenthesisEmpty = /\(\s*\)/g;
       let test = '';
@@ -69,6 +69,8 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
           text: '계산식이 잘못되었습니다.'
         });
         handleCheck(false);
+      } else {
+        handleCheck(true);
       }
     });
     setAnnotations(newAnnotations);
@@ -79,7 +81,6 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
       const validateCode = () => {
         const lines = props.value.split('\n');
         handleLineException(lines);
-        handleCheck(true);
       };
       validateCode();
     };
