@@ -209,7 +209,7 @@ const Chart = ({id, adHocOption, item}) => {
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
-                type={meta.seriesType}
+                type={meta.seriesType ? meta.seriesType : 'bar'}
               >
                 <Label
                   visible={true}
@@ -230,6 +230,10 @@ const propsComparator = (prev, next) => {
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
+  _.isEqual(prev.item.meta.useRotate,
+      next.item.meta.useRotate) &&
+  _.isEqual(prev.item.meta.seriesType,
+      next.item.meta.seriesType) &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
 
