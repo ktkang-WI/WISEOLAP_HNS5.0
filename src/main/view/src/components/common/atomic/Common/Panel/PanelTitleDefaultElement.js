@@ -45,10 +45,7 @@ const PanelTitleDefaultElement = () => {
           openModal(UserDefinedDataModal,
               {selectedDataSource: dataSource, orgDataset: dataset});
         } else if (dataset.datasetType == 'CUBE') {
-          // const dataSource = await models.
-          //    DataSource.getByDsId(dataset.dataSrcId);
-          // openModal(UserDefinedDataModal,
-          //    {selectedDataSource: dataSource, orgDataset: dataset});
+          alert('주제영역 사용자 정의 개발 예정');
         }
       },
       src: customFieldImg,
