@@ -1,7 +1,7 @@
 const DesignerMode = {
   DASHBOARD: 'DashAny',
   AD_HOC: 'AdHoc',
-  SPREAD_SHEET: 'Excel'
+  EXCEL: 'Excel'
 };
 
 const ConvertDesignerMode = {

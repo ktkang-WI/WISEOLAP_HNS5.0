@@ -65,7 +65,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
       onClick: (e) => {
-        onClick(DesignerMode['SPREAD_SHEET']);
+        onClick(DesignerMode['EXCEL']);
       }
     },
     'Preference': {

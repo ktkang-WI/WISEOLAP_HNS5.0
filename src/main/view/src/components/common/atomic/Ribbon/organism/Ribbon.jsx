@@ -45,7 +45,7 @@ const Ribbon = () => {
       />
       <CreateRibbonBtns
         targetItem={focusedItem}
-        items={!focusedItem || designerMode === DesignerMode['SPREAD_SHEET'] ?
+        items={!focusedItem || designerMode === DesignerMode['EXCEL'] ?
          [] : focusedItem.mart.ribbonItems}
       />
       <CreateRibbonBtns

@@ -31,6 +31,13 @@ const reducers = {
     return cloneState;
   },
   /*
+   * 보고서 추가 시 보고서 변경 (덮어쓰기) -> 대시보드에서 reports 추가되지 않고 덮어쓰기 해야함
+   * param {JSON} actions.payload initialState
+   */
+  changeReport(state, actions) {
+    return actions.payload;
+  },
+  /*
    * 보고서 추가
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
    */
@@ -49,11 +56,12 @@ const reducers = {
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
    */
   updateReport(state, actions) {
-    const updateId = actions.payload.reportId;
+    const report = actions.payload;
+    const updateId = report.reports[0].reportId;
 
     state.selectedReportId = updateId;
-    state.reports.find((report) => report.reportId === updateId)
-        .options = actions.payload.options;
+    state.reports.find((report) => report.reportId == updateId)
+        .options = report.reports[0].options;
   },
   /*
    * 보고서 삭제

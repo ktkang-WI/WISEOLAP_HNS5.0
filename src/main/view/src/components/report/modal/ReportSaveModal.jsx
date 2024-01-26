@@ -11,6 +11,9 @@ import useReportSave from 'hooks/useReportSave';
 import {useRef} from 'react';
 import models from 'models';
 import useModal from 'hooks/useModal';
+import useSpread from 'hooks/useSpread';
+import useFile from 'hooks/useFile';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -38,6 +41,8 @@ const ReportSaveModal = ({...props}) => {
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
   const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
+  const {createReportBlob} = useSpread();
+  const {fileUpload} = useFile();
   /**
    * SaveReportModal state(dataSource) 값 설정
    * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
@@ -62,14 +67,18 @@ const ReportSaveModal = ({...props}) => {
       const param = generateParameter(dataSource);
       let isOk = false;
       await models.Report.insertReport(param).then((res) => {
-        const data = res.data;
-        const msg = data.msg;
-        const result = data.result;
-
         if (res.status != 200) {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
+        if (res.data.report.reportType === DesignerMode['EXCEL']) {
+          createReportBlob().then((bolb) => fileUpload(
+              bolb, {fileName: response.report.reportId + '.xlsx'}));
+        }
+        const data = res.data;
+        const msg = data.msg;
+        const result = data.result;
+
 
         alert(localizedString[msg]);
 

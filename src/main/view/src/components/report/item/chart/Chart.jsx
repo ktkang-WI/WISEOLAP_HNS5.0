@@ -59,7 +59,7 @@ const Chart = ({id, adHocOption, item}) => {
     const filters = selectedData.reduce((acc, filter) => {
       if (targetDiemnsion == 'dimension') {
         filter.split('<br/>').reverse().forEach((v, i) => {
-          const name = dim[i].name;
+          const name = dim[i].uniqueName;
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -69,7 +69,7 @@ const Chart = ({id, adHocOption, item}) => {
       } else {
         filter.split('-').forEach((v, i) => {
           if (dimGrp.length <= i) return;
-          const name = dimGrp[i].name;
+          const name = dimGrp[i].uniqueName;
           if (acc[name]) {
             acc[name].add(v);
           } else {
