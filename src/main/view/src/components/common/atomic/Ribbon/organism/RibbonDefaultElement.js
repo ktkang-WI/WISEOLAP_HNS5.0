@@ -48,6 +48,7 @@ const RibbonDefaultElement = () => {
 
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
 
   const data = [
     {id: 'chart', text: '차트만 보기'},
