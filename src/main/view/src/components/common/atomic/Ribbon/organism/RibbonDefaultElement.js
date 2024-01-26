@@ -21,7 +21,6 @@ import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
-import useQueryExecute from 'hooks/useQueryExecute';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
@@ -32,7 +31,6 @@ import useReportSave from 'hooks/useReportSave';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
-import {DesignerMode} from 'components/config/configType';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
 
@@ -48,9 +46,6 @@ const RibbonDefaultElement = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
-
-  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
-  const {openedPopover} = usePopover();
   const {querySearch} = useReportSave();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();

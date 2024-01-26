@@ -172,13 +172,13 @@ const useQueryExecute = () => {
         if (response.data['chart']) {
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
-          ItemManager.generateItem(chartItem);
+          ItemManager.generateItem(chartItem, cloneItem);
           dispatch(updateItem({reportId, item: chartItem}));
         }
         if (response.data['pivot']) {
           pivotItem.mart.init = true;
           pivotItem.mart.data = response.data['pivot'];
-          ItemManager.generateItem(pivotItem, tempItem);
+          ItemManager.generateItem(pivotItem, cloneItem);
           dispatch(updateItem({reportId, item: pivotItem}));
         }
       });
