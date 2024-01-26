@@ -4,7 +4,9 @@ import {dataSource}
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {
+  selectCurrentDataField
+} from 'redux/selector/ItemSelector';
 
 
 const ListStyled = {
@@ -28,14 +30,17 @@ const CalcObjectList = () => {
 
   // Selector
   const selectedCurrentDataField = useSelector(selectCurrentDataField);
-
   // 초기화
   useEffect(() => {
     initColumns();
   }, []);
 
   const locatedFields = (selectedCurrentDataField) => {
-    const measure = selectedCurrentDataField.measure;
+    let measure = selectedCurrentDataField.measure;
+    if (!measure) {
+      measure =
+      selectedCurrentDataField.field.filter((item) => item.fieldType === 'MEA');
+    }
     const isMeasureEmpty = measure.length === 0;
     let isSelectedMeasureFieldsEmpty = true;
     let selectedMeasureFields = null;
