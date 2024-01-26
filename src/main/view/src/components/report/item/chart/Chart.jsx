@@ -2,16 +2,16 @@ import DevChart, {
   ArgumentAxis,
   CommonSeriesSettings,
   Grid,
-  Legend,
   Point,
-  Series,
-  Tooltip,
   ValueAxis,
+  Legend,
+  Tooltip,
+  Series,
   Label
 } from 'devextreme-react/chart';
-import customizeTooltip from '../util/customizeTooltip';
+// import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {
   overlappingModeData,
@@ -23,7 +23,7 @@ import {selectSeriesOption} from
   'redux/selector/SeriesOption/SeriesOptionSelector';
 import _ from 'lodash';
 
-const Chart = ({id, item}) => {
+const Chart = ({id, adHocOption, item}) => {
   const dataFields = useSelector(selectSeriesOption);
 
   const mart = item ? item.mart : null;
