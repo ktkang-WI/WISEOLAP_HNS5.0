@@ -1,11 +1,19 @@
 a {
   text-decoration: none;
 }
-
 .App {
   text-align: center;
   width: 100vw;
   height: 100vh;
+}
+
+*{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .App-logo {

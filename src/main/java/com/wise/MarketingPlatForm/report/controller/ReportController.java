@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
@@ -122,6 +123,7 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
+        String adHocOptionStr = param.get("adHocOption");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -142,7 +144,8 @@ public class ReportController {
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
-
+        AdHocOption adHocOption = new AdHocOption(null, null);
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -154,6 +157,7 @@ public class ReportController {
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
                 .filter(filter)
+                .adHocOption(adHocOption)
                 .build();
 
         // 추후 PivotMatrix 적용시 주석 해제
@@ -214,7 +218,7 @@ public class ReportController {
                     "}")
     }))
     @PostMapping(value = "/adhoc-item-data")
-    public List<ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
+    public Map<String, ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
@@ -224,7 +228,7 @@ public class ReportController {
         String parameterStr = param.getOrDefault("parameter", "[]");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
-        String topBottomInfoStr = param.get("topBottomInfo");
+        String adHocOptionStr = param.get("adHocOption");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -240,11 +244,9 @@ public class ReportController {
                 }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
+        AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
         ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
-
-        TopBottomInfo topBottomInfo = gson.fromJson(topBottomInfoStr, TopBottomInfo.class);
-
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -255,7 +257,7 @@ public class ReportController {
                 .parameters(parameters)
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
-                .topBottomInfo(topBottomInfo)
+                .adHocOption(adHocOption)
                 .build();
 
         return reportService.getAdHocItemData(dataAggreagtion);
