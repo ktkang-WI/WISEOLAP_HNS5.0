@@ -7,6 +7,8 @@ import store from 'redux/modules';
 import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import DatasetType from 'components/dataset/utils/DatasetType';
 import models from 'models';
+import UserDefinedDataModal
+  from 'components/dataset/modal/CustomData/CustomDataModal';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import ParameterSlice from 'redux/modules/ParameterSlice';
@@ -29,7 +31,22 @@ const PanelTitleDefaultElement = () => {
   return {
     CustomField: {
       id: 'custom_field',
-      onClick: () => {
+      onClick: async () => {
+        // TODO: 기존 직접쿼리입력 로직 Format 변경필요.
+        const dataset = selectCurrentDataset(store.getState());
+        if (!dataset) {
+          alert(localizedString.datasetNotSelected);
+          return;
+        }
+        if (dataset.datasetType == DatasetType.DS_SQL) {
+          const dataSource = await models.
+              DataSource.getByDsId(dataset.dataSrcId);
+
+          openModal(UserDefinedDataModal,
+              {selectedDataSource: dataSource, orgDataset: dataset});
+        } else if (dataset.datasetType == 'CUBE') {
+          alert('주제영역 사용자 정의 개발 예정');
+        }
       },
       src: customFieldImg,
       label: localizedString.addCustomField,

@@ -49,6 +49,12 @@ const useDrag = () => {
     const targetId = e.draggableId;
     const datasetId = selectedDataset.datasetId;
 
+    const getCustomDatas = (field, sourceField) => {
+      if (!sourceField.isCustomData) return null;
+      field.expression = sourceField.expression;
+      return field;
+    };
+
     const getNewDataField = (sourceField) => {
       const getDataFieldType = () => {
         const category = dest.droppableId;
@@ -66,6 +72,10 @@ const useDrag = () => {
         fieldType: sourceField.type, // 데이터 항목 원본 타입
         type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
+      const customDatas = getCustomDatas(tempField, sourceField);
+
+      if (customDatas) tempField = customDatas;
+
       // 필드아이디가 있는 경우 기존 아이템 이동
       if (sourceField.fieldId) {
         tempField = {...sourceField, ...tempField};
@@ -162,10 +172,18 @@ const useDrag = () => {
 
         const parameters = selectRootParameter(store.getState());
         const paramInfo = parameters.informations;
+        let sourceField = null;
+        if (source.droppableId == 'dataSource') {
+          sourceField = selectedDataset.fields.find((field) =>
+            field.uniqueName == targetId
+          );
+        } else {
+          sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+          sourceField = sourceField[0];
 
-        const sourceField = selectedDataset.fields.find((field) =>
-          field.uniqueName == targetId
-        );
+          dispatch(setItemField({reportId, dataField}));
+        }
 
         const regExp = /[\[\]]/gi;
         const uniName = sourceField.uniqueName.replace(regExp, '')

@@ -21,7 +21,7 @@ import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import useLayout from 'hooks/useLayout';
 import {useSelector} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
@@ -31,14 +31,21 @@ import useReportSave from 'hooks/useReportSave';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
+import {RadioGroup} from 'devextreme-react';
+import _ from 'lodash';
 
 const RibbonDefaultElement = () => {
+  const {
+    insertFlexLayout,
+    convertCaptionVisible,
+    editItemName,
+    adHocLayoutUpdate
+  } = useLayout();
+  const {openedPopover} = usePopover();
+  const rootItem = useSelector(selectRootItem);
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
-
-  const {insertFlexLayout, convertCaptionVisible, editItemName} = useLayout();
-  const {openedPopover} = usePopover();
   const {querySearch} = useReportSave();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
@@ -46,6 +53,30 @@ const RibbonDefaultElement = () => {
   const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+
+  const data = [
+    {id: 'chart', text: '차트만 보기'},
+    {id: 'pivot', text: '피벗그리드만 보기'},
+    {id: 'chart_pivot', text: '차트, 피벗 전부 보기'}
+  ];
+
+  const getRadioPopover = (reportId) => {
+    return <RadioGroup
+      onValueChanged={(e) => {
+        const chartData = rootItem.items[0].mart.data;
+        const pivotData = rootItem.items[1].mart.data;
+
+        adHocLayoutUpdate(reportId, e.value);
+
+        if (!_.isEmpty(chartData) || !_.isEmpty(pivotData)) {
+          executeItems();
+        }
+      }}
+      valueExpr={'id'}
+      displayExpr={'text'}
+      value={rootItem.adHocOption.layoutSetting}
+      items={data}/>;
+  };
 
   return {
     'NewReport': {
@@ -147,6 +178,18 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
+      }
+    },
+    'AdHocLayout': {
+      ...commonPopoverButton,
+      'id': 'adHoc_layout',
+      'label': '비정형 레이아웃',
+      'imgSrc': addGrid,
+      'renderContent': (e) => {
+        // 임시 추가.
+        const selectedReportId = selectCurrentReportId(store.getState());
+
+        return getRadioPopover(selectedReportId);
       }
     },
     'AddContainer': {
