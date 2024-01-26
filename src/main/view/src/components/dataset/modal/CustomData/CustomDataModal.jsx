@@ -16,7 +16,7 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 export const CustomDataContext = createContext();
 
 const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
-  // TODO: 직접쿼리 입력과 틀 맞춤
+  // TODO: 직접쿼리 입력과 틀 맞춤 임시용
   const generateFields = (tempFields) => {
     let generatedFields = null;
     generatedFields = tempFields.map((field) => {

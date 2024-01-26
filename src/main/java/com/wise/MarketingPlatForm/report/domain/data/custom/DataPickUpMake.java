@@ -40,7 +40,7 @@ public class DataPickUpMake {
             	tempSetKey.setKeyDuplicate(true);
                 tempSetKey.setColumnIdCount(setKey.getColumnIdCount() + 1);
                 tempSetKey.setKey(key);
-                tempSetKey.setCaptionKey(String.format("%s_%s", key,setKey.getColumnIdCount()));
+                tempSetKey.setCaptionKey(String.format("%s_%s", key, setKey.getColumnIdCount()));
                 tempSetKey.setExpression(expression);
                 
                 return tempSetKey;
@@ -139,7 +139,7 @@ public class DataPickUpMake {
             key = setKey.getCaptionKey();
                 
         } else {
-            key = setKey.getCaptionKey();
+            key = setKey.getKey();
         }
 
         // value setting
@@ -160,8 +160,8 @@ public class DataPickUpMake {
     	temp = new HashMap<>();
     	for (SetKey setKey : setKeys) {
     		String key = setKey.getCaptionKey();
-    		Object value = getData(setKey,odsMap).get(key);
-    		temp.put(key,value);
+    		Object value = getData(setKey, odsMap).get(key);
+    		temp.put(key, value);
         }
     	return temp;
     }
@@ -187,11 +187,11 @@ public class DataPickUpMake {
         SetKey tempKey = null;
         for (Measure measure : measures) {
             tempKey = new SetKey();
-            tempKey.setKey(measure.getSummaryType().name()+"_"+measure.getName());
+            tempKey.setKey(measure.getSummaryName());
             if(measure.getExpression() != null) {
                 String expression = measure.getExpression();
                 for (Measure replace : measures) {
-                    expression = expression.replaceAll(replace.getName(), replace.getSummaryType().name()+"_"+replace.getName());
+                    expression = expression.replaceAll(replace.getName(), replace.getSummaryName());
                 }
                 tempKey.setExpression(expression);
             }
