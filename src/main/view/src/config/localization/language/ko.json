@@ -1,5 +1,32 @@
 {
   "dataColumnSeriesOptions": "시리즈 옵션",
+  "alertInfo":{
+    "common":{
+      "invalid":"유효하지않습니다."
+    },
+    "customData":{
+      "empty":"필드명,계산식,타입이 빈값이 있습니다."
+    },
+    "customDataCalc":{
+      "empty":"필드명,계산식,타입이 빈값이 있습니다.",
+      "Inspection":"계산식에 올바르지 않습니다."
+    }
+  },
+  "customData": {
+    "title":"사용자 정의 데이터",
+    "list":{
+      "fieldName":"필드명",
+      "expression":"계산식",
+      "type":"데이터형식"
+    }
+  },
+  "customDataCalc":{
+    "title":"계산식 편집",
+    "buttons":{
+      "duplicatedFiledName" : "필드명이 열값과 사용자 정의 데이터와 겹칩니다. (항목에 없는 경우 경고창 표시시 최종 저장 이후 생성해주시길 바랍니다.):",
+      "Inspection":"검사"
+    }
+  },
   "test": "테스트",
   "newWindow": "새 창 열기",
   "viewer": "뷰어",
