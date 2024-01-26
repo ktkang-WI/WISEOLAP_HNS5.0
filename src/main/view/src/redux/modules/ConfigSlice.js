@@ -9,9 +9,9 @@ const setInitDesignerMode = () => {
     return DesignerMode['AD_HOC'];
   } else if (href.indexOf(DesignerMode['EXCEL'].toLowerCase()) > -1) {
     return DesignerMode['EXCEL'];
-  } else {
-    throw Error('ConfigSlise setInitDesignerMode 에러');
   }
+
+  return DesignerMode['DASHBOARD'];
 };
 
 const initialState = {

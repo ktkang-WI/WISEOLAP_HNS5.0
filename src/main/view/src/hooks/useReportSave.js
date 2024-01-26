@@ -26,6 +26,7 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
 import useSpread from './useSpread';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
@@ -135,7 +136,7 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.insertReport(report.reports[0]));
+    dispatch(reportActions.changeReport(report));
     dispatch(itemActions.changeItemReportId(reportId));
     dispatch(layoutActions.changeLayoutReportId(reportId));
     dispatch(datasetActions.changeDatasetReportId(reportId));
@@ -211,7 +212,10 @@ const useReportSave = () => {
       ItemManager.generateMeta(i);
     });
     data.dataset.datasets.forEach((dataset) => {
-      dataset.fields = makeFieldIcon(dataset.fields);
+      if (dataset.datasetType === DatasetType['DS_SQL']) {
+        dataset.fields = makeFieldIcon(
+            dataset.fields, dataset.datasetType);
+      }
     });
 
     designerLoadReport(data);
