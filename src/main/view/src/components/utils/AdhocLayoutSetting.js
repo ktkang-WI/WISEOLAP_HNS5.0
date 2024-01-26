@@ -4,7 +4,6 @@ const resultLayout = (
     selectedLayoutId,
     tabsetType
 ) => {
-  let result = {};
   // 레이아웃 설정 초기화
   layoutPosition = layoutPosition.map(
       (child) => {
@@ -13,7 +12,7 @@ const resultLayout = (
   );
 
   if (tabsetType === 'row') {
-    result = tempState = {
+    tempState = {
       ...tempState,
       type: 'row',
       children: [
@@ -26,7 +25,7 @@ const resultLayout = (
       ]
     };
   } else {
-    result = tempState = {
+    tempState = {
       ...tempState,
       type: 'row',
       children: layoutPosition
@@ -34,7 +33,7 @@ const resultLayout = (
   }
   // init = 차트, 피벗 전부 보기.
   if (selectedLayoutId === 'init') {
-    return result;
+    return tempState;
   }
 
   const idx = layoutPosition.findIndex(
@@ -46,7 +45,7 @@ const resultLayout = (
     maximized: true
   };
 
-  return result;
+  return tempState;
 };
 
 // 비정형 보고서 배열 모양(tabsetType)이 세로로 2개 -> tabset, 가로로 2개 -> row

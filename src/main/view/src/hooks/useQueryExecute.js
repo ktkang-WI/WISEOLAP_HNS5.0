@@ -132,10 +132,6 @@ const useQueryExecute = () => {
         return;
       }
 
-      if (!response.data['chart'] && !response.data['pivot']) {
-        return;
-      }
-
       if (response.data['chart']) {
         chartItem.mart.init = true;
         chartItem.mart.data = response.data['chart'];

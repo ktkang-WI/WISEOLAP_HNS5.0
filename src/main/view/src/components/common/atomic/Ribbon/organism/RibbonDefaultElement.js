@@ -34,6 +34,7 @@ import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
 import {RadioGroup} from 'devextreme-react';
+import _ from 'lodash';
 
 const RibbonDefaultElement = () => {
   const {
@@ -59,12 +60,17 @@ const RibbonDefaultElement = () => {
     {id: 'chart_pivot', text: '차트, 피벗 전부 보기'}
   ];
 
-  const tempPopoverData = (reportId) => {
+  const getRadioPopover = (reportId) => {
     return <RadioGroup
       onValueChanged={(e) => {
+        const chartData = rootItem.items[0].mart.data;
+        const pivotData = rootItem.items[1].mart.data;
+
         adHocLayoutUpdate(reportId, e.value);
 
-        executeItems();
+        if (!_.isEmpty(chartData) || !_.isEmpty(pivotData)) {
+          executeItems();
+        }
       }}
       valueExpr={'id'}
       displayExpr={'text'}
@@ -180,7 +186,8 @@ const RibbonDefaultElement = () => {
       'renderContent': (e) => {
         // 임시 추가.
         const selectedReportId = selectCurrentReportId(store.getState());
-        return tempPopoverData(selectedReportId);
+
+        return getRadioPopover(selectedReportId);
       }
     },
     'AddContainer': {

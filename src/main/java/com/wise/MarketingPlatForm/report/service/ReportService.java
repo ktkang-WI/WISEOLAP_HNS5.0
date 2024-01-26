@@ -212,10 +212,7 @@ public class ReportService {
 
     public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
         Map<String, ReportResult> result = new HashMap<String, ReportResult>();
-        Map<String, ItemType> itemTypes = new HashMap<String, ItemType>() {{
-            put("chart", ItemType.CHART);
-            put("pivot", ItemType.PIVOT_GRID);
-        }};
+
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
         QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
 
@@ -225,20 +222,14 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion);
         String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
-        String[] items= new String["chart_pivot".equals(layoutType) ? 2 : 1];
+        String[] items= layoutType.split("_");
 
-        if ("chart_pivot".equals(layoutType)) {
-            items = layoutType.split("_");
-        } else {
-            items[0] = layoutType;
-        }
-        
         MartResultDTO martResultDTO = martDAO.select(query);
         List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         
         for (String item : items) {
-            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(itemTypes.get(item));
+            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
             result.put(item, dataMaker.make(dataAggreagtion, rowData));
         }
