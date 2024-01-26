@@ -46,7 +46,9 @@ const PivotGrid = ({id, adHocOption, item}) => {
       const instance = item.instance;
 
       if (instance) {
-        instance.updateDimensions();
+        try {
+          instance.updateDimensions();
+        } catch {}
       }
     });
 
