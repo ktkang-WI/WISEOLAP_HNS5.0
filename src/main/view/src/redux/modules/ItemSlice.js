@@ -247,6 +247,12 @@ const reducers = {
 
     state[reportId].adHocOption.topBottomInfo = topBottomInfo;
   },
+  updateLayoutSetting(state, actions) {
+    const reportId = actions.payload.reportId;
+    const layoutType = actions.payload.layoutType;
+
+    state[reportId].adHocOption.layoutSetting = layoutType;
+  },
   changeItem(state, actions) {
     const prevId = actions.payload.reportId.prevId;
     const newId = actions.payload.reportId.newId;

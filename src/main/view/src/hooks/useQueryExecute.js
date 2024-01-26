@@ -169,18 +169,18 @@ const useQueryExecute = () => {
           alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
           return;
         }
-
-        chartItem.mart.init = true;
-        chartItem.mart.data = response.data[0];
-
-        pivotItem.mart.init = true;
-        pivotItem.mart.data = response.data[1];
-
-        ItemManager.generateItem(chartItem, cloneItem);
-        ItemManager.generateItem(pivotItem, cloneItem);
-
-        dispatch(updateItem({reportId, item: chartItem}));
-        dispatch(updateItem({reportId, item: pivotItem}));
+        if (response.data['chart']) {
+          chartItem.mart.init = true;
+          chartItem.mart.data = response.data['chart'];
+          ItemManager.generateItem(chartItem, cloneItem);
+          dispatch(updateItem({reportId, item: chartItem}));
+        }
+        if (response.data['pivot']) {
+          pivotItem.mart.init = true;
+          pivotItem.mart.data = response.data['pivot'];
+          ItemManager.generateItem(pivotItem, cloneItem);
+          dispatch(updateItem({reportId, item: pivotItem}));
+        }
       });
     } catch (error) {
       alert(error.message);

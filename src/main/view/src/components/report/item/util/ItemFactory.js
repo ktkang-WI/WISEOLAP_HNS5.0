@@ -73,12 +73,14 @@ const makeAdHocOption = () => {
   dataField.dataFieldQuantity = 0;
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
+  const layoutType = ItemManager.getLayoutSetting();
 
   return {
     dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
     dataField: dataField,
     attributeItems: attributeItems,
-    topBottomInfo: topBottomInfo
+    topBottomInfo: topBottomInfo,
+    layoutSetting: layoutType['chart_pivot']
   };
 };
 
