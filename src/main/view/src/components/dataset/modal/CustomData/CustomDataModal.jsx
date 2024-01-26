@@ -109,6 +109,8 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   };
 
   // TODO: 함수명 이름추천 해주면 좋을듯 합니다.
+  // 1. updateDatasetFields
+  // 2. fetchCustomDataFromDataset
   const reduxFetchCustomDataList = (dataset) => {
     if (dataset.fields) {
       const fetchCustomDataList =

@@ -156,8 +156,8 @@ public class DataPickUpMake {
 
 
     private Map<String, Object> getDataRow(Map<String, Object> odsMap){
-    	Map<String, Object> temp = null;
-    	temp = new HashMap<>();
+    	Map<String, Object> temp = new HashMap<>();
+    	
     	for (SetKey setKey : setKeys) {
     		String key = setKey.getCaptionKey();
     		Object value = getData(setKey, odsMap).get(key);
@@ -214,6 +214,7 @@ public class DataPickUpMake {
         return this;
     } 
     
+    // 데이터 계산처리
     public List<Map<String, Object>> builder() {
 
         if (setMeaAndDimKeys.size() != 0) {
