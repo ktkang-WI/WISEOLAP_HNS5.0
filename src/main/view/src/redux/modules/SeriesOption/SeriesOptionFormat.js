@@ -1,5 +1,9 @@
 import _ from 'lodash';
+import localizedString from '../../../config/localization';
 
+const seriesOption = localizedString.seriesOptions.data;
+
+// name
 const generalKeyName = {
   auxiliaryAxis: 'auxiliaryAxis',
   ignoreEmptyPoints: 'ignoreEmptyPoints',
@@ -7,12 +11,45 @@ const generalKeyName = {
   reverseView: 'reverseView'
 };
 
-const pointerMarkerName = {
+const pointerMarkerKeyName = {
   Notation: 'Notation',
   overlayMode: 'overlayMode',
   direction: 'direction'
 };
 
+// Data
+const generalData = {
+  auxiliaryAxis: seriesOption.general.auxiliaryAxis,
+  ignoreEmptyPoints: seriesOption.general.ignoreEmptyPoints,
+  pointerMarker: seriesOption.general.pointerMarker,
+  reverseView: seriesOption.general.reverseView
+};
+
+const pointLabelNotationData = {
+  none: seriesOption.pointLabelNotation.none,
+  argument: seriesOption.pointLabelNotation.argument,
+  measureName: seriesOption.pointLabelNotation.measureName,
+  value: seriesOption.pointLabelNotation.value,
+  argumentMeasureName: seriesOption.pointLabelNotation.argumentMeasureName,
+  measureNameValue: seriesOption.pointLabelNotation.measureNameValue,
+  argumentMeasureNameValue: seriesOption.pointLabelNotation.argMeaNameValue
+};
+
+const overlappingModeData = {
+  default: seriesOption.overlappingMode.default,
+  hidden: seriesOption.overlappingMode.hidden,
+  overlappingLabelReLocate:
+    seriesOption.overlappingMode.overlappingLabelReLocate
+};
+
+const pointLabelDirectionData = {
+  default: seriesOption.pointLabelDirectionData.default,
+  left: seriesOption.pointLabelDirectionData.left,
+  right: seriesOption.pointLabelDirectionData.right
+};
+// Data
+
+// Format
 const seriesOptionDefaultFormat = {
   fieldId: '',
   type: 'bar',
@@ -28,37 +65,6 @@ const seriesOptionDefaultFormat = {
     direction: '기본'
   }
 };
-
-// Data
-const generalData = {
-  auxiliaryAxis: '보조 축의 구성',
-  ignoreEmptyPoints: '빈 포인트 무시',
-  pointerMarker: '포인트 마커 표시',
-  reverseView: '역순으로 보기'
-};
-
-const pointLabelNotationData = {
-  none: '없음',
-  argument: '인수',
-  measureName: '측정값 명',
-  value: '값',
-  argumentMeasureName: '인수 및 측정값 명',
-  measureNameValue: '측정값 명 및 값',
-  argumentMeasureNameValue: '인수,측정값 명 및 값'
-};
-
-const overlappingModeData = {
-  default: '기본',
-  hidden: '없음',
-  overlappingLabelReLocate: '중복 레이블 위치 변경'
-};
-
-const pointLabelDirectionData = {
-  default: '기본',
-  left: '왼쪽으로 회전',
-  right: '오른쪽으로 회전'
-};
-// Data
 
 const seriesOptionGetDataFieldFormat = {
   fieldId: '',
@@ -82,6 +88,7 @@ const seriesOptionFetchFormat = {
   seriesOptions: seriesOptionDefaultFormat
 };
 
+// get Format
 const getSeriesOptionGeneralFormat = () => {
   return _.cloneDeep(seriesOptionDefaultFormat.general);
 };
@@ -128,5 +135,5 @@ export {
 // Export KeyName
 export {
   generalKeyName,
-  pointerMarkerName
+  pointerMarkerKeyName
 };

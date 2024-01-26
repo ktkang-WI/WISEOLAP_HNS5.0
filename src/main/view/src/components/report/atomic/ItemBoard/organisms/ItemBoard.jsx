@@ -3,6 +3,7 @@ import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
+  selectCurrentDataField,
   selectCurrentItems,
   selectRootItem,
   selectSelectedItemId
@@ -40,7 +41,7 @@ const ItemBoard = () => {
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
-
+  const dataFields = useSelector(selectCurrentDataField);
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
@@ -73,7 +74,11 @@ const ItemBoard = () => {
 
     return (
       <Item>
-        <ItemComponent item={item} adHocOption={adHocOption} id={item.id}/>
+        <ItemComponent
+          item={item}
+          dataFields={dataFields}
+          adHocOption={adHocOption}
+          id={item.id}/>
       </Item>
     );
   }

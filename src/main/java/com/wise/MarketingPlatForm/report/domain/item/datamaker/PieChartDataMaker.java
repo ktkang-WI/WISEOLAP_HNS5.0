@@ -41,18 +41,7 @@ public class PieChartDataMaker implements ItemDataMaker {
                 .getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-
-        // 사용자 정의 데이터 가공
-        List<Map<String, Object>> tempData = null;
-        try {
-            tempData = customData.setDimension(dimensions)
-                         .setMeasure(measures)
-                         .builder();
-        } catch (Exception e) {
-            e.printStackTrace();
-            tempData = null;
-        }
-
+        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
         if(tempData != null) {
             data = tempData;
         }

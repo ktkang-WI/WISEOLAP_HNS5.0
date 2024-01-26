@@ -5,13 +5,13 @@ import {dataSource} from './metaData/SeriesOptionData';
 import {
   seriesOptionFetch}
   from 'redux/modules/SeriesOption/SeriesOptionSlice';
-import {useDispatch} from 'react-redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {getSeriesOptionFetchFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import {selectSeriesOption}
   from 'redux/selector/SeriesOption/SeriesOptionSelector';
+import localizedString from 'config/localization';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
@@ -69,7 +69,6 @@ const DataColumnSeriesOptions = (
     tempSeriesOption.seriesOptions.general = general;
     tempSeriesOption.seriesOptions.type = type;
     tempSeriesOption.seriesOptions.pointLabel = pointLabel;
-    // update
     dispatch(seriesOptionFetch(tempSeriesOption));
   };
 
@@ -83,7 +82,7 @@ const DataColumnSeriesOptions = (
         }}
         height='700px'
         width='500px'
-        modalTitle='시리즈 옵션'
+        modalTitle={localizedString.seriesOptions.title}
         onClose={onClose}>
         <TabPanel
           className='dx-theme-background-color'

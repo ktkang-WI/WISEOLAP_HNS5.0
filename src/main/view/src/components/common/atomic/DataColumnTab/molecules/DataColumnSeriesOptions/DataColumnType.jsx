@@ -16,6 +16,7 @@ const DataColumnType = () => {
   }, []);
 
   const dataColumnTypeCheckBoxCheck = (type) => {
+    setType(type);
     setDataColumnType((prev) => {
       const result = prev.map((item) => {
         return {
@@ -23,7 +24,6 @@ const DataColumnType = () => {
           checkboxs: item.checkboxs.map((checkbox, index) => {
             if (type === checkbox.type) {
               checkbox.checked = true;
-              setType((prev) => checkbox.type);
             } else {
               checkbox.checked = false;
             }
