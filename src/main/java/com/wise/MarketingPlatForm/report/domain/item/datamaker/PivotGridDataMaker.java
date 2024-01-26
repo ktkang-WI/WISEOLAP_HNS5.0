@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
@@ -42,6 +43,23 @@ public class PivotGridDataMaker implements ItemDataMaker {
         }
 
         data = sanitizer.getData();
+
+        DataPickUpMake customData = new DataPickUpMake(data);
+
+        // 사용자 정의 데이터 가공
+        List<Map<String, Object>> tempData = null;
+        try {
+            tempData = customData.setDimension(dimensions)
+                         .setMeasure(measures)
+                         .builder();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tempData = null;
+        }
+
+        if(tempData != null) {
+            data = tempData;
+        }
 
         CommonResult result = new CommonResult(data, "", null);
 
