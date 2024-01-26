@@ -1,8 +1,8 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {dataSource}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
+import {removeDuplicate} from 'components/utils/utility';
 import {List, TextArea} from 'devextreme-react';
-import _ from 'lodash';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {
@@ -36,40 +36,15 @@ const CalcObjectList = () => {
     initColumns();
   }, []);
 
-  const removeDuplicateValue = (func, array, returnArray, prevKey) => {
-    try {
-      if (array.length == 0) return returnArray;
-      const measure = array.shift();
-      const key = func(measure);
-      let isInsertingData = false;
-      // 키를 생성해야함
-      if (!prevKey) {
-        isInsertingData = true;
-      } else {
-        prevKey === key ?
-        isInsertingData = false : isInsertingData = true;
-      };
-      if (isInsertingData) returnArray.push(measure);
-      return removeDuplicateValue(func, array, returnArray, key);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
   const locatedFields = (selectedCurrentDataField) => {
-    let tempMeasures = selectedCurrentDataField.measure;
-    let measures = [];
+    let measures = selectedCurrentDataField.measure;
 
-    if (!tempMeasures) {
-      tempMeasures =
+    if (!measures) {
+      measures =
       selectedCurrentDataField.field.filter((item) => item.fieldType === 'MEA');
     }
-    measures = removeDuplicateValue(
-        (measure) => {
-          return measure.summaryType + '_' + measure.name;
-        },
-        _.cloneDeep(tempMeasures),
+    measures = removeDuplicate(
+        (measure) => measure.summaryType + '_' + measure.name,
         measures);
 
     const isMeasureEmpty = measures.length === 0;
