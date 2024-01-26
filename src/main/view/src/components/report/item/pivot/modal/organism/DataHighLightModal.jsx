@@ -16,7 +16,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import _ from 'lodash';
-import MakeForm from '../molecules/MakeForm';
+import DataHighlightForm from '../molecules/DataHighlightForm';
 import useModal from 'hooks/useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from '../../../../../config/configType';
@@ -63,14 +63,14 @@ const DataHighlightModal = ({...props}) => {
     useState(
         [...selectedReportTypeHighlight(selectedItem, reportType)]
     );
-  // 하이라이트 목록 중 하나를 선택 시 선택 Form에 정보를 보여줌.
+  // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
   const [data, setData] = useState({
     'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true
   });
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
   const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
-  // 데이터항목에 올라간 측정값의 name을 가져옴.
+  // 데이터항목에 올라간 측정값의 name만 가져옴.
   const measureNames = useMemo(() => {
     if (reportType === DesignerMode['AD_HOC']) {
       return rootItem.adHocOption.dataField.measure.map((mea) => mea.name);
@@ -79,7 +79,7 @@ const DataHighlightModal = ({...props}) => {
     }
   }, []);
 
-  // 하이라이트 추가 부분.
+  // 하이라이트 목록에 추가.
   const onClick = () => {
     const copyHighlight = [...highlightList];
     const formData = _.cloneDeep(ref.current.props.formData);
@@ -91,9 +91,10 @@ const DataHighlightModal = ({...props}) => {
 
     const highlightData = {...formData, idx: idx};
 
+    // 추가 된 하이라이트 정보가 있는지 찾음.
     const findIdx = copyHighlight.findIndex((highlight) =>
       highlight.dataItem == formData.dataItem
-    ); // 추가 된 하이라이트 정보가 있는지 찾음.
+    );
 
     if (copyHighlight.length == 0) {
       // 첫 추가
@@ -163,12 +164,12 @@ const DataHighlightModal = ({...props}) => {
       }}
       height={theme.size.bigModalHeight}
       width={'calc(' + theme.size.bigModalWidth + ' - 70px)'}
-      modalTitle={localizedString.datahighlight}
+      modalTitle={localizedString.dataHighlight}
       {...props}
     >
       <StyledWrapper>
         <ModalPanel
-          title={localizedString.datahighlightList}
+          title={localizedString.dataHighlightList}
           width='60%'
           padding='10'>
           <AddBtn src={addHighLightIcon} onClick={onClick}/>
@@ -201,11 +202,15 @@ const DataHighlightModal = ({...props}) => {
           </CommonDataGrid>
         </ModalPanel>
         <ModalPanel
-          title={localizedString.datahighlightInfo}
+          title={localizedString.dataHighlightInfo}
           width='40%'
           padding='10'>
           {/* 하이라이트 정보를 구성. dev의 <Form> 사용. */}
-          <MakeForm ref={ref} formData={data} measureNames={measureNames}/>
+          <DataHighlightForm
+            ref={ref}
+            formData={data}
+            measureNames={measureNames}
+          />
         </ModalPanel>
       </StyledWrapper>
     </Modal>

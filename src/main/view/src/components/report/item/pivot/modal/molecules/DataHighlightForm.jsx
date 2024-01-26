@@ -4,7 +4,7 @@ import localizedString from '../../../../../../config/localization';
 import React, {useState} from 'react';
 import EmojiArr from './EmojiArr';
 
-const MakeForm = ({formData, measureNames}, ref) => {
+const DataHighlightForm = ({formData, measureNames}, ref) => {
   const [showField, setShowField] = useState(false); // between 선택 시 조건값 To 보여줌.
   const [selectedIcon, setSelectedIcon] = useState(''); // 선택한 아이콘 보여줌.
 
@@ -133,4 +133,4 @@ const MakeForm = ({formData, measureNames}, ref) => {
     </Form>
   );
 };
-export default React.forwardRef(MakeForm);
+export default React.forwardRef(DataHighlightForm);

@@ -179,7 +179,7 @@ const ItemAttributeDefaultElement = () => {
       items: [
         {
           id: 'dataHighlight',
-          label: localizedString.datahighlight,
+          label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
@@ -203,7 +203,7 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'dataHighlight',
-          label: '데이터 하이라이트',
+          label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {

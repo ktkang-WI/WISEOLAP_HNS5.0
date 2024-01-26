@@ -62,6 +62,7 @@ import highlightIcon30
   from '../../../../../../assets/image/icon/highlight/pivot_highlight_30.png';
 import highlightIcon31
   from '../../../../../../assets/image/icon/highlight/pivot_highlight_31.png';
+
 const EmojiArr = [
   {icon: highlightIcon0, id: 0},
   {icon: highlightIcon1, id: 1},

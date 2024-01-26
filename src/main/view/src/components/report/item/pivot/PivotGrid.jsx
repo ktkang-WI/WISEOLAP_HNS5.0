@@ -3,9 +3,8 @@ import DevPivotGrid, {
   Scrolling
 } from 'devextreme-react/pivot-grid';
 import {useEffect, useMemo, useRef} from 'react';
-import getCssStyle from './GetCssStyle';
-import isDataCell from './IsDataCell';
 import React from 'react';
+import {isDataCell, getCssStyle} from './DataHighlightUtility';
 
 const PivotGrid = ({id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -47,11 +46,14 @@ const PivotGrid = ({id, adHocOption, item}) => {
   useEffect(() => {
     ref.current.instance.repaint();
   }, [meta.dataHighlight]);
-  // 하이라이트를 가져옴.
+
+  // 하이라이트 목록을 가져옴.
   const highlight = useMemo(() => {
     return meta.dataHighlight;
   }, [meta.dataHighlight]);
-  // 하이라이트를 hashMap으로 만들어서 사용.
+
+  // 측정값의 순서로 그리드가 생성
+  // -> 하이라이트를 측정값 순서 반대로 만들면 측정 조건에서 하이라이트 적용이 안됨.
   const highlightMap = useMemo(() => {
     const map = new Map();
 
@@ -61,9 +63,9 @@ const PivotGrid = ({id, adHocOption, item}) => {
     return map;
   }, [meta.dataHighlight]);
 
-  const pivotCellPrepared = ({cell, area, cellElement}) => {
+  const onCellPrepared = ({cell, area, cellElement}) => {
     if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
-      // isDataCell -> 셀, 합계 셀, 총계 셀 체크 안된경우 분기처리
+      // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
       if (isDataCell(cell, area, highlightMap.get(cell.dataIndex)) ) {
         Object.assign(
             cellElement.style,
@@ -116,7 +118,7 @@ const PivotGrid = ({id, adHocOption, item}) => {
       fieldPanel={fieldPanel}
       showTotalsPrior={showTotalsPrior}
       wordWrapEnabled={false}
-      onCellPrepared={pivotCellPrepared}
+      onCellPrepared={onCellPrepared}
       allowSorting={false}
       allowSortingBySummary={false}
     >
