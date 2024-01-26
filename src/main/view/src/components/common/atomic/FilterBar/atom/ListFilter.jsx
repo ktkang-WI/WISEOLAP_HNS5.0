@@ -18,6 +18,7 @@ const ListFilter = ({
   const [text, setText] = useState('');
   const popOverRef = useRef();
   const listRef = useRef();
+  const [dataType, setDataType] = useState('');
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
@@ -51,9 +52,13 @@ const ListFilter = ({
       }
       setText(allText);
     } else {
-      keys = keys.split(', ').map((key) => {
-        return isNaN(Number(key)) ? key : Number(key);
-      });
+      if (dataType === 'number') {
+        keys = keys.split(', ').map((key) => {
+          return isNaN(Number(key)) ? key : Number(key);
+        });
+      } else {
+        keys = keys.split(', ');
+      }
       setText(generateCaptionText(keys));
     }
     setSelectionKeys(keys);
@@ -85,6 +90,9 @@ const ListFilter = ({
         selection = '[All]';
         setText(allText);
       } else {
+        if (typeof selectionKeys[0] === 'number') {
+          setDataType(typeof selectionKeys[0]);
+        }
         selection = selectionKeys.join(', ');
         setText(generateCaptionText(selectionKeys));
       }
