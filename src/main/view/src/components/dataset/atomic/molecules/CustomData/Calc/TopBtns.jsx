@@ -12,6 +12,7 @@ import useModal from 'hooks/useModal';
 import localizedString from '../../../../../../config/localization';
 import {
   useContext,
+  useEffect,
   useRef
   // useState
 } from 'react';
@@ -35,6 +36,15 @@ const TopBtns = () => {
   const {alert} = useModal();
   const [, setCheckForSaving] = getContext.state.checkForSaving;
 
+  useEffect(() => {
+    setCustomData((prev) => {
+      return {
+        ...prev,
+        type: 'decimal'
+      };
+    });
+  }, []);
+
   const inputValidation = (value) => {
     const dupplicatedNaming =
       allFields.find((item) => item.uniqueName === value);
@@ -50,7 +60,9 @@ const TopBtns = () => {
           fieldName: ''
         };
       });
-      alert('필드명이 열값과 사용자 정의 데이터와 겹칩니다. : '+data.value);
+      alert(
+          localizedString.customDataCalc.buttons.duplicatedFiledName+data.value
+      );
       return;
     }
     setCustomData((prev) => {
@@ -100,7 +112,7 @@ const TopBtns = () => {
           dataSource={typeData}
           valueExpr="id"
           displayExpr="text"
-          value={customData.type}
+          value={'decimal'}
           onValueChanged={handleSelectBox}
         />
       </Wrapper>

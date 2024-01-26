@@ -78,7 +78,7 @@ const CustomDataList = () => {
           allowEditing={false}
           cellRender={(data) => {
             return (
-              <Cell>
+              <Cell title="사용자 데이터 수식 정의">
                 {data.text}
                 <Img src={customFieldImg}/>
               </Cell>

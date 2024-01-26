@@ -207,11 +207,11 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   // 사용자 정의 데이터 업데이트
   const customDataUpdate = (customData) => {
     let isUpdate = false;
-    let lastFireldId = 0;
+    let lastFieldId = 0;
     // 사용자 정의 데이터 값 업데이트
     setCustomDataList((prev)=>{
       return prev.map((item)=>{
-        lastFireldId = item.fieldId;
+        lastFieldId = item.fieldId;
         if (item.fieldId === customData.fieldId) {
           isUpdate = true;
           return customData;
@@ -224,7 +224,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     if (isUpdate) {
       setCustomData({
         customDataInitial,
-        fieldId: lastFireldId + 1});
+        fieldId: lastFieldId + 1});
     }
     return isUpdate;
   };

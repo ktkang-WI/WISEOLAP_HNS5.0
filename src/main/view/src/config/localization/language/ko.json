@@ -21,7 +21,8 @@
   },
   "customDataCalc":{
     "title":"계산식 편집",
-    "butons":{
+    "buttons":{
+      "duplicatedFiledName" : "필드명이 열값과 사용자 정의 데이터와 겹칩니다. (항목에 없는 경우 경고창 표시시 최종 저장 이후 생성해주시길 바랍니다.):",
       "Inspection":"검사"
     }
   },
