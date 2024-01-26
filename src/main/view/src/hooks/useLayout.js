@@ -4,28 +4,28 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 
 export default function useLayout() {
   const dispatch = useDispatch();
-  const flexLayout = LayoutSlice.actions;
+  const layoutSlice = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
 
   const initLayout = (reportTypes) => {
-    dispatch(flexLayout.initLayout(reportTypes));
+    dispatch(layoutSlice.initLayout(reportTypes));
   };
 
   const setLayout = (reportId, layout) => {
-    dispatch(flexLayout.setLayout({reportId: reportId, layout: layout}));
+    dispatch(layoutSlice.setLayout({reportId: reportId, layout: layout}));
   };
 
-  const setMovedLayout = (reportId, model) => {
+  const updateLayoutShape = (reportId, model) => {
     const param = {reportId: reportId, layout: model};
 
-    dispatch(flexLayout.updataFlexLayout(param));
+    dispatch(layoutSlice.updataFlexLayout(param));
   };
 
   const insertFlexLayout = (reportId, component) => {
     const param =
       {reportId: reportId, component: component};
 
-    dispatch(flexLayout.insertFlexLayout(param));
+    dispatch(layoutSlice.insertFlexLayout(param));
     dispatch(itemSlice.insertItem({
       reportId: reportId, // 보고서 ID
       item: {
@@ -49,7 +49,7 @@ export default function useLayout() {
       layoutSliceParam.layout.layout.children = [];
     }
 
-    dispatch(flexLayout.updataFlexLayout(layoutSliceParam));
+    dispatch(layoutSlice.updataFlexLayout(layoutSliceParam));
     dispatch(itemSlice.deleteItem(itemSliceParam));
   };
 
@@ -79,7 +79,7 @@ export default function useLayout() {
     setLayout,
     deleteFlexLayout,
     initLayout,
-    setMovedLayout,
+    updateLayoutShape,
     convertCaptionVisible,
     editItemName
   };

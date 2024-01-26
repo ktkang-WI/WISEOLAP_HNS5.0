@@ -18,29 +18,27 @@ const ListFilter = ({
   const [text, setText] = useState('');
   const popOverRef = useRef();
   const listRef = useRef();
+  const [dataType, setDataType] = useState('');
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
-    const temp = _.cloneDeep(keys);
-    let tempText = '';
+    const keySet = new Set(keys);
+    const captionArr = [];
 
     for (const item of value.listItems) {
-      const index = temp.indexOf(item.name);
-      if (index >= 0) {
-        tempText += item.caption + ', ';
-        temp.splice(index, 1);
+      if (keySet.has(item.name)) {
+        captionArr.push(item.caption);
+        keySet.delete(item.name);
       }
-      if (temp.length == 0) {
+      if (keySet.size == 0) {
         break;
       }
     }
-    if (tempText.length > 0) {
-      tempText = tempText.substring(0, tempText.length - 2);
-    } else {
-      return allText;
+    if (captionArr.length > 0) {
+      return captionArr.join(', ');
     }
 
-    return tempText;
+    return allText;
   };
 
   useEffect(() => {
@@ -54,7 +52,13 @@ const ListFilter = ({
       }
       setText(allText);
     } else {
-      keys = keys.split(', ');
+      if (dataType === 'number') {
+        keys = keys.split(', ').map((key) => {
+          return isNaN(Number(key)) ? key : Number(key);
+        });
+      } else {
+        keys = keys.split(', ');
+      }
       setText(generateCaptionText(keys));
     }
     setSelectionKeys(keys);
@@ -86,6 +90,9 @@ const ListFilter = ({
         selection = '[All]';
         setText(allText);
       } else {
+        if (typeof selectionKeys[0] === 'number') {
+          setDataType(typeof selectionKeys[0]);
+        }
         selection = selectionKeys.join(', ');
         setText(generateCaptionText(selectionKeys));
       }
@@ -96,6 +103,7 @@ const ListFilter = ({
     };
 
     const cancel = () => {
+      listRef.current.instance.option('selectedItemKeys', selectionKeys);
       popOverRef.current.instance.hide();
     };
 

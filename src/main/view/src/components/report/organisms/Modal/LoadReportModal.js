@@ -18,7 +18,7 @@ const theme = getTheme();
 const LoadReportModal = ({...props}) => {
   let selectedReport = {};
   const [reportList, setReportList] = useState();
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
   const {loadReport} = useReportSave();
 
 
@@ -38,11 +38,13 @@ const LoadReportModal = ({...props}) => {
           if (selectedReport.type == 'REPORT') {
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
-                  // try {
-                  loadReport(data);
-                  // } catch {
-                  //   alert(localizedString.reportCorrupted);
-                  // }
+                  try {
+                    loadReport(data);
+                  } catch {
+                    alert(localizedString.reportCorrupted);
+                  }
+                }).catch(() => {
+                  alert(localizedString.reportCorrupted);
                 });
           } else {
             openModal(Alert, {

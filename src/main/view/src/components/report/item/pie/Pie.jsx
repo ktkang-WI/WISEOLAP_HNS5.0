@@ -28,7 +28,7 @@ const Pie = ({id, item}) => {
         width={'calc(100%/'+'1'+')'}
         height={'100%'}
         style={{float: 'left'}}
-        title={meta.labelEdit.showTitle ? dimension : ''}
+        title={meta.labelEdit.showTitle ? dimension.caption : ''}
         animation={{
           duration: 1000,
           easing: 'easeOutCubic', // 애니메이션
@@ -48,7 +48,7 @@ const Pie = ({id, item}) => {
         />
         <Series
           argumentField='arg'
-          valueField={dimension}
+          valueField={dimension.summaryName}
         >
           <Label visible={true}
             position={meta.labelPosition}
