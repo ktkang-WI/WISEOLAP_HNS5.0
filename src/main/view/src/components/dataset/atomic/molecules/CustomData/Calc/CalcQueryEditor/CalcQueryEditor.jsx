@@ -47,6 +47,7 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
       const operPatternCase2 = /(\]\s{0,}\d)|(\d\s{0,}\[)/g;
       const numberPattern = /\d\s{1,}\d/g;
       const parenthesisEmpty = /\(\s*\)/g;
+      const aggregationCase = /SUM|AVG|MIN|MAX/g;
       let test = '';
       addedLine = addedLine.concat(line+' ');
 
@@ -61,12 +62,17 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
         parenthesisEmpty.exec(addedLine) ||
         operPatternCase2.exec(addedLine);
 
+      const aggregateCheck =
+      aggregationCase.exec(addedLine);
+
       if (errorCheck) {
+        const message =
+          aggregateCheck ? '집계함수 명칭을 사용할수 없습니다.' : '계산식이 잘못되었습니다.';
         newAnnotations.push({
           row: index,
           column: 0,
           type: 'error',
-          text: '계산식이 잘못되었습니다.'
+          text: message
         });
         handleCheck(false);
       } else {
