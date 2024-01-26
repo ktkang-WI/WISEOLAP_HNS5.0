@@ -36,7 +36,7 @@ const CalcDefineArea = () => {
       return {
         ...prev,
         expression:
-          (!prev.expression) ?
+          !prev.expression ?
           ev.dataTransfer.getData('value') :
           prev.expression + ev.dataTransfer.getData('value')
       };

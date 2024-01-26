@@ -4,8 +4,6 @@ import {typeData}
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
 import {
-  // Button,
-  // LoadIndicator,
   SelectBox,
   TextBox} from 'devextreme-react';
 import useModal from 'hooks/useModal';
@@ -14,7 +12,6 @@ import {
   useContext,
   useEffect,
   useRef
-  // useState
 } from 'react';
 import styled from 'styled-components';
 
@@ -25,14 +22,12 @@ const Label = styled.label`
   padding: 0 10px 0 0;
 `;
 
-// 사용자 정의 데이터 계산식 상단 버튼 부분
 const TopBtns = () => {
   const getContext = useContext(CustomDataCalContext);
   const [customData, setCustomData] = getContext.state.customData;
   const [allFields] = getContext.state.allFields;
   const textBoxRef = useRef();
   const selectBoxRef = useRef();
-  // const [onLoading, setOnLoading] = useState(false);
   const {alert} = useModal();
   const [, setCheckForSaving] = getContext.state.checkForSaving;
 

@@ -36,9 +36,11 @@ const CalcObjectList = () => {
 
   const locatedFields = (selectedCurrentDataField) => {
     const measure = selectedCurrentDataField.measure;
+    const isMeasureEmpty = measure.length === 0;
+    let isSelectedMeasureFieldsEmpty = true;
     let selectedMeasureFields = null;
 
-    if (measure.length === 0) return null;
+    if (isMeasureEmpty) return null;
 
     selectedMeasureFields =
       measure.filter((item) => item.expression == null)
@@ -49,7 +51,8 @@ const CalcObjectList = () => {
             };
           });
 
-    if (selectedMeasureFields.length == 0) return null;
+    isSelectedMeasureFieldsEmpty = selectedMeasureFields.length == 0;
+    if (isSelectedMeasureFieldsEmpty) return null;
 
     return selectedMeasureFields;
   };

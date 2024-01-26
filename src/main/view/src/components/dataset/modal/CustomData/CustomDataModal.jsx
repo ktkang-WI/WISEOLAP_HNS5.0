@@ -154,6 +154,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     return isok;
   };
 
+  // TODO: 임시기능요 NULL 체크
   const nullCheck = (...args) => {
     let isok = true;
     args.forEach((item)=>{

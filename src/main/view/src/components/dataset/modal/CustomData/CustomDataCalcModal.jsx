@@ -50,6 +50,7 @@ const CustomDataCalcModal = ({...props}) => {
     }
   };
 
+  // TODO: 임시기능요 NULL 체크
   const nullCheck = (...args) => {
     let isOk = true;
     args.forEach((item) => {
