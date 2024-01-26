@@ -1,5 +1,5 @@
-const treatedNumber = (value, customSuffix, degree, degreeOption) => {
-  const suffixValue = customSuffix * (10 ** (degree));
+const treatedNumber = (value, customSuffix, precsion, precsionOption) => {
+  const suffixValue = customSuffix * (10 ** (precsion));
   const mathRoundFunc = {
     round: Math.round,
     roundUp: Math.ceil,
@@ -8,8 +8,8 @@ const treatedNumber = (value, customSuffix, degree, degreeOption) => {
 
   return (
     parseFloat(
-        mathRoundFunc[degreeOption](value * suffixValue) / suffixValue
-    ).toFixed(degree)
+        mathRoundFunc[precsionOption](value * suffixValue) / suffixValue
+    ).toFixed(precsion)
   );
 };
 
@@ -22,10 +22,10 @@ export default function CustomizeSuffixValue(value, options) {
   };
   const unit = options.unit.toLowerCase();
   const customSuffix = suffix[options[unit]];
-  const degree = options.degree;
+  const precsion = options.precsion;
 
   const num = treatedNumber(
-      value * 100, customSuffix, degree, options.degreeOption
+      value * 100, customSuffix, precsion, options.precsionOption
   );
 
   return num + '%';

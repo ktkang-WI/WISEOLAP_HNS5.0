@@ -26,7 +26,7 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
 
   useEffect(() => {
     models.DataSource.getByIdAndDsType('admin', DatasetType.DS_SQL)
-        .then((data) => {
+        .then(({data}) => {
           setDataSource(data);
         });
   }, []);

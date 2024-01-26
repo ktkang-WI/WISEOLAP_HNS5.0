@@ -8,6 +8,7 @@ import ItemSlice from './ItemSlice';
 import PopoverSlice from './PopoverSlice';
 import ParameterSlice from './ParameterSlice';
 import SpreadSlice from './SpreadSlice';
+import LoadingSlice from './LoadingSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
@@ -21,7 +22,8 @@ const metaReducer = combineReducers({
 
 const systemReducer = combineReducers({
   modal: ModalSlice.reducer,
-  popover: PopoverSlice.reducer
+  popover: PopoverSlice.reducer,
+  loading: LoadingSlice.reducer
 });
 
 const configure = {
@@ -39,5 +41,7 @@ const store = configureStore(configure);
 if (process.env.NODE_ENV == 'development') {
   window.WI = store;
 }
+
+export const getReportInitialState = () => ReportSlice.getInitialState();
 
 export default store;

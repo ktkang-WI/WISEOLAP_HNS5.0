@@ -1,5 +1,9 @@
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import {setMeta} from '../util/metaUtilityFactory';
+import {defaultDimension, defaultMeasure}
+  from 'components/report/item/util/martUtilityFactory';
+import localizedString from 'config/localization';
+import {DataFieldType} from '../util/dataFieldType';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
@@ -25,6 +29,7 @@ const generateMeta = (item) => {
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
+  setMeta(item, 'dataHighlight', []);
 };
 
 /**
@@ -109,6 +114,34 @@ const generateItem = (item, rootItem) => {
 };
 
 /**
+ * 아이템 객체의 데이터 항목 옵션
+ * @return {JSON} dataFieldOption
+ */
+const getDataFieldOptionChild = () => {
+  const dataFieldMeasure = {
+    ...defaultMeasure
+  };
+
+  const dataFieldColumn = {
+    ...defaultDimension,
+    label: localizedString.column,
+    placeholder: localizedString.columnPlaceholder
+  };
+
+  const dataFieldRow = {
+    ...defaultDimension,
+    label: localizedString.row,
+    placeholder: localizedString.rowPlaceholder
+  };
+
+  return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
+    [DataFieldType.ROW]: dataFieldRow,
+    [DataFieldType.COLUMN]: dataFieldColumn
+  };
+};
+
+/**
  * 차트 커스텀 파라미터 삽입
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
@@ -151,17 +184,19 @@ const getRibbonItems = () => {
 const getAttributeItems = () => {
   return [
     'InteractionConfiguration',
-    'TargetDimension'
+    'DashAnyPivotOption'
   ];
 };
 
 const getTabHeaderItems = () => {
-  return ['ColRowSwitch'];
+  // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
+  return ['ColRowSwitch', 'ShowGrid'];
 };
 
 export default {
   generateMeta,
   generateItem,
+  getDataFieldOptionChild,
   generateParameter,
   getRibbonItems,
   getAttributeItems,

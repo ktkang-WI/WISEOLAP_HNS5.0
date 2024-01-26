@@ -4,7 +4,7 @@ const Overlay = styled.div`
   background-color: rgba(255, 255, 255, 0.4);
   width: 100%;
   height: 100vh;
-  z-index: 50;
+  z-index: ${(props) => props.zIndex || 1600};
   position: fixed;
   top: 0;
   left: 0;

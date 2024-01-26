@@ -243,13 +243,30 @@ const useSpread = () => {
     return blob;
   };
 
+  const createDesigner = () => {
+    const sheets = selectSheets(store.getState());
+    const config = setRibbonSetting();
+    const designer =
+    new sheets.Designer
+        .Designer(document.getElementById('spreadWrapper'),
+            config);
+    dispatch(spreadActions.setSpread({
+      reportId: newReportId,
+      bindingInfos: data.spread,
+      designer: designer
+    }));
+    sheetNameChangedListener();
+    sheetChangedListener();
+  };
+
   return {
     bindData,
     sheetChangedListener,
     sheetNameChangedListener,
     positionConverterAsObject,
     positionConverterAsString,
-    createReportBlob
+    createReportBlob,
+    createDesigner
   };
 };
 

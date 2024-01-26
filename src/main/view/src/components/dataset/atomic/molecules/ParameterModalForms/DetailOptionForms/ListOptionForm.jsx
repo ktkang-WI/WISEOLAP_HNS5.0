@@ -57,7 +57,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
             onFieldDataChanged(e);
           },
           dsId: param.dsId,
-          table: param.dataSource
+          table: param.dataSource.trim()
         });
       }
     }
@@ -80,7 +80,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
             onFieldDataChanged(e);
           },
           dsId: param.dsId,
-          table: param.dataSource
+          table: param.dataSource.trim()
         });
       }
     }
@@ -103,7 +103,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
             onFieldDataChanged(e);
           },
           dsId: param.dsId,
-          table: param.dataSource
+          table: param.dataSource.trim()
         });
       }
     }

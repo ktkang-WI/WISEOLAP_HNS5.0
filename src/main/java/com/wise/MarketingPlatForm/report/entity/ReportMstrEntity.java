@@ -23,8 +23,12 @@ public class ReportMstrEntity {
     String fldType;
     int reportOrdinal;
     String reportType;
-    String reportTag;
-    String reportDesc;
+    @Builder.Default
+    String reportTag = "";
+    @Builder.Default
+    String reportDesc = "";
+    @Builder.Default
+    String reportSubTitle = "";
     String reportLayout;
     String gridInfo;
     int dataSrcId;
@@ -40,7 +44,6 @@ public class ReportMstrEntity {
     Date RegDt;
     String delYn;
     String promptYn;
-    String reportSubTitle;
     int modUserNo;
     Date modDt;
     String privacyYn;

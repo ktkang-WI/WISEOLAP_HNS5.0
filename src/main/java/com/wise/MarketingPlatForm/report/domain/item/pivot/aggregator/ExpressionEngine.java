@@ -31,7 +31,11 @@ public class ExpressionEngine {
         final Map<String, Object> globalNamespace = new HashMap<>();
         globalNamespace.put(null, new PivotFunctions());
 
-        jexl = new JexlBuilder().namespaces(globalNamespace).create();
+        jexl = new JexlBuilder().permissions(null).namespaces(globalNamespace).create();
+    }
+
+    public JexlEngine getJexl() {
+    	return jexl;
     }
 
     public Object evaluate(final Map<String, Object> context, final String expression,

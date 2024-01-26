@@ -54,6 +54,8 @@ const getInitialState = () => {
   if (mode === DesignerMode['AD_HOC']) {
     return adHocInitialState;
   }
+
+  return dashboardInitialState;
 };
 
 const reducers = {
@@ -62,11 +64,11 @@ const reducers = {
     const mode = actions.payload;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      dashboardInitialState;
+      return {...dashboardInitialState};
     } else if (mode === DesignerMode['AD_HOC']) {
-      return adHocInitialState;
+      return {...adHocInitialState};
     } else if (mode === DesignerMode['EXCEL']) {
-      dashboardInitialState;
+      return {...dashboardInitialState};
     }
   },
   changeItemReportId(state, actions) {
@@ -250,6 +252,12 @@ const reducers = {
     const layoutType = actions.payload.layoutType;
 
     state[reportId].adHocOption.layoutSetting = layoutType;
+  },
+  changeItem(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.item;
   }
 };
 

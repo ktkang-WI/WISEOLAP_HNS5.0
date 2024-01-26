@@ -1,4 +1,31 @@
 {
+  "alertInfo":{
+    "common":{
+      "invalid":"유효하지않습니다."
+    },
+    "customData":{
+      "empty":"필드명,계산식,타입이 빈값이 있습니다."
+    },
+    "customDataCalc":{
+      "empty":"필드명,계산식,타입이 빈값이 있습니다.",
+      "Inspection":"계산식에 올바르지 않습니다."
+    }
+  },
+  "customData": {
+    "title":"사용자 정의 데이터",
+    "list":{
+      "fieldName":"필드명",
+      "expression":"계산식",
+      "type":"데이터형식"
+    }
+  },
+  "customDataCalc":{
+    "title":"계산식 편집",
+    "buttons":{
+      "duplicatedFiledName" : "필드명이 열값과 사용자 정의 데이터와 겹칩니다. (항목에 없는 경우 경고창 표시시 최종 저장 이후 생성해주시길 바랍니다.):",
+      "Inspection":"검사"
+    }
+  },
   "test": "테스트",
   "newWindow": "새 창 열기",
   "viewer": "뷰어",
@@ -36,7 +63,7 @@
   "interactionConfiguration": "상호작용 설정",
   "crossDataSourceFiltering": "교차 데이터 소스 필터링",
   "ignoreMasterFilter": "마스터 필터 무시",
-  "targetDimension": "차원",
+  "targetDimension": "대상 차원",
   "dimensionGroup": "차원 그룹",
   "count": "카운트",
   "distinctCount": "고유 카운트",
@@ -114,6 +141,9 @@
   "rowPlaceholder": "새 열",
   "columnPlaceholder": "새 행",
   "fieldPlaceholder": "새 필드",
+  "fieldName": "필드명",
+  "condition": "조건",
+  "conditionValue":"조건값",
   "sparkline": "스파크 라인",
   "sparklinePlaceholder": "새 스파크 라인",
   "reportName": "보고서명",
@@ -180,6 +210,18 @@
   "month": "월",
   "day": "일",
   "datasetNotSelected": "데이터집합이 선택되지 않았습니다.",
+  "dataHighlightList": "하이라이트 목록",
+  "dataHighlightInfo": "하이라이트 정보",
+  "measureList": "측정값 목록",
+  "conditionType": "조건 유형",
+  "valueFrom": "조건 값(From)",
+  "valueTo": "조건 값(To)",
+  "backgroundColor": "배경 색상",
+  "fontColor": "글꼴 색상",
+  "applyCell": "셀",
+  "applyTotal": "합계 셀",
+  "applyGrandTotal": "총계 셀",
+  "emojiList": "이모티콘",
   "pieChart": "파이차트",
   "histogram": "히스토그램",
   "wordCloud": "워드 클라우드",
@@ -222,11 +264,11 @@
   "card": "카드",
   "rectangleArea": "네모영역",
   "editFieldName": "필드 명 수정",
-  "fieldName": "필드 명",
   "reportNotDeleteMsg": "저장이 안된 보고서 입니다.",
   "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
+  "dataHighlight": "데이터 하이라이트",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
   "tooltip": "툴팁",
@@ -264,7 +306,6 @@
   "fieldType": "필드 타입",
   "visibility": "표시 여부",
   "detailSetting": "세부 설정",
-  "bar": "바",
   "round": "반올림",
   "ceil": "올림",
   "floor": "버림",
@@ -286,7 +327,7 @@
     {"name": "argument&Percent", "caption": "인수 및 %"},
     {"name": "argument&Value&Percent", "caption": "인수, 값 및 %"}
   ],
-  "degreeOptions": [
+  "precsionOptions": [
     {"name": "round", "caption": "반올림"},
     {"name": "roundUp", "caption": "올림"},
     {"name": "roundDown", "caption": "버림"}
@@ -303,16 +344,42 @@
   "thousands": "천 단위",
   "milions": "백만 단위",
   "bilions": "십억 단위",
-  "degree": "정도",
-  "precision": "정도",
-  "degreeOption": "정도 옵션",
-  "precisionOption": "정도 옵션",
+  "precsion": "정도",
+  "precsionOption": "정도 옵션",
   "unit": "단위",
   "all": "전체",
+  "showGrid": "그리드로 보기",
+  "detailedData": "상세데이터",
+  "numberFormat": "숫자 형식",
+  "formatUnit": "포맷 단위",
+  "digitUnit": "자리수 단위",
+  "suffixO": "O",
+  "suffixK": "K",
+  "suffixM": "M",
+  "suffixB": "B",
+  "digitSeparator" : "그룹 구분 포함",
   "colRowSwitch": "행/열 변환",
+  "k": "천",
+  "m": "백만",
+  "b": "십억",
   "datasetBinding": "데이터집합 연동",
   "file": "파일",
   "importFileFromPC": "파일 불러오기",
   "print": "프린트",
-  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다."
+  "spreadBindingInfoNot": "해당 보고서에 데이터 연결 정보가 없습니다.",
+  "addHighlightMsg": "하이라이트 목록을 추가해 주세요.",
+  "highlightBetweenValueCompareMsg": "조건 값(To)이 조건 값(From)보다 커야 합니다.",
+  "highlightBetweenValueEssentialMsg": "조건유형 Between은 조건 값(To)도 필수 입력입니다.",
+  "highlightOnlyNumberMsg": "조건 값은 숫자만 입력해 주세요.",
+  "highlightInputEssentialValueMsg": "데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다.",
+  "reportCorrupted": "보고서 데이터가 손상되어 있습니다.\n 관리자에게 문의해 주세요",
+  "menuChangeConfirm": "저장되지 않은 작업 내용이 손실될 수 있습니다.\n 이동하시겠습니까?",
+  "saveReportMsg": "보고서를 저장했습니다.",
+  "faildSaveReportMsg": "보고서 저장을 실패했습니다. \n 관리자에게 문의하세요",
+  "duplicatedSaveReportMsg": "보고서 저장을 실패했습니다. \n 중복된 보고서가 있습니다.",
+  "deleteReportMsg": "보고서를 삭제했습니다.",
+  "failedDeleteReportMsg": "보고서 삭제를 실패했습니다. \n 관리자에게 문의하세요.",
+  "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다.",
+  "requiredFieldNotExist": "의 항목이 비어있습니다.",
+  "deleteParameterMsg": "매개변수를 삭제하시겠습니까?"
 }

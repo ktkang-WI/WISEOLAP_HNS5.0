@@ -123,15 +123,15 @@ const reducers = {
     const mode = actions.payload;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return dashboardInitialState;
+      return {...dashboardInitialState};
     }
 
     if (mode === DesignerMode['AD_HOC']) {
-      return adHocInitialState;
+      return {...adHocInitialState};
     }
 
     if (mode === DesignerMode['EXCEL']) {
-      return excelInitialState;
+      return {...excelInitialState};
     }
   },
   setLayout(state, actions) {
@@ -188,8 +188,13 @@ const reducers = {
   adHocLayoutUpdate(state, actions) {
     const reportId = actions.payload.reportId;
     const layoutType = actions.payload.layoutType;
-
     state[reportId] = adHocLayoutSetting(layoutType, reportId, state);
+  },
+  changeLayout(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.layout;
   }
 };
 const extraReducers = {};
