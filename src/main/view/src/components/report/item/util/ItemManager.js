@@ -62,19 +62,17 @@ const generateDataFieldOption = (item) => {
  */
 const generateAdHocParameter = (rootItem, param) => {
   const dataField = rootItem.adHocOption.dataField;
-  const topBottomInfo = rootItem.adHocOption.topBottomInfo;
-  // const chartItem = rootItem.items[0];
+  const adHocOption = rootItem.adHocOption;
   const pivotItem = rootItem.items[1];
 
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
-  param.topBottomInfo = topBottomInfo;
 
   param.removeNullData = pivotItem.meta.removeNullData;
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
-  param.topBottomInfo = JSON.stringify(param.topBottomInfo);
+  param.adHocOption = JSON.stringify(adHocOption);
 };
 
 /**
@@ -105,6 +103,14 @@ const getTopBottomInfo = () => {
   };
 };
 
+const getLayoutSetting = () => {
+  const layoutType = {
+    'chart': 'chart',
+    'pivot': 'pivot',
+    'chart_pivot': 'chart_pivot'
+  };
+  return layoutType;
+};
 /**
  * 탭 헤더 영역 아이템을 반환합니다.
  * @param {ItemType} type 아이템 타입
@@ -175,5 +181,6 @@ export default {
   getAdHocAttributeItems,
   getTopBottomInfo,
   getTabHeaderItems,
-  useCustomEvent
+  useCustomEvent,
+  getLayoutSetting
 };
