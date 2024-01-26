@@ -224,8 +224,8 @@ public class ReportService {
         return result;
     }
 
-    public List<ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
-        List<ReportResult> result = new ArrayList<ReportResult>();
+    public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        Map<String, ReportResult> result = new HashMap<String, ReportResult>();
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
         QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
@@ -235,19 +235,19 @@ public class ReportService {
         martConfig.setMartDataSource(dsMstrDTO);
 
         String query = queryGenerator.getQuery(dataAggreagtion);
+        String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
+        String[] items = layoutType.split("_");
 
         MartResultDTO martResultDTO = martDAO.select(query);
-        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
-        List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
-
+        List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
-        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
-
-        // clone으로 넘겨서
-        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
-        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
-
+        
+        for (String item : items) {
+            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
+            List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
+            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+        }
+        
         return result;
     }
 

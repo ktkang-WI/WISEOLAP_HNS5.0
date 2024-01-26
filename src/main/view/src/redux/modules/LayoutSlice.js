@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
+import adHocLayoutSetting from 'components/utils/AdhocLayoutSetting';
 
 const dashboardInitialState = {
   0: {
@@ -40,7 +41,8 @@ const adHocInitialState = {
     layoutConfig: {
       global: {
         tabEnableClose: false,
-        tabEnableRename: false
+        tabEnableRename: false,
+        tabSetEnableMaximize: false
       },
       layout: {
         type: 'row',
@@ -54,6 +56,7 @@ const adHocInitialState = {
                 type: 'tabset',
                 weight: 50,
                 selected: 0,
+                maximized: false,
                 children: [
                   {
                     id: 'item1',
@@ -67,6 +70,7 @@ const adHocInitialState = {
                 type: 'tabset',
                 weight: 50,
                 selected: 0,
+                maximized: false,
                 children: [
                   {
                     id: 'item2',
@@ -180,6 +184,11 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state = getInitialState();
     }
+  },
+  adHocLayoutUpdate(state, actions) {
+    const reportId = actions.payload.reportId;
+    const layoutType = actions.payload.layoutType;
+    state[reportId] = adHocLayoutSetting(layoutType, reportId, state);
   },
   changeLayout(state, actions) {
     const prevId = actions.payload.reportId.prevId;

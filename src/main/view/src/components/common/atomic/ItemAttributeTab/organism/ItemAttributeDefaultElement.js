@@ -13,13 +13,17 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import dataHighlightImg
+  from '../../../../../assets/image/icon/highlight/ico_CHightLight.png';
+import useModal from 'hooks/useModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
-import useModal from 'hooks/useModal';
 import TopBottomModal from '../modal/TopBottomModal';
+import DataHighlightModal
+  from 'components/report/item/pivot/modal/organism/DataHighLightModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -170,6 +174,21 @@ const ItemAttributeDefaultElement = () => {
         }
       ]
     },
+    DashAnyPivotOption: {
+      title: '피벗그리드 옵션',
+      items: [
+        {
+          id: 'dataHighlight',
+          label: localizedString.dataHighlight,
+          icon: dataHighlightImg,
+          active: option.dataHighlight == 'dataHighlight',
+          onClick: () => {
+            // 데이터 하이라이트
+            openModal(DataHighlightModal);
+          }
+        }
+      ]
+    },
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
@@ -184,11 +203,12 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'dataHighlight',
-          label: '데이터 하이라이트',
-          icon: dimensionGroupImg,
+          label: localizedString.dataHighlight,
+          icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
             // 데이터 하이라이트
+            openModal(DataHighlightModal);
           }
         },
         {
