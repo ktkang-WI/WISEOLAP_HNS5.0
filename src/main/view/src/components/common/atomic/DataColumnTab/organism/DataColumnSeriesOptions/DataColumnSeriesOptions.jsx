@@ -36,11 +36,13 @@ const DataColumnSeriesOptions = (
   const seriesOptions = useSelector(selectSeriesOption);
 
   useEffect(() => {
-    const seriesOption =
+    if (!seriesOptions || !seriesOptions.length == 0) {
+      const seriesOption =
       seriesOptions.filter((item) => item.fieldId === fieldId)[0];
-    setType(seriesOption.type);
-    setGeneral(seriesOption.general);
-    setPointLabel(seriesOption.pointLabel);
+      setType(seriesOption.type);
+      setGeneral(seriesOption.general);
+      setPointLabel(seriesOption.pointLabel);
+    }
   }, []);
 
   // setting context

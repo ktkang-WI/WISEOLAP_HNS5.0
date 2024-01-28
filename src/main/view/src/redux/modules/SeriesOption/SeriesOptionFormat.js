@@ -88,7 +88,15 @@ const seriesOptionFetchFormat = {
   seriesOptions: seriesOptionDefaultFormat
 };
 
+const measuresValueUpdateFormat = {
+  customDatas: null,
+  reportId: 0
+};
+
 // get Format
+const getMeasuresValueUpdateFormat = () => {
+  return _.cloneDeep(measuresValueUpdateFormat);
+};
 const getSeriesOptionGeneralFormat = () => {
   return _.cloneDeep(seriesOptionDefaultFormat.general);
 };
@@ -128,7 +136,8 @@ export {
   getSeriesOptionFetchFormat,
   getSeriesOptionDefaultFormat,
   getSeriesOptionGeneralFormat,
-  getSeriesOptionPointLabelFormat
+  getSeriesOptionPointLabelFormat,
+  getMeasuresValueUpdateFormat
 };
 
 

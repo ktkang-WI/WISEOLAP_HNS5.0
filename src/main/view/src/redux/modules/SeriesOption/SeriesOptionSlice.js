@@ -1,6 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
   ExceptionCheck,
+  MeasuresUpdateNullCheck,
   ReportIdNullCheck,
   SeriesOptionFetchNullCheck,
   SeriesOptionInitNullCheck} from './handlerException';
@@ -13,6 +14,8 @@ import _ from 'lodash';
 // Create Actions
 const seriesOptionFetch = createAction('Item/SERIES_OPTION_FETCH');
 const seriesOptionInit = createAction('Item/SERIES_OPTION_INITIAL');
+// 임시용 redux
+const measuresFetch = createAction('Item/MEASURES_FETCH');
 
 const getItemIndex = (state, reportId) => {
   return state[reportId].items.findIndex(
@@ -34,6 +37,11 @@ const getFieldIdFromMeasure = (state, reportId) => {
 const getDataFieldType = (state, reportId) => {
   const itemIndex = getItemIndex(state, reportId);
   return state[reportId].items[itemIndex].meta.dataField;
+};
+
+// 임시용 redux
+const getItems = (state, reportId) => {
+  return state[reportId].items;
 };
 
 // Create Selectors for in slice
@@ -116,9 +124,53 @@ const seriesOptionsSynchronization = (
           tempPointGeneralOption.general.reverseView);
   });
 };
+const getMeasures = (item) => {
+  let measures = null;
+  if (!item.meta) return null;
+  if (!item.meta.dataField) return null;
+  if (item.type === 'grid') {
+    measures =
+    item.meta.dataField.field.filter((field) => field.fieldType === 'MEA');
+  } else {
+    measures =
+    item.meta.dataField.measure;
+  };
+  return measures;
+};
 
+const updateMeasuresInfo = (measures, customDatas) => {
+  if (!measures) return;
+  if (!customDatas) return;
+  measures.forEach((measure) => {
+    customDatas.forEach((customData) => {
+      if (measure.uniqueName === customData.uniqueName) {
+        measure.expression = customData.expression;
+      }
+    });
+  });
+};
 // Create Reducers
 const seriesOptionSlice = (builder) => {
+  // 임시용 코드
+  builder.addCase(measuresFetch, (state, action) => {
+    // STEP1 This would be send fields
+    try {
+      ExceptionCheck[MeasuresUpdateNullCheck](action.payload);
+      const customDatas = action.payload.customDatas;
+      const reportId = action.payload.reportId;
+      const items = getItems(state, reportId);
+
+      if (!customDatas) return;
+      if (!items) return;
+
+      items.forEach((item) => {
+        const measures = getMeasures(item);
+        if (measures) updateMeasuresInfo(measures, customDatas);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
   builder.addCase(seriesOptionInit, (state, action) => {
     try {
       ExceptionCheck[SeriesOptionInitNullCheck](action.payload);
@@ -180,7 +232,8 @@ export {
 // export Actions
 export {
   seriesOptionInit,
-  seriesOptionFetch
+  seriesOptionFetch,
+  measuresFetch
 };
 
 export default seriesOptionSlice;

@@ -23,7 +23,7 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 const Chart = ({id, adHocOption, item}) => {
   const dataFields = item.meta.dataField;
@@ -258,11 +258,14 @@ const Chart = ({id, adHocOption, item}) => {
   );
 };
 
+/*
 const propsComparator = (prev, next) => {
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
+*/
 
-export default React.memo(Chart, propsComparator);
+// export default React.memo(Chart, propsComparator);
+export default React.memo(Chart);

@@ -11,6 +11,12 @@ const payloadNullCheck = (payload) => {
   }
 };
 
+const customDataNullCheck = (customDatas) => {
+  if (!customDatas) {
+    throw new Error('customData is null!! not defined yet');
+  }
+};
+
 const seriesOptionsNullCheck = (dataField) => {
   if (!dataField.seriesOptions) {
     throw new Error('SeriesOption is null!! not defined yet');
@@ -47,6 +53,11 @@ const ExceptionCheck = {
   },
   SeriesOptionNullCheck: (dataField) => {
     seriesOptionsNullCheck(dataField);
+  },
+  MeasuresUpdateNullCheck: (payload) => {
+    payloadNullCheck(payload);
+    reportIdNullCheck(payload.reportId);
+    customDataNullCheck(payload.customDatas);
   }
 };
 
@@ -55,6 +66,7 @@ const SeriesOptionNullCheck = 'SeriesOptionNullCheck';
 const SeriesOptionInitNullCheck = 'SeriesOptionInitNullCheck';
 const SeriesOptionFetchNullCheck = 'SeriesOptionFetchNullCheck';
 const SeriesOptionUpdateNullCheck = 'SeriesOptionUpdateNullCheck';
+const MeasuresUpdateNullCheck = 'MeasuresUpdateNullCheck';
 
 // handler Export
 export {
@@ -67,6 +79,7 @@ export {
   SeriesOptionNullCheck,
   SeriesOptionInitNullCheck,
   SeriesOptionUpdateNullCheck,
-  SeriesOptionFetchNullCheck
+  SeriesOptionFetchNullCheck,
+  MeasuresUpdateNullCheck
 };
 
