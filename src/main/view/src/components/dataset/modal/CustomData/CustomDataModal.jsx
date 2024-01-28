@@ -180,7 +180,8 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
         reportId: selectedReportId,
         dataset: {
           ...dataset,
-          fields: [...fields, ...tempFields]
+          fields: [...fields, ...tempFields],
+          customData: [...tempFields]
         }
       }));
       isok = true;
