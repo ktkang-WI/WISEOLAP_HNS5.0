@@ -15,7 +15,6 @@ export const removeDuplicate = (func, array, returnArray, prevKey) => {
     const measure = array.shift();
     const key = func(measure);
     let isInsertingData = false;
-    // 키를 생성해야함
     if (!prevKey) {
       isInsertingData = true;
     } else {

@@ -130,7 +130,7 @@ public class ChartDataMaker implements ItemDataMaker {
 
         info.put("seriesDimensionNames", seriesDimensionNames);
         info.put("seriesDimensionCaptions", seriesDimensionCaptions);
-        info.put("seriesMeasureNames",seriesMeasureNames);
+        info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 

@@ -234,7 +234,7 @@ public class DataPickUpMake {
         List<Map<String, Object>> tempData = null;
         List<Measure> distinctMeasures = new ArrayList<>();
         List<String> uniqueKeys = new ArrayList<>();
-        measures.stream().forEach(item->{
+        measures.stream().forEach(item -> {
             if (!uniqueKeys.contains(item.getSummaryName())) {
                 distinctMeasures.add(item);
                 uniqueKeys.add(item.getSummaryName());
