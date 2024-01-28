@@ -174,6 +174,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   const reduxUpdateCustomDataList = (tempFields) => {
     const fields = getCurrentFields();
 
+    if (!fields) return;
     let isok = false;
     if (tempFields) {
       dispatch(updateDataset({
