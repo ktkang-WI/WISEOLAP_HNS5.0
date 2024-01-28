@@ -150,6 +150,7 @@ const DataColumn = ({
   };
 
   const handleSeriesOptionClick = (e) => {
+    if (data.category === 'field') return;
     const fieldId = data.fieldId;
     openModal(DataColumnSeriesOptions, {
       fieldId

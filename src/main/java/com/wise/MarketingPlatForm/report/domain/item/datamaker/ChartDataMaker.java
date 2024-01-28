@@ -135,7 +135,7 @@ public class ChartDataMaker implements ItemDataMaker {
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
-    }
+}
 
     private Map<String, Measure> generateSingleDataMap(String key, Object o) {
         Map<String, Measure> temp = new HashMap<>();

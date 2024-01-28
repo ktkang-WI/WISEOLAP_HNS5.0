@@ -5,9 +5,10 @@ import _ from 'lodash';
 // measures = removeDuplicate(
 //   (measure) => measure.summaryType + '_' + measure.name,
 //   measures);
-export const removeDuplicate = (func, array, returnArray, prevKey) => {
+export const removeDuplicate = (func, array, returnArray, storedKey) => {
   if (!returnArray) {
     returnArray = [];
+    storedKey = [];
     array = _.cloneDeep(array);
   }
   try {
@@ -15,14 +16,17 @@ export const removeDuplicate = (func, array, returnArray, prevKey) => {
     const measure = array.shift();
     const key = func(measure);
     let isInsertingData = false;
-    if (!prevKey) {
+    if (returnArray.length === 0) {
       isInsertingData = true;
     } else {
-      prevKey === key ?
+      storedKey.includes(key)?
       isInsertingData = false : isInsertingData = true;
     };
-    if (isInsertingData) returnArray.push(measure);
-    return removeDuplicate(func, array, returnArray, key);
+    if (isInsertingData) {
+      returnArray.push(measure);
+      storedKey.push(key);
+    }
+    return removeDuplicate(func, array, returnArray, storedKey);
   } catch (error) {
     console.log(error);
     return null;

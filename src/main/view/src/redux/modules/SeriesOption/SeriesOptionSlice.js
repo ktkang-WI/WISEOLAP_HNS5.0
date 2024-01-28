@@ -65,16 +65,17 @@ const getSeriesOptions = (state, reportId) => {
 export const removedSeriesOptions = (state, reportId, fetchFieldId) => {
   const fieldIds = getFieldIdFromMeasure(state, reportId);
   const seriesOptions = getSeriesOptions(state, reportId);
+  const seriesFieldIds = seriesOptions.map((item) => item.fieldId);
   const removeIndexs = [];
 
   if (seriesOptions.length == 0) return seriesOptions;
 
-  seriesOptions.forEach((item, index) => {
-    if (item.fieldId === fetchFieldId) {
+  seriesFieldIds.forEach((fieldId, index) => {
+    if (fieldId === fetchFieldId) {
       removeIndexs.push(index);
     }
-    if (!fieldIds.includes(item.fieldId)) {
-      removeIndexs.push(fieldIds.indexOf(item.fieldId));
+    if (!fieldIds.includes(fieldId)) {
+      removeIndexs.push(seriesFieldIds.indexOf(fieldId));
     }
   });
 

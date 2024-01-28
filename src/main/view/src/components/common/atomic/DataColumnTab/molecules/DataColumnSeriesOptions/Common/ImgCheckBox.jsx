@@ -2,6 +2,8 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import styled from 'styled-components';
 
 const StyledUl = styled.ul`
+  width: 100%;
+  height: 100%;
   list-style-type: none;
 `;
 
@@ -13,6 +15,19 @@ const StyledTitle = styled.h4`
   background-color: #f1f1f1;
   padding: 3px 5px;
   font-weight: 400;
+`;
+
+const Img = styled.img`
+  display: block;
+  margin: 0 auto;
+`;
+
+const SubTitle = styled.div`
+  font-size: 0.75rem;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 `;
 
 const Label = styled.label`
@@ -69,7 +84,12 @@ const CheckBox = ({onValueChanged, id, src, title, checked}) => (
   <StyledLi>
     <StyledInput type="checkbox" id={id} onChange={onValueChanged}
       checked={checked}/>
-    <Label htmlFor={id}><img src={src} title={title}/></Label>
+    <Label htmlFor={id}>
+      <Wrapper>
+        <Img src={src} title={title}/>
+        <SubTitle>{title}</SubTitle>
+      </Wrapper>
+    </Label>
   </StyledLi>
 );
 

@@ -258,14 +258,16 @@ const Chart = ({id, adHocOption, item}) => {
   );
 };
 
-/*
+
 const propsComparator = (prev, next) => {
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
+  _.isEqual(prev.item.meta.dataField.seriesOptions,
+      next.item.meta.dataField.seriesOptions) &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
-*/
 
-// export default React.memo(Chart, propsComparator);
-export default React.memo(Chart);
+
+export default React.memo(Chart, propsComparator);
+// export default React.memo(Chart);

@@ -12,12 +12,19 @@ import {getSeriesOptionFetchFormat}
 import {selectSeriesOption}
   from 'redux/selector/SeriesOption/SeriesOptionSelector';
 import localizedString from 'config/localization';
+import styled from 'styled-components';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
+const OverFlowScrollSetting = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+`;
+
 const TabPanelItem = ({children}) => {
   return (
-    <>{children}</>
+    <OverFlowScrollSetting id ='TEST'>{children}</OverFlowScrollSetting>
   );
 };
 
@@ -36,14 +43,19 @@ const DataColumnSeriesOptions = (
   const seriesOptions = useSelector(selectSeriesOption);
 
   useEffect(() => {
-    if (!seriesOptions || !seriesOptions.length == 0) {
+    effectSeriesOption();
+  }, []);
+
+  const effectSeriesOption = () => {
+    if (!seriesOptions) return;
+    if (!seriesOptions.length == 0) {
       const seriesOption =
       seriesOptions.filter((item) => item.fieldId === fieldId)[0];
       setType(seriesOption.type);
       setGeneral(seriesOption.general);
       setPointLabel(seriesOption.pointLabel);
     }
-  }, []);
+  };
 
   // setting context
   const context = {
