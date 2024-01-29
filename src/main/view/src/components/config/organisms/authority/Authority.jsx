@@ -1,0 +1,120 @@
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {Button, TabPanel} from 'devextreme-react';
+import styled from 'styled-components';
+import {dataSource} from './data/AuthorityData';
+import {createContext, useCallback, useState} from 'react';
+import {useLoaderData} from 'react-router-dom';
+
+const Header = styled.div`
+  flex: 0 0 50px;
+  background-color:#e1e1e1;
+`;
+
+const Content = styled.div`
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction: row;
+  flex: 0 0 1;
+`;
+
+const NavBar = styled.div`
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
+`;
+
+const NavBarItem = styled.div`
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 30px;
+  padding: 0px 3px;
+`;
+
+export const AuthorityContext = createContext();
+
+const Authority = () => {
+  const btns = ['save'];
+  const [mode, setMode] = useState(dataSource[0].mode);
+  const groupData = useLoaderData().data;
+
+  const [data, setData] = useState(groupData[0]);
+  const [report, setReport] = useState();
+  const [dataset, setDataset] = useState();
+  const [datasource, setDatasource] = useState();
+
+  const context = {
+    state: {
+      data: [data, setData],
+      report: [report, setReport],
+      dataset: [dataset, setDataset],
+      datasource: [datasource, setDatasource]
+    }
+  };
+
+  const handleBtnClick = ({component}) => {
+    alert('클릭');
+  };
+
+  const navBarItems = () => {
+    return (
+      btns.map((item, index) => (
+        <NavBarItem key={index}>
+          <Button icon={item} onClick={handleBtnClick}></Button>
+        </NavBarItem>
+      ))
+    );
+  };
+
+  const TabPanelItem = useCallback(({data}) => {
+    return data.component;
+  }, []);
+
+  const handleTabPanelItem = ({itemData}) => {
+    const panelTitle = itemData.title;
+
+    dataSource.forEach((item) => {
+      if (item.title === panelTitle) {
+        setMode(item.mode);
+        item.data().then((res) => {
+          if (res.data) {
+            setData(res.data);
+          }
+        });
+        return;
+      }
+    });
+  };
+
+  return (
+    <AuthorityContext.Provider
+      value={context}>
+      <Wrapper display='flex' direction='column'>
+        <Header>
+          <NavBar>
+            {navBarItems(mode)}
+          </NavBar>
+        </Header>
+        <Content>
+          <TabPanel
+            className='dx-theme-background-color'
+            width='100%'
+            height='100%'
+            dataSource={dataSource}
+            animationEnabled={false}
+            swipeEnabled={false}
+            itemComponent={TabPanelItem}
+            onTitleClick={handleTabPanelItem}
+          >
+          </TabPanel>
+        </Content>
+      </Wrapper>
+    </AuthorityContext.Provider>
+  );
+};
+
+export default Authority;

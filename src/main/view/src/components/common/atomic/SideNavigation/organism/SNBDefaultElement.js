@@ -73,6 +73,15 @@ const SNBDefaultElement = () => {
       onClick: (e) => {
         nav('user-group');
       }
+    },
+    '권한': {
+      id: '권한',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '권한',
+      onClick: (e) => {
+        nav('auth');
+      }
     }
   };
 };

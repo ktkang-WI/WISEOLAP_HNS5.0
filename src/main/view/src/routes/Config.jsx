@@ -35,7 +35,7 @@ const Config = () => {
       <Container display='flex' direction='row'>
         <Wrapper size={theme.size.snbWidth}>
           <SideNavigationBar
-            content={['환경 설정', '사용자/그룹관리']}
+            content={['환경 설정', '사용자/그룹관리', '권한']}
           />
         </Wrapper>
         <Wrapper>

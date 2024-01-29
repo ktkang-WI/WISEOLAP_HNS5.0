@@ -1,0 +1,35 @@
+import axios from 'axios';
+
+import {getConfig} from 'config/config';
+
+const contextRoot =
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
+const accountPath = document.location.origin + contextRoot + '/account';
+
+// 그룹
+export const getGroups = async () => {
+  const res = await axios.get(accountPath + '/group');
+  return res;
+};
+
+// 사용자
+export const getUsers = async () => {
+  const res = await axios.get(accountPath + '/user');
+  return res;
+};
+
+// 권한
+// 그룹 데이터
+export const getGroupData = async () => {
+  const res = await axios.get(accountPath + '/group/data');
+  return res;
+};
+
+// 사용자 데이터
+export const getUserData = async () => {
+  const res = await axios.get(accountPath + '/user/data');
+  return res;
+};
+
+

@@ -12,9 +12,11 @@ import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import {
   generalConfigure as generalLoader,
+  groupData as groupDataLoader,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
+import Authority from 'components/config/organisms/authority/Authority';
 
 const contextPath = '/editds';
 
@@ -68,6 +70,11 @@ const router = createBrowserRouter([
         path: 'user-group',
         element: <UserGroupManagement/>,
         loader: userGroupLoader
+      },
+      {
+        path: 'auth',
+        element: <Authority/>,
+        loader: groupDataLoader
       }
     ]
   }

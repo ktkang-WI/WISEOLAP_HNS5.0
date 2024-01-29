@@ -2,7 +2,7 @@ import models from 'models';
 
 export async function generalConfigure() {
   const generalConfigure =
-  await models.Config.getGeneralConfig().then((res) => {
+  await models.Preferences.getGeneralConfig().then((res) => {
     if (res.status != 200) {
       return res.error;
     }
@@ -12,9 +12,11 @@ export async function generalConfigure() {
   return {generalConfigure};
 }
 
+console.log(models);
+
 export async function userGroupManagement() {
   const userGroupManagement =
-  await models.Config.getUserGroupManagement().then((res) => {
+  await models.UserGroupManagement.getUserGroupManagement().then((res) => {
     if (res.status != 200) {
       return res.error;
     }
@@ -22,4 +24,28 @@ export async function userGroupManagement() {
     return res.data.data;
   });
   return {userGroupManagement};
+}
+
+export async function groupData() {
+  const data =
+  await models.Authority.getGroupData().then((res) => {
+    if (res.status != 200) {
+      return res.error;
+    }
+    console.log(res);
+    return res.data.data;
+  });
+  return {data};
+}
+
+export async function userData() {
+  const data =
+  await models.Authority.getUserData().then((res) => {
+    if (res.status != 200) {
+      return res.error;
+    }
+    console.log(res);
+    return res.data.data;
+  });
+  return {data};
 }

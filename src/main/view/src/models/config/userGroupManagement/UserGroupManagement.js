@@ -5,26 +5,17 @@ import {getConfig} from 'config/config';
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
-const configPath = document.location.origin + contextRoot + '/config';
 const accountPath = document.location.origin + contextRoot + '/account';
-
-export const getGeneralConfig = async () => {
-  const res = await axios.get(configPath + '/general');
-  return res;
-};
-
-export const updateGeneralConfig = async (general) => {
-  const res = await axios.patch(configPath + '/general', null, {
-    params: general
-  });
-  return res;
-};
 
 export const getUserGroupManagement = async () => {
   const res = await axios.get(accountPath + '/user-group');
   return res;
 };
 
+/**
+ * 사용자 관리 비밀번호 변경
+ * @param {JSON} user 사용자 관리, 비밀번호에 필요한 정보 (현재 비밀번호, 새 비밀번호, 비밀번호 확인)
+ */
 export const updateUserPassword = async (user) => {
   // const res = await axios.get(accountPath + '/user/password', null, {
   //   params: user

@@ -243,5 +243,16 @@
   "generateConfigure": "generateConfigure",
   "reportConfigure": "reportConfigure",
   "userManagement": "userManagement",
-  "groupManagement": "groupManagement"
+  "groupManagement": "groupManagement",
+  "passwordChange": "passwordChange",
+  "currentPassword": "currentPassword",
+  "newPassword": "newPassword",
+  "passwordConfirm": "passwordConfirm",
+  "groupData": "groupData",
+  "groupReport": "groupReport",
+  "groupDataset": "groupDataset",
+  "groupDatasource": "groupDatasource",
+  "userReport": "userReport",
+  "userDataset": "userDataset",
+  "userDatasource": "userDatasource"
 }

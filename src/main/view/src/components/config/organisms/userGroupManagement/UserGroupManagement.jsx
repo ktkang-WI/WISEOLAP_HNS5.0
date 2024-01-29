@@ -129,12 +129,13 @@ const UserGroupManagement = () => {
   };
 
   const handleKey = () => {
-    console.log(userDetailInfo);
-    const user =
-      usersFormat.find((user) => user.userId === userDetailInfo.userId);
-    openModal(UserPasswordModal, {
-      user: user
-    });
+    if (userDetailInfo) {
+      const user =
+        usersFormat.find((user) => user.userId === userDetailInfo.userId);
+      openModal(UserPasswordModal, {
+        user: user
+      });
+    };
   };
 
   const handleTabPanelItem = ({itemData}) => {

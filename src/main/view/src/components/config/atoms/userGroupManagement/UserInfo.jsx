@@ -16,6 +16,7 @@ const UserInfo = () => {
   const [userDetailInfo] = getContext.state.userDetailInfo;
 
   return (
+
     <Panel title='사용자 정보'>
       <Form
         formData={userDetailInfo}

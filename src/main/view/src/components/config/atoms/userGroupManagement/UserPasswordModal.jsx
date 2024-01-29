@@ -5,7 +5,9 @@ import {Item, Label} from 'devextreme-react/form';
 import useModal from 'hooks/useModal';
 import {useRef} from 'react';
 import {getTheme} from 'config/theme';
-import {updateUserPassword} from 'models/config/userGroupManagement';
+import {updateUserPassword}
+  from 'models/config/userGroupManagement/UserGroupManagement';
+
 
 const theme = getTheme();
 

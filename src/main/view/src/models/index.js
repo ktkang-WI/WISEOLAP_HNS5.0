@@ -5,8 +5,10 @@ import * as DBInfo from './dataset/DBInfo';
 import * as Item from './report/Item';
 import * as Report from './report/Report';
 import * as Parameter from './dataset/Parameter';
-import * as Config from './config/userGroupManagement';
-
+import * as Preferences from './config/preferences/Preferences';
+import * as UserGroupManagement
+  from './config/userGroupManagement/UserGroupManagement';
+import * as Authority from './config/authority/Authority';
 export default {
   DataSource,
   Cube,
@@ -15,5 +17,7 @@ export default {
   Item,
   Parameter,
   Report,
-  Config
+  Preferences,
+  UserGroupManagement,
+  Authority
 };
