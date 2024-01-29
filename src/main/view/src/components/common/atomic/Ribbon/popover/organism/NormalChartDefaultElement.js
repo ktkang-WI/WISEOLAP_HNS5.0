@@ -31,7 +31,7 @@ import store from 'redux/modules';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {useDispatch} from 'react-redux';
 
-const NomalChartDefaultElement = (seriesTypeCompact) => {
+const NormalChartDefaultElement = (seriesTypeCompact) => {
   const dispatch = useDispatch();
   const {insertFlexLayout} = useLayout();
   const {closePopover} = usePopover();
@@ -53,20 +53,21 @@ const NomalChartDefaultElement = (seriesTypeCompact) => {
     dispatch(updateItem({reportId: selectedReportId, item: item}));
   };
 
-  const makeCompactNomalElemet = (
+  const makeCompactNormalElemet = (
       seriesTypeCompact,
-      nomalChartElemet) => {
+      normalChartElemet) => {
     if (seriesTypeCompact) {
-      delete nomalChartElemet['restChart'];
-      nomalChartElemet.keys.pop();
-      // nomalChartElemet['restChart'].filter((element) =>
+      delete normalChartElemet['restChart'];
+      normalChartElemet.keys.pop();
+      // TODO: bubble chart 추가
+      // normalChartElemet['restChart'].filter((element) =>
       //   element.label !== localizedString.pieChart
       // );
     }
-    return nomalChartElemet;
+    return normalChartElemet;
   };
 
-  const nomalChartElemet = {
+  const normalChartElemet = {
     barChart: [
       {
         imgSrc: bar1,
@@ -159,6 +160,7 @@ const NomalChartDefaultElement = (seriesTypeCompact) => {
       }
     ],
     restChart: [
+      // TODO: bubble chart 추가
       // {
       //   imgSrc: bubbleBar1,
       //   label: localizedString.BubbleChart,
@@ -181,6 +183,6 @@ const NomalChartDefaultElement = (seriesTypeCompact) => {
     ]
   };
 
-  return makeCompactNomalElemet(seriesTypeCompact, nomalChartElemet);
+  return makeCompactNormalElemet(seriesTypeCompact, normalChartElemet);
 };
-export default NomalChartDefaultElement;
+export default NormalChartDefaultElement;

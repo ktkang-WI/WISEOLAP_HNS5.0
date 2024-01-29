@@ -209,7 +209,7 @@ const Chart = ({id, adHocOption, item}) => {
                 valueField={valueField}
                 argumentField='arg'
                 name={seriesCaptions[i]}
-                type={meta.seriesType ? meta.seriesType : 'bar'}
+                type={meta.seriesType}
               >
                 <Label
                   visible={true}

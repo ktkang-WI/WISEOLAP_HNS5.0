@@ -19,11 +19,11 @@ const useCustomEvent = () => {
   const {openedPopover} = usePopover();
   const dispatch = useDispatch();
   const {updateItem} = ItemSlice.actions;
-  const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
+  const {commonRibbonBtnElement} = itemOptionManager();
 
   const ribbonConfig = {
     'Rotate': {
-      ...commonRibbonButton,
+      ...commonRibbonBtnElement,
       'id': 'rotate',
       'label': localizedString.rotate,
       'imgSrc': rotate,
@@ -38,7 +38,7 @@ const useCustomEvent = () => {
       }
     },
     // 'XAxisSetting': {
-    //   ...commonRibbonButton,
+    //   ...commonRibbonBtnElement,
     //   'id': 'xAxis_setting',
     //   'label': localizedString.xAxisSetting,
     //   'imgSrc': xAxisSetting,
@@ -52,7 +52,7 @@ const useCustomEvent = () => {
     //   }
     // },
     // 'YAxisSetting': {
-    //   ...commonRibbonButton,
+    //   ...commonRibbonBtnElement,
     //   'id': 'yAxis_setting',
     //   'label': localizedString.yAxisSetting,
     //   'imgSrc': yAxisSetting,
@@ -66,7 +66,7 @@ const useCustomEvent = () => {
     //   }
     // },
     // 'ExtraAxisSetting': {
-    //   ...commonRibbonButton,
+    //   ...commonRibbonBtnElement,
     //   'id': 'extra_setting',
     //   'label': localizedString.extraAxisSetting,
     //   'imgSrc': yAxisSetting,
@@ -80,7 +80,7 @@ const useCustomEvent = () => {
     //   }
     // },
     'SeriesType': {
-      ...commonRibbonButton,
+      ...commonRibbonBtnElement,
       'id': 'seriesType',
       'label': localizedString.seriesType,
       'imgSrc': seriesType,

@@ -42,8 +42,7 @@ const generateMeta = (item) => {
   });
 
   setMeta(item, 'useRotate', false);
-  // seriesType의 경우 여기서 기본값을 설정하지 않고
-  // NormalChartDefaultElement.js에서 chartType으로 넘긴다.
+  setMeta(item, 'seriesType', 'bar');
 };
 
 /**
