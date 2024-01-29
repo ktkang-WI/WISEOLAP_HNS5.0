@@ -183,6 +183,9 @@ const QueryDataSourceDesignerModal = ({
           if (!response.data.rowData[0].error) {
             let tempFields = response.data.metaData;
             tempFields = makeFieldIcon(tempFields);
+            if (dataset.customData) {
+              tempFields = [...tempFields, ...dataset.customData];
+            }
 
             dispatch(updateDataset({
               reportId: selectedReportId,
