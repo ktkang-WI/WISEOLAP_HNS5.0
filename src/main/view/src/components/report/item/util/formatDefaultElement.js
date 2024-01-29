@@ -1,6 +1,6 @@
 import localizedString from 'config/localization';
 
-export const farmatType = [
+export const formatType = [
   {value: 'Auto', caption: 'Auto'},
   {value: 'General', caption: 'General'},
   {value: 'Number', caption: 'Number'},

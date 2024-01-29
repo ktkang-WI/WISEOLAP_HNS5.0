@@ -3,7 +3,7 @@ import useLayout from 'hooks/useLayout';
 import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-// image file 불러오기 추후 수정
+// TODO: image file 불러오기 추후 수정
 import bar1 from 'assets/image/icon/button/series_type.png';
 import bar2 from 'assets/image/icon/button/stackbar.png';
 import bar3 from 'assets/image/icon/button/fullstackbar.png';
@@ -23,6 +23,7 @@ import areaBar5 from 'assets/image/icon/button/ico_area5.png';
 import areaBar6 from 'assets/image/icon/button/ico_area6.png';
 import areaBar7 from 'assets/image/icon/button/ico_area7.png';
 
+// TODO: bubble chart 추가 예정
 // import bubbleBar1 from 'assets/image/icon/button/ico_bubble1.png';
 
 import pie from 'assets/image/icon/button/pieChart.png';
@@ -32,12 +33,18 @@ import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {useDispatch} from 'react-redux';
 
 const NormalChartDefaultElement = (seriesTypeCompact) => {
+  // action
+  const {updateItem} = ItemSlice.actions;
+
+  // hook
   const dispatch = useDispatch();
   const {insertFlexLayout} = useLayout();
   const {closePopover} = usePopover();
-  const {updateItem} = ItemSlice.actions;
+
+  // state
   const selectedReportId = useSelector(selectCurrentReportId);
   const chart = 'chart';
+
   const onClickChartItem = (selectedReportId, chart, chartType) => {
     if (!seriesTypeCompact) {
       insertFlexLayout(selectedReportId, chart, chartType);

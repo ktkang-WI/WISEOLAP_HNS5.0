@@ -3,8 +3,8 @@ import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
 import {useEffect, useState} from 'react';
 import {formatValue, updateFomatType} from './FormatFunction';
-import {farmatType, unitType, precisionType}
-  from 'components/report/item/util/fomatDefaultElement';
+import {formatType, unitType, precisionType}
+  from 'components/report/item/util/formatDefaultElement';
 const Preview = styled.textarea`
 background-color: lightgray;
 border: 1px solid #ccc;
@@ -59,7 +59,7 @@ const FormatOptionForm = ({
         dataField='formatType'
         editorOptions={
           {
-            dataSource: farmatType,
+            dataSource: formatType,
             valueExpr: 'value',
             displayExpr: 'caption'
           }
