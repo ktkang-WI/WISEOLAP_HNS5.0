@@ -122,7 +122,10 @@ public class QueryGenService {
 
         cubeParamSet.setAuthMembers(authMembers);
 
-        List<Measure> measures = cubeParamSet.getDataAggreagtion().getMeasures();
+        List<Measure> measures = new ArrayList<> ();
+        measures.addAll(cubeParamSet.getDataAggreagtion().getMeasures());
+        measures.addAll(cubeParamSet.getDataAggreagtion().getSortByItems());
+        
         ArrayList<String> meaGrp = new ArrayList<String>();
         // 현재 사용중인 측정값 그룹
         for (Measure measure : measures) {
