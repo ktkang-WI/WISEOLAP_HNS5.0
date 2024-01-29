@@ -20,6 +20,9 @@ import models from 'models';
 import {makeMetaDataField, metaDataField}
   from 'components/report/item/util/metaUtilityFactory';
 import localizedString from 'config/localization';
+import {getSeriesOptionInitFormat}
+  from 'redux/modules/SeriesOption/SeriesOptionFormat';
+import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -32,6 +35,16 @@ const useDrag = () => {
   const comparePos = (destination, source) => {
     return destination && destination.droppableId == source.droppableId &&
         destination.index == source.index;
+  };
+
+  const onDragEndSeriesOption = (tempField, reportId) => {
+    if (tempField.fieldType !== 'DIM') {
+      // seriesOptions 초기화
+      const tempSeriesOptionInit = getSeriesOptionInitFormat();
+      tempSeriesOptionInit.reportId = reportId;
+      tempSeriesOptionInit.fieldId = tempField.fieldId;
+      dispatch(seriesOptionInit(tempSeriesOptionInit));
+    }
   };
 
   const onDragStart = (e) => {
@@ -48,6 +61,12 @@ const useDrag = () => {
     const source = e.source;
     const targetId = e.draggableId;
     const datasetId = selectedDataset.datasetId;
+
+    const getCustomDatas = (field, sourceField) => {
+      if (!sourceField.isCustomData) return null;
+      field.expression = sourceField.expression;
+      return field;
+    };
 
     const getNewDataField = (sourceField) => {
       const getDataFieldType = () => {
@@ -66,6 +85,10 @@ const useDrag = () => {
         fieldType: sourceField.type, // 데이터 항목 원본 타입
         type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
       };
+      const customDatas = getCustomDatas(tempField, sourceField);
+
+      if (customDatas) tempField = customDatas;
+
       // 필드아이디가 있는 경우 기존 아이템 이동
       if (sourceField.fieldId) {
         tempField = {...sourceField, ...tempField};
@@ -156,12 +179,24 @@ const useDrag = () => {
     // Droppable 컴포넌트에 떨군 경우
     if (dest) {
       if (dest.droppableId == 'filter-bar') {
+        if (selectedDataset.datasetType != 'CUBE') {
+          return;
+        }
+
         const parameters = selectRootParameter(store.getState());
         const paramInfo = parameters.informations;
+        let sourceField = null;
+        if (source.droppableId == 'dataSource') {
+          sourceField = selectedDataset.fields.find((field) =>
+            field.uniqueName == targetId
+          );
+        } else {
+          sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+          sourceField = sourceField[0];
 
-        const sourceField = selectedDataset.fields.find((field) =>
-          field.uniqueName == targetId
-        );
+          dispatch(setItemField({reportId, dataField}));
+        }
 
         const regExp = /[\[\]]/gi;
         const uniName = sourceField.uniqueName.replace(regExp, '')
@@ -214,6 +249,7 @@ const useDrag = () => {
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
           dataField.datasetId = selectedDataset.datasetId;
           dispatch(setItemField({reportId, dataField}));
+          onDragEndSeriesOption(tempField, reportId);
         } else {
           // 데이터 항목에서 출발한 경우 기존 데이터 항목 복제 및 삭제 후 추가
           let sourceField = dataField[source.droppableId]

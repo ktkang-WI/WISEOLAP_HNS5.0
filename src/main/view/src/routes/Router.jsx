@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         element: <Adhoc/>
       },
       {
-        path: DesignerMode['SPREAD_SHEET'].toLowerCase(),
+        path: DesignerMode['EXCEL'].toLowerCase(),
         element: <Spreadsheet/>
       }
     ]

@@ -21,6 +21,7 @@ import localizedString from 'config/localization';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 
 const useQueryExecute = () => {
@@ -28,6 +29,8 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
   /**
@@ -38,7 +41,7 @@ const useQueryExecute = () => {
    * @param {JSON} filter 아이템에 적용할 필터
    * @return {JSON} parameter
    */
-  const generateParameter = (item, datasets, parameters, filter={}) => {
+  const generateParameter = async (item, datasets, parameters, filter={}) => {
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -68,10 +71,32 @@ const useQueryExecute = () => {
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
 
+    param.filter = JSON.stringify(filter);
+
+    // 주제영역 마스터 필터 있는 경우
+    // TODO: 추후 관계 검사 필요
+    if (orgDataset.datasetType == 'CUBE' && !_.isEmpty(filter)) {
+      for (const uniqueName in filter) {
+        if (filter[uniqueName]) {
+          const cubeInfoParam = {
+            cubeId: orgDataset.cubeId,
+            userId: 'admin', // 추후 userId 받아서
+            uniqueName: uniqueName
+          };
+
+          const response = await models.Cube.getCubeInfo(cubeInfoParam);
+
+          parameter.push(ParamUtils.filterToParameter(filter[uniqueName],
+              response.data, orgDataset.dsId));
+        }
+      };
+
+      param.filter = '{}';
+    }
+
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
-    param.filter = JSON.stringify(filter);
     ItemManager.generateParameter(item, param);
 
     return param;
@@ -93,13 +118,24 @@ const useQueryExecute = () => {
 
     // dataset
     const orgDataset = datasets.find(
-        (dataset) => rootItem.adHocOption.dataField.datasetId ==
-        dataset.datasetId
+        (ds) => rootItem.adHocOption.dataField.datasetId ==
+        ds.datasetId
     );
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
 
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
@@ -120,30 +156,35 @@ const useQueryExecute = () => {
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
   const executeAdHocItem = (rootItem, datasets, parameters) => {
-    const tempItem = _.cloneDeep(rootItem);
-    const chartItem = tempItem.items[0];
-    const pivotItem = tempItem.items[1];
-    const param = generateAdHocParamter(tempItem, datasets, parameters);
-    const reportId = selectCurrentReportId(store.getState());
+    try {
+      validateRequiredField(rootItem);
+      const cloneItem = _.cloneDeep(rootItem);
+      const chartItem = cloneItem.items[0];
+      const pivotItem = cloneItem.items[1];
+      const param = generateAdHocParamter(cloneItem, datasets, parameters);
+      const reportId = selectCurrentReportId(store.getState());
 
-    models.Item.getAdHocItemData(param).then((response) => {
-      if (response.status != 200) {
-        alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
-        return;
-      }
-
-      chartItem.mart.init = true;
-      chartItem.mart.data = response.data[0];
-
-      pivotItem.mart.init = true;
-      pivotItem.mart.data = response.data[1];
-
-      ItemManager.generateItem(chartItem);
-      ItemManager.generateItem(pivotItem, tempItem);
-
-      dispatch(updateItem({reportId, item: chartItem}));
-      dispatch(updateItem({reportId, item: pivotItem}));
-    });
+      models.Item.getAdHocItemData(param).then((response) => {
+        if (response.status != 200) {
+          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
+          return;
+        }
+        if (response.data['chart']) {
+          chartItem.mart.init = true;
+          chartItem.mart.data = response.data['chart'];
+          ItemManager.generateItem(chartItem, cloneItem);
+          dispatch(updateItem({reportId, item: chartItem}));
+        }
+        if (response.data['pivot']) {
+          pivotItem.mart.init = true;
+          pivotItem.mart.data = response.data['pivot'];
+          ItemManager.generateItem(pivotItem, cloneItem);
+          dispatch(updateItem({reportId, item: pivotItem}));
+        }
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -153,32 +194,39 @@ const useQueryExecute = () => {
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    * @param {JSON} filter 아이템에 적용할 필터
    */
-  const executeItem = (item, datasets, parameters, filter) => {
-    const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets, parameters, filter);
-    const reportId = selectCurrentReportId(store.getState());
+  const executeItem = async (item, datasets, parameters, filter) => {
+    try {
+      validateRequiredField(item);
+      const tempItem = _.cloneDeep(item);
+      const param =
+          await generateParameter(tempItem, datasets, parameters, filter);
 
-    // TODO: 추후 PivotMatrix 적용할 때 해제
-    // if (item.type == ItemType.PIVOT_GRID) {
-    //   tempItem.mart.init = true;
-    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+      const reportId = selectCurrentReportId(store.getState());
 
-    //   dispatch(updateItem({reportId, item: tempItem}));
-    // } else {
+      // TODO: 추후 PivotMatrix 적용할 때 해제
+      // if (item.type == ItemType.PIVOT_GRID) {
+      //   tempItem.mart.init = true;
+      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
 
-    models.Item.getItemData(param).then((response) => {
-      if (response.status != 200) {
-        return;
-      }
+      //   dispatch(updateItem({reportId, item: tempItem}));
+      // } else {
 
-      tempItem.mart.init = true;
-      tempItem.mart.data = response.data;
-      tempItem.mart.currentFilter = filter || {};
+      models.Item.getItemData(param).then((response) => {
+        if (response.status != 200) {
+          return;
+        }
 
-      ItemManager.generateItem(tempItem);
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+        tempItem.mart.currentFilter = filter || {};
 
-      dispatch(updateItem({reportId, item: tempItem}));
-    });
+        ItemManager.generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   /**
@@ -280,13 +328,17 @@ const useQueryExecute = () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
-    const reportType = selectCurrentDesignerMode(store.getState());
 
-    if (reportType === DesignerMode['DASHBOARD']) {
+    if (datasets.length === 0) {
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
+    };
+
+    if (designerMode === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
     }
 
-    if (reportType === DesignerMode['AD_HOC']) {
+    if (designerMode === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
@@ -418,7 +470,8 @@ const useQueryExecute = () => {
             const defaultValue = [];
 
             param.calendarPeriodBase.map((base, i) => {
-              const value = param.calendarPeriodValue[i];
+              const value = param.calendarPeriodValue ?
+                param.calendarPeriodValue[i] : 0;
               const date = ParamUtils.getCalendarNowDefaultValue(base, value);
 
               defaultValue.push(
@@ -472,6 +525,27 @@ const useQueryExecute = () => {
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
       bindData({dataset: dataset, datas: datas.data.rowData});
+    });
+  };
+
+  const validateRequiredField = (item) => {
+    let dataFieldOption;
+    let dataField;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      dataFieldOption = item.mart.dataFieldOption;
+      dataField = item.meta.dataField;
+    } else if (designerMode === DesignerMode['AD_HOC']) {
+      dataFieldOption = item.adHocOption.dataFieldOption;
+      dataField = item.adHocOption.dataField;
+    }
+    const dataFieldOptionKeys = Object.keys(dataFieldOption);
+    dataFieldOptionKeys.forEach((key) => {
+      const isRequired = dataFieldOption[key].required;
+      const isEmpty = dataField[key].length === 0;
+      if (isRequired && isEmpty) {
+        throw new Error(`${dataFieldOption[key].label}
+         ${localizedString.requiredFieldNotExist}`);
+      }
     });
   };
 

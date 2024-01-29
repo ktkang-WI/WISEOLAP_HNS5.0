@@ -36,11 +36,10 @@ const DownloadImage = styled.img`
 `;
 
 const ItemBoard = () => {
-  const {deleteFlexLayout, setMovedLayout} = useLayout();
+  const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
-
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
@@ -73,7 +72,10 @@ const ItemBoard = () => {
 
     return (
       <Item>
-        <ItemComponent item={item} adHocOption={adHocOption} id={item.id}/>
+        <ItemComponent
+          item={item}
+          adHocOption={adHocOption}
+          id={item.id}/>
       </Item>
     );
   }
@@ -103,6 +105,10 @@ const ItemBoard = () => {
       const node = model.getNodeById(action.data.tabsetNode);
       const itemId = node.getChildren()[0].getId();
       if (selectedItemId != itemId) {
+        model.doAction(Actions.setActiveTabset(action.data.tabsetNode));
+        const modelJson = model.toJson();
+
+        updateLayoutShape(reportId, modelJson);
         dispatch(selectItem({reportId, itemId}));
       }
       return;
@@ -141,7 +147,7 @@ const ItemBoard = () => {
       };
 
       setWeight(modelJson.layout);
-      setMovedLayout(reportId, modelJson);
+      updateLayoutShape(reportId, modelJson);
       return;
     }
     return action;
@@ -183,7 +189,7 @@ const ItemBoard = () => {
 
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
-      setMovedLayout(reportId, model.toJson());
+      updateLayoutShape(reportId, model.toJson());
     } else if (action.type == 'FlexLayout_DeleteTab') {
       // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
       deleteFlexLayout(

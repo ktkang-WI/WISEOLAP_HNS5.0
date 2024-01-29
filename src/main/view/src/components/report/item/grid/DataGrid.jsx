@@ -27,6 +27,8 @@ const DataGrid = ({id, item}) => {
   };
   let dataSource = _.cloneDeep(mart.data);
   let rowSpans = null;
+  const maxValue = {};
+
   if (!mart.init) {
     return <></>;
   }
@@ -87,6 +89,28 @@ const DataGrid = ({id, item}) => {
 
   const allowedPageSizes = [10, 20, 50];
 
+  const getMaxValue = (column) => {
+    if (!maxValue[column.name]) {
+      maxValue[column.name] =
+      Math.max.apply(null, mart.data.data.map((row) => row[column.name]));
+    }
+    return maxValue[column.name];
+  };
+
+  const cellRender = (e, column) => {
+    let endScaleValue = 0;
+    if (column.detailSetting === 'bar') {
+      endScaleValue = getMaxValue(column);
+
+      return <DataGridBullet
+        endScaleValue={endScaleValue}
+        value={e.value}
+        column={column}
+      />;
+    }
+    return e.value;
+  };
+
   return (
     <DevDataGrid
       ref={dataGridRef}
@@ -119,10 +143,7 @@ const DataGrid = ({id, item}) => {
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
-          cellRender={
-            column.detailSetting === 'bar' &&
-            DataGridBullet
-          }
+          cellRender={(e) => cellRender(e, column)}
         />
       )}
     </DevDataGrid>

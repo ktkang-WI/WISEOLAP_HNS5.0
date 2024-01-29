@@ -11,7 +11,7 @@ import filterImg from 'assets/image/icon/report/filter.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentItem, selectCurrentItems}
+import {selectCurrentItem, selectCurrentItems, selectRootItem}
   from 'redux/selector/ItemSelector';
 import localizedString from 'config/localization';
 import {CheckBox, RadioGroup} from 'devextreme-react';
@@ -22,6 +22,7 @@ import itemOptionManager from '../ItemOptionManager';
 import useModal from 'hooks/useModal';
 import ShowDataModal
   from 'components/common/atomic/Modal/organisms/ShowDataModal';
+import store from 'redux/modules';
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
@@ -239,9 +240,9 @@ const useCustomEvent = () => {
       title: localizedString.colRowSwitch,
       onClick: (id) => {
         const item = _.cloneDeep(items.find((i) => id == i.id));
-
+        const rootItem = selectRootItem(store.getState());
         item.meta.colRowSwitch = !item.meta.colRowSwitch;
-        Utility.generateItem(item, item.mart.data);
+        Utility.generateItem(item, rootItem);
 
         dispatch(updateItem({reportId, item}));
       },
@@ -252,10 +253,12 @@ const useCustomEvent = () => {
       onClick: (id) => {
         const item = items.find((i) => id == i.id);
         const columns = [];
+        const rootItem = selectRootItem(store.getState());
+        const field = item.meta.dataField || rootItem.adHocOption.dataField;
 
-        columns.push(...item.meta.dataField.column);
-        columns.push(...item.meta.dataField.row);
-        columns.push(...item.meta.dataField.measure.map((mea) => ({
+        columns.push(...field.column);
+        columns.push(...field.row);
+        columns.push(...field.measure.map((mea) => ({
           name: mea.summaryType + '_' + mea.name,
           caption: mea.caption
         })));
@@ -289,7 +292,10 @@ const useCustomEvent = () => {
     );
   };
 
-  return {ribbonConfig, getTabHeaderButton};
+  return {
+    ribbonConfig,
+    getTabHeaderButton
+  };
 };
 
 export default useCustomEvent;

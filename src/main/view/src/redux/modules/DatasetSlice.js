@@ -85,6 +85,12 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state[0] = initialState[0];
     }
+  },
+  changeDataset(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.dataset;
   }
 };
 

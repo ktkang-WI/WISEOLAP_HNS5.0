@@ -16,7 +16,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const Footer = ({
-  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, buttons,
+  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, buttons=[],
   ...props
 }) => {
   const onConfirm = async () => {
@@ -47,13 +47,17 @@ const Footer = ({
         {onSubmit? localizedString.cancel : localizedString.confirm}
       </CommonButton>
       {
-        buttons &&
-        <CommonButton width="60px" onClick={() => {
-          buttons[0].onClick();
-          onClose();
-        }}>
-          {localizedString.deleteReport}
-        </CommonButton>
+        buttons.map((button, i) => (
+          <CommonButton width="60px"
+            key={i}
+            onClick={async () => {
+              if (!await button.onClick()) {
+                onClose();
+              }
+            }}>
+            {button.text}
+          </CommonButton>
+        ))
       }
     </ButtonWrapper>
   );

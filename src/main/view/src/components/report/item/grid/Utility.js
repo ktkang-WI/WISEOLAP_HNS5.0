@@ -1,6 +1,4 @@
-import {defaultDimension, defaultAnyField}
-  from 'components/report/item/util/martUtilityFactory';
-import localizedString from 'config/localization';
+import {defaultAnyField} from 'components/report/item/util/martUtilityFactory';
 import {DataFieldType} from '../util/dataFieldType';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
 import fieldIcon from 'assets/image/icon/button/ico_axis.png';
@@ -52,15 +50,8 @@ const getDataFieldOptionChild = () => {
     }
   };
 
-  const dataFieldSparkline = {
-    ...defaultDimension,
-    label: localizedString.sparkline,
-    placeholder: localizedString.sparklinePlaceholder
-  };
-
   return {
-    [DataFieldType.FIELD]: dataFieldField,
-    [DataFieldType.SPARKLINE]: dataFieldSparkline
+    [DataFieldType.FIELD]: dataFieldField
   };
 };
 

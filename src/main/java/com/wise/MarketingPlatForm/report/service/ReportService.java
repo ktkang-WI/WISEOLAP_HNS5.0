@@ -144,16 +144,22 @@ public class ReportService {
         Map<String, Object> report = new HashMap<String, Object>();
     	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
 
-    	reports.add(report);
-
     	Map<String, Object> options = new HashMap<String, Object>();
         options.put("order", entity.getReportOrdinal());
     	options.put("reportNm", entity.getReportNm());
+    	options.put("fldId", entity.getFldId());
+    	options.put("fldType", entity.getFldType());
+    	options.put("reportType", entity.getReportType());
+    	options.put("reportTag", entity.getReportTag());
     	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportSubTitle", entity.getReportSubTitle());
     	options.put("reportPath", null);
 
-    	report.put("reportId", reportId);
+    	report.put("reportId", Integer.parseInt(reportId));
     	report.put("options", options);
+
+    	reports.add(report);
+
     	returnMap.put("reports", reports);
 
         return returnMap;
@@ -218,8 +224,8 @@ public class ReportService {
         return result;
     }
 
-    public List<ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
-        List<ReportResult> result = new ArrayList<ReportResult>();
+    public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        Map<String, ReportResult> result = new HashMap<String, ReportResult>();
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
         QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
@@ -229,19 +235,19 @@ public class ReportService {
         martConfig.setMartDataSource(dsMstrDTO);
 
         String query = queryGenerator.getQuery(dataAggreagtion);
+        String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
+        String[] items = layoutType.split("_");
 
         MartResultDTO martResultDTO = martDAO.select(query);
-        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
-        List<Map<String, Object>> pivotRowData = martResultDTO.deepCloneList(chartRowData);
-
+        List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker chartDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.CHART);
-        ItemDataMaker pivotDataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.PIVOT_GRID);
-
-        // clone으로 넘겨서
-        result.add(chartDataMaker.make(dataAggreagtion, chartRowData));
-        result.add(pivotDataMaker.make(dataAggreagtion, pivotRowData));
-
+        
+        for (String item : items) {
+            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
+            List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
+            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+        }
+        
         return result;
     }
 
@@ -435,6 +441,7 @@ public class ReportService {
             .reportOrdinal(reportMstrDTO.getReportOrdinal())
             .reportType(reportMstrDTO.getReportType().toString())
             .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
             .regUserNo(0)
             .chartXml(reportMstrDTO.getChartXml())
@@ -484,6 +491,7 @@ public class ReportService {
             .reportOrdinal(reportMstrDTO.getReportOrdinal())
             .reportType(reportMstrDTO.getReportType().toString())
             .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
             .regUserNo(0)
             .chartXml(reportMstrDTO.getChartXml())

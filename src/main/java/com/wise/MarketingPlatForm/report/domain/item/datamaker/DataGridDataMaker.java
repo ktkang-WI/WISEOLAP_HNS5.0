@@ -1,11 +1,14 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
@@ -30,6 +33,12 @@ public class DataGridDataMaker implements ItemDataMaker {
                 .columnFiltering()
                 .paging(pagingOption)
                 .getData();
+
+        DataPickUpMake customData = new DataPickUpMake(data);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
+        if(tempData != null) {
+            data = tempData;
+        }
 
         Map<String, Object> info = new HashMap<String, Object>();
         info.put("maxPage", sanitizer.getMaxPage());

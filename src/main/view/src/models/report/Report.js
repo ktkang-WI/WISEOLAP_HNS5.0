@@ -22,7 +22,7 @@ export const getReportById = async (userId, reportId) => {
       res.data[key] = JSON.parse(res.data[key]);
     }
   });
-  return res.data;
+  return res;
 };
 
 
@@ -40,7 +40,7 @@ export const getList = async (userId, reportType, editMode) => {
     userId: userId
   });
 
-  return res.data;
+  return res;
 };
 /**
  * 보고서 저장 / 새로운 보고서를 저장 합니다.(insert)
@@ -63,11 +63,10 @@ export const updateReport = async (param) => {
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
- * @param {function} callback
+ * @return {JSON}
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = (param) => {
+  return axios.post(path + '/report-folder-list', param);
 };
 
 /**
