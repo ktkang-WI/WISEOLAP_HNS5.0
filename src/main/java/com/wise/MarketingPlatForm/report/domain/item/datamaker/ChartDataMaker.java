@@ -54,8 +54,6 @@ public class ChartDataMaker implements ItemDataMaker {
         List<String> dimNames = new ArrayList<>();
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
-        List<String> seriesDimensionNames = new ArrayList<>();
-        List<String> seriesDimensionCaptions = new ArrayList<>();
         List<Measure> seriesMeasureNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
@@ -108,9 +106,6 @@ public class ChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
-                // 하단코드 불필요시 삭제필요
-                seriesDimensionNames.add(measure.getSummaryName());
-                seriesDimensionCaptions.add(measure.getCaption());
                 seriesMeasureNames.add(measure);
             }
         } else {
@@ -128,24 +123,16 @@ public class ChartDataMaker implements ItemDataMaker {
                         .summaryName(name + "-" + measure.getSummaryName())
                         .build();
                     seriesMeasureNames.add(tempMeasure);
-                    // 하단코드 불필요시 삭제필요
-                    seriesDimensionNames.add(name + "-" + measure.getSummaryName());
-                    seriesDimensionCaptions.add(name + "-" + measure.getSummaryName());
                 }
-            }
-            if (measures.size() == 1) {
-                seriesDimensionCaptions = new ArrayList<>(dimensionGroupNames);
             }
         }
 
-        info.put("seriesDimensionNames", seriesDimensionNames);
-        info.put("seriesDimensionCaptions", seriesDimensionCaptions);
         info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
-}
+    }
 
     private Map<String, Measure> generateSingleDataMap(String key, Object o) {
         Map<String, Measure> temp = new HashMap<>();
