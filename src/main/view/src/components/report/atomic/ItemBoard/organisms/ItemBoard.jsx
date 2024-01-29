@@ -64,15 +64,24 @@ const ItemBoard = () => {
     return itemExports.filter((item) => item.id == id)[0];
   };
 
+  // TODO: 임시 예외처리 차트용만 다운로드 구현 삭제예정
   const exportExceptionHandle = (pickItem) => {
-    let isOk = true;
+    let isOk = false;
     if (!pickItem) {
       isOk = false;
       return isOk;
     }
-    // 임시 예외처리 차트용만 다운로드 구현
-    if (pickItem.type !== 'CHART') {
-      isOk = false;
+    if (pickItem.type === 'CHART') {
+      isOk = true;
+    }
+    if (pickItem.type === 'GRID') {
+      isOk = true;
+    }
+    if (pickItem.type === 'PIE') {
+      isOk = true;
+    }
+    if (pickItem.type === 'PIVOT') {
+      isOk = true;
     }
     return isOk;
   };
@@ -87,6 +96,8 @@ const ItemBoard = () => {
       exportToFile(e, pickItem.data, Type.CSV);
     } else if (Type.TXT === type) {
       exportToFile(e, pickItem.data, Type.TXT);
+    } else if (Type.XLSX === type) {
+      exportToFile(e, pickItem.data, Type.XLSX);
     } else if (Type.IMG === type) {
       pickItem.ref.current.instance.exportTo(e, 'png');
     }
@@ -111,7 +122,6 @@ const ItemBoard = () => {
       <Item>
         <ItemComponent
           setItemExports={setItemExports}
-          mart={item.mart}
           item={item}
           adHocOption={adHocOption}
           id={item.id}/>
@@ -201,6 +211,10 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
+      let isImg = true;
+      if (type === 'grid') isImg = false;
+      if (type === 'pivot') isImg = false;
+
       renderValues.buttons.push(
           !rootItem.adHocOption &&
           <button
@@ -222,15 +236,19 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
+              {isImg ?
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.IMG);
-              }}>img</button>
+              }}>img</button> : null}
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.CSV);
               }}>csv</button>
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.TXT);
               }}>txt</button>
+              <button onClick={() => {
+                exportFile(tabNode._attributes.id, Type.XLSX);
+              }}>xlsx</button>
             </Popover>
           </button>,
           ...buttons

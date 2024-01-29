@@ -27,9 +27,10 @@ import {
 } from './seriesOption/SeriesOption';
 // import _ from 'lodash';
 
-const Chart = ({id, adHocOption, item}) => {
-  const dataFields = item.meta.dataField;
+const Chart = ({setItemExports, id, adHocOption, item}) => {
+  const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
+  // TODO: 임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
   const {
     auxiliaryAxis,
@@ -55,16 +56,18 @@ const Chart = ({id, adHocOption, item}) => {
   const dxRef = useRef();
 
   const itemExportObject =
-   itemExportsObject(id, itemRef, 'CHART', mart.data.data);
+   itemExportsObject(id, dxRef, 'CHART', mart.data.data);
 
   useEffect(() => {
     setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
       return [
-        ...prev,
+        ...itemExports,
         itemExportObject
       ];
     });
-  }, []);
+  }, [mart.data.data]);
 
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
