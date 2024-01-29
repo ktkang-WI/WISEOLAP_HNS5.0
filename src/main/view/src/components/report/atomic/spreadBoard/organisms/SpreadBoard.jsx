@@ -1,38 +1,23 @@
-import {useDispatch} from 'react-redux';
-import SpreadSlice from 'redux/modules/SpreadSlice';
 import './spreadBoard.css';
-import spreadDefaultElement from './SpreadDefaultElement';
+// import spreadDefaultElement from './SpreadDefaultElement';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSpread from 'hooks/useSpread';
-import {selectCurrentDesigner,
-  selectSheets} from 'redux/selector/SpreadSelector';
-import store from 'redux/modules';
 import {useEffect} from 'react';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+
 
 const SpreadBoard = () => {
-  const dispatch = useDispatch();
-  const {setSpread} = SpreadSlice.actions;
-  const {setRibbonSetting} = spreadDefaultElement();
-  const config = setRibbonSetting();
-  const {sheetNameChangedListener, sheetChangedListener} = useSpread();
+  // action
+  // const {setRibbonSetting} = spreadDefaultElement();
+  // const config = setRibbonSetting();
+  const {createDesigner} = useSpread();
 
   useEffect(() => {
-    const sheets = selectSheets(store.getState());
-    const reportId = selectCurrentReportId(store.getState());
-    const designer = selectCurrentDesigner(store.getState());
-    if (_.isEmpty(designer)) {
-      const newDesigner = new sheets.Designer.Designer(document
-          .getElementById('spreadWrapper'), config);
-      dispatch(setSpread({
-        reportId: reportId,
-        bindingInfos: {},
-        designer: newDesigner
-      }));
-      sheetNameChangedListener();
-      sheetChangedListener();
-    }
-  });
+    createDesigner({
+      config: {},
+      newReportId: 0,
+      spread: {}
+    });
+  }, []);
 
   return (
     <Wrapper id='spreadWrapper'

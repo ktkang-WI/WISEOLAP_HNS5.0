@@ -1,19 +1,23 @@
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectBindingInfos, selectCurrentDesigner,
+import {selectBindingInfos,
+  selectCurrentDesigner,
   selectExcelIO,
   selectSheets} from 'redux/selector/SpreadSelector';
 
 const useSpread = () => {
   const sheets = selectSheets(store.getState());
   const dispatch = useDispatch();
-  const {setBindingInfo} = SpreadSlice.actions;
+  const {setBindingInfo, setSpread} = SpreadSlice.actions;
+  const designer = useSelector(selectCurrentDesigner);
+  const bindingInfos = useSelector(selectBindingInfos);
+  const reportId = useSelector(selectCurrentReportId);
+  const excelIO = useSelector(selectExcelIO);
+
 
   const bindData = ({dataset, datas}) => {
-    const designer = selectCurrentDesigner(store.getState());
-    const bindingInfos = selectBindingInfos((store.getState()));
     const bindingInfo = bindingInfos[dataset.datasetId];
     // foreach로 bindingInfos에서 datasetId로 찾아서 진행
     // 추후 메게변수로 가져와야함.
@@ -57,41 +61,8 @@ const useSpread = () => {
     designer.getWorkbook().resumePaint();
   };
 
-  const createColumnsAndRows = (columns, invoice, bindedSheet, bindingInfo) => {
-    const bindedSheetColumnNum = bindedSheet.getColumnCount();
-    const dataLengthWithColumnPosition =
-     columns.length + bindingInfo.columnIndex;
-    const bindedSheetRowNum = bindedSheet.getRowCount();
-    const dataLengthWithRowPosition =
-      invoice.records.length + bindingInfo.rowIndex + 1;
-    if (dataLengthWithColumnPosition > bindedSheetColumnNum) {
-      bindedSheet.addColumns(bindedSheetColumnNum,
-          dataLengthWithColumnPosition - bindedSheetColumnNum);
-    };
-    if (dataLengthWithRowPosition > bindedSheetRowNum) {
-      bindedSheet.addRows(bindedSheetRowNum,
-          dataLengthWithRowPosition - bindedSheetRowNum);
-    };
-  };
 
-  const generateColumns = (datas) => {
-    const columns = [];
-    const header = [];
-    const columnKeys = Object.keys(datas[0]);
-    columnKeys.forEach((columnKey) => {
-      const spreadColumnObj = new sheets.Tables.TableColumn();
-      spreadColumnObj.name(columnKey);
-      spreadColumnObj.dataField(columnKey);
-
-      columns.push(spreadColumnObj);
-      header[columnKey] = columnKey;
-    });
-
-    return {columns: columns, header: header};
-  };
-
-  const sheetChangedListener = () => {
-    const designer = selectCurrentDesigner(store.getState());
+  const sheetChangedListener = (designer) => {
     designer.getWorkbook().bind(sheets.Events.SheetChanged, changSheet);
   };
 
@@ -102,8 +73,6 @@ const useSpread = () => {
   };
 
   const deletedSheet = (e, args) => {
-    const bindingInfos = selectBindingInfos(store.getState());
-    const reportId = selectCurrentReportId(store.getState());
     const datasetNms = Object.keys(bindingInfos);
     if (!_.isEmpty(bindingInfos)) return null;
     datasetNms.map((datasetId) => {
@@ -120,15 +89,12 @@ const useSpread = () => {
     });
   };
 
-  const sheetNameChangedListener = () => {
-    const designer = selectCurrentDesigner(store.getState());
+  const sheetNameChangedListener = (designer) => {
     designer.getWorkbook().bind(sheets.Events.SheetNameChanged,
         renameSheet);
   };
 
   const renameSheet = (e, args) => {
-    const reportId = selectCurrentReportId(store.getState());
-    const bindingInfos = selectBindingInfos(store.getState());
     Object.keys(bindingInfos).forEach((datasetId) => {
       if (bindingInfos[datasetId].sheetNm === args.oldValue) {
         const newBindingInfo = _.cloneDeep(bindingInfos[datasetId]);
@@ -143,8 +109,6 @@ const useSpread = () => {
   };
 
   const dataSourceMaker = (datas) => {
-    const sheet = selectSheets(store.getState());
-
     const recodes = datas.map((data) => {
       return new Record(data);
     });
@@ -153,75 +117,7 @@ const useSpread = () => {
       dataSource: new sheet.Bindings.CellBindingSource(invoice)};
   };
 
-  const Record = function(_data) {
-    for (const key in _data) {
-      if (Object.hasOwn(_data, key)) {
-        this[key] = _data[key];
-      }
-    }
-  };
-
-  const Invoice = function(records) {
-    this.records = records;
-  };
-
-  const deleteTables = (bindedSheet) => {
-    bindedSheet.tables.all().forEach((table) => {
-      const name = table.tableName();
-      if (name.indexOf('table') > -1) {
-        bindedSheet.tables.remove(name);
-      }
-    });
-  };
-
-  const positionConverterAsObject = (str) => {
-    if (_.isEmpty(str)) {
-      return {rowIndex: null, columnIndex: null};
-    } else {
-      const regExp = new RegExp('([a-zA-Z]+)([\\d]+)');
-      const match = regExp.exec(str);
-      if (match) {
-        const str = match[1];
-        const rowIndex = Number(match[2]);
-        let columnIndex = 0;
-        for (let i = 0; i < str.length; i++) {
-          columnIndex *= 26;
-          columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
-        }
-        return {
-          columnIndex: columnIndex - 1,
-          rowIndex: rowIndex -1
-        };
-      } else {
-        return {
-          columnIndex: 0,
-          rowIndex: 0
-        };
-      }
-    }
-  };
-
-  /**
-   * @param {number} columnIndex
-   * @param {number} rowIndex
-   * @return {string}
-   */
-  const positionConverterAsString = (columnIndex, rowIndex) => {
-    let position = '';
-    if (!_.isNil(columnIndex) && !_.isNil(rowIndex)) {
-      columnIndex += 1;
-      while (columnIndex > 0) {
-        const remainder = (columnIndex - 1) % 26;
-        position = String.fromCharCode(65 + remainder) + position;
-        columnIndex = Math.floor((columnIndex - 1) / 26);
-      }
-      position += (rowIndex + 1);
-    }
-    return position;
-  };
-
   const createBorderStyle = (useBorder) => {
-    const sheets = selectSheets(store.getState());
     const tableStyle = new sheets.Tables.TableTheme();
     const thinBorder = undefined;
     if (useBorder) {
@@ -234,7 +130,6 @@ const useSpread = () => {
   };
 
   const createReportBlob = async () => {
-    const excelIO = selectExcelIO(store.getState());
     const designer = selectCurrentDesigner(store.getState());
     const json = designer.getWorkbook().toJSON({includeBindingSource: false});
     const blob = await new Promise((resolve, reject) => {
@@ -243,30 +138,45 @@ const useSpread = () => {
     return blob;
   };
 
-  const createDesigner = () => {
-    const sheets = selectSheets(store.getState());
-    const config = setRibbonSetting();
+  /**
+   * @param {Object} config spreadSlice의 config 객체
+   */
+  const createDesigner = ({newReportId, config, spread}) => {
+    // config를 전역변수로 등록하고 불러오는 형태로!
+    if (_.isEmpty(config)) {
+      // 이쪽을 통해서 workbook만 생성하는 형태로.
+    }
     const designer =
     new sheets.Designer
         .Designer(document.getElementById('spreadWrapper'),
             config);
-    dispatch(spreadActions.setSpread({
+    dispatch(setSpread({
       reportId: newReportId,
-      bindingInfos: data.spread,
+      bindingInfos: spread,
       designer: designer
     }));
-    sheetNameChangedListener();
-    sheetChangedListener();
+    sheetNameChangedListener(designer);
+    sheetChangedListener(designer);
   };
 
+  const createExcelFile = () => {
+    createReportBlob().then(
+        (bolb) => fileUpload(
+            bolb,
+            {fileName: response.report.reportId + '.xlsx'}
+        ));
+  };
+
+  // spreadRibbon에 사용되는 모든 hook을 여기서 관리 추가적으로 다른 hook을 가져올 경우 SpreadDefault에서 호출
+  // 다른 커스텀 훅에서 사용되는 모든 useSpread내의 훅은 store.getState()로 가져와서 사용
+  // 참조를 던지면 값이 안 변하는 이슈가 있음으로.
   return {
     bindData,
     sheetChangedListener,
     sheetNameChangedListener,
-    positionConverterAsObject,
-    positionConverterAsString,
     createReportBlob,
-    createDesigner
+    createDesigner,
+    createExcelFile
   };
 };
 

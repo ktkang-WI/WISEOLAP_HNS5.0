@@ -16,11 +16,11 @@ const SaveDefaultElement = () => {
     save: [
       {
         label: localizedString.saveReport, // 저장
-        onClick: () => {
+        onClick: (createExcelFile) => {
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {
-            openModal(ReportSaveModal);
+            openModal(ReportSaveModal, createExcelFile);
           } else {
             dataSource.reportId = currentReport.reportId;
             const param = generateParameter(dataSource);
@@ -36,9 +36,8 @@ const SaveDefaultElement = () => {
 
               alert(localizedString[msg]);
 
-              if (result) {
-                patchReport(data);
-              }
+              if (result) patchReport(data);
+              if (createExcelFile) createExcelFile();
             });
           };
         }

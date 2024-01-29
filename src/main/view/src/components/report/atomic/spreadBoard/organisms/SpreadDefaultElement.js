@@ -1,6 +1,5 @@
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
-import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {selectCurrentDesigner, selectExcelIO, selectSheets}
@@ -9,7 +8,6 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useReportSave from 'hooks/useReportSave';
 import saveDefaultElement from
   'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
-import SpreadSlice from 'redux/modules/SpreadSlice';
 import ribbonDefaultElement
   from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
@@ -17,15 +15,14 @@ import DatasetLinkerModal from '../modal/DataLinkerModal';
 import useSpread from 'hooks/useSpread';
 
 const SpreadDefaultElement = () => {
-  const {setSpread} = SpreadSlice.actions;
-
   const {openModal, confirm, alert} = useModal();
-  const dispatch = useDispatch();
   const {reload} = useReportSave();
   const {save} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
-  const {sheetNameChangedListener,
-    sheetChangedListener} = useSpread();
+  const {
+    createDesigner,
+    createExcelFile
+  } = useSpread();
 
   const setRibbonSetting = () => {
     const sheets = selectSheets(store.getState());
@@ -56,23 +53,17 @@ const SpreadDefaultElement = () => {
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
     const newReport = (context) => {
-      const sheets = selectSheets(store.getState());
       const executeNew = (context) => {
         const config = setRibbonSetting();
         reload();
         // 기존 workbook 제거
         context.destroy();
         // 새로운 workbook 생성 및 등록
-        const newDesigner =
-          new sheets.Designer.Designer(document
-              .getElementById('spreadWrapper'), config);
-        dispatch(setSpread({
-          reportId: 0,
-          designer: newDesigner,
-          bindingInfos: {}
-        }));
-        sheetNameChangedListener();
-        sheetChangedListener();
+        createDesigner({
+          newReportId: 0,
+          config: config,
+          spread: {}
+        });
       };
 
       confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
@@ -89,7 +80,7 @@ const SpreadDefaultElement = () => {
     };
 
     const saveReport = () => {
-      save[0].onClick();
+      save[0].onClick({createExcelFile: createExcelFile});
     };
 
     const saveAsReport = () => {

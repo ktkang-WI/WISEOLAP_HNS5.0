@@ -57,9 +57,10 @@ const defaultBindInfo = {
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
+  config: {},
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
-    designer: undefined,
+    designer: {},
     bindingInfos: {}
   }
 };
@@ -72,6 +73,9 @@ const reducers = {
     state[reportId].bindingInfos = actions.payload.bindingInfos;
     state[reportId].reportId = reportId;
     state[reportId].designer = actions.payload.designer;
+  },
+  setConfig(state, actions) {
+    state.config = actions.payload;
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
