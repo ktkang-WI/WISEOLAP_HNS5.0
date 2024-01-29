@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx';
+import {exportWidgets} from 'devextreme/viz/export';
 
 const extractingKeys = (data) => {
   const keys = [];
@@ -78,13 +79,17 @@ const convertToFormat = (data, type) => {
 };
 
 export const exportToFile = (name, data, type) => {
-  exportFile(name, convertToFormat(data, type), type);
+  if (Type.IMG === type) {
+    exportImgFile(name, data, type);
+  } else {
+    exportFile(name, convertToFormat(data, type), type);
+  }
 };
 
 export const Type = {
   CSV: 'csv',
   TXT: 'txt',
-  IMG: 'img',
+  IMG: 'PNG',
   XLSX: 'xlsx'
 };
 
@@ -93,6 +98,20 @@ const s2ab = (s) => {
   const view = new Uint8Array(buf);
   for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
   return buf;
+};
+
+const exportImgFile = (name, pickItem, type) => {
+  const refInstance = [];
+  const ref = pickItem.ref.filter((item) => item !== null);
+  if (Array.isArray(ref)) {
+    ref.forEach((current) => refInstance.push(current.instance));
+  } else {
+    refInstance.push(ref.current.instance);
+  }
+  exportWidgets([...refInstance], {
+    fileName: name,
+    format: type
+  });
 };
 
 const exportFile = (name, data, type) => {

@@ -99,7 +99,7 @@ const ItemBoard = () => {
     } else if (Type.XLSX === type) {
       exportToFile(e, pickItem.data, Type.XLSX);
     } else if (Type.IMG === type) {
-      pickItem.ref.current.instance.exportTo(e, 'png');
+      exportToFile(e, pickItem, Type.IMG);
     }
   };
 
