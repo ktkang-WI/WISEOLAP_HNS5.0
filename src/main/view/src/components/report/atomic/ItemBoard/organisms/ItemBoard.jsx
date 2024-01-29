@@ -1,18 +1,18 @@
 import {styled} from 'styled-components';
-import {Layout, Model} from 'flexlayout-react';
+import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   selectCurrentItems,
+  selectRootItem,
   selectSelectedItemId
 } from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
-import {useLocation} from 'react-router-dom';
 import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
 import Chart from 'components/report/item/chart/Chart';
@@ -21,6 +21,8 @@ import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import DataGrid from 'components/report/item/grid/DataGrid';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
+import Pie from 'components/report/item/pie/Pie';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const StyledBoard = styled.div`
   height: 100%;
@@ -38,21 +40,14 @@ const DownloadImage = styled.img`
 
 
 const ItemBoard = () => {
-  const location = useLocation();
-  const {initLayout, deleteFlexLayout, setMovedLayout} = useLayout();
+  const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
+  const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
-
-  useEffect(() => {
-    const defaultLayout = location.pathname.includes('dashboard')?
-    {reportId: selectedReportId, designer: 'dashboard'} :
-    {reportId: selectedReportId, designer: 'adhoc'};
-    initLayout(defaultLayout);
-  }, [location]);
-
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
+  const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
@@ -61,7 +56,8 @@ const ItemBoard = () => {
   const itemFactory = {
     chart: Chart,
     pivot: PivotGrid,
-    grid: DataGrid
+    grid: DataGrid,
+    pie: Pie
   };
 
   const itemExportsPicker = (id) => {
@@ -106,13 +102,19 @@ const ItemBoard = () => {
     const id = node.getId();
     const ItemComponent = itemFactory[component];
     const item = items.find((i) => id == i.id);
+    const adHocOption = rootItem.adHocOption;
+
     if (!item) return <></>;
 
 
     return (
       <Item>
-        <ItemComponent setItemExports={setItemExports}
-          mart={item.mart} id={item.id}/>
+        <ItemComponent
+          setItemExports={setItemExports}
+          mart={item.mart}
+          item={item}
+          adHocOption={adHocOption}
+          id={item.id}/>
       </Item>
     );
   }
@@ -142,6 +144,10 @@ const ItemBoard = () => {
       const node = model.getNodeById(action.data.tabsetNode);
       const itemId = node.getChildren()[0].getId();
       if (selectedItemId != itemId) {
+        model.doAction(Actions.setActiveTabset(action.data.tabsetNode));
+        const modelJson = model.toJson();
+
+        updateLayoutShape(reportId, modelJson);
         dispatch(selectItem({reportId, itemId}));
       }
       return;
@@ -180,7 +186,7 @@ const ItemBoard = () => {
       };
 
       setWeight(modelJson.layout);
-      setMovedLayout(modelJson);
+      updateLayoutShape(reportId, modelJson);
       return;
     }
     return action;
@@ -188,13 +194,21 @@ const ItemBoard = () => {
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
+
     if (tabNode) {
+      const type = tabNode.getComponent();
+      const id = tabNode.getId();
+      const buttons = ItemManager.getTabHeaderItems(type)
+          .map((key) => getTabHeaderButtons(type, key, id));
+
       renderValues.buttons.push(
+          !rootItem.adHocOption &&
           <button
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
-              deleteFlexLayout(selectedReportId, tabNode._attributes.id);
+              // flexLayout 커스텀 삭제 버튼 기능.
+              model.doAction(Actions.deleteTab(id));
             }}
           >
           &#128473;&#xFE0E;
@@ -218,14 +232,22 @@ const ItemBoard = () => {
                 exportFile(tabNode._attributes.id, Type.TXT);
               }}>txt</button>
             </Popover>
-          </button>
+          </button>,
+          ...buttons
       );
     }
   }
 
   const onModelChange = (node, action) => {
     if (action.type == 'FlexLayout_MoveNode') {
-      setMovedLayout(model.toJson());
+      updateLayoutShape(reportId, model.toJson());
+    } else if (action.type == 'FlexLayout_DeleteTab') {
+      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
     }
   };
 

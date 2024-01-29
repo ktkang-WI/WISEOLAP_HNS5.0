@@ -14,6 +14,8 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const informations = actions.payload.informations;
 
+    if (state[reportId] === undefined) state[reportId] = {};
+
     state[reportId].informations = informations;
     state[reportId].values = {};
     state[reportId].filterSearchComplete = [];
@@ -63,19 +65,21 @@ const reducers = {
     const values = actions.payload.values;
     state[reportId].values = Object.assign(state[reportId].values, values);
   },
-  // 파라미터로 reportId
-  initParameter(state, actions) {
-    delete state[actions.payload];
-
-    state[0] = initialState[0];
-  },
+  initParameter: () => initialState,
   filterSearchComplete(state, actions) {
     const reportId = actions.payload.reportId;
     const filterId = actions.payload.id;
     state[reportId].filterSearchComplete =
         state[reportId].filterSearchComplete.concat([filterId]);
   },
-  deleteParameterByDatsetId(state, actions) {
+  deleteParameter(state, actions) {
+    const reportId = actions.payload.reportId;
+    const paramNm = actions.payload.name;
+    state[reportId].informations =
+      state[reportId].informations.filter((info) => info.name != paramNm);
+    delete state[reportId].values[paramNm];
+  },
+  deleteParameterByDatasetId(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
@@ -112,6 +116,18 @@ const reducers = {
     if (Object.keys(state).length == 0) {
       state[0] = initialState[0];
     }
+  },
+  changeParameterInformation(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    const informations = actions.payload.informations;
+
+    delete state[prevId];
+    state[newId] = {};
+
+    state[newId].informations = informations;
+    state[newId].values = {};
+    state[newId].filterSearchComplete = [];
   }
 };
 

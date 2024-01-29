@@ -1,25 +1,16 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
+const path = '/dataset';
 
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/dataset';
-
-export const getByIdAndDsType = async (userId, dsType) => {
-  const res = await axios.post(path + '/data-sources', {
+export const getByIdAndDsType = (userId, dsType) => {
+  return axios.post(path + '/data-sources', {
     userId: userId,
     dsType: dsType
   });
-
-  return res.data;
 };
 
-export const getByDsId = async (dsId) => {
-  const res = await axios.post(path + '/data-source', {
+export const getByDsId = (dsId) => {
+  return axios.post(path + '/data-source', {
     dsId: dsId
   });
-
-  return res.data;
 };

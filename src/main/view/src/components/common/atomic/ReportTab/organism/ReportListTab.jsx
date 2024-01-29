@@ -32,8 +32,8 @@ const ReportListTab = ({width, ...props}) => {
       <StyledTreeView
         dataStructure="plain"
         displayExpr="name"
-        parentIdExpr="categoryId"
-        keyExpr="ID"
+        parentIdExpr="upperId"
+        keyExpr="id"
         noDataText="조회된 보고서가 없습니다."
         searchEnabled={true}
         searchEditorOptions={{

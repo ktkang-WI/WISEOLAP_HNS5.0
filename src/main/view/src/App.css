@@ -1,11 +1,19 @@
 a {
   text-decoration: none;
 }
-
 .App {
   text-align: center;
   width: 100vw;
   height: 100vh;
+}
+
+*{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .App-logo {
@@ -17,6 +25,19 @@ a {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+img {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
 .App-header {
@@ -54,4 +75,8 @@ a {
 
 #subMenu {
   padding-left: 15px;
+}
+
+.dx-selectbox-popup-wrapper {
+  z-index: 1800 !important;
 }

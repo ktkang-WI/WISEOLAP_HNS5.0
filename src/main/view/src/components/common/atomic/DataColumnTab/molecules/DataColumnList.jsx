@@ -70,6 +70,7 @@ const DataColumnList = ({
   const dispatch = useDispatch();
   let sortItems = [];
 
+  // TODO: 소스개선 필요 (일정 외 사항 참고)removeDuplicate
   for (const key in dataFieldOptions) {
     if (dataFields[key].length > 0) {
       const option = dataFieldOptions[key];
@@ -79,6 +80,20 @@ const DataColumnList = ({
           value: field.fieldId,
           type: 'SortBy'
         })));
+      } else if (option.type == 'ANY') {
+        sortItems = sortItems.concat(dataFields[key].reduce((acc, field) => {
+          if (field.type == 'MEA') {
+            const tempField = {
+              text: field.caption,
+              value: field.fieldId,
+              type: 'SortBy'
+            };
+
+            acc.push(tempField);
+          }
+
+          return acc;
+        }, []));
       }
     }
   }
@@ -123,7 +138,10 @@ const DataColumnList = ({
                     index={index}
                     useButton={useButton}
                     buttonEvent={buttonEvent}
-                    buttonIcon={buttonIcon}
+                    buttonIcon={
+                      typeof buttonIcon === 'function' ?
+                      buttonIcon(column) : buttonIcon
+                    }
                     sortItems={sortItems}
                   >
                     {column.caption}

@@ -18,8 +18,20 @@ const FilterWrapper = styled.div`
   }
 `;
 
+
+const DeleteButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 100%;
+    line-height: 100px;
+    font-weight: bold;
+    color: gray;
+  `;
+
 // TODO: 추후 각 필터에 onChangeValue 받아서 이벤트 처리 예정
-const Filter = ({info, value, isTo, onValueChanged}) => {
+const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
   const getParamId = (id) => {
     return id.slice(1);
   };
@@ -49,6 +61,12 @@ const Filter = ({info, value, isTo, onValueChanged}) => {
         {isTo ? '~' : info.caption}
       </FilterLabel>
       {getFilter(info.paramType)}
+      {onDeleted &&
+        <DeleteButton onClick={() => {
+          onDeleted();
+        }}>X</DeleteButton>
+      }
+
     </FilterWrapper>
   );
 };

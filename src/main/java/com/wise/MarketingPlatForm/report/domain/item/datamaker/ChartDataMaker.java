@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +12,12 @@ import java.util.List;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 
 public class ChartDataMaker implements ItemDataMaker {
     @Override
@@ -22,6 +25,8 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+        TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
+        null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
         DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
@@ -32,10 +37,18 @@ public class ChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
+                .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .topBottom(topBottomInfo)
                 .orderBy()
                 .columnFiltering()
                 .getData();
+
+        DataPickUpMake customData = new DataPickUpMake(data);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
+        if(tempData != null) {
+            data = tempData;
+        }
 
         // 차트 데이터 가공
         List<String> dimNames = new ArrayList<>();
@@ -43,10 +56,12 @@ public class ChartDataMaker implements ItemDataMaker {
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
         List<String> seriesDimensionNames = new ArrayList<>();
         List<String> seriesDimensionCaptions = new ArrayList<>();
+        List<Measure> seriesMeasureNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
-            if ("dimension".equals(dim.getCategory())) {
+            // 비정형 보고서에서 조회 시, 행(row) -> 차원(dimension), 열(column) -> 차원그룹(dimensionGroup)
+            if ("dimension".equals(dim.getCategory()) || "row".equals(dim.getCategory())) {
                 dimNames.add(dim.getName());
             } else {
                 dimGrpNames.add(dim.getName());
@@ -95,6 +110,7 @@ public class ChartDataMaker implements ItemDataMaker {
             for (Measure measure : measures) {
                 seriesDimensionNames.add(measure.getSummaryName());
                 seriesDimensionCaptions.add(measure.getCaption());
+                seriesMeasureNames.add(measure);
             }
         } else {
             for (Measure measure : measures) {
@@ -104,6 +120,7 @@ public class ChartDataMaker implements ItemDataMaker {
                     String name = iter.next();
                     seriesDimensionNames.add(name + "-" + measure.getSummaryName());
                     seriesDimensionCaptions.add(name + "-" + measure.getCaption());
+                    seriesMeasureNames.add(measure);
                 }
             }
             if (measures.size() == 1) {
@@ -113,9 +130,16 @@ public class ChartDataMaker implements ItemDataMaker {
 
         info.put("seriesDimensionNames", seriesDimensionNames);
         info.put("seriesDimensionCaptions", seriesDimensionCaptions);
+        info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
+}
+
+    private Map<String, Measure> generateSingleDataMap(String key, Object o) {
+        Map<String, Measure> temp = new HashMap<>();
+        temp.put(key, (Measure) o);
+        return temp;
     }
 }

@@ -11,7 +11,11 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import useModal from 'hooks/useModal';
 import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
+import NumberFormatModal
+  from 'components/report/atomic/Format/organisms/NumberFormatModal';
 import {getContextMenu} from '../utils/contextMenu';
+import DataColumnSeriesOptions
+  from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
 
 const theme = getTheme();
 
@@ -133,9 +137,30 @@ const DataColumn = ({
         }
       });
     },
+    'Format': (e) => {
+      openModal(NumberFormatModal, {
+        dataField: data,
+        reportId: reportId
+      });
+    },
     'SortBy': (e) => {
       dispatch(updateItemField({reportId,
         dataField: {...data, sortBy: e.itemData.value}}));
+    }
+  };
+
+  const handleSeriesOptionClick = (e) => {
+    if (data.category === 'field') return;
+    const fieldId = data.fieldId;
+    openModal(DataColumnSeriesOptions, {
+      fieldId
+    });
+  };
+  const buttonEventFunction = (e) => {
+    if (data.category === 'field') {
+      buttonEvent(data, openModal);
+    } else {
+      buttonEvent(data, e);
     }
   };
 
@@ -159,7 +184,7 @@ const DataColumn = ({
           }
         }}
         width={(useButton? 'calc(100% - 38px)' : '100%')}>
-        {type === 'DIM' &&
+        {data?.type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         {children}
@@ -185,7 +210,9 @@ const DataColumn = ({
       </Column>
       {useButton &&
         <Button onClick={(e) => {
-          buttonEvent(data, e);
+          // buttonEvent(data, e);
+          handleSeriesOptionClick(e);
+          buttonEventFunction(e);
         }}>
           <IconImg src={buttonIcon}/>
         </Button>

@@ -1,7 +1,9 @@
 package com.wise.MarketingPlatForm.report.domain.data;
 
 import java.util.List;
+import java.util.Map;
 
+import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
@@ -24,5 +26,8 @@ public class DataAggregation {
     ItemType itemType;
     Dataset dataset;
     PagingOption pagingOption;
+    boolean removeNullData;
     List<Parameter> parameters;
+    Map<String, List<String>> filter;
+    AdHocOption adHocOption;
 }

@@ -5,21 +5,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.json.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,16 +30,21 @@ import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
-import com.wise.MarketingPlatForm.global.util.XMLParser;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
+import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
@@ -60,14 +67,18 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
+import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
+import com.wise.MarketingPlatForm.report.type.ItemType;
+import com.wise.MarketingPlatForm.report.type.EditMode;
+import com.wise.MarketingPlatForm.report.type.ItemType;
+import com.wise.MarketingPlatForm.report.type.ReportType;
+import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
-import com.wise.MarketingPlatForm.report.vo.MetaVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
-import com.wise.MarketingPlatForm.report.vo.ReportOptionsVO;
-import com.wise.MarketingPlatForm.report.vo.ReportVO;
-import com.wise.MarketingPlatForm.report.vo.RootDataSetVO;
 
+import javaxt.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -78,7 +89,6 @@ public class ReportService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
-    private final XMLParser xmlParser;
     private final QueryResultCacheManager queryResultCacheManager;
     private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
@@ -98,9 +108,11 @@ public class ReportService {
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
 
+    @Autowired
+    private XMLParserFactory xmlParserFactory;
+
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager, XMLParser xmlParser) {
-        this.xmlParser = xmlParser;
+            QueryResultCacheManager queryResultCacheManager) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
@@ -108,37 +120,49 @@ public class ReportService {
         this.queryResultCacheManager = queryResultCacheManager;
     }
 
-    public MetaVO getReport(String reportId, String userId) {
-        ReportMstrEntity temp = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = temp.toDTO(temp);
+    public Map<String, Object> getReport(String reportId, String userId) {
+    	ReportMstrEntity entity = reportDAO.selectReport(reportId);
+        ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
+        Map<String, Object> returnMap = new HashMap<>();
+        if(!"newReport".equals(dto.getDatasetXml())) {
+        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+        	returnMap = xmlParser.getReport(dto, userId);
+        } else {
+        	JSONObject items = new JSONObject(entity.getChartXml());
+        	JSONObject dataset = new JSONObject(entity.getDatasetXml());
+        	JSONObject layout = new JSONObject(entity.getLayoutXml());
+        	JSONArray informations = new JSONArray(entity.getParamXml());
+        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+        		JSONObject spread = new JSONObject(entity.getReportXml());
+        		returnMap.put("spread", spread.toString());
+        	}
+        	returnMap.put("item", items.toString());
+        	returnMap.put("dataset", dataset.toString());
+        	returnMap.put("layout", layout.toString());
+        	returnMap.put("informations", informations.toString());
+        }
+        Map<String, Object> report = new HashMap<String, Object>();
+    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
 
-        MetaVO metaVO = MetaVO.builder().build();
+    	Map<String, Object> options = new HashMap<String, Object>();
+        options.put("order", entity.getReportOrdinal());
+    	options.put("reportNm", entity.getReportNm());
+    	options.put("fldId", entity.getFldId());
+    	options.put("fldType", entity.getFldType());
+    	options.put("reportType", entity.getReportType());
+    	options.put("reportTag", entity.getReportTag());
+    	options.put("reportDesc", entity.getReportDesc());
+    	options.put("reportSubTitle", entity.getReportSubTitle());
+    	options.put("reportPath", null);
 
-        // report
-        ReportOptionsVO reportOptions = ReportOptionsVO.builder()
-                .order(dto.getReportOrdinal())
-                .reportDesc(dto.getReportDesc())
-                .reportNm(dto.getReportNm())
-                .reportPath(null)
-                .build();
-        ReportVO reports = ReportVO.builder()
-                .reportId(dto.getReportId())
-                .options(reportOptions)
-                .build();
-        metaVO.getReports().put(dto.getReportId(), new ArrayList<ReportVO>() {
-            {
-                add(reports);
-            }
-        });
+    	report.put("reportId", Integer.parseInt(reportId));
+    	report.put("options", options);
 
-        // dataset
-        List<RootDataSetVO> datasetVO = xmlParser.datasetParser(dto.getDatasetXml(), userId);
-        metaVO.getDatasets().put(dto.getReportId(), datasetVO);
+    	reports.add(report);
 
-        // layout
-        metaVO = xmlParser.layoutParser(dto.getReportId(), metaVO, dto.getLayoutXml());
+    	returnMap.put("reports", reports);
 
-        return metaVO;
+        return returnMap;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
@@ -197,6 +221,33 @@ public class ReportService {
         PivotResult result = new PivotResult();
 
         result.setMatrix(pagedMatrix);
+        return result;
+    }
+
+    public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
+        Map<String, ReportResult> result = new HashMap<String, ReportResult>();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggreagtion);
+        String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
+        String[] items = layoutType.split("_");
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+        List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
+        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
+        
+        for (String item : items) {
+            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
+            List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
+            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+        }
+        
         return result;
     }
 
@@ -376,24 +427,135 @@ public class ReportService {
         }
     }
 
-    public ReportMstrDTO addReport(ReportMstrDTO reportMstrDTO) {
-        if (reportMstrDTO.getReportId() == 0) {
-            reportMstrDTO.setDupleYn(checkDuplicatedReport(reportMstrDTO));
-        }
+    public Map<String, Object> insertReport(ReportMstrDTO reportMstrDTO) throws SQLException{
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
 
-        if (reportMstrDTO.getDupleYn() != "Y") {
-            reportDAO.addReport(reportMstrDTO);
-        }
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
 
-        return reportMstrDTO;
+        String duplicationStatus = checkDuplicatedReport(reportMstrEntity);
+
+        try {
+            if ("N".equals(duplicationStatus)) {
+                result = reportDAO.insertReport(reportMstrEntity);
+
+                if (result) {
+                    reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                    map.put("msg", "saveReportMsg");
+                } else {
+                    map.put("msg", "faildSaveReportMsg");
+                }
+            } else {
+                reportMstrDTO.setDupleYn(duplicationStatus);
+                map.put("msg", "duplicatedSaveReportMsg");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+        return map;
     }
 
-    public int deleteReport(int reportId) {
-        return reportDAO.deleteReport(reportId);
+    public Map<String, Object> updateReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+
+        // TODO: regUserNo -> 로그인 개발 시 추가 필요
+        ReportMstrEntity reportMstrEntity = ReportMstrEntity.builder()
+            .reportId(reportMstrDTO.getReportId())
+            .reportNm(reportMstrDTO.getReportNm())
+            .reportSubTitle(reportMstrDTO.getReportSubTitle())
+            .fldId(reportMstrDTO.getFldId())
+            .fldType(reportMstrDTO.getFldType())
+            .reportOrdinal(reportMstrDTO.getReportOrdinal())
+            .reportType(reportMstrDTO.getReportType().toString())
+            .reportDesc(reportMstrDTO.getReportDesc())
+            .reportTag(reportMstrDTO.getReportTag())
+            .paramXml(reportMstrDTO.getParamXml())
+            .regUserNo(0)
+            .chartXml(reportMstrDTO.getChartXml())
+            .layoutXml(reportMstrDTO.getLayoutXml())
+            .reportXml(reportMstrDTO.getReportXml())
+            .datasetXml(reportMstrDTO.getDatasetXml())
+            .build();
+
+        try {
+            result = reportDAO.updateReport(reportMstrEntity);
+
+            if (result) {
+                reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                map.put("msg", "saveReportMsg");
+            } else {
+                map.put("msg", "faildSaveReportMsg");
+            }
+
+            map.put("report", reportMstrDTO);
+            map.put("result", result);
+        } catch (Exception e) {
+            // 예외 발생 시 로깅 또는 다른 처리를 추가할 수 있습니다.
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Add report failed: " + e.getMessage(), e);
+        }
+
+        return map;
     }
 
-    public String checkDuplicatedReport(ReportMstrDTO reportMstrDTO) {
-        List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrDTO);
+    public Map<String, Object> deleteReport(ReportMstrDTO reportMstrDTO) {
+        Map<String, Object> map = new HashMap<String,Object>();
+        boolean result = false;
+        int reportId = reportMstrDTO.getReportId();
+
+        try {
+            result = reportDAO.deleteReport(reportId);
+
+            if (result) {
+                map.put("report", reportMstrDTO);
+                map.put("msg", "deleteReportMsg");
+            } else {
+                map.put("msg", "failedDeleteReportMsg");
+            }
+            map.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace(); // 또는 로깅 프레임워크를 사용하여 로그에 기록할 수 있음
+            throw new RuntimeException("Delete report failed: " + e.getMessage(), e);
+        }
+        return map;
+    }
+
+    public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
+        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
+                editMode.toString());
+        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
+                editMode.toString());
+        Map<String, List<ReportListDTO>> result = new HashMap<>();
+        result.put("publicReport", pubList);
+        result.put("privateReport", priList);
+        return result;
+    }
+
+    public String checkDuplicatedReport(ReportMstrEntity reportMstrEntity) {
+        List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrEntity);
         return result.size() > 0 ? "Y" : "N";
     }
 
@@ -402,10 +564,49 @@ public class ReportService {
 
         List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
         List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
-
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
 
         return result;
+    }
+
+    public MartResultDTO getDetailedData(String userId, String dsId, String cubeId,
+            String actId, List<Parameter> parameters) {
+
+        List<Dimension> dimensions = new ArrayList<>();
+        List<Measure> measures = new ArrayList<>();
+
+        List<DetailedDataItemVO> items = reportDAO.selectDetailedDataItem(cubeId, actId);
+
+        for (DetailedDataItemVO item : items) {
+            if ("measure".equals(item.getType())) {
+                measures.add(Measure.builder().uniqueName(item.getRtnItemUniNm()).build());
+            } else {
+                dimensions.add(Dimension.builder().uniqueName(item.getRtnItemUniNm()).build());
+            }
+        }
+
+        DataAggregation dataAggregation = DataAggregation.builder()
+                .dimensions(dimensions)
+                .measures(measures)
+                .parameters(parameters)
+                .dataset(new Dataset(Integer.parseInt(dsId), Integer.parseInt(cubeId), 0, "", DsType.CUBE))
+                .userId(userId)
+                .sortByItems(new ArrayList<>())
+                .itemType(ItemType.DATA_GRID)
+                .build();
+
+        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(DsType.CUBE);
+
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(Integer.parseInt(dsId));
+
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        String query = queryGenerator.getQuery(dataAggregation);
+
+        MartResultDTO martResultDTO = martDAO.select(query);
+
+        return martResultDTO;
     }
 }

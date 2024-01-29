@@ -1,9 +1,9 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
+// import meaImg from 'assets/image/icon/dataSource/measure.png';
+// import dimImg from 'assets/image/icon/dataSource/dimension.png';
+// import folderImg from 'assets/image/icon/report/folder_load.png';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';
@@ -25,6 +25,7 @@ import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetType from '../utils/DatasetType';
+import {makeFieldIcon} from '../utils/DatasetUtil';
 
 const theme = getTheme();
 
@@ -91,12 +92,6 @@ const QueryDataSourceDesignerModal = ({
     onClick: () => {
       const query = queryEditorRef.current.editor.getValue();
       const paramNames = ParamUtils.getParameterNamesInQuery(query) || [];
-      let order = paramInfo.reduce((acc, param) => {
-        if (acc <= param.order) {
-          acc = param.order + 1;
-        }
-        return acc;
-      }, 1);
 
       // 기존 데이터 필터링
       const newParamInfo = paramInfo.filter((info) => {
@@ -107,7 +102,14 @@ const QueryDataSourceDesignerModal = ({
           return true;
         }
         return false;
-      }, []);
+      });
+
+      let order = newParamInfo.reduce((acc, param) => {
+        if (acc <= param.order) {
+          acc = param.order + 1;
+        }
+        return acc;
+      }, 1);
 
       // 기존에 없던 필터
       for (name of paramNames) {
@@ -178,27 +180,12 @@ const QueryDataSourceDesignerModal = ({
 
           const response = await models.DBInfo.
               getDataByQueryMart(selectedDataSource.dsId, query, parameters);
-          if (!response.rowData[0].error) {
-            let tempFields = response.metaData;
-
-            tempFields = tempFields.map((field) => {
-              const isMea = field.columnTypeName == 'decimal';
-              return {
-                icon: isMea ? meaImg : dimImg,
-                parentId: '0',
-                uniqueName: field.columnName,
-                name: field.columnName,
-                type: isMea ? 'MEA' : 'DIM',
-                ...field
-              };
-            });
-
-            tempFields.unshift({
-              name: localizedString.defaultDatasetName,
-              type: 'FLD',
-              uniqueName: '0',
-              icon: folderImg
-            });
+          if (!response.data.rowData[0].error) {
+            let tempFields = response.data.metaData;
+            tempFields = makeFieldIcon(tempFields);
+            if (dataset.customData) {
+              tempFields = [...tempFields, ...dataset.customData];
+            }
 
             dispatch(updateDataset({
               reportId: selectedReportId,

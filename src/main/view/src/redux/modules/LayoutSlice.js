@@ -1,8 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
-import flexLayoutDefault
-  from 'components/report/atomic/ItemBoard/organisms/FlexLayoutDefault';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
+import adHocLayoutSetting from 'components/utils/AdhocLayoutSetting';
 
-const initialState = {
+const dashboardInitialState = {
   0: {
     layoutQuantity: 1,
     layoutConfig: {
@@ -10,44 +11,139 @@ const initialState = {
         tabEnableClose: false,
         tabEnableRename: false
       },
+      borders: [],
       layout: {
         type: 'row',
-        children: []
+        children: [
+          {
+            type: 'tabset',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                className: 'item1',
+                id: 'item1',
+                type: 'tab',
+                name: 'Chart 1',
+                component: 'chart'
+              }
+            ]
+          }
+        ]
       }
     }
   }
 };
+
+const adHocInitialState = {
+  0: {
+    layoutQuantity: 1,
+    layoutConfig: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false,
+        tabSetEnableMaximize: false
+      },
+      layout: {
+        type: 'row',
+        children: [
+          {
+            type: 'row',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                maximized: false,
+                children: [
+                  {
+                    id: 'item1',
+                    type: 'tab',
+                    name: 'Chart',
+                    component: 'chart'
+                  }
+                ]
+              },
+              {
+                type: 'tabset',
+                weight: 50,
+                selected: 0,
+                maximized: false,
+                children: [
+                  {
+                    id: 'item2',
+                    type: 'tab',
+                    name: 'PivotGrid',
+                    component: 'pivot'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+};
+
+const excelInitialState = {
+  0: {
+    layoutQuantity: 1,
+    layoutConfig: {
+      global: {
+        tabEnableClose: false,
+        tabEnableRename: false
+      },
+      layout: {}
+    }
+  }
+};
+
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === DesignerMode['DASHBOARD']) {
+    return dashboardInitialState;
+  }
+
+  if (mode === DesignerMode['AD_HOC']) {
+    return adHocInitialState;
+  }
+
+  if (mode === DesignerMode['EXCEL']) {
+    return excelInitialState;
+  }
+};
+
 const reducers = {
   // initLayout -> dashboard, adhoc Layout 다르게.
-  initLayout(state, actions) {
-    actions.payload.reportId != 0 && delete state[actions.payload.reportId];
+  initLayout: (state, actions) => {
+    const mode = actions.payload;
 
-    state[0] = {
-      layoutQuantity: 1,
-      layoutConfig: flexLayoutDefault()[actions.payload.designer]
-    };
+    if (mode === DesignerMode['DASHBOARD']) {
+      return {...dashboardInitialState};
+    }
+
+    if (mode === DesignerMode['AD_HOC']) {
+      return {...adHocInitialState};
+    }
+
+    if (mode === DesignerMode['EXCEL']) {
+      return {...excelInitialState};
+    }
   },
   setLayout(state, actions) {
     const reportId = actions.payload.reportId;
     state[reportId] = actions.payload.layout;
   },
-  setMovedLayout(state, actions) {
-    state[0].layoutConfig = actions.payload;
-  },
-  // deleteFlexLayout
-  deleteFlexLayout(state, actions) {
+  // delete 및 layout 배치 변경 등.
+  updataFlexLayout(state, actions) {
     const reportId = actions.payload.reportId;
-    const itemId = actions.payload.itemId;
+    const layout = actions.payload.layout;
 
-    state[reportId].layoutConfig = {
-      ...state[reportId].layoutConfig,
-      layout: {
-        ...state[reportId].layoutConfig.layout,
-        children: state[reportId].layoutConfig.layout.children.filter(
-            (child) => child.children[0].id != itemId
-        )
-      }
-    };
+    state[reportId].layoutConfig = layout;
   },
   // insertFlexLayout
   insertFlexLayout(state, actions) {
@@ -86,18 +182,26 @@ const reducers = {
     delete state[actions.payload.reportId];
 
     if (Object.keys(state).length == 0) {
-      state[0] = {
-        ...initialState[0],
-        layoutConfig: flexLayoutDefault()[actions.payload.reportType]
-      };
+      state = getInitialState();
     }
+  },
+  adHocLayoutUpdate(state, actions) {
+    const reportId = actions.payload.reportId;
+    const layoutType = actions.payload.layoutType;
+    state[reportId] = adHocLayoutSetting(layoutType, reportId, state);
+  },
+  changeLayout(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.layout;
   }
 };
 const extraReducers = {};
 
 const LayoutSlice = createSlice({
   name: 'Layout',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });

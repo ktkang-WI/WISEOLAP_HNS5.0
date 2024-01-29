@@ -1,10 +1,36 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
 import React from 'react';
+import DataGridBullet from './DataGridBullet';
 
-const DataGrid = ({id, mart}) => {
+const DataGrid = ({id, item}) => {
+  const mart = item ? item.mart : null;
+  const maxValue = {};
+
   if (!mart.init) {
     return <></>;
   }
+
+  const getMaxValue = (column) => {
+    if (!maxValue[column.name]) {
+      maxValue[column.name] =
+      Math.max.apply(null, mart.data.data.map((row) => row[column.name]));
+    }
+    return maxValue[column.name];
+  };
+
+  const cellRender = (e, column) => {
+    let endScaleValue = 0;
+    if (column.detailSetting === 'bar') {
+      endScaleValue = getMaxValue(column);
+
+      return <DataGridBullet
+        endScaleValue={endScaleValue}
+        value={e.value}
+        column={column}
+      />;
+    }
+    return e.value;
+  };
 
   return (
     <DevDataGrid
@@ -19,6 +45,8 @@ const DataGrid = ({id, mart}) => {
           key={i}
           caption={column.caption}
           dataField={column.name}
+          visible={column.visible}
+          cellRender={(e) => cellRender(e, column)}
         />
       )}
     </DevDataGrid>

@@ -17,6 +17,7 @@ import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResultVO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -174,7 +175,7 @@ public class DatasetController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
             @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
     }))
-    @PostMapping(value = "/query-dataset-fields")
+    @PostMapping(value = "/query-dataset-datas")
     public MartResultDTO getValidate(@RequestBody Map<String, String> datasource) {
         String query = datasource.get("query");
         int dsId = Integer.parseInt(datasource.get("dsId"));
@@ -253,5 +254,23 @@ public class DatasetController {
             }.getType());
 
         return datasetService.getDefaultValues(dsId, defaultValue);
+    }
+
+    @Operation(summary = "get Cube Column Information", description = "필터 생성을 위한 차원 정보를 불러온다.")
+    @Parameters({
+            @Parameter(name = "cubeId", description = "cube id", example = "3295"),
+            @Parameter(name = "userId", description = "user id", example = "admin", required = true),
+            @Parameter(name = "uniqueName", description = "unique name", example = "[D_자동차].[자동차명]", required = true),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"cubeId\": \"5181\", \"userId\": \"admin\", \"uniqueName\": \"[D_자동차].[자동차명]\"}")
+    }))
+    @PostMapping(value = "/cube-column")
+    public CubeTableColumn getCubeColumn(@RequestBody Map<String, String> param) {
+        String cubeId = param.getOrDefault("cubeId", "");
+        String userId = param.getOrDefault("userId", "");
+        String uniqueName = param.getOrDefault("uniqueName", "");
+
+        return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);
     }
 }

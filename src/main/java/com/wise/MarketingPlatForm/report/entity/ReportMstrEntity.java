@@ -2,9 +2,7 @@ package com.wise.MarketingPlatForm.report.entity;
 
 import java.sql.Date;
 import java.util.Base64;
-import java.util.Optional;
 
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import lombok.AllArgsConstructor;
@@ -25,11 +23,15 @@ public class ReportMstrEntity {
     String fldType;
     int reportOrdinal;
     String reportType;
-    String reportTag;
-    String reportDesc;
+    @Builder.Default
+    String reportTag = "";
+    @Builder.Default
+    String reportDesc = "";
+    @Builder.Default
+    String reportSubTitle = "";
     String reportLayout;
     String gridInfo;
-    int datasrcId;
+    int dataSrcId;
     String datasrcType;
     String datasetType;
     String reportXml;
@@ -42,26 +44,29 @@ public class ReportMstrEntity {
     Date RegDt;
     String delYn;
     String promptYn;
-    String reportSubTitle;
     int modUserNo;
     Date modDt;
     String privacyYn;
     String layoutConfig;
+    String dupleYn;
 
-    private static String decodeBase64(String base64) {
-        byte[] decodedBytes = Base64.getDecoder().decode(
+    private static String decodeBase64(String base64, boolean datasetCheck) {
+    	byte[] decodedBytes = null;
+    	String decodedString = "";
+    	try {
+        decodedBytes = Base64.getDecoder().decode(
             base64.replaceAll("\\R", ""));
-        String decodedString = "";
-        try {
         	decodedString = new String(decodedBytes, "UTF-8");
+        	if(!datasetCheck) {
+        		decodedString = decodedString.replaceAll("&lt;", "<");
+        		decodedString = decodedString.replaceAll("&gt;", ">");
+        	}
         } catch (Exception e) {
-            e.printStackTrace();
+        	return decodedString = "newReport";
         }
-        decodedString.replaceAll("&lt;", "<");
-        decodedString.replaceAll("&gt;", ">");
         return decodedString;
     }
-
+    
     public static ReportMstrDTO toDTO(ReportMstrEntity reportMstrEntity) {
     	String decodedReportXml = null;
     	String decodedChartXml = null;
@@ -71,22 +76,22 @@ public class ReportMstrEntity {
     	String decodedDatasetXml = null;
     	
     	if(reportMstrEntity.getReportXml() != null) {
-    		decodedReportXml = decodeBase64(reportMstrEntity.getReportXml());
+    		decodedReportXml = decodeBase64(reportMstrEntity.getReportXml(), false);
         }
     	if(reportMstrEntity.getChartXml() != null) {
-    		decodedChartXml = decodeBase64(reportMstrEntity.getChartXml());
+    		decodedChartXml = decodeBase64(reportMstrEntity.getChartXml(), false);
     	}
     	if(reportMstrEntity.getLayoutXml() != null) {
-    		decodedLayoutXml = decodeBase64(reportMstrEntity.getLayoutXml());
+    		decodedLayoutXml = decodeBase64(reportMstrEntity.getLayoutXml(), false);
     	}
     	if(reportMstrEntity.getParamXml() != null) {
-    		decodedParamXml = decodeBase64(reportMstrEntity.getParamXml());
+    		decodedParamXml = decodeBase64(reportMstrEntity.getParamXml(), false);
     	}
     	if(reportMstrEntity.getDatasetQuery() != null) {
-    		decodedDatasetQuery = decodeBase64(reportMstrEntity.getDatasetQuery());
+    		decodedDatasetQuery = decodeBase64(reportMstrEntity.getDatasetQuery(), false);
     	}
     	if(reportMstrEntity.getDatasetXml() != null) {
-    		decodedDatasetXml = decodeBase64(reportMstrEntity.getDatasetXml());
+    		decodedDatasetXml = decodeBase64(reportMstrEntity.getDatasetXml(), true);
     	}
         
         return ReportMstrDTO.builder()
@@ -100,7 +105,7 @@ public class ReportMstrEntity {
 	        .reportDesc(reportMstrEntity.getReportDesc())
 	        .reportLayout(reportMstrEntity.getReportLayout())
 	        .gridInfo(reportMstrEntity.getGridInfo())
-	        .datasrcId(reportMstrEntity.getDatasrcId())
+	        .dataSrcId(reportMstrEntity.getDataSrcId())
 	        .datasrcType(reportMstrEntity.getDatasrcType())
 	        .datasetType(reportMstrEntity.getDatasetType())
 	        .reportXml(decodedReportXml)  
@@ -116,6 +121,7 @@ public class ReportMstrEntity {
 	        .reportSubTitle(reportMstrEntity.getReportSubTitle())
 	        .modUserNo(reportMstrEntity.getModUserNo())
 	        .modDt(reportMstrEntity.getModDt())
+	        .dupleYn(reportMstrEntity.getDupleYn())
 	        .privacyYn(reportMstrEntity.getPrivacyYn())
 	        .layoutConfig(reportMstrEntity.getLayoutConfig())
 	        .build();

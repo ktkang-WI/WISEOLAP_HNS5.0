@@ -32,7 +32,7 @@ const newParamInformation = (name, dsId, dsType, order = 1) => {
 
     // CUBE or DS_SINGLE Only Use
     orgField: '', // 주제영역, 단일 테이블의 경우 조회를 위해 원본 데이터 항목 키값 저장
-
+    uniqueName: name.substring(1),
     // List Type Value
     dataSourceType: 'TABLE', // 데이터 원본 타입 (QUERY, TABLE)
     dataSource: '', // 데이터 원본
@@ -43,6 +43,29 @@ const newParamInformation = (name, dsId, dsType, order = 1) => {
     multiSelect: false, // 다중 선택
     useAll: true, // 전체 항목 표시 여부
     linkageFilters: [] // 연계 필터를 사용하는 경우 매개변수 이름을 담아놓는 배열
+  };
+};
+
+const newCubeParamInformation = (name, dsId, dsType,
+    order = 1, cubeColumnInfo) => {
+  return {
+    ...newParamInformation(name, dsId, dsType, order),
+    // newParamInformation 오버라이딩
+    caption: cubeColumnInfo.physicalColumnName,
+    exceptionValue: cubeColumnInfo.physicalTableName + '.' +
+       cubeColumnInfo.physicalColumnKey,
+    uniqueName: cubeColumnInfo.logicalColumnName,
+    dataSource: cubeColumnInfo.physicalTableName,
+    itemCaption: cubeColumnInfo.physicalColumnName != '' ?
+        cubeColumnInfo.physicalColumnName :
+        cubeColumnInfo.physicalColumnKey, // 리스트에 보여줄 값
+    itemKey: cubeColumnInfo.physicalColumnKey, // 조회할 때 실제로 쿼리에 들어가는 값
+    sortBy: cubeColumnInfo.orderBy != 'Null' ?
+        cubeColumnInfo.orderBy == 'Key Column' ?
+        cubeColumnInfo.physicalColumnKey :
+        cubeColumnInfo.physicalColumnName :
+        cubeColumnInfo.physicalColumnKey, // 정렬 기준 항목
+    multiSelect: true // 다중 선택
   };
 };
 
@@ -96,7 +119,11 @@ const sanitizeParamInformation = (param) => {
  * @return {Array} names를 담은 배열
  */
 const getParameterNamesInQuery = (query) => {
-  return query.match(/@[^()\s]+/g);
+  return _.uniq(query.match(/@[^()\s]+/g));
+};
+
+const getCubeParameterNamesCube = (paramInfo, paramName) => {
+  return paramInfo.map((info) => info.name).concat(paramName);
 };
 
 /**
@@ -138,6 +165,25 @@ const parseStringFromDate = (date, format) => {
   return str;
 };
 
+const filterToParameter = (values, columnInfo, dsId) => {
+  const name = '@WISE_F_' + columnInfo.physicalTableName +
+      '_' + columnInfo.physicalColumnKey;
+
+  return {
+    name: name,
+    values: values,
+    caption: columnInfo.physicalColumnName,
+    exceptionValue: columnInfo.physicalTableName + '.' +
+        columnInfo.physicalColumnKey,
+    uniqueName: columnInfo.logicalColumnName,
+    dataType: 'STRING',
+    operation: 'IN',
+    dsType: 'CUBE',
+    dsId: dsId,
+    paramType: 'LIST'
+  };
+};
+
 /**
  * 쿼리 실행에 필요한 Request Body 생성
  * @param {*} parameters 매개변수 목록
@@ -158,7 +204,6 @@ const generateParameterForQueryExecute = (parameters) => {
       p.calendarPeriodBase.map((base, i) => {
         const value = p.calendarPeriodValue ? p.calendarPeriodValue[i] : 0;
         const date = getCalendarNowDefaultValue(base, value);
-        // TODO: 달력 필터 기본값 만들기
         values.push(
             parseStringFromDate(date, p.calendarKeyFormat)
         );
@@ -172,7 +217,10 @@ const generateParameterForQueryExecute = (parameters) => {
       dataType: p.dataType,
       operation: p.operation,
       dsType: p.dsType,
-      dsId: p.dsId
+      dsId: p.dsId,
+      uniqueName: p.uniqueName,
+      caption: p.cpation,
+      paramType: p.paramType
     };
   });
 
@@ -210,5 +258,8 @@ export default {
   parseDateFromString,
   parseStringFromDate,
   generateParameterForQueryExecute,
-  getCalendarNowDefaultValue
+  getCalendarNowDefaultValue,
+  newCubeParamInformation,
+  getCubeParameterNamesCube,
+  filterToParameter
 };
