@@ -23,9 +23,14 @@ const getItemIndex = (state, reportId) => {
   );
 };
 
+const isThisAdhoc = (state, reportId) => {
+  let isok = false;
+  if (state[reportId].adHocOption) isok = true;
+  return isok;
+};
+
 const getFieldIdFromMeasure = (state, reportId) => {
-  const itemIndex = getItemIndex(state, reportId);
-  const measures = state[reportId].items[itemIndex].meta.dataField.measure;
+  const measures = getDataFieldType(state, reportId).measure;
   const fieldIds = [];
   measures.forEach((item) => {
     fieldIds.push(item.fieldId);
@@ -36,7 +41,16 @@ const getFieldIdFromMeasure = (state, reportId) => {
 // TODO: Item Slice 로 옮겨야 할거 같다.?
 const getDataFieldType = (state, reportId) => {
   const itemIndex = getItemIndex(state, reportId);
-  return state[reportId].items[itemIndex].meta.dataField;
+  // TODO: 긴급 소스수정 추후 수정
+
+  let dataField = null;
+
+  if (isThisAdhoc(state, reportId)) {
+    dataField = state[reportId].adHocOption.dataField;
+  } else {
+    dataField = state[reportId].items[itemIndex].meta.dataField;
+  }
+  return dataField;
 };
 
 // 임시용 redux
