@@ -1,3 +1,4 @@
+
 const extractingKeys = (data) => {
   const keys = [];
   try {
@@ -69,7 +70,8 @@ export const exportToFile = (name, data, type) => {
 export const Type = {
   CSV: 'csv',
   TXT: 'txt',
-  IMG: 'img'
+  IMG: 'img',
+  XLSX: 'xlsx'
 };
 
 const exportFile = (name, data, type) => {
