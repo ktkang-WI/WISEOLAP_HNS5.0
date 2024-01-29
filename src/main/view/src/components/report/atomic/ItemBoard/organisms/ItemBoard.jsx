@@ -40,7 +40,6 @@ const ItemBoard = () => {
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
-
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
   const items = useSelector(selectCurrentItems);
@@ -73,7 +72,10 @@ const ItemBoard = () => {
 
     return (
       <Item>
-        <ItemComponent item={item} adHocOption={adHocOption} id={item.id}/>
+        <ItemComponent
+          item={item}
+          adHocOption={adHocOption}
+          id={item.id}/>
       </Item>
     );
   }

@@ -45,18 +45,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 .getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-
-        // 사용자 정의 데이터 가공
-        List<Map<String, Object>> tempData = null;
-        try {
-            tempData = customData.setDimension(dimensions)
-                         .setMeasure(measures)
-                         .builder();
-        } catch (Exception e) {
-            e.printStackTrace();
-            tempData = null;
-        }
-
+        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
         if(tempData != null) {
             data = tempData;
         }
@@ -67,6 +56,7 @@ public class ChartDataMaker implements ItemDataMaker {
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
         List<String> seriesDimensionNames = new ArrayList<>();
         List<String> seriesDimensionCaptions = new ArrayList<>();
+        List<Measure> seriesMeasureNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
@@ -120,6 +110,7 @@ public class ChartDataMaker implements ItemDataMaker {
             for (Measure measure : measures) {
                 seriesDimensionNames.add(measure.getSummaryName());
                 seriesDimensionCaptions.add(measure.getCaption());
+                seriesMeasureNames.add(measure);
             }
         } else {
             for (Measure measure : measures) {
@@ -129,6 +120,7 @@ public class ChartDataMaker implements ItemDataMaker {
                     String name = iter.next();
                     seriesDimensionNames.add(name + "-" + measure.getSummaryName());
                     seriesDimensionCaptions.add(name + "-" + measure.getCaption());
+                    seriesMeasureNames.add(measure);
                 }
             }
             if (measures.size() == 1) {
@@ -138,9 +130,16 @@ public class ChartDataMaker implements ItemDataMaker {
 
         info.put("seriesDimensionNames", seriesDimensionNames);
         info.put("seriesDimensionCaptions", seriesDimensionCaptions);
+        info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
+}
+
+    private Map<String, Measure> generateSingleDataMap(String key, Object o) {
+        Map<String, Measure> temp = new HashMap<>();
+        temp.put(key, (Measure) o);
+        return temp;
     }
 }

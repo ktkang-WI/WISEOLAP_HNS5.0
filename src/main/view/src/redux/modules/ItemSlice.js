@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import seriesOptionSlice from './SeriesOption/SeriesOptionSlice';
 import {makeAdHocItem, makeAdHocOption, makeItem}
   from 'components/report/item/util/ItemFactory';
 import ConfigSlice from './ConfigSlice';
@@ -261,7 +262,9 @@ const reducers = {
   }
 };
 
-const extraReducers = {};
+const extraReducers = (builder) => {
+  seriesOptionSlice(builder);
+};
 
 const ItemSlice = createSlice({
   name: 'Item',
