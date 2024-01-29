@@ -74,6 +74,11 @@ const reducers = {
     state[reportId].reportId = reportId;
     state[reportId].designer = actions.payload.designer;
   },
+  // 새로만들기에서 Designer만 변경시 사용
+  setDesigner(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId].designer = actions.payload.designer;
+  },
   setConfig(state, actions) {
     state.config = actions.payload;
   },
@@ -99,9 +104,10 @@ const reducers = {
       delete state[actions.payload];
     }
   },
+  // 디자이너에서 저장 후 reportId만 변경할 때 사용
   changeSpreadReportId(state, actions) {
-    const prevId = actions.payload.prevId;
-    const newId = actions.payload.newId;
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
 
     if (prevId != newId) {
       const spread = state[prevId];

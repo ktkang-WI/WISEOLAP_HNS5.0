@@ -1,29 +1,27 @@
 import localizedString from 'config/localization';
-import useModal from 'hooks/useModal';
 import store from 'redux/modules';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
-import {selectCurrentDesigner, selectExcelIO, selectSheets}
+import {selectSheets}
   from 'redux/selector/SpreadSelector';
-import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
-import useReportSave from 'hooks/useReportSave';
-import saveDefaultElement from
-  'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
-import ribbonDefaultElement
-  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
-import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
-import DatasetLinkerModal from '../modal/DataLinkerModal';
 import useSpread from 'hooks/useSpread';
+import useModal from 'hooks/useModal';
 
 const SpreadDefaultElement = () => {
-  const {openModal, confirm, alert} = useModal();
-  const {reload} = useReportSave();
-  const {save} = saveDefaultElement();
-  const ribbonElement = ribbonDefaultElement();
   const {
-    createDesigner,
-    createExcelFile
+    executeNew,
+    openReportLocal,
+    openReport,
+    saveReport,
+    saveAsReport,
+    deleteReport,
+    downloadReportXLSX,
+    downloadReportTXT,
+    datasetBinder,
+    print,
+    addSpreadTemplate
   } = useSpread();
+  const {confirm} = useModal();
 
+  // config의 경우 초기에만 생성하고 이후에 state에서 사용하는 형태로 변경
   const setRibbonSetting = () => {
     const sheets = selectSheets(store.getState());
     const config = sheets.Designer.DefaultConfig;
@@ -45,114 +43,8 @@ const SpreadDefaultElement = () => {
     return config;
   };
 
-  const addSpreadTemplate = (templateName, templateMethod) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.registerTemplate(templateName, templateMethod);
-  };
-
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
-    const newReport = (context) => {
-      const executeNew = (context) => {
-        const config = setRibbonSetting();
-        reload();
-        // 기존 workbook 제거
-        context.destroy();
-        // 새로운 workbook 생성 및 등록
-        createDesigner({
-          newReportId: 0,
-          config: config,
-          spread: {}
-        });
-      };
-
-      confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
-    };
-
-    const openReportLocal =(context) => {
-      const sheets = selectSheets(store.getState());
-      sheets.Designer.getCommand('fileMenuPanel')
-          .execute(context, 'button_import_excel', null);
-    };
-
-    const openReport = () => {
-      openModal(LoadReportModal);
-    };
-
-    const saveReport = () => {
-      save[0].onClick({createExcelFile: createExcelFile});
-    };
-
-    const saveAsReport = () => {
-      save[1].onClick();
-    };
-
-    const deleteReport = () => {
-      ribbonElement['DeleteReport'].onClick();
-    };
-
-    const downloadReportXLSX = () => {
-      let reportNm = selectCurrentReport(store.getState()).options.reportNm;
-      const sheets = selectSheets(store.getState());
-      const designer = selectCurrentDesigner(store.getState());
-      const excelIO = selectExcelIO(store.getState());
-
-      reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
-      // 예외 처리 및  메소드 분리.
-      sheets.Designer.showDialog('downlaodReportDialog',
-          {
-            extName: '.xlsx',
-            fileName: reportNm,
-            designer: designer,
-            excelIO: excelIO
-          },
-          xlsxDownload
-      );
-    };
-
-    const xlsxDownload = (e) => {
-      if (e.fileName === '') {
-        alert('파일명을 입력해 주세요.');
-      } else {
-        if (e.fileName
-            .substr(-e.extName.length, e.extName.length) !== e.extName) {
-          e.fileName += e.extName;
-        }
-        const fileName = e.fileName;
-        const json = JSON.stringify(
-            e.designer.getWorkbook().toJSON({includeBindingSource: true}));
-        e.excelIO.save(json, (blob) => {
-          saveAs(blob, fileName);
-        }, (e) => {
-          console.log(e);
-        });
-      }
-    };
-
-    const downloadReportTXT = () => {
-
-    };
-
-    const datasetBinder = () => {
-      const datasets = selectCurrentDatasets(store.getState());
-      if (datasets.length == 0) {
-        alert(localizedString.dataSourceNotSelectedMsg);
-        return;
-      }
-      openModal(DatasetLinkerModal);
-    };
-
-    const print = () => {
-      const designer = selectCurrentDesigner(store.getState());
-      const workbook = designer.getWorkbook();
-      const activeSheet = workbook.getActiveSheet();
-      activeSheet.printInfo().margin(
-          {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
-      );
-      const index = workbook.getActiveSheetIndex();
-      workbook.print(index);
-    };
-
     return {
       newReport: {
         title: localizedString.newReport,
@@ -161,7 +53,7 @@ const SpreadDefaultElement = () => {
         bigButton: 'true',
         commandName: 'newReport',
         execute: (context, propertyName, fontItalicChecked) => {
-          newReport(context);
+          confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
         }
       },
       openReportLocal: {

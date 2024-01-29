@@ -18,7 +18,6 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
-import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
@@ -27,7 +26,6 @@ import {useSelector} from 'react-redux';
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
   const {alert} = useModal();
-  const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const designerMode = useSelector(selectCurrentDesignerMode);
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
@@ -524,7 +522,7 @@ const useQueryExecute = () => {
       }
       const datas = await models.DBInfo.
           getDataByQueryMart(dsId, query, parameters, 0);
-      bindData({dataset: dataset, datas: datas.data.rowData});
+      console.log(datas);
     });
   };
 

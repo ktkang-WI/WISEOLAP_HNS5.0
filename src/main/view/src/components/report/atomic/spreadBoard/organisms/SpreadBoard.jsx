@@ -1,22 +1,28 @@
 import './spreadBoard.css';
-// import spreadDefaultElement from './SpreadDefaultElement';
+import spreadDefaultElement from './SpreadDefaultElement';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSpread from 'hooks/useSpread';
 import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import SpreadSlice from 'redux/modules/SpreadSlice';
 
 
 const SpreadBoard = () => {
-  // action
-  // const {setRibbonSetting} = spreadDefaultElement();
-  // const config = setRibbonSetting();
+  // hook
+  const {setRibbonSetting} = spreadDefaultElement();
+  const config = setRibbonSetting();
   const {createDesigner} = useSpread();
+  const dispatch = useDispatch();
+
+  const spreadActions = SpreadSlice.actions;
 
   useEffect(() => {
     createDesigner({
-      config: {},
-      newReportId: 0,
-      spread: {}
+      config: config,
+      reportId: 0,
+      prevDesigner: {}
     });
+    dispatch(spreadActions.setConfig(config));
   }, []);
 
   return (

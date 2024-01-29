@@ -244,6 +244,10 @@ const useReportSave = () => {
       reportId: reportId,
       informations: data.informations
     }));
+    dispatch(spreadActions.changeSpreadReportId({
+      reportId: reportId,
+      spread: data.spread
+    }));
     querySearch();
   };
 
