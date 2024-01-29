@@ -108,6 +108,7 @@ public class ChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
+                // 하단코드 불필요시 삭제필요
                 seriesDimensionNames.add(measure.getSummaryName());
                 seriesDimensionCaptions.add(measure.getCaption());
                 seriesMeasureNames.add(measure);
@@ -118,9 +119,18 @@ public class ChartDataMaker implements ItemDataMaker {
 
                 while (iter.hasNext()) {
                     String name = iter.next();
+                    Measure tempMeasure = Measure.builder()
+                        .caption(name + "-" + measure.getCaption())
+                        .category(measure.getCategory())
+                        .expression(measure.getExpression())
+                        .fieldId(measure.getFieldId())
+                        .name(name + "-" + measure.getSummaryName())
+                        .summaryName(name + "-" + measure.getSummaryName())
+                        .build();
+                    seriesMeasureNames.add(tempMeasure);
+                    // 하단코드 불필요시 삭제필요
                     seriesDimensionNames.add(name + "-" + measure.getSummaryName());
-                    seriesDimensionCaptions.add(name + "-" + measure.getCaption());
-                    seriesMeasureNames.add(measure);
+                    seriesDimensionCaptions.add(name + "-" + measure.getSummaryName());
                 }
             }
             if (measures.size() == 1) {

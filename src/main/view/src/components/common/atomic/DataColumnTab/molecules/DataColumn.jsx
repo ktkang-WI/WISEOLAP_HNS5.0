@@ -149,16 +149,14 @@ const DataColumn = ({
     }
   };
 
-  const handleSeriesOptionClick = (e) => {
-    if (data.category === 'field') return;
-    const fieldId = data.fieldId;
-    openModal(DataColumnSeriesOptions, {
-      fieldId
-    });
-  };
   const buttonEventFunction = (e) => {
     if (data.category === 'field') {
       buttonEvent(data, openModal);
+    } else if (data.category === 'measure') {
+      const fieldId = data.fieldId;
+      openModal(DataColumnSeriesOptions, {
+        fieldId
+      });
     } else {
       buttonEvent(data, e);
     }
@@ -211,7 +209,6 @@ const DataColumn = ({
       {useButton &&
         <Button onClick={(e) => {
           // buttonEvent(data, e);
-          handleSeriesOptionClick(e);
           buttonEventFunction(e);
         }}>
           <IconImg src={buttonIcon}/>

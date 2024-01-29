@@ -64,7 +64,7 @@ export const getSeriesGeneralOption = (seriesOptions) => {
   const ignoreEmptyPoints =
    !seriesOptions ? false : seriesOptions[0].general.ignoreEmptyPoints;
   const pointerMarker =
-   !seriesOptions ? false : seriesOptions[0].general.pointerMarker;
+   !seriesOptions ? true : seriesOptions[0].general.pointerMarker;
   const reverseView =
    !seriesOptions ? false : seriesOptions[0].general.reverseView;
 

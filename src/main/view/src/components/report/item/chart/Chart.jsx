@@ -275,16 +275,27 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   );
 };
 
-/*
+
+const getDataField = (state) => {
+  if (state.adHocOption) {
+    return state.adHocOption.dataField;
+  };
+  return state.item.meta.dataField;
+};
+
 const propsComparator = (prev, next) => {
+  const prevDataField = getDataField(prev);
+  const nextDataField = getDataField(next);
+
+  const seriesOptionsComparator =
+    _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
+
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
-  _.isEqual(prev.item.meta.dataField.seriesOptions,
-      next.item.meta.dataField.seriesOptions) &&
+      seriesOptionsComparator &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
-*/
 
-// export default React.memo(Chart, propsComparator);
-export default React.memo(Chart);
+
+export default React.memo(Chart, propsComparator);
