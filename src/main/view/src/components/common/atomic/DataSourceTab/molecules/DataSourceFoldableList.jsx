@@ -81,7 +81,7 @@ const DataSourceFoldableList = ({dataset}) => {
 
   const data = dataset? _.cloneDeep(dataset.fields) : [];
 
-  if (data.length > 0) {
+  if (data.length > 0 && dataset.datasetType != 'CUBE') {
     data[0].expanded = true;
   }
 
