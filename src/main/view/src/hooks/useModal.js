@@ -17,10 +17,10 @@ export default function useModal() {
 
   /**
    * 모달을 닫습니다.
-   * @param {*} index 모달의 index
+   * @param {*} id 모달의 id
    */
-  const closeModal = (index) => {
-    dispatch(modalActions.close(index));
+  const closeModal = (id) => {
+    dispatch(modalActions.close(id));
   };
 
   /**

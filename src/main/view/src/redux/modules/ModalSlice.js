@@ -1,18 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  openedModals: []
+  openedModals: [],
+  modalNumber: 0
 };
 
 const reducers = {
   open(state, actions) {
     const Component = actions.payload.Component;
     const props = actions.payload.props;
-    state.openedModals = [...state.openedModals, {Component, props}];
+    const modalNumber = state.modalNumber++;
+    state.openedModals = [...state.openedModals, {
+      Component, props, id: modalNumber
+    }];
   },
   close(state, actions) {
     state.openedModals = state.openedModals.filter((modal, index) => {
-      return index !== actions.payload;
+      return modal.id != actions.payload;
     });
   }
 };
