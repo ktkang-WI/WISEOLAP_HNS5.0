@@ -1,54 +1,71 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-import {createContext, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Mode} from '../data/AuthorityData';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
-import AuthorityDataGrid
-  from 'components/config/atoms/authority/AuthorityDataGrid';
 import DatasourceViewList
   from 'components/config/molecules/authority/DatasourceViewList';
+import AuthorityDataDimension
+  from 'components/config/atoms/authority/AuthorityDataDimension';
+import AuthorityDataMember from
+  'components/config/atoms/authority/AuthorityDataMember';
+import AuthorityDataCube from
+  'components/config/atoms/authority/AuthorityDataCube';
 
-export const AuthorityDataContext = createContext();
+import models from 'models';
 
-const DataAuthority = ({data}) => {
+const DataAuthority = ({auth}) => {
   const [row, setRow] = useState({});
+  const [dsView, setDsView] = useState({});
+  const [dsViewCube, setDsViewCube] = useState([]);
 
-  const context = {
-    state: {
-      row: [row, setRow]
-    }
-  };
+  useEffect(() => {
+    models.Authority.getDsViewCube()
+        .then((response) => {
+          setDsViewCube(response.data.data);
+        });
+  }, []);
 
   return (
-    <AuthorityDataContext.Provider
-      value={context}>
-      <Wrapper display='flex' direction='row'>
-        <Wrapper size="650px">
-          {
-            data.mode === Mode.GROUPDATA ?
-            <GroupList/> :
-            <UserList/>
-          }
+    <Wrapper display='flex' direction='row'>
+      <Wrapper padding='10px'>
+        {
+          auth.mode === Mode.GROUPDATA ?
+          <GroupList
+            setRow={setRow}
+          /> :
+          <UserList
+            setRow={setRow}
+          />
+        }
+      </Wrapper>
+      <Wrapper size="2" display='flex' direction='column'>
+        <Wrapper height="55%" padding='10px'>
+          <DatasourceViewList
+            row={row}
+            setDsView={setDsView}
+          />
         </Wrapper>
-        <Wrapper size="2" display='flex' direction='column'>
-          <Wrapper height="50%">
-            <DatasourceViewList/>
+        <Wrapper
+          height="45%"
+          size="3"
+          display='flex'
+          direction='row'
+          padding='10px'
+        >
+          <Wrapper>
+            <AuthorityDataCube dsView={dsView} dsViewCube={dsViewCube}/>
           </Wrapper>
-          <Wrapper height="50%" size="3" display='flex' direction='row'>
-            <Wrapper>
-              <AuthorityDataGrid/>
-            </Wrapper>
-            <Wrapper>
-              <AuthorityDataGrid/>
-            </Wrapper>
-            <Wrapper>
-              <AuthorityDataGrid/>
-            </Wrapper>
+          <Wrapper>
+            <AuthorityDataDimension dsView={dsView} dsViewCube={dsViewCube}/>
+          </Wrapper>
+          <Wrapper>
+            <AuthorityDataMember dsView={dsView} dsViewCube={dsViewCube}/>
           </Wrapper>
         </Wrapper>
       </Wrapper>
-    </AuthorityDataContext.Provider>
+    </Wrapper>
   );
 };
 

@@ -21,13 +21,14 @@ export const authData = [
   {
     mode: Mode.GROUPDATA,
     title: localizedString.groupData,
-    component: ({data}) => <DataAuthority data={data}/>,
+    // component: ({data}) => <DataAuthority data={data}/>,
+    component: (auth) => <DataAuthority auth={auth}/>,
     data: groupData
   },
   {
     mode: Mode.GROUPREPORT,
     title: localizedString.groupReport,
-    component: <ReportAuthority/>
+    component: (auth) => <ReportAuthority auth={auth}/>
   },
   {
     mode: Mode.GROUPDATASET,
@@ -43,13 +44,13 @@ export const authData = [
   {
     mode: Mode.USERDATA,
     title: localizedString.userData,
-    component: ({data}) => <DataAuthority data={data}/>,
+    component: (auth) => <DataAuthority auth={auth}/>,
     data: userData
   },
   {
     mode: Mode.USERREPORT,
     title: localizedString.userReport,
-    component: <ReportAuthority/>
+    component: (auth) => <ReportAuthority auth={auth}/>
   },
   {
     mode: Mode.USERDATASET,

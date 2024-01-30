@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class DatasetDsDTO {
   int dsId;
+  int dsViewId;
   String dsViewNm;
   String dsNm;
   String dbmsType;

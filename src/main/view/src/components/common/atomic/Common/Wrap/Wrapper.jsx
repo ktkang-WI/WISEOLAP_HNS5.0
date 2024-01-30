@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   flex: 0 0 ${(props)=>props.size ? props.size : 1};
   justify-content: ${(props)=>props.center ? props.center : 'start'};
   align-items: ${(props)=>props.center ? props.center : 'start'};
+  padding: ${(props)=>props.padding ? props.padding : '0px'};
 `;
 
 export default Wrapper;

@@ -69,6 +69,7 @@ public class DataSetDsDsviewCubeService {
       if (!isDsViewContained) {
         dsView = DatasetDsDsviewCubeDTO.builder()
         .dsId(datasetDsDsviewCubeData.getDsId())
+        .dsViewId(datasetDsDsviewCubeData.getDsViewId())
         .dsViewNm(datasetDsDsviewCubeData.getDsViewNm())
         .dbmsType(datasetDsDsviewCubeData.getDbmsType())
         .ownerNm(datasetDsDsviewCubeData.getOwnerNm())

@@ -13,6 +13,11 @@ export const getDs = async () => {
   return res;
 };
 
+export const getDsViewCube = async () => {
+  const res = await axios.get('/dataset/ds/dsview-cube');
+  return res;
+};
+
 // 그룹
 export const getGroups = async () => {
   const res = await axios.get(accountPath + '/group');
@@ -22,6 +27,7 @@ export const getGroups = async () => {
 // 사용자
 export const getUsers = async () => {
   const res = await axios.get(accountPath + '/user');
+  console.log(res.data.data);
   return res;
 };
 
@@ -35,6 +41,7 @@ export const getGroupData = async () => {
 // 사용자 데이터
 export const getUserData = async () => {
   const res = await axios.get(accountPath + '/user/data');
+  console.log(res.data.data);
   return res;
 };
 

@@ -75,15 +75,19 @@ const Authority = () => {
 
     authData.forEach((item) => {
       if (item.title === panelTitle) {
-        setAuth(item);
         item.data().then((res) => {
           if (res.data) {
+            setAuth(item);
             setData(res.data);
           }
         });
         return;
       }
     });
+  }, [auth, data]);
+
+  const renderItemComponent = useCallback(() => {
+    return auth.component(auth);
   }, [auth]);
 
   return (
@@ -103,7 +107,7 @@ const Authority = () => {
             dataSource={authData}
             animationEnabled={false}
             swipeEnabled={false}
-            itemComponent={auth.component}
+            itemComponent={renderItemComponent}
             onTitleClick={handleTabPanelItem}
           >
           </TabPanel>
