@@ -36,7 +36,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
-  const detailedData = dataset.detailedData;
+  const detailedData = dataset?.detailedData || [];
 
   useEffect(() => {
     const item = ref.current;
