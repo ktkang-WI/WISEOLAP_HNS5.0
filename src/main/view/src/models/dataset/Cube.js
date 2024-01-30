@@ -1,35 +1,27 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
+const path = '/dataset';
 
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/dataset';
-
-
-export const getAll = async (userId) => {
-  const res = await axios.post(path + '/cubes', {
+export const getAll = (userId) => {
+  return axios.post(path + '/cubes', {
     userId: userId
   });
-
-  return res.data;
 };
 
-export const getByCubeId = async (userId, cubeId) => {
-  const res = await axios.post(path + '/cube', {
+export const getByCubeId = (userId, cubeId) => {
+  return axios.post(path + '/cube', {
     cubeId: cubeId,
     userId: userId
   });
-
-  return res.data;
 };
 
-export const getByDsViewId = async (userId, dsViewId) => {
-  const res = await axios.post(path + '/cubes', {
+export const getByDsViewId = (userId, dsViewId) => {
+  return axios.post(path + '/cubes', {
     dsViewId: dsViewId,
     userId: userId
   });
+};
 
-  return res.data;
+export const getCubeInfo = (param) => {
+  return axios.post(path + '/cube-column', param);
 };

@@ -3,6 +3,8 @@ import {styled} from 'styled-components';
 import CreateRibbonBtns from '../molecules/CreateRibbonBtns';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -16,7 +18,8 @@ const StyledRibbon = styled.div`
 `;
 
 const Ribbon = () => {
-  const focustedItem = useSelector(selectCurrentItem);
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  const focusedItem = useSelector(selectCurrentItem);
 
   return (
     <StyledRibbon>
@@ -32,17 +35,20 @@ const Ribbon = () => {
         ]}
       />
       <CreateRibbonBtns
-        items={[
-          'AddContainer',
-          'AddChart',
-          'AddPivotGrid',
-          'AddGrid',
-          'AddCustomChart'
-        ]}
+        items={
+          designerMode === DesignerMode['AD_HOC'] ?
+          ['AdHocLayout'] : [
+            'AddContainer',
+            'AddChart',
+            'AddPivotGrid',
+            'AddGrid',
+            'AddCustomChart'
+          ]}
       />
       <CreateRibbonBtns
-        targetItem={focustedItem}
-        items={!focustedItem ? [] : focustedItem.mart.ribbonItems}
+        targetItem={focusedItem}
+        items={!focusedItem || designerMode === DesignerMode['EXCEL'] ?
+         [] : focusedItem.mart.ribbonItems}
       />
       <CreateRibbonBtns
         items={[

@@ -9,6 +9,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 
 public class SqlQueryGenerator implements QueryGenerator {
+
     @Override
     public String getQuery(DataAggregation dataAggreagtion) {
         String query = dataAggreagtion.getDataset().getQuery();
@@ -72,4 +73,5 @@ public class SqlQueryGenerator implements QueryGenerator {
         return values.size() > index && StringUtil.isNotBlank(values.get(index)) &&
                 !values.get(index).equals("[All]");
     }
+
 }

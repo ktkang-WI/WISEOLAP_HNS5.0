@@ -19,7 +19,18 @@ public final class ListParameterUtils {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         List<Parameter> params = new ArrayList<Parameter>();
         for (LinkageValue value : listParameterDTO.getLinkageValues()) {
-            Parameter param = new Parameter(0, value.getName(), null, value.getOperation(), null, value.getExceptionValue(), value.getValue());
+            Parameter param = new Parameter(0, value.getName(),
+                     null,
+                     value.getOperation(),
+                     null,
+                     value.getExceptionValue(),
+                     value.getValue(),
+                     null,
+                     null,
+                     null,
+                     null,
+                     null
+                     );
             params.add(param);
         }
 

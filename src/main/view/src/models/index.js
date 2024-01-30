@@ -9,6 +9,8 @@ import * as Preferences from './config/preferences/Preferences';
 import * as UserGroupManagement
   from './config/userGroupManagement/UserGroupManagement';
 import * as Authority from './config/authority/Authority';
+import * as File from './upload/File';
+
 export default {
   DataSource,
   Cube,
@@ -19,5 +21,6 @@ export default {
   Report,
   Preferences,
   UserGroupManagement,
-  Authority
+  Authority,
+  File
 };

@@ -14,7 +14,7 @@ const SelectTableModal = ({dsId, onSubmit, ...props}) => {
 
   useEffect(() => {
     models.DBInfo.dbTables(dsId)
-        .then((data) => {
+        .then(({data}) => {
           setTables(data);
         });
   }, []);

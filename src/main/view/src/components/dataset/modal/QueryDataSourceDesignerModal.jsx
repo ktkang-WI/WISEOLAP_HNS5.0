@@ -1,9 +1,9 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
+// import meaImg from 'assets/image/icon/dataSource/measure.png';
+// import dimImg from 'assets/image/icon/dataSource/dimension.png';
+// import folderImg from 'assets/image/icon/report/folder_load.png';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';
@@ -25,6 +25,7 @@ import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetType from '../utils/DatasetType';
+import {makeFieldIcon} from '../utils/DatasetUtil';
 
 const theme = getTheme();
 
@@ -45,7 +46,7 @@ const RowWrapper = styled.div`
 `;
 
 const QueryDataSourceDesignerModal = ({
-  onSubmit, selectedDataSource, orgDataset, query='', ...props
+  onSubmit, selectedDataSource, orgDataset, query='', onClose, ...props
 }) => {
   const defaultDataset = {
     datasetNm: localizedString.defaultDatasetName,
@@ -55,7 +56,7 @@ const QueryDataSourceDesignerModal = ({
   };
 
   // hook
-  const {openModal, alert} = useModal();
+  const {openModal, alert, confirm} = useModal();
   const dispatch = useDispatch();
 
   // actions
@@ -91,12 +92,6 @@ const QueryDataSourceDesignerModal = ({
     onClick: () => {
       const query = queryEditorRef.current.editor.getValue();
       const paramNames = ParamUtils.getParameterNamesInQuery(query) || [];
-      let order = paramInfo.reduce((acc, param) => {
-        if (acc <= param.order) {
-          acc = param.order + 1;
-        }
-        return acc;
-      }, 1);
 
       // 기존 데이터 필터링
       const newParamInfo = paramInfo.filter((info) => {
@@ -107,7 +102,14 @@ const QueryDataSourceDesignerModal = ({
           return true;
         }
         return false;
-      }, []);
+      });
+
+      let order = newParamInfo.reduce((acc, param) => {
+        if (acc <= param.order) {
+          acc = param.order + 1;
+        }
+        return acc;
+      }, 1);
 
       // 기존에 없던 필터
       for (name of paramNames) {
@@ -159,18 +161,12 @@ const QueryDataSourceDesignerModal = ({
 
   return (
     <Modal
-      onSubmit={async () => {
+      onSubmit={() => {
         const query = queryEditorRef.current.editor.getValue();
         const dupleCheck = datasets.find((ds) =>
           ds.datasetNm == dataset.datasetNm && ds.datasetId != datasetId);
 
-        if (!query || query == '') { // 쿼리 빈값 확인.
-          alert('쿼리를 입력해 주세요.');
-        } else if (!dataset.datasetNm || dataset.datasetNm == '') {
-          alert('데이터 집합 명을 입력해 주세요.');
-        } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
-          alert('중복된 데이터 집합 명입니다. 다시 입력해 주세요.');
-        } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
+        const setDataset = async () => {
           const parameters = {
             informations: paramInfo,
             values: {}
@@ -178,27 +174,12 @@ const QueryDataSourceDesignerModal = ({
 
           const response = await models.DBInfo.
               getDataByQueryMart(selectedDataSource.dsId, query, parameters);
-          if (!response.rowData[0].error) {
-            let tempFields = response.metaData;
-
-            tempFields = tempFields.map((field) => {
-              const isMea = field.columnTypeName == 'decimal';
-              return {
-                icon: isMea ? meaImg : dimImg,
-                parentId: '0',
-                uniqueName: field.columnName,
-                name: field.columnName,
-                type: isMea ? 'MEA' : 'DIM',
-                ...field
-              };
-            });
-
-            tempFields.unshift({
-              name: localizedString.defaultDatasetName,
-              type: 'FLD',
-              uniqueName: '0',
-              icon: folderImg
-            });
+          if (!response.data.rowData[0]?.error) {
+            let tempFields = response.data.metaData;
+            tempFields = makeFieldIcon(tempFields);
+            if (dataset.customData) {
+              tempFields = [...tempFields, ...dataset.customData];
+            }
 
             dispatch(updateDataset({
               reportId: selectedReportId,
@@ -216,10 +197,24 @@ const QueryDataSourceDesignerModal = ({
               informations: paramInfo
             }));
 
-            return;
+            onClose();
           } else {
             alert('쿼리가 부적절 합니다. 다시 입력해 주세요.');
           }
+        };
+
+        if (!query || query == '') { // 쿼리 빈값 확인.
+          alert('쿼리를 입력해 주세요.');
+        } else if (!dataset.datasetNm || dataset.datasetNm == '') {
+          alert('데이터 집합 명을 입력해 주세요.');
+        } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
+          alert('중복된 데이터 집합 명입니다. 다시 입력해 주세요.');
+        } else if (!query.toLowerCase().includes('group by')) {
+          confirm(localizedString.cofirmGroupBy, () => {
+            setDataset();
+          });
+        } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
+          setDataset();
         }
         return true;
       }}

@@ -1,0 +1,38 @@
+
+on:
+  workflow_dispatch:
+
+jobs:
+  my_job:
+    env:
+      CI: ''
+    name: Deploy Refactoring Project
+    runs-on: ubuntu-latest
+    steps:
+      # repositoy 체크아웃
+      - uses: actions/checkout@v2
+      
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
+      - name: Build Refactoring Project
+        run: |
+          export NODE_OPTIONS="--max_old_space_size=8192"
+          chmod -R 777 ./
+          ./mvnw clean install
+      - name: Undeploy Application
+        run: curl -u 'wise:wise1012' "http://intelligence.wise.co.kr:58080/manager/text/undeploy?path=/editds"
+
+      - name: Deploy Application
+        run: |
+          cd target
+          mv MarketingPlatForm-0.0.1-SNAPSHOT.war editds.war
+          curl -u 'wise:wise1012' -X PUT --upload-file editds.war "http://intelligence.wise.co.kr:58080/manager/text/deploy?path=/editds"

@@ -2,7 +2,7 @@ import Footer from '../molecules/Footer';
 import Header from '../molecules/Header';
 import Draggable from 'react-draggable';
 import Content from '../atoms/Content';
-import Overlay from '../atoms/Overlay';
+import Overlay from '../../Common/Wrap/Overlay';
 import Inner from '../atoms/Inner';
 import {useState} from 'react';
 import {motion} from 'framer-motion';
@@ -17,6 +17,7 @@ const Modal = ({
   usePage=false,
   width='50%', height='50%',
   modalTitle='',
+  buttons,
   ...props
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +31,7 @@ const Modal = ({
 
   return (
     <motion.div
-      initial={{opacity: 0, zIndex: 30}}
+      initial={{opacity: 0, zIndex: 1600}}
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       style={{position: 'fixed'}}
@@ -66,6 +67,7 @@ const Modal = ({
                   }}
                   onSubmit={onSubmit}
                   onClose={onClose}
+                  buttons={buttons}
                 />
               </Content>
             </motion.div>

@@ -6,9 +6,14 @@ import RibbonBtnWrap from '../atom/RibbonBtnWrap';
 import Popover from '../../Popover/organism/Popover';
 import ItemManager from 'components/report/item/util/ItemManager';
 import RibbonPopoverBtn from '../atom/RIbbonPopoverBtn';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {DesignerMode} from 'components/config/configType';
 
 const CreateRibbonBtns = ({items, targetItem}) => {
   const eventManager = ItemManager.useCustomEvent();
+  const ribbonDefault = ribbonDefaultElement();
+  const reportType = selectCurrentDesignerMode(store.getState());
 
   const getRibbonItem = (item) => {
     if (item.type === 'RibbonButton' && !item.usePopover) {
@@ -21,7 +26,10 @@ const CreateRibbonBtns = ({items, targetItem}) => {
       return (<AddOnlyImageBtn item={item}/>);
     } else if (item.type === 'CommonButton') {
       return (<AddCommonBtn item={item}/>);
-    } else if (item.type === 'PopoverButton') {
+    } else if (item.id !== 'adHoc_layout' && item.type === 'PopoverButton') {
+      return (<RibbonPopoverBtn item={item}/>);
+    } else if (reportType === DesignerMode['AD_HOC'] &&
+      item.id === 'adHoc_layout') {
       return (<RibbonPopoverBtn item={item}/>);
     }
   };
@@ -54,11 +62,20 @@ const CreateRibbonBtns = ({items, targetItem}) => {
     });
   };
 
-  const ribbonDefaultItems = ribbonDefaultElement();
-
+  const ribbonDefaultItems = () => {
+    const reportType = selectCurrentDesignerMode(store.getState());
+    let returnDefault;
+    if (reportType === 'Spread' || reportType === 'Excel') {
+      const {Dataset, QuerySearch} = ribbonDefault;
+      returnDefault = {Dataset, QuerySearch};
+    } else {
+      returnDefault = ribbonDefault;
+    }
+    return returnDefault;
+  };
   return (
     <RibbonBtnWrap>
-      {itemIterator(ribbonDefaultItems, items)}
+      {itemIterator(ribbonDefaultItems(), items)}
     </RibbonBtnWrap>
   );
 };

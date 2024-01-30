@@ -2,9 +2,10 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItems
+  selectCurrentItems, selectRootItem
 } from 'redux/selector/ItemSelector';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
 import _ from 'lodash';
@@ -14,11 +15,22 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {DesignerMode} from 'components/config/configType';
+import useModal from './useModal';
+import localizedString from 'config/localization';
+import useSpread from './useSpread';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {alert} = useModal();
+  const {bindData} = useSpread();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
   /**
@@ -26,9 +38,10 @@ const useQueryExecute = () => {
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   * @param {JSON} filter 아이템에 적용할 필터
    * @return {JSON} parameter
    */
-  const generateParameter = (item, datasets, parameters) => {
+  const generateParameter = async (item, datasets, parameters, filter={}) => {
     const param = {};
 
     // TODO: 로그인 추가 후 유저 아이디 수정
@@ -40,12 +53,46 @@ const useQueryExecute = () => {
         (dataset) => item.meta.dataField.datasetId == dataset.datasetId
     );
 
-    param.dataset.dsId = orgDataset.dataSrcId;
-    param.dataset.dsType = orgDataset.datasetType;
-    param.dataset.query = orgDataset.datasetQuery;
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
 
     const parameter = ParamUtils.
         generateParameterForQueryExecute(parameters);
+
+    param.filter = JSON.stringify(filter);
+
+    // 주제영역 마스터 필터 있는 경우
+    // TODO: 추후 관계 검사 필요
+    if (orgDataset.datasetType == 'CUBE' && !_.isEmpty(filter)) {
+      for (const uniqueName in filter) {
+        if (filter[uniqueName]) {
+          const cubeInfoParam = {
+            cubeId: orgDataset.cubeId,
+            userId: 'admin', // 추후 userId 받아서
+            uniqueName: uniqueName
+          };
+
+          const response = await models.Cube.getCubeInfo(cubeInfoParam);
+
+          parameter.push(ParamUtils.filterToParameter(filter[uniqueName],
+              response.data, orgDataset.dsId));
+        }
+      };
+
+      param.filter = '{}';
+    }
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
@@ -56,47 +103,245 @@ const useQueryExecute = () => {
   };
 
   /**
+   * 비정형 조회에 필요한 파라미터 생성
+   * @param {JSON} rootItem State(item) (itemState 최상단)
+   * @param {JSON} datasets 조회할 비정형 보고서의 datasets
+   * @param {JSON} parameters 조회할 비정형 보고서의 parameters
+   * @return {JSON} parameter
+   */
+  const generateAdHocParamter = (rootItem, datasets, parameters) => {
+    const param = {};
+
+    // TODO: 로그인 추가 후 유저 아이디 수정
+    param.userId = 'admin';
+    param.dataset = {};
+
+    // dataset
+    const orgDataset = datasets.find(
+        (ds) => rootItem.adHocOption.dataField.datasetId ==
+        ds.datasetId
+    );
+
+    switch (orgDataset.datasetType) {
+      case 'CUBE':
+        param.dataset.dsId = orgDataset.dsId;
+        param.dataset.dsViewId = orgDataset.dsViewId;
+        param.dataset.cubeId = orgDataset.cubeId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+      default:
+        param.dataset.dsId = orgDataset.dataSrcId;
+        param.dataset.dsType = orgDataset.datasetType;
+        param.dataset.query = orgDataset.datasetQuery;
+        break;
+    }
+
+    const parameter = ParamUtils.
+        generateParameterForQueryExecute(parameters);
+
+    param.parameter = JSON.stringify(parameter);
+    param.dataset = JSON.stringify(param.dataset);
+    param.sortByItem =
+    JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
+    ItemManager.generateAdHocParameter(rootItem, param);
+
+    return param;
+  };
+
+  /**
+   * 매개변수로 전달받은 모든 비정형 보고서 아이템 조회
+   * @param {JSON} rootItem State(item) (itemState 최상단)
+   * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
+   * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   */
+  const executeAdHocItem = (rootItem, datasets, parameters) => {
+    try {
+      validateRequiredField(rootItem);
+      const cloneItem = _.cloneDeep(rootItem);
+      const chartItem = cloneItem.items[0];
+      const pivotItem = cloneItem.items[1];
+      const param = generateAdHocParamter(cloneItem, datasets, parameters);
+      const reportId = selectCurrentReportId(store.getState());
+
+      models.Item.getAdHocItemData(param).then((response) => {
+        if (response.status != 200) {
+          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
+          return;
+        }
+        if (response.data['chart']) {
+          chartItem.mart.init = true;
+          chartItem.mart.data = response.data['chart'];
+          ItemManager.generateItem(chartItem, cloneItem);
+          dispatch(updateItem({reportId, item: chartItem}));
+        }
+        if (response.data['pivot']) {
+          pivotItem.mart.init = true;
+          pivotItem.mart.data = response.data['pivot'];
+          ItemManager.generateItem(pivotItem, cloneItem);
+          dispatch(updateItem({reportId, item: pivotItem}));
+        }
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  /**
    * 매개변수로 전달받은 item만 조회
    * @param {JSON} item 조회할 아이템
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
+   * @param {JSON} filter 아이템에 적용할 필터
    */
-  const executeItem = (item, datasets, parameters) => {
-    const tempItem = _.cloneDeep(item);
-    const param = generateParameter(tempItem, datasets, parameters);
+  const executeItem = async (item, datasets, parameters, filter) => {
+    try {
+      validateRequiredField(item);
+      const tempItem = _.cloneDeep(item);
+      const param =
+          await generateParameter(tempItem, datasets, parameters, filter);
+
+      const reportId = selectCurrentReportId(store.getState());
+
+      // TODO: 추후 PivotMatrix 적용할 때 해제
+      // if (item.type == ItemType.PIVOT_GRID) {
+      //   tempItem.mart.init = true;
+      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+
+      //   dispatch(updateItem({reportId, item: tempItem}));
+      // } else {
+
+      models.Item.getItemData(param).then((response) => {
+        if (response.status != 200) {
+          return;
+        }
+
+        tempItem.mart.init = true;
+        tempItem.mart.data = response.data;
+        tempItem.mart.currentFilter = filter || {};
+
+        ItemManager.generateItem(tempItem);
+
+        dispatch(updateItem({reportId, item: tempItem}));
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  /**
+   * 마스터 필터를 적용합니다.
+   * @param {*} targetItem 마스터 필터를 사용한 아이템
+   * @param {*} filter 마스터 필터 적용 대상 데이터 목록
+   */
+  const filterItems = (targetItem, filter) => {
     const reportId = selectCurrentReportId(store.getState());
+    const items = selectCurrentItems(store.getState());
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+    const meta = targetItem.meta;
 
-    // TODO: 추후 PivotMatrix 적용할 때 해제
-    // if (item.type == ItemType.PIVOT_GRID) {
-    //   tempItem.mart.init = true;
-    //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
+    items.forEach((item) => {
+      if (!item.mart || !item.mart.init) return;
 
-    //   dispatch(updateItem({reportId, item: tempItem}));
-    // } else {
-    models.Item.getItemData(param, (response) => {
-      if (response.status != 200) {
-        return;
+      if (targetItem.id != item.id) {
+        if (meta.interactiveOption?.crossDataSource ||
+            item.meta.dataField.datasetId == meta.dataField.datasetId) {
+          if (JSON.stringify(item.mart.currentFilter) !=
+              JSON.stringify(filter)) {
+            // 마스터 필터 무시 켜져 있는 아이템의 경우 필터 정보만 저장
+            const tempItem = {
+              ...item,
+              mart: {
+                ...item.mart,
+                filter: filter
+              }
+            };
+
+            if (item.meta.interactiveOption?.ignoreMasterFilter) {
+              dispatch(updateItem({reportId, item: tempItem}));
+            } else {
+              executeItem(tempItem, datasets, parameters, filter);
+            }
+          }
+        }
       }
-
-      tempItem.mart.init = true;
-      tempItem.mart.data = response.data;
-
-      ItemManager.generateItem(tempItem);
-
-      dispatch(updateItem({reportId, item: tempItem}));
     });
-    // }
+  };
+
+  /**
+   * 단일 아이템에 마스터 필터를 겁니다.
+   * @param {*} item
+   * @param {*} filter
+   */
+  const filterItem = (item, filter) => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+
+    if (item && item.mart?.init &&
+      JSON.stringify(item.mart.currentFilter) != JSON.stringify(filter)) {
+      executeItem(item, datasets, parameters, filter);
+    } else {
+      const reportId = selectCurrentReportId(store.getState());
+      dispatch(updateItem({reportId, item: item}));
+    }
+  };
+
+  /**
+   * targetItem을 제외한 모든 아이템의 마스터 필터를 제거합니다.
+   * @param {*} targetItem
+   */
+  const clearAllFilter = (targetItem) => {
+    const reportId = selectCurrentReportId(store.getState());
+    const items = selectCurrentItems(store.getState());
+    const datasets = selectCurrentDatasets(store.getState());
+    const parameters = selectRootParameter(store.getState());
+    const filter = {};
+
+    items.forEach((item) => {
+      if (!item.mart || !item.mart.init) return;
+      if (targetItem.id != item.id) {
+        const tempItem = {
+          ...item,
+          mart: {
+            ...item.mart,
+            filter: filter
+          }
+        };
+
+        // 현재 적용된 필터가 있는 경우 제거
+        if (JSON.stringify(item.mart.currentFilter) != '{}') {
+          // 마스터 필터 무시 켜져 있는 아이템의 경우 필터 정보만 저장
+          executeItem(tempItem, datasets, parameters, filter);
+        } else {
+          // 현재 적용된 필터가 없는 경우 filter 값 업데이트
+          dispatch(updateItem({reportId, item: tempItem}));
+        }
+      }
+    });
   };
 
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    */
   const executeItems = () => {
-    const items = selectCurrentItems(store.getState());
+    const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
 
-    items.map((item) => executeItem(item, datasets, parameters));
+    if (datasets.length === 0) {
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
+    };
+
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      rootItem.items.map((item) => executeItem(item, datasets, parameters));
+    }
+
+    if (designerMode === DesignerMode['AD_HOC']) {
+      executeAdHocItem(rootItem, datasets, parameters);
+    }
+    // items.forEach((item) => executeItem(item, datasets, parameters));
   };
 
   /**
@@ -145,8 +390,8 @@ const useQueryExecute = () => {
         });
       }
 
-      const values = await models.Parameter.getListItems(param, linkageValues);
-
+      const res = await models.Parameter.getListItems(param, linkageValues);
+      const values = res.data;
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }
@@ -183,7 +428,8 @@ const useQueryExecute = () => {
   };
 
   const executeParameterDefaultValueQuery = async (param) => {
-    return await models.Parameter.getDefaultValue(param);
+    const res = await models.Parameter.getDefaultValue(param);
+    return res.data;
   };
 
   const executeParameters = () => {
@@ -224,7 +470,8 @@ const useQueryExecute = () => {
             const defaultValue = [];
 
             param.calendarPeriodBase.map((base, i) => {
-              const value = param.calendarPeriodValue[i];
+              const value = param.calendarPeriodValue ?
+                param.calendarPeriodValue[i] : 0;
               const date = ParamUtils.getCalendarNowDefaultValue(base, value);
 
               defaultValue.push(
@@ -244,12 +491,74 @@ const useQueryExecute = () => {
     });
   };
 
+  const executeSpread = async () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    if (_.isEmpty(datasets)) {
+      alert(localizedString.dataSourceNotSelectedMsg); return;
+    }
+    const rootParameters = selectRootParameter(store.getState());
+    const bindingInfos = selectBindingInfos((store.getState()));
+    datasets.map(async (dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+       !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot); return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      const paramInfo = rootParameters.informations.filter((information) => {
+        if (information.dataset[0] === dataset.datasetId) {
+          return information;
+        }
+      });
+      let parameters = {
+        informations: [],
+        values: {}
+      };
+      if (!_.isEmpty(paramInfo)) {
+        parameters = paramInfo.map((information) => {
+          return {
+            informations: information,
+            values: rootParameters.values[information.name] || {}
+          };
+        });
+      }
+      const datas = await models.DBInfo.
+          getDataByQueryMart(dsId, query, parameters, 0);
+      bindData({dataset: dataset, datas: datas.data.rowData});
+    });
+  };
+
+  const validateRequiredField = (item) => {
+    let dataFieldOption;
+    let dataField;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      dataFieldOption = item.mart.dataFieldOption;
+      dataField = item.meta.dataField;
+    } else if (designerMode === DesignerMode['AD_HOC']) {
+      dataFieldOption = item.adHocOption.dataFieldOption;
+      dataField = item.adHocOption.dataField;
+    }
+    const dataFieldOptionKeys = Object.keys(dataFieldOption);
+    dataFieldOptionKeys.forEach((key) => {
+      const isRequired = dataFieldOption[key].required;
+      const isEmpty = dataField[key].length === 0;
+      if (isRequired && isEmpty) {
+        throw new Error(`${dataFieldOption[key].label}
+         ${localizedString.requiredFieldNotExist}`);
+      }
+    });
+  };
+
   return {
     generateParameter,
     executeItem,
     executeItems,
+    filterItem,
+    filterItems,
+    clearAllFilter,
     executeParameters,
-    executeLinkageFilter
+    executeLinkageFilter,
+    executeSpread
   };
 };
 

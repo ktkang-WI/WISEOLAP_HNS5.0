@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.wise.MarketingPlatForm.domain.adom.application.AService;
@@ -15,12 +14,12 @@ public class AController {
 
 	private AService AService;
 
-	@RequestMapping(value = {"/login.do"})
-    public void login(HttpServletRequest request, HttpServletResponse response, Model model){
-			String id = "admin";
-			String pwd = "Wise1012!@#$";
-			AService.login(id,pwd);
-    }
+//	@RequestMapping(value = {"/login.do"})
+//    public void login(HttpServletRequest request, HttpServletResponse response, Model model){
+//			String id = "admin";
+//			String pwd = "Wise1012!@#$";
+//			AService.login(id,pwd);
+//    }
     
 //	@RequestMapping(value = {"/logout.do"})
 //    public void logout(Long orderId){

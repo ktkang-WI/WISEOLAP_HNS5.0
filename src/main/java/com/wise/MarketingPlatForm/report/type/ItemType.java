@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ItemType {
-    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid");
+    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid"), PIE_CHART("pie"), AD_HOC("adHoc");
 
     private final String symbol;
 
@@ -19,7 +19,7 @@ public enum ItemType {
 
     /**
      * 문자열에 상응하는 ItemType 있는 경우 반환합니다.
-     * 
+     *
      * @param symbol
      * @return ItemType
      */
