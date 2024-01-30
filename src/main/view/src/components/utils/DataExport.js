@@ -56,7 +56,7 @@ const sortObject = (obj) => {
   keys = keys.sort();
 
   if (!keys) {
-    console.error('정렬 작업중 오류 발생 수정 필요 !!')
+    console.error('정렬 작업중 오류 발생 수정 필요 !!');
     return null;
   };
 
