@@ -14,7 +14,6 @@ const ImgWrapper = styled(Wrapper)`
 `;
 
 const LoadingPanel = () => {
-  console.log(store.getState());
   const jobQuantity = useSelector(selectJobQuantity);
 
   if (jobQuantity == 0) return <></>;
