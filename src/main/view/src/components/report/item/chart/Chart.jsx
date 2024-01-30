@@ -25,12 +25,12 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
-  // TODO: 임시용 코드
+  // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
   const {
     auxiliaryAxis,
