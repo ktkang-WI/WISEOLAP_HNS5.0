@@ -16,12 +16,12 @@ export const Mode = {
   USERDATASOURCE: 'USERDATASOURCE'
 };
 
-export const dataSource = [
+export const authData = [
   // 그룹
   {
     mode: Mode.GROUPDATA,
     title: localizedString.groupData,
-    component: <DataAuthority/>,
+    component: ({data}) => <DataAuthority data={data}/>,
     data: groupData
   },
   {
@@ -43,7 +43,7 @@ export const dataSource = [
   {
     mode: Mode.USERDATA,
     title: localizedString.userData,
-    component: <DataAuthority/>,
+    component: ({data}) => <DataAuthority data={data}/>,
     data: userData
   },
   {

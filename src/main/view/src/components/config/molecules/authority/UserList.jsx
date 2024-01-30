@@ -1,11 +1,11 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 // import models from 'models';
 import {useRef} from 'react';
-import {useContext} from 'react';
+// import {useContext} from 'react';
+// import {AuthorityContext} from '../Authority';
 
-const UserGroupList = () => {
-  const getContext = useContext(AuthorityContext);
-  const [data] = getContext.state.data;
+const UserList = ({data}) => {
+  // const getContext = useContext(AuthorityContext);
 
   console.log(data);
   // useEffect(() => {
@@ -34,14 +34,20 @@ const UserGroupList = () => {
     >
       <Selection mode="single" />
       <Column
-        dataField="grpNm"
-        caption="그룹 명"
+        dataField="userId"
+        caption="사용자 ID"
         dataType="varchar"
         format="currency"
       />
       <Column
-        dataField="grpDesc"
-        caption="설명"
+        dataField="userNm"
+        caption="사용자명"
+        dataType="varchar"
+        format="currency"
+      />
+      <Column
+        dataField="grpNm"
+        caption="그룹명"
         dataType="varchar"
         format="currency"
       />
@@ -49,4 +55,4 @@ const UserGroupList = () => {
   );
 };
 
-export default UserGroupList;
+export default UserList;

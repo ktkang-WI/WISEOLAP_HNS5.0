@@ -51,7 +51,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
       onClick: (e) => {
-        nav('config');
+        nav('config/general');
       }
     },
     // TODO: 임시용 입니다.

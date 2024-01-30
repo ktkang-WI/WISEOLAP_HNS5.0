@@ -12,8 +12,6 @@ export async function generalConfigure() {
   return {generalConfigure};
 }
 
-console.log(models);
-
 export async function userGroupManagement() {
   const userGroupManagement =
   await models.UserGroupManagement.getUserGroupManagement().then((res) => {

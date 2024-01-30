@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import {dataSource} from './data/AuthorityData';
+import {authData} from './data/AuthorityData';
 import {createContext, useCallback, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 
@@ -39,10 +39,10 @@ export const AuthorityContext = createContext();
 
 const Authority = () => {
   const btns = ['save'];
-  const [mode, setMode] = useState(dataSource[0].mode);
+  const [auth, setAuth] = useState(authData[0]);
   const groupData = useLoaderData().data;
 
-  const [data, setData] = useState(groupData[0]);
+  const [data, setData] = useState(groupData);
   const [report, setReport] = useState();
   const [dataset, setDataset] = useState();
   const [datasource, setDatasource] = useState();
@@ -70,25 +70,22 @@ const Authority = () => {
     );
   };
 
-  const TabPanelItem = useCallback(({data}) => {
-    return data.component;
-  }, []);
-
-  const handleTabPanelItem = ({itemData}) => {
+  const handleTabPanelItem = useCallback(({itemData}) => {
     const panelTitle = itemData.title;
 
-    dataSource.forEach((item) => {
+    authData.forEach((item) => {
       if (item.title === panelTitle) {
-        setMode(item.mode);
+        setAuth(item);
         item.data().then((res) => {
           if (res.data) {
+            console.log(res.data);
             setData(res.data);
           }
         });
         return;
       }
     });
-  };
+  }, [auth]);
 
   return (
     <AuthorityContext.Provider
@@ -96,7 +93,7 @@ const Authority = () => {
       <Wrapper display='flex' direction='column'>
         <Header>
           <NavBar>
-            {navBarItems(mode)}
+            {navBarItems(auth.mode)}
           </NavBar>
         </Header>
         <Content>
@@ -104,10 +101,10 @@ const Authority = () => {
             className='dx-theme-background-color'
             width='100%'
             height='100%'
-            dataSource={dataSource}
+            dataSource={authData}
             animationEnabled={false}
             swipeEnabled={false}
-            itemComponent={TabPanelItem}
+            itemComponent={auth.component}
             onTitleClick={handleTabPanelItem}
           >
           </TabPanel>
