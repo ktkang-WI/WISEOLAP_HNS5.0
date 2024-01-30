@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.sr.sysCode.dao.SysCodeDAO">
+
+  <sql id = "sc_clmn">
+    sys_cd,
+    cd_nm,
+    grp_cd,
+    upper_grp_cd,
+    use_yn,
+    st_ymd,
+    ed_ymd,
+    crt_by,
+    crt_dt,
+    udt_by,
+    udt_dt,
+    sort_by
+  </sql>
+
+<!-- Query -->
+
+  <select id="selectSysCodeList" resultType="SysCodeEntity" parameterType="SysCodeEntity">
+    SELECT
+      <include refid = "sc_clmn"></include>
+    FROM
+      CSR_SYS_CD_INFO
+  </select>
+
+  <select id="selectSysCodeByOne" resultType="SysCodeEntity" parameterType="Integer">
+    SELECT
+      <include refid = "sc_clmn"></include>
+    FROM
+      CSR_SYS_CD_INFO
+    WHERE 1 = 1
+      AND sys_cd = #{sys_cd}
+  </select>
+
+  <select id="insertSysCode" parameterType="SysCodeEntity">
+    INSERT INTO
+      CSR_SYS_CD_INFO ( <include refid = "sc_clmn"></include> )
+    VALUES
+      (#{sys_cd}, #{cd_nm}, #{grp_cd}, #{upper_grp_cd}, #{use_yn},
+       #{st_ymd}, #{ed_ymd}, #{crt_by}, #{crt_dt}, #{sort_by})
+  </select>
+
+  <select id="updateSysCode" parameterType="SysCodeEntity">
+    UPDATE
+      CSR_SYS_CD_INFO
+    SET
+      cd_nm = #{cd_nm},
+      st_ymd = #{st_ymd},
+      ed_ymd = #{ed_ymd},
+      udt_by = #{udt_by}, 
+      udt_dt = #{udt_dt},
+      sort_by = #{sort_by}
+    WHERE 1 = 1
+      AND sys_cd = #{sys_cd}
+  </select>
+
+  <select id="deleteSysCode" parameterType="java.util.List">
+    UPDATE
+      CSR_SYS_CD_INFO
+    SET
+      USE_YN = 'N'
+    WHERE 1 = 1
+      AND sys_cd in
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item.sys_cd}
+      </foreach>
+  ]]>
+
+<!-- Query End -->
+
+</mapper>
