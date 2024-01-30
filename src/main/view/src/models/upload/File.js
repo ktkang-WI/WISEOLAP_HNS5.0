@@ -13,3 +13,9 @@ export const uploadFile = (param) => {
 export const deleteFile = (param) => {
   return axios.post(path + '/delete', param);
 };
+
+export const importFile = (param) => {
+  return axios.post(path + '/import', param, {
+    responseType: 'arraybuffer'
+  });
+};

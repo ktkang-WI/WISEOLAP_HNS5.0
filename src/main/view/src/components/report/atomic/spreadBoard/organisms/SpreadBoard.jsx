@@ -19,8 +19,7 @@ const SpreadBoard = () => {
   useEffect(() => {
     createDesigner({
       config: config,
-      reportId: 0,
-      prevDesigner: {}
+      reportId: 0
     });
     dispatch(spreadActions.setConfig(config));
   }, []);

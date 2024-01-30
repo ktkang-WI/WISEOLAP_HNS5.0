@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.fileUpload.service;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import javax.servlet.http.HttpServletRequest;
 import com.wise.MarketingPlatForm.global.util.WebFileUtils;
@@ -36,5 +37,17 @@ public class FileUploadService {
 		} catch (Exception e) {
         	e.printStackTrace();
         } 
+	}
+	
+	public byte[] fileImport(HttpServletRequest request, String fileName) {
+		byte[] fileByte = null;
+		try {
+			File file = WebFileUtils.getWebFolder(request, false, "UploadFiles", fileName);
+			Path filePath = file.toPath();
+			fileByte = Files.readAllBytes(filePath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return fileByte;
 	}
 }

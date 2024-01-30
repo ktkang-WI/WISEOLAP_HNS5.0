@@ -5,7 +5,7 @@ const useFile = () => {
    * @param {Blob} file
    * @param {Object} param
    */
-  const fileUpload = async (file, param) => {
+  const uploadFile = async (file, param) => {
     try {
       const newParam = new Blob([JSON.stringify(param)],
           {type: 'application/json'});
@@ -21,7 +21,7 @@ const useFile = () => {
     }
   };
 
-  const fileDelete = async (param) => {
+  const deleteFile = async (param) => {
     try {
       const response = await models.File.deleteFile(param);
       console.log('File delete successfully:', response.data);
@@ -30,9 +30,19 @@ const useFile = () => {
     }
   };
 
+  const importFile = async (param) => {
+    try {
+      const response = await models.File.importFile(param);
+      return response;
+    } catch (error) {
+      console.error('Error import file:', error);
+    }
+  };
+
   return {
-    fileUpload,
-    fileDelete
+    uploadFile,
+    deleteFile,
+    importFile
   };
 };
 

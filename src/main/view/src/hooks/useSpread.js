@@ -1,3 +1,5 @@
+import {createColumnsAndRows, deleteTables, generateColumns}
+  from 'components/report/atomic/spreadBoard/util/spreadUtil';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
@@ -7,13 +9,6 @@ import {selectBindingInfos,
   selectExcelConfig,
   selectExcelIO,
   selectSheets} from 'redux/selector/SpreadSelector';
-import useModal from './useModal';
-import useReportSave from './useReportSave';
-import saveDefaultElement
-  from 'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
-import ribbonDefaultElement
-  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
-import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 
 const useSpread = () => {
   const sheets = selectSheets(store.getState());
@@ -23,10 +18,7 @@ const useSpread = () => {
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
   const excelIO = useSelector(selectExcelIO);
-  const {openModal, alert} = useModal();
-  const {reload} = useReportSave();
-  const {save} = saveDefaultElement();
-  const ribbonElement = ribbonDefaultElement();
+
 
   const bindData = ({dataset, datas}) => {
     const bindingInfo = bindingInfos[dataset.datasetId];
@@ -140,20 +132,14 @@ const useSpread = () => {
     return tableStyle;
   };
 
-  const createReportBlob = async () => {
-    const designer = selectCurrentDesigner(store.getState());
-    const json = designer.getWorkbook().toJSON({includeBindingSource: false});
-    const blob = await new Promise((resolve, reject) => {
-      excelIO.save(JSON.stringify(json), resolve, reject);
-    });
-    return blob;
-  };
-
   /**
-   * @param {Object} config spreadSlice의 config 객체
+   * @param {int} reportId designer를 등록 할 reportId
+   * @param {Object} prevDesigner 이전 Designer 객체
+   * @param {Object} config ribbon 설정 객체 - 처음 SpreadContent에서만 생성 이후 state에서 불러옴
    */
-  const createDesigner = ({reportId, config, prevDesigner}) => {
-    if (!_.isEmpty(prevDesigner)) prevDesigner.destroy();
+  const createDesigner = ({reportId, prevDesigner, config}) => {
+    if (prevDesigner) prevDesigner.destroy();
+    if (_.isEmpty(config)) config = selectExcelConfig(store.getState());
 
     const designer =
     new sheets.Designer
@@ -169,114 +155,51 @@ const useSpread = () => {
 
   const createExcelFile = () => {
     createReportBlob().then(
-        (bolb) => fileUpload(
+        (bolb) => uploadFile(
             bolb,
             {fileName: response.report.reportId + '.xlsx'}
         ));
   };
 
-  // spreadRibbon에 사용되는 모든 hook을 여기서 관리 추가적으로 다른 hook을 가져올 경우 SpreadDefault에서 호출
-  // 다른 커스텀 훅에서 사용되는 모든 useSpread내의 훅은 store.getState()로 가져와서 사용
-  // 참조를 던지면 값이 안 변하는 이슈가 있음으로.
-  // SpreadDefaultElement -> useSpread
-
-  const executeNew = (context) => {
-    const config = selectExcelConfig(store.getState());
-    reload();
-    createDesigner({
-      reportId: 0,
-      config: config,
-      prevDesigner: context
+  const createReportBlob = async () => {
+    const designer = selectCurrentDesigner(store.getState());
+    const json = designer.getWorkbook().toJSON({includeBindingSource: false});
+    const blob = await new Promise((resolve, reject) => {
+      excelIO.save(JSON.stringify(json), resolve, reject);
     });
+    return blob;
   };
 
-  const openReportLocal =(context) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.getCommand('fileMenuPanel')
-        .execute(context, 'button_import_excel', null);
-  };
-
-  const openReport = () => {
-    openModal(LoadReportModal);
-  };
-
-  const saveReport = () => {
-    save[0].onClick({createExcelFile: createExcelFile});
-  };
-
-  const saveAsReport = () => {
-    save[1].onClick();
-  };
-
-  const deleteReport = () => {
-    ribbonElement['DeleteReport'].onClick();
-  };
-
-  const downloadReportXLSX = () => {
-    let reportNm = selectCurrentReport(store.getState()).options.reportNm;
-    const sheets = selectSheets(store.getState());
+  const setExcelFile = async (data) => {
     const designer = selectCurrentDesigner(store.getState());
+    const workBook = designer.getWorkbook();
     const excelIO = selectExcelIO(store.getState());
-
-    reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
-    // 예외 처리 및  메소드 분리.
-    sheets.Designer.showDialog('downlaodReportDialog',
-        {
-          extName: '.xlsx',
-          fileName: reportNm,
-          designer: designer,
-          excelIO: excelIO
-        },
-        xlsxDownload
+    const blob = new Blob(
+        [data],
+        {type:
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        }
     );
-  };
-
-  const xlsxDownload = (e) => {
-    if (e.fileName === '') {
-      alert('파일명을 입력해 주세요.');
-    } else {
-      if (e.fileName
-          .substr(-e.extName.length, e.extName.length) !== e.extName) {
-        e.fileName += e.extName;
-      }
-      const fileName = e.fileName;
-      const json = JSON.stringify(
-          e.designer.getWorkbook().toJSON({includeBindingSource: true}));
-      e.excelIO.save(json, (blob) => {
-        saveAs(blob, fileName);
-      }, (e) => {
-        console.log(e);
-      });
-    }
-  };
-
-  const downloadReportTXT = () => {
-
-  };
-
-  const datasetBinder = () => {
-    const datasets = selectCurrentDatasets(store.getState());
-    if (datasets.length == 0) {
-      alert(localizedString.dataSourceNotSelectedMsg);
-      return;
-    }
-    openModal(DatasetLinkerModal);
-  };
-
-  const print = () => {
-    const designer = selectCurrentDesigner(store.getState());
-    const workbook = designer.getWorkbook();
-    const activeSheet = workbook.getActiveSheet();
-    activeSheet.printInfo().margin(
-        {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
-    );
-    const index = workbook.getActiveSheetIndex();
-    workbook.print(index);
-  };
-
-  const addSpreadTemplate = (templateName, templateMethod) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.registerTemplate(templateName, templateMethod);
+    workBook.suspendPaint();
+    const options = {
+      excelOpenFlags: {
+        ignoreStyle: false,
+        ignoreFormula: false,
+        frozenColumnsAsRowHeaders: false,
+        frozenRowsAsColumnHeaders: false,
+        doNotRecalculateAfterLoad: true
+      },
+      password: ''
+    };
+    excelIO.open(blob, (json) => {
+      workBook.clearSheets();
+      const workbookObj = json;
+      workBook.fromJSON(workbookObj);
+      workBook.resumePaint();
+    },
+    (e) => {
+      console.log(e);
+    }, options);
   };
 
   return {
@@ -286,17 +209,7 @@ const useSpread = () => {
     createReportBlob,
     createDesigner,
     createExcelFile,
-    executeNew,
-    openReportLocal,
-    openReport,
-    saveReport,
-    saveAsReport,
-    deleteReport,
-    downloadReportXLSX,
-    downloadReportTXT,
-    datasetBinder,
-    print,
-    addSpreadTemplate
+    setExcelFile
   };
 };
 

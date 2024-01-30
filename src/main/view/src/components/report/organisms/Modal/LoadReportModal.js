@@ -12,14 +12,19 @@ import {setIconReportList} from 'components/report/util/ReportUtility';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
+import {selectCurrentDesigner} from 'redux/selector/SpreadSelector';
+import {useSelector} from 'react-redux';
 
 const theme = getTheme();
 
-const LoadReportModal = ({...props}) => {
+const LoadReportModal = ({
+  loadExcelFile,
+  ...props}) => {
   let selectedReport = {};
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
   const {loadReport} = useReportSave();
+  const designer = useSelector(selectCurrentDesigner);
 
 
   useEffect(() => {
@@ -40,6 +45,12 @@ const LoadReportModal = ({...props}) => {
                 .then(({data}) => {
                   try {
                     loadReport(data);
+                    if (loadExcelFile) {
+                      loadExcelFile({
+                        reportId: data.reports[0].reportId,
+                        prevDesigner: designer
+                      });
+                    }
                   } catch {
                     alert(localizedString.reportCorrupted);
                   }

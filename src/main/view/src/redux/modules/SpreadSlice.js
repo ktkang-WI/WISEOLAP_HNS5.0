@@ -66,13 +66,23 @@ const initialState = {
 };
 
 const reducers = {
-  initSpread: () => initialState,
-  setSpread(state, actions) {
-    const reportId = actions.payload.reportId;
-    state[reportId] = {};
-    state[reportId].bindingInfos = actions.payload.bindingInfos;
-    state[reportId].reportId = reportId;
-    state[reportId].designer = actions.payload.designer;
+  initSpread: () => {
+    return initialState.config = state.config;
+  },
+  changeSpread(state, actions) {
+    const newId = actions.payload.reportId.newId;
+    const {config, excelIO, sheets, defaultBindInfo} = state;
+    const newState = {
+      config,
+      excelIO,
+      sheets,
+      defaultBindInfo,
+      [newId]: {
+        bindingInfos: actions.payload.bindingInfos
+      }
+    };
+
+    return newState;
   },
   // 새로만들기에서 Designer만 변경시 사용
   setDesigner(state, actions) {

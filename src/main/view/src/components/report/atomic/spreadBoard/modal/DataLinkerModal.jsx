@@ -2,7 +2,6 @@ import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import localizedString from 'config/localization';
 import {Column, Lookup} from 'devextreme-react/data-grid';
-import useSpread from 'hooks/useSpread';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
@@ -11,13 +10,16 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos, selectCurrentDesigner} from
   'redux/selector/SpreadSelector';
+import {
+  positionConverterAsObject,
+  positionConverterAsString
+} from '../util/spreadUtil';
 
 const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
   const designer = selectCurrentDesigner(store.getState());
   const [dataSources, setDataSources] = useState([]);
   const {setBindingInfos} = SpreadSlice.actions;
-  const {positionConverterAsObject, positionConverterAsString} = useSpread();
   const datasets = selectCurrentDatasets(store.getState());
   const reportId = selectCurrentReportId(store.getState());
   const bindingInfos = useSelector(selectBindingInfos);

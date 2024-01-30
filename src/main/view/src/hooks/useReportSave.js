@@ -30,7 +30,7 @@ import DatasetType from 'components/dataset/utils/DatasetType';
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
-  const {fileDelete} = useFile();
+  const {deleteFile} = useFile();
   const {executeItems, executeSpread} = useQueryExecute();
 
   const reportActions = ReportSlice.actions;
@@ -188,7 +188,7 @@ const useReportSave = () => {
       dispatch(spreadActions.deleteSpread(reportId));
       reload(reportType);
       if (reportType === DesignerMode['EXCEL']) {
-        fileDelete({fileName: reportId + '.xlsx'});
+        deleteFile({fileName: reportId + '.xlsx'});
       }
     });
   };
@@ -244,9 +244,9 @@ const useReportSave = () => {
       reportId: reportId,
       informations: data.informations
     }));
-    dispatch(spreadActions.changeSpreadReportId({
+    dispatch(spreadActions.changeSpread({
       reportId: reportId,
-      spread: data.spread
+      bindingInfos: data.spread
     }));
     querySearch();
   };

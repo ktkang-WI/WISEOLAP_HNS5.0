@@ -1,25 +1,32 @@
 import localizedString from 'config/localization';
 import store from 'redux/modules';
-import {selectSheets}
+import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
-import useSpread from 'hooks/useSpread';
 import useModal from 'hooks/useModal';
+import useReportSave from 'hooks/useReportSave';
+import saveDefaultElement
+  from 'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
+import ribbonDefaultElement
+  from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import useSpread from 'hooks/useSpread';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import useFile from 'hooks/useFile';
+import DatasetLinkerModal from '../modal/DataLinkerModal';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SpreadDefaultElement = () => {
+  const {openModal, alert, confirm} = useModal();
+  const {reload} = useReportSave();
+  const {save} = saveDefaultElement();
+  const {importFile} = useFile();
+  const ribbonElement = ribbonDefaultElement();
   const {
-    executeNew,
-    openReportLocal,
-    openReport,
-    saveReport,
-    saveAsReport,
-    deleteReport,
-    downloadReportXLSX,
-    downloadReportTXT,
-    datasetBinder,
-    print,
-    addSpreadTemplate
+    createExcelFile,
+    createDesigner,
+    setExcelFile
   } = useSpread();
-  const {confirm} = useModal();
 
   // config의 경우 초기에만 생성하고 이후에 state에서 사용하는 형태로 변경
   const setRibbonSetting = () => {
@@ -43,6 +50,113 @@ const SpreadDefaultElement = () => {
     return config;
   };
 
+  const newReport = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    const designerMode = selectCurrentDesignerMode(store.getState());
+    reload(designerMode);
+    createDesigner({
+      reportId: 0,
+      prevDesigner: designer
+    });
+  };
+
+  const openReportLocal =(context) => {
+    const sheets = selectSheets(store.getState());
+    sheets.Designer.getCommand('fileMenuPanel')
+        .execute(context, 'button_import_excel', null);
+  };
+
+  const openReport = () => {
+    const loadExcelFile = ({reportId, prevDesigner}) => {
+      createDesigner({reportId, prevDesigner});
+      importFile({fileName: reportId + '.xlsx'}).then((response) => {
+        setExcelFile(response.data);
+      });
+    };
+    openModal(LoadReportModal, {loadExcelFile: loadExcelFile});
+  };
+
+  const saveReport = () => {
+    save[0].onClick({
+      createExcelFile: createExcelFile
+    });
+  };
+
+  const saveAsReport = () => {
+    save[1].onClick({createExcelFile: createExcelFile});
+  };
+
+  const deleteReport = () => {
+    ribbonElement['DeleteReport'].onClick();
+  };
+
+  const downloadReportXLSX = () => {
+    let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+    const sheets = selectSheets(store.getState());
+    const designer = selectCurrentDesigner(store.getState());
+    const excelIO = selectExcelIO(store.getState());
+
+    reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
+    // 예외 처리 및  메소드 분리.
+    sheets.Designer.showDialog('downlaodReportDialog',
+        {
+          extName: '.xlsx',
+          fileName: reportNm,
+          designer: designer,
+          excelIO: excelIO
+        },
+        xlsxDownload
+    );
+  };
+
+  const xlsxDownload = (e) => {
+    if (e.fileName === '') {
+      alert('파일명을 입력해 주세요.');
+    } else {
+      if (e.fileName
+          .substr(-e.extName.length, e.extName.length) !== e.extName) {
+        e.fileName += e.extName;
+      }
+      const fileName = e.fileName;
+      const json = JSON.stringify(
+          e.designer.getWorkbook().toJSON({includeBindingSource: true}));
+      e.excelIO.save(json, (blob) => {
+        saveAs(blob, fileName);
+      }, (e) => {
+        console.log(e);
+      });
+    }
+  };
+
+  const downloadReportTXT = () => {
+
+  };
+
+  const datasetBinder = () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    if (datasets.length == 0) {
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
+    }
+    openModal(DatasetLinkerModal);
+  };
+
+  const print = () => {
+    const designer = selectCurrentDesigner(store.getState());
+    const workbook = designer.getWorkbook();
+    const activeSheet = workbook.getActiveSheet();
+    activeSheet.printInfo().margin(
+        {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
+    );
+    const index = workbook.getActiveSheetIndex();
+    workbook.print(index);
+  };
+
+  const addSpreadTemplate = (templateName, templateMethod) => {
+    const sheets = selectSheets(store.getState());
+    sheets.Designer.registerTemplate(templateName, templateMethod);
+  };
+
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
     return {
@@ -53,7 +167,9 @@ const SpreadDefaultElement = () => {
         bigButton: 'true',
         commandName: 'newReport',
         execute: (context, propertyName, fontItalicChecked) => {
-          confirm(localizedString.reloadConfirmMsg, () => executeNew(context));
+          confirm(localizedString.reloadConfirmMsg, () => {
+            newReport();
+          });
         }
       },
       openReportLocal: {
