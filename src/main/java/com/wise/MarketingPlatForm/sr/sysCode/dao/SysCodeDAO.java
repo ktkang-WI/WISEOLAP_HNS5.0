@@ -11,12 +11,12 @@ public interface SysCodeDAO {
 
     public List<SysCodeEntity> selectSysCodeList(SysCodeEntity sysCodeEntity);
 
-    public SysCodeEntity selectSysCodeByOne(int sysCd);
+    public SysCodeEntity selectSysCodeByOne(SysCodeEntity sysCodeEntity);
 
-    public void insertSysCode(SysCodeEntity sysCodeEntity);
+    public void insertSysCodeInfo(SysCodeEntity sysCodeEntity);
 
-    public void updateSysCode(SysCodeEntity sysCodeEntity);
+    public void updateSysCodeInfo(SysCodeEntity sysCodeEntity);
 
-    public void deleteSysCode(List<Integer> sysCdList);
+    public void updateSysCodeUseYN(List<SysCodeEntity> sysCdList);
 
 }

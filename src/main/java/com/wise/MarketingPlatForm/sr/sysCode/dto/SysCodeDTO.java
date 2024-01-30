@@ -1,9 +1,6 @@
 package com.wise.MarketingPlatForm.sr.sysCode.dto;
 
-import java.util.Date;
-
 import org.apache.ibatis.type.Alias;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity;
 
@@ -22,10 +19,28 @@ import lombok.Builder;
 @Builder
 @Alias("SysCodeDTO")
 public class SysCodeDTO {
-    
-    private int sysCd;
 
-    private String cdNm;
+    private SysCodeEntity sysCodeEntity;
+
+    public SysCodeDTO(SysCodeDTO sysCodeDTO) {
+        this.sysCodeEntity = toDo(sysCodeDTO);
+    }
+    
+    private String seqCd;
+
+    private String sysCd;
+
+    private String subCd;
+
+    private String jobCd;
+
+    private String seqNm;
+
+    private String sysNm;
+
+    private String subNm;
+
+    private String jobNm;
 
     private int grpCd;
 
@@ -33,28 +48,30 @@ public class SysCodeDTO {
 
     private String useYn;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date stYmd;
+    private String stYmd;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date edYmd;
+    private String edYmd;
 
     private String crtBy;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date crtDt;
+    private String crtDt;
 
     private String udtBy;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date udtDt;
+    private String udtDt;
     
     private int sortBy;
 
     public SysCodeEntity toDo(SysCodeDTO sysCodeDTO) {
         return SysCodeEntity.builder()
+                .seq_cd(sysCodeDTO.getSeqCd())
                 .sys_cd(sysCodeDTO.getSysCd())
-                .cd_nm(sysCodeDTO.getCdNm())
+                .sub_cd(sysCodeDTO.getSubCd())
+                .job_cd(sysCodeDTO.getJobCd())
+                .seq_nm(sysCodeDTO.getSeqNm())
+                .sys_nm(sysCodeDTO.getSysNm())
+                .sub_nm(sysCodeDTO.getSubNm())
+                .job_nm(sysCodeDTO.getJobNm())
                 .grp_cd(sysCodeDTO.getGrpCd())
                 .upper_grp_cd(sysCodeDTO.getUpperGrpCd())
                 .use_yn(sysCodeDTO.getUseYn())

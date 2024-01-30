@@ -1,9 +1,6 @@
 package com.wise.MarketingPlatForm.sr.sysCode.entity;
 
-import java.util.Date;
-
 import org.apache.ibatis.type.Alias;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wise.MarketingPlatForm.sr.sysCode.dto.SysCodeDTO;
 
@@ -22,10 +19,28 @@ import lombok.ToString;
 @Builder
 @Alias("SysCodeEntity")
 public class SysCodeEntity {
-    
-    private int sys_cd;
 
-    private String cd_nm;
+    private SysCodeDTO sysCodeDTO;
+
+    public SysCodeEntity(SysCodeEntity sysCodeEntity) {
+        this.sysCodeDTO = toDo(sysCodeEntity);
+    }
+    
+    private String seq_cd;
+
+    private String sys_cd;
+
+    private String sub_cd;
+
+    private String job_cd;
+
+    private String seq_nm;
+
+    private String sys_nm;
+
+    private String sub_nm;
+
+    private String job_nm;
 
     private int grp_cd;
 
@@ -33,28 +48,30 @@ public class SysCodeEntity {
 
     private String use_yn;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date st_ymd;
+    private String st_ymd;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date ed_ymd;
+    private String ed_ymd;
 
     private String crt_by;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date crt_dt;
+    private String crt_dt;
 
     private String udt_by;
 
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    private Date udt_dt;
+    private String udt_dt;
     
     private int sort_by;
 
     public SysCodeDTO toDo(SysCodeEntity sysCodeEntity) {
         return SysCodeDTO.builder()
+                .seqCd(sysCodeEntity.getSeq_cd())
                 .sysCd(sysCodeEntity.getSys_cd())
-                .cdNm(sysCodeEntity.getCd_nm())
+                .subCd(sysCodeEntity.getSub_cd())
+                .jobCd(sysCodeEntity.getJob_cd())
+                .seqNm(sysCodeEntity.getSeq_nm())
+                .sysNm(sysCodeEntity.getSys_nm())
+                .subNm(sysCodeEntity.getSub_nm())
+                .jobNm(sysCodeEntity.getJob_nm())
                 .grpCd(sysCodeEntity.getGrp_cd())
                 .upperGrpCd(sysCodeEntity.getUpper_grp_cd())
                 .useYn(sysCodeEntity.getUse_yn())

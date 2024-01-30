@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.sr.sysCode.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.sr.sysCode.dao.SysCodeDAO;
 import com.wise.MarketingPlatForm.sr.sysCode.dto.SysCodeDTO;
+import com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity;
 import com.wise.MarketingPlatForm.sr.sysCode.service.SysCodeService;
 
 @Service
@@ -25,27 +27,42 @@ public class SysCodeServiceImpl implements SysCodeService {
 
     @Override
     public List<SysCodeDTO> selectSysCodeList(SysCodeDTO sysCodeDTO) {
-        return null;
+        SysCodeEntity sysCodeEntity = new SysCodeDTO(sysCodeDTO).getSysCodeEntity();
+        List<SysCodeEntity> entityList = sysCodeDAO.selectSysCodeList(sysCodeEntity);
+        List<SysCodeDTO> dtoList = new ArrayList<SysCodeDTO>();
+        for(SysCodeEntity entity : entityList) {
+            dtoList.add(new SysCodeEntity(entity).getSysCodeDTO());
+        }
+        return dtoList;
     }
 
     @Override
-    public SysCodeDTO selectSysCodeByOne(int sysCd) {
-        return null;
+    public SysCodeDTO selectSysCodeByOne(SysCodeDTO sysCodeDTO) {
+        SysCodeEntity sysCodeEntity = new SysCodeDTO(sysCodeDTO).getSysCodeEntity();
+        SysCodeEntity resultEntity = sysCodeDAO.selectSysCodeByOne(sysCodeEntity);
+        SysCodeDTO resultDTO = new SysCodeEntity(resultEntity).getSysCodeDTO();
+        return resultDTO;
     }
 
     @Override
-    public void insertSysCode(SysCodeDTO sysCodeDTO) {
-
+    public void insertSysCodeInfo(SysCodeDTO sysCodeDTO) {
+        SysCodeEntity sysCodeEntity = new SysCodeDTO(sysCodeDTO).getSysCodeEntity();
+        sysCodeDAO.insertSysCodeInfo(sysCodeEntity);
     }
 
     @Override
-    public void updateSysCode(SysCodeDTO sysCodeDTO) {
-
+    public void updateSysCodeInfo(SysCodeDTO sysCodeDTO) {
+        SysCodeEntity sysCodeEntity = new SysCodeDTO(sysCodeDTO).getSysCodeEntity();
+        sysCodeDAO.updateSysCodeInfo(sysCodeEntity);
     }
 
     @Override
-    public void deleteSysCode(List<Integer> sysCdList) {
-
+    public void updateSysCodeUseYN(List<SysCodeDTO> sysCdList) {
+        List<SysCodeEntity> dtoList = new ArrayList<SysCodeEntity>();
+        for(SysCodeDTO sysCode : sysCdList) {
+            dtoList.add(new SysCodeDTO(sysCode).getSysCodeEntity());
+        }
+        sysCodeDAO.updateSysCodeUseYN(dtoList);
     }
 
 }

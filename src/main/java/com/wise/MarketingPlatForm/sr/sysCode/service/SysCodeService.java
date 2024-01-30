@@ -9,12 +9,12 @@ public interface SysCodeService {
     
     public List<SysCodeDTO> selectSysCodeList(SysCodeDTO sysCodeDTO);
 
-    public SysCodeDTO selectSysCodeByOne(int sysCd);
+    public SysCodeDTO selectSysCodeByOne(SysCodeDTO sysCodeDTO);
 
-    public void insertSysCode(SysCodeDTO sysCodeDTO);
+    public void insertSysCodeInfo(SysCodeDTO sysCodeDTO);
 
-    public void updateSysCode(SysCodeDTO sysCodeDTO);
+    public void updateSysCodeInfo(SysCodeDTO sysCodeDTO);
 
-    public void deleteSysCode(List<Integer> sysCdList);
+    public void updateSysCodeUseYN(List<SysCodeDTO> sysCdList);
 
 }

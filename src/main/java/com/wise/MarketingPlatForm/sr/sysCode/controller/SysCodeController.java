@@ -1,5 +1,8 @@
 package com.wise.MarketingPlatForm.sr.sysCode.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,7 +23,7 @@ import com.wise.MarketingPlatForm.sr.sysCode.service.SysCodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "system code", description = "system code 요청 처리")
+@Tag(name = "system-code", description = "system code 요청 처리")
 @RestController
 @RequestMapping("/sr")
 public class SysCodeController {
@@ -37,31 +40,35 @@ public class SysCodeController {
     @Operation(summary = "system code 조회", description = "CSR_SYS_CD_INFO 테이블 데이터 조회")
     @GetMapping(value = "/sys-code")
     public List<SysCodeDTO> selectSysCodeList(SysCodeDTO sysCodeDTO) {
-        return null;
+        return sysCodeService.selectSysCodeList(sysCodeDTO);
     } 
 
     @Operation(summary = "system code 부분 조회", description = "CSR_SYS_CD_INFO 테이블 데이터 부분 조회")
-    @GetMapping(value = "/sys-code/{sysCodeId}")
-    public SysCodeDTO selectSysCodeByOne(@PathVariable int sysCd) {
-        return null;
+    @GetMapping(value = "/sys-code/{seqCd}")
+    public SysCodeDTO selectSysCodeByOne(@PathVariable String seqCd) {
+        SysCodeDTO sysCodeDTO = new SysCodeDTO();
+        sysCodeDTO.setSeqCd(seqCd);
+        return sysCodeService.selectSysCodeByOne(sysCodeDTO);
     }
 
     @Operation(summary = "system code 입력", description = "CSR_SYS_CD_INFO 테이블 데이터 입력")
     @PostMapping(value = "/sys-code")
-    public void insertSysCode(SysCodeDTO sysCodeDTO) {
-
+    public void insertSysCodeInfo(SysCodeDTO sysCodeDTO) {
+        sysCodeDTO.setCrtDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        sysCodeService.insertSysCodeInfo(sysCodeDTO);
     }
 
-    @Operation(summary = "system code 수정", description = "CSR_SYS_CD_INFO 테이블 데이터 수정")
+    @Operation(summary = "system code 정보 수정", description = "CSR_SYS_CD_INFO 테이블 데이터 수정")
     @PutMapping(value = "/sys-code")
-    public void updateSysCode(SysCodeDTO sysCodeDTO) {
-
+    public void updateSysCodeInfo(SysCodeDTO sysCodeDTO) {
+        sysCodeDTO.setUdtDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        sysCodeService.updateSysCodeInfo(sysCodeDTO);
     }
 
-    @Operation(summary = "system code 삭제", description = "CSR_SYS_CD_INFO 테이블 데이터 삭제 (실제로는 사용여부 컬럼인 use_yn 의 값을 N로 변경)")
+    @Operation(summary = "system code 삭제 (사용여부 수정)", description = "CSR_SYS_CD_INFO 코드 사용 여부 수정 : Y -> N)")
     @DeleteMapping(value = "/sys-code")
-    public void deleteSysCode(@RequestParam List<Integer> sysCdList) {
-
+    public void updateSysCodeUseYN(@RequestParam List<SysCodeDTO> sysCdList) {
+        sysCodeService.updateSysCodeUseYN(sysCdList);
     }
 
 

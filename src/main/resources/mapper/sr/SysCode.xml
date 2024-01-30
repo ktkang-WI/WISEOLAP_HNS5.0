@@ -4,73 +4,133 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wise.MarketingPlatForm.sr.sysCode.dao.SysCodeDAO">
 
-  <sql id = "sc_clmn">
-    sys_cd,
-    cd_nm,
-    grp_cd,
-    upper_grp_cd,
-    use_yn,
-    st_ymd,
-    ed_ymd,
-    crt_by,
-    crt_dt,
-    udt_by,
-    udt_dt,
-    sort_by
-  </sql>
 
-<!-- Query -->
-
-  <select id="selectSysCodeList" resultType="SysCodeEntity" parameterType="SysCodeEntity">
+  <select id="selectSysCodeList" resultType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
     SELECT
-      <include refid = "sc_clmn"></include>
+      a1.seq_cd AS sys_cd,
+      a1.seq_nm AS sys_nm,
+      a2.seq_cd AS sub_cd,
+      a2.seq_nm AS sub_nm,
+      a3.seq_cd AS job_cd,
+      a3.seq_nm AS job_nm
     FROM
-      CSR_SYS_CD_INFO
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND grp_cd = 1
+            AND use_yn = 'Y'
+      ) a1
+      LEFT OUTER join
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND GRP_CD = 2
+            AND use_yn = 'Y'
+      ) a2
+        ON  a1.grp_cd = a2.upper_grp_cd
+            AND SUBSTR(a1.seq_cd, 1, 3) =  SUBSTR(a2.seq_cd, 1, 3)
+      LEFT OUTER join
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND GRP_CD = 3
+            AND use_yn = 'Y'
+      ) a3
+        ON a2.grp_cd = a3.upper_grp_cd
+            AND SUBSTR(a1.seq_cd, 1, 3) =  SUBSTR(a3.seq_cd, 1, 3)
+            AND SUBSTR(a2.seq_cd, 4, 3) =  SUBSTR(a3.seq_cd, 4, 3)
+      WHERE 1 = 1
+      ORDER BY
+        a1.sort_by, a2.sort_by, a3.sort_by
   </select>
 
-  <select id="selectSysCodeByOne" resultType="SysCodeEntity" parameterType="Integer">
+  <select id="selectSysCodeByOne" resultType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity"  parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
     SELECT
-      <include refid = "sc_clmn"></include>
+      seq_cd,
+      seq_nm,
+      grp_cd,
+      upper_grp_cd,
+      use_yn,
+      TO_CHAR(st_ymd, 'YYYY-MM-DD HH24:MI:SS') AS st_ymd,
+      TO_CHAR(ed_ymd, 'YYYY-MM-DD HH24:MI:SS') AS ed_ymd,
+      crt_by,
+      TO_CHAR(crt_dt, 'YYYY-MM-DD HH24:MI:SS') AS crt_dt,
+      udt_by,
+      TO_CHAR(udt_dt, 'YYYY-MM-DD HH24:MI:SS') AS udt_dt,
+      sort_by
     FROM
-      CSR_SYS_CD_INFO
+      csr_sys_cd_info
     WHERE 1 = 1
-      AND sys_cd = #{sys_cd}
+      AND seq_cd = #{seq_cd}
   </select>
 
-  <select id="insertSysCode" parameterType="SysCodeEntity">
-    INSERT INTO
-      CSR_SYS_CD_INFO ( <include refid = "sc_clmn"></include> )
-    VALUES
-      (#{sys_cd}, #{cd_nm}, #{grp_cd}, #{upper_grp_cd}, #{use_yn},
-       #{st_ymd}, #{ed_ymd}, #{crt_by}, #{crt_dt}, #{sort_by})
-  </select>
+  <insert id="insertSysCodeInfo" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
+    INSERT INTO csr_sys_cd_info (
+      seq_cd, seq_nm, grp_cd, upper_grp_cd, use_yn,
+      st_ymd, ed_ymd, crt_by, crt_dt, sort_by
+    ) VALUES (
+      #{seq_cd},
+      #{seq_nm},
+      #{grp_cd},
+      #{upper_grp_cd},
+      'Y',
+      TO_DATE(#{st_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      TO_DATE(#{ed_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      #{crt_by},
+      TO_DATE(#{crt_dt}, 'YYYY-MM-DD HH24:MI:SS'),
+      #{sort_by}
+    )
+  </insert>
 
-  <select id="updateSysCode" parameterType="SysCodeEntity">
+  <update id="updateSysCodeInfo" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
     UPDATE
-      CSR_SYS_CD_INFO
+      csr_sys_cd_info
     SET
-      cd_nm = #{cd_nm},
-      st_ymd = #{st_ymd},
-      ed_ymd = #{ed_ymd},
+      seq_nm = #{seq_nm},
+      use_yn = #{use_yn},
+      st_ymd = TO_DATE(#{st_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      ed_ymd = TO_DATE(#{ed_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
       udt_by = #{udt_by}, 
-      udt_dt = #{udt_dt},
+      udt_dt = TO_DATE(#{udt_dt}, 'YYYY-MM-DD HH24:MI:SS'),
       sort_by = #{sort_by}
     WHERE 1 = 1
-      AND sys_cd = #{sys_cd}
-  </select>
+      AND seq_cd = #{seq_cd}
+  </update>
 
-  <select id="deleteSysCode" parameterType="java.util.List">
+  <update id="updateSysCodeUseYN" parameterType="java.util.List">
     UPDATE
-      CSR_SYS_CD_INFO
+      csr_sys_cd_info
     SET
       USE_YN = 'N'
     WHERE 1 = 1
-      AND sys_cd in
+      AND seq_cd in
       <foreach collection="list" item="item" separator="," open="(" close=")">
-        #{item.sys_cd}
+        #{item.seq_cd}
       </foreach>
-  ]]>
-
-<!-- Query End -->
+  </update>
 
 </mapper>
