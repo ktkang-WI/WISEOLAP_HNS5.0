@@ -102,8 +102,9 @@ const s2ab = (s) => {
 
 const exportImgFile = (name, pickItem, type) => {
   const refInstance = [];
-  const ref = pickItem.ref.filter((item) => item !== null);
+  let ref = pickItem.ref;
   if (Array.isArray(ref)) {
+    ref = ref.filter((item) => item !== null);
     ref.forEach((current) => refInstance.push(current.instance));
   } else {
     refInstance.push(ref.current.instance);
