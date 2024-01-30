@@ -111,15 +111,18 @@ public class ChartDataMaker implements ItemDataMaker {
         } else {
             for (Measure measure : measures) {
                 Iterator<String> iter = dimensionGroupNames.iterator();
-
+                final boolean isThisSizeOneRow = measures.size() == 1 ? true : false;
                 while (iter.hasNext()) {
-                    String name = iter.next();
+                    final String name = iter.next();
+                    final String SeriesName = isThisSizeOneRow ? 
+                        name : name + "-" + measure.getName();
+
                     Measure tempMeasure = Measure.builder()
                         .caption(name + "-" + measure.getCaption())
                         .category(measure.getCategory())
                         .expression(measure.getExpression())
                         .fieldId(measure.getFieldId())
-                        .name(name + "-" + measure.getSummaryName())
+                        .name(SeriesName)
                         .summaryName(name + "-" + measure.getSummaryName())
                         .build();
                     seriesMeasureNames.add(tempMeasure);
