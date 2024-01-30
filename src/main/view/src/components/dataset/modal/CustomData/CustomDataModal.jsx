@@ -12,6 +12,9 @@ import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useSelector} from 'react-redux';
 import DatasetSlice from 'redux/modules/DatasetSlice';
+import {measuresFetch} from 'redux/modules/SeriesOption/SeriesOptionSlice';
+import {getMeasuresValueUpdateFormat}
+  from 'redux/modules/SeriesOption/SeriesOptionFormat';
 
 export const CustomDataContext = createContext();
 
@@ -51,7 +54,10 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
 
   // UseState
   const [customDataList, setCustomDataList] = useState([]);
+  const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [moveToPage, setMoveToPage] = useState(false);
+  const [createCustom, setCreateCustom] = useState(false);
+  const [updateCustom, setUpdateCustom] = useState(false);
   const [customData, setCustomData] = useState(customDataInitial);
   const [dataset] = useState(_.cloneDeep(orgDataset));
 
@@ -68,9 +74,21 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   // Context
   const context = {
     state: {
+      selectedRowKey: [
+        selectedRowKey,
+        setSelectedRowKey
+      ],
       moveToPage: [
         moveToPage,
         setMoveToPage
+      ],
+      createCustom: [
+        createCustom,
+        setCreateCustom
+      ],
+      updateCustom: [
+        updateCustom,
+        setUpdateCustom
       ],
       customData: [
         customData,
@@ -91,11 +109,25 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
 
   // Modal 이동 감지기
   useEffect(() => {
-    if (moveToPage) handleModal();
+    if (moveToPage) {
+      if (updateCustom) handleUpdateCustom();
+      else if (createCustom) handleCreateCustom();
+    }
     return () => {
       setMoveToPage(false);
+      setCreateCustom(false);
+      setUpdateCustom(false);
     };
-  }, [moveToPage]);
+  }, [moveToPage, createCustom, updateCustom]);
+
+  const handleCreateCustom = () => {
+    handleModal();
+  };
+
+  const handleUpdateCustom = () => {
+    if (customData.expression) handleModal();
+    else alert('업데이트할 로우가 선택되지 않았습니다.');
+  };
 
   // 데이터 집합 및 사용자 정의 데이터 필드
   const getAllCurrentFields = () => {
@@ -142,13 +174,15 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   const reduxUpdateCustomDataList = (tempFields) => {
     const fields = getCurrentFields();
 
+    if (!fields) return;
     let isok = false;
     if (tempFields) {
       dispatch(updateDataset({
         reportId: selectedReportId,
         dataset: {
           ...dataset,
-          fields: [...fields, ...tempFields]
+          fields: [...fields, ...tempFields],
+          customData: [...tempFields]
         }
       }));
       isok = true;
@@ -261,6 +295,14 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
       alert(localizedString.alertInfo.customData.empty);
       isok = true;
     };
+
+    if (!isok) {
+      const customDatas = tempFields.filter((item) => item.type === 'MEA');
+      const measuresUpdateFormat = getMeasuresValueUpdateFormat();
+      measuresUpdateFormat.customDatas = customDatas;
+      measuresUpdateFormat.reportId = selectedReportId;
+      dispatch(measuresFetch(measuresUpdateFormat));
+    }
 
     return isok;
   };

@@ -10,6 +10,8 @@ import addContainer from 'assets/image/icon/button/insert_container.png';
 import addChart from 'assets/image/icon/button/add_chart.png';
 import addPivotGrid from 'assets/image/icon/button/pivot_grid.png';
 import addGrid from 'assets/image/icon/button/basic_grid.png';
+import adHocLayoutSetting
+  from 'assets/image/icon/button/adHocLayoutSetting.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
 import nameEdit from 'assets/image/icon/button/name_edit.png';
 import rotate from 'assets/image/icon/button/rotate.png';
@@ -184,7 +186,7 @@ const RibbonDefaultElement = () => {
       ...commonPopoverButton,
       'id': 'adHoc_layout',
       'label': '비정형 레이아웃',
-      'imgSrc': addGrid,
+      'imgSrc': adHocLayoutSetting,
       'renderContent': (e) => {
         // 임시 추가.
         const selectedReportId = selectCurrentReportId(store.getState());

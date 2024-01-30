@@ -19,6 +19,7 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import store from 'redux/modules';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -75,6 +76,8 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
       },
       paramInfo.length > 0 ? paramInfo[0] : {}
   );
+
+  const {confirm} = useModal();
 
   const getNewParamInfo = () => {
     const newParamInfo = paramInfo.map((info) => {
@@ -141,6 +144,19 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
 
         newParamInfo = newParamInfo.
             map((param) => ParamUtils.sanitizeParamInformation(param));
+
+        for (const param of newParamInfo) {
+          if (param.dataSourceType == 'QUERY') {
+            if (!param.dataSource.toLowerCase().includes('group by')) {
+              confirm(localizedString.cofirmGroupBy, () => {
+                onSubmit(newParamInfo);
+                onClose();
+              });
+
+              return true;
+            }
+          }
+        }
 
         onSubmit(newParamInfo);
       }}

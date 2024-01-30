@@ -38,6 +38,11 @@ export const selectCurrentDataField = createSelector(
     }
 );
 
+export const selectCurrentDataMeasure = createSelector(
+    selectCurrentItem,
+    (selectedItem) => selectedItem.meta.dataField.measure
+);
+
 export const selectCurrentDataFieldOption = createSelector(
     selectCurrentItem,
     selectCurrentReportId,
