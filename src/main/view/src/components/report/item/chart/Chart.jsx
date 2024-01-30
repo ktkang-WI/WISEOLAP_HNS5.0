@@ -25,12 +25,12 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
-  // TODO: 임시용 코드
+  // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
   const {
     auxiliaryAxis,
@@ -253,7 +253,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   fieldId: valueField.fieldId,
                   math: Math.floor(i / mart.seriesLength)
                 }}
-                name={valueField.caption}
+                name={valueField.name}
                 type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
                 sizeField={
                   getSeriesOptionType(valueField.fieldId, seriesOptions) ===
@@ -276,15 +276,26 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 };
 
 
+const getDataField = (state) => {
+  if (state.adHocOption) {
+    return state.adHocOption.dataField;
+  };
+  return state.item.meta.dataField;
+};
+
 const propsComparator = (prev, next) => {
+  const prevDataField = getDataField(prev);
+  const nextDataField = getDataField(next);
+
+  const seriesOptionsComparator =
+    _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
+
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
-  _.isEqual(prev.item.meta.dataField.seriesOptions,
-      next.item.meta.dataField.seriesOptions) &&
+      seriesOptionsComparator &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
 
 
 export default React.memo(Chart, propsComparator);
-// export default React.memo(Chart);

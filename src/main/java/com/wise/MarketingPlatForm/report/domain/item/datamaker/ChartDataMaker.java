@@ -54,8 +54,6 @@ public class ChartDataMaker implements ItemDataMaker {
         List<String> dimNames = new ArrayList<>();
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
-        List<String> seriesDimensionNames = new ArrayList<>();
-        List<String> seriesDimensionCaptions = new ArrayList<>();
         List<Measure> seriesMeasureNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
@@ -108,34 +106,36 @@ public class ChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
-                seriesDimensionNames.add(measure.getSummaryName());
-                seriesDimensionCaptions.add(measure.getCaption());
                 seriesMeasureNames.add(measure);
             }
         } else {
             for (Measure measure : measures) {
                 Iterator<String> iter = dimensionGroupNames.iterator();
-
+                final boolean isThisSizeOneRow = measures.size() == 1 ? true : false;
                 while (iter.hasNext()) {
-                    String name = iter.next();
-                    seriesDimensionNames.add(name + "-" + measure.getSummaryName());
-                    seriesDimensionCaptions.add(name + "-" + measure.getCaption());
-                    seriesMeasureNames.add(measure);
+                    final String name = iter.next();
+                    final String SeriesName = isThisSizeOneRow ? 
+                        name : name + "-" + measure.getName();
+
+                    Measure tempMeasure = Measure.builder()
+                        .caption(name + "-" + measure.getCaption())
+                        .category(measure.getCategory())
+                        .expression(measure.getExpression())
+                        .fieldId(measure.getFieldId())
+                        .name(SeriesName)
+                        .summaryName(name + "-" + measure.getSummaryName())
+                        .build();
+                    seriesMeasureNames.add(tempMeasure);
                 }
-            }
-            if (measures.size() == 1) {
-                seriesDimensionCaptions = new ArrayList<>(dimensionGroupNames);
             }
         }
 
-        info.put("seriesDimensionNames", seriesDimensionNames);
-        info.put("seriesDimensionCaptions", seriesDimensionCaptions);
         info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 
         return result;
-}
+    }
 
     private Map<String, Measure> generateSingleDataMap(String key, Object o) {
         Map<String, Measure> temp = new HashMap<>();

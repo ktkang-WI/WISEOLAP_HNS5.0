@@ -56,13 +56,13 @@ const seriesOptionDefaultFormat = {
   general: {
     auxiliaryAxis: false,
     ignoreEmptyPoints: false,
-    pointerMarker: false,
+    pointerMarker: true,
     reverseView: false
   },
   pointLabel: {
-    Notation: '없음',
-    overlayMode: '기본',
-    direction: '기본'
+    Notation: seriesOption.pointLabelNotation.value,
+    overlayMode: seriesOption.overlappingMode.default,
+    direction: seriesOption.pointLabelDirectionData.default
   }
 };
 
