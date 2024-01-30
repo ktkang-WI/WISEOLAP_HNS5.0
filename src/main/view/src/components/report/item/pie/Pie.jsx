@@ -21,6 +21,7 @@ const Pie = ({setItemExports, id, item}) => {
   const dxRefs = useRef([]);
 
   useEffect(() => {
+    // TODO: PIE 는 임시용 매개변수입니다.
     const itemExportObject =
       itemExportsObject(id, dxRefs.current, 'PIE', mart.data.data);
 

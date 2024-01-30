@@ -55,11 +55,22 @@ const sortObject = (obj) => {
 
   keys = keys.sort();
 
+  if (!keys) {
+    console.error('정렬 작업중 오류 발생 수정 필요 !!')
+    return null;
+  };
+
   const sortedObject = {};
 
   keys.forEach((key) => {
     sortedObject[key] = obj[key];
   });
+
+  if (!sortedObject) {
+    console.error('정렬 작업중 오류 발생 수정 필요 !!');
+    return obj;
+  }
+
   return sortedObject;
 };
 
@@ -83,8 +94,8 @@ const extractingValues = (insertedData) => {
 
 const mergeHeaderValue = (data) => {
   let keys = extractingKeys(data).sort();
-  keys = keys.map((key) => wasteDisposalKey(key));
   if (!keys) return null;
+  keys = keys.map((key) => wasteDisposalKey(key));
   const values = extractingValues(data);
   if (!values) return null;
   values.unshift(keys);
