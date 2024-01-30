@@ -14,6 +14,8 @@ import SimpleInputModal from '../../Modal/organisms/SimpleInputModal';
 import NumberFormatModal
   from 'components/report/atomic/Format/organisms/NumberFormatModal';
 import {getContextMenu} from '../utils/contextMenu';
+import DataColumnSeriesOptions
+  from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
 
 const theme = getTheme();
 
@@ -150,6 +152,11 @@ const DataColumn = ({
   const buttonEventFunction = (e) => {
     if (data.category === 'field') {
       buttonEvent(data, openModal);
+    } else if (data.category === 'measure') {
+      const fieldId = data.fieldId;
+      openModal(DataColumnSeriesOptions, {
+        fieldId
+      });
     } else {
       buttonEvent(data, e);
     }
@@ -201,6 +208,7 @@ const DataColumn = ({
       </Column>
       {useButton &&
         <Button onClick={(e) => {
+          // buttonEvent(data, e);
           buttonEventFunction(e);
         }}>
           <IconImg src={buttonIcon}/>

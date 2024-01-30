@@ -55,7 +55,7 @@ const generateItem = (item, rootItem) => {
   const data = item.mart.data;
   const measures = dataField.measure;
   const meaLength = measures.length;
-  item.mart.seriesLength = data.info.seriesDimensionNames.length / meaLength;
+  item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
   item.mart.formats = measures.map((mea) => mea.format);
 };
 

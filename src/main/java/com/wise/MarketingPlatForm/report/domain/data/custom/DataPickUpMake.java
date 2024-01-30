@@ -191,6 +191,7 @@ public class DataPickUpMake {
             if(measure.getExpression() != null) {
                 String expression = measure.getExpression();
                 for (Measure replace : measures) {
+                    if (replace.getExpression() != null) continue;
                     expression = expression.replaceAll(replace.getName(), replace.getSummaryName());
                 }
                 tempKey.setExpression(expression);
@@ -229,4 +230,26 @@ public class DataPickUpMake {
         }
         return result;
     }
+
+    public List<Map<String, Object>> executer(List<Dimension> dimensions, List<Measure> measures) {
+        List<Map<String, Object>> tempData = null;
+        List<Measure> distinctMeasures = new ArrayList<>();
+        List<String> uniqueKeys = new ArrayList<>();
+        measures.stream().forEach(item -> {
+            if (!uniqueKeys.contains(item.getSummaryName())) {
+                distinctMeasures.add(item);
+                uniqueKeys.add(item.getSummaryName());
+            }
+        });
+        try {
+            tempData = setDimension(dimensions).
+                       setMeasure(distinctMeasures).
+                       builder();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tempData = null;
+        }
+
+        return tempData;
+    }   
 }

@@ -82,7 +82,7 @@ export default function useLayout() {
     };
 
     dispatch(itemSlice.updateLayoutSetting(param));
-    dispatch(flexLayout.adHocLayoutUpdate(param));
+    dispatch(layoutSlice.adHocLayoutUpdate(param));
   };
 
   return {
