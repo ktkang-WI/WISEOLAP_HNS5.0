@@ -17,8 +17,14 @@ const Pie = ({setItemExports, id, item}) => {
   if (!mart.init) {
     return <></>;
   }
+  const seriesDimensionNames = mart?.data.info.seriesDimensionNames;
+  const dxRefs = useRef([]);
 
   useEffect(() => {
+    // TODO: PIE 는 임시용 매개변수입니다.
+    const itemExportObject =
+      itemExportsObject(id, dxRefs.current, 'PIE', mart.data.data);
+
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -29,17 +35,10 @@ const Pie = ({setItemExports, id, item}) => {
     });
   }, [mart.data.data]);
 
-  const seriesDimensionNames = mart?.data.info.seriesDimensionNames;
-
-  const dxRef = useRef();
-
-  const itemExportObject =
-   itemExportsObject(id, dxRef, 'PIE', mart.data.data);
-
   const pies = seriesDimensionNames.map((dimension, idx) => {
     return (
       <PieChart
-        ref={dxRef}
+        ref={(ref) => (dxRefs.current[idx] = ref)}
         key={idx}
         type={meta.pieChartStyle}
         dataSource={mart.data.data} // mart
