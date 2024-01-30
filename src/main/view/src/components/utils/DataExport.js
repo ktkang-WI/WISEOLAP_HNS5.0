@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import {exportWidgets} from 'devextreme/viz/export';
+import _ from 'lodash';
 
 const extractingKeys = (data) => {
   const keys = [];
@@ -7,7 +8,7 @@ const extractingKeys = (data) => {
     // Array check
     if (typeof data !== 'object') return null;
 
-    data = data[0];
+    data = Array.isArray(data) ? data[0] : data;
 
     // Map check
     if (typeof data !== 'object') return null;
@@ -25,44 +26,87 @@ const extractingKeys = (data) => {
   return keys;
 };
 
-const extractingValues = (data) => {
-  const keys = extractingKeys(data);
-  if (!keys) return null;
-  const result = data.map((data) => keys.map((key) => {
-    return data[key];
-  }));
+// TODO: 필드명 다음 체크리스트 값 막아야함.
+const wasteDisposalKey = (key) => {
+  const checkList = ['SUM_', 'AVG_', 'MIN_', 'MAX_'];
+  let start = 0;
+  const end = key.length;
+  for (let index = 0; index < checkList.length; index++) {
+    const checkKey = checkList[index];
+    const checkKeyLen = checkKey.length;
+    const point = key.indexOf(checkKey);
+    if (point != -1) {
+      start = point + checkKeyLen;
+    }
+  };
+  if (start == 0) return key;
+  return key.substring(start, end);
+};
+
+const renameObjectKey = (obj, oldKeyName, newKeyName) => {
+  const tempObj = obj;
+  tempObj[newKeyName] = tempObj[oldKeyName];
+  delete tempObj[oldKeyName];
+  return tempObj;
+};
+
+const sortObject = (obj) => {
+  let keys = Object.keys(obj);
+
+  keys = keys.sort();
+
+  const sortedObject = {};
+
+  keys.forEach((key) => {
+    sortedObject[key] = obj[key];
+  });
+  return sortedObject;
+};
+
+const extractingValues = (insertedData) => {
+  const result = insertedData.map((data) => {
+    let tempData = _.cloneDeep(data);
+    tempData = sortObject(tempData);
+    const keys = extractingKeys(tempData);
+    if (!keys) return null;
+    return keys.map((key) => {
+      const newKeyName = wasteDisposalKey(key);
+      if (key !== newKeyName) {
+        const redefinedData = renameObjectKey(tempData, key, newKeyName);
+        return redefinedData[newKeyName];
+      }
+      return tempData[key];
+    });
+  });
   return result;
 };
 
-const convertToCsv = (data) => {
-  const keys = extractingKeys(data);
+const mergeHeaderValue = (data) => {
+  let keys = extractingKeys(data).sort();
+  keys = keys.map((key) => wasteDisposalKey(key));
   if (!keys) return null;
   const values = extractingValues(data);
   if (!values) return null;
   values.unshift(keys);
 
+  return values;
+};
+
+const convertToCsv = (data) => {
+  const values = mergeHeaderValue(data);
+  if (!values) return null;
   return values.map((item) => item.join(',')).join('\n');
 };
 
 const convertToTxt = (data) => {
-  const keys = extractingKeys(data);
-  if (!keys) return null;
-  const values = extractingValues(data);
+  const values = mergeHeaderValue(data);
   if (!values) return null;
-
-  values.unshift(keys);
-
   return values.map((item) => item.join('\t')).join('\n');
 };
 
 const convertToXlsx = (data) => {
-  const keys = extractingKeys(data);
-  if (!keys) return null;
-  const values = extractingValues(data);
+  const values = mergeHeaderValue(data);
   if (!values) return null;
-
-  values.unshift(keys);
-
   return values;
 };
 
