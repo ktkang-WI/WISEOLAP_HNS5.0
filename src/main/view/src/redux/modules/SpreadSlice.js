@@ -65,6 +65,32 @@ const initialState = {
   }
 };
 
+const getObjKey = (obj) => {
+  const keys = Object.keys(obj);
+  if (!keys) return keys;
+  return null;
+};
+
+const mergeObj = (obj1, obj2) => {
+  const obj1Key = getObjKey(obj1);
+  const obj2Key = getObjKey(obj2);
+
+  let tempObj = {};
+
+  tempObj = mergeProcess(obj1Key, obj1, tempObj);
+  tempObj = mergeProcess(obj2Key, obj2, tempObj);
+
+  return tempObj;
+};
+
+const mergeProcess = (keys, obj1, tempObj) => {
+  keys.forEach((key) => {
+    tempObj[key] = obj1[key];
+  });
+  return tempObj;
+};
+
+
 const reducers = {
   initSpread: () => {
     return initialState.config = state.config;
