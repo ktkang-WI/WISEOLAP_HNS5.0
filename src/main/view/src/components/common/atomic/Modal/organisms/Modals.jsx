@@ -10,10 +10,10 @@ const Modals = () => {
   return (
     <AnimatePresence>
       {openedModals.map((modal, index) => {
-        const {Component, props} = modal;
+        const {id, Component, props} = modal;
 
         const onClose = () => {
-          closeModal(index);
+          closeModal(id);
         };
 
         return <Component key={index} onClose={onClose} {...props} />;

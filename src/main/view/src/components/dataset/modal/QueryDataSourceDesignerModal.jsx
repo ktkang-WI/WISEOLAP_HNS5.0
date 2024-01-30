@@ -46,7 +46,7 @@ const RowWrapper = styled.div`
 `;
 
 const QueryDataSourceDesignerModal = ({
-  onSubmit, selectedDataSource, orgDataset, query='', ...props
+  onSubmit, selectedDataSource, orgDataset, query='', onClose, ...props
 }) => {
   const defaultDataset = {
     datasetNm: localizedString.defaultDatasetName,
@@ -56,7 +56,7 @@ const QueryDataSourceDesignerModal = ({
   };
 
   // hook
-  const {openModal, alert} = useModal();
+  const {openModal, alert, confirm} = useModal();
   const dispatch = useDispatch();
 
   // actions
@@ -161,18 +161,12 @@ const QueryDataSourceDesignerModal = ({
 
   return (
     <Modal
-      onSubmit={async () => {
+      onSubmit={() => {
         const query = queryEditorRef.current.editor.getValue();
         const dupleCheck = datasets.find((ds) =>
           ds.datasetNm == dataset.datasetNm && ds.datasetId != datasetId);
 
-        if (!query || query == '') { // 쿼리 빈값 확인.
-          alert('쿼리를 입력해 주세요.');
-        } else if (!dataset.datasetNm || dataset.datasetNm == '') {
-          alert('데이터 집합 명을 입력해 주세요.');
-        } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
-          alert('중복된 데이터 집합 명입니다. 다시 입력해 주세요.');
-        } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
+        const setDataset = async () => {
           const parameters = {
             informations: paramInfo,
             values: {}
@@ -203,10 +197,24 @@ const QueryDataSourceDesignerModal = ({
               informations: paramInfo
             }));
 
-            return;
+            onClose();
           } else {
             alert('쿼리가 부적절 합니다. 다시 입력해 주세요.');
           }
+        };
+
+        if (!query || query == '') { // 쿼리 빈값 확인.
+          alert('쿼리를 입력해 주세요.');
+        } else if (!dataset.datasetNm || dataset.datasetNm == '') {
+          alert('데이터 집합 명을 입력해 주세요.');
+        } else if (dupleCheck) { // 데이터 집합 명 중복 검사.
+          alert('중복된 데이터 집합 명입니다. 다시 입력해 주세요.');
+        } else if (!query.toLowerCase().includes('group by')) {
+          confirm(localizedString.cofirmGroupBy, () => {
+            setDataset();
+          });
+        } else { // 백단에서 쿼리 검사 및 데이터 가져옴.
+          setDataset();
         }
         return true;
       }}
