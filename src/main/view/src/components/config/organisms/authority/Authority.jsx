@@ -78,7 +78,6 @@ const Authority = () => {
         setAuth(item);
         item.data().then((res) => {
           if (res.data) {
-            console.log(res.data);
             setData(res.data);
           }
         });

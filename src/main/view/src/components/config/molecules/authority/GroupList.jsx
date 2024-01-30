@@ -6,15 +6,17 @@ import {useContext, useEffect, useRef, useState} from 'react';
 // import {useContext} from 'react';
 // import {AuthorityContext} from '../Authority';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
+import {AuthorityDataContext} from
+  'components/config/organisms/authority/dataAuthority/DataAuthority';
+
 const GroupList = () => {
   // context
-  const getContext = useContext(AuthorityContext);
+  const authoritycontext = useContext(AuthorityContext);
+  const authorityDataContext = useContext(AuthorityDataContext);
   // state
   const [groups, setGroups] = useState([]);
-  const [data, setData] = getContext.state.data;
-
-  console.log(data);
-  console.log(setData);
+  const [data] = authoritycontext.state.data;
+  const [, setRow] = authorityDataContext.state.row;
 
   useEffect(() => {
     models.Authority.getGroups()
@@ -34,13 +36,13 @@ const GroupList = () => {
   }, []);
 
   const ref = useRef();
-  const handleRowClick = () => {
-    return;
+  const handleRowClick = ({data}) => {
+    setRow(data);
   };
 
   return (
     <DataGrid
-      height={600}
+      height={'100%'}
       dataSource={groups}
       showBorders={true}
       onRowClick={handleRowClick}

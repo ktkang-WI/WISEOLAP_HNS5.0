@@ -7,6 +7,12 @@ const contextRoot =
 
 const accountPath = document.location.origin + contextRoot + '/account';
 
+// 데이터셋
+export const getDs = async () => {
+  const res = await axios.get('/dataset/ds');
+  return res;
+};
+
 // 그룹
 export const getGroups = async () => {
   const res = await axios.get(accountPath + '/group');

@@ -12,6 +12,7 @@ const AuthorityDataGrid = () => {
       showBorders={true}
       onRowClick={handleRowClick}
       ref={ref}
+      height="100%"
     >
       <Selection
         mode="multiple"
