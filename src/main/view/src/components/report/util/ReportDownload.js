@@ -3,8 +3,9 @@ import DataGrid from 'devextreme/ui/data_grid';
 import Chart from 'devextreme/viz/chart';
 import PieChart from 'devextreme/viz/pie_chart';
 import {Workbook} from 'exceljs';
-import saveAs from 'file-saver';
 import {exportPivotGrid, exportDataGrid} from 'devextreme/excel_exporter';
+// import saveAs from 'file-saver';
+import {downloadReportExcelAll} from 'models/report/Report';
 
 const addImageToWorksheet = async (workbook, worksheet, blob) => {
   return new Promise((resolve, reject) => {
@@ -46,7 +47,8 @@ export const handleDownload = async (items, parameters, dataSource) => {
       workbook.addWorksheet(elementObj.name);
       await exportPivotGrid({
         component: instance,
-        worksheet: worksheet
+        worksheet: worksheet,
+        topLeftCell: {row: 4, column: 1}
       });
       worksheetCount++;
     } else if (elementObj.type === 'grid') {
@@ -55,7 +57,8 @@ export const handleDownload = async (items, parameters, dataSource) => {
       workbook.addWorksheet(elementObj.name);
       await exportDataGrid({
         component: instance,
-        worksheet: worksheet
+        worksheet: worksheet,
+        topLeftCell: {row: 4, column: 1}
       });
       worksheetCount++;
     } else if (elementObj.type === 'chart') {
@@ -89,6 +92,9 @@ export const handleDownload = async (items, parameters, dataSource) => {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {type: blobType});
-    saveAs(blob, 'PivotGrids');
+    const downloadData = new FormData();
+    downloadData.append('file', blob);
+    downloadData.append('fileName', dataSource.reportNm + '.xlsx');
+    downloadReportExcelAll(downloadData);
   }
 };

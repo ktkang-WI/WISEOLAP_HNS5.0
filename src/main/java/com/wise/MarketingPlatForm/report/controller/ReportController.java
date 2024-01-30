@@ -1,6 +1,9 @@
 package com.wise.MarketingPlatForm.report.controller;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -580,6 +589,33 @@ public class ReportController {
         }
         return maxDepth;
     }
+    
+	@PostMapping(value = "/download-report-excel-all", consumes = "multipart/form-data")
+	public ResponseEntity<InputStreamResource> downloadReportExcelAll(
+	        @RequestParam("file") MultipartFile file,
+	        @RequestParam("fileName") String fileName) {
+	    try {
+	        InputStreamResource resource = new InputStreamResource(file.getInputStream());
+	        long contentLength = file.getSize();
+
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentLength(contentLength);
+	        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+	        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+	        String encodedFilename = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
+	        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"");
+
+	        return ResponseEntity.ok()
+	                .headers(headers)
+	                .contentLength(contentLength)
+	                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+	                .body(resource);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.internalServerError().body(null);
+	    }
+	}
 
     @PostMapping(value = "/download-report-all")
     public void downloadReportAll(@RequestBody Map<String, Object> requestData, HttpServletResponse response) {
