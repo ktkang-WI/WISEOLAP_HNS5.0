@@ -73,27 +73,29 @@ const PivotGrid = ({id, adHocOption, item}) => {
 
   // 측정값의 순서로 그리드가 생성
   // -> 하이라이트를 측정값 순서 반대로 만들면 측정 조건에서 하이라이트 적용이 안됨.
-  const highlightMap = useMemo(() => {
-    const map = new Map();
+  // const highlightMap = useMemo(() => {
+  //   const map = new Map();
 
-    for (let i =0; i< highlight.length; i++) {
-      map.set(highlight[i].idx, highlight[i]);
-    }
-    return map;
-  }, [meta.dataHighlight]);
+  //   for (let i =0; i< highlight.length; i++) {
+  //     map.set(highlight[i].idx, highlight[i]);
+  //   }
+  //   return map;
+  // }, [meta.dataHighlight]);
 
   const onCellPrepared = ({cell, area, cellElement}) => {
-    if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
+    if (highlight.length != 0) {
       // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
-      if (isDataCell(cell, area, highlightMap.get(cell.dataIndex)) ) {
-        Object.assign(
-            cellElement.style,
-            getCssStyle(
-                highlightMap.get(cell.dataIndex),
-                cellElement,
-                cell
-            )
-        );
+      for (let i = 0; i < highlight.length; i ++) {
+        if (isDataCell(cell, area, highlight[i])) {
+          Object.assign(
+              cellElement.style,
+              getCssStyle(
+                  highlight[i],
+                  cellElement,
+                  cell
+              )
+          );
+        }
       }
     }
   };

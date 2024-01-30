@@ -80,3 +80,7 @@ img {
 .dx-selectbox-popup-wrapper {
   z-index: 1800 !important;
 }
+
+.dx-overlay-wrapper {
+  z-index: 1800 !important;
+}
