@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
-import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
+import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 import com.wise.MarketingPlatForm.dataset.service.ds.DataSetDsService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class DataSetDsController {
   @GetMapping
   public ResponseEntity<RestAPIVO> getDs() throws Exception{
 
-    List<DsMstrEntity> model = datasetDsService.getDatasetDsData();
+    List<DatasetDsDTO> model = datasetDsService.getDatasetDsData();
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 

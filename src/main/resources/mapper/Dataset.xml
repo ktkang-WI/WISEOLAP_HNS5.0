@@ -37,6 +37,7 @@
 	<resultMap id="DatasetDsDTO" type="com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO">
 		<result column="DS_ID" property="dsId" javaType="int"/>
 	  <result column="DS_NM" property="dsNm" javaType="String"/>
+		<result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
 	  <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	  <result column="OWNER_NM" property="ownerNm" javaType="String"/>
 	  <result column="IP" property="ip" javaType="String"/>
@@ -115,11 +116,13 @@
 		<select id="selectDatasetDs" resultMap="DatasetDsDTO">
 			SELECT
 				DS_MSTR.DS_ID,
+				DS_VIEW_MSTR.DS_VIEW_NM,
 				DS_MSTR.DS_NM,
 				DS_MSTR.DBMS_TYPE,
 				DS_MSTR.OWNER_NM,
 				DS_MSTR.IP
-				FROM DS_MSTR
+						FROM DS_MSTR INNER JOIN DS_VIEW_MSTR
+						ON DS_MSTR.DS_ID = DS_VIEW_MSTR.DS_ID
 		</select>
 
   	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
