@@ -85,17 +85,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     return meta.dataHighlight;
   }, [meta.dataHighlight]);
 
-  // 측정값의 순서로 그리드가 생성
-  // -> 하이라이트를 측정값 순서 반대로 만들면 측정 조건에서 하이라이트 적용이 안됨.
-  // const highlightMap = useMemo(() => {
-  //   const map = new Map();
-
-  //   for (let i =0; i< highlight.length; i++) {
-  //     map.set(highlight[i].idx, highlight[i]);
-  //   }
-  //   return map;
-  // }, [meta.dataHighlight]);
-
   const onCellPrepared = ({cell, area, cellElement}) => {
     if (highlight.length != 0) {
       // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
