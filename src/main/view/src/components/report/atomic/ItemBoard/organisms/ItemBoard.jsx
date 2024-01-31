@@ -8,6 +8,7 @@ import {
   selectSelectedItemId
 } from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
 import useLayout from 'hooks/useLayout';
@@ -46,6 +47,7 @@ const ItemBoard = () => {
   const selectedReportId = useSelector(selectCurrentReportId);
   const layoutConfig = useSelector(selectFlexLayoutConfig);
   const {selectItem} = ItemSlice.actions;
+  const {selectDataset} = DatasetSlice.actions;
   const items = useSelector(selectCurrentItems);
   const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
@@ -142,6 +144,20 @@ const ItemBoard = () => {
     return <span>{useCaption? item.meta.name : false}</span>;
   }
 
+  function focusItem(itemId) {
+    if (selectedItemId != itemId) {
+      dispatch(selectItem({reportId, itemId}));
+      const item = items.find((i) => itemId == i.id);
+
+      if (item?.meta?.dataField?.datasetId) {
+        dispatch(selectDataset({
+          reportId: reportId,
+          datasetId: item.meta.dataField.datasetId
+        }));
+      }
+    }
+  }
+
   /**
    * 해당 action 실행할 경우 action return.
    * 아닐 경우 커스텀 로직 지정정
@@ -158,7 +174,7 @@ const ItemBoard = () => {
         const modelJson = model.toJson();
 
         updateLayoutShape(reportId, modelJson);
-        dispatch(selectItem({reportId, itemId}));
+        focusItem(itemId);
       }
       return;
     }
@@ -166,9 +182,7 @@ const ItemBoard = () => {
     // Tab Focus 처리
     if (action.type == 'FlexLayout_SelectTab') {
       const itemId = action.data.tabNode;
-      if (selectedItemId != itemId) {
-        dispatch(selectItem({reportId, itemId}));
-      }
+      focusItem(itemId);
     }
 
     // 레이아웃 조절
