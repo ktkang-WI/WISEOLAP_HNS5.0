@@ -30,6 +30,7 @@
   "seriesOptions": {
     "title": "시리즈 옵션",
     "data": {
+      "defaultType": "bar",
       "general": {
         "auxiliaryAxis": "보조 축의 구성",
         "ignoreEmptyPoints": "빈 포인트 무시",

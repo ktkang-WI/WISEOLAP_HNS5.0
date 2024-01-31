@@ -5,6 +5,10 @@ import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
 
+
+const seriesOption = localizedString.seriesOptions.data;
+
+
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
@@ -42,7 +46,7 @@ const generateMeta = (item) => {
   });
 
   setMeta(item, 'useRotate', false);
-  setMeta(item, 'seriesType', 'bar');
+  setMeta(item, 'seriesType', seriesOption.defaultType);
 };
 
 /**
