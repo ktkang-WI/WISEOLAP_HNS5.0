@@ -120,8 +120,7 @@ const getRibbonItems = () => {
     'Rotate',
     'XAxisSetting',
     'YAxisSetting',
-    'ExtraAxisSetting',
-    'SeriesType'
+    'ExtraAxisSetting'
   ];
 };
 

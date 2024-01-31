@@ -3,7 +3,6 @@ import itemOptionManager from '../ItemOptionManager';
 import rotate from 'assets/image/icon/button/rotate.png';
 // import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
 // import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
-import seriesType from 'assets/image/icon/button/series_type.png';
 // import useModal from 'hooks/useModal';
 // import ItemOptionModal from '../pie/itemOptionModal/ItemOptionModal';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -11,12 +10,9 @@ import store from 'redux/modules';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
-import usePopover from 'hooks/usePopover';
-import PopoverUI from 'components/common/atomic/Popover/organism/PopoverUI';
 
 const useCustomEvent = () => {
   // const {openModal} = useModal();
-  const {openedPopover} = usePopover();
   const dispatch = useDispatch();
   const {updateItem} = ItemSlice.actions;
   const {commonRibbonBtnElement} = itemOptionManager();
@@ -36,7 +32,7 @@ const useCustomEvent = () => {
           item: selectedItem
         }));
       }
-    },
+    }
     // 'XAxisSetting': {
     //   ...commonRibbonBtnElement,
     //   'id': 'xAxis_setting',
@@ -79,24 +75,6 @@ const useCustomEvent = () => {
     //     );
     //   }
     // },
-    'SeriesType': {
-      ...commonRibbonBtnElement,
-      'id': 'seriesType',
-      'label': localizedString.seriesType,
-      'imgSrc': seriesType,
-      'usePopover': true,
-      'onClick': () => {
-        const props = {
-          width: '600px',
-          height: 'auto',
-          popoverType: 'labelImages',
-          titlePanel: true,
-          id: 'add_default_chart',
-          seriesTypeCompact: true
-        };
-        openedPopover(PopoverUI, props);
-      }
-    }
   };
 
   return {

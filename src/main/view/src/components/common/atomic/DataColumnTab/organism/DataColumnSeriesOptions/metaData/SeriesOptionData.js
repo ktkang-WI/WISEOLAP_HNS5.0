@@ -6,7 +6,6 @@ import {
   pointLabelNotationData,
   pointerMarkerKeyName
 } from 'redux/modules/SeriesOption/SeriesOptionFormat';
-import barImg from '../../../../../../../assets/image/icon/item/bar.png';
 import DataColumnOption
   from '../../../molecules/DataColumnSeriesOptions/DataColumnOption';
 import DataColumnPointLabel
@@ -14,6 +13,7 @@ import DataColumnPointLabel
 import DataColumnType
   from '../../../molecules/DataColumnSeriesOptions/DataColumnType';
 import localizedString from 'config/localization';
+import {chartImages} from 'components/report/item/util/chartImageImporter';
 
 const label = localizedString.seriesOptions.label;
 
@@ -111,19 +111,19 @@ export const dataColumnTypeData = {
           title: label.chart.bar,
           type: 'bar',
           checked: false,
-          src: barImg
+          src: chartImages.bar1
         },
         {
           title: label.chart.stackedbar,
           type: 'stackedbar',
           checked: false,
-          src: barImg
+          src: chartImages.bar2
         },
         {
           title: label.chart.fullstackedbar,
           type: 'fullstackedbar',
           checked: false,
-          src: barImg
+          src: chartImages.bar3
         }
       ]
     },
@@ -134,37 +134,37 @@ export const dataColumnTypeData = {
           title: label.chart.scatter,
           type: 'scatter',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar1
         },
         {
           title: label.chart.line,
           type: 'line',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar2
         },
         {
           title: label.chart.stackedline,
           type: 'stackedline',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar3
         },
         {
           title: label.chart.fullstackedline,
           type: 'fullstackedline',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar4
         },
         {
           title: label.chart.stepline,
           type: 'stepline',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar5
         },
         {
           title: label.chart.spline,
           type: 'spline',
           checked: false,
-          src: barImg
+          src: chartImages.lineBar6
         }
       ]
     },
@@ -175,43 +175,43 @@ export const dataColumnTypeData = {
           title: label.chart.area,
           type: 'area',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar1
         },
         {
           title: label.chart.stackedarea,
           type: 'stackedarea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar2
         },
         {
           title: label.chart.fullstackedarea,
           type: 'fullstackedarea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar3
         },
         {
           title: label.chart.steparea,
           type: 'steparea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar4
         },
         {
           title: label.chart.splinearea,
           type: 'splinearea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar5
         },
         {
           title: label.chart.stackedsplinearea,
           type: 'stackedsplinearea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar6
         },
         {
           title: label.chart.fullstackedsplinearea,
           type: 'fullstackedsplinearea',
           checked: false,
-          src: barImg
+          src: chartImages.areaBar7
         }
       ]
     },
@@ -222,7 +222,7 @@ export const dataColumnTypeData = {
           title: label.chart.bubble,
           type: 'bubble',
           checked: false,
-          src: barImg
+          src: chartImages.bubbleBar1
         }
       ]
     }

@@ -3,41 +3,11 @@ import useLayout from 'hooks/useLayout';
 import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-// TODO: image file 불러오기 추후 수정
-import bar1 from 'assets/image/icon/button/series_type.png';
-import bar2 from 'assets/image/icon/button/stackbar.png';
-import bar3 from 'assets/image/icon/button/fullstackbar.png';
-
-import lineBar1 from 'assets/image/icon/button/ico_pointLine1.png';
-import lineBar2 from 'assets/image/icon/button/ico_pointLine2.png';
-import lineBar3 from 'assets/image/icon/button/ico_pointLine3.png';
-import lineBar4 from 'assets/image/icon/button/ico_pointLine4.png';
-import lineBar5 from 'assets/image/icon/button/ico_pointLine5.png';
-import lineBar6 from 'assets/image/icon/button/ico_pointLine6.png';
-
-import areaBar1 from 'assets/image/icon/button/ico_area1.png';
-import areaBar2 from 'assets/image/icon/button/ico_area2.png';
-import areaBar3 from 'assets/image/icon/button/ico_area3.png';
-import areaBar4 from 'assets/image/icon/button/ico_area4.png';
-import areaBar5 from 'assets/image/icon/button/ico_area5.png';
-import areaBar6 from 'assets/image/icon/button/ico_area6.png';
-import areaBar7 from 'assets/image/icon/button/ico_area7.png';
-
-// TODO: bubble chart 추가 예정
-// import bubbleBar1 from 'assets/image/icon/button/ico_bubble1.png';
-
 import pie from 'assets/image/icon/button/pieChart.png';
-import ItemSlice from 'redux/modules/ItemSlice';
-import store from 'redux/modules';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
-import {useDispatch} from 'react-redux';
+import {chartImages} from 'components/report/item/util/chartImageImporter';
 
-const NormalChartDefaultElement = (seriesTypeCompact) => {
-  // action
-  const {updateItem} = ItemSlice.actions;
-
+const NormalChartDefaultElement = () => {
   // hook
-  const dispatch = useDispatch();
   const {insertFlexLayout} = useLayout();
   const {closePopover} = usePopover();
 
@@ -46,48 +16,24 @@ const NormalChartDefaultElement = (seriesTypeCompact) => {
   const chart = 'chart';
 
   const onClickChartItem = (selectedReportId, chart, chartType) => {
-    if (!seriesTypeCompact) {
-      insertFlexLayout(selectedReportId, chart, chartType);
-    } else {
-      editSeriesType(chartType);
-    }
+    insertFlexLayout(selectedReportId, chart, chartType);
     closePopover();
-  };
-
-  const editSeriesType = (chartType) => {
-    const item = _.cloneDeep(selectCurrentItem(store.getState()));
-    item.meta.seriesType = chartType;
-    dispatch(updateItem({reportId: selectedReportId, item: item}));
-  };
-
-  const makeCompactNormalElemet = (
-      seriesTypeCompact,
-      normalChartElemet) => {
-    if (seriesTypeCompact) {
-      delete normalChartElemet['restChart'];
-      normalChartElemet.keys.pop();
-      // TODO: bubble chart 추가
-      // normalChartElemet['restChart'].filter((element) =>
-      //   element.label !== localizedString.pieChart
-      // );
-    }
-    return normalChartElemet;
   };
 
   const normalChartElemet = {
     barChart: [
       {
-        imgSrc: bar1,
+        imgSrc: chartImages.bar1,
         label: localizedString.barChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'bar')
       },
       {
-        imgSrc: bar2,
+        imgSrc: chartImages.bar2,
         label: localizedString.stackedBarChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'stackedbar')
       },
       {
-        imgSrc: bar3,
+        imgSrc: chartImages.bar3,
         label: localizedString.fullStackedBarChart,
         onClick: () =>
           onClickChartItem(selectedReportId, chart, 'fullstackedbar')
@@ -95,72 +41,72 @@ const NormalChartDefaultElement = (seriesTypeCompact) => {
     ],
     lineChart: [
       {
-        imgSrc: lineBar1,
+        imgSrc: chartImages.lineBar1,
         label: localizedString.scatterChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'scatter')
       },
       {
-        imgSrc: lineBar2,
+        imgSrc: chartImages.lineBar2,
         label: localizedString.lineChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'line')
       },
       {
-        imgSrc: lineBar3,
+        imgSrc: chartImages.lineBar3,
         label: localizedString.stackedLineChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'stackedline')
       },
       {
-        imgSrc: lineBar4,
+        imgSrc: chartImages.lineBar4,
         label: localizedString.fullStackedLineChart,
         onClick: () =>
           onClickChartItem(selectedReportId, chart, 'fullstackedline')
       },
       {
-        imgSrc: lineBar5,
+        imgSrc: chartImages.lineBar5,
         label: localizedString.stepLineChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'stepline')
       },
       {
-        imgSrc: lineBar6,
+        imgSrc: chartImages.lineBar6,
         label: localizedString.splineChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'spline')
       }
     ],
     areaChart: [
       {
-        imgSrc: areaBar1,
+        imgSrc: chartImages.areaBar1,
         label: localizedString.stackChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'area')
       },
       {
-        imgSrc: areaBar2,
+        imgSrc: chartImages.areaBar2,
         label: localizedString.stackedAreaChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'stackedarea')
       },
       {
-        imgSrc: areaBar3,
+        imgSrc: chartImages.areaBar3,
         label: localizedString.fullStackedAreaChart,
         onClick: () =>
           onClickChartItem(selectedReportId, chart, 'fullstackedarea')
       },
       {
-        imgSrc: areaBar4,
+        imgSrc: chartImages.areaBar4,
         label: localizedString.stepAreaChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'steparea')
       },
       {
-        imgSrc: areaBar5,
+        imgSrc: chartImages.areaBar5,
         label: localizedString.splineAreaChart,
         onClick: () => onClickChartItem(selectedReportId, chart, 'splinearea')
       },
       {
-        imgSrc: areaBar6,
+        imgSrc: chartImages.areaBar6,
         label: localizedString.stackedSplineAreaChart,
         onClick: () =>
           onClickChartItem(selectedReportId, chart, 'stackedsplinearea')
       },
       {
-        imgSrc: areaBar7,
+        imgSrc: chartImages.areaBar7,
         label: localizedString.fullStackedSplineAreaChart,
         onClick: () => onClickChartItem(selectedReportId, chart,
             'fullstackedsplineArea')
@@ -190,6 +136,6 @@ const NormalChartDefaultElement = (seriesTypeCompact) => {
     ]
   };
 
-  return makeCompactNormalElemet(seriesTypeCompact, normalChartElemet);
+  return normalChartElemet;
 };
 export default NormalChartDefaultElement;

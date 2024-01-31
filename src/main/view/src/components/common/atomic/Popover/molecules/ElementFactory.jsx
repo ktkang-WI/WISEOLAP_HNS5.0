@@ -13,12 +13,12 @@ import store from 'redux/modules';
 import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 
-const ElementFactory = (id, seriesTypeCompact) => {
+const ElementFactory = (id) => {
   const reportType = selectCurrentDesignerMode(store.getState());
   if (id === 'add_custom_chart') {
     return customChartDefaulElement();
   } else if (id === 'add_default_chart') {
-    return normalChartDefaultElement(seriesTypeCompact);
+    return normalChartDefaultElement();
   } else if (id === 'save_report') {
     return saveDefaultElement();
   } else if (id === 'download_report') {

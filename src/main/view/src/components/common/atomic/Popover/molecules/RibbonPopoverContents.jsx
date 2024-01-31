@@ -68,8 +68,8 @@ const popoverSelector = (type, items) => {
 };
 
 const RibbonPopoverContents = ({
-  popoverType, titlePanel, id, seriesTypeCompact = false}) => {
-  const element = elementFactory(id, seriesTypeCompact);
+  popoverType, titlePanel, id}) => {
+  const element = elementFactory(id);
   return (
     element['keys'].map((e, idx) => {
       return (
