@@ -19,7 +19,7 @@ const Alert = ({
 }) => {
   return (
     <motion.div
-      initial={{opacity: 0, zIndex: 1600}}
+      initial={{opacity: 0, zIndex: 1800}}
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       style={{position: 'fixed'}}
