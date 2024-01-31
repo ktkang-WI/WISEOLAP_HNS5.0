@@ -4,8 +4,7 @@ import Chart from 'devextreme/viz/chart';
 import PieChart from 'devextreme/viz/pie_chart';
 import {Workbook} from 'exceljs';
 import {exportPivotGrid, exportDataGrid} from 'devextreme/excel_exporter';
-// import saveAs from 'file-saver';
-import {downloadReportExcelAll} from 'models/report/Report';
+import {downloadReportExcelAll} from 'models/report/Download';
 
 const addImageToWorksheet = async (workbook, worksheet, blob, startRow) => {
   return new Promise((resolve, reject) => {
