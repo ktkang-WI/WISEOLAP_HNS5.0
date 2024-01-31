@@ -299,6 +299,13 @@ public final class DataSanitizer {
 
                 int compareResult = 0;
 
+                if (v1 == null) {
+                    v1 = "";
+                }
+                if (v2 == null) {
+                    v2 = "";
+                }
+
                 if (v1 instanceof String) {
                     compareResult = StringCompareUtils.compare((String) v1, (String) v2);
                 } else {
