@@ -11,8 +11,6 @@ const DownloadDefaultElement = () => {
   const parameters = selectRootParameter(store.getState());
   const currentReport = useSelector(selectCurrentReport);
   const dataSource = _.cloneDeep(currentReport.options);
-  const downloadAllSet = {items, parameters, dataSource};
-  console.log('downloadAllSet', downloadAllSet);
   return {
     download: [
       {

@@ -29,7 +29,6 @@ const addImageToWorksheet = async (workbook, worksheet, blob, startRow) => {
 };
 
 export const handleDownload = async (items, parameters, dataSource) => {
-  console.log('parameters', parameters);
   const workbook = new Workbook();
   let worksheetCount = 0;
   const elements = items.map((item) => {

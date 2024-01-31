@@ -10,7 +10,6 @@ const CustomChartDefaulElement = () => {
         imgSrc: barImg,
         label: localizedString.histogram,
         onClick: () => {
-          console.log(insertFlexLayout);
         }
       },
       {

@@ -24,7 +24,6 @@ const NomalChartDefaultElement = () => {
         imgSrc: bar,
         label: 'aaa',
         onClick: () => {
-          console.log('test');
         }
       },
       {

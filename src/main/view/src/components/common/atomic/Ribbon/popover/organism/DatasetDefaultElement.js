@@ -37,7 +37,6 @@ const DatasetDefaultElement = () => {
         imgSrc: '',
         visible: true,
         onClick: () => {
-          console.log('singleTable');
         }
       },
       {
@@ -45,7 +44,6 @@ const DatasetDefaultElement = () => {
         imgSrc: '',
         visible: true,
         onClick: () => {
-          console.log('upload');
         }
       }
     ],
