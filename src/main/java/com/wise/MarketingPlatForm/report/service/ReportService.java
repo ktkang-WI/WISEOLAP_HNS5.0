@@ -34,6 +34,7 @@ import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
+import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
@@ -110,6 +111,9 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
+    
+    @Autowired
+    private FileUploadService fileUploadService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {
@@ -123,6 +127,10 @@ public class ReportService {
     public Map<String, Object> getReport(String reportId, String userId) {
     	ReportMstrEntity entity = reportDAO.selectReport(reportId);
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
+        byte[] excelFile = null;
+        if(dto.getReportType() == ReportType.EXCEL) {
+        	excelFile = fileUploadService.fileImport(String.valueOf(dto.getReportId()));
+        }
         Map<String, Object> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
         	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
@@ -161,7 +169,7 @@ public class ReportService {
     	reports.add(report);
 
     	returnMap.put("reports", reports);
-
+    	returnMap.put("excelFile", excelFile);
         return returnMap;
     }
 

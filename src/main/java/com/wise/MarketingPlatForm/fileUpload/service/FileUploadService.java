@@ -17,9 +17,9 @@ public class FileUploadService {
 	@Value("${upload.path}")
 	private String uploadPath;
 	
-	public void saveFile(HttpServletRequest request, MultipartFile file, String fileName) {
+	public void saveFile(MultipartFile file, String fileName) {
         try (InputStream input = file.getInputStream()) {
-        	File folder = WebFileUtils.getWebFolder(request, true, "UploadFiles");
+        	File folder = WebFileUtils.getWebFolder(true, "UploadFiles");
         	File sysFile = WebFileUtils.getFile(folder, fileName);
         	if(sysFile == null) new Exception("spread File create Error");
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -28,9 +28,9 @@ public class FileUploadService {
         } 
     }
 
-	public void deleteFile(HttpServletRequest request, String fileName) {
+	public void deleteFile(String fileName) {
 		try {
-			File file = WebFileUtils.getWebFolder(request, false, "UploadFiles", fileName);
+			File file = WebFileUtils.getWebFolder(false, "UploadFiles", fileName);
 			if (!file.delete()) {
 				new Exception("spread File delete Exception");
 			}
@@ -39,10 +39,10 @@ public class FileUploadService {
         } 
 	}
 	
-	public byte[] fileImport(HttpServletRequest request, String fileName) {
+	public byte[] fileImport(String fileName) {
 		byte[] fileByte = null;
 		try {
-			File file = WebFileUtils.getWebFolder(request, false, "UploadFiles", fileName);
+			File file = WebFileUtils.getWebFolder(false, "UploadFiles", fileName + ".xlsx");
 			Path filePath = file.toPath();
 			fileByte = Files.readAllBytes(filePath);
 		} catch (Exception e) {

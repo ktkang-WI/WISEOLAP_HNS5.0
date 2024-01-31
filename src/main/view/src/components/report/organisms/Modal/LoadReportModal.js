@@ -43,7 +43,6 @@ const LoadReportModal = ({
                   try {
                     if (loadExcelFile) {
                       loadExcelFile({
-                        reportId: selectedReport.id,
                         data: data
                       });
                     } else {

@@ -258,6 +258,7 @@ const useReportSave = () => {
     } catch (error) {
       new Error('Report load Error');
     }
+    querySearch();
   };
 
   const querySearch = () => {
