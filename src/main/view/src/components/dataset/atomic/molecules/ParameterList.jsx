@@ -6,6 +6,7 @@ import localizedString from 'config/localization';
 const ParameterList = ({compact=false, ...props}) => {
   return (
     <CommonDataGrid
+      useFilter={false}
       {...props}
     >
       <Column caption={localizedString.parameterName} dataField='name'/>

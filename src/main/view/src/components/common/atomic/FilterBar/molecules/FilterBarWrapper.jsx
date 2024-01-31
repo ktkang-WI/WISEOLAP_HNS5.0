@@ -59,6 +59,12 @@ const FilterBarWrapper = (props) => {
             dispatch(setParameterValues({
               reportId, values: {[param.name]: values}
             }));
+
+            for (const idx in values.value) {
+              if (parameters.values[key].value[idx] != values.value[idx]) {
+                onValueChanged(param.name, values[idx], idx);
+              }
+            }
           });
         }
       }

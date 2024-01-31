@@ -221,6 +221,7 @@ const QueryDataSourceDesignerModal = ({
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
       modalTitle={localizedString.datasetDesigner}
+      onClose={onClose}
       {...props}
     >
       <RowWrapper>

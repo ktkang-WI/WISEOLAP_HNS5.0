@@ -81,6 +81,10 @@ const DataSourceFoldableList = ({dataset}) => {
 
   const data = dataset? _.cloneDeep(dataset.fields) : [];
 
+  if (data.length > 0 && dataset.datasetType != 'CUBE') {
+    data[0].expanded = true;
+  }
+
   return (
     <Wrapper>
       <Droppable
@@ -95,6 +99,7 @@ const DataSourceFoldableList = ({dataset}) => {
             {...provided.droppableProps}
           >
             <StyledTreeView
+              expandedExpr="expanded"
               ref={ref}
               items={data}
               dataStructure="plain"

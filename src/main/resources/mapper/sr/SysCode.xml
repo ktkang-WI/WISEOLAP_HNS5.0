@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.sr.sysCode.dao.SysCodeDAO">
+
+
+  <select id="selectSysCodeList" resultType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
+    SELECT
+      a1.seq_cd AS sys_cd,
+      a1.seq_nm AS sys_nm,
+      a2.seq_cd AS sub_cd,
+      a2.seq_nm AS sub_nm,
+      a3.seq_cd AS job_cd,
+      a3.seq_nm AS job_nm
+    FROM
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND grp_cd = 1
+            AND use_yn = 'Y'
+      ) a1
+      LEFT OUTER join
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND GRP_CD = 2
+            AND use_yn = 'Y'
+      ) a2
+        ON  a1.grp_cd = a2.upper_grp_cd
+            AND SUBSTR(a1.seq_cd, 1, 3) =  SUBSTR(a2.seq_cd, 1, 3)
+      LEFT OUTER join
+      (
+        SELECT
+            seq_cd AS seq_cd,
+            seq_nm,
+            grp_cd,
+            upper_grp_cd,
+            use_yn,
+            sort_by
+        FROM
+            csr_sys_cd_info
+        WHERE 1 = 1
+            AND GRP_CD = 3
+            AND use_yn = 'Y'
+      ) a3
+        ON a2.grp_cd = a3.upper_grp_cd
+            AND SUBSTR(a1.seq_cd, 1, 3) =  SUBSTR(a3.seq_cd, 1, 3)
+            AND SUBSTR(a2.seq_cd, 4, 3) =  SUBSTR(a3.seq_cd, 4, 3)
+      WHERE 1 = 1
+      ORDER BY
+        a1.sort_by, a2.sort_by, a3.sort_by
+  </select>
+
+  <select id="selectSysCodeByOne" resultType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity"  parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
+    SELECT
+      seq_cd,
+      seq_nm,
+      grp_cd,
+      upper_grp_cd,
+      use_yn,
+      TO_CHAR(st_ymd, 'YYYY-MM-DD HH24:MI:SS') AS st_ymd,
+      TO_CHAR(ed_ymd, 'YYYY-MM-DD HH24:MI:SS') AS ed_ymd,
+      crt_by,
+      TO_CHAR(crt_dt, 'YYYY-MM-DD HH24:MI:SS') AS crt_dt,
+      udt_by,
+      TO_CHAR(udt_dt, 'YYYY-MM-DD HH24:MI:SS') AS udt_dt,
+      sort_by
+    FROM
+      csr_sys_cd_info
+    WHERE 1 = 1
+      AND seq_cd = #{seq_cd}
+  </select>
+
+  <insert id="insertSysCodeInfo" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
+    INSERT INTO csr_sys_cd_info (
+      seq_cd, seq_nm, grp_cd, upper_grp_cd, use_yn,
+      st_ymd, ed_ymd, crt_by, crt_dt, sort_by
+    ) VALUES (
+      #{seq_cd},
+      #{seq_nm},
+      #{grp_cd},
+      #{upper_grp_cd},
+      'Y',
+      TO_DATE(#{st_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      TO_DATE(#{ed_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      #{crt_by},
+      TO_DATE(#{crt_dt}, 'YYYY-MM-DD HH24:MI:SS'),
+      #{sort_by}
+    )
+  </insert>
+
+  <update id="updateSysCodeInfo" parameterType="com.wise.MarketingPlatForm.sr.sysCode.entity.SysCodeEntity">
+    UPDATE
+      csr_sys_cd_info
+    SET
+      seq_nm = #{seq_nm},
+      use_yn = #{use_yn},
+      st_ymd = TO_DATE(#{st_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      ed_ymd = TO_DATE(#{ed_ymd}, 'YYYY-MM-DD HH24:MI:SS'),
+      udt_by = #{udt_by}, 
+      udt_dt = TO_DATE(#{udt_dt}, 'YYYY-MM-DD HH24:MI:SS'),
+      sort_by = #{sort_by}
+    WHERE 1 = 1
+      AND seq_cd = #{seq_cd}
+  </update>
+
+  <update id="updateSysCodeUseYN" parameterType="java.util.List">
+    UPDATE
+      csr_sys_cd_info
+    SET
+      USE_YN = 'N'
+    WHERE 1 = 1
+      AND seq_cd in
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item.seq_cd}
+      </foreach>
+  </update>
+
+</mapper>

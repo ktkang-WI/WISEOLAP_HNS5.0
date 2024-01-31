@@ -461,5 +461,6 @@
   "requireReloadMsg": "해당 옵션은 재조회 시 적용됩니다.",
   "requiredFieldNotExist": "의 항목이 비어있습니다.",
   "deleteParameterMsg": "매개변수를 삭제하시겠습니까?",
+  "deleteDatasetMsg": "데이터 집합을 삭제하시겠습니까?",
   "cofirmGroupBy": "쿼리에 GROUP BY 가 없을 경우 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?"
 }
