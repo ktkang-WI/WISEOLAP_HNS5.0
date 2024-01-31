@@ -8,8 +8,7 @@ import DevChart, {
   Tooltip,
   Point,
   Series,
-  ValueAxis,
-  Label
+  ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
@@ -25,6 +24,7 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
+import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
@@ -187,7 +187,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   };
 
 
-  const customizeLabel = (o) => {
+  const customizeLabel = (o, formats) => {
     const fieldId = o.series.tag.fieldId;
     const dataField =
       seriesOptions.filter((item) => (item.fieldId === fieldId))[0];
@@ -197,11 +197,33 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     const direction = !dataField ?
       seriesOptionDefaultFormat.pointLabel.direction :
       directionFormat(dataField.pointLabel.direction);
+    // format label 적용 부분
+    const formData = formats[o.series.tag.math];
+    const labelSuffix = {
+      O: formData.suffixO,
+      K: formData.suffixK,
+      M: formData.suffixM,
+      B: formData.suffixB
+    };
+    const formatNumber = (value) => {
+      return NumberFormatUtility.formatNumber(
+          value,
+          formData.formatType,
+          formData.unit,
+          formData.precision,
+          formData.useDigitSeparator,
+          undefined,
+          labelSuffix,
+          formData.suffixEnabled,
+          formData.precisionType
+      );
+    };
+    // format label 적용 부분
     return {
       rotationAngle: direction,
       visible: label ? true : false,
       customizeText(e) {
-        return label;
+        return formatNumber(label);
       }
     };
   };
@@ -211,7 +233,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       dataSource={mart.data.data}
       width="100%"
       height="100%"
-      customizeLabel={customizeLabel}
+      customizeLabel={(o) => customizeLabel(o, mart.formats)}
       resolveLabelOverlapping={overlapping}
       id={id}
       ref={dxRef}
@@ -273,14 +295,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   'bubble' ? valueField.summaryName: null
                 }
               >
-                <Label
-                  visible={true}
-                  position='outside'
-                  offset={50}
-                  customizeText={
-                    (info) => customizeTooltip(info, true, mart.formats)
-                  }
-                />
               </Series>
         )
       }
