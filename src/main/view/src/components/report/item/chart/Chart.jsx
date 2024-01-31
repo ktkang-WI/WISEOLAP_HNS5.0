@@ -83,7 +83,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     if (!adHocOption) {
       filterItems(item, {});
     }
-  }, [interactiveOption.targetDimension, interactiveOption.mode]);
+  }, [
+    interactiveOption.targetDimension,
+    interactiveOption.mode,
+    interactiveOption.enabled]);
 
   useEffect(() => {
     if (!adHocOption) {
@@ -141,6 +144,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         selectedData = [];
         if (target.isSelected()) {
           component.clearSelection();
+          filterItems(item, {});
           return;
         }
         component.clearSelection();
