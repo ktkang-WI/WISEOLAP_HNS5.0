@@ -1,9 +1,7 @@
 import localizedString from 'config/localization';
-import useLayout from 'hooks/useLayout';
 import barImg from '../../../../../../assets/image/icon/item/bar.png';
 
 const CustomChartDefaulElement = () => {
-  const {insertFlexLayout} = useLayout();
   return {
     relationChart: [
       {
