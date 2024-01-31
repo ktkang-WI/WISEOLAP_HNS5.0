@@ -3,7 +3,7 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/authority/Title';
 import {useEffect, useState} from 'react';
 
-const AuthorityDataCube = ({dsView, dsViewCube}) => {
+const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
   const [cubeList, setCubeList] = useState([]);
 
   useEffect(() => {
@@ -13,6 +13,10 @@ const AuthorityDataCube = ({dsView, dsViewCube}) => {
 
     setCubeList(newCubeList);
   }, [dsView]);
+
+  useEffect(() => {
+    setCubeList([]);
+  }, [row]);
 
   const handleRowClick = () => {
     return;

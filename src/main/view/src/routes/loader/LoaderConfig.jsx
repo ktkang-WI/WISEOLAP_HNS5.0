@@ -30,7 +30,7 @@ export async function groupData() {
     if (res.status != 200) {
       return res.error;
     }
-    console.log(res);
+
     return res.data.data;
   });
   return {data};
@@ -42,7 +42,7 @@ export async function userData() {
     if (res.status != 200) {
       return res.error;
     }
-    console.log(res);
+
     return res.data.data;
   });
   return {data};

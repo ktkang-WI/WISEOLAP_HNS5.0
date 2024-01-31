@@ -24,11 +24,40 @@ export const getGroups = async () => {
   return res;
 };
 
+export const getGroupFolder = async () => {
+  const res = await axios.get(accountPath + '/group/folder');
+  return res.data;
+};
+
+export const getGroupDataset = async () => {
+  const res = await axios.get(accountPath + '/group/dataset');
+  return res.data;
+};
+
+export const getGroupDs = async () => {
+  const res = await axios.get(accountPath + '/group/ds');
+  return res.data;
+};
+
 // 사용자
 export const getUsers = async () => {
   const res = await axios.get(accountPath + '/user');
-  console.log(res.data.data);
   return res;
+};
+
+export const getUserFolder = async () => {
+  const res = await axios.get(accountPath + '/user/folder');
+  return res.data;
+};
+
+export const getUserDataset = async () => {
+  const res = await axios.get(accountPath + '/user/dataset');
+  return res.data;
+};
+
+export const getUserDs = async () => {
+  const res = await axios.get(accountPath + '/user/ds');
+  return res.data;
 };
 
 // 권한
@@ -41,8 +70,16 @@ export const getGroupData = async () => {
 // 사용자 데이터
 export const getUserData = async () => {
   const res = await axios.get(accountPath + '/user/data');
-  console.log(res.data.data);
   return res;
 };
 
+export const getFolders = async () => {
+  const res = await axios.get('config/folder');
+  return res;
+};
+
+export const getFolderDatasets = async () => {
+  const res = await axios.get('config/folder/dataset');
+  return res;
+};
 

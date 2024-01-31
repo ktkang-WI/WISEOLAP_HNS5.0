@@ -1,45 +1,52 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import models from 'models';
-import {AuthorityContext}
-  from 'components/config/organisms/authority/Authority';
-import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
+import {AuthorityContext}
+  from 'components/config/organisms/authority/Authority';
 
-const DatasourceViewList = ({row, setDsView}) => {
+const DatasourceList = ({row}) => {
   // context
-  const authoritycontext = useContext(AuthorityContext);
+  const authorityContext = useContext(AuthorityContext);
   // state
   const [ds, setDs] = useState([]);
-  const [data] = authoritycontext.state.data;
-  // ref
-  const ref = useRef();
+  const [data] = authorityContext.state.data;
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const getDsViewIdList = () => {
-    let dsViewIdList = [];
+  const getDsIdList = () => {
+    let dsIdList = [];
     const groups = data.filter((d) => d.group);
     const users = data.filter((d) => d.user);
 
     if (groups.length > 0) {
-      dsViewIdList = groups.find((g) => g.group.grpId === row.grpId)
-          ?.dsViews.dsViewId;
+      const dsList = groups.find((g) => g.group.grpId === row?.grpId)
+          ?.ds;
+      dsIdList = dsList?.map((ds) => ds.dsId);
     }
 
     if (users.length > 0) {
-      dsViewIdList = users.find((u) => u.user.userNo === row.userNo)
-          ?.dsViews.dsViewId;
+      const dsList = users.find((u) => u.user.userNo === row?.userNo)
+          ?.ds;
+      dsIdList = dsList?.map((ds) => ds.dsId);
     }
 
-    return dsViewIdList ? dsViewIdList : [];
+    return dsIdList ? dsIdList : [];
   };
 
   useEffect(() => {
     models.Authority.getDs()
         .then((response) => {
-          setDs(response.data.data);
+          const newDs = response.data.data.reduce((acc, v) => {
+            const dsIdList = acc.map((row) => row.dsId);
+            if (!dsIdList.includes(v.dsId)) {
+              acc.push(v);
+            }
+            return acc;
+          }, []);
+          setDs(newDs);
         })
         .catch(() => {
           throw new Error('Data Loading Error');
@@ -47,52 +54,27 @@ const DatasourceViewList = ({row, setDsView}) => {
   }, []);
 
   useEffect(() => {
-    const dsViewIdList = getDsViewIdList();
-    const newDs = ds.map((ds) => {
-      return {
-        ...ds,
-        isAuth: dsViewIdList?.includes(ds.dsViewId) ? true: false
-      };
-    });
-    setDs(newDs);
-    ref.current._instance.clearSelection();
+    const dsIdList = getDsIdList();
+    setSelectedRowKeys(dsIdList);
   }, [row]);
 
   const handleRowClick = ({data}) => {
-    setDsView(data);
+    // setDsView(data);
   };
-
 
   return (
     <Wrapper>
-      <Title title={'데이터 원본 뷰 목록'}></Title>
+      <Title title={'데이터 원본 목록'}></Title>
       <DataGrid
         dataSource={ds}
         showBorders={true}
         onRowClick={handleRowClick}
         height={'90%'}
-        ref={ref}
+        keyExpr="dsId"
+        selectedRowKeys={selectedRowKeys}
       >
-        <Selection mode="single" />
+        <Selection mode="multiple" />
         <SearchPanel visible={true} />
-        <Column
-          dataField="isAuth"
-          caption=""
-          dataType="varchar"
-          format="currency"
-          width="30px"
-          cellRender={({value}) => {
-            if (value) {
-              return <img height={'15px'} src={passwordIcon}/>;
-            }
-          }}
-        />
-        <Column
-          dataField="dsViewNm"
-          caption="데이터 원본 뷰 명"
-          dataType="varchar"
-          format="currency"
-        />
         <Column
           dataField="dsNm"
           caption="데이터 원본 명"
@@ -135,4 +117,4 @@ const DatasourceViewList = ({row, setDsView}) => {
   );
 };
 
-export default DatasourceViewList;
+export default DatasourceList;

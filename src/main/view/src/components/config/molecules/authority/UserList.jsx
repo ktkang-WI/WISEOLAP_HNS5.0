@@ -36,7 +36,7 @@ const UserList = ({setRow}) => {
   }, []);
 
   const handleRowClick = ({data}) => {
-    setRow({data});
+    setRow(data);
   };
 
   return (

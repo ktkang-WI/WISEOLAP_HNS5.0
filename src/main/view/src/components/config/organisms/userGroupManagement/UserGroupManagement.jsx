@@ -74,8 +74,6 @@ const UserGroupManagement = () => {
   const handleBtnClick = ({component}) => {
     // getUserGroupManagementTEST();
     // updateGroupTest();
-    console.log(component);
-    console.log(component.option('icon'));
     const icon = component.option('icon');
 
     switch (icon) {

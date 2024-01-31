@@ -55,13 +55,25 @@ const DataAuthority = ({auth}) => {
           padding='10px'
         >
           <Wrapper>
-            <AuthorityDataCube dsView={dsView} dsViewCube={dsViewCube}/>
+            <AuthorityDataCube
+              dsView={dsView}
+              dsViewCube={dsViewCube}
+              row={row}
+            />
           </Wrapper>
           <Wrapper>
-            <AuthorityDataDimension dsView={dsView} dsViewCube={dsViewCube}/>
+            <AuthorityDataDimension
+              dsView={dsView}
+              dsViewCube={dsViewCube}
+              row={row}
+            />
           </Wrapper>
           <Wrapper>
-            <AuthorityDataMember dsView={dsView} dsViewCube={dsViewCube}/>
+            <AuthorityDataMember
+              dsView={dsView}
+              dsViewCube={dsViewCube}
+              row={row}
+            />
           </Wrapper>
         </Wrapper>
       </Wrapper>

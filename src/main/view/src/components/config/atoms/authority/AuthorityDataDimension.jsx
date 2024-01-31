@@ -3,7 +3,7 @@ import Title from 'components/config/atoms/authority/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useEffect, useState} from 'react';
 
-const AuthorityDataDimension = ({dsView, dsViewCube}) => {
+const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
   const [dimensionList, setDimensionList] = useState([]);
   useEffect(() => {
     const row = dsViewCube
@@ -12,6 +12,10 @@ const AuthorityDataDimension = ({dsView, dsViewCube}) => {
 
     setDimensionList(newDimensionList);
   }, [dsView]);
+
+  useEffect(() => {
+    setDimensionList([]);
+  }, [row]);
 
   const handleRowClick = () => {
     return;

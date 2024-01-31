@@ -16,8 +16,6 @@ const UserPasswordModal = ({...props}) => {
   const user = props.user;
   const ref = useRef();
 
-  console.log(user);
-
   const validationCheck = () => {
     const formInstance = ref.current._instance;
     const newPassword = formInstance.getEditor('newPassword').option('value');

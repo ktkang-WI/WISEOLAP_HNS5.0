@@ -61,8 +61,6 @@ const ConfigurationSetting = () => {
     // 일반 설정
     updateGeneralConfig(general).then((res) => {
       if (res.status === 200) {
-        console.log(res);
-        console.log('환경설정 저장');
         alert('저장 되었습니다.');
       };
     });
