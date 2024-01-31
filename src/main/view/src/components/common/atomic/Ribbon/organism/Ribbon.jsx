@@ -35,14 +35,15 @@ const Ribbon = () => {
         ]}
       />
       <CreateRibbonBtns
-        items={[
-          'AdHocLayout',
-          'AddContainer',
-          'AddChart',
-          'AddPivotGrid',
-          'AddGrid',
-          'AddCustomChart'
-        ]}
+        items={
+          designerMode === DesignerMode['AD_HOC'] ?
+          ['AdHocLayout'] : [
+            'AddContainer',
+            'AddChart',
+            'AddPivotGrid',
+            'AddGrid',
+            'AddCustomChart'
+          ]}
       />
       <CreateRibbonBtns
         targetItem={focusedItem}

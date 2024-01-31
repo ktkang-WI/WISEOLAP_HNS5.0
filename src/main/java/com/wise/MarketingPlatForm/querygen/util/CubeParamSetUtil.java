@@ -76,9 +76,11 @@ public class CubeParamSetUtil {
         DataAggregation dataAggregation= cubeParamSet.getDataAggreagtion();
 
         List<Dimension> dimensions = dataAggregation.getDimensions();
-        List<Measure> measures = dataAggregation.getMeasures();
+        List<Measure> measures = new ArrayList<> ();
         List<Parameter> params = dataAggregation.getParameters();
-        
+        measures.addAll(dataAggregation.getMeasures());
+        measures.addAll(dataAggregation.getSortByItems());
+
         List<String> columnList = cubeParamSet.getColumnList();
         List<String> measureList = cubeParamSet.getMeasureList();
 

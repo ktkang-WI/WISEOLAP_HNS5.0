@@ -3,8 +3,10 @@ import DevDataGrid,
 import React, {createRef, useEffect} from 'react';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 
-const DataGrid = ({id, item}) => {
+const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   const dataGridRef = createRef();
   const config = {
@@ -88,6 +90,20 @@ const DataGrid = ({id, item}) => {
   };
 
   const allowedPageSizes = [10, 20, 50];
+
+  const itemExportObject =
+   itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
 
   const getMaxValue = (column) => {
     if (!maxValue[column.name]) {
