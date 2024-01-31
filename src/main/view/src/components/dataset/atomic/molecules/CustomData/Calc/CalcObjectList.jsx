@@ -1,6 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {dataSource}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
+import {removeDuplicate} from 'components/utils/utility';
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
@@ -36,19 +37,24 @@ const CalcObjectList = () => {
   }, []);
 
   const locatedFields = (selectedCurrentDataField) => {
-    let measure = selectedCurrentDataField.measure;
-    if (!measure) {
-      measure =
+    let measures = selectedCurrentDataField.measure;
+
+    if (!measures) {
+      measures =
       selectedCurrentDataField.field.filter((item) => item.fieldType === 'MEA');
     }
-    const isMeasureEmpty = measure.length === 0;
+    measures = removeDuplicate(
+        (measure) => measure.summaryType + '_' + measure.name,
+        measures);
+
+    const isMeasureEmpty = measures.length === 0;
     let isSelectedMeasureFieldsEmpty = true;
     let selectedMeasureFields = null;
 
     if (isMeasureEmpty) return null;
 
     selectedMeasureFields =
-      measure.filter((item) => item.expression == null)
+      measures.filter((item) => item.expression == null)
           .map((item) => {
             return {
               key: item.name,

@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import CommonButton from '../../Common/Button/CommonButton';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import localizedString from 'config/localization';
 
@@ -73,7 +73,7 @@ const ListFilter = ({
     justify-content: center;
   `;
 
-  const renderContent = useCallback(() => {
+  const renderContent = () => {
     const StyledList = styled(List)`
       .dx-list-item-content {
         font: ${theme.font.filterContent};
@@ -148,7 +148,7 @@ const ListFilter = ({
         </Footer>
       </Wrapper>
     );
-  }, [value, selectionKeys]);
+  };
 
   return (
     <>
