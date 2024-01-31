@@ -2,7 +2,7 @@ import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 import localizedString from 'config/localization';
 
 const customizeTooltip = (info, isLabel, formats) => {
-  const formData = formats[info.point.series.tag];
+  const formData = formats[info.point.series.tag.math];
   let labelFormat = 'Number';
   let labelUnit = 'Ones';
   let labelPrecision = 0;

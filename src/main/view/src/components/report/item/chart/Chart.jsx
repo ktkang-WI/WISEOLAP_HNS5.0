@@ -166,6 +166,15 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       }
     } else {
       // 대상 차원이 차원 그룹일 경우
+      if (interactiveOption.mode == 'single') {
+        selectedData = [];
+        if (target.series.isSelected()) {
+          component.clearSelection();
+          filterItems(item, {});
+          return;
+        }
+        component.clearSelection();
+      }
       if (target.series.isSelected()) {
         target.series.clearSelection();
         selectedData = selectedData.filter((d) => d != target.series.name);
