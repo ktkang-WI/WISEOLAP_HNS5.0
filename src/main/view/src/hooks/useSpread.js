@@ -1,4 +1,4 @@
-import {createColumnsAndRows, deleteTables, generateColumns}
+import {createColumnsAndRows, dataSourceMaker, deleteTables, generateColumns}
   from 'components/report/atomic/spreadBoard/util/spreadUtil';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
@@ -9,22 +9,22 @@ import {selectBindingInfos,
   selectExcelConfig,
   selectExcelIO,
   selectSheets} from 'redux/selector/SpreadSelector';
+import localizedString from 'config/localization';
+import useModal from './useModal';
 
 const useSpread = () => {
   const sheets = selectSheets(store.getState());
   const dispatch = useDispatch();
   const {setBindingInfo, setDesigner} = SpreadSlice.actions;
-  const designer = useSelector(selectCurrentDesigner);
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
   const excelIO = useSelector(selectExcelIO);
 
+  const {alert} = useModal();
 
-  const bindData = ({dataset, datas}) => {
-    const bindingInfo = bindingInfos[dataset.datasetId];
-    // foreach로 bindingInfos에서 datasetId로 찾아서 진행
-    // 추후 메게변수로 가져와야함.
-    const {columns} = generateColumns(datas);
+  const bindData = ({rowData, bindingInfo}) => {
+    const designer = selectCurrentDesigner(store.getState());
+    const {columns} = generateColumns(rowData, sheets);
     let bindedSheet = designer.getWorkbook()
         .getSheetFromName(bindingInfo.sheetNm);
 
@@ -35,7 +35,7 @@ const useSpread = () => {
           .getSheetFromName(bindingInfo.sheetNm);
     }
 
-    const {invoice, dataSource} = dataSourceMaker(datas);
+    const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
     createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
     deleteTables(bindedSheet);
 
@@ -111,15 +111,6 @@ const useSpread = () => {
     });
   };
 
-  const dataSourceMaker = (datas) => {
-    const recodes = datas.map((data) => {
-      return new Record(data);
-    });
-    const invoice = new Invoice(recodes);
-    return {invoice: invoice,
-      dataSource: new sheet.Bindings.CellBindingSource(invoice)};
-  };
-
   const createBorderStyle = (useBorder) => {
     const tableStyle = new sheets.Tables.TableTheme();
     const thinBorder = undefined;
@@ -138,27 +129,22 @@ const useSpread = () => {
    * @param {Object} config ribbon 설정 객체 - 처음 SpreadContent에서만 생성 이후 state에서 불러옴
    */
   const createDesigner = ({reportId, prevDesigner, config}) => {
-    if (prevDesigner) prevDesigner.destroy();
-    if (_.isEmpty(config)) config = selectExcelConfig(store.getState());
-
-    const designer =
-    new sheets.Designer
-        .Designer(document.getElementById('spreadWrapper'),
-            config);
-    dispatch(setDesigner({
-      reportId: reportId,
-      designer: designer
-    }));
-    sheetNameChangedListener(designer);
-    sheetChangedListener(designer);
-  };
-
-  const createExcelFile = () => {
-    createReportBlob().then(
-        (bolb) => uploadFile(
-            bolb,
-            {fileName: response.report.reportId + '.xlsx'}
-        ));
+    try {
+      if (prevDesigner) prevDesigner.destroy();
+      if (_.isEmpty(config)) config = selectExcelConfig(store.getState());
+      const designer =
+      new sheets.Designer
+          .Designer(document.getElementById('spreadWrapper'),
+              config);
+      dispatch(setDesigner({
+        reportId: reportId,
+        designer: designer
+      }));
+      sheetNameChangedListener(designer);
+      sheetChangedListener(designer);
+    } catch (error) {
+      console.error('createDesigner error');
+    }
   };
 
   const createReportBlob = async () => {
@@ -170,7 +156,8 @@ const useSpread = () => {
     return blob;
   };
 
-  const setExcelFile = async (data) => {
+  const setExcelFile = async (data, reportId) => {
+    createDesigner({reportId: reportId});
     const designer = selectCurrentDesigner(store.getState());
     const workBook = designer.getWorkbook();
     const excelIO = selectExcelIO(store.getState());
@@ -180,7 +167,7 @@ const useSpread = () => {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         }
     );
-    workBook.suspendPaint();
+
     const options = {
       excelOpenFlags: {
         ignoreStyle: false,
@@ -195,10 +182,9 @@ const useSpread = () => {
       workBook.clearSheets();
       const workbookObj = json;
       workBook.fromJSON(workbookObj);
-      workBook.resumePaint();
     },
-    (e) => {
-      console.log(e);
+    () => {
+      alert(localizedString.reportCorrupted);
     }, options);
   };
 
@@ -208,7 +194,6 @@ const useSpread = () => {
     sheetNameChangedListener,
     createReportBlob,
     createDesigner,
-    createExcelFile,
     setExcelFile
   };
 };

@@ -32,7 +32,7 @@ const StyledModalPanel = styled(ModalPanel)`
     }
   `;
 
-const ReportSaveModal = ({...props}) => {
+const ReportSaveModal = ({createExcelFile, ...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
@@ -67,6 +67,7 @@ const ReportSaveModal = ({...props}) => {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
+        const reportId = res.data.report.reportId;
         const data = res.data;
         const msg = data.msg;
         const result = data.result;
@@ -77,7 +78,7 @@ const ReportSaveModal = ({...props}) => {
         if (result) {
           addReport(data);
           isOk = true;
-          if (props.createExcelFile) props.createExcelFile();
+          if (createExcelFile) createExcelFile(reportId);
         } else {
           return;
         }

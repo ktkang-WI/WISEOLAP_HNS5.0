@@ -333,5 +333,6 @@
   "highlightBetweenValueCompareMsg": "The condition value (To) must be greater than the condition value (From).",
   "highlightBetweenValueEssentialMsg": "For the condition type Between, the condition value (To) is also required.",
   "highlightOnlyNumberMsg": "Please enter only numbers as condition values.",
-  "highlightInputEssentialValueMsg": "Data item, condition type, and condition value are required input items."
+  "highlightInputEssentialValueMsg": "Data item, condition type, and condition value are required input items.",
+  "noneFile": "The file does not exist."
 }

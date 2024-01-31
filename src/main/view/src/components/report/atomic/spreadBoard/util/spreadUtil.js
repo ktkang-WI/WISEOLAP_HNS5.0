@@ -20,10 +20,10 @@ export const createColumnsAndRows = (
   };
 };
 
-export const generateColumns = (datas) => {
+export const generateColumns = (rowData, sheets) => {
   const columns = [];
   const header = [];
-  const columnKeys = Object.keys(datas[0]);
+  const columnKeys = Object.keys(rowData[0]);
   columnKeys.forEach((columnKey) => {
     const spreadColumnObj = new sheets.Tables.TableColumn();
     spreadColumnObj.name(columnKey);
@@ -55,30 +55,23 @@ export const deleteTables = (bindedSheet) => {
   });
 };
 
-export const positionConverterAsObject = (str) => {
-  if (_.isEmpty(str)) {
+export const positionConverterAsObject = (strWithNum) => {
+  if (_.isEmpty(strWithNum)) {
     return {rowIndex: null, columnIndex: null};
   } else {
     const regExp = new RegExp('([a-zA-Z]+)([\\d]+)');
-    const match = regExp.exec(str);
-    if (match) {
-      const str = match[1];
-      const rowIndex = Number(match[2]);
-      let columnIndex = 0;
-      for (let i = 0; i < str.length; i++) {
-        columnIndex *= 26;
-        columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
-      }
-      return {
-        columnIndex: columnIndex - 1,
-        rowIndex: rowIndex -1
-      };
-    } else {
-      return {
-        columnIndex: 0,
-        rowIndex: 0
-      };
+    const match = regExp.exec(strWithNum);
+    const str = match[1].toUpperCase();
+    const rowIndex = Number(match[2]);
+    let columnIndex = 0;
+    for (let i = 0; i < str.length; i++) {
+      columnIndex *= 26;
+      columnIndex += str.charCodeAt(i) - 'A'.charCodeAt(0) + 1;
     }
+    return {
+      columnIndex: columnIndex - 1,
+      rowIndex: rowIndex -1
+    };
   }
 };
 
@@ -99,5 +92,14 @@ export const positionConverterAsString = (columnIndex, rowIndex) => {
     position += (rowIndex + 1);
   }
   return position;
+};
+
+export const dataSourceMaker = (rowData, sheets) => {
+  const recodes = rowData.map((data) => {
+    return new Record(data);
+  });
+  const invoice = new Invoice(recodes);
+  return {invoice: invoice,
+    dataSource: new sheets.Bindings.CellBindingSource(invoice)};
 };
 

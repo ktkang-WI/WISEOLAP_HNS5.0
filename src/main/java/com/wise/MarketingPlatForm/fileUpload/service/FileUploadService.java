@@ -16,13 +16,13 @@ public class FileUploadService {
 	
 	@Value("${upload.path}")
 	private String uploadPath;
-	// @Autowired
-	// private ResourceLoader resourceLoader;
 	
 	public void saveFile(HttpServletRequest request, MultipartFile file, String fileName) {
         try (InputStream input = file.getInputStream()) {
-        	File folder = WebFileUtils.getWebFolder(request, true, "UploadFiles", fileName);
-			Files.copy(input, folder.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        	File folder = WebFileUtils.getWebFolder(request, true, "UploadFiles");
+        	File sysFile = WebFileUtils.getFile(folder, fileName);
+        	if(sysFile == null) new Exception("spread File create Error");
+			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
         	e.printStackTrace();
         } 

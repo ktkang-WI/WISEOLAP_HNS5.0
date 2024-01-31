@@ -3,7 +3,7 @@ import axios from 'axios';
 const path = '/upload';
 
 export const uploadFile = (param) => {
-  return axios.post(path + '/import', param, {
+  return axios.post(path + '/upload', param, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }

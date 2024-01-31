@@ -21,7 +21,7 @@ public class FileUploadController {
 	@Autowired
 	FileUploadService fileUploadService;
 	
-	@PostMapping(value="/import" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value="/upload" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void fileUpload(
 			HttpServletRequest request,
 			@RequestPart("file") MultipartFile file, 

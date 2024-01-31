@@ -140,14 +140,14 @@ const RibbonDefaultElement = () => {
       'id': 'delete_report',
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
-      'onClick': () => {
+      'onClick': (afterClick) => {
         const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
         dataSource.reportId = selectedReportId;
 
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(dataSource);
+            removeReport(dataSource, afterClick);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);

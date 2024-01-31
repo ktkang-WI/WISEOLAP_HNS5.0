@@ -57,6 +57,7 @@ const defaultBindInfo = {
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
+  // config의 경우 처음 생성되고
   config: {},
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
@@ -65,38 +66,16 @@ const initialState = {
   }
 };
 
-const getObjKey = (obj) => {
-  const keys = Object.keys(obj);
-  if (!keys) return keys;
-  return null;
-};
-
-const mergeObj = (obj1, obj2) => {
-  const obj1Key = getObjKey(obj1);
-  const obj2Key = getObjKey(obj2);
-
-  let tempObj = {};
-
-  tempObj = mergeProcess(obj1Key, obj1, tempObj);
-  tempObj = mergeProcess(obj2Key, obj2, tempObj);
-
-  return tempObj;
-};
-
-const mergeProcess = (keys, obj1, tempObj) => {
-  keys.forEach((key) => {
-    tempObj[key] = obj1[key];
-  });
-  return tempObj;
-};
-
-
 const reducers = {
-  initSpread: () => {
-    return initialState.config = state.config;
+  initSpread: (state) => {
+    return {
+      ...initialState,
+      config: state.config
+    };
   },
   changeSpread(state, actions) {
     const newId = actions.payload.reportId.newId;
+    const prevId = actions.payload.reportId.prevId;
     const {config, excelIO, sheets, defaultBindInfo} = state;
     const newState = {
       config,
@@ -104,7 +83,8 @@ const reducers = {
       sheets,
       defaultBindInfo,
       [newId]: {
-        bindingInfos: actions.payload.bindingInfos
+        bindingInfos: actions.payload.bindingInfos,
+        designer: state[prevId].designer
       }
     };
 
@@ -142,13 +122,15 @@ const reducers = {
   },
   // 디자이너에서 저장 후 reportId만 변경할 때 사용
   changeSpreadReportId(state, actions) {
-    const prevId = actions.payload.reportId.prevId;
-    const newId = actions.payload.reportId.newId;
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
 
     if (prevId != newId) {
-      const spread = state[prevId];
-      delete state[prevId];
-      state[newId] = spread;
+      const newState = {...state};
+      const spread = newState[prevId];
+      delete newState[prevId];
+      newState[newId] = spread;
+      return newState;
     }
   }
 };

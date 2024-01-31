@@ -1,6 +1,9 @@
 import models from 'models';
+import useModal from './useModal';
+import localizedString from 'config/localization';
 
 const useFile = () => {
+  const {alert} = useModal();
   /**
    * @param {Blob} file
    * @param {Object} param
@@ -12,21 +15,17 @@ const useFile = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('param', newParam);
-
-      const response = await models.File.uploadFile(formData);
-
-      console.log('File uploaded successfully:', response.data);
+      await models.File.uploadFile(formData);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      alert(localizedString.noneFile);
     }
   };
 
   const deleteFile = async (param) => {
     try {
-      const response = await models.File.deleteFile(param);
-      console.log('File delete successfully:', response.data);
+      await models.File.deleteFile(param);
     } catch (error) {
-      console.error('Error delete file:', error);
+      alert(localizedString.noneFile);
     }
   };
 
@@ -35,7 +34,7 @@ const useFile = () => {
       const response = await models.File.importFile(param);
       return response;
     } catch (error) {
-      console.error('Error import file:', error);
+      alert(localizedString.noneFile);
     }
   };
 

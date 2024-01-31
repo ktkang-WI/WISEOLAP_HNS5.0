@@ -14,6 +14,7 @@ import {
   positionConverterAsObject,
   positionConverterAsString
 } from '../util/spreadUtil';
+import useModal from 'hooks/useModal';
 
 const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
@@ -22,6 +23,7 @@ const DatasetLinkerModal = ({...props}) => {
   const {setBindingInfos} = SpreadSlice.actions;
   const datasets = selectCurrentDatasets(store.getState());
   const reportId = selectCurrentReportId(store.getState());
+  const {alert} = useModal();
   const bindingInfos = useSelector(selectBindingInfos);
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
@@ -96,6 +98,11 @@ const DatasetLinkerModal = ({...props}) => {
 
   const updateDataSources = (value, currentRowData, key) => {
     const newDataSources = _.cloneDeep(dataSources);
+    const reg = /^(?:[A-Za-z]{1,2}\d{1,3})?$/;
+    if (key === 'position' && !reg.test(value)) {
+      alert(localizedString.dataLinkerPosition);
+      return;
+    }
     newDataSources.map((dataSource) => {
       if (dataSource.datasetNm === currentRowData.datasetNm) {
         dataSource[key] = value;
@@ -122,14 +129,19 @@ const DatasetLinkerModal = ({...props}) => {
         }}
       >
         <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}/>
-        <Column dataField='sheetNm' caption='Sheet 명' setCellValue={
-          (newData, value, currentRowData) =>
+        <Column
+          dataField='sheetNm'
+          caption='Sheet 명'
+          setCellValue={(newData, value, currentRowData) =>
             updateDataSources(value, currentRowData, 'sheetNm')}>
           <Lookup dataSource={sheetNms} />
         </Column>
-        <Column dataField='position' caption='데이터 연동 위치'setCellValue={
-          (newData, value, currentRowData) =>
-            updateDataSources(value, currentRowData, 'position')}/>
+        <Column
+          dataField='position'
+          caption='데이터 연동 위치'
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'position')}
+        />
         <Column
           dataField='useHeader'
           caption='헤더 표시 여부'

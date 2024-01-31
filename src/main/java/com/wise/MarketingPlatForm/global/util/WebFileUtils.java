@@ -42,4 +42,10 @@ public final class WebFileUtils {
 
         return folder;
     }
+    
+    public static File getFile(final File folder, final String fileName) {
+    	if (folder == null || fileName == null) return null;
+    	final File file = FileUtils.getFile(folder, fileName);
+    	return file;
+    }
 }

@@ -18,14 +18,14 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SpreadDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
-  const {reload} = useReportSave();
+  const {reload, loadReport, querySearch} = useReportSave();
   const {save} = saveDefaultElement();
-  const {importFile} = useFile();
+  const {importFile, uploadFile, deleteFile} = useFile();
   const ribbonElement = ribbonDefaultElement();
   const {
-    createExcelFile,
     createDesigner,
-    setExcelFile
+    setExcelFile,
+    createReportBlob
   } = useSpread();
 
   // config의 경우 초기에만 생성하고 이후에 state에서 사용하는 형태로 변경
@@ -67,19 +67,26 @@ const SpreadDefaultElement = () => {
   };
 
   const openReport = () => {
-    const loadExcelFile = ({reportId, prevDesigner}) => {
-      createDesigner({reportId, prevDesigner});
+    const loadExcelFile = ({reportId, data}) => {
       importFile({fileName: reportId + '.xlsx'}).then((response) => {
-        setExcelFile(response.data);
+        loadReport(data);
+        setExcelFile(response.data, reportId);
+        querySearch();
       });
     };
     openModal(LoadReportModal, {loadExcelFile: loadExcelFile});
   };
 
+  const createExcelFile = (reportId) => {
+    createReportBlob().then(
+        (blob) => uploadFile(
+            blob,
+            {fileName: reportId + '.xlsx'}
+        ));
+  };
+
   const saveReport = () => {
-    save[0].onClick({
-      createExcelFile: createExcelFile
-    });
+    save[0].onClick({createExcelFile: createExcelFile});
   };
 
   const saveAsReport = () => {
@@ -87,7 +94,15 @@ const SpreadDefaultElement = () => {
   };
 
   const deleteReport = () => {
-    ribbonElement['DeleteReport'].onClick();
+    ribbonElement['DeleteReport'].onClick({deleteExcelFile: deleteExcelFile});
+  };
+
+  const deleteExcelFile = ({reportId, prevDesigner}) => {
+    createDesigner({
+      reportId: 0,
+      prevDesigner: prevDesigner
+    });
+    deleteFile({fileName: reportId + '.xlsx'});
   };
 
   const downloadReportXLSX = () => {
@@ -123,7 +138,7 @@ const SpreadDefaultElement = () => {
       e.excelIO.save(json, (blob) => {
         saveAs(blob, fileName);
       }, (e) => {
-        console.log(e);
+        alert(localizedString.reportCorrupted);
       });
     }
   };
