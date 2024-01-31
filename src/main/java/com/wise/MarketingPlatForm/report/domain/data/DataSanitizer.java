@@ -241,6 +241,22 @@ public final class DataSanitizer {
     }
 
     /**
+     * null값이 포함된 row가 있을 경우 해당 row를 빈 문자열로 바꿉니다.
+     *
+     * @return DataSanitizer
+     */
+    public final DataSanitizer replaceNullData() {
+        for (Map<String, Object> map : data) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getValue() == null) {
+                    entry.setValue("");
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
      * <p>
      * 데이터를 차원(Dimension)의 sortBy와 sortOrder 값을 사용해서 정렬합니다.
      * 차원의 index가 낮을 수록 높은 우선순위를 가집니다.
