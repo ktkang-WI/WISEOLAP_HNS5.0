@@ -31,23 +31,23 @@ const DatasetDefaultElement = () => {
             }
           });
         }
-      },
-      {
-        label: localizedString.addDsSingle,
-        imgSrc: '',
-        visible: true,
-        onClick: () => {
-          console.log('singleTable');
-        }
-      },
-      {
-        label: localizedString.addDsUpload,
-        imgSrc: '',
-        visible: true,
-        onClick: () => {
-          console.log('upload');
-        }
       }
+      // {
+      //   label: localizedString.addDsSingle,
+      //   imgSrc: '',
+      //   visible: true,
+      //   onClick: () => {
+      //     console.log('singleTable');
+      //   }
+      // },
+      // {
+      //   label: localizedString.addDsUpload,
+      //   imgSrc: '',
+      //   visible: true,
+      //   onClick: () => {
+      //     console.log('upload');
+      //   }
+      // }
     ],
     keys: ['dataset']
   };

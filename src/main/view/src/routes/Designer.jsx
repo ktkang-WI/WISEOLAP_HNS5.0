@@ -10,15 +10,16 @@ const Designer = () => {
       <Header
         left={left}
         right={[
-          'Viewer',
-          'NewWindow',
-          'ShowQuery',
-          'ReportProperty'
+          'Viewer'
+          // 'NewWindow',
+          // 'ShowQuery',
+          // 'ReportProperty'
         ]}
       >
       </Header>
+      {/* , 'Spreadsheet', 'Preference' */}
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc', 'Spreadsheet', 'Preference']}
+        content={['Dashboard', 'AdHoc']}
       />
       <Outlet/>
     </div>
