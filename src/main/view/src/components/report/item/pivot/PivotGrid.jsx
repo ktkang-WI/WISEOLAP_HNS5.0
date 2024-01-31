@@ -15,10 +15,10 @@ import store from 'redux/modules';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import models from 'models';
 import localizedString from 'config/localization';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 
-
-const PivotGrid = ({id, adHocOption, item}) => {
-  console.log('pivot grid id', id);
+const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -28,6 +28,8 @@ const PivotGrid = ({id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const itemExportObject =
+   itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal} = useModal();
 
   const datasets = useSelector(selectCurrentDatasets);
@@ -61,6 +63,16 @@ const PivotGrid = ({id, adHocOption, item}) => {
     };
   }, []);
 
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
 
   // highlight 추가, 변경 시 repaint(컴포넌트를 다시 그려줌)
   useEffect(() => {

@@ -23,9 +23,14 @@ const getItemIndex = (state, reportId) => {
   );
 };
 
+const isThisAdhoc = (state, reportId) => {
+  let isok = false;
+  if (state[reportId].adHocOption) isok = true;
+  return isok;
+};
+
 const getFieldIdFromMeasure = (state, reportId) => {
-  const itemIndex = getItemIndex(state, reportId);
-  const measures = state[reportId].items[itemIndex].meta.dataField.measure;
+  const measures = getDataFieldType(state, reportId).measure;
   const fieldIds = [];
   measures.forEach((item) => {
     fieldIds.push(item.fieldId);
@@ -36,12 +41,25 @@ const getFieldIdFromMeasure = (state, reportId) => {
 // TODO: Item Slice 로 옮겨야 할거 같다.?
 const getDataFieldType = (state, reportId) => {
   const itemIndex = getItemIndex(state, reportId);
-  return state[reportId].items[itemIndex].meta.dataField;
+  // TODO: 긴급 소스수정 추후 수정
+
+  let dataField = null;
+
+  if (isThisAdhoc(state, reportId)) {
+    dataField = state[reportId].adHocOption.dataField;
+  } else {
+    dataField = state[reportId].items[itemIndex].meta.dataField;
+  }
+  return dataField;
 };
 
 // 임시용 redux
 const getItems = (state, reportId) => {
   return state[reportId].items;
+};
+
+const getItem = (state, reportId) => {
+  return state[reportId];
 };
 
 // Create Selectors for in slice
@@ -70,16 +88,16 @@ export const removedSeriesOptions = (state, reportId, fetchFieldId) => {
 
   if (seriesOptions.length == 0) return seriesOptions;
 
-  seriesFieldIds.forEach((fieldId, index) => {
+  seriesFieldIds.forEach((fieldId) => {
     if (fieldId === fetchFieldId) {
-      removeIndexs.push(index);
+      removeIndexs.push(seriesFieldIds.indexOf(fetchFieldId));
     }
     if (!fieldIds.includes(fieldId)) {
       removeIndexs.push(seriesFieldIds.indexOf(fieldId));
     }
   });
 
-  removeIndexs.forEach((index) => seriesOptions.splice(index, 1));
+  removeIndexs.forEach((i, index) => seriesOptions.splice((i - index), 1));
 
   return seriesOptions;
 };
@@ -139,6 +157,15 @@ const getMeasures = (item) => {
   return measures;
 };
 
+const getAdHocMeasures = (item) => {
+  let measures = null;
+  if (!item.adHocOption) return null;
+  if (!item.adHocOption.dataField) return null;
+  const dataField = item.adHocOption.dataField;
+  measures = dataField.measure;
+  return measures;
+};
+
 const updateMeasuresInfo = (measures, customDatas) => {
   if (!measures) return;
   if (!customDatas) return;
@@ -150,6 +177,24 @@ const updateMeasuresInfo = (measures, customDatas) => {
     });
   });
 };
+
+const updateMeasureInfoAdhocProcess = (state, reportId, customDatas) => {
+  const item = getItem(state, reportId);
+  const measures = getAdHocMeasures(item);
+  if (measures) updateMeasuresInfo(measures, customDatas);
+};
+
+const updateMeasureInfoProcess = (state, reportId, customDatas) => {
+  const items = getItems(state, reportId);
+  if (!customDatas) return;
+  if (!items) return;
+
+  items.forEach((item) => {
+    const measures = getMeasures(item);
+    if (measures) updateMeasuresInfo(measures, customDatas);
+  });
+};
+
 // Create Reducers
 const seriesOptionSlice = (builder) => {
   // 임시용 코드
@@ -159,15 +204,12 @@ const seriesOptionSlice = (builder) => {
       ExceptionCheck[MeasuresUpdateNullCheck](action.payload);
       const customDatas = action.payload.customDatas;
       const reportId = action.payload.reportId;
-      const items = getItems(state, reportId);
 
-      if (!customDatas) return;
-      if (!items) return;
-
-      items.forEach((item) => {
-        const measures = getMeasures(item);
-        if (measures) updateMeasuresInfo(measures, customDatas);
-      });
+      if (isThisAdhoc(state, reportId)) {
+        updateMeasureInfoAdhocProcess(state, reportId, customDatas);
+      } else {
+        updateMeasureInfoProcess(state, reportId, customDatas);
+      }
     } catch (error) {
       console.log(error);
     }

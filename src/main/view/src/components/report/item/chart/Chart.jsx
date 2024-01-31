@@ -1,3 +1,5 @@
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import DevChart, {
   ArgumentAxis,
   CommonSeriesSettings,
@@ -23,11 +25,12 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-// import _ from 'lodash';
+import _ from 'lodash';
 
-const Chart = ({id, adHocOption, item}) => {
-  const dataFields = item.meta.dataField;
+const Chart = ({setItemExports, id, adHocOption, item}) => {
+  const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
+  // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
   const {
     auxiliaryAxis,
@@ -52,6 +55,20 @@ const Chart = ({id, adHocOption, item}) => {
 
   const dxRef = useRef();
 
+  const itemExportObject =
+   itemExportsObject(id, dxRef, 'CHART', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
 
@@ -66,7 +83,10 @@ const Chart = ({id, adHocOption, item}) => {
     if (!adHocOption) {
       filterItems(item, {});
     }
-  }, [interactiveOption.targetDimension, interactiveOption.mode]);
+  }, [
+    interactiveOption.targetDimension,
+    interactiveOption.mode,
+    interactiveOption.enabled]);
 
   useEffect(() => {
     if (!adHocOption) {
@@ -124,6 +144,7 @@ const Chart = ({id, adHocOption, item}) => {
         selectedData = [];
         if (target.isSelected()) {
           component.clearSelection();
+          filterItems(item, {});
           return;
         }
         component.clearSelection();
@@ -145,6 +166,15 @@ const Chart = ({id, adHocOption, item}) => {
       }
     } else {
       // 대상 차원이 차원 그룹일 경우
+      if (interactiveOption.mode == 'single') {
+        selectedData = [];
+        if (target.series.isSelected()) {
+          component.clearSelection();
+          filterItems(item, {});
+          return;
+        }
+        component.clearSelection();
+      }
       if (target.series.isSelected()) {
         target.series.clearSelection();
         selectedData = selectedData.filter((d) => d != target.series.name);
@@ -236,7 +266,7 @@ const Chart = ({id, adHocOption, item}) => {
                   fieldId: valueField.fieldId,
                   math: Math.floor(i / mart.seriesLength)
                 }}
-                name={valueField.caption}
+                name={valueField.name}
                 type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
                 sizeField={
                   getSeriesOptionType(valueField.fieldId, seriesOptions) ===
@@ -259,15 +289,26 @@ const Chart = ({id, adHocOption, item}) => {
 };
 
 
+const getDataField = (state) => {
+  if (state.adHocOption) {
+    return state.adHocOption.dataField;
+  };
+  return state.item.meta.dataField;
+};
+
 const propsComparator = (prev, next) => {
+  const prevDataField = getDataField(prev);
+  const nextDataField = getDataField(next);
+
+  const seriesOptionsComparator =
+    _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
+
   return _.isEqual(prev.item.mart, next.item.mart) &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
-  _.isEqual(prev.item.meta.dataField.seriesOptions,
-      next.item.meta.dataField.seriesOptions) &&
+      seriesOptionsComparator &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
 
 
 export default React.memo(Chart, propsComparator);
-// export default React.memo(Chart);

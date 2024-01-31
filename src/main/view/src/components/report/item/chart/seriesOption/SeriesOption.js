@@ -5,6 +5,7 @@ import {
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 
 const isUsedAuxiliaryAxis = (seriesOptions) => {
+  if (!seriesOptions) false;
   const auxiliaryAxis =
     seriesOptions.filter((item) => item.general.auxiliaryAxis === true);
   if (auxiliaryAxis.length === 0) return false;
@@ -44,6 +45,7 @@ export const directionFormat = (direction) => {
 };
 
 export const getSeriesOptionType = (fieldId, seriesOptions) => {
+  if (!seriesOptions) return 'bar';
   let selectedSeriesOption = null;
   seriesOptions.forEach((item) => {
     if (item.fieldId === fieldId) {
@@ -62,7 +64,7 @@ export const getSeriesGeneralOption = (seriesOptions) => {
   const ignoreEmptyPoints =
    !seriesOptions ? false : seriesOptions[0].general.ignoreEmptyPoints;
   const pointerMarker =
-   !seriesOptions ? false : seriesOptions[0].general.pointerMarker;
+   !seriesOptions ? true : seriesOptions[0].general.pointerMarker;
   const reverseView =
    !seriesOptions ? false : seriesOptions[0].general.reverseView;
 
@@ -84,6 +86,7 @@ export const getAuxiliaryAxis = (fieldId, seriesOptions) => {
 };
 
 export const overlappingFormat = (seriesOptions) => {
+  if (!seriesOptions) return 'none';
   let format = '';
   const overlapping = !seriesOptions ?
     overlappingModeData.default :

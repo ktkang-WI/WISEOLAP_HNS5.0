@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.querygen.aggregator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ public class QueryGenAggregator {
         this.itemType = dataAggregation.getItemType().toString();
 
         List<Dimension> dimensions = dataAggregation.getDimensions();
-        List<Measure> measures = dataAggregation.getMeasures();
+        List<Measure> measures = new ArrayList<>();
+        measures.addAll(dataAggregation.getMeasures());
+        measures.addAll(dataAggregation.getSortByItems());
         List<Parameter> params = dataAggregation.getParameters();
 
         List<CubeTableColumn> columnInfoList = cubeParamSet.getColumnInfoList();
