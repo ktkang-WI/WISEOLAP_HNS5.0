@@ -9,14 +9,14 @@ const DataGrid = ({id, item}) => {
   const dataGridRef = createRef();
   const config = {
     gridLine: true,
-    barPallete: false, // 구현 X
+    barPallete: false, // TODO: 추구개발
     barColorEdit: false, // 구현 X
     merging: true,
     shwHeader: true,
     paging: true,
-    autoWrap: false, // 구현 X
+    autoWrap: false,
     autoGridWidth: false,
-    headerAdd: false, // 구현 X
+    headerAdd: false, // TODO: 추구개발
     writeHeader: false // 구현 X
   };
   const options = {
@@ -127,6 +127,7 @@ const DataGrid = ({id, item}) => {
       rowAlternationEnabled={false}
       columnAutoWidth={config.autoGridWidth}
       showColumnHeaders={config.shwHeader}
+      wordWrapEnabled={config.autoWrap}
     >
       <Paging
         enabled={config.paging}
