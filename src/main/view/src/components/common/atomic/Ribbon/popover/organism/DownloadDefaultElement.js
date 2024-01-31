@@ -4,7 +4,6 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItems} from 'redux/selector/ItemSelector';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
-// import models from 'models';
 import {handleDownload} from 'components/report/util/ReportDownload';
 
 const DownloadDefaultElement = () => {
@@ -14,21 +13,6 @@ const DownloadDefaultElement = () => {
   const dataSource = _.cloneDeep(currentReport.options);
   const downloadAllSet = {items, parameters, dataSource};
   console.log('downloadAllSet', downloadAllSet);
-
-  // function replacer(key, value) {
-  //   const seen = new WeakSet();
-  //   return (key, value) => {
-  //     if (typeof value === 'object' && value !== null) {
-  //       if (seen.has(value)) {
-  //         return;
-  //       }
-  //       seen.add(value);
-  //     }
-  //     return value;
-  //   };
-  // }
-
-  // const safeStringify = (obj) => JSON.stringify(obj, replacer());
   return {
     download: [
       {
@@ -40,8 +24,6 @@ const DownloadDefaultElement = () => {
             visible: true,
             onClick: () => {
               handleDownload(items, parameters, dataSource);
-              // models.Report.downloadReportAll(
-              //     safeStringify(downloadAllSet), '.xlsx');
             }
           },
           {
