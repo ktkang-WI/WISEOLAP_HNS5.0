@@ -7,7 +7,7 @@ import {exportPivotGrid, exportDataGrid} from 'devextreme/excel_exporter';
 // import saveAs from 'file-saver';
 import {downloadReportExcelAll} from 'models/report/Report';
 
-const addImageToWorksheet = async (workbook, worksheet, blob) => {
+const addImageToWorksheet = async (workbook, worksheet, blob, startRow) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = function(event) {
@@ -17,8 +17,8 @@ const addImageToWorksheet = async (workbook, worksheet, blob) => {
         extension: 'png'
       });
       worksheet.addImage(imageId, {
-        tl: {col: 0.0, row: 0.0},
-        br: {col: 13.9999, row: 30.9999}
+        tl: {col: 0.0, row: startRow},
+        br: {col: 13.9999, row: 27.9999}
       });
       resolve();
     };
@@ -30,6 +30,7 @@ const addImageToWorksheet = async (workbook, worksheet, blob) => {
 };
 
 export const handleDownload = async (items, parameters, dataSource) => {
+  console.log('parameters', parameters);
   const workbook = new Workbook();
   let worksheetCount = 0;
   const elements = items.map((item) => {
@@ -41,24 +42,33 @@ export const handleDownload = async (items, parameters, dataSource) => {
     };
   });
   for (const elementObj of elements) {
+    let startRow = 2;
+    const worksheet = workbook.addWorksheet(elementObj.name);
+    if (parameters.informations) {
+      worksheet.getCell('A1').value = '필터차원';
+      worksheet.getCell('B1').value = '조건값';
+      parameters.informations.forEach((info, index) => {
+        const defaultValue =
+        (info.defaultValue && info.defaultValue.length) ?
+        info.defaultValue.join('') : '';
+        worksheet.getRow(index + 2).values = [info.caption, defaultValue];
+      });
+      startRow += parameters.informations.length;
+    }
     if (elementObj.type === 'pivot') {
       const instance = PivotGrid.getInstance(elementObj.element);
-      const worksheet =
-      workbook.addWorksheet(elementObj.name);
       await exportPivotGrid({
         component: instance,
         worksheet: worksheet,
-        topLeftCell: {row: 4, column: 1}
+        topLeftCell: {row: startRow +1, column: 1}
       });
       worksheetCount++;
     } else if (elementObj.type === 'grid') {
       const instance = DataGrid.getInstance(elementObj.element);
-      const worksheet =
-      workbook.addWorksheet(elementObj.name);
       await exportDataGrid({
         component: instance,
         worksheet: worksheet,
-        topLeftCell: {row: 4, column: 1}
+        topLeftCell: {row: startRow +1, column: 1}
       });
       worksheetCount++;
     } else if (elementObj.type === 'chart') {
@@ -70,8 +80,7 @@ export const handleDownload = async (items, parameters, dataSource) => {
         });
         instance.exportTo('PNG').catch(reject);
       });
-      const worksheet = workbook.addWorksheet(elementObj.name);
-      await addImageToWorksheet(workbook, worksheet, blob);
+      await addImageToWorksheet(workbook, worksheet, blob, startRow);
       worksheetCount++;
     } else if (elementObj.type === 'pie') {
       const instance = PieChart.getInstance(elementObj.element);
@@ -82,8 +91,7 @@ export const handleDownload = async (items, parameters, dataSource) => {
         });
         instance.exportTo('PNG').catch(reject);
       });
-      const worksheet = workbook.addWorksheet(elementObj.name);
-      await addImageToWorksheet(workbook, worksheet, blob);
+      await addImageToWorksheet(workbook, worksheet, blob, startRow);
       worksheetCount++;
     }
   }
