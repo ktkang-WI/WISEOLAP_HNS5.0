@@ -53,6 +53,7 @@ public class ListParameterDTO {
         .dataType(String.valueOf(map.get("dataType")))
         .defaultValue(defaultValue)
         .linkageValues(linkageValues)
+        .defaultValueUseSql(Boolean.valueOf(map.get("defaultValueUseSql")))
         .itemCaption(String.valueOf(map.get("itemCaption")))
         .itemKey(String.valueOf(map.get("itemKey")))
         .operation(String.valueOf(map.get("operation")))

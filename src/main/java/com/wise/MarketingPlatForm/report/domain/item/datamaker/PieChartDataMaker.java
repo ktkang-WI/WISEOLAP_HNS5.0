@@ -36,6 +36,7 @@ public class PieChartDataMaker implements ItemDataMaker {
         data = sanitizer
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .replaceNullData()
                 .orderBy()
                 .columnFiltering()
                 .getData();
