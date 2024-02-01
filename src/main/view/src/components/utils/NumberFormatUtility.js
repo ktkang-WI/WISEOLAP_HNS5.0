@@ -1,5 +1,29 @@
 import localizedString from 'config/localization';
 
+export const generateLabelSuffix = (formData) => {
+  const labelSuffix = {
+    O: formData.suffixO,
+    K: formData.suffixK,
+    M: formData.suffixM,
+    B: formData.suffixB
+  };
+  return labelSuffix;
+};
+
+export const formatNumber = (value, formData, labelSuffix) => {
+  return NumberFormatUtility.formatNumber(
+      value,
+      formData.formatType,
+      formData.unit,
+      formData.precision,
+      formData.useDigitSeparator,
+      undefined,
+      labelSuffix,
+      formData.suffixEnabled,
+      formData.precisionType
+  );
+};
+
 const NumberFormatUtility = {
   // 단위변환에 필요한 숫자 정의
   unitNum: {
