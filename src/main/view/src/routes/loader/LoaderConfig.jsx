@@ -33,7 +33,7 @@ export async function groupData() {
 
     return res.data.data;
   });
-  return {data};
+  return data;
 }
 
 export async function userData() {
@@ -45,5 +45,5 @@ export async function userData() {
 
     return res.data.data;
   });
-  return {data};
+  return data;
 }

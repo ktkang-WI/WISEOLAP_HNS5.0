@@ -40,7 +40,7 @@ export const AuthorityContext = createContext();
 const Authority = () => {
   const btns = ['save'];
   const [auth, setAuth] = useState(authData[0]);
-  const groupData = useLoaderData().data;
+  const groupData = useLoaderData();
 
   const [data, setData] = useState(groupData);
   const [report, setReport] = useState();
@@ -76,9 +76,9 @@ const Authority = () => {
     authData.forEach((item) => {
       if (item.title === panelTitle) {
         item.data().then((res) => {
-          if (res.data) {
+          if (res.data.data) {
             setAuth(item);
-            setData(res.data);
+            setData(res.data.data);
           }
         });
         return;

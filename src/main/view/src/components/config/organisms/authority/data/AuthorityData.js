@@ -3,11 +3,13 @@ import DataAuthority from '../dataAuthority/DataAuthority';
 import DatasetAuthority from '../datasetAuthority/DatasetAuthority';
 import DatasourceAuthority from '../datasourceAuthority/DatasourceAuthority';
 import ReportAuthority from '../reportAuthority/ReportAuthority';
-import {groupData, userData} from 'routes/loader/LoaderConfig';
+
 import {
+  getGroupData,
   getGroupDataset,
   getGroupDs,
   getGroupFolder,
+  getUserData,
   getUserDataset,
   getUserDs,
   getUserFolder
@@ -31,7 +33,7 @@ export const authData = [
     mode: Mode.GROUP_DATA,
     title: localizedString.groupData,
     component: (auth) => <DataAuthority auth={auth}/>,
-    data: groupData
+    data: getGroupData
   },
   {
     mode: Mode.GROUP_REPORT,
@@ -56,7 +58,7 @@ export const authData = [
     mode: Mode.USER_DATA,
     title: localizedString.userData,
     component: (auth) => <DataAuthority auth={auth}/>,
-    data: userData
+    data: getUserData
   },
   {
     mode: Mode.USER_REPORT,
