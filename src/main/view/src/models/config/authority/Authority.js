@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const accountPath = document.location.origin + contextRoot + '/account';
+const accountPath = '/account';
 
 // 데이터셋
 export const getDs = async () => {
