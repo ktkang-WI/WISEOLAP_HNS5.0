@@ -40,7 +40,7 @@ public class MartConfig {
                 sqlSessionFactoryBean.setConfigLocation(new PathMatchingResourcePatternResolver()
                         .getResource("classpath:/mybatis/mybatis-mart-config.xml"));
                 sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                        .getResources("classpath:/mapper/mart/*.xml"));
+                        .getResources("classpath:/mapper/mart/Mart.xml"));
                 SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactoryBean.getObject());
 
                 martSqlSession.sessionTemplates.put(dsMstrDTO.getDsId(), template);
