@@ -242,7 +242,8 @@ const useDrag = () => {
             field.uniqueName == targetId
           );
 
-          if (sourceField.type == 'FLD') return;
+          const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
+          if (noDragItems.includes(sourceField.type)) return;
 
           const tempField = getNewDataField(sourceField);
 
@@ -250,6 +251,13 @@ const useDrag = () => {
           dataField.datasetId = selectedDataset.datasetId;
           dispatch(setItemField({reportId, dataField}));
           onDragEndSeriesOption(tempField, reportId);
+        } else if (source.droppableId == dest.droppableId) {
+          const sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+
+          dataField[dest.droppableId].splice(dest.index, 0, sourceField[0]);
+
+          dispatch(setItemField({reportId, dataField}));
         } else {
           // 데이터 항목에서 출발한 경우 기존 데이터 항목 복제 및 삭제 후 추가
           let sourceField = dataField[source.droppableId]

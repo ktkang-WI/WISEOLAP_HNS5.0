@@ -39,6 +39,7 @@ public class ChartDataMaker implements ItemDataMaker {
         data = sanitizer
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .replaceNullData()
                 .topBottom(topBottomInfo)
                 .orderBy()
                 .columnFiltering()

@@ -57,7 +57,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                 result += " AND ";
 
                 if (validateValue(values, 1)) {
-                    result += "\'" + param.getValues().get(0) + "\'";
+                    result += "\'" + param.getValues().get(1) + "\'";
                 } else {
                     result += param.getExceptionValue();
                 }

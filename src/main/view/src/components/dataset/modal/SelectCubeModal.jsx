@@ -82,8 +82,10 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     // 그룹일 경우
                     if (!field.parentId) {
                       if (field.type == 'DIM') {
+                        field.type = 'DIMGRP';
                         field.icon = cubeDimGrpImg;
                       } else if (field.type == 'MEA') {
+                        field.type = 'MEAGRP';
                         field.icon = cubeMeaGrpImg;
                       }
                     } else {
