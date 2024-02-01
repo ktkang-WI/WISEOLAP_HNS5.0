@@ -272,7 +272,7 @@ const useReportSave = () => {
       }
     };
 
-    if (parameters.informations.length ==
+    if (parameters.informations.length <=
       parameters.filterSearchComplete.length) {
       execute();
     } else {
@@ -281,7 +281,7 @@ const useReportSave = () => {
         count++;
         parameters = selectRootParameter(store.getState());
 
-        if (parameters.informations.length ==
+        if (parameters.informations.length <=
           parameters.filterSearchComplete.length) {
           execute();
           clearInterval(wait);

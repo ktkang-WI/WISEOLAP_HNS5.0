@@ -20,6 +20,9 @@ import models from 'models';
 import {makeMetaDataField, metaDataField}
   from 'components/report/item/util/metaUtilityFactory';
 import localizedString from 'config/localization';
+import {getSeriesOptionInitFormat}
+  from 'redux/modules/SeriesOption/SeriesOptionFormat';
+import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -32,6 +35,16 @@ const useDrag = () => {
   const comparePos = (destination, source) => {
     return destination && destination.droppableId == source.droppableId &&
         destination.index == source.index;
+  };
+
+  const onDragEndSeriesOption = (tempField, reportId) => {
+    if (tempField.fieldType !== 'DIM') {
+      // seriesOptions 초기화
+      const tempSeriesOptionInit = getSeriesOptionInitFormat();
+      tempSeriesOptionInit.reportId = reportId;
+      tempSeriesOptionInit.fieldId = tempField.fieldId;
+      dispatch(seriesOptionInit(tempSeriesOptionInit));
+    }
   };
 
   const onDragStart = (e) => {
@@ -229,12 +242,21 @@ const useDrag = () => {
             field.uniqueName == targetId
           );
 
-          if (sourceField.type == 'FLD') return;
+          const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
+          if (noDragItems.includes(sourceField.type)) return;
 
           const tempField = getNewDataField(sourceField);
 
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
           dataField.datasetId = selectedDataset.datasetId;
+          dispatch(setItemField({reportId, dataField}));
+          onDragEndSeriesOption(tempField, reportId);
+        } else if (source.droppableId == dest.droppableId) {
+          const sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+
+          dataField[dest.droppableId].splice(dest.index, 0, sourceField[0]);
+
           dispatch(setItemField({reportId, dataField}));
         } else {
           // 데이터 항목에서 출발한 경우 기존 데이터 항목 복제 및 삭제 후 추가

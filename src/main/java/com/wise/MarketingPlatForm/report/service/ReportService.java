@@ -243,7 +243,7 @@ public class ReportService {
         String[] items = layoutType.split("_");
 
         MartResultDTO martResultDTO = martDAO.select(query);
-        List<Map<String, Object>> chartRowData= martResultDTO.getRowData();
+        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         
         for (String item : items) {

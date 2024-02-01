@@ -1,14 +1,32 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import DataGridBullet from './DataGridBullet';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 
-const DataGrid = ({id, item}) => {
+const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   const maxValue = {};
 
   if (!mart.init) {
     return <></>;
   }
+
+  const dxRef = useRef();
+
+  const itemExportObject =
+   itemExportsObject(id, dxRef, 'GRID', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
 
   const getMaxValue = (column) => {
     if (!maxValue[column.name]) {
@@ -34,6 +52,7 @@ const DataGrid = ({id, item}) => {
 
   return (
     <DevDataGrid
+      ref={dxRef}
       width='100%'
       height='100%'
       id={id}

@@ -69,11 +69,11 @@ const format = {
   'type': 'Format'
 };
 
-const topN = {
-  'text': localizedString.topN,
-  'value': 'TOP_N',
-  'type': 'TopN'
-};
+// const topN = {
+//   'text': localizedString.topN,
+//   'value': 'TOP_N',
+//   'type': 'TopN'
+// };
 
 /**
  * DataColumn의 contextMenu dataSource를 생성합니다.
@@ -108,7 +108,7 @@ export const getContextMenu = (data, sortItems = []) => {
     };
 
 
-    obj = [...obj, sortBy, topN];
+    obj = [...obj, sortBy];
   }
 
   return [...obj, rename];

@@ -87,7 +87,7 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
-    'InteractionNoDrillDown',
+    // 'InteractionNoDrillDown',
     'InteractionConfiguration'
   ];
 };

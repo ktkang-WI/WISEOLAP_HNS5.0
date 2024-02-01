@@ -10,6 +10,8 @@ import addContainer from 'assets/image/icon/button/insert_container.png';
 import addChart from 'assets/image/icon/button/add_chart.png';
 import addPivotGrid from 'assets/image/icon/button/pivot_grid.png';
 import addGrid from 'assets/image/icon/button/basic_grid.png';
+import adHocLayoutSetting
+  from 'assets/image/icon/button/adHocLayoutSetting.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
 import nameEdit from 'assets/image/icon/button/name_edit.png';
 import rotate from 'assets/image/icon/button/rotate.png';
@@ -33,6 +35,7 @@ import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 const RibbonDefaultElement = () => {
   const {
@@ -47,6 +50,7 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const {querySearch} = useReportSave();
+  const {executeItems} = useQueryExecute();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
 
@@ -184,7 +188,7 @@ const RibbonDefaultElement = () => {
       ...commonPopoverButton,
       'id': 'adHoc_layout',
       'label': '비정형 레이아웃',
-      'imgSrc': addGrid,
+      'imgSrc': adHocLayoutSetting,
       'renderContent': (e) => {
         // 임시 추가.
         const selectedReportId = selectCurrentReportId(store.getState());

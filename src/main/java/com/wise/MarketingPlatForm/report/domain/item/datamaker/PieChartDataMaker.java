@@ -36,23 +36,13 @@ public class PieChartDataMaker implements ItemDataMaker {
         data = sanitizer
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .replaceNullData()
                 .orderBy()
                 .columnFiltering()
                 .getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-
-        // 사용자 정의 데이터 가공
-        List<Map<String, Object>> tempData = null;
-        try {
-            tempData = customData.setDimension(dimensions)
-                         .setMeasure(measures)
-                         .builder();
-        } catch (Exception e) {
-            e.printStackTrace();
-            tempData = null;
-        }
-
+        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
         if(tempData != null) {
             data = tempData;
         }
@@ -61,7 +51,7 @@ public class PieChartDataMaker implements ItemDataMaker {
         List<String> dimNames = new ArrayList<>();
         List<String> dimGrpNames = new ArrayList<>();
         Set<String> dimensionGroupNames = new LinkedHashSet<>();
-        List<Map<String, String>> seriesDimensionNames = new ArrayList<>();
+        List<Map<String, String>> seriesMeasureNames = new ArrayList<>();
         Map<String, Object> info = new HashMap<>();
 
         for (Dimension dim : dimensions) {
@@ -112,12 +102,12 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
-                Map<String,String> seriesDimensions = new HashMap<>();
+                Map<String,String> seriesMeasures = new HashMap<>();
                 String caption = measure.getCaption() != null ?  measure.getCaption():  measure.getName();
 
-                seriesDimensions.put("summaryName", measure.getSummaryName());
-                seriesDimensions.put("caption", caption);
-                seriesDimensionNames.add(seriesDimensions);
+                seriesMeasures.put("summaryName", measure.getSummaryName());
+                seriesMeasures.put("caption", caption);
+                seriesMeasureNames.add(seriesMeasures);
             }
         } else {
             for (Measure measure : measures) {
@@ -126,16 +116,16 @@ public class PieChartDataMaker implements ItemDataMaker {
                 
                 while (iter.hasNext()) {
                     String name = iter.next();
-                    Map<String,String> seriesDimensions = new HashMap<>();
+                    Map<String,String> seriesMeasures = new HashMap<>();
 
-                    seriesDimensions.put("summaryName", name + "-" + measure.getSummaryName());
-                    seriesDimensions.put("caption", name + "-" + caption);
-                    seriesDimensionNames.add(seriesDimensions);
+                    seriesMeasures.put("summaryName", name + "-" + measure.getSummaryName());
+                    seriesMeasures.put("caption", name + "-" + caption);
+                    seriesMeasureNames .add(seriesMeasures);
                 }
             }
         }
 
-        info.put("seriesDimensionNames", seriesDimensionNames);
+        info.put("seriesMeasureNames", seriesMeasureNames);
 
         CommonResult result = new CommonResult(data, "", info);
 

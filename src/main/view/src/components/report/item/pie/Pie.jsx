@@ -7,20 +7,38 @@ import {
   Size,
   Tooltip} from 'devextreme-react/pie-chart';
 import customizeOption from './customizingPie/CustomizeOption';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 
-const Pie = ({item}) => {
+const Pie = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   if (!mart.init) {
     return <></>;
   }
+  const seriesMeasureNames = mart?.data.info.seriesMeasureNames;
+  const dxRefs = useRef([]);
 
-  const seriesDimensionNames = mart?.data.info.seriesDimensionNames;
+  useEffect(() => {
+    // TODO: PIE 는 임시용 매개변수입니다.
+    const itemExportObject =
+      itemExportsObject(id, dxRefs.current, 'PIE', mart.data.data);
 
-  const pies = seriesDimensionNames.map((dimension, idx) => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
+  const pies = seriesMeasureNames.map((dimension, idx) => {
     return (
       <PieChart
+        ref={(ref) => (dxRefs.current[idx] = ref)}
         key={idx}
         type={meta.pieChartStyle}
         dataSource={mart.data.data} // mart

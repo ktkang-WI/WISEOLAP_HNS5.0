@@ -343,5 +343,7 @@
   "useBoarder": "Boarder Using",
   "noneExcelFile": "There is no Excel file for that report.",
   "failToUpload": "File upload failed.",
-  "failToDelete": "File deletion failed."
+  "failToDelete": "File deletion failed.",
+  "deleteDatasetMsg": "Would you like to delete this dataset?",
+  "cofirmGroupBy": "If there is no GROUP BY clause in the query, it may take a long time to retrieve the data. Would you like to continue?"
 }

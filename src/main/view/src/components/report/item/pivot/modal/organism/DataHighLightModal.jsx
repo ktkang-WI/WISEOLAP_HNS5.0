@@ -68,8 +68,8 @@ const DataHighlightModal = ({...props}) => {
     'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true
   });
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
-  const [isUpdate, setIsUpdate] = useState(false);
   const ref = useRef(null);
+  const [showField, setShowField] = useState(false);
   // 데이터항목에 올라간 측정값의 name만 가져옴.
   const measureNames = useMemo(() => {
     if (reportType === DesignerMode['AD_HOC']) {
@@ -79,33 +79,32 @@ const DataHighlightModal = ({...props}) => {
     }
   }, []);
 
-  // 하이라이트 목록에 추가.
-  const onClick = () => {
+  // 동일 필드명, 조건이면 정보 업데이트.
+  const appliedHighlight = (formData) => {
     const copyHighlight = [...highlightList];
-    const formData = _.cloneDeep(ref.current.props.formData);
 
-    // 선택한 측정값의 인덱스를 가져옴.
+    // 선택한 측정값의 순서(인덱스)를 가져옴.
     const idx = measureNames.findIndex((measure) =>
       measure == formData.dataItem
     );
 
     const highlightData = {...formData, idx: idx};
-
-    // 추가 된 하이라이트 정보가 있는지 찾음.
-    const findIdx = copyHighlight.findIndex((highlight) =>
-      highlight.dataItem == formData.dataItem
+    const findIdx = copyHighlight.findIndex(
+        (data) => (data.dataItem === formData.dataItem &&
+          data.condition === formData.condition)
     );
-
-    if (copyHighlight.length == 0) {
-      // 첫 추가
+    if (findIdx == -1) {
       copyHighlight.push(highlightData);
-    } else if (findIdx == -1) {
-      // 2번째 추가 부터 같은 fieldName이 없으면 새로 추가
-      copyHighlight.push(highlightData);
-    } else {
-      // 같은 fieldName있으면 내용만 변경.
-      copyHighlight[findIdx] = {...highlightData};
+    } else if (findIdx != -1) {
+      copyHighlight[findIdx] = highlightData;
     }
+    return copyHighlight;
+  };
+
+  // 하이라이트 목록에 추가.
+  const onClick = () => {
+    const formData = _.cloneDeep(ref.current.props.formData);
+    const highlight = appliedHighlight(formData);
 
     // 유효성 검사.
     if (!formData.dataItem || !formData.condition || !formData.valueFrom) {
@@ -118,9 +117,10 @@ const DataHighlightModal = ({...props}) => {
       } else if (Number(formData.valueFrom) > Number(formData.valueTo)) {
         alert(localizedString.highlightBetweenValueCompareMsg);
       } else {
-        setHighlightList(copyHighlight);
+        setHighlightList(highlight);
         const init = {applyCell: true, applyTotal: true, applyGrandTotal: true};
         setData(init);
+        setShowField(false);
       }
     }
   };
@@ -139,11 +139,10 @@ const DataHighlightModal = ({...props}) => {
   const deleteHighlightList = (data) => {
     if (data[0] && highlightList.length != 0) {
       const deletedHighlight = highlightList.filter(
-          (highlight)=> highlight.dataItem !== data[0].key.dataItem
+          (highlight) => highlight !== data[0].key
       );
       setData({});
       setHighlightList(deletedHighlight);
-      setIsUpdate(true);
     }
   };
 
@@ -151,16 +150,25 @@ const DataHighlightModal = ({...props}) => {
     <Modal
       onSubmit={() => {
         const popupName = 'dataHighlight';
-        if (highlightList.length == 0 && !isUpdate) {
-          alert(localizedString.addHighlightMsg);
-          return true;
-        } else {
-          const selectItem =
-            Array.isArray(selectedItem) ? selectedItem[1] : selectedItem;
-          const item = setMeta(selectItem, popupName, highlightList);
-          dispatch(updateItem({reportId: reportId, item: item}));
-          return;
+        const formData = _.cloneDeep(ref.current.props.formData);
+        const isNullData =
+          formData.dataItem && formData.condition ? true : false;
+        let resultHighlightList = [];
+
+        const highlight = appliedHighlight(formData);
+
+        if (isNullData) {
+          resultHighlightList= highlight;
+        } else if (highlightList.length != 0) {
+          resultHighlightList = highlightList;
         }
+
+        const selectItem =
+            Array.isArray(selectedItem) ? selectedItem[1] : selectedItem;
+
+        const item = setMeta(selectItem, popupName, resultHighlightList);
+        dispatch(updateItem({reportId: reportId, item: item}));
+        return;
       }}
       height={theme.size.bigModalHeight}
       width={'calc(' + theme.size.bigModalWidth + ' - 70px)'}
@@ -181,7 +189,8 @@ const DataHighlightModal = ({...props}) => {
               const rowData = _.cloneDeep(e.row ?
                 e.row.data :
                 {applyCell: true, applyTotal: true, applyGrandTotal: true});
-
+              rowData.condition === 'Between' && setShowField(true);
+              rowData.condition !== 'Between' && setShowField(false);
               setData(rowData);
             }}
           >
@@ -210,6 +219,8 @@ const DataHighlightModal = ({...props}) => {
             ref={ref}
             formData={data}
             measureNames={measureNames}
+            showField={showField}
+            setShowField={setShowField}
           />
         </ModalPanel>
       </StyledWrapper>

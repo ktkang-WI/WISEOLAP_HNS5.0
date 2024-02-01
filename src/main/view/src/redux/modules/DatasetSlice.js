@@ -54,6 +54,8 @@ const reducers = {
     state[reportId].datasets = state[reportId].datasets.filter(
         (ds) => ds.datasetId != datasetId
     );
+    state[reportId].selectedDatasetId =
+      state[reportId]?.datasets[0]?.datasetId || '';
   },
   // 파라미터로 reportId
   deleteAllDatasets(state, actions) {
@@ -63,7 +65,9 @@ const reducers = {
   },
   selectDataset(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].selectedDatasetId = actions.payload.datasetId;
+    if (state[reportId]) {
+      state[reportId].selectedDatasetId = actions.payload.datasetId;
+    };
   },
   setDataset(state, actions) {
     const reportId = actions.payload.reportId;

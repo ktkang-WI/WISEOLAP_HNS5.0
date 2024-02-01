@@ -17,7 +17,6 @@ const ShowDataModal = ({
       modalTitle={modalTitle}
       width={theme.size.bigModalWidth}
       height={theme.size.bigModalHeight}
-      onSubmit={() => {}}
       {...props}
     >
       <DataGrid
