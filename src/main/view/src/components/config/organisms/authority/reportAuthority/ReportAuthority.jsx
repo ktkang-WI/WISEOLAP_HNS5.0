@@ -13,7 +13,7 @@ const ReportAuthority = ({auth}) => {
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUPREPORT ?
+          auth.mode === Mode.GROUP_REPORT ?
           <GroupList setRow={setRow}/> :
           <UserList setRow={setRow}/>
         }

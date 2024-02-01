@@ -13,7 +13,7 @@ const DatasourceAuthority = ({auth}) => {
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUPDATASOURCE ?
+          auth.mode === Mode.GROUP_DATASOURCE ?
           <GroupList setRow={setRow}/> :
           <UserList setRow={setRow}/>
         }

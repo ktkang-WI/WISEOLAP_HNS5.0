@@ -14,7 +14,7 @@ const DatasetAuthority = ({auth}) => {
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUPDATASET ?
+          auth.mode === Mode.GROUP_DATASET ?
           <GroupList setRow={setRow}/> :
           <UserList setRow={setRow}/>
         }

@@ -31,7 +31,7 @@ const DataAuthority = ({auth}) => {
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUPDATA ?
+          auth.mode === Mode.GROUP_DATA ?
           <GroupList
             setRow={setRow}
           /> :
