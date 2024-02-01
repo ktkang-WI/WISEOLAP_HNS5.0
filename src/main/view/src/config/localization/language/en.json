@@ -335,5 +335,6 @@
   "highlightOnlyNumberMsg": "Please enter only numbers as condition values.",
   "highlightInputEssentialValueMsg": "Data item, condition type, and condition value are required input items.",
   "deleteDatasetMsg": "Would you like to delete this dataset?",
-  "cofirmGroupBy": "If there is no GROUP BY clause in the query, it may take a long time to retrieve the data. Would you like to continue?"
+  "cofirmGroupBy": "If there is no GROUP BY clause in the query, it may take a long time to retrieve the data. Would you like to continue?",
+  "invalidQuery": "Queries are invalid."
 }
