@@ -249,7 +249,7 @@ public final class DataSanitizer {
         for (Map<String, Object> map : data) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (entry.getValue() == null) {
-                    entry.setValue("");
+                    entry.setValue("\u2800");
                 }
             }
         }
@@ -366,8 +366,16 @@ public final class DataSanitizer {
         if (filter != null && filter.size() > 0) {
             data = data.stream()
                     .filter(map -> filter.entrySet().stream()
-                            .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
-                                    entry.getValue().toArray(new CharSequence[0]))))
+                            .allMatch(entry -> {
+                                Object value = map.get(entry.getKey());
+                                
+                                if (value == null) {
+                                    return entry.getValue().contains(null);
+                                }
+
+                                return StringUtils.containsAny(value.toString(),
+                                    entry.getValue().toArray(new CharSequence[0]));
+                            }))
                     .collect(Collectors.toList());
         }
 
