@@ -4,43 +4,47 @@ import measureIcon from 'assets/image/icon/dataSource/measure.png';
 import fieldIcon from 'assets/image/icon/button/ico_axis.png';
 import FieldOptionModal
   from 'components/common/atomic/DataColumnTab/modal/FieldOptionModal';
+import {setMeta} from '../util/metaUtilityFactory';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
+
+const dataGridOptionConfig = {
+  option: {
+    on: 'on',
+    off: 'off'
+  },
+  gridLine: {
+    row: true,
+    column: true,
+    stripes: false
+  }, // 그리드 라인
+  barPallete: false, // TODO: 추후개발
+  barColorEdit: false, // TODO: 추후개발
+  cellMerging: true, // 셀 병합
+  columnHeader: true, // 열 머리글
+  pagination: {
+    isOk: false,
+    content: '',
+    pagingRange: 20
+  },
+  pageUsageOfPageCount: {
+    isOk: true,
+    pageSizes: [10, 20, 50]
+  },
+  autoWrap: false, // 자동 줄 바꿈
+  autoGridWidth: {
+    contentAutoTailored: false,
+    manual: false
+  }, // 그리드 너비 조정
+  headerAdd: false, // TODO: 추후개발
+  writeHeader: false // TODO: 추후개발
+};
+
 const generateMeta = (item) => {
-  setMeta(item, 'dataGridOption', {
-    gridLine: {
-      row: true,
-      column: true,
-      stripes: false
-    }, // 그리드 라인
-    barPallete: false, // TODO: 추후개발
-    barColorEdit: false, // TODO: 추후개발
-    merging: true, // 셀 병합
-    shwHeader: true, // 열 머리글
-    paging: {
-      pagination: {
-        isOk: true,
-        content: '',
-        pagingRange: 20
-      },
-      pageUsageOfPageCount: {
-        isOk: true,
-        first: 10,
-        second: 20,
-        third: 30
-      }
-    }, // 페이징 설정
-    autoWrap: false, // 자동 줄 바꿈
-    autoGridWidth: {
-      autoOnContent: false,
-      passive: false
-    }, // 그리드 너비 조정
-    headerAdd: false, // TODO: 추후개발
-    writeHeader: false // TODO: 추후개발
-  });
+  setMeta(item, 'dataGridOption', dataGridOptionConfig);
 };
 
 /**
@@ -115,7 +119,7 @@ const getRibbonItems = () => {
     'ColumnHeader',
     'Paging',
     'AutoWrap',
-    'GridResiging',
+    'AutoGridWidth',
     'HeaderAdd',
     'InputTxt'
   ];

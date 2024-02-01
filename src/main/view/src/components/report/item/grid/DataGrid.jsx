@@ -8,91 +8,19 @@ import {itemExportsObject}
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
+  const meta = item ? item.meta : null;
   const dataGridRef = createRef();
-  const config = {
-    gridLine: true,
-    barPallete: false, // TODO: 추구개발
-    barColorEdit: false, // 구현 X
-    merging: true,
-    shwHeader: true,
-    paging: true,
-    autoWrap: false,
-    autoGridWidth: false,
-    headerAdd: false, // TODO: 추구개발
-    writeHeader: false // 구현 X
-  };
-  const options = {
-    pageRange: 20,
-    pageIndex: 0,
-    start: 0,
-    end: 20
-  };
+  const maxValue = {};
+  const config = meta.dataGridOption;
+  const allowedPageSizes = config.pageUsageOfPageCount.pageSizes;
+  const itemExportObject =
+    itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
   let dataSource = _.cloneDeep(mart.data);
   let rowSpans = null;
-  const maxValue = {};
 
   if (!mart.init) {
     return <></>;
   }
-
-  useEffect(() => {
-    const dataGridInstance = dataGridRef.current.instance;
-    dataGridInstance.pageIndex(options.pageIndex);
-    dataGridInstance.pageSize(options.pageRange);
-  }, [mart]);
-
-  const handleMerge = (e) => {
-    const isGetRowpan =
-      e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0;
-
-    if (isGetRowpan) {
-      dataSource = _.cloneDeep(mart.data);
-      if (config.paging) {
-        const data = dataSource.data.slice(options.start, options.end);
-        rowSpans =
-          _.cloneDeep(generateRowSpans(data, dataSource.columns));
-      } else {
-        rowSpans =
-          _.cloneDeep(generateRowSpans(dataSource.data, dataSource.columns));
-      }
-    }
-    cellMerge(e, rowSpans, mart.data.columns);
-  };
-
-  const handlePaging = (index) => {
-    options.pageIndex = index;
-    options.start = options.pageIndex === 0 ?
-      0 :
-      options.pageRange * options.pageIndex;
-    options.end = options.pageIndex === 0 ?
-      options.pageRange:
-      options.pageRange * (options.pageIndex + 1);
-  };
-
-  const onCellPrepared = (e) => {
-    if (config.merging) {
-      handleMerge(e);
-    }
-  };
-
-  const onOptionChanged = (e) => {
-    const paging = (e.fullName === 'paging.pageIndex' && config.paging);
-    const pagingSize = (e.fullName === 'paging.pageSize' && config.paging);
-    if (paging) {
-      handlePaging(e.value);
-    }
-    if (pagingSize) {
-      const dataGridInstance = dataGridRef.current.instance;
-      options.pageRange = e.value;
-      handlePaging(options.pageIndex);
-      dataGridInstance.pageIndex(options.pageIndex);
-    }
-  };
-
-  const allowedPageSizes = [10, 20, 50];
-
-  const itemExportObject =
-   itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
 
   useEffect(() => {
     setItemExports((prev) => {
@@ -104,6 +32,84 @@ const DataGrid = ({setItemExports, id, item}) => {
       ];
     });
   }, [mart.data.data]);
+
+  useEffect(() => {
+    const dataGridInstance = dataGridRef.current.instance;
+    const options = getPagingOption(config);
+    dataGridInstance.pageIndex(options.pageIndex);
+    dataGridInstance.pageSize(options.pageRange);
+  }, [mart]);
+
+  // 페이징 옵션 가져오기
+  const getPagingOption = (config) => {
+    const defaultOption = {
+      pageRange: 20,
+      pageIndex: 0,
+      start: 0,
+      end: 20
+    };
+    if (config.pagination.isOk) {
+      const pageRange = config.pagination.pagingRange;
+      defaultOption.pageRange = pageRange;
+      defaultOption.end = pageRange;
+    }
+    return defaultOption;
+  };
+
+  // 페이징 동작 함수
+  const handlePaging = (index) => {
+    const options = getPagingOption(config);
+    options.pageIndex = index;
+    options.start = options.pageIndex === 0 ?
+      0 :
+      options.pageRange * options.pageIndex;
+    options.end = options.pageIndex === 0 ?
+      options.pageRange:
+      options.pageRange * (options.pageIndex + 1);
+  };
+
+  // 셀 병합로직
+  const handleMerge = (e) => {
+    const options = getPagingOption(config);
+    const isGetRowpan =
+      e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0;
+    if (isGetRowpan) {
+      dataSource = _.cloneDeep(mart.data);
+      if (config.pagination.isOk) {
+        const data = dataSource.data.slice(options.start, options.end);
+        rowSpans =
+          _.cloneDeep(generateRowSpans(data, dataSource.columns));
+      } else {
+        rowSpans =
+          _.cloneDeep(generateRowSpans(dataSource.data, dataSource.columns));
+      }
+    }
+    cellMerge(e, rowSpans, mart.data.columns);
+  };
+
+  // DataGrid 이벤트
+  const onCellPrepared = (e) => {
+    if (config.merging) {
+      handleMerge(e);
+    }
+  };
+
+  // DataGrid 이벤트
+  const onOptionChanged = (e) => {
+    const options = getPagingOption(config);
+    const isPaging = config.pagination.isOk;
+    const paging = (e.fullName === 'paging.pageIndex' && isPaging);
+    const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
+    if (paging) {
+      handlePaging(e.value);
+    }
+    if (pagingSize) {
+      const dataGridInstance = dataGridRef.current.instance;
+      options.pageRange = e.value;
+      handlePaging(options.pageIndex);
+      dataGridInstance.pageIndex(options.pageIndex);
+    }
+  };
 
   const getMaxValue = (column) => {
     if (!maxValue[column.name]) {
@@ -137,16 +143,16 @@ const DataGrid = ({setItemExports, id, item}) => {
       sorting={false}
       onCellPrepared={onCellPrepared}
       onOptionChanged={onOptionChanged}
-      showColumnLines={config.gridLine}
-      showRowLines={config.gridLine}
+      showColumnLines={config.gridLine.column}
+      showRowLines={config.gridLine.row}
       AllowUserToAddRows={false}
       rowAlternationEnabled={false}
-      columnAutoWidth={config.autoGridWidth}
+      columnAutoWidth={config.autoGridWidth.autoOnContent}
       showColumnHeaders={config.shwHeader}
       wordWrapEnabled={config.autoWrap}
     >
       <Paging
-        enabled={config.paging}
+        enabled={config.pagination.isOk}
         defaultPageSize={20} />
       <Pager
         showPageSizeSelector={true}

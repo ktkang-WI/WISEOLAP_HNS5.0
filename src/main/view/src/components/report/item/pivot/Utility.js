@@ -25,7 +25,6 @@ const generateMeta = (item) => {
     },
     dataPosition: 'row' // 측정값 위치
   });
-
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
