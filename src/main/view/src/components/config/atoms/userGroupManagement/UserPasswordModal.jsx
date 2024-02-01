@@ -8,7 +8,6 @@ import {getTheme} from 'config/theme';
 import {updateUserPassword}
   from 'models/config/userGroupManagement/UserGroupManagement';
 
-
 const theme = getTheme();
 
 const UserPasswordModal = ({...props}) => {
@@ -32,7 +31,7 @@ const UserPasswordModal = ({...props}) => {
     const newPassword = formInstance.getEditor('newPassword').option('value');
 
     if (!validationCheck()) {
-      alert('새 비밀번호화 비밀번호 확인이 일치하지 않습니다.');
+      alert(localizedString.checkPasword);
       return true;
     }
 
@@ -44,9 +43,9 @@ const UserPasswordModal = ({...props}) => {
 
     updateUserPassword(user).then((res) => {
       if (res.status !== 200) {
-        alert('비밀번호 변경에 실패했습니다.');
+        alert(localizedString.failedPasswordChange);
       }
-      alert('비밀번호를 변경했습니다.');
+      alert(localizedString.completedPasswordChange);
     });
   };
 

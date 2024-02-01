@@ -4,6 +4,7 @@ import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import {useContext, useRef} from 'react';
+import localizedString from 'config/localization';
 
 const GroupDataGrid = () => {
   const getContext = useContext(UserGroupContext);
@@ -40,13 +41,13 @@ const GroupDataGrid = () => {
         <Selection mode="single" />
         <Column
           dataField="grpNm"
-          caption="그룹 명"
+          caption={localizedString.groupName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="grpDesc"
-          caption="설명"
+          caption={localizedString.description}
           dataType="varchar"
           format="currency"
         />

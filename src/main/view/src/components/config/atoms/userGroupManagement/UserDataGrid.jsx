@@ -6,6 +6,7 @@ import Panel from
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import _ from 'lodash';
 import {useContext, useRef} from 'react';
+import localizedString from 'config/localization';
 
 const UserDataGrid = () => {
   const getContext = useContext(UserGroupContext);
@@ -38,17 +39,17 @@ const UserDataGrid = () => {
         <Selection mode="single" />
         <Column
           dataField="userId"
-          caption="사용자 ID"
+          caption={localizedString.userId}
         />
         <Column
           dataField="userNm"
-          caption="사용자 명"
+          caption={localizedString.userName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="grpNm"
-          caption="그룹 명"
+          caption={localizedString.groupName}
           dataType="varchar"
           format="currency"
         />

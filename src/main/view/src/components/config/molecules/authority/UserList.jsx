@@ -6,6 +6,7 @@ import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import {useContext, useEffect, useState} from 'react';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
+import localizedString from 'config/localization';
 
 const UserList = ({setRow}) => {
   // context
@@ -41,7 +42,7 @@ const UserList = ({setRow}) => {
 
   return (
     <Wrapper>
-      <Title title={'사용자 목록'}></Title>
+      <Title title={localizedString.userList}></Title>
       <DataGrid
         height={600}
         dataSource={users}
@@ -63,19 +64,19 @@ const UserList = ({setRow}) => {
         />
         <Column
           dataField="userId"
-          caption="사용자 ID"
+          caption={localizedString.userId}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="userNm"
-          caption="사용자명"
+          caption={localizedString.userName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="grpNm"
-          caption="그룹명"
+          caption={localizedString.groupName}
           dataType="varchar"
           format="currency"
         />

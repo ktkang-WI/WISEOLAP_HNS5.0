@@ -6,6 +6,7 @@ import {useContext, useEffect, useState} from 'react';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
+import localizedString from 'config/localization';
 
 const GroupList = ({setRow}) => {
   // context
@@ -41,7 +42,7 @@ const GroupList = ({setRow}) => {
 
   return (
     <Wrapper>
-      <Title title={'그룹 목록'}></Title>
+      <Title title={localizedString.groupList}></Title>
       <DataGrid
         height={'90%'}
         dataSource={groups}
@@ -63,13 +64,13 @@ const GroupList = ({setRow}) => {
         />
         <Column
           dataField="grpNm"
-          caption="그룹 명"
+          caption={localizedString.groupName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="grpDesc"
-          caption="설명"
+          caption={localizedString.description}
           dataType="varchar"
           format="currency"
         />

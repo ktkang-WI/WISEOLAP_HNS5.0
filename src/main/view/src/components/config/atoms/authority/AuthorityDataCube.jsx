@@ -2,6 +2,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/authority/Title';
 import {useEffect, useState} from 'react';
+import localizedString from 'config/localization';
 
 const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
   const [cubeList, setCubeList] = useState([]);
@@ -24,7 +25,7 @@ const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
 
   return (
     <Wrapper>
-      <Title title={'주제영역'}></Title>
+      <Title title={localizedString.addCUBE}></Title>
       <DataGrid
         dataSource={cubeList}
         showBorders={true}
@@ -37,7 +38,7 @@ const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
         />
         <Column
           dataField="cubeNm"
-          caption="주제 영역"
+          caption={localizedString.addCUBE}
           dataType="varchar"
           format="currency"
         />

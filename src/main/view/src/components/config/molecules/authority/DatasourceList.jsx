@@ -7,6 +7,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
+import localizedString from 'config/localization';
 
 const DatasourceList = ({row}) => {
   // context
@@ -64,7 +65,7 @@ const DatasourceList = ({row}) => {
 
   return (
     <Wrapper>
-      <Title title={'데이터 원본 목록'}></Title>
+      <Title title={localizedString.dataSourceList}></Title>
       <DataGrid
         dataSource={ds}
         showBorders={true}
@@ -77,37 +78,37 @@ const DatasourceList = ({row}) => {
         <SearchPanel visible={true} />
         <Column
           dataField="dsNm"
-          caption="데이터 원본 명"
+          caption={localizedString.dataSourceName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbmsType"
-          caption="DB 유형"
+          caption={localizedString.dbType}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ownerNm"
-          caption="소유자"
+          caption={localizedString.owner}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ip"
-          caption="서버 주소(명)"
+          caption={localizedString.dbAddress}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbNm"
-          caption="DB 명"
+          caption={localizedString.dbName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dsViewId"
-          caption="데이터 원본 뷰 id"
+          caption={localizedString.dsViewId}
           dataType="varchar"
           format="currency"
           visible={false}

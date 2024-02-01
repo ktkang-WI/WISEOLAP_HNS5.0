@@ -7,21 +7,22 @@ import Form, {
   GroupItem, Item, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
+import localizedString from 'config/localization';
 
 const GroupInfo = () => {
   const getContext = useContext(UserGroupContext);
   const [groupDetailInfo] = getContext.state.groupDetailInfo;
 
   return (
-    <Panel title='그룹 정보'>
+    <Panel title={localizedString.groupInfo}>
       <Form
         formData={groupDetailInfo}
       >
         <GroupItem colCount={1}>
           <Item
             dataField="grpNm"
-            caption="그룹명"></Item>
-          <SimpleItem dataField="grpDesc" caption="설명">
+            caption={localizedString.groupName}></Item>
+          <SimpleItem dataField="grpDesc" caption={localizedString.description}>
             <TextArea
               height={100}
               width="100%"
@@ -29,7 +30,7 @@ const GroupInfo = () => {
           </SimpleItem>
           <Item
             dataField="grpRunMode"
-            caption="그룹 실행모드"
+            caption={localizedString.groupRunMode}
             editorType="dxSelectBox"></Item>
         </GroupItem>
       </Form>

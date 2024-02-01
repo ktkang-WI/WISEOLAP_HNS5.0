@@ -2,6 +2,7 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import {useRef} from 'react';
 import Title from 'components/config/atoms/authority/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import localizedString from 'config/localization';
 
 const AuthorityDataMember = () => {
   const ref = useRef();
@@ -11,7 +12,7 @@ const AuthorityDataMember = () => {
   };
   return (
     <Wrapper>
-      <Title title={'멤버'}></Title>
+      <Title title={localizedString.member}></Title>
       <DataGrid
         dataSource={groupsFormat}
         showBorders={true}
@@ -25,7 +26,7 @@ const AuthorityDataMember = () => {
         />
         <Column
           dataField="test"
-          caption="멤버"
+          caption={localizedString.member}
           dataType="varchar"
           format="currency"
         />

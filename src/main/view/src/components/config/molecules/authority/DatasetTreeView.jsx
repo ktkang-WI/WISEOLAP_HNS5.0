@@ -9,6 +9,7 @@ import {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/authority/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
+import localizedString from 'config/localization';
 
 const DatasetTreeView = ({row}) => {
   // context
@@ -81,7 +82,7 @@ const DatasetTreeView = ({row}) => {
 
   return (
     <Wrapper>
-      <Title title={'데이터 집합 폴더 목록'}></Title>
+      <Title title={localizedString.datasetFolderList}></Title>
       <TreeList
         dataSource={folders}
         keyExpr="fldId"
@@ -103,7 +104,7 @@ const DatasetTreeView = ({row}) => {
         />
         <Column
           dataField="fldNm"
-          caption="폴더 이름"
+          caption={localizedString.folderName}
         />
       </TreeList>
     </Wrapper>

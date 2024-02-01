@@ -6,6 +6,7 @@ import {Button} from 'devextreme-react';
 import {useCallback, useContext, useRef} from 'react';
 import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
+import localizedString from 'config/localization';
 
 const GroupMember = () => {
   const getContext = useContext(UserGroupContext);
@@ -57,7 +58,7 @@ const GroupMember = () => {
   return (
     <Wrapper display='flex'>
       <Wrapper>
-        <Panel title='그룹소속사용자'>
+        <Panel title={localizedString.groupUser}>
           <DataGrid
             height={263}
             dataSource={groupMemberUsers}
@@ -70,11 +71,11 @@ const GroupMember = () => {
             />
             <Column
               dataField="userId"
-              caption="사용자 ID"
+              caption={localizedString.userId}
             />
             <Column
               dataField="userNm"
-              caption="사용자 명"
+              caption={localizedString.userName}
               dataType="varchar"
               format="currency"
             />
@@ -88,7 +89,7 @@ const GroupMember = () => {
         </Wrapper>
       </Wrapper>
       <Wrapper>
-        <Panel title='사용자목록'>
+        <Panel title={localizedString.userList}>
           <DataGrid
             height={263}
             dataSource={groupNotMemberUsers}
@@ -101,11 +102,11 @@ const GroupMember = () => {
             />
             <Column
               dataField="userId"
-              caption="사용자 ID"
+              caption={localizedString.userId}
             />
             <Column
               dataField="userNm"
-              caption="사용자 명"
+              caption={localizedString.userName}
               dataType="varchar"
               format="currency"
             />

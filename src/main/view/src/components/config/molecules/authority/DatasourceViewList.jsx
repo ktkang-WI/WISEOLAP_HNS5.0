@@ -8,6 +8,7 @@ import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
+import localizedString from 'config/localization';
 
 const DatasourceViewList = ({row, setDsView}) => {
   // context
@@ -65,7 +66,7 @@ const DatasourceViewList = ({row, setDsView}) => {
 
   return (
     <Wrapper>
-      <Title title={'데이터 원본 뷰 목록'}></Title>
+      <Title title={localizedString.dsViewList}></Title>
       <DataGrid
         dataSource={ds}
         showBorders={true}
@@ -89,43 +90,43 @@ const DatasourceViewList = ({row, setDsView}) => {
         />
         <Column
           dataField="dsViewNm"
-          caption="데이터 원본 뷰 명"
+          caption={localizedString.dsViewName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dsNm"
-          caption="데이터 원본 명"
+          caption={localizedString.dataSourceName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbmsType"
-          caption="DB 유형"
+          caption={localizedString.dbType}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ownerNm"
-          caption="소유자"
+          caption={localizedString.owner}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ip"
-          caption="서버 주소(명)"
+          caption={localizedString.dbAddress}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbNm"
-          caption="DB 명"
+          caption={localizedString.dbName}
           dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dsViewId"
-          caption="데이터 원본 뷰 id"
+          caption={localizedString.dsViewId}
           dataType="varchar"
           format="currency"
           visible={false}

@@ -9,6 +9,7 @@ import {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/authority/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
+import localizedString from 'config/localization';
 
 const FolderTreeView = ({row}) => {
   // context
@@ -70,7 +71,7 @@ const FolderTreeView = ({row}) => {
 
   return (
     <Wrapper>
-      <Title title={'공용 보고서 폴더 목록'}></Title>
+      <Title title={localizedString.publicReportFolderList}></Title>
       <TreeList
         dataSource={folders}
         keyExpr="fldId"
@@ -86,30 +87,30 @@ const FolderTreeView = ({row}) => {
 
         <Column
           dataField="fldNm"
-          caption="폴더 이름"
+          caption={localizedString.folderName}
         />
         <Column
           dataField="authView"
           dataType='boolean'
-          caption="조회"
+          caption={localizedString.querySearch}
         >
         </Column>
         <Column
           dataField="authPublish"
           dataType='boolean'
-          caption="보고서 작성/배포"
+          caption={localizedString.reportView}
         >
         </Column>
         <Column
           dataField="authDataItem"
           dataType='boolean'
-          caption="데이터 항목 사용"
+          caption={localizedString.useDataitem}
         >
         </Column>
         <Column
           dataField="authExport"
           dataType='boolean'
-          caption="보고서 내려받기"
+          caption={localizedString.reportDownload}
         >
         </Column>
         <Column

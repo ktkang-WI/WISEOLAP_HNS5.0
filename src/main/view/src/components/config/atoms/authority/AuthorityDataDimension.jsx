@@ -2,6 +2,7 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/authority/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useEffect, useState} from 'react';
+import localizedString from 'config/localization';
 
 const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
   const [dimensionList, setDimensionList] = useState([]);
@@ -22,7 +23,7 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
   };
   return (
     <Wrapper>
-      <Title title={'차원'}></Title>
+      <Title title={localizedString.dimension}></Title>
       <DataGrid
         dataSource={dimensionList}
         showBorders={true}
@@ -35,7 +36,7 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
         />
         <Column
           dataField="dimCaption"
-          caption="차원"
+          caption={localizedString.dimension}
           dataType="varchar"
           format="currency"
         />
