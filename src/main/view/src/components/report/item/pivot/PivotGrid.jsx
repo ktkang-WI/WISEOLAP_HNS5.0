@@ -17,6 +17,8 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {generateLabelSuffix, formatNumber} from
+  'components/utils/NumberFormatUtility';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -31,7 +33,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal} = useModal();
-  // const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
@@ -109,6 +110,13 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
             )
         );
       }
+    }
+    if (area == 'data' && cell.dataType && cell.value) {
+      const newFormat = dataField.measure.map((item) => item.format);
+      const formData = newFormat[cell.dataIndex];
+      const labelSuffix = generateLabelSuffix(formData);
+      const formattedValue = formatNumber(cell.value, formData, labelSuffix);
+      cellElement.textContent = formattedValue;
     }
   };
   let showTotalsPrior = 'both';
