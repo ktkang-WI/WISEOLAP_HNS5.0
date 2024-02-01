@@ -242,7 +242,8 @@ const useDrag = () => {
             field.uniqueName == targetId
           );
 
-          if (sourceField.type == 'FLD') return;
+          const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
+          if (noDragItems.includes(sourceField.type)) return;
 
           const tempField = getNewDataField(sourceField);
 
