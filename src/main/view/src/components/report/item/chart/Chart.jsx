@@ -107,6 +107,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       if (targetDiemnsion == 'dimension') {
         filter.split('<br/>').reverse().forEach((v, i) => {
           const name = dim[i].uniqueName;
+          if (v == '\u2800') {
+            v = null;
+          }
+
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -117,6 +121,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         filter.split('-').forEach((v, i) => {
           if (dimGrp.length <= i) return;
           const name = dimGrp[i].uniqueName;
+          if (v == '\u2800') {
+            v = null;
+          }
+
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -288,7 +296,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   fieldId: valueField.fieldId,
                   math: Math.floor(i / mart.seriesLength)
                 }}
-                name={valueField.name}
+                name={valueField.name || '\u2800'}
                 type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
                 sizeField={
                   getSeriesOptionType(valueField.fieldId, seriesOptions) ===
@@ -317,7 +325,7 @@ const propsComparator = (prev, next) => {
   const seriesOptionsComparator =
     _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
 
-  return _.isEqual(prev.item.mart, next.item.mart) &&
+  return prev.item.mart == next.item.mart &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
       seriesOptionsComparator &&
