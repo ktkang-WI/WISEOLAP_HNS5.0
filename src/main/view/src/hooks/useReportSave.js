@@ -228,6 +228,7 @@ const useReportSave = () => {
   // 디자이너 보고서 불러오기
   const designerLoadReport = (data) => {
     try {
+      const currentReportId = selectCurrentReportId(store.getState());
       const newReportId = data.reports[0].reportId;
       const reportId = {
         prevId: currentReportId,
@@ -258,7 +259,6 @@ const useReportSave = () => {
     } catch (error) {
       new Error('Report load Error');
     }
-    querySearch();
   };
 
   const querySearch = () => {

@@ -84,7 +84,7 @@ const reducers = {
       defaultBindInfo,
       [newId]: {
         bindingInfos: actions.payload.bindingInfos,
-        designer: state[prevId].designer
+        designer: state[prevId]?.designer
       }
     };
 

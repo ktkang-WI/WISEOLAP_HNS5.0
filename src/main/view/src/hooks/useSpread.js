@@ -48,7 +48,7 @@ const useSpread = () => {
         columns.length,
         createBorderStyle(bindingInfo.useBorder));
 
-    table.showHeader(true);
+    table.showHeader(bindingInfo.useHeader);
     table.autoGenerateColumns(false);
     table.bindColumns(columns);
     table.bindingPath('records');
@@ -113,7 +113,7 @@ const useSpread = () => {
 
   const createBorderStyle = (useBorder) => {
     const tableStyle = new sheets.Tables.TableTheme();
-    const thinBorder = undefined;
+    let thinBorder = undefined;
     if (useBorder) {
       thinBorder = new sheets.LineBorder('black', 1);
     }
@@ -156,8 +156,7 @@ const useSpread = () => {
     return blob;
   };
 
-  const setExcelFile = async (data, reportId) => {
-    createDesigner({reportId: reportId});
+  const setExcelFile = (data, querySearch) => {
     const designer = selectCurrentDesigner(store.getState());
     const workBook = designer.getWorkbook();
     const excelIO = selectExcelIO(store.getState());
@@ -182,6 +181,7 @@ const useSpread = () => {
       workBook.clearSheets();
       const workbookObj = json;
       workBook.fromJSON(workbookObj);
+      querySearch();
     },
     () => {
       alert(localizedString.reportCorrupted);

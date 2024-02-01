@@ -28,44 +28,41 @@ const DatasetLinkerModal = ({...props}) => {
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
+  const datasetNms = datasets.map((dataset) => dataset.datasetNm);
 
   const booleanMapper = [
-    {key: true, value: '표시'},
-    {key: false, value: '표시안함'}
+    {key: true, value: localizedString.use},
+    {key: false, value: localizedString.dontUse}
   ];
 
+  const dataMaker = (datasetId, type) => {
+    return bindingInfos[datasetId]?.[type] != undefined ?
+      bindingInfos[datasetId]?.[type] : true;
+  };
+
   useEffect(() => {
-    if (_.isEmpty(bindingInfos)) {
-      const dataSources = datasets.map((dataset) => {
-        return {
-          datasetId: dataset.datasetId,
-          datasetNm: dataset.datasetNm,
-          sheetNm: undefined,
-          position: undefined,
-          useHeader: false,
-          useBorder: false,
-          useBinding: false
-        };
-      });
-      setDataSources(dataSources);
-    } else {
-      const dataSources = Object.keys(bindingInfos).map((datasetId) => {
-        const position = positionConverterAsString(
-            bindingInfos[datasetId].columnIndex,
-            bindingInfos[datasetId].rowIndex);
-        return {
-          datasetId: datasetId,
-          datasetNm: bindingInfos[datasetId].datasetNm,
-          sheetNm: bindingInfos[datasetId].sheetNm,
-          position: position,
-          useHeader: bindingInfos[datasetId].useHeader,
-          useBorder: bindingInfos[datasetId].useBorder,
-          useBinding: bindingInfos[datasetId].useBinding
-        };
-      });
-      setDataSources(dataSources);
-    }
+    const dataSources = datasets.map((dataset) => {
+      const datasetId = dataset.datasetId;
+      const useHeader = dataMaker(datasetId, 'useHeader');
+      const useBorder = dataMaker(datasetId, 'useBorder');
+      const useBinding = dataMaker(datasetId, 'useBinding');
+      const position = positionConverterAsString(
+          bindingInfos[datasetId]?.columnIndex,
+          bindingInfos[datasetId]?.rowIndex
+      );
+      return {
+        datasetId: datasetId,
+        datasetNm: dataset.datasetNm,
+        sheetNm: bindingInfos[datasetId]?.sheetNm,
+        position: position,
+        useHeader: useHeader,
+        useBorder: useBorder,
+        useBinding: useBinding
+      };
+    });
+    setDataSources(dataSources);
   }, [bindingInfos]);
+
 
   const onSubmit = useCallback(() => {
     const returnObj = {};
@@ -128,23 +125,33 @@ const DatasetLinkerModal = ({...props}) => {
           mode: 'cell'
         }}
       >
-        <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}/>
+        <Column
+          dataField='datasetNm'
+          caption={localizedString.datasetName}
+          allowEditing={false}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'datasetNm')}
+        >
+          <Lookup dataSource={datasetNms} />
+        </Column>
         <Column
           dataField='sheetNm'
-          caption='Sheet 명'
+          caption={localizedString.sheetNm}
           setCellValue={(newData, value, currentRowData) =>
             updateDataSources(value, currentRowData, 'sheetNm')}>
           <Lookup dataSource={sheetNms} />
         </Column>
         <Column
           dataField='position'
-          caption='데이터 연동 위치'
+          caption={localizedString.bindingPosition}
           setCellValue={(newData, value, currentRowData) =>
             updateDataSources(value, currentRowData, 'position')}
         />
         <Column
           dataField='useHeader'
-          caption='헤더 표시 여부'
+          caption={localizedString.useHeader}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'useHeader')}
         >
           <Lookup
             dataSource={booleanMapper}
@@ -154,7 +161,9 @@ const DatasetLinkerModal = ({...props}) => {
         </Column>
         <Column
           dataField='useBorder'
-          caption='테두리 표시 여부'
+          caption={localizedString.useBoarder}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'useBorder')}
         >
           <Lookup
             dataSource={booleanMapper}

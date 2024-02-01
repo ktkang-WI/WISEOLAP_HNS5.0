@@ -18,7 +18,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SpreadDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
-  const {reload, loadReport} = useReportSave();
+  const {reload, loadReport, querySearch} = useReportSave();
   const {save} = saveDefaultElement();
   const {importFile, uploadFile, deleteFile} = useFile();
   const ribbonElement = ribbonDefaultElement();
@@ -68,8 +68,20 @@ const SpreadDefaultElement = () => {
 
   const openReport = () => {
     const loadExcelFile = ({data}) => {
-      loadReport(data);
-      setExcelFile(response.data, reportId);
+      try {
+        const reportId = data.reports[0].reportId;
+        loadReport(data);
+        createDesigner({reportId: reportId});
+        importFile(
+            {fileName: reportId + '.xlsx'}
+        ).then((response) => {
+          setExcelFile(response.data, querySearch);
+        }).catch((e) => {
+          alert(localizedString.noneExcelFile);
+        });
+      } catch {
+        alert(localizedString.reportCorrupted);
+      }
     };
     openModal(LoadReportModal, {loadExcelFile: loadExcelFile});
   };

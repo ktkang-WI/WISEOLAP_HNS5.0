@@ -24,19 +24,19 @@ public class FileUploadController {
 	@PostMapping(value="/upload" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void fileUpload(
 			@RequestPart("file") MultipartFile file, 
-			@RequestPart("param") Map<String, String> param) {
+			@RequestPart("param") Map<String, String> param) throws Exception {
 		String fileName = param.get("fileName");
 		fileUploadService.saveFile(file, fileName);
     }
 	
 	@PostMapping("/delete")
-	public void fileUpload(@RequestBody Map<String, String> param) {
+	public void fileUpload(@RequestBody Map<String, String> param) throws Exception {
 		String fileName = param.get("fileName");
 		fileUploadService.deleteFile(fileName);
 	}
 	
 	@PostMapping(value="/import")
-	public ResponseEntity<byte[]> fileImport(@RequestBody Map<String, String> param) {
+	public ResponseEntity<byte[]> fileImport(@RequestBody Map<String, String> param) throws Exception {
 		String fileName = param.get("fileName");
 		byte[] fileBytes = fileUploadService.fileImport(fileName);
 		return ResponseEntity

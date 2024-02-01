@@ -9,32 +9,32 @@ const useFile = () => {
    * @param {Object} param
    */
   const uploadFile = async (file, param) => {
-    try {
-      const newParam = new Blob([JSON.stringify(param)],
-          {type: 'application/json'});
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('param', newParam);
-      await models.File.uploadFile(formData);
-    } catch (error) {
-      alert(localizedString.noneFile);
+    const newParam = new Blob([JSON.stringify(param)],
+        {type: 'application/json'});
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('param', newParam);
+    const response = await models.File.uploadFile(formData);
+    if (response.status !== 200) {
+      alert(localizedString.failToUpload);
     }
   };
 
   const deleteFile = async (param) => {
-    try {
-      await models.File.deleteFile(param);
-    } catch (error) {
-      alert(localizedString.noneFile);
+    const response = await models.File.deleteFile(param);
+    if (response.status !== 200) {
+      alert(localizedString.failToDelete);
+    } else {
+      return response;
     }
   };
 
   const importFile = async (param) => {
-    try {
-      const response = await models.File.importFile(param);
+    const response = await models.File.importFile(param);
+    if (response.status !== 200) {
+      throw new Error('import file server error');
+    } else {
       return response;
-    } catch (error) {
-      alert(localizedString.noneFile);
     }
   };
 
