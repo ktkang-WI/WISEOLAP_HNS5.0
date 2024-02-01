@@ -3,7 +3,8 @@ import React, {useEffect, useRef} from 'react';
 import DataGridBullet from './DataGridBullet';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import {formatNumber, generateLabelSuffix} from
+  'components/utils/NumberFormatUtility';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -48,26 +49,9 @@ const DataGrid = ({setItemExports, id, item}) => {
         column={column}
       />;
     } else if (column.fieldType === 'MEA') {
-      const labelSuffix = {
-        O: column.format.suffixO,
-        K: column.format.suffixK,
-        M: column.format.suffixM,
-        B: column.format.suffixB
-      };
-      const formatNumber = (value) => {
-        return NumberFormatUtility.formatNumber(
-            value,
-            column.format.formatType,
-            column.format.unit,
-            column.format.precision,
-            column.format.useDigitSeparator,
-            undefined,
-            labelSuffix,
-            column.format.suffixEnabled,
-            column.format.precisionType
-        );
-      };
-      return formatNumber(e.value);
+      const labelSuffix = generateLabelSuffix(column.format);
+      e.value = formatNumber(e.value, column.format, labelSuffix);
+      return e.value;
     }
     return e.value;
   };
