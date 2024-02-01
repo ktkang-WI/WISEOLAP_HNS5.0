@@ -5,6 +5,7 @@ import {defaultDimension, defaultMeasure}
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
 import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import {DesignerMode} from 'components/config/configType';
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
