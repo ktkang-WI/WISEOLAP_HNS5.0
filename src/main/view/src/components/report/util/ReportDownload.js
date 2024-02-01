@@ -28,6 +28,39 @@ const addImageToWorksheet = async (workbook, worksheet, blob, startRow) => {
   });
 };
 
+const exportComponentToWorksheet = async (
+    workbook, elementObj, worksheet, startRow) => {
+  switch (elementObj.type) {
+    case 'pivot':
+    case 'grid': {
+      const instance = elementObj.type === 'pivot'?
+        PivotGrid.getInstance(elementObj.element):
+        DataGrid.getInstance(elementObj.element);
+      await (elementObj.type === 'pivot' ? exportPivotGrid : exportDataGrid)({
+        component: instance,
+        worksheet: worksheet,
+        topLeftCell: {row: startRow + 1, column: 1}
+      });
+      break;
+    }
+    case 'chart':
+    case 'pie': {
+      const instance = elementObj.type === 'chart'?
+        Chart.getInstance(elementObj.element):
+        PieChart.getInstance(elementObj.element);
+      const blob = await new Promise((resolve, reject) => {
+        instance.on('fileSaving', function(e) {
+          e.cancel = true;
+          resolve(e.data);
+        });
+        instance.exportTo('PNG').catch(reject);
+      });
+      await addImageToWorksheet(workbook, worksheet, blob, startRow);
+      break;
+    }
+  }
+};
+
 export const handleDownload = async (items, parameters, dataSource) => {
   const workbook = new Workbook();
   let worksheetCount = 0;
@@ -53,45 +86,8 @@ export const handleDownload = async (items, parameters, dataSource) => {
       });
       startRow += parameters.informations.length;
     }
-    if (elementObj.type === 'pivot') {
-      const instance = PivotGrid.getInstance(elementObj.element);
-      await exportPivotGrid({
-        component: instance,
-        worksheet: worksheet,
-        topLeftCell: {row: startRow +1, column: 1}
-      });
-      worksheetCount++;
-    } else if (elementObj.type === 'grid') {
-      const instance = DataGrid.getInstance(elementObj.element);
-      await exportDataGrid({
-        component: instance,
-        worksheet: worksheet,
-        topLeftCell: {row: startRow +1, column: 1}
-      });
-      worksheetCount++;
-    } else if (elementObj.type === 'chart') {
-      const instance = Chart.getInstance(elementObj.element);
-      const blob = await new Promise((resolve, reject) => {
-        instance.on('fileSaving', function(e) {
-          e.cancel = true;
-          resolve(e.data);
-        });
-        instance.exportTo('PNG').catch(reject);
-      });
-      await addImageToWorksheet(workbook, worksheet, blob, startRow);
-      worksheetCount++;
-    } else if (elementObj.type === 'pie') {
-      const instance = PieChart.getInstance(elementObj.element);
-      const blob = await new Promise((resolve, reject) => {
-        instance.on('fileSaving', function(e) {
-          e.cancel = true;
-          resolve(e.data);
-        });
-        instance.exportTo('PNG').catch(reject);
-      });
-      await addImageToWorksheet(workbook, worksheet, blob, startRow);
-      worksheetCount++;
-    }
+    await exportComponentToWorksheet(workbook, elementObj, worksheet, startRow);
+    worksheetCount++;
   }
   if (worksheetCount > 0) {
     const blobType =
