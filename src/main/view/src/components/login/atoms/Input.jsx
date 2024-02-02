@@ -27,6 +27,7 @@ const Input = ({contents}) => {
               <StyledTextBox
                 key={index}
                 label={input}
+                id={'input-' + input}
                 labelMode={contents.labelMode}
                 onKeyDown={contents.onKeyDown}
                 mode={
