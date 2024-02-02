@@ -8,7 +8,6 @@ import DevChart, {
   Tooltip,
   Point,
   Series,
-  Label,
   ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
