@@ -10,6 +10,7 @@ import * as UserGroupManagement
   from './config/userGroupManagement/UserGroupManagement';
 import * as Authority from './config/authority/Authority';
 import * as File from './upload/File';
+import * as Login from './auth/Login';
 
 export default {
   DataSource,
@@ -19,8 +20,9 @@ export default {
   Item,
   Parameter,
   Report,
+  File,
+  Login,
   Preferences,
   UserGroupManagement,
-  Authority,
-  File
+  Authority
 };
