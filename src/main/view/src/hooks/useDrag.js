@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 import models from 'models';
 import {makeMetaDataField, metaDataField}
   from 'components/report/item/util/metaUtilityFactory';
@@ -30,6 +31,7 @@ import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
   const {updateParameterInformation} = ParameterSlice.actions;
+  const {updateDataset} = DatasetSlice.actions;
   const dispatch = useDispatch();
 
   const comparePos = (destination, source) => {
@@ -134,39 +136,74 @@ const useDrag = () => {
     };
 
     const generateCubeParameter = (newParamInfo, sourceField, order, name) => {
-      const param = {
-        cubeId: selectedDataset.cubeId,
-        userId: 'admin', // 추후 userId 받아서
-        uniqueName: sourceField.uniqueName
-      };
-      models.Cube.getCubeInfo(param)
-          .then((response) => {
-            if (response.status != 200) {
-              return;
-            }
+      if (selectedDataset.datasetType == 'CUBE') {
+        const param = {
+          cubeId: selectedDataset.cubeId,
+          userId: 'admin', // 추후 userId 받아서
+          uniqueName: sourceField.uniqueName
+        };
+        models.Cube.getCubeInfo(param)
+            .then((response) => {
+              if (response.status != 200) {
+                return;
+              }
 
-            const cubeColumnInfo = response.data;
-            const newParam =
-              ParamUtils.newCubeParamInformation(
-                  name,
-                  selectedDataset.dsId,
-                  selectedDataset.datasetType,
-                  order ++,
-                  cubeColumnInfo);
-            newParam.dataset = [datasetId];
+              const cubeColumnInfo = response.data;
+              const newParam =
+                ParamUtils.newCubeParamInformation(
+                    name,
+                    selectedDataset.dsId,
+                    selectedDataset.datasetType,
+                    order ++,
+                    cubeColumnInfo);
+              newParam.dataset = [datasetId];
 
-            newParamInfo.push(newParam);
-            newParamInfo.sort((a, b) => a.order - b.order);
+              newParamInfo.push(newParam);
+              newParamInfo.sort((a, b) => a.order - b.order);
 
-            newParamInfo = newParamInfo.
-                map((param) => ParamUtils.sanitizeParamInformation(param));
+              newParamInfo = newParamInfo.
+                  map((param) => ParamUtils.sanitizeParamInformation(param));
 
-            dispatch(updateParameterInformation({
-              datasetId: datasetId,
-              reportId: reportId,
-              informations: newParamInfo
-            }));
-          });
+              dispatch(updateParameterInformation({
+                datasetId: datasetId,
+                reportId: reportId,
+                informations: newParamInfo
+              }));
+            });
+      } else if (selectedDataset.datasetType == 'DS_SINGLE') {
+        const newParam =
+          ParamUtils.newSingleTableParamInformation(
+              name,
+              selectedDataset.dataSrcId,
+              selectedDataset.datasetType,
+              order ++,
+              sourceField);
+        newParam.dataset = [datasetId];
+
+        newParamInfo.push(newParam);
+        newParamInfo.sort((a, b) => a.order - b.order);
+
+        newParamInfo = newParamInfo.
+            map((param) => ParamUtils.sanitizeParamInformation(param));
+
+        dispatch(updateParameterInformation({
+          datasetId: datasetId,
+          reportId: reportId,
+          informations: newParamInfo
+        }));
+
+        const addParamaQuery = selectedDataset.datasetQuery +
+                  ' AND A.' + newParam.itemKey +
+                  ' IN (' + name + ') \n';
+
+        dispatch(updateDataset({
+          reportId: reportId,
+          dataset: {
+            ...selectedDataset,
+            datasetQuery: addParamaQuery
+          }
+        }));
+      }
     };
 
     // 목적지와 이동 위치가 같거나 dataSource에서 허공으로 떨구는 경우우
@@ -179,7 +216,8 @@ const useDrag = () => {
     // Droppable 컴포넌트에 떨군 경우
     if (dest) {
       if (dest.droppableId == 'filter-bar') {
-        if (selectedDataset.datasetType != 'CUBE') {
+        if (selectedDataset.datasetType != 'CUBE' &&
+            selectedDataset.datasetType != 'DS_SINGLE') {
           return;
         }
 

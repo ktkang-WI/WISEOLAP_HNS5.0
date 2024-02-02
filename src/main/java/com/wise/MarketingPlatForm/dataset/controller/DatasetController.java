@@ -273,4 +273,34 @@ public class DatasetController {
 
         return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);
     }
+
+    @Operation(summary = "get SingleTable DataSet Query", description = "단일테이블 쿼리 생성용.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "데이터 원본 아이디"),
+            @Parameter(name = "columnList", description = "단일테이블 컬럼 목록"),
+            @Parameter(name = "parameter", description = "필터 정보"),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"5181\", \"columnList\": \"[{\"TBL_CAPTION\":\"F_교육기관\",\"PK_YN\":null,\"LENGTH\":\"255\",\"COL_CAPTION\":\"COL행정구\",\"ID\":\"[F_교육기관].[COL행정구]\",\"COL_ID\":\"7\",\"TBL_NM\":\"F_교육기관\",\"DATA_TYPE\":\"VARCHAR2\",\"COL_NM\":\"COL행정구\",\"PARENT_ID\":\"F_교육기관\",\"TYPE\":\"DIM\",\"columnTypeName\":\"varchar2\",\"columnName\":\"COL행정구\",\"order\":0,\"visibility\":true}]\", \"parameter\": \"\"}")
+    }))
+    @PostMapping(value = "/query-single-datas")
+    public String getSingleTableQuery(@RequestBody Map<String, String> params) {
+        Gson gson = new Gson();
+        int dsId = Integer.parseInt(params.get("dsId"));
+        String parameterStr = params.getOrDefault("parameter", "");
+        
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+            new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+            }.getType());
+        
+        String columnStr = params.getOrDefault("columnList", "");
+
+        List<Map<String, Object>> columnList = gson.fromJson(columnStr,
+            new TypeToken<ArrayList<Map<String, Object>>>() {
+            }.getType());
+        
+        String singleTableQuery = datasetService.generateSingleTableQuery(dsId, columnList, parameters);
+
+        return singleTableQuery;
+    }
 }
