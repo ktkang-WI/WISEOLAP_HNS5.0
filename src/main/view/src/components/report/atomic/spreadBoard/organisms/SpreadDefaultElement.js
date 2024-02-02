@@ -93,15 +93,17 @@ const SpreadDefaultElement = () => {
             {fileName: reportId + '.xlsx'}
         ));
   };
-
   const saveReport = () => {
-    save[0].onClick({createExcelFile: createExcelFile});
+    save.find((saveitem) =>
+      saveitem.label === localizedString.saveReport)
+        .onClick({createExcelFile: createExcelFile});
   };
 
   const saveAsReport = () => {
-    save[1].onClick({createExcelFile: createExcelFile});
+    save.find((saveitem) =>
+      saveitem.label === localizedString.saveAs)
+        .onClick({createExcelFile: createExcelFile});
   };
-
   const deleteReport = () => {
     ribbonElement['DeleteReport'].onClick({deleteExcelFile: deleteExcelFile});
   };
