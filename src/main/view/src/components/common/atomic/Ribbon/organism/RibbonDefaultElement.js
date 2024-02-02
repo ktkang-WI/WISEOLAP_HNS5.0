@@ -31,6 +31,7 @@ import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 const RibbonDefaultElement = () => {
   const {
@@ -45,6 +46,7 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const {querySearch} = useReportSave();
+  const {executeItems} = useQueryExecute();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
 

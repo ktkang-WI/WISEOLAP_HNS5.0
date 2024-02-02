@@ -4,9 +4,10 @@ import localizedString from '../../../../../../config/localization';
 import React, {useState} from 'react';
 import EmojiArr from './EmojiArr';
 
-const DataHighlightForm = ({formData, measureNames}, ref) => {
-  const [showField, setShowField] = useState(false); // between 선택 시 조건값 To 보여줌.
-  const [selectedIcon, setSelectedIcon] = useState(''); // 선택한 아이콘 보여줌.
+const DataHighlightForm = (
+    {formData, measureNames, showField, setShowField}, ref) => {
+  // 선택한 아이콘 보여줌.
+  const [selectedIcon, setSelectedIcon] = useState('');
 
   const emojiSelectBox = (src) => {
     if (src !== '') {

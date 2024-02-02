@@ -9,7 +9,8 @@ const dashboardInitialState = {
     layoutConfig: {
       global: {
         tabEnableClose: false,
-        tabEnableRename: false
+        tabEnableRename: false,
+        tabSetEnableDrop: false
       },
       borders: [],
       layout: {
@@ -42,7 +43,8 @@ const adHocInitialState = {
       global: {
         tabEnableClose: false,
         tabEnableRename: false,
-        tabSetEnableMaximize: false
+        tabSetEnableMaximize: false,
+        tabSetEnableDrop: false
       },
       layout: {
         type: 'row',
@@ -94,7 +96,8 @@ const excelInitialState = {
     layoutConfig: {
       global: {
         tabEnableClose: false,
-        tabEnableRename: false
+        tabEnableRename: false,
+        tabSetEnableDrop: false
       },
       layout: {}
     }
