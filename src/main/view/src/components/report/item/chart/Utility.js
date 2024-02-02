@@ -1,15 +1,52 @@
+import {setMeta} from '../util/metaUtilityFactory';
 import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
 
+
+const seriesOption = localizedString.seriesOptions.data;
+
+
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  const defaultAxis = {
+    formatType: 'Number',
+    unit: 'Ones',
+    axisStartToZero: true,
+    useAxis: true,
+    customText: false,
+    suffixEnabled: false,
+    suffix: {
+      O: '',
+      K: '천',
+      M: '백만',
+      B: '십억'
+    },
+    precision: 0,
+    precisionType: 'roundUp',
+    useDigitSeparator: true
+  };
 
+  setMeta(item, 'xAxis', {
+    useXAxis: true,
+    xAxisCaption: undefined,
+    xAxisInclination: 0
+  });
+  setMeta(item, 'yAxis', defaultAxis);
+  setMeta(item, 'supplyAxis', defaultAxis);
+
+  setMeta(item, 'legend', {
+    useLegend: true,
+    legendPosition: ''
+  });
+
+  setMeta(item, 'useRotate', false);
+  setMeta(item, 'seriesType', seriesOption.defaultType);
 };
 
 /**
@@ -79,7 +116,11 @@ const generateParameter = (item, param) => {
 const getRibbonItems = () => {
   return [
     'CaptionView',
-    'NameEdit'
+    'NameEdit',
+    'Rotate',
+    'XAxisSetting',
+    'YAxisSetting',
+    'ExtraAxisSetting'
   ];
 };
 
