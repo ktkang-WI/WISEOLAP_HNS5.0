@@ -79,7 +79,7 @@ export const getCssStyle = (highlight, cellElement, cell) => {
         '<img src='+
           EmojiArr[highlight.emojiList].icon +
         ' style="float:left" />'+
-        cellElement.innerHTML;
+        '<span>' + cellElement.innerText + '</span>';
     }
   };
 
