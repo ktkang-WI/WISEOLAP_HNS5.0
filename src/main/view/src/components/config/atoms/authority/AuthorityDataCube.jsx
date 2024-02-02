@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/authority/Title';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import localizedString from 'config/localization';
 
 const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
@@ -47,4 +47,4 @@ const AuthorityDataCube = ({dsView, dsViewCube, row}) => {
   );
 };
 
-export default AuthorityDataCube;
+export default React.memo(AuthorityDataCube);

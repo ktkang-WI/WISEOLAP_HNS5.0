@@ -1,6 +1,6 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import models from 'models';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
@@ -118,4 +118,4 @@ const DatasourceList = ({row}) => {
   );
 };
 
-export default DatasourceList;
+export default React.memo(DatasourceList);

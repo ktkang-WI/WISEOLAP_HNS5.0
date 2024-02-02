@@ -1,7 +1,7 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/authority/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import localizedString from 'config/localization';
 
 const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
@@ -45,4 +45,4 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row}) => {
   );
 };
 
-export default AuthorityDataDimension;
+export default React.memo(AuthorityDataDimension);

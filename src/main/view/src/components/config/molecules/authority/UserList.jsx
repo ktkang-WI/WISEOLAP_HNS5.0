@@ -3,7 +3,7 @@ import models from 'models';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
@@ -18,22 +18,20 @@ const UserList = ({setRow}) => {
 
   useEffect(() => {
     const dataUsers = data.filter((row) => row.user);
-    if (dataUsers.length > 0) {
-      models.Authority.getUsers()
-          .then((response) => {
-            const authUserNoList = dataUsers.map((row) => row.user.userNo);
-            const newUsers = response.data.data.map((row) => {
-              return {
-                ...row,
-                isAuth: authUserNoList.includes(row.userNo) ? true: false
-              };
-            });
-            setUsers(newUsers);
-          })
-          .catch(() => {
-            throw new Error('Data Loading Error');
+    models.Authority.getUsers()
+        .then((response) => {
+          const authUserNoList = dataUsers.map((row) => row.user.userNo);
+          const newUsers = response.data.data.map((row) => {
+            return {
+              ...row,
+              isAuth: authUserNoList.includes(row.userNo) ? true: false
+            };
           });
-    }
+          setUsers(newUsers);
+        })
+        .catch(() => {
+          throw new Error('Data Loading Error');
+        });
   }, []);
 
   const handleRowClick = ({data}) => {
@@ -44,7 +42,7 @@ const UserList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.userList}></Title>
       <DataGrid
-        height={600}
+        height={'90%'}
         dataSource={users}
         showBorders={true}
         onRowClick={handleRowClick}
@@ -85,4 +83,4 @@ const UserList = ({setRow}) => {
   );
 };
 
-export default UserList;
+export default React.memo(UserList);

@@ -2,8 +2,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
 import {authData} from './data/AuthorityData';
-import {createContext, useCallback, useState} from 'react';
-import {useLoaderData} from 'react-router-dom';
+import React, {createContext, useCallback, useEffect, useState} from 'react';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -40,21 +39,21 @@ export const AuthorityContext = createContext();
 const Authority = () => {
   const btns = ['save'];
   const [auth, setAuth] = useState(authData[0]);
-  const groupData = useLoaderData();
-
-  const [data, setData] = useState(groupData);
-  const [report, setReport] = useState();
-  const [dataset, setDataset] = useState();
-  const [datasource, setDatasource] = useState();
+  const [data, setData] = useState([]);
 
   const context = {
     state: {
-      data: [data, setData],
-      report: [report, setReport],
-      dataset: [dataset, setDataset],
-      datasource: [datasource, setDatasource]
+      data: [data, setData]
     }
   };
+
+  useEffect(() => {
+    auth.data().then((res) => {
+      if (res.data.data) {
+        setData(res.data.data);
+      }
+    });
+  }, []);
 
   const handleBtnClick = ({component}) => {
     alert('기능 개발 중입니다.');
@@ -86,10 +85,6 @@ const Authority = () => {
     });
   }, [auth, data]);
 
-  const renderItemComponent = useCallback(() => {
-    return auth.component(auth);
-  }, [auth]);
-
   return (
     <AuthorityContext.Provider
       value={context}>
@@ -107,7 +102,7 @@ const Authority = () => {
             dataSource={authData}
             animationEnabled={false}
             swipeEnabled={false}
-            itemComponent={renderItemComponent}
+            itemComponent={auth.component}
             onTitleClick={handleTabPanelItem}
           >
           </TabPanel>
@@ -117,4 +112,4 @@ const Authority = () => {
   );
 };
 
-export default Authority;
+export default React.memo(Authority);

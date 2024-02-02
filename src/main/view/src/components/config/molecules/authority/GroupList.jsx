@@ -2,7 +2,7 @@ import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import models from 'models';
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/authority/Title';
@@ -18,22 +18,20 @@ const GroupList = ({setRow}) => {
 
   useEffect(() => {
     const dataGroups = data.filter((row)=>row.group);
-    if (dataGroups.length > 0) {
-      models.Authority.getGroups()
-          .then((response) => {
-            const authGrpIdList = dataGroups.map((row) => row.group.grpId);
-            const newGroups = response.data.data.map((row) => {
-              return {
-                ...row,
-                isAuth: authGrpIdList.includes(row.grpId) ? true: false
-              };
-            });
-            setGroups(newGroups);
-          })
-          .catch(() => {
-            throw new Error('Data Loading Error');
+    models.Authority.getGroups()
+        .then((response) => {
+          const authGrpIdList = dataGroups.map((row) => row.group.grpId);
+          const newGroups = response.data.data.map((row) => {
+            return {
+              ...row,
+              isAuth: authGrpIdList.includes(row.grpId) ? true: false
+            };
           });
-    }
+          setGroups(newGroups);
+        })
+        .catch(() => {
+          throw new Error('Data Loading Error');
+        });
   }, []);
 
   const handleRowClick = ({data}) => {
@@ -79,4 +77,4 @@ const GroupList = ({setRow}) => {
   );
 };
 
-export default GroupList;
+export default React.memo(GroupList);

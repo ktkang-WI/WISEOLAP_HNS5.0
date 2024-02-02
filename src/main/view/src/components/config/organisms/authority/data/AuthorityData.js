@@ -32,50 +32,50 @@ export const authData = [
   {
     mode: Mode.GROUP_DATA,
     title: localizedString.groupData,
-    component: (auth) => <DataAuthority auth={auth}/>,
+    component: DataAuthority,
     data: getGroupData
   },
   {
     mode: Mode.GROUP_REPORT,
     title: localizedString.groupReport,
-    component: (auth) => <ReportAuthority auth={auth}/>,
+    component: ReportAuthority,
     data: getGroupFolder
   },
   {
     mode: Mode.GROUP_DATASET,
     title: localizedString.groupDataset,
-    component: (auth) => <DatasetAuthority auth={auth}/>,
+    component: DatasetAuthority,
     data: getGroupDataset
   },
   {
     mode: Mode.GROUP_DATASOURCE,
     title: localizedString.groupDatasource,
-    component: (auth) => <DatasourceAuthority auth={auth}/>,
+    component: DatasourceAuthority,
     data: getGroupDs
   },
   // 사용자
   {
     mode: Mode.USER_DATA,
     title: localizedString.userData,
-    component: (auth) => <DataAuthority auth={auth}/>,
+    component: DataAuthority,
     data: getUserData
   },
   {
     mode: Mode.USER_REPORT,
     title: localizedString.userReport,
-    component: (auth) => <ReportAuthority auth={auth}/>,
+    component: ReportAuthority,
     data: getUserFolder
   },
   {
     mode: Mode.USER_DATASET,
     title: localizedString.userDataset,
-    component: (auth) => <DatasetAuthority auth={auth}/>,
+    component: DatasetAuthority,
     data: getUserDataset
   },
   {
     mode: Mode.USER_DATASOURCE,
     title: localizedString.userDatasource,
-    component: (auth) => <DatasourceAuthority auth={auth}/>,
+    component: DatasourceAuthority,
     data: getUserDs
   }
 ];
