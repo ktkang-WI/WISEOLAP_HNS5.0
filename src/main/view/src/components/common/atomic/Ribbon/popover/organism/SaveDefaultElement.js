@@ -7,11 +7,15 @@ import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import store from 'redux/modules';
 
-const saveDefaultElement = () => {
+const SaveDefaultElement = () => {
   const {openModal, alert} = useModal();
   const {patchReport, generateParameter} = useReportSave();
 
-  return {
+  const getElementByLable = (label) => {
+    return saveElement.save.find((element) => element.label === label);
+  };
+
+  const saveElement = {
     save: [
       {
         label: localizedString.saveReport, // 저장
@@ -56,10 +60,10 @@ const saveDefaultElement = () => {
       'save'
     ]
   };
+  return {
+    saveElement,
+    getElementByLable
+  };
 };
 
-export const getElementByLable = (label) => {
-  return saveDefaultElement().find((element) => element.label === label);
-};
-
-export default saveDefaultElement;
+export default SaveDefaultElement;

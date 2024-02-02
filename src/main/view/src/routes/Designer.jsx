@@ -59,9 +59,9 @@ const Designer = () => {
         ]}
       >
       </Header>
-      {/* , 'Spreadsheet', 'Preference' */}
+      {/* , 'Preference' */}
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc']}
+        content={['Dashboard', 'AdHoc', 'Spreadsheet']}
       />
       <Outlet/>
     </div>
