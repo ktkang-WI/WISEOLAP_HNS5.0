@@ -411,14 +411,14 @@ public class ReportController {
 	}
 
     @PatchMapping(value = "/report-delete")
-        public ResponseEntity<Map<String, Object>> deleteReport(@RequestBody Map<String, String> param) throws SQLException {
-                Gson gson = new Gson();
-                ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
-                String reportTypeStr = param.getOrDefault("reportType", "");
-                ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
-                reportDTO.setReportType(reportType);
-                Map<String, Object> map = reportService.deleteReport(reportDTO);
+    public ResponseEntity<Map<String, Object>> deleteReport(@RequestBody Map<String, String> param) throws SQLException {
+            Gson gson = new Gson();
+            ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
+            String reportTypeStr = param.getOrDefault("reportType", "");
+            ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
+            reportDTO.setReportType(reportType);
+            Map<String, Object> map = reportService.deleteReport(reportDTO);
 
-                return ResponseEntity.ok().body(map);
-        }
+            return ResponseEntity.ok().body(map);
+    }
 }

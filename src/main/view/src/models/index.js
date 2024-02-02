@@ -6,6 +6,10 @@ import * as SingleTable from './dataset/SingleTable';
 import * as Item from './report/Item';
 import * as Report from './report/Report';
 import * as Parameter from './dataset/Parameter';
+import * as Preferences from './config/preferences/Preferences';
+import * as UserGroupManagement
+  from './config/userGroupManagement/UserGroupManagement';
+import * as Authority from './config/authority/Authority';
 import * as File from './upload/File';
 
 export default {
@@ -17,5 +21,8 @@ export default {
   Item,
   Parameter,
   Report,
+  Preferences,
+  UserGroupManagement,
+  Authority,
   File
 };

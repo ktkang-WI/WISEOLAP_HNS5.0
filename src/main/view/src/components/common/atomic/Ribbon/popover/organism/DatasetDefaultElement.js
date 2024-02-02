@@ -36,6 +36,7 @@ const DatasetDefaultElement = () => {
             }
           });
         }
+
       },
       {
         label: localizedString.addDsSingle,
@@ -61,15 +62,15 @@ const DatasetDefaultElement = () => {
             }
           });
         }
-      },
-      {
-        label: localizedString.addDsUpload,
-        imgSrc: '',
-        visible: true,
-        onClick: () => {
-          console.log('upload');
-        }
       }
+      // {
+      //   label: localizedString.addDsUpload,
+      //   imgSrc: '',
+      //   visible: true,
+      //   onClick: () => {
+      //     console.log('upload');
+      //   }
+      // }
     ],
     keys: ['dataset']
   };

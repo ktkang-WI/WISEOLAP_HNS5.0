@@ -108,7 +108,13 @@ const PanelTitleDefaultElement = () => {
       onClick: () => {
         const dataset = selectCurrentDataset(store.getState());
         const reportId = selectCurrentReportId(store.getState());
-        confirm('데이터 집합을 삭제하시겠습니까?', () => {
+
+        if (!dataset) {
+          alert(localizedString.datasetNotSelected);
+          return;
+        }
+
+        confirm(localizedString.deleteDatasetMsg, () => {
           const datasetId = dataset.datasetId;
           dispatch(deleteDataset({datasetId, reportId}));
           dispatch(deleteParameterByDatasetId({reportId, datasetId}));

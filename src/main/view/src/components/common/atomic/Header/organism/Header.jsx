@@ -9,7 +9,6 @@ import ReportTitleTabs from '../../ReportTitleTab/ReportTitleTabs';
 import LabelImageButton from '../../Common/Button/LabelImageButton';
 import headerDefaultElement from './HeaderDefaultElement';
 import TextButton from '../../Common/Button/TextButton';
-import {Link} from 'react-router-dom';
 
 const theme = getTheme();
 
@@ -78,9 +77,7 @@ const getHeaderItem = (item) => {
         position={item.position}
         breakLine={item.index !== item.length - 1}
       >
-        <Link to={'/editds/'}>
-          <HeaderLogoImage height={item.height}/>
-        </Link>
+        <HeaderLogoImage height={item.height}/>
       </HeaderPanel>
     );
   } else if (item.type === 'ReportTabs') {

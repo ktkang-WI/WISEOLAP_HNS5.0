@@ -17,6 +17,10 @@
 		<property name="password" value="${spring.datasource.password}" />
 		<property name="defaultAutoCommit" value="false" />
 	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="repositoryDataSource"/>
+  </bean>
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="repositoryDataSource"/>
@@ -46,4 +50,6 @@
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
+
+	<tx:annotation-driven/>
 </beans>
