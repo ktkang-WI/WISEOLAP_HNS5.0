@@ -15,12 +15,14 @@ import localizedString from 'config/localization';
 
 const ElementFactory = (id) => {
   const reportType = selectCurrentDesignerMode(store.getState());
+  const {saveElement} = saveDefaultElement();
+
   if (id === 'add_custom_chart') {
     return customChartDefaulElement();
   } else if (id === 'add_default_chart') {
     return normalChartDefaultElement();
   } else if (id === 'save_report') {
-    return saveDefaultElement();
+    return saveElement;
   } else if (id === 'download_report') {
     return downloadDefaultElement();
   } else if (id === 'dataset') {
