@@ -195,7 +195,7 @@ const useDrag = () => {
         }));
 
         const addParamaQuery = selectedDataset.datasetQuery +
-                  ' AND A.' + newParam.itemKey +
+                  ' AND A.' + newParam.uniqueName +
                   ' IN (' + name + ') \n';
 
         dispatch(updateDataset({

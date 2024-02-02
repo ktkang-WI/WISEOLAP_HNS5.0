@@ -113,15 +113,15 @@ const SingleTableDesignerModal = ({
       switch (param.operation) {
         case 'IN':
         case 'Equals':
-          sqlData += ' AND A.' + param.itemKey +
+          sqlData += ' AND A.' + param.uniqueName +
               ' IN (' + param.name + ') \n';
           break;
         case 'Not In':
-          sqlData += ' AND A.' + param.itemKey +
+          sqlData += ' AND A.' + param.uniqueName +
               'NOT IN (' + param.name + ') \n';
           break;
         case 'Between':
-          sqlData += ' AND A.' + param.itemKey +
+          sqlData += ' AND A.' + param.uniqueName +
               'BETWEEN (' + param.name + ') \n';
           break;
       }
@@ -215,6 +215,7 @@ const SingleTableDesignerModal = ({
               onRowUpdated={(columns) => {
                 const changeColumnList = columnList.map((row) => {
                   if (columns.key == row.ID) {
+                    columns.data.columnName = columns.data.COL_CAPTION;
                     row = columns.data;
                   }
                   return row;
