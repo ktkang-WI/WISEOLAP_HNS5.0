@@ -3,6 +3,7 @@ import Input from '../atoms/Input';
 import {Link, useNavigate} from 'react-router-dom';
 import TextButton from 'components/common/atomic/Common/Button/CommonButton';
 import models from 'models';
+import useModal from 'hooks/useModal';
 // import {DesignerMode} from 'components/config/configType';
 
 const StyledForm = styled.form.attrs(() => ({
@@ -75,6 +76,7 @@ const createCheckBox = (contents) => {
 
 const FormInputs = ({contents}) => {
   const nav = useNavigate();
+  const {alert} = useModal();
 
   const createFormBtn = (contents) => {
     const type = contents.type;
