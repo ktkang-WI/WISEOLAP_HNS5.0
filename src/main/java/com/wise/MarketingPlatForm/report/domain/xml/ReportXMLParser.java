@@ -25,7 +25,7 @@ import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.global.util.DBDataUtility;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public abstract class XMLParser {
+public abstract class ReportXMLParser {
 	/**
 	 * 모든 보고서에서 공통으로 필드
 	 */
