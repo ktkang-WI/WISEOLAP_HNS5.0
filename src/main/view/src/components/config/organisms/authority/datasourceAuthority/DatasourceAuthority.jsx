@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Mode} from '../data/AuthorityData';
 import DatasourceList from
   'components/config/molecules/authority/DatasourceList';
@@ -25,4 +25,4 @@ const DatasourceAuthority = ({auth}) => {
   );
 };
 
-export default DatasourceAuthority;
+export default React.memo(DatasourceAuthority);

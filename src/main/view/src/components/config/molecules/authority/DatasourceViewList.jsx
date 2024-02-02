@@ -1,6 +1,6 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import models from 'models';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
@@ -136,4 +136,4 @@ const DatasourceViewList = ({row, setDsView}) => {
   );
 };
 
-export default DatasourceViewList;
+export default React.memo(DatasourceViewList);

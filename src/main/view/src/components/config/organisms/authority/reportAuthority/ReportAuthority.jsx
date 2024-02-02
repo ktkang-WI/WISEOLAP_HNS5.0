@@ -4,7 +4,7 @@ import UserList from 'components/config/molecules/authority/UserList';
 import {Mode} from '../data/AuthorityData';
 import FolderTreeView
   from 'components/config/molecules/authority/FolderTreeView';
-import {useState} from 'react';
+import React, {useState} from 'react';
 
 const ReportAuthority = ({auth}) => {
   const [row, setRow] = useState();
@@ -25,4 +25,4 @@ const ReportAuthority = ({auth}) => {
   );
 };
 
-export default ReportAuthority;
+export default React.memo(ReportAuthority);

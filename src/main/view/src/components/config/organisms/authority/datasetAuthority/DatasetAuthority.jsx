@@ -3,7 +3,7 @@ import Wrapper from
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
 import {Mode} from '../data/AuthorityData';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import DatasetTreeView
   from 'components/config/molecules/authority/DatasetTreeView';
 
@@ -26,4 +26,4 @@ const DatasetAuthority = ({auth}) => {
   );
 };
 
-export default DatasetAuthority;
+export default React.memo(DatasetAuthority);

@@ -1,6 +1,6 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Mode} from '../data/AuthorityData';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
@@ -21,6 +21,7 @@ const DataAuthority = ({auth}) => {
   const [dsViewCube, setDsViewCube] = useState([]);
 
   useEffect(() => {
+    console.log('DataAuthority.jsx Mount!!!!');
     models.Authority.getDsViewCube()
         .then((response) => {
           setDsViewCube(response.data.data);
@@ -81,4 +82,4 @@ const DataAuthority = ({auth}) => {
   );
 };
 
-export default DataAuthority;
+export default React.memo(DataAuthority);

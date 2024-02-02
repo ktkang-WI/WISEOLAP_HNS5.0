@@ -5,7 +5,7 @@ import TreeList, {
   Selection} from 'devextreme-react/tree-list';
 
 import models from 'models';
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/authority/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
@@ -123,4 +123,4 @@ const FolderTreeView = ({row}) => {
   );
 };
 
-export default FolderTreeView;
+export default React.memo(FolderTreeView);
