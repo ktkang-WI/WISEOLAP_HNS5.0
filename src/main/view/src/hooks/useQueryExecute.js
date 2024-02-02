@@ -2,7 +2,8 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItems, selectRootItem
+  selectCurrentItems,
+  selectRootItem
 } from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
@@ -169,6 +170,11 @@ const useQueryExecute = () => {
           alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
           return;
         }
+
+        if (response.data.chart.data.length === 0) {
+          alert(`${localizedString.addPivotGrid}${localizedString.noneData}`);
+        }
+
         if (response.data['chart']) {
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
@@ -215,9 +221,13 @@ const useQueryExecute = () => {
         if (response.status != 200) {
           return;
         }
+        const data = response.data;
+        if (data.data.length === 0) {
+          alert(`${item.meta.name}${localizedString.noneData}`);
+        }
 
         tempItem.mart.init = true;
-        tempItem.mart.data = response.data;
+        tempItem.mart.data = data;
         tempItem.mart.currentFilter = filter || {};
 
         ItemManager.generateItem(tempItem);
