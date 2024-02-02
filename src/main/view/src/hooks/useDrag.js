@@ -33,7 +33,6 @@ const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
   const {updateParameterInformation} = ParameterSlice.actions;
   const {updateDataset} = DatasetSlice.actions;
-  
   const dispatch = useDispatch();
   const {alert} = useModal();
 
