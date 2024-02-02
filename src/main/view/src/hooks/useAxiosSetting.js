@@ -26,10 +26,12 @@ export default function useAxiosSetting() {
   axios.interceptors.response.use(
       (response) => {
         dispatch(actions.endJob());
+        console.log(response);
         return response;
       },
       (error) => {
         dispatch(actions.endJob());
+        console.log(error);
         return error;
       }
   );
