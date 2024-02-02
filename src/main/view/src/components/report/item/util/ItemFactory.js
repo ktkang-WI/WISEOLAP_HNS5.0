@@ -11,6 +11,8 @@ import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
  */
 const makeItem = (orgItem) => {
   let item = {};
+  const seriesType = orgItem.chartType;
+  delete orgItem.chartType;
   // meta 값 있는 경우 불러오기로 간주
   if (!orgItem.meta) {
     // 기본 값 세팅
@@ -35,6 +37,9 @@ const makeItem = (orgItem) => {
         dataHighlight: []
       }
     };
+    if (orgItem.type === 'chart') {
+      item.meta.seriesType = seriesType;
+    }
   }
 
   // mart 및 meta 값 세팅
