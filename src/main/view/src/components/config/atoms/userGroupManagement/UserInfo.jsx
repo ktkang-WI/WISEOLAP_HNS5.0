@@ -6,7 +6,7 @@ import Panel
   from 'components/config/organisms/userGroupManagement/common/Panel';
 import {TextArea} from 'devextreme-react';
 import Form, {
-  GroupItem, Item, SimpleItem
+  GroupItem, Item, Label, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
@@ -23,25 +23,43 @@ const UserInfo = () => {
       >
         <GroupItem
           colCount={1}>
-          <Item dataField="userId" caption={localizedString.userId}></Item>
-          <Item dataField="userNm" caption={localizedString.userName}></Item>
-          <Item dataField="email1" caption="이메일 1"></Item>
-          <Item dataField="email2" caption="이메일 2"></Item>
-          <Item dataField="telNo" caption="휴대전화번호"></Item>
+          <Item dataField="userId">
+            <Label>{localizedString.userId}</Label>
+          </Item>
+          <Item dataField="userNm">
+            <Label>{localizedString.userName}</Label>
+          </Item>
+          <Item dataField="email1">
+            <Label>{'이메일'}</Label>
+          </Item>
+          <Item dataField="email2">
+            <Label>{'이메일2'}</Label>
+          </Item>
+          <Item dataField="telNo">
+            <Label>{'전화번호'}</Label>
+          </Item>
           <Item
             dataField="grpNm"
-            caption={localizedString.groupName}
-            editorType="dxSelectBox"></Item>
+            editorType="dxSelectBox"
+          >
+            <Label>{localizedString.groupName}</Label>
+          </Item>
           <Item
             dataField="userRunMode"
-            caption={localizedString.userRunMode}
-            editorType="dxSelectBox"></Item>
-          <Item dataField="grpRunMode" caption={localizedString.groupRunMode}>
+            editorType="dxSelectBox"
+          >
+            <Label>{localizedString.userRunMode}</Label>
+          </Item>
+          <Item
+            dataField="grpRunMode"
+            editorType="dxSelectBox"
+          >
+            <Label>{localizedString.groupRunMode}</Label>
           </Item>
           <SimpleItem
             dataField="userDesc"
-            caption={localizedString.description}
           >
+            <Label>{localizedString.description}</Label>
             <TextArea
               height={140}
               width="100%"

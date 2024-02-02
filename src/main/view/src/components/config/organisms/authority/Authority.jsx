@@ -57,7 +57,7 @@ const Authority = () => {
   };
 
   const handleBtnClick = ({component}) => {
-    alert('클릭');
+    alert('기능 개발 중입니다.');
   };
 
   const navBarItems = () => {

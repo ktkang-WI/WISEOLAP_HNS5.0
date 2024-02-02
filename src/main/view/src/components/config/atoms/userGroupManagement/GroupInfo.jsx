@@ -4,7 +4,7 @@ import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import {TextArea} from 'devextreme-react';
 import Form, {
-  GroupItem, Item, SimpleItem
+  GroupItem, Item, Label, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
@@ -21,8 +21,11 @@ const GroupInfo = () => {
         <GroupItem colCount={1}>
           <Item
             dataField="grpNm"
-            caption={localizedString.groupName}></Item>
-          <SimpleItem dataField="grpDesc" caption={localizedString.description}>
+          >
+            <Label>{localizedString.groupName}</Label>
+          </Item>
+          <SimpleItem dataField="grpDesc">
+            <Label>{localizedString.description}</Label>
             <TextArea
               height={100}
               width="100%"
@@ -30,8 +33,10 @@ const GroupInfo = () => {
           </SimpleItem>
           <Item
             dataField="grpRunMode"
-            caption={localizedString.groupRunMode}
-            editorType="dxSelectBox"></Item>
+            editorType="dxSelectBox"
+          >
+            <Label>{localizedString.groupRunMode}</Label>
+          </Item>
         </GroupItem>
       </Form>
     </Panel>
