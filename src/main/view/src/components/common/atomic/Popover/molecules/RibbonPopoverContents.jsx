@@ -27,6 +27,7 @@ const popoverSelector = (type, items) => {
           return (
             <IconWrap key={idx}>
               <PopoverLabelImageBtn
+                visible={item.visible ? true : false}
                 label={item.label}
                 imgSrc={item.imgSrc}
                 onClick={item.onClick}
@@ -66,7 +67,8 @@ const popoverSelector = (type, items) => {
   }
 };
 
-const RibbonPopoverContents = ({popoverType, titlePanel, id}) => {
+const RibbonPopoverContents = ({
+  popoverType, titlePanel, id}) => {
   const element = elementFactory(id);
   return (
     element['keys'].map((e, idx) => {
