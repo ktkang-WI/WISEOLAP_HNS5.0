@@ -1,0 +1,19 @@
+export const chartItemType = {
+  bar: 'bar',
+  stackedbar: 'stackedbar',
+  fullstackedbar: 'fullstackedbar',
+  scatter: 'scatter',
+  line: 'line',
+  stackedline: 'stackedline',
+  fullstackedline: 'fullstackedline',
+  stepline: 'stepline',
+  spline: 'spline',
+  area: 'area',
+  stackedarea: 'stackedarea',
+  fullstackedarea: 'fullstackedarea',
+  steparea: 'steparea',
+  splinearea: 'splinearea',
+  stackedsplinearea: 'stackedsplinearea',
+  fullstackedsplinearea: 'fullstackedsplinearea',
+  bubble: 'bubble'
+};
