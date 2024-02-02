@@ -54,7 +54,7 @@ const DatasetLinkerModal = ({...props}) => {
         datasetId: datasetId,
         datasetNm: dataset.datasetNm,
         sheetNm: bindingInfos[datasetId]?.sheetNm ?
-          bindingInfos[datasetId]?.sheetNm : sheetNms[0],
+          bindingInfos[datasetId]?.sheetNm : '',
         position: position,
         useHeader: useHeader,
         useBorder: useBorder,

@@ -7,7 +7,7 @@ import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import store from 'redux/modules';
 
-const SaveDefaultElement = () => {
+const saveDefaultElement = () => {
   const {openModal, alert} = useModal();
   const {patchReport, generateParameter} = useReportSave();
 
@@ -57,4 +57,9 @@ const SaveDefaultElement = () => {
     ]
   };
 };
-export default SaveDefaultElement;
+
+export const getElementByLable = (label) => {
+  return saveDefaultElement().find((element) => element.label === label);
+};
+
+export default saveDefaultElement;

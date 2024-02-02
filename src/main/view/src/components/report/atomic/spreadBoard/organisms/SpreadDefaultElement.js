@@ -4,7 +4,7 @@ import {selectCurrentDesigner, selectExcelIO, selectSheets}
   from 'redux/selector/SpreadSelector';
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
-import saveDefaultElement
+import {getElementByLable}
   from 'components/common/atomic/Ribbon/popover/organism/SaveDefaultElement';
 import ribbonDefaultElement
   from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
@@ -19,7 +19,6 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 const SpreadDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
   const {reload, loadReport, querySearch} = useReportSave();
-  const {save} = saveDefaultElement();
   const {importFile, uploadFile, deleteFile} = useFile();
   const ribbonElement = ribbonDefaultElement();
   const {
@@ -94,14 +93,12 @@ const SpreadDefaultElement = () => {
         ));
   };
   const saveReport = () => {
-    save.find((saveitem) =>
-      saveitem.label === localizedString.saveReport)
+    getElementByLable(localizedString.saveReport)
         .onClick({createExcelFile: createExcelFile});
   };
 
   const saveAsReport = () => {
-    save.find((saveitem) =>
-      saveitem.label === localizedString.saveAs)
+    getElementByLable(localizedString.saveAs)
         .onClick({createExcelFile: createExcelFile});
   };
   const deleteReport = () => {

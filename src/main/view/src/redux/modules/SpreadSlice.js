@@ -50,7 +50,7 @@ const defaultBindInfo = {
   useHeader: false,
   useBorder: false,
   useBind: false,
-  sheetNm: undefined,
+  sheetNm: '',
   datasetNm: undefined
 };
 
