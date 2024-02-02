@@ -10,7 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 
 @Component
-public class LoginInterCeptor implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 

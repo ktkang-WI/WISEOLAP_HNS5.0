@@ -6,17 +6,17 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.wise.MarketingPlatForm.login.interceptor.LoginInterCeptor;
+import com.wise.MarketingPlatForm.login.interceptor.LoginInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private LoginInterCeptor loginInterCeptor;
+    private LoginInterceptor loginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterCeptor)
+        registry.addInterceptor(loginInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/login/**", "/error");
     }
