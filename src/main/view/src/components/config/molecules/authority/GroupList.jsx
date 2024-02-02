@@ -17,7 +17,6 @@ const GroupList = ({setRow}) => {
   const [data] = authoritycontext.state.data;
 
   useEffect(() => {
-    console.log('GroupList Mount');
     const dataGroups = data.filter((row)=>row.group);
     models.Authority.getGroups()
         .then((response) => {

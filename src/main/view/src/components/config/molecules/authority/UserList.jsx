@@ -17,7 +17,6 @@ const UserList = ({setRow}) => {
   const [data] = authoritycontext.state.data;
 
   useEffect(() => {
-    console.log('UserList Mount');
     const dataUsers = data.filter((row) => row.user);
     models.Authority.getUsers()
         .then((response) => {
@@ -43,7 +42,7 @@ const UserList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.userList}></Title>
       <DataGrid
-        height={600}
+        height={'90%'}
         dataSource={users}
         showBorders={true}
         onRowClick={handleRowClick}

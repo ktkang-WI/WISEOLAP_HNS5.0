@@ -6,20 +6,28 @@ import {Mode} from '../data/AuthorityData';
 import DatasourceList from
   'components/config/molecules/authority/DatasourceList';
 
-const DatasourceAuthority = ({auth}) => {
+const DatasourceAuthority = ({data}) => {
   const [row, setRow] = useState({});
+  const auth = data;
 
   return (
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_DATASOURCE ?
-          <GroupList setRow={setRow}/> :
+          auth.mode === Mode.GROUP_DATASOURCE &&
+          <GroupList setRow={setRow}/>
+        }
+        {
+          auth.mode === Mode.USER_DATASOURCE &&
           <UserList setRow={setRow}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>
-        <DatasourceList row={row}/>
+        {
+          (auth.mode === Mode.GROUP_DATASOURCE ||
+          auth.mode === Mode.USER_DATASOURCE) &&
+          <DatasourceList row={row}/>
+        }
       </Wrapper>
     </Wrapper>
   );

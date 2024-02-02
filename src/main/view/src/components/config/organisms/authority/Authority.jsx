@@ -48,7 +48,6 @@ const Authority = () => {
   };
 
   useEffect(() => {
-    console.log('Authority.jsx Mount !!!!');
     auth.data().then((res) => {
       if (res.data.data) {
         setData(res.data.data);
@@ -86,12 +85,6 @@ const Authority = () => {
     });
   }, [auth, data]);
 
-  const renderItemComponent = useCallback(() => {
-    console.log('renderItemComponent execute!!!!');
-    console.log(auth);
-    return auth.component(auth);
-  }, [data]);
-
   return (
     <AuthorityContext.Provider
       value={context}>
@@ -109,7 +102,7 @@ const Authority = () => {
             dataSource={authData}
             animationEnabled={false}
             swipeEnabled={false}
-            itemRender={renderItemComponent}
+            itemComponent={auth.component}
             onTitleClick={handleTabPanelItem}
           >
           </TabPanel>
