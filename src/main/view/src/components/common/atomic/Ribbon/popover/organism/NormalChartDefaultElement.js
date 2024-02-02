@@ -13,6 +13,7 @@ const NormalChartDefaultElement = () => {
 
   // state
   const selectedReportId = useSelector(selectCurrentReportId);
+
   const chart = 'chart';
 
   const onClickChartItem = (selectedReportId, chart, chartType) => {

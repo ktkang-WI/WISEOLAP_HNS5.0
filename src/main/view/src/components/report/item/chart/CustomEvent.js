@@ -33,6 +33,7 @@ const useCustomEvent = () => {
         }));
       }
     }
+    // TODO : x, y, 보조 축 설정 추가
     // 'XAxisSetting': {
     //   ...commonRibbonBtnElement,
     //   'id': 'xAxis_setting',
