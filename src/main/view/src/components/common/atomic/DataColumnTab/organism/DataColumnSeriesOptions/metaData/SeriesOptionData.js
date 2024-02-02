@@ -14,6 +14,7 @@ import DataColumnType
   from '../../../molecules/DataColumnSeriesOptions/DataColumnType';
 import localizedString from 'config/localization';
 import {chartImages} from 'components/report/item/util/chartImageImporter';
+import {chartItemType} from 'components/report/item/chart/chartItemType';
 
 const label = localizedString.seriesOptions.label;
 
@@ -109,21 +110,21 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: label.chart.bar,
-          type: 'bar',
+          type: chartItemType.bar,
           checked: false,
-          src: chartImages.bar1
+          src: chartImages[chartItemType.bar]
         },
         {
           title: label.chart.stackedbar,
-          type: 'stackedbar',
+          type: chartItemType.stackedbar,
           checked: false,
-          src: chartImages.bar2
+          src: chartImages[chartItemType.stackedbar]
         },
         {
           title: label.chart.fullstackedbar,
-          type: 'fullstackedbar',
+          type: chartItemType.fullstackedbar,
           checked: false,
-          src: chartImages.bar3
+          src: chartImages[chartItemType.fullstackedbar]
         }
       ]
     },
@@ -132,39 +133,39 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: label.chart.scatter,
-          type: 'scatter',
+          type: chartItemType.scatter,
           checked: false,
-          src: chartImages.lineBar1
+          src: chartImages[chartItemType.scatter]
         },
         {
           title: label.chart.line,
-          type: 'line',
+          type: chartItemType.line,
           checked: false,
-          src: chartImages.lineBar2
+          src: chartImages[chartItemType.line]
         },
         {
           title: label.chart.stackedline,
-          type: 'stackedline',
+          type: chartItemType.stackedline,
           checked: false,
-          src: chartImages.lineBar3
+          src: chartImages[chartItemType.stackedline]
         },
         {
           title: label.chart.fullstackedline,
-          type: 'fullstackedline',
+          type: chartItemType.fullstackedline,
           checked: false,
-          src: chartImages.lineBar4
+          src: chartImages[chartItemType.fullstackedline]
         },
         {
           title: label.chart.stepline,
-          type: 'stepline',
+          type: chartItemType.stepline,
           checked: false,
-          src: chartImages.lineBar5
+          src: chartImages[chartItemType.stepline]
         },
         {
           title: label.chart.spline,
-          type: 'spline',
+          type: chartItemType.spline,
           checked: false,
-          src: chartImages.lineBar6
+          src: chartImages[chartItemType.spline]
         }
       ]
     },
@@ -173,45 +174,45 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: label.chart.area,
-          type: 'area',
+          type: chartItemType.area,
           checked: false,
-          src: chartImages.areaBar1
+          src: chartImages[chartItemType.area]
         },
         {
           title: label.chart.stackedarea,
-          type: 'stackedarea',
+          type: chartItemType.stackedarea,
           checked: false,
-          src: chartImages.areaBar2
+          src: chartImages[chartItemType.stackedarea]
         },
         {
           title: label.chart.fullstackedarea,
-          type: 'fullstackedarea',
+          type: chartItemType.fullstackedarea,
           checked: false,
-          src: chartImages.areaBar3
+          src: chartImages[chartItemType.fullstackedarea]
         },
         {
           title: label.chart.steparea,
-          type: 'steparea',
+          type: chartItemType.steparea,
           checked: false,
-          src: chartImages.areaBar4
+          src: chartImages[chartItemType.steparea]
         },
         {
           title: label.chart.splinearea,
-          type: 'splinearea',
+          type: chartItemType.splinearea,
           checked: false,
-          src: chartImages.areaBar5
+          src: chartImages[chartItemType.splinearea]
         },
         {
           title: label.chart.stackedsplinearea,
-          type: 'stackedsplinearea',
+          type: chartItemType.stackedsplinearea,
           checked: false,
-          src: chartImages.areaBar6
+          src: chartImages[chartItemType.stackedsplinearea]
         },
         {
           title: label.chart.fullstackedsplinearea,
-          type: 'fullstackedsplinearea',
+          type: chartItemType.fullstackedsplinearea,
           checked: false,
-          src: chartImages.areaBar7
+          src: chartImages[chartItemType.fullstackedsplinearea]
         }
       ]
     },
@@ -220,9 +221,9 @@ export const dataColumnTypeData = {
       checkboxs: [
         {
           title: label.chart.bubble,
-          type: 'bubble',
+          type: chartItemType.bubble,
           checked: false,
-          src: chartImages.bubbleBar1
+          src: chartImages[chartItemType.bubble]
         }
       ]
     }

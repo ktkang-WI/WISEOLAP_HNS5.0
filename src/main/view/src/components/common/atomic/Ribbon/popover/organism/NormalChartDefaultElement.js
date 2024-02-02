@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import pie from 'assets/image/icon/button/pieChart.png';
 import {chartImages} from 'components/report/item/util/chartImageImporter';
+import {chartItemType} from 'components/report/item/chart/chartItemType';
 
 const NormalChartDefaultElement = () => {
   // hook
@@ -24,101 +25,118 @@ const NormalChartDefaultElement = () => {
   const normalChartElemet = {
     barChart: [
       {
-        imgSrc: chartImages.bar1,
+        imgSrc: chartImages[chartItemType.bar],
         label: localizedString.barChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'bar')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.bar)
       },
       {
-        imgSrc: chartImages.bar2,
+        imgSrc: chartImages[chartItemType.stackedbar],
         label: localizedString.stackedBarChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedbar')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.stackedbar)
       },
       {
-        imgSrc: chartImages.bar3,
+        imgSrc: chartImages[chartItemType.fullstackedbar],
         label: localizedString.fullStackedBarChart,
         onClick: () =>
-          onClickChartItem(selectedReportId, chart, 'fullstackedbar')
+          onClickChartItem(
+              selectedReportId, chart, chartItemType.fullstackedbar)
       }
     ],
     lineChart: [
       {
-        imgSrc: chartImages.lineBar1,
+        imgSrc: chartImages[chartItemType.scatter],
         label: localizedString.scatterChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'scatter')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.scatter)
       },
       {
-        imgSrc: chartImages.lineBar2,
+        imgSrc: chartImages[chartItemType.line],
         label: localizedString.lineChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'line')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.line)
       },
       {
-        imgSrc: chartImages.lineBar3,
+        imgSrc: chartImages[chartItemType.stackedline],
         label: localizedString.stackedLineChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedline')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.stackedline)
       },
       {
-        imgSrc: chartImages.lineBar4,
+        imgSrc: chartImages[chartItemType.fullstackedline],
         label: localizedString.fullStackedLineChart,
         onClick: () =>
-          onClickChartItem(selectedReportId, chart, 'fullstackedline')
+          onClickChartItem(
+              selectedReportId, chart, chartItemType.fullstackedline)
       },
       {
-        imgSrc: chartImages.lineBar5,
+        imgSrc: chartImages[chartItemType.stepline],
         label: localizedString.stepLineChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'stepline')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.stepline)
       },
       {
-        imgSrc: chartImages.lineBar6,
+        imgSrc: chartImages[chartItemType.spline],
         label: localizedString.splineChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'spline')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.spline)
       }
     ],
     areaChart: [
       {
-        imgSrc: chartImages.areaBar1,
+        imgSrc: chartImages[chartItemType.area],
         label: localizedString.stackChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'area')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.area)
       },
       {
-        imgSrc: chartImages.areaBar2,
+        imgSrc: chartImages[chartItemType.stackedarea],
         label: localizedString.stackedAreaChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'stackedarea')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.stackedarea)
       },
       {
-        imgSrc: chartImages.areaBar3,
+        imgSrc: chartImages[chartItemType.fullstackedarea],
         label: localizedString.fullStackedAreaChart,
         onClick: () =>
-          onClickChartItem(selectedReportId, chart, 'fullstackedarea')
+          onClickChartItem(
+              selectedReportId, chart, chartItemType.fullstackedarea)
       },
       {
-        imgSrc: chartImages.areaBar4,
+        imgSrc: chartImages[chartItemType.steparea],
         label: localizedString.stepAreaChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'steparea')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.steparea)
       },
       {
-        imgSrc: chartImages.areaBar5,
+        imgSrc: chartImages[chartItemType.splinearea],
         label: localizedString.splineAreaChart,
-        onClick: () => onClickChartItem(selectedReportId, chart, 'splinearea')
+        onClick: () =>
+          onClickChartItem(selectedReportId, chart, chartItemType.splinearea)
       },
       {
-        imgSrc: chartImages.areaBar6,
+        imgSrc: chartImages[chartItemType.stackedsplinearea],
         label: localizedString.stackedSplineAreaChart,
         onClick: () =>
-          onClickChartItem(selectedReportId, chart, 'stackedsplinearea')
+          onClickChartItem(
+              selectedReportId, chart, chartItemType.stackedsplinearea)
       },
       {
-        imgSrc: chartImages.areaBar7,
+        imgSrc: chartImages[chartItemType.fullstackedsplinearea],
         label: localizedString.fullStackedSplineAreaChart,
-        onClick: () => onClickChartItem(selectedReportId, chart,
-            'fullstackedsplineArea')
+        onClick: () =>
+          onClickChartItem(
+              selectedReportId, chart, chartItemType.fullstackedsplinearea)
       }
     ],
     restChart: [
       // TODO: bubble chart 추가
       // {
-      //   imgSrc: bubbleBar1,
+      //   imgSrc: chartImages[chartItemType.bubble],
       //   label: localizedString.BubbleChart,
-      //   onClick: () => onClickChartItem(selectedReportId, chart, 'bubble')
+      //   onClick: ()
+      //   => onClickChartItem(selectedReportId, chart, chartItemType.bubble)
       // },
       {
         imgSrc: pie,
