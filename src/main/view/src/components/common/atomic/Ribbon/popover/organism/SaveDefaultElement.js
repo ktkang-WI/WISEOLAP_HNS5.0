@@ -4,27 +4,28 @@ import {selectCurrentReport}
   from 'redux/selector/ReportSelector';
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
-import {useSelector} from 'react-redux';
 import models from 'models';
+import store from 'redux/modules';
 
-const SaveDefaultElement = () => {
+const saveDefaultElement = () => {
   const {openModal, alert} = useModal();
   const {patchReport, generateParameter} = useReportSave();
-  const currentReport = useSelector(selectCurrentReport);
 
   return {
     save: [
       {
         label: localizedString.saveReport, // 저장
-        onClick: () => {
+        onClick: (afterClick) => {
+          const currentReport = selectCurrentReport(store.getState());
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {
-            openModal(ReportSaveModal);
+            openModal(ReportSaveModal, afterClick);
           } else {
             dataSource.reportId = currentReport.reportId;
             const param = generateParameter(dataSource);
             models.Report.updateReport(param).then((res) => {
+              const reportId = res.data.report.reportId;
               const data = res.data;
               const msg = data.msg;
               const result = data.result;
@@ -36,8 +37,9 @@ const SaveDefaultElement = () => {
 
               alert(localizedString[msg]);
 
-              if (result) {
-                patchReport(data);
+              if (result) patchReport(data);
+              if (afterClick) {
+                afterClick.createExcelFile(reportId);
               }
             });
           };
@@ -45,8 +47,8 @@ const SaveDefaultElement = () => {
       },
       {
         label: localizedString.saveAs, // 다른이름으로 저장
-        onClick: () => {
-          openModal(ReportSaveModal);
+        onClick: (afterClick) => {
+          openModal(ReportSaveModal, afterClick);
         }
       }
     ],
@@ -55,4 +57,9 @@ const SaveDefaultElement = () => {
     ]
   };
 };
-export default SaveDefaultElement;
+
+export const getElementByLable = (label) => {
+  return saveDefaultElement().find((element) => element.label === label);
+};
+
+export default saveDefaultElement;
