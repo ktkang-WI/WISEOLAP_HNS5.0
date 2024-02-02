@@ -159,6 +159,7 @@ public class AuthService {
     public UserDTO getUserById(String userId) {
         UserEntity entity = authDAO.selectUserById(userId);
 
+        if (entity == null) return null;
         // TODO: 추후 필요한 정보 있으면 추가
         return UserDTO.builder()
                 .userId(userId)
