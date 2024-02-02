@@ -20,6 +20,7 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -82,6 +83,22 @@ public class DatasetController {
         String dsId = param.getOrDefault("dsId", "");
 
         return datasetService.getDBTables(dsId);
+    }
+
+    @Operation(summary = "get dsview database tables", description = "지정한 DS_ID에 해당하는 데이터 원본 뷰의 설정된 테이블 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
+            @Parameter(name = "dsViewId", description = "DS_VIEW_ID", example = "3000", required = true),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"2101\", \"dsViewId\": \"6260\"}")
+    }))
+    @PostMapping(value = "/dsview-db-tables")
+    public List<DsViewTableDTO> getDsViewDBTables(@RequestBody Map<String, String> param) {
+        String dsId = param.getOrDefault("dsId", "");
+        String dsViewId = param.getOrDefault("dsViewId", "");
+
+        return datasetService.getDsViewDBTables(dsId, dsViewId);
     }
 
     @Operation(summary = "get database columns", description = "지정한 DS_ID와 테이블에 해당하는 컬럼 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")

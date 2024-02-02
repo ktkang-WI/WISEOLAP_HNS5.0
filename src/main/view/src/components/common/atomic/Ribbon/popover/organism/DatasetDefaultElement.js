@@ -56,10 +56,12 @@ const DatasetDefaultElement = () => {
                   );
                 },
                 dsId: dataSource.dsId,
+                dsViewId: dataSource.dsViewId,
                 height: theme.size.bigModalHeight,
                 width: theme.size.bigModalWidth
               });
-            }
+            },
+            isSingleTable: true
           });
         }
       }

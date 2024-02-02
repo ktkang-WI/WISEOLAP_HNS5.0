@@ -516,6 +516,7 @@
   "dsViewId": "데이터 원본 뷰 ID",
   "dsViewList": "데이터 원본 뷰 목록",
   "dsViewName": "데이터 원본 뷰 명",
+  "dsView": "데이터 원본 뷰",
   "publicReportFolderList": "공용 보고서 폴더 목록",
   "reportView": "보고서 작성/배포",
   "useDataitem": "데이터 항목 사용",

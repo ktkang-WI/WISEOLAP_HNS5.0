@@ -17,9 +17,11 @@ import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResul
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.util.ListParameterUtils;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -187,6 +189,11 @@ public class DatasetService {
                     .dsViewId(entity.getDsViewId())
                     .dsViewNm(entity.getDsViewNm())
                     .dbmsType(DbmsType.fromString(entity.getDbmsType()).get())
+                    .dsNm(entity.getDsNm())
+                    .userAreaYn(entity.getUserAreaYn())
+                    .port(entity.getPort())
+                    .ownerNm(entity.getOwnerNm())
+                    .userId(entity.getUserId())
                     .build());
         }
 
@@ -468,5 +475,22 @@ public class DatasetService {
                             new ArrayList<com.wise.MarketingPlatForm.querygen.dto.Relation>(), new ArrayList<com.wise.MarketingPlatForm.querygen.dto.Relation>(),
                              new ArrayList<SelectCubeEtc>());
         return sql;
+    }
+
+    public List<DsViewTableDTO> getDsViewDBTables(String dsId, String dsViewId) {
+    
+        List<DsViewTableEntity> dsViewTableEntityList = datasetDAO.selectDsViewTables(dsViewId);
+        List<DsViewTableDTO> dsViewTableDtoList = new ArrayList<DsViewTableDTO>();
+        
+        for (DsViewTableEntity dsViewTableEntity : dsViewTableEntityList) {
+            DsViewTableDTO dsViewTableDTO = DsViewTableDTO.builder()
+                .tableNm(dsViewTableEntity.getTableNm())
+                .tableCaption(dsViewTableEntity.getTableCaption())
+                .build();
+
+            dsViewTableDtoList.add(dsViewTableDTO);
+        }
+
+        return dsViewTableDtoList;
     }
 }

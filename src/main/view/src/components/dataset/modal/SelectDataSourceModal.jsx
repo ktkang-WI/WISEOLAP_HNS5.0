@@ -1,6 +1,7 @@
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {Column, Selection} from 'devextreme-react/data-grid';
+import {RadioGroup} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import _ from 'lodash';
@@ -19,16 +20,32 @@ const StyledWrapper = styled(Wrapper)`
   display: flex;
 `;
 
-const SelectDataSourceModal = ({onSubmit, ...props}) => {
+const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
   const [selectedDataSource, setSelectedDataSource] = useState({});
   const [dataSource, setDataSource] = useState([]);
+  const [dsViewList, setDsViewList] = useState([]);
   const {alert} = useModal();
+
+  const dsType = [
+    {id: 'ds', text: localizedString.dataSource},
+    {id: 'dsView', text: localizedString.dsView}
+  ];
+
+  const isDsSingleTalbe = isSingleTable ? isSingleTable : false;
+
+  const [dataSourceType, setDataSourceType] = useState('ds');
 
   useEffect(() => {
     models.DataSource.getByIdAndDsType('admin', DatasetType.DS_SQL)
         .then(({data}) => {
           setDataSource(data);
         });
+    if (isDsSingleTalbe) {
+      models.DSView.getByUserId('admin')
+          .then((data) => {
+            setDsViewList(data.data);
+          });
+    }
   }, []);
 
   return (
@@ -52,14 +69,26 @@ const SelectDataSourceModal = ({onSubmit, ...props}) => {
           title={localizedString.selectDataSource}
           width='50%'
           padding='10'>
+          <RadioGroup
+            onValueChanged={(e) => {
+              console.log(e);
+              setDataSourceType(e.value);
+            }}
+            valueExpr={'id'}
+            displayExpr={'text'}
+            value={dataSourceType}
+            items={dsType}
+            visible={isDsSingleTalbe}/>
           <CommonDataGrid
             width='100%'
-            dataSource={dataSource}
+            dataSource={dataSourceType == 'ds' ? dataSource : dsViewList}
             onSelectionChanged={(e) => {
               setSelectedDataSource(e.selectedRowsData[0]);
             }}
           >
             <Selection mode='single'/>
+            <Column caption={localizedString.dsViewName}
+              visible={dataSourceType == 'dsView'} dataField='dsViewNm'/>
             <Column caption={localizedString.dataSourceName} dataField='dsNm'/>
             <Column caption={localizedString.dbType} dataField='dbmsType'/>
             <Column caption={localizedString.dbAddress} dataField='ip'/>
