@@ -380,6 +380,8 @@
   "noneExcelFile": "There is no Excel file for that report.",
   "failToUpload": "File upload failed.",
   "failToDelete": "File deletion failed.",
+  "selectUploadFile": "Select a Upload File.",
+  "selectFile": "Select a File.",
   "deleteDatasetMsg": "Would you like to delete this dataset?",
   "cofirmGroupBy": "If there is no GROUP BY clause in the query, it may take a long time to retrieve the data. Would you like to continue?",
   "filterErrorMsg": "Filter settings using the drag function are only possible in 'Subject' and 'Single Table'.",

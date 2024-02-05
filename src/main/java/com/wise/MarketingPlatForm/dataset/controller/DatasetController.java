@@ -20,6 +20,7 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -272,5 +273,20 @@ public class DatasetController {
         String uniqueName = param.getOrDefault("uniqueName", "");
 
         return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);
+    }
+
+    @Operation(summary = "get database upload tables", description = "지정한 DS_ID에 해당하는 데이터베이스에 사용자가 업로드한 테이블 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"2101\"}")
+    }))
+    @PostMapping(value = "/db-upload-tables")
+    public List<UserUploadMstrDTO> getDBUploadTables(@RequestBody Map<String, String> param) {
+        
+        int dsId = Integer.parseInt(param.get("dsId"));
+
+        return datasetService.getDBUploadTables(dsId);
     }
 }

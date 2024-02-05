@@ -5,9 +5,15 @@ import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import SelectDataSourceModal
   from 'components/dataset/modal/SelectDataSourceModal';
+import {getTheme} from 'config/theme';
+import SelectUserUploadTableModal
+  from 'components/dataset/modal/SelectUserUploadTableModal';
+import UserUploadTableModal
+  from 'components/dataset/modal/UserUploadTableModal';
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
+  const theme = getTheme();
   return {
     dataset: [
       {
@@ -31,7 +37,7 @@ const DatasetDefaultElement = () => {
             }
           });
         }
-      }
+      },
       // {
       //   label: localizedString.addDsSingle,
       //   imgSrc: '',
@@ -40,14 +46,33 @@ const DatasetDefaultElement = () => {
       //     console.log('singleTable');
       //   }
       // },
-      // {
-      //   label: localizedString.addDsUpload,
-      //   imgSrc: '',
-      //   visible: true,
-      //   onClick: () => {
-      //     console.log('upload');
-      //   }
-      // }
+      {
+        label: localizedString.addDsUpload,
+        imgSrc: '',
+        visible: true,
+        onClick: () => {
+          openModal(SelectDataSourceModal, {
+            onSubmit: (dataSource) => {
+              openModal(SelectUserUploadTableModal, {
+                onSubmit: (selectedTable) => {
+                  openModal(UserUploadTableModal, {
+                    onSubmit: (selectedTable) => {
+                      console.log(selectedTable);
+                    },
+                    dsId: dataSource.dsId,
+                    selectedTable: selectedTable
+                  });
+                },
+                dsId: dataSource.dsId,
+                selectedDataSource: dataSource,
+                height: theme.size.bigModalHeight,
+                width: theme.size.bigModalWidth
+              });
+            },
+            isSingleTable: false
+          });
+        }
+      }
     ],
     keys: ['dataset']
   };

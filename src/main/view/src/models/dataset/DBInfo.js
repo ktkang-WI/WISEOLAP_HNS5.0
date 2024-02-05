@@ -40,3 +40,10 @@ export const getDataByQueryMart = (dsId, query, parameters, rowNum) => {
     rowNum: rowNum
   });
 };
+
+export const dbUploadTables = (dsId, search) => {
+  return axios.post(path + '/db-upload-tables', {
+    dsId: dsId,
+    search: search
+  });
+};

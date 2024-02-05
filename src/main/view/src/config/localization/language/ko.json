@@ -493,6 +493,8 @@
   "noneExcelFile": "해당 보고서의 Excel 파일이 없습니다.",
   "failToUpload": "파일 업로드에 실패했습니다.",
   "failToDelete": "파일 삭제에 실패했습니다.",
+  "selectUploadFile": "업로드 파일 선택",
+  "selectFile": "파일 선택",
   "deleteDatasetMsg": "데이터 집합을 삭제하시겠습니까?",
   "cofirmGroupBy": "쿼리에 GROUP BY 가 없을 경우 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?",
   "filterErrorMsg": "드레그 기능을 이용한 필터 설정은 '주제영역', '단일 테이블'에서만 가능합니다.",
