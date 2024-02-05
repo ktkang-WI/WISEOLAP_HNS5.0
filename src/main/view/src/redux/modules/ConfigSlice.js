@@ -17,7 +17,8 @@ const setInitDesignerMode = () => {
 const initialState = {
   designerMode: setInitDesignerMode(),
   runMode: 'DashAny',
-  initialDisplay: 'DashAny' // 'adHoc',
+  initialDisplay: 'DashAny', // 'adHoc',
+  editMode: 'Designer'
   // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 
@@ -27,6 +28,9 @@ const reducers = {
   },
   setDesignerMode(state, actions) {
     state.designerMode = actions.payload;
+  },
+  setEditMode(state, actions) {
+    state.editMode = actions.payload;
   }
 };
 

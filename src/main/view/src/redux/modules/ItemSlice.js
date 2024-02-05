@@ -141,10 +141,10 @@ const reducers = {
     state[reportId].selectedItemId = selectedItemId;
   },
   // 파라미터로 reportId
-  deleteAllItems(state, actions) {
+  deleteReportItem(state, actions) {
     const reportId = actions.payload.reportId;
 
-    state[reportId].items = [];
+    delete state[reportId];
   },
   selectItem(state, actions) {
     const reportId = actions.payload.reportId;

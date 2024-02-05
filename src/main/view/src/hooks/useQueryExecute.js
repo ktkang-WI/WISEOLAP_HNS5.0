@@ -20,7 +20,6 @@ import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {useSelector} from 'react-redux';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 
@@ -30,7 +29,6 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const {bindData} = useSpread();
-  const designerMode = useSelector(selectCurrentDesignerMode);
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -381,6 +379,7 @@ const useQueryExecute = () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
+    const designerMode = selectCurrentDesignerMode(store.getState());
 
     if (datasets.length === 0) {
       alert(localizedString.dataSourceNotSelectedMsg);
@@ -547,6 +546,7 @@ const useQueryExecute = () => {
   const validateRequiredField = (item) => {
     let dataFieldOption;
     let dataField;
+    const designerMode = selectCurrentDesignerMode(store.getState());
     if (designerMode === DesignerMode['DASHBOARD']) {
       dataFieldOption = item.mart.dataFieldOption;
       dataField = item.meta.dataField;

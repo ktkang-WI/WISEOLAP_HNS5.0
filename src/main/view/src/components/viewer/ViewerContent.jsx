@@ -15,24 +15,27 @@ import ViewerDataAttributePanels
 import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import useDrag from 'hooks/useDrag';
 
 const theme = getTheme();
 
 const ViewerContent = ({children}) => {
+  const {onDragEnd, onDragStart} = useDrag();
   const report = useSelector(selectCurrentReport);
   return (
     <Content
       headerHeight={theme.size.headerHeight}
     >
-      <DragDropContext>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer
           index={0}
           component={ReportTabs}
         >
+          {/* TODO: 추후 권한 적용 */}
           <CustomDrawer
             index={1}
+            defaultValue={false}
             component={ViewerDataAttributePanels}
-            opened={false}
             visible={report.options.reportType == 'AdHoc'}
           >
             <Wrapper>
