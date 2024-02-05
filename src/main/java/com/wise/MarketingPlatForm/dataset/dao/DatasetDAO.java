@@ -26,4 +26,7 @@ public interface DatasetDAO {
 
   public List<DatasetDsDsviewCubeDTO> selectDatasetDsviewCubeDs();
 
+  public boolean deleteDs(DsMstrEntity dsMstrEntity);
+  public boolean updateDs(DsMstrEntity dsMstrEntity);
+  public boolean createDs(DsMstrEntity dsMstrEntity);
 }

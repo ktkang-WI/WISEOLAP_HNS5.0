@@ -23,4 +23,16 @@ public class DataSetDsService {
     return dsMstrEntities;
   };
 
+  public boolean updateDs(DsMstrEntity dsMstr) {
+    return datasetDAO.updateDs(dsMstr);
+  }
+
+  public boolean deleteDs(DsMstrEntity dsMstr) {
+    return datasetDAO.deleteDs(dsMstr);
+  }
+
+  public boolean createDs(DsMstrEntity dsMstr) {
+    return datasetDAO.createDs(dsMstr);
+  }
+  
 }

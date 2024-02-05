@@ -64,6 +64,90 @@
 <!-- Query -->
 
   <!-- DataSource -->
+		<insert id="createDs" parameterType="com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity">
+			INSERT INTO
+        DS_MSTR(
+						DS_ID,
+            DS_NM,
+            DB_NM,
+            IP,
+						USER_ID,
+						PASSWD,
+						PORT,
+						DBMS_TYPE,
+						OWNER_NM,
+						DS_DESC,
+						DS_CONNSTR,
+						REG_DT,
+						REG_USER_NO,
+						UPD_DT,
+						UPD_USER_NO,
+						RACIP,
+						RACPORT,
+						WF_YN,
+						USER_AREA_YN,
+						CONN_TYPE,
+						HASH_YN
+        )
+        VALUES(
+            DS_MSTR_DS_ID_SEQ.NEXTVAL,
+						#{dsNm, jdbcType=VARCHAR},
+            #{dbNm, jdbcType=VARCHAR},
+            #{ip, jdbcType=VARCHAR},
+						#{userId, jdbcType=VARCHAR},
+						#{password, jdbcType=VARCHAR},
+            #{port, jdbcType=VARCHAR},
+            #{dbmsType, jdbcType=VARCHAR},
+            #{ownerNm, jdbcType=VARCHAR},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+        )
+		</insert>
+		<delete id="deleteDs" parameterType="com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity">
+			DELETE FROM DS_MSTR
+					WHERE DS_ID = #{dsId, jdbcType=INTEGER}
+		</delete>
+		<update id="updateDs" parameterType="com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity">
+			UPDATE DS_MSTR
+          SET 
+              <if test='dsNm != ""'>
+                DS_NM = #{dsNm, jdbcType=VARCHAR},
+              </if>
+              <if test='ip != ""'>
+                IP = #{ip, jdbcType=VARCHAR},
+              </if>
+              <if test='dbNm != ""'>
+                DB_NM = #{dbNm, jdbcType=VARCHAR},
+              </if>
+							<if test='dbmsType != ""'>
+                DBMS_TYPE = #{dbmsType, jdbcType=VARCHAR},
+              </if>
+							<if test='ownerNm != ""'>
+                OWNER_NM = #{ownerNm, jdbcType=VARCHAR},
+              </if>
+							<if test='port != ""'>
+                PORT = #{port, jdbcType=VARCHAR},
+              </if>
+							<if test='userId != ""'>
+                USER_ID = #{userId, jdbcType=VARCHAR},
+              </if>
+							<if test='password != ""'>
+                PASSWD = #{password, jdbcType=VARCHAR},
+              </if>
+              HASH_YN = HASH_YN
+          WHERE DS_ID = #{dsId, jdbcType=INTEGER}
+		</update>
+
 		<select id="selectDatasetDsviewCubeDs" resultMap="DatasetDsDsviewCubeDTO">
 			SELECT
 				ROWNUM AS DS_CUBE_ID,
