@@ -1,8 +1,10 @@
 import {styled} from 'styled-components';
 import Input from '../atoms/Input';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import TextButton from 'components/common/atomic/Common/Button/CommonButton';
-import {DesignerMode} from 'components/config/configType';
+import models from 'models';
+import useModal from 'hooks/useModal';
+// import {DesignerMode} from 'components/config/configType';
 
 const StyledForm = styled.form.attrs(() => ({
   action: 'http://localhost:3000/editds'
@@ -72,46 +74,59 @@ const createCheckBox = (contents) => {
   }
 };
 
-const createFormBtn = (contents) => {
-  const type = contents.type;
-  const btnTexts =
-    type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
-  const path = type === 'login' ? '/editds/regist' : '/editds';
-  return btnTexts.map((btnText, index) => {
-    if (btnText.linkBtn) {
-      return (
-        <Link
-          to={path}
-          key={index}
-        >
-          <TextButton
-            className='link-textBtn'
-            border-radius= '5px;'
+const FormInputs = ({contents}) => {
+  const nav = useNavigate();
+  const {alert} = useModal();
+
+  const createFormBtn = (contents) => {
+    const type = contents.type;
+    const btnTexts =
+      type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
+    const path = type === 'login' ? '/editds/regist' : '/editds';
+    return btnTexts.map((btnText, index) => {
+      if (btnText.linkBtn) {
+        return (
+          <Link
+            to={path}
+            key={index}
           >
-            {btnText.linkBtn ? btnText.linkBtn : btnText}
-          </TextButton>
-        </Link>
-      );
-    } else {
-      return (
-        <Link
-          to={btnText === '로그인' ? DesignerMode['DASHBOARD'].toLowerCase() : ''}
-          key={index}
-        >
+            <TextButton
+              className='link-textBtn'
+              border-radius= '5px;'
+            >
+              {btnText.linkBtn ? btnText.linkBtn : btnText}
+            </TextButton>
+          </Link>
+        );
+      } else {
+        return (
           <TextButton
             className='form-textBtn'
             key={index}
             border-radius= '5px;'
+            onClick={async () => {
+              const id = document.querySelector('#input-ID input').value;
+              const password =
+                document.querySelector('#input-Password input').value;
+              const res = await models.Login.login(id, password);
+
+              if (res.status == 200) {
+                // TODO: 추후 권한 적용
+                // 임시적용 하드코딩
+                nav('dashany');
+              } else if (res.response?.status == 404) {
+                alert('사용자 정보가 잘못되었습니다.');
+              } else if (res.response?.status == 500) {
+                alert('서버에 문제가 발생하였습니다.');
+              }
+            }}
           >
             {btnText.linkBtn ? btnText.linkBtn : btnText}
           </TextButton>
-        </Link>
-      );
-    }
-  });
-};
-
-const FormInputs = ({contents}) => {
+        );
+      }
+    });
+  };
   return (
     <StyledForm id='send-login-data'>
       {createInputForm(contents)}

@@ -74,7 +74,36 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
       onClick: (e) => {
-        nav('config');
+        nav('config/general');
+      }
+    },
+    // TODO: 임시용 입니다.
+    '환경 설정': {
+      id: '환경 설정',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.preference,
+      onClick: (e) => {
+        nav('general');
+      }
+    },
+    // TODO: 임시용 입니다.
+    '사용자/그룹관리': {
+      id: '사용자/그룹관리',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '사용자/그룹관리',
+      onClick: (e) => {
+        nav('user-group');
+      }
+    },
+    '권한': {
+      id: '권한',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '권한',
+      onClick: (e) => {
+        nav('auth');
       }
     }
   };

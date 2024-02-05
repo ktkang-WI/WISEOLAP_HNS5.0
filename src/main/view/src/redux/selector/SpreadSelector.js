@@ -2,10 +2,6 @@ import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 import {selectCurrentDataset} from './DatasetSelector';
 
-export const selectDefaultBindInfo = createSelector(
-    (state) => state.meta.spread.defaultBindInfo,
-    (defaultBindInfo) => defaultBindInfo
-);
 
 export const selectSheets = createSelector(
     (state) => state.meta.spread.sheets,
@@ -14,7 +10,17 @@ export const selectSheets = createSelector(
 
 export const selectExcelIO = createSelector(
     (state) => state.meta.spread.excelIO,
-    (excelIO ) => excelIO
+    (excelIO) => excelIO
+);
+
+export const selectExcelConfig = createSelector(
+    (state) => state.meta.spread.config,
+    (config) => config
+);
+
+export const selectDefaultBindInfo = createSelector(
+    (state) => state.meta.spread.defaultBindInfo,
+    (defaultBindInfo) => defaultBindInfo
 );
 
 export const selectCurrentDesigner = createSelector(

@@ -27,6 +27,7 @@ const popoverSelector = (type, items) => {
           return (
             <IconWrap key={idx}>
               <PopoverLabelImageBtn
+                visible={item.visible ? true : false}
                 label={item.label}
                 imgSrc={item.imgSrc}
                 onClick={item.onClick}
