@@ -189,6 +189,7 @@ const useQueryExecute = () => {
         }
       });
     } catch (error) {
+      console.error(error);
       alert(error.message);
     }
   };
@@ -235,6 +236,7 @@ const useQueryExecute = () => {
         dispatch(updateItem({reportId, item: tempItem}));
       });
     } catch (error) {
+      console.error(error);
       alert(error.message);
     }
   };

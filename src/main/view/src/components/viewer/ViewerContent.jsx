@@ -12,10 +12,14 @@ import ViewerFilterBar
   from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
 import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
+import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {useSelector} from 'react-redux';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
 const ViewerContent = ({children}) => {
+  const report = useSelector(selectCurrentReport);
   return (
     <Content
       headerHeight={theme.size.headerHeight}
@@ -29,13 +33,17 @@ const ViewerContent = ({children}) => {
             index={1}
             component={ViewerDataAttributePanels}
             opened={false}
-            visible={false}
+            visible={report.options.reportType == 'AdHoc'}
           >
             <Wrapper>
               <ReportContentWrapper>
                 <ViewerFilterBar/>
                 <ReportContent>
-                  {children}
+                  {report && report.reportId != 0 &&
+                    (report.options.reportType == 'Excel' ?
+                      <div/> :
+                      <ItemBoard/>)
+                  }
                 </ReportContent>
               </ReportContentWrapper>
             </Wrapper>
