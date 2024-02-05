@@ -1,6 +1,5 @@
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
-import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import bar from '../../../../../../assets/image/icon/button/series_type.png';
@@ -8,7 +7,6 @@ import pie from '../../../../../../assets/image/icon/button/pieChart.png';
 
 const NomalChartDefaultElement = () => {
   const {insertFlexLayout} = useLayout();
-  const {closePopover} = usePopover();
   const selectedReportId = useSelector(selectCurrentReportId);
   return {
     barChart: [
@@ -17,7 +15,6 @@ const NomalChartDefaultElement = () => {
         label: localizedString.barChart,
         onClick: () => {
           insertFlexLayout(selectedReportId, 'chart');
-          closePopover();
         }
       },
       {
@@ -74,7 +71,6 @@ const NomalChartDefaultElement = () => {
         label: localizedString.pieChart,
         onClick: () => {
           insertFlexLayout(selectedReportId, 'pie');
-          closePopover();
         }
       },
       {
