@@ -16,7 +16,35 @@ const ReportList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
-  console.log('ReportList', data);
+  // const [reports, setReports] = useState([]);
+  // console.log(data);
+
+  // console.log('ReportFolderManagement ReportList Mount!!!!');
+  // console.log('ReportList', data);
+  // const newData = data.reduce((acc, v) => {
+  //   const folderIdList = acc.map((row) => row.folderId);
+
+  //   if (!folderIdList.includes(v.reportId)) {
+  //     acc.push({
+  //       fldId: v.fldId,
+  //       fldLvl: v.fldLvl,
+  //       fldNm: v.fldNm,
+  //       fldOrdinal: v.fldOrdinal,
+  //       fldParentId: v.fldParentId
+  //     });
+  //   }
+
+  //   acc.push({
+  //     ...v,
+  //     fldParentId: v.fldId
+  //   });
+
+  //   return acc;
+  // }, []);
+
+  // setReports(newData);
+  // console.log('newData', newData);
+
 
   return (
     <Wrapper>
@@ -35,6 +63,10 @@ const ReportList = ({setRow}) => {
         <Selection mode="single" />
         <Column
           dataField="fldNm"
+          caption={localizedString.folderName}
+        />
+        <Column
+          dataField="reportNm"
           caption={localizedString.reportName}
         />
       </TreeList>
