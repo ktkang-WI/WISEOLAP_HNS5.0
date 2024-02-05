@@ -28,7 +28,7 @@ const Popover = ({btn}) => {
   };
 
   const onMenuChange = (e) => {
-    // 팝업 닫힐 시 state 초기화.
+    // 팝오버 닫힐 시 state 초기화.
     if (!e.open) {
       closePopover();
     }
