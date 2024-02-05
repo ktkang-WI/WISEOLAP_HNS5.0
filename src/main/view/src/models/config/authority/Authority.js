@@ -3,8 +3,8 @@ import axios from 'axios';
 const accountPath = '/account';
 
 // 데이터셋
-export const getDs = () => {
-  const res = axios.get('/dataset/ds');
+export const getDsView = () => {
+  const res = axios.get('/dataset/ds-dsview');
   return res;
 };
 
@@ -69,12 +69,12 @@ export const getUserData = () => {
 };
 
 export const getFolders = () => {
-  const res = axios.get('config/folder');
+  const res = axios.get('config/folder-group');
   return res;
 };
 
 export const getFolderDatasets = () => {
-  const res = axios.get('config/folder/dataset');
+  const res = axios.get('config/folder-dataset');
   return res;
 };
 

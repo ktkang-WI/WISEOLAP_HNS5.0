@@ -485,5 +485,17 @@
   "useDataitem": "데이터 항목 사용",
   "reportDownload": "보고서 내려받기",
   "groupList": "그룹 목록",
-  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요."
+  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
+  "reportId": "보고서 ID",
+  "reportType": "보고서 유형",
+  "folderManagement": "폴더 관리",
+  "publisher": "게시자",
+  "registerDate": "게시일자",
+  "reportlist": "보고서 목록",
+  "reportInformation": "보고서 정보",
+  "folderInformation": "폴더 정보",
+  "userGroupManagement": "사용자/그룹관리",
+  "authority": "권한",
+  "reportFolderManagement": "보고서/폴더관리",
+  "reportManagement": "보고서 관리"
 }

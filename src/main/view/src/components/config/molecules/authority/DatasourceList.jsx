@@ -38,7 +38,7 @@ const DatasourceList = ({row}) => {
   };
 
   useEffect(() => {
-    models.Authority.getDs()
+    models.Authority.getDsView()
         .then((response) => {
           const newDs = response.data.data.reduce((acc, v) => {
             const dsIdList = acc.map((row) => row.dsId);

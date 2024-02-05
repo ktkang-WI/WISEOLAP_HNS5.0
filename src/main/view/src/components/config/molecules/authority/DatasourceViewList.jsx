@@ -38,7 +38,7 @@ const DatasourceViewList = ({row, setDsView}) => {
   };
 
   useEffect(() => {
-    models.Authority.getDs()
+    models.Authority.getDsView()
         .then((response) => {
           setDs(response.data.data);
         })
