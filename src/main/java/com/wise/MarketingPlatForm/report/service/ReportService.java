@@ -16,8 +16,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.json.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +65,7 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
-import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -125,8 +123,8 @@ public class ReportService {
         ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
         Map<String, Object> returnMap = new HashMap<>();
         if(!"newReport".equals(dto.getDatasetXml())) {
-        	XMLParser xmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        	returnMap = xmlParser.getReport(dto, userId);
+        	ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+        	returnMap = reportXmlParser.getReport(dto, userId);
         } else {
         	JSONObject items = new JSONObject(entity.getChartXml());
         	JSONObject dataset = new JSONObject(entity.getDatasetXml());
