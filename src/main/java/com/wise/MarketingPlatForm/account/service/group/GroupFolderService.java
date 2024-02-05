@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
-import com.wise.MarketingPlatForm.account.entity.AuthReportMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
+import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class GroupFolderService {

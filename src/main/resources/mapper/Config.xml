@@ -4,6 +4,31 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wise.MarketingPlatForm.config.dao.ConfigDAO">
     
+    <resultMap id="FldMstr" type="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
+      <result column="FLD_DESC" property="fldDesc" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="ConfigFolderReportDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO">
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
+      <result column="REPORT_ID" property="reportId" javaType="int"/>
+      <result column="REPORT_NM" property="reportNm" javaType="String"/>
+      <result column="REPORT_SUB_TITLE" property="reportSubTitle" javaType="String"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="REG_DT" property="regDt" javaType="String"/>
+      <result column="REPORT_TAG" property="reportTag" javaType="String"/>
+      <result column="REPORT_ORDINAL" property="reportOrdinal" javaType="String"/>
+      <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
+    </resultMap>
+
     <resultMap id="ConfigGeneralDTO" type="com.wise.MarketingPlatForm.config.dto.GeneralDTO">
       <result column="MAIN_TITLE" property="mainTitle" javaType="String"/>
       <result column="LICENSES_KEY" property="licensesKey" javaType="String"/>
@@ -35,6 +60,18 @@
       <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
     </resultMap>
 
+    <select id="selectConfigFolder" resultMap="FldMstr">
+			SELECT
+        FLD_ID,
+        FLD_NM,
+        FLD_LVL,
+        FLD_PARENT_ID,
+        FLD_ORDINAL,
+        FLD_DESC
+        FROM PUB_FLD_MSTR
+            ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
+		</select>
+
 		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
 			SELECT
         CONFIG_MSTR.MAIN_TITLE,
@@ -59,8 +96,31 @@
             FLD_ID,
             FLD_ORDINAL
 		</select>
+
+    <select id="selectConfigFolderReport" resultMap="ConfigFolderReportDTO">
+			SELECT
+        PUB_FLD_MSTR.FLD_ID,
+        PUB_FLD_MSTR.FLD_NM,
+        PUB_FLD_MSTR.FLD_LVL,
+        PUB_FLD_MSTR.FLD_PARENT_ID,
+        PUB_FLD_MSTR.FLD_ORDINAL,
+        REPORT_MSTR.REPORT_ID,
+        REPORT_MSTR.REPORT_NM,
+        REPORT_MSTR.REPORT_SUB_TITLE,
+        USER_MSTR.USER_ID,
+        REPORT_MSTR.REG_DT,
+        REPORT_MSTR.REPORT_TAG,
+        REPORT_MSTR.REPORT_ORDINAL,
+        REPORT_MSTR.REPORT_DESC
+        FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
+            ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
+                          INNER JOIN USER_MSTR 
+            ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
+            WHERE REPORT_MSTR.DEL_YN = 'N' AND USER_MSTR.DEL_YN = 'N'
+            ORDER BY 3 ASC, 5 ASC
+		</select>
     
-    <select id="selectConfigFolder" resultMap="ConfigFolderDTO">
+    <select id="selectConfigFolderGroup" resultMap="ConfigFolderDTO">
 			SELECT
         GRP_AUTH_REPORT_MSTR.GRP_ID,
         PUB_FLD_MSTR.FLD_ID,

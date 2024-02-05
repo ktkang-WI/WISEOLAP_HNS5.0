@@ -11,9 +11,18 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfigFolderDatasetDTO {
+public class ConfigFolderReportDTO {
   int fldId;
   String fldNm;
-  int parentFldId;
-  int fldOridinal;
+  int fldLvl;
+  int fldParentId;
+  int fldOrdinal;
+  int reportId;
+  String reportNm;
+  String reportSubTitle;
+  String userId;
+  String regDt;
+  String reportTag;
+  String reportOrdinal;
+  String reportDesc;
 }

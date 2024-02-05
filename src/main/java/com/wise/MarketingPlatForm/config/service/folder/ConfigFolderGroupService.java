@@ -6,17 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
+import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
 
 @Service
-public class ConfigFolderService {
+public class ConfigFolderGroupService {
+  
   @Autowired
   ConfigDAO configDao;
 
-  public List<FldMstrEntity> getConfigFolderData() {
+  public List<ConfigFolderDTO> getConfigFolderGroupData() {
 
-    List<FldMstrEntity> configFolderDTO = configDao.selectConfigFolder();
+    List<ConfigFolderDTO> configFolderDTO = configDao.selectConfigFolderGroup();
     
     return configFolderDTO;
   };
+
 }

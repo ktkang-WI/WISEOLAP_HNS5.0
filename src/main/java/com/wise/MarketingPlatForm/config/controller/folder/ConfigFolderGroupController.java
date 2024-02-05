@@ -9,29 +9,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
-import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderService;
+import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
+import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderGroupService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "config-folder", description = "폴더 리스트를 가져옵니다.")
+@Tag(name = "config-folder-group", description = "데이터원본을 관리합니다.")
 @RestController
-@RequestMapping("/config/folder")
-public class ConfigFolderController {
+@RequestMapping("/config/folder-group")
+public class ConfigFolderGroupController {
   
   @Autowired
-  private ConfigFolderService configFolderService;
-
+  private ConfigFolderGroupService configFolderGroupService;
 
   @GetMapping
-  public ResponseEntity<RestAPIVO> getConfigFolderData() throws Exception {
+  public ResponseEntity<RestAPIVO> getConfigFolderGroupData() throws Exception {
 
-    List<FldMstrEntity> model = configFolderService.getConfigFolderData();
+    List<ConfigFolderDTO> model = configFolderGroupService.getConfigFolderGroupData();
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 
     return RestAPIVO.okResponse(model);
-
   }
 
 }

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
-import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.dataset.GroupDatasetModel;
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class GroupDatasetService {
