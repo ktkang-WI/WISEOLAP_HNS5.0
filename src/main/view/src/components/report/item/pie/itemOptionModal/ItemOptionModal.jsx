@@ -9,10 +9,6 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LabelEditForm from './molecules/LabelEditForm';
-// import YAxisExtraAxisForm from '../../chart/molecules/YAxisExtraAxisForm';
-import XAxisForm from '../../chart/molecules/XAxisForm';
-import FormatOptionForm
-  from 'components/report/atomic/Format/molecules/FormatOptionForm';
 
 const theme = getTheme();
 
@@ -54,19 +50,6 @@ const ItemOptionModal = ({popupName, ...props}) => {
       }
       {popupName === 'labelEdit' &&
         <LabelEditForm
-          selectedItem={selectedItem}
-          ref={ref}
-        />
-      }
-      {(popupName === 'supplyAxis' || popupName === 'yAxis') &&
-        <FormatOptionForm
-          formData={_.cloneDeep(selectedItem.meta.yAxis)}
-          formRef={ref}
-          axisSetting={true}
-        />
-      }
-      {(popupName === 'xAxis') &&
-        <XAxisForm
           selectedItem={selectedItem}
           ref={ref}
         />

@@ -3,8 +3,7 @@ import {styled} from 'styled-components';
 import Form, {Item, Label} from 'devextreme-react/form';
 import {useEffect, useState} from 'react';
 import {formatValue, updateFomatType} from './FormatFunction';
-import {formatType, unitType, precisionType}
-  from 'components/report/item/util/formatDefaultElement';
+
 const Preview = styled.textarea`
 background-color: lightgray;
 border: 1px solid #ccc;
@@ -18,8 +17,7 @@ text-align: center;
 
 const FormatOptionForm = ({
   formData,
-  formRef,
-  axisSetting = false
+  formRef
 }) => {
   const [preview, setPreview] = useState(formatValue(formData));
   useEffect(() => {
@@ -59,7 +57,14 @@ const FormatOptionForm = ({
         dataField='formatType'
         editorOptions={
           {
-            dataSource: formatType,
+            dataSource: [
+              {value: 'Auto', caption: 'Auto'},
+              {value: 'General', caption: 'General'},
+              {value: 'Number', caption: 'Number'},
+              {value: 'Currency', caption: 'Currency'},
+              {value: 'Scientific', caption: 'Scientific'},
+              {value: 'Percent', caption: 'Percent'}
+            ],
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -72,7 +77,13 @@ const FormatOptionForm = ({
         dataField='unit'
         editorOptions={
           {
-            dataSource: unitType,
+            dataSource: [
+              {value: 'Auto', caption: 'Auto'},
+              {value: 'Ones', caption: 'Ones'},
+              {value: 'Thousands', caption: 'Thousands'},
+              {value: 'Millions', caption: 'Millions'},
+              {value: 'Billions', caption: 'Billions'}
+            ],
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -80,30 +91,6 @@ const FormatOptionForm = ({
       >
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
-      {axisSetting && <Item
-        dataField='useShowZero'
-        editorType='dxCheckBox'
-        editorOptions={{
-        }}
-      >
-        <Label>{localizedString.yAsixStartPoint}</Label>
-      </Item>}
-      {axisSetting && <Item
-        dataField='useAxis'
-        editorType='dxCheckBox'
-        editorOptions={{
-        }}
-      >
-        <Label>{localizedString.yAxisMark}</Label>
-      </Item>}
-      {axisSetting && <Item
-        dataField='customText'
-        editorType='dxTextBox'
-        editorOptions={{
-        }}
-      >
-        <Label>{localizedString.axisCutomText}</Label>
-      </Item>}
       <Item
         editorType='dxCheckBox'
         dataField='suffixEnabled'
@@ -154,7 +141,11 @@ const FormatOptionForm = ({
         editorType='dxSelectBox'
         editorOptions={
           {
-            dataSource: precisionType,
+            dataSource: [
+              {value: 'round', caption: localizedString.round},
+              {value: 'ceil', caption: localizedString.ceil},
+              {value: 'floor', caption: localizedString.floor}
+            ],
             valueExpr: 'value',
             displayExpr: 'caption'
           }
@@ -179,7 +170,7 @@ const FormatOptionForm = ({
       >
         <Preview
           value={preview}
-          readOnly={true}
+          readOnly
         />
       </Item>
     </Form>

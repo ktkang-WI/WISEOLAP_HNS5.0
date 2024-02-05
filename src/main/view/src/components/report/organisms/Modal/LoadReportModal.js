@@ -15,13 +15,11 @@ import useReportSave from 'hooks/useReportSave';
 
 const theme = getTheme();
 
-const LoadReportModal = ({
-  loadExcelFile,
-  ...props}) => {
+const LoadReportModal = ({...props}) => {
   let selectedReport = {};
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
-  const {loadReport, querySearch} = useReportSave();
+  const {loadReport} = useReportSave();
 
 
   useEffect(() => {
@@ -41,14 +39,7 @@ const LoadReportModal = ({
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
                   try {
-                    if (loadExcelFile) {
-                      loadExcelFile({
-                        data: data
-                      });
-                    } else {
-                      loadReport(data);
-                      querySearch();
-                    }
+                    loadReport(data);
                   } catch {
                     alert(localizedString.reportCorrupted);
                   }

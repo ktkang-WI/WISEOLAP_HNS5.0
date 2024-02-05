@@ -247,7 +247,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       ref={dxRef}
       onPointClick={onPointClick}
       pointSelectionMode={'multiple'}
-      rotated={meta.useRotate}
       seriesSelectionMode={interactiveOption.mode}
     >
       <CommonSeriesSettings
@@ -325,13 +324,11 @@ const propsComparator = (prev, next) => {
 
   const seriesOptionsComparator =
     _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
-  const rotateComparator =
-    _.isEqual(prev.item.meta.useRotate, next.item.meta.useRotate);
+
   return prev.item.mart == next.item.mart &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
       seriesOptionsComparator &&
-      rotateComparator &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
 

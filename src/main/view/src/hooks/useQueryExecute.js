@@ -2,8 +2,7 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentItems,
-  selectRootItem
+  selectCurrentItems, selectRootItem
 } from 'redux/selector/ItemSelector';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
@@ -19,17 +18,17 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {useSelector} from 'react-redux';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
   const {alert} = useModal();
-  const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const {bindData} = useSpread();
+  const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const designerMode = useSelector(selectCurrentDesignerMode);
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
@@ -170,11 +169,6 @@ const useQueryExecute = () => {
           alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
           return;
         }
-
-        if (response.data.chart.data.length === 0) {
-          alert(`${localizedString.addPivotGrid}${localizedString.noneData}`);
-        }
-
         if (response.data['chart']) {
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
@@ -221,13 +215,9 @@ const useQueryExecute = () => {
         if (response.status != 200) {
           return;
         }
-        const data = response.data;
-        if (data.data.length === 0) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
 
         tempItem.mart.init = true;
-        tempItem.mart.data = data;
+        tempItem.mart.data = response.data;
         tempItem.mart.currentFilter = filter || {};
 
         ItemManager.generateItem(tempItem);
@@ -237,47 +227,6 @@ const useQueryExecute = () => {
     } catch (error) {
       alert(error.message);
     }
-  };
-
-  const executeSpread = async () => {
-    const datasets = selectCurrentDatasets(store.getState());
-    if (_.isEmpty(datasets)) {
-      alert(localizedString.dataSourceNotSelectedMsg); return;
-    }
-    const rootParameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos((store.getState()));
-    datasets.map(async (dataset) => {
-      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
-       !bindingInfos[dataset.datasetId].useBinding) {
-        alert(localizedString.spreadBindingInfoNot); return;
-      }
-      const dsId = dataset.dataSrcId;
-      const query = dataset.datasetQuery;
-      const paramInfo = rootParameters.informations.filter((information) => {
-        if (information.dataset[0] === dataset.datasetId) {
-          return information;
-        }
-      });
-      let parameters = {
-        informations: [],
-        values: {}
-      };
-      if (!_.isEmpty(paramInfo)) {
-        parameters = paramInfo.map((information) => {
-          return {
-            informations: information,
-            values: rootParameters.values[information.name] || {}
-          };
-        });
-      }
-      const datas = await models.DBInfo.
-          getDataByQueryMart(dsId, query, parameters, 0);
-      if (!datas.data.rowData) return;
-      bindData({
-        rowData: datas.data.rowData,
-        bindingInfo: bindingInfos[dataset.datasetId]
-      });
-    });
   };
 
   /**
@@ -539,6 +488,43 @@ const useQueryExecute = () => {
         console.error(e);
         filterSearchComplete({reportId, id: param.name});
       }
+    });
+  };
+
+  const executeSpread = async () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    if (_.isEmpty(datasets)) {
+      alert(localizedString.dataSourceNotSelectedMsg); return;
+    }
+    const rootParameters = selectRootParameter(store.getState());
+    const bindingInfos = selectBindingInfos((store.getState()));
+    datasets.map(async (dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+       !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot); return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      const paramInfo = rootParameters.informations.filter((information) => {
+        if (information.dataset[0] === dataset.datasetId) {
+          return information;
+        }
+      });
+      let parameters = {
+        informations: [],
+        values: {}
+      };
+      if (!_.isEmpty(paramInfo)) {
+        parameters = paramInfo.map((information) => {
+          return {
+            informations: information,
+            values: rootParameters.values[information.name] || {}
+          };
+        });
+      }
+      const datas = await models.DBInfo.
+          getDataByQueryMart(dsId, query, parameters, 0);
+      bindData({dataset: dataset, datas: datas.data.rowData});
     });
   };
 

@@ -31,7 +31,7 @@ const useCustomEvent = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
   const {updateItem} = ItemSlice.actions;
-  const {commonPopoverButtonElement} = itemOptionManager();
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   let formItems = {};
 
   // Ribbon 영역 CustomEvent
@@ -77,7 +77,7 @@ const useCustomEvent = () => {
   // ribbon Element 객체
   const ribbonConfig = {
     'InitState': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'init_state',
       'label': localizedString.initState,
       'imgSrc': initStateImg,
@@ -86,7 +86,7 @@ const useCustomEvent = () => {
       }
     },
     'Total': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'total',
       'label': localizedString.total,
       'imgSrc': totalImg,
@@ -95,7 +95,7 @@ const useCustomEvent = () => {
       }
     },
     'GrandTotal': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'grand_total',
       'label': localizedString.grandTotal,
       'imgSrc': grandTotalImg,
@@ -104,7 +104,7 @@ const useCustomEvent = () => {
       }
     },
     'Layout': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'layout',
       'label': localizedString.layout,
       'imgSrc': layoutImg,
@@ -113,7 +113,7 @@ const useCustomEvent = () => {
       }
     },
     'RowTotalPosition': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'row_total_position',
       'label': localizedString.rowTotalPosition,
       'imgSrc': rowTotalPosImg,
@@ -123,7 +123,7 @@ const useCustomEvent = () => {
       }
     },
     'ColumnTotalPosition': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'column_total_position',
       'label': localizedString.columnTotalPosition,
       'imgSrc': colTotalPosImg,
@@ -133,7 +133,7 @@ const useCustomEvent = () => {
       }
     },
     'DataPosition': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'data_position',
       'label': localizedString.dataPosition,
       'imgSrc': colTotalPosImg,
@@ -143,7 +143,7 @@ const useCustomEvent = () => {
       }
     },
     'RemoveNullData': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'remove_null_data',
       'label': localizedString.removeNullData,
       'imgSrc': removeNullDataImg,
@@ -152,7 +152,7 @@ const useCustomEvent = () => {
       }
     },
     'ShowFilter': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'show_filter',
       'label': localizedString.showFilter,
       'imgSrc': filterImg,

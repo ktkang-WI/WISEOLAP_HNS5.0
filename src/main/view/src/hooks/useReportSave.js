@@ -15,21 +15,24 @@ import {selectCurrentInformationas,
 import useModal from './useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-import {selectBindingInfos, selectCurrentDesigner}
-  from 'redux/selector/SpreadSelector';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {ConvertDesignerMode, DesignerMode} from 'components/config/configType';
 import models from 'models';
 import localizedString from 'config/localization';
+import useFile from './useFile';
 import {useSelector} from 'react-redux';
 import {makeMart} from 'components/report/item/util/martUtilityFactory';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
+import useSpread from './useSpread';
 import DatasetType from 'components/dataset/utils/DatasetType';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
+  const {fileDelete} = useFile();
+  const {createDesigner} = useSpread();
   const {executeItems, executeSpread} = useQueryExecute();
 
   const reportActions = ReportSlice.actions;
@@ -150,12 +153,11 @@ const useReportSave = () => {
     dispatch(reportActions.updateReport(report));
   };
 
-  const removeReport = (dataSource, {deleteExcelFile}) => {
+  const removeReport = (dataSource) => {
     const param = generateParameter(dataSource);
     const reports = selectReports(store.getState());
 
     models.Report.deleteReport(param).then((res) => {
-      const designer = selectCurrentDesigner(store.getState());
       const data = res.data;
       const msg = data.msg;
       const result = data.result;
@@ -187,11 +189,8 @@ const useReportSave = () => {
       dispatch(parameterActions.deleteParameterForDesigner(reportId));
       dispatch(spreadActions.deleteSpread(reportId));
       reload(reportType);
-      if (deleteExcelFile) {
-        deleteExcelFile({
-          reportId: dataSource.reportId,
-          prevDesigner: designer
-        });
+      if (reportType === DesignerMode['EXCEL']) {
+        fileDelete({fileName: reportId + '.xlsx'});
       }
     });
   };
@@ -207,58 +206,50 @@ const useReportSave = () => {
 
   // 보고서 불러오기 - 추후 뷰어 및 디자이너 분기 처리.
   const loadReport = (data) => {
-    try {
-      // 공통 데이터 가공
-      data.item.items.forEach((i) => {
-        i.mart = makeMart(i);
-        ItemManager.generateMeta(i);
-      });
-      data.dataset.datasets.forEach((dataset) => {
-        if (dataset.datasetType === DatasetType['DS_SQL']) {
-          dataset.fields = makeFieldIcon(
-              dataset.fields, dataset.datasetType);
-        }
-      });
-      designerLoadReport(data);
-    } catch (error) {
-      new Error('Report load Error');
-    }
+    // 공통 데이터 가공
+    data.item.items.forEach((i) => {
+      i.mart = makeMart(i);
+      ItemManager.generateMeta(i);
+    });
+    data.dataset.datasets.forEach((dataset) => {
+      if (dataset.datasetType === DatasetType['DS_SQL']) {
+        dataset.fields = makeFieldIcon(
+            dataset.fields, dataset.datasetType);
+      }
+    });
+
+    designerLoadReport(data);
   };
 
   // 디자이너 보고서 불러오기
   const designerLoadReport = (data) => {
-    try {
-      const currentReportId = selectCurrentReportId(store.getState());
-      const newReportId = data.reports[0].reportId;
-      const reportId = {
-        prevId: currentReportId,
-        newId: newReportId
-      };
-      dispatch(reportActions.setReports(data.reports));
-      dispatch(reportActions.selectReport(newReportId));
-      dispatch(datasetActions.changeDataset({
-        reportId: reportId,
-        dataset: data.dataset
-      }));
-      dispatch(layoutActions.changeLayout({
-        reportId: reportId,
-        layout: data.layout
-      }));
-      dispatch(itemActions.changeItem({
-        reportId: reportId,
-        item: data.item
-      }));
-      dispatch(parameterActions.changeParameterInformation({
-        reportId: reportId,
-        informations: data.informations
-      }));
-      dispatch(spreadActions.changeSpread({
-        reportId: reportId,
-        bindingInfos: data.spread
-      }));
-    } catch (error) {
-      new Error('Report load Error');
+    const newReportId = data.reports[0].reportId;
+    const reportId = {
+      prevId: currentReportId,
+      newId: newReportId
+    };
+    dispatch(reportActions.setReports(data.reports));
+    dispatch(reportActions.selectReport(newReportId));
+    dispatch(datasetActions.changeDataset({
+      reportId: reportId,
+      dataset: data.dataset
+    }));
+    dispatch(layoutActions.changeLayout({
+      reportId: reportId,
+      layout: data.layout
+    }));
+    dispatch(itemActions.changeItem({
+      reportId: reportId,
+      item: data.item
+    }));
+    dispatch(parameterActions.changeParameterInformation({
+      reportId: reportId,
+      informations: data.informations
+    }));
+    if (designerMode === DesignerMode['EXCEL']) {
+      createDesigner();
     }
+    querySearch();
   };
 
   const querySearch = () => {

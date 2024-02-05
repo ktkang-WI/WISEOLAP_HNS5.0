@@ -53,21 +53,6 @@ const getDataFieldType = (state, reportId) => {
   return dataField;
 };
 
-const getItemType = (state, reportId) => {
-  const itemIndex = getItemIndex(state, reportId);
-  const seriesOptionDefaultFormat = getSeriesOptionDefaultFormat();
-  let itemMeta = seriesOptionDefaultFormat.type;
-  const item = state[reportId];
-  if (!item?.items[itemIndex]?.meta?.seriesType) return itemMeta;
-
-  if (isThisAdhoc(state, reportId)) {
-    return itemMeta;
-  } else {
-    itemMeta = state[reportId].items[itemIndex].meta.seriesType;
-  }
-  return itemMeta;
-};
-
 // 임시용 redux
 const getItems = (state, reportId) => {
   return state[reportId].items;
@@ -235,12 +220,11 @@ const seriesOptionSlice = (builder) => {
 
       const fieldId = action.payload.fieldId;
       const reportId = action.payload.reportId;
-      const itemType = getItemType(state, reportId);
       const dataField = getDataFieldType(state, reportId);
       const tempSeriesOption = getSeriesOptionDefaultFormat();
 
       tempSeriesOption.fieldId = fieldId;
-      tempSeriesOption.type = itemType;
+
       dataField.seriesOptions = removedSeriesOptions(state, reportId, fieldId);
 
       (dataField.seriesOptions.length > 1) ?

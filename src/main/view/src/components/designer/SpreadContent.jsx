@@ -24,8 +24,8 @@ const SpreadContent = () => {
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
+          <FilterBar/>
           <Wrapper>
-            <FilterBar/>
             <SpreadBoard/>
           </Wrapper>
         </CustomDrawer>

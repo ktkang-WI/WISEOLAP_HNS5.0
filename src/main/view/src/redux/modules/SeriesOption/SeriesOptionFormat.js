@@ -52,7 +52,7 @@ const pointLabelDirectionData = {
 // Format
 const seriesOptionDefaultFormat = {
   fieldId: '',
-  type: seriesOption.defaultType,
+  type: 'bar',
   general: {
     auxiliaryAxis: false,
     ignoreEmptyPoints: false,

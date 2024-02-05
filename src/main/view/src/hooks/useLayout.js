@@ -21,7 +21,7 @@ export default function useLayout() {
     dispatch(layoutSlice.updataFlexLayout(param));
   };
 
-  const insertFlexLayout = (reportId, component, chartType) => {
+  const insertFlexLayout = (reportId, component) => {
     const param =
       {reportId: reportId, component: component};
 
@@ -29,8 +29,7 @@ export default function useLayout() {
     dispatch(itemSlice.insertItem({
       reportId: reportId, // 보고서 ID
       item: {
-        type: component, // type을 담고 있는 item 객체
-        chartType: chartType
+        type: component // type을 담고 있는 item 객체
       }
     }));
   };

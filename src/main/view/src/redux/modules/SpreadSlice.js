@@ -50,53 +50,28 @@ const defaultBindInfo = {
   useHeader: false,
   useBorder: false,
   useBind: false,
-  sheetNm: '',
+  sheetNm: undefined,
   datasetNm: undefined
 };
 
 const initialState = {
   sheets: GC.Spread.Sheets,
   excelIO: excelIO,
-  // config의 경우 처음 생성되고
-  config: {},
   // Workbook의 instance 객체 새롭게 만들어서 관리되야함.
   0: {
-    designer: {},
+    designer: undefined,
     bindingInfos: {}
   }
 };
 
 const reducers = {
-  initSpread: (state) => {
-    return {
-      ...initialState,
-      config: state.config
-    };
-  },
-  changeSpread(state, actions) {
-    const newId = actions.payload.reportId.newId;
-    const prevId = actions.payload.reportId.prevId;
-    const {config, excelIO, sheets, defaultBindInfo} = state;
-    const newState = {
-      config,
-      excelIO,
-      sheets,
-      defaultBindInfo,
-      [newId]: {
-        bindingInfos: actions.payload.bindingInfos,
-        designer: state[prevId]?.designer
-      }
-    };
-
-    return newState;
-  },
-  // 새로만들기에서 Designer만 변경시 사용
-  setDesigner(state, actions) {
+  initSpread: () => initialState,
+  setSpread(state, actions) {
     const reportId = actions.payload.reportId;
+    state[reportId] = {};
+    state[reportId].bindingInfos = actions.payload.bindingInfos;
+    state[reportId].reportId = reportId;
     state[reportId].designer = actions.payload.designer;
-  },
-  setConfig(state, actions) {
-    state.config = actions.payload;
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
@@ -120,17 +95,14 @@ const reducers = {
       delete state[actions.payload];
     }
   },
-  // 디자이너에서 저장 후 reportId만 변경할 때 사용
   changeSpreadReportId(state, actions) {
     const prevId = actions.payload.prevId;
     const newId = actions.payload.newId;
 
     if (prevId != newId) {
-      const newState = {...state};
-      const spread = newState[prevId];
-      delete newState[prevId];
-      newState[newId] = spread;
-      return newState;
+      const spread = state[prevId];
+      delete state[prevId];
+      state[newId] = spread;
     }
   }
 };

@@ -14,6 +14,10 @@ import adHocLayoutSetting
   from 'assets/image/icon/button/adHocLayoutSetting.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
 import nameEdit from 'assets/image/icon/button/name_edit.png';
+import rotate from 'assets/image/icon/button/rotate.png';
+import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
+import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
+import seriesType from 'assets/image/icon/button/series_type.png';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
 import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
@@ -50,11 +54,9 @@ const RibbonDefaultElement = () => {
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
 
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
-  const {
-    commonRibbonBtnElement,
-    commonPopoverButtonElement
-  } = itemOptionManager();
+  const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
 
   const data = [
     {id: 'chart', text: '차트만 보기'},
@@ -82,7 +84,7 @@ const RibbonDefaultElement = () => {
 
   return {
     'NewReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'new_report',
       'label': localizedString.newReport,
       'imgSrc': newReport,
@@ -93,7 +95,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'Dataset': { // 팝오버 버튼으로 추후 교체
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'dataset',
       'label': localizedString.dataset,
       'imgSrc': dataset,
@@ -111,7 +113,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'LoadReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'load_report',
       'label': localizedString.loadReport,
       'imgSrc': loadReport,
@@ -120,7 +122,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'SaveReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'save_report',
       'label': localizedString.saveReport,
       'imgSrc': saveReport,
@@ -138,18 +140,18 @@ const RibbonDefaultElement = () => {
       }
     },
     'DeleteReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'delete_report',
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
-      'onClick': (afterClick) => {
+      'onClick': () => {
         const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
         dataSource.reportId = selectedReportId;
 
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(dataSource, afterClick);
+            removeReport(dataSource);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);
@@ -157,7 +159,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'DownloadReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'download_report',
       'label': localizedString.downloadReport,
       'imgSrc': downloadReport,
@@ -175,7 +177,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'ConnectReport': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'connect_report',
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
@@ -183,7 +185,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AdHocLayout': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'adHoc_layout',
       'label': '비정형 레이아웃',
       'imgSrc': adHocLayoutSetting,
@@ -195,7 +197,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddContainer': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'add_container',
       'label': localizedString.addContainer,
       'imgSrc': addContainer,
@@ -204,7 +206,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddChart': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'add_default_chart',
       'label': localizedString.addChart,
       'imgSrc': addChart,
@@ -212,7 +214,7 @@ const RibbonDefaultElement = () => {
       'useArrowButton': true,
       'onClick': (ref) => {
         const props = {
-          width: '600px',
+          width: '500px',
           height: 'auto',
           popoverType: 'labelImages',
           titlePanel: true,
@@ -222,7 +224,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddPivotGrid': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'add_pivotGrid',
       'label': localizedString.addPivotGrid,
       'imgSrc': addPivotGrid,
@@ -232,7 +234,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddGrid': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'add_grid',
       'label': localizedString.addGrid,
       'imgSrc': addGrid,
@@ -242,7 +244,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'AddCustomChart': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'add_custom_chart',
       'label': localizedString.addCustomChart,
       'imgSrc': addChart,
@@ -261,7 +263,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'CaptionView': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'caption_view',
       'label': localizedString.captionView,
       'imgSrc': captionView,
@@ -271,7 +273,7 @@ const RibbonDefaultElement = () => {
       }
     },
     'NameEdit': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'name_edit',
       'label': localizedString.nameEdit,
       'imgSrc': nameEdit,
@@ -289,13 +291,57 @@ const RibbonDefaultElement = () => {
         );
       }
     },
+    'Rotate': {
+      ...commonRibbonButton,
+      'id': 'rotate',
+      'label': localizedString.rotate,
+      'imgSrc': rotate,
+      'onClick': (e) => {
+        console.log(e);
+      }
+    },
+    'XAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'xAxis_setting',
+      'label': localizedString.xAxisSetting,
+      'imgSrc': xAxisSetting,
+      'onClick': (e) => {
+        console.log(e);
+      }
+    },
+    'YAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'yAxis_setting',
+      'label': localizedString.yAxisSetting,
+      'imgSrc': yAxisSetting,
+      'onClick': (e) => {
+        console.log(e);
+      }
+    },
+    'ExtraAxisSetting': {
+      ...commonRibbonButton,
+      'id': 'extra_setting',
+      'label': localizedString.extraAxisSetting,
+      'imgSrc': yAxisSetting,
+      'onClick': (e) => {
+        console.log(e);
+      }
+    },
+    'SeriesType': {
+      ...commonPopoverButton,
+      'id': 'bar_two',
+      'label': localizedString.seriesType,
+      'imgSrc': seriesType,
+      'onClick': (e) => {
+        console.log(e);
+      }
+    },
     'InputTxt': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'input_text',
       'label': localizedString.inputTxt,
       'imgSrc': inputTxt,
       'onClick': () => {
-
       }
     },
     'QuerySearch': {

@@ -38,21 +38,16 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   const cellRender = (e, column) => {
     let endScaleValue = 0;
-    const value = e.data[column.name];
-
     if (column.detailSetting === 'bar') {
       endScaleValue = getMaxValue(column);
 
       return <DataGridBullet
         endScaleValue={endScaleValue}
-        value={value}
+        value={e.value}
         column={column}
       />;
     }
-
-    if (value === 0) return '0';
-
-    return value;
+    return e.value;
   };
 
   return (
@@ -70,7 +65,6 @@ const DataGrid = ({setItemExports, id, item}) => {
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
-          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
           cellRender={(e) => cellRender(e, column)}
         />
       )}

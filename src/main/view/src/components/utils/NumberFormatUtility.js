@@ -8,7 +8,6 @@ const NumberFormatUtility = {
     M: 1000000,
     B: 1000000000
   },
-
   formatNumber: function(
       _value,
       _type,

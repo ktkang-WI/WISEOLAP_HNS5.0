@@ -23,9 +23,10 @@ const useCustomEvent = () => {
   const reportId = useSelector(selectCurrentReportId);
   const {openModal} = useModal();
   // 팝오버 버튼의 공통 요소 집합
+  const commonPopoverButton = itemOptionManager().commonPopoverButtonElement;
+  const commonRibbonButton = itemOptionManager().commonRibbonBtnElement;
   // 팝오버가 아닌 일반 리본 버튼 요소 집합.
-  const {commonPopoverButtonElement, commonRibbonBtnElement, commonRibbonBtn} =
-    itemOptionManager();
+  const itemOptionBtn = itemOptionManager().commonRibbonBtn;
   let formItems = {};
 
   if (selectedItem && selectedItem.type == ItemType.PIE_CHART) {
@@ -48,7 +49,7 @@ const useCustomEvent = () => {
   // ribbon Element 객체 : pie차트에서 사용됨.
   const ribbonConfig = {
     'DataLabelEdit': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'data_label_edit',
       'label': localizedString.dataLabelEdit,
       'imgSrc': dataLabelEdit,
@@ -62,7 +63,7 @@ const useCustomEvent = () => {
       }
     },
     'LabelPosition': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'label_position',
       'label': localizedString.labelPosition,
       'imgSrc': labelPosition,
@@ -74,7 +75,7 @@ const useCustomEvent = () => {
       }
     },
     'Tooltip': {
-      ...commonRibbonBtnElement,
+      ...commonRibbonButton,
       'id': 'tootip',
       'label': localizedString.tooltip,
       'imgSrc': tooltip,
@@ -88,7 +89,7 @@ const useCustomEvent = () => {
       }
     },
     'PieChartStyle': {
-      ...commonPopoverButtonElement,
+      ...commonPopoverButton,
       'id': 'pie_chart_style',
       'label': localizedString.pieChartStyle,
       'imgSrc': pieStyle,
@@ -100,11 +101,11 @@ const useCustomEvent = () => {
       }
     },
     // 공통으로 사용 되는 리본 버튼.
-    'InputTxt': {...commonRibbonBtn['InputTxt']},
-    'ShowColorLegend': {...commonRibbonBtn['ShowColorLegend']},
-    'Palette': {...commonRibbonBtn['Palette']},
-    'ColorEdit': {...commonRibbonBtn['ColorEdit']},
-    'PointLabel': {...commonRibbonBtn['PointLabel']}
+    'InputTxt': {...itemOptionBtn['InputTxt']},
+    'ShowColorLegend': {...itemOptionBtn['ShowColorLegend']},
+    'Palette': {...itemOptionBtn['Palette']},
+    'ColorEdit': {...itemOptionBtn['ColorEdit']},
+    'PointLabel': {...itemOptionBtn['PointLabel']}
   };
 
   const setMeta = (item, key, value) => {

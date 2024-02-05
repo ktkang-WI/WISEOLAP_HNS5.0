@@ -4,32 +4,27 @@ import {selectCurrentReport}
   from 'redux/selector/ReportSelector';
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
+import {useSelector} from 'react-redux';
 import models from 'models';
-import store from 'redux/modules';
 
 const SaveDefaultElement = () => {
   const {openModal, alert} = useModal();
   const {patchReport, generateParameter} = useReportSave();
+  const currentReport = useSelector(selectCurrentReport);
 
-  const getElementByLable = (label) => {
-    return saveElement.save.find((element) => element.label === label);
-  };
-
-  const saveElement = {
+  return {
     save: [
       {
         label: localizedString.saveReport, // 저장
-        onClick: (afterClick) => {
-          const currentReport = selectCurrentReport(store.getState());
+        onClick: () => {
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {
-            openModal(ReportSaveModal, afterClick);
+            openModal(ReportSaveModal);
           } else {
             dataSource.reportId = currentReport.reportId;
             const param = generateParameter(dataSource);
             models.Report.updateReport(param).then((res) => {
-              const reportId = res.data.report.reportId;
               const data = res.data;
               const msg = data.msg;
               const result = data.result;
@@ -41,9 +36,8 @@ const SaveDefaultElement = () => {
 
               alert(localizedString[msg]);
 
-              if (result) patchReport(data);
-              if (afterClick) {
-                afterClick.createExcelFile(reportId);
+              if (result) {
+                patchReport(data);
               }
             });
           };
@@ -51,8 +45,8 @@ const SaveDefaultElement = () => {
       },
       {
         label: localizedString.saveAs, // 다른이름으로 저장
-        onClick: (afterClick) => {
-          openModal(ReportSaveModal, afterClick);
+        onClick: () => {
+          openModal(ReportSaveModal);
         }
       }
     ],
@@ -60,10 +54,5 @@ const SaveDefaultElement = () => {
       'save'
     ]
   };
-  return {
-    saveElement,
-    getElementByLable
-  };
 };
-
 export default SaveDefaultElement;

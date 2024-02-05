@@ -12,6 +12,7 @@ const FilterBar = ({useExpandButton=true}) => {
   const ExpandBtn = (props) => {
     const BtnWrapper = styled.div`
       width: 20px;
+      height: 100%;
       display: flex;
       border-right: 1px solid ${theme.color.breakLine};
       border-bottom: 1px solid ${theme.color.breakLine};

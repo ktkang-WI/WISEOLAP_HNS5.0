@@ -2,24 +2,17 @@ package com.wise.MarketingPlatForm.global.util;
 import java.io.File;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.ServletContextAware;
 
-@Component
-public final class WebFileUtils implements ServletContextAware{
-	
-	private static ServletContext servletContext;
+/**
+ * File utilities under the web root folders and files which is located at
+ * <code>request.getServletContext().getRealPath("/")</code>.
+ */
+public final class WebFileUtils {
+
     private WebFileUtils() {
-    	
-    }
-    
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        WebFileUtils.servletContext = servletContext;
     }
 
     /**
@@ -38,9 +31,9 @@ public final class WebFileUtils implements ServletContextAware{
      * @return the subfolder, located under the web root folder, by the subfolder names
      * @throws IOException if the subfolder cannot be created
      */
-    public static File getWebFolder(final boolean create, String... folderNames) throws IOException {
-    	final String webRootPath = servletContext.getRealPath("/");
-        final File webRootFolder = new File(webRootPath);
+    public static File getWebFolder(final HttpServletRequest request, final boolean create,
+            String... folderNames) throws IOException {
+        final File webRootFolder = new File(request.getServletContext().getRealPath("/"));
         final File folder = FileUtils.getFile(webRootFolder, folderNames);
 
         if (create && !folder.isDirectory()) {
@@ -48,11 +41,5 @@ public final class WebFileUtils implements ServletContextAware{
         }
 
         return folder;
-    }
-    
-    public static File getFile(final File folder, final String fileName) {
-    	if (folder == null || fileName == null) return null;
-    	final File file = FileUtils.getFile(folder, fileName);
-    	return file;
     }
 }

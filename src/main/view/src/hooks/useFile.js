@@ -1,47 +1,38 @@
 import models from 'models';
-import useModal from './useModal';
-import localizedString from 'config/localization';
 
 const useFile = () => {
-  const {alert} = useModal();
   /**
    * @param {Blob} file
    * @param {Object} param
    */
-  const uploadFile = async (file, param) => {
-    const newParam = new Blob([JSON.stringify(param)],
-        {type: 'application/json'});
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('param', newParam);
-    const response = await models.File.uploadFile(formData);
-    if (response.status !== 200) {
-      alert(localizedString.failToUpload);
+  const fileUpload = async (file, param) => {
+    try {
+      const newParam = new Blob([JSON.stringify(param)],
+          {type: 'application/json'});
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('param', newParam);
+
+      const response = await models.File.uploadFile(formData);
+
+      console.log('File uploaded successfully:', response.data);
+    } catch (error) {
+      console.error('Error uploading file:', error);
     }
   };
 
-  const deleteFile = async (param) => {
-    const response = await models.File.deleteFile(param);
-    if (response.status !== 200) {
-      alert(localizedString.failToDelete);
-    } else {
-      return response;
-    }
-  };
-
-  const importFile = async (param) => {
-    const response = await models.File.importFile(param);
-    if (response.status !== 200) {
-      throw new Error('import file server error');
-    } else {
-      return response;
+  const fileDelete = async (param) => {
+    try {
+      const response = await models.File.deleteFile(param);
+      console.log('File delete successfully:', response.data);
+    } catch (error) {
+      console.error('Error delete file:', error);
     }
   };
 
   return {
-    uploadFile,
-    deleteFile,
-    importFile
+    fileUpload,
+    fileDelete
   };
 };
 
