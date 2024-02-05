@@ -64,6 +64,7 @@ const exportComponentToWorksheet = async (
 export const handleDownload = async (items, parameters, dataSource) => {
   const workbook = new Workbook();
   let worksheetCount = 0;
+  console.log('itmes', items);
   const elements = items.map((item) => {
     const element = document.getElementById(item.id);
     return {
@@ -75,16 +76,16 @@ export const handleDownload = async (items, parameters, dataSource) => {
   for (const elementObj of elements) {
     let startRow = 2;
     const worksheet = workbook.addWorksheet(elementObj.name);
-    if (parameters.informations) {
+    if (parameters) {
       worksheet.getCell('A1').value = '필터차원';
       worksheet.getCell('B1').value = '조건값';
-      parameters.informations.forEach((info, index) => {
+      parameters.forEach((info, index) => {
         const defaultValue =
         (info.defaultValue && info.defaultValue.length) ?
         info.defaultValue.join('') : '';
         worksheet.getRow(index + 2).values = [info.caption, defaultValue];
       });
-      startRow += parameters.informations.length;
+      startRow += parameters.length;
     }
     await exportComponentToWorksheet(workbook, elementObj, worksheet, startRow);
     worksheetCount++;
