@@ -64,7 +64,6 @@ const exportComponentToWorksheet = async (
 export const handleDownload = async (items, parameters, dataSource) => {
   const workbook = new Workbook();
   let worksheetCount = 0;
-  console.log('itmes', items);
   const elements = items.map((item) => {
     const element = document.getElementById(item.id);
     return {
