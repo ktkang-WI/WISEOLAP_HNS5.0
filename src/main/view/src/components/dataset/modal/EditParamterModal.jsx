@@ -132,8 +132,8 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
   };
 
   const paramterButtons = datasets.length > 0 &&
-      datasets[0].datasetType == 'CUBE' ||
-      datasets[0].datasetType == 'DS_SINGLE' ? [deleteParameter] : [];
+      (datasets[0].datasetType == 'CUBE' ||
+      datasets[0].datasetType == 'DS_SINGLE') ? [deleteParameter] : [];
 
   return (
     <Modal
