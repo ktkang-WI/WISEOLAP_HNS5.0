@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // TODO: 향후 개발
 @RestController
-@RequestMapping("/config/folder/report")
+@RequestMapping("/config/folder-report")
 public class ConfigFolderReportController {
   
 }

@@ -6,21 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
-import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
+import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 
 @Service
-public class DataSetDsService {
-
+public class DatasetDsDsviewService {
   @Autowired
   DatasetDAO datasetDAO;
 
-  public List<DsMstrEntity> getDatasetDsData() {
+  public List<DatasetDsDTO> getDatasetDsDsviewData() {
 
-    List<DsMstrEntity> dsMstrEntities = datasetDAO.selectDatasetDs();
+    List<DatasetDsDTO> datasetDsDTO = datasetDAO.selectDatasetDsDsview();
 
-    if (dsMstrEntities == null) return null;
+    if (datasetDsDTO == null) return null;
 
-    return dsMstrEntities;
+    return datasetDsDTO;
   };
-
 }

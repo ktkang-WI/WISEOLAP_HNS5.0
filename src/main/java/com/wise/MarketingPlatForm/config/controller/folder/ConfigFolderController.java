@@ -14,9 +14,9 @@ import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "config-folder", description = "데이터원본을 관리합니다.")
+@Tag(name = "config-folder-group", description = "데이터원본을 관리합니다.")
 @RestController
-@RequestMapping("/config/folder")
+@RequestMapping("/config/folder-group")
 public class ConfigFolderController {
   
   @Autowired

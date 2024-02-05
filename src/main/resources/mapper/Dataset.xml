@@ -114,7 +114,7 @@
 		</select>
 
 
-		<select id="selectDatasetDs" resultMap="DatasetDsDTO">
+		<select id="selectDatasetDsDsview" resultMap="DatasetDsDTO">
 			SELECT
 				DS_MSTR.DS_ID,
 				DS_VIEW_MSTR.DS_VIEW_ID,
@@ -125,6 +125,25 @@
 				DS_MSTR.IP
 						FROM DS_MSTR INNER JOIN DS_VIEW_MSTR
 						ON DS_MSTR.DS_ID = DS_VIEW_MSTR.DS_ID
+		</select>
+
+		<select id="selectDatasetDs" resultMap="DsMstr">
+			SELECT
+				DS_MSTR.DS_ID,
+				DS_MSTR.DS_NM,
+				DS_MSTR.DB_NM,
+				DS_MSTR.IP,
+        DS_MSTR.USER_ID,
+        DS_MSTR.PASSWD,
+        DS_MSTR.PORT,
+				DS_MSTR.DBMS_TYPE,
+				DS_MSTR.OWNER_NM,
+        DS_DESC,
+        DS_MSTR.CONN_TYPE,
+        DS_MSTR.USER_AREA_YN,
+        DS_MSTR.HASH_YN,
+        DS_MSTR.WF_YN
+						FROM DS_MSTR
 		</select>
 
   	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">

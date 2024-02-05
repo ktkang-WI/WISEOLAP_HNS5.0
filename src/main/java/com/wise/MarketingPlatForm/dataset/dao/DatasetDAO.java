@@ -20,7 +20,9 @@ public interface DatasetDAO {
   
   public DsMstrEntity selectDataSource(int dsId);
 
-  public List<DatasetDsDTO> selectDatasetDs();
+  public List<DsMstrEntity> selectDatasetDs();
+
+  public List<DatasetDsDTO> selectDatasetDsDsview();
 
   public List<DatasetDsDsviewCubeDTO> selectDatasetDsviewCubeDs();
 
