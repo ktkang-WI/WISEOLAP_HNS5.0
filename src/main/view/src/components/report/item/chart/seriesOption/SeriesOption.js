@@ -23,10 +23,11 @@ export const labelFormat = (Notation, valueObject) => {
   } else if (pointLabelNotationData.argumentMeasureName === Notation) {
     format = `${valueObject.argument} (${valueObject.seriesName})`;
   } else if (pointLabelNotationData.measureNameValue === Notation) {
-    format = `${valueObject.value} (${valueObject.seriesName})`;
+    format =
+    `(${valueObject.seriesName}): ${valueObject.value}`;
   } else if (pointLabelNotationData.argumentMeasureNameValue === Notation) {
-    format = `${valueObject.value} 
-    ${valueObject.argument} (${valueObject.seriesName})`;
+    format =
+    `${valueObject.argument} (${valueObject.seriesName}): ${valueObject.value}`;
   }
 
   return format;
