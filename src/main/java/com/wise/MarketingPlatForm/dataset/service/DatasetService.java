@@ -238,14 +238,14 @@ public class DatasetService {
         return tbl_Col;
     }
     
-    public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters, int rowNum) {
+    public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
         
-        return this.getQueryData(dsId, query, rowNum);
+        return this.getQueryData(dsId, query);
     }
     
-    public MartResultDTO getQueryData(int dsId, String query, int rowNum) {
+    public MartResultDTO getQueryData(int dsId, String query) {
     	 DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
 
          DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
@@ -264,7 +264,7 @@ public class DatasetService {
 
          martConfig.setMartDataSource(dsMstrDTO);
          
-         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), rowNum);
+         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
          MartResultDTO resultDTO = new MartResultDTO();
 
          try {
@@ -286,6 +286,50 @@ public class DatasetService {
              resultDTO.setRowData(err);
          }
          return resultDTO;
+    }
+    
+    public MartResultDTO getQueryDatas(int dsId, String query, List<Parameter> parameters) {
+        SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
+        query = queryGenerator.applyParameter(parameters, query);
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                .dsId(dsInfoEntity.getDsId())
+                .dsNm(dsInfoEntity.getDsNm())
+                .ip(dsInfoEntity.getIp())
+                .port(dsInfoEntity.getPort())
+                .password(dsInfoEntity.getPassword())
+                .dbNm(dsInfoEntity.getDbNm())
+                .ownerNm(dsInfoEntity.getOwnerNm())
+                .userId(dsInfoEntity.getUserId())
+                .userAreaYn(dsInfoEntity.getUserAreaYn())
+                .dsDesc(dsInfoEntity.getDsDesc())
+                .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                .build();
+
+        martConfig.setMartDataSource(dsMstrDTO);
+        
+        MartResultDTO resultDTO = new MartResultDTO();
+
+        try {
+            resultDTO = martDAO.select(query);
+            List<MetaDTO> metaDTOs = resultDTO.getMetaData();
+
+            for (MetaDTO metaDTO : metaDTOs) {
+                if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
+                    metaDTO.setColumnTypeName("decimal");
+                }
+            }
+
+        } catch (Exception e) {
+            log.warn(e.toString());
+
+            List<Map<String, Object>> err = new ArrayList<Map<String, Object>>();
+            err.add(Collections.singletonMap("error", e.toString()));
+
+            resultDTO.setRowData(err);
+        }
+        return resultDTO;
     }
 
     private String convertTopN(String sql, String dbType, int rowNum) {

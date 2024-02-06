@@ -254,7 +254,7 @@ const useQueryExecute = () => {
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       const datas = await models.DBInfo.
-          getDataByQueryMart(dsId, query, parameters, 0);
+          getAllDatasetDatas(dsId, query, parameters);
       if (!datas.data.rowData) return;
       bindData({
         rowData: datas.data.rowData,
