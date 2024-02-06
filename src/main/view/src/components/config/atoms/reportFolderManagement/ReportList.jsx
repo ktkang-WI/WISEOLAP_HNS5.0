@@ -4,11 +4,12 @@ import TreeList, {
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/authority/Title';
 import localizedString from 'config/localization';
 import {ReportFolderContext} from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
+import folderImg from 'assets/image/icon/report/folder_load.png';
 
 const ReportList = ({setRow}) => {
   // context
@@ -16,45 +17,57 @@ const ReportList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
-  // const [reports, setReports] = useState([]);
-  // console.log(data);
+  const [reports, setReports] = useState();
 
-  // console.log('ReportFolderManagement ReportList Mount!!!!');
-  // console.log('ReportList', data);
-  // const newData = data.reduce((acc, v) => {
-  //   const folderIdList = acc.map((row) => row.folderId);
+  useEffect(() => {
+    const newData = data.reduce((acc, v) => {
+      const folderIdList = acc.map((row) => row.fldId);
 
-  //   if (!folderIdList.includes(v.reportId)) {
-  //     acc.push({
-  //       fldId: v.fldId,
-  //       fldLvl: v.fldLvl,
-  //       fldNm: v.fldNm,
-  //       fldOrdinal: v.fldOrdinal,
-  //       fldParentId: v.fldParentId
-  //     });
-  //   }
+      if (!folderIdList.includes(v.fldId)) {
+        const fldParentId = v.fldParentId === 0 ?
+        v.fldParentId : 'f_' + v.fldParentId;
+        acc.push({
+          fldId: v.fldId,
+          fldLvl: v.fldLvl,
+          fldNm: v.fldNm,
+          fldOrdinal: v.fldOrdinal,
+          parentId: fldParentId,
+          key: 'f_' + v.fldId,
+          name: v.fldNm,
+          type: 'folder'
+        });
+      }
 
-  //   acc.push({
-  //     ...v,
-  //     fldParentId: v.fldId
-  //   });
+      acc.push({
+        ...v,
+        key: 'r_'+ v.reportId,
+        parentId: 'f_' + v.fldId,
+        name: v.reportNm
+      });
 
-  //   return acc;
-  // }, []);
+      return acc;
+    }, []);
+    setReports(newData);
+  }, [data]);
 
-  // setReports(newData);
-  // console.log('newData', newData);
-
+  const handleRowClick = ({data}) => {
+    let newRow = {};
+    if (data.type !== 'folder') {
+      newRow = data;
+    }
+    setRow(newRow);
+  };
 
   return (
     <Wrapper>
       <Title title={localizedString.reportlist}></Title>
       <TreeList
-        dataSource={data}
-        keyExpr="fldId"
-        parentIdExpr="fldParentId"
+        dataSource={reports}
+        keyExpr="key"
+        parentIdExpr="parentId"
         id="reportFolderManagementReportList"
         height={'90%'}
+        onRowClick={handleRowClick}
       >
         <SearchPanel
           visible={true}
@@ -62,12 +75,16 @@ const ReportList = ({setRow}) => {
         />
         <Selection mode="single" />
         <Column
-          dataField="fldNm"
-          caption={localizedString.folderName}
-        />
-        <Column
-          dataField="reportNm"
+          dataField="name"
           caption={localizedString.reportName}
+          cellRender={({row}) => {
+            return (
+              <span>
+                <img height={'17px'} src={folderImg}/>
+                {row.data.name}
+              </span>
+            );
+          }}
         />
       </TreeList>
     </Wrapper>
