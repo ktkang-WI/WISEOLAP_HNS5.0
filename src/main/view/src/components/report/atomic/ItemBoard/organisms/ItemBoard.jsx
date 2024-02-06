@@ -169,11 +169,12 @@ const ItemBoard = () => {
     if (action.type == 'FlexLayout_SetActiveTabset') {
       const node = model.getNodeById(action.data.tabsetNode);
       const itemId = node.getChildren()[0].getId();
-      if (selectedItemId != itemId) {
-        model.doAction(Actions.setActiveTabset(action.data.tabsetNode));
-        const modelJson = model.toJson();
 
-        updateLayoutShape(reportId, modelJson);
+      model.doAction(Actions.setActiveTabset(action.data.tabsetNode));
+      const modelJson = model.toJson();
+
+      updateLayoutShape(reportId, modelJson);
+      if (selectedItemId != itemId) {
         focusItem(itemId);
       }
       return;
@@ -182,6 +183,12 @@ const ItemBoard = () => {
     // Tab Focus 처리
     if (action.type == 'FlexLayout_SelectTab') {
       const itemId = action.data.tabNode;
+      const tabsetId = model.getNodeById(itemId).getParent().getId();
+
+      model.doAction(Actions.setActiveTabset(tabsetId));
+      const modelJson = model.toJson();
+
+      updateLayoutShape(reportId, modelJson);
       focusItem(itemId);
     }
 
@@ -213,6 +220,17 @@ const ItemBoard = () => {
       updateLayoutShape(reportId, modelJson);
       return;
     }
+
+    // FlexLayout에서 지원하는 삭제 기능(현재 숨김 처리함.)
+    if (action.type == 'FlexLayout_DeleteTab') {
+      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
+    }
+
     return action;
   }
 
@@ -271,15 +289,9 @@ const ItemBoard = () => {
   }
 
   const onModelChange = (node, action) => {
+    // 레이아웃 이동.
     if (action.type == 'FlexLayout_MoveNode') {
       updateLayoutShape(reportId, model.toJson());
-    } else if (action.type == 'FlexLayout_DeleteTab') {
-      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
-      deleteFlexLayout(
-          selectedReportId,
-          action.data.node,
-          model.toJson()
-      );
     }
   };
 

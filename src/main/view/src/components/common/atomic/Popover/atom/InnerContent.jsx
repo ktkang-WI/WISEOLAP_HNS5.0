@@ -34,13 +34,15 @@ const ArrowImage = styled.div`
 // export 1 라벨아이콘만.
 export const PopoverLabelImageBtn = ({label, imgSrc, onClick}) => {
   return (
-    <LabelImageButton
-      label={label}
-      imgSrc={imgSrc}
-      height='60px'
-      width='60px'
-      onClick={onClick}
-    />
+    <MenuItem>
+      <LabelImageButton
+        label={label}
+        imgSrc={imgSrc}
+        height='60px'
+        width='60px'
+        onClick={onClick}
+      />
+    </MenuItem>
   );
 };
 
