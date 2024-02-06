@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +45,7 @@ public class GroupFolderController {
     return RestAPIVO.okResponse(model);
   }
 
-  @PatchMapping
+  @PutMapping
   public ResponseEntity<RestAPIVO> patchGroupFolderData(
     @RequestParam(required = false, defaultValue = "data") String key,
     @RequestBody Map<String, Object> body
@@ -60,6 +61,6 @@ public class GroupFolderController {
 
     boolean result = groupFolderService.patchGroupFolder(groupFolderPatchDTO);
 
-    return RestAPIVO.okResponse(false);
+    return RestAPIVO.okResponse(result);
   }
 }
