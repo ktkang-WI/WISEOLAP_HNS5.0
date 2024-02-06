@@ -9,6 +9,7 @@ import Title from 'components/config/atoms/authority/Title';
 import localizedString from 'config/localization';
 import {ReportFolderContext} from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
+import folderImg from 'assets/image/icon/report/folder_load.png';
 
 const FolderList = ({setRow}) => {
   // context
@@ -16,7 +17,10 @@ const FolderList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
-  console.log('FolderList', data);
+
+  const handleRowClick = ({data}) => {
+    setRow(data);
+  };
 
   return (
     <Wrapper>
@@ -27,6 +31,7 @@ const FolderList = ({setRow}) => {
         parentIdExpr="fldParentId"
         id="reportFolderManagementFolderList"
         height={'90%'}
+        onRowClick={handleRowClick}
       >
         <SearchPanel
           visible={true}
@@ -36,6 +41,14 @@ const FolderList = ({setRow}) => {
         <Column
           dataField="fldNm"
           caption={localizedString.folderName}
+          cellRender={({row}) => {
+            return (
+              <span>
+                <img height={'17px'} src={folderImg}/>
+                {row.data.fldNm}
+              </span>
+            );
+          }}
         />
       </TreeList>
     </Wrapper>

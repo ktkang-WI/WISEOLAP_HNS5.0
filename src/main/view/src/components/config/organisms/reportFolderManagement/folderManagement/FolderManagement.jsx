@@ -6,8 +6,6 @@ import FolderList
 import React, {useState} from 'react';
 
 const FolderManagement = ({data}) => {
-  console.log('FolderManagement.jsx');
-  console.log(data);
   const [row, setRow] = useState({});
 
   return (

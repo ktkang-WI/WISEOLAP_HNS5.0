@@ -5,14 +5,36 @@ import Form, {
   GroupItem, Item, Label
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
+import ReportFolderSelectorModal from
+  'components/report/modal/ReportFolderSelectorModal';
+import {useRef} from 'react';
 
-const ReportInformation = () => {
-  const reportInformation = [];
+const ReportInformation = ({row}) => {
+  const {openModal} = useModal();
+  const ref = useRef();
+
+  const folderSearchBtn = {
+    name: 'folderSearchBtn',
+    location: 'after',
+    options: {
+      visible: true,
+      stylingMode: 'text',
+      icon: 'search',
+      type: 'default',
+      disabled: false,
+      onClick: (e) => {
+        openModal(ReportFolderSelectorModal, {
+          formInstance: ref.current.instance
+        });
+      }
+    }
+  };
 
   return (
     <Panel title={localizedString.reportInformation}>
       <Form
-        formData={reportInformation}
+        formData={row}
       >
         <GroupItem colCount={1}>
           <Item
@@ -28,7 +50,7 @@ const ReportInformation = () => {
             <Label>{localizedString.reportName}</Label>
           </Item>
           <Item
-            dataField="reportSubNm"
+            dataField="reportSubTitle"
             editorType="dxTextBox"
           >
             <Label>{localizedString.reportSubName}</Label>
@@ -40,8 +62,20 @@ const ReportInformation = () => {
             <Label>{localizedString.reportType}</Label>
           </Item>
           <Item
-            dataField="folderManagement"
+            dataField="fldNm"
             editorType="dxTextBox"
+            readOnly={true}
+            editorOptions={{
+              readOnly: true,
+              buttons: [folderSearchBtn],
+              elementAttr: {
+                id: 'fldName'
+              },
+              onValueChanged: (e) => {
+                const elementAttr = e.component.option('elementAttr');
+                console.log(elementAttr);
+              }
+            }}
           >
             <Label>{localizedString.folderManagement}</Label>
           </Item>
@@ -52,25 +86,25 @@ const ReportInformation = () => {
             <Label>{localizedString.publisher}</Label>
           </Item>
           <Item
-            dataField="registerDate"
+            dataField="regDt"
             editorType="dxTextBox"
           >
             <Label>{localizedString.RegisterDate}</Label>
           </Item>
           <Item
-            dataField="annotation"
+            dataField="reportTag"
             editorType="dxTextBox"
           >
             <Label>{localizedString.annotation}</Label>
           </Item>
           <Item
-            dataField="order"
+            dataField="fldOrdinal"
             editorType="dxTextBox"
           >
             <Label>{localizedString.order}</Label>
           </Item>
           <Item
-            dataField="order"
+            dataField="reportDesc"
             editorType="dxTextBox"
           >
             <TextArea

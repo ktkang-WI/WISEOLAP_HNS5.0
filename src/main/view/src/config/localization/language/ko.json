@@ -497,5 +497,6 @@
   "userGroupManagement": "사용자/그룹관리",
   "authority": "권한",
   "reportFolderManagement": "보고서/폴더관리",
-  "reportManagement": "보고서 관리"
+  "reportManagement": "보고서 관리",
+  "folderId": "폴더 ID"
 }

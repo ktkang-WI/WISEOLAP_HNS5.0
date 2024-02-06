@@ -91,11 +91,9 @@ const ReportFolderManagement = () => {
             setData(res.data.data);
           }
         });
-        setManagement(item);
         return;
       }
     });
-    console.log('ReportFolderManagement HandelTabPanelItem Click');
   }, [management, data]);
 
   return (
