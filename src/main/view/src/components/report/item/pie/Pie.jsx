@@ -38,6 +38,7 @@ const Pie = ({setItemExports, id, item}) => {
   const pies = seriesMeasureNames.map((dimension, idx) => {
     return (
       <PieChart
+        id={id}
         ref={(ref) => (dxRefs.current[idx] = ref)}
         key={idx}
         type={meta.pieChartStyle}

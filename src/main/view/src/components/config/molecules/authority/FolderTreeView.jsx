@@ -3,7 +3,6 @@ import TreeList, {
   Column,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-
 import models from 'models';
 import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/authority/Title';
