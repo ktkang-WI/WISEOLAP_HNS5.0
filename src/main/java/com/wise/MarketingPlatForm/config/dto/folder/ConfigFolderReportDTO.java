@@ -25,4 +25,5 @@ public class ConfigFolderReportDTO {
   String reportTag;
   String reportOrdinal;
   String reportDesc;
+  String reportType;
 }

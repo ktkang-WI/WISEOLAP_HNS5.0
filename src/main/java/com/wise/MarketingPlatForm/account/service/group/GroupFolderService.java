@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
+import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
 import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
@@ -29,6 +32,46 @@ public class GroupFolderService {
     List<GroupFolderModel> groupDataModel = generateGroupFolderObject(groupFolderDTO);
 
     return groupDataModel;
+  };
+
+  public boolean patchGroupFolder(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+
+    List<GroupAuthReportMstrEntity> groupFolderMstr = generateGroupFolderPatchObject(groupFolderPatchDTO);
+
+    if (groupFolderMstr == null) return false;
+
+    boolean result = false;
+  
+    result = accountDAO.deleteGroupFolder(groupFolderMstr);
+    result = accountDAO.putGroupFolder(groupFolderMstr);
+
+    return result;
+  };
+
+
+  private List<GroupAuthReportMstrEntity> generateGroupFolderPatchObject(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+    List<GroupAuthReportMstrEntity> result = new ArrayList<>();
+
+    for (GroupFolderPatchDTO groupFolder : groupFolderPatchDTO) {
+      int grpId = groupFolder.getGrpId();
+
+      for (ConfigFolderDTO configFolderDTO : groupFolder.getFldIds()) {
+
+        GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
+          .grpId(grpId)
+          .fldId(configFolderDTO.getFldId())
+          .authDataItem(configFolderDTO.getAuthDataItem())
+          .authExport(configFolderDTO.getAuthExport())
+          .authPublish(configFolderDTO.getAuthPublish())
+          .authView(configFolderDTO.getAuthView())
+          .build();
+
+          result.add(groupAuthReportMstrEntity);
+          
+      }
+
+    }
+    return result;
   };
 
   private List<GroupFolderModel> generateGroupFolderObject(List<GroupFolderDTO> groupFolderDTO) {

@@ -20,4 +20,7 @@ public interface ConfigDAO {
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
   public List<FldMstrEntity> selectConfigFolder();
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
+  public boolean createConfigFolder(FldMstrEntity fldMstrEntity);
+  public boolean updateConfigFolder(FldMstrEntity fldMstrEntity);
+  public boolean deleteConfigFolder(FldMstrEntity fldMstrEntity);
 }

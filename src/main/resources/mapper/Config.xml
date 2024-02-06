@@ -27,6 +27,7 @@
       <result column="REPORT_TAG" property="reportTag" javaType="String"/>
       <result column="REPORT_ORDINAL" property="reportOrdinal" javaType="String"/>
       <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
+      <result column="REPORT_TYPE" property="reportType" javaType="String"/>
     </resultMap>
 
     <resultMap id="ConfigGeneralDTO" type="com.wise.MarketingPlatForm.config.dto.GeneralDTO">
@@ -111,7 +112,8 @@
         REPORT_MSTR.REG_DT,
         REPORT_MSTR.REPORT_TAG,
         REPORT_MSTR.REPORT_ORDINAL,
-        REPORT_MSTR.REPORT_DESC
+        REPORT_MSTR.REPORT_DESC,
+        REPORT_MSTR.REPORT_TYPE
         FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
             ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
                           INNER JOIN USER_MSTR 
@@ -178,5 +180,52 @@
               REPORT_DIRECT_VIEW = REPORT_DIRECT_VIEW
           WHERE 1 = 1
     </update>
+    
+    <update id="updateConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+        UPDATE PUB_FLD_MSTR
+          SET 
+              <if test='fldLvl != 0'>
+                FLD_LVL = #{fldLvl, jdbcType=INTEGER},
+              </if>
+              <if test='fldParentId != 0'>
+                FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
+              </if>
+              <if test='fldOrdinal != 0'>
+                FLD_ORDINAL = #{fldOrdinal, jdbcType=INTEGER},
+              </if>
+              <if test='fldDesc != ""'>
+                FLD_DESC = #{fldDesc, jdbcType=VARCHAR},
+              </if>
+              <if test='fldNm != ""'>
+                FLD_NM = #{fldNm, jdbcType=VARCHAR},
+              </if>
+              FLD_ID = FLD_ID
+          WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
+    </update>
+
+    <insert id="createConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+        INSERT INTO
+        PUB_FLD_MSTR(
+            FLD_ID,
+            FLD_NM,
+            FLD_LVL,
+            FLD_PARENT_ID,
+            FLD_ORDINAL,
+            FLD_DESC
+        )
+        VALUES(
+            PUB_FLD_MSTR_FLD_ID_SEQ.NEXTVAL,
+            #{fldNm, jdbcType=VARCHAR},
+            #{fldLvl, jdbcType=INTEGER},
+            #{fldParentId, jdbcType=INTEGER},
+            #{fldOrdinal, jdbcType=INTEGER},
+            #{fldDesc, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <delete id="deleteConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+      DELETE FROM PUB_FLD_MSTR 
+              WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
+    </delete>
 
 </mapper>

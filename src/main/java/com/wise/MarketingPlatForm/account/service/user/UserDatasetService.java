@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserDatasetPutDTO;
+import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
@@ -28,6 +31,43 @@ public class UserDatasetService {
 
     return userDatasetModel;
   };
+
+  @Transactional
+  public boolean putUserDataset(List<UserDatasetPutDTO> userDatasetPutDTO) {
+
+    List<UserAuthDatasetMstrEntity> userAuthDatasetMstr = generateUserAuthDatasetObject(userDatasetPutDTO);
+
+    if (userAuthDatasetMstr == null) return false;
+
+    boolean result = false;
+  
+    result = accountDAO.deleteUserDataset(userAuthDatasetMstr);
+    result = accountDAO.putUserDataset(userAuthDatasetMstr);
+
+    return result;
+  };
+  
+    public List<UserAuthDatasetMstrEntity> generateUserAuthDatasetObject(List<UserDatasetPutDTO> userDatasetPutDTO) {
+    List<UserAuthDatasetMstrEntity> result = new ArrayList<>();
+
+    for (UserDatasetPutDTO userDatasetPut : userDatasetPutDTO) {
+      int userNo = userDatasetPut.getUserNo();
+
+      for (Integer fldId : userDatasetPut.getFldId()) {
+
+        UserAuthDatasetMstrEntity userAuthDatasetMstrEntity = UserAuthDatasetMstrEntity.builder()
+          .userNo(userNo)
+          .fldId(fldId)
+          .build();
+
+          result.add(userAuthDatasetMstrEntity);
+
+      }
+
+    }
+
+    return result;
+  }
 
   public List<UserDatasetModel> generateUserDatasetObject(List<UserDatasetDTO> userDatasetDTO) {
 

@@ -19,4 +19,16 @@ public class ConfigFolderService {
     
     return configFolderDTO;
   };
+
+  public boolean createConfigFolder(FldMstrEntity fldMstrEntity) {
+    return configDao.createConfigFolder(fldMstrEntity);
+  };
+
+  public boolean patchConfigFolder(FldMstrEntity fldMstrEntity) {
+    return configDao.updateConfigFolder(fldMstrEntity);
+  };
+
+  public boolean deleteConfigFolder(FldMstrEntity fldMstrEntity) {
+    return configDao.deleteConfigFolder(fldMstrEntity);
+  };
 }

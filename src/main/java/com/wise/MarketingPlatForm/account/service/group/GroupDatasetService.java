@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetPutDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.dataset.GroupDatasetModel;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
@@ -28,7 +31,44 @@ public class GroupDatasetService {
     return groupDatasetModel;
   };
 
-  public List<GroupDatasetModel> generateGroupDatasetObject(List<GroupDatasetDTO> groupDatasetDTO) {
+  @Transactional
+  public boolean putGroupDataset(List<GroupDatasetPutDTO> groupDatasetPutDTO) {
+
+    List<GroupAuthDatasetMstrEntity> groupAuthDatasetMstr = generateGroupAuthDatasetObject(groupDatasetPutDTO);
+
+    if (groupAuthDatasetMstr == null) return false;
+
+    boolean result = false;
+  
+    result = accountDAO.deleteGroupDataset(groupAuthDatasetMstr);
+    result = accountDAO.putGroupDataset(groupAuthDatasetMstr);
+
+    return result;
+  };
+
+  private List<GroupAuthDatasetMstrEntity> generateGroupAuthDatasetObject(List<GroupDatasetPutDTO> groupDatasetPutDTO) {
+    List<GroupAuthDatasetMstrEntity> result = new ArrayList<>();
+
+    for (GroupDatasetPutDTO groupDatasetPut : groupDatasetPutDTO) {
+      int grpId = groupDatasetPut.getGrpId();
+
+      for (Integer fldId : groupDatasetPut.getFldId()) {
+
+        GroupAuthDatasetMstrEntity groupAuthDatasetMstrEntity = GroupAuthDatasetMstrEntity.builder()
+          .grpId(grpId)
+          .fldId(fldId)
+          .build();
+
+          result.add(groupAuthDatasetMstrEntity);
+
+      }
+
+    }
+
+    return result;
+  }
+
+  private List<GroupDatasetModel> generateGroupDatasetObject(List<GroupDatasetDTO> groupDatasetDTO) {
 
     List<GroupDatasetModel> result = new ArrayList<>();
     List<FldMstrEntity> datasetList = new ArrayList<>();
