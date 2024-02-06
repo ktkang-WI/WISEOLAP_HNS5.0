@@ -10,8 +10,12 @@ import {useContext} from 'react';
 import localizedString from 'config/localization';
 
 const GroupInfo = () => {
+  // context
   const getContext = useContext(UserGroupContext);
   const [groupDetailInfo] = getContext.state.groupDetailInfo;
+
+  // selectBox DataSource
+  const mode = ['ADMIN', 'VIEW'];
 
   return (
     <Panel title={localizedString.groupInfo}>
@@ -34,6 +38,9 @@ const GroupInfo = () => {
           <Item
             dataField="grpRunMode"
             editorType="dxSelectBox"
+            editorOptions={{
+              dataSource: mode
+            }}
           >
             <Label>{localizedString.groupRunMode}</Label>
           </Item>

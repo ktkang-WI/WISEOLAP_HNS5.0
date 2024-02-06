@@ -7,7 +7,7 @@ import localizedString from 'config/localization';
 
 const DataSourceInformation = ({row}) => {
   return (
-    <Panel title={localizedString.folderInformation}>
+    <Panel title={localizedString.dataSourceInfo}>
       <Form
         formData={row}
       >

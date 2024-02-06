@@ -7,6 +7,7 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import _ from 'lodash';
 import {useContext, useRef} from 'react';
 import localizedString from 'config/localization';
+import {handleRowClick} from 'components/config/utility/utility';
 
 const UserDataGrid = () => {
   const getContext = useContext(UserGroupContext);
@@ -15,13 +16,6 @@ const UserDataGrid = () => {
   const [userDetailInfo, setUserDetailInfo] = getContext.state.userDetailInfo;
 
   const ref = useRef();
-
-  const handleRowClick = (e) => {
-    const userId = e.data.userId;
-    const selectedUser =
-      usersFormat.filter((item) => item.userId === userId)[0].userDetailInfo;
-    setUserDetailInfo(selectedUser);
-  };
 
   if (_.isEmpty(userDetailInfo)) {
     ref.current?._instance.clearSelection();
@@ -33,7 +27,7 @@ const UserDataGrid = () => {
         height={600}
         dataSource={usersFormat}
         showBorders={true}
-        onRowClick={handleRowClick}
+        onRowClick={({data}) => handleRowClick(data, setUserDetailInfo)}
         ref={ref}
       >
         <Selection mode="single" />

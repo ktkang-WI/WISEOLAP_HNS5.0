@@ -7,6 +7,11 @@ const contextRoot =
 
 const accountPath = document.location.origin + contextRoot + '/account';
 
+export const getGroups = async () => {
+  const res = await axios.get(accountPath + '/group');
+  return res;
+};
+
 export const getUserGroupManagement = async () => {
   const res = await axios.get(accountPath + '/user-group');
   return res;

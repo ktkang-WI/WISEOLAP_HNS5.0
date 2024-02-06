@@ -7,6 +7,7 @@ import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 import {DataSourceAdditionContext} from
   'components/config/organisms/dataSourceAddition/DataSourceAddition';
+import {handleRowClick} from 'components/config/utility/utility';
 
 const DataSourceList = ({setRow}) => {
   // context
@@ -15,17 +16,13 @@ const DataSourceList = ({setRow}) => {
   // state
   const [dataSource] = dataSourceAdditionContext.state.dataSource;
 
-  const handleRowClick = ({data}) => {
-    setRow(data);
-  };
-
   return (
     <Wrapper>
       <Title title={localizedString.dataSourceList}></Title>
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
-        onRowClick={handleRowClick}
+        onRowClick={({data}) => handleRowClick(data, setRow)}
         height={'90%'}
         keyExpr="dsId"
       >

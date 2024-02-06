@@ -19,7 +19,7 @@ const GroupDataGrid = () => {
   const handleRowClick = (e) => {
     const grpId = e.data.grpId;
     const selectedGroup =
-    groupsFormat.filter((item) => item.grpId === grpId)[0];
+    _.cloneDeep(groupsFormat.filter((item) => item.grpId === grpId)[0]);
     setGroupDetailInfo(selectedGroup.grpDetailInfo);
     setGroupMemberUsers(selectedGroup.grpMemberUser);
     setGroupNotMemberUsers(selectedGroup.grpNotMemberUser);

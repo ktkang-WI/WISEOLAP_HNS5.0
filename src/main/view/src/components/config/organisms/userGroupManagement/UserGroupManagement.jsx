@@ -41,6 +41,7 @@ const UserGroupManagement = () => {
   const {alert} = useModal();
 
   const {userGroupManagement} = useLoaderData();
+  console.log('userGroupManagement', userGroupManagement);
   const [groupsFormat, setGroupsFormat] =
   useState(userGroupManagement.groupsFormat);
   const [groupDetailInfo, setGroupDetailInfo] = useState();
