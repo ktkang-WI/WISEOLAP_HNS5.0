@@ -88,7 +88,6 @@ public class GroupDataService {
       XML = xmlGenerator.builder();
       String encodedXML = new String(base64.encode(XML.getBytes(StandardCharsets.UTF_8)));
 
-      System.out.println(encodedXML);
 
       GroupAuthDataMstrEntity groupAuthDataMstrEntity = GroupAuthDataMstrEntity.builder()
           .grpId(grpId)

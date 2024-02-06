@@ -42,7 +42,6 @@
       <result column="USER_NO" property="userNo" javaType="int"/>
       <result column="USER_ID" property="userId" javaType="String"/>
       <result column="USER_NM" property="userNm" javaType="String"/>
-      <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="DATA_XML" property="dataXml" javaType="String"/>
     </resultMap>
 
@@ -177,11 +176,8 @@
           USER_MSTR.USER_NO,
           USER_MSTR.USER_ID,
           USER_MSTR.USER_NM,
-          GRP_MSTR.GRP_NM,
           USER_AUTH_DATA_MSTR.DATA_XML
-          FROM USER_MSTR INNER JOIN GRP_MSTR
-              ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-                        INNER JOIN USER_AUTH_DATA_MSTR
+          FROM USER_MSTR INNER JOIN USER_AUTH_DATA_MSTR
               ON USER_MSTR.USER_NO = USER_AUTH_DATA_MSTR.USER_NO
     </select>
 

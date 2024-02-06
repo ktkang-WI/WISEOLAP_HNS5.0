@@ -40,10 +40,10 @@ public class ConfigFolderController {
   @PostMapping
   public ResponseEntity<RestAPIVO> createConfigFolderData(
     @RequestParam(required = true) String fldNm,
-    @RequestParam(required = true) int fldLvl,
-    @RequestParam(required = true) int fldParentId,
+    @RequestParam(required = false, defaultValue = "0") int fldLvl,
+    @RequestParam(required = false, defaultValue = "0") int fldParentId,
     @RequestParam(required = false, defaultValue = "") int fldOrdinal,
-    @RequestParam(required = false, defaultValue = "") String fldDesc
+    @RequestParam(required = false, defaultValue = "0") String fldDesc
   ) throws Exception {
 
     FldMstrEntity fldMstr = FldMstrEntity.builder()
@@ -65,9 +65,9 @@ public class ConfigFolderController {
   public ResponseEntity<RestAPIVO> patchConfigFolderData(
     @RequestParam(required = true) int fldId,
     @RequestParam(required = false, defaultValue = "") String fldNm,
-    @RequestParam(required = false, defaultValue = "") int fldLvl,
-    @RequestParam(required = false, defaultValue = "") int fldParentId,
-    @RequestParam(required = false, defaultValue = "") int fldOrdinal,
+    @RequestParam(required = false, defaultValue = "0") int fldLvl,
+    @RequestParam(required = false, defaultValue = "0") int fldParentId,
+    @RequestParam(required = false, defaultValue = "0") int fldOrdinal,
     @RequestParam(required = false, defaultValue = "") String fldDesc
   ) throws Exception {
 

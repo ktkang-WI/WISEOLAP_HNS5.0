@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupDataPutDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataPutDTO;
-import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
@@ -91,8 +89,6 @@ public class UserDataService {
       XML = xmlGenerator.builder();
       String encodedXML = new String(base64.encode(XML.getBytes(StandardCharsets.UTF_8)));
 
-      System.out.println(encodedXML);
-
       UserAuthDataMstrEntity userAuthDataMstrEntity = UserAuthDataMstrEntity.builder()
           .userNo(userNo)
           .dataXml(encodedXML)
@@ -115,7 +111,6 @@ public class UserDataService {
         .userNo(userData.getUserNo())
         .userId(userData.getUserId())
         .userNm(userData.getUserNm())
-        .grpNm(userData.getGrpNm())
         .build();
 
       UserDataModel userDataModel = UserDataModel.builder()
