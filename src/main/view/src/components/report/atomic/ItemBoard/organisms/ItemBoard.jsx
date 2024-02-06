@@ -149,6 +149,13 @@ const ItemBoard = () => {
       dispatch(selectItem({reportId, itemId}));
       const item = items.find((i) => itemId == i.id);
 
+      const tabsetId = model.getNodeById(itemId).getParent().getId();
+
+      model.doAction(Actions.setActiveTabset(tabsetId));
+      const modelJson = model.toJson();
+
+      updateLayoutShape(reportId, modelJson);
+
       if (item?.meta?.dataField?.datasetId) {
         dispatch(selectDataset({
           reportId: reportId,
