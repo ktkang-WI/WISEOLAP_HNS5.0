@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 
 const setInitDesignerMode = () => {
   const href = window.location.href;
@@ -18,7 +18,7 @@ const initialState = {
   designerMode: setInitDesignerMode(),
   runMode: 'DashAny',
   initialDisplay: 'DashAny', // 'adHoc',
-  editMode: 'Designer'
+  editMode: EditMode.DESIGNER
   // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 
