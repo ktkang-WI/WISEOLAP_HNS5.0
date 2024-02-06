@@ -8,6 +8,15 @@ import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
 import Spreadsheet from 'components/designer/Spreadsheet';
+import UserGroupManagement
+  from 'components/config/organisms/userGroupManagement/UserGroupManagement';
+import {
+  generalConfigure as generalLoader,
+  groupData as groupDataLoader,
+  userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
+import ConfigurationSetting
+  from 'components/config/organisms/configurationSetting/ConfigurationSetting';
+import Authority from 'components/config/organisms/authority/Authority';
 import {DesignerMode} from 'components/config/configType';
 
 const contextPath = '/editds';
@@ -51,7 +60,24 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/config',
-    element: <Config/>
+    element: <Config/>,
+    children: [
+      {
+        path: 'general',
+        element: <ConfigurationSetting/>,
+        loader: generalLoader
+      },
+      {
+        path: 'user-group',
+        element: <UserGroupManagement/>,
+        loader: userGroupLoader
+      },
+      {
+        path: 'auth',
+        element: <Authority/>,
+        loader: groupDataLoader
+      }
+    ]
   }
 ]);
 

@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
+import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
@@ -108,6 +110,9 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
+    
+    @Autowired
+    private FileUploadService fileUploadService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {
@@ -159,7 +164,6 @@ public class ReportService {
     	reports.add(report);
 
     	returnMap.put("reports", reports);
-
         return returnMap;
     }
 
