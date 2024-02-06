@@ -36,7 +36,7 @@ const Config = () => {
         <Wrapper size={theme.size.snbWidth}>
           <SideNavigationBar
             content={['ConfigurationSetting', 'UserGroupManagement',
-              'Authority', 'ReportFolderManagement']}
+              'Authority', 'ReportFolderManagement', 'DataSourceAddition']}
           />
         </Wrapper>
         <Wrapper>

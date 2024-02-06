@@ -2,7 +2,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
 import React, {createContext, useCallback, useEffect, useState} from 'react';
-import {Mode, managementData} from './data/ReportFolderManagementData';
+import {managementData} from './data/ReportFolderManagementData';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -37,7 +37,7 @@ const NavBarItem = styled.div`
 export const ReportFolderContext = createContext();
 
 const ReportFolderManagement = () => {
-  const btns = ['plus', 'save', 'remove', 'edit'];
+  const btns = ['plus', 'save', 'remove'];
   const [management, setManagement] = useState(managementData[0]);
   const [data, setData] = useState([]);
 
@@ -60,24 +60,13 @@ const ReportFolderManagement = () => {
   };
 
   const navBarItems = () => {
-    if (management.mode === Mode.REPORT) {
-      return (
-        btns.filter((item) => (item !== 'plus' || item !== 'edit'))
-            .map((item, index) => (
-              <NavBarItem key={index}>
-                <Button icon={item} onClick={handleBtnClick}></Button>
-              </NavBarItem>
-            ))
-      );
-    } else if (management.mode === Mode.FOLDER) {
-      return (
-        btns.map((item, index) => (
-          <NavBarItem icon={item} key={index}>
-            <Button icon={item} onClick={handleBtnClick}></Button>
-          </NavBarItem>
-        ))
-      );
-    };
+    return (
+      btns.map((item, index) => (
+        <NavBarItem icon={item} key={index}>
+          <Button icon={item} onClick={handleBtnClick}></Button>
+        </NavBarItem>
+      ))
+    );
   };
 
   const handleTabPanelItem = useCallback(({itemData}) => {

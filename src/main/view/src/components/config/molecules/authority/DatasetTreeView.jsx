@@ -6,7 +6,7 @@ import TreeList, {
 
 import models from 'models';
 import React, {useContext, useEffect, useState} from 'react';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';

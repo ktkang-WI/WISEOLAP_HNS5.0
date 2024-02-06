@@ -1,6 +1,6 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import React, {useRef} from 'react';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 

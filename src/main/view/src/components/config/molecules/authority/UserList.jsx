@@ -1,7 +1,7 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import models from 'models';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthorityContext}

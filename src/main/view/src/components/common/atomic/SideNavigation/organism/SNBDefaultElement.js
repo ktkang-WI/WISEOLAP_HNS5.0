@@ -114,6 +114,15 @@ const SNBDefaultElement = () => {
       onClick: (e) => {
         nav('report-folder');
       }
+    },
+    'DataSourceAddition': {
+      id: 'dataSourceAddition',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.dataSourceAddition,
+      onClick: (e) => {
+        nav('add-datasource');
+      }
     }
   };
 };

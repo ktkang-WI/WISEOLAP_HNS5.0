@@ -498,5 +498,6 @@
   "authority": "권한",
   "reportFolderManagement": "보고서/폴더관리",
   "reportManagement": "보고서 관리",
-  "folderId": "폴더 ID"
+  "folderId": "폴더 ID",
+  "dataSourceAddition": "데이터 원본 추가"
 }

@@ -1,5 +1,5 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import React, {useEffect, useState} from 'react';
 import localizedString from 'config/localization';

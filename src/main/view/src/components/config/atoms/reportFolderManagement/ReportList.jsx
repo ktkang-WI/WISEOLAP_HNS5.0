@@ -5,7 +5,7 @@ import TreeList, {
   Selection} from 'devextreme-react/tree-list';
 
 import React, {useContext, useEffect, useState} from 'react';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 import {ReportFolderContext} from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';

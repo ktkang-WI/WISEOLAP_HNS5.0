@@ -4,7 +4,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import models from 'models';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';

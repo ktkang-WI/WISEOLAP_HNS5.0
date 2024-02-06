@@ -7,7 +7,7 @@ import {AuthorityContext}
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 
 const DatasourceViewList = ({row, setDsView}) => {
