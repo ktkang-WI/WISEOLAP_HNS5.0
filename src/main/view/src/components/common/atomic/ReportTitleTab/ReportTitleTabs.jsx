@@ -50,7 +50,11 @@ const ReportTitleTabs = () => {
         <ReportTitleTab
           key={report.reportId}
           onClick={() => onClick(report)}
-          onDelete={() => closeReport(report.reportId)}
+          onDelete={
+            editMode == EditMode.VIEWER ?
+            (() => closeReport(report.reportId)) :
+            undefined
+          }
         >
           {report.options.reportNm}
         </ReportTitleTab>
