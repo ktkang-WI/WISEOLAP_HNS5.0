@@ -12,10 +12,80 @@ export const getGroups = async () => {
   return res;
 };
 
-export const getUserGroupManagement = async () => {
-  const res = await axios.get(accountPath + '/user-group');
+export const getUserGroupManagement = () => {
+  const res = axios.get(accountPath + '/user-group');
   return res;
 };
+
+export class User {
+  userNo = 0;
+  userId = '';
+  userNm = '';
+  email1 = '';
+  email2 = '';
+  telNo = '';
+  grpId = '';
+  userRunMode = '';
+  userDesc = '';
+  passwd = '';
+
+  constructor({userNo = 0, userId = '', userNm = '', email1 = '', email2 = '',
+    telNo = '', grpId = '', userRunMode = '', userDesc = '', passwd = ''}) {
+    this.userNo = userNo;
+    this.userId = userId;
+    this.userNm = userNm;
+    this.eamil1 = email1;
+    this.email2 = email2;
+    this.telNo = telNo;
+    this.grpId = grpId;
+    this.userRunMode = userRunMode;
+    this.userDesc = userDesc;
+    this.passwd = passwd;
+  }
+
+  createUser = () => {
+    const user = {
+      userId: this.userId,
+      userNm: this.userNm,
+      email1: this.email1,
+      email2: this.email2,
+      telNo: this.telNo,
+      grpId: this.grpId,
+      userRunMode: this.userRunMode,
+      userDesc: this.userDesc,
+      passwd: this.passwd
+    };
+    const res = axios.post(accountPath + '/user', null, {params: user});
+    return res;
+  };
+
+  updateUser = () => {
+    const user = {
+      userId: this.userId,
+      userNm: this.userNm,
+      email1: this.email1,
+      email2: this.email2,
+      telNo: this.telNo,
+      grpId: this.grpId,
+      userRunMode: this.userRunMode,
+      userDesc: this.userDesc,
+      passwd: this.passwd,
+      userNo: this.userNo
+    };
+    const res = axios.patch(accountPath + '/user', null, {params: user});
+    return res;
+  };
+
+  deleteUser = () => {
+    const user = {
+      userNo: this.userNo
+    };
+    console.log(user);
+    const res = axios.delete(accountPath + '/user', null,
+        {params: user});
+    return res;
+  };
+}
 
 /**
  * 사용자 관리 비밀번호 변경

@@ -1,9 +1,11 @@
-import {createContext, useCallback, useState} from 'react';
+import {createContext, useCallback, useRef, useState} from 'react';
 import styled from 'styled-components';
 import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
+import {User} from 'models/config/userGroupManagement/UserGroupManagement.js';
+
 // import useModal from 'hooks/useModal.js';
 
 const NavBar = styled.div`
@@ -51,6 +53,8 @@ const UserGroupManagement = () => {
   const [groupNotMemberUsers, setGroupNotMemberUsers] = useState();
   const [mode, setMode] = useState(dataSource[0].mode);
 
+  const userInfoRef = useRef();
+
   const btns = ['plus', 'save', 'remove', 'key'];
 
   const context = {
@@ -61,6 +65,9 @@ const UserGroupManagement = () => {
       userDetailInfo: [userDetailInfo, setUserDetailInfo],
       groupMemberUsers: [groupMemberUsers, setGroupMemberUsers],
       groupNotMemberUsers: [groupNotMemberUsers, setGroupNotMemberUsers]
+    },
+    ref: {
+      userInfoRef: userInfoRef
     }
   };
 
@@ -70,16 +77,21 @@ const UserGroupManagement = () => {
 
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
+    const formData = userInfoRef.current._instance.option('formData');
+    const user = new User(formData);
+    const group = 'test';
+    // const group = new User(formData);
+
 
     switch (icon) {
       case 'plus':
         handlePlus();
         break;
       case 'save':
-        handleSave();
+        handleSave({user, group});
         break;
       case 'remove':
-        handleRemove();
+        handleRemove({user, group});
         break;
       case 'key':
         handleKey();
@@ -100,25 +112,60 @@ const UserGroupManagement = () => {
     }
   };
 
-  // const handleSave = () => {
-  //   if (mode === Mode.USER) {
+  const handleSave = ({user, group}) => {
+    if (mode === Mode.USER) {
+      const validate = userInfoRef.current._instance.validate();
+      if (validate.isValid) {
+        if (user.userNo === 0) {
+          console.log(user);
+          console.log(group);
+          user.createUser()
+              .then((response) => {
+                if (response.data.data) {
+                  console.log(usersFormat);
+                  console.log(user);
+                  setUserDetailInfo({});
+                }
+              })
+              .catch(() => {
+                throw new Error('failure Create User');
+              });
+        } else {
+          user.updateUser()
+              .then((response) => {
+                console.log(response);
+              })
+              .catch(() => {
+                throw new Error('failure Update User');
+              });
+        }
+      }
+    }
 
-  //   }
+    if (mode === Mode.GROUP) {
 
-  //   if (mode === Mode.GROUP) {
+    }
+  };
 
-  //   }
-  // };
+  const handleRemove = ({user, group}) => {
+    if (mode === Mode.USER) {
+      user.userNo = 2156;
+      if (user.userNo !== 0) {
+        console.log(user);
+        user.deleteUser(user)
+            .then((response) => {
+              console.log(response);
+            })
+            .catch(() => {
+              throw new Error('failure Delete User');
+            });
+      };
+    }
 
-  // const handleRemove = () => {
-  //   if (mode === Mode.USER) {
+    if (mode === Mode.GROUP) {
 
-  //   }
-
-  //   if (mode === Mode.GROUP) {
-
-  //   }
-  // };
+    }
+  };
 
   // const handleKey = () => {
   //   if (userDetailInfo) {
