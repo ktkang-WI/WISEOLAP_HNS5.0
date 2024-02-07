@@ -1,10 +1,11 @@
 package com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser;
 
 import java.util.Map;
-import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+
+import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public class AdHocXmlParser extends XMLParser{
+public class AdHocXmlParser extends ReportXMLParser{
 
 	@Override
 	public void getReportXmlDTO(String reportXml) {

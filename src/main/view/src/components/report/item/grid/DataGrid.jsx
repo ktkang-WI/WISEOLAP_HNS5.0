@@ -3,6 +3,8 @@ import React, {useEffect, useRef} from 'react';
 import DataGridBullet from './DataGridBullet';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {formatNumber, generateLabelSuffix} from
+  'components/utils/NumberFormatUtility';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -38,16 +40,25 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   const cellRender = (e, column) => {
     let endScaleValue = 0;
+    const value = e.data[column.name];
+
     if (column.detailSetting === 'bar') {
       endScaleValue = getMaxValue(column);
 
       return <DataGridBullet
         endScaleValue={endScaleValue}
-        value={e.value}
+        value={value}
         column={column}
       />;
+    } else if (column.fieldType === 'MEA') {
+      const labelSuffix = generateLabelSuffix(column.format);
+      e.value = formatNumber(e.value, column.format, labelSuffix);
+      return e.value;
     }
-    return e.value;
+
+    if (value === 0) return '0';
+
+    return value;
   };
 
   return (
@@ -65,6 +76,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
+          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
           cellRender={(e) => cellRender(e, column)}
         />
       )}

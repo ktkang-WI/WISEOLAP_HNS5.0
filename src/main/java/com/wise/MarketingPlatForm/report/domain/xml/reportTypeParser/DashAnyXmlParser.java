@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.xml.parsers.DocumentBuilder;
-
 import org.apache.logging.log4j.core.pattern.EqualsIgnoreCaseReplacementConverter;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,14 +29,14 @@ import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
-import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabVO;
 import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabWrapperVO;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public class DashAnyXmlParser extends XMLParser {
+public class DashAnyXmlParser extends ReportXMLParser {
 
 	private JSONArray datasetJsonArray = new JSONArray();
 
