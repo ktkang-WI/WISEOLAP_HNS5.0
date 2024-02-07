@@ -4,7 +4,7 @@ import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
-import useModal from 'hooks/useModal.js';
+// import useModal from 'hooks/useModal.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -38,10 +38,9 @@ const Content = styled.div`
 export const UserGroupContext = createContext();
 
 const UserGroupManagement = () => {
-  const {alert} = useModal();
+  // const {alert} = useModal();
 
   const {userGroupManagement} = useLoaderData();
-  console.log('userGroupManagement', userGroupManagement);
   const [groupsFormat, setGroupsFormat] =
   useState(userGroupManagement.groupsFormat);
   const [groupDetailInfo, setGroupDetailInfo] = useState();
@@ -70,39 +69,36 @@ const UserGroupManagement = () => {
   }, [groupsFormat, usersFormat]);
 
   const handleBtnClick = ({component}) => {
-    // getUserGroupManagementTEST();
-    // updateGroupTest();
-    // const icon = component.option('icon');
+    const icon = component.option('icon');
 
-    // switch (icon) {
-    //   case 'plus':
-    //     handlePlus();
-    //     break;
-    //   case 'save':
-    //     handleSave();
-    //     break;
-    //   case 'remove':
-    //     handleRemove();
-    //     break;
-    //   case 'key':
-    //     handleKey();
-    //     break;
-    //   default:
-    //     break;
-    // }
-    alert('기능 개발 중 입니다.');
+    switch (icon) {
+      case 'plus':
+        handlePlus();
+        break;
+      case 'save':
+        handleSave();
+        break;
+      case 'remove':
+        handleRemove();
+        break;
+      case 'key':
+        handleKey();
+        break;
+      default:
+        break;
+    }
   };
 
-  // const handlePlus = () => {
-  //   if (mode === Mode.USER) {
-  //     setUserDetailInfo({});
-  //   }
+  const handlePlus = () => {
+    if (mode === Mode.USER) {
+      setUserDetailInfo({});
+    }
 
-  //   if (mode === Mode.GROUP) {
-  //     setGroupDetailInfo({});
-  //     setGroupMemberUsers({});
-  //   }
-  // };
+    if (mode === Mode.GROUP) {
+      setGroupDetailInfo({});
+      setGroupMemberUsers({});
+    }
+  };
 
   // const handleSave = () => {
   //   if (mode === Mode.USER) {
