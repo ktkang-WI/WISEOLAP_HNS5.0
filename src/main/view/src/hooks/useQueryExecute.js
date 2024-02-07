@@ -244,7 +244,7 @@ const useQueryExecute = () => {
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
     }
-    const rootParameters = selectRootParameter(store.getState());
+    const parameters = selectRootParameter(store.getState());
     const bindingInfos = selectBindingInfos((store.getState()));
     datasets.map(async (dataset) => {
       if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
@@ -253,25 +253,8 @@ const useQueryExecute = () => {
       }
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
-      const paramInfo = rootParameters.informations.filter((information) => {
-        if (information.dataset[0] === dataset.datasetId) {
-          return information;
-        }
-      });
-      let parameters = {
-        informations: [],
-        values: {}
-      };
-      if (!_.isEmpty(paramInfo)) {
-        parameters = paramInfo.map((information) => {
-          return {
-            informations: information,
-            values: rootParameters.values[information.name] || {}
-          };
-        });
-      }
       const datas = await models.DBInfo.
-          getDataByQueryMart(dsId, query, parameters, 0);
+          getAllDatasetDatas(dsId, query, parameters);
       if (!datas.data.rowData) return;
       bindData({
         rowData: datas.data.rowData,
