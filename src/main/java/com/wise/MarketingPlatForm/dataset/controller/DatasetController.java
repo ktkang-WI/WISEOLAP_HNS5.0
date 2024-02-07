@@ -189,6 +189,29 @@ public class DatasetController {
                 
         return datasetService.getQueryData(dsId, query, parameters);
     }
+    
+    @Operation(summary = "dataset Data", description = "dataset data 불러오기")
+    @Parameters({
+            @Parameter(name = "query", description = "query contents", example = "select * from DEMO_01_D_공공_고객"),
+            @Parameter(name = "dsId", description = "DS id", example = "2703"),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
+    }))
+    @PostMapping(value = "/query-dataset-allDatas")
+    public MartResultDTO getQueryDatas(@RequestBody Map<String, String> datasource) {
+        String query = datasource.get("query");
+        int dsId = Integer.parseInt(datasource.get("dsId"));
+        String parameterStr = datasource.getOrDefault("parameter", "");
+
+        Gson gson = new Gson();
+
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+                }.getType());
+                
+        return datasetService.getQueryDatas(dsId, query, parameters);
+    }
 
     @Operation(summary = "get List Parameter Items", description = "리스트형 매개변수의 리스트 목록 및 defautlValue를 조회함.")
     @Parameters({

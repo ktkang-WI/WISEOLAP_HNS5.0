@@ -153,7 +153,7 @@ const SpreadDefaultElement = () => {
   };
 
   const downloadReportTXT = () => {
-
+    alert('추후 개발 예정');
   };
 
   const datasetBinder = () => {
