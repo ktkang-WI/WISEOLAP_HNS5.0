@@ -192,22 +192,30 @@ const ItemAttributeDefaultElement = () => {
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
-        {
-          id: 'deltaValue',
-          label: '변동 측정값',
-          active: option.deltaValue == 'deltaValue',
-          icon: dimensionImg,
-          onClick: () => {
-            // 변동 측정값
-          }
-        },
+        // {
+        //   id: 'deltaValue',
+        //   label: '변동 측정값',
+        //   active: option.deltaValue == 'deltaValue',
+        //   icon: dimensionImg,
+        //   onClick: () => {
+        //     // 변동 측정값
+        //   }
+        // },
         {
           id: 'dataHighlight',
           label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
-            // 데이터 하이라이트
+            const dataField = rootItem.adHocOption.dataField;
+            if (dataField.measure.length === 0) {
+              return;
+            }
+
+            if (dataField.row.length === 0 && dataField.column.length === 0) {
+              return;
+            }
+
             openModal(DataHighlightModal);
           }
         },
