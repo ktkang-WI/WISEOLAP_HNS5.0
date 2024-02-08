@@ -48,14 +48,16 @@ const UserGroupManagement = () => {
   const [groupDetailInfo, setGroupDetailInfo] = useState();
   const [usersFormat, setUsersFormat] =
   useState(userGroupManagement.usersFormat);
-  const [userDetailInfo, setUserDetailInfo] = useState();
+  const [userDetailInfo, setUserDetailInfo] = useState({});
   const [groupMemberUsers, setGroupMemberUsers] = useState();
   const [groupNotMemberUsers, setGroupNotMemberUsers] = useState();
   const [mode, setMode] = useState(dataSource[0].mode);
 
+  // ref
   const userInfoRef = useRef();
+  const userDataGridRef = useRef();
 
-  const btns = ['plus', 'save', 'remove', 'key'];
+  const btns = ['plus', 'save', 'remove'];
 
   const context = {
     state: {
@@ -67,6 +69,7 @@ const UserGroupManagement = () => {
       groupNotMemberUsers: [groupNotMemberUsers, setGroupNotMemberUsers]
     },
     ref: {
+      userDataGridRef: userDataGridRef,
       userInfoRef: userInfoRef
     }
   };
@@ -79,22 +82,16 @@ const UserGroupManagement = () => {
     const icon = component.option('icon');
     const formData = userInfoRef.current._instance.option('formData');
     const user = new User(formData);
-    const group = 'test';
-    // const group = new User(formData);
-
 
     switch (icon) {
       case 'plus':
         handlePlus();
         break;
       case 'save':
-        handleSave({user, group});
+        handleSave({user});
         break;
       case 'remove':
-        handleRemove({user, group});
-        break;
-      case 'key':
-        handleKey();
+        handleRemove({user});
         break;
       default:
         break;
@@ -112,28 +109,40 @@ const UserGroupManagement = () => {
     }
   };
 
-  const handleSave = ({user, group}) => {
+  const handleSave = ({user}) => {
     if (mode === Mode.USER) {
       const validate = userInfoRef.current._instance.validate();
       if (validate.isValid) {
         if (user.userNo === 0) {
-          console.log(user);
-          console.log(group);
           user.createUser()
               .then((response) => {
                 if (response.data.data) {
-                  console.log(usersFormat);
-                  console.log(user);
-                  setUserDetailInfo({});
+                  user.getUser()
+                      .then((users) => {
+                        setUsersFormat(users);
+                        setUserDetailInfo({});
+                      })
+                      .catch(() => {
+                        throw new Error('Failure get User');
+                      });
                 }
               })
               .catch(() => {
-                throw new Error('failure Create User');
+                throw new Error('Failure Create User');
               });
         } else {
           user.updateUser()
               .then((response) => {
-                console.log(response);
+                if (response.data.data) {
+                  user.getUser()
+                      .then((users) => {
+                        setUsersFormat(users);
+                        setUserDetailInfo({});
+                      })
+                      .catch(() => {
+                        throw new Error('Failure get User');
+                      });
+                }
               })
               .catch(() => {
                 throw new Error('failure Update User');
@@ -147,14 +156,21 @@ const UserGroupManagement = () => {
     }
   };
 
-  const handleRemove = ({user, group}) => {
+  const handleRemove = ({user}) => {
     if (mode === Mode.USER) {
-      user.userNo = 2156;
       if (user.userNo !== 0) {
-        console.log(user);
         user.deleteUser(user)
             .then((response) => {
-              console.log(response);
+              if (response.data.data) {
+                user.getUser()
+                    .then((users) => {
+                      setUsersFormat(users);
+                      setUserDetailInfo({});
+                    })
+                    .catch(() => {
+                      throw new Error('Failure get User');
+                    });
+              }
             })
             .catch(() => {
               throw new Error('failure Delete User');
@@ -189,24 +205,13 @@ const UserGroupManagement = () => {
 
 
   const navBarItems = (mode) => {
-    if (mode === Mode.USER) {
-      return (
-        btns.map((item, index) => (
-          <NavBarItem key={index}>
-            <Button icon={item} onClick={handleBtnClick}></Button>
-          </NavBarItem>
-        ))
-      );
-    } else if (mode === Mode.GROUP) {
-      return (
-        btns.filter((item) => item !== 'key')
-            .map((item, index) => (
-              <NavBarItem icon={item} key={index}>
-                <Button icon={item} onClick={handleBtnClick}></Button>
-              </NavBarItem>
-            ))
-      );
-    };
+    return (
+      btns.map((item, index) => (
+        <NavBarItem key={index}>
+          <Button icon={item} onClick={handleBtnClick}></Button>
+        </NavBarItem>
+      ))
+    );
   };
 
   return (

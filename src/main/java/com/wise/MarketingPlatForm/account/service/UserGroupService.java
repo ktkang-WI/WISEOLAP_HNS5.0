@@ -143,6 +143,7 @@ public class UserGroupService {
 
   private UserDetailInfoModel generateUserDetailInfoObject(UserGroupDTO userGroup){
     UserDetailInfoModel userDetailInfo = UserDetailInfoModel.builder()
+        .userNo(userGroup.getUserNo())
         .userId(userGroup.getUserId())
         .userNm(userGroup.getUserNm())
         .eMail1(userGroup.getEMail1())

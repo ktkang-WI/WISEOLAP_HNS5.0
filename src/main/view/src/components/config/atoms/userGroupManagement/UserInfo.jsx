@@ -51,11 +51,19 @@ const UserInfo = () => {
   return (
     <Panel title={localizedString.userInfomation}>
       <Form
-        formData={userDetailInfo?.userDetailInfo}
+        formData={userDetailInfo}
         ref={userInfoRef}
       >
         <GroupItem
           colCount={1}>
+          <Item
+            dataField="userNo"
+            editorOptions={{
+              visible: false
+            }}
+          >
+            <Label>{'이메일'}</Label>
+          </Item>
           <SimpleItem
             dataField="userId"
             editorType="dxTextBox"

@@ -43,6 +43,17 @@ export class User {
     this.passwd = passwd;
   }
 
+  getUser = async () => {
+    const userGroupManageMent = await getUserGroupManagement()
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch(() => {
+          throw new Error('Failure Get User');
+        });
+    return userGroupManageMent.usersFormat;
+  };
+
   createUser = () => {
     const user = {
       userId: this.userId,
@@ -81,8 +92,9 @@ export class User {
       userNo: this.userNo
     };
     console.log(user);
-    const res = axios.delete(accountPath + '/user', null,
-        {params: user});
+    const res = axios.delete(accountPath + '/user', {
+      params: user
+    });
     return res;
   };
 }
