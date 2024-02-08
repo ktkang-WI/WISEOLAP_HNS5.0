@@ -1,6 +1,8 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {TreeView} from 'devextreme-react';
+import React, {useRef, useCallback} from 'react';
+import {debounce} from 'lodash';
 
 const theme = getTheme();
 
@@ -9,7 +11,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: ${(props) => props.width || theme.size.panelWidth};
   display: inline-block;
-  border-right: solid 1px ${theme.color.breakLine};
+  border: solid 1px ${theme.color.breakLine};
   text-align: left;
 `;
 const StyledTreeView = styled(TreeView)`
@@ -24,12 +26,28 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = ({width, ...props}) => {
+// const Title = styled.div`
+//   font-size: 16px; // Example title size, adjust as needed
+//   color: ${theme.color.primaryFont};
+//   padding: 0 10px; // Example padding, adjust as needed
+//   margin-bottom: 10px; // Space between title and TreeView
+// `;
+
+const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
+  const dxRef = useRef();
+  const handleItemClick = useCallback(
+      debounce((e) => {
+        console.log('e.itemData', e.itemData);
+        if (onItemSelect) onItemSelect(e.itemData);
+      }, 300), [onItemSelect]);
   return (
     <Wrapper
       width={width}
+      height={height}
     >
+      {/* {title && <Title>{title}</Title>} */}
       <StyledTreeView
+        ref={dxRef}
         dataStructure="plain"
         displayExpr="name"
         parentIdExpr="upperId"
@@ -40,10 +58,11 @@ const ReportListTab = ({width, ...props}) => {
           placeholder: '검색'
         }}
         focusStateEnabled={true}
+        onItemClick={handleItemClick}
         {...props}
       />
     </Wrapper>
   );
 };
 
-export default ReportListTab;
+export default React.memo(ReportListTab);
