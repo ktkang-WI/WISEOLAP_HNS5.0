@@ -21,6 +21,8 @@
     <result column="RTN_ITEM_UNI_NM" property="rtnItemUniNm" javaType="String"/>
     <result column="TYPE" property="type" javaType="String"/>
   </resultMap>
+  
+  
   <!-- Query -->
     <select id="selectReport" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
         SELECT 	A.REPORT_ID as reportId
@@ -168,6 +170,27 @@
                 TYPE,
                 ORDINAL
     </select>
+    
+    <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.LinkReportVO">
+		SELECT	A.REPORT_ID AS reportID,
+				A.LINK_REPORT_ID AS linkReportId,
+				B.REPORT_NM AS linkReportNm,
+				A.DATA_LINK_TYPE AS linkType,
+				A.LINK_XML AS linkXml,
+				B.REPORT_TYPE AS reportType
+		FROM REPORT_LINK_MSTR A
+		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
+		WHERE A.REPORT_ID = #{id}
+    </select>
+
+    <select id='selectLinkReportParam' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+    SELECT A.PARAM_XML as paramXml FROM REPORT_MSTR A
+      <if test='reportId != null'>
+        AND A.REPORT_ID = #{reportId}
+      </if>
+    </select>
+
+    
     <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
 					FLD_NM 						AS fldNm,
