@@ -31,7 +31,7 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
     {id: 'dsView', text: localizedString.dsView}
   ];
 
-  const isDsSingleTalbe = isSingleTable ? isSingleTable : false;
+  const isDsSingleTable = isSingleTable ? isSingleTable : false;
 
   const [dataSourceType, setDataSourceType] = useState('ds');
 
@@ -40,7 +40,7 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
         .then(({data}) => {
           setDataSource(data);
         });
-    if (isDsSingleTalbe) {
+    if (isDsSingleTable) {
       models.DSView.getByUserId('admin')
           .then((data) => {
             setDsViewList(data.data);
@@ -78,7 +78,7 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
             displayExpr={'text'}
             value={dataSourceType}
             items={dsType}
-            visible={isDsSingleTalbe}/>
+            visible={isDsSingleTable}/>
           <CommonDataGrid
             width='100%'
             dataSource={dataSourceType == 'ds' ? dataSource : dsViewList}
