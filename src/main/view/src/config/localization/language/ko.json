@@ -519,5 +519,7 @@
   "useDataitem": "데이터 항목 사용",
   "reportDownload": "보고서 내려받기",
   "groupList": "그룹 목록",
-  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요."
+  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
+  "linkReport": "연결 보고서",
+  "linkReportAlready": "이미 연결된 보고서 입니다."
 }
