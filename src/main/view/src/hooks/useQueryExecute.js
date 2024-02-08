@@ -171,17 +171,21 @@ const useQueryExecute = () => {
           return;
         }
 
-        if (response.data.chart.data.length === 0) {
-          alert(`${localizedString.addPivotGrid}${localizedString.noneData}`);
-        }
-
         if (response.data['chart']) {
+          if (response.data['chart'].data.length == 0) {
+            alert(`${localizedString.adhoc}${localizedString.noneData}`);
+            return;
+          }
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
           ItemManager.generateItem(chartItem, cloneItem);
           dispatch(updateItem({reportId, item: chartItem}));
         }
         if (response.data['pivot']) {
+          if (response.data['pivot'].data.length == 0) {
+            alert(`${localizedString.adhoc}${localizedString.noneData}`);
+            return;
+          }
           pivotItem.mart.init = true;
           pivotItem.mart.data = response.data['pivot'];
           ItemManager.generateItem(pivotItem, cloneItem);
