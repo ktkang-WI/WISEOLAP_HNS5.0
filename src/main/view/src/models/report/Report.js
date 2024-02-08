@@ -61,6 +61,24 @@ export const updateReport = async (param) => {
 };
 
 /**
+ * 연결 보고서 목록 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getLinkReportList = (param) => {
+  return axios.post(path + '/report-link-list', param);
+};
+
+/**
+ * 연결 보고서 필터정보 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getLinkReportParam = (param) => {
+  return axios.post(path + '/report-link-param', param);
+};
+
+/**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
  * @return {JSON}
