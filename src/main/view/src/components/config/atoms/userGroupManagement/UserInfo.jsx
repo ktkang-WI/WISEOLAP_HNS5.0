@@ -6,7 +6,8 @@ import Panel
   from 'components/config/organisms/userGroupManagement/common/Panel';
 import Form, {
   AsyncRule,
-  GroupItem, Item, Label, RequiredRule, SimpleItem
+  EmptyItem,
+  Item, Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
@@ -54,31 +55,30 @@ const UserInfo = () => {
         formData={userDetailInfo}
         ref={userInfoRef}
       >
-        <GroupItem
-          colCount={1}>
-          <Item
-            dataField="userNo"
-            editorOptions={{
-              visible: false
-            }}
-          >
-            <Label>{'이메일'}</Label>
-          </Item>
-          <SimpleItem
-            dataField="userId"
-            editorType="dxTextBox"
-          >
-            <RequiredRule message="사용자 ID 를 입력 해주세요."/>
-            <AsyncRule
-              message="해당 사용자 ID 는 이미 등록되어 있습니다."
-              validationCallback={asyncValidation}
-            />
-            <Label>{localizedString.userId}</Label>
-          </SimpleItem>
-          <SimpleItem dataField="userNm">
-            <RequiredRule message="사용자 명 을 입력 해주세요."/>
-            <Label>{localizedString.userName}</Label>
-          </SimpleItem>
+        <EmptyItem
+          dataField="userNo"
+          editorOptions={{
+            mode: 'number'
+          }}
+        >
+        </EmptyItem>
+        <SimpleItem
+          dataField="userId"
+          editorType="dxTextBox"
+        >
+          <RequiredRule message="사용자 ID 를 입력 해주세요."/>
+          <AsyncRule
+            message="해당 사용자 ID 는 이미 등록되어 있습니다."
+            validationCallback={asyncValidation}
+          />
+          <Label>{localizedString.userId}</Label>
+        </SimpleItem>
+        <SimpleItem dataField="userNm">
+          <RequiredRule message="사용자 명 을 입력 해주세요."/>
+          <Label>{localizedString.userName}</Label>
+        </SimpleItem>
+        {
+          userDetailInfo.userNo === 0 &&
           <SimpleItem
             dataField="passwd"
             editorOptions={{
@@ -88,6 +88,9 @@ const UserInfo = () => {
             <RequiredRule message="비밀번호 를 입력 해주세요."/>
             <Label>{localizedString.password}</Label>
           </SimpleItem>
+        }
+        {
+          userDetailInfo.userNo === 0 &&
           <SimpleItem
             dataField="passwdConfirm"
             editorOptions={{
@@ -101,54 +104,54 @@ const UserInfo = () => {
             />
             <Label>{localizedString.passwordConfirm}</Label>
           </SimpleItem>
-          <Item dataField="email1">
-            <Label>{'이메일'}</Label>
-          </Item>
-          <Item dataField="email2">
-            <Label>{'이메일2'}</Label>
-          </Item>
-          <Item dataField="telNo">
-            <Label>{'전화번호'}</Label>
-          </Item>
-          <SimpleItem
-            dataField="grpId"
-            editorType="dxSelectBox"
-            editorOptions={{
-              dataSource: groups,
-              displayExpr: 'grpNm',
-              valueExpr: 'grpId'
-            }}
-          >
-            <RequiredRule message="그룹 명 을 선택 해주세요."/>
-            <Label>{localizedString.groupName}</Label>
-          </SimpleItem>
-          <SimpleItem
-            dataField="userRunMode"
-            editorType="dxSelectBox"
-            editorOptions={{
-              dataSource: mode
-            }}
-          >
-            <RequiredRule message="사용자 실행모드 를 선택 해주세요."/>
-            <Label>{localizedString.userRunMode}</Label>
-          </SimpleItem>
-          <Item
-            dataField="grpRunMode"
-            editorType="dxSelectBox"
-            editorOptions={{
-              dataSource: mode,
-              disabled: true
-            }}
-          >
-            <Label>{localizedString.groupRunMode}</Label>
-          </Item>
-          <Item
-            dataField="userDesc"
-            editorType='dxTextArea'
-          >
-            <Label>{localizedString.description}</Label>
-          </Item>
-        </GroupItem>
+        }
+        <Item dataField="email1">
+          <Label>{'이메일'}</Label>
+        </Item>
+        <Item dataField="email2">
+          <Label>{'이메일2'}</Label>
+        </Item>
+        <Item dataField="telNo">
+          <Label>{'전화번호'}</Label>
+        </Item>
+        <SimpleItem
+          dataField="grpId"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: groups,
+            displayExpr: 'grpNm',
+            valueExpr: 'grpId'
+          }}
+        >
+          <RequiredRule message="그룹 명 을 선택 해주세요."/>
+          <Label>{localizedString.groupName}</Label>
+        </SimpleItem>
+        <SimpleItem
+          dataField="userRunMode"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: mode
+          }}
+        >
+          <RequiredRule message="사용자 실행모드 를 선택 해주세요."/>
+          <Label>{localizedString.userRunMode}</Label>
+        </SimpleItem>
+        <Item
+          dataField="grpRunMode"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: mode,
+            disabled: true
+          }}
+        >
+          <Label>{localizedString.groupRunMode}</Label>
+        </Item>
+        <Item
+          dataField="userDesc"
+          editorType='dxTextArea'
+        >
+          <Label>{localizedString.description}</Label>
+        </Item>
       </Form>
     </Panel>
   );

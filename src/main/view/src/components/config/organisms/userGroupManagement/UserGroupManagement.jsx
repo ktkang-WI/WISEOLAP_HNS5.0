@@ -5,6 +5,10 @@ import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
 import {User} from 'models/config/userGroupManagement/UserGroupManagement.js';
+import localizedString from 'config/localization';
+import useModal from 'hooks/useModal.js';
+import UserPasswordModal from
+  'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
 
 // import useModal from 'hooks/useModal.js';
 
@@ -40,7 +44,7 @@ const Content = styled.div`
 export const UserGroupContext = createContext();
 
 const UserGroupManagement = () => {
-  // const {alert} = useModal();
+  const {alert, openModal} = useModal();
 
   const {userGroupManagement} = useLoaderData();
   const [groupsFormat, setGroupsFormat] =
@@ -48,7 +52,7 @@ const UserGroupManagement = () => {
   const [groupDetailInfo, setGroupDetailInfo] = useState();
   const [usersFormat, setUsersFormat] =
   useState(userGroupManagement.usersFormat);
-  const [userDetailInfo, setUserDetailInfo] = useState({});
+  const [userDetailInfo, setUserDetailInfo] = useState(new User({}));
   const [groupMemberUsers, setGroupMemberUsers] = useState();
   const [groupNotMemberUsers, setGroupNotMemberUsers] = useState();
   const [mode, setMode] = useState(dataSource[0].mode);
@@ -57,7 +61,7 @@ const UserGroupManagement = () => {
   const userInfoRef = useRef();
   const userDataGridRef = useRef();
 
-  const btns = ['plus', 'save', 'remove'];
+  const btns = ['plus', 'save', 'remove', 'key'];
 
   const context = {
     state: {
@@ -93,6 +97,8 @@ const UserGroupManagement = () => {
       case 'remove':
         handleRemove({user});
         break;
+      case 'key':
+        handleKey({user});
       default:
         break;
     }
@@ -100,7 +106,8 @@ const UserGroupManagement = () => {
 
   const handlePlus = () => {
     if (mode === Mode.USER) {
-      setUserDetailInfo({});
+      userDataGridRef.current._instance.clearSelection();
+      setUserDetailInfo(new User({}));
     }
 
     if (mode === Mode.GROUP) {
@@ -120,7 +127,9 @@ const UserGroupManagement = () => {
                   user.getUser()
                       .then((users) => {
                         setUsersFormat(users);
-                        setUserDetailInfo({});
+                        setUserDetailInfo(new User({}));
+                        alert('사용자 ' + user.userId + ' (을)를 ' +
+                          localizedString.successSave);
                       })
                       .catch(() => {
                         throw new Error('Failure get User');
@@ -137,7 +146,9 @@ const UserGroupManagement = () => {
                   user.getUser()
                       .then((users) => {
                         setUsersFormat(users);
-                        setUserDetailInfo({});
+                        setUserDetailInfo(new User({}));
+                        alert('사용자 ' + user.userId + ' (을)를 ' +
+                          localizedString.successUpdate);
                       })
                       .catch(() => {
                         throw new Error('Failure get User');
@@ -165,7 +176,9 @@ const UserGroupManagement = () => {
                 user.getUser()
                     .then((users) => {
                       setUsersFormat(users);
-                      setUserDetailInfo({});
+                      setUserDetailInfo(new User({}));
+                      alert('사용자 ' + user.userId + ' (을)를 ' +
+                          localizedString.successRemove);
                     })
                     .catch(() => {
                       throw new Error('Failure get User');
@@ -183,15 +196,13 @@ const UserGroupManagement = () => {
     }
   };
 
-  // const handleKey = () => {
-  //   if (userDetailInfo) {
-  //     const user =
-  //       usersFormat.find((user) => user.userId === userDetailInfo.userId);
-  //     openModal(UserPasswordModal, {
-  //       user: user
-  //     });
-  //   };
-  // };
+  const handleKey = ({user}) => {
+    if (user.userNo !== 0) {
+      openModal(UserPasswordModal, {
+        user: user
+      });
+    }
+  };
 
   const handleTabPanelItem = ({itemData}) => {
     const panelTitle = itemData.title;
@@ -205,13 +216,24 @@ const UserGroupManagement = () => {
 
 
   const navBarItems = (mode) => {
-    return (
-      btns.map((item, index) => (
-        <NavBarItem key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
-        </NavBarItem>
-      ))
-    );
+    if (mode === Mode.USER) {
+      return (
+        btns.map((item, index) => (
+          <NavBarItem key={index}>
+            <Button icon={item} onClick={handleBtnClick}></Button>
+          </NavBarItem>
+        ))
+      );
+    } else if (mode === Mode.GROUP) {
+      return (
+        btns.filter((item) => item !== 'key')
+            .map((item, index) => (
+              <NavBarItem icon={item} key={index}>
+                <Button icon={item} onClick={handleBtnClick}></Button>
+              </NavBarItem>
+            ))
+      );
+    };
   };
 
   return (

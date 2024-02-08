@@ -5,8 +5,6 @@ import {Item, Label} from 'devextreme-react/form';
 import useModal from 'hooks/useModal';
 import {useRef} from 'react';
 import {getTheme} from 'config/theme';
-import {updateUserPassword}
-  from 'models/config/userGroupManagement/UserGroupManagement';
 
 const theme = getTheme();
 
@@ -40,12 +38,14 @@ const UserPasswordModal = ({...props}) => {
     param.userNo = user.userNo;
     param.currentPassword = currentPassword;
     param.newPassword = newPassword;
+    user.passwd = newPassword;
 
-    updateUserPassword(user).then((res) => {
+    user.updateUserPassword(user).then((res) => {
       if (res.status !== 200) {
         alert(localizedString.failedPasswordChange);
+      } else {
+        alert(localizedString.completedPasswordChange);
       }
-      alert(localizedString.completedPasswordChange);
     });
   };
 

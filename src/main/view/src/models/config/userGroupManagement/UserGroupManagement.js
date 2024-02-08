@@ -87,6 +87,21 @@ export class User {
     return res;
   };
 
+  /**
+   * 사용자 관리 비밀번호 변경
+   * @param {JSON} user 사용자 관리, 비밀번호에 필요한 정보 (현재 비밀번호, 새 비밀번호, 비밀번호 확인)
+   * @return {response} response
+  */
+  updateUserPassword = () => {
+    const user = {
+      userNo: this.userNo,
+      passwd: this.passwd
+    };
+    const res = axios.patch(accountPath + '/user/password', null,
+        {params: user});
+    return res;
+  };
+
   deleteUser = () => {
     const user = {
       userNo: this.userNo
@@ -98,18 +113,6 @@ export class User {
     return res;
   };
 }
-
-/**
- * 사용자 관리 비밀번호 변경
- * @param {JSON} user 사용자 관리, 비밀번호에 필요한 정보 (현재 비밀번호, 새 비밀번호, 비밀번호 확인)
- */
-export const updateUserPassword = async (user) => {
-  // const res = await axios.get(accountPath + '/user/password', null, {
-  //   params: user
-  // });
-  // return res;
-  return;
-};
 
 const body = {
   grpMemberUser: [

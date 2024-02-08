@@ -534,5 +534,8 @@
   "reportFolderManagement": "보고서/폴더관리",
   "reportManagement": "보고서 관리",
   "folderId": "폴더 ID",
-  "dataSourceAddition": "데이터 원본 추가"
+  "dataSourceAddition": "데이터 원본 추가",
+  "successSave": "저장 했습니다.",
+  "successUpdate": "업데이트 했습니다.",
+  "successRemove": "삭제 했습니다."
 }
