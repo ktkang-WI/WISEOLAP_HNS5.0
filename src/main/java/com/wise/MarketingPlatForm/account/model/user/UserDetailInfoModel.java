@@ -11,6 +11,7 @@ public class UserDetailInfoModel {
   String eMail1;
   String eMail2;
   String telNo;
+  int grpId;
   String grpNm;
   String userRunMode;
   String grpRunMode;

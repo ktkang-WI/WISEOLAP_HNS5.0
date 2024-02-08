@@ -22,7 +22,7 @@ public class UserGroupService {
   private AccountDAO accountDAO;
 
   public UsersGroupsModel getUserGroupData() {
-    
+
     List<UserGroupDTO> userGroupDTO = accountDAO.selectListGroupData();
 
     if (userGroupDTO == null) return null;
@@ -45,7 +45,7 @@ public class UserGroupService {
   private List<GroupsModel> generateGroupsObject(List<UserGroupDTO> userGroups) {
     List<GroupsModel> result = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-  
+
     for (UserGroupDTO userGroup : userGroups) {
       if(groupkeys.contains(userGroup.getGrpId())) continue;
       GroupsModel groupMemberUser = generateGroupMemberUser(userGroups, userGroup);
@@ -79,7 +79,7 @@ public class UserGroupService {
       .userId(tempUserGroup.getUserId())
       .userNm(tempUserGroup.getUserNm())
       .build();
-      
+
       if (groupMemberUser == null) {
         throw new NullPointerException("groupMemberUser is null");
       }
@@ -87,7 +87,7 @@ public class UserGroupService {
       // Group member Users
       if(tempUserGroup.getGrpId() == userGroup.getGrpId()) {
         grpMemberUser.add(groupMemberUser);
-      } 
+      }
       // Not Group member Users
       else {
         grpNotMemberUser.add(groupMemberUser);
@@ -124,7 +124,7 @@ public class UserGroupService {
 
   private List<UsersModel> generateUsersObject(List<UserGroupDTO> userGroups) {
     List<UsersModel> result = new ArrayList<>();
-    
+
     for (UserGroupDTO userGroup : userGroups) {
       UsersModel usersFormat = UsersModel.builder()
         .userId(userGroup.getUserId())
@@ -148,7 +148,7 @@ public class UserGroupService {
         .eMail1(userGroup.getEMail1())
         .eMail2(userGroup.getEMail2())
         .telNo(userGroup.getTelNo())
-        .grpNm(userGroup.getGrpNm())
+        .grpId(userGroup.getGrpId())
         .userRunMode(userGroup.getUserRunMode())
         .grpRunMode(userGroup.getGrpRunMode())
         .userDesc(userGroup.getUserDesc())
