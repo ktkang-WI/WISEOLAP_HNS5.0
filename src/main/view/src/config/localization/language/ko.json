@@ -543,5 +543,6 @@
   "validationUserNm": "사용자 명 을 입력 해주세요.",
   "validationGroupNm": "그룹 명 을 선택 해주세요.",
   "validationUserRunMode": "사용자 실행모드 를 선택 해주세요.",
-  "validationDupleUserNm": "해당 사용자 ID 는 이미 등록되어 있습니다."
+  "validationDupleUserNm": "해당 사용자 ID 는 이미 등록되어 있습니다.",
+  "validationGroupRunMode": "그룹 실행모드 를 선택 해주세요."
 }

@@ -43,7 +43,7 @@ export class User {
     this.passwd = passwd;
   }
 
-  getUser = async () => {
+  getUsers = async () => {
     const userGroupManageMent = await getUserGroupManagement()
         .then((res) => {
           return res.data.data;
@@ -108,6 +108,89 @@ export class User {
     };
     const res = axios.delete(accountPath + '/user', {
       params: user
+    });
+    return res;
+  };
+}
+
+export class Group {
+  grpId = 0;
+  grpNm = '';
+  grpDesc = '';
+  grpRunMode = '';
+  grpMemberUsers = [];
+  grpNotMemberUsers = [];
+
+  constructor({grpId = 0, grpNm = '', grpDesc = '', grpRunMode = '',
+    grpMemberUsers = [], grpNotMemberUsers = []}) {
+    this.grpId = grpId;
+    this.grpNm = grpNm;
+    this.grpDesc = grpDesc;
+    this.grpRunMode = grpRunMode;
+    this.grpMemberUsers = grpMemberUsers;
+    this.grpNotMemberUsers = grpNotMemberUsers;
+  }
+
+  setGrpMemberUsers(grpMemberUsers) {
+    this.grpMemberUsers = grpMemberUsers.map((row) => {
+      return {
+        userNo: row.userNo
+      };
+    });
+  }
+
+  getGroups = async () => {
+    const userGroupManageMent = await getUserGroupManagement()
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch(() => {
+          throw new Error('Failure Get Group');
+        });
+    return userGroupManageMent.groupsFormat;
+  };
+
+  getGroupNotMemberUsers = async () => {
+    const userGroupManageMent = await getUserGroupManagement()
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch(() => {
+          throw new Error('Failure Get User');
+        });
+    return userGroupManageMent.usersFormat;
+  };
+
+  createGroup = () => {
+    const group = {
+      grpNm: this.grpNm,
+      grpDesc: this.grpDesc,
+      grpRunMode: this.grpRunMode
+    };
+    const res = axios.post(accountPath + '/group', {
+      data: this.grpMemberUsers
+    },
+    {params: group});
+    return res;
+  };
+
+  updateGroup = () => {
+    const group = {
+      grpId: this.grpId,
+      grpNm: this.grpNm,
+      grpDesc: this.grpDesc,
+      grpRunMode: this.grpRunMode
+    };
+    const res = axios.patch(accountPath + '/group', null, {params: group});
+    return res;
+  };
+
+  deleteGroup = () => {
+    const group = {
+      grpId: this.grpId
+    };
+    const res = axios.delete(accountPath + '/group', {
+      params: group
     });
     return res;
   };

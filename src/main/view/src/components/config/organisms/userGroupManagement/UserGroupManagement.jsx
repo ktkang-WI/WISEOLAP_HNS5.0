@@ -4,7 +4,8 @@ import {Button, TabPanel} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
-import {User} from 'models/config/userGroupManagement/UserGroupManagement.js';
+import {Group, User} from
+  'models/config/userGroupManagement/UserGroupManagement.js';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal.js';
 import UserPasswordModal from
@@ -54,13 +55,15 @@ const UserGroupManagement = () => {
   useState(userGroupManagement.usersFormat);
   const [userDetailInfo, setUserDetailInfo] = useState(new User({}));
   const [groupMemberUsers, setGroupMemberUsers] = useState();
-  const [groupNotMemberUsers, setGroupNotMemberUsers] = useState();
+  const [groupNotMemberUsers, setGroupNotMemberUsers] = useState(usersFormat);
   const [mode, setMode] = useState(dataSource[0].mode);
 
   // ref
   const userInfoRef = useRef();
   const userDataGridRef = useRef();
   const userIdRef = useRef();
+  const groupDataGridRef = useRef();
+  const groupInfoRef = useRef();
 
   const btns = ['plus', 'save', 'remove', 'key'];
 
@@ -76,7 +79,9 @@ const UserGroupManagement = () => {
     ref: {
       userDataGridRef: userDataGridRef,
       userInfoRef: userInfoRef,
-      userIdRef: userIdRef
+      userIdRef: userIdRef,
+      groupDataGridRef: groupDataGridRef,
+      groupInfoRef: groupInfoRef
     }
   };
 
@@ -86,15 +91,17 @@ const UserGroupManagement = () => {
 
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
-    const formData = userInfoRef.current._instance.option('formData');
-    const user = new User(formData);
+    const userInfoFormData = userInfoRef.current._instance.option('formData');
+    const groupInfoFormData = groupInfoRef.current._instance.option('formData');
+    const user = new User(userInfoFormData);
+    const group = new Group(groupInfoFormData);
 
     switch (icon) {
       case 'plus':
         handlePlus();
         break;
       case 'save':
-        handleSave({user});
+        handleSave({user, group});
         break;
       case 'remove':
         handleRemove({user});
@@ -113,12 +120,20 @@ const UserGroupManagement = () => {
     }
 
     if (mode === Mode.GROUP) {
-      setGroupDetailInfo({});
-      setGroupMemberUsers({});
+      groupDataGridRef.current._instance.clearSelection();
+      new Group({}).getGroupNotMemberUsers()
+          .then((users) => {
+            setGroupNotMemberUsers(users);
+          })
+          .catch(() => {
+            throw new Error('Falied get Users');
+          });
+      setGroupDetailInfo(new Group({}));
+      setGroupMemberUsers([]);
     }
   };
 
-  const handleSave = ({user}) => {
+  const handleSave = ({user, group}) => {
     if (mode === Mode.USER) {
       const validate = userInfoRef.current._instance.validate();
       validate.complete?.then((res) => {
@@ -127,7 +142,7 @@ const UserGroupManagement = () => {
             user.createUser()
                 .then((response) => {
                   if (response.data.data) {
-                    user.getUser()
+                    user.getUsers()
                         .then((users) => {
                           setUsersFormat(users);
                           setUserDetailInfo(new User({}));
@@ -146,7 +161,7 @@ const UserGroupManagement = () => {
             user.updateUser()
                 .then((response) => {
                   if (response.data.data) {
-                    user.getUser()
+                    user.getUsers()
                         .then((users) => {
                           setUsersFormat(users);
                           setUserDetailInfo(new User({}));
@@ -167,7 +182,42 @@ const UserGroupManagement = () => {
     }
 
     if (mode === Mode.GROUP) {
+      const validate = groupInfoRef.current._instance.validate();
 
+      if (validate.isValid && groupMemberUsers.length > 0) {
+        if (group.grpId === 0) {
+          group.setGrpMemberUsers(groupMemberUsers);
+          group.createGroup()
+              .then((response) => {
+                if (response.data.data) {
+                  group.getGroups()
+                      .then((groups) => {
+                        setGroupsFormat(groups);
+                        groupDataGridRef.current._instance.clearSelection();
+                        new Group({}).getGroupNotMemberUsers()
+                            .then((users) => {
+                              setGroupNotMemberUsers(users);
+                            })
+                            .catch(() => {
+                              throw new Error('Falied get Users');
+                            });
+                        setGroupDetailInfo(new Group({}));
+                        setGroupMemberUsers([]);
+                        alert('그룹 ' + group.grpNm + ' (을)를 ' +
+                          localizedString.successSave);
+                      })
+                      .catch(() => {
+                        throw new Error('Failure get User');
+                      });
+                }
+              })
+              .catch(() => {
+                throw new Error('Failed Create Group');
+              });
+        } else {
+
+        }
+      }
     }
   };
 
@@ -177,7 +227,7 @@ const UserGroupManagement = () => {
         user.deleteUser(user)
             .then((response) => {
               if (response.data.data) {
-                user.getUser()
+                user.getUsers()
                     .then((users) => {
                       setUsersFormat(users);
                       setUserDetailInfo(new User({}));
