@@ -21,6 +21,7 @@ const UserInfo = () => {
   const [groupsFormat] = getContext.state.groupsFormat;
 
   const userInfoRef = getContext.ref.userInfoRef;
+  const userDataGridRef = getContext.ref.userDataGridRef;
 
   // selectBox DataSource
   const groups = groupsFormat.map((row) => {
@@ -32,8 +33,10 @@ const UserInfo = () => {
   const mode = ['ADMIN', 'VIEW'];
 
   const asyncValidation = (params) => {
+    const selectedRow = userDataGridRef.current._instance
+        .getSelectedRowsData()[0];
     const invalidValues = usersFormat
-        .filter((row) => row.userId != userDetailInfo?.userId)
+        .filter((row) => row.userId != selectedRow?.userId)
         .map((row) => row.userId);
     return duplicateValidation(params.value, invalidValues, userInfoRef);
   };
@@ -66,15 +69,15 @@ const UserInfo = () => {
           dataField="userId"
           editorType="dxTextBox"
         >
-          <RequiredRule message="사용자 ID 를 입력 해주세요."/>
+          <RequiredRule message={localizedString.validationUserId}/>
           <AsyncRule
-            message="해당 사용자 ID 는 이미 등록되어 있습니다."
+            message={localizedString.validationDupleUserNm}
             validationCallback={asyncValidation}
           />
           <Label>{localizedString.userId}</Label>
         </SimpleItem>
         <SimpleItem dataField="userNm">
-          <RequiredRule message="사용자 명 을 입력 해주세요."/>
+          <RequiredRule message={localizedString.validationUserNm}/>
           <Label>{localizedString.userName}</Label>
         </SimpleItem>
         {
@@ -85,7 +88,7 @@ const UserInfo = () => {
               mode: 'password'
             }}
           >
-            <RequiredRule message="비밀번호 를 입력 해주세요."/>
+            <RequiredRule message={localizedString.validationPassword}/>
             <Label>{localizedString.password}</Label>
           </SimpleItem>
         }
@@ -97,7 +100,7 @@ const UserInfo = () => {
               mode: 'password'
             }}
           >
-            <RequiredRule message="비밀번호 를 입력 해주세요."/>
+            <RequiredRule message={localizedString.validationPassword}/>
             <AsyncRule
               message={localizedString.checkPasword}
               validationCallback={passwordValidation}
@@ -123,7 +126,7 @@ const UserInfo = () => {
             valueExpr: 'grpId'
           }}
         >
-          <RequiredRule message="그룹 명 을 선택 해주세요."/>
+          <RequiredRule message={localizedString.validationGroupNm}/>
           <Label>{localizedString.groupName}</Label>
         </SimpleItem>
         <SimpleItem
@@ -133,7 +136,7 @@ const UserInfo = () => {
             dataSource: mode
           }}
         >
-          <RequiredRule message="사용자 실행모드 를 선택 해주세요."/>
+          <RequiredRule message={localizedString.validationUserRunMode}/>
           <Label>{localizedString.userRunMode}</Label>
         </SimpleItem>
         <Item

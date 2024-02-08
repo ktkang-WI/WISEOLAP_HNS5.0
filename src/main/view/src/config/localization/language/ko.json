@@ -537,5 +537,11 @@
   "dataSourceAddition": "데이터 원본 추가",
   "successSave": "저장 했습니다.",
   "successUpdate": "업데이트 했습니다.",
-  "successRemove": "삭제 했습니다."
+  "successRemove": "삭제 했습니다.",
+  "validationPassword": "비밀번호 를 입력 해주세요.",
+  "validationUserId": "사용자 ID 를 입력 해주세요.",
+  "validationUserNm": "사용자 명 을 입력 해주세요.",
+  "validationGroupNm": "그룹 명 을 선택 해주세요.",
+  "validationUserRunMode": "사용자 실행모드 를 선택 해주세요.",
+  "validationDupleUserNm": "해당 사용자 ID 는 이미 등록되어 있습니다."
 }

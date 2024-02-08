@@ -106,7 +106,6 @@ export class User {
     const user = {
       userNo: this.userNo
     };
-    console.log(user);
     const res = axios.delete(accountPath + '/user', {
       params: user
     });

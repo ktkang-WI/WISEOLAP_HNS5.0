@@ -60,6 +60,7 @@ const UserGroupManagement = () => {
   // ref
   const userInfoRef = useRef();
   const userDataGridRef = useRef();
+  const userIdRef = useRef();
 
   const btns = ['plus', 'save', 'remove', 'key'];
 
@@ -74,7 +75,8 @@ const UserGroupManagement = () => {
     },
     ref: {
       userDataGridRef: userDataGridRef,
-      userInfoRef: userInfoRef
+      userInfoRef: userInfoRef,
+      userIdRef: userIdRef
     }
   };
 
@@ -119,47 +121,49 @@ const UserGroupManagement = () => {
   const handleSave = ({user}) => {
     if (mode === Mode.USER) {
       const validate = userInfoRef.current._instance.validate();
-      if (validate.isValid) {
-        if (user.userNo === 0) {
-          user.createUser()
-              .then((response) => {
-                if (response.data.data) {
-                  user.getUser()
-                      .then((users) => {
-                        setUsersFormat(users);
-                        setUserDetailInfo(new User({}));
-                        alert('사용자 ' + user.userId + ' (을)를 ' +
-                          localizedString.successSave);
-                      })
-                      .catch(() => {
-                        throw new Error('Failure get User');
-                      });
-                }
-              })
-              .catch(() => {
-                throw new Error('Failure Create User');
-              });
-        } else {
-          user.updateUser()
-              .then((response) => {
-                if (response.data.data) {
-                  user.getUser()
-                      .then((users) => {
-                        setUsersFormat(users);
-                        setUserDetailInfo(new User({}));
-                        alert('사용자 ' + user.userId + ' (을)를 ' +
-                          localizedString.successUpdate);
-                      })
-                      .catch(() => {
-                        throw new Error('Failure get User');
-                      });
-                }
-              })
-              .catch(() => {
-                throw new Error('failure Update User');
-              });
+      validate.complete?.then((res) => {
+        if (res.isValid) {
+          if (user.userNo === 0) {
+            user.createUser()
+                .then((response) => {
+                  if (response.data.data) {
+                    user.getUser()
+                        .then((users) => {
+                          setUsersFormat(users);
+                          setUserDetailInfo(new User({}));
+                          alert('사용자 ' + user.userId + ' (을)를 ' +
+                            localizedString.successSave);
+                        })
+                        .catch(() => {
+                          throw new Error('Failure get User');
+                        });
+                  }
+                })
+                .catch(() => {
+                  throw new Error('Failure Create User');
+                });
+          } else {
+            user.updateUser()
+                .then((response) => {
+                  if (response.data.data) {
+                    user.getUser()
+                        .then((users) => {
+                          setUsersFormat(users);
+                          setUserDetailInfo(new User({}));
+                          alert('사용자 ' + user.userId + ' (을)를 ' +
+                            localizedString.successUpdate);
+                        })
+                        .catch(() => {
+                          throw new Error('Failure get User');
+                        });
+                  }
+                })
+                .catch(() => {
+                  throw new Error('failure Update User');
+                });
+          }
         }
-      }
+      });
     }
 
     if (mode === Mode.GROUP) {
