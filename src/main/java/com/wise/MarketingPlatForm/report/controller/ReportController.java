@@ -39,6 +39,7 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
+import com.wise.MarketingPlatForm.report.vo.LinkReportVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 import io.micrometer.core.ipc.http.HttpSender.Response;
@@ -48,6 +49,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import oracle.jdbc.proxy.annotation.Post;
 
 @Tag(name = "report", description = "보고서와 관련된 요청을 처리합니다.")
 @RestController
@@ -409,6 +411,18 @@ public class ReportController {
 
                 return ResponseEntity.ok().body(map);
 	}
+
+    @PostMapping(value = "/report-link-param")
+	public Map<String, Object> getLinkReportParam(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+        return reportService.getLinkReportParam(reportId);
+	}
+
+    @PostMapping(value = "/report-link-list")
+    public List<LinkReportVO> getLinkReportList(@RequestBody String param) {
+        String reportId = param;
+        return reportService.getLinkReportList(reportId);
+    }
 
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
