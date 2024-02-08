@@ -17,7 +17,7 @@ const Pie = ({setItemExports, id, item}) => {
   if (!mart.init) {
     return <></>;
   }
-  const seriesDimensionNames = mart?.data.info.seriesDimensionNames;
+  const seriesMeasureNames = mart?.data.info.seriesMeasureNames;
   const dxRefs = useRef([]);
 
   useEffect(() => {
@@ -35,9 +35,10 @@ const Pie = ({setItemExports, id, item}) => {
     });
   }, [mart.data.data]);
 
-  const pies = seriesDimensionNames.map((dimension, idx) => {
+  const pies = seriesMeasureNames.map((dimension, idx) => {
     return (
       <PieChart
+        id={id}
         ref={(ref) => (dxRefs.current[idx] = ref)}
         key={idx}
         type={meta.pieChartStyle}

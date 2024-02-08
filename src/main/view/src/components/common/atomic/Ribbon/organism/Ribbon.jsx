@@ -30,19 +30,19 @@ const Ribbon = () => {
           'LoadReport',
           'SaveReport',
           'DeleteReport',
-          'DownloadReport',
-          'ConnectReport'
+          'DownloadReport'
+          // 'ConnectReport'
         ]}
       />
       <CreateRibbonBtns
         items={
           designerMode === DesignerMode['AD_HOC'] ?
           ['AdHocLayout'] : [
-            'AddContainer',
+            // 'AddContainer',
             'AddChart',
             'AddPivotGrid',
-            'AddGrid',
-            'AddCustomChart'
+            'AddGrid'
+            // 'AddCustomChart'
           ]}
       />
       <CreateRibbonBtns

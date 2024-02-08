@@ -2,7 +2,6 @@ import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import localizedString from 'config/localization';
 import {Column, Lookup} from 'devextreme-react/data-grid';
-import useSpread from 'hooks/useSpread';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
@@ -11,57 +10,60 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos, selectCurrentDesigner} from
   'redux/selector/SpreadSelector';
+import {
+  positionConverterAsObject,
+  positionConverterAsString
+} from '../util/spreadUtil';
+import useModal from 'hooks/useModal';
 
 const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
   const designer = selectCurrentDesigner(store.getState());
   const [dataSources, setDataSources] = useState([]);
   const {setBindingInfos} = SpreadSlice.actions;
-  const {positionConverterAsObject, positionConverterAsString} = useSpread();
   const datasets = selectCurrentDatasets(store.getState());
   const reportId = selectCurrentReportId(store.getState());
+  const {alert} = useModal();
   const bindingInfos = useSelector(selectBindingInfos);
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });
+  const datasetNms = datasets.map((dataset) => dataset.datasetNm);
 
   const booleanMapper = [
-    {key: true, value: '표시'},
-    {key: false, value: '표시안함'}
+    {key: true, value: localizedString.use},
+    {key: false, value: localizedString.dontUse}
   ];
 
+  const dataMaker = (datasetId, type) => {
+    return bindingInfos[datasetId]?.[type] != undefined ?
+      bindingInfos[datasetId]?.[type] : true;
+  };
+
   useEffect(() => {
-    if (_.isEmpty(bindingInfos)) {
-      const dataSources = datasets.map((dataset) => {
-        return {
-          datasetId: dataset.datasetId,
-          datasetNm: dataset.datasetNm,
-          sheetNm: undefined,
-          position: undefined,
-          useHeader: false,
-          useBorder: false,
-          useBinding: false
-        };
-      });
-      setDataSources(dataSources);
-    } else {
-      const dataSources = Object.keys(bindingInfos).map((datasetId) => {
-        const position = positionConverterAsString(
-            bindingInfos[datasetId].columnIndex,
-            bindingInfos[datasetId].rowIndex);
-        return {
-          datasetId: datasetId,
-          datasetNm: bindingInfos[datasetId].datasetNm,
-          sheetNm: bindingInfos[datasetId].sheetNm,
-          position: position,
-          useHeader: bindingInfos[datasetId].useHeader,
-          useBorder: bindingInfos[datasetId].useBorder,
-          useBinding: bindingInfos[datasetId].useBinding
-        };
-      });
-      setDataSources(dataSources);
-    }
+    const dataSources = datasets.map((dataset) => {
+      const datasetId = dataset.datasetId;
+      const useHeader = dataMaker(datasetId, 'useHeader');
+      const useBorder = dataMaker(datasetId, 'useBorder');
+      const useBinding = dataMaker(datasetId, 'useBinding');
+      const position = positionConverterAsString(
+          bindingInfos[datasetId]?.columnIndex,
+          bindingInfos[datasetId]?.rowIndex
+      );
+      return {
+        datasetId: datasetId,
+        datasetNm: dataset.datasetNm,
+        sheetNm: bindingInfos[datasetId]?.sheetNm ?
+          bindingInfos[datasetId]?.sheetNm : '',
+        position: position,
+        useHeader: useHeader,
+        useBorder: useBorder,
+        useBinding: useBinding
+      };
+    });
+    setDataSources(dataSources);
   }, [bindingInfos]);
+
 
   const onSubmit = useCallback(() => {
     const returnObj = {};
@@ -94,6 +96,11 @@ const DatasetLinkerModal = ({...props}) => {
 
   const updateDataSources = (value, currentRowData, key) => {
     const newDataSources = _.cloneDeep(dataSources);
+    const reg = /^(?:[A-Za-z]{1,2}\d{1,3})?$/;
+    if (key === 'position' && !reg.test(value)) {
+      alert(localizedString.dataLinkerPosition);
+      return;
+    }
     newDataSources.map((dataSource) => {
       if (dataSource.datasetNm === currentRowData.datasetNm) {
         dataSource[key] = value;
@@ -119,18 +126,33 @@ const DatasetLinkerModal = ({...props}) => {
           mode: 'cell'
         }}
       >
-        <Column dataField='datasetNm' caption='데이터 집합 명' allowEditing={false}/>
-        <Column dataField='sheetNm' caption='Sheet 명' setCellValue={
-          (newData, value, currentRowData) =>
+        <Column
+          dataField='datasetNm'
+          caption={localizedString.datasetName}
+          allowEditing={false}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'datasetNm')}
+        >
+          <Lookup dataSource={datasetNms} />
+        </Column>
+        <Column
+          dataField='sheetNm'
+          caption={localizedString.sheetNm}
+          setCellValue={(newData, value, currentRowData) =>
             updateDataSources(value, currentRowData, 'sheetNm')}>
           <Lookup dataSource={sheetNms} />
         </Column>
-        <Column dataField='position' caption='데이터 연동 위치'setCellValue={
-          (newData, value, currentRowData) =>
-            updateDataSources(value, currentRowData, 'position')}/>
+        <Column
+          dataField='position'
+          caption={localizedString.bindingPosition}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'position')}
+        />
         <Column
           dataField='useHeader'
-          caption='헤더 표시 여부'
+          caption={localizedString.useHeader}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'useHeader')}
         >
           <Lookup
             dataSource={booleanMapper}
@@ -140,7 +162,9 @@ const DatasetLinkerModal = ({...props}) => {
         </Column>
         <Column
           dataField='useBorder'
-          caption='테두리 표시 여부'
+          caption={localizedString.useBoarder}
+          setCellValue={(newData, value, currentRowData) =>
+            updateDataSources(value, currentRowData, 'useBorder')}
         >
           <Lookup
             dataSource={booleanMapper}

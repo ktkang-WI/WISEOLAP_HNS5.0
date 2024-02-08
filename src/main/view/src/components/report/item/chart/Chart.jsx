@@ -8,8 +8,7 @@ import DevChart, {
   Tooltip,
   Point,
   Series,
-  ValueAxis,
-  Label
+  ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
@@ -25,6 +24,8 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
+import {generateLabelSuffix, formatNumber}
+  from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
@@ -83,7 +84,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     if (!adHocOption) {
       filterItems(item, {});
     }
-  }, [interactiveOption.targetDimension, interactiveOption.mode]);
+  }, [
+    interactiveOption.targetDimension,
+    interactiveOption.mode,
+    interactiveOption.enabled]);
 
   useEffect(() => {
     if (!adHocOption) {
@@ -104,6 +108,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       if (targetDiemnsion == 'dimension') {
         filter.split('<br/>').reverse().forEach((v, i) => {
           const name = dim[i].uniqueName;
+          if (v == '\u2800') {
+            v = null;
+          }
+
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -114,6 +122,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         filter.split('-').forEach((v, i) => {
           if (dimGrp.length <= i) return;
           const name = dimGrp[i].uniqueName;
+          if (v == '\u2800') {
+            v = null;
+          }
+
           if (acc[name]) {
             acc[name].add(v);
           } else {
@@ -141,6 +153,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         selectedData = [];
         if (target.isSelected()) {
           component.clearSelection();
+          filterItems(item, {});
           return;
         }
         component.clearSelection();
@@ -162,6 +175,15 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       }
     } else {
       // 대상 차원이 차원 그룹일 경우
+      if (interactiveOption.mode == 'single') {
+        selectedData = [];
+        if (target.series.isSelected()) {
+          component.clearSelection();
+          filterItems(item, {});
+          return;
+        }
+        component.clearSelection();
+      }
       if (target.series.isSelected()) {
         target.series.clearSelection();
         selectedData = selectedData.filter((d) => d != target.series.name);
@@ -174,7 +196,11 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   };
 
 
-  const customizeLabel = (o) => {
+  const customizeLabel = (o, formats) => {
+    const formData = formats[o.series.tag.math];
+    if (!formData) console.error('format 데이터쪽 확인필요이상감지');
+    const labelSuffix = generateLabelSuffix(formData);
+    o.value = formatNumber(o.value, formData, labelSuffix);
     const fieldId = o.series.tag.fieldId;
     const dataField =
       seriesOptions.filter((item) => (item.fieldId === fieldId))[0];
@@ -198,12 +224,13 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       dataSource={mart.data.data}
       width="100%"
       height="100%"
-      customizeLabel={customizeLabel}
+      customizeLabel={(o) => customizeLabel(o, mart.formats)}
       resolveLabelOverlapping={overlapping}
       id={id}
       ref={dxRef}
       onPointClick={onPointClick}
       pointSelectionMode={'multiple'}
+      rotated={meta.useRotate}
       seriesSelectionMode={interactiveOption.mode}
     >
       <CommonSeriesSettings
@@ -253,21 +280,13 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   fieldId: valueField.fieldId,
                   math: Math.floor(i / mart.seriesLength)
                 }}
-                name={valueField.name}
+                name={valueField.caption || '\u2800'}
                 type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
                 sizeField={
                   getSeriesOptionType(valueField.fieldId, seriesOptions) ===
                   'bubble' ? valueField.summaryName: null
                 }
               >
-                <Label
-                  visible={true}
-                  position='outside'
-                  offset={50}
-                  customizeText={
-                    (info) => customizeTooltip(info, true, mart.formats)
-                  }
-                />
               </Series>
         )
       }
@@ -289,11 +308,13 @@ const propsComparator = (prev, next) => {
 
   const seriesOptionsComparator =
     _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
-
-  return _.isEqual(prev.item.mart, next.item.mart) &&
+  const rotateComparator =
+    _.isEqual(prev.item.meta.useRotate, next.item.meta.useRotate);
+  return prev.item.mart == next.item.mart &&
   _.isEqual(prev.item.meta.interactiveOption,
       next.item.meta.interactiveOption) &&
       seriesOptionsComparator &&
+      rotateComparator &&
   _.isEqual(prev.adHocOption, next.adHocOption);
 };
 

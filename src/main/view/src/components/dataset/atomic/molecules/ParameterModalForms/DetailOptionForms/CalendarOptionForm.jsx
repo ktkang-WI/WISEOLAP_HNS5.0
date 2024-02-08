@@ -179,14 +179,6 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
       >
         <Label>{localizedString.calendarCaptionFormat}*</Label>
       </Item>
-      <Item
-        colSpan={1}
-        editorType='dxTextBox'
-        dataField='exceptionValue'
-        visible={formData.calendarDefaultType == 'QUERY'}
-      >
-        <Label>{localizedString.exceptionValue}*</Label>
-      </Item>
     </Form>
   );
 };

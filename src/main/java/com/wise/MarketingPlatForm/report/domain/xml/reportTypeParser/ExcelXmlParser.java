@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPointer;
 import org.json.XML;
-
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
@@ -21,10 +19,10 @@ import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.report.domain.xml.XMLParser;
+import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
-public class ExcelXmlParser extends XMLParser{
+public class ExcelXmlParser extends ReportXMLParser {
 
 	private JSONArray datasetJsonArray = new JSONArray();
 

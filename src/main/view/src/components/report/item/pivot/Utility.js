@@ -5,6 +5,7 @@ import {defaultDimension, defaultMeasure}
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
 import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import {DesignerMode} from 'components/config/configType';
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
@@ -119,7 +120,9 @@ const generateItem = (item, rootItem) => {
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
     ...defaultMeasure,
-    useButton: true,
+    useButton:
+    window.location.href.includes(DesignerMode['DASHBOARD'].toLowerCase()) ?
+    false : true,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
     buttonIcon: chartSeriesButtonIcon,
     buttonEvent: function(e) {

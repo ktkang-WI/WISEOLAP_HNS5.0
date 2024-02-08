@@ -20,6 +20,7 @@ import {
 } from 'redux/selector/DatasetSelector';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
+import models from 'models';
 
 const theme = getTheme();
 
@@ -77,7 +78,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
       paramInfo.length > 0 ? paramInfo[0] : {}
   );
 
-  const {confirm} = useModal();
+  const {confirm, alert} = useModal();
 
   const getNewParamInfo = () => {
     const newParamInfo = paramInfo.map((info) => {
@@ -130,12 +131,12 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
     }
   };
 
-  const paramterButtons =
-      datasets[0].datasetType == 'CUBE' ? [deleteParameter] : [];
+  const paramterButtons = datasets.length > 0 &&
+    datasets[0].datasetType == 'CUBE' ? [deleteParameter] : [];
 
   return (
     <Modal
-      onSubmit={() => {
+      onSubmit={async () => {
         let newParamInfo = paramInfo;
 
         if (!_.isEmpty(selectedParam)) {
@@ -145,6 +146,11 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
         newParamInfo = newParamInfo.
             map((param) => ParamUtils.sanitizeParamInformation(param));
 
+        const tempParameters = {
+          informations: newParamInfo,
+          values: {}
+        };
+
         for (const param of newParamInfo) {
           if (param.dataSourceType == 'QUERY') {
             if (!param.dataSource.toLowerCase().includes('group by')) {
@@ -153,6 +159,14 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
                 onClose();
               });
 
+              return true;
+            }
+
+            const res = await models.DBInfo.getDataByQueryMart(
+                param.dsId, param.dataSource, tempParameters);
+
+            if (res.data.rowData[0]?.error) {
+              alert(localizedString.invalidQuery);
               return true;
             }
           }

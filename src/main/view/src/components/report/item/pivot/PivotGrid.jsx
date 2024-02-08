@@ -17,6 +17,8 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {generateLabelSuffix, formatNumber} from
+  'components/utils/NumberFormatUtility';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -31,7 +33,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal} = useModal();
-  // const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
@@ -85,30 +86,28 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     return meta.dataHighlight;
   }, [meta.dataHighlight]);
 
-  // 측정값의 순서로 그리드가 생성
-  // -> 하이라이트를 측정값 순서 반대로 만들면 측정 조건에서 하이라이트 적용이 안됨.
-  const highlightMap = useMemo(() => {
-    const map = new Map();
-
-    for (let i =0; i< highlight.length; i++) {
-      map.set(highlight[i].idx, highlight[i]);
-    }
-    return map;
-  }, [meta.dataHighlight]);
-
   const onCellPrepared = ({cell, area, cellElement}) => {
-    if (highlightMap.get(cell.dataIndex) && highlight.length != 0) {
+    if (highlight.length != 0) {
       // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
-      if (isDataCell(cell, area, highlightMap.get(cell.dataIndex)) ) {
-        Object.assign(
-            cellElement.style,
-            getCssStyle(
-                highlightMap.get(cell.dataIndex),
-                cellElement,
-                cell
-            )
-        );
+      for (let i = 0; i < highlight.length; i ++) {
+        if (isDataCell(cell, area, highlight[i])) {
+          Object.assign(
+              cellElement.style,
+              getCssStyle(
+                  highlight[i],
+                  cellElement,
+                  cell
+              )
+          );
+        }
       }
+    }
+    if (area == 'data' && cell.dataType && cell.value) {
+      const newFormat = dataField.measure.map((item) => item.format);
+      const formData = newFormat[cell.dataIndex];
+      const labelSuffix = generateLabelSuffix(formData);
+      const formattedValue = formatNumber(cell.value, formData, labelSuffix);
+      cellElement.textContent = formattedValue;
     }
   };
   let showTotalsPrior = 'both';

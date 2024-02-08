@@ -241,6 +241,22 @@ public final class DataSanitizer {
     }
 
     /**
+     * null값이 포함된 row가 있을 경우 해당 row를 빈 문자열로 바꿉니다.
+     *
+     * @return DataSanitizer
+     */
+    public final DataSanitizer replaceNullData() {
+        for (Map<String, Object> map : data) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getValue() == null) {
+                    entry.setValue("\u2800");
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
      * <p>
      * 데이터를 차원(Dimension)의 sortBy와 sortOrder 값을 사용해서 정렬합니다.
      * 차원의 index가 낮을 수록 높은 우선순위를 가집니다.
@@ -282,6 +298,13 @@ public final class DataSanitizer {
                 Object v2 = o2.get(name);
 
                 int compareResult = 0;
+
+                if (v1 == null) {
+                    v1 = "";
+                }
+                if (v2 == null) {
+                    v2 = "";
+                }
 
                 if (v1 instanceof String) {
                     compareResult = StringCompareUtils.compare((String) v1, (String) v2);
@@ -343,8 +366,16 @@ public final class DataSanitizer {
         if (filter != null && filter.size() > 0) {
             data = data.stream()
                     .filter(map -> filter.entrySet().stream()
-                            .allMatch(entry -> StringUtils.containsAny(map.get(entry.getKey()).toString(),
-                                    entry.getValue().toArray(new CharSequence[0]))))
+                            .allMatch(entry -> {
+                                Object value = map.get(entry.getKey());
+                                
+                                if (value == null) {
+                                    return entry.getValue().contains(null);
+                                }
+
+                                return StringUtils.containsAny(value.toString(),
+                                    entry.getValue().toArray(new CharSequence[0]));
+                            }))
                     .collect(Collectors.toList());
         }
 

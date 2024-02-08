@@ -23,6 +23,7 @@ import localizedString from 'config/localization';
 import {getSeriesOptionInitFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
+import useModal from './useModal';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -30,7 +31,9 @@ import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
   const {updateParameterInformation} = ParameterSlice.actions;
+
   const dispatch = useDispatch();
+  const {alert} = useModal();
 
   const comparePos = (destination, source) => {
     return destination && destination.droppableId == source.droppableId &&
@@ -180,6 +183,7 @@ const useDrag = () => {
     if (dest) {
       if (dest.droppableId == 'filter-bar') {
         if (selectedDataset.datasetType != 'CUBE') {
+          alert(localizedString.filterErrorMsg);
           return;
         }
 
@@ -242,7 +246,8 @@ const useDrag = () => {
             field.uniqueName == targetId
           );
 
-          if (sourceField.type == 'FLD') return;
+          const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
+          if (noDragItems.includes(sourceField.type)) return;
 
           const tempField = getNewDataField(sourceField);
 
@@ -250,6 +255,13 @@ const useDrag = () => {
           dataField.datasetId = selectedDataset.datasetId;
           dispatch(setItemField({reportId, dataField}));
           onDragEndSeriesOption(tempField, reportId);
+        } else if (source.droppableId == dest.droppableId) {
+          const sourceField = dataField[source.droppableId]
+              .splice(source.index, 1);
+
+          dataField[dest.droppableId].splice(dest.index, 0, sourceField[0]);
+
+          dispatch(setItemField({reportId, dataField}));
         } else {
           // 데이터 항목에서 출발한 경우 기존 데이터 항목 복제 및 삭제 후 추가
           let sourceField = dataField[source.droppableId]
