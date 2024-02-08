@@ -32,6 +32,8 @@ import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
 import useQueryExecute from 'hooks/useQueryExecute';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
 
 const RibbonDefaultElement = () => {
   const {
@@ -180,6 +182,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
+        openModal(LinkReportModal);
       }
     },
     'AdHocLayout': {

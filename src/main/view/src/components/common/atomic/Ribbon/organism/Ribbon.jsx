@@ -29,9 +29,9 @@ const Ribbon = () => {
           'Dataset',
           'LoadReport',
           'SaveReport',
-          'DeleteReport'
+          'DeleteReport',
           // 'DownloadReport',
-          // 'ConnectReport'
+          'ConnectReport'
         ]}
       />
       <CreateRibbonBtns
