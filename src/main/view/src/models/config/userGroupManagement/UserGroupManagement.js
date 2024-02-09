@@ -43,13 +43,24 @@ export class User {
     this.passwd = passwd;
   }
 
+  getUserGroups = async () => {
+    const userGroupManageMent = await getUserGroupManagement()
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch(() => {
+          throw new Error('Failed Get User Groups');
+        });
+    return userGroupManageMent;
+  };
+
   getUsers = async () => {
     const userGroupManageMent = await getUserGroupManagement()
         .then((res) => {
           return res.data.data;
         })
         .catch(() => {
-          throw new Error('Failure Get User');
+          throw new Error('Failed Get Users');
         });
     return userGroupManageMent.usersFormat;
   };
@@ -139,13 +150,24 @@ export class Group {
     });
   }
 
+  getUserGroups = async () => {
+    const userGroupManageMent = await getUserGroupManagement()
+        .then((res) => {
+          return res.data.data;
+        })
+        .catch(() => {
+          throw new Error('Failed Get User Groups');
+        });
+    return userGroupManageMent;
+  };
+
   getGroups = async () => {
     const userGroupManageMent = await getUserGroupManagement()
         .then((res) => {
           return res.data.data;
         })
         .catch(() => {
-          throw new Error('Failure Get Group');
+          throw new Error('Failed Get Groups');
         });
     return userGroupManageMent.groupsFormat;
   };
@@ -156,7 +178,7 @@ export class Group {
           return res.data.data;
         })
         .catch(() => {
-          throw new Error('Failure Get User');
+          throw new Error('Failed Get Users');
         });
     return userGroupManageMent.usersFormat;
   };
@@ -181,7 +203,9 @@ export class Group {
       grpDesc: this.grpDesc,
       grpRunMode: this.grpRunMode
     };
-    const res = axios.patch(accountPath + '/group', null, {params: group});
+    const res = axios.patch(accountPath + '/group', {
+      data: this.grpMemberUsers
+    }, {params: group});
     return res;
   };
 

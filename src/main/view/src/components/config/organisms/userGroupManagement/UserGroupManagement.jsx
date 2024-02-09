@@ -64,6 +64,8 @@ const UserGroupManagement = () => {
   const userIdRef = useRef();
   const groupDataGridRef = useRef();
   const groupInfoRef = useRef();
+  const groupMemberUserRef = useRef();
+  const groupNotMemberUserRef = useRef();
 
   const btns = ['plus', 'save', 'remove', 'key'];
 
@@ -81,7 +83,9 @@ const UserGroupManagement = () => {
       userInfoRef: userInfoRef,
       userIdRef: userIdRef,
       groupDataGridRef: groupDataGridRef,
-      groupInfoRef: groupInfoRef
+      groupInfoRef: groupInfoRef,
+      groupMemberUserRef: groupMemberUserRef,
+      groupNotMemberUserRef: groupNotMemberUserRef
     }
   };
 
@@ -91,166 +95,176 @@ const UserGroupManagement = () => {
 
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
-    const userInfoFormData = userInfoRef.current._instance.option('formData');
-    const groupInfoFormData = groupInfoRef.current._instance.option('formData');
-    const user = new User(userInfoFormData);
-    const group = new Group(groupInfoFormData);
+    let instance = {};
+
+    if (mode === Mode.USER) {
+      const userInfoFormData = userInfoRef.current?._instance
+          .option('formData');
+      instance = new User(userInfoFormData);
+    }
+    if (mode === Mode.GROUP) {
+      const groupInfoFormData = groupInfoRef.current?._instance
+          .option('formData');
+      instance = new Group(groupInfoFormData);
+    }
 
     switch (icon) {
       case 'plus':
         handlePlus();
         break;
       case 'save':
-        handleSave({user, group});
+        handleSave({instance});
         break;
       case 'remove':
-        handleRemove({user});
+        handleRemove({instance});
         break;
       case 'key':
-        handleKey({user});
+        handleKey({instance});
       default:
         break;
     }
   };
 
-  const handlePlus = () => {
-    if (mode === Mode.USER) {
-      userDataGridRef.current._instance.clearSelection();
-      setUserDetailInfo(new User({}));
-    }
-
-    if (mode === Mode.GROUP) {
-      groupDataGridRef.current._instance.clearSelection();
-      new Group({}).getGroupNotMemberUsers()
-          .then((users) => {
-            setGroupNotMemberUsers(users);
-          })
-          .catch(() => {
-            throw new Error('Falied get Users');
-          });
-      setGroupDetailInfo(new Group({}));
-      setGroupMemberUsers([]);
-    }
-  };
-
-  const handleSave = ({user, group}) => {
-    if (mode === Mode.USER) {
-      const validate = userInfoRef.current._instance.validate();
-      validate.complete?.then((res) => {
-        if (res.isValid) {
-          if (user.userNo === 0) {
-            user.createUser()
-                .then((response) => {
-                  if (response.data.data) {
-                    user.getUsers()
-                        .then((users) => {
-                          setUsersFormat(users);
-                          setUserDetailInfo(new User({}));
-                          alert('사용자 ' + user.userId + ' (을)를 ' +
-                            localizedString.successSave);
-                        })
-                        .catch(() => {
-                          throw new Error('Failure get User');
-                        });
-                  }
-                })
-                .catch(() => {
-                  throw new Error('Failure Create User');
-                });
-          } else {
-            user.updateUser()
-                .then((response) => {
-                  if (response.data.data) {
-                    user.getUsers()
-                        .then((users) => {
-                          setUsersFormat(users);
-                          setUserDetailInfo(new User({}));
-                          alert('사용자 ' + user.userId + ' (을)를 ' +
-                            localizedString.successUpdate);
-                        })
-                        .catch(() => {
-                          throw new Error('Failure get User');
-                        });
-                  }
-                })
-                .catch(() => {
-                  throw new Error('failure Update User');
-                });
-          }
-        }
-      });
-    }
-
-    if (mode === Mode.GROUP) {
-      const validate = groupInfoRef.current._instance.validate();
-
-      if (validate.isValid && groupMemberUsers.length > 0) {
-        if (group.grpId === 0) {
-          group.setGrpMemberUsers(groupMemberUsers);
-          group.createGroup()
-              .then((response) => {
-                if (response.data.data) {
-                  group.getGroups()
-                      .then((groups) => {
-                        setGroupsFormat(groups);
-                        groupDataGridRef.current._instance.clearSelection();
-                        new Group({}).getGroupNotMemberUsers()
-                            .then((users) => {
-                              setGroupNotMemberUsers(users);
-                            })
-                            .catch(() => {
-                              throw new Error('Falied get Users');
-                            });
-                        setGroupDetailInfo(new Group({}));
-                        setGroupMemberUsers([]);
-                        alert('그룹 ' + group.grpNm + ' (을)를 ' +
-                          localizedString.successSave);
-                      })
-                      .catch(() => {
-                        throw new Error('Failure get User');
-                      });
-                }
-              })
-              .catch(() => {
-                throw new Error('Failed Create Group');
-              });
-        } else {
-
-        }
+  // 유효성 검사와 결과 처리를 위한 공통 함수
+  const validateAndProcess = (validate, process) => {
+    validate.complete?.then((res) => {
+      if (res.isValid) {
+        process();
+      } else {
+        alert(localizedString.validationAlert);
       }
-    }
+    }).catch((error) => {
+      throw new Error('Failed Validation');
+    });
   };
 
-  const handleRemove = ({user}) => {
+  const init = (instance, msg) => {
+    instance.getUserGroups()
+        .then((userGroups) => {
+          setUserDetailInfo(new User({}));
+          setUsersFormat(userGroups.usersFormat);
+          setGroupsFormat(userGroups.groupsFormat);
+
+          setGroupDetailInfo(new Group({}));
+          setGroupNotMemberUsers(userGroups.usersFormat);
+          setGroupMemberUsers([]);
+          alert(`${msg}`);
+        })
+        .catch(() => {
+          throw new Error('Failed UserGroupManagement Init');
+        });
+  };
+
+  const handleSaveUser = (user) => {
+    const saveUser = () => {
+      const action = user.userNo === 0 ? user.createUser : user.updateUser;
+      const successMessage = user.userNo === 0 ?
+      localizedString.successSave : localizedString.successUpdate;
+
+      action().then((response) => {
+        if (response.data.data) {
+          init(user, successMessage);
+        }
+      }).catch(() => {
+        throw new Error(user.userNo === 0 ?
+          'Failure Create User' : 'Failure Update User');
+      });
+    };
+
+    validateAndProcess(userInfoRef.current._instance.validate(), saveUser);
+  };
+
+  const handleRemoveInstance = (instance, action) => {
+    const successMessage = localizedString.successRemove;
+
+    action().then((response) => {
+      if (response.data.data) {
+        init(instance, successMessage);
+      }
+    }).catch(() => {
+      throw new Error('Failed Delete User');
+    });
+  };
+
+  const handleSaveGroup = (group) => {
+    const saveGroup = () => {
+      if (groupMemberUsers.length === 0) {
+        alert(localizedString.validationGroupMemberUsers);
+        return;
+      }
+
+      const action = group.grpId === 0 ? group.createGroup : group.updateGroup;
+      const successMessage = group.grpId === 0 ?
+      localizedString.successSave : localizedString.successUpdate;
+
+      group.setGrpMemberUsers(groupMemberUsers);
+
+      action().then((response) => {
+        if (response.data.data) {
+          init(group, successMessage);
+        }
+      }).catch(() => {
+        throw new Error(group.grpId === 0 ?
+          'Failed Create Group' : 'Failed Update Group');
+      });
+    };
+
+    validateAndProcess(groupInfoRef.current._instance.validate(), saveGroup);
+  };
+
+  const handlePlus = () => {
+    const clearAndSetNewDetail = (dataGridRef, setDetailInfo, NewInstance,
+        additionalAction = () => {}) => {
+      dataGridRef.current._instance.clearSelection();
+      setDetailInfo(new NewInstance({}));
+      additionalAction();
+    };
+
     if (mode === Mode.USER) {
-      if (user.userNo !== 0) {
-        user.deleteUser(user)
-            .then((response) => {
-              if (response.data.data) {
-                user.getUsers()
-                    .then((users) => {
-                      setUsersFormat(users);
-                      setUserDetailInfo(new User({}));
-                      alert('사용자 ' + user.userId + ' (을)를 ' +
-                          localizedString.successRemove);
-                    })
-                    .catch(() => {
-                      throw new Error('Failure get User');
-                    });
-              }
+      clearAndSetNewDetail(userDataGridRef, setUserDetailInfo, User);
+    } else if (mode === Mode.GROUP) {
+      const fetchAndSetGroupNotMemberUsers = () => {
+        new Group({}).getGroupNotMemberUsers()
+            .then((users) => {
+              setGroupNotMemberUsers(users);
             })
             .catch(() => {
-              throw new Error('failure Delete User');
+              throw new Error('Failed to get Users');
             });
+        setGroupMemberUsers([]);
+      };
+
+      clearAndSetNewDetail(groupDataGridRef, setGroupDetailInfo, Group,
+          fetchAndSetGroupNotMemberUsers);
+    }
+  };
+
+  const handleSave = ({instance}) => {
+    if (mode === Mode.USER) {
+      handleSaveUser(instance);
+    }
+
+    if (mode === Mode.GROUP) {
+      handleSaveGroup(instance);
+    }
+  };
+
+  const handleRemove = ({instance}) => {
+    if (mode === Mode.USER) {
+      if (instance.userNo !== 0) {
+        handleRemoveInstance(instance, instance.deleteUser);
       };
     }
 
     if (mode === Mode.GROUP) {
-
+      if (instance.grpId !== 0) {
+        handleRemoveInstance(instance, instance.deleteGroup);
+      };
     }
   };
 
-  const handleKey = ({user}) => {
+  const handleKey = ({instance}) => {
+    const user = instance;
     if (user.userNo !== 0) {
       openModal(UserPasswordModal, {
         user: user
@@ -267,7 +281,6 @@ const UserGroupManagement = () => {
       }
     });
   };
-
 
   const navBarItems = (mode) => {
     if (mode === Mode.USER) {

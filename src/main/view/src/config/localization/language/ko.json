@@ -544,5 +544,8 @@
   "validationGroupNm": "그룹 명 을 선택 해주세요.",
   "validationUserRunMode": "사용자 실행모드 를 선택 해주세요.",
   "validationDupleUserNm": "해당 사용자 ID 는 이미 등록되어 있습니다.",
-  "validationGroupRunMode": "그룹 실행모드 를 선택 해주세요."
+  "validationGroupRunMode": "그룹 실행모드 를 선택 해주세요.",
+  "validationDupleGrpNm": "해당 그룹 명 은 이미 등록되어 있습니다.",
+  "validationGroupMemberUsers": "그룹 소속 사용자 목록이 비어있습니다.",
+  "validationAlert": "입력 정보를 확인해주세요."
 }

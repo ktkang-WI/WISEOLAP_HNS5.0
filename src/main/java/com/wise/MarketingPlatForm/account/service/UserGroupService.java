@@ -110,6 +110,7 @@ public class UserGroupService {
 
   private GroupDetailInfoModel generateGroupDetailInfoObject(UserGroupDTO userGroup) {
       GroupDetailInfoModel groupDetailInfo = GroupDetailInfoModel.builder()
+          .grpId(userGroup.getGrpId())
           .grpNm(userGroup.getGrpNm())
           .grpDesc(userGroup.getGrpDesc())
           .grpRunMode(userGroup.getGrpRunMode())
