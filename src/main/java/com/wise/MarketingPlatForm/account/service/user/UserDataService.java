@@ -15,9 +15,9 @@ import com.wise.MarketingPlatForm.account.dto.user.UserDataPutDTO;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.dataset.dto.ds.DataDsviewCubeDimDTO;
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
-import com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.utils.XMLGenerator;
 
 

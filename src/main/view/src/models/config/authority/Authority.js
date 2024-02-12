@@ -14,11 +14,6 @@ export const getDsViewCube = () => {
 };
 
 // 그룹
-export const getGroups = () => {
-  const res = axios.get(accountPath + '/group');
-  return res;
-};
-
 export const getGroupFolder = () => {
   const res = axios.get(accountPath + '/group/folder');
   return res;
@@ -57,6 +52,52 @@ export const getUserDs = () => {
 
 // 권한
 // 그룹 데이터
+export class AuthorityData {
+  grpId = 0;
+  userNo = 0;
+  dsViewList = [];
+  cubeList = [];
+  cubeDimList = [];
+
+  constructor({grpId = 0, userNo = 0, dsViewList = [], cubeList = [],
+    cubeDimList = []}) {
+    this.grpId = grpId;
+    this.userNo = userNo;
+    this.dsViewList = dsViewList;
+    this.cubeList = cubeList;
+    this.cubeDimList = cubeDimList;
+  }
+
+  createGroupAuthorityData = () => {
+    const authorityData = [];
+    const data = {
+      grpId: this.grpId,
+      dsView: this.dsViewList,
+      cube: this.cubeList,
+      cubeDim: this.cubeDimList
+    };
+    authorityData.push(data);
+    const res = axios.put(accountPath + '/group/data', {
+      data: authorityData
+    });
+    return res;
+  };
+
+  createUserAuthorityData = () => {
+    const authorityData = [];
+    const data = {
+      userNo: this.userNo,
+      dsView: this.dsViewList,
+      cube: this.cubeList,
+      cubeDim: this.cubeDimList
+    };
+    authorityData.push(data);
+    const res = axios.put(accountPath + '/user/data', {
+      data: authorityData
+    });
+    return res;
+  };
+}
 export const getGroupData = () => {
   const res = axios.get(accountPath + '/group/data');
   return res;

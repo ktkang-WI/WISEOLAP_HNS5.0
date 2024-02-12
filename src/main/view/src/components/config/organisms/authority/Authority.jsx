@@ -1,8 +1,10 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import {authData} from './data/AuthorityData';
-import React, {createContext, useCallback, useEffect, useState} from 'react';
+import {Mode, authData} from './data/AuthorityData';
+import React,
+{createContext, useCallback, useEffect, useRef, useState} from 'react';
+import useModal from 'hooks/useModal';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -37,26 +39,89 @@ const NavBarItem = styled.div`
 export const AuthorityContext = createContext();
 
 const Authority = () => {
+  const {alert} = useModal();
+
   const btns = ['save'];
   const [auth, setAuth] = useState(authData[0]);
   const [data, setData] = useState([]);
 
+  const groupListRef = useRef();
+  const userListRef = useRef();
+  const authorityDataCubeRef = useRef();
+  const authorityDataDimensionRef = useRef();
+  const dsViewListRef = useRef();
+
   const context = {
     state: {
       data: [data, setData]
+    },
+    ref: {
+      authorityDataCubeRef: authorityDataCubeRef,
+      authorityDataDimensionRef: authorityDataDimensionRef,
+      groupListRef: groupListRef,
+      userListRef: userListRef,
+      dsViewListRef: dsViewListRef
     }
   };
 
   useEffect(() => {
     auth.data().then((res) => {
       if (res.data.data) {
+        console.log(res.data.data);
         setData(res.data.data);
       }
     });
   }, []);
 
+  const validationSave = () => {
+    const groupListSelectedRowKeys =
+        groupListRef.current?._instance.option('selectedRowKeys');
+    const userListSelectedRowKeys =
+        userListRef.current?._instance.option('selectedRowKeys');
+    const dsViewListRefSelectedRowKeys =
+        dsViewListRef.current._instance.option('selectedRowKeys');
+
+    return (groupListSelectedRowKeys?.length > 0 ||
+      userListSelectedRowKeys?.length > 0) &&
+    (dsViewListRefSelectedRowKeys.length > 0);
+  };
+
   const handleBtnClick = ({component}) => {
-    alert('기능 개발 중입니다.');
+    if (!validationSave()) {
+      alert('데이터를 선택해주세요.');
+      return;
+    }
+
+    const authorityData = auth.create({groupListRef, userListRef, dsViewListRef,
+      authorityDataCubeRef, authorityDataDimensionRef});
+
+    if (auth.mode === Mode.GROUP_DATA) {
+      authorityData.createGroupAuthorityData().then((response) => {
+        if (response.data.data) {
+          auth.data().then((res) => {
+            if (res.data.data) {
+              setData(res.data.data);
+            }
+          });
+        }
+      }).catch(() => {
+        throw new Error('Failed CreateAuthorityData');
+      });
+    }
+
+    if (auth.mode === Mode.USER_DATA) {
+      authorityData.createUserAuthorityData().then((response) => {
+        if (response.data.data) {
+          auth.data().then((res) => {
+            if (res.data.data) {
+              setData(res.data.data);
+            }
+          });
+        }
+      }).catch(() => {
+        throw new Error('Failed CreateAuthorityData');
+      });
+    }
   };
 
   const navBarItems = () => {

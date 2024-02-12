@@ -7,6 +7,7 @@ import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
+import {Group} from 'models/config/userGroupManagement/UserGroupManagement';
 
 const GroupList = ({setRow}) => {
   // context
@@ -15,24 +16,27 @@ const GroupList = ({setRow}) => {
   // state
   const [groups, setGroups] = useState([]);
   const [data] = authoritycontext.state.data;
+  const groupListRef = authoritycontext.ref.groupListRef;
 
   useEffect(() => {
     const dataGroups = data.filter((row)=>row.group);
-    models.Authority.getGroups()
+    models.UserGroupManagement.getGroups()
         .then((response) => {
-          const authGrpIdList = dataGroups.map((row) => row.group.grpId);
-          const newGroups = response.data.data.map((row) => {
-            return {
-              ...row,
-              isAuth: authGrpIdList.includes(row.grpId) ? true: false
-            };
+          const authGrpIdList = dataGroups
+              .filter((row) => row.dsViews?.dsViewId.length > 0)
+              .map((row) => row.group.grpId);
+          const groups = response.data.data;
+          const newGroups = groups.map((group) => {
+            const newGroup = new Group(group);
+            newGroup.isAuth = authGrpIdList.includes(group.grpId) ? true: false;
+            return newGroup;
           });
           setGroups(newGroups);
         })
         .catch(() => {
           throw new Error('Data Loading Error');
         });
-  }, []);
+  }, [data]);
 
   const handleRowClick = ({data}) => {
     setRow(data);
@@ -42,6 +46,7 @@ const GroupList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.groupList}></Title>
       <DataGrid
+        ref={groupListRef}
         height={'90%'}
         dataSource={groups}
         showBorders={true}

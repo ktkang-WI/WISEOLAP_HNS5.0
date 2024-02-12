@@ -161,17 +161,6 @@ export class Group {
     return userGroupManageMent;
   };
 
-  getGroups = async () => {
-    const userGroupManageMent = await getUserGroupManagement()
-        .then((res) => {
-          return res.data.data;
-        })
-        .catch(() => {
-          throw new Error('Failed Get Groups');
-        });
-    return userGroupManageMent.groupsFormat;
-  };
-
   getGroupNotMemberUsers = async () => {
     const userGroupManageMent = await getUserGroupManagement()
         .then((res) => {
