@@ -1,7 +1,7 @@
 {
-    "primary": "#577df6",
+    "primary": "#005196",
     "primaryGradient": " #2b5eff",
-    "primaryGradientHover": "#577df6",
+    "primaryGradientHover": "#005196",
     "secondary": "#646464",
     "secondaryGradient": "#f6f6f6",
     "secondaryGradientHover": "#f6f6f6",
@@ -17,7 +17,7 @@
     "breakLine": "#ddd",
     "dashedBorder": "#c3c8d9",
     "selectedTabHeader": "#ececec",
-    "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#577df6), to(#2b5eff))",
+    "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#005196), to(#2b5eff))",
     "filterBar": "#f6f6f6",
     "filterBarExpand": "#f6f6f6",
     "popoverBackground": "#fff",

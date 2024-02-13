@@ -1,12 +1,24 @@
 import {styled} from 'styled-components';
 import LoginLogo from '../assets/image/icon/login/login_visual.png';
+import bgLogo from '../assets/image/logo/logo_wi_bg.png';
 import PagingTransition from
   'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
 
-const Wrap = styled.div``;
+const Wrap = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const BackgroundLogo = styled.img`
+  width: 40vw;
+  height: auto;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+`;
 
 const Container = styled.div`
   top: 50%;
@@ -79,21 +91,20 @@ const Footer = styled.div`
 
 const Login = () => {
   return (
-    <div>
-      <Wrap>
-        <Container className="containerWrap" id="container">
-          <InnerWrap className='innerWrap'>
-            <LoginLogoWrap className='loginLogoWrap'>
-              <VisualInnerWrap className='visualInnerWrap'>
-                <StyledLoginImg src={LoginLogo}/>
-              </VisualInnerWrap>
-            </LoginLogoWrap>
-            <PagingTransition/>
-          </InnerWrap>
-        </Container>
-        <Footer>2019 © Intelligence by wise</Footer>
-      </Wrap>
-    </div>
+    <Wrap>
+      <BackgroundLogo src={bgLogo}></BackgroundLogo>
+      <Container className="containerWrap" id="container">
+        <InnerWrap className='innerWrap'>
+          <LoginLogoWrap className='loginLogoWrap'>
+            <VisualInnerWrap className='visualInnerWrap'>
+              <StyledLoginImg src={LoginLogo}/>
+            </VisualInnerWrap>
+          </LoginLogoWrap>
+          <PagingTransition/>
+        </InnerWrap>
+      </Container>
+      <Footer>2019 © Intelligence by wise</Footer>
+    </Wrap>
   );
 };
 export default Login;
