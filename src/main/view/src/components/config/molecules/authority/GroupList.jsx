@@ -23,7 +23,15 @@ const GroupList = ({setRow}) => {
     models.UserGroupManagement.getGroups()
         .then((response) => {
           const authGrpIdList = dataGroups
-              .filter((row) => row.dsViews?.dsViewId.length > 0)
+              .filter((row) => {
+                if (row.dsViews) {
+                  if (row.dsViews?.dsViewId.length > 0) {
+                    return row;
+                  }
+                } else {
+                  return row;
+                }
+              })
               .map((row) => row.group.grpId);
           const groups = response.data.data;
           const newGroups = groups.map((group) => {

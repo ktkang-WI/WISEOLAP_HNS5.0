@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/account/user/folder")
 public class UserFolderController {
-  
+
   @Autowired
   private UserFolderService userFolderService;
 
@@ -62,7 +62,7 @@ public class UserFolderController {
 
     boolean result = userFolderService.patchUserFolder(userFolderPatchDTO);
 
-    return RestAPIVO.okResponse(false);
+    return RestAPIVO.okResponse(result);
   }
 
 }

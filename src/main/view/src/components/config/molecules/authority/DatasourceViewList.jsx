@@ -25,12 +25,12 @@ const DatasourceViewList = ({row, setDsView}) => {
 
     if (groups.length > 0) {
       dsViewIdList = groups.find((g) => g.group.grpId === row.grpId)
-          ?.dsViews.dsViewId;
+          ?.dsViews?.dsViewId;
     }
 
     if (users.length > 0) {
       dsViewIdList = users.find((u) => u.user.userNo === row.userNo)
-          ?.dsViews.dsViewId;
+          ?.dsViews?.dsViewId;
     }
 
     return dsViewIdList ? dsViewIdList : [];

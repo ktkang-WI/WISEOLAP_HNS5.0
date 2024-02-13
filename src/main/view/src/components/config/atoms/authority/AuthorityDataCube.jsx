@@ -37,11 +37,11 @@ const AuthorityDataCube = ({dsView, dsViewCube, row, auth}) => {
 
     setCubeList(newCubeList);
     setSelectedRowKeys(selectedCubeList);
-  }, [dsView, data, auth]);
+  }, [dsView, auth]);
 
   useEffect(() => {
     setCubeList([]);
-  }, [row]);
+  }, [row, data]);
 
   const onSelectionChanged = useCallback(
       ({selectedRowKeys: changedRowKeys}) => {

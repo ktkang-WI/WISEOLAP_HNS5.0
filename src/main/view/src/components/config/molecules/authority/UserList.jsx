@@ -23,7 +23,15 @@ const UserList = ({setRow}) => {
     models.Authority.getUsers()
         .then((response) => {
           const authUserNoList = dataUsers
-              .filter((row) => row.dsViews?.dsViewId.length > 0)
+              .filter((row) => {
+                if (row.dsViews) {
+                  if (row.dsViews?.dsViewId.length > 0) {
+                    return row;
+                  }
+                } else {
+                  return row;
+                }
+              })
               .map((row) => row.user.userNo);
           const users = response.data.data;
           const newUsers = users.map((user) => {

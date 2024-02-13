@@ -38,11 +38,11 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row, auth}) => {
 
     setDimensionList(newDimensionList);
     setSelectedRowKeys(selectedDimensionList);
-  }, [dsView, data, auth]);
+  }, [dsView, auth]);
 
   useEffect(() => {
     setDimensionList([]);
-  }, [row]);
+  }, [row, data]);
 
   const onSelectionChanged = useCallback(
       ({selectedRowKeys: changedRowKeys}) => {

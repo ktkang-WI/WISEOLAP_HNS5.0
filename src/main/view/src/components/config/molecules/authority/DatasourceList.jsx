@@ -1,6 +1,6 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import models from 'models';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
@@ -15,6 +15,7 @@ const DatasourceList = ({row}) => {
   // state
   const [ds, setDs] = useState([]);
   const [data] = authorityContext.state.data;
+  const dataSourceListRef = authorityContext.ref.dataSourceListRef;
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const getDsIdList = () => {
@@ -59,6 +60,13 @@ const DatasourceList = ({row}) => {
     setSelectedRowKeys(dsIdList);
   }, [row]);
 
+  const onSelectionChanged = useCallback(
+      ({selectedRowKeys: changedRowKeys}) => {
+        setSelectedRowKeys(changedRowKeys);
+      },
+      [row],
+  );
+
   const handleRowClick = ({data}) => {
     // setDsView(data);
   };
@@ -67,14 +75,19 @@ const DatasourceList = ({row}) => {
     <Wrapper>
       <Title title={localizedString.dataSourceList}></Title>
       <DataGrid
+        ref={dataSourceListRef}
         dataSource={ds}
         showBorders={true}
         onRowClick={handleRowClick}
         height={'90%'}
         keyExpr="dsId"
         selectedRowKeys={selectedRowKeys}
+        onSelectionChanged={onSelectionChanged}
       >
-        <Selection mode="multiple" />
+        <Selection
+          mode="multiple"
+          showCheckBoxesMode={'always'}
+        />
         <SearchPanel visible={true} />
         <Column
           dataField="dsNm"

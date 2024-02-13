@@ -5,6 +5,7 @@ import {Mode, authData} from './data/AuthorityData';
 import React,
 {createContext, useCallback, useEffect, useRef, useState} from 'react';
 import useModal from 'hooks/useModal';
+import localizedString from 'config/localization';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -50,6 +51,9 @@ const Authority = () => {
   const authorityDataCubeRef = useRef();
   const authorityDataDimensionRef = useRef();
   const dsViewListRef = useRef();
+  const folderTreeViewRef = useRef();
+  const dataSetTreeViewRef = useRef();
+  const dataSourceListRef = useRef();
 
   const context = {
     state: {
@@ -60,7 +64,10 @@ const Authority = () => {
       authorityDataDimensionRef: authorityDataDimensionRef,
       groupListRef: groupListRef,
       userListRef: userListRef,
-      dsViewListRef: dsViewListRef
+      dsViewListRef: dsViewListRef,
+      folderTreeViewRef: folderTreeViewRef,
+      dataSetTreeViewRef: dataSetTreeViewRef,
+      dataSourceListRef: dataSourceListRef
     }
   };
 
@@ -74,16 +81,31 @@ const Authority = () => {
   }, []);
 
   const validationSave = () => {
-    const groupListSelectedRowKeys =
-        groupListRef.current?._instance.option('selectedRowKeys');
-    const userListSelectedRowKeys =
-        userListRef.current?._instance.option('selectedRowKeys');
-    const dsViewListRefSelectedRowKeys =
-        dsViewListRef.current._instance.option('selectedRowKeys');
+    if (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) {
+      const groupListSelectedRowKeys =
+          groupListRef.current?._instance.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef.current?._instance.option('selectedRowKeys');
+      const dsViewListRefSelectedRowKeys =
+          dsViewListRef.current._instance.option('selectedRowKeys');
 
-    return (groupListSelectedRowKeys?.length > 0 ||
-      userListSelectedRowKeys?.length > 0) &&
-    (dsViewListRefSelectedRowKeys.length > 0);
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0) &&
+      (dsViewListRefSelectedRowKeys.length > 0);
+    }
+
+    if (auth.mode === Mode.GROUP_REPORT || auth.mode === Mode.USER_REPORT ||
+      auth.mode === Mode.GROUP_DATASET || auth.mode === Mode.USER_DATASET ||
+      auth.mode === Mode.GROUP_DATASOURCE ||
+      auth.mode === Mode.USER_DATASOURCE) {
+      const groupListSelectedRowKeys =
+          groupListRef.current?._instance.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef.current?._instance.option('selectedRowKeys');
+
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0);
+    }
   };
 
   const handleBtnClick = ({component}) => {
@@ -92,35 +114,50 @@ const Authority = () => {
       return;
     }
 
-    const authorityData = auth.create({groupListRef, userListRef, dsViewListRef,
-      authorityDataCubeRef, authorityDataDimensionRef});
+    const authorityData = auth.save({groupListRef, userListRef, dsViewListRef,
+      authorityDataCubeRef, authorityDataDimensionRef, folderTreeViewRef,
+      dataSetTreeViewRef, dataSourceListRef});
 
-    if (auth.mode === Mode.GROUP_DATA) {
-      authorityData.createGroupAuthorityData().then((response) => {
+    try {
+      let prom;
+      if (auth.mode === Mode.GROUP_DATA) {
+        prom = authorityData.createGroupAuthorityData();
+      }
+      if (auth.mode === Mode.GROUP_REPORT) {
+        prom = authorityData.createGroupAuthorityReport();
+      }
+      if (auth.mode === Mode.GROUP_DATASET) {
+        prom = authorityData.createGroupAuthorityDataSet();
+      }
+      if (auth.mode === Mode.GROUP_DATASOURCE) {
+        prom = authorityData.createGroupAuthorityDataSource();
+      }
+      if (auth.mode === Mode.USER_DATA) {
+        prom = authorityData.createUserAuthorityData();
+      }
+      if (auth.mode === Mode.USER_REPORT) {
+        prom = authorityData.createUserAuthorityReport();
+      }
+      if (auth.mode === Mode.USER_DATASET) {
+        prom = authorityData.createUserAuthorityDataSet();
+      }
+      if (auth.mode === Mode.USER_DATASOURCE) {
+        prom = authorityData.createUserAuthorityDataSource();
+      }
+
+      prom.then((response) => {
         if (response.data.data) {
           auth.data().then((res) => {
             if (res.data.data) {
               setData(res.data.data);
+              auth.init({authorityDataCubeRef, authorityDataDimensionRef});
+              alert(localizedString.successSave);
             }
           });
         }
-      }).catch(() => {
-        throw new Error('Failed CreateAuthorityData');
       });
-    }
-
-    if (auth.mode === Mode.USER_DATA) {
-      authorityData.createUserAuthorityData().then((response) => {
-        if (response.data.data) {
-          auth.data().then((res) => {
-            if (res.data.data) {
-              setData(res.data.data);
-            }
-          });
-        }
-      }).catch(() => {
-        throw new Error('Failed CreateAuthorityData');
-      });
+    } catch (error) {
+      console.error('Failed SaveAuthority', error);
     }
   };
 

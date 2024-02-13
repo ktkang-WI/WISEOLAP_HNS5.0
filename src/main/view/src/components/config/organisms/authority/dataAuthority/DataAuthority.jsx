@@ -28,7 +28,7 @@ const DataAuthority = ({data}) => {
             setDsViewCube(response.data.data);
           });
     }
-  }, []);
+  }, [dsView]);
 
   return (
     <Wrapper display='flex' direction='row'>
