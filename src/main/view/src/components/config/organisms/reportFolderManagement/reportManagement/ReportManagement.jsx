@@ -15,7 +15,10 @@ const ReportManagement = ({data}) => {
         <ReportList setRow={setRow}/>
       </Wrapper>
       <Wrapper padding='10px'>
-        <ReportInformation row={row}/>
+        <ReportInformation
+          row={row}
+          setRow={setRow}
+        />
       </Wrapper>
     </Wrapper>
   );

@@ -15,13 +15,28 @@ export const managementData = [
     mode: Mode.REPORT_MANAGEMENT,
     title: localizedString.reportManagement,
     component: ReportManagement,
-    data: getFolderReports
+    data: getFolderReports,
+    update: (instance) => {
+      return instance.updateReport();
+    },
+    remove: (instance) => {
+      return instance.deleteReport();
+    }
   },
   // 폴더
   {
     mode: Mode.FOLDER_MANAGEMENT,
     title: localizedString.folderManagement,
     component: FolderManagement,
-    data: getFolders
+    data: getFolders,
+    save: (instance) => {
+      return instance.createFolder();
+    },
+    update: (instance) => {
+      return instance.updateFolder();
+    },
+    remove: (instance) => {
+      return instance.deleteFolder();
+    }
   }
 ];

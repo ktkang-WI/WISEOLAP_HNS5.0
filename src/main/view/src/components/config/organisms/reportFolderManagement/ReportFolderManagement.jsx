@@ -1,8 +1,13 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import React, {createContext, useCallback, useEffect, useState} from 'react';
-import {managementData} from './data/ReportFolderManagementData';
+import React, {createContext, useCallback, useEffect, useRef, useState}
+  from 'react';
+import {Mode, managementData} from './data/ReportFolderManagementData';
+import {Folder, Report} from
+  'models/config/reportFolderManagement/ReportFolderManagement';
+import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -37,36 +42,168 @@ const NavBarItem = styled.div`
 export const ReportFolderContext = createContext();
 
 const ReportFolderManagement = () => {
+  const {alert} = useModal();
+
   const btns = ['plus', 'save', 'remove'];
   const [management, setManagement] = useState(managementData[0]);
   const [data, setData] = useState([]);
+  const reportListRef = useRef();
+  const reportInformationRef = useRef();
+  const folderListRef = useRef();
+  const folderInformationRef = useRef();
 
   const context = {
     state: {
       data: [data, setData]
+    },
+    ref: {
+      reportListRef: reportListRef,
+      reportInformationRef: reportInformationRef,
+      folderListRef: folderListRef,
+      folderInformationRef: folderInformationRef
     }
   };
 
-  useEffect(() => {
+  const clearRef = (listRef, infoRef) => {
+    listRef.current._instance.clearSelection();
+    infoRef.current._instance.resetValues();
+  };
+
+  const init = () => {
     management.data().then((res) => {
       if (res.data.data) {
         setData(res.data.data);
       }
     });
+  };
+
+  useEffect(() => {
+    init();
   }, []);
 
   const handleBtnClick = ({component}) => {
-    alert('기능 개발 중입니다.');
+    const icon = component.option('icon');
+    let instance = {};
+    let listRef = '';
+    let infoRef = '';
+
+    if (management.mode === Mode.REPORT_MANAGEMENT) {
+      const reportInfoFormData = reportInformationRef.current?._instance
+          .option('formData');
+      instance = new Report(reportInfoFormData);
+    }
+    if (management.mode === Mode.FOLDER_MANAGEMENT) {
+      const folderInfoFormData = folderInformationRef.current?._instance
+          .option('formData');
+      instance = new Folder(folderInfoFormData);
+      listRef = folderListRef;
+      infoRef = folderInformationRef;
+    }
+
+    switch (icon) {
+      case 'plus':
+        handlePlus();
+        break;
+      case 'save':
+        handleSave({instance, listRef, infoRef});
+        break;
+      case 'remove':
+        handleRemove({instance, listRef, infoRef});
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handlePlus = () => {
+    // management.save(instance)
+    //     .then((response) => {
+    //       console.log(response.data.data);
+    //     })
+    //     .catch(() => {
+    //       throw new Error('Failed Update Report');
+    //     });
+    clearRef(folderListRef, folderInformationRef);
+  };
+
+  const handleSaveFolder = (folder, listRef, infoRef) => {
+    const action = folder.fldId === 0 ? management.save : management.update;
+    const successMessage = folder.fldId === 0 ?
+    localizedString.successSave : localizedString.successUpdate;
+
+    action(folder).then((response) => {
+      if (response.data.data) {
+        init();
+        clearRef(listRef, infoRef);
+        alert(successMessage);
+      }
+    }).catch(() => {
+      throw new Error('Failure save Folder');
+    });
+  };
+
+  const handleSaveReport = (report, listRef, infoRef) => {
+    management.update(report)
+        .then((response) => {
+          console.log(response.data.data);
+          init();
+          clearRef(listRef, infoRef);
+        })
+        .catch(() => {
+          throw new Error('Failed Update Report');
+        });
+  };
+
+  const handleSave = ({instance, listRef, infoRef}) => {
+    if (management.mode === Mode.REPORT_MANAGEMENT) {
+      handleSaveReport(instance);
+    }
+    if (management.mode === Mode.FOLDER_MANAGEMENT) {
+      handleSaveFolder(instance);
+    }
+  };
+
+  const handleRemoveReport = (report, listRef, infoRef) => {
+    management.remove(report)
+        .then((response) => {
+          if (response.data.result) {
+            init();
+            clearRef(listRef, infoRef);
+            alert(localizedString[response.data.msg]);
+          }
+        })
+        .catch(() => {
+          throw new Error('Failed Remove Report');
+        });
+  };
+
+  const handleRemove = ({instance, listRef, infoRef}) => {
+    if (management.mode === Mode.REPORT_MANAGEMENT) {
+      handleRemoveReport(instance, listRef, infoRef);
+    }
+    if (management.mode === Mode.FOLDER_MANAGEMENT) {
+    }
   };
 
   const navBarItems = () => {
-    return (
-      btns.map((item, index) => (
-        <NavBarItem icon={item} key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
-        </NavBarItem>
-      ))
-    );
+    if (management.mode === Mode.FOLDER_MANAGEMENT) {
+      return (
+        btns.map((item, index) => (
+          <NavBarItem key={index}>
+            <Button icon={item} onClick={handleBtnClick}></Button>
+          </NavBarItem>
+        ))
+      );
+    } else if (management.mode === Mode.REPORT_MANAGEMENT) {
+      return (
+        btns.filter((item) => item !== 'plus')
+            .map((item, index) => (
+              <NavBarItem icon={item} key={index}>
+                <Button icon={item} onClick={handleBtnClick}></Button>
+              </NavBarItem>
+            ))
+      );
+    };
   };
 
   const handleTabPanelItem = useCallback(({itemData}) => {

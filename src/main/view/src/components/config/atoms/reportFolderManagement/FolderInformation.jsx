@@ -1,17 +1,22 @@
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import Form, {
-  GroupItem, Item, Label
+  Item, Label, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
-import {useRef} from 'react';
-import ReportFolderSelectorModal from
-  'components/report/modal/ReportFolderSelectorModal';
+import {useContext} from 'react';
+import {ReportFolderContext} from
+  'components/config/organisms/reportFolderManagement/ReportFolderManagement';
+import FolderListModal from './modal/FolderListModal';
 
-const FolderInformation = ({row}) => {
+const FolderInformation = ({row, setRow}) => {
   const {openModal} = useModal();
-  const ref = useRef();
+  // context
+  const reportFolderContext = useContext(ReportFolderContext);
+
+  // state
+  const folderInformationRef = reportFolderContext.ref.folderInformationRef;
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -23,9 +28,12 @@ const FolderInformation = ({row}) => {
       type: 'default',
       disabled: false,
       onClick: (e) => {
-        openModal(ReportFolderSelectorModal, {
-          formInstance: ref.current.instance
-        });
+        if (Object.keys(row).length > 0) {
+          openModal(FolderListModal, {
+            infoInstance: folderInformationRef.current._instance,
+            setRow: setRow
+          });
+        }
       }
     }
   };
@@ -34,40 +42,50 @@ const FolderInformation = ({row}) => {
     <Panel title={localizedString.folderInformation}>
       <Form
         formData={row}
-        ref={ref}
+        ref={folderInformationRef}
       >
-        <GroupItem colCount={1}>
-          <Item
-            dataField="fldId"
-            editorType="dxTextBox"
-          >
-            <Label>{localizedString.folderId}</Label>
-          </Item>
-          <Item
-            dataField="fldNm"
-            editorType="dxTextBox"
-            readOnly={true}
-            editorOptions={{
-              readOnly: true,
-              buttons: [folderSearchBtn],
-              elementAttr: {
-                id: 'fldName'
-              },
-              onValueChanged: (e) => {
-                const elementAttr = e.component.option('elementAttr');
-                console.log(elementAttr);
-              }
-            }}
-          >
-            <Label>{localizedString.folderManagement}</Label>
-          </Item>
-          <Item
-            dataField="fldOrdinal"
-            editorType="dxTextBox"
-          >
-            <Label>{localizedString.order}</Label>
-          </Item>
-        </GroupItem>
+        <SimpleItem
+          dataField="fldId"
+          editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
+        >
+          <Label>{localizedString.folderId}</Label>
+        </SimpleItem>
+        <Item
+          dataField="fldNm"
+          editorType="dxTextBox"
+          readOnly={true}
+          editorOptions={{
+            readOnly: true,
+            buttons: [folderSearchBtn],
+            elementAttr: {
+              id: 'fldName'
+            },
+            onValueChanged: (e) => {
+              // const elementAttr = e.component.option('elementAttr');
+              // console.log(elementAttr);
+              // console.log(row);
+              // if (row.fldParentId === 0) {
+              //   e.component.option('value', '');
+              // } else {
+              //   const newFldNm = folderListRef.current._instance
+              //       .option('dataSource')
+              //       .find((li) => li.fldId === row.fldParentId).fldNm;
+              //   e.component.option('value', newFldNm);
+              // }
+            }
+          }}
+        >
+          <Label>{localizedString.folderManagement}</Label>
+        </Item>
+        <Item
+          dataField="fldOrdinal"
+          editorType="dxTextBox"
+        >
+          <Label>{localizedString.order}</Label>
+        </Item>
       </Form>
     </Panel>
   );

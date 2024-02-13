@@ -18,6 +18,7 @@ const FolderManagement = ({data}) => {
       <Wrapper padding='10px'>
         <FolderInformation
           row={row}
+          setRow={setRow}
         />
       </Wrapper>
     </Wrapper>

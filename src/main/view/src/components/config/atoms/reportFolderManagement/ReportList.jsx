@@ -10,6 +10,9 @@ import localizedString from 'config/localization';
 import {ReportFolderContext} from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
 import folderImg from 'assets/image/icon/report/folder_load.png';
+import dash from 'assets/image/icon/report/dash.png';
+import excel from 'assets/image/icon/report/excel_file.png';
+import adhoc from 'assets/image/icon/report/adhoc.png';
 
 const ReportList = ({setRow}) => {
   // context
@@ -17,6 +20,7 @@ const ReportList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
+  const reportListRef = reportFolderContext.ref.reportListRef;
   const [reports, setReports] = useState();
 
   useEffect(() => {
@@ -62,6 +66,7 @@ const ReportList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.reportlist}></Title>
       <TreeList
+        ref={reportListRef}
         dataSource={reports}
         keyExpr="key"
         parentIdExpr="parentId"
@@ -78,9 +83,20 @@ const ReportList = ({setRow}) => {
           dataField="name"
           caption={localizedString.reportName}
           cellRender={({row}) => {
+            let img = folderImg;
+            if (row.data.reportType === 'DashAny') {
+              img = dash;
+            }
+            if (row.data.reportType === 'AdHoc') {
+              img = adhoc;
+            }
+            if (row.data.reportType === 'Spread' ||
+            row.data.reportType == 'Excel') {
+              img = excel;
+            }
             return (
               <span>
-                <img height={'17px'} src={folderImg}/>
+                <img height={'17px'} src={img}/>
                 {row.data.name}
               </span>
             );

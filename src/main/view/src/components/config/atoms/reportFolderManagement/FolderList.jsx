@@ -4,7 +4,7 @@ import TreeList, {
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 import {ReportFolderContext} from
@@ -17,15 +17,22 @@ const FolderList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
+  const folderListRef = reportFolderContext.ref.folderListRef;
 
-  const handleRowClick = ({data}) => {
+  useEffect(() => {
+    console.log(data);
+  }, []);
+
+  const handleRowClick = useCallback(({data}) => {
+    console.log(folderListRef);
     setRow(data);
-  };
+  }, [data]);
 
   return (
     <Wrapper>
       <Title title={localizedString.folderList}></Title>
       <TreeList
+        ref={folderListRef}
         dataSource={data}
         keyExpr="fldId"
         parentIdExpr="fldParentId"
