@@ -113,7 +113,7 @@ export class Folder {
       fldId: this.fldId
     };
 
-    const res = axios.delete(configPath + '/folder', null, {params: folder});
+    const res = axios.delete(configPath + '/folder', {params: folder});
     return res;
   };
 }

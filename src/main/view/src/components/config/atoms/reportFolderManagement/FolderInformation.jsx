@@ -31,6 +31,7 @@ const FolderInformation = ({row, setRow}) => {
         if (Object.keys(row).length > 0) {
           openModal(FolderListModal, {
             infoInstance: folderInformationRef.current._instance,
+            row: row,
             setRow: setRow
           });
         }
@@ -46,22 +47,31 @@ const FolderInformation = ({row, setRow}) => {
       >
         <SimpleItem
           dataField="fldId"
-          editorType="dxTextBox"
           editorOptions= {{
-            disabled: true
+            disabled: true,
+            mode: 'number'
           }}
         >
           <Label>{localizedString.folderId}</Label>
         </SimpleItem>
+        {
+          (!row.fldId || row.fldId === '') &&
+          <SimpleItem
+            dataField="fldNm"
+            editorType="dxTextBox"
+          >
+            <Label>{localizedString.folderNm}</Label>
+          </SimpleItem>
+        }
         <Item
-          dataField="fldNm"
+          dataField="fldParentNm"
           editorType="dxTextBox"
           readOnly={true}
           editorOptions={{
             readOnly: true,
             buttons: [folderSearchBtn],
             elementAttr: {
-              id: 'fldName'
+              id: 'fldParentName'
             },
             onValueChanged: (e) => {
               // const elementAttr = e.component.option('elementAttr');

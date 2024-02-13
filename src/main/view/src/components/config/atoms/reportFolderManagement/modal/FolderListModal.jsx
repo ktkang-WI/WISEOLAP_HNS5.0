@@ -44,7 +44,14 @@ const FolderListModal = ({...props}) => {
   };
 
   const onClick = (e) => {
-    props.setRow(row);
+    const newRow = {
+      fldParentId: row.fldId,
+      fldParentNm: row.fldNm
+    };
+    props.setRow({
+      ...props.row,
+      ...newRow
+    });
   };
 
   return (

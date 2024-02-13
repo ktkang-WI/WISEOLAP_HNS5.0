@@ -16,16 +16,40 @@ const FolderList = ({setRow}) => {
   const reportFolderContext = useContext(ReportFolderContext);
 
   // state
-  const [data] = reportFolderContext.state.data;
+  const [data, setData] = reportFolderContext.state.data;
   const folderListRef = reportFolderContext.ref.folderListRef;
 
+  const initData = () => {
+    const getParentFldNm = (fld) => data
+        .find((d) => d.fldId === fld.fldParentId).fldNm;
+    const newData = data.map((row) => {
+      if (row.fldParentId === 0) {
+        return {
+          ...row,
+          fldParentNm: ''
+        };
+      } else {
+        return {
+          ...row,
+          fldParentNm: getParentFldNm(row)
+        };
+      }
+    });
+    setData(newData);
+  };
+
   useEffect(() => {
-    console.log(data);
+    initData();
   }, []);
 
   const handleRowClick = useCallback(({data}) => {
-    console.log(folderListRef);
     setRow(data);
+  }, [data]);
+
+  const handleSelectionChanged = useCallback(({selectedRowKeys}) => {
+    if (selectedRowKeys.length === 0) {
+      initData();
+    }
   }, [data]);
 
   return (
@@ -39,6 +63,7 @@ const FolderList = ({setRow}) => {
         id="reportFolderManagementFolderList"
         height={'90%'}
         onRowClick={handleRowClick}
+        onSelectionChanged={handleSelectionChanged}
       >
         <SearchPanel
           visible={true}

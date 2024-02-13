@@ -116,13 +116,6 @@ const ReportFolderManagement = () => {
   };
 
   const handlePlus = () => {
-    // management.save(instance)
-    //     .then((response) => {
-    //       console.log(response.data.data);
-    //     })
-    //     .catch(() => {
-    //       throw new Error('Failed Update Report');
-    //     });
     clearRef(folderListRef, folderInformationRef);
   };
 
@@ -145,7 +138,6 @@ const ReportFolderManagement = () => {
   const handleSaveReport = (report, listRef, infoRef) => {
     management.update(report)
         .then((response) => {
-          console.log(response.data.data);
           init();
           clearRef(listRef, infoRef);
         })
@@ -156,10 +148,10 @@ const ReportFolderManagement = () => {
 
   const handleSave = ({instance, listRef, infoRef}) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
-      handleSaveReport(instance);
+      handleSaveReport(instance, listRef, infoRef);
     }
     if (management.mode === Mode.FOLDER_MANAGEMENT) {
-      handleSaveFolder(instance);
+      handleSaveFolder(instance, listRef, infoRef);
     }
   };
 
@@ -177,11 +169,26 @@ const ReportFolderManagement = () => {
         });
   };
 
+  const handleRemoveFolder = (report, listRef, infoRef) => {
+    management.remove(report)
+        .then((response) => {
+          if (response.data.data) {
+            init();
+            clearRef(listRef, infoRef);
+            alert(localizedString.successRemove);
+          }
+        })
+        .catch(() => {
+          throw new Error('Failed Remove Report');
+        });
+  };
+
   const handleRemove = ({instance, listRef, infoRef}) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
       handleRemoveReport(instance, listRef, infoRef);
     }
     if (management.mode === Mode.FOLDER_MANAGEMENT) {
+      handleRemoveFolder(instance, listRef, infoRef);
     }
   };
 
