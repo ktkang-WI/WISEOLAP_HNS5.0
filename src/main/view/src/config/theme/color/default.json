@@ -1,6 +1,6 @@
 {
     "primary": "#005196",
-    "primaryGradient": " #2b5eff",
+    "primaryGradient": " #005196",
     "primaryGradientHover": "#005196",
     "secondary": "#646464",
     "secondaryGradient": "#f6f6f6",
@@ -22,5 +22,6 @@
     "filterBarExpand": "#f6f6f6",
     "popoverBackground": "#fff",
     "boxShadow": "0 0 5px 0 rgba(51, 51, 51, 0.3)",
-    "popoverTitleBackground": "linear-gradient(#ececed, #fafafa, #ececed)"
+    "popoverTitleBackground": "linear-gradient(#ececed, #fafafa, #ececed)",
+    "gray400": "#858B93"
 }

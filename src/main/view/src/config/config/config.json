@@ -1,7 +1,7 @@
 {
   "test": "TEST",
   "snbOnlyIcon": false,
-  "useSNBDrawer": true,
+  "useSNBDrawer": false,
   "useRibbonLabel": true,
   "ribbonOnlyIcon": true,
   "contextRoot": "/editds"

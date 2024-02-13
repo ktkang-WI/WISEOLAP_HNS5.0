@@ -1,29 +1,26 @@
 import {styled} from 'styled-components';
-import TitleImage from '../atoms/TitleImage';
+import TitleWithBreakLine from '../atoms/TitleWithBreakLine';
 import FormInputs from '../molecules/FormInputs';
 import inputElements from './InputElements';
 
 const StyledSignIn = styled.div`
-  margin-left: 50%;
   min-height: inherit;
 `;
 
 const ActionPageWrap = styled.div`
-  width: 60%;
+  width: 100%;
   height: 100%;
-  padding: 134px 112px 0;
 `;
 
 const FormWrap = styled.div`
   height: 400px;
-  padding-top: 100px;
 `;
 
 const SignIn = () => {
   return (
     <StyledSignIn>
       <ActionPageWrap>
-        <TitleImage type={'login'}/>
+        <TitleWithBreakLine>Login</TitleWithBreakLine>
         <FormWrap>
           <FormInputs
             contents={inputElements()['login']}

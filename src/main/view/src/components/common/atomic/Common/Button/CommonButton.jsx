@@ -16,9 +16,10 @@ const Button = styled.div`
   min-width: ${(props) => props.minWidth};
   max-width: ${(props) => props.maxWidth};
   margin: ${(props) => props.margin};
-  font: ${theme.font.button};
+  font: ${(props) => props.font};
   box-sizing: border-box;
-  padding: 0px 1px;
+  padding: ${(props) => props.padding};
+  
   border-radius:${(props) => props.borderRadius || '0px'};
 
   &:hover {
@@ -38,6 +39,7 @@ const CommonButton = ({
   minWidth='50px',
   maxWidth='100%',
   margin='0px',
+  padding='0px 1px',
   ...props
 }) => {
   const themeType = {
@@ -45,13 +47,15 @@ const CommonButton = ({
       background: theme.color.primaryGradient,
       hoverBackground: theme.color.primaryGradientHover,
       color: theme.color.secondaryFont,
-      border: 'none'
+      border: 'none',
+      font: theme.font.button
     },
     'secondary': {
       background: theme.color.secondaryGradient,
       hoverBackground: theme.color.secondaryGradientHover,
       color: theme.color.primaryFont,
-      border: 'solid 1px ' + theme.color.primaryBorder
+      border: 'solid 1px ' + theme.color.primaryBorder,
+      font: theme.font.button
     }
   };
 

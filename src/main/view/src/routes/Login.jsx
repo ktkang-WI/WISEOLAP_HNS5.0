@@ -1,6 +1,7 @@
 import {styled} from 'styled-components';
-import LoginLogo from '../assets/image/icon/login/login_visual.png';
+import LoginLogo from '../assets/image/logo/login_image.png';
 import bgLogo from '../assets/image/logo/logo_wi_bg.png';
+import wordLogo from '../assets/image/logo/logo_wiseitech.png';
 import PagingTransition from
   'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
@@ -20,22 +21,38 @@ const BackgroundLogo = styled.img`
   bottom: 0;
 `;
 
+const WordLogo = styled.img`
+  height: auto;
+  width: 182px;
+  position: absolute;
+  left: 140px;
+  top: 80px;
+`;
+
 const Container = styled.div`
   top: 50%;
-  transform: translateY(-50%);
-  border-radius: 10px;
+  transform: translate(-50%, -50%);
   border: 2px solid #eaf0f6;
+  border-radius: 32px 82px;
+  background: white;
   position: absolute;
-  width: 1122px;
-  min-height: 682px;
+  width: 1000px;
+  height: 538px;
   overflow: hidden;
   display: block;
   left: 50%;
-  margin-left: -561px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 `;
 
 const InnerWrap = styled.div`
   min-height: inherit;
+
+  & > div {
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+    padding: 50px 70px;
+  }
 
   & > .page-enter {
     z-index: 0;
@@ -59,8 +76,6 @@ const InnerWrap = styled.div`
 `;
 
 const StyledLoginImg = styled.img`
-  width: 400px;
-  margin-left: -20px;
   vertical-align: middle;
   max-width: 100%;
   height: auto;
@@ -70,13 +85,11 @@ const StyledLoginImg = styled.img`
 const LoginLogoWrap = styled.div`
   width: 50%;
   height: 100%;
-  float: left;
-  border-right: 1px solid #e7e7e7;;
 `;
 
 const VisualInnerWrap = styled.div`
   display: flex;
-  height: 682px;
+  height: 420px;
   align-items: center;
   justify-content: center;
 `;
@@ -92,15 +105,16 @@ const Footer = styled.div`
 const Login = () => {
   return (
     <Wrap>
-      <BackgroundLogo src={bgLogo}></BackgroundLogo>
+      <BackgroundLogo src={bgLogo}/>
+      <WordLogo src={wordLogo}/>
       <Container className="containerWrap" id="container">
         <InnerWrap className='innerWrap'>
+          <PagingTransition/>
           <LoginLogoWrap className='loginLogoWrap'>
             <VisualInnerWrap className='visualInnerWrap'>
               <StyledLoginImg src={LoginLogo}/>
             </VisualInnerWrap>
           </LoginLogoWrap>
-          <PagingTransition/>
         </InnerWrap>
       </Container>
       <Footer>2019 © Intelligence by wise</Footer>
