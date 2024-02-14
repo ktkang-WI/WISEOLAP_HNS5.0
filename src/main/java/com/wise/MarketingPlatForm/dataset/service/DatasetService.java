@@ -289,13 +289,59 @@ public class DatasetService {
          }
          return resultDTO;
     }
+    
+    public MartResultDTO getQueryDatas(int dsId, String query, List<Parameter> parameters) {
+        SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
+        query = queryGenerator.applyParameter(parameters, query);
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                .dsId(dsInfoEntity.getDsId())
+                .dsNm(dsInfoEntity.getDsNm())
+                .ip(dsInfoEntity.getIp())
+                .port(dsInfoEntity.getPort())
+                .password(dsInfoEntity.getPassword())
+                .dbNm(dsInfoEntity.getDbNm())
+                .ownerNm(dsInfoEntity.getOwnerNm())
+                .userId(dsInfoEntity.getUserId())
+                .userAreaYn(dsInfoEntity.getUserAreaYn())
+                .dsDesc(dsInfoEntity.getDsDesc())
+                .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                .build();
+
+        martConfig.setMartDataSource(dsMstrDTO);
+        
+        MartResultDTO resultDTO = new MartResultDTO();
+
+        try {
+            resultDTO = martDAO.select(query);
+            List<MetaDTO> metaDTOs = resultDTO.getMetaData();
+
+            for (MetaDTO metaDTO : metaDTOs) {
+                if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
+                    metaDTO.setColumnTypeName("decimal");
+                }
+            }
+
+        } catch (Exception e) {
+            log.warn(e.toString());
+
+            List<Map<String, Object>> err = new ArrayList<Map<String, Object>>();
+            err.add(Collections.singletonMap("error", e.toString()));
+
+            resultDTO.setRowData(err);
+        }
+        return resultDTO;
+    }
 
     private String convertTopN(String sql, String dbType, int rowNum) {
-        if ("MS_SQL".equals(dbType)) {
-            sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
-        } else {
-            sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
-        }
+    	if (rowNum != 0) {
+    		if ("MS_SQL".equals(dbType)) {
+    			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
+    		} else {
+    			sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
+    		}    		
+    	}
         return sql;
     }
 
