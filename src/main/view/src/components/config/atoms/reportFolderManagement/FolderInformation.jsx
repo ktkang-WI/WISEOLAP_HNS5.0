@@ -1,7 +1,7 @@
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import Form, {
-  Item, Label, SimpleItem
+  Item, Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -60,10 +60,11 @@ const FolderInformation = ({row, setRow}) => {
             dataField="fldNm"
             editorType="dxTextBox"
           >
+            <RequiredRule message={localizedString.valiedationFolderNm}/>
             <Label>{localizedString.folderNm}</Label>
           </SimpleItem>
         }
-        <Item
+        <SimpleItem
           dataField="fldParentNm"
           editorType="dxTextBox"
           readOnly={true}
@@ -72,24 +73,12 @@ const FolderInformation = ({row, setRow}) => {
             buttons: [folderSearchBtn],
             elementAttr: {
               id: 'fldParentName'
-            },
-            onValueChanged: (e) => {
-              // const elementAttr = e.component.option('elementAttr');
-              // console.log(elementAttr);
-              // console.log(row);
-              // if (row.fldParentId === 0) {
-              //   e.component.option('value', '');
-              // } else {
-              //   const newFldNm = folderListRef.current._instance
-              //       .option('dataSource')
-              //       .find((li) => li.fldId === row.fldParentId).fldNm;
-              //   e.component.option('value', newFldNm);
-              // }
             }
           }}
         >
+          <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
-        </Item>
+        </SimpleItem>
         <Item
           dataField="fldOrdinal"
           editorType="dxTextBox"

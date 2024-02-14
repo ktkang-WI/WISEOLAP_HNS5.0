@@ -75,15 +75,17 @@ export class Folder {
   fldNm = '';
   fldLvl = 0;
   fldParentId = '';
+  fldParentNm = '';
   fldOrdinal = 0;
   fldDesc = '';
 
   constructor({fldId = 0, fldNm = '', fldLvl = 0, fldParentId = '',
-    fldOrdinal = 0, fldDesc = ''}) {
+    fldParentNm = '', fldOrdinal = 0, fldDesc = ''}) {
     this.fldId = fldId;
     this.fldNm = fldNm;
     this.fldLvl = fldLvl;
     this.fldParentId = fldParentId;
+    this.fldParentNm = fldParentNm;
     this.fldOrdinal = fldOrdinal;
     this.fldDesc = fldDesc;
   }

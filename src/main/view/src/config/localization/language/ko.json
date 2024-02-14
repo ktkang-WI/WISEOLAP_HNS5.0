@@ -554,5 +554,8 @@
   "validationDbNm": "데이터 베이스 명 을 입력해주세요.",
   "validationDbmsType": "데이터 베이스 타입을 선택해주세요",
   "validationOwnerNm": "소유자 명을 입력해주세요.",
-  "validationPort": "포트 를 입력해주세요."
+  "validationPort": "포트 를 입력해주세요.",
+  "valiedationFolderNm": "폴더 명을 입력해 주세요.",
+  "validationFolderSelect": "폴더를 선택해주세요.",
+  "validationReportNm": "보고서 명을 입력해 주세요."
 }

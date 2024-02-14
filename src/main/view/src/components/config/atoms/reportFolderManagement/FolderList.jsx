@@ -18,31 +18,11 @@ const FolderList = ({setRow}) => {
   const reportFolderContext = useContext(ReportFolderContext);
 
   // state
-  const [data, setData] = reportFolderContext.state.data;
+  const [data] = reportFolderContext.state.data;
   const folderListRef = reportFolderContext.ref.folderListRef;
 
-  const initData = () => {
-    const getParentFldNm = (fld) => data
-        .find((d) => d.fldId === fld.fldParentId).fldNm;
-    const newData = data.map((row) => {
-      if (row.fldParentId === 0) {
-        return {
-          ...row,
-          fldParentNm: ''
-        };
-      } else {
-        return {
-          ...row,
-          fldParentNm: getParentFldNm(row)
-        };
-      }
-    });
-    setData(newData);
-    setRow(new Folder({}));
-  };
-
   useEffect(() => {
-    initData();
+    setRow(new Folder({}));
   }, []);
 
   const handleRowClick = useCallback(({data}) => {
@@ -51,7 +31,7 @@ const FolderList = ({setRow}) => {
 
   const handleSelectionChanged = useCallback(({selectedRowKeys}) => {
     if (selectedRowKeys.length === 0) {
-      initData();
+      setRow(new Folder({}));
     }
   }, [data]);
 

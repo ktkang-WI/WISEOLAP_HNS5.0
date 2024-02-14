@@ -64,26 +64,48 @@ const ReportFolderManagement = () => {
     }
   };
 
-  const clearRef = (listRef, infoRef) => {
-    listRef.current._instance.clearSelection();
-    infoRef.current._instance.resetValues();
+  const validateAndProcess = (validate, process) => {
+    if (validate.isValid) {
+      process();
+    } else {
+      alert(localizedString.validationAlert);
+    }
   };
 
-  const dataPrepro = (data) => {
+  const clearRef = (listRef) => {
+    listRef.current._instance.clearSelection();
+  };
+
+  const dataPrepro = useCallback(({data, mode}) => {
+    const getParentFldNm = (fld) => data
+        .find((d) => d.fldId === fld.fldParentId).fldNm;
     return data.map((row) => {
-      if (management.mode === Mode.REPORT_MANAGEMENT) {
+      if (mode === Mode.REPORT_MANAGEMENT) {
         return new Report(row);
       }
-      if (management.mode === Mode.FOLDER_MANAGEMENT) {
-        return new Folder(row);
+      if (mode === Mode.FOLDER_MANAGEMENT) {
+        let newRow = {};
+        if (row.fldParentId === 0) {
+          newRow = {
+            ...row,
+            fldParentNm: '/root'
+          };
+        } else {
+          newRow = {
+            ...row,
+            fldParentNm: getParentFldNm(row)
+          };
+        }
+        return new Folder(newRow);
       }
     });
-  };
+  }, [management]);
 
   const init = () => {
     management.data().then((res) => {
       if (res.data.data) {
-        const newData = dataPrepro(res.data.data);
+        const newData = dataPrepro({data: res.data.data,
+          mode: management.mode});
         setData(newData);
       }
     });
@@ -128,34 +150,45 @@ const ReportFolderManagement = () => {
   };
 
   const handlePlus = () => {
-    clearRef(folderListRef, folderInformationRef);
+    clearRef(folderListRef);
   };
 
   const handleSaveFolder = (folder, listRef, infoRef) => {
-    const action = folder.fldId === 0 ? management.save : management.update;
-    const successMessage = folder.fldId === 0 ?
-    localizedString.successSave : localizedString.successUpdate;
+    const saveFolder = () => {
+      const action = folder.fldId === 0 ? management.save : management.update;
+      const successMessage = folder.fldId === 0 ?
+      localizedString.successSave : localizedString.successUpdate;
 
-    action(folder).then((response) => {
-      if (response.data.data) {
-        init();
-        clearRef(listRef, infoRef);
-        alert(successMessage);
-      }
-    }).catch(() => {
-      throw new Error('Failure save Folder');
-    });
+      action(folder).then((response) => {
+        if (response.data.data) {
+          init();
+          clearRef(listRef);
+          alert(successMessage);
+        }
+      }).catch((e) => {
+        console.log(e);
+        throw new Error('Failure save Folder');
+      });
+    };
+    validateAndProcess(folderInformationRef.current._instance.validate(),
+        saveFolder);
   };
 
   const handleSaveReport = (report, listRef, infoRef) => {
-    management.update(report)
-        .then((response) => {
-          init();
-          clearRef(listRef, infoRef);
-        })
-        .catch(() => {
-          throw new Error('Failed Update Report');
-        });
+    const saveReport = () => {
+      // management.update(report)
+      //     .then((response) => {
+      //       init();
+      //       clearRef(listRef);
+      //       alert(localizedString.successUpdate);
+      //     })
+      //     .catch(() => {
+      //       throw new Error('Failed Update Report');
+      //     });
+      alert('기능 점검 중입니다.');
+    };
+    validateAndProcess(reportInformationRef.current._instance.validate(),
+        saveReport);
   };
 
   const handleSave = ({instance, listRef, infoRef}) => {
@@ -172,7 +205,7 @@ const ReportFolderManagement = () => {
         .then((response) => {
           if (response.data.result) {
             init();
-            clearRef(listRef, infoRef);
+            clearRef(listRef);
             alert(localizedString[response.data.msg]);
           }
         })
@@ -186,7 +219,7 @@ const ReportFolderManagement = () => {
         .then((response) => {
           if (response.data.data) {
             init();
-            clearRef(listRef, infoRef);
+            clearRef(listRef);
             alert(localizedString.successRemove);
           }
         })
@@ -232,8 +265,8 @@ const ReportFolderManagement = () => {
       if (item.title === panelTitle) {
         item.data().then((res) => {
           if (res.data.data) {
-            const newData = dataPrepro(res.data.data);
             setManagement(item);
+            const newData = dataPrepro({data: res.data.data, mode: item.mode});
             setData(newData);
           }
         });

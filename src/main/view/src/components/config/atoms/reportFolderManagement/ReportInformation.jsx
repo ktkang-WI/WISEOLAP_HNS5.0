@@ -2,7 +2,7 @@ import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import {TextArea} from 'devextreme-react';
 import Form, {
-  Item, Label
+  Item, Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -54,12 +54,13 @@ const ReportInformation = ({row, setRow}) => {
         >
           <Label>{localizedString.reportId}</Label>
         </Item>
-        <Item
+        <SimpleItem
           dataField="reportNm"
           editorType="dxTextBox"
         >
+          <RequiredRule message={localizedString.validationReportNm}/>
           <Label>{localizedString.reportName}</Label>
-        </Item>
+        </SimpleItem>
         <Item
           dataField="reportSubTitle"
           editorType="dxTextBox"
@@ -72,7 +73,7 @@ const ReportInformation = ({row, setRow}) => {
         >
           <Label>{localizedString.reportType}</Label>
         </Item>
-        <Item
+        <SimpleItem
           dataField="fldNm"
           editorType="dxTextBox"
           readOnly={true}
@@ -81,15 +82,12 @@ const ReportInformation = ({row, setRow}) => {
             buttons: [folderSearchBtn],
             elementAttr: {
               id: 'fldName'
-            },
-            onValueChanged: (e) => {
-              const elementAttr = e.component.option('elementAttr');
-              console.log(elementAttr);
             }
           }}
         >
+          <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
-        </Item>
+        </SimpleItem>
         <Item
           dataField="publisher"
           editorType="dxTextBox"
