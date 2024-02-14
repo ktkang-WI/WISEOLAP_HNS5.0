@@ -211,9 +211,14 @@ const useReportSave = () => {
   const loadReport = (data) => {
     try {
       const editMode = selectEditMode(store.getState());
+      const designerMode = selectCurrentDesignerMode(store.getState());
       // 공통 데이터 가공
       data.item.items.forEach((i) => {
-        i.mart = makeMart(i);
+        if (designerMode == DesignerMode['AD_HOC']) {
+          i.mart = makeAdHocItemMart(i);
+        } else {
+          i.mart = makeMart(i);
+        }
         ItemManager.generateMeta(i);
       });
       data.dataset.datasets.forEach((dataset) => {
@@ -290,7 +295,7 @@ const useReportSave = () => {
         reportId: reportId,
         informations: data.informations
       }));
-      dispatch(spreadActions.changeSpread({
+      dispatch(spreadActions.setViewSpread({
         reportId: reportId,
         bindingInfos: data.spread
       }));

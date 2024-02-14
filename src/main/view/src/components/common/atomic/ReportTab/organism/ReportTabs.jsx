@@ -11,6 +11,7 @@ import models from 'models';
 import useReportSave from 'hooks/useReportSave';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {useDispatch} from 'react-redux';
+import {DesignerMode} from 'components/config/configType';
 
 const ReportTabSource = [
   {
@@ -55,15 +56,11 @@ const ReportTabs = () => {
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
                   try {
-                    // if (loadExcelFile) {
-                    //   loadExcelFile({
-                    //     data: data
-                    //   });
-                    // } else {
                     dispatch(setDesignerMode(selectedReport.reportType));
                     loadReport(data);
-                    querySearch();
-                    // }
+                    if (selectedReport.reportType !== DesignerMode['EXCEL']) {
+                      querySearch();
+                    }
                   } catch (e) {
                     console.error(e);
                     alert(localizedString.reportCorrupted);

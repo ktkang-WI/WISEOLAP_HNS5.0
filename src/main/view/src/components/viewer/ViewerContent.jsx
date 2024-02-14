@@ -16,6 +16,8 @@ import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import useDrag from 'hooks/useDrag';
+import SpreadViewer from
+  'components/report/atomic/spreadBoard/organisms/SpreadViewer';
 
 const theme = getTheme();
 
@@ -44,7 +46,7 @@ const ViewerContent = ({children}) => {
                 <ReportContent>
                   {report && report.reportId != 0 &&
                     (report.options.reportType == 'Excel' ?
-                      <div/> :
+                      <SpreadViewer /> :
                       <ItemBoard/>)
                   }
                 </ReportContent>

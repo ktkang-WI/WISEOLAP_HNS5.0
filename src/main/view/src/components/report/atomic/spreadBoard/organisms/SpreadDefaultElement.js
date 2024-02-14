@@ -328,6 +328,8 @@ const SpreadDefaultElement = () => {
   const SpreadRibbonDefaultElement = {
     id: 'fileMenu',
     text: localizedString.file,
+    visibleWhen: '!TableSheetActive&& !DataManagerActive ' +
+     '&& !ContainMultipleHeaderCells || IsInTableSheetDesignMode',
     buttonGroups: [
       {
         commandGroup: {
