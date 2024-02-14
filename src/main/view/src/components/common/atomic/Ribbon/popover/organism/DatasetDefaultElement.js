@@ -56,9 +56,6 @@ const DatasetDefaultElement = () => {
               openModal(SelectUserUploadTableModal, {
                 onSubmit: (selectedTable) => {
                   openModal(UserUploadTableModal, {
-                    onSubmit: (selectedTable) => {
-                      console.log(selectedTable);
-                    },
                     dsId: dataSource.dsId,
                     selectedTable: selectedTable
                   });

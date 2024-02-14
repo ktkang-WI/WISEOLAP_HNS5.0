@@ -522,5 +522,8 @@
   "reportDownload": "보고서 내려받기",
   "groupList": "그룹 목록",
   "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
-  "length": "길이"
+  "length": "길이",
+  "emptyDatasetNmMsg": "데이터 집합 명을 입력해 주세요.",
+  "emptyUploadDataMsg": "업로드된 데이터가 없습니다. 파일을 선택해 주세요.",
+  "duplicatedDatasetNameMsg": "중복된 데이터 집합 명입니다. 다시 입력해 주세요."
 }

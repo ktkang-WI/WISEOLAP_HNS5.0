@@ -1,8 +1,14 @@
 package com.wise.MarketingPlatForm.fileUpload.controller;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 
 @RestController
 @RequestMapping("/upload")
@@ -44,4 +58,49 @@ public class FileUploadController {
                 .header("Content-Disposition", "attachment; filename=binary-data.txt")
                 .body(fileBytes);
 	}
+
+    @PostMapping(value = "/upload-data-column")
+    public void getUploadDataColumn(HttpServletRequest request, HttpServletResponse response) {
+        
+        response.setCharacterEncoding("utf-8");
+        PrintWriter out = null;        
+        
+        try {
+                
+                out = response.getWriter();
+
+                ArrayList<JSONObject> uploadDataColumnList = fileUploadService.getUploadDataColumnList(request);
+
+                out.print(uploadDataColumnList);
+                out.flush();
+                out.close();
+
+        } catch (Exception e) {
+                e.printStackTrace();
+                ArrayList<JSONObject> uploadDataColumnList = new ArrayList<JSONObject>();
+                JSONObject objCode = new JSONObject();
+                objCode.put("code", 500);
+                uploadDataColumnList.add(objCode);
+                out.print(uploadDataColumnList);
+                out.flush();
+                out.close();
+            }
+
+    }
+
+	@PostMapping(value = "/upload-user-data")
+    public void uploadUserData(@RequestBody Map<String, String> params) {
+        Gson gson = new Gson();
+        int dsId = Integer.parseInt(params.get("dsId"));
+
+		String dataNm = params.getOrDefault("dataNm", "");
+
+		String uploadData = params.getOrDefault("uploadData", "");
+
+        List<Map<String, Object>> uploadDataList = gson.fromJson(uploadData,
+            new TypeToken<ArrayList<Map<String, Object>>>() {
+            }.getType());
+
+		fileUploadService.createUploadDataTable(dsId, dataNm, uploadDataList);
+    }
 }

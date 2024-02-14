@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.dataset.domain.upload.store;
+package com.wise.MarketingPlatForm.fileUpload.store;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -409,5 +409,8 @@
   "reportDownload": "Download Report",
   "groupList": "Groups",
   "invalidQuery": "Queries are invalid.",
-  "length": "Length"
+  "length": "Length",
+  "emptyDatasetNmMsg": "Empty Dataset Name.",
+  "emptyUploadDataMsg": "Empty Upload Data.",
+  "duplicatedDatasetNameMsg": "Duplicated Dataset Name."
 }

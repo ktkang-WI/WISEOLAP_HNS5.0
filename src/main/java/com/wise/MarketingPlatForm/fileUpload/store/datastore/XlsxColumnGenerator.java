@@ -1,35 +1,33 @@
-package com.wise.MarketingPlatForm.dataset.domain.upload.store.datastore;
+package com.wise.MarketingPlatForm.fileUpload.store.datastore;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
 
-import com.wise.MarketingPlatForm.dataset.domain.upload.store.UploadGenerator;
+import com.wise.MarketingPlatForm.fileUpload.store.UploadGenerator;
 
-public class XlsColumnGenerator implements UploadGenerator{
+public class XlsxColumnGenerator implements UploadGenerator{
 
     @Override
-    public ArrayList<JSONObject> getUploadColumnList(ArrayList<JSONObject> uploadDataColumnList, File uploadFolder, String filename) throws FileNotFoundException, IOException {
-        
+    public ArrayList<JSONObject> getUploadColumnList(ArrayList<JSONObject> uploadDataColumnList, File uploadFolder, String filename) throws IOException {
         ArrayList<JSONObject> tempArr = new ArrayList<JSONObject>();
         File uploadFile = new File(uploadFolder, filename);
 
         try (FileInputStream fis = new FileInputStream(uploadFile);
-                HSSFWorkbook workbook = new HSSFWorkbook(fis)) {
+                XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
             int columnindex = 0;
-            HSSFSheet sheet = workbook.getSheetAt(0);
-            HSSFRow row = sheet.getRow(0);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            XSSFRow row = sheet.getRow(0);
             int cells = row.getPhysicalNumberOfCells();
             for (columnindex = 0; columnindex < cells; columnindex++) {
-                HSSFCell cell = row.getCell(columnindex);
+                XSSFCell cell = row.getCell(columnindex);
                 String value = "";
                 switch (cell.getCellType()) {
                     case FORMULA:
@@ -60,16 +58,16 @@ public class XlsColumnGenerator implements UploadGenerator{
                 tempArr.add(obj);
             }
             row = sheet.getRow(1);
-
+            // cells=row.getPhysicalNumberOfCells();
             for (columnindex = 0; columnindex < cells; columnindex++) {
-                HSSFCell cell = row.getCell(columnindex);
+                XSSFCell cell = row.getCell(columnindex);
+                String valueType = "";
                 if (cell == null) {
-                    String valueType = "String";
+                    valueType = "String";
                     JSONObject obj = tempArr.get(columnindex);
                     obj.put("colType", valueType);
                     uploadDataColumnList.add(obj);
                 } else {
-                    String valueType = "";
                     switch (cell.getCellType()) {
                         case FORMULA:
                             valueType = "int";

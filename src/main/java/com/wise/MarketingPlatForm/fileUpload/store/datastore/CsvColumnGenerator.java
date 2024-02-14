@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.dataset.domain.upload.store.datastore;
+package com.wise.MarketingPlatForm.fileUpload.store.datastore;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-import com.wise.MarketingPlatForm.dataset.domain.upload.store.UploadGenerator;
+import com.wise.MarketingPlatForm.fileUpload.store.UploadGenerator;
 import com.wise.MarketingPlatForm.global.util.WINumberUtils;
 
 public class CsvColumnGenerator implements UploadGenerator {
