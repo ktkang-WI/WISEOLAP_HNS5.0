@@ -69,10 +69,22 @@ const ReportFolderManagement = () => {
     infoRef.current._instance.resetValues();
   };
 
+  const dataPrepro = (data) => {
+    return data.map((row) => {
+      if (management.mode === Mode.REPORT_MANAGEMENT) {
+        return new Report(row);
+      }
+      if (management.mode === Mode.FOLDER_MANAGEMENT) {
+        return new Folder(row);
+      }
+    });
+  };
+
   const init = () => {
     management.data().then((res) => {
       if (res.data.data) {
-        setData(res.data.data);
+        const newData = dataPrepro(res.data.data);
+        setData(newData);
       }
     });
   };
@@ -220,8 +232,9 @@ const ReportFolderManagement = () => {
       if (item.title === panelTitle) {
         item.data().then((res) => {
           if (res.data.data) {
+            const newData = dataPrepro(res.data.data);
             setManagement(item);
-            setData(res.data.data);
+            setData(newData);
           }
         });
         return;

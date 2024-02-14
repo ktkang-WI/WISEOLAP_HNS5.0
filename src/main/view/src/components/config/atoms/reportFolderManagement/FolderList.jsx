@@ -10,6 +10,8 @@ import localizedString from 'config/localization';
 import {ReportFolderContext} from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
 import folderImg from 'assets/image/icon/report/folder_load.png';
+import {Folder} from
+  'models/config/reportFolderManagement/ReportFolderManagement';
 
 const FolderList = ({setRow}) => {
   // context
@@ -36,6 +38,7 @@ const FolderList = ({setRow}) => {
       }
     });
     setData(newData);
+    setRow(new Folder({}));
   };
 
   useEffect(() => {

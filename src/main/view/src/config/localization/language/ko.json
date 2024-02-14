@@ -548,5 +548,11 @@
   "validationDupleGrpNm": "해당 그룹 명 은 이미 등록되어 있습니다.",
   "validationGroupMemberUsers": "그룹 소속 사용자 목록이 비어있습니다.",
   "validationAlert": "입력 정보를 확인해주세요.",
-  "folderNm": "폴더 명"
+  "folderNm": "폴더 명",
+  "validationDsNm": "데이터 원본 명을 입력 해주세요.",
+  "validationIp": "IP 를 입력 해주세요.",
+  "validationDbNm": "데이터 베이스 명 을 입력해주세요.",
+  "validationDbmsType": "데이터 베이스 타입을 선택해주세요",
+  "validationOwnerNm": "소유자 명을 입력해주세요.",
+  "validationPort": "포트 를 입력해주세요."
 }
