@@ -37,10 +37,10 @@ const SpreadViewer = () => {
     password: ''
   };
 
-  const successFunc = (json, workbook) => {
-    workbook.clearSheets();
-    const workbookObj = json;
-    workbook.fromJSON(workbookObj);
+  const successFunc = (json, workBook) => {
+    workBook.clearSheets();
+    const workBookObj = json;
+    workBook.fromJSON(workBookObj);
     querySearch();
   };
 
@@ -49,9 +49,9 @@ const SpreadViewer = () => {
   };
 
   useEffect(() => {
-    const prevWorkbook = sheets.findControl(sheetsRef.current);
-    if (prevWorkbook) prevWorkbook.destroy();
-    const workbook = new sheets.Workbook(sheetsRef.current);
+    const prevWorkBook = sheets.findControl(sheetsRef.current);
+    if (prevWorkbook) prevWorkBook.destroy();
+    const workBook = new sheets.Workbook(sheetsRef.current);
     importFile({fileName: report.reportId + '.xlsx'})
         .then(
             (response) => {
@@ -61,7 +61,7 @@ const SpreadViewer = () => {
               }
               const blob = createBlob(response.data);
               excelIO.open(blob,
-                  (json) => successFunc(json, workbook),
+                  (json) => successFunc(json, workBook),
                   errorFunc,
                   options);
             })
