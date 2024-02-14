@@ -30,10 +30,14 @@ const UserUploadTableModal = ({
     setDataNm(e);
   };
 
+  const onUploaded = (e) => {
+    const data = JSON.parse(e.request.responseText);
+    setUploadData(data);
+  };
+
   return (
     <Modal
       onSubmit={() => {
-        setUploadData([]);
       }}
       modalTitle={localizedString.selectUploadFile}
       height={theme.size.bigModalHeight}
@@ -61,11 +65,16 @@ const UserUploadTableModal = ({
         <RowWrapper>
           <FileUploader
             multiple={false}
-            accept='*'
+            accept={'.xls, .xlsx, .csv'}
             uploadMode='instantly'
             labelText={localizedString.selectUploadFile}
             selectButtonText={localizedString.selectFile}
-            uploadUrl="https://js.devexpress.com/Demos/NetCore/FileUploader/Upload"
+            // uploadUrl="https://js.devexpress.com/Demos/NetCore/FileUploader/Upload"
+            uploadUrl={
+              // window.location.host+'/editds
+              '/dataset/upload/upload-data-column'
+            }
+            onUploaded={onUploaded}
           />
         </RowWrapper>
       </ModalPanel>
@@ -76,26 +85,28 @@ const UserUploadTableModal = ({
         padding='10'>
         <CommonDataGrid
           dataSource={uploadData}
+          useFilter={false}
           onSelectionChanged={(e) => {
             console.log(e);
           }}
         >
           <Selection mode='single'/>
           <Column
-            dataField='columNm'
-            caption={localizedString.dataSourceName}
+            dataField='colPhysicalNm'
+            caption={localizedString.columnPhysicalName}
           />
           <Column
-            dataField='columLogicalName'
-            caption={localizedString.tableLogicalName}
+            dataField='colNm'
+            caption={localizedString.columnLogicalName}
           />
           <Column
-            dataField='dataType'
-            caption={localizedString.tableLogicalName}
+            dataField='colType'
+            caption={localizedString.dataType}
+            readOnly={false}
           />
           <Column
-            dataField='length'
-            caption={localizedString.tableLogicalName}
+            dataField='colSize'
+            caption={localizedString.length}
           />
         </CommonDataGrid>
       </ModalPanel>

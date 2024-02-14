@@ -408,5 +408,6 @@
   "useDataitem": "Use Data Item ",
   "reportDownload": "Download Report",
   "groupList": "Groups",
-  "invalidQuery": "Queries are invalid."
+  "invalidQuery": "Queries are invalid.",
+  "length": "Length"
 }
