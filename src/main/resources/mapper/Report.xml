@@ -185,6 +185,7 @@
 
     <select id='selectLinkReportParam' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
     SELECT A.PARAM_XML as paramXml FROM REPORT_MSTR A
+    WHERE 1=1
       <if test='reportId != null'>
         AND A.REPORT_ID = #{reportId}
       </if>
