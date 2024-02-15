@@ -103,17 +103,8 @@ const reducers = {
     // 아아템 이름에 번호 생성.
     const countMap = state[reportId].chartCount;
     const itemType = actions.payload.item.type;
-    const itemNamesArr = Object.keys(countMap);
 
-    for (let i = 0; i < itemNamesArr.length; i++) {
-      if (!itemNamesArr.includes(itemType)) {
-        countMap[itemType] = 1;
-        break;
-      }
-      if (itemNamesArr[i] === itemType) {
-        countMap[itemType] ++;
-      }
-    };
+    countMap[itemType] = (countMap[itemType] || 0) + 1;
 
     state[reportId].chartCount = countMap;
     state[reportId].itemQuantity++;
