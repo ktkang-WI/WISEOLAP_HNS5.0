@@ -7,6 +7,7 @@ import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 
 @Mapper
 public interface DatasetDAO {
@@ -26,7 +27,11 @@ public interface DatasetDAO {
 
   public List<DatasetDsDsviewCubeDTO> selectDatasetDsviewCubeDs();
 
+  public List<DsViewTableEntity> selectDsViewTables(String dsViewId);
+  
   public boolean deleteDs(DsMstrEntity dsMstrEntity);
+  
   public boolean updateDs(DsMstrEntity dsMstrEntity);
+  
   public boolean createDs(DsMstrEntity dsMstrEntity);
 }

@@ -10,6 +10,14 @@ export const dbTables = (dsId, search) => {
   });
 };
 
+export const dsViewdbTables = (dsId, dsViewId, search) => {
+  return axios.post(path + '/dsview-db-tables', {
+    dsId: dsId,
+    dsViewId: dsViewId,
+    search: search
+  });
+};
+
 export const dbColumns = (dsId, table, search) => {
   return axios.post(path + '/db-columns', {
     dsId: dsId,

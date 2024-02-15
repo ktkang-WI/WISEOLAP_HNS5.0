@@ -11,18 +11,12 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DsViewEntity {
+public class DsViewTableEntity {
   int dsViewId;
-  int dsId;
-  String dsViewNm;
-  String dsViewDesc;
-  String dbNm;
-  String ip;
-  String dbType;
-  String dbmsType;
-  String dsNm;
-  String userAreaYn;
-  String port;
-  String ownerNm;
-  String userId;
+  String tableNm;
+  String tableCaption;
+  String tableDesc;
+  String tableType;
+  String tableGrpNm;
+  String queryDefinition;
 }
