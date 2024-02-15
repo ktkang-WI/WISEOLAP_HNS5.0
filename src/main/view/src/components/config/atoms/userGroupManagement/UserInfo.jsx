@@ -4,68 +4,157 @@ import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import Panel
   from 'components/config/organisms/userGroupManagement/common/Panel';
-import {TextArea} from 'devextreme-react';
 import Form, {
-  GroupItem, Item, Label, SimpleItem
+  AsyncRule,
+  EmptyItem,
+  Item, Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
+import {duplicateValidation} from 'components/config/utility/utility';
 
 const UserInfo = () => {
+  // context
   const getContext = useContext(UserGroupContext);
   const [userDetailInfo] = getContext.state.userDetailInfo;
+  const [usersFormat] = getContext.state.usersFormat;
+  const [groupsFormat] = getContext.state.groupsFormat;
+
+  const userInfoRef = getContext.ref.userInfoRef;
+  const userDataGridRef = getContext.ref.userDataGridRef;
+
+  // selectBox DataSource
+  const groups = groupsFormat.map((row) => {
+    return {
+      grpId: row.grpId,
+      grpNm: row.grpNm
+    };
+  });
+  const mode = ['ADMIN', 'VIEW'];
+
+  const asyncValidation = (params) => {
+    const selectedRow = userDataGridRef.current._instance
+        .getSelectedRowsData()[0];
+    const invalidValues = usersFormat
+        .filter((row) => row.userId != selectedRow?.userId)
+        .map((row) => row.userId);
+    return duplicateValidation(params.value, invalidValues, userInfoRef);
+  };
+
+  const passwordValidation = (params) => {
+    const passwd = userInfoRef.current._instance.getEditor('passwd')
+        .option('value');
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(params.value === passwd);
+      }, 500);
+    });
+  };
 
   return (
-
     <Panel title={localizedString.userInfomation}>
       <Form
         formData={userDetailInfo}
+        ref={userInfoRef}
       >
-        <GroupItem
-          colCount={1}>
-          <Item dataField="userId">
-            <Label>{localizedString.userId}</Label>
-          </Item>
-          <Item dataField="userNm">
-            <Label>{localizedString.userName}</Label>
-          </Item>
-          <Item dataField="email1">
-            <Label>{'이메일'}</Label>
-          </Item>
-          <Item dataField="email2">
-            <Label>{'이메일2'}</Label>
-          </Item>
-          <Item dataField="telNo">
-            <Label>{'전화번호'}</Label>
-          </Item>
-          <Item
-            dataField="grpNm"
-            editorType="dxSelectBox"
-          >
-            <Label>{localizedString.groupName}</Label>
-          </Item>
-          <Item
-            dataField="userRunMode"
-            editorType="dxSelectBox"
-          >
-            <Label>{localizedString.userRunMode}</Label>
-          </Item>
-          <Item
-            dataField="grpRunMode"
-            editorType="dxSelectBox"
-          >
-            <Label>{localizedString.groupRunMode}</Label>
-          </Item>
+        <EmptyItem
+          dataField="userNo"
+          editorOptions={{
+            mode: 'number'
+          }}
+        >
+        </EmptyItem>
+        <SimpleItem
+          dataField="userId"
+          editorType="dxTextBox"
+        >
+          <RequiredRule message={localizedString.validationUserId}/>
+          <AsyncRule
+            message={localizedString.validationDupleUserNm}
+            validationCallback={asyncValidation}
+          />
+          <Label>{localizedString.userId}</Label>
+        </SimpleItem>
+        <SimpleItem dataField="userNm">
+          <RequiredRule message={localizedString.validationUserNm}/>
+          <Label>{localizedString.userName}</Label>
+        </SimpleItem>
+        {
+          userDetailInfo.userNo === 0 &&
           <SimpleItem
-            dataField="userDesc"
+            dataField="passwd"
+            editorOptions={{
+              mode: 'password'
+            }}
           >
-            <Label>{localizedString.description}</Label>
-            <TextArea
-              height={140}
-              width="100%"
-            />
+            <RequiredRule message={localizedString.validationPassword}/>
+            <Label>{localizedString.password}</Label>
           </SimpleItem>
-        </GroupItem>
+        }
+        {
+          userDetailInfo.userNo === 0 &&
+          <SimpleItem
+            dataField="passwdConfirm"
+            editorOptions={{
+              mode: 'password'
+            }}
+          >
+            <RequiredRule message={localizedString.validationPassword}/>
+            <AsyncRule
+              message={localizedString.checkPasword}
+              validationCallback={passwordValidation}
+            />
+            <Label>{localizedString.passwordConfirm}</Label>
+          </SimpleItem>
+        }
+        <Item dataField="email1">
+          <Label>{'이메일'}</Label>
+        </Item>
+        <Item dataField="email2">
+          <Label>{'이메일2'}</Label>
+        </Item>
+        <Item dataField="telNo">
+          <Label>{'전화번호'}</Label>
+        </Item>
+        <SimpleItem
+          dataField="grpId"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: groups,
+            displayExpr: 'grpNm',
+            valueExpr: 'grpId'
+          }}
+        >
+          <RequiredRule message={localizedString.validationGroupNm}/>
+          <Label>{localizedString.groupName}</Label>
+        </SimpleItem>
+        <SimpleItem
+          dataField="userRunMode"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: mode
+          }}
+        >
+          <RequiredRule message={localizedString.validationUserRunMode}/>
+          <Label>{localizedString.userRunMode}</Label>
+        </SimpleItem>
+        <Item
+          dataField="grpRunMode"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: mode,
+            disabled: true
+          }}
+        >
+          <Label>{localizedString.groupRunMode}</Label>
+        </Item>
+        <Item
+          dataField="userDesc"
+          editorType='dxTextArea'
+        >
+          <Label>{localizedString.description}</Label>
+        </Item>
       </Form>
     </Panel>
   );

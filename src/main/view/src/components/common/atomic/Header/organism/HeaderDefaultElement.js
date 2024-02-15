@@ -1,9 +1,14 @@
+import {EditMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 import openViewerImg from 'assets/image/icon/button/open_viewer.png';
+import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
+  const {setEditMode} = ConfigSlice.actions;
 
   return {
     'Logo': {
@@ -39,6 +44,7 @@ const HeaderDefaultElement = () => {
       'type': 'CommonButton',
       'onClick': (e) => {
         nav('viewer');
+        dispatch(setEditMode(EditMode.VIEWER));
       }
     },
     'ShowQuery': {
@@ -62,6 +68,7 @@ const HeaderDefaultElement = () => {
       'type': 'TextButton',
       'onClick': (e) => {
         nav('/editds/dashany');
+        dispatch(setEditMode(EditMode.VIEWER));
       }
     },
     'DownloadReport': {

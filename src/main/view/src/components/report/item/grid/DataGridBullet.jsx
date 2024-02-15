@@ -3,7 +3,7 @@ import {Bullet, Tooltip} from 'devextreme-react/bullet';
 const DataGridBullet = ({endScaleValue, value, column}) => {
   const customizeTooltip = () => {
     return {
-      text: column.name + ': ' + value
+      text: value
     };
   };
 

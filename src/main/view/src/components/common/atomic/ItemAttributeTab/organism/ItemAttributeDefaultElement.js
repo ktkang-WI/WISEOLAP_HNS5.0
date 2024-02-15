@@ -183,7 +183,12 @@ const ItemAttributeDefaultElement = () => {
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
-            // 데이터 하이라이트
+            const pivotMartInit = focusedItem.mart.init;
+
+            if (!pivotMartInit) {
+              return;
+            }
+
             openModal(DataHighlightModal);
           }
         }
@@ -192,22 +197,28 @@ const ItemAttributeDefaultElement = () => {
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
-        {
-          id: 'deltaValue',
-          label: '변동 측정값',
-          active: option.deltaValue == 'deltaValue',
-          icon: dimensionImg,
-          onClick: () => {
-            // 변동 측정값
-          }
-        },
+        // {
+        //   id: 'deltaValue',
+        //   label: '변동 측정값',
+        //   active: option.deltaValue == 'deltaValue',
+        //   icon: dimensionImg,
+        //   onClick: () => {
+        //     // 변동 측정값
+        //   }
+        // },
         {
           id: 'dataHighlight',
           label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
-            // 데이터 하이라이트
+            const chartMartInit = rootItem.items[0].mart.init;
+            const pivotMartInit = rootItem.items[1].mart.init;
+
+            if (!chartMartInit && !pivotMartInit) {
+              return;
+            }
+
             openModal(DataHighlightModal);
           }
         },

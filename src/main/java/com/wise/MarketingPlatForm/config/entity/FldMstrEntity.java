@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.account.entity;
+package com.wise.MarketingPlatForm.config.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,4 +13,5 @@ public class FldMstrEntity {
   int fldLvl;
   int fldParentId;
   int fldOrdinal;
+  String fldDesc;
 }

@@ -38,6 +38,7 @@ import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -138,7 +139,7 @@ public class ReportController {
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
         AdHocOption adHocOption = new AdHocOption(null, null);
-        
+
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -428,5 +429,5 @@ public class ReportController {
     }
 
 }
-    
+
 
