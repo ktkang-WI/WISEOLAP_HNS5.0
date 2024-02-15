@@ -30,15 +30,16 @@ const ColumnWrapper = styled.div`
 `;
 
 const Column = styled.div`
-  background: ${theme.color.dataColumn};
-  color: ${theme.color.primaryFont};
+  background: ${theme.color.white};
+  color: ${theme.color.gray600};
   height: ${theme.size.dataColumn};
   width: ${(props) => props.width};
   font: ${theme.font.dataColumn};
-  border: 1px solid ${theme.color.dataColumnBorder};
-  border-radius: 2px;
-  line-height: calc(${theme.size.dataColumn} - 4px);
-  text-align: center;
+  border: 1px solid ${theme.color.gray200};
+  border-radius: 4px;
+  line-height: ${theme.size.dataColumn};
+  text-align: left;
+  padding-left: ${(props) => props.sortOrder ? '27px' : '12px'};
   justify-content: center;
   align-items: center;
   position: relative;
@@ -55,33 +56,26 @@ const Button = styled.div`
   align-items: center;
   cursor: pointer;
   width: 35px;
-  &:hover {
-    background: ${theme.color.dataColumn};
-    border: 1px solid ${theme.color.dataColumnBorder};
-  }
+  border: 1px solid ${theme.color.gray200};
+  border-radius: 4px;
 `;
 
 const Arrow = styled.img `
     position: absolute;
     left: 7px;
-    top: calc(50% - 7px);
+    top: calc(50% - 8px);
     width: auto;
-    height: 13px;
+    height: 16px;
     ${(props) => props.direction == 'DESC' && 'transform: rotate(180deg);'}
 `;
 
 const OtherMenuButton = styled.img `
     position: absolute;
     right: 5px;
-    top: calc(50% - 7px);
+    top: calc(50% - 8px);
     width: auto;
-    height: 13px;
-    opacity: 0.6;
+    height: 16px;
     cursor: pointer;
-
-    &:hover {
-      opacity: 1;
-    }
 `;
 
 const DataColumn = ({
@@ -171,6 +165,7 @@ const DataColumn = ({
       {...props}
     >
       <Column
+        sortOrder={sortOrder}
         onClick={(e) => {
           if (sortOrder && e.target.tagName != 'IMG' &&
               e.target.className.indexOf('dx-menu') == -1) {

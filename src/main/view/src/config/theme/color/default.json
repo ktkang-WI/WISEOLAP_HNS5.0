@@ -14,7 +14,7 @@
     "dataColumnBorder": "#c5c5c5",
     "ribbonHoverBorder": "#c5c5c5",
     "ribbonHover": "#f5f6fa",
-    "breakLine": "#ddd",
+    "breakLine": "#D4D7DC",
     "dashedBorder": "#c3c8d9",
     "selectedTabHeader": "#ececec",
     "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#005196), to(#2b5eff))",
@@ -23,5 +23,11 @@
     "popoverBackground": "#fff",
     "boxShadow": "0 0 5px 0 rgba(51, 51, 51, 0.3)",
     "popoverTitleBackground": "linear-gradient(#ececed, #fafafa, #ececed)",
-    "gray400": "#858B93"
+    "gray100": "#ECEEF0",
+    "gray200": "#D4D7DC",
+    "gray300": "#B5B9C0",
+    "gray400": "#858B93",
+    "gray500": "#50555C",
+    "gray600": "#2E3033",
+    "white": "#ffffff"
 }

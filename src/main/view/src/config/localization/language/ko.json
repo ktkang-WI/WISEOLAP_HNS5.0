@@ -161,7 +161,7 @@
   "palette": "팔레트",
   "colorEdit": "색상 편집",
   "pointLabel": "애니메이션",
-  "querySearch": "조회",
+  "querySearch": "조회하기",
   "publicReport": "공용 보고서",
   "privateReport": "개인 보고서",
   "designer": "디자이너",
@@ -519,5 +519,6 @@
   "useDataitem": "데이터 항목 사용",
   "reportDownload": "보고서 내려받기",
   "groupList": "그룹 목록",
-  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요."
+  "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
+  "openViewer": "뷰어 열기"
 }

@@ -5,6 +5,8 @@ a {
   text-align: center;
   width: 100vw;
   height: 100vh;
+  font: normal 14px "Noto Sans KR";
+  background: #F6F8FC;
 }
 
 *{
@@ -75,4 +77,14 @@ img {
 
 #subMenu {
   padding-left: 15px;
+}
+
+.section {
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.section .section {
+  margin-top: 0px;
+  margin-right: 0px;
 }

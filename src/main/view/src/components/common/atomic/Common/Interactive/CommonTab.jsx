@@ -6,22 +6,23 @@ import React from 'react';
 const theme = getTheme();
 
 const StyledTabPanel = styled(TabPanel)`
-  .dx-tab.dx-state-hover{
-    background: ${theme.color.selectedTabHeader};
-    border-bottom: 1px solid  ${theme.color.breakLine};
+  .dx-tab span{
+    font: ${theme.font.tabTitle};
   }
 
   .dx-tab.dx-tab-selected {
-    background: ${theme.color.secondaryGradient};
     border-bottom: 3px solid ${theme.color.primary};
+    span {
+      color: ${theme.color.primary};
+    }
   }
 
   .dx-tab.dx-tab-selected > div {
-    top: 2px;
+    top: -3px;
   }
 
   .dx-tab {
-    background: ${theme.color.secondaryGradient};
+    background: none;
     border-bottom: 1px solid ${theme.color.breakLine};
     box-sizing: border-box;
     span {
@@ -29,13 +30,18 @@ const StyledTabPanel = styled(TabPanel)`
     }
   }
 
+  .dx-tabs {
+    background: none;
+    box-shadow: none !important;
+  }
+
   .dx-tab > div {
     position: relative;
-    top: 1px;
+    top: -4px;
   }
 
   .dx-tabs-wrapper {
-    height: ${theme.size.tabHeaderHeight};
+    height: calc(${theme.size.tabHeaderHeight} - 10px);
   }
 
   .dx-tabpanel-tabs .dx-tab.dx-tab-selected {
@@ -46,7 +52,6 @@ const StyledTabPanel = styled(TabPanel)`
     width: 500px;
     padding: 0px;
     box-shadow: none !important;
-    border-right: 1px solid ${theme.color.breakLine};
   }
 
   .dx-multiview-wrapper {

@@ -15,6 +15,7 @@ import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
+import {getTheme} from 'config/theme';
 
 import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
@@ -25,13 +26,34 @@ import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 
+
+const theme = getTheme();
+
 const StyledBoard = styled.div`
   height: 100%;
-  width: 100%;
+  width: calc(100% - 10px);
   flex: 1;
   background: #f5f6fa;
   display: flex;
   min-height: 0px;
+  margin-bottom: 0px;
+
+  .flexlayout__tabset {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+
+  .flexlayout__tab > div {
+    border-radius: 0px 0px 8px 8px;
+  }
+
+  .flexlayout__tabset_tabbar_outer {
+    font: ${theme.font.itemTitle};
+  }
+
+  .flexlayout__tabset_tabbar_outer span {
+    color: ${theme.color.gray500};
+  }
 `;
 
 const DownloadImage = styled.img`
@@ -295,8 +317,13 @@ const ItemBoard = () => {
     }
   };
 
+  model.doAction(Actions.updateModelAttributes({
+    tabSetHeaderHeight: 40,
+    tabSetTabStripHeight: 40
+  }));
+
   return (
-    <StyledBoard>
+    <StyledBoard className='section'>
       <Layout
         model={model}
         factory={factory}

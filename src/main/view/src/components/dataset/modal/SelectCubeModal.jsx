@@ -9,12 +9,6 @@ import PageWrapper from '../../common/atomic/Modal/atoms/PageWrapper';
 import CommonTextArea from '../../common/atomic/Common/CommonTextArea';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import dimImg from 'assets/image/icon/dataSource/dimension.png';
-import cubeMeaGrpImg from
-  'assets/image/icon/dataSource/cube_measure.png';
-import cubeDimGrpImg from
-  'assets/image/icon/dataSource/cube_dimension.png';
 import {Column, Selection} from 'devextreme-react/data-grid';
 import useModal from 'hooks/useModal';
 import {useEffect, useState} from 'react';
@@ -83,16 +77,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     if (!field.parentId) {
                       if (field.type == 'DIM') {
                         field.type = 'DIMGRP';
-                        field.icon = cubeDimGrpImg;
                       } else if (field.type == 'MEA') {
                         field.type = 'MEAGRP';
-                        field.icon = cubeMeaGrpImg;
-                      }
-                    } else {
-                      if (field.type == 'DIM') {
-                        field.icon = dimImg;
-                      } else if (field.type == 'MEA') {
-                        field.icon = meaImg;
                       }
                     }
 

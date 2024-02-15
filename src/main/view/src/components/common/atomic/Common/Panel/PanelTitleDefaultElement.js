@@ -49,8 +49,7 @@ const PanelTitleDefaultElement = () => {
         }
       },
       src: customFieldImg,
-      label: localizedString.addCustomField,
-      imgWidth: '14px'
+      label: localizedString.addCustomField
     },
     DataSourceModify: {
       id: 'data_source_modify',

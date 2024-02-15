@@ -2,21 +2,18 @@ import {styled, css} from 'styled-components';
 import {useState} from 'react';
 import {getTheme} from 'config/theme';
 import filterImg from 'assets/image/icon/report/filter.png';
-import expandImg from 'assets/image/icon/button/expand.png';
 import FilterBarWrapper from '../molecules/FilterBarWrapper';
 
 const theme = getTheme();
 
 const FilterBar = ({useExpandButton=true}) => {
   const [isExpand, setIsExpand] = useState(false);
+
   const ExpandBtn = (props) => {
     const BtnWrapper = styled.div`
-      width: 20px;
+      width: 40px;
       display: flex;
-      border-right: 1px solid ${theme.color.breakLine};
-      border-bottom: 1px solid ${theme.color.breakLine};
-      background: ${props.isExpand ?
-      theme.color.filterBarExpand : theme.color.filterBar};
+      height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
       flex-direction: column;
       box-sizing: border-box;
       align-items: center;
@@ -25,7 +22,7 @@ const FilterBar = ({useExpandButton=true}) => {
     `;
 
     const Img = styled.img`
-      width: ${(props) => props.width || '17px'};
+      width: ${(props) => props.width || '16px'};
       height: auto;
       ${(props) => props.rotate && css`
           transform: rotate(180deg);
@@ -35,19 +32,23 @@ const FilterBar = ({useExpandButton=true}) => {
     return (
       <BtnWrapper {...props}>
         <Img src={filterImg}/>
-        <Img src={expandImg} width='12px' rotate={props.isExpand}/>
       </BtnWrapper>
     );
   };
 
   const Wrapper = styled.div`
-    width: 100%;
-    height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
+    width: calc(100% - 10px);
+    background: ${theme.color.white};
+    height: ${isExpand ?
+      'auto' : 'calc(' + theme.size.filterBarHeight + ' + 2px)'};
     display: flex;
+    box-sizing: border-box;
+    border: 1px solid ${theme.color.gray200};
+    border-radius: 10px;
   `;
 
   return (
-    <Wrapper>
+    <Wrapper className='section'>
       {useExpandButton ?
         (<ExpandBtn isExpand={isExpand}
           onClick={() => setIsExpand(!isExpand)}></ExpandBtn>) :

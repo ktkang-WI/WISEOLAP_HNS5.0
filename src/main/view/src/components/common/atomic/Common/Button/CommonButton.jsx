@@ -29,6 +29,13 @@ const Button = styled.div`
   & + & {
     margin-left: 5px;
   }
+
+  & img {
+    vertical-align: middle;
+  }
+  & span {
+    line-height: ${(props) => props.height};
+  }
 `;
 
 const CommonButton = ({
@@ -56,6 +63,20 @@ const CommonButton = ({
       color: theme.color.primaryFont,
       border: 'solid 1px ' + theme.color.primaryBorder,
       font: theme.font.button
+    },
+    'primaryGradient': {
+      background: 'linear-gradient(180deg, #005EAD 0%, #0082F0 145.39%)',
+      hoverBackground: theme.color.primaryGradientHover,
+      color: theme.color.secondaryFont,
+      border: 'none',
+      font: theme.font.button
+    },
+    'whiteRound': {
+      background: theme.color.white,
+      border: 'solid 1px ' + theme.color.gray200,
+      color: theme.color.gray600,
+      font: theme.font.smallButton,
+      borderRadius: '74px'
     }
   };
 
@@ -70,7 +91,7 @@ const CommonButton = ({
       {...(themeType[type]? themeType[type] : themeType['primary'])}
       {...props}
     >
-      {children}
+      <span>{children}</span>
     </Button>
   );
 };

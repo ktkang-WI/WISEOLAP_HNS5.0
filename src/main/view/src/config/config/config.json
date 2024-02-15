@@ -3,6 +3,6 @@
   "snbOnlyIcon": false,
   "useSNBDrawer": false,
   "useRibbonLabel": true,
-  "ribbonOnlyIcon": true,
+  "ribbonOnlyIcon": false,
   "contextRoot": "/editds"
 }
