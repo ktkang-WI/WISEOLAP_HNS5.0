@@ -5,6 +5,9 @@ import './App.css';
 import LoadingPanel
   from 'components/common/atomic/Loading/organisms/LoadingPanel';
 import useAxiosSetting from 'hooks/useAxiosSetting';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import
+'@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
 
 function App() {
   useAxiosSetting();

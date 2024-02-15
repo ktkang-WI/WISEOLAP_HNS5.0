@@ -56,7 +56,7 @@ export const getDataByQueryMart = (dsId, query, parameters) => {
 export const getAllDatasetDatas = (dsId, query, parameters) => {
   const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
 
-  return axios.post(path + '/query-dataset-allDatas', {
+  return axios.post(path + '/query-dataset-all-datas', {
     dsId: parseInt(dsId),
     query: query,
     parameter: JSON.stringify(parameter)

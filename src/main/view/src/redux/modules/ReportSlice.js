@@ -69,10 +69,15 @@ const reducers = {
    */
   deleteReport(state, actions) {
     const deleteReportId = actions.payload.reportId;
-    const lastIndex = state.reports.length - 2;
-    state.selectedReportId = state.reports[lastIndex].reportId;
-    state.reports = state.reports.filter(
-        (report) => report.reportId != deleteReportId);
+    const idx = state.reports.findIndex(
+        (report) => report.reportId == deleteReportId);
+
+    state.reports.splice(idx, 1);
+
+    if (deleteReportId == state.selectedReportId) {
+      state.selectedReportId =
+        (state.reports[idx] || state.reports[idx - 1]).reportId;
+    }
   },
   deleteAllReport(state, actions) {
     state.reports = [];

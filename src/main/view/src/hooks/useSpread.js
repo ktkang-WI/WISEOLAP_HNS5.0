@@ -11,6 +11,8 @@ import {selectBindingInfos,
   selectSheets} from 'redux/selector/SpreadSelector';
 import localizedString from 'config/localization';
 import useModal from './useModal';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 
 const useSpread = () => {
   const sheets = selectSheets(store.getState());
@@ -19,19 +21,25 @@ const useSpread = () => {
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
   const excelIO = useSelector(selectExcelIO);
+  const editMode = useSelector(selectEditMode);
 
   const {alert} = useModal();
 
   const bindData = ({rowData, bindingInfo}) => {
-    const designer = selectCurrentDesigner(store.getState());
+    let workBook;
+    if (editMode !== EditMode['VIEWER']) {
+      workBook = selectCurrentDesigner(store.getState()).getWorkbook();
+    } else {
+      workBook = sheets.findControl(document.querySelector('[gcuielement]'));
+    }
     const {columns} = generateColumns(rowData, sheets);
-    let bindedSheet = designer.getWorkbook()
+    let bindedSheet = workBook
         .getSheetFromName(bindingInfo.sheetNm);
 
     if (bindedSheet == undefined) {
-      designer.getWorkbook().addSheet(0,
+      workBook.addSheet(0,
           new sheets.Worksheet(bindingInfo.sheetNm));
-      bindedSheet = designer.getWorkbook()
+      bindedSheet = workBook
           .getSheetFromName(bindingInfo.sheetNm);
     }
 
@@ -39,7 +47,7 @@ const useSpread = () => {
     createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
     deleteTables(bindedSheet);
 
-    designer.getWorkbook().suspendPaint();
+    workBook.suspendPaint();
 
     const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
         bindingInfo.rowIndex,
@@ -61,7 +69,7 @@ const useSpread = () => {
     bindedSheet.setDataSource(dataSource);
     table.filterButtonVisible(false);
 
-    designer.getWorkbook().resumePaint();
+    workBook.resumePaint();
   };
 
 

@@ -13,11 +13,13 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentInformationas,
   selectRootParameter} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode, selectEditMode}
+  from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectBindingInfos, selectCurrentDesigner}
   from 'redux/selector/SpreadSelector';
-import {ConvertDesignerMode, DesignerMode} from 'components/config/configType';
+import {ConvertDesignerMode, DesignerMode, EditMode}
+  from 'components/config/configType';
 import models from 'models';
 import localizedString from 'config/localization';
 import {useSelector} from 'react-redux';
@@ -208,9 +210,15 @@ const useReportSave = () => {
   // 보고서 불러오기 - 추후 뷰어 및 디자이너 분기 처리.
   const loadReport = (data) => {
     try {
+      const editMode = selectEditMode(store.getState());
+      const designerMode = selectCurrentDesignerMode(store.getState());
       // 공통 데이터 가공
       data.item.items.forEach((i) => {
-        i.mart = makeMart(i);
+        if (designerMode == DesignerMode['AD_HOC']) {
+          i.mart = makeAdHocItemMart(i);
+        } else {
+          i.mart = makeMart(i);
+        }
         ItemManager.generateMeta(i);
       });
       data.dataset.datasets.forEach((dataset) => {
@@ -219,7 +227,12 @@ const useReportSave = () => {
               dataset.fields, dataset.datasetType);
         }
       });
-      designerLoadReport(data);
+
+      if (editMode == EditMode.VIEWER) {
+        viewerLoadReport(data);
+      } else {
+        designerLoadReport(data);
+      }
     } catch (error) {
       new Error('Report load Error');
     }
@@ -259,6 +272,44 @@ const useReportSave = () => {
     } catch (error) {
       new Error('Report load Error');
     }
+  };
+
+  // 뷰어 보고서 불러오기
+  const viewerLoadReport = (data) => {
+    try {
+      const reportId = data.reports[0].reportId;
+      dispatch(reportActions.insertReport(data.reports[0]));
+      dispatch(datasetActions.setDataset({
+        reportId: reportId,
+        dataset: data.dataset
+      }));
+      dispatch(layoutActions.setLayout({
+        reportId: reportId,
+        layout: data.layout
+      }));
+      dispatch(itemActions.setItem({
+        reportId: reportId,
+        item: data.item
+      }));
+      dispatch(parameterActions.setParameterInformation({
+        reportId: reportId,
+        informations: data.informations
+      }));
+      dispatch(spreadActions.setViewSpread({
+        reportId: reportId,
+        bindingInfos: data.spread
+      }));
+    } catch (error) {
+      new Error('Report load Error');
+    }
+  };
+
+  const closeReport = (reportId) => {
+    dispatch(reportActions.deleteReport({reportId}));
+    dispatch(parameterActions.deleteReportParameter({reportId}));
+    dispatch(itemActions.deleteReportItem({reportId}));
+    dispatch(layoutActions.deleteReportLayout({reportId}));
+    dispatch(datasetActions.deleteReportDataset({reportId}));
   };
 
   const querySearch = () => {
@@ -301,7 +352,8 @@ const useReportSave = () => {
     patchReport,
     reload,
     loadReport,
-    querySearch
+    querySearch,
+    closeReport
   };
 };
 

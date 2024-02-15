@@ -40,10 +40,13 @@ const CustomDrawer = ({
     <Wrapper>
       <Drawer
         ref={ref}
-        opened={opened}
+        opened={opened && visible}
         position='left'
         openedStateMode='shrink'
-        revealMode='slide'
+        revealMode={'slide'}
+        // NOTE: 뷰어에서 사용시 보고서 전환시 부자연스러움.
+        // 애니메이션 해제
+        animationEnabled={false}
         {...props}
       >
         <ExpandButton

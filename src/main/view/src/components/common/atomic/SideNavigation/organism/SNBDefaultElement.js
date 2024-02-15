@@ -14,14 +14,14 @@ import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
 import {useDispatch} from 'react-redux';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import useReportSave from 'hooks/useReportSave';
 import useModal from 'hooks/useModal';
 
 const SNBDefaultElement = () => {
   // actions
-  const {setDesignerMode} = ConfigSlice.actions;
+  const {setDesignerMode, setEditMode} = ConfigSlice.actions;
 
   // hook
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ const SNBDefaultElement = () => {
   const changeNav = (designerMode) => {
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
+    dispatch(setEditMode(EditMode.DESIGNER));
     reload(designerMode);
   };
 

@@ -181,6 +181,11 @@ const reducers = {
       state[newId] = layout;
     }
   },
+  deleteReportLayout(state, actions) {
+    const {reportId} = actions.payload;
+
+    delete state[reportId];
+  },
   deleteLayoutForDesigner(state, actions) {
     delete state[actions.payload.reportId];
 

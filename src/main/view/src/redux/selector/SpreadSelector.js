@@ -32,7 +32,7 @@ export const selectCurrentDesigner = createSelector(
 export const selectBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].bindingInfos
+    (reportId, spread) => spread[reportId]?.bindingInfos
 );
 
 export const selectCurrentBindingInfo = createSelector(
