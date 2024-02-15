@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.report.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
@@ -16,6 +17,7 @@ public interface ReportDAO {
     public List<ReportListDTO> selectPrivateReportList(String userId, List<String> reportTypes, String editMode);
     public boolean insertReport(ReportMstrEntity reportMstrEntity);
     public boolean updateReport(ReportMstrEntity reportMstrEntity);
+    public boolean updateConfigReport(ReportMstrEntity reportMstrEntity);
     public boolean deleteReport(int reportId);
     public List<ReportMstrEntity> checkDuplicatedReport(ReportMstrEntity reportMstrDTO);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);

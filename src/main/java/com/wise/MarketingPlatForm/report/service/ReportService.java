@@ -110,7 +110,7 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
-    
+
     @Autowired
     private FileUploadService fileUploadService;
 
@@ -243,13 +243,13 @@ public class ReportService {
         MartResultDTO martResultDTO = martDAO.select(query);
         List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        
+
         for (String item : items) {
             ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
             result.put(item, dataMaker.make(dataAggreagtion, rowData));
         }
-        
+
         return result;
     }
 
@@ -521,6 +521,10 @@ public class ReportService {
         }
 
         return map;
+    }
+
+    public boolean patchConfigReport(ReportMstrEntity reportMstrEntity) {
+        return reportDAO.updateConfigReport(reportMstrEntity);
     }
 
     public Map<String, Object> deleteReport(ReportMstrDTO reportMstrDTO) {

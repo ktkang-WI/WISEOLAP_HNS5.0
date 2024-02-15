@@ -1,13 +1,15 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import React, {createContext, useCallback, useEffect, useRef, useState}
+import React, {createContext, useEffect, useState}
   from 'react';
 import {Mode, managementData} from './data/ReportFolderManagementData';
 import {Folder, Report} from
   'models/config/reportFolderManagement/ReportFolderManagement';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
+import Form from 'devextreme/ui/form';
+import TreeList from 'devextreme/ui/tree_list';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -47,20 +49,10 @@ const ReportFolderManagement = () => {
   const btns = ['plus', 'save', 'remove'];
   const [management, setManagement] = useState(managementData[0]);
   const [data, setData] = useState([]);
-  const reportListRef = useRef();
-  const reportInformationRef = useRef();
-  const folderListRef = useRef();
-  const folderInformationRef = useRef();
 
   const context = {
     state: {
       data: [data, setData]
-    },
-    ref: {
-      reportListRef: reportListRef,
-      reportInformationRef: reportInformationRef,
-      folderListRef: folderListRef,
-      folderInformationRef: folderInformationRef
     }
   };
 
@@ -73,17 +65,44 @@ const ReportFolderManagement = () => {
   };
 
   const clearRef = (listRef) => {
-    listRef.current._instance.clearSelection();
+    listRef.clearSelection();
   };
 
-  const dataPrepro = useCallback(({data, mode}) => {
-    const getParentFldNm = (fld) => data
-        .find((d) => d.fldId === fld.fldParentId).fldNm;
-    return data.map((row) => {
-      if (mode === Mode.REPORT_MANAGEMENT) {
-        return new Report(row);
-      }
-      if (mode === Mode.FOLDER_MANAGEMENT) {
+  const dataPrepro = ({data, mode}) => {
+    if (mode === Mode.REPORT_MANAGEMENT) {
+      return data.reduce((acc, v) => {
+        const folderIdList = acc.map((row) => row.fldId);
+
+        if (!folderIdList.includes(v.fldId)) {
+          const fldParentId = v.fldParentId === 0 ?
+          v.fldParentId : 'f_' + v.fldParentId;
+          acc.push({
+            fldId: v.fldId,
+            fldLvl: v.fldLvl,
+            fldNm: v.fldNm,
+            fldOrdinal: v.fldOrdinal,
+            parentId: fldParentId,
+            key: 'f_' + v.fldId,
+            name: v.fldNm,
+            type: 'folder'
+          });
+        }
+
+        acc.push({
+          ...v,
+          key: 'r_'+ v.reportId,
+          parentId: 'f_' + v.fldId,
+          name: v.reportNm
+        });
+
+        return acc;
+      }, []);
+    }
+
+    if (mode === Mode.FOLDER_MANAGEMENT) {
+      const getParentFldNm = (fld) => data
+          .find((d) => d.fldId === fld.fldParentId).fldNm;
+      return data.map((row) => {
         let newRow = {};
         if (row.fldParentId === 0) {
           newRow = {
@@ -97,9 +116,9 @@ const ReportFolderManagement = () => {
           };
         }
         return new Folder(newRow);
-      }
-    });
-  }, [management]);
+      });
+    }
+  };
 
   const init = () => {
     management.data().then((res) => {
@@ -115,6 +134,13 @@ const ReportFolderManagement = () => {
     init();
   }, []);
 
+  const getRefInstance = (component, classNm) => {
+    const element = Array.from(document.querySelectorAll('[role="tabpanel"]'))
+        .filter((row) => row.className.includes('dx-item-selected'))[0]
+        .getElementsByClassName(classNm);
+    return component.getInstance(element[0]);
+  };
+
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
     let instance = {};
@@ -122,16 +148,16 @@ const ReportFolderManagement = () => {
     let infoRef = '';
 
     if (management.mode === Mode.REPORT_MANAGEMENT) {
-      const reportInfoFormData = reportInformationRef.current?._instance
-          .option('formData');
+      listRef = getRefInstance(TreeList, 'report-list');
+      infoRef = getRefInstance(Form, 'report-information');
+      const reportInfoFormData = infoRef.option('formData');
       instance = new Report(reportInfoFormData);
     }
     if (management.mode === Mode.FOLDER_MANAGEMENT) {
-      const folderInfoFormData = folderInformationRef.current?._instance
-          .option('formData');
+      listRef = getRefInstance(TreeList, 'folder-list');
+      infoRef = getRefInstance(Form, 'folder-information');
+      const folderInfoFormData = infoRef.option('formData');
       instance = new Folder(folderInfoFormData);
-      listRef = folderListRef;
-      infoRef = folderInformationRef;
     }
 
     switch (icon) {
@@ -170,25 +196,23 @@ const ReportFolderManagement = () => {
         throw new Error('Failure save Folder');
       });
     };
-    validateAndProcess(folderInformationRef.current._instance.validate(),
+    validateAndProcess(infoRef.validate(),
         saveFolder);
   };
 
   const handleSaveReport = (report, listRef, infoRef) => {
     const saveReport = () => {
-      // management.update(report)
-      //     .then((response) => {
-      //       init();
-      //       clearRef(listRef);
-      //       alert(localizedString.successUpdate);
-      //     })
-      //     .catch(() => {
-      //       throw new Error('Failed Update Report');
-      //     });
-      alert('기능 점검 중입니다.');
+      management.update(report)
+          .then((response) => {
+            init();
+            clearRef(listRef);
+            alert(localizedString.successUpdate);
+          })
+          .catch(() => {
+            throw new Error('Failed Update Report');
+          });
     };
-    validateAndProcess(reportInformationRef.current._instance.validate(),
-        saveReport);
+    validateAndProcess(infoRef.validate(), saveReport);
   };
 
   const handleSave = ({instance, listRef, infoRef}) => {
@@ -258,22 +282,22 @@ const ReportFolderManagement = () => {
     };
   };
 
-  const handleTabPanelItem = useCallback(({itemData}) => {
+  const handleTabPanelItem = ({itemData}) => {
     const panelTitle = itemData.title;
 
     managementData.forEach((item) => {
       if (item.title === panelTitle) {
         item.data().then((res) => {
           if (res.data.data) {
-            setManagement(item);
             const newData = dataPrepro({data: res.data.data, mode: item.mode});
+            setManagement(item);
             setData(newData);
           }
         });
         return;
       }
     });
-  }, [management, data]);
+  };
 
   return (
     <ReportFolderContext.Provider
@@ -286,6 +310,10 @@ const ReportFolderManagement = () => {
         </Header>
         <Content>
           <TabPanel
+            onOptionChanged={(e) => {
+              if (e.name == 'hoveredElement') return;
+              console.log(e);
+            }}
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -294,6 +322,7 @@ const ReportFolderManagement = () => {
             swipeEnabled={false}
             itemComponent={management.component}
             onTitleClick={handleTabPanelItem}
+            deferRendering
           >
           </TabPanel>
         </Content>
