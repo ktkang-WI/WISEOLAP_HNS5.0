@@ -7,7 +7,7 @@ import {useRef} from 'react';
 import {styled} from 'styled-components';
 import meaImg from 'assets/image/icon/dataSource/small_measure.png';
 import dimImg from 'assets/image/icon/dataSource/small_dimension.png';
-import fldImg from 'assets/image/icon/report/folder_load.png';
+import fldImg from 'assets/image/icon/dataSource/folder.png';
 import meaGrpImg from
   'assets/image/icon/dataSource/cube_measure.png';
 import dimGrpImg from
