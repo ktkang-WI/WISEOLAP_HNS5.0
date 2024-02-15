@@ -1,10 +1,10 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import models from 'models';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
@@ -15,6 +15,7 @@ const DatasourceList = ({row}) => {
   // state
   const [ds, setDs] = useState([]);
   const [data] = authorityContext.state.data;
+  const dataSourceListRef = authorityContext.ref.dataSourceListRef;
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const getDsIdList = () => {
@@ -38,7 +39,7 @@ const DatasourceList = ({row}) => {
   };
 
   useEffect(() => {
-    models.Authority.getDs()
+    models.Authority.getDsView()
         .then((response) => {
           const newDs = response.data.data.reduce((acc, v) => {
             const dsIdList = acc.map((row) => row.dsId);
@@ -59,6 +60,13 @@ const DatasourceList = ({row}) => {
     setSelectedRowKeys(dsIdList);
   }, [row]);
 
+  const onSelectionChanged = useCallback(
+      ({selectedRowKeys: changedRowKeys}) => {
+        setSelectedRowKeys(changedRowKeys);
+      },
+      [row],
+  );
+
   const handleRowClick = ({data}) => {
     // setDsView(data);
   };
@@ -67,14 +75,19 @@ const DatasourceList = ({row}) => {
     <Wrapper>
       <Title title={localizedString.dataSourceList}></Title>
       <DataGrid
+        ref={dataSourceListRef}
         dataSource={ds}
         showBorders={true}
         onRowClick={handleRowClick}
         height={'90%'}
         keyExpr="dsId"
         selectedRowKeys={selectedRowKeys}
+        onSelectionChanged={onSelectionChanged}
       >
-        <Selection mode="multiple" />
+        <Selection
+          mode="multiple"
+          showCheckBoxesMode={'always'}
+        />
         <SearchPanel visible={true} />
         <Column
           dataField="dsNm"
@@ -118,4 +131,4 @@ const DatasourceList = ({row}) => {
   );
 };
 
-export default DatasourceList;
+export default React.memo(DatasourceList);

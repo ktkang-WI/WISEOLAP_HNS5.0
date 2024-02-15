@@ -1,13 +1,13 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import models from 'models';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import Title from 'components/config/atoms/authority/Title';
+import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 
 const DatasourceViewList = ({row, setDsView}) => {
@@ -16,8 +16,7 @@ const DatasourceViewList = ({row, setDsView}) => {
   // state
   const [ds, setDs] = useState([]);
   const [data] = authoritycontext.state.data;
-  // ref
-  const ref = useRef();
+  const dsViewListRef = authoritycontext.ref.dsViewListRef;
 
   const getDsViewIdList = () => {
     let dsViewIdList = [];
@@ -26,19 +25,19 @@ const DatasourceViewList = ({row, setDsView}) => {
 
     if (groups.length > 0) {
       dsViewIdList = groups.find((g) => g.group.grpId === row.grpId)
-          ?.dsViews.dsViewId;
+          ?.dsViews?.dsViewId;
     }
 
     if (users.length > 0) {
       dsViewIdList = users.find((u) => u.user.userNo === row.userNo)
-          ?.dsViews.dsViewId;
+          ?.dsViews?.dsViewId;
     }
 
     return dsViewIdList ? dsViewIdList : [];
   };
 
   useEffect(() => {
-    models.Authority.getDs()
+    models.Authority.getDsView()
         .then((response) => {
           setDs(response.data.data);
         })
@@ -56,8 +55,8 @@ const DatasourceViewList = ({row, setDsView}) => {
       };
     });
     setDs(newDs);
-    ref.current._instance.clearSelection();
-  }, [row]);
+    dsViewListRef.current._instance.clearSelection();
+  }, [row, data]);
 
   const handleRowClick = ({data}) => {
     setDsView(data);
@@ -72,7 +71,7 @@ const DatasourceViewList = ({row, setDsView}) => {
         showBorders={true}
         onRowClick={handleRowClick}
         height={'90%'}
-        ref={ref}
+        ref={dsViewListRef}
       >
         <Selection mode="single" />
         <SearchPanel visible={true} />
@@ -136,4 +135,4 @@ const DatasourceViewList = ({row, setDsView}) => {
   );
 };
 
-export default DatasourceViewList;
+export default React.memo(DatasourceViewList);

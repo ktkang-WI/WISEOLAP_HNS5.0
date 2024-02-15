@@ -1,9 +1,11 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import {authData} from './data/AuthorityData';
-import {createContext, useCallback, useState} from 'react';
-import {useLoaderData} from 'react-router-dom';
+import {Mode, authData} from './data/AuthorityData';
+import React,
+{createContext, useCallback, useEffect, useRef, useState} from 'react';
+import useModal from 'hooks/useModal';
+import localizedString from 'config/localization';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -38,26 +40,125 @@ const NavBarItem = styled.div`
 export const AuthorityContext = createContext();
 
 const Authority = () => {
+  const {alert} = useModal();
+
   const btns = ['save'];
   const [auth, setAuth] = useState(authData[0]);
-  const groupData = useLoaderData();
+  const [data, setData] = useState([]);
 
-  const [data, setData] = useState(groupData);
-  const [report, setReport] = useState();
-  const [dataset, setDataset] = useState();
-  const [datasource, setDatasource] = useState();
+  const groupListRef = useRef();
+  const userListRef = useRef();
+  const authorityDataCubeRef = useRef();
+  const authorityDataDimensionRef = useRef();
+  const dsViewListRef = useRef();
+  const folderTreeViewRef = useRef();
+  const dataSetTreeViewRef = useRef();
+  const dataSourceListRef = useRef();
 
   const context = {
     state: {
-      data: [data, setData],
-      report: [report, setReport],
-      dataset: [dataset, setDataset],
-      datasource: [datasource, setDatasource]
+      data: [data, setData]
+    },
+    ref: {
+      authorityDataCubeRef: authorityDataCubeRef,
+      authorityDataDimensionRef: authorityDataDimensionRef,
+      groupListRef: groupListRef,
+      userListRef: userListRef,
+      dsViewListRef: dsViewListRef,
+      folderTreeViewRef: folderTreeViewRef,
+      dataSetTreeViewRef: dataSetTreeViewRef,
+      dataSourceListRef: dataSourceListRef
+    }
+  };
+
+  useEffect(() => {
+    auth.data().then((res) => {
+      if (res.data.data) {
+        console.log(res.data.data);
+        setData(res.data.data);
+      }
+    });
+  }, []);
+
+  const validationSave = () => {
+    if (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) {
+      const groupListSelectedRowKeys =
+          groupListRef.current?._instance.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef.current?._instance.option('selectedRowKeys');
+      const dsViewListRefSelectedRowKeys =
+          dsViewListRef.current._instance.option('selectedRowKeys');
+
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0) &&
+      (dsViewListRefSelectedRowKeys.length > 0);
+    }
+
+    if (auth.mode === Mode.GROUP_REPORT || auth.mode === Mode.USER_REPORT ||
+      auth.mode === Mode.GROUP_DATASET || auth.mode === Mode.USER_DATASET ||
+      auth.mode === Mode.GROUP_DATASOURCE ||
+      auth.mode === Mode.USER_DATASOURCE) {
+      const groupListSelectedRowKeys =
+          groupListRef.current?._instance.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef.current?._instance.option('selectedRowKeys');
+
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0);
     }
   };
 
   const handleBtnClick = ({component}) => {
-    alert('기능 개발 중입니다.');
+    if (!validationSave()) {
+      alert('데이터를 선택해주세요.');
+      return;
+    }
+
+    const authorityData = auth.save({groupListRef, userListRef, dsViewListRef,
+      authorityDataCubeRef, authorityDataDimensionRef, folderTreeViewRef,
+      dataSetTreeViewRef, dataSourceListRef});
+
+    try {
+      let prom;
+      if (auth.mode === Mode.GROUP_DATA) {
+        prom = authorityData.createGroupAuthorityData();
+      }
+      if (auth.mode === Mode.GROUP_REPORT) {
+        prom = authorityData.createGroupAuthorityReport();
+      }
+      if (auth.mode === Mode.GROUP_DATASET) {
+        prom = authorityData.createGroupAuthorityDataSet();
+      }
+      if (auth.mode === Mode.GROUP_DATASOURCE) {
+        prom = authorityData.createGroupAuthorityDataSource();
+      }
+      if (auth.mode === Mode.USER_DATA) {
+        prom = authorityData.createUserAuthorityData();
+      }
+      if (auth.mode === Mode.USER_REPORT) {
+        prom = authorityData.createUserAuthorityReport();
+      }
+      if (auth.mode === Mode.USER_DATASET) {
+        prom = authorityData.createUserAuthorityDataSet();
+      }
+      if (auth.mode === Mode.USER_DATASOURCE) {
+        prom = authorityData.createUserAuthorityDataSource();
+      }
+
+      prom.then((response) => {
+        if (response.data.data) {
+          auth.data().then((res) => {
+            if (res.data.data) {
+              setData(res.data.data);
+              auth.init({authorityDataCubeRef, authorityDataDimensionRef});
+              alert(localizedString.successSave);
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Failed SaveAuthority', error);
+    }
   };
 
   const navBarItems = () => {
@@ -86,10 +187,6 @@ const Authority = () => {
     });
   }, [auth, data]);
 
-  const renderItemComponent = useCallback(() => {
-    return auth.component(auth);
-  }, [auth]);
-
   return (
     <AuthorityContext.Provider
       value={context}>
@@ -107,7 +204,7 @@ const Authority = () => {
             dataSource={authData}
             animationEnabled={false}
             swipeEnabled={false}
-            itemComponent={renderItemComponent}
+            itemComponent={auth.component}
             onTitleClick={handleTabPanelItem}
           >
           </TabPanel>
@@ -117,4 +214,4 @@ const Authority = () => {
   );
 };
 
-export default Authority;
+export default React.memo(Authority);

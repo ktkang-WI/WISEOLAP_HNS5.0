@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
+import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
 public class DataSetDsService {
@@ -14,13 +14,25 @@ public class DataSetDsService {
   @Autowired
   DatasetDAO datasetDAO;
 
-  public List<DatasetDsDTO> getDatasetDsData() {
+  public List<DsMstrEntity> getDatasetDsData() {
 
-    List<DatasetDsDTO> datasetDsDTO = datasetDAO.selectDatasetDs();
+    List<DsMstrEntity> dsMstrEntities = datasetDAO.selectDatasetDs();
 
-    if (datasetDsDTO == null) return null;
+    if (dsMstrEntities == null) return null;
 
-    return datasetDsDTO;
+    return dsMstrEntities;
   };
 
+  public boolean updateDs(DsMstrEntity dsMstr) {
+    return datasetDAO.updateDs(dsMstr);
+  }
+
+  public boolean deleteDs(DsMstrEntity dsMstr) {
+    return datasetDAO.deleteDs(dsMstr);
+  }
+
+  public boolean createDs(DsMstrEntity dsMstr) {
+    return datasetDAO.createDs(dsMstr);
+  }
+  
 }

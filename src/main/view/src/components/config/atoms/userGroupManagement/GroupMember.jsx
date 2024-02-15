@@ -1,9 +1,10 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
+import DataGrid, {Column, Selection}
+  from 'devextreme-react/data-grid';
 import {Button} from 'devextreme-react';
-import {useCallback, useContext, useRef} from 'react';
+import {useCallback, useContext} from 'react';
 import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import localizedString from 'config/localization';
@@ -14,9 +15,8 @@ const GroupMember = () => {
   getContext.state.groupMemberUsers;
   const [groupNotMemberUsers, setGroupNotMemberUsers] =
   getContext.state.groupNotMemberUsers;
-
-  const groupMemberUserRef = useRef();
-  const groupNotMemberUserRef = useRef();
+  const groupMemberUserRef = getContext.ref.groupMemberUserRef;
+  const groupNotMemberUserRef = getContext.ref.groupNotMemberUserRef;
 
   const moveUserToGroup = useCallback(() => {
     const selectedData = groupNotMemberUserRef
@@ -72,7 +72,8 @@ const GroupMember = () => {
             <Column
               dataField="userId"
               caption={localizedString.userId}
-            />
+            >
+            </Column>
             <Column
               dataField="userNm"
               caption={localizedString.userName}

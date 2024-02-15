@@ -3,10 +3,11 @@ import {UserGroupContext}
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
-import {useContext, useRef} from 'react';
+import {useContext} from 'react';
 import localizedString from 'config/localization';
 
 const GroupDataGrid = () => {
+  // context
   const getContext = useContext(UserGroupContext);
   const [groupsFormat] = getContext.state.groupsFormat;
   const [groupDetailInfo, setGroupDetailInfo] =
@@ -14,19 +15,19 @@ const GroupDataGrid = () => {
   const [, setGroupMemberUsers] = getContext.state.groupMemberUsers;
   const [, setGroupNotMemberUsers] = getContext.state.groupNotMemberUsers;
 
-  const ref = useRef();
+  const groupDataGridRef = getContext.ref.groupDataGridRef;
 
   const handleRowClick = (e) => {
     const grpId = e.data.grpId;
     const selectedGroup =
-    groupsFormat.filter((item) => item.grpId === grpId)[0];
+    _.cloneDeep(groupsFormat.filter((item) => item.grpId === grpId)[0]);
     setGroupDetailInfo(selectedGroup.grpDetailInfo);
     setGroupMemberUsers(selectedGroup.grpMemberUser);
     setGroupNotMemberUsers(selectedGroup.grpNotMemberUser);
   };
 
   if (_.isEmpty(groupDetailInfo)) {
-    ref.current?._instance.clearSelection();
+    groupDataGridRef.current?._instance.clearSelection();
   }
 
   return (
@@ -36,7 +37,7 @@ const GroupDataGrid = () => {
         dataSource={groupsFormat}
         showBorders={true}
         onRowClick={handleRowClick}
-        ref={ref}
+        ref={groupDataGridRef}
       >
         <Selection mode="single" />
         <Column

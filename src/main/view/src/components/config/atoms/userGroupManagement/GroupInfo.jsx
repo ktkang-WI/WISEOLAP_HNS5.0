@@ -4,40 +4,74 @@ import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import {TextArea} from 'devextreme-react';
 import Form, {
-  GroupItem, Item, Label, SimpleItem
+  AsyncRule,
+  EmptyItem,
+  Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
+import {duplicateValidation} from 'components/config/utility/utility';
 
 const GroupInfo = () => {
+  // context
   const getContext = useContext(UserGroupContext);
+  const [groupsFormat] = getContext.state.groupsFormat;
   const [groupDetailInfo] = getContext.state.groupDetailInfo;
+  const groupDataGridRef = getContext.ref.groupDataGridRef;
+  const groupInfoRef = getContext.ref.groupInfoRef;
+
+  // selectBox DataSource
+  const mode = ['ADMIN', 'VIEW'];
+
+  const asyncValidation = (params) => {
+    const selectedRow = groupDataGridRef.current._instance
+        .getSelectedRowsData()[0];
+    const invalidValues = groupsFormat
+        .filter((row) => row.grpNm != selectedRow?.grpNm)
+        .map((row) => row.grpNm);
+    return duplicateValidation(params.value, invalidValues, groupInfoRef);
+  };
 
   return (
     <Panel title={localizedString.groupInfo}>
       <Form
         formData={groupDetailInfo}
+        ref={groupInfoRef}
       >
-        <GroupItem colCount={1}>
-          <Item
-            dataField="grpNm"
-          >
-            <Label>{localizedString.groupName}</Label>
-          </Item>
-          <SimpleItem dataField="grpDesc">
-            <Label>{localizedString.description}</Label>
-            <TextArea
-              height={100}
-              width="100%"
-            />
-          </SimpleItem>
-          <Item
-            dataField="grpRunMode"
-            editorType="dxSelectBox"
-          >
-            <Label>{localizedString.groupRunMode}</Label>
-          </Item>
-        </GroupItem>
+        <EmptyItem
+          dataField="grpId"
+          editorOptions={{
+            mode: 'number'
+          }}
+        >
+        </EmptyItem>
+        <SimpleItem
+          dataField="grpNm"
+        >
+          <RequiredRule message={localizedString.validationGroupNm}/>
+          <AsyncRule
+            message={localizedString.validationDupleGrpNm}
+            validationCallback={asyncValidation}
+          />
+          <Label>{localizedString.groupName}</Label>
+        </SimpleItem>
+        <SimpleItem dataField="grpDesc">
+          <Label>{localizedString.description}</Label>
+          <TextArea
+            height={100}
+            width="100%"
+          />
+        </SimpleItem>
+        <SimpleItem
+          dataField="grpRunMode"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: mode
+          }}
+        >
+          <RequiredRule message={localizedString.validationGroupRunMode}/>
+          <Label>{localizedString.groupRunMode}</Label>
+        </SimpleItem>
       </Form>
     </Panel>
   );

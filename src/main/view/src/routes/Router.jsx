@@ -18,6 +18,10 @@ import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
 import Authority from 'components/config/organisms/authority/Authority';
 import {DesignerMode} from 'components/config/configType';
+import ReportFolderManagement from
+  'components/config/organisms/reportFolderManagement/ReportFolderManagement';
+import DataSourceAddition
+  from 'components/config/organisms/dataSourceAddition/DataSourceAddition';
 
 const contextPath = '/editds';
 
@@ -76,6 +80,14 @@ const router = createBrowserRouter([
         path: 'auth',
         element: <Authority/>,
         loader: groupDataLoader
+      },
+      {
+        path: 'report-folder',
+        element: <ReportFolderManagement/>
+      },
+      {
+        path: 'add-datasource',
+        element: <DataSourceAddition/>
       }
     ]
   }

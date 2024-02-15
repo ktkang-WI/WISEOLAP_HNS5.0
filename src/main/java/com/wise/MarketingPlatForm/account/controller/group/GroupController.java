@@ -54,17 +54,17 @@ public class GroupController{
       @RequestParam(required = true) String grpNm,
       @RequestParam(required = false, defaultValue = "") String grpDesc,
       @RequestParam(required = true, defaultValue = "") String grpRunMode,
-      @RequestParam(required = false, defaultValue = "") String grpMemberUserKey,
+      @RequestParam(required = false, defaultValue = "data") String key,
       @RequestBody Map<String, Object> body
   ) throws SQLException{
 
-    String grpMemberUserData = body.get(grpMemberUserKey).toString();
+    String grpMemberUserData = body.get(key).toString();
 
-    if (!body.containsKey(grpMemberUserKey)) {
+    if (!body.containsKey(key)) {
         return RestAPIVO.badRequest(false);
     }
 
-    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData,grpMemberUserType);
+    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData, grpMemberUserType);
     
     GroupDTO groupDTO = GroupDTO.builder()
       .grpNm(grpNm)
@@ -86,12 +86,12 @@ public class GroupController{
       @RequestParam(required = false, defaultValue = "") String grpNm,
       @RequestParam(required = false, defaultValue = "") String grpDesc,
       @RequestParam(required = false, defaultValue = "") String grpRunMode,
-      @RequestParam(required = false, defaultValue = "") String grpMemberUserKey,
+      @RequestParam(required = false, defaultValue = "data") String key,
       @RequestBody Map<String, Object> body
   ) throws SQLException{
-    String grpMemberUserData = body.get(grpMemberUserKey).toString();
+    String grpMemberUserData = body.get(key).toString();
 
-    if (!body.containsKey(grpMemberUserKey)) {
+    if (!body.containsKey(key)) {
       return RestAPIVO.badRequest(false);
     }
 

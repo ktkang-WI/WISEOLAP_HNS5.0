@@ -24,7 +24,8 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import {generateLabelSuffix, formatNumber}
+  from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
@@ -196,6 +197,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
 
   const customizeLabel = (o, formats) => {
+    const formData = formats[o.series.tag.math];
+    if (!formData) console.error('format 데이터쪽 확인필요이상감지');
+    const labelSuffix = generateLabelSuffix(formData);
+    o.value = formatNumber(o.value, formData, labelSuffix);
     const fieldId = o.series.tag.fieldId;
     const dataField =
       seriesOptions.filter((item) => (item.fieldId === fieldId))[0];
@@ -205,33 +210,11 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     const direction = !dataField ?
       seriesOptionDefaultFormat.pointLabel.direction :
       directionFormat(dataField.pointLabel.direction);
-    // format label 적용 부분
-    const formData = formats[o.series.tag.math];
-    const labelSuffix = {
-      O: formData.suffixO,
-      K: formData.suffixK,
-      M: formData.suffixM,
-      B: formData.suffixB
-    };
-    const formatNumber = (value) => {
-      return NumberFormatUtility.formatNumber(
-          value,
-          formData.formatType,
-          formData.unit,
-          formData.precision,
-          formData.useDigitSeparator,
-          undefined,
-          labelSuffix,
-          formData.suffixEnabled,
-          formData.precisionType
-      );
-    };
-    // format label 적용 부분
     return {
       rotationAngle: direction,
       visible: label ? true : false,
       customizeText(e) {
-        return formatNumber(label);
+        return label;
       }
     };
   };
@@ -297,7 +280,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   fieldId: valueField.fieldId,
                   math: Math.floor(i / mart.seriesLength)
                 }}
-                name={valueField.name || '\u2800'}
+                name={valueField.caption || '\u2800'}
                 type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
                 sizeField={
                   getSeriesOptionType(valueField.fieldId, seriesOptions) ===

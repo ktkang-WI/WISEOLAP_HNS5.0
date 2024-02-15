@@ -1,6 +1,6 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
-import {useRef} from 'react';
-import Title from 'components/config/atoms/authority/Title';
+import React, {useRef} from 'react';
+import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 
@@ -35,4 +35,4 @@ const AuthorityDataMember = () => {
   );
 };
 
-export default AuthorityDataMember;
+export default React.memo(AuthorityDataMember);

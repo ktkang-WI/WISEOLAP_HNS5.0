@@ -4,25 +4,33 @@ import UserList from 'components/config/molecules/authority/UserList';
 import {Mode} from '../data/AuthorityData';
 import FolderTreeView
   from 'components/config/molecules/authority/FolderTreeView';
-import {useState} from 'react';
+import React, {useState} from 'react';
 
-const ReportAuthority = ({auth}) => {
+const ReportAuthority = ({data}) => {
   const [row, setRow] = useState();
+  const auth = data;
 
   return (
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_REPORT ?
-          <GroupList setRow={setRow}/> :
+          auth.mode === Mode.GROUP_REPORT &&
+          <GroupList setRow={setRow}/>
+        }
+        {
+          auth.mode === Mode.USER_REPORT &&
           <UserList setRow={setRow}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>
-        <FolderTreeView row={row}/>
+        {
+          (auth.mode === Mode.GROUP_REPORT ||
+          auth.mode === Mode.USER_REPORT) &&
+          <FolderTreeView row={row}/>
+        }
       </Wrapper>
     </Wrapper>
   );
 };
 
-export default ReportAuthority;
+export default React.memo(ReportAuthority);
