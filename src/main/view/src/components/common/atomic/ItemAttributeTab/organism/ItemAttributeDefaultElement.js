@@ -183,7 +183,12 @@ const ItemAttributeDefaultElement = () => {
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
-            // 데이터 하이라이트
+            const pivotMartInit = focusedItem.mart.init;
+
+            if (!pivotMartInit) {
+              return;
+            }
+
             openModal(DataHighlightModal);
           }
         }
@@ -207,12 +212,10 @@ const ItemAttributeDefaultElement = () => {
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
           onClick: () => {
-            const dataField = rootItem.adHocOption.dataField;
-            if (dataField.measure.length === 0) {
-              return;
-            }
+            const chartMartInit = rootItem.items[0].mart.init;
+            const pivotMartInit = rootItem.items[1].mart.init;
 
-            if (dataField.row.length === 0 && dataField.column.length === 0) {
+            if (!chartMartInit && !pivotMartInit) {
               return;
             }
 
