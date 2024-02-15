@@ -50,7 +50,7 @@ const SpreadViewer = () => {
 
   useEffect(() => {
     const prevWorkBook = sheets.findControl(sheetsRef.current);
-    if (prevWorkbook) prevWorkBook.destroy();
+    if (prevWorkBook) prevWorkBook.destroy();
     const workBook = new sheets.Workbook(sheetsRef.current);
     importFile({fileName: report.reportId + '.xlsx'})
         .then(
