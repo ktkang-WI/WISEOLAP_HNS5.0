@@ -1,7 +1,7 @@
 package com.wise.MarketingPlatForm.account.model.common;
 
-import com.wise.MarketingPlatForm.account.entity.AuthReportMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.FldMstrEntity;
+import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 import lombok.Builder;
 import lombok.Getter;

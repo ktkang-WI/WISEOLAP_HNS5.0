@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.account.entity;
+package com.wise.MarketingPlatForm.config.entity;
 
 import lombok.Builder;
 import lombok.Getter;

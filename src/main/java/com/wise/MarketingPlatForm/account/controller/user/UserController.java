@@ -127,7 +127,7 @@ public class UserController {
     @RequestParam(required = true) int userNo
   ) throws SQLException{
 
-    UserGroupDTO userMstr = UserGroupDTO.builder()
+    UserMstrEntity userMstr = UserMstrEntity.builder()
       .userNo(userNo)
       .build();
 
