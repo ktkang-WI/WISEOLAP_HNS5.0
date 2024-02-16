@@ -6,8 +6,8 @@ const theme = getTheme();
 const ReportTitleText = styled.div`
   color: ${theme.color.gray600};
   font: ${(props) => props.font || theme.font.reportTitle};
-  padding-left: 20px;
   cursor: pointer;
+  text-wrap: nowrap;
 `;
 
 export default ReportTitleText;

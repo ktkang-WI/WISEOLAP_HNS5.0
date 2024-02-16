@@ -1,6 +1,6 @@
 import Drawer from 'devextreme-react/drawer';
 import Wrapper from '../Wrap/Wrapper';
-import {useRef, useState} from 'react';
+import {useRef} from 'react';
 // import {styled} from 'styled-components';
 // import expandImg from 'assets/image/icon/button/expand.png';
 
@@ -21,9 +21,10 @@ import {useRef, useState} from 'react';
 // `;
 
 const CustomDrawer = ({
-  children, index=0, defaultValue=true, visible=true, margin, ...props
+  opened=true, children, index=0,
+  defaultValue=true, visible=true, margin, ...props
 }) => {
-  const [opened] = useState(defaultValue);
+  // const [opened] = useState(defaultValue);
   const ref = useRef(null);
 
   // const expandDrawer = () => {

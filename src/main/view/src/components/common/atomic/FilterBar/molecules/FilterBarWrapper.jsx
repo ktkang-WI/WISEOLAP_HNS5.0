@@ -18,7 +18,7 @@ const theme = getTheme();
 const StyledFilterBarWrapper = styled.div`
     height: 100%;
     min-height: ${theme.size.filterBarHeight};
-    width: calc(100% - 20px);
+    width: 100%;
     display: block;
     overflow: hidden;
     box-sizing: border-box;

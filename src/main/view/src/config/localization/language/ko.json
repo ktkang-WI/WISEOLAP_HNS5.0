@@ -525,6 +525,7 @@
   "groupList": "그룹 목록",
   "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
   "openViewer": "뷰어 열기",
+  "openDesigner": "디자이너 열기",
   "reportId": "보고서 ID",
   "reportType": "보고서 유형",
   "folderManagement": "폴더 관리",
@@ -561,5 +562,7 @@
   "validationPort": "포트 를 입력해주세요.",
   "valiedationFolderNm": "폴더 명을 입력해 주세요.",
   "validationFolderSelect": "폴더를 선택해주세요.",
-  "validationReportNm": "보고서 명을 입력해 주세요."
+  "validationReportNm": "보고서 명을 입력해 주세요.",
+  "dataAttributeList": "데이터속성목록",
+  "reportList": "보고서목록"
 }

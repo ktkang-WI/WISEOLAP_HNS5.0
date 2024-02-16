@@ -25,6 +25,7 @@ const Wrapper = styled.div`
 `;
 
 const BreakLine = styled.div`
+  display: none;
   width: 1px;
   height: 70%;
   background: ${theme.color.breakLine};

@@ -64,11 +64,14 @@ const HeaderDefaultElement = () => {
     },
     'Designer': {
       'id': 'designer',
-      'label': localizedString.designer,
-      'type': 'TextButton',
+      'label': localizedString.openDesigner,
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
       'onClick': (e) => {
         nav('/editds/dashany');
-        dispatch(setEditMode(EditMode.VIEWER));
+        dispatch(setEditMode(EditMode.DESIGNER));
       }
     },
     'DownloadReport': {

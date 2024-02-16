@@ -21,6 +21,15 @@ const StyledWrapper = styled(Wrapper)`
   border: 1px solid ${theme.color.gray200};
   border-radius: 10px;
   overflow: hidden;
+  text-align: left;
+
+  .name-box-selector {
+    height: 21px;
+  }
+
+  .gc-ribbon-bar .ribbon-navigation .ribbon-navigation-item {
+    border-radius: 8px 8px 0px 0px;
+  }
 `;
 
 const SpreadBoard = () => {

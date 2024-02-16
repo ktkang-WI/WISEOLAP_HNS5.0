@@ -8,8 +8,8 @@ import ReportContentWrapper
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import ReportTabs from 'components/common/atomic/ReportTab/organism/ReportTabs';
 import {getTheme} from 'config/theme';
-import ViewerFilterBar
-  from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
+// import ViewerFilterBar
+//   from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
 import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
 import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
@@ -18,42 +18,90 @@ import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import useDrag from 'hooks/useDrag';
 import SpreadViewer from
   'components/report/atomic/spreadBoard/organisms/SpreadViewer';
+import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
+import {styled} from 'styled-components';
+import {useState} from 'react';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
+
+const StyledWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  min-height: 0px;
+  margin-bottom: 0px;
+`;
 
 const ViewerContent = ({children}) => {
   const {onDragEnd, onDragStart} = useDrag();
   const report = useSelector(selectCurrentReport);
+  const [reportListOpened, setReportListOpened] = useState(true);
+  const [dataColumnOpened, setDataColumnOpened] = useState(false);
+
+  const buttons = [
+    {
+      icon: '',
+      label: localizedString.reportList,
+      width: '100px',
+      value: reportListOpened,
+      onClick: () => {
+        setReportListOpened(!reportListOpened);
+      }
+    },
+    {
+      icon: '',
+      label: localizedString.dataAttributeList,
+      width: '105px',
+      value: dataColumnOpened,
+      onClick: () => {
+        setDataColumnOpened(!dataColumnOpened);
+      }
+    }
+  ];
+
   return (
     <Content
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%'
+      }}
+      marginHeight={'10px'}
       headerHeight={theme.size.headerHeight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-        <CustomDrawer
-          index={0}
-          component={ReportTabs}
-        >
-          {/* TODO: 추후 권한 적용 */}
+        <FilterBar useSearchButton={true} buttons={buttons}/>
+        <StyledWrapper>
           <CustomDrawer
-            index={1}
-            defaultValue={false}
-            component={ViewerDataAttributePanels}
-            visible={report.options.reportType == 'AdHoc'}
+            index={0}
+            opened={reportListOpened}
+            margin={'0px 0px 10px 10px'}
+            component={ReportTabs}
           >
-            <Wrapper>
-              <ReportContentWrapper>
-                <ViewerFilterBar/>
-                <ReportContent>
-                  {report && report.reportId != 0 &&
-                    (report.options.reportType == 'Excel' ?
-                      <SpreadViewer /> :
-                      <ItemBoard/>)
-                  }
-                </ReportContent>
-              </ReportContentWrapper>
-            </Wrapper>
+            {/* TODO: 추후 권한 적용 */}
+            <CustomDrawer
+              index={1}
+              margin={'0px'}
+              opend={dataColumnOpened}
+              component={ViewerDataAttributePanels}
+              visible={report.options.reportType == 'AdHoc'}
+            >
+              <Wrapper>
+                <ReportContentWrapper>
+                  <ReportContent>
+                    {report && report.reportId != 0 &&
+                      (report.options.reportType == 'Excel' ?
+                        <SpreadViewer /> :
+                        <ItemBoard/>)
+                    }
+                  </ReportContent>
+                </ReportContentWrapper>
+              </Wrapper>
+            </CustomDrawer>
           </CustomDrawer>
-        </CustomDrawer>
+        </StyledWrapper>
       </DragDropContext>
     </Content>
   );

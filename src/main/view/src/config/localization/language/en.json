@@ -409,5 +409,8 @@
   "reportDownload": "Download Report",
   "groupList": "Groups",
   "invalidQuery": "Queries are invalid.",
-  "openViewer": "openViewer"
+  "openViewer": "Open Viewer",
+  "openDesigner": "Open Designer",
+  "dataAttributeList": "Data attribute list",
+  "reportList": "Report list"
 }

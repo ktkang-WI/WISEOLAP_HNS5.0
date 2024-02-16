@@ -82,7 +82,6 @@ const DataSourceFoldableList = ({dataset}) => {
   const itemRender = (item, index, snapshot) => {
     const shouldRenderClone = item.uniqueName === snapshot.draggingFromThisWith;
 
-    console.log(item.type);
     if (shouldRenderClone) {
       return (
         <div className="dx-item-content dx-treeview-item-content">
@@ -104,7 +103,7 @@ const DataSourceFoldableList = ({dataset}) => {
             className="dx-item-content dx-treeview-item-content"
           >
             <img
-              style={{width: '16px', height: '16px', marginBottom: '2px'}}
+              style={{width: '16px', height: '16px', marginBottom: '1px'}}
               src={iconMapper[item.type]}
               className="dx-icon"/>
             <span>{item.name}</span>

@@ -1,6 +1,7 @@
 import {styled} from 'styled-components';
 import ReportTitlePanel from '../../Common/Panel/ReportTitlePanel';
 import ReportTitleText from '../atom/ReportTitleText';
+import closeImg from 'assets/image/icon/button/close.png';
 
 
 const DeleteButton = styled.div`
@@ -13,18 +14,22 @@ const DeleteButton = styled.div`
   font-weight: bold;
   color: gray;
   cursor: pointer;
+  margin-left: 20px;
 `;
 
-const ReportTitleTab = ({children, height, onClick, onDelete}) => {
+const ReportTitleTab = ({
+  children, height, onClick, onDelete, selected
+}) => {
   return (
-    <ReportTitlePanel height={height}>
+    <ReportTitlePanel selected={selected} height={height}>
       <ReportTitleText onClick={onClick}>
         {children}
       </ReportTitleText>
       {
         onDelete &&
         <DeleteButton onClick={onDelete}>
-          X</DeleteButton>
+          <img src={closeImg}/>
+        </DeleteButton>
       }
     </ReportTitlePanel>
   );

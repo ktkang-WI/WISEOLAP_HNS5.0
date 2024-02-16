@@ -82,7 +82,11 @@ const ViewerFilterBar = ({useExpandButton=true}) => {
           width={queryButton.width}
           height={queryButton.height}
           onClick={querySearch}
+          type='secondary'
+          borderRadius='4px'
+          font={theme.font.ribbonButton}
         >
+          <img src={queryButton.icon}/>
           {queryButton.label}
         </CommonButton>
       </QueryButtonWrapper>

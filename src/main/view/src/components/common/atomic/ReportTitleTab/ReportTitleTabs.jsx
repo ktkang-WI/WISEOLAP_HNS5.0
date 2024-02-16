@@ -10,13 +10,13 @@ import useReportSave from 'hooks/useReportSave';
 import {EditMode} from 'components/config/configType';
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  width: calc(100vw - 500px);
+  height: 54px;
   display: flex;
   min-width: 200px;
-  @media screen and (max-width: 720px) {
-    display: none;
-  }
+  position: absolute;
+  top: 8px;
+  left: 350px;
 `;
 
 // TODO: 추후 데이터 연동시 수정 예정
@@ -55,6 +55,7 @@ const ReportTitleTabs = () => {
             (() => closeReport(report.reportId)) :
             undefined
           }
+          selected={report.reportId == selectedReportId}
         >
           {report.options.reportNm}
         </ReportTitleTab>
