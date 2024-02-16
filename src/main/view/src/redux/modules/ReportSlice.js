@@ -16,12 +16,7 @@ const initialState = {
       reportTag: '',
       reportDesc: '',
       path: '', // 해당 경로 비어있을 경우 새 보고서 다시 확인
-      reportType: DesignerMode['DASHBOARD'],
-      linkReportId: 0,
-      linkXml: '',
-      linkReportOrdinal: 0,
-      linkReportType: '',
-      dataLinkType: ''
+      reportType: DesignerMode['DASHBOARD']
     }
   }]
 };
