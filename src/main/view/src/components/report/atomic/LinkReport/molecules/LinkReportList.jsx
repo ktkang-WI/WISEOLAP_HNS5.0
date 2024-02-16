@@ -2,16 +2,15 @@ import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
 import {useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import SmallImageButton
   from 'components/common/atomic/Common/Button/SmallImageButton';
 import paramConnect
   from 'assets/image/icon/button/ico_connectReportSettings.png';
 import Popup from 'devextreme-react/popup';
-// import useModal from 'hooks/useModal';
+import models from 'models';
 import LinkParamInfo
   from 'components/report/atomic/LinkReport/molecules/LinkParamInfo';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -31,23 +30,30 @@ const Title = styled.div`
   margin-bottom: 10px;
 `;
 
-const LinkReportList = ({width, dataSource}) => {
+const LinkReportList = ({width, dataSource, onSelectionChange}) => {
   const dxRef = useRef();
   const [popupVisible, setPopupVisible] = useState(false);
-  // const {openModal} = useModal();
-  const currentReportId = useSelector(selectCurrentReportId);
-  console.log('currentReportId', currentReportId);
-  console.log('LinkReportList dataSource', dataSource);
-  // if (currentReportId !== 0) {
-  //   getLinkReportList(currentReportId).then((response) => {
-  //     if (response.status != 200) {
-  //       return;
-  //     }
-  //     console.log('response', response);
-  //   });
-  // } else if (currentReportId == 0) {
+  const {alert} = useModal();
+  const [selectedRowData, setSelectedRowData] = useState();
+  const [linkParamData, setLinkParamData] = useState();
+  const [paramInfo, setParamInfo] = useState([]);
 
-  // }
+  const handleOpenPopup = async () => {
+    if (selectedRowData &&
+        selectedRowData.id !== linkParamData?.reports[0]?.reportId) {
+      const param = {reportId: selectedRowData.id};
+      models.Report.getLinkReportParam(param).then(({data}) => {
+        setLinkParamData(data);
+        setPopupVisible(true);
+      });
+    } else if (selectedRowData &&
+      selectedRowData.id == linkParamData?.reports[0]?.reportId) {
+      console.log('linkParamData', linkParamData);
+      setPopupVisible(true);
+    } else {
+      alert('연결 보고서를 선택해주세요.');
+    };
+  };
 
   return (
     <Wrapper
@@ -63,19 +69,29 @@ const LinkReportList = ({width, dataSource}) => {
           imgHeight='auto'
           buttonWidth='40px'
           buttonHeight='40px'
-          onClick={() => setPopupVisible(true)}
+          onClick={handleOpenPopup}
         />
       </Title>
       <DevDataGrid
         height={'90%'}
         ref={dxRef}
         dataSource={dataSource}
-        // columnAutoWidth={true}
-        showBorders={true}
-        showRowLines={true}
-        showColumnLines={true}
-        // allowColumnReordering={true}
-        // allowColumnResizing={true}
+        showBorders={false}
+        showRowLines={false}
+        showColumnLines={false}
+        selection={
+          {
+            mode: 'single',
+            showCheckBoxesMode: 'onClick'
+          }
+        }
+        onSelectionChanged={(selectionChangedEvent) => {
+          const selectedRow = selectionChangedEvent.selectedRowsData[0];
+          if (selectedRow) {
+            setSelectedRowData(selectedRow);
+            onSelectionChange(selectedRow);
+          }
+        }}
       >
         <Column dataField="name" caption="연결 보고서 목록" />
       </DevDataGrid>
@@ -83,13 +99,18 @@ const LinkReportList = ({width, dataSource}) => {
         visible={popupVisible}
         onHiding={() => setPopupVisible(false)}
         dragEnabled={true}
-        // closeOnOutsideClick={true}
         showCloseButton={true}
         title="연결보고서 데이터 설정"
         width="600px"
         height="400px"
       >
-        <LinkParamInfo />
+        <LinkParamInfo
+          selectedRowData = {selectedRowData}
+          linkParamData={linkParamData}
+          onClose={() => setPopupVisible(false)}
+          paramInfo={paramInfo}
+          setParamInfo={setParamInfo}
+        />
       </Popup>
     </Wrapper>
   );
