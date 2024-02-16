@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-const LinkReportRibbon = ({width, onAddButtonClick}) => {
+const LinkReportRibbon = ({width, removeLinkReport, addLinkReport}) => {
   return (
     <Wrapper
       width={width}
@@ -26,7 +26,7 @@ const LinkReportRibbon = ({width, onAddButtonClick}) => {
         imgHeight='auto'
         buttonWidth='20px'
         buttonHeight='20px'
-        onClick={onAddButtonClick}
+        onClick={addLinkReport}
       />
       <SmallImageButton
         src={removeArrow}
@@ -34,7 +34,7 @@ const LinkReportRibbon = ({width, onAddButtonClick}) => {
         imgHeight='auto'
         buttonWidth='20px'
         buttonHeight='20px'
-        // onClick={}
+        onClick={removeLinkReport}
       />
     </Wrapper>
   );
