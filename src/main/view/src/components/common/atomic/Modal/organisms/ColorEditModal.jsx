@@ -42,9 +42,7 @@ const FieldValue = ({...props}) => {
   );
 };
 
-
 const getRandomHexColor = () => {
-  // Generate a random hexadecimal color code
   let color = '#';
   for (let i = 0; i < 6; i++) {
     color += Math.floor(Math.random() * 16).toString(16);
@@ -53,12 +51,17 @@ const getRandomHexColor = () => {
 };
 
 const ColorEditModal = ({popupName, ...props}) => {
-  // TODO: 예외처리
-  if (props?.measures?.length == 0) return;
+  if (props?.measures?.length == 0) {
+    console.error('state of grid error nothing measures value in state');
+  }
+  if (props?.colorEdit?.length == 0) {
+    console.error('state of grid error nothing colorEdit value in state');
+  }
   const measures = props.measures;
   const colorEdit = props.colorEdit;
   const colorEditLen = colorEdit.length;
   const state = [];
+
   measures.forEach((item, index) => {
     const object = {
       caption: '',
@@ -72,8 +75,8 @@ const ColorEditModal = ({popupName, ...props}) => {
       object.value = getRandomHexColor();
     } else {
       const field = colorEdit.filter((i) => i.fieldId === item.fieldId);
-      field.length === 0 ?
-        object.value = getRandomHexColor() : object.value = field[0].value;
+      field?.length !== 0 ?
+      object.value = field[0].value : object.value = getRandomHexColor();
     }
     state.push(useState(object));
   });
@@ -98,7 +101,7 @@ const ColorEditModal = ({popupName, ...props}) => {
       }}
       modalTitle={props.modalTitle}
       width={theme.size.smallModalWidth}
-      height='600px'
+      height={theme.size.middleModalHeight}
     >
       <FieldSet>
         {

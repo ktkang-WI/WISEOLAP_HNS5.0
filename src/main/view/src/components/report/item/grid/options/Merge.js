@@ -13,7 +13,7 @@ const generateBaseKey = (depth) => {
 
 const generateKey = (baseKey, depth) => {
   if (depth > 0) {
-    baseKey = baseKey.concat('-'+generateBaseKey(depth));
+    baseKey = baseKey.concat('-' + generateBaseKey(depth));
   } else {
     baseKey = baseKey.concat(generateBaseKey(depth));
   }

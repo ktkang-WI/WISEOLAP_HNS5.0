@@ -18,9 +18,11 @@ const DataGrid = ({setItemExports, id, item}) => {
   const allowedPageSizes = config.paging.pageUsageOfPageCount.pageSizes;
   const itemExportObject =
     itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
-  let pagingOption = getPagingOption(config);
-  let dataSource = _.cloneDeep(mart.data);
-  let rowSpans = null;
+  const dataGridConfig = {
+    pagingOption: getPagingOption(config),
+    dataSource: _.cloneDeep(mart.data),
+    rowSpans: null
+  };
 
   if (!mart.init) {
     return <></>;
@@ -39,18 +41,17 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   useEffect(() => {
     handlePagingIndex();
-  }, [mart, pagingOption]);
+  }, [mart, dataGridConfig.pagingOption]);
 
   const handlePagingIndex = () => {
     const dataGridInstance = dataGridRef.current.instance;
-    dataGridInstance.pageIndex(pagingOption.pageIndex);
-    dataGridInstance.pageSize(pagingOption.pageRange);
+    dataGridInstance.pageIndex(dataGridConfig.pagingOption.pageIndex);
+    dataGridInstance.pageSize(dataGridConfig.pagingOption.pageRange);
   };
 
-  // 페이징 동작 함수
   const handlePaging = (index) => {
-    const options = pagingOption;
-    const dataLen = dataSource.data.length;
+    const options = dataGridConfig.pagingOption;
+    const dataLen = dataGridConfig.dataSource.data.length;
     if (dataLen < index * options.pageRange) {
       index = Math.floor(dataLen / options.pageRange);
     }
@@ -61,39 +62,38 @@ const DataGrid = ({setItemExports, id, item}) => {
     options.end = options.pageIndex === 0 ?
       options.pageRange:
       options.pageRange * (options.pageIndex + 1);
-    pagingOption = options;
+    dataGridConfig.pagingOption = options;
   };
 
-  // 셀 병합로직
   const handleMerge = (e) => {
-    const options = pagingOption;
+    const options = dataGridConfig.pagingOption;
     const isGetRowpan =
       e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0;
     if (isGetRowpan) {
-      dataSource = _.cloneDeep(mart.data);
+      dataGridConfig.dataSource = _.cloneDeep(mart.data);
+      const data = dataGridConfig.dataSource.data;
+      const columns = dataGridConfig.dataSource.columns;
       if (config.paging.pagination.isOk) {
-        const data = dataSource.data.slice(options.start, options.end);
-        rowSpans =
-          _.cloneDeep(generateRowSpans(data, dataSource.columns));
+        const pagedData = data.slice(options.start, options.end);
+        dataGridConfig.rowSpans =
+          _.cloneDeep(generateRowSpans(pagedData, columns));
       } else {
-        rowSpans =
-          _.cloneDeep(generateRowSpans(dataSource.data, dataSource.columns));
+        dataGridConfig.rowSpans =
+          _.cloneDeep(generateRowSpans(data, columns));
       }
     }
     // handlePagingIndex();
-    cellMerge(e, rowSpans, mart.data.columns);
+    cellMerge(e, dataGridConfig.rowSpans, mart.data.columns);
   };
 
-  // DataGrid 이벤트
   const onCellPrepared = (e) => {
     if (config.cellMerging) {
       handleMerge(e);
     }
   };
 
-  // DataGrid 이벤트
   const onOptionChanged = (e) => {
-    const options = pagingOption;
+    const options = dataGridConfig.pagingOption;
     const isPaging = config.paging.pagination.isOk;
     const paging = (e.fullName === 'paging.pageIndex' && isPaging);
     const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
@@ -158,7 +158,7 @@ const DataGrid = ({setItemExports, id, item}) => {
       width='100%'
       height='100%'
       id={id}
-      dataSource={dataSource.data}
+      dataSource={dataGridConfig.dataSource.data}
       sorting={false}
       onCellPrepared={onCellPrepared}
       onOptionChanged={onOptionChanged}
@@ -172,14 +172,14 @@ const DataGrid = ({setItemExports, id, item}) => {
     >
       <Paging
         enabled={config.paging.pagination.isOk}
-        defaultPageSize={pagingOption.pageRange} />
+        defaultPageSize={dataGridConfig.pagingOption.pageRange} />
       <Pager
         showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
         allowedPageSizes={allowedPageSizes}
         showNavigationButtons={true}
       />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
-      {dataSource.columns.map((column, i) =>
+      {dataGridConfig.dataSource.columns.map((column, i) =>
         <Column
           key={i}
           caption={column.caption}

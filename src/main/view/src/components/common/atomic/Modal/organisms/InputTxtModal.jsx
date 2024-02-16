@@ -2,6 +2,7 @@ import {getTheme} from 'config/theme';
 import Modal from './Modal';
 import {TextBox} from 'devextreme-react';
 import {useState} from 'react';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 const nameLabel = {'aria-label': 'Name'};
@@ -23,11 +24,11 @@ const InputTxtModal = ({...props}) => {
       }}
       modalTitle={props.modalTitle}
       width={theme.size.smallModalWidth}
-      height='170px'
+      height={theme.size.tinyModalHeight}
     >
       <TextBox
         defaultValue={memo}
-        placeholder="메모를 작성해주세요."
+        placeholder={localizedString.colorEditPlaceHolder}
         inputAttr={nameLabel}
         onValueChanged={handleValueChange}
       />

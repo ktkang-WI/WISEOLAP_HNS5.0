@@ -241,7 +241,7 @@ const ItemBoard = () => {
     return action;
   }
 
-  const calculatorFontWidth = (txt) => {
+  const calcForFontWidth = (txt) => {
     const len = txt.split('')
         .map((s) => s.charCodeAt(0))
         .reduce((prev, c) =>
@@ -258,7 +258,7 @@ const ItemBoard = () => {
       const id = tabNode.getId();
       const item = items.filter((item) => item.id === id)[0];
       const memo = item?.meta?.memo;
-      const memoWidth = calculatorFontWidth(memo);
+      const memoWidth = calcForFontWidth(memo);
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 

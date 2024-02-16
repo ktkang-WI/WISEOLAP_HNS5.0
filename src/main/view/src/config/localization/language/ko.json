@@ -160,6 +160,7 @@
   "SeriesType": "계열 유형",
   "palette": "팔레트",
   "colorEdit": "색상 편집",
+  "colorEditPlaceHolder": "메모를 작성해주세요.",
   "pointLabel": "애니메이션",
   "querySearch": "조회",
   "publicReport": "공용 보고서",

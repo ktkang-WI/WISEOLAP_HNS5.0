@@ -45,7 +45,7 @@ const useCustomEvent = () => {
     return openModal(ItemOptionModal,
         {
           popupName: 'pagingSetting',
-          modalTitle: '페이징 설정',
+          modalTitle: localizedString.paging,
           options: value,
           onSubmit: (returnedOptions) => {
             const item =
@@ -124,25 +124,6 @@ const useCustomEvent = () => {
             booleanToOnOff(selectedItem.meta.dataGridOption.autoGridWidth));
       }
     },
-    /*
-    'BarPalet': {
-      ...commonPopoverButton,
-      'id': 'input_text',
-      'label': localizedString.cellMerging,
-      'imgSrc': grandTotalImg,
-      'renderContent': () => {
-        return getRadioPopover('merge', selectedItem.meta.merging);
-      }
-    },
-    'BarColorEdit': {
-      ...commonRibbonButton,
-      'id': 'input_text',
-      'label': localizedString.cellMerging,
-      'imgSrc': grandTotalImg,
-      'renderContent': () => {
-        return getRadioPopover('merge', selectedItem.meta.merging);
-      }
-    },*/
     'CellMerging': {
       ...commonPopoverButton,
       'id': 'input_cellMerging',
@@ -183,24 +164,6 @@ const useCustomEvent = () => {
             booleanToOnOff(selectedItem.meta.dataGridOption.autoWrap));
       }
     }
-    /*
-    'HeaderAdd': {
-      ...commonRibbonButton,
-      'id': 'input_text',
-      'label': localizedString.headerAdd,
-      'imgSrc': inputTxt,
-      'onClick': () => {
-      }
-    }
-    'InputTxt': {
-      ...commonRibbonButton,
-      'id': 'input_text',
-      'label': localizedString.inputTxt,
-      'imgSrc': inputTxt,
-      'onClick': () => {
-      }
-    }
-    */
   };
 
   const editDataGridOption = (id, key, value) => {

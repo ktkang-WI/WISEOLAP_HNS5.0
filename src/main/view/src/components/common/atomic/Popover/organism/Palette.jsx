@@ -1,3 +1,4 @@
+import {getTheme} from 'config/theme';
 import {SelectBox} from 'devextreme-react';
 import {useState} from 'react';
 import styled from 'styled-components';
@@ -115,18 +116,10 @@ const renderPaletteItem = (data) => {
   );
 };
 
+const theme = getTheme();
+
 const Palette = ({onValueChanged}) => {
   const [palette, setPalette] = useState(paletteCollection[0]);
-
-  /*
-  const handlePaletteChange = useCallback(
-      (e) => {
-        setPalette(e.value);
-        onValueChanged(e);
-      },
-      [setPalette],
-  );
-  */
 
   const handlePaletteChange =
       (e) => {
@@ -136,7 +129,7 @@ const Palette = ({onValueChanged}) => {
 
   return (
     <SelectBox
-      style={{width: '450px'}}
+      style={{width: theme.size.width_450}}
       items={paletteCollection}
       inputAttr={paletteLabel}
       displayExpr='caption'

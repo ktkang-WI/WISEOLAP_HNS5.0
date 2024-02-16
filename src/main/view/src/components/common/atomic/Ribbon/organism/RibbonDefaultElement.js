@@ -74,9 +74,11 @@ const RibbonDefaultElement = () => {
   const getPalettePopover = () => {
     return <Palette
       onValueChanged={(e) => {
-        // TODO: 소스 따라감
         const pickPalette =
           paletteCollection.filter((item) => item.name === e.value);
+        if (!(pickPalette?.length !== 0)) {
+          console.error('palette is not picked it might be invalid name color');
+        }
         editPalette(reportId, selectedItem, pickPalette[0]);
       }}
     />;
@@ -86,8 +88,7 @@ const RibbonDefaultElement = () => {
     const memo = item.meta.memo;
     return openModal(InputTxtModal,
         {
-          popupName: 'InputTxt',
-          modalTitle: '이름 편집',
+          modalTitle: localizedString.inputTxt,
           memo: memo,
           onSubmit: (returnedOptions) => {
             editMemo(reportId, selectedItem, returnedOptions);
@@ -101,8 +102,7 @@ const RibbonDefaultElement = () => {
     const colorEdit = item.meta.colorEdit;
     return openModal(ColorEditModal,
         {
-          popupName: 'ColorEdit',
-          modalTitle: '색상 편집',
+          modalTitle: localizedString.colorEdit,
           measures: measures,
           colorEdit: colorEdit,
           onSubmit: (returnedOptions) => {
