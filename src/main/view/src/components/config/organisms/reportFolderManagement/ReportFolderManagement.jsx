@@ -10,6 +10,7 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import Form from 'devextreme/ui/form';
 import TreeList from 'devextreme/ui/tree_list';
+import {getRefInstance} from 'components/config/utility/utility';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -133,13 +134,6 @@ const ReportFolderManagement = () => {
   useEffect(() => {
     init();
   }, []);
-
-  const getRefInstance = (component, classNm) => {
-    const element = Array.from(document.querySelectorAll('[role="tabpanel"]'))
-        .filter((row) => row.className.includes('dx-item-selected'))[0]
-        .getElementsByClassName(classNm);
-    return component.getInstance(element[0]);
-  };
 
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');

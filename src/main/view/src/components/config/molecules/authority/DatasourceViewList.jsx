@@ -1,6 +1,6 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useRef, useEffect, useState} from 'react';
 import models from 'models';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
@@ -16,7 +16,7 @@ const DatasourceViewList = ({row, setDsView}) => {
   // state
   const [ds, setDs] = useState([]);
   const [data] = authoritycontext.state.data;
-  const dsViewListRef = authoritycontext.ref.dsViewListRef;
+  const ref = useRef();
 
   const getDsViewIdList = () => {
     let dsViewIdList = [];
@@ -55,7 +55,7 @@ const DatasourceViewList = ({row, setDsView}) => {
       };
     });
     setDs(newDs);
-    dsViewListRef.current._instance.clearSelection();
+    ref.current._instance.clearSelection();
   }, [row, data]);
 
   const handleRowClick = ({data}) => {
@@ -71,7 +71,10 @@ const DatasourceViewList = ({row, setDsView}) => {
         showBorders={true}
         onRowClick={handleRowClick}
         height={'90%'}
-        ref={dsViewListRef}
+        ref={ref}
+        elementAttr={{
+          class: 'datasource-view-list'
+        }}
       >
         <Selection mode="single" />
         <SearchPanel visible={true} />

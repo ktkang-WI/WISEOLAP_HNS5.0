@@ -1,7 +1,8 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/common/Title';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect,
+  useRef, useState} from 'react';
 import localizedString from 'config/localization';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
@@ -15,7 +16,7 @@ const AuthorityDataCube = ({dsView, dsViewCube, row, auth}) => {
   const [cubeList, setCubeList] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [data] = authoritycontext.state.data;
-  const authorityDataCubeRef = authoritycontext.ref.authorityDataCubeRef;
+  const ref = useRef();
 
   useEffect(() => {
     const dsViewId = dsView.dsViewId;
@@ -58,7 +59,10 @@ const AuthorityDataCube = ({dsView, dsViewCube, row, auth}) => {
     <Wrapper>
       <Title title={localizedString.addCUBE}></Title>
       <DataGrid
-        ref={authorityDataCubeRef}
+        ref={ref}
+        elementAttr={{
+          class: 'authority-data-cube'
+        }}
         dataSource={cubeList}
         showBorders={true}
         onRowClick={handleRowClick}

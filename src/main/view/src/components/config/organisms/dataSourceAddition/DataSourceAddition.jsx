@@ -49,7 +49,7 @@ const DataSourceAddition = () => {
             }
             return acc;
           }, []);
-          console.log(newDs);
+
           setDataSource(newDs);
           dataSourceListRef.current._instance.clearSelection();
         })
