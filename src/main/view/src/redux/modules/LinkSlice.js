@@ -1,31 +1,25 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  links: [{
-    reportId: 0,
-    linkReportId: 0,
-    linkXml: '',
-    linkReportOrdinal: 0,
-    linkReportType: '',
-    dataLinkType: ''
-  }]
+  informations: {}
 };
 
 const reducers = {
-  getInitialState: () => initialState,
-  /* LINK */
   initLink: () => initialState,
-  changeLink(state, actions) {
-    return actions.payload;
-  },
   insertLink(state, actions) {
-    state.links = state.links.concat(actions.payload);
+    const {linkReportId} = actions.payload;
+    if (!state.informations[linkReportId]) {
+      state.informations[linkReportId] = {};
+    }
+    state.informations[linkReportId]= actions.payload;
   },
-  setLinks(state, actions) {
-    state.links = actions.payload;
+  updateLink(state, actions) {
+    const {linkReportId} = actions.payload;
+    state.informations[linkReportId]= actions.payload;
   },
   deleteLink(state, actions) {
-    state.links = state.links.filter((link) => link.linkReportId !== actions.payload);
+    const {linkReportId} = actions.payload;
+    delete state.informations[linkReportId];
   }
 };
 
