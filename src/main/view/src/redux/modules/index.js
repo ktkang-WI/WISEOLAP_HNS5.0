@@ -9,6 +9,7 @@ import PopoverSlice from './PopoverSlice';
 import ParameterSlice from './ParameterSlice';
 import SpreadSlice from './SpreadSlice';
 import LoadingSlice from './LoadingSlice';
+import LinkSlice from './LinkSlice';
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
@@ -17,7 +18,8 @@ const metaReducer = combineReducers({
   layout: LayoutSlice.reducer,
   item: ItemSlice.reducer,
   parameter: ParameterSlice.reducer,
-  spread: SpreadSlice.reducer
+  spread: SpreadSlice.reducer,
+  link: LinkSlice.reducer
 });
 
 const systemReducer = combineReducers({
