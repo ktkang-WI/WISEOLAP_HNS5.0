@@ -2,7 +2,6 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {TreeView} from 'devextreme-react';
 import React, {useRef, useCallback} from 'react';
-import {debounce} from 'lodash';
 
 const theme = getTheme();
 
@@ -26,26 +25,17 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-// const Title = styled.div`
-//   font-size: 16px; // Example title size, adjust as needed
-//   color: ${theme.color.primaryFont};
-//   padding: 0 10px; // Example padding, adjust as needed
-//   margin-bottom: 10px; // Space between title and TreeView
-// `;
-
 const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
   const dxRef = useRef();
   const handleItemClick = useCallback(
-      debounce((e) => {
-        console.log('e.itemData', e.itemData);
+      (e) => {
         if (onItemSelect) onItemSelect(e.itemData);
-      }, 300), [onItemSelect]);
+      }, [onItemSelect]);
   return (
     <Wrapper
       width={width}
       height={height}
     >
-      {/* {title && <Title>{title}</Title>} */}
       <StyledTreeView
         ref={dxRef}
         dataStructure="plain"
