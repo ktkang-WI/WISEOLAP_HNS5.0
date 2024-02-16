@@ -32,7 +32,6 @@ const SelectTableModal = ({dsId, onSubmit, ...props}) => {
       <CommonDataGrid
         dataSource={tables}
         onSelectionChanged={(e) => {
-          console.log(e);
           if (e.selectedRowsData.length > 0) {
             setSelectedTable(e.selectedRowsData[0]);
           } else {
