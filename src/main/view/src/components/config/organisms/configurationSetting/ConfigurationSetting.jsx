@@ -6,6 +6,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {createContext, useState, useCallback} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import useModal from 'hooks/useModal.js';
+import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
 
 const NavBar = styled.div`
   width:100%;

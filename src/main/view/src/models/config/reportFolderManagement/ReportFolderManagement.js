@@ -46,19 +46,19 @@ export class Report {
   }
 
   updateReport = () => {
-    // const report = {
-    //   reportId: '' + this.reportId,
-    //   reportNm: this.reportNm,
-    //   reportSubTitle: this.reportSubTitle,
-    //   fldId: '' + this.fldId,
-    //   fldType: this.fldType,
-    //   reportOrdinal: this.reportOrdinal,
-    //   reportType: this.reportType,
-    //   reportTag: this.reportTag,
-    //   reportDesc: this.reportDesc
-    // };
-    // const res = axios.patch(reportPath + '/report-save', report);
-    // return res;
+    const report = {
+      reportId: this.reportId,
+      reportNm: this.reportNm,
+      reportSubTitle: this.reportSubTitle,
+      fldId: this.fldId,
+      fldType: this.fldType,
+      reportOrdinal: this.reportOrdinal,
+      reportType: this.reportType,
+      reportTag: this.reportTag,
+      reportDesc: this.reportDesc
+    };
+    const res = axios.patch(reportPath + '/update', null, {params: report});
+    return res;
   };
 
   deleteReport = () => {

@@ -1,24 +1,14 @@
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import {TextArea} from 'devextreme-react';
 import Form, {
-  Item, Label, RequiredRule, SimpleItem
+  Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
-import {ReportFolderContext} from
-  'components/config/organisms/reportFolderManagement/ReportFolderManagement';
-import {useContext} from 'react';
 import FolderListModal from './modal/FolderListModal';
 
 const ReportInformation = ({row, setRow}) => {
   const {openModal} = useModal();
-  // context
-  const reportFolderContext = useContext(ReportFolderContext);
-
-  // state
-  const reportListRef = reportFolderContext.ref.reportListRef;
-  const reportInformationRef = reportFolderContext.ref.reportInformationRef;
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -31,8 +21,6 @@ const ReportInformation = ({row, setRow}) => {
       disabled: false,
       onClick: (e) => {
         openModal(FolderListModal, {
-          infoInstance: reportInformationRef.current._instance,
-          listInstance: reportListRef.current._instance,
           setRow: setRow
         });
       }
@@ -43,9 +31,11 @@ const ReportInformation = ({row, setRow}) => {
     <Panel title={localizedString.reportInformation}>
       <Form
         formData={row}
-        ref={reportInformationRef}
+        elementAttr={{
+          class: 'report-information'
+        }}
       >
-        <Item
+        <SimpleItem
           dataField="reportId"
           editorType="dxTextBox"
           editorOptions= {{
@@ -53,7 +43,7 @@ const ReportInformation = ({row, setRow}) => {
           }}
         >
           <Label>{localizedString.reportId}</Label>
-        </Item>
+        </SimpleItem>
         <SimpleItem
           dataField="reportNm"
           editorType="dxTextBox"
@@ -61,18 +51,18 @@ const ReportInformation = ({row, setRow}) => {
           <RequiredRule message={localizedString.validationReportNm}/>
           <Label>{localizedString.reportName}</Label>
         </SimpleItem>
-        <Item
+        <SimpleItem
           dataField="reportSubTitle"
           editorType="dxTextBox"
         >
           <Label>{localizedString.reportSubName}</Label>
-        </Item>
-        <Item
+        </SimpleItem>
+        <SimpleItem
           dataField="reportType"
           editorType="dxTextBox"
         >
           <Label>{localizedString.reportType}</Label>
-        </Item>
+        </SimpleItem>
         <SimpleItem
           dataField="fldNm"
           editorType="dxTextBox"
@@ -88,40 +78,36 @@ const ReportInformation = ({row, setRow}) => {
           <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
-        <Item
+        <SimpleItem
           dataField="publisher"
           editorType="dxTextBox"
         >
           <Label>{localizedString.publisher}</Label>
-        </Item>
-        <Item
+        </SimpleItem>
+        <SimpleItem
           dataField="regDt"
           editorType="dxTextBox"
         >
           <Label>{localizedString.RegisterDate}</Label>
-        </Item>
-        <Item
+        </SimpleItem>
+        <SimpleItem
           dataField="reportTag"
           editorType="dxTextBox"
         >
           <Label>{localizedString.annotation}</Label>
-        </Item>
-        <Item
+        </SimpleItem>
+        <SimpleItem
           dataField="fldOrdinal"
           editorType="dxTextBox"
         >
           <Label>{localizedString.order}</Label>
-        </Item>
-        <Item
+        </SimpleItem>
+        <SimpleItem
           dataField="reportDesc"
           editorType="dxTextBox"
         >
-          <TextArea
-            height={100}
-            width="100%"
-          />
           <Label>{localizedString.description}</Label>
-        </Item>
+        </SimpleItem>
       </Form>
     </Panel>
   );

@@ -6,7 +6,7 @@ import ReportList
 import React, {useState} from 'react';
 
 const ReportManagement = ({data}) => {
-  const [row, setRow] = useState();
+  const [row, setRow] = useState({});
   // const auth = data;
 
   return (
