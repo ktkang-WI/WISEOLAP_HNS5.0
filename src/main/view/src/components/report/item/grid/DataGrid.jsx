@@ -5,6 +5,7 @@ import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -43,13 +44,19 @@ const DataGrid = ({setItemExports, id, item}) => {
     const value = e.data[column.name];
 
     if (column.detailSetting === 'bar') {
+      const labelSuffix = generateLabelSuffix(column.format);
+      const label = formatNumber(value, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
-
-      return <DataGridBullet
-        endScaleValue={endScaleValue}
-        value={value}
-        column={column}
-      />;
+      return (
+        <Wrapper display="flex">
+          <DataGridBullet
+            endScaleValue={endScaleValue}
+            value={value}
+            column={column}
+          />
+          <span>{label}</span>
+        </Wrapper>
+      );
     } else if (column.fieldType === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
       e.value = formatNumber(e.value, column.format, labelSuffix);
