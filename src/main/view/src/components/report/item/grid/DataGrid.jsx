@@ -8,6 +8,7 @@ import {itemExportsObject}
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
 import {getPagingOption} from './Utility';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -133,17 +134,25 @@ const DataGrid = ({setItemExports, id, item}) => {
     const value = e.data[column.name];
 
     if (column.detailSetting === 'bar') {
+      const labelSuffix = generateLabelSuffix(column.format);
+      const label = formatNumber(e.displayValue, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
 
-      return <DataGridBullet
-        endScaleValue={endScaleValue}
-        value={value}
-        column={column}
-        color={getColor(meta, column, index)}
-      />;
+      return (
+        <Wrapper display="flex">
+          <DataGridBullet
+            endScaleValue={endScaleValue}
+            value={value}
+            column={column}
+            displayValue={e.displayValue}
+            color={getColor(meta, column, index)}
+          />
+          <span>{label}</span>
+        </Wrapper>
+      );
     } else if (column.fieldType === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
-      e.value = formatNumber(e.value, column.format, labelSuffix);
+      e.value = formatNumber(e.displayValue, column.format, labelSuffix);
       return e.value;
     }
 

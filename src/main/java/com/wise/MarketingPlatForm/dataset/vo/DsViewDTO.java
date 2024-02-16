@@ -21,4 +21,9 @@ public class DsViewDTO {
   String dbNm;
   String ip;
   DbmsType dbmsType;
+  String dsNm;
+  String userAreaYn;
+  String port;
+  String ownerNm;
+  String userId;
 }

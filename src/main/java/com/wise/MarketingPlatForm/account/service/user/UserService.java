@@ -70,11 +70,8 @@ public class UserService {
     return accountDAO.updateUserPasswd(user);
   };
 
-  public boolean deleteUser(UserGroupDTO userMstr){
-    UserMstrEntity user = UserMstrEntity.builder()
-      .userNo(userMstr.getUserNo())
-      .build();
-    return accountDAO.deleteUser(user);
+  public boolean deleteUser(UserMstrEntity userMstr){
+    return accountDAO.deleteUser(userMstr);
   }
 
   public List<UserMstrEntity> selectUserMstr() {

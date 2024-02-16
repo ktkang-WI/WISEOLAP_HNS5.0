@@ -228,16 +228,6 @@ const ItemBoard = () => {
       return;
     }
 
-    // FlexLayout에서 지원하는 삭제 기능(현재 숨김 처리함.)
-    if (action.type == 'FlexLayout_DeleteTab') {
-      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
-      deleteFlexLayout(
-          selectedReportId,
-          action.data.node,
-          model.toJson()
-      );
-    }
-
     return action;
   }
 
@@ -313,6 +303,15 @@ const ItemBoard = () => {
     // 레이아웃 이동.
     if (action.type == 'FlexLayout_MoveNode') {
       updateLayoutShape(reportId, model.toJson());
+    }
+    // FlexLayout에서 지원하는 삭제 기능(현재 숨김 처리함.)
+    if (action.type == 'FlexLayout_DeleteTab') {
+      // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
+      deleteFlexLayout(
+          selectedReportId,
+          action.data.node,
+          model.toJson()
+      );
     }
   };
 

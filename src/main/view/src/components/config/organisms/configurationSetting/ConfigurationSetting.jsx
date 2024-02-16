@@ -6,6 +6,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {createContext, useState, useCallback} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import useModal from 'hooks/useModal.js';
+import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -57,14 +58,17 @@ const ConfigurationSetting = () => {
   }, [general]);
 
   const handleBtnClick = (e) => {
-    alert('기능 개발중입니다.');
-    // TODO: 추후 추가
     // 일반 설정
-    // updateGeneralConfig(general).then((res) => {
-    //  if (res.status === 200) {
-    //    alert('저장 되었습니다.');
-    //  };
-    // });
+    updateGeneralConfig(general)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log('Successfully ConfigurationSetting Data Save');
+            alert('저장 되었습니다.');
+          };
+        })
+        .catch(() => {
+          throw new Error('ConfigurationSetting Data Save Error');
+        });
   };
 
   const navBarItems = () => {

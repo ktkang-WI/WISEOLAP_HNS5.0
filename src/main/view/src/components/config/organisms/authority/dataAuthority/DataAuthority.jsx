@@ -28,7 +28,7 @@ const DataAuthority = ({data}) => {
             setDsViewCube(response.data.data);
           });
     }
-  }, []);
+  }, [dsView]);
 
   return (
     <Wrapper display='flex' direction='row'>
@@ -68,6 +68,7 @@ const DataAuthority = ({data}) => {
               dsView={dsView}
               dsViewCube={dsViewCube}
               row={row}
+              auth={auth}
             />
           </Wrapper>
           <Wrapper>
@@ -75,6 +76,7 @@ const DataAuthority = ({data}) => {
               dsView={dsView}
               dsViewCube={dsViewCube}
               row={row}
+              auth={auth}
             />
           </Wrapper>
           <Wrapper>

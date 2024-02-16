@@ -9,10 +9,17 @@ import {paletteCollection}
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
+ * @param {*} countMap 아이템 이름 카운트
  * @return {JSON} 생성된 아이템 객체
  */
-const makeItem = (orgItem) => {
+const makeItem = (orgItem, countMap) => {
   let item = {};
+  // 임시용
+  const type = {chart: '차트', pie: '파이', pivot: '피벗', grid: '그리드'};
+  let initNum = 1;
+  if (countMap) {
+    initNum = countMap[orgItem.type];
+  }
   const seriesType = orgItem.chartType;
   delete orgItem.chartType;
   // meta 값 있는 경우 불러오기로 간주
@@ -30,7 +37,7 @@ const makeItem = (orgItem) => {
           crossDataSource: false,
           targetDimension: 'dimension' // 대상 차원
         },
-        name: '아이템',
+        name: type[orgItem.type] + initNum,
         memo: '',
         paletteType: 'palette',
         palette: paletteCollection[0],

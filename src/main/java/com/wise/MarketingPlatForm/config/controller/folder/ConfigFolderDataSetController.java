@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "config-folder-dataset", description = "데이터원본을 관리합니다.")
 @RestController
-@RequestMapping("/config/folder/dataset")
+@RequestMapping("/config/folder-dataset")
 public class ConfigFolderDataSetController {
   
   @Autowired

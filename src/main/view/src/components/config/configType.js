@@ -15,8 +15,14 @@ const RunMode = {
   VIEWER: 'viewer'
 };
 
+const EditMode = {
+  DESIGNER: 'designer',
+  VIEWER: 'viewer'
+};
+
 export {
   DesignerMode,
   ConvertDesignerMode,
-  RunMode
+  RunMode,
+  EditMode
 };

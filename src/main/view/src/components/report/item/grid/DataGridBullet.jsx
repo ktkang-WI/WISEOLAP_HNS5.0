@@ -1,9 +1,14 @@
+import {formatNumber, generateLabelSuffix}
+  from 'components/utils/NumberFormatUtility';
 import {Bullet, Tooltip} from 'devextreme-react/bullet';
 
-const DataGridBullet = ({endScaleValue, value, column, color}) => {
+const DataGridBullet = ({endScaleValue, value, column, color, displayValue}) => {
   const customizeTooltip = () => {
+    const labelSuffix = generateLabelSuffix(column.format);
+    const tooltipValue = formatNumber(displayValue, column.format, labelSuffix);
+
     return {
-      text: value
+      text: tooltipValue
     };
   };
 

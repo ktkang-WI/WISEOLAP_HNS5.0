@@ -12,30 +12,43 @@ import ViewerFilterBar
   from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
 import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
+import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {useSelector} from 'react-redux';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import useDrag from 'hooks/useDrag';
+import SpreadViewer from
+  'components/report/atomic/spreadBoard/organisms/SpreadViewer';
 
 const theme = getTheme();
 
 const ViewerContent = ({children}) => {
+  const {onDragEnd, onDragStart} = useDrag();
+  const report = useSelector(selectCurrentReport);
   return (
     <Content
       headerHeight={theme.size.headerHeight}
     >
-      <DragDropContext>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer
           index={0}
           component={ReportTabs}
         >
+          {/* TODO: 추후 권한 적용 */}
           <CustomDrawer
             index={1}
+            defaultValue={false}
             component={ViewerDataAttributePanels}
-            opened={false}
-            visible={false}
+            visible={report.options.reportType == 'AdHoc'}
           >
             <Wrapper>
               <ReportContentWrapper>
                 <ViewerFilterBar/>
                 <ReportContent>
-                  {children}
+                  {report && report.reportId != 0 &&
+                    (report.options.reportType == 'Excel' ?
+                      <SpreadViewer /> :
+                      <ItemBoard/>)
+                  }
                 </ReportContent>
               </ReportContentWrapper>
             </Wrapper>
