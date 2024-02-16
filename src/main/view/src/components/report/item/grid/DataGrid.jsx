@@ -45,7 +45,7 @@ const DataGrid = ({setItemExports, id, item}) => {
 
     if (column.detailSetting === 'bar') {
       const labelSuffix = generateLabelSuffix(column.format);
-      const label = formatNumber(value, column.format, labelSuffix);
+      const label = formatNumber(e.displayValue, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
       return (
         <Wrapper display="flex">
@@ -53,13 +53,14 @@ const DataGrid = ({setItemExports, id, item}) => {
             endScaleValue={endScaleValue}
             value={value}
             column={column}
+            displayValue={e.displayValue}
           />
           <span>{label}</span>
         </Wrapper>
       );
     } else if (column.fieldType === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
-      e.value = formatNumber(e.value, column.format, labelSuffix);
+      e.value = formatNumber(e.displayValue, column.format, labelSuffix);
       return e.value;
     }
 
