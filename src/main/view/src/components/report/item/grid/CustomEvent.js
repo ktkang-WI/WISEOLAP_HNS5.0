@@ -16,6 +16,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import ItemOptionModal from './ItemOptionModal/ItemOptionModal';
 import useModal from 'hooks/useModal';
 
+
 const useCustomEvent = () => {
   const dispatch = useDispatch();
   const selectedItem = useSelector(selectCurrentItem);
@@ -38,6 +39,21 @@ const useCustomEvent = () => {
 
   const booleanToOnOff = (value) => {
     return value ? 'on' : 'off';
+  };
+
+  const getModal = (key, value) => {
+    return openModal(ItemOptionModal,
+        {
+          popupName: 'pagingSetting',
+          modalTitle: '페이징 설정',
+          options: value,
+          onSubmit: (returnedOptions) => {
+            const item =
+            ribbonEvent[key](key, returnedOptions.paging);
+            dispatch(updateItem({reportId, item}));
+          }
+        }
+    );
   };
 
   const getRadioPopover = (key, value) => {
@@ -104,8 +120,8 @@ const useCustomEvent = () => {
       'label': localizedString.gridResiging,
       'imgSrc': autoWidh,
       'renderContent': () => {
-        return getCheckBoxPopover('autoGridWidth',
-            selectedItem.meta.dataGridOption.autoGridWidth);
+        return getRadioPopover('autoGridWidth',
+            booleanToOnOff(selectedItem.meta.dataGridOption.autoGridWidth));
       }
     },
     /*
@@ -153,12 +169,8 @@ const useCustomEvent = () => {
       'label': localizedString.paging,
       'imgSrc': paging,
       'onClick': () => {
-        openModal(ItemOptionModal,
-            {
-              popupName: 'pagingSetting',
-              modalTitle: '페이징 설정'
-            }
-        );
+        return getModal('paging',
+            selectedItem.meta.dataGridOption);
       }
     },
     'AutoWrap': {
@@ -226,7 +238,10 @@ const useCustomEvent = () => {
       return editDataGridOption(id, 'gridLine', e.value);
     },
     'autoGridWidth': (id, e) => {
-      return editDataGridOption(id, 'autoGridWidth', e.value);
+      return editDataGridOption(id, 'autoGridWidth', onOffToBoolean(e.value));
+    },
+    'paging': (id, e) => {
+      return editDataGridOption(id, 'paging', e);
     }
   };
 

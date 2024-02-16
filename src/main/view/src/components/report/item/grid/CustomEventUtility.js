@@ -26,14 +26,12 @@ const getFormItems = (item) => {
     ],
     'autoGridWidth': [
       {
-        id: 'contentAutoTailored',
-        text: '내용에 자동 맞춤',
-        value: dataGridOption.autoGridWidth.contentAutoTailored
+        id: 'on',
+        text: dataGridOption.option.on
       },
       {
-        id: 'manual',
-        text: '수동',
-        value: dataGridOption.autoGridWidth.manual
+        id: 'off',
+        text: dataGridOption.option.off
       }
     ],
     'cellMerging': [

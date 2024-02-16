@@ -11,6 +11,21 @@ import {setMeta} from '../util/metaUtilityFactory';
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 
+export const getPagingOption = (config) => {
+  const defaultOption = {
+    pageRange: 20,
+    pageIndex: 0,
+    start: 0,
+    end: 20
+  };
+  if (config.paging.pagination.isOk) {
+    const pageRange = config.paging.pagination.pagingRange;
+    defaultOption.pageRange = pageRange;
+    defaultOption.end = pageRange;
+  }
+  return defaultOption;
+};
+
 const dataGridOptionConfig = {
   option: {
     on: 'on',
@@ -21,24 +36,21 @@ const dataGridOptionConfig = {
     column: true,
     stripes: false
   }, // 그리드 라인
-  barPallete: false, // TODO: 추후개발
-  barColorEdit: false, // TODO: 추후개발
   cellMerging: true, // 셀 병합
   columnHeader: true, // 열 머리글
-  pagination: {
-    isOk: false,
-    content: '',
-    pagingRange: 20
-  },
-  pageUsageOfPageCount: {
-    isOk: true,
-    pageSizes: [10, 20, 50]
+  paging: {
+    pagination: {
+      isOk: false,
+      content: '',
+      pagingRange: 20
+    },
+    pageUsageOfPageCount: {
+      isOk: false,
+      pageSizes: [10, 20, 50]
+    }
   },
   autoWrap: false, // 자동 줄 바꿈
-  autoGridWidth: {
-    contentAutoTailored: false,
-    manual: false
-  }, // 그리드 너비 조정
+  autoGridWidth: false, // 그리드 너비 조정
   headerAdd: false, // TODO: 추후개발
   writeHeader: false // TODO: 추후개발
 };
@@ -112,6 +124,8 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
+    'Palette',
+    'ColorEdit',
     'GridLine',
     'BarPallet',
     'BarColorEdit',

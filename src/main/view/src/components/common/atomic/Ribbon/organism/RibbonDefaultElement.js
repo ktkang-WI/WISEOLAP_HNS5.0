@@ -32,16 +32,25 @@ import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
 import useQueryExecute from 'hooks/useQueryExecute';
+import palette from 'assets/image/icon/button/global_color.png';
+import colorEdit from 'assets/image/icon/button/edit_color.png';
+import Palette, {paletteCollection} from '../../Popover/organism/Palette';
+import ColorEditModal from '../../Modal/organisms/ColorEditModal';
+import InputTxtModal from '../../Modal/organisms/InputTxtModal';
 
 const RibbonDefaultElement = () => {
   const {
     insertFlexLayout,
     convertCaptionVisible,
     editItemName,
-    adHocLayoutUpdate
+    adHocLayoutUpdate,
+    editPalette,
+    editColor,
+    editMemo
   } = useLayout();
   const {openedPopover} = usePopover();
   const rootItem = useSelector(selectRootItem);
+  const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
@@ -61,6 +70,56 @@ const RibbonDefaultElement = () => {
     {id: 'pivot', text: '피벗그리드만 보기'},
     {id: 'chart_pivot', text: '차트, 피벗 전부 보기'}
   ];
+
+  const getPalettePopover = () => {
+    return <Palette
+      onValueChanged={(e) => {
+        // TODO: 소스 따라감
+        const pickPalette =
+          paletteCollection.filter((item) => item.name === e.value);
+        editPalette(reportId, selectedItem, pickPalette[0]);
+      }}
+    />;
+  };
+
+  const getInputTxtModal = (item) => {
+    const memo = item.meta.memo;
+    return openModal(InputTxtModal,
+        {
+          popupName: 'InputTxt',
+          modalTitle: '이름 편집',
+          memo: memo,
+          onSubmit: (returnedOptions) => {
+            editMemo(reportId, selectedItem, returnedOptions);
+          }
+        }
+    );
+  };
+
+  const getColorEditModal = (item) => {
+    const measures = getMeasures(item);
+    const colorEdit = item.meta.colorEdit;
+    return openModal(ColorEditModal,
+        {
+          popupName: 'ColorEdit',
+          modalTitle: '색상 편집',
+          measures: measures,
+          colorEdit: colorEdit,
+          onSubmit: (returnedOptions) => {
+            editColor(reportId, selectedItem, returnedOptions);
+          }
+        }
+    );
+  };
+
+  const getMeasures = (item) => {
+    if (item.type === 'grid') {
+      return item.meta.dataField.field.filter(
+          (item) => item.fieldType === 'MEA');
+    } else {
+      return item.meta.dataField.measure;
+    }
+  };
 
   const getRadioPopover = (reportId) => {
     return <RadioGroup
@@ -289,13 +348,33 @@ const RibbonDefaultElement = () => {
         );
       }
     },
+    'Palette': {
+      ...commonPopoverButtonElement,
+      'id': 'palette',
+      'label': localizedString.palette,
+      'imgSrc': palette,
+      'popoverWidth': '500px',
+      'renderContent': (e) => {
+        return getPalettePopover();
+      }
+    },
+    'ColorEdit': {
+      ...commonRibbonBtnElement,
+      'id': 'color_edit',
+      'label': localizedString.colorEdit,
+      'imgSrc': colorEdit,
+      'onClick': (e) => {
+        // You have to pass dimension and measure list
+        return getColorEditModal(selectedItem);
+      }
+    },
     'InputTxt': {
       ...commonRibbonBtnElement,
       'id': 'input_text',
       'label': localizedString.inputTxt,
       'imgSrc': inputTxt,
-      'onClick': () => {
-
+      'onClick': (e) => {
+        return getInputTxtModal(selectedItem);
       }
     },
     'QuerySearch': {

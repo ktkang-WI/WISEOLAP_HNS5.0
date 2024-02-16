@@ -7,6 +7,7 @@ import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
+import {getPagingOption} from './Utility';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -14,9 +15,10 @@ const DataGrid = ({setItemExports, id, item}) => {
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
-  const allowedPageSizes = config.pageUsageOfPageCount.pageSizes;
+  const allowedPageSizes = config.paging.pageUsageOfPageCount.pageSizes;
   const itemExportObject =
     itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
+  let pagingOption = getPagingOption(config);
   let dataSource = _.cloneDeep(mart.data);
   let rowSpans = null;
 
@@ -36,31 +38,22 @@ const DataGrid = ({setItemExports, id, item}) => {
   }, [mart.data.data]);
 
   useEffect(() => {
-    const dataGridInstance = dataGridRef.current.instance;
-    const options = getPagingOption(config);
-    dataGridInstance.pageIndex(options.pageIndex);
-    dataGridInstance.pageSize(options.pageRange);
-  }, [mart]);
+    handlePagingIndex();
+  }, [mart, pagingOption]);
 
-  // 페이징 옵션 가져오기
-  const getPagingOption = (config) => {
-    const defaultOption = {
-      pageRange: 20,
-      pageIndex: 0,
-      start: 0,
-      end: 20
-    };
-    if (config.pagination.isOk) {
-      const pageRange = config.pagination.pagingRange;
-      defaultOption.pageRange = pageRange;
-      defaultOption.end = pageRange;
-    }
-    return defaultOption;
+  const handlePagingIndex = () => {
+    const dataGridInstance = dataGridRef.current.instance;
+    dataGridInstance.pageIndex(pagingOption.pageIndex);
+    dataGridInstance.pageSize(pagingOption.pageRange);
   };
 
   // 페이징 동작 함수
   const handlePaging = (index) => {
-    const options = getPagingOption(config);
+    const options = pagingOption;
+    const dataLen = dataSource.data.length;
+    if (dataLen < index * options.pageRange) {
+      index = Math.floor(dataLen / options.pageRange);
+    }
     options.pageIndex = index;
     options.start = options.pageIndex === 0 ?
       0 :
@@ -68,16 +61,17 @@ const DataGrid = ({setItemExports, id, item}) => {
     options.end = options.pageIndex === 0 ?
       options.pageRange:
       options.pageRange * (options.pageIndex + 1);
+    pagingOption = options;
   };
 
   // 셀 병합로직
   const handleMerge = (e) => {
-    const options = getPagingOption(config);
+    const options = pagingOption;
     const isGetRowpan =
       e.rowType === 'data' && e.rowIndex === 0 && e.columnIndex === 0;
     if (isGetRowpan) {
       dataSource = _.cloneDeep(mart.data);
-      if (config.pagination.isOk) {
+      if (config.paging.pagination.isOk) {
         const data = dataSource.data.slice(options.start, options.end);
         rowSpans =
           _.cloneDeep(generateRowSpans(data, dataSource.columns));
@@ -86,30 +80,29 @@ const DataGrid = ({setItemExports, id, item}) => {
           _.cloneDeep(generateRowSpans(dataSource.data, dataSource.columns));
       }
     }
+    // handlePagingIndex();
     cellMerge(e, rowSpans, mart.data.columns);
   };
 
   // DataGrid 이벤트
   const onCellPrepared = (e) => {
-    if (config.merging) {
+    if (config.cellMerging) {
       handleMerge(e);
     }
   };
 
   // DataGrid 이벤트
   const onOptionChanged = (e) => {
-    const options = getPagingOption(config);
-    const isPaging = config.pagination.isOk;
+    const options = pagingOption;
+    const isPaging = config.paging.pagination.isOk;
     const paging = (e.fullName === 'paging.pageIndex' && isPaging);
     const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
     if (paging) {
       handlePaging(e.value);
     }
     if (pagingSize) {
-      const dataGridInstance = dataGridRef.current.instance;
       options.pageRange = e.value;
       handlePaging(options.pageIndex);
-      dataGridInstance.pageIndex(options.pageIndex);
     }
   };
 
@@ -121,7 +114,21 @@ const DataGrid = ({setItemExports, id, item}) => {
     return maxValue[column.name];
   };
 
-  const cellRender = (e, column) => {
+  const getColor = (meta, column, index) => {
+    let pickedColor = null;
+    if (meta.paletteType === 'colorEdit') {
+      const palette = meta.colorEdit;
+      const pickColor =
+        palette.filter((item) => item.fieldId === column.fieldId);
+      pickedColor = pickColor[0]?.value;
+    } else {
+      const palette = meta.palette?.colors;
+      pickedColor = palette[index % 6];
+    }
+    return pickedColor;
+  };
+
+  const cellRender = (e, column, meta, index) => {
     let endScaleValue = 0;
     const value = e.data[column.name];
 
@@ -132,6 +139,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         endScaleValue={endScaleValue}
         value={value}
         column={column}
+        color={getColor(meta, column, index)}
       />;
     } else if (column.fieldType === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
@@ -157,16 +165,16 @@ const DataGrid = ({setItemExports, id, item}) => {
       showColumnLines={config.gridLine.column}
       showRowLines={config.gridLine.row}
       AllowUserToAddRows={false}
-      rowAlternationEnabled={false}
-      columnAutoWidth={config.autoGridWidth.autoOnContent}
-      showColumnHeaders={config.shwHeader}
+      rowAlternationEnabled={config.gridLine.stripes}
+      columnAutoWidth={config.autoGridWidth}
+      showColumnHeaders={config.columnHeader}
       wordWrapEnabled={config.autoWrap}
     >
       <Paging
-        enabled={config.pagination.isOk}
-        defaultPageSize={20} />
+        enabled={config.paging.pagination.isOk}
+        defaultPageSize={pagingOption.pageRange} />
       <Pager
-        showPageSizeSelector={true}
+        showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
         allowedPageSizes={allowedPageSizes}
         showNavigationButtons={true}
       />
@@ -178,7 +186,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           dataField={column.name}
           visible={column.visible}
           dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
-          cellRender={(e) => cellRender(e, column)}
+          cellRender={(e) => cellRender(e, column, meta, i)}
         />
       )}
     </DevDataGrid>
