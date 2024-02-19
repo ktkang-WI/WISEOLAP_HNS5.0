@@ -14,8 +14,8 @@ const ExpandButton = styled.div`
   position: relative;
   bottom: calc(50% - 15px);
   ${(props) => props.expanded ?
-  css`left: calc(${theme.size.panelWidth} - 15px);` :
-  'left: 0px;'}
+  css`left: calc(${theme.size.panelWidth} - 20px);` :
+  'left: 5px;'}
   z-index: 10;
   border-radius: 15px;
   box-sizing: border-box;
@@ -26,7 +26,7 @@ const ExpandButton = styled.div`
 `;
 
 const ExpandPanel = styled.div`
-  width: 15px;
+  width: 20px;
   height: calc(100% -  ${(props) => props.index == 0 ? '2px' : '0px'});
   display: inline-block;
   float: left;
