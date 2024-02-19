@@ -42,7 +42,7 @@ const CommonButton = ({
   type='primary',
   children,
   width='100%',
-  height='32px',
+  height='40px',
   minWidth='50px',
   maxWidth='100%',
   margin='0px',
@@ -51,18 +51,22 @@ const CommonButton = ({
 }) => {
   const themeType = {
     'primary': {
-      background: theme.color.primaryGradient,
-      hoverBackground: theme.color.primaryGradientHover,
-      color: theme.color.secondaryFont,
+      background: theme.color.primary,
+      hoverBackground: theme.color.primary,
+      color: theme.color.white,
       border: 'none',
-      font: theme.font.button
+      font: theme.font.button,
+      minWidth: '60px',
+      borderRadius: '8px'
     },
     'secondary': {
-      background: theme.color.secondaryGradient,
-      hoverBackground: theme.color.secondaryGradientHover,
-      color: theme.color.primaryFont,
-      border: 'solid 1px ' + theme.color.primaryBorder,
-      font: theme.font.button
+      background: theme.color.gray50,
+      hoverBackground: theme.color.gray50,
+      color: theme.color.gray600,
+      border: 'solid 1px ' + theme.color.gray300,
+      font: theme.font.button,
+      minWidth: '60px',
+      borderRadius: '8px'
     },
     'primaryGradient': {
       background: 'linear-gradient(180deg, #005EAD 0%, #0082F0 145.39%)',

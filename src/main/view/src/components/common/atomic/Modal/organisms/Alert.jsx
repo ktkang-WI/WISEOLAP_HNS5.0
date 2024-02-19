@@ -1,18 +1,31 @@
 import Footer from '../molecules/Footer';
 import Content from '../atoms/Content';
-import Inner from '../atoms/Inner';
 import {motion} from 'framer-motion';
 import Wrapper from '../../Common/Wrap/Wrapper';
-import Header from '../molecules/Header';
-import localizedString from 'config/localization';
 import Draggable from 'react-draggable';
 import Overlay from '../../Common/Wrap/Overlay';
+import {styled} from 'styled-components';
+import warningImg from 'assets/image/component/warning.png';
+import alertImg from 'assets/image/component/alert.png';
+
+const AlertInnenr = styled.div`
+  box-sizing: border-box;
+  padding: 40px;
+  padding-bottom: 20px;
+  text-align: center;
+  word-break: keep-all;
+
+  img {
+    display: block;
+    margin: 20px auto 40px auto;
+  }
+`;
 
 const Alert = ({
   children,
   onClose,
   onSubmit,
-  width='350px', height='170px',
+  width='320px', height='auto',
   type='alert',
   message='',
   ...props
@@ -40,14 +53,10 @@ const Alert = ({
               transition={{duration: 0.2}}
             >
               <Content width={width} height={height}>
-                <Header>
-                  {type == 'alert'? localizedString.alert :
-                    type == 'warning' ? localizedString.warning :
-                    type == 'confirm' ? localizedString.confirm : ''}
-                </Header>
-                <Inner>
+                <AlertInnenr>
+                  <img src={type == 'warning' ? warningImg : alertImg}/>
                   {message}
-                </Inner>
+                </AlertInnenr>
                 <Footer
                   onSubmit={onSubmit}
                   onClose={onClose}
