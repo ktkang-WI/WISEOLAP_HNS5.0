@@ -19,14 +19,13 @@ const FolderList = ({setRow}) => {
 
   // state
   const [data] = reportFolderContext.state.data;
-  const folderListRef = reportFolderContext.ref.folderListRef;
 
   useEffect(() => {
     setRow(new Folder({}));
   }, []);
 
   const handleRowClick = useCallback(({data}) => {
-    setRow(data);
+    setRow(new Folder(data));
   }, [data]);
 
   const handleSelectionChanged = useCallback(({selectedRowKeys}) => {
@@ -39,11 +38,12 @@ const FolderList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.folderList}></Title>
       <TreeList
-        ref={folderListRef}
         dataSource={data}
         keyExpr="fldId"
         parentIdExpr="fldParentId"
-        id="reportFolderManagementFolderList"
+        elementAttr={{
+          class: 'folder-list'
+        }}
         height={'90%'}
         onRowClick={handleRowClick}
         onSelectionChanged={handleSelectionChanged}

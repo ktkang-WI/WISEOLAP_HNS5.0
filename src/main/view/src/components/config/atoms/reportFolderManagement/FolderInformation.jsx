@@ -5,18 +5,12 @@ import Form, {
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
-import {useContext} from 'react';
-import {ReportFolderContext} from
-  'components/config/organisms/reportFolderManagement/ReportFolderManagement';
 import FolderListModal from './modal/FolderListModal';
+import {useRef} from 'react';
 
 const FolderInformation = ({row, setRow}) => {
   const {openModal} = useModal();
-  // context
-  const reportFolderContext = useContext(ReportFolderContext);
-
-  // state
-  const folderInformationRef = reportFolderContext.ref.folderInformationRef;
+  const ref = useRef();
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -30,7 +24,7 @@ const FolderInformation = ({row, setRow}) => {
       onClick: (e) => {
         if (Object.keys(row).length > 0) {
           openModal(FolderListModal, {
-            infoInstance: folderInformationRef.current._instance,
+            infoInstance: ref.current._instance,
             row: row,
             setRow: setRow
           });
@@ -43,7 +37,10 @@ const FolderInformation = ({row, setRow}) => {
     <Panel title={localizedString.folderInformation}>
       <Form
         formData={row}
-        ref={folderInformationRef}
+        ref={ref}
+        elementAttr={{
+          class: 'folder-information'
+        }}
       >
         <SimpleItem
           dataField="fldId"

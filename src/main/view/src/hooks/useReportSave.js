@@ -23,7 +23,8 @@ import {ConvertDesignerMode, DesignerMode, EditMode}
 import models from 'models';
 import localizedString from 'config/localization';
 import {useSelector} from 'react-redux';
-import {makeMart} from 'components/report/item/util/martUtilityFactory';
+import {makeMart, makeAdHocItemMart}
+  from 'components/report/item/util/martUtilityFactory';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
@@ -215,7 +216,7 @@ const useReportSave = () => {
       // 공통 데이터 가공
       data.item.items.forEach((i) => {
         if (designerMode == DesignerMode['AD_HOC']) {
-          i.mart = makeAdHocItemMart(i);
+          i.mart = makeAdHocItemMart();
         } else {
           i.mart = makeMart(i);
         }
