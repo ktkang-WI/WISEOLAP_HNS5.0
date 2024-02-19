@@ -232,6 +232,7 @@ const ItemBoard = () => {
   }
 
   const calcForFontWidth = (txt) => {
+    if (!txt) return 0;
     const len = txt.split('')
         .map((s) => s.charCodeAt(0))
         .reduce((prev, c) =>
@@ -258,7 +259,7 @@ const ItemBoard = () => {
 
       renderValues.buttons.push(
           !rootItem.adHocOption &&
-          (memo !== '' ?
+          (memo ?
             <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
           <button
             key="delete"

@@ -30,6 +30,23 @@ const DataGrid = ({setItemExports, id, item}) => {
   }
 
   useEffect(() => {
+    const dataGridInstance = dataGridRef.current.instance;
+    const pageRange = dataGridConfig.pagingOption.pageRange;
+    const totalRows = dataGridConfig.dataSource.info.totalRows;
+    const lastIndex = Math.floor(totalRows / pageRange);
+    let index = 0;
+    const id = setInterval(() => {
+      if (lastIndex > index) {
+        index = index + 1;
+      } else {
+        index = 0;
+      }
+      if (config.paging.autoPaging.isOk) dataGridInstance.pageIndex(index);
+    }, config.paging.autoPaging.time * 1000);
+    return () => clearInterval(id);
+  }, [config.paging.autoPaging]);
+
+  useEffect(() => {
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -45,9 +62,19 @@ const DataGrid = ({setItemExports, id, item}) => {
   }, [mart, dataGridConfig.pagingOption]);
 
   const handlePagingIndex = () => {
-    const dataGridInstance = dataGridRef.current.instance;
-    dataGridInstance.pageIndex(dataGridConfig.pagingOption.pageIndex);
-    dataGridInstance.pageSize(dataGridConfig.pagingOption.pageRange);
+    const dataGridInstance = dataGridRef?.current?.instance;
+    if (!dataGridInstance) return;
+    const pageSizes = config?.paging?.pageUsageOfPageCount?.pageSizes;
+    const pageIndex = dataGridConfig.pagingOption.pageIndex;
+    let setPageRange = dataGridConfig.pagingOption.pageRange;
+    if (pageSizes.indexOf(setPageRange) === -1) {
+      dataGridConfig.pagingOption.pageRange = pageSizes[0];
+      handlePaging(pageIndex);
+      setPageRange = pageSizes[0];
+    }
+
+    dataGridInstance.pageIndex(pageIndex);
+    dataGridInstance.pageSize(setPageRange);
   };
 
   const handlePaging = (index) => {
@@ -83,13 +110,13 @@ const DataGrid = ({setItemExports, id, item}) => {
           _.cloneDeep(generateRowSpans(data, columns));
       }
     }
-    // handlePagingIndex();
     cellMerge(e, dataGridConfig.rowSpans, mart.data.columns);
   };
 
   const onCellPrepared = (e) => {
     if (config.cellMerging) {
       handleMerge(e);
+      handlePagingIndex();
     }
   };
 
@@ -115,27 +142,34 @@ const DataGrid = ({setItemExports, id, item}) => {
     return maxValue[column.name];
   };
 
-  const getColor = (meta, column, index) => {
+  const getColor = (meta, column) => {
+    const columnFieldId = column.fieldId;
     let pickedColor = null;
     if (meta.paletteType === 'colorEdit') {
       const palette = meta.colorEdit;
       const pickColor =
-        palette.filter((item) => item.fieldId === column.fieldId);
+        palette.filter((item) => item.fieldId === columnFieldId);
       pickedColor = pickColor[0]?.value;
     } else {
+      const measures =
+        meta.dataField.field.filter((item) => item.type === 'MEA');
       const palette = meta.palette?.colors;
-      pickedColor = palette[index % 6];
+      let colorIndex = 0;
+      measures.forEach((item, index) => {
+        if (item.fieldId === columnFieldId) colorIndex = index;
+      });
+      pickedColor = palette[colorIndex % 6];
     }
     return pickedColor;
   };
 
-  const cellRender = (e, column, meta, index) => {
+  const cellRender = (e, column, meta) => {
     let endScaleValue = 0;
     const value = e.data[column.name];
 
     if (column.detailSetting === 'bar') {
-      const labelSuffix = generateLabelSuffix(column.format);
-      const label = formatNumber(e.displayValue, column.format, labelSuffix);
+      // const labelSuffix = generateLabelSuffix(column.format);
+      // const label = formatNumber(e.displayValue, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
 
       return (
@@ -144,10 +178,10 @@ const DataGrid = ({setItemExports, id, item}) => {
             endScaleValue={endScaleValue}
             value={value}
             column={column}
-            displayValue={e.displayValue}
-            color={getColor(meta, column, index)}
+            // displayValue={e.displayValue}
+            color={getColor(meta, column)}
           />
-          <span>{label}</span>
+          {/* <span>{label}</span> */}
         </Wrapper>
       );
     } else if (column.fieldType === 'MEA') {
@@ -183,9 +217,10 @@ const DataGrid = ({setItemExports, id, item}) => {
         enabled={config.paging.pagination.isOk}
         defaultPageSize={dataGridConfig.pagingOption.pageRange} />
       <Pager
+        displayMode={'full'}
+        enabled={config.paging.pageUsageOfPageCount.isOk}
         showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
         allowedPageSizes={allowedPageSizes}
-        showNavigationButtons={true}
       />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
       {dataGridConfig.dataSource.columns.map((column, i) =>
@@ -195,7 +230,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           dataField={column.name}
           visible={column.visible}
           dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
-          cellRender={(e) => cellRender(e, column, meta, i)}
+          cellRender={(e) => cellRender(e, column, meta)}
         />
       )}
     </DevDataGrid>

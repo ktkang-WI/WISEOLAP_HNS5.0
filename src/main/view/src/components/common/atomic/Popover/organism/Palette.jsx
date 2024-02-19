@@ -1,6 +1,6 @@
 import {getTheme} from 'config/theme';
 import {SelectBox} from 'devextreme-react';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 
 export const paletteCollection = [
@@ -118,17 +118,30 @@ const renderPaletteItem = (data) => {
 
 const theme = getTheme();
 
-const Palette = ({onValueChanged}) => {
-  const [palette, setPalette] = useState(paletteCollection[0]);
+const Palette = ({onValueChanged, ...props}) => {
+  const [palette, setPalette] = useState(props.palette);
+  const selectBoxRef = useRef(null);
 
-  const handlePaletteChange =
-      (e) => {
-        setPalette(e.value);
-        onValueChanged(e);
-      };
+  useEffect(() => {
+    if (selectBoxRef.current) {
+      selectBoxRef.current.instance.option('value', props.palette.name);
+    }
+  }, [props.palette]);
+
+  const handlePaletteChange = (e) => {
+    const pickPalette =
+      paletteCollection.filter((item) => item.name === e.value);
+    setPalette(pickPalette[0]);
+    if (e?.event?.type === 'dxclick') onValueChanged(e, pickPalette[0]);
+  };
+
+  const handleFocusIn = (e) => {
+    onValueChanged(e, palette);
+  };
 
   return (
     <SelectBox
+      ref={selectBoxRef}
       style={{width: theme.size.width_450}}
       items={paletteCollection}
       inputAttr={paletteLabel}
@@ -136,6 +149,7 @@ const Palette = ({onValueChanged}) => {
       valueExpr='name'
       defaultValue={palette.name}
       onValueChanged={handlePaletteChange}
+      onFocusIn={handleFocusIn}
       itemRender={renderPaletteItem}
     />
   );

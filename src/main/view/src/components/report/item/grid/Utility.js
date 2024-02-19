@@ -20,6 +20,7 @@ export const getPagingOption = (config) => {
   };
   if (config.paging.pagination.isOk) {
     const pageRange = config.paging.pagination.pagingRange;
+    defaultOption.pageIndex = config.paging.pagination.index - 1;
     defaultOption.pageRange = pageRange;
     defaultOption.end = pageRange;
   }
@@ -39,10 +40,15 @@ const dataGridOptionConfig = {
   cellMerging: true, // 셀 병합
   columnHeader: true, // 열 머리글
   paging: {
+    autoPaging: {
+      isOk: false,
+      time: 5
+    },
     pagination: {
       isOk: false,
       content: '',
-      pagingRange: 20
+      pagingRange: 20,
+      index: 1
     },
     pageUsageOfPageCount: {
       isOk: false,

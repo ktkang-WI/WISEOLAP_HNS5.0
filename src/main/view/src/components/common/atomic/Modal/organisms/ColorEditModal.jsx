@@ -1,46 +1,17 @@
 import {getTheme} from 'config/theme';
 import Modal from './Modal';
-import {ColorBox} from 'devextreme-react';
 import {useState} from 'react';
+import {
+  Field,
+  FieldLabel,
+  FieldSet,
+  FieldValue
+} from '../../Common/DevExtreme/Field';
+import {ColorBox} from 'devextreme-react';
 
-const theme = getTheme();
 const defaultModeLabel = {'aria-label': 'Default mode'};
 
-const FieldSet = ({children}) => {
-  return (
-    <div className="dx-fieldset">
-      {children}
-    </div>
-  );
-};
-
-const Field = ({children}) => {
-  return (
-    <div className="dx-field">
-      {children}
-    </div>
-  );
-};
-
-const FieldLabel = ({children}) => {
-  return (
-    <div className="dx-field-label">
-      {children}
-    </div>
-  );
-};
-
-const FieldValue = ({...props}) => {
-  return (
-    <div className="dx-field-value">
-      <ColorBox
-        onValueChanged={props.onValueChanged}
-        defaultValue={props.defaultValue}
-        inputAttr={defaultModeLabel}
-      />
-    </div>
-  );
-};
+const theme = getTheme();
 
 const getRandomHexColor = () => {
   let color = '#';
@@ -115,7 +86,13 @@ const ColorEditModal = ({popupName, ...props}) => {
                   defaultValue={value.value}
                   onValueChanged={(e) =>
                     handleColorPickerValue(e, setValue)}
-                />
+                >
+                  <ColorBox
+                    onValueChanged={props.onValueChanged}
+                    defaultValue={props.defaultValue}
+                    inputAttr={defaultModeLabel}
+                  />
+                </FieldValue>
               </Field>
             );
           }

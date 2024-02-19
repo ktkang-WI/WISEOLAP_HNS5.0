@@ -34,7 +34,7 @@ import _ from 'lodash';
 import useQueryExecute from 'hooks/useQueryExecute';
 import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
-import Palette, {paletteCollection} from '../../Popover/organism/Palette';
+import Palette from '../../Popover/organism/Palette';
 import ColorEditModal from '../../Modal/organisms/ColorEditModal';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
 
@@ -71,16 +71,16 @@ const RibbonDefaultElement = () => {
     {id: 'chart_pivot', text: '차트, 피벗 전부 보기'}
   ];
 
-  const getPalettePopover = () => {
+  const getPalettePopover = (item) => {
+    const palette = item?.meta?.palette;
     return <Palette
-      onValueChanged={(e) => {
-        const pickPalette =
-          paletteCollection.filter((item) => item.name === e.value);
-        if (!(pickPalette?.length !== 0)) {
+      onValueChanged={(e, changedPalette) => {
+        if (!(changedPalette?.length !== 0)) {
           console.error('palette is not picked it might be invalid name color');
         }
-        editPalette(reportId, selectedItem, pickPalette[0]);
+        editPalette(reportId, selectedItem, changedPalette);
       }}
+      palette={palette}
     />;
   };
 
@@ -355,7 +355,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': palette,
       'popoverWidth': '500px',
       'renderContent': (e) => {
-        return getPalettePopover();
+        return getPalettePopover(selectedItem);
       }
     },
     'ColorEdit': {
