@@ -74,8 +74,6 @@ public class GroupService {
 
       result = accountDAO.updateGroup(groupMstrEntity);
 
-      if (!result) throw new SQLException("그룹이 업데이트 되지 않았습니다.");
-
       result = accountDAO.updateUserDefaultGroup(groupMstrEntity);
 
       for (GroupMemberUserModel groupMemberUser : groupDTO.getGrpMemberUser())
