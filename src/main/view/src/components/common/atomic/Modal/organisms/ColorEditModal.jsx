@@ -67,7 +67,7 @@ const ColorEditModal = ({popupName, ...props}) => {
         props.onSubmit({colorEdit: state.map((item) => item[0])});
         return false;
       }}
-      onClose={()=>{
+      onClose={() => {
         return props.onClose();
       }}
       modalTitle={props.modalTitle}

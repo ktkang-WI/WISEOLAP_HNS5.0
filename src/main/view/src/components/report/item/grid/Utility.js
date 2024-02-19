@@ -36,9 +36,9 @@ const dataGridOptionConfig = {
     row: true,
     column: true,
     stripes: false
-  }, // 그리드 라인
-  cellMerging: true, // 셀 병합
-  columnHeader: true, // 열 머리글
+  },
+  cellMerging: true,
+  columnHeader: true,
   paging: {
     autoPaging: {
       isOk: false,
@@ -55,10 +55,10 @@ const dataGridOptionConfig = {
       pageSizes: [10, 20, 50]
     }
   },
-  autoWrap: false, // 자동 줄 바꿈
-  autoGridWidth: false, // 그리드 너비 조정
+  autoWrap: false,
+  autoGridWidth: false,
   headerAdd: false, // TODO: 추후개발
-  writeHeader: false // TODO: 추후개발
+  writeHeader: false
 };
 
 const generateMeta = (item) => {

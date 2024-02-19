@@ -19,7 +19,7 @@ const InputTxtModal = ({...props}) => {
         props.onSubmit({memo: memo});
         return false;
       }}
-      onClose={()=>{
+      onClose={() => {
         return props.onClose();
       }}
       modalTitle={props.modalTitle}

@@ -168,8 +168,8 @@ const DataGrid = ({setItemExports, id, item}) => {
     const value = e.data[column.name];
 
     if (column.detailSetting === 'bar') {
-      // const labelSuffix = generateLabelSuffix(column.format);
-      // const label = formatNumber(e.displayValue, column.format, labelSuffix);
+      const labelSuffix = generateLabelSuffix(column.format);
+      const label = formatNumber(e.displayValue, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
 
       return (
@@ -178,10 +178,10 @@ const DataGrid = ({setItemExports, id, item}) => {
             endScaleValue={endScaleValue}
             value={value}
             column={column}
-            // displayValue={e.displayValue}
+            displayValue={e.displayValue}
             color={getColor(meta, column)}
           />
-          {/* <span>{label}</span> */}
+          <span>{label}</span>
         </Wrapper>
       );
     } else if (column.fieldType === 'MEA') {
