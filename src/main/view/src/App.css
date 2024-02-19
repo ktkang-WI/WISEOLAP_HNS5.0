@@ -89,10 +89,14 @@ img {
   margin-right: 0px;
 }
 
-.dx-drawer:not(.dx-drawer-opened) .section:first-child {
+.dx-drawer:not(.dx-drawer-opened) .board:first-child {
   margin-left: 0px;
 }
 
-.dx-drawer.dx-drawer-opened .section:first-child {
+.dx-drawer.dx-drawer-opened .board:first-child {
   margin-left: 10px !important;
+}
+
+.dx-drawer-content {
+  overflow: visible !important;
 }

@@ -89,7 +89,7 @@ const SpreadViewer = () => {
 
   return (
     <StyledWrapper
-      className='section'
+      className='section board'
       ref={sheetsRef}
     >
     </StyledWrapper>

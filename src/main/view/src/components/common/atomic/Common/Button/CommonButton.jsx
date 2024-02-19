@@ -26,6 +26,10 @@ const Button = styled.div`
     background: ${(props) => props.hoverBackground};
   }
 
+  &:active {
+    background: ${(props) => props.activeBackground};
+  }
+
   & + & {
     margin-left: 5px;
   }
@@ -52,7 +56,8 @@ const CommonButton = ({
   const themeType = {
     'primary': {
       background: theme.color.primary,
-      hoverBackground: theme.color.primary,
+      hoverBackground: theme.color.primaryHover,
+      activeBackground: theme.color.primaryActive,
       color: theme.color.white,
       border: 'none',
       font: theme.font.button,
@@ -60,24 +65,20 @@ const CommonButton = ({
       borderRadius: '8px'
     },
     'secondary': {
-      background: theme.color.gray50,
-      hoverBackground: theme.color.gray50,
+      background: theme.color.secondary,
+      hoverBackground: theme.color.secondaryHover,
+      activeBackground: theme.color.secondaryActive,
       color: theme.color.gray600,
       border: 'solid 1px ' + theme.color.gray300,
       font: theme.font.button,
       minWidth: '60px',
       borderRadius: '8px'
     },
-    'primaryGradient': {
-      background: 'linear-gradient(180deg, #005EAD 0%, #0082F0 145.39%)',
-      hoverBackground: theme.color.primaryGradientHover,
-      color: theme.color.secondaryFont,
-      border: 'none',
-      font: theme.font.button
-    },
     'whiteRound': {
       background: theme.color.white,
       border: 'solid 1px ' + theme.color.gray200,
+      hoverBackground: '#F2F2F2',
+      activeBackground: '#E6E6E6',
       color: theme.color.gray600,
       font: theme.font.smallButton,
       borderRadius: '74px'

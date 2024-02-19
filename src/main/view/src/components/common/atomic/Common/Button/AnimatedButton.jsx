@@ -7,7 +7,7 @@ const theme = getTheme();
 
 const Button = styled.div`
   width: calc(${(props) => props.width || '60px'} - 10px);
-  margin: 10px;
+  margin: 12px 10px;
   height: 76px;
   color: ${theme.color.gray600};
   display: flex;
@@ -71,7 +71,7 @@ const AnimatedButton = ({
   label,
   hoveredImgSrc,
   width='80px',
-  height='45px',
+  height='40px',
   direction='column',
   active = false,
   ...props
@@ -91,7 +91,6 @@ const AnimatedButton = ({
       width={width}
       height={height}
       direction={direction}
-      hoveranimation={'true'}
       onClick={onClick}
       onMouseOver={hoveredImgSrc? onMouseOver : null}
       onMouseOut={hoveredImgSrc? onMouseOut : null}

@@ -50,7 +50,7 @@ const SpreadBoard = () => {
   }, []);
 
   return (
-    <StyledWrapper className='section'>
+    <StyledWrapper className='section board'>
       <Wrapper id="spreadWrapper"/>
     </StyledWrapper>
   );

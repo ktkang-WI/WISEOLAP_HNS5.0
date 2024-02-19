@@ -322,7 +322,7 @@ const ItemBoard = () => {
   }));
 
   return (
-    <StyledBoard className='section'>
+    <StyledBoard className='section board'>
       <Layout
         model={model}
         factory={factory}

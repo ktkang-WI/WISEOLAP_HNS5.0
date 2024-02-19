@@ -75,6 +75,7 @@ const ViewerContent = ({children}) => {
         <FilterBar useSearchButton={true} buttons={buttons}/>
         <StyledWrapper>
           <CustomDrawer
+            useExpandButton={false}
             index={0}
             opened={reportListOpened}
             margin={'0px 0px 10px 10px'}
@@ -82,6 +83,7 @@ const ViewerContent = ({children}) => {
           >
             {/* TODO: 추후 권한 적용 */}
             <CustomDrawer
+              useExpandButton={false}
               index={1}
               margin={'0px'}
               opend={dataColumnOpened}
