@@ -12,7 +12,7 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState, useCallback} from 'react';
 import {
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
@@ -26,6 +26,7 @@ import {
 } from './seriesOption/SeriesOption';
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
+import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
@@ -236,78 +237,112 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     };
   };
 
+  // const popupRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [contextMenuEvent, setContextMenuEvent] = useState(null);
+
+  const handleContextMenu = useCallback((event) => {
+    event.preventDefault();
+    setContextMenuEvent(event);
+    setShowPopup(true);
+  }, []);
+
+  useEffect(() => {
+    const chartContainer = dxRef.current.instance._renderer.root.element;
+    chartContainer &&
+      chartContainer.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      chartContainer &&
+        chartContainer.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, [handleContextMenu]);
+
   return (
-    <DevChart
-      dataSource={mart.data.data}
-      width="100%"
-      height="100%"
-      customizeLabel={(o) => customizeLabel(o, mart.formats)}
-      resolveLabelOverlapping={overlapping}
-      id={id}
-      ref={dxRef}
-      onPointClick={onPointClick}
-      pointSelectionMode={'multiple'}
-      rotated={meta.useRotate}
-      seriesSelectionMode={interactiveOption.mode}
-    >
-      <CommonSeriesSettings
-        ignoreEmptyPoints={ignoreEmptyPoints}
+    <>
+      <DevChart
+        dataSource={mart.data.data}
+        width="100%"
+        height="100%"
+        customizeLabel={(o) => customizeLabel(o, mart.formats)}
+        resolveLabelOverlapping={overlapping}
+        id={id}
+        ref={dxRef}
+        onPointClick={onPointClick}
+        pointSelectionMode={'multiple'}
+        rotated={meta.useRotate}
+        seriesSelectionMode={interactiveOption.mode}
+        // onInitialized={handleInitialized}
       >
-        <Point visible={pointerMarker} />
-      </CommonSeriesSettings>
-      <ArgumentAxis
-        inverted={reverseView} />
-      <ValueAxis
-        name="left"
-        position="left"
-        inverted={reverseView}>
-        <Grid visible={true} />
-      </ValueAxis>
-      {
-        auxiliaryAxis ?
+        <CommonSeriesSettings
+          ignoreEmptyPoints={ignoreEmptyPoints}
+        >
+          <Point visible={pointerMarker} />
+        </CommonSeriesSettings>
+        <ArgumentAxis
+          inverted={reverseView} />
         <ValueAxis
-          name="right"
-          position="right"
+          name="left"
+          position="left"
           inverted={reverseView}>
           <Grid visible={true} />
-        </ValueAxis> : <></>
-      }
-      <Legend
-        visible={true}
-        position='outside'
-        horizontalAlignment='right'
-        verticalAlignment='top'
-      />
-      <Tooltip
-        enabled={true}
-        location='edge'
-        customizeTooltip={
-          (info) => customizeTooltip(info, false, mart.formats)
+        </ValueAxis>
+        {
+          auxiliaryAxis ?
+          <ValueAxis
+            name="right"
+            position="right"
+            inverted={reverseView}>
+            <Grid visible={true} />
+          </ValueAxis> : <></>
         }
-      ></Tooltip>
-      {
-        seriesNames.map(
-            (valueField, i) =>
-              <Series
-                axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
-                key={valueField.summaryName+'-'+i}
-                valueField={valueField.summaryName}
-                argumentField='arg'
-                tag={{
-                  fieldId: valueField.fieldId,
-                  math: Math.floor(i / mart.seriesLength)
-                }}
-                name={valueField.name || '\u2800'}
-                type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
-                sizeField={
-                  getSeriesOptionType(valueField.fieldId, seriesOptions) ===
-                  'bubble' ? valueField.summaryName: null
-                }
-              >
-              </Series>
-        )
-      }
-    </DevChart>
+        <Legend
+          visible={true}
+          position='outside'
+          horizontalAlignment='right'
+          verticalAlignment='top'
+        />
+        <Tooltip
+          enabled={true}
+          location='edge'
+          customizeTooltip={
+            (info) => customizeTooltip(info, false, mart.formats)
+          }
+        ></Tooltip>
+        {
+          seriesNames.map(
+              (valueField, i) =>
+                <Series
+                  axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
+                  key={valueField.summaryName+'-'+i}
+                  valueField={valueField.summaryName}
+                  argumentField='arg'
+                  tag={{
+                    fieldId: valueField.fieldId,
+                    math: Math.floor(i / mart.seriesLength)
+                  }}
+                  name={valueField.name || '\u2800'}
+                  type={
+                    getSeriesOptionType(
+                        valueField.fieldId,
+                        seriesOptions)
+                  }
+                  sizeField={
+                    getSeriesOptionType(valueField.fieldId, seriesOptions) ===
+                    'bubble' ? valueField.summaryName: null
+                  }
+                >
+                </Series>
+          )
+        }
+      </DevChart>
+      {showPopup && (
+        <SubLinkReportPopup
+          showButton={showPopup}
+          setShowButton={setShowPopup}
+          event={contextMenuEvent}
+        />
+      )}
+    </>
   );
 };
 
