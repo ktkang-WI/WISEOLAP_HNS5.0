@@ -182,7 +182,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
-        openModal(LinkReportModal);
+        openModal(LinkReportModal, {subYn: false, subLinkDim: null});
       }
     },
     'AdHocLayout': {
