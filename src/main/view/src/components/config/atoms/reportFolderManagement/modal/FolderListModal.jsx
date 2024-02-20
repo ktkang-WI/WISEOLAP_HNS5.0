@@ -10,6 +10,8 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import {managementData} from
   // eslint-disable-next-line max-len
   'components/config/organisms/reportFolderManagement/data/ReportFolderManagementData';
+import TreeListInstance from 'devextreme/ui/tree_list';
+import {getRefInstance} from 'components/config/utility/utility';
 
 const theme = getTheme();
 
@@ -18,10 +20,26 @@ const FolderListModal = ({...props}) => {
   const [row, setRow] = useState({});
 
   useEffect(() => {
+    const getFolderIdList = (reportList) => {
+      return reportList.reduce((acc, v) => {
+        if (!acc.includes(v.fldId)) {
+          acc.push(v.fldId);
+        }
+        return acc;
+      }, []);
+    };
+
     managementData[1].data()
         .then((response) => {
           if (response.data.data) {
-            setDataSource(response.data.data);
+            let newData = response.data.data;
+            if (props.type === 'report') {
+              const reportList = getRefInstance(TreeListInstance, 'report-list')
+                  .option('dataSource');
+              const fldIdList = getFolderIdList(reportList);
+              newData = newData.filter((row) => fldIdList.includes(row.fldId));
+            }
+            setDataSource(newData);
           }
         })
         .catch(() => {

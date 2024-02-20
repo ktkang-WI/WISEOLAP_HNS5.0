@@ -20,9 +20,23 @@ const UserList = ({setRow}) => {
 
   const ref = useRef();
 
+  const getReportUsers = (dataUsers) => {
+    return dataUsers.filter((row) => {
+      const reportAuthCheck = row.folderList
+          .find((folder) => folder.auth.authView === 'Y' ||
+            folder.auth.authPublish === 'Y' ||
+            folder.auth.authDataItem === 'Y' ||
+            folder.auth.authExport === 'Y');
+      return reportAuthCheck;
+    });
+  };
+
   useEffect(() => {
     if (data[0]?.user) {
-      const dataUsers = data.filter((row) => row.user);
+      let dataUsers = data.filter((row) => row.user);
+      if (data[0].folderList) {
+        dataUsers = getReportUsers(dataUsers);
+      }
       models.Authority.getUsers()
           .then((response) => {
             const authUserNoList = dataUsers

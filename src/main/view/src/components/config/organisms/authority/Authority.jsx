@@ -152,13 +152,20 @@ const Authority = () => {
 
       prom.then((response) => {
         if (response.data.data) {
-          auth.data().then((res) => {
-            if (res.data.data) {
-              setData(res.data.data);
-              auth.init({authorityDataCubeRef, authorityDataDimensionRef});
-              alert(localizedString.successSave);
-            }
-          });
+          try {
+            auth.data()
+                .then((res) => {
+                  if (res.data.data) {
+                    setData(res.data.data);
+                    auth.init(
+                        {authorityDataCubeRef, authorityDataDimensionRef}
+                    );
+                    alert(localizedString.successSave);
+                  }
+                });
+          } catch (error) {
+            alert('서버 오류 관리자에게 문의하세요.');
+          }
         }
       });
     } catch (error) {

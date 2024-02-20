@@ -60,53 +60,65 @@ const saveAuthorityData = (ref, dsViewListRef, cubeRef, dimRef, userMode,
 
   const selectedRowKeys = ref().option('selectedRowKeys');
   const dsViewId = dsViewListRef().option('selectedRowKeys')[0]?.dsViewId;
-  let cubeList = cubeRef().option('selectedRowKeys')?.map((row) => ({
-    dsViewId: dsViewId,
-    cubeId: row
-  }));
-  let cubeDimList = dimRef().option('selectedRowKeys')?.map((row) => ({
-    dsViewId: dsViewId,
-    dimUniNm: row.replace('[', '').replace(']', '')
-  }));
+  let cubeList = [];
+  let cubeDimList = [];
+
+  if (cubeRef().option('selectedRowKeys')) {
+    cubeList = cubeRef().option('selectedRowKeys').map((row) => ({
+      dsViewId: dsViewId,
+      cubeId: row
+    }));
+  }
+
+  if (dimRef().option('selectedRowKeys')) {
+    cubeDimList = dimRef().option('selectedRowKeys').map((row) => ({
+      dsViewId: dsViewId,
+      dimUniNm: row.replace('[', '').replace(']', '')
+    }));
+  }
+
+  let originData = {};
+  let originCubeId = {};
+  let originCubeDimNm = {};
+
+  const findInstanceData = (instance) => {
+    return data.find((row) => row[instance].grpId === selectedRowKeys[0].grpId);
+  };
+
+  function processAuthorityData(findData, selectedItem, additionalData) {
+    if (findData) {
+      originData = findData.dsViews;
+      originCubeId = originData.cubeId;
+      delete originCubeId[dsViewId];
+      originCubeDimNm = originData.cubeDimNm;
+      delete originCubeDimNm[dsViewId];
+    }
+
+    const originCubeIdList = getOriginList(originCubeId, 'cubeId', []);
+    const originCubeDimNmList = getOriginList(originCubeDimNm, 'dimUniNm', []);
+
+    cubeList = originCubeIdList.concat(cubeList);
+    cubeDimList = originCubeDimNmList.concat(cubeDimList);
+
+    const authorityDataParams = {
+      cubeList,
+      cubeDimList,
+      ...additionalData
+    };
+
+    if (userMode === Mode.GROUP_DATA) {
+      authorityDataParams.grpId = selectedItem[0]?.grpId;
+    } else if (userMode === Mode.USER_DATA) {
+      authorityDataParams.userNo = selectedItem[0]?.userNo;
+    }
+
+    return new AuthorityData(authorityDataParams);
+  }
 
   if (userMode === Mode.GROUP_DATA) {
-    const originData = data
-        .find((row) => row.group.grpId === selectedRowKeys[0].grpId)
-        .dsViews;
-
-    const originCubeId = originData.cubeId;
-    const originCubeDimNm = originData.cubeDimNm;
-
-    const originCubeIdList = getOriginList(originCubeId, 'cubeId', []);
-    const originCubeDimNmList = getOriginList(originCubeDimNm, 'dimUniNm', []);
-
-    cubeList = originCubeIdList.concat(cubeList);
-    cubeDimList = originCubeDimNmList.concat(cubeDimList);
-
-    return new AuthorityData({
-      grpId: selectedRowKeys[0]?.grpId,
-      cubeList,
-      cubeDimList
-    });
+    return processAuthorityData(findInstanceData('group'), selectedRowKeys, {});
   } else if (userMode === Mode.USER_DATA) {
-    const originData = data
-        .find((row) => row.user.userNo === selectedRowKeys[0].userNo)
-        .dsViews;
-
-    const originCubeId = originData.cubeId;
-    const originCubeDimNm = originData.cubeDimNm;
-
-    const originCubeIdList = getOriginList(originCubeId, 'cubeId', []);
-    const originCubeDimNmList = getOriginList(originCubeDimNm, 'dimUniNm', []);
-
-    cubeList = originCubeIdList.concat(cubeList);
-    cubeDimList = originCubeDimNmList.concat(cubeDimList);
-
-    return new AuthorityData({
-      userNo: selectedRowKeys[0]?.userNo,
-      cubeList,
-      cubeDimList
-    });
+    return processAuthorityData(findInstanceData('user'), selectedRowKeys, {});
   }
 };
 
@@ -219,9 +231,9 @@ export const authData = [
     component: DataAuthority,
     data: getUserData,
     save: ({userListRef, dsViewListRef, authorityDataCubeRef,
-      authorityDataDimensionRef}) =>
+      authorityDataDimensionRef, data}) =>
       saveAuthorityData(userListRef, dsViewListRef, authorityDataCubeRef,
-          authorityDataDimensionRef, Mode.USER_DATA),
+          authorityDataDimensionRef, Mode.USER_DATA, data),
     init: ({authorityDataCubeRef, authorityDataDimensionRef}) => {
       const mode = Mode.USER_DATA;
       init({authorityDataCubeRef, authorityDataDimensionRef, mode});

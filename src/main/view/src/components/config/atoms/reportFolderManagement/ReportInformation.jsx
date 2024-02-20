@@ -21,7 +21,9 @@ const ReportInformation = ({row, setRow}) => {
       disabled: false,
       onClick: (e) => {
         openModal(FolderListModal, {
-          setRow: setRow
+          row: row,
+          setRow: setRow,
+          type: 'report'
         });
       }
     }
@@ -64,14 +66,14 @@ const ReportInformation = ({row, setRow}) => {
           <Label>{localizedString.reportType}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="fldNm"
+          dataField="fldParentNm"
           editorType="dxTextBox"
           readOnly={true}
           editorOptions={{
             readOnly: true,
             buttons: [folderSearchBtn],
             elementAttr: {
-              id: 'fldName'
+              id: 'fldParentName'
             }
           }}
         >

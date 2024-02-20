@@ -93,7 +93,8 @@ const ReportFolderManagement = () => {
           ...v,
           key: 'r_'+ v.reportId,
           parentId: 'f_' + v.fldId,
-          name: v.reportNm
+          name: v.reportNm,
+          fldParentNm: v.fldNm
         });
 
         return acc;

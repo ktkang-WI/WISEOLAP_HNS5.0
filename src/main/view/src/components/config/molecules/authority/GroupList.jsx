@@ -19,9 +19,23 @@ const GroupList = ({setRow}) => {
 
   const ref = useRef();
 
+  const getReportGroups = (dataGroups) => {
+    return dataGroups.filter((row) => {
+      const reportAuthCheck = row.folderList
+          .find((folder) => folder.auth.authView === 'Y' ||
+            folder.auth.authPublish === 'Y' ||
+            folder.auth.authDataItem === 'Y' ||
+            folder.auth.authExport === 'Y');
+      return reportAuthCheck;
+    });
+  };
+
   useEffect(() => {
     if (data[0]?.group) {
-      const dataGroups = data.filter((row)=>row.group);
+      let dataGroups = data.filter((row)=>row.group);
+      if (data[0].folderList) {
+        dataGroups = getReportGroups(dataGroups);
+      }
       models.UserGroupManagement.getGroups()
           .then((response) => {
             const authGrpIdList = dataGroups
