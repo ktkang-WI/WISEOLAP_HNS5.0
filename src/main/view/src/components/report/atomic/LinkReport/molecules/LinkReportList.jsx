@@ -30,13 +30,22 @@ const Title = styled.div`
   margin-bottom: 10px;
 `;
 
-const LinkReportList = ({width, dataSource, onSelectionChange}) => {
+const LinkReportList = (
+    {
+      width,
+      dataSource,
+      onSelectionChange,
+      subYn,
+      subLinkDim
+    }
+) => {
   const dxRef = useRef();
   const [popupVisible, setPopupVisible] = useState(false);
   const {alert} = useModal();
   const [selectedRowData, setSelectedRowData] = useState();
   const [linkParamData, setLinkParamData] = useState();
   const [paramInfo, setParamInfo] = useState([]);
+  const [subLinkParamInfo, setSubLinkParamInfo] = useState([]);
 
   const handleOpenPopup = async () => {
     if (selectedRowData &&
@@ -101,8 +110,8 @@ const LinkReportList = ({width, dataSource, onSelectionChange}) => {
         dragEnabled={true}
         showCloseButton={true}
         title="연결보고서 데이터 설정"
-        width="600px"
-        height="400px"
+        width='600px'
+        height={subYn ? '800px' : '400px'}
       >
         <LinkParamInfo
           selectedRowData = {selectedRowData}
@@ -110,6 +119,10 @@ const LinkReportList = ({width, dataSource, onSelectionChange}) => {
           onClose={() => setPopupVisible(false)}
           paramInfo={paramInfo}
           setParamInfo={setParamInfo}
+          subYn={subYn}
+          subLinkDim={subLinkDim}
+          subLinkParamInfo={subLinkParamInfo}
+          setSubLinkParamInfo={setSubLinkParamInfo}
         />
       </Popup>
     </Wrapper>

@@ -24,6 +24,8 @@ justify-content: center;
 `;
 const LinkReportModal = ({
   loadExcelFile,
+  subYn,
+  subLinkDim,
   ...props
 }) => {
   const [reportList, setReportList] = useState();
@@ -108,6 +110,8 @@ const LinkReportModal = ({
           width='44%'
           dataSource={dataSource}
           onSelectionChange={handleReportSelection}
+          subYn={subYn}
+          subLinkDim={subLinkDim}
         />
       </StyledWrapper>
     </Modal>
