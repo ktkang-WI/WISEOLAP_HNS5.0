@@ -12,7 +12,7 @@ import {useState, useEffect} from 'react';
 // const theme = getTheme();
 
 const SubLinkReportPopupButton = styled.div`
-  position: absolute;
+  position: fixed;
   left: ${({x}) => x}px;
   top: ${({y}) => y}px;
   z-index: 1000;
@@ -32,27 +32,64 @@ export const SubLinkReportPopup = (
     {
       showButton,
       setShowButton,
-      event
+      focusedItem
     }
 ) => {
   const {openModal} = useModal();
   const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
+  const [subLinkDim, setSubLinkDim] = useState([]);
 
   useEffect(() => {
-    if (!showButton || !event) return;
-    const x = event.clientX;
-    //  window.scrollX;
-    const y = event.clientY;
-    //  window.scrollY;
-    setButtonPosition({x, y});
-    const handleLeftClick = () => setShowButton(false);
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      const {clientX, clientY} = event;
+      setButtonPosition({x: clientX, y: clientY});
+      setShowButton(true);
+    };
 
+    const handleLeftClick = () => {
+      setShowButton(false);
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('click', handleLeftClick);
-    return () => document.removeEventListener('click', handleLeftClick);
-  }, [showButton, event]);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('click', handleLeftClick);
+    };
+  }, [setShowButton]);
+
+  useEffect(() => {
+    let newSubLinkDim = [];
+
+    if (focusedItem && focusedItem.dimension) {
+      newSubLinkDim = newSubLinkDim.concat(focusedItem.dimension);
+    }
+
+    if (focusedItem && (focusedItem.column || focusedItem.row)) {
+      if (focusedItem.column) {
+        newSubLinkDim = newSubLinkDim.concat(focusedItem.column);
+      }
+      if (focusedItem.row) {
+        if (!focusedItem.column || focusedItem.column !== focusedItem.row) {
+          newSubLinkDim = newSubLinkDim.concat(focusedItem.row);
+        }
+      }
+    }
+    if (focusedItem && focusedItem.field) {
+      focusedItem.field.forEach((item) => {
+        if (item.fieldType === 'DIM') {
+          newSubLinkDim.push(item);
+        }
+      });
+    }
+
+    setSubLinkDim(newSubLinkDim);
+  }, [focusedItem]);
 
   const handleClick = () => {
-    openModal(LinkReportModal, {subYn: true});
+    openModal(LinkReportModal, {subYn: true, subLinkDim: subLinkDim});
     setShowButton(false);
   };
 
