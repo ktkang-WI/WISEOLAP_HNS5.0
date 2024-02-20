@@ -1,8 +1,16 @@
 import DevDataGrid, {Column} from 'devextreme-react/data-grid';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import DataGridBullet from './DataGridBullet';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
+import styled from 'styled-components';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
+
+const Container = styled.div`
+  position: relative;
+`;
 
 const DataGrid = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -55,26 +63,64 @@ const DataGrid = ({setItemExports, id, item}) => {
     return value;
   };
 
+  const [showPopup, setShowPopup] = useState(false);
+  const focusedItem = useSelector(selectCurrentDataField);
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      setShowPopup(true);
+    };
+
+    const handleContentReady = () => {
+      const gridInstance = dxRef.current.instance;
+      if (gridInstance) {
+        const scrollable = gridInstance.getScrollable();
+        const container = scrollable.element();
+        container.addEventListener('contextmenu', handleContextMenu);
+        return () => {
+          container.removeEventListener('contextmenu', handleContextMenu);
+        };
+      }
+    };
+
+    const gridInstance = dxRef.current.instance;
+    if (gridInstance) {
+      gridInstance.on('contentReady', handleContentReady);
+      return () => {
+        gridInstance.off('contentReady', handleContentReady);
+      };
+    }
+  }, []);
+
+
   return (
-    <DevDataGrid
-      ref={dxRef}
-      width='100%'
-      height='100%'
-      id={id}
-      dataSource={mart.data.data}
-      sorting={false}
-    >
-      {mart.data.columns.map((column, i) =>
-        <Column
-          key={i}
-          caption={column.caption}
-          dataField={column.name}
-          visible={column.visible}
-          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
-          cellRender={(e) => cellRender(e, column)}
-        />
-      )}
-    </DevDataGrid>
+    <Container>
+      <DevDataGrid
+        ref={dxRef}
+        width='100%'
+        height='100%'
+        id={id}
+        dataSource={mart.data.data}
+        sorting={false}
+      >
+        {mart.data.columns.map((column, i) =>
+          <Column
+            key={i}
+            caption={column.caption}
+            dataField={column.name}
+            visible={column.visible}
+            dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
+            cellRender={(e) => cellRender(e, column)}
+          />
+        )}
+      </DevDataGrid>
+      {showPopup &&
+      <SubLinkReportPopup
+        showButton={showPopup}
+        setShowButton={setShowPopup}
+        focusedItem={focusedItem}
+      />}
+    </Container>
   );
 };
 

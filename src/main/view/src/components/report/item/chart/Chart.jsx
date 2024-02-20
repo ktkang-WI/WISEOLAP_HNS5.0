@@ -27,6 +27,8 @@ import {
 import NumberFormatUtility from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
@@ -239,11 +241,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   // const popupRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [contextMenuEvent, setContextMenuEvent] = useState(null);
+  const focusedItem = useSelector(selectCurrentDataField);
 
   const handleContextMenu = useCallback((event) => {
     event.preventDefault();
-    setContextMenuEvent(event);
     setShowPopup(true);
   }, []);
 
@@ -271,7 +272,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         pointSelectionMode={'multiple'}
         rotated={meta.useRotate}
         seriesSelectionMode={interactiveOption.mode}
-        // onInitialized={handleInitialized}
       >
         <CommonSeriesSettings
           ignoreEmptyPoints={ignoreEmptyPoints}
@@ -339,7 +339,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <SubLinkReportPopup
           showButton={showPopup}
           setShowButton={setShowPopup}
-          event={contextMenuEvent}
+          focusedItem={focusedItem}
         />
       )}
     </>

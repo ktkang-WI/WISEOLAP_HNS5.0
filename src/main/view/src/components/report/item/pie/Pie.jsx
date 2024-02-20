@@ -7,9 +7,12 @@ import {
   Size,
   Tooltip} from 'devextreme-react/pie-chart';
 import customizeOption from './customizingPie/CustomizeOption';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
 
 const Pie = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -36,49 +39,76 @@ const Pie = ({setItemExports, id, item}) => {
   }, [mart.data.data]);
 
   const pies = seriesMeasureNames.map((dimension, idx) => {
+    const [showPopup, setShowPopup] = useState(false);
+    const focusedItem = useSelector(selectCurrentDataField);
+    const handleContextMenu = useCallback((event) => {
+      event.preventDefault();
+      setShowPopup(true);
+    }, []);
+
+    useEffect(() => {
+      const chartContainer =
+        dxRefs.current[idx].instance._renderer.root.element;
+      chartContainer &&
+        chartContainer.addEventListener('contextmenu', handleContextMenu);
+      return () => {
+        chartContainer &&
+          chartContainer.removeEventListener('contextmenu', handleContextMenu);
+      };
+    }, [handleContextMenu]);
+
     return (
-      <PieChart
-        ref={(ref) => (dxRefs.current[idx] = ref)}
-        key={idx}
-        type={meta.pieChartStyle}
-        dataSource={mart.data.data} // mart
-        width={'calc(100%/'+'1'+')'}
-        height={'100%'}
-        style={{float: 'left'}}
-        title={meta.labelEdit.showTitle ? dimension.caption : ''}
-        animation={{
-          duration: 1000,
-          easing: 'easeOutCubic', // 애니메이션
-          enabled: true
-        }}
-      >
-        <Legend // 범례
-          visible={true}
-          verticalAlignment="bottom"
-          horizontalAlignment="center"
-          itemTextPosition="right"
-          rowCount={2}
-        />
-        <Tooltip
-          enabled={true}
-          contentRender={(e) => customizeOption(e, meta.tooltip, 'tooltip')}
-        />
-        <Series
-          argumentField='arg'
-          valueField={dimension.summaryName}
+      <>
+        <PieChart
+          ref={(ref) => (dxRefs.current[idx] = ref)}
+          key={idx}
+          type={meta.pieChartStyle}
+          dataSource={mart.data.data} // mart
+          width={'calc(100%/'+'1'+')'}
+          height={'100%'}
+          style={{float: 'left'}}
+          title={meta.labelEdit.showTitle ? dimension.caption : ''}
+          animation={{
+            duration: 1000,
+            easing: 'easeOutCubic', // 애니메이션
+            enabled: true
+          }}
         >
-          <Label visible={true}
-            position={meta.labelPosition}
-            customizeText={(e) => customizeOption(e, meta.labelEdit, 'label')}
+          <Legend // 범례
+            visible={true}
+            verticalAlignment="bottom"
+            horizontalAlignment="center"
+            itemTextPosition="right"
+            rowCount={2}
+          />
+          <Tooltip
+            enabled={true}
+            contentRender={(e) => customizeOption(e, meta.tooltip, 'tooltip')}
+          />
+          <Series
+            argumentField='arg'
+            valueField={dimension.summaryName}
           >
-            <Connector
-              visible={true}
-              width={0.5}
-            />
-          </Label>
-        </Series>
-        <Size width={'100%'} />
-      </PieChart>
+            <Label visible={true}
+              position={meta.labelPosition}
+              customizeText={(e) => customizeOption(e, meta.labelEdit, 'label')}
+            >
+              <Connector
+                visible={true}
+                width={0.5}
+              />
+            </Label>
+          </Series>
+          <Size width={'100%'} />
+        </PieChart>
+        {showPopup && (
+          <SubLinkReportPopup
+            showButton={showPopup}
+            setShowButton={setShowPopup}
+            focusedItem={focusedItem}
+          />
+        )}
+      </>
     );
   });
 
