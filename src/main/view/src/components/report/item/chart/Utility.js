@@ -27,22 +27,29 @@ const generateMeta = (item) => {
       M: '백만',
       B: '십억'
     },
+    suffixO: '',
+    suffixK: localizedString.k,
+    suffixM: localizedString.m,
+    suffixB: localizedString.b,
     precision: 0,
-    precisionType: 'roundUp',
+    precisionType: 'round',
     useDigitSeparator: true
   };
 
   setMeta(item, 'xAxis', {
-    useXAxis: true,
-    xAxisCaption: undefined,
+    xAxisMark: true,
+    axisCutomText: '',
     xAxisInclination: 0
   });
   setMeta(item, 'yAxis', defaultAxis);
-  setMeta(item, 'supplyAxis', defaultAxis);
+  setMeta(item, 'extraAxis', defaultAxis);
 
   setMeta(item, 'legend', {
     useLegend: true,
-    legendPosition: ''
+    position: 'outside',
+    horizontalAlignment: 'right',
+    verticalAlignment: 'top',
+    itemTextPosition: 'right'
   });
 
   setMeta(item, 'useRotate', false);
@@ -120,7 +127,8 @@ const getRibbonItems = () => {
     'Rotate',
     'XAxisSetting',
     'YAxisSetting',
-    'ExtraAxisSetting'
+    'ExtraAxisSetting',
+    'ShowColorLegend'
   ];
 };
 

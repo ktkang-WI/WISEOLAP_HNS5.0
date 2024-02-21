@@ -55,7 +55,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.inputPrefix}</Label>
       </Item>
       <Item
-        dataField='customSuffix'
+        dataField='suffixEnabled'
         editorType='dxCheckBox'
         editorOptions={{
         }}
@@ -63,7 +63,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.customSuffix}</Label>
       </Item>
       <Item
-        dataField='ones'
+        dataField='suffixO'
         editorType='dxTextBox'
         editorOptions={{
         }}
@@ -71,7 +71,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.ones}</Label>
       </Item>
       <Item
-        dataField='thousands'
+        dataField='suffixK'
         editorType='dxTextBox'
         editorOptions={{
         }}
@@ -79,7 +79,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.thousands}</Label>
       </Item>
       <Item
-        dataField='millions'
+        dataField='suffixM'
         editorType='dxTextBox'
         editorOptions={{
         }}
@@ -87,7 +87,7 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.millions}</Label>
       </Item>
       <Item
-        dataField='billions'
+        dataField='suffixB'
         editorType='dxTextBox'
         editorOptions={{
         }}
@@ -95,13 +95,13 @@ const LabelEditForm = ({selectedItem}, ref) => {
         <Label>{localizedString.billions}</Label>
       </Item>
       <Item
-        dataField='precsion'
+        dataField='precision'
         editorType='dxNumberBox'
       >
         <Label>{localizedString.precsion}</Label>
       </Item>
       <Item
-        dataField='precsionOption'
+        dataField='precisionType'
         editorType='dxSelectBox'
         editorOptions={{
           items: localizedString.precsionOptions,
