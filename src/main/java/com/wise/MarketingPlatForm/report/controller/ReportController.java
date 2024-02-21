@@ -39,8 +39,10 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
-import com.wise.MarketingPlatForm.report.vo.LinkReportVO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import java.lang.reflect.Type;
 
 import io.micrometer.core.ipc.http.HttpSender.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -412,6 +414,23 @@ public class ReportController {
                 return ResponseEntity.ok().body(map);
 	}
 
+    @PatchMapping(value = "/report-link-save")
+    public ResponseEntity<?> insertLinkReport(@RequestBody List<Map<String, Object>> linkReports) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<ReportLinkMstrDTO>>() {}.getType();
+        List<ReportLinkMstrDTO> reportLinkDTO = gson.fromJson(gson.toJson(linkReports), listType);
+        reportService.insertLinkReport(reportLinkDTO);
+        reportLinkDTO.forEach(subDto -> {
+            if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
+                List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
+                System.out.println("reportLinkSubDTO : " + reportLinkSubDTO);
+                reportService.insertSubLinkReport(reportLinkSubDTO);
+            }
+        });
+        return ResponseEntity.ok().body("Link reports successfully saved.");
+    }
+    
+
     @PostMapping(value = "/report-link-param")
 	public Map<String, Object> getLinkReportParam(@RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
@@ -419,7 +438,7 @@ public class ReportController {
 	}
 
     @PostMapping(value = "/report-link-list")
-    public List<LinkReportVO> getLinkReportList(@RequestBody String param) {
+    public List<ReportLinkMstrDTO> getLinkReportList(@RequestBody String param) {
         String reportId = param;
         return reportService.getLinkReportList(reportId);
     }
@@ -427,7 +446,6 @@ public class ReportController {
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
         String userId = param.getOrDefault("userId", "");
-
         return reportService.getReportFolderList(userId);
 	}
 
