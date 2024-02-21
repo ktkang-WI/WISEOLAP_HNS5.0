@@ -7,6 +7,7 @@ import {createContext, useState, useCallback} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import useModal from 'hooks/useModal.js';
 import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
+import {getHint} from 'components/config/utility/utility.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -75,7 +76,11 @@ const ConfigurationSetting = () => {
     return (
       btns.map((item, index) => (
         <NavBarItem key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
+          <Button
+            icon={item}
+            onClick={handleBtnClick}
+            hint={getHint(item)}
+          />
         </NavBarItem>
       ))
     );

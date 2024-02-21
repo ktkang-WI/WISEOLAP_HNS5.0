@@ -1,3 +1,5 @@
+import localizedString from 'config/localization';
+
 export const handleRowClick = (data, setRow) => {
   setRow(_.cloneDeep(data));
 };
@@ -15,4 +17,22 @@ export const getRefInstance = (component, classNm) => {
       .filter((row) => row.className.includes('dx-item-selected'))[0]
       .getElementsByClassName(classNm);
   return component.getInstance(element[0]);
+};
+
+export const getHint = (item) => {
+  if (item === 'plus') {
+    return localizedString.newReport;
+  }
+
+  if (item === 'save') {
+    return localizedString.saveReport;
+  }
+
+  if (item === 'remove') {
+    return localizedString.deleteReport;
+  }
+
+  if (item === 'key') {
+    return localizedString.passwordChange;
+  }
 };
