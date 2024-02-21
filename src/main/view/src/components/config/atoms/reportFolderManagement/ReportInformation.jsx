@@ -21,7 +21,9 @@ const ReportInformation = ({row, setRow}) => {
       disabled: false,
       onClick: (e) => {
         openModal(FolderListModal, {
-          setRow: setRow
+          row: row,
+          setRow: setRow,
+          type: 'report'
         });
       }
     }
@@ -60,18 +62,21 @@ const ReportInformation = ({row, setRow}) => {
         <SimpleItem
           dataField="reportType"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
         >
           <Label>{localizedString.reportType}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="fldNm"
+          dataField="fldParentNm"
           editorType="dxTextBox"
           readOnly={true}
           editorOptions={{
             readOnly: true,
             buttons: [folderSearchBtn],
             elementAttr: {
-              id: 'fldName'
+              id: 'fldParentName'
             }
           }}
         >
@@ -79,16 +84,13 @@ const ReportInformation = ({row, setRow}) => {
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="publisher"
-          editorType="dxTextBox"
-        >
-          <Label>{localizedString.publisher}</Label>
-        </SimpleItem>
-        <SimpleItem
           dataField="regDt"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
         >
-          <Label>{localizedString.RegisterDate}</Label>
+          <Label>{localizedString.registerDate}</Label>
         </SimpleItem>
         <SimpleItem
           dataField="reportTag"
@@ -97,7 +99,7 @@ const ReportInformation = ({row, setRow}) => {
           <Label>{localizedString.annotation}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="fldOrdinal"
+          dataField="reportOrdinal"
           editorType="dxTextBox"
         >
           <Label>{localizedString.order}</Label>

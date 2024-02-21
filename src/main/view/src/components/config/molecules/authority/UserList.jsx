@@ -3,7 +3,8 @@ import models from 'models';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useRef,
+  useEffect, useState} from 'react';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
@@ -16,35 +17,52 @@ const UserList = ({setRow}) => {
   // state
   const [users, setUsers] = useState([]);
   const [data] = authoritycontext.state.data;
-  const userListRef = authoritycontext.ref.userListRef;
+
+  const ref = useRef();
+
+  const getReportUsers = (dataUsers) => {
+    return dataUsers.filter((row) => {
+      const reportAuthCheck = row.folderList
+          .find((folder) => folder.auth.authView === 'Y' ||
+            folder.auth.authPublish === 'Y' ||
+            folder.auth.authDataItem === 'Y' ||
+            folder.auth.authExport === 'Y');
+      return reportAuthCheck;
+    });
+  };
 
   useEffect(() => {
-    const dataUsers = data.filter((row) => row.user);
-    models.Authority.getUsers()
-        .then((response) => {
-          const authUserNoList = dataUsers
-              .filter((row) => {
-                if (row.dsViews) {
-                  if (row.dsViews?.dsViewId.length > 0) {
+    if (data[0]?.user) {
+      let dataUsers = data.filter((row) => row.user);
+      if (data[0].folderList) {
+        dataUsers = getReportUsers(dataUsers);
+      }
+      models.Authority.getUsers()
+          .then((response) => {
+            const authUserNoList = dataUsers
+                .filter((row) => {
+                  if (row.dsViews) {
+                    if (row.dsViews?.dsViewId.length > 0) {
+                      return row;
+                    }
+                  } else {
                     return row;
                   }
-                } else {
-                  return row;
-                }
-              })
-              .map((row) => row.user.userNo);
-          const users = response.data.data;
-          const newUsers = users.map((user) => {
-            const newUser = new User(user);
-            newUser.isAuth = authUserNoList.includes(user.userNo) ?
-            true : false;
-            return newUser;
+                })
+                .map((row) => row.user.userNo);
+            const users = response.data.data;
+            const newUsers = users.map((user) => {
+              const newUser = new User(user);
+              newUser.isAuth = authUserNoList.includes(user.userNo) ?
+              true : false;
+              return newUser;
+            });
+            setUsers(newUsers);
+          })
+          .catch(() => {
+            throw new Error('Data Loading Error');
           });
-          setUsers(newUsers);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
-        });
+    }
   }, [data]);
 
   const handleRowClick = ({data}) => {
@@ -55,7 +73,10 @@ const UserList = ({setRow}) => {
     <Wrapper>
       <Title title={localizedString.userList}></Title>
       <DataGrid
-        ref={userListRef}
+        ref={ref}
+        elementAttr={{
+          class: 'user-list'
+        }}
         height={'90%'}
         dataSource={users}
         showBorders={true}

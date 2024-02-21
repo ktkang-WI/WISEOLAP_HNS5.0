@@ -26,11 +26,12 @@ export class Report {
   reportType = '';
   reportTag = '';
   reportDesc = '';
+  fldParentNm = '';
 
   constructor({reportId = 0, reportNm = '', reportSubTitle = '', fldId = 0,
     fldLvl = 0, fldNm = '', fldParentId = 0, fldType = 'PUBLIC',
     reportOrdinal = 0, reportType ='', reportTag = '',
-    reportDesc = ''}) {
+    reportDesc = '', fldParentNm = ''}) {
     this.reportId = reportId;
     this.reportNm = reportNm;
     this.reportSubTitle = reportSubTitle;
@@ -43,6 +44,7 @@ export class Report {
     this.reportType = reportType;
     this.reportTag = reportTag;
     this.reportDesc = reportDesc;
+    this.fldParentNm = fldParentNm;
   }
 
   updateReport = () => {
@@ -50,7 +52,7 @@ export class Report {
       reportId: this.reportId,
       reportNm: this.reportNm,
       reportSubTitle: this.reportSubTitle,
-      fldId: this.fldId,
+      fldId: this.fldParentId,
       fldType: this.fldType,
       reportOrdinal: this.reportOrdinal,
       reportType: this.reportType,

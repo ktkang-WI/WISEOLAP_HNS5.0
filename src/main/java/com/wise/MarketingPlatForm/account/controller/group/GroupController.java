@@ -95,7 +95,7 @@ public class GroupController{
       return RestAPIVO.badRequest(false);
     }
 
-    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData,grpMemberUserType);
+    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData, grpMemberUserType);
     
     GroupDTO groupDTO = GroupDTO.builder()
       .grpId(grpId)
@@ -107,9 +107,7 @@ public class GroupController{
   
     boolean result = groupService.updateGroup(groupDTO);
 
-    if (!result) return RestAPIVO.conflictResponse(false);
-
-    return RestAPIVO.okResponse(true);
+    return RestAPIVO.okResponse(result);
   }
 
   

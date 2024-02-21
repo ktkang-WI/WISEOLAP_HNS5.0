@@ -2,7 +2,6 @@ import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import {TextArea} from 'devextreme-react';
 import Form, {
   AsyncRule,
   EmptyItem,
@@ -37,6 +36,9 @@ const GroupInfo = () => {
       <Form
         formData={groupDetailInfo}
         ref={groupInfoRef}
+        elementAttr={{
+          class: 'group-info'
+        }}
       >
         <EmptyItem
           dataField="grpId"
@@ -55,12 +57,11 @@ const GroupInfo = () => {
           />
           <Label>{localizedString.groupName}</Label>
         </SimpleItem>
-        <SimpleItem dataField="grpDesc">
+        <SimpleItem
+          dataField="grpDesc"
+          editorType='dxTextArea'
+        >
           <Label>{localizedString.description}</Label>
-          <TextArea
-            height={100}
-            width="100%"
-          />
         </SimpleItem>
         <SimpleItem
           dataField="grpRunMode"

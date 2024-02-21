@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
@@ -34,6 +35,7 @@ public class GroupFolderService {
     return groupDataModel;
   };
 
+  @Transactional
   public boolean patchGroupFolder(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
 
     List<GroupAuthReportMstrEntity> groupFolderMstr = generateGroupFolderPatchObject(groupFolderPatchDTO);
@@ -41,7 +43,7 @@ public class GroupFolderService {
     if (groupFolderMstr == null) return false;
 
     boolean result = false;
-  
+
     result = accountDAO.deleteGroupFolder(groupFolderMstr);
     result = accountDAO.putGroupFolder(groupFolderMstr);
 
@@ -67,7 +69,7 @@ public class GroupFolderService {
           .build();
 
           result.add(groupAuthReportMstrEntity);
-          
+
       }
 
     }
@@ -89,7 +91,7 @@ public class GroupFolderService {
       int grpId = groupData.getGrpId();
       boolean lastGroupIdNumber = ((prevGroupId != grpId) && prevGroupId != 0);
       boolean isGroupContained = groupkeys.contains(grpId);
-      
+
       if (lastGroupIdNumber) {
         groupFolderModel = GroupFolderModel.builder()
         .group(group)
@@ -127,7 +129,7 @@ public class GroupFolderService {
         .folder(pubFldMstrEntity)
         .auth(authReportMstrEntity)
         .build();
-      
+
       folderListMode.add(folderListModel);
 
       prevGroupId = grpId;
@@ -146,5 +148,5 @@ public class GroupFolderService {
     return result;
   }
 
-  
+
 }

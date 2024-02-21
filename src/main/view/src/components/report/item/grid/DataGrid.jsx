@@ -41,26 +41,29 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   const cellRender = (e, column) => {
     let endScaleValue = 0;
-    const value = e.data[column.name];
+    const value = e.data[column.name] ? e.data[column.name] : 0;
+    const displayValue = e.displayValue ? e.displayValue : 0;
 
     if (column.detailSetting === 'bar') {
       const labelSuffix = generateLabelSuffix(column.format);
-      const label = formatNumber(e.displayValue, column.format, labelSuffix);
+      const label = formatNumber(displayValue, column.format, labelSuffix);
       endScaleValue = getMaxValue(column);
       return (
-        <Wrapper display="flex">
+        <Wrapper display="flex" style={{position: 'relative'}}>
           <DataGridBullet
             endScaleValue={endScaleValue}
-            value={value}
+            value={value ? value : 0}
             column={column}
-            displayValue={e.displayValue}
+            displayValue={displayValue}
           />
-          <span>{label}</span>
+          <div style={{position: 'absolute', right: '1%'}}>
+            {label}
+          </div>
         </Wrapper>
       );
     } else if (column.fieldType === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
-      e.value = formatNumber(e.displayValue, column.format, labelSuffix);
+      e.value = formatNumber(displayValue, column.format, labelSuffix);
       return e.value;
     }
 
@@ -85,6 +88,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           dataField={column.name}
           visible={column.visible}
           dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
+          width={column.detailSetting === 'bar' ? '500px' : undefined}
           cellRender={(e) => cellRender(e, column)}
         />
       )}

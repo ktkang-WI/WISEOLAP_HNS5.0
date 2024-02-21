@@ -34,44 +34,97 @@ export const Mode = {
 
 const init = ({authorityDataCubeRef, authorityDataDimensionRef, mode}) => {
   if (mode === Mode.GROUP_DATA || mode === Mode.USER_DATA) {
-    authorityDataCubeRef.current._instance.clearSelection();
-    authorityDataDimensionRef.current._instance.clearSelection();
+    authorityDataCubeRef().clearSelection();
+    authorityDataDimensionRef().clearSelection();
   }
 };
 
-const saveAuthorityData = (ref, dsViewListRef, cubeRef, dimRef, userMode) => {
-  const selectedRowKeys = ref.current._instance.option('selectedRowKeys');
-  const dsViewId = dsViewListRef.current._instance
-      .option('selectedRowKeys')[0]?.dsViewId;
-  const cubeList = cubeRef.current._instance
-      .option('selectedRowKeys')?.map((row) => ({
-        dsViewId: dsViewId,
-        cubeId: row
-      }));
-  const cubeDimList = dimRef.current._instance
-      .option('selectedRowKeys')?.map((row) => ({
-        dsViewId: dsViewId,
-        dimUniNm: row.replace('[', '').replace(']', '')
-      }));
+const saveAuthorityData = (ref, dsViewListRef, cubeRef, dimRef, userMode,
+    data) => {
+  const getOriginList = (origin, info, list) => {
+    for (const [key, value] of Object.entries(origin)) {
+      const dsViewId = key;
+      const cubeInfoList = value;
+
+      list = list.concat(cubeInfoList.reduce((acc, v) => {
+        const result = {
+          dsViewId: Number(dsViewId),
+          [info]: info === 'dimUniNm' ? v.replace('[', '').replace(']', '') : v
+        };
+        acc.push(result);
+        return acc;
+      }, []));
+    }
+    return list;
+  };
+
+  const selectedRowKeys = ref().option('selectedRowKeys');
+  const dsViewId = dsViewListRef().option('selectedRowKeys')[0]?.dsViewId;
+  let cubeList = [];
+  let cubeDimList = [];
+
+  if (cubeRef().option('selectedRowKeys')) {
+    cubeList = cubeRef().option('selectedRowKeys').map((row) => ({
+      dsViewId: dsViewId,
+      cubeId: row
+    }));
+  }
+
+  if (dimRef().option('selectedRowKeys')) {
+    cubeDimList = dimRef().option('selectedRowKeys').map((row) => ({
+      dsViewId: dsViewId,
+      dimUniNm: row.replace('[', '').replace(']', '')
+    }));
+  }
+
+  let originData = {};
+  let originCubeId = {};
+  let originCubeDimNm = {};
+
+  const findInstanceData = (instance) => {
+    return data.find((row) => row[instance].grpId === selectedRowKeys[0].grpId);
+  };
+
+  function processAuthorityData(findData, selectedItem, additionalData) {
+    if (findData) {
+      originData = findData.dsViews;
+      originCubeId = originData.cubeId;
+      delete originCubeId[dsViewId];
+      originCubeDimNm = originData.cubeDimNm;
+      delete originCubeDimNm[dsViewId];
+    }
+
+    const originCubeIdList = getOriginList(originCubeId, 'cubeId', []);
+    const originCubeDimNmList = getOriginList(originCubeDimNm, 'dimUniNm', []);
+
+    cubeList = originCubeIdList.concat(cubeList);
+    cubeDimList = originCubeDimNmList.concat(cubeDimList);
+
+    const authorityDataParams = {
+      cubeList,
+      cubeDimList,
+      ...additionalData
+    };
+
+    if (userMode === Mode.GROUP_DATA) {
+      authorityDataParams.grpId = selectedItem[0]?.grpId;
+    } else if (userMode === Mode.USER_DATA) {
+      authorityDataParams.userNo = selectedItem[0]?.userNo;
+    }
+
+    return new AuthorityData(authorityDataParams);
+  }
 
   if (userMode === Mode.GROUP_DATA) {
-    return new AuthorityData({
-      grpId: selectedRowKeys[0]?.grpId,
-      cubeList,
-      cubeDimList
-    });
+    return processAuthorityData(findInstanceData('group'), selectedRowKeys, {});
   } else if (userMode === Mode.USER_DATA) {
-    return new AuthorityData({
-      userNo: selectedRowKeys[0]?.userNo,
-      cubeList,
-      cubeDimList
-    });
+    return processAuthorityData(findInstanceData('user'), selectedRowKeys, {});
   }
 };
 
 const saveAuthorityReport = (ref, folderTreeViewRef, mode) => {
-  const selectedRowKeys = ref.current._instance.option('selectedRowKeys');
-  const fldList = folderTreeViewRef.current._instance.option('dataSource');
+  const selectedRowKeys = ref().option('selectedRowKeys');
+  const fldList = folderTreeViewRef().option('dataSource');
 
   if (mode === Mode.GROUP_REPORT) {
     return new AuthorityReport({
@@ -89,8 +142,8 @@ const saveAuthorityReport = (ref, folderTreeViewRef, mode) => {
 };
 
 const saveAuthorityDataSet = (ref, dataSetTreeViewRef, mode) => {
-  const selectedRowKeys = ref.current._instance.option('selectedRowKeys');
-  const fldList = dataSetTreeViewRef.current._instance.option('dataSource');
+  const selectedRowKeys = ref().option('selectedRowKeys');
+  const fldList = dataSetTreeViewRef().option('dataSource');
 
   if (mode === Mode.GROUP_DATASET) {
     return new AuthorityDataSet({
@@ -108,9 +161,8 @@ const saveAuthorityDataSet = (ref, dataSetTreeViewRef, mode) => {
 };
 
 const saveAuthorityDataSource = (ref, dataSourceListRef, mode) => {
-  const selectedRowKeys = ref.current._instance.option('selectedRowKeys');
-  const dsIdList = dataSourceListRef.current._instance
-      .option('selectedRowKeys');
+  const selectedRowKeys = ref().option('selectedRowKeys');
+  const dsIdList = dataSourceListRef().option('selectedRowKeys');
 
   if (mode === Mode.GROUP_DATASOURCE) {
     return new AuthorityDataSource({
@@ -135,9 +187,9 @@ export const authData = [
     component: DataAuthority,
     data: getGroupData,
     save: ({groupListRef, dsViewListRef,
-      authorityDataCubeRef, authorityDataDimensionRef}) =>
+      authorityDataCubeRef, authorityDataDimensionRef, data}) =>
       saveAuthorityData(groupListRef, dsViewListRef, authorityDataCubeRef,
-          authorityDataDimensionRef, Mode.GROUP_DATA),
+          authorityDataDimensionRef, Mode.GROUP_DATA, data),
     init: ({authorityDataCubeRef, authorityDataDimensionRef}) => {
       const mode = Mode.GROUP_DATA;
       init({authorityDataCubeRef, authorityDataDimensionRef, mode});
@@ -179,9 +231,9 @@ export const authData = [
     component: DataAuthority,
     data: getUserData,
     save: ({userListRef, dsViewListRef, authorityDataCubeRef,
-      authorityDataDimensionRef}) =>
+      authorityDataDimensionRef, data}) =>
       saveAuthorityData(userListRef, dsViewListRef, authorityDataCubeRef,
-          authorityDataDimensionRef, Mode.USER_DATA),
+          authorityDataDimensionRef, Mode.USER_DATA, data),
     init: ({authorityDataCubeRef, authorityDataDimensionRef}) => {
       const mode = Mode.USER_DATA;
       init({authorityDataCubeRef, authorityDataDimensionRef, mode});

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
@@ -21,7 +22,7 @@ import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class UserFolderService {
-  
+
   @Autowired
   private AccountDAO accountDAO;
 
@@ -37,6 +38,7 @@ public class UserFolderService {
   };
 
 
+  @Transactional
   public boolean patchUserFolder(List<UserFolderPatchDTO> userFolderPatchDTO) {
 
     List<UserAuthReportMstrEntity> userFolderMstr = generateUserFolderPatchObject(userFolderPatchDTO);
@@ -44,7 +46,7 @@ public class UserFolderService {
     if (userFolderMstr == null) return false;
 
     boolean result = false;
-  
+
     result = accountDAO.deleteUserFolder(userFolderMstr);
     result = accountDAO.putUserFolder(userFolderMstr);
 
@@ -69,13 +71,13 @@ public class UserFolderService {
           .build();
 
           result.add(groupAuthReportMstrEntity);
-          
+
       }
 
     }
     return result;
   };
-  
+
 
   private List<UserFolderModel> generateUserFolderObject(List<UserFolderDTO> userFolderDTO) {
 
@@ -130,7 +132,7 @@ public class UserFolderService {
         .folder(pubFldMstrEntity)
         .auth(authReportMstrEntity)
         .build();
-      
+
       folderListMode.add(folderListModel);
 
       prevUserNo = userNo;

@@ -9,3 +9,10 @@ export const duplicateValidation = (value, list) => {
     }, 500);
   });
 };
+
+export const getRefInstance = (component, classNm) => {
+  const element = Array.from(document.querySelectorAll('[role="tabpanel"]'))
+      .filter((row) => row.className.includes('dx-item-selected'))[0]
+      .getElementsByClassName(classNm);
+  return component.getInstance(element[0]);
+};
