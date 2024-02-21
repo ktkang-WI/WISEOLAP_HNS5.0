@@ -1,41 +1,143 @@
 import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
 import store from 'redux/modules';
 
-export const processLinkParamData = (data, setParamInfo, setFkNmOptions) => {
+export const processLinkParamData = (
+    data,
+    setParamInfo,
+    setFkNmOptions,
+    linkFkInfo,
+    setLinkFkInfo,
+    subLinkParamInfo,
+    setSubLinkParamInfo,
+    setSubFkNmOptions,
+    subLinkDim,
+    subYn
+) => {
   let transformedData;
+  let transSubLinkDim;
+  let currentParsedData;
+  let parsedData;
+  let fkNmOpts;
+  let subFkNmOpts;
+  console.log('data', data);
+  console.log('linkFkInfo 방금 받아온거', linkFkInfo);
   if (data.informations) {
-    const parsedData = JSON.parse(data.informations);
+    // 처음 가져오는거
+    parsedData = JSON.parse(data.informations);
+    // console.log('parsedData', parsedData);
     const linkReportId = data.reports[0].reportId;
-    const CurrentItemParam = selectCurrentInformationas(store.getState());
-    transformedData = parsedData.map((item, index) => {
-      const currentItem = CurrentItemParam[index];
+    const currentItemParam = selectCurrentInformationas(store.getState());
+    transformedData = currentItemParam.map((item, index) => {
+      currentParsedData = parsedData[index];
       return {
         linkReportId: linkReportId,
-        pkNm: currentItem?.caption,
-        pkParam: currentItem?.name,
-        fkNm: item.caption,
-        fkParam: item.name
+        pkNm: item.caption,
+        pkParam: item.name,
+        fkNm:
+          currentParsedData?.caption ==
+            undefined ? 'None' : currentParsedData?.caption,
+        fkParam:
+          currentParsedData?.name ==
+            undefined ? 'None' : currentParsedData?.name
       };
     });
+    setLinkFkInfo(parsedData);
+    if (subYn) {
+      transSubLinkDim = subLinkDim.map((item, index) => {
+        currentParsedData = parsedData[index];
+        return {
+          linkReportId: linkReportId,
+          pkNm: item.caption,
+          pkParam: item.name,
+          fkNm:
+            currentParsedData?.caption ==
+              undefined ? 'None' : currentParsedData?.caption,
+          fkParam:
+            currentParsedData?.name ==
+              undefined ? 'None' : currentParsedData?.name
+        };
+      });
+      // console.log('transSubLinkDim length', transSubLinkDim.length);
+    }
   } else if (!data.informations) {
+    // 그대로 가져오는거
     transformedData = data.linkParamInfo;
+    if (subYn) {
+      if (subLinkParamInfo.length == 0) {
+        transSubLinkDim = subLinkDim.map((item, index) => {
+          currentParsedData = data.linkParamInfo[index];
+          return {
+            linkReportId: data.linkReportId,
+            pkNm: item.caption,
+            pkParam: item.name,
+            fkNm:
+              currentParsedData?.caption ==
+                undefined ? 'None' : currentParsedData?.caption,
+            fkParam:
+              currentParsedData?.name ==
+                undefined ? 'None' : currentParsedData?.name
+          };
+        });
+      } else {
+        transSubLinkDim = subLinkParamInfo;
+      }
+    }
   }
   setParamInfo(transformedData);
-
-  const uniqueFkNmOptions = transformedData.reduce((acc, item) => {
-    const exists = acc.some((option) => option.fkNm === item.fkNm);
-    if (!exists && item.fkNm !== null) {
-      acc.push({
-        fkNm: item.fkNm,
-        fkParam: item.fkParam,
-        caption: item.fkNm
-      });
+  if (subYn) {
+    setSubLinkParamInfo(transSubLinkDim);
+  }
+  if (data.informations) {
+    console.log('setFkNmOptions parsedData', parsedData);
+    fkNmOpts = parsedData.reduce((acc, item) => {
+      const exists = acc.some((option) => option.caption === item.caption);
+      if (!exists && item.caption !== null) {
+        acc.push({
+          fkNm: item.caption == undefined ? 'None' : item.caption,
+          fkParam: item.name == undefined ? 'None' : item.name,
+          caption: item.caption == undefined ? 'None' : item.caption
+        });
+      }
+      return acc;
+    }, []);
+  } else if (!data.informations) {
+    console.log('setFkNmOptions linkFkInfo', linkFkInfo);
+    let exists;
+    fkNmOpts = data.linkFkInfo.reduce((acc, item) => {
+      exists = acc.some((option) => option.caption === item.caption);
+      if (!exists && item.caption !== null) {
+        acc.push({
+          fkNm: item.caption == undefined ? 'None' : item.caption,
+          fkParam: item.name == undefined ? 'None' : item.name,
+          caption: item.caption == undefined ? 'None' : item.caption
+        });
+      }
+      return acc;
+    }, []);
+    if (data.subLinkReport[0].subLinkParamInfo.length > 0) {
+      subFkNmOpts = data.subLinkReport[0].subLinkParamInfo.reduce(
+          (acc, item) => {
+            exists = acc.some((option) => option.fkNm === item.fkNm);
+            if (!exists && item.fkNm !== null) {
+              acc.push({
+                fkNm: item.fkNm == undefined ? 'None' : item.fkNm,
+                fkParam: item.fkParam == undefined ? 'None' : item.fkParam,
+                caption: item.fkNm == undefined ? 'None' : item.fkNm
+              });
+            }
+            return acc;
+          }, []);
     }
-    return acc;
-  }, []);
-  setFkNmOptions(uniqueFkNmOptions);
+  }
+  // console.log('processLinkParamData subFkNmOpts', subFkNmOpts);
+  setFkNmOptions(fkNmOpts);
+  if (subYn) {
+    if (subLinkParamInfo.length > 0) {
+      setSubFkNmOptions(subFkNmOpts);
+    }
+    setSubFkNmOptions(fkNmOpts);
+  }
 };
-
 
 export const createLinkDataXML = (dataPairs) => {
   const xmlDoc = document.implementation.createDocument('', '', null);
