@@ -84,7 +84,7 @@ const useDrag = () => {
       let tempField = {
         name: sourceField.name,
         uniqueName: sourceField.uniqueName,
-        caption: sourceField.name,
+        caption: sourceField.caption,
         category: dest.droppableId,
         fieldType: sourceField.type, // 데이터 항목 원본 타입
         type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
