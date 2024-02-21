@@ -52,7 +52,7 @@ export class Report {
       reportId: this.reportId,
       reportNm: this.reportNm,
       reportSubTitle: this.reportSubTitle,
-      fldId: this.fldId,
+      fldId: this.fldParentId,
       fldType: this.fldType,
       reportOrdinal: this.reportOrdinal,
       reportType: this.reportType,

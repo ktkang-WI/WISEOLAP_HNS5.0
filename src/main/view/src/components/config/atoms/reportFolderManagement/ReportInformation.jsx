@@ -62,6 +62,9 @@ const ReportInformation = ({row, setRow}) => {
         <SimpleItem
           dataField="reportType"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
         >
           <Label>{localizedString.reportType}</Label>
         </SimpleItem>
@@ -81,16 +84,13 @@ const ReportInformation = ({row, setRow}) => {
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="publisher"
-          editorType="dxTextBox"
-        >
-          <Label>{localizedString.publisher}</Label>
-        </SimpleItem>
-        <SimpleItem
           dataField="regDt"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
         >
-          <Label>{localizedString.RegisterDate}</Label>
+          <Label>{localizedString.registerDate}</Label>
         </SimpleItem>
         <SimpleItem
           dataField="reportTag"
@@ -99,7 +99,7 @@ const ReportInformation = ({row, setRow}) => {
           <Label>{localizedString.annotation}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="fldOrdinal"
+          dataField="reportOrdinal"
           editorType="dxTextBox"
         >
           <Label>{localizedString.order}</Label>

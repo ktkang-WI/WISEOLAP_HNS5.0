@@ -157,21 +157,21 @@ const ReportFolderManagement = () => {
 
     switch (icon) {
       case 'plus':
-        handlePlus();
+        handlePlus(listRef);
         break;
       case 'save':
-        handleSave({instance, listRef, infoRef});
+        handleSave(instance, listRef, infoRef);
         break;
       case 'remove':
-        handleRemove({instance, listRef, infoRef});
+        handleRemove(instance, listRef, infoRef);
         break;
       default:
         break;
     }
   };
 
-  const handlePlus = () => {
-    clearRef(folderListRef);
+  const handlePlus = (listRef) => {
+    clearRef(listRef);
   };
 
   const handleSaveFolder = (folder, listRef, infoRef) => {
@@ -210,7 +210,7 @@ const ReportFolderManagement = () => {
     validateAndProcess(infoRef.validate(), saveReport);
   };
 
-  const handleSave = ({instance, listRef, infoRef}) => {
+  const handleSave = (instance, listRef, infoRef) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
       handleSaveReport(instance, listRef, infoRef);
     }
@@ -247,7 +247,7 @@ const ReportFolderManagement = () => {
         });
   };
 
-  const handleRemove = ({instance, listRef, infoRef}) => {
+  const handleRemove = (instance, listRef, infoRef) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
       handleRemoveReport(instance, listRef, infoRef);
     }
