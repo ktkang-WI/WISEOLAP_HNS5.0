@@ -19,12 +19,9 @@ export const processLinkParamData = (
   let parsedData;
   let fkNmOpts;
   let subFkNmOpts;
-  console.log('data', data);
-  console.log('linkFkInfo 방금 받아온거', linkFkInfo);
   if (data.informations) {
     // 처음 가져오는거
     parsedData = JSON.parse(data.informations);
-    // console.log('parsedData', parsedData);
     const linkReportId = data.reports[0].reportId;
     const currentItemParam = selectCurrentInformationas(store.getState());
     transformedData = currentItemParam.map((item, index) => {
@@ -57,7 +54,6 @@ export const processLinkParamData = (
               undefined ? 'None' : currentParsedData?.name
         };
       });
-      // console.log('transSubLinkDim length', transSubLinkDim.length);
     }
   } else if (!data.informations) {
     // 그대로 가져오는거
@@ -88,7 +84,6 @@ export const processLinkParamData = (
     setSubLinkParamInfo(transSubLinkDim);
   }
   if (data.informations) {
-    console.log('setFkNmOptions parsedData', parsedData);
     fkNmOpts = parsedData.reduce((acc, item) => {
       const exists = acc.some((option) => option.caption === item.caption);
       if (!exists && item.caption !== null) {
@@ -101,7 +96,6 @@ export const processLinkParamData = (
       return acc;
     }, []);
   } else if (!data.informations) {
-    console.log('setFkNmOptions linkFkInfo', linkFkInfo);
     let exists;
     fkNmOpts = data.linkFkInfo.reduce((acc, item) => {
       exists = acc.some((option) => option.caption === item.caption);
@@ -129,7 +123,6 @@ export const processLinkParamData = (
           }, []);
     }
   }
-  // console.log('processLinkParamData subFkNmOpts', subFkNmOpts);
   setFkNmOptions(fkNmOpts);
   if (subYn) {
     if (subLinkParamInfo.length > 0) {

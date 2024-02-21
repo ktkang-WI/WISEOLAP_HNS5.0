@@ -52,9 +52,7 @@ const SaveDefaultElement = () => {
 
             const linkReport = checkLinkReport(store.getState());
             const linkParam = genLinkParam(linkReport);
-            console.log('linkParam', linkParam);
             models.Report.insertLinkReport(linkParam.data).then((res) => {
-              console.log('insertLinkReport res', res);
             });
           };
         }

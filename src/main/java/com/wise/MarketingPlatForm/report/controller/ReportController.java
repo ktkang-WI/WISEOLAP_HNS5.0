@@ -423,7 +423,6 @@ public class ReportController {
         reportLinkDTO.forEach(subDto -> {
             if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
                 List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
-                System.out.println("reportLinkSubDTO : " + reportLinkSubDTO);
                 reportService.insertSubLinkReport(reportLinkSubDTO);
             }
         });

@@ -92,7 +92,6 @@ const LinkParamInfo = ({
   const focusedItemType = useSelector(selectCurrentItemType);
 
   useEffect(() => {
-    console.log('linkParamData', linkParamData);
     if (linkParamData &&
         JSON.stringify(linkParamData) !== JSON.stringify(prevLinkParamData)) {
       if (checkLinkReportList.hasOwnProperty(selectedRowData.id)) {
@@ -194,7 +193,6 @@ const LinkParamInfo = ({
     if (!checkLinkReportList.hasOwnProperty(linkReportId)) {
       dispatch(insertLink(linkReportInfo));
     } else {
-      console.log('updateLink');
       dispatch(updateLink(linkReportInfo));
     }
     onClose();

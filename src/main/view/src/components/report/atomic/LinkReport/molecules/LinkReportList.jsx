@@ -59,7 +59,6 @@ const LinkReportList = (
       });
     } else if (selectedRowData &&
       selectedRowData.id == linkParamData?.reports[0]?.reportId) {
-      console.log('Same Thing in handleOpenPopup');
       setPopupVisible(true);
     } else {
       alert('연결 보고서를 선택해주세요.');

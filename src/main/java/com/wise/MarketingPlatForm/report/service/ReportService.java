@@ -655,7 +655,6 @@ public class ReportService {
 
     @Transactional
     public void insertSubLinkReport(List<ReportLinkSubMstrDTO> reportLinkSubDTO) {
-        System.out.println(reportLinkSubDTO);
         for (ReportLinkSubMstrDTO dto : reportLinkSubDTO) {
             ReportLinkSubMstrEntity entity = ReportLinkSubMstrDTO.toEntity(dto);
             reportDAO.insertSubLinkReport(entity);
