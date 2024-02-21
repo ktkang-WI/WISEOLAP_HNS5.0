@@ -6,20 +6,73 @@ const initialState = {
 
 const reducers = {
   initLink: () => initialState,
-  insertLink(state, actions) {
-    const {linkReportId} = actions.payload;
+  insertLink(state, action) {
+    const {linkReportId, subYn, subLinkReport} = action.payload;
     if (!state.informations[linkReportId]) {
-      state.informations[linkReportId] = {};
+      state.informations[linkReportId] =
+        {
+          ...action.payload,
+          subLinkReport: subYn === 'True' ?
+            [subLinkReport].flat() : []
+        };
+    } else {
+      if (subYn === 'True') {
+        const newSubLinks =
+          Array.isArray(subLinkReport) ? subLinkReport : [subLinkReport];
+        newSubLinks.forEach((newSubLink) => {
+          const index =
+            state.informations[linkReportId].subLinkReport.findIndex(
+                (sub) => sub.subLinkItemId === newSubLink.subLinkItemId
+            );
+          if (index !== -1) {
+            state.informations[linkReportId].subLinkReport[index] = newSubLink;
+          } else {
+            state.informations[linkReportId].subLinkReport.push(newSubLink);
+          }
+        });
+      } else {
+        state.informations[linkReportId] = {
+          ...action.payload,
+          subLinkReport: state.informations[linkReportId].subLinkReport
+        };
+      }
     }
-    state.informations[linkReportId]= actions.payload;
   },
-  updateLink(state, actions) {
-    const {linkReportId} = actions.payload;
-    state.informations[linkReportId]= actions.payload;
+
+  updateLink(state, action) {
+    const {linkReportId, subYn, subLinkReport} = action.payload;
+    if (subYn === 'True' && state.informations[linkReportId]) {
+      const newSubLinks =
+        Array.isArray(subLinkReport) ? subLinkReport : [subLinkReport];
+      newSubLinks.forEach((newSubLink) => {
+        const index =
+          state.informations[linkReportId].subLinkReport.findIndex(
+              (sub) => sub.subLinkItemId === newSubLink.subLinkItemId);
+        if (index !== -1) {
+          state.informations[linkReportId].subLinkReport[index] = newSubLink;
+        } else {
+          state.informations[linkReportId].subLinkReport.push(newSubLink);
+        }
+      });
+    } else {
+      state.informations[linkReportId] =
+        {
+          ...action.payload,
+          subLinkReport: state.informations[linkReportId]?.subLinkReport || []
+        };
+    }
   },
-  deleteLink(state, actions) {
-    const {linkReportId} = actions.payload;
-    delete state.informations[linkReportId];
+
+  deleteLink(state, action) {
+    const {linkReportId, subYn, subLinkItemId} = action.payload;
+    if (subYn === 'True' && state.informations[linkReportId]) {
+      state.informations[linkReportId].subLinkReport =
+        state.informations[linkReportId].subLinkReport.filter(
+            (sub) => sub.subLinkItemId !== subLinkItemId
+        );
+    } else {
+      delete state.informations[linkReportId];
+    }
   }
 };
 
