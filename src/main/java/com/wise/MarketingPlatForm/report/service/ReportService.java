@@ -124,47 +124,51 @@ public class ReportService {
     }
 
     public Map<String, Object> getReport(String reportId, String userId) {
-    	ReportMstrEntity entity = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
-        Map<String, Object> returnMap = new HashMap<>();
-        if(!"newReport".equals(dto.getDatasetXml())) {
-        	ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        	returnMap = reportXmlParser.getReport(dto, userId);
-        } else {
-        	JSONObject items = new JSONObject(entity.getChartXml());
-        	JSONObject dataset = new JSONObject(entity.getDatasetXml());
-        	JSONObject layout = new JSONObject(entity.getLayoutXml());
-        	JSONArray informations = new JSONArray(entity.getParamXml());
-        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
-        		JSONObject spread = new JSONObject(entity.getReportXml());
-        		returnMap.put("spread", spread.toString());
-        	}
-        	returnMap.put("item", items.toString());
-        	returnMap.put("dataset", dataset.toString());
-        	returnMap.put("layout", layout.toString());
-        	returnMap.put("informations", informations.toString());
-        }
-        Map<String, Object> report = new HashMap<String, Object>();
-    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-
-    	Map<String, Object> options = new HashMap<String, Object>();
-        options.put("order", entity.getReportOrdinal());
-    	options.put("reportNm", entity.getReportNm());
-    	options.put("fldId", entity.getFldId());
-    	options.put("fldType", entity.getFldType());
-    	options.put("reportType", entity.getReportType());
-    	options.put("reportTag", entity.getReportTag());
-    	options.put("reportDesc", entity.getReportDesc());
-    	options.put("reportSubTitle", entity.getReportSubTitle());
-    	options.put("reportPath", null);
-
-    	report.put("reportId", Integer.parseInt(reportId));
-    	report.put("options", options);
-
-    	reports.add(report);
-
-    	returnMap.put("reports", reports);
-        return returnMap;
+    	Map<String, Object> returnMap = new HashMap<>();
+    	try {
+    		ReportMstrEntity entity = reportDAO.selectReport(reportId);
+    		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
+    		if(!"newReport".equals(dto.getDatasetXml())) {
+    			ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+    			returnMap = reportXmlParser.getReport(dto, userId);
+    		} else {
+    			JSONObject items = new JSONObject(entity.getChartXml());
+    			JSONObject dataset = new JSONObject(entity.getDatasetXml());
+    			JSONObject layout = new JSONObject(entity.getLayoutXml());
+    			JSONArray informations = new JSONArray(entity.getParamXml());
+    			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+    				JSONObject spread = new JSONObject(entity.getReportXml());
+    				returnMap.put("spread", spread.toString());
+    			}
+    			returnMap.put("item", items.toString());
+    			returnMap.put("dataset", dataset.toString());
+    			returnMap.put("layout", layout.toString());
+    			returnMap.put("informations", informations.toString());
+    		}
+    		Map<String, Object> report = new HashMap<String, Object>();
+    		List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+    		
+    		Map<String, Object> options = new HashMap<String, Object>();
+    		options.put("order", entity.getReportOrdinal());
+    		options.put("reportNm", entity.getReportNm());
+    		options.put("fldId", entity.getFldId());
+    		options.put("fldType", entity.getFldType());
+    		options.put("reportType", entity.getReportType());
+    		options.put("reportTag", entity.getReportTag());
+    		options.put("reportDesc", entity.getReportDesc());
+    		options.put("reportSubTitle", entity.getReportSubTitle());
+    		options.put("reportPath", null);
+    		
+    		report.put("reportId", Integer.parseInt(reportId));
+    		report.put("options", options);
+    		
+    		reports.add(report);
+    		
+    		returnMap.put("reports", reports);
+    	} catch (Exception e) {
+    		returnMap.put("error", "error");
+    	}
+    	return returnMap;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {

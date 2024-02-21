@@ -24,7 +24,8 @@ const dashboardInitialState = {
   0: {
     selectedItemId: 'item1',
     itemQuantity: 1,
-    items: [item]
+    items: [item],
+    chartCount: {chart: 1}
   }
 };
 
@@ -99,13 +100,20 @@ const reducers = {
         items: []
       };
     }
+    // 아아템 이름에 번호 생성.
+    const countMap = state[reportId].chartCount;
+    const itemType = actions.payload.item.type;
 
+    countMap[itemType] = (countMap[itemType] || 0) + 1;
+
+    state[reportId].chartCount = countMap;
     state[reportId].itemQuantity++;
+
     const itemId = 'item' + state[reportId].itemQuantity;
 
     actions.payload.item.id = itemId;
 
-    const item = makeItem(actions.payload.item);
+    const item = makeItem(actions.payload.item, countMap);
 
     state[reportId].items =
       state[reportId].items.concat(item);
@@ -141,10 +149,10 @@ const reducers = {
     state[reportId].selectedItemId = selectedItemId;
   },
   // 파라미터로 reportId
-  deleteAllItems(state, actions) {
+  deleteReportItem(state, actions) {
     const reportId = actions.payload.reportId;
 
-    state[reportId].items = [];
+    delete state[reportId];
   },
   selectItem(state, actions) {
     const reportId = actions.payload.reportId;

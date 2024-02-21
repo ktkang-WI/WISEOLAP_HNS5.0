@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -35,13 +34,13 @@ public class ExcelXmlParser extends ReportXMLParser {
 	}
 	
 	@Override
-	public void getReportXmlDTO(String reportXml) {
+	public void getReportXmlDTO(String reportXml) throws Exception {
 		
 		
 	}
 
 	@Override
-	public void getChartXmlDTO(String chartXml) {
+	public void getChartXmlDTO(String chartXml) throws Exception {
 		JSONObject returnSheet = new JSONObject();
 		JSONObject root = XML.toJSONObject(chartXml);
 		JSONPointer exdendedNamePointer = new JSONPointer("/EXCEL_XML/FILE_EXT_ELEMENT/FILE_EXT");
@@ -66,7 +65,13 @@ public class ExcelXmlParser extends ReportXMLParser {
 					if(sheet.get("SHEET_ID").equals(dataset.get("datasetNm"))) {
 						JSONObject innerObj = new JSONObject();
 						innerObj.put("visible", sheet.get("VISIBLE"));
-						Map<String, Integer> position = positionConvertor((String) sheet.get("START_POS"));
+						Map<String, Integer> position = new HashMap<String, Integer>();
+						try {
+							position = positionConvertor((String) sheet.get("START_POS"));
+						} catch (Exception e) {
+							Exception er = new Exception("positionConvertor method error");
+							er.initCause(e);
+						}
 						innerObj.put("columnIndex", position.get("columnIndex"));
 						innerObj.put("rowIndex", position.get("rowIndex"));
 						innerObj.put("useHeader", stringToBoolean((String) sheet.get("SHOW_HEADER")));
@@ -87,7 +92,7 @@ public class ExcelXmlParser extends ReportXMLParser {
 		}
 	}
 	
-	private HashMap<String, Integer> positionConvertor (String position) {
+	private HashMap<String, Integer> positionConvertor (String position) throws Exception {
 		String alphabet =  "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		HashMap<String, Integer> newPosition = new HashMap<>();
 		String regex = "([a-zA-Z]+)(\\d+)";
@@ -114,101 +119,97 @@ public class ExcelXmlParser extends ReportXMLParser {
 	}
 
 	@Override
-	public void getlayoutXmlDTO(String layoutXml) {
+	public void getlayoutXmlDTO(String layoutXml) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void getDatasetXmlDTO(String datasetXml, String userId) {
-		try {
-			JSONObject root = XML.toJSONObject(datasetXml);
-			JSONPointer pointer = new JSONPointer("/DATASET_XML/DATASET_ELEMENT/DATASET");
-			Object result = pointer.queryFrom(root);
-
-			if (result instanceof JSONObject) {
-				this.datasetJsonArray.put((JSONObject) result);
-			} else if (result instanceof JSONArray) {
-				this.datasetJsonArray = (JSONArray) result;
-			} else {
-				super.log.error("DATA_SET not found or has unexpected format.");
-			}
-
-			List<Map<String, Object>> datasets = new ArrayList<>();
-
-			for (int datasetArrayIndex = 0; datasetArrayIndex < this.datasetJsonArray.length(); datasetArrayIndex++) {
-				Map<String, Object> dataset = new HashMap<>();
-
-				JSONObject datasetJson = this.datasetJsonArray.getJSONObject(datasetArrayIndex);
-				String datasetNm = datasetJson.getString("DATASET_NM");
-				Integer datasrcId = datasetJson.getInt("DATASRC_ID");
-				String datasetType = datasetJson.getString("DATASET_TYPE");
-				String datasrcType = datasetJson.getString("DATASRC_TYPE");
-				String datasetQuery = datasetJson.getString("DATASET_QUERY");
-				String sheetNm = datasetJson.getString("SHEET_ID");
-				JSONObject datasetField = datasetJson.optJSONObject("DATASET_FIELD");
-				List<Object> fields = new ArrayList<>();
-				if (datasetField != null) {
-					JSONArray fieldsArray = datasetField.getJSONArray("LIST");
-					for (int fieldsIndex = 1; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
-						RootFieldVO field = null;
-						JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
-						String dataType = fieldObject.getString("DATA_TYPE");
-						String name = fieldObject.getString("CAPTION");
-						String uniqueName = fieldObject.optString("UNI_NM");
-						String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
-						Integer order = fieldObject.getInt("ORDER");
-						DataFieldType type = DataFieldType.fromString(fieldObject.getString("TYPE")).get();
-
-						if (datasrcType.equals(DsType.CUBE.toString())) {
-							// 추후 추가
-							field = CubeFieldVO.builder().dataType(dataType).name(name).type(type)
-									.uniqueName(uniqueName).parentId(parentId).order(order).build();
-						} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
-							field = QueryFieldVO.builder().dataType(dataType).name(name).type(type)
-									.uniqueName(uniqueName).parentId(parentId).build();
-						}
-						fields.add(field);
-					}
-				} else {
+	public void getDatasetXmlDTO(String datasetXml, String userId) throws Exception {
+		JSONObject root = XML.toJSONObject(datasetXml);
+		JSONPointer pointer = new JSONPointer("/DATASET_XML/DATASET_ELEMENT/DATASET");
+		Object result = pointer.queryFrom(root);
+	
+		if (result instanceof JSONObject) {
+			this.datasetJsonArray.put((JSONObject) result);
+		} else if (result instanceof JSONArray) {
+			this.datasetJsonArray = (JSONArray) result;
+		} else {
+			super.log.error("DATA_SET not found or has unexpected format.");
+		}
+	
+		List<Map<String, Object>> datasets = new ArrayList<>();
+	
+		for (int datasetArrayIndex = 0; datasetArrayIndex < this.datasetJsonArray.length(); datasetArrayIndex++) {
+			Map<String, Object> dataset = new HashMap<>();
+	
+			JSONObject datasetJson = this.datasetJsonArray.getJSONObject(datasetArrayIndex);
+			String datasetNm = datasetJson.getString("DATASET_NM");
+			Integer datasrcId = datasetJson.getInt("DATASRC_ID");
+			String datasetType = datasetJson.getString("DATASET_TYPE");
+			String datasrcType = datasetJson.getString("DATASRC_TYPE");
+			String datasetQuery = datasetJson.getString("DATASET_QUERY");
+			String sheetNm = datasetJson.getString("SHEET_ID");
+			JSONObject datasetField = datasetJson.optJSONObject("DATASET_FIELD");
+			List<Object> fields = new ArrayList<>();
+			if (datasetField != null) {
+				JSONArray fieldsArray = datasetField.getJSONArray("LIST");
+				for (int fieldsIndex = 1; fieldsIndex < fieldsArray.length(); fieldsIndex++) {
+					RootFieldVO field = null;
+					JSONObject fieldObject = fieldsArray.getJSONObject(fieldsIndex);
+					String dataType = fieldObject.getString("DATA_TYPE");
+					String name = fieldObject.getString("CAPTION");
+					String uniqueName = fieldObject.optString("UNI_NM");
+					String parentId = Integer.toString(fieldObject.getInt("PARENT_ID"));
+					Integer order = fieldObject.getInt("ORDER");
+					DataFieldType type = DataFieldType.fromString(fieldObject.getString("TYPE")).get();
+	
 					if (datasrcType.equals(DsType.CUBE.toString())) {
 						// 추후 추가
-						fields.add(cubeService.getCubeFields());
+						field = CubeFieldVO.builder().dataType(dataType).name(name).type(type)
+								.uniqueName(uniqueName).parentId(parentId).order(order).build();
 					} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
-						MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery);
-						fields.add(martDTO.getMetaData());
+						field = QueryFieldVO.builder().dataType(dataType).name(name).type(type)
+								.uniqueName(uniqueName).parentId(parentId).build();
 					}
+					fields.add(field);
 				}
-
-				dataset.put("dataSrcId", datasrcId);
-				dataset.put("datasetNm", datasetNm);
-				dataset.put("datasetQuery", datasetQuery);
-				dataset.put("datasetType", datasrcType);
-				dataset.put("datasetNm", datasetNm);
-				// spread보고서는 datasetId가 없음.
-//				dataset.put("datasetId", this.dsNmWithInfo.get(datasetNm).get("dataSource"));
-				dataset.put("fields", fields);
-				datasets.add(dataset);
+			} else {
+				if (datasrcType.equals(DsType.CUBE.toString())) {
+					// 추후 추가
+					fields.add(cubeService.getCubeFields());
+				} else if (datasrcType.equals(DsType.DS_SQL.toString())) {
+					MartResultDTO martDTO = datasetService.getQueryData(datasrcId, datasetQuery);
+					fields.add(martDTO.getMetaData());
+				}
 			}
-			
+	
+			dataset.put("dataSrcId", datasrcId);
+			dataset.put("datasetNm", datasetNm);
+			dataset.put("datasetQuery", datasetQuery);
+			dataset.put("datasetType", datasrcType);
+			dataset.put("datasetNm", datasetNm);
 			// spread보고서는 datasetId가 없음.
-			this.dataset.put("selectedDatasetId", datasets.get(0).get("datasetId"));
-			this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
-			this.dataset.put("datasets", datasets);
-		} catch (Exception e) {
-			e.printStackTrace();
+	//		dataset.put("datasetId", this.dsNmWithInfo.get(datasetNm).get("dataSource"));
+			dataset.put("fields", fields);
+			datasets.add(dataset);
 		}
+		
+		// spread보고서는 datasetId가 없음.
+		this.dataset.put("selectedDatasetId", datasets.get(0).get("datasetId"));
+		this.dataset.put("datasetQuantity", this.datasetJsonArray.length());
+		this.dataset.put("datasets", datasets);
 	}
 
 	@Override
-	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
+	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) throws Exception {
 		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
 		this.returnReport.put("dataset", this.dataset);
 		return returnReport;
 	}
 
 	@Override
-	public void getParamXmlDTO(String paramXml) {
+	public void getParamXmlDTO(String paramXml) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

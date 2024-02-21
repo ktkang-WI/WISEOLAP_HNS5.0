@@ -30,8 +30,12 @@
 	    <result column="DS_VIEW_DESC" property="dsViewDesc" javaType="String"/>
 	    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	    <result column="DB_NM" property="dbNm" javaType="String"/>
-	    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	    <result column="IP" property="ip" javaType="String"/>
+		<result column="DS_NM" property="dsNm" javaType="String"/>
+		<result column="USER_AREA_YN" property="userAreaYn" javaType="String"/>
+		<result column="PORT" property="port" javaType="String"/>
+		<result column="OWNER_NM" property="ownerNm" javaType="String"/>
+		<result column="USER_ID" property="userId" javaType="String"/>
 	</resultMap>
 
 	<resultMap id="DatasetDsDTO" type="com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO">
@@ -58,6 +62,11 @@
 		<result column="DB_NM" property="dbNm" javaType="String"/>
 	  <result column="CUBE_NM" property="cubeNm" javaType="String"/>
 	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
+	</resultMap>
+
+	<resultMap id="DsViewTable" type="com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity">
+		<result column="TBL_NM" property="tableNm" javaType="String"/>
+	    <result column="TBL_CAPTION" property="tableCaption" javaType="String"/>
 	</resultMap>
 <!-- Mapper End -->
 
@@ -271,6 +280,15 @@
 		SELECT * FROM DS_MSTR
 		WHERE DS_ID = #{dsId}
 	</select>
+
+	<select id="selectDsViewTables" parameterType="String" resultMap="DsViewTable">
+		SELECT	TBL_NM AS TBL_NM ,
+		TBL_CAPTION AS TBL_CAPTION 
+		FROM	DS_VIEW_TBL_MSTR
+		WHERE	DS_VIEW_ID = #{dsView_id}
+	</select>
+
+	
 	
 <!-- Query End -->
 </mapper>
