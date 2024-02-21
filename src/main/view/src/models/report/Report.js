@@ -60,6 +60,14 @@ export const updateReport = async (param) => {
   return await axios.patch(path + '/report-save', param);
 };
 
+export const insertLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-save', param);
+};
+
+export const updateLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-update', param);
+};
+
 /**
  * 연결 보고서 목록 가져오기
  * @param {JSON} param
