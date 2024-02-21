@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -69,6 +71,8 @@ import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
+import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
+import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
@@ -76,7 +80,8 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
-import com.wise.MarketingPlatForm.report.vo.LinkReportVO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 import javaxt.json.JSONObject;
@@ -585,7 +590,7 @@ public class ReportService {
         return returnMap;
     }
 
-    public List<LinkReportVO> getLinkReportList(String reportId) {
+    public List<ReportLinkMstrDTO> getLinkReportList(String reportId) {
         return reportDAO.selectLinkReportList(reportId);
     }
 
@@ -639,4 +644,22 @@ public class ReportService {
 
         return martResultDTO;
     }
+
+    @Transactional
+    public void insertLinkReport(List<ReportLinkMstrDTO> reportLinkDTO) {
+        for (ReportLinkMstrDTO dto : reportLinkDTO) {
+            ReportLinkMstrEntity entity = ReportLinkMstrDTO.toEntity(dto);
+            reportDAO.insertLinkReport(entity);
+        }
+    }
+
+    @Transactional
+    public void insertSubLinkReport(List<ReportLinkSubMstrDTO> reportLinkSubDTO) {
+        System.out.println(reportLinkSubDTO);
+        for (ReportLinkSubMstrDTO dto : reportLinkSubDTO) {
+            ReportLinkSubMstrEntity entity = ReportLinkSubMstrDTO.toEntity(dto);
+            reportDAO.insertSubLinkReport(entity);
+        }
+    }
+
 }
