@@ -171,7 +171,7 @@
                 ORDINAL
     </select>
     
-    <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.LinkReportVO">
+    <!-- <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.LinkReportVO">
 		SELECT	A.REPORT_ID AS reportID,
 				A.LINK_REPORT_ID AS linkReportId,
 				B.REPORT_NM AS linkReportNm,
@@ -181,7 +181,7 @@
 		FROM REPORT_LINK_MSTR A
 		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
 		WHERE A.REPORT_ID = #{id}
-    </select>
+    </select> -->
 
     <select id='selectLinkReportParam' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
     SELECT A.PARAM_XML as paramXml FROM REPORT_MSTR A
@@ -216,6 +216,54 @@
 		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
 		WHERE USER_MSTR.USER_ID = #{userId}
     </select>
+
+  <insert id = "insertLinkReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
+    INSERT INTO REPORT_LINK_MSTR
+      (
+        REPORT_ID,
+        LINK_REPORT_ID,
+        LINK_XML,
+        LINK_REPORT_ORDINAL,
+        LINK_REPORT_TYPE,
+        DATA_LINK_TYPE
+      )
+    VALUES
+      (
+        #{reportId},
+        #{linkReportId},
+        #{linkXml},
+        #{linkReportOrdinal},
+        #{linkReportType},
+        #{dataLinkType}
+      )
+  </insert>
+
+  <insert id = "insertSubLinkReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity">
+    INSERT INTO REPORT_LINK_SUB_MSTR
+      (
+        SEQ,
+        REPORT_ID,
+        LINK_REPORT_ID,
+        LINK_SUB_ITEM,
+        LINK_DATA_TYPE,
+        LINK_XML_PARAM,
+        LINK_XML_DATA,
+        LINK_REPORT_ORDINAL,
+        LINK_REPORT_TYPE
+      )
+    VALUES
+      (
+        REPORT_LINK_SUB_MSTR_SEQ.NEXTVAL,
+        #{reportId},
+        #{linkReportId},
+        #{linkSubItem},
+        #{linkDataType},
+        #{linkXmlParam},
+        #{linkXmlData},
+        #{linkReportOrdinal},
+        #{linkReportType}
+      )
+  </insert>
 
 	<insert id = "insertReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
 		<selectKey keyProperty="reportId" resultType="int" order="AFTER">
