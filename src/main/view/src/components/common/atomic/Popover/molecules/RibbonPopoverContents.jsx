@@ -8,11 +8,14 @@ import InnerContentWrapper from '../atom/InnerContentWrapper';
 import PopoverTitlePanel from '../atom/PopoverTitlePanel';
 import IconWrap from '../atom/IconWrapper';
 import elementFactory from './ElementFactory';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const StyledDiv = styled.div`
   height: auto;
   list-style: none;
-  margin: 10px;
+  color: ${theme.color.gray500};
 `;
 
 const TitleWrap = styled.div`

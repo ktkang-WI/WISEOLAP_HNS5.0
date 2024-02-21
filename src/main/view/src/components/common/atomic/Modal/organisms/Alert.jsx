@@ -7,6 +7,10 @@ import Overlay from '../../Common/Wrap/Overlay';
 import {styled} from 'styled-components';
 import warningImg from 'assets/image/component/warning.png';
 import alertImg from 'assets/image/component/alert.png';
+import {getTheme} from 'config/theme';
+import localizedString from 'config/localization';
+
+const theme = getTheme();
 
 const AlertInnenr = styled.div`
   box-sizing: border-box;
@@ -17,8 +21,14 @@ const AlertInnenr = styled.div`
 
   img {
     display: block;
-    margin: 20px auto 40px auto;
+    margin: 20px auto 15px auto;
   }
+`;
+
+const AlertTitle = styled.div`
+  font: ${theme.font.alertTitle};
+  color: ${(props) => props.color};
+  margin-bottom: 40px;
 `;
 
 const Alert = ({
@@ -55,6 +65,11 @@ const Alert = ({
               <Content width={width} height={height}>
                 <AlertInnenr>
                   <img src={type == 'warning' ? warningImg : alertImg}/>
+                  <AlertTitle
+                    color={type == 'warning' ?
+                    theme.color.red : theme.color.green}>
+                    {localizedString[type]}
+                  </AlertTitle>
                   {message}
                 </AlertInnenr>
                 <Footer

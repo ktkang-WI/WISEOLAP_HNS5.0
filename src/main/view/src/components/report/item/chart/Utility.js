@@ -1,7 +1,7 @@
 import {setMeta} from '../util/metaUtilityFactory';
 import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
-import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import chartSeriesButtonIcon from 'assets/image/icon/item/bar.png';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
 

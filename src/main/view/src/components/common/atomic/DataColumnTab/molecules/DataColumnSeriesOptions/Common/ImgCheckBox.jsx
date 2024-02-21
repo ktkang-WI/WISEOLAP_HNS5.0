@@ -1,20 +1,60 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {getTheme} from 'config/theme';
+import {useState} from 'react';
 import styled from 'styled-components';
+import expandIcon from 'assets/image/icon/button/arrow.png';
+
+const theme = getTheme();
+
+const StyledWrapper = styled(Wrapper)`
+  border-radius: 10px;
+  color: ${theme.color.gray600};
+  border: 1px solid ${theme.color.gray100};
+  margin-top: 20px;
+  box-sizing: border-box;
+
+  & + & {
+    margin-top: 10px;
+  }
+`;
 
 const StyledUl = styled.ul`
   width: 100%;
   height: 100%;
+  margin: 0px;
+  padding: 0px 15px;
+  padding-bottom: 10px;
   list-style-type: none;
 `;
 
 const StyledLi = styled.li`
   display: inline-block;
+  position: relative;
+
+  &:hover .tooltip{
+    display: block;
+  }
 `;
 
-const StyledTitle = styled.h4`
-  background-color: #f1f1f1;
-  padding: 3px 5px;
-  font-weight: 400;
+const StyledTitle = styled.div`
+  height: 38px;
+  font: ${theme.font.expandPanelTitle};
+  line-height: 38px;
+  padding: 0px 20px;
+  cursor: pointer;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    right: 20px;
+    transform: rotate(${(props) => props.expanded ? '270deg' : '90deg'});
+    top: 11px;
+    background: url(${expandIcon}) no-repeat;
+    background-position: center;
+  }
 `;
 
 const Img = styled.img`
@@ -23,20 +63,48 @@ const Img = styled.img`
 `;
 
 const SubTitle = styled.div`
+  display: none;
   font-size: 0.75rem;
   font-weight: 400;
-  display: flex;
-  justify-content: center;
-  align-content: center;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  width: auto;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0 auto;
+  transform: translateX(-50%);
+  background: ${theme.color.white};
+  border-radius: 2px;
+  border: 1px solid ${theme.color.primary};
+  padding: 3px 7px;
+  color: ${theme.color.primary};
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, .15);
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    transform: rotate(45deg);
+    background: #ffffff;
+    left: calc(50% - 2px);
+    top: -3px;
+    border-left: 1px solid ${theme.color.primary};
+    border-top: 1px solid ${theme.color.primary};
+  }
 `;
 
 const Label = styled.label`
   border: 1px solid #fff;
   padding: 5px;
+  width: 48px;
+  height: 48px;
   display: block;
   position: relative;
   margin: 5px;
   cursor: pointer;
+
   &:before {
     background-color: white;
     color: white;
@@ -54,9 +122,10 @@ const Label = styled.label`
     transition-duration: 0.4s;
     transform: scale(0);
   }
+
   img {
-    height: 35px;
-    width: 35px;
+    height: 100%;
+    width: 100%;
     transition-duration: 0.2s;
     transform-origin: 50% 50%;
   }
@@ -64,16 +133,17 @@ const Label = styled.label`
 
 const StyledInput = styled.input`
   display: none;
-  &:checked + Label{
-    border-color: #ddd;
+
+  & + label {
+    border-radius: 6px;
+    border-color: ${theme.color.gray100};
   }
-  &:checked + Label:before{
-    content: "✓";
-    background-color: grey;
-    transform: scale(1);
-    z-index: 2;
+
+  &:checked + label{
+    border-color: ${theme.color.primary};
   }
-  &:checked + Label img {
+
+  &:checked + label img {
     transform: scale(0.9);
     z-index: -1;
   }
@@ -87,9 +157,9 @@ const CheckBox = ({onValueChanged, id, src, title, checked}) => (
     <Label htmlFor={id}>
       <Wrapper>
         <Img src={src} title={title}/>
-        <SubTitle>{title}</SubTitle>
       </Wrapper>
     </Label>
+    <SubTitle className='tooltip'>{title}</SubTitle>
   </StyledLi>
 );
 
@@ -110,12 +180,21 @@ const CheckBoxs = ({onValueChanged, checkboxs, ...props}) => {
 };
 
 export const ImgCheckBox = ({onValueChanged, ...props}) => {
+  const [expanded, setExpanded] = useState(true);
+
   return (
-    <Wrapper>
-      <StyledTitle>{props.title}</StyledTitle>
-      <CheckBoxs
-        onValueChanged={onValueChanged}
-        title={props.title} checkboxs={props.checkboxs}/>
-    </Wrapper>
+    <StyledWrapper>
+      <StyledTitle
+        expanded={expanded}
+        onClick={() => setExpanded(!expanded)}>
+        {props.title}
+      </StyledTitle>
+      {
+        expanded &&
+        <CheckBoxs
+          onValueChanged={onValueChanged}
+          title={props.title} checkboxs={props.checkboxs}/>
+      }
+    </StyledWrapper>
   );
 };

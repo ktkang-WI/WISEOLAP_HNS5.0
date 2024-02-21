@@ -61,6 +61,8 @@ const ViewerContent = ({children}) => {
     }
   ];
 
+  const enabled = report.options.reportType == 'AdHoc' && dataColumnOpened;
+
   return (
     <Content
       style={{
@@ -85,8 +87,9 @@ const ViewerContent = ({children}) => {
             <CustomDrawer
               useExpandButton={false}
               index={1}
+              style={enabled ? {paddingLeft: '10px'} : {}}
               margin={'0px'}
-              opend={dataColumnOpened}
+              opened={dataColumnOpened}
               component={ViewerDataAttributePanels}
               visible={report.options.reportType == 'AdHoc'}
             >

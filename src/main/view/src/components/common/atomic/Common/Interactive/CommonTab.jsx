@@ -49,8 +49,8 @@ const StyledTabPanel = styled(TabPanel)`
   }
 
   .dx-tabpanel-tabs .dx-tab {
-    width: 500px;
-    padding: 0px;
+    width: ${(props) => props.tabWidth || 'auto'};
+    padding: 0px 20px;
     box-shadow: none !important;
   }
 

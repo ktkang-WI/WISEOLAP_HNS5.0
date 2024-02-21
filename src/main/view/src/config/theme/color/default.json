@@ -32,5 +32,7 @@
     "gray400": "#858B93",
     "gray500": "#50555C",
     "gray600": "#2E3033",
-    "white": "#ffffff"
+    "white": "#ffffff",
+    "red": "#DF0015",
+    "green": "#139F4B"
 }

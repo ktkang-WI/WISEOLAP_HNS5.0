@@ -4,7 +4,6 @@ import {SelectBox} from 'devextreme-react';
 import localizedString from '../../../../config/localization';
 import PanelTitle from '../Common/Panel/PanelTitle';
 import DataSourceFoldableList from './molecules/DataSourceFoldableList';
-import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentDataset, selectCurrentDatasets}
   from 'redux/selector/DatasetSelector';
@@ -55,13 +54,6 @@ const ContentWrapper = styled.div`
   & .dx-dropdowneditor-button, & .dx-button-content, & .dx-dropdowneditor-icon {
     background: none !important;
     box-shadow: none !important;
-  }
-
-  .dx-dropdowneditor-icon::before {
-    content: '';
-    background: url(${moreIcon}) no-repeat;
-    width: 16px;
-    height: 16px;
   }
 `;
 

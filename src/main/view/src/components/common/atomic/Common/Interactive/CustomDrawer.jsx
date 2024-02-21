@@ -14,7 +14,7 @@ const ExpandButton = styled.div`
   position: relative;
   bottom: calc(50% - 15px);
   ${(props) => props.expanded ?
-  css`left: calc(${theme.size.panelWidth} - 20px);` :
+  css`left: calc(${theme.size.panelWidth} - 15px);` :
   'left: 5px;'}
   z-index: 10;
   border-radius: 15px;
@@ -72,7 +72,6 @@ const CustomDrawer = ({
       }
       <Drawer
         ref={ref}
-        width={'calc(100% - 0px)'}
         opened={expanded && opened && visible}
         position='left'
         openedStateMode='shrink'

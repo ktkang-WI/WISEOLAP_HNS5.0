@@ -45,6 +45,7 @@ const getTabContent = ({data}) => {
 const AttributeTabs = () => {
   return (
     <StyledTab
+      tabWidth={'500px'}
       swipeEnabled={false}
       dataSource={AttributeTabsSource}
       itemComponent={getTabContent}

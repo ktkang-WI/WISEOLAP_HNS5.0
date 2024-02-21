@@ -79,7 +79,7 @@ const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
   `;
 
   return (
-    <Wrapper style={{padding: '0px 5px'}} className='section'>
+    <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
       {buttons &&
         <ButtonWrapper>
           {

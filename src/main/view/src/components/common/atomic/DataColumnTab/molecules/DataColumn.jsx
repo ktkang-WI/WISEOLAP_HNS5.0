@@ -89,28 +89,16 @@ const DataColumn = ({
 
   const contextItemRender = (e) => {
     const checkIcon = '\u2713';
-    const childrenIcon = '\u25B6';
-    const iconStyle = {
-      position: 'absolute',
-      display: 'inline-block',
-      right: '5px'
-    };
-
-    const expandIconStyle = {
-      ...iconStyle,
-      fontSize: '10px',
-      top: 'calc(50% - 10px)'
-    };
 
     const summaryType = data && data.type == 'MEA' ? data.summaryType : '';
     const sortBy = data && data.type == 'DIM' ? data.sortBy : '';
 
     return (
       <>
-        <span className='dx-menu-item-text'>{e.text}</span>
-        {(summaryType || sortBy) == e.value &&
-          <div style={iconStyle}>{checkIcon}</div>}
-        {e.items && <div style={expandIconStyle}>{childrenIcon}</div>}
+        <span className='dx-menu-item-text'>
+          {(summaryType || sortBy) == e.value && checkIcon + ' '}
+          {e.text}
+        </span>
       </>
     );
   };
