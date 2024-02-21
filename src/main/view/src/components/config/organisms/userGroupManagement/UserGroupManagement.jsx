@@ -10,6 +10,7 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal.js';
 import UserPasswordModal from
   'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
+import {getHint} from 'components/config/utility/utility.js';
 
 // import useModal from 'hooks/useModal.js';
 
@@ -287,7 +288,11 @@ const UserGroupManagement = () => {
       return (
         btns.map((item, index) => (
           <NavBarItem key={index}>
-            <Button icon={item} onClick={handleBtnClick}></Button>
+            <Button
+              icon={item}
+              onClick={handleBtnClick}
+              hint={getHint(item)}
+            />
           </NavBarItem>
         ))
       );
@@ -296,7 +301,11 @@ const UserGroupManagement = () => {
         btns.filter((item) => item !== 'key')
             .map((item, index) => (
               <NavBarItem icon={item} key={index}>
-                <Button icon={item} onClick={handleBtnClick}></Button>
+                <Button
+                  icon={item}
+                  onClick={handleBtnClick}
+                  hint={getHint(item)}
+                />
               </NavBarItem>
             ))
       );

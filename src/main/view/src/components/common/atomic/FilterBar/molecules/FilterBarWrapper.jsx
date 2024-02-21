@@ -86,6 +86,8 @@ const FilterBarWrapper = (props) => {
         >
           {
             parameters.informations.reduce((acc, filter) => {
+              if (!filter.visible) return;
+
               const filterProps = {
                 key: filter.name,
                 info: filter,

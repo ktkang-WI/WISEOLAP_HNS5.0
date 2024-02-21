@@ -6,7 +6,7 @@ import React,
 {createContext, useCallback, useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import localizedString from 'config/localization';
-import {getRefInstance} from 'components/config/utility/utility';
+import {getHint, getRefInstance} from 'components/config/utility/utility';
 import DataGrid from 'devextreme/ui/data_grid';
 import TreeList from 'devextreme/ui/tree_list';
 
@@ -177,7 +177,11 @@ const Authority = () => {
     return (
       btns.map((item, index) => (
         <NavBarItem key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
+          <Button
+            icon={item}
+            onClick={handleBtnClick}
+            hint={getHint(item)}
+          />
         </NavBarItem>
       ))
     );
