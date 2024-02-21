@@ -18,7 +18,7 @@ const StyledTabPanel = styled(TabPanel)`
   }
 
   .dx-tab.dx-tab-selected > div {
-    top: -3.5px;
+    top: -3px;
   }
 
   .dx-tab {
