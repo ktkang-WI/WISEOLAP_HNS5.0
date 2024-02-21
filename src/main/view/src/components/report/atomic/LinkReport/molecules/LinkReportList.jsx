@@ -45,6 +45,8 @@ const LinkReportList = (
   const [selectedRowData, setSelectedRowData] = useState();
   const [linkParamData, setLinkParamData] = useState();
   const [paramInfo, setParamInfo] = useState([]);
+  const [linkFkInfo, setLinkFkInfo] = useState([]);
+  const [subLinkFkInfo, setSubLinkFkInfo] = useState([]);
   const [subLinkParamInfo, setSubLinkParamInfo] = useState([]);
 
   const handleOpenPopup = async () => {
@@ -57,7 +59,7 @@ const LinkReportList = (
       });
     } else if (selectedRowData &&
       selectedRowData.id == linkParamData?.reports[0]?.reportId) {
-      console.log('linkParamData', linkParamData);
+      console.log('Same Thing in handleOpenPopup');
       setPopupVisible(true);
     } else {
       alert('연결 보고서를 선택해주세요.');
@@ -123,6 +125,10 @@ const LinkReportList = (
           subLinkDim={subLinkDim}
           subLinkParamInfo={subLinkParamInfo}
           setSubLinkParamInfo={setSubLinkParamInfo}
+          linkFkInfo={linkFkInfo}
+          setLinkFkInfo={setLinkFkInfo}
+          subLinkFkInfo={subLinkFkInfo}
+          setSubLinkFkInfo={setSubLinkFkInfo}
         />
       </Popup>
     </Wrapper>
