@@ -116,7 +116,7 @@ const DataGrid = ({setItemExports, id, item}) => {
   const onCellPrepared = (e) => {
     if (config.cellMerging) {
       handleMerge(e);
-      handlePagingIndex();
+      if (config.paging.pagination.isOk) handlePagingIndex();
     }
   };
 
