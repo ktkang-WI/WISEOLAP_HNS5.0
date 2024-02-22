@@ -70,6 +70,7 @@ const SubTitle = styled.div`
   top: 60px;
   left: 50%;
   width: auto;
+  z-index: 3;
   white-space: nowrap;
   text-align: center;
   margin: 0 auto;
@@ -101,6 +102,7 @@ const Label = styled.label`
   width: 48px;
   height: 48px;
   display: block;
+  box-sizing: border-box;
   position: relative;
   margin: 5px;
   cursor: pointer;
@@ -193,7 +195,8 @@ export const ImgCheckBox = ({onValueChanged, ...props}) => {
         expanded &&
         <CheckBoxs
           onValueChanged={onValueChanged}
-          title={props.title} checkboxs={props.checkboxs}/>
+          title={props.title}
+          checkboxs={props.checkboxs}/>
       }
     </StyledWrapper>
   );

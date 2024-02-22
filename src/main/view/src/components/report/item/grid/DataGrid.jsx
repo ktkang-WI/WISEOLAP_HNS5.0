@@ -75,6 +75,7 @@ const DataGrid = ({setItemExports, id, item}) => {
       width='100%'
       height='100%'
       id={id}
+      showBorders={true}
       dataSource={mart.data.data}
       sorting={false}
     >

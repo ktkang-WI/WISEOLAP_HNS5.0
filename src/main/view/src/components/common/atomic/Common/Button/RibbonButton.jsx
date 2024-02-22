@@ -2,7 +2,7 @@ import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
 import {getTheme} from 'config/theme';
 import RibbonButtonLabel from '../Label/RibbonButtonLabel';
-import arrowDown from 'assets/image/icon/button/arrow_down.png';
+import arrowDown from 'assets/image/icon/button/expand_ribbon.png';
 
 const theme = getTheme();
 
@@ -34,13 +34,6 @@ const Button = styled.div`
     outline: 1px solid ${theme.color.dataColumnBorder};
     background: ${theme.color.ribbonHover};
     box-sizing: border-box;
-
-
-    div {
-      border-left: 1px solid ${theme.color.ribbonHoverBorder};
-      background: ${theme.color.ribbonHover};
-      border-radius: 10%;
-    }
   }
 `;
 
@@ -49,30 +42,18 @@ const Image = styled.img`
   width: auto;
 `;
 
-const ArrowButton = styled.div`
-  width: 15px;
-  height: 100%;
-  top: 0px;
-  color: ${theme.color.primaryFont};
-  text-align: center;
+const ImageGroup = styled.div`
   display: flex;
-  align-items: center;
-  flex-direction: column;
   justify-content: center;
-  cursor: pointer;
-  position: absolute;
-  right: 0;
-  box-sizing: border-box;
-
-  &:active > img{
-    transform: scale(0.9, 0.9);
-    transition: transform .2s;
-  }
+  align-items: center;
+  position: relative;
 `;
 
 const ArrowImage = styled.img`
-  height: auto; /* Adjust the height as needed */
-  width: 12px;
+  height: 6px; /* Adjust the height as needed */
+  width: 6px;
+  position: absolute;
+  right: 0px;
 `;
 
 /**
@@ -109,38 +90,24 @@ const RibbonButton = ({
     setSrc(imgSrc);
   };
 
-  const renderButtonContent = () => {
-    return (
-      <Button
-        width={width}
-        height={height}
-        hoveranimation={hoveredImgSrc? '' : 'true'}
-        onClick={onClick}
-        onMouseOver={hoveredImgSrc? onMouseOver : null}
-        onMouseOut={hoveredImgSrc? onMouseOut : null}
-        {...props}
-        rightButton={useArrowButton}
-      >
-        <Image src={src} height={height} />
-        <RibbonButtonLabel>{label}</RibbonButtonLabel>
-        {useArrowButton && (
-          <ArrowButton
-            width={width}
-            height={height}
-            hoveranimation={hoveredImgSrc ? '' : 'true'}
-            onMouseOver={hoveredImgSrc ? onMouseOver : null}
-            onMouseOut={hoveredImgSrc ? onMouseOut : null}
-            {...props}
-          >
-            <ArrowImage src={arrowDown} height={height} />
-          </ArrowButton>
-        )}
-      </Button>
-    );
-  };
-
   return (
-    renderButtonContent()
+    <Button
+      width={width}
+      height={height}
+      hoveranimation={hoveredImgSrc? '' : 'true'}
+      onClick={onClick}
+      onMouseOver={hoveredImgSrc? onMouseOver : null}
+      onMouseOut={hoveredImgSrc? onMouseOut : null}
+      {...props}
+    >
+      <ImageGroup>
+        <Image src={src} height={height}
+          style={{margin: useArrowButton ? '0px 8px' : ''}}/>
+        {useArrowButton &&
+          <ArrowImage src={arrowDown} height={height} />}
+      </ImageGroup>
+      <RibbonButtonLabel>{label}</RibbonButtonLabel>
+    </Button>
   );
 };
 
