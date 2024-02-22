@@ -102,14 +102,17 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         }
       }
     }
+
     if (area == 'data' && cell.dataType && cell.value) {
       const newFormat = dataField.measure.map((item) => item.format);
       const formData = newFormat[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.textContent = formattedValue;
+      cellElement.innerHTML =
+        cellElement.innerHTML.replace(cell.value, formattedValue);
     }
   };
+
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
   const columnTotalPos = meta.positionOption.column.position == 'left';
