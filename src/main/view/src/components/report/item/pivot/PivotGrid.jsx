@@ -152,6 +152,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       id={id}
       width={'100%'}
       height={'100%'}
+      showBorders={true}
       dataSource={mart.dataSourceConfig}
       showColumnTotals={meta.positionOption.column.totalVisible}
       showRowTotals={meta.positionOption.row.totalVisible}

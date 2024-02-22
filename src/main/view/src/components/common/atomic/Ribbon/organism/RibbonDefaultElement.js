@@ -10,6 +10,7 @@ import addContainer from 'assets/image/icon/button/insert_container.png';
 import addChart from 'assets/image/icon/button/add_chart.png';
 import addPivotGrid from 'assets/image/icon/button/pivot_grid.png';
 import addGrid from 'assets/image/icon/button/basic_grid.png';
+import querySearchIcon from 'assets/image/icon/report/query_search.png';
 import adHocLayoutSetting
   from 'assets/image/icon/button/adHocLayoutSetting.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
@@ -302,8 +303,8 @@ const RibbonDefaultElement = () => {
       'id': 'query_search',
       'label': localizedString.querySearch,
       'type': 'CommonButton',
-      'imgSrc': querySearch,
-      'width': 'auto',
+      'icon': querySearchIcon,
+      'width': '83px',
       'height': '30px',
       'useArrowButton': false,
       'onClick': () => {

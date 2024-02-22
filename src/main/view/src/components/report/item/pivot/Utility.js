@@ -4,7 +4,9 @@ import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
-import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import chartSeriesButtonIcon from 'assets/image/icon/item/bar.png';
+import columnIcon from 'assets/image/icon/dataSource/column.png';
+import rowIcon from 'assets/image/icon/dataSource/row.png';
 import {DesignerMode} from 'components/config/configType';
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
@@ -133,12 +135,14 @@ const getDataFieldOptionChild = () => {
 
   const dataFieldColumn = {
     ...defaultDimension,
+    icon: columnIcon,
     label: localizedString.column,
     placeholder: localizedString.columnPlaceholder
   };
 
   const dataFieldRow = {
     ...defaultDimension,
+    icon: rowIcon,
     label: localizedString.row,
     placeholder: localizedString.rowPlaceholder
   };

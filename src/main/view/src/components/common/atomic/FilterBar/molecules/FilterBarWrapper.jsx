@@ -18,14 +18,11 @@ const theme = getTheme();
 const StyledFilterBarWrapper = styled.div`
     height: 100%;
     min-height: ${theme.size.filterBarHeight};
-    width: calc(100% - 20px);
-    background: ${(props) => props.isExpand ?
-      theme.color.filterBarExpand : theme.color.filterBar};
+    width: 100%;
     display: block;
     overflow: hidden;
     box-sizing: border-box;
     text-align: left;
-    border-bottom: 1px solid ${theme.color.breakLine};
   `;
 
 const FilterBarWrapper = (props) => {

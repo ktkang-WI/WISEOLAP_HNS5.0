@@ -5,7 +5,6 @@ const ReportContent = styled.div`
   width: 100%;
   display: flex;
   flex: 1;
-  padding: 10px;
   min-height: 0px;
 `;
 

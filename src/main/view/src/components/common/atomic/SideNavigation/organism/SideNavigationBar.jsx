@@ -18,14 +18,13 @@ const Wrapper = styled.div`
     padding-top: 10px;
   `:
   css`
-    padding-top: 50px;
+    // padding-top: 50px;
   `}
 `;
 
 const ItemWrapper = styled.div`
   width: 100%;
-  height: ${(props) => props.height ?
-  'calc(' + props.height + ' + 5px)' : '90px'};
+  height: auto;
 `;
 
 const getSNBItem = (item) => {
@@ -56,6 +55,7 @@ const getSNBItem = (item) => {
           hoveredImgSrc={item.hoveredImgSrc}
           onClick={item.onClick}
           path={item.path}
+          active={item.active}
         />
       </ItemWrapper>
     );
@@ -73,9 +73,7 @@ const itemIterator = (snbDefaultItems, items) => {
 const StyledSNB = styled.div`
   width: ${theme.size.snbWidth};
   height: calc(100vh - ${theme.size.headerHeight});
-  border-right: solid 1px ${theme.color.breakLine};
   box-sizing: border-box;
-  background: ${theme.color.panelColor};
   overflow: hidden;
   position: absolute;
   left: 0px;

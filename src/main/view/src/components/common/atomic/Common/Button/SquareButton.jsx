@@ -7,22 +7,23 @@ const theme = getTheme();
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   justify-content: center;
+  border-radius: 4px;
   align-items: center;
-  margin: 0px 5px;
-  border: 1px solid ${theme.color.breakLine};
+  border: 1px solid ${theme.color.gray200};
   flex-direction: column;
   word-break: keep-all;
   cursor: pointer;
+  padding: 10px 5px;
 
   &:hover {
-    background: ${theme.color.secondaryGradient}
+    background: #F6FAFF;
   }
 
   & + & {
-    margin-left: 0px;
+    margin-left: 7px;
   }
 
   div {
@@ -34,8 +35,9 @@ const Wrapper = styled.div`
   }
 
   ${(props) => props.active && `
-    box-shadow: inset 0 0 0px 0.5px ${theme.color.primary};
-    border: 1px solid ${theme.color.primary};
+    border: 1px solid #BCD1F0;
+    background: #F6FAFF;
+    color: #3679DA;
   `}
 `;
 

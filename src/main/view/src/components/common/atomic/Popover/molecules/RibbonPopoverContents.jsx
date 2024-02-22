@@ -8,11 +8,16 @@ import InnerContentWrapper from '../atom/InnerContentWrapper';
 import PopoverTitlePanel from '../atom/PopoverTitlePanel';
 import IconWrap from '../atom/IconWrapper';
 import elementFactory from './ElementFactory';
+import {getTheme} from 'config/theme';
+import {ImgCheckBox} from
+  '../../DataColumnTab/molecules/DataColumnSeriesOptions/Common/ImgCheckBox';
+
+const theme = getTheme();
 
 const StyledDiv = styled.div`
   height: auto;
   list-style: none;
-  margin: 10px;
+  color: ${theme.color.gray500};
 `;
 
 const TitleWrap = styled.div`
@@ -87,8 +92,23 @@ const popoverContents = (element, popoverType, titlePanel) => {
 
 const RibbonPopoverContents = ({popoverType, titlePanel, id, props}) => {
   const element = elementFactory(id);
-  const contents = popoverContents(element, popoverType, titlePanel);
+  if (id == 'add_default_chart') {
+    const {data, onClick} = element;
 
-  return contents;
+    return (
+      <div style={{width: '500px', padding: '15px', paddingTop: '5px'}}>
+        {data.map((item, index) =>
+          <ImgCheckBox key={index}
+            onValueChanged={(e) => onClick(e.target.id)}
+            title={item.title}
+            useChecked={false}
+            checkboxs={item.checkboxs} />)}
+      </div>
+    );
+  } else {
+    const contents = popoverContents(element, popoverType, titlePanel);
+
+    return contents;
+  }
 };
 export default RibbonPopoverContents;

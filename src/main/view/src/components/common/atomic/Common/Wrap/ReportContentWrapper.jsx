@@ -3,7 +3,7 @@ import {styled} from 'styled-components';
 const ReportContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: calc(100% - 10px);
     height: 100%;
 `;
 
