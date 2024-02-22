@@ -39,8 +39,6 @@ public class GroupService {
 
       result = accountDAO.createGroup(groupMstrEntity);
 
-      if (!result) throw new SQLException("그룹이 업데이트 되지 않았습니다.");
-
       grpId = groupMstrEntity.getGrpId();
 
       for (GroupMemberUserModel groupMemberUser : groupDTO.getGrpMemberUser())
