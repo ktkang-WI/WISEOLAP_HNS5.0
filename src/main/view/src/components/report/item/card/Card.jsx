@@ -1,8 +1,19 @@
+import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
 
 
-const Card = () => {
+const Card = ({setItemExports, id, item}) => {
+  const mart = item ? item.mart : null;
+  if (!mart.init) {
+    return <></>;
+  }
+
+  console.log(mart.data.data);
+
   return (
-    <div>Card</div>
+    <DefaultCard
+      dataSource={mart.data.data}
+      column={2}
+    />
   );
 };
 

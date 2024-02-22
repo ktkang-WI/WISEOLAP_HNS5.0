@@ -12,6 +12,7 @@ public enum ItemType {
     PIE_CHART("pie"),
     AD_HOC("adHoc"),
     TREEMAP("treeMap"),
+    CARD("card"),
     ;
 
     private final String symbol;
