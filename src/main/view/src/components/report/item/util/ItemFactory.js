@@ -13,7 +13,16 @@ import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 const makeItem = (orgItem, countMap) => {
   let item = {};
   // 임시용
-  const type = {chart: '차트', pie: '파이', pivot: '피벗', grid: '그리드'};
+  const type = {
+    chart: '차트',
+    pie: '파이',
+    pivot: '피벗',
+    grid: '그리드',
+    choropleth: '코로프레스',
+    liquidGauge: '액체게이지',
+    treeMap: '트리맵',
+    card: '카드'
+  };
   let initNum = 1;
   if (countMap) {
     initNum = countMap[orgItem.type];

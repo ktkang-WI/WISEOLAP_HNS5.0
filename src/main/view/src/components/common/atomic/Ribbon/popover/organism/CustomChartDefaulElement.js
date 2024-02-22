@@ -1,8 +1,19 @@
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
 import barImg from '../../../../../../assets/image/icon/item/bar.png';
+import choroplethImg
+  from '../../../../../../assets/image/icon/item/choropleth.png';
+import cardImg
+  from '../../../../../../assets/image/icon/item/card.png';
+import liquidFillGaugeImg
+  from '../../../../../../assets/image/icon/item/liquidFillGauge.png';
+import squariFied
+  from '../../../../../../assets/image/icon/item/squariFied.png';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const CustomChartDefaulElement = () => {
+  const reportId = useSelector(selectCurrentReportId);
   const {insertFlexLayout} = useLayout();
   return {
     relationChart: [
@@ -38,12 +49,18 @@ const CustomChartDefaulElement = () => {
     ],
     compareDistritution: [
       {
-        imgSrc: '',
-        label: 'ddd'
+        imgSrc: liquidFillGaugeImg,
+        label: '액체게이지',
+        onClick: () => {
+          insertFlexLayout(reportId, 'liquidGauge');
+        }
       },
       {
-        imgSrc: '',
-        label: 'aaa'
+        imgSrc: squariFied,
+        label: '트리맵',
+        onClick: () => {
+          insertFlexLayout(reportId, 'treeMap');
+        }
       },
       {
         imgSrc: '',
@@ -70,12 +87,18 @@ const CustomChartDefaulElement = () => {
         label: 'ddd'
       },
       {
-        imgSrc: '',
-        label: 'aaa'
+        imgSrc: cardImg,
+        label: '카드',
+        onClick: () => {
+          insertFlexLayout(reportId, 'card');
+        }
       },
       {
-        imgSrc: '',
-        label: 'ccc'
+        imgSrc: choroplethImg,
+        label: '코로플레스',
+        onClick: () => {
+          insertFlexLayout(reportId, 'choropleth');
+        }
       }
     ],
     keys: [

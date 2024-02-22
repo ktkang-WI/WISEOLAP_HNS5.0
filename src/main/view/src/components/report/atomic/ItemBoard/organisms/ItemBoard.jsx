@@ -16,10 +16,14 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 
+import Choropleth from 'components/report/item/choropleth/Choropleth';
 import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
+import Card from 'components/report/item/card/Card';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import TreeMap from 'components/report/item/treeMap/TreeMap';
+import LiquidGauge from 'components/report/item/liquidGauge/LiquidGauge';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
@@ -59,7 +63,11 @@ const ItemBoard = () => {
     chart: Chart,
     pivot: PivotGrid,
     grid: DataGrid,
-    pie: Pie
+    pie: Pie,
+    choropleth: Choropleth,
+    treeMap: TreeMap,
+    liquidGauge: LiquidGauge,
+    card: Card
   };
 
   const itemExportsPicker = (id) => {

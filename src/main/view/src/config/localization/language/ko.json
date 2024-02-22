@@ -113,6 +113,7 @@
   "dimension": "차원",
   "dimensionGrop": "차원 그룹",
   "measure": "측정값",
+  "treeMapMeasure": "측정값 (1개)",
   "dimensionPlaceholder": "새 차원",
   "dimensionGroupPlaceholder": "새 차원 그룹",
   "measurePlaceholder": "새 측정값",

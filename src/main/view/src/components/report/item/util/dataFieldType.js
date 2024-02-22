@@ -29,6 +29,22 @@ const DataFieldTypeOfItemType = {
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION,
     DataFieldType.DIMENSION_GROUP
+  ],
+  [ItemType.CHOROPLETH]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.TREEMAP]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.LIQUID_GAUGE]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.CARD]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
   ]
 };
 
