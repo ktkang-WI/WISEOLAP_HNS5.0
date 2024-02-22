@@ -27,6 +27,8 @@ const ModalPanelTitle = ({buttons = [], children}) => {
     return buttons.map((button, i) => (
       <CommonButton
         key={'modal-button' + i}
+        height='30px'
+        font={theme.font.modalButton}
         {...button}
       >
         {button.text}

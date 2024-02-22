@@ -39,7 +39,8 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
   return (
     <DateBox
       calendarOptions={{
-        ...zoomLevels
+        ...zoomLevels,
+        firstDayOfWeek: '5'
       }}
       onValueChanged={(e) => {
         if (value && e.value) {

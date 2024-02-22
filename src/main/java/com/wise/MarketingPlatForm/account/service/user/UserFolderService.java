@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderPatchDTO;
-import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
@@ -21,7 +21,7 @@ import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class UserFolderService {
-  
+
   @Autowired
   private AccountDAO accountDAO;
 
@@ -37,6 +37,7 @@ public class UserFolderService {
   };
 
 
+  @Transactional
   public boolean patchUserFolder(List<UserFolderPatchDTO> userFolderPatchDTO) {
 
     List<UserAuthReportMstrEntity> userFolderMstr = generateUserFolderPatchObject(userFolderPatchDTO);
@@ -44,7 +45,7 @@ public class UserFolderService {
     if (userFolderMstr == null) return false;
 
     boolean result = false;
-  
+
     result = accountDAO.deleteUserFolder(userFolderMstr);
     result = accountDAO.putUserFolder(userFolderMstr);
 
@@ -56,6 +57,22 @@ public class UserFolderService {
 
     for (UserFolderPatchDTO userFolder : userFolderPatchDTO) {
       int userNo = userFolder.getUserNo();
+      List<ConfigFolderDTO> fldIds = userFolder.getFldIds();
+      int fldsSize = fldIds.size();
+  
+      if (fldsSize == 0) {
+        UserAuthReportMstrEntity userAuthDatasetMstrEntity = UserAuthReportMstrEntity.builder()
+          .userNo(userNo)
+          .fldId(0)
+          .authDataItem("N")
+          .authExport("N")
+          .authPublish("N")
+          .authView("N")
+          .build();
+          result.add(userAuthDatasetMstrEntity);
+
+        continue;
+      }
 
       for (ConfigFolderDTO configFolderDTO : userFolder.getFldIds()) {
 
@@ -69,13 +86,13 @@ public class UserFolderService {
           .build();
 
           result.add(groupAuthReportMstrEntity);
-          
+
       }
 
     }
     return result;
   };
-  
+
 
   private List<UserFolderModel> generateUserFolderObject(List<UserFolderDTO> userFolderDTO) {
 
@@ -130,7 +147,7 @@ public class UserFolderService {
         .folder(pubFldMstrEntity)
         .auth(authReportMstrEntity)
         .build();
-      
+
       folderListMode.add(folderListModel);
 
       prevUserNo = userNo;

@@ -9,6 +9,7 @@ import DataSourceAdditionContent from
 import {DataSource} from 'models/dataset/DataSource';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
+import {getHint} from 'components/config/utility/utility';
 
 export const DataSourceAdditionContext = createContext();
 
@@ -49,7 +50,7 @@ const DataSourceAddition = () => {
             }
             return acc;
           }, []);
-          console.log(newDs);
+
           setDataSource(newDs);
           dataSourceListRef.current._instance.clearSelection();
         })
@@ -157,7 +158,11 @@ const DataSourceAddition = () => {
     return (
       btns.map((item, index) => (
         <NavBarItem icon={item} key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
+          <Button
+            icon={item}
+            onClick={handleBtnClick}
+            hint={getHint(item)}
+          />
         </NavBarItem>
       ))
     );

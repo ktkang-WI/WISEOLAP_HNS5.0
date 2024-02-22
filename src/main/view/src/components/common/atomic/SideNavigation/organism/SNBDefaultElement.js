@@ -18,6 +18,8 @@ import {DesignerMode, EditMode} from 'components/config/configType';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import useReportSave from 'hooks/useReportSave';
 import useModal from 'hooks/useModal';
+import {useSelector} from 'react-redux';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SNBDefaultElement = () => {
   // actions
@@ -28,6 +30,9 @@ const SNBDefaultElement = () => {
   const nav = useNavigate();
   const {reload} = useReportSave();
   const {confirm} = useModal();
+
+  // redux
+  const designerMode = useSelector(selectCurrentDesignerMode);
 
   // local
   const onClick = (designerMode) => {
@@ -47,6 +52,7 @@ const SNBDefaultElement = () => {
       imgSrc: dashboard,
       hoveredImgSrc: dashboardActive,
       label: localizedString.dashboard,
+      active: designerMode == DesignerMode.DASHBOARD,
       onClick: (e) => {
         onClick(DesignerMode['DASHBOARD']);
       }
@@ -56,6 +62,7 @@ const SNBDefaultElement = () => {
       imgSrc: adhoc,
       hoveredImgSrc: adhocActive,
       label: localizedString.adhoc,
+      active: designerMode == DesignerMode.AD_HOC,
       onClick: (e) => {
         onClick(DesignerMode['AD_HOC']);
       }
@@ -65,6 +72,7 @@ const SNBDefaultElement = () => {
       imgSrc: spreadsheet,
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
+      active: designerMode == DesignerMode.EXCEL,
       onClick: (e) => {
         onClick(DesignerMode['EXCEL']);
       }

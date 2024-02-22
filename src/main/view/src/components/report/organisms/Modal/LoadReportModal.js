@@ -1,4 +1,3 @@
-import PageWrapper from 'components/common/atomic/Modal/atoms/PageWrapper';
 import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import DesignerReportTabs
@@ -73,19 +72,17 @@ const LoadReportModal = ({
       width={theme.size.smallModalWidth}
       {...props}
     >
-      <PageWrapper>
-        <DesignerReportTabs
-          reportList={reportList}
-          onSelectionChanged={(e) => {
-            const nodes = e.component.getSelectedNodes();
+      <DesignerReportTabs
+        reportList={reportList}
+        onSelectionChanged={(e) => {
+          const nodes = e.component.getSelectedNodes();
 
-            if (nodes.length > 0) {
-              selectedReport = nodes[0].itemData;
-            } else {
-              selectedReport = {};
-            }
-          }}/>
-      </PageWrapper>
+          if (nodes.length > 0) {
+            selectedReport = nodes[0].itemData;
+          } else {
+            selectedReport = {};
+          }
+        }}/>
     </Modal>
   );
 };

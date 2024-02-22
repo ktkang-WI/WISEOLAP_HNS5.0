@@ -3,9 +3,12 @@ import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
 import {Mode, authData} from './data/AuthorityData';
 import React,
-{createContext, useCallback, useEffect, useRef, useState} from 'react';
+{createContext, useCallback, useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import localizedString from 'config/localization';
+import {getHint, getRefInstance} from 'components/config/utility/utility';
+import DataGrid from 'devextreme/ui/data_grid';
+import TreeList from 'devextreme/ui/tree_list';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -46,14 +49,17 @@ const Authority = () => {
   const [auth, setAuth] = useState(authData[0]);
   const [data, setData] = useState([]);
 
-  const groupListRef = useRef();
-  const userListRef = useRef();
-  const authorityDataCubeRef = useRef();
-  const authorityDataDimensionRef = useRef();
-  const dsViewListRef = useRef();
-  const folderTreeViewRef = useRef();
-  const dataSetTreeViewRef = useRef();
-  const dataSourceListRef = useRef();
+  const authorityDataCubeRef = () =>
+    getRefInstance(DataGrid, 'authority-data-cube');
+  const authorityDataDimensionRef = () =>
+    getRefInstance(DataGrid, 'authority-data-dimension');
+  const groupListRef = () => getRefInstance(DataGrid, 'group-list');
+  const userListRef = () => getRefInstance(DataGrid, 'user-list');
+  const dsViewListRef = () => getRefInstance(DataGrid, 'datasource-view-list');
+  const folderTreeViewRef = () => getRefInstance(TreeList, 'folder-tree-view');
+  const dataSetTreeViewRef = () =>
+    getRefInstance(TreeList, 'dataset-tree-view');
+  const dataSourceListRef = () => getRefInstance(DataGrid, 'datasource-list');
 
   const context = {
     state: {
@@ -74,7 +80,6 @@ const Authority = () => {
   useEffect(() => {
     auth.data().then((res) => {
       if (res.data.data) {
-        console.log(res.data.data);
         setData(res.data.data);
       }
     });
@@ -83,11 +88,11 @@ const Authority = () => {
   const validationSave = () => {
     if (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) {
       const groupListSelectedRowKeys =
-          groupListRef.current?._instance.option('selectedRowKeys');
+          groupListRef()?.option('selectedRowKeys');
       const userListSelectedRowKeys =
-          userListRef.current?._instance.option('selectedRowKeys');
+          userListRef()?.option('selectedRowKeys');
       const dsViewListRefSelectedRowKeys =
-          dsViewListRef.current._instance.option('selectedRowKeys');
+          dsViewListRef().option('selectedRowKeys');
 
       return (groupListSelectedRowKeys?.length > 0 ||
         userListSelectedRowKeys?.length > 0) &&
@@ -99,9 +104,9 @@ const Authority = () => {
       auth.mode === Mode.GROUP_DATASOURCE ||
       auth.mode === Mode.USER_DATASOURCE) {
       const groupListSelectedRowKeys =
-          groupListRef.current?._instance.option('selectedRowKeys');
+          groupListRef()?.option('selectedRowKeys');
       const userListSelectedRowKeys =
-          userListRef.current?._instance.option('selectedRowKeys');
+          userListRef()?.option('selectedRowKeys');
 
       return (groupListSelectedRowKeys?.length > 0 ||
         userListSelectedRowKeys?.length > 0);
@@ -116,7 +121,7 @@ const Authority = () => {
 
     const authorityData = auth.save({groupListRef, userListRef, dsViewListRef,
       authorityDataCubeRef, authorityDataDimensionRef, folderTreeViewRef,
-      dataSetTreeViewRef, dataSourceListRef});
+      dataSetTreeViewRef, dataSourceListRef, data});
 
     try {
       let prom;
@@ -147,13 +152,20 @@ const Authority = () => {
 
       prom.then((response) => {
         if (response.data.data) {
-          auth.data().then((res) => {
-            if (res.data.data) {
-              setData(res.data.data);
-              auth.init({authorityDataCubeRef, authorityDataDimensionRef});
-              alert(localizedString.successSave);
-            }
-          });
+          try {
+            auth.data()
+                .then((res) => {
+                  if (res.data.data) {
+                    setData(res.data.data);
+                    auth.init(
+                        {authorityDataCubeRef, authorityDataDimensionRef}
+                    );
+                    alert(localizedString.successSave);
+                  }
+                });
+          } catch (error) {
+            alert('서버 오류 관리자에게 문의하세요.');
+          }
         }
       });
     } catch (error) {
@@ -165,7 +177,11 @@ const Authority = () => {
     return (
       btns.map((item, index) => (
         <NavBarItem key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
+          <Button
+            icon={item}
+            onClick={handleBtnClick}
+            hint={getHint(item)}
+          />
         </NavBarItem>
       ))
     );

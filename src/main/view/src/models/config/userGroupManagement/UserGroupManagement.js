@@ -34,7 +34,7 @@ export class User {
     this.userNo = userNo;
     this.userId = userId;
     this.userNm = userNm;
-    this.eamil1 = email1;
+    this.email1 = email1;
     this.email2 = email2;
     this.telNo = telNo;
     this.grpId = grpId;

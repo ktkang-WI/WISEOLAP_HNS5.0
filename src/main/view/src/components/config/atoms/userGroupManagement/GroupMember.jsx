@@ -8,6 +8,8 @@ import {useCallback, useContext} from 'react';
 import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import localizedString from 'config/localization';
+import {getRefInstance} from 'components/config/utility/utility';
+import Form from 'devextreme/ui/form';
 
 const GroupMember = () => {
   const getContext = useContext(UserGroupContext);
@@ -15,8 +17,14 @@ const GroupMember = () => {
   getContext.state.groupMemberUsers;
   const [groupNotMemberUsers, setGroupNotMemberUsers] =
   getContext.state.groupNotMemberUsers;
+  const [, setGroupDetailInfo] = getContext.state.groupDetailInfo;
   const groupMemberUserRef = getContext.ref.groupMemberUserRef;
   const groupNotMemberUserRef = getContext.ref.groupNotMemberUserRef;
+
+  const getGroupInfo = () => {
+    const groupInfoRef = getRefInstance(Form, 'group-info');
+    return groupInfoRef.option('formData');
+  };
 
   const moveUserToGroup = useCallback(() => {
     const selectedData = groupNotMemberUserRef
@@ -34,6 +42,7 @@ const GroupMember = () => {
 
     setGroupMemberUsers(groupMemberUsers.concat(selectedData));
     setGroupNotMemberUsers(newGroupNotMmemberUsers);
+    setGroupDetailInfo(getGroupInfo());
   }, [groupMemberUsers, groupNotMemberUsers]);
 
 
@@ -53,6 +62,7 @@ const GroupMember = () => {
 
     setGroupNotMemberUsers(groupNotMemberUsers.concat(selectedData));
     setGroupMemberUsers(newGroupMmemberUsers);
+    setGroupDetailInfo(getGroupInfo());
   }, [groupMemberUsers, groupNotMemberUsers]);
 
   return (

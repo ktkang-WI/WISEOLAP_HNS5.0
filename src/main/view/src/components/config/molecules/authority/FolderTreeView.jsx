@@ -4,7 +4,7 @@ import TreeList, {
   Editing,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useRef, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
@@ -19,7 +19,7 @@ const FolderTreeView = ({row}) => {
   // state
   const [folders, setFolders] = useState([]);
   const [data] = authoritycontext.state.data;
-  const folderTreeViewRef = authoritycontext.ref.folderTreeViewRef;
+  const ref = useRef();
 
   useEffect(() => {
     getFolders()
@@ -103,7 +103,10 @@ const FolderTreeView = ({row}) => {
     <Wrapper>
       <Title title={localizedString.publicReportFolderList}></Title>
       <TreeList
-        ref={folderTreeViewRef}
+        ref={ref}
+        elementAttr={{
+          class: 'folder-tree-view'
+        }}
         dataSource={folders}
         keyExpr="fldId"
         parentIdExpr="fldParentId"

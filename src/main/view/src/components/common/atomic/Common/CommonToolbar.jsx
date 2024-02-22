@@ -7,8 +7,9 @@ const theme = getTheme();
 const StyledTabPanel = styled(Toolbar)`
   .dx-toolbar-items-container {
     height: ${theme.size.filterBarHeight};
-    background: ${theme.color.filterBar};
-    border-right: solid 1px ${theme.color.breakLine};
+    background: ${theme.color.white};
+    border: solid 1px ${theme.color.gray200};
+    border-radius: 10px;
   },
   .dx-toolbar-after {
     padding-right: 15px;

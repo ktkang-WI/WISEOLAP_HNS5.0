@@ -6,6 +6,7 @@ const theme = getTheme();
 
 const ItemWrapper = styled(Wrapper)`
   border: 1px solid ${theme.color.breakLine};
+  border-top: 1px solid ${theme.color.gray100};
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -14,6 +15,7 @@ const ItemWrapper = styled(Wrapper)`
 const ItemContent = styled.div`
   width: 100%;
   height: 100%;
+  padding: 10px 100px;
 `;
 
 // TODO: 추후 아이템별로 나눠야함.

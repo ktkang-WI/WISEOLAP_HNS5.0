@@ -2,6 +2,7 @@ import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import SmallImageButton from '../../Common/Button/SmallImageButton';
 import resetImg from 'assets/image/icon/button/reset_layout.png';
+import plusImg from 'assets/image/icon/button/plus.png';
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
@@ -17,7 +18,7 @@ const theme = getTheme();
 const Wrapper = styled.div`
   width: 100%;
   height: auto;
-  padding: 20px;
+  color: ${theme.color.gray600};
 
   & + & {
     padding-top: 0px;
@@ -31,18 +32,39 @@ const Title = styled.div`
 
 
 const Icon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   float: left;
   margin-right: 5px;
+  margin-top: 2px;
 `;
 
 const ListWrapper = styled.div`
   height: auto;
   width: 100%;
-  border: 1px dashed ${theme.color.dashedBorder};
-  margin: 20px 0px;
+  border: 1px solid ${theme.color.gray100};
+  border-radius: 6px;
+  margin: 10px 0px 20px 0px;
   padding: 5px;
+`;
+
+const EmptyColumnList = styled.div`
+  color: ${theme.color.gray400};
+  font: ${theme.font.dataColumnMsg};
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-itmes: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0px auto;
+    background: url(${plusImg}) no-repeat;
+  }
 `;
 
 const getRenderItem = (items) => {
@@ -150,22 +172,9 @@ const DataColumnList = ({
               </Draggable>
             )}
             {columns.length === 0 &&
-              <Draggable
-                key={id + 'temp'}
-                draggableId={id + 'temp'}
-                index={0}
-                isDragDisabled={true}
-              >
-                {(provided) => (
-                  <DataColumn
-                    key={label}
-                    provided={provided}
-                    fixed={true}
-                  >
-                    {placeholder}
-                  </DataColumn>
-                )}
-              </Draggable>
+              <EmptyColumnList>
+                {label}을 드래그해서 넣으세요.
+              </EmptyColumnList>
             }
             {columns.length > 0 && provided.placeholder}
           </ListWrapper>

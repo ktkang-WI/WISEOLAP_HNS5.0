@@ -5,11 +5,11 @@ import {TreeView} from 'devextreme-react';
 const theme = getTheme();
 
 const Wrapper = styled.div`
+  padding-top: 10px;
   background: ${theme.color.panelColor};
   height: 100%;
-  width: ${(props) => props.width || theme.size.panelWidth};
+  width: 100%;
   display: inline-block;
-  border-right: solid 1px ${theme.color.breakLine};
   text-align: left;
 `;
 const StyledTreeView = styled(TreeView)`

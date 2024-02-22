@@ -51,6 +51,19 @@ public class UserDsService {
 
     for (UserDsPutDTO userDsPut : userDsPutDTO) {
       int userNo = userDsPut.getUserNo();
+      List<Integer> dss = userDsPut.getDsIds();
+      int dsSize = dss.size();
+
+      if (dsSize == 0) {
+        UserAuthDsMstrEntity userAuthDsMstrEntity = UserAuthDsMstrEntity.builder()
+          .userNo(userNo)
+          .dsId(0)
+          .build();
+
+        result.add(userAuthDsMstrEntity);
+
+        continue;
+      }
 
       for (Integer dsId : userDsPut.getDsIds()) {
 

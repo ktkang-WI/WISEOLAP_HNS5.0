@@ -1,18 +1,20 @@
 import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
 import {getTheme} from '../../../../../config/theme';
-import {hexToRgb, rgbToFilterString} from 'components/utils/Color';
 import AnimatedButtonLabel from '../Label/AnimatedButtonLabel';
 
 const theme = getTheme();
 
 const Button = styled.div`
-  width: ${(props) => props.width || '60px'};
-  height: ${(props) => props.height || '60px'};
-  color: ${theme.color.primaryFont};
+  width: calc(${(props) => props.width || '60px'} - 10px);
+  margin: 12px 10px;
+  height: 76px;
+  color: ${theme.color.gray600};
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: center;
+  border-radius: 16px 6px;
   ${(props) => props.direction == 'row' ? css `
     flex-direction: row;
     width: ${theme.size.snbDrawerWidth};
@@ -27,13 +29,19 @@ const Button = styled.div`
     transition: transform .2s;
   }
 
-  &:hover{
-    color: ${theme.color.primary};
+  &.selected, &:hover {
+    background: linear-gradient(180deg, #005EAD 0%, #0082F0 145.39%);
+    color: ${theme.color.white};
+  }
+  
+  &.selected img {
+    filter: brightness(0) invert(1);
   }
   
   ${(props) => props.hoveranimation && css`
-    &:hover, &:active{
-      ${rgbToFilterString(hexToRgb(theme.color.primary))}
+    &:hover img, &:active img{
+      -webkit-filter: brightness(0) invert(1); 
+      filter: brightness(0) invert(1);
     }
   `}
 `;
@@ -63,8 +71,9 @@ const AnimatedButton = ({
   label,
   hoveredImgSrc,
   width='80px',
-  height='50px',
+  height='40px',
   direction='column',
+  active = false,
   ...props
 }) => {
   const [src, setSrc] = useState(imgSrc);
@@ -82,10 +91,10 @@ const AnimatedButton = ({
       width={width}
       height={height}
       direction={direction}
-      hoveranimation={hoveredImgSrc? '' : 'true'}
       onClick={onClick}
       onMouseOver={hoveredImgSrc? onMouseOver : null}
       onMouseOut={hoveredImgSrc? onMouseOut : null}
+      className={active? 'selected' : ''}
       {...props}
     >
       <Image

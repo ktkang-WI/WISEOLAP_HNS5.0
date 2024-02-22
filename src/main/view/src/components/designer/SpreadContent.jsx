@@ -1,7 +1,6 @@
 import Content from 'components/common/atomic/Common/Content/Content';
 import CustomDrawer from
   'components/common/atomic/Common/Interactive/CustomDrawer';
-import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import DataSourceTab from
   'components/common/atomic/DataSourceTab/DataSourceTab';
 import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
@@ -9,6 +8,8 @@ import {getTheme} from 'config/theme';
 import {DragDropContext} from 'react-beautiful-dnd';
 import useDrag from 'hooks/useDrag';
 import SpreadBoard from '../report/atomic/spreadBoard/organisms/SpreadBoard';
+import ReportContentWrapper
+  from 'components/common/atomic/Common/Wrap/ReportContentWrapper';
 
 const theme = getTheme();
 
@@ -24,10 +25,10 @@ const SpreadContent = () => {
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
-          <Wrapper>
+          <ReportContentWrapper>
             <FilterBar/>
             <SpreadBoard/>
-          </Wrapper>
+          </ReportContentWrapper>
         </CustomDrawer>
       </DragDropContext>
     </Content>

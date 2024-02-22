@@ -8,16 +8,16 @@ const Panel = styled.div`
   width: ${(props) => props.width};
   min-width: 40px;
   height: 100%;
-  display: flex;
+  display: inline-block;
   float: ${(props) => props.position};
   vertical-align: top;
   box-sizing: border-box;
-  align-items: center;
+  flex-shrink: 0;
+  // align-items: center;
 `;
 
 const Wrapper = styled.div`
   height: ${(props) => props.height};
-  width: calc(100% - 1px);
   display: flex;
   justify-content: ${(props) => props.item_alignment};
   align-items: center;
@@ -25,6 +25,7 @@ const Wrapper = styled.div`
 `;
 
 const BreakLine = styled.div`
+  display: none;
   width: 1px;
   height: 70%;
   background: ${theme.color.breakLine};
