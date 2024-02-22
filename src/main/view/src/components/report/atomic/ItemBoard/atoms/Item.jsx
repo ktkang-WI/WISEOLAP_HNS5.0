@@ -15,7 +15,7 @@ const ItemWrapper = styled(Wrapper)`
 const ItemContent = styled.div`
   width: 100%;
   height: 100%;
-  padding: 10px 100px;
+  padding: 10px 20px;
 `;
 
 // TODO: 추후 아이템별로 나눠야함.
