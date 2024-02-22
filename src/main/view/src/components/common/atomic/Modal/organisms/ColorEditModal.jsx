@@ -82,14 +82,10 @@ const ColorEditModal = ({popupName, ...props}) => {
             return (
               <Field key={index}>
                 <FieldLabel>{value.caption}</FieldLabel>
-                <FieldValue
-                  defaultValue={value.value}
-                  onValueChanged={(e) =>
-                    handleColorPickerValue(e, setValue)}
-                >
+                <FieldValue>
                   <ColorBox
-                    onValueChanged={props.onValueChanged}
-                    defaultValue={props.defaultValue}
+                    onValueChanged={(e) => handleColorPickerValue(e, setValue)}
+                    defaultValue={value.value}
                     inputAttr={defaultModeLabel}
                   />
                 </FieldValue>
