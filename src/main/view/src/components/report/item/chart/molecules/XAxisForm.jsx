@@ -12,15 +12,15 @@ const XAxisForm = ({selectedItem}, ref) => {
       formData={formData}
     >
       <Item
-        dataField='useComma'
+        dataField='xAxisMark'
         editorType='dxCheckBox'
         editorOptions={{
         }}
       >
-        <Label>{localizedString.numberSeperator}</Label>
+        <Label>{localizedString.xAxisMark}</Label>
       </Item>
       <Item
-        dataField='customText'
+        dataField='axisCutomText'
         editorType='dxTextBox'
         editorOptions={{
         }}
@@ -28,12 +28,14 @@ const XAxisForm = ({selectedItem}, ref) => {
         <Label>{localizedString.axisCutomText}</Label>
       </Item>
       <Item
-        dataField='customText'
-        editorType='dxCheckBox'
+        dataField='xAxisInclination'
+        editorType='dxRadioGroup'
         editorOptions={{
+          items: [0, 45, 90],
+          layout: 'horizontal'
         }}
       >
-        <Label>{localizedString.axisCutomText}</Label>
+        <Label>{localizedString.inclination}</Label>
       </Item>
     </Form>
   );

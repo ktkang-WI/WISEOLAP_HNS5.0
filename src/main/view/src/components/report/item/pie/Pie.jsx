@@ -54,10 +54,11 @@ const Pie = ({setItemExports, id, item}) => {
         }}
       >
         <Legend // 범례
-          visible={true}
-          verticalAlignment="bottom"
-          horizontalAlignment="center"
-          itemTextPosition="right"
+          visible={meta.legend.useLegend}
+          position={meta.legend.position}
+          horizontalAlignment={meta.legend.horizontalAlignment}
+          verticalAlignment={meta.legend.verticalAlignment}
+          itemTextPosition={meta.legend.itemTextPosition}
           rowCount={2}
         />
         <Tooltip
