@@ -16,7 +16,7 @@ import useModal from './useModal';
 import {selectCurrentDesignerMode, selectEditMode}
   from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-import {selectBindingInfos, selectCurrentDesigner}
+import {selectBindingInfos}
   from 'redux/selector/SpreadSelector';
 import {ConvertDesignerMode, DesignerMode, EditMode}
   from 'components/config/configType';
@@ -157,7 +157,6 @@ const useReportSave = () => {
     const reports = selectReports(store.getState());
 
     models.Report.deleteReport(param).then((res) => {
-      const designer = selectCurrentDesigner(store.getState());
       const data = res.data;
       const msg = data.msg;
       const result = data.result;

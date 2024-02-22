@@ -1,32 +1,52 @@
 import './spreadBoard.css';
-import spreadDefaultElement from './SpreadDefaultElement';
-import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useSpreadRibbon from './useSpreadRibbon';
+import {useEffect, useRef} from 'react';
+import {Designer} from '@grapecity/spread-sheets-designer-react';
+import {insertWorkbook, setDesigner, updateWorkbook}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {useSelector} from 'react-redux';
+import {selectCurrentData} from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
-import SpreadSlice from 'redux/modules/SpreadSlice';
-
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const SpreadBoard = () => {
+  const spreaRef = useRef();
   // hook
-  const {setRibbonSetting} = spreadDefaultElement();
-  const config = setRibbonSetting();
-  const {createDesigner} = useSpread();
-  const dispatch = useDispatch();
-
-  const spreadActions = SpreadSlice.actions;
+  const {sheetChangedListener, sheetNameChangedListener} =
+    useSpread();
+  const config = useSpreadRibbon();
+  const currentReportId = useSelector(selectCurrentReportId);
+  const data = useSelector(selectCurrentData);
 
   useEffect(() => {
-    createDesigner({
-      config: config,
-      reportId: 0
+
+  }, [data]);
+
+  useEffect(() => {
+    updateWorkbook({
+      reportId: currentReportId,
+      workbook: spreaRef.current.designer.getWorkbook()
     });
-    dispatch(spreadActions.setConfig(config));
-  }, []);
+  }, [currentReportId]);
 
   return (
-    <Wrapper id='spreadWrapper'
-      style={{width: '100%', height: 'calc(100% - 40px)'}}>
+    <Wrapper>
+      <Designer
+        ref={spreaRef}
+        designerInitialized={(designer) => {
+          designer.setConfig(config);
+          setDesigner(designer);
+          insertWorkbook({
+            reportId: currentReportId,
+            workbook: designer.getWorkbook()
+          });
+          sheetChangedListener(designer);
+          sheetNameChangedListener(designer);
+        }}
+        styleInfo={{width: '100%', height: 'calc(100% - 40px)'}}
+      >
+      </Designer>
     </Wrapper>
   );
 };

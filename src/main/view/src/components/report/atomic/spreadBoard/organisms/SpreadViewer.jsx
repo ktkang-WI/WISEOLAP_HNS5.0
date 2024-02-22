@@ -2,16 +2,15 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {importFile} from 'models/upload/File';
 import localizedString from 'config/localization';
-import {selectExcelIO, selectSheets} from 'redux/selector/SpreadSelector';
+import {sheets, excelIO} from '../util/SpreadCore';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect, useRef} from 'react';
 import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {excelIOOpenOtions} from '../util/spreadContants';
 
 const SpreadViewer = () => {
   const report = useSelector(selectCurrentReport);
-  const excelIO = useSelector(selectExcelIO);
-  const sheets = useSelector(selectSheets);
   const sheetsRef = useRef();
   const {alert} = useModal();
   const {querySearch} = useReportSave();
@@ -26,21 +25,10 @@ const SpreadViewer = () => {
     return blob;
   };
 
-  const options = {
-    excelOpenFlags: {
-      ignoreStyle: false,
-      ignoreFormula: false,
-      frozenColumnsAsRowHeaders: false,
-      frozenRowsAsColumnHeaders: false,
-      doNotRecalculateAfterLoad: true
-    },
-    password: ''
-  };
-
-  const successFunc = (json, workBook) => {
-    workBook.clearSheets();
-    const workBookObj = json;
-    workBook.fromJSON(workBookObj);
+  const successFunc = (json, workbook) => {
+    workbook.clearSheets();
+    const workbookObj = json;
+    workbook.fromJSON(workbookObj);
     querySearch();
   };
 
@@ -50,8 +38,8 @@ const SpreadViewer = () => {
 
   useEffect(() => {
     const prevWorkBook = sheets.findControl(sheetsRef.current);
-    if (prevWorkbook) prevWorkBook.destroy();
-    const workBook = new sheets.Workbook(sheetsRef.current);
+    if (prevWorkBook) prevWorkBook.destroy();
+    const workbook = new sheets.Workbook(sheetsRef.current);
     importFile({fileName: report.reportId + '.xlsx'})
         .then(
             (response) => {
@@ -61,9 +49,9 @@ const SpreadViewer = () => {
               }
               const blob = createBlob(response.data);
               excelIO.open(blob,
-                  (json) => successFunc(json, workBook),
+                  (json) => successFunc(json, workbook),
                   errorFunc,
-                  options);
+                  excelIOOpenOtions);
             })
         .catch((e) => {
           alert(localizedString.noneExcelFile);

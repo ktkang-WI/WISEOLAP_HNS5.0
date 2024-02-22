@@ -1,7 +1,7 @@
 package com.wise.MarketingPlatForm.config.dao;
 
+import java.util.HashMap;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
@@ -16,4 +16,5 @@ public interface ConfigDAO {
   public boolean updateWbConfig(WbConfigMstrEntity wbConfigMstr);
   public List<ConfigFolderDTO> selectConfigFolder();
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
+  public HashMap<String, String> getSpreadLicense();
 }

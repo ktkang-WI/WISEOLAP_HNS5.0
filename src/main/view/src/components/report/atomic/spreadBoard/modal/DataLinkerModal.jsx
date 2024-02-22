@@ -5,10 +5,11 @@ import {Column, Lookup} from 'devextreme-react/data-grid';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
+import {designer} from '../util/SpreadCore';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectBindingInfos, selectCurrentDesigner} from
+import {selectBindingInfos} from
   'redux/selector/SpreadSelector';
 import {
   positionConverterAsObject,
@@ -18,7 +19,6 @@ import useModal from 'hooks/useModal';
 
 const DatasetLinkerModal = ({...props}) => {
   const disptch = useDispatch();
-  const designer = selectCurrentDesigner(store.getState());
   const [dataSources, setDataSources] = useState([]);
   const {setBindingInfos} = SpreadSlice.actions;
   const datasets = selectCurrentDatasets(store.getState());

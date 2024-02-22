@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.config.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,11 @@ public class ConfigController {
       .build();
 
     return generalService.updateConfig(generalDTO);
+  }
+  
+  @GetMapping("/spread")
+  public HashMap<String, String> getSpreadLicense () {
+	  return generalService.getSpreadLicense();
   }
 
 }

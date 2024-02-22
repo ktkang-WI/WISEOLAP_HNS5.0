@@ -18,3 +18,9 @@ export const updateGeneralConfig = async (general) => {
   });
   return res;
 };
+
+export const getSpread = async (general) => {
+  const res = await axios.get(configPath + '/general/spread');
+  return res;
+};
+

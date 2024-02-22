@@ -118,5 +118,11 @@
               REPORT_DIRECT_VIEW = REPORT_DIRECT_VIEW
           WHERE 1 = 1
     </update>
-
+    
+    <select id="getSpreadLicense" resultType="hashmap">
+		SELECT
+	        SPREAD_JS_DESIGNER_LICENSE,
+	        SPREAD_JS_LICENSE    
+        FROM WB_CONFIG_MSTR
+	</select>
 </mapper>

@@ -4,6 +4,8 @@ import {Link, useNavigate} from 'react-router-dom';
 import TextButton from 'components/common/atomic/Common/Button/CommonButton';
 import models from 'models';
 import useModal from 'hooks/useModal';
+import {setSpreadLicense}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
 // import {DesignerMode} from 'components/config/configType';
 
 const StyledForm = styled.form.attrs(() => ({
@@ -109,6 +111,7 @@ const FormInputs = ({contents}) => {
               const password =
                 document.querySelector('#input-Password input').value;
               const res = await models.Login.login(id, password);
+              await setSpreadLicense();
 
               if (res.status == 200) {
                 // TODO: 추후 권한 적용
