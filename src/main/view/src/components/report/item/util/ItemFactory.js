@@ -68,7 +68,7 @@ const makeItem = (orgItem, countMap) => {
  */
 const makeAdHocItem = (orgItem) => {
   const meta = !orgItem.meta ? makeAdHocItemMeta(orgItem) : orgItem.meta;
-  const mart = !orgItem.mart ? makeAdHocItemMart() : orgItem.mart;
+  const mart = !orgItem.mart ? makeAdHocItemMart(orgItem.type) : orgItem.mart;
 
   return {
     ...orgItem,

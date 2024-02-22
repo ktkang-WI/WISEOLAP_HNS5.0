@@ -60,10 +60,13 @@ const makeMart = (item) => {
   };
 };
 
-const makeAdHocItemMart = () => {
+const makeAdHocItemMart = (type) => {
+  // 비정형 -> type : chart or pivot
+  const ribbonItems = ItemManager.getRibbonItems(type);
+
   return {
     ...defaultMart,
-    ribbonItem: []
+    ribbonItems: ribbonItems
   };
 };
 
