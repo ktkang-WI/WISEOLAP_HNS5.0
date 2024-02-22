@@ -51,8 +51,19 @@ public class GroupDatasetService {
 
     for (GroupDatasetPutDTO groupDatasetPut : groupDatasetPutDTO) {
       int grpId = groupDatasetPut.getGrpId();
+      List<Integer> flds = groupDatasetPut.getFldId();
+      int fldsSize = flds.size();
+      if (fldsSize == 0) {
+        GroupAuthDatasetMstrEntity groupAuthDatasetMstrEntity = GroupAuthDatasetMstrEntity.builder()
+          .grpId(grpId)
+          .fldId(0)
+          .build();
+          result.add(groupAuthDatasetMstrEntity);
 
-      for (Integer fldId : groupDatasetPut.getFldId()) {
+        continue;
+      }
+
+      for (Integer fldId : flds) {
 
         GroupAuthDatasetMstrEntity groupAuthDatasetMstrEntity = GroupAuthDatasetMstrEntity.builder()
           .grpId(grpId)

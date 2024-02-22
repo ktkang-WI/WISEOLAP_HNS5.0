@@ -12,6 +12,7 @@ import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
@@ -56,6 +57,23 @@ public class GroupFolderService {
 
     for (GroupFolderPatchDTO groupFolder : groupFolderPatchDTO) {
       int grpId = groupFolder.getGrpId();
+      List<ConfigFolderDTO> fldIds = groupFolder.getFldIds();
+      int fldsSize = fldIds.size();
+
+      if (fldsSize == 0) {
+        GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
+          .grpId(grpId)
+          .fldId(0)
+          .authDataItem("N")
+          .authExport("N")
+          .authPublish("N")
+          .authView("N")
+          .build();
+
+          result.add(groupAuthReportMstrEntity);
+
+        continue;
+      }
 
       for (ConfigFolderDTO configFolderDTO : groupFolder.getFldIds()) {
 

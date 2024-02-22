@@ -11,6 +11,7 @@ import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetPutDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
@@ -52,6 +53,18 @@ public class UserDatasetService {
 
     for (UserDatasetPutDTO userDatasetPut : userDatasetPutDTO) {
       int userNo = userDatasetPut.getUserNo();
+      List<Integer> flds = userDatasetPut.getFldId();
+      int fldsSize = flds.size();
+
+      if (fldsSize == 0) {
+        UserAuthDatasetMstrEntity userAuthDatasetMstrEntity = UserAuthDatasetMstrEntity.builder()
+          .userNo(userNo)
+          .fldId(0)
+          .build();
+          result.add(userAuthDatasetMstrEntity);
+
+        continue;
+      }
 
       for (Integer fldId : userDatasetPut.getFldId()) {
 
