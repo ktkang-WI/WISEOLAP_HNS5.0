@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {Button} from 'devextreme-react';
-import TabPanel from 'devextreme-react/tab-panel';
 import {dataSource} from './data/ConfigurationSettingData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {createContext, useState, useCallback} from 'react';
@@ -8,6 +7,8 @@ import {useLoaderData} from 'react-router-dom';
 import useModal from 'hooks/useModal.js';
 import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
 import {getHint} from 'components/config/utility/utility.js';
+import CommonTab from
+  'components/common/atomic/Common/Interactive/CommonTab.jsx';
 
 const NavBar = styled.div`
   width:100%;
@@ -97,7 +98,7 @@ const ConfigurationSetting = () => {
           </NavBar>
         </Header>
         <Content>
-          <TabPanel
+          <CommonTab
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -106,7 +107,7 @@ const ConfigurationSetting = () => {
             swipeEnabled={false}
             itemComponent={TabPanelItem}
           >
-          </TabPanel>
+          </CommonTab>
         </Content>,
       </Wrapper>
     </ConfigureContext.Provider>
