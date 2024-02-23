@@ -282,17 +282,17 @@ const ItemBoard = () => {
       renderValues.buttons.push(
           !rootItem.adHocOption &&
           (memo ?
-            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
-          <button
-            key="delete"
-            title="Delete tabset"
-            onClick={(e) => {
-              // flexLayout 커스텀 삭제 버튼 기능.
-              model.doAction(Actions.deleteTab(id));
-            }}
-          >
-          &#128473;&#xFE0E;
-          </button>,
+            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>,
+            <button
+              key="delete"
+              title="Delete tabset"
+              onClick={(e) => {
+                // flexLayout 커스텀 삭제 버튼 기능.
+                model.doAction(Actions.deleteTab(id));
+              }}
+            >
+            &#128473;&#xFE0E;
+            </button>),
           <button
             key="download"
             title="Download"
