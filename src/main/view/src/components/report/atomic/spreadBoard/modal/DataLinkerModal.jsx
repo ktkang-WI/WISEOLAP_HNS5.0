@@ -5,7 +5,7 @@ import {Column, Lookup} from 'devextreme-react/data-grid';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import store from 'redux/modules';
-import {designer} from '../util/SpreadCore';
+import {designerRef} from '../util/SpreadCore';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -25,6 +25,7 @@ const DatasetLinkerModal = ({...props}) => {
   const reportId = selectCurrentReportId(store.getState());
   const {alert} = useModal();
   const bindingInfos = useSelector(selectBindingInfos);
+  const designer = designerRef.current.designer;
   const sheetNms = designer.getWorkbook().sheets.map((sheet) => {
     return sheet.name();
   });

@@ -1,5 +1,4 @@
 const GC = require('@grapecity/spread-sheets');
-const ExcelIO = require('@grapecity/spread-excelio');
 require('@grapecity/spread-sheets-charts');
 require('@grapecity/spread-sheets-print');
 require('@grapecity/spread-sheets-barcode');
@@ -7,6 +6,7 @@ require('@grapecity/spread-sheets-shapes');
 require('@grapecity/spread-sheets-pdf');
 require('@grapecity/spread-sheets-pivot-addon');
 require('@grapecity/spread-sheets-tablesheet');
+const ExcelIO = require('@grapecity/spread-excelio');
 require('@grapecity/spread-sheets-resources-ko');
 require('@grapecity/spread-sheets-designer-resources-ko');
 require('@grapecity/spread-sheets-designer');
@@ -27,25 +27,30 @@ export const setSpreadLicense = async () => {
 };
 
 // spread Core Objects
+// eslint-disable-next-line prefer-const
+export let designerRef;
+export const setDesignerRef = (ref) => {
+  designerRef = ref;
+};
 export const excelIO = new GC.Spread.Excel.IO();
 export const sheets = GC.Spread.Sheets;
-export let designer;
-export const setDesigner = (newDesigner) => {
-  designer = newDesigner;
-};
 
 // eslint-disable-next-line prefer-const
-export let workbooks = {};
-export const insertWorkbook = ({reportId, workbook}) => {
-  workbooks[reportId] = workbook;
+export let workbookJSONs = {};
+export const insertWorkbookJSON = ({reportId, workbookJSON}) => {
+  workbookJSONs[reportId] = workbookJSON;
 };
-export const deleteWorkbook = (reportId) => {
-  delete workbooks[reportId];
+export const deleteWorkbookJSON = (reportId) => {
+  delete workbookJSONs[reportId];
 };
-export const updateWorkbook = ({reportId, workbook}) => {
-  workbooks = {};
-  workbooks[reportId] = workbook;
+export const updateWorkbookJSON = ({reportId, workbookJSON}) => {
+
 };
-export const getWorkbook = (reportId) => {
-  return workbooks[reportId];
+export const getWorkbookJSON = (reportId) => {
+  return workbookJSONs[reportId];
 };
+export const resetWorkbookJSON = ({reportId, workbookJSON}) => {
+  workbookJSONs = {};
+  workbookJSONs[reportId] = workbookJSON;
+};
+

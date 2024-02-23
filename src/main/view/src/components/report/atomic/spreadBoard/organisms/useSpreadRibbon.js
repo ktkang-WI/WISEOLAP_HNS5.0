@@ -14,22 +14,21 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {sheets, excelIO,
-  deleteWorkbook, insertWorkbook, designer} from '../util/SpreadCore';
+import {sheets, excelIO, resetWorkbookJSON} from '../util/SpreadCore';
 import {
   SpreadRibbonDefaultElement,
-  designerWorkbookDOM,
+  defaultWorkbookJSON,
   spreadDownlaodReportModel
 } from 'components/report/atomic/spreadBoard/util/spreadContants.js';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
-  const {reload, loadReport, querySearch} = useReportSave();
-  const {importFile, uploadFile, deleteFile} = useFile();
+  const {reload} = useReportSave();
+  // const {querySearch} = useReportSave();
+  const {uploadFile, deleteFile} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {
-    setExcelFile,
     createReportBlob
   } = useSpread();
 
@@ -56,38 +55,22 @@ const useSpreadRibbon = () => {
   // spread ribbon menu 선언 부분
   const newReport = (context) => {
     const designerMode = selectCurrentDesignerMode(store.getState());
-    const reportId = selectCurrentReportId(store.getState());
-    deleteWorkbook(reportId);
-    const newWorkbook = new sheets.Workbook(designerWorkbookDOM);
-    context.getWorkbook().destroy();
-    context.setWorkbook(newWorkbook);
-    insertWorkbook({reportId: reportId, workbook: newWorkbook});
+    context.getWorkbook().fromJSON(defaultWorkbookJSON);
     reload(designerMode);
   };
 
   const openReportLocal = (context) => {
+    const currentReportId = selectCurrentReportId(store.getState());
     sheets.Designer.getCommand('fileMenuPanel')
         .execute(context, 'button_import_excel', null);
+    resetWorkbookJSON({
+      reportId: currentReportId,
+      workbookJSON: context.getWorkbook().toJSON()
+    });
   };
 
   const openReport = () => {
-    const loadExcelFile = ({data}) => {
-      try {
-        const reportId = data.reports[0].reportId;
-        loadReport(data);
-        // createDesigner({reportId: reportId});
-        importFile(
-            {fileName: reportId + '.xlsx'}
-        ).then((response) => {
-          setExcelFile(response.data, querySearch);
-        }).catch((e) => {
-          alert(localizedString.noneExcelFile);
-        });
-      } catch {
-        alert(localizedString.reportCorrupted);
-      }
-    };
-    openModal(LoadReportModal, {loadExcelFile: loadExcelFile});
+    openModal(LoadReportModal);
   };
 
   const createExcelFile = (reportId) => {
@@ -111,10 +94,6 @@ const useSpreadRibbon = () => {
   };
 
   const deleteExcelFile = ({reportId, prevDesigner}) => {
-    // createDesigner({
-    //   reportId: 0,
-    //   prevDesigner: prevDesigner
-    // });
     deleteFile({fileName: reportId + '.xlsx'});
   };
 

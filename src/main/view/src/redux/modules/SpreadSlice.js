@@ -13,7 +13,7 @@ const defaultBindInfo = {
 const initialState = {
   0: {
     mart: {
-      data: {}
+      spreadData: {}
     },
     meta: {
       bindingInfos: {}
@@ -27,6 +27,10 @@ const reducers = {
       ...initialState
     };
   },
+  setSpreadData(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId].mart.spreadData = actions.payload.data;
+  },
   setViewSpread(state, actions) {
     const reportId = actions.payload.reportId;
     return {
@@ -37,24 +41,22 @@ const reducers = {
     };
   },
   changeSpread(state, actions) {
-    const newId = actions.payload.reportId.newId;
     const prevId = actions.payload.reportId.prevId;
-    const {config, sheets, defaultBindInfo} = state;
-    const newState = {
-      config,
-      sheets,
-      defaultBindInfo,
-      [newId]: {
-        bindingInfos: actions.payload.bindingInfos,
-        designer: state[prevId]?.designer
-      }
+    const newId = actions.payload.reportId.newId;
+    const bindingInfos = actions.payload.bindingInfos;
+
+    delete state[prevId];
+    state[newId] = {
+      mart: {},
+      meta: {}
     };
 
-    return newState;
+    state[newId].meta.bindingInfos = bindingInfos;
+    state[newId].mart = {};
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId].bindingInfos = actions.payload.bindingInfos;
+    state[reportId].meta.bindingInfos = actions.payload.bindingInfos;
   },
   setBindingInfo(state, actions) {
     const reportId = actions.payload.reportId;
@@ -65,7 +67,7 @@ const reducers = {
         keys1.every((key, index) => key === keys2[index])) {
       new Error('setBindingInfo의 bindingInfo의 key가 다릅니다.');
     }
-    state[reportId].bindingInfos[datasetId] = actions.payload.bindingInfo;
+    state[reportId].meta.bindingInfos[datasetId] = actions.payload.bindingInfo;
   },
   deleteSpread(state, actions) {
     if (actions.payload == 0) {

@@ -5,7 +5,7 @@ import {selectCurrentDataset} from './DatasetSelector';
 export const selectBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId]?.bindingInfos
+    (reportId, spread) => spread[reportId]?.meta?.bindingInfos
 );
 
 export const selectCurrentBindingInfo = createSelector(
@@ -16,8 +16,8 @@ export const selectCurrentBindingInfo = createSelector(
 
 // 사용할 것들
 
-export const selectCurrentData = createSelector(
+export const selectCurrentSpreadData = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].mart.data
+    (reportId, spread) => spread[reportId]?.mart?.spreadData
 );

@@ -1,7 +1,7 @@
 import localizedString from 'config/localization';
 
-export const designerWorkbookDOM =
-  document.getElementById('ss');
+export const excelFileType =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 export const defaultWorkbookJSON = {
   'version': '15.1.4',

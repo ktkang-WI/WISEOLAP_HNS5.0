@@ -12,20 +12,21 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import localizedString from 'config/localization';
 import useModal from './useModal';
-import {excelIO, sheets, designer, getWorkbook}
+import {excelIO, sheets, getWorkbookJSON, insertWorkbookJSON}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
-import {excelIOOpenOtions}
+import {defaultWorkbookJSON, excelFileType, excelIOOpenOtions}
   from 'components/report/atomic/spreadBoard/util/spreadContants';
+import useFile from './useFile';
 const useSpread = () => {
   const dispatch = useDispatch();
   const {setBindingInfo} = SpreadSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
-
+  const {importFile} = useFile();
   const {alert} = useModal();
 
   const bindData = ({rowData, bindingInfo}) => {
-    const workbook = getWorkbook(reportId);
+    const workbook = getWorkbookJSON(reportId);
     const {columns} = generateColumns(rowData, sheets);
     let bindedSheet = workbook
         .getSheetFromName(bindingInfo.sheetNm);
@@ -121,27 +122,36 @@ const useSpread = () => {
     return blob;
   };
 
-  const setExcelFile = (data, querySearch) => {
+  const setExcelFile = (reportId) => {
+    const response = importFile({fileName: reportId + '.xlsx'});
+    if (response.status !== 200) {
+      insertWorkbookJSON({
+        reportId: reportId,
+        workbookJSON: defaultWorkbookJSON
+      });
+    }
     const blob = new Blob(
-        [data],
-        {type:
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        }
+        [response.data],
+        {type: excelFileType}
     );
-    excelIoOpen(blob, querySearch);
+    excelIoOpen(reportId, blob);
   };
 
-  const excelIoOpen = (file, querySearch) => {
-    const workbook = getWorkbook(reportId);
-    excelIO.open(
+  const excelIoOpen = async (reportId, file) => {
+    await excelIO.open(
         file,
         (json) => {
-          const workbookObj = json;
-          workbook.fromJSON(workbookObj);
-          if (querySearch) querySearch();
+          insertWorkbookJSON({
+            reportId: reportId,
+            workbookJSON: json
+          });
         },
         () => {
           alert(localizedString.reportCorrupted);
+          insertWorkbookJSON({
+            reportId: reportId,
+            workbookJSON: defaultWorkbookJSON
+          });
         },
         excelIOOpenOtions);
   };

@@ -32,7 +32,7 @@ const useFile = () => {
   const importFile = async (param) => {
     const response = await models.File.importFile(param);
     if (response.status !== 200) {
-      throw new Error('import file server error');
+      alert(localizedString.noneExcelFile);
     } else {
       return response;
     }

@@ -2,32 +2,50 @@ import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
 import {useEffect, useRef} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
-import {insertWorkbook, setDesigner, updateWorkbook}
+import {
+  getWorkbookJSON,
+  insertWorkbookJSON,
+  setDesignerRef}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useSelector} from 'react-redux';
-import {selectCurrentData} from 'redux/selector/SpreadSelector';
+import {selectBindingInfos, selectCurrentSpreadData}
+  from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import store from 'redux/modules';
 
 const SpreadBoard = () => {
   const spreaRef = useRef();
   // hook
-  const {sheetChangedListener, sheetNameChangedListener} =
-    useSpread();
+  const {
+    sheetChangedListener,
+    sheetNameChangedListener,
+    bindData
+  } = useSpread();
   const config = useSpreadRibbon();
   const currentReportId = useSelector(selectCurrentReportId);
-  const data = useSelector(selectCurrentData);
+  const spreadData = useSelector(selectCurrentSpreadData);
 
   useEffect(() => {
-
-  }, [data]);
+    setDesignerRef(spreaRef);
+  }, []);
 
   useEffect(() => {
-    updateWorkbook({
-      reportId: currentReportId,
-      workbook: spreaRef.current.designer.getWorkbook()
+    const bindingInfos = selectBindingInfos(store.getState());
+    Object.keys(spreadData).forEach((datasetId) => {
+      const bindingInfo = bindingInfos[datasetId];
+      bindData({
+        rowData: spreadData[datasetId],
+        bindingInfo: bindingInfo
+      });
     });
+  }, [spreadData]);
+
+
+  useEffect(() => {
+    const workbookJSON = getWorkbookJSON(currentReportId);
+    spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
   }, [currentReportId]);
 
   return (
@@ -36,10 +54,9 @@ const SpreadBoard = () => {
         ref={spreaRef}
         designerInitialized={(designer) => {
           designer.setConfig(config);
-          setDesigner(designer);
-          insertWorkbook({
+          insertWorkbookJSON({
             reportId: currentReportId,
-            workbook: designer.getWorkbook()
+            workbookJSON: designer.getWorkbook().toJSON()
           });
           sheetChangedListener(designer);
           sheetNameChangedListener(designer);
