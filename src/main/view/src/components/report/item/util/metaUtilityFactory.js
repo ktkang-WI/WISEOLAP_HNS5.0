@@ -1,5 +1,7 @@
 import ItemManager from './ItemManager';
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+// 추후 사용 예정.
+// import localizedString from 'config/localization';
 
 // meta.dataField.dimension 설정
 const getDimensionOption = (fieldOption) => {
@@ -89,10 +91,13 @@ const initDataFieldMeta = (item) => {
  * @return {JSON} 생성된 비정형 아이템의 meta 정보
  */
 const makeAdHocItemMeta = (orgItem) => {
+  // 임시용.
+  const type = {chart: '차트', pivot: '피벗'};
   orgItem.meta = {};
   ItemManager.generateMeta(orgItem);
+  // localizedString 사용 추후에 현재는 활용이 힘듬.
   return {
-    name: '아이템',
+    name: type[orgItem.type],
     memo: '',
     useCaption: true,
     ...orgItem.meta

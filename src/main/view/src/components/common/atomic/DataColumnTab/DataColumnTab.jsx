@@ -10,16 +10,15 @@ const theme = getTheme();
 
 const TitleWrapper = styled.div`
   text-align: left;
-  padding: 12px 15px;
-  border-bottom: 1px solid ${theme.color.breakLine};
+  padding: 15px 0px 8px 0px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid ${theme.color.gray100};
 `;
 
 const Wrapper = styled.div`
-  background: ${theme.color.background};
   height: 100%;
-  width: ${theme.size.panelWidth};
+  width: 100%;
   display: inline-block;
-  border-right: solid 1px ${theme.color.breakLine};
 `;
 
 const DataColumnTab = () => {
@@ -41,7 +40,7 @@ const DataColumnTab = () => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <PanelTitleText color={theme.color.primary}>
+        <PanelTitleText fontWeight={500}>
           {localizedString.dataItem}
         </PanelTitleText>
       </TitleWrapper>

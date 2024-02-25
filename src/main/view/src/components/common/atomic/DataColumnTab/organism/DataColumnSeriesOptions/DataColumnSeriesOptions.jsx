@@ -1,4 +1,3 @@
-import {TabPanel} from 'devextreme-react';
 import Modal from '../../../Modal/organisms/Modal';
 import {createContext, useEffect, useState} from 'react';
 import {dataSource} from './metaData/SeriesOptionData';
@@ -13,6 +12,7 @@ import {selectSeriesOption}
   from 'redux/selector/SeriesOption/SeriesOptionSelector';
 import localizedString from 'config/localization';
 import styled from 'styled-components';
+import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
@@ -50,7 +50,7 @@ const DataColumnSeriesOptions = (
     if (!seriesOptions) return;
     if (!seriesOptions.length == 0) {
       const seriesOption =
-        seriesOptions.filter((item) => item.fieldId === fieldId)[0];
+        seriesOptions.find((item) => item.fieldId === fieldId);
       setType(seriesOption.type);
       setGeneral(seriesOption.general);
       setPointLabel(seriesOption.pointLabel);
@@ -98,7 +98,7 @@ const DataColumnSeriesOptions = (
         width='500px'
         modalTitle={localizedString.seriesOptions.title}
         onClose={onClose}>
-        <TabPanel
+        <CommonTab
           className='dx-theme-background-color'
           width='100%'
           height='100%'
@@ -113,7 +113,7 @@ const DataColumnSeriesOptions = (
           }}
         >
 
-        </TabPanel>
+        </CommonTab>
       </Modal>
     </DataColumnSeriesOptionsContext.Provider>
   );

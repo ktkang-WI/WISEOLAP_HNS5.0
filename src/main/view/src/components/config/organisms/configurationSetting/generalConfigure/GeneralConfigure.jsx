@@ -7,7 +7,6 @@ import CusTomFileUploader from '../../userGroupManagement/common/FileUploader';
 import {useContext} from 'react';
 import {ConfigureContext} from '../ConfigurationSetting';
 
-
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
   const [general] = getContext.state.general;
@@ -17,7 +16,7 @@ const GeneralConfigure = () => {
   return (
     <Form
       formData={general}>
-      <GroupItem colCount={1}>
+      <GroupItem colCount={1} caption='라이센스 정보'>
         <Item
           dataField="licensesKey"
           editorOptions={nameEditorOptions}/>

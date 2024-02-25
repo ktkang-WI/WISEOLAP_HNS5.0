@@ -75,6 +75,41 @@ export default function useLayout() {
     dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
   };
 
+  const editColor = (reportId, selectedItem, colorEditValues) => {
+    const item = {
+      ...selectedItem,
+      meta: {
+        ...selectedItem.meta,
+        paletteType: 'colorEdit',
+        colorEdit: colorEditValues.colorEdit}
+    };
+
+    dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
+  };
+
+  const editMemo = (reportId, selectedItem, memoValue) => {
+    const item = {
+      ...selectedItem,
+      meta: {
+        ...selectedItem.meta,
+        memo: memoValue.memo}
+    };
+
+    dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
+  };
+
+  const editPalette = (reportId, selectedItem, paletteValue) => {
+    const item = {
+      ...selectedItem,
+      meta: {
+        ...selectedItem.meta,
+        paletteType: 'palette',
+        palette: paletteValue}
+    };
+
+    dispatch(itemSlice.updateItem({reportId: reportId, item: item}));
+  };
+
   const adHocLayoutUpdate = (reportId, value) => {
     const param = {
       reportId: reportId,
@@ -93,6 +128,9 @@ export default function useLayout() {
     updateLayoutShape,
     convertCaptionVisible,
     editItemName,
-    adHocLayoutUpdate
+    adHocLayoutUpdate,
+    editPalette,
+    editColor,
+    editMemo
   };
 };

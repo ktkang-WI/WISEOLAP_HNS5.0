@@ -13,6 +13,5 @@ public class UserDataDTO {
   int userNo;
   String userId;
   String userNm;
-  String grpNm;
   String dataXml;
 }

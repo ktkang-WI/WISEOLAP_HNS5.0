@@ -19,8 +19,6 @@ const Designer = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions
   const {setDesignerMode} = ConfigSlice.actions;
-
-  const left = ['Logo', 'ReportTabs'];
   const history = createBrowserHistory();
 
   useEffect(() => {
@@ -50,9 +48,10 @@ const Designer = () => {
   return (
     <div>
       <Header
-        left={left}
+        left={['Logo', 'Viewer']}
+        middle={['ReportTab']}
         right={[
-          'Viewer'
+          // 'Viewer'
           // 'NewWindow',
           // 'ShowQuery',
           // 'ReportProperty'

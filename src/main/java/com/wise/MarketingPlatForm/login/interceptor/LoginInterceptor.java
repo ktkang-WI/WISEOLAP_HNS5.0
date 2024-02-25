@@ -22,11 +22,11 @@ public class LoginInterceptor implements HandlerInterceptor {
         UserDTO userDTO = (UserDTO)session.getAttribute("user");
         log.info("Request URI == > " + request.getRequestURI());
 
-        if (userDTO == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.sendRedirect(request.getContextPath());
-            return false;
-        }
+        // if (userDTO == null) {
+        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        //     response.sendRedirect(request.getContextPath());
+        //     return false;
+        // }
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

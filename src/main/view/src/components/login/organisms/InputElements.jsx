@@ -85,7 +85,7 @@ const InputElements = () => {
     login: {
       type: 'login',
       inputs: ['ID', 'Password'],
-      labelMode: 'floating',
+      labelMode: 'outside',
       passwordLabel: 'Password',
       textLabel: 'text',
       mode: {
@@ -100,7 +100,7 @@ const InputElements = () => {
     register: {
       type: 'register',
       inputs: ['ID', 'Password', 'PasswordCheck', 'Email', 'Company'],
-      labelMode: 'floating',
+      labelMode: 'outside',
       passwordLabel: 'Password',
       textLabel: 'text',
       mode: {

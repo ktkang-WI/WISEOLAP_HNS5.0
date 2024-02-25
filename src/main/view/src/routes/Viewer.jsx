@@ -19,8 +19,8 @@ const Viewer = () => {
   return (
     <div>
       <Header
-        left={['Logo', 'ReportTabs']}
-        right={['Designer', 'DownloadReport', 'ReportProperty']}
+        left={['Logo', 'Designer', 'ReportTabs']}
+        right={['DownloadReport', 'ReportProperty']}
       >
       </Header>
       <ViewerContent/>

@@ -15,146 +15,155 @@ const NormalChartDefaultElement = () => {
   // state
   const selectedReportId = useSelector(selectCurrentReportId);
 
-  const chart = 'chart';
+  const label = localizedString.seriesOptions.label;
 
-  const onClickChartItem = (selectedReportId, chart, chartType) => {
-    insertFlexLayout(selectedReportId, chart, chartType);
+  const onClick = (chartType) => {
+    if (chartType == 'pie') {
+      insertFlexLayout(selectedReportId, 'pie');
+    } else {
+      insertFlexLayout(selectedReportId, 'chart', chartType);
+    }
+
     closePopover();
   };
 
-  const normalChartElemet = {
-    barChart: [
-      {
-        imgSrc: chartImages[chartItemType.bar],
-        label: localizedString.barChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.bar)
-      },
-      {
-        imgSrc: chartImages[chartItemType.stackedbar],
-        label: localizedString.stackedBarChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.stackedbar)
-      },
-      {
-        imgSrc: chartImages[chartItemType.fullstackedbar],
-        label: localizedString.fullStackedBarChart,
-        onClick: () =>
-          onClickChartItem(
-              selectedReportId, chart, chartItemType.fullstackedbar)
-      }
-    ],
-    lineChart: [
-      {
-        imgSrc: chartImages[chartItemType.scatter],
-        label: localizedString.scatterChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.scatter)
-      },
-      {
-        imgSrc: chartImages[chartItemType.line],
-        label: localizedString.lineChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.line)
-      },
-      {
-        imgSrc: chartImages[chartItemType.stackedline],
-        label: localizedString.stackedLineChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.stackedline)
-      },
-      {
-        imgSrc: chartImages[chartItemType.fullstackedline],
-        label: localizedString.fullStackedLineChart,
-        onClick: () =>
-          onClickChartItem(
-              selectedReportId, chart, chartItemType.fullstackedline)
-      },
-      {
-        imgSrc: chartImages[chartItemType.stepline],
-        label: localizedString.stepLineChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.stepline)
-      },
-      {
-        imgSrc: chartImages[chartItemType.spline],
-        label: localizedString.splineChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.spline)
-      }
-    ],
-    areaChart: [
-      {
-        imgSrc: chartImages[chartItemType.area],
-        label: localizedString.stackChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.area)
-      },
-      {
-        imgSrc: chartImages[chartItemType.stackedarea],
-        label: localizedString.stackedAreaChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.stackedarea)
-      },
-      {
-        imgSrc: chartImages[chartItemType.fullstackedarea],
-        label: localizedString.fullStackedAreaChart,
-        onClick: () =>
-          onClickChartItem(
-              selectedReportId, chart, chartItemType.fullstackedarea)
-      },
-      {
-        imgSrc: chartImages[chartItemType.steparea],
-        label: localizedString.stepAreaChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.steparea)
-      },
-      {
-        imgSrc: chartImages[chartItemType.splinearea],
-        label: localizedString.splineAreaChart,
-        onClick: () =>
-          onClickChartItem(selectedReportId, chart, chartItemType.splinearea)
-      },
-      {
-        imgSrc: chartImages[chartItemType.stackedsplinearea],
-        label: localizedString.stackedSplineAreaChart,
-        onClick: () =>
-          onClickChartItem(
-              selectedReportId, chart, chartItemType.stackedsplinearea)
-      },
-      {
-        imgSrc: chartImages[chartItemType.fullstackedsplinearea],
-        label: localizedString.fullStackedSplineAreaChart,
-        onClick: () =>
-          onClickChartItem(
-              selectedReportId, chart, chartItemType.fullstackedsplinearea)
-      }
-    ],
-    restChart: [
-      // TODO: bubble chart 추가
-      // {
-      //   imgSrc: chartImages[chartItemType.bubble],
-      //   label: localizedString.BubbleChart,
-      //   onClick: ()
-      //   => onClickChartItem(selectedReportId, chart, chartItemType.bubble)
-      // },
-      {
-        imgSrc: pie,
-        label: localizedString.pieChart,
-        onClick: () => {
-          insertFlexLayout(selectedReportId, 'pie');
-          closePopover();
+  const data = [
+    {
+      title: label.chart.bar,
+      checkboxs: [
+        {
+          title: label.chart.bar,
+          type: chartItemType.bar,
+          checked: false,
+          src: chartImages[chartItemType.bar]
+        },
+        {
+          title: label.chart.stackedbar,
+          type: chartItemType.stackedbar,
+          checked: false,
+          src: chartImages[chartItemType.stackedbar]
+        },
+        {
+          title: label.chart.fullstackedbar,
+          type: chartItemType.fullstackedbar,
+          checked: false,
+          src: chartImages[chartItemType.fullstackedbar]
         }
-      }
-    ],
-    keys: [
-      'barChart',
-      'lineChart',
-      'areaChart',
-      'restChart'
-    ]
-  };
+      ]
+    },
+    {
+      title: label.chart.scatterline,
+      checkboxs: [
+        {
+          title: label.chart.scatter,
+          type: chartItemType.scatter,
+          checked: false,
+          src: chartImages[chartItemType.scatter]
+        },
+        {
+          title: label.chart.line,
+          type: chartItemType.line,
+          checked: false,
+          src: chartImages[chartItemType.line]
+        },
+        {
+          title: label.chart.stackedline,
+          type: chartItemType.stackedline,
+          checked: false,
+          src: chartImages[chartItemType.stackedline]
+        },
+        {
+          title: label.chart.fullstackedline,
+          type: chartItemType.fullstackedline,
+          checked: false,
+          src: chartImages[chartItemType.fullstackedline]
+        },
+        {
+          title: label.chart.stepline,
+          type: chartItemType.stepline,
+          checked: false,
+          src: chartImages[chartItemType.stepline]
+        },
+        {
+          title: label.chart.spline,
+          type: chartItemType.spline,
+          checked: false,
+          src: chartImages[chartItemType.spline]
+        }
+      ]
+    },
+    {
+      title: label.chart.area,
+      checkboxs: [
+        {
+          title: label.chart.area,
+          type: chartItemType.area,
+          checked: false,
+          src: chartImages[chartItemType.area]
+        },
+        {
+          title: label.chart.area,
+          type: chartItemType.area,
+          checked: false,
+          src: chartImages[chartItemType.area]
+        },
+        {
+          title: label.chart.stackedarea,
+          type: chartItemType.stackedarea,
+          checked: false,
+          src: chartImages[chartItemType.stackedarea]
+        },
+        {
+          title: label.chart.fullstackedarea,
+          type: chartItemType.fullstackedarea,
+          checked: false,
+          src: chartImages[chartItemType.fullstackedarea]
+        },
+        {
+          title: label.chart.steparea,
+          type: chartItemType.steparea,
+          checked: false,
+          src: chartImages[chartItemType.steparea]
+        },
+        {
+          title: label.chart.splinearea,
+          type: chartItemType.splinearea,
+          checked: false,
+          src: chartImages[chartItemType.splinearea]
+        },
+        {
+          title: label.chart.stackedsplinearea,
+          type: chartItemType.stackedsplinearea,
+          checked: false,
+          src: chartImages[chartItemType.stackedsplinearea]
+        },
+        {
+          title: label.chart.fullstackedsplinearea,
+          type: chartItemType.fullstackedsplinearea,
+          checked: false,
+          src: chartImages[chartItemType.fullstackedsplinearea]
+        }
+      ]
+    },
+    {
+      title: localizedString.etc,
+      checkboxs: [
+        {
+          title: label.chart.bubble,
+          type: chartItemType.bubble,
+          checked: false,
+          src: chartImages[chartItemType.bubble]
+        },
+        {
+          title: localizedString.pieChart,
+          type: 'pie',
+          checked: false,
+          src: pie
+        }
+      ]
+    }
+  ];
 
-  return normalChartElemet;
+  return {data, onClick};
 };
 export default NormalChartDefaultElement;

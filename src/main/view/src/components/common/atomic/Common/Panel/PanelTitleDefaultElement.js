@@ -18,6 +18,8 @@ import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import EditParamterModal from 'components/dataset/modal//EditParamterModal';
+import SingleTableDesignerModal
+  from 'components/dataset/modal/SingleTableDesignerModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -49,8 +51,7 @@ const PanelTitleDefaultElement = () => {
         }
       },
       src: customFieldImg,
-      label: localizedString.addCustomField,
-      imgWidth: '14px'
+      label: localizedString.addCustomField
     },
     DataSourceModify: {
       id: 'data_source_modify',
@@ -84,6 +85,18 @@ const PanelTitleDefaultElement = () => {
               }));
             }
           });
+        } else if (dataset.datasetType == DatasetType.DS_SINGLE) {
+          const dataSourceRes = await models.
+              DataSource.getByDsId(dataset.dataSrcId);
+          const dataSource = dataSourceRes.data;
+          openModal(SingleTableDesignerModal,
+              {
+                selectedDataSource: dataSource,
+                orgDataset: dataset,
+                selectedTable: dataset.tableInfo,
+                columns: dataset.columnList
+              }
+          );
         }
       },
       src: modifyImg,

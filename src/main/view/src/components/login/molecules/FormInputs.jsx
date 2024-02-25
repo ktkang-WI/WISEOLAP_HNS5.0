@@ -1,12 +1,16 @@
 import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link, useNavigate} from 'react-router-dom';
-import TextButton from 'components/common/atomic/Common/Button/CommonButton';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import models from 'models';
 import useModal from 'hooks/useModal';
 import {setSpreadLicense}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {CheckBox} from 'devextreme-react';
+import {getTheme} from 'config/theme';
 // import {DesignerMode} from 'components/config/configType';
+
+const theme = getTheme();
 
 const StyledForm = styled.form.attrs(() => ({
   action: 'http://localhost:3000/editds'
@@ -19,10 +23,6 @@ const StyledForm = styled.form.attrs(() => ({
   }
 `;
 
-const Span = styled.span`
-  color: #7f8fa4;
-`;
-
 const FormInterval = styled.div`
   padding-top: ${(props) => {
     if (props.props === 'login') {
@@ -31,16 +31,12 @@ const FormInterval = styled.div`
   }}
 `;
 
-const StyledInput = styled.input`
-  width: 14px;
-  height: 14px;
-  margin-right: 5px;
-  background-position: -341px -12px;
-  transform: translateY(20%);
-`;
-
 const CheckBoxWrap = styled.div`
   padding-top: 10px;
+
+  .dx-checkbox-text {
+    color: ${theme.color.gray400} !important;
+  }
 `;
 
 const CheckBoxSpanWrap = styled.span`
@@ -60,10 +56,7 @@ const createCheckBox = (contents) => {
     return (
       <CheckBoxWrap>
         <CheckBoxSpanWrap>
-          <StyledInput type='checkBox' id='remainId'/>
-          <label htmlFor='remainId'>
-            <Span>ID Remember</Span>
-          </label>
+          <CheckBox text='아이디 저장'/>
         </CheckBoxSpanWrap>
       </CheckBoxWrap>
     );
@@ -82,8 +75,10 @@ const FormInputs = ({contents}) => {
 
   const createFormBtn = (contents) => {
     const type = contents.type;
-    const btnTexts =
-      type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
+    // const btnTexts =
+    //   type === 'login' ? ['로그인', {linkBtn: '회원가입'}] :
+    // ['회원가입', {linkBtn: '취소'}];
+    const btnTexts = ['로그인'];
     const path = type === 'login' ? '/editds/regist' : '/editds';
     return btnTexts.map((btnText, index) => {
       if (btnText.linkBtn) {
@@ -92,20 +87,22 @@ const FormInputs = ({contents}) => {
             to={path}
             key={index}
           >
-            <TextButton
+            <CommonButton
               className='link-textBtn'
               border-radius= '5px;'
             >
               {btnText.linkBtn ? btnText.linkBtn : btnText}
-            </TextButton>
+            </CommonButton>
           </Link>
         );
       } else {
         return (
-          <TextButton
+          <CommonButton
             className='form-textBtn'
+            font={theme.font.bigButton}
             key={index}
-            border-radius= '5px;'
+            borderRadius='8px'
+            height='48px'
             onClick={async () => {
               const id = document.querySelector('#input-ID input').value;
               const password =
@@ -125,7 +122,7 @@ const FormInputs = ({contents}) => {
             }}
           >
             {btnText.linkBtn ? btnText.linkBtn : btnText}
-          </TextButton>
+          </CommonButton>
         );
       }
     });

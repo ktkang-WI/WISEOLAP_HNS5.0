@@ -1,8 +1,14 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {Button, TabPanel} from 'devextreme-react';
 import styled from 'styled-components';
-import {authData} from './data/AuthorityData';
-import React, {createContext, useCallback, useEffect, useState} from 'react';
+import {Mode, authData} from './data/AuthorityData';
+import React,
+{createContext, useCallback, useEffect, useState} from 'react';
+import useModal from 'hooks/useModal';
+import localizedString from 'config/localization';
+import {getHint, getRefInstance} from 'components/config/utility/utility';
+import DataGrid from 'devextreme/ui/data_grid';
+import TreeList from 'devextreme/ui/tree_list';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -37,13 +43,37 @@ const NavBarItem = styled.div`
 export const AuthorityContext = createContext();
 
 const Authority = () => {
+  const {alert} = useModal();
+
   const btns = ['save'];
   const [auth, setAuth] = useState(authData[0]);
   const [data, setData] = useState([]);
 
+  const authorityDataCubeRef = () =>
+    getRefInstance(DataGrid, 'authority-data-cube');
+  const authorityDataDimensionRef = () =>
+    getRefInstance(DataGrid, 'authority-data-dimension');
+  const groupListRef = () => getRefInstance(DataGrid, 'group-list');
+  const userListRef = () => getRefInstance(DataGrid, 'user-list');
+  const dsViewListRef = () => getRefInstance(DataGrid, 'datasource-view-list');
+  const folderTreeViewRef = () => getRefInstance(TreeList, 'folder-tree-view');
+  const dataSetTreeViewRef = () =>
+    getRefInstance(TreeList, 'dataset-tree-view');
+  const dataSourceListRef = () => getRefInstance(DataGrid, 'datasource-list');
+
   const context = {
     state: {
       data: [data, setData]
+    },
+    ref: {
+      authorityDataCubeRef: authorityDataCubeRef,
+      authorityDataDimensionRef: authorityDataDimensionRef,
+      groupListRef: groupListRef,
+      userListRef: userListRef,
+      dsViewListRef: dsViewListRef,
+      folderTreeViewRef: folderTreeViewRef,
+      dataSetTreeViewRef: dataSetTreeViewRef,
+      dataSourceListRef: dataSourceListRef
     }
   };
 
@@ -55,15 +85,103 @@ const Authority = () => {
     });
   }, []);
 
+  const validationSave = () => {
+    if (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) {
+      const groupListSelectedRowKeys =
+          groupListRef()?.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef()?.option('selectedRowKeys');
+      const dsViewListRefSelectedRowKeys =
+          dsViewListRef().option('selectedRowKeys');
+
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0) &&
+      (dsViewListRefSelectedRowKeys.length > 0);
+    }
+
+    if (auth.mode === Mode.GROUP_REPORT || auth.mode === Mode.USER_REPORT ||
+      auth.mode === Mode.GROUP_DATASET || auth.mode === Mode.USER_DATASET ||
+      auth.mode === Mode.GROUP_DATASOURCE ||
+      auth.mode === Mode.USER_DATASOURCE) {
+      const groupListSelectedRowKeys =
+          groupListRef()?.option('selectedRowKeys');
+      const userListSelectedRowKeys =
+          userListRef()?.option('selectedRowKeys');
+
+      return (groupListSelectedRowKeys?.length > 0 ||
+        userListSelectedRowKeys?.length > 0);
+    }
+  };
+
   const handleBtnClick = ({component}) => {
-    alert('기능 개발 중입니다.');
+    if (!validationSave()) {
+      alert('데이터를 선택해주세요.');
+      return;
+    }
+
+    const authorityData = auth.save({groupListRef, userListRef, dsViewListRef,
+      authorityDataCubeRef, authorityDataDimensionRef, folderTreeViewRef,
+      dataSetTreeViewRef, dataSourceListRef, data});
+
+    try {
+      let prom;
+      if (auth.mode === Mode.GROUP_DATA) {
+        prom = authorityData.createGroupAuthorityData();
+      }
+      if (auth.mode === Mode.GROUP_REPORT) {
+        prom = authorityData.createGroupAuthorityReport();
+      }
+      if (auth.mode === Mode.GROUP_DATASET) {
+        prom = authorityData.createGroupAuthorityDataSet();
+      }
+      if (auth.mode === Mode.GROUP_DATASOURCE) {
+        prom = authorityData.createGroupAuthorityDataSource();
+      }
+      if (auth.mode === Mode.USER_DATA) {
+        prom = authorityData.createUserAuthorityData();
+      }
+      if (auth.mode === Mode.USER_REPORT) {
+        prom = authorityData.createUserAuthorityReport();
+      }
+      if (auth.mode === Mode.USER_DATASET) {
+        prom = authorityData.createUserAuthorityDataSet();
+      }
+      if (auth.mode === Mode.USER_DATASOURCE) {
+        prom = authorityData.createUserAuthorityDataSource();
+      }
+
+      prom.then((response) => {
+        if (response.data.data) {
+          try {
+            auth.data()
+                .then((res) => {
+                  if (res.data.data) {
+                    setData(res.data.data);
+                    auth.init(
+                        {authorityDataCubeRef, authorityDataDimensionRef}
+                    );
+                    alert(localizedString.successSave);
+                  }
+                });
+          } catch (error) {
+            alert('서버 오류 관리자에게 문의하세요.');
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Failed SaveAuthority', error);
+    }
   };
 
   const navBarItems = () => {
     return (
       btns.map((item, index) => (
         <NavBarItem key={index}>
-          <Button icon={item} onClick={handleBtnClick}></Button>
+          <Button
+            icon={item}
+            onClick={handleBtnClick}
+            hint={getHint(item)}
+          />
         </NavBarItem>
       ))
     );

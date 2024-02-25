@@ -81,7 +81,7 @@ const FormatOptionForm = ({
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
       {axisSetting && <Item
-        dataField='useShowZero'
+        dataField='axisStartToZero'
         editorType='dxCheckBox'
         editorOptions={{
         }}

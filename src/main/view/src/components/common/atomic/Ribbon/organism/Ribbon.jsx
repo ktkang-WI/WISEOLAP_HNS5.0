@@ -9,12 +9,13 @@ import {DesignerMode} from 'components/config/configType';
 const theme = getTheme();
 
 const StyledRibbon = styled.div`
-  width: 100vw;
+  width: calc(100% - ${theme.size.snbWidth} - 20px);
+  border-radius: 10px;
   height: ${theme.size.ribbonHeight};
-  border-bottom: solid 1px ${theme.color.breakLine};
+  border: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
-  padding-left: ${theme.size.snbWidth};
+  margin-left: calc(${theme.size.snbWidth} + 10px);
 `;
 
 const Ribbon = () => {
@@ -22,7 +23,7 @@ const Ribbon = () => {
   const focusedItem = useSelector(selectCurrentItem);
 
   return (
-    <StyledRibbon>
+    <StyledRibbon className='section'>
       <CreateRibbonBtns
         items={[
           'NewReport',

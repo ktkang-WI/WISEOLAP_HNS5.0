@@ -3,10 +3,11 @@ import RibbonPopoverContents from '../molecules/RibbonPopoverContents';
 
 const PopoverWrap = styled.div`
   background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 5px 0 rgba(51, 51, 51, 0.3);
-  width: ${(props)=> props.width? props.width: '300px'};
+  border: none;
+  box-shadow: 0 0 4px 0px rgba(0,0,0,.25);
+  width: auto;
   height: ${(props)=> props.height? props.height: '300px'};
+  white-space: nowrap;
 `;
 
 const PopoverUI = ({id, width, height, popoverType, titlePanel, props}) => {

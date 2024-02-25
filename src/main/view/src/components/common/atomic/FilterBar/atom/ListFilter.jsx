@@ -49,8 +49,9 @@ const ListFilter = ({
     } else if (!keys || keys == '[All]') {
       if (info.multiSelect) {
         keys = value.listItems.map((item) => item.name);
+      } else {
+        keys = [value.listItems[0].name];
       }
-      setText(allText);
     } else {
       if (dataType === 'number') {
         keys = keys.split(', ').map((key) => {
@@ -59,8 +60,8 @@ const ListFilter = ({
       } else {
         keys = keys.split(', ');
       }
-      setText(generateCaptionText(keys));
     }
+    setText(generateCaptionText(keys));
     setSelectionKeys(keys);
   }, [info, value]);
 

@@ -42,7 +42,6 @@
       <result column="USER_NO" property="userNo" javaType="int"/>
       <result column="USER_ID" property="userId" javaType="String"/>
       <result column="USER_NM" property="userNm" javaType="String"/>
-      <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="DATA_XML" property="dataXml" javaType="String"/>
     </resultMap>
 
@@ -167,7 +166,7 @@
         GRP_MSTR.GRP_DESC
         FROM USER_MSTR INNER JOIN GRP_MSTR
             ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-            WHERE 1 = 1 
+            WHERE 1 = 1
             AND USER_MSTR.DEL_YN = 'N'
             AND GRP_MSTR.DEL_YN = 'N'
 		</select>
@@ -177,11 +176,8 @@
           USER_MSTR.USER_NO,
           USER_MSTR.USER_ID,
           USER_MSTR.USER_NM,
-          GRP_MSTR.GRP_NM,
           USER_AUTH_DATA_MSTR.DATA_XML
-          FROM USER_MSTR INNER JOIN GRP_MSTR
-              ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-                        INNER JOIN USER_AUTH_DATA_MSTR
+          FROM USER_MSTR INNER JOIN USER_AUTH_DATA_MSTR
               ON USER_MSTR.USER_NO = USER_AUTH_DATA_MSTR.USER_NO
     </select>
 
@@ -209,15 +205,15 @@
           GRP_AUTH_REPORT_MSTR.AUTH_PUBLISH,
           GRP_AUTH_REPORT_MSTR.AUTH_DATAITEM,
           GRP_AUTH_REPORT_MSTR.AUTH_EXPORT
-          FROM GRP_AUTH_REPORT_MSTR 
+          FROM GRP_AUTH_REPORT_MSTR
               INNER JOIN PUB_FLD_MSTR
               ON GRP_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
               INNER JOIN GRP_MSTR
               ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
-              ORDER BY 
+              ORDER BY
                   GRP_MSTR.GRP_ID,
                   PUB_FLD_MSTR.FLD_ID,
-                  PUB_FLD_MSTR.FLD_LVL, 
+                  PUB_FLD_MSTR.FLD_LVL,
                   PUB_FLD_MSTR.FLD_ORDINAL
     </select>
 
@@ -234,18 +230,18 @@
           USER_AUTH_REPORT_MSTR.AUTH_VIEW,
           USER_AUTH_REPORT_MSTR.AUTH_PUBLISH,
           USER_AUTH_REPORT_MSTR.AUTH_DATAITEM,
-          USER_AUTH_REPORT_MSTR.AUTH_EXPORT 
+          USER_AUTH_REPORT_MSTR.AUTH_EXPORT
           FROM USER_MSTR
               INNER JOIN GRP_MSTR ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-              INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_MSTR.USER_NO
+              INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
               INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
-              ORDER BY 
+              ORDER BY
                   USER_MSTR.USER_NO,
                   PUB_FLD_MSTR.FLD_ID,
                   PUB_FLD_MSTR.FLD_LVL,
                   PUB_FLD_MSTR.FLD_ORDINAL
     </select>
-    
+
 
     <select id="selectGroupDs" resultMap="GroupDsDTO">
       SELECT
@@ -261,7 +257,7 @@
           FROM GRP_AUTH_DS_MSTR
           INNER JOIN DS_MSTR ON GRP_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
           INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
-          ORDER BY 
+          ORDER BY
               GRP_MSTR.GRP_ID,
               DS_MSTR.DS_ID
     </select>
@@ -279,12 +275,12 @@
         FROM USER_AUTH_DS_MSTR
         INNER JOIN DS_MSTR ON USER_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
         INNER JOIN USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_DS_MSTR.USER_NO
-        ORDER BY 
+        ORDER BY
             USER_MSTR.USER_NO,
             DS_MSTR.DS_ID
     </select>
 
-    <select id="selectUserDataset" resultMap="UserDatasetDTO">  
+    <select id="selectUserDataset" resultMap="UserDatasetDTO">
       SELECT
         USER_MSTR.USER_NO,
         USER_MSTR.USER_ID,
@@ -316,7 +312,7 @@
             GRP_MSTR.GRP_ID,
             DATASET_FLD_MSTR.FLD_ID
     </select>
-    
+
     <!-- TODO: 디비별 분기 처리-->
     <insert id="createUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
       INSERT INTO
@@ -368,7 +364,7 @@
 
     <update id="updateUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
         UPDATE USER_MSTR
-          SET 
+          SET
               <if test='grpId != 0'>
                 GRP_ID = #{grpId, jdbcType=INTEGER},
               </if>
@@ -399,7 +395,7 @@
 
     <update id="updateUsers" parameterType="java.util.List">
       UPDATE USER_MSTR
-        SET 
+        SET
         <if test='list[0].grpId != 0'>
           GRP_ID = #{list[0].grpId, jdbcType=INTEGER},
         </if>
@@ -409,6 +405,215 @@
             #{item.userNo, jdbcType=INTEGER}
       </foreach>
     </update>
+
+    <delete id="deleteGroupDs" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DS_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupDs" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DS_MSTR(
+              GRP_ID,
+              DS_ID
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.dsId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserDs" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DS_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserDs" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DS_MSTR(
+              USER_NO,
+              DS_ID
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.dsId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupDataset" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DATASET_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupDataset" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DATASET_MSTR(
+              GRP_ID,
+              FLD_ID
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserDataset" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DATASET_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserDataset" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DATASET_MSTR(
+              USER_NO,
+              FLD_ID
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupFolder" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_REPORT_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupFolder" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_REPORT_MSTR(
+              GRP_ID,
+              FLD_ID,
+              AUTH_VIEW,
+              AUTH_PUBLISH,
+              AUTH_DATAITEM,
+              AUTH_EXPORT
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER},
+            #{item.authView, jdbcType=VARCHAR},
+            #{item.authPublish, jdbcType=VARCHAR},
+            #{item.authDataItem, jdbcType=VARCHAR},
+            #{item.authExport, jdbcType=VARCHAR}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserFolder" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_REPORT_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserFolder" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_REPORT_MSTR(
+              USER_NO,
+              FLD_ID,
+              AUTH_VIEW,
+              AUTH_PUBLISH,
+              AUTH_DATAITEM,
+              AUTH_EXPORT
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER},
+            #{item.authView, jdbcType=VARCHAR},
+            #{item.authPublish, jdbcType=VARCHAR},
+            #{item.authDataItem, jdbcType=VARCHAR},
+            #{item.authExport, jdbcType=VARCHAR}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserData" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DATA_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserData" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DATA_MSTR(
+              USER_NO,
+              DATA_XML
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.dataXml, jdbcType=NCLOB}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupData" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DATA_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupData" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DATA_MSTR(
+              GRP_ID,
+              DATA_XML
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.dataXml, jdbcType=NCLOB}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
 
     <update id="updateUserPasswd" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
       UPDATE USER_MSTR
@@ -422,8 +627,8 @@
           WHERE USER_NO = #{userNo, jdbcType=INTEGER}
     </update>
 
-    <insert 
-      id="createGroup" 
+    <insert
+      id="createGroup"
       parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
       INSERT INTO
         GRP_MSTR(
@@ -449,7 +654,7 @@
 
     <update id="updateGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
         UPDATE GRP_MSTR
-          SET 
+          SET
               <if test='grpNm != ""'>
                 GRP_NM = #{grpNm, jdbcType=VARCHAR},
               </if>

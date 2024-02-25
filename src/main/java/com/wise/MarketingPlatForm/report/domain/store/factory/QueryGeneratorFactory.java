@@ -7,7 +7,7 @@ import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerato
 
 public class QueryGeneratorFactory {
     public QueryGenerator getDataStore(DsType dsType) {
-        if (dsType == DsType.DS_SQL) {
+        if (dsType == DsType.DS_SQL || dsType == DsType.DS_SINGLE) {
             return new SqlQueryGenerator();
         }
         if (dsType == DsType.CUBE) {

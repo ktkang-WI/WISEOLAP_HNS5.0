@@ -8,8 +8,6 @@ const InputFilter = ({info, value, isTo, onValueChanged, id, width}) => {
   return (
     <TextBox
       width={width}
-      focusStateEnabled={false}
-      hoverStateEnabled={false}
       height={theme.size.filterHeight}
       value={value? value.value[index] : ''}
       onValueChanged={(e) => {
