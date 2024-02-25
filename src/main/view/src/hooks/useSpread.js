@@ -10,23 +10,34 @@ import {useDispatch, useSelector} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
-import localizedString from 'config/localization';
-import useModal from './useModal';
-import {excelIO, sheets, getWorkbookJSON, insertWorkbookJSON}
+import {excelIO, sheets, insertWorkbookJSON, designerRef, workbookRef}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {defaultWorkbookJSON, excelFileType, excelIOOpenOtions}
   from 'components/report/atomic/spreadBoard/util/spreadContants';
 import useFile from './useFile';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
+import store from 'redux/modules';
+
 const useSpread = () => {
   const dispatch = useDispatch();
   const {setBindingInfo} = SpreadSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
   const {importFile} = useFile();
-  const {alert} = useModal();
+
+  const getWorkbook = () => {
+    const editMode = selectEditMode(store.getState());
+    if (editMode === EditMode['DESIGNER']) {
+      return designerRef.current.designer.getWorkbook();
+    } else if (editMode === EditMode['VIEWER']) {
+      return workbookRef.current.spread;
+    }
+  };
 
   const bindData = ({rowData, bindingInfo}) => {
-    const workbook = getWorkbookJSON(reportId);
+    if (rowData.length === 0) return;
+    const workbook = getWorkbook();
     const {columns} = generateColumns(rowData, sheets);
     let bindedSheet = workbook
         .getSheetFromName(bindingInfo.sheetNm);
@@ -115,26 +126,31 @@ const useSpread = () => {
   };
 
   const createReportBlob = async () => {
-    const json = designer.getWorkbook().toJSON({includeBindingSource: false});
+    const workbook = getWorkbook();
+    const json = workbook.toJSON({includeBindingSource: false});
     const blob = await new Promise((resolve, reject) => {
       excelIO.save(JSON.stringify(json), resolve, reject);
     });
     return blob;
   };
 
-  const setExcelFile = (reportId) => {
-    const response = importFile({fileName: reportId + '.xlsx'});
+  const setExcelFile = async (reportId) => {
+    const response = await importFile({fileName: reportId + '.xlsx'});
+    let data;
     if (response.status !== 200) {
+      data = defaultWorkbookJSON;
       insertWorkbookJSON({
         reportId: reportId,
         workbookJSON: defaultWorkbookJSON
       });
+    } else {
+      data = response.data;
     }
     const blob = new Blob(
-        [response.data],
+        [data],
         {type: excelFileType}
     );
-    excelIoOpen(reportId, blob);
+    await excelIoOpen(reportId, blob);
   };
 
   const excelIoOpen = async (reportId, file) => {
@@ -147,7 +163,6 @@ const useSpread = () => {
           });
         },
         () => {
-          alert(localizedString.reportCorrupted);
           insertWorkbookJSON({
             reportId: reportId,
             workbookJSON: defaultWorkbookJSON

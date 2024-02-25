@@ -2,10 +2,16 @@ import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 import {selectCurrentDataset} from './DatasetSelector';
 
+export const selectSpreadMeta = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.spread,
+    (reportId, spread) => spread[reportId].meta
+);
+
 export const selectBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId]?.meta?.bindingInfos
+    (reportId, spread) => spread[reportId].meta.bindingInfos
 );
 
 export const selectCurrentBindingInfo = createSelector(
@@ -14,10 +20,8 @@ export const selectCurrentBindingInfo = createSelector(
     (dataset, bindingInfos) => bindingInfos[dataset.datasetNm]
 );
 
-// 사용할 것들
-
 export const selectCurrentSpreadData = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId]?.mart?.spreadData
+    (reportId, spread) => spread[reportId].mart.spreadData
 );

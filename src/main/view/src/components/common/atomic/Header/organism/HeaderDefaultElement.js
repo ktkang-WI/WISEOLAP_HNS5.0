@@ -63,7 +63,7 @@ const HeaderDefaultElement = () => {
       }
     },
     'DownloadReport': {
-      'id': 'designer',
+      'id': 'downLoadReport',
       'label': localizedString.downloadReport,
       'type': 'TextButton'
     }

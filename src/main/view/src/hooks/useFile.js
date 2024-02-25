@@ -24,18 +24,16 @@ const useFile = () => {
     const response = await models.File.deleteFile(param);
     if (response.status !== 200) {
       alert(localizedString.failToDelete);
-    } else {
-      return response;
     }
+    return response;
   };
 
   const importFile = async (param) => {
     const response = await models.File.importFile(param);
     if (response.status !== 200) {
       alert(localizedString.noneExcelFile);
-    } else {
-      return response;
     }
+    return response;
   };
 
   return {

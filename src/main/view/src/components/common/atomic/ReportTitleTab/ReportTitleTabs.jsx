@@ -8,6 +8,8 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import useReportSave from 'hooks/useReportSave';
 import {EditMode} from 'components/config/configType';
+import {deleteWorkbookJSON}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -52,7 +54,10 @@ const ReportTitleTabs = () => {
           onClick={() => onClick(report)}
           onDelete={
             editMode == EditMode.VIEWER ?
-            (() => closeReport(report.reportId)) :
+            (() => {
+              closeReport(report.reportId);
+              deleteWorkbookJSON(report.reportId);
+            }) :
             undefined
           }
         >

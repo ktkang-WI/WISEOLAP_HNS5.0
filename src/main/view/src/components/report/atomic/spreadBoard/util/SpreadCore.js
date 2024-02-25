@@ -27,13 +27,20 @@ export const setSpreadLicense = async () => {
 };
 
 // spread Core Objects
+export const excelIO = new GC.Spread.Excel.IO();
+export const sheets = GC.Spread.Sheets;
+
 // eslint-disable-next-line prefer-const
 export let designerRef;
 export const setDesignerRef = (ref) => {
   designerRef = ref;
 };
-export const excelIO = new GC.Spread.Excel.IO();
-export const sheets = GC.Spread.Sheets;
+
+// eslint-disable-next-line prefer-const
+export let workbookRef;
+export const setWorkbookRef = (ref) => {
+  workbookRef = ref;
+};
 
 // eslint-disable-next-line prefer-const
 export let workbookJSONs = {};

@@ -14,7 +14,12 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {sheets, excelIO, resetWorkbookJSON} from '../util/SpreadCore';
+import {
+  sheets,
+  excelIO,
+  resetWorkbookJSON,
+  designerRef
+} from '../util/SpreadCore';
 import {
   SpreadRibbonDefaultElement,
   defaultWorkbookJSON,
@@ -24,7 +29,6 @@ import {
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
   const {reload} = useReportSave();
-  // const {querySearch} = useReportSave();
   const {uploadFile, deleteFile} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
@@ -99,8 +103,8 @@ const useSpreadRibbon = () => {
 
   const downloadReportXLSX = () => {
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+    const designer = designerRef.current.designer;
     reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
-    // 예외 처리 및  메소드 분리.
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',

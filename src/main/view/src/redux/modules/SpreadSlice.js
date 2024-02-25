@@ -31,28 +31,26 @@ const reducers = {
     const reportId = actions.payload.reportId;
     state[reportId].mart.spreadData = actions.payload.data;
   },
-  setViewSpread(state, actions) {
+  setSpread(state, actions) {
     const reportId = actions.payload.reportId;
+    const meta = actions.payload.meta;
     return {
       ...state,
       [reportId]: {
-        bindingInfos: actions.payload.bindingInfos
+        ...initialState[0],
+        meta: meta
       }
     };
   },
   changeSpread(state, actions) {
     const prevId = actions.payload.reportId.prevId;
     const newId = actions.payload.reportId.newId;
-    const bindingInfos = actions.payload.bindingInfos;
-
-    delete state[prevId];
+    const meta = actions.payload.meta;
     state[newId] = {
-      mart: {},
-      meta: {}
+      ...initialState[0],
+      meta: meta
     };
-
-    state[newId].meta.bindingInfos = bindingInfos;
-    state[newId].mart = {};
+    delete state[prevId];
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;

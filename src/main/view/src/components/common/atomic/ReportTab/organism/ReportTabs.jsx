@@ -12,6 +12,7 @@ import useReportSave from 'hooks/useReportSave';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {useDispatch} from 'react-redux';
 import {DesignerMode} from 'components/config/configType';
+import useSpread from 'hooks/useSpread';
 
 const ReportTabSource = [
   {
@@ -37,6 +38,7 @@ const ToolbarItems = [
 const ReportTabs = () => {
   const [reportList, setReportList] = useState();
   const {loadReport, querySearch} = useReportSave();
+  const {setExcelFile} = useSpread();
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
@@ -53,14 +55,16 @@ const ReportTabs = () => {
         if (dblClick > 1) {
           const selectedReport = e.itemData;
           if (selectedReport && selectedReport.type == 'REPORT') {
+            const reportType = selectedReport.reportType;
+            if (reportType === DesignerMode['EXCEL']) {
+              setExcelFile(selectedReport.id);
+            }
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
                   try {
                     dispatch(setDesignerMode(selectedReport.reportType));
                     loadReport(data);
-                    if (selectedReport.reportType !== DesignerMode['EXCEL']) {
-                      querySearch();
-                    }
+                    querySearch();
                   } catch (e) {
                     console.error(e);
                     alert(localizedString.reportCorrupted);

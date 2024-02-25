@@ -246,7 +246,7 @@ const useQueryExecute = () => {
       alert(localizedString.dataSourceNotSelectedMsg); return;
     }
     const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos((store.getState()));
+    const bindingInfos = selectBindingInfos(store.getState());
     const promises = [];
     const datas = {};
 
@@ -263,7 +263,7 @@ const useQueryExecute = () => {
         const data =
           await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
         if (!data.data.rowData) return;
-        datas[dataset.datasetId] = data;
+        datas[dataset.datasetId] = data.data.rowData;
       })());
     });
     await Promise.all(promises);
