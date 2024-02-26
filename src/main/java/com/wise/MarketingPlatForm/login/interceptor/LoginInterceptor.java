@@ -23,19 +23,22 @@ public class LoginInterceptor implements HandlerInterceptor {
         UserDTO userDTO = (UserDTO)session.getAttribute("user");
         log.info("Request URI == > " + request.getRequestURI());
 
-        if (userDTO == null) {
+        // 로그인(contetxtRoot) 진입 시 동작
+        if (request.getRequestURI().equals(request.getContextPath())) {
+            if (userDTO != null) {
+                // 세션 존재시 runMode 적용
+                RunMode runMode = userDTO.getRunMode();
+
+                if (runMode.equals(RunMode.ADMIN)) {
+                    response.sendRedirect(request.getContextPath() + "/dashany");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/viewer");
+                }
+                return false;
+            }
+        } else if (userDTO == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.sendRedirect(request.getContextPath());
-            return false;
-        } else if (request.getRequestURI().equals(request.getContextPath())) {
-            // 세션 존재시 runMode 적용
-            RunMode runMode = userDTO.getRunMode();
-
-            if (runMode.equals(RunMode.ADMIN)) {
-                response.sendRedirect(request.getContextPath() + "/dashany");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/viewer");
-            }
             return false;
         }
 
