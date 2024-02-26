@@ -22,6 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         UserDTO userDTO = (UserDTO)session.getAttribute("user");
         log.info("Request URI == > " + request.getRequestURI());
+        log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
 
         // 로그인(contetxtRoot) 진입 시 동작
         if (request.getRequestURI().equals(request.getContextPath() + "/")) {
