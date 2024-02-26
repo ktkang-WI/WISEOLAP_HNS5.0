@@ -7,7 +7,6 @@ import {
   useRef
 } from 'react';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import store from 'redux/modules';
 import {useDispatch} from 'react-redux';
 import LinkSlice from 'redux/modules/LinkSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -87,7 +86,8 @@ const LinkParamInfo = ({
   const dispatch = useDispatch();
   const {insertLink, updateLink} = LinkSlice.actions;
   const prevLinkParamData = usePrevious(linkParamData);
-  const checkLinkReportList = checkLinkReport(store.getState());
+  const checkLinkReportList = useSelector(checkLinkReport);
+  // (store.getState());
   const focusedItemId = useSelector(selectSelectedItemId);
   const focusedItemType = useSelector(selectCurrentItemType);
 
@@ -157,10 +157,11 @@ const LinkParamInfo = ({
   };
 
   const confirm = () => {
-    const checkLinkReportList = checkLinkReport(store.getState());
     const linkReportId = linkParamData.reports[0].reportId;
-    const currentReportId = selectCurrentReportId(store.getState());
-    const currentReportType = selectCurrentDesignerMode(store.getState());
+    const currentReportId = useSelector(selectCurrentReportId);
+    // selectCurrentReportId(store.getState());
+    const currentReportType = useSelector(selectCurrentDesignerMode);
+    // selectCurrentDesignerMode(store.getState());
     const dataPairs = paramInfo.map((info) => ({
       FK_COL_NM: info.fkParam,
       PK_COL_NM: info.pkParam
@@ -190,10 +191,11 @@ const LinkParamInfo = ({
       subLinkInfo.subLinkReportType = currentReportType;
       subLinkInfo.subLinkParamInfo = subLinkParamInfo;
     }
+    const immutableLinkReportInfo = JSON.parse(JSON.stringify(linkReportInfo));
     if (!checkLinkReportList.hasOwnProperty(linkReportId)) {
-      dispatch(insertLink(linkReportInfo));
+      dispatch(insertLink(immutableLinkReportInfo));
     } else {
-      dispatch(updateLink(linkReportInfo));
+      dispatch(updateLink(immutableLinkReportInfo));
     }
     onClose();
   };

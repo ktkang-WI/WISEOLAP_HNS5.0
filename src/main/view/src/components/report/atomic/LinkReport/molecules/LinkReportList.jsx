@@ -50,19 +50,25 @@ const LinkReportList = (
   const [subLinkParamInfo, setSubLinkParamInfo] = useState([]);
 
   const handleOpenPopup = async () => {
-    if (selectedRowData &&
-        selectedRowData.id !== linkParamData?.reports[0]?.reportId) {
-      const param = {reportId: selectedRowData.id};
-      models.Report.getLinkReportParam(param).then(({data}) => {
-        setLinkParamData(data);
-        setPopupVisible(true);
-      });
-    } else if (selectedRowData &&
-      selectedRowData.id == linkParamData?.reports[0]?.reportId) {
-      setPopupVisible(true);
-    } else {
+    if (!selectedRowData) {
       alert('연결 보고서를 선택해주세요.');
-    };
+      return;
+    }
+    try {
+      if (selectedRowData.id !== linkParamData?.reports[0]?.reportId) {
+        const {data} =
+          await models.Report.getLinkReportParam(
+              {
+                reportId: selectedRowData.id
+              }
+          );
+        setLinkParamData(data);
+      }
+      setPopupVisible(true);
+    } catch (error) {
+      console.error('Error fetching link report params:', error);
+      alert('Failed to fetch link parameters.');
+    }
   };
 
   return (
