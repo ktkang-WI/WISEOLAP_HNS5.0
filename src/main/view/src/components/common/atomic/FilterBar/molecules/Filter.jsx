@@ -58,7 +58,7 @@ const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
     <FilterWrapper>
       <FilterLabel
         width={info.useCaptionWidth ? info.captionWidth + 'px' : null}>
-        {isTo ? '~' : info.caption}
+        {isTo ? '~' : '\u2022 ' + info.caption}
       </FilterLabel>
       {getFilter(info.paramType)}
       {onDeleted &&

@@ -1,20 +1,21 @@
-import bar from 'assets/image/icon/button/series_type.png';
-import stackedbar from 'assets/image/icon/button/stackbar.png';
-import fullstackedbar from 'assets/image/icon/button/fullstackbar.png';
-import scatter from 'assets/image/icon/button/ico_pointLine1.png';
-import line from 'assets/image/icon/button/ico_pointLine2.png';
-import stackedline from 'assets/image/icon/button/ico_pointLine3.png';
-import fullstackedline from 'assets/image/icon/button/ico_pointLine4.png';
-import stepline from 'assets/image/icon/button/ico_pointLine5.png';
-import spline from 'assets/image/icon/button/ico_pointLine6.png';
-import area from 'assets/image/icon/button/ico_area1.png';
-import stackedarea from 'assets/image/icon/button/ico_area2.png';
-import fullstackedarea from 'assets/image/icon/button/ico_area3.png';
-import steparea from 'assets/image/icon/button/ico_area4.png';
-import splinearea from 'assets/image/icon/button/ico_area5.png';
-import stackedsplinearea from 'assets/image/icon/button/ico_area6.png';
-import fullstackedsplinearea from 'assets/image/icon/button/ico_area7.png';
-import bubble from 'assets/image/icon/button/ico_bubble1.png';
+import bar from 'assets/image/icon/item/bar.png';
+import stackedbar from 'assets/image/icon/item/stack_bar.png';
+import fullstackedbar from 'assets/image/icon/item/full_stacked_bar.png';
+import scatter from 'assets/image/icon/item/scatter.png';
+import line from 'assets/image/icon/item/line.png';
+import stackedLine from 'assets/image/icon/item/stacked_line.png';
+import fullStackedLine from 'assets/image/icon/item/full_stacked_line.png';
+import stepLine from 'assets/image/icon/item/step_line.png';
+import spline from 'assets/image/icon/item/spline.png';
+import area from 'assets/image/icon/item/area.png';
+import stackedArea from 'assets/image/icon/item/stacked_area.png';
+import fullStackedArea from 'assets/image/icon/item/full_stacked_area.png';
+import stepArea from 'assets/image/icon/item/step_area.png';
+import splineArea from 'assets/image/icon/item/spline_area.png';
+import stackedSplineArea from 'assets/image/icon/item/stacked_spline_area.png';
+import fullStackedSplineArea
+  from 'assets/image/icon/item/full_stacked_spline_area.png';
+import bubble from 'assets/image/icon/item/bubble.png';
 
 export const chartImages = {
   bar: bar,
@@ -22,16 +23,16 @@ export const chartImages = {
   fullstackedbar: fullstackedbar,
   scatter: scatter,
   line: line,
-  stackedline: stackedline,
-  fullstackedline: fullstackedline,
-  stepline: stepline,
+  stackedline: stackedLine,
+  fullstackedline: fullStackedLine,
+  stepline: stepLine,
   spline: spline,
   area: area,
-  stackedarea: stackedarea,
-  fullstackedarea: fullstackedarea,
-  steparea: steparea,
-  splinearea: splinearea,
-  stackedsplinearea: stackedsplinearea,
-  fullstackedsplinearea: fullstackedsplinearea,
+  stackedarea: stackedArea,
+  fullstackedarea: fullStackedArea,
+  steparea: stepArea,
+  splinearea: splineArea,
+  stackedsplinearea: stackedSplineArea,
+  fullstackedsplinearea: fullStackedSplineArea,
   bubble: bubble
 };

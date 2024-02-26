@@ -16,7 +16,7 @@ import FormatOptionForm
 
 const theme = getTheme();
 
-const ItemOptionModal = ({popupName, ...props}) => {
+const ItemOptionModal = ({popupName, height, ...props}) => {
   const selectedItem = useSelector(selectCurrentItem);
   const reportId = useSelector(selectCurrentReportId);
   const dispatch = useDispatch();
@@ -37,13 +37,16 @@ const ItemOptionModal = ({popupName, ...props}) => {
     <Modal
       onSubmit={() => {
         const formData = _.cloneDeep(ref.current.props.formData);
-        const item = setMeta(selectedItem, popupName, formData);
+        const selectedItemClone = _.cloneDeep(selectedItem);
+        const item = setMeta(selectedItemClone, popupName, formData);
+
         dispatch(updateItem({reportId: reportId, item: item}));
+
         return false;
       }}
       modalTitle={props.modalTitle}
       width={theme.size.smallModalWidth}
-      height={theme.size.bigModalHeight}
+      height={height ? height : theme.size.bigModalHeight}
       {...props}
     >
       {popupName === 'tooltip' &&
@@ -58,9 +61,9 @@ const ItemOptionModal = ({popupName, ...props}) => {
           ref={ref}
         />
       }
-      {(popupName === 'supplyAxis' || popupName === 'yAxis') &&
+      {(popupName === 'extraAxis' || popupName === 'yAxis') &&
         <FormatOptionForm
-          formData={_.cloneDeep(selectedItem.meta.yAxis)}
+          formData={_.cloneDeep(selectedItem.meta[popupName])}
           formRef={ref}
           axisSetting={true}
         />

@@ -4,13 +4,65 @@ import measureIcon from 'assets/image/icon/dataSource/measure.png';
 import fieldIcon from 'assets/image/icon/button/ico_axis.png';
 import FieldOptionModal
   from 'components/common/atomic/DataColumnTab/modal/FieldOptionModal';
+import {setMeta} from '../util/metaUtilityFactory';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
-const generateMeta = (item) => {
 
+export const getPagingOption = (config) => {
+  const defaultOption = {
+    pageRange: 20,
+    pageIndex: 0,
+    start: 0,
+    end: 20
+  };
+  if (config.paging.pagination.isOk) {
+    const pageRange = config.paging.pagination.pagingRange;
+    defaultOption.pageIndex = config.paging.pagination.index - 1;
+    defaultOption.pageRange = pageRange;
+    defaultOption.end = pageRange;
+  }
+  return defaultOption;
+};
+
+const dataGridOptionConfig = {
+  option: {
+    on: 'on',
+    off: 'off'
+  },
+  gridLine: {
+    row: true,
+    column: true,
+    stripes: false
+  },
+  cellMerging: true,
+  columnHeader: true,
+  paging: {
+    autoPaging: {
+      isOk: false,
+      time: 5
+    },
+    pagination: {
+      isOk: false,
+      content: '',
+      pagingRange: 20,
+      index: 1
+    },
+    pageUsageOfPageCount: {
+      isOk: false,
+      pageSizes: [10, 20, 50]
+    }
+  },
+  autoWrap: false,
+  autoGridWidth: false,
+  headerAdd: false, // TODO: 추후개발
+  writeHeader: false
+};
+
+const generateMeta = (item) => {
+  setMeta(item, 'dataGridOption', dataGridOptionConfig);
 };
 
 /**
@@ -77,7 +129,19 @@ const generateParameter = (item, param) => {
 const getRibbonItems = () => {
   return [
     'CaptionView',
-    'NameEdit'
+    'NameEdit',
+    'Palette',
+    'ColorEdit',
+    'GridLine',
+    'BarPallet',
+    'BarColorEdit',
+    'CellMerging',
+    'ColumnHeader',
+    'Paging',
+    'AutoWrap',
+    'AutoGridWidth',
+    'HeaderAdd',
+    'InputTxt'
   ];
 };
 

@@ -19,11 +19,11 @@ public class GroupService {
 
     @Autowired
     private AccountDAO accountDAO;
-    
+
 
     public List<GroupMstrEntity> getGroup() {
       return accountDAO.selectGroupMstr();
-    } 
+    }
 
     @Transactional
     public boolean createGroup(GroupDTO groupDTO) throws SQLException{
@@ -39,8 +39,6 @@ public class GroupService {
 
       result = accountDAO.createGroup(groupMstrEntity);
 
-      if (!result) throw new SQLException("그룹이 업데이트 되지 않았습니다.");
-
       grpId = groupMstrEntity.getGrpId();
 
       for (GroupMemberUserModel groupMemberUser : groupDTO.getGrpMemberUser())
@@ -52,7 +50,7 @@ public class GroupService {
         userMstr.add(userMstrEntity);
       }
 
-      
+
       result = accountDAO.updateUsers(userMstr);
 
       return result;
@@ -60,7 +58,7 @@ public class GroupService {
 
   @Transactional
     public boolean updateGroup(GroupDTO groupDTO) throws SQLException{
-      
+
       boolean result = false;
       List<UserMstrEntity> userMstr = new ArrayList<>();
       int grpId = groupDTO.getGrpId();
@@ -74,8 +72,6 @@ public class GroupService {
 
       result = accountDAO.updateGroup(groupMstrEntity);
 
-      if (!result) throw new SQLException("그룹이 업데이트 되지 않았습니다.");
-
       result = accountDAO.updateUserDefaultGroup(groupMstrEntity);
 
       for (GroupMemberUserModel groupMemberUser : groupDTO.getGrpMemberUser())
@@ -87,8 +83,7 @@ public class GroupService {
         userMstr.add(userMstrEntity);
       }
 
-      
-      result = accountDAO.updateUsers(userMstr);
+      if (userMstr.size() != 0 ) result = accountDAO.updateUsers(userMstr);
 
       return result;
   };
@@ -96,13 +91,13 @@ public class GroupService {
 
   @Transactional
     public boolean deleteGroup(GroupDTO groupDTO) throws SQLException{
-      
+
       boolean result = false;
 
       GroupMstrEntity groupMstrEntity = GroupMstrEntity.builder()
         .grpId(groupDTO.getGrpId())
         .build();
-      
+
       result = accountDAO.deleteGroup(groupMstrEntity);
       result = accountDAO.updateUserDefaultGroup(groupMstrEntity);
 

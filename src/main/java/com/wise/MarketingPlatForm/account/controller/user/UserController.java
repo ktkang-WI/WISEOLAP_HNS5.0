@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/account/user")
 public class UserController {
-  
+
   @Autowired
   private UserService userService;
 
@@ -63,7 +63,7 @@ public class UserController {
       .userDesc(userDesc)
       .passwd(passwd)
       .build();
-    
+
     boolean result = userService.createUser(userMstr);
 
     if (!result) return RestAPIVO.conflictResponse(false);
@@ -76,8 +76,8 @@ public class UserController {
     @RequestParam(required = true) int userNo,
     @RequestParam(required = false, defaultValue = "") String userId,
     @RequestParam(required = false, defaultValue = "") String userNm,
-    @RequestParam(required = false, defaultValue = "") String email_1,
-    @RequestParam(required = false, defaultValue = "") String email_2,
+    @RequestParam(required = false, defaultValue = "") String email1,
+    @RequestParam(required = false, defaultValue = "") String email2,
     @RequestParam(required = false, defaultValue = "") String telNo,
     @RequestParam(required = false, defaultValue = "0") int grpId,
     @RequestParam(required = false, defaultValue = "") String userRunMode,
@@ -88,18 +88,18 @@ public class UserController {
       .userNo(userNo)
       .userId(userId)
       .userNm(userNm)
-      .eMail1(email_1)
-      .eMail2(email_2)
+      .eMail1(email1)
+      .eMail2(email2)
       .telNo(telNo)
       .grpId(grpId)
       .userRunMode(userRunMode)
       .userDesc(userDesc)
       .build();
-    
+
     boolean result = userService.updateUser(userMstr);
 
     if (!result) return RestAPIVO.conflictResponse(false);
-  
+
     return RestAPIVO.okResponse(true);
 
   }
@@ -114,11 +114,11 @@ public class UserController {
       .userNo(userNo)
       .passwd(passwd)
       .build();
-    
+
     boolean result = userService.updateUserPasswd(userMstr);
 
     if (!result) return RestAPIVO.conflictResponse(false);
-  
+
     return RestAPIVO.okResponse(true);
   }
 
@@ -127,14 +127,14 @@ public class UserController {
     @RequestParam(required = true) int userNo
   ) throws SQLException{
 
-    UserGroupDTO userMstr = UserGroupDTO.builder()
+    UserMstrEntity userMstr = UserMstrEntity.builder()
       .userNo(userNo)
       .build();
 
     boolean result = userService.deleteUser(userMstr);
 
     if (!result) return RestAPIVO.conflictResponse(false);
-  
+
     return RestAPIVO.okResponse(true);
   }
 

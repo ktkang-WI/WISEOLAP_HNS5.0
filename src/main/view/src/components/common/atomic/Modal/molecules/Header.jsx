@@ -5,11 +5,11 @@ const theme = getTheme();
 
 const Wrapper = styled.div`
   width: 100%;
-  border-bottom: 1px ${theme.color.breakLine} solid;
   display: flex;
   font: ${theme.font.modalTitle};
-  color: ${theme.color.primaryFont};
-  height: 40px;
+  color: ${theme.color.gray600};
+  background: ${theme.color.gray50};
+  height: 48px;
   padding-left: 15px;
   align-items: center;
   box-sizing: border-box;

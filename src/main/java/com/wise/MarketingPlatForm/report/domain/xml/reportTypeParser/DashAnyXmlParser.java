@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
-import org.apache.logging.log4j.core.pattern.EqualsIgnoreCaseReplacementConverter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONPointer;
@@ -26,9 +25,6 @@ import com.wise.MarketingPlatForm.dataset.vo.CubeFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.QueryFieldVO;
 import com.wise.MarketingPlatForm.dataset.vo.RootFieldVO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
-import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
-import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
-import com.wise.MarketingPlatForm.report.domain.data.data.RootData;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabVO;
 import com.wise.MarketingPlatForm.report.domain.xml.vo.LayoutTabWrapperVO;
@@ -575,7 +571,7 @@ public class DashAnyXmlParser extends ReportXMLParser {
 		return dimensions;
 	}
 	@Override
-	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) {
+	public Map<String, Object> getReport(ReportMstrDTO dto, String userId) throws Exception {
 		this.getlayoutXmlDTO(dto.getLayoutXml());
 		this.getDatasetXmlDTO(dto.getDatasetXml(), userId);
 		this.getChartXmlDTO(dto.getChartXml());

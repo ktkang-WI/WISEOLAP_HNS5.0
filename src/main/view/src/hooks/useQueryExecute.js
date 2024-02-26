@@ -20,7 +20,6 @@ import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {useSelector} from 'react-redux';
 import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 
@@ -30,7 +29,6 @@ const useQueryExecute = () => {
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
   const {bindData} = useSpread();
-  const designerMode = useSelector(selectCurrentDesignerMode);
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -171,17 +169,21 @@ const useQueryExecute = () => {
           return;
         }
 
-        if (response.data.chart.data.length === 0) {
-          alert(`${localizedString.addPivotGrid}${localizedString.noneData}`);
-        }
-
         if (response.data['chart']) {
+          if (response.data['chart'].data.length == 0) {
+            alert(`${localizedString.adhoc}${localizedString.noneData}`);
+            return;
+          }
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
           ItemManager.generateItem(chartItem, cloneItem);
           dispatch(updateItem({reportId, item: chartItem}));
         }
         if (response.data['pivot']) {
+          if (response.data['pivot'].data.length == 0) {
+            alert(`${localizedString.adhoc}${localizedString.noneData}`);
+            return;
+          }
           pivotItem.mart.init = true;
           pivotItem.mart.data = response.data['pivot'];
           ItemManager.generateItem(pivotItem, cloneItem);
@@ -189,6 +191,7 @@ const useQueryExecute = () => {
         }
       });
     } catch (error) {
+      console.error(error);
       alert(error.message);
     }
   };
@@ -235,6 +238,7 @@ const useQueryExecute = () => {
         dispatch(updateItem({reportId, item: tempItem}));
       });
     } catch (error) {
+      console.error(error);
       alert(error.message);
     }
   };
@@ -362,6 +366,7 @@ const useQueryExecute = () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
+    const designerMode = selectCurrentDesignerMode(store.getState());
 
     if (datasets.length === 0) {
       alert(localizedString.dataSourceNotSelectedMsg);
@@ -528,6 +533,7 @@ const useQueryExecute = () => {
   const validateRequiredField = (item) => {
     let dataFieldOption;
     let dataField;
+    const designerMode = selectCurrentDesignerMode(store.getState());
     if (designerMode === DesignerMode['DASHBOARD']) {
       dataFieldOption = item.mart.dataFieldOption;
       dataField = item.meta.dataField;

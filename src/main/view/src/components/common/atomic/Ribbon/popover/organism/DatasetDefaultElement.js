@@ -10,6 +10,10 @@ import SelectUserUploadTableModal
   from 'components/dataset/modal/SelectUserUploadTableModal';
 import UserUploadTableModal
   from 'components/dataset/modal/UserUploadTableModal';
+import SelectTableModal from 'components/dataset/modal/SelectTableModal';
+import SingleTableDesignerModal
+  from 'components/dataset/modal/SingleTableDesignerModal';
+import {getTheme} from 'config/theme';
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
@@ -38,14 +42,33 @@ const DatasetDefaultElement = () => {
           });
         }
       },
-      // {
-      //   label: localizedString.addDsSingle,
-      //   imgSrc: '',
-      //   visible: true,
-      //   onClick: () => {
-      //     console.log('singleTable');
-      //   }
-      // },
+      {
+        label: localizedString.addDsSingle,
+        imgSrc: '',
+        visible: true,
+        onClick: () => {
+          openModal(SelectDataSourceModal, {
+            onSubmit: (dataSource) => {
+              openModal(SelectTableModal, {
+                onSubmit: (selectedTable, columns) => {
+                  openModal(SingleTableDesignerModal,
+                      {
+                        selectedDataSource: dataSource,
+                        selectedTable: selectedTable,
+                        columns: columns
+                      }
+                  );
+                },
+                dsId: dataSource.dsId,
+                dsViewId: dataSource.dsViewId,
+                height: theme.size.bigModalHeight,
+                width: theme.size.bigModalWidth
+              });
+            },
+            isSingleTable: true
+          });
+        }
+      },
       {
         label: localizedString.addDsUpload,
         imgSrc: '',

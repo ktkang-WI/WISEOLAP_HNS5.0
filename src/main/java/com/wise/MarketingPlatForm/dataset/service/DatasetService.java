@@ -22,10 +22,22 @@ import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
+import com.wise.MarketingPlatForm.dataset.type.DbmsType;
+import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
+import com.wise.MarketingPlatForm.querygen.dto.Hierarchy;
+import com.wise.MarketingPlatForm.querygen.dto.SelectCube;
+import com.wise.MarketingPlatForm.querygen.dto.SelectCubeEtc;
+import com.wise.MarketingPlatForm.querygen.dto.SelectCubeMeasure;
+import com.wise.MarketingPlatForm.querygen.dto.SelectCubeOrder;
+import com.wise.MarketingPlatForm.querygen.dto.SelectCubeWhere;
+import com.wise.MarketingPlatForm.querygen.service.QuerySettingEx;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
 
@@ -182,6 +194,11 @@ public class DatasetService {
                     .dsViewId(entity.getDsViewId())
                     .dsViewNm(entity.getDsViewNm())
                     .dbmsType(DbmsType.fromString(entity.getDbmsType()).get())
+                    .dsNm(entity.getDsNm())
+                    .userAreaYn(entity.getUserAreaYn())
+                    .port(entity.getPort())
+                    .ownerNm(entity.getOwnerNm())
+                    .userId(entity.getUserId())
                     .build());
         }
 
@@ -442,7 +459,93 @@ public class DatasetService {
         return defaultValues;
     }
 
-    public List<UserUploadMstrDTO> getDBUploadTables(int dsId) {
+    public String generateSingleTableQuery(int dsId, List<Map<String, Object>> columnList, List<Parameter> parameters) {
+
+        String tableName = "";
+        QuerySettingEx sqlQenQuery = new QuerySettingEx();
+        ArrayList<SelectCube> aDtSel = new ArrayList<SelectCube>();
+        ArrayList<Hierarchy> aDtSelHIe = new ArrayList<Hierarchy>();
+        ArrayList<SelectCubeMeasure> aDtSelMea = new ArrayList<SelectCubeMeasure>();
+
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                .dsId(dsInfoEntity.getDsId())
+                .dsNm(dsInfoEntity.getDsNm())
+                .ip(dsInfoEntity.getIp())
+                .port(dsInfoEntity.getPort())
+                .password(dsInfoEntity.getPassword())
+                .dbNm(dsInfoEntity.getDbNm())
+                .ownerNm(dsInfoEntity.getOwnerNm())
+                .userId(dsInfoEntity.getUserId())
+                .userAreaYn(dsInfoEntity.getUserAreaYn())
+                .dsDesc(dsInfoEntity.getDsDesc())
+                .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                .build();
+
+        String dsOwnerNm = dsMstrDTO.getOwnerNm();
+        int columnListLength = columnList.size();
+        for (int i = 0; i < columnListLength; i++) {
+            Map<String, Object> column = columnList.get(i);
+
+            SelectCube selCubemea = new SelectCube();
+
+            if (column != null) {
+                selCubemea.setUNI_NM(column.get("TBL_NM") + "." + column.get("COL_NM")); // TBL_NM+COL_NM
+                selCubemea.setCAPTION(column.get("COL_CAPTION") + ""); // COL_CAPTION
+                selCubemea.setDATA_TYPE(column.get("DATA_TYPE") + "");// DATA_TYPE
+                selCubemea.setORDER(Integer.toString(i));// for문으로 추가
+                selCubemea.setTYPE("MEA");// TYPE
+                aDtSel.add(selCubemea);
+
+                SelectCubeMeasure selMea = new SelectCubeMeasure();
+
+                selMea.setMEA_GRP_UNI_NM(column.get("TBL_NM") + ""); // TBL_NM
+                selMea.setMEA_UNI_NM(
+                    column.get("TBL_NM") + "." + column.get("COL_NM")); // TBL_NM+COL_NM
+                selMea.setMEA_CAPTION(column.get("COL_CAPTION") + ""); // COL_CAPTION
+                selMea.setMEA_TBL_NM(column.get("TBL_NM")+""); // TBL_NM
+                selMea.setMEA_COL_NM(column.get("COL_NM") + "");// COL_NM
+                if (column.get("AGG") != null){
+                    selMea.setMEA_AGG(column.get("AGG")+""); // AGG
+                } else {
+                    selMea.setMEA_AGG(""); // AGG
+                }
+                selMea.setCOL_EXPRESS("");
+                aDtSelMea.add(selMea);
+
+                tableName = column.get("TBL_NM") + "";
+            }
+            if ("".equals(tableName)) {
+                tableName = column.get("TBL_NM") + "";
+            }
+        }
+
+        String sql = sqlQenQuery.CubeQuerySettingSingleDS(aDtSel, aDtSelHIe, aDtSelMea,
+                            new ArrayList<SelectCubeWhere>(), new ArrayList<SelectCubeOrder>(), "DB2",
+                            new ArrayList<com.wise.MarketingPlatForm.querygen.dto.Relation>(), new ArrayList<com.wise.MarketingPlatForm.querygen.dto.Relation>(),
+                             new ArrayList<SelectCubeEtc>());
+        return sql;
+    }
+
+    public List<DsViewTableDTO> getDsViewDBTables(String dsId, String dsViewId) {
+    
+        List<DsViewTableEntity> dsViewTableEntityList = datasetDAO.selectDsViewTables(dsViewId);
+        List<DsViewTableDTO> dsViewTableDtoList = new ArrayList<DsViewTableDTO>();
+        
+        for (DsViewTableEntity dsViewTableEntity : dsViewTableEntityList) {
+            DsViewTableDTO dsViewTableDTO = DsViewTableDTO.builder()
+                .tableNm(dsViewTableEntity.getTableNm())
+                .tableCaption(dsViewTableEntity.getTableCaption())
+                .build();
+
+            dsViewTableDtoList.add(dsViewTableDTO);
+        }
+
+        return dsViewTableDtoList;
+    }
+	
+	public List<UserUploadMstrDTO> getDBUploadTables(int dsId) {
         
         List<UserUploadMstrEntity> userUploadMstrEntityList = datasetDAO.selectUserUploadTables(dsId);
 
@@ -463,5 +566,5 @@ public class DatasetService {
         }
         
         return userUploadTableList;
-    }
+	}
 }

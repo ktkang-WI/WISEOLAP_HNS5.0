@@ -1,10 +1,29 @@
 import {TextBox} from 'devextreme-react';
 import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const StyledTextBox = styled(TextBox)`
-  .dx-texteditor-input-container{
-  }
+  border: 1px solid ${theme.color.gray400} !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
 `;
+
+const TextBoxLabel = styled.div`
+  margin: 10px 5px;
+  text-align: left;
+  font-size: 14px;
+  color: ${theme.color.gray400};
+  font: ${theme.font.common};
+  margin-top: 30px;
+`;
+
+const labelMapper = {
+  'ID': '아이디',
+  'Password': '비밀번호',
+  'Email': '이메일'
+};
 
 const Input = ({contents}) => {
   const handleValidation = (contents, input) => {
@@ -24,20 +43,22 @@ const Input = ({contents}) => {
       {
         contents.inputs.map(
             (input, index) =>
-              <StyledTextBox
-                key={index}
-                label={input}
-                id={'input-' + input}
-                labelMode={contents.labelMode}
-                onKeyDown={contents.onKeyDown}
-                mode={
-                  input.includes('Password')? contents.mode['Password'] : 'text'
-                }
-                maxLength={20}
-              >
-                {type === 'register' ? handleValidation(contents, input) : ''}
-                {input === 'ID' ? contents.checkBtn : ''}
-              </StyledTextBox>
+              <>
+                <TextBoxLabel>{labelMapper[input] || input}</TextBoxLabel>
+                <StyledTextBox
+                  key={index}
+                  id={'input-' + input}
+                  onKeyDown={contents.onKeyDown}
+                  mode={
+                    input.includes('Password')?
+                      contents.mode['Password'] : 'text'
+                  }
+                  maxLength={20}
+                >
+                  {type === 'register' ? handleValidation(contents, input) : ''}
+                  {input === 'ID' ? contents.checkBtn : ''}
+                </StyledTextBox>
+              </>
         )
       }
     </div>

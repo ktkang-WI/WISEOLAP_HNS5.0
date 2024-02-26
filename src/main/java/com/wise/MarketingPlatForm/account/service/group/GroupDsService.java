@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupDsPutDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthDsMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.ds.GroupDsModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
@@ -28,6 +32,56 @@ public class GroupDsService {
 
     return groupDsModel;
   };
+
+  @Transactional
+  public boolean putGroupDs(List<GroupDsPutDTO> groupDsPutDTO) {
+
+    List<GroupAuthDsMstrEntity> groupAuthDsMstr = generateGroupAuthDsObject(groupDsPutDTO);
+
+    if (groupAuthDsMstr == null) return false;
+
+    boolean result = false;
+  
+    result = accountDAO.deleteGroupDs(groupAuthDsMstr);
+    result = accountDAO.putGroupDs(groupAuthDsMstr);
+
+    return result;
+  };
+
+  public List<GroupAuthDsMstrEntity> generateGroupAuthDsObject(List<GroupDsPutDTO> groupDsPutDTO) {
+    List<GroupAuthDsMstrEntity> result = new ArrayList<>();
+
+    for (GroupDsPutDTO groupdsPut : groupDsPutDTO) {
+      int grpId = groupdsPut.getGrpId();
+      List<Integer> dss = groupdsPut.getDsIds();
+      int dsSize = dss.size();
+
+      if (dsSize == 0) {
+        GroupAuthDsMstrEntity groupAuthDsMstrEntity = GroupAuthDsMstrEntity.builder()
+          .grpId(grpId)
+          .dsId(0)
+          .build();
+
+          result.add(groupAuthDsMstrEntity);
+
+        continue;
+      }
+
+      for (Integer dsId : groupdsPut.getDsIds()) {
+
+        GroupAuthDsMstrEntity groupAuthDsMstrEntity = GroupAuthDsMstrEntity.builder()
+          .grpId(grpId)
+          .dsId(dsId)
+          .build();
+
+          result.add(groupAuthDsMstrEntity);
+
+      }
+
+    }
+
+    return result;
+  }
 
 
   public List<GroupDsModel> generateGroupDsObject(List<GroupDsDTO> groupDsDTO) {

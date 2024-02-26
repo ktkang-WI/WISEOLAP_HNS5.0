@@ -1,4 +1,5 @@
 export default {
   DS_SQL: 'DS_SQL',
-  CUBE: 'CUBE'
+  CUBE: 'CUBE',
+  DS_SINGLE: 'DS_SINGLE'
 };

@@ -9,29 +9,28 @@ import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  background: ${theme.color.background};
   height: 100%;
-  width: ${theme.size.panelWidth};
+  width: 100%;
   display: inline-block;
-  border-right: solid 1px ${theme.color.breakLine};
 `;
 
 const AttributeWrapper = styled.div`
   width: 100%;
+  margin: 10px 0px;
   height: auto;
 `;
 
 const TitleWrapper = styled.div`
   text-align: left;
-  padding: 12px 15px;
-  border-bottom: 1px solid ${theme.color.breakLine};
+  margin-bottom: 15px;
 `;
 
 const ButtonWrapper = styled.div`
   width: 100%;
-  height: 100px;
+  height: auto;
   display: flex;
-  padding: 10px 15px;
+  margin: 10px 0px;
+  margin-bottom: 30px;
 `;
 
 
@@ -52,7 +51,7 @@ const ItemAttributeTab = () => {
       return (
         <AttributeWrapper key={data}>
           <TitleWrapper>
-            <PanelTitleText color={theme.color.primary}>
+            <PanelTitleText color={theme.color.gray600}>
               {attributeGrp.title}
             </PanelTitleText>
           </TitleWrapper>

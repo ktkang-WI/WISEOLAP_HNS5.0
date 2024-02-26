@@ -10,6 +10,14 @@ export const dbTables = (dsId, search) => {
   });
 };
 
+export const dsViewdbTables = (dsId, dsViewId, search) => {
+  return axios.post(path + '/dsview-db-tables', {
+    dsId: dsId,
+    dsViewId: dsViewId,
+    search: search
+  });
+};
+
 export const dbColumns = (dsId, table, search) => {
   return axios.post(path + '/db-columns', {
     dsId: dsId,
@@ -48,7 +56,7 @@ export const getDataByQueryMart = (dsId, query, parameters) => {
 export const getAllDatasetDatas = (dsId, query, parameters) => {
   const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
 
-  return axios.post(path + '/query-dataset-allDatas', {
+  return axios.post(path + '/query-dataset-all-datas', {
     dsId: parseInt(dsId),
     query: query,
     parameter: JSON.stringify(parameter)

@@ -1,9 +1,6 @@
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
-// import meaImg from 'assets/image/icon/dataSource/measure.png';
-// import dimImg from 'assets/image/icon/dataSource/dimension.png';
-// import folderImg from 'assets/image/icon/report/folder_load.png';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useRef, useState} from 'react';

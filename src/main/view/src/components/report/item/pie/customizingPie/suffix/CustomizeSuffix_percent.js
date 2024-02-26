@@ -15,10 +15,10 @@ const treatedNumber = (value, customSuffix, precsion, precsionOption) => {
 
 export default function CustomizeSuffixValue(value, options) {
   const customSuffix = 1;
-  const precsion = options.precsion;
+  const precision = options.precision;
 
   const num = treatedNumber(
-      value * 100, customSuffix, precsion, options.precsionOption
+      value * 100, customSuffix, precision, options.precisionType
   );
 
   return num + '%';

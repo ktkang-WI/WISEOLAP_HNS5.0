@@ -1,13 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
-require('@grapecity/spread-sheets-designer/' +
-  'styles/gc.spread.sheets.designer.min.css');
-require('@grapecity/spread-sheets-designer-resources-ko');
-require('@grapecity/spread-sheets-resources-ko');
-require('@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css');
-require('@grapecity/spread-sheets-designer');
 
 const GC = require('@grapecity/spread-sheets');
 const ExcelIO = require('@grapecity/spread-excelio');
+require('@grapecity/spread-sheets-charts');
+require('@grapecity/spread-sheets-print');
+require('@grapecity/spread-sheets-barcode');
+require('@grapecity/spread-sheets-shapes');
+require('@grapecity/spread-sheets-pdf');
+require('@grapecity/spread-sheets-pivot-addon');
+require('@grapecity/spread-sheets-tablesheet');
+require('@grapecity/spread-sheets-resources-ko');
+require('@grapecity/spread-sheets-designer-resources-ko');
+require('@grapecity/spread-sheets-designer');
+
 
 GC.Spread.Common.CultureManager.culture('ko-kr');
 const sjsLicense = 'intelligence.wise.co.kr,5962557' +
@@ -71,6 +76,15 @@ const reducers = {
     return {
       ...initialState,
       config: state.config
+    };
+  },
+  setViewSpread(state, actions) {
+    const reportId = actions.payload.reportId;
+    return {
+      ...state,
+      [reportId]: {
+        bindingInfos: actions.payload.bindingInfos
+      }
     };
   },
   changeSpread(state, actions) {

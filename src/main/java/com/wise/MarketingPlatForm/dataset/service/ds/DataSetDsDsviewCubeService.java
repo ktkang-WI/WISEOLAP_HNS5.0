@@ -69,7 +69,7 @@ public class DataSetDsDsviewCubeService {
       if (!isDsViewContained) {
         dsView = DatasetDsDsviewCubeDTO.builder()
         .dsId(datasetDsDsviewCubeData.getDsId())
-        .dsViewId(datasetDsDsviewCubeData.getDsViewId())
+        .dsViewId(dsViewId)
         .dsViewNm(datasetDsDsviewCubeData.getDsViewNm())
         .dbmsType(datasetDsDsviewCubeData.getDbmsType())
         .ownerNm(datasetDsDsviewCubeData.getOwnerNm())
@@ -81,7 +81,7 @@ public class DataSetDsDsviewCubeService {
 
       if (!isCubeIdContained) {
         cube = CubeMstrEntity.builder()
-        .dsViewId(prevDsViewId)
+        .dsViewId(dsViewId)
         .cubeId(datasetDsDsviewCubeData.getCubeId())
         .cubeNm(datasetDsDsviewCubeData.getCubeNm())
         .build();

@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -31,6 +34,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -38,6 +42,7 @@ import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -138,7 +143,7 @@ public class ReportController {
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
         AdHocOption adHocOption = new AdHocOption(null, null);
-        
+
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -407,6 +412,38 @@ public class ReportController {
                 return ResponseEntity.ok().body(map);
 	}
 
+    @PatchMapping(value = "/update")
+  public ResponseEntity<RestAPIVO> patchConfigReportData(
+    @RequestParam(required = true) int reportId,
+    @RequestParam(required = false, defaultValue = "") String reportNm,
+    @RequestParam(required = false, defaultValue = "0") String reportSubTitle,
+    @RequestParam(required = false, defaultValue = "0") int fldId,
+    @RequestParam(required = false, defaultValue = "0") String fldType,
+    @RequestParam(required = false, defaultValue = "") int reportOrdinal,
+    @RequestParam(required = false, defaultValue = "") String reportType,
+    @RequestParam(required = false, defaultValue = "") String reportTag,
+    @RequestParam(required = false, defaultValue = "") String reportDesc
+  ) throws Exception {
+
+    ReportMstrEntity reportMstr = ReportMstrEntity.builder()
+        .reportId(reportId)
+        .reportNm(reportNm)
+        .reportSubTitle(reportSubTitle)
+        .fldId(fldId)
+        .fldType(fldType)
+        .reportOrdinal(reportOrdinal)
+        .reportType(reportType)
+        .reportDesc(reportDesc)
+        .reportTag(reportTag)
+        .build();
+
+    boolean result = reportService.patchConfigReport(reportMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+
+    return RestAPIVO.okResponse(result);
+  }
+
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
         String userId = param.getOrDefault("userId", "");
@@ -428,5 +465,5 @@ public class ReportController {
     }
 
 }
-    
+
 

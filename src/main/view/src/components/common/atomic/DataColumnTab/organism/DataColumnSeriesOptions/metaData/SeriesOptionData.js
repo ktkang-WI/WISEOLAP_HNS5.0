@@ -179,6 +179,12 @@ export const dataColumnTypeData = {
           src: chartImages[chartItemType.area]
         },
         {
+          title: label.chart.area,
+          type: chartItemType.area,
+          checked: false,
+          src: chartImages[chartItemType.area]
+        },
+        {
           title: label.chart.stackedarea,
           type: chartItemType.stackedarea,
           checked: false,
