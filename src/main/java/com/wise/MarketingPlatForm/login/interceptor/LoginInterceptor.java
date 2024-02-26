@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 
 @Component
@@ -22,11 +23,21 @@ public class LoginInterceptor implements HandlerInterceptor {
         UserDTO userDTO = (UserDTO)session.getAttribute("user");
         log.info("Request URI == > " + request.getRequestURI());
 
-        // if (userDTO == null) {
-        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        //     response.sendRedirect(request.getContextPath());
-        //     return false;
-        // }
+        if (userDTO == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendRedirect(request.getContextPath());
+            return false;
+        } else if (request.getRequestURI().equals(request.getContextPath())) {
+            // 세션 존재시 runMode 적용
+            RunMode runMode = userDTO.getRunMode();
+
+            if (runMode.equals(RunMode.ADMIN)) {
+                response.sendRedirect(request.getContextPath() + "/dashany");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/viewer");
+            }
+            return false;
+        }
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
