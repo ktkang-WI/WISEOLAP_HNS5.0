@@ -31,9 +31,9 @@ public class LoginInterceptor implements HandlerInterceptor {
                 RunMode runMode = userDTO.getRunMode();
 
                 if (runMode.equals(RunMode.ADMIN)) {
-                    response.sendRedirect(request.getContextPath() + "/dashany");
+                    response.sendRedirect("dashany");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/viewer");
+                    response.sendRedirect("viewer");
                 }
             }
         } else if (userDTO == null) {
