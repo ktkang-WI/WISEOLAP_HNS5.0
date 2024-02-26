@@ -35,7 +35,6 @@ public class LoginInterceptor implements HandlerInterceptor {
                 } else {
                     response.sendRedirect(request.getContextPath() + "/viewer");
                 }
-                return false;
             }
         } else if (userDTO == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
