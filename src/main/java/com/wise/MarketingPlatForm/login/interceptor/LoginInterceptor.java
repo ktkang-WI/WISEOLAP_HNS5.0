@@ -24,7 +24,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         log.info("Request URI == > " + request.getRequestURI());
 
         // 로그인(contetxtRoot) 진입 시 동작
-        if (request.getRequestURI().equals(request.getContextPath())) {
+        if (request.getRequestURI().equals(request.getContextPath() + "/")) {
             if (userDTO != null) {
                 // 세션 존재시 runMode 적용
                 RunMode runMode = userDTO.getRunMode();
