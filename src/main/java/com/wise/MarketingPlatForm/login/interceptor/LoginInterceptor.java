@@ -19,28 +19,29 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("user");
-        log.info("Request URI == > " + request.getRequestURI());
-        log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
+        // HttpSession session = request.getSession();
+        // UserDTO userDTO = (UserDTO)session.getAttribute("user");
+        // log.info("Request URI == > " + request.getRequestURI());
+        // log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
 
-        // 로그인(contetxtRoot) 진입 시 동작
-        if (request.getRequestURI().equals(request.getContextPath() + "/")) {
-            if (userDTO != null) {
-                // 세션 존재시 runMode 적용
-                RunMode runMode = userDTO.getRunMode();
+        // response.getStatus()
+        // // 로그인(contetxtRoot) 진입 시 동작
+        // if (request.getRequestURI().equals(request.getContextPath() + "/")) {
+        //     if (userDTO != null) {
+        //         // 세션 존재시 runMode 적용
+        //         RunMode runMode = userDTO.getRunMode();
 
-                if (runMode.equals(RunMode.ADMIN)) {
-                    response.sendRedirect("dashany");
-                } else {
-                    response.sendRedirect("viewer");
-                }
-            }
-        } else if (userDTO == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.sendRedirect(request.getContextPath());
-            return false;
-        }
+        //         if (runMode.equals(RunMode.ADMIN)) {
+        //             response.sendRedirect("dashany");
+        //         } else {
+        //             response.sendRedirect("viewer");
+        //         }
+        //     }
+        // } else if (userDTO == null) {
+        //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        //     response.sendRedirect(request.getContextPath());
+        //     return false;
+        // }
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
