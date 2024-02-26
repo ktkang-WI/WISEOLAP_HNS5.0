@@ -1,12 +1,9 @@
-import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
-import store from 'redux/modules';
-
 export const processLinkParamData = (
     data,
     setParamInfo,
     setFkNmOptions,
-    linkFkInfo,
     setLinkFkInfo,
+    currentItemParam,
     subLinkParamInfo,
     setSubLinkParamInfo,
     setSubFkNmOptions,
@@ -23,7 +20,6 @@ export const processLinkParamData = (
     // 처음 가져오는거
     parsedData = JSON.parse(data.informations);
     const linkReportId = data.reports[0].reportId;
-    const currentItemParam = selectCurrentInformationas(store.getState());
     transformedData = currentItemParam.map((item, index) => {
       currentParsedData = parsedData[index];
       return {

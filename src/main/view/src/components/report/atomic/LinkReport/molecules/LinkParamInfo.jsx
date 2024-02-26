@@ -21,6 +21,7 @@ import {
 import {selectSelectedItemId, selectCurrentItemType}
   from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
+import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
 
 const PopupWrapper = styled.div`
   width: 100%;
@@ -90,6 +91,9 @@ const LinkParamInfo = ({
   // (store.getState());
   const focusedItemId = useSelector(selectSelectedItemId);
   const focusedItemType = useSelector(selectCurrentItemType);
+  const currentItemParam = useSelector(selectCurrentInformationas);
+  const currentReportId = useSelector(selectCurrentReportId);
+  const currentReportType = useSelector(selectCurrentDesignerMode);
 
   useEffect(() => {
     if (linkParamData &&
@@ -99,8 +103,8 @@ const LinkParamInfo = ({
             checkLinkReportList[selectedRowData.id],
             setParamInfo,
             setFkNmOptions,
-            linkFkInfo,
             setLinkFkInfo,
+            currentItemParam,
             subLinkParamInfo,
             setSubLinkParamInfo,
             setSubFkNmOptions,
@@ -112,8 +116,8 @@ const LinkParamInfo = ({
             linkParamData,
             setParamInfo,
             setFkNmOptions,
-            linkFkInfo,
             setLinkFkInfo,
+            currentItemParam,
             subLinkParamInfo,
             setSubLinkParamInfo,
             setSubFkNmOptions,
@@ -158,9 +162,7 @@ const LinkParamInfo = ({
 
   const confirm = () => {
     const linkReportId = linkParamData.reports[0].reportId;
-    const currentReportId = useSelector(selectCurrentReportId);
     // selectCurrentReportId(store.getState());
-    const currentReportType = useSelector(selectCurrentDesignerMode);
     // selectCurrentDesignerMode(store.getState());
     const dataPairs = paramInfo.map((info) => ({
       FK_COL_NM: info.fkParam,
