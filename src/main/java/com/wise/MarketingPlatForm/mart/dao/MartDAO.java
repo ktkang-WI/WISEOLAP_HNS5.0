@@ -15,21 +15,18 @@ public class MartDAO {
     @Resource(name = "martTemplates")
     MartSqlSession martSqlSession;
 
-    public MartResultDTO select(String query) {
-        List<MartResultDTO> result = martSqlSession.sessionTemplate.selectList("Mart.select", query);
-
+    public MartResultDTO select(Integer dsId, String query) {
+        List<MartResultDTO> result = martSqlSession.sessionTemplates.get(dsId).selectList("Mart.select", query);
         return (MartResultDTO) result.get(0);
     }
 
-    public MartResultDTO selectQueryDataTbl(Map<String, String> param) {
-        MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataTbl", param);
-
+    public MartResultDTO selectQueryDataTbl(Integer dsId, Map<String, String> param) {
+        MartResultDTO result = martSqlSession.sessionTemplates.get(dsId).selectOne("Mart.selectQueryDataTbl", param);
         return result;
     }
 
-    public MartResultDTO selectQueryDataCol(Map<String, String> param) {
-        MartResultDTO result = martSqlSession.sessionTemplate.selectOne("Mart.selectQueryDataCol", param);
-
+    public MartResultDTO selectQueryDataCol(Integer dsId, Map<String, String> param) {
+        MartResultDTO result = martSqlSession.sessionTemplates.get(dsId).selectOne("Mart.selectQueryDataCol", param);
         return result;
     }
 }

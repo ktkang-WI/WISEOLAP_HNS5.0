@@ -194,7 +194,7 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion);
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
 
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
@@ -244,7 +244,7 @@ public class ReportService {
         String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
         String[] items = layoutType.split("_");
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
         List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
 
@@ -615,7 +615,7 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggregation);
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
 
         return martResultDTO;
     }

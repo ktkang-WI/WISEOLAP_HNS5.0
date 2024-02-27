@@ -85,6 +85,10 @@ const FilterBarWrapper = (props) => {
             parameters.informations.reduce((acc, filter) => {
               if (!filter.visible) return;
 
+              if (filter.lineBreak) {
+                acc.push(<br/>);
+              }
+
               const filterProps = {
                 key: filter.name,
                 info: filter,
@@ -112,9 +116,6 @@ const FilterBarWrapper = (props) => {
                   onDeleted={onDeleted}/>);
               }
 
-              if (filter.lineBreak) {
-                acc.push(<br/>);
-              }
               return acc;
             }, [])
           }
