@@ -42,8 +42,8 @@ public class LoginFilter implements Filter{
         HttpSession session = request.getSession();
         UserDTO userDTO = (UserDTO)session.getAttribute("user");
 
-        log.info("Request URI == > " + request.getRequestURI());
-        log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
+        log.debug("Request URI == > " + request.getRequestURI());
+        log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
 
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
