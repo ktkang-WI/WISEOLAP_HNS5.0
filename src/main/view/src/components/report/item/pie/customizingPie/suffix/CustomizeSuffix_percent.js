@@ -1,15 +1,15 @@
-const treatedNumber = (value, customSuffix, precsion, precsionOption) => {
-  const suffixValue = customSuffix * (10 ** (precsion));
+const treatedNumber = (value, customSuffix, precision, precisionType) => {
+  const suffixValue = customSuffix * (10 ** (precision));
   const mathRoundFunc = {
     round: Math.round,
-    roundUp: Math.ceil,
-    roundDown: Math.floor
+    ceil: Math.ceil,
+    floor: Math.floor
   };
 
   return (
     parseFloat(
-        mathRoundFunc[precsionOption](value * suffixValue) / suffixValue
-    ).toFixed(precsion)
+        mathRoundFunc[precisionType](value * suffixValue) / suffixValue
+    ).toFixed(precision)
   );
 };
 

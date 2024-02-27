@@ -98,18 +98,18 @@ const LabelEditForm = ({selectedItem}, ref) => {
         dataField='precision'
         editorType='dxNumberBox'
       >
-        <Label>{localizedString.precsion}</Label>
+        <Label>{localizedString.precision}</Label>
       </Item>
       <Item
         dataField='precisionType'
         editorType='dxSelectBox'
         editorOptions={{
-          items: localizedString.precsionOptions,
+          items: localizedString.precisionOptions,
           valueExpr: 'name',
           displayExpr: 'caption'
         }}
       >
-        <Label>{localizedString.precsionOption}</Label>
+        <Label>{localizedString.precisionOption}</Label>
       </Item>
     </Form>
   );
