@@ -35,7 +35,7 @@ const StyledBoard = styled.div`
   height: 100%;
   width: calc(100% - 10px);
   flex: 1;
-  background: ${theme.color.white};
+  background: ${theme.color.background};
   display: flex;
   min-height: 0px;
   margin-bottom: 0px;

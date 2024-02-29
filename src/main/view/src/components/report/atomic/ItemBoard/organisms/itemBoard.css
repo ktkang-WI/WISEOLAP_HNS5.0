@@ -50,7 +50,7 @@ div.flexlayout__tab_button--selected {
 }
 
 .flexlayout__splitter {
-  background: white;
+  background: none;
 }
 
 .flexlayout__layout {
