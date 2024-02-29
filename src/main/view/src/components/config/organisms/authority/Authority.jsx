@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {Button, TabPanel} from 'devextreme-react';
+import {Button} from 'devextreme-react';
 import styled from 'styled-components';
 import {Mode, authData} from './data/AuthorityData';
 import React,
@@ -9,6 +9,7 @@ import localizedString from 'config/localization';
 import {getHint, getRefInstance} from 'components/config/utility/utility';
 import DataGrid from 'devextreme/ui/data_grid';
 import TreeList from 'devextreme/ui/tree_list';
+import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -213,7 +214,7 @@ const Authority = () => {
           </NavBar>
         </Header>
         <Content>
-          <TabPanel
+          <CommonTab
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -223,7 +224,7 @@ const Authority = () => {
             itemComponent={auth.component}
             onTitleClick={handleTabPanelItem}
           >
-          </TabPanel>
+          </CommonTab>
         </Content>
       </Wrapper>
     </AuthorityContext.Provider>
