@@ -120,7 +120,7 @@ public class DatasetService {
         param.put("dbType", dsMstrDTO.getDbmsType().name());
         param.put("owner", dsMstrDTO.getOwnerNm());
 
-        MartResultDTO tableList = martDAO.selectQueryDataTbl(param);
+        MartResultDTO tableList = martDAO.selectQueryDataTbl(dsMstrDTO.getDsId(), param);
         List<Map<String, Object>> result = tableList.getRowData()
                 .stream()
                 .map(data -> {
@@ -156,7 +156,7 @@ public class DatasetService {
         param.put("owner", dsMstrDTO.getOwnerNm());
         param.put("table", table);
 
-        MartResultDTO columnList = martDAO.selectQueryDataCol(param);
+        MartResultDTO columnList = martDAO.selectQueryDataCol(dsMstrDTO.getDsId(), param);
         List<Map<String, Object>> result = columnList.getRowData()
                 .stream()
                 .map(data -> {
@@ -217,7 +217,7 @@ public class DatasetService {
 
         martConfig.setMartDataSource(dsMstrDTO);
         String query = "SELECT * FROM BMT_F_버블차트";
-        return martDAO.select(query);
+        return martDAO.select(dsMstrDTO.getDsId(), query);
     }
 
     public Map<String, MartResultDTO> getQueryDatasetTable(int dsId) {
@@ -243,8 +243,8 @@ public class DatasetService {
         param.put("dbType", dsMstrDTO.getDbmsType().name());
         param.put("owner", dsMstrDTO.getOwnerNm());
 
-        MartResultDTO tableList = martDAO.selectQueryDataTbl(param);
-        MartResultDTO columnList = martDAO.selectQueryDataCol(param);
+        MartResultDTO tableList = martDAO.selectQueryDataTbl(dsMstrDTO.getDsId(), param);
+        MartResultDTO columnList = martDAO.selectQueryDataCol(dsMstrDTO.getDsId(), param);
 
         tbl_Col.put("tables", tableList);
         tbl_Col.put("columns", columnList);
@@ -282,7 +282,7 @@ public class DatasetService {
          MartResultDTO resultDTO = new MartResultDTO();
 
          try {
-             resultDTO = martDAO.select(newQuery);
+             resultDTO = martDAO.select(dsMstrDTO.getDsId(), newQuery);
              List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
              for (MetaDTO metaDTO : metaDTOs) {
@@ -326,7 +326,7 @@ public class DatasetService {
         MartResultDTO resultDTO = new MartResultDTO();
 
         try {
-            resultDTO = martDAO.select(query);
+            resultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
             List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
             for (MetaDTO metaDTO : metaDTOs) {
@@ -389,7 +389,7 @@ public class DatasetService {
             query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);
         }
 
-        MartResultDTO result = martDAO.select(query);
+        MartResultDTO result = martDAO.select(dsMstrDTO.getDsId(), query);
         List<Map<String, Object>> listItems = ListParameterUtils.sanitize(result.getRowData(), listParameterDTO);
 
         List<String> defaultValue = listParameterDTO.getDefaultValue();
@@ -427,7 +427,7 @@ public class DatasetService {
                 defaultValues.add("");
                 continue;
             }
-            MartResultDTO result = martDAO.select(query);
+            MartResultDTO result = martDAO.select(dsMstrDTO.getDsId(), query);
             List<Map<String, Object>> data = result.getRowData();
 
             if (data.size() == 0) {

@@ -5,6 +5,7 @@ import DataColumnList from './molecules/DataColumnList';
 import localizedString from 'config/localization';
 import {selectCurrentDataFieldOption} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
+import {ScrollView} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -44,9 +45,16 @@ const DataColumnTab = () => {
           {localizedString.dataItem}
         </PanelTitleText>
       </TitleWrapper>
-      {
-        getColumnList()
-      }
+      <ScrollView
+        height={'calc(100% - 60px)'}
+        width={'100%'}
+        direction='vertical'
+        showScrollbar={'never'}
+      >
+        {
+          getColumnList()
+        }
+      </ScrollView>
     </Wrapper>
   );
 };

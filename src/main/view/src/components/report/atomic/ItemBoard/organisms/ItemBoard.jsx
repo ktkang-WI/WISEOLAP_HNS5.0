@@ -25,6 +25,8 @@ import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 
 const theme = getTheme();
@@ -82,6 +84,7 @@ const ItemBoard = () => {
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
 
   const itemFactory = {
@@ -282,17 +285,17 @@ const ItemBoard = () => {
       renderValues.buttons.push(
           !rootItem.adHocOption &&
           (memo ?
-            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>,
-            <button
-              key="delete"
-              title="Delete tabset"
-              onClick={(e) => {
-                // flexLayout 커스텀 삭제 버튼 기능.
-                model.doAction(Actions.deleteTab(id));
-              }}
-            >
-            &#128473;&#xFE0E;
-            </button>),
+            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
+          (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
+            key="delete"
+            title="Delete tabset"
+            onClick={(e) => {
+              // flexLayout 커스텀 삭제 버튼 기능.
+              model.doAction(Actions.deleteTab(id));
+            }}
+          >
+          &#128473;&#xFE0E;
+          </button>),
           <button
             key="download"
             title="Download"
