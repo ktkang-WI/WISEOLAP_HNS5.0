@@ -97,3 +97,13 @@ img {
 .dx-drawer-content {
   overflow: visible !important;
 }
+
+.szh-menu__item {
+  content: '>';
+  width: 80px;
+  padding: 5px 8px;
+}
+
+.szh-menu__submenu > .szh-menu__item{
+  content: '>';
+}

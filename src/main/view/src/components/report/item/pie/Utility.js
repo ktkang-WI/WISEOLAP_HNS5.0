@@ -22,7 +22,7 @@ const generateMeta = (item) => {
     suffixK: 'K',
     unit: 'Ones',
     precision: 0,
-    ones: ''
+    suffixO: ''
   });
   setMeta(item, 'labelEdit', {
     showTitle: true,
@@ -36,7 +36,7 @@ const generateMeta = (item) => {
     suffixK: 'K',
     unit: 'Ones',
     precision: 0,
-    ones: ''
+    suffixO: ''
   });
   setMeta(item, 'legend', {
     useLegend: true,

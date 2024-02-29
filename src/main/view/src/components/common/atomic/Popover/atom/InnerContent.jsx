@@ -33,7 +33,7 @@ const PointerWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px 8px;
+  padding: 0px;
   justify-content: space-between;
   height: 28px;
   font: ${theme.font.ribbonSubMenu};
@@ -48,8 +48,7 @@ const PointerWrap = styled.div`
   }
 `;
 const Arrow = styled.img`
-  margin-left: 20px;
-  padding: 10px 5px;
+  padding-right: 10px;
   width: 10px;
   height: 10px;
 }
@@ -74,7 +73,7 @@ export const PopoverLabelImageBtn = ({label, imgSrc, onClick}) => {
 export const PopoverTextBtn = ({label, onClick}) => {
   return (
     <PointerWrap>
-      <MenuItem
+      <MenuItem style={{width: '100%', padding: '5px 10px'}}
         onClick={onClick}
       >
         {label}
@@ -86,8 +85,9 @@ export const PopoverTextBtn = ({label, onClick}) => {
 // export 3 subMenu 사용 팝오버
 export const PopoverSubMenu = ({label, visible, contents}) => {
   return (
-    <PointerWrap>
-      <SubMenu id='subMenu' label={label}>
+    <PointerWrap type='subMenu'>
+      <SubMenu id='subMenu' label={label}
+        gap={-27}>
         <Wrap>
           {contents && visible && contents.map((i, idx) => {
             return i.visible &&
