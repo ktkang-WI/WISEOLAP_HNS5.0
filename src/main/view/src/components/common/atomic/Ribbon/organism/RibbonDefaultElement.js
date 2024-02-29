@@ -225,7 +225,7 @@ const RibbonDefaultElement = () => {
       'usePopover': true,
       'onClick': (ref) => {
         const props = {
-          width: '200px',
+          width: '500px',
           height: 'auto',
           popoverType: 'subMenuBtn',
           titlePanel: false,
@@ -248,7 +248,6 @@ const RibbonDefaultElement = () => {
       'label': '비정형 레이아웃',
       'imgSrc': adHocLayoutSetting,
       'renderContent': (e) => {
-        // 임시 추가.
         const selectedReportId = selectCurrentReportId(store.getState());
 
         return getRadioPopover(selectedReportId);

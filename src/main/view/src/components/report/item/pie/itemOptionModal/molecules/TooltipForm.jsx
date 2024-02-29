@@ -89,18 +89,18 @@ const TooltipForm = ({selectedItem}, ref) => {
         dataField='precision'
         editorType='dxNumberBox'
       >
-        <Label>{localizedString.precsion}</Label>
+        <Label>{localizedString.precision}</Label>
       </Item>
       <Item
         dataField='precisionType'
         editorType='dxSelectBox'
         editorOptions={{
-          dataSource: localizedString.precsionOptions,
+          dataSource: localizedString.precisionOptions,
           displayExpr: 'caption',
           valueExpr: 'name'
         }}
       >
-        <Label>{localizedString.precsionOption}</Label>
+        <Label>{localizedString.precisionOption}</Label>
       </Item>
     </Form>
   );
