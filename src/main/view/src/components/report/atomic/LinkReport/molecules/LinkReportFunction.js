@@ -55,7 +55,10 @@ export const processLinkParamData = (
     // 그대로 가져오는거
     transformedData = data.linkParamInfo;
     if (subYn) {
-      if (subLinkParamInfo.length == 0) {
+      // console.log('data.linkParamInfo:', data.linkParamInfo);
+      // console.log('data', data);
+      // console.log('subLinkParamInfo:', subLinkParamInfo);
+      if (!data.subLinkParamInfo || data.subLinkParamInfo.length === 0) {
         transSubLinkDim = subLinkDim.map((item, index) => {
           currentParsedData = data.linkParamInfo[index];
           return {
@@ -71,7 +74,7 @@ export const processLinkParamData = (
           };
         });
       } else {
-        transSubLinkDim = subLinkParamInfo;
+        transSubLinkDim = data.subLinkParamInfo;
       }
     }
   }
@@ -104,24 +107,37 @@ export const processLinkParamData = (
       }
       return acc;
     }, []);
-    if (data.subLinkReport[0].subLinkParamInfo.length > 0) {
-      subFkNmOpts = data.subLinkReport[0].subLinkParamInfo.reduce(
-          (acc, item) => {
-            exists = acc.some((option) => option.fkNm === item.fkNm);
-            if (!exists && item.fkNm !== null) {
-              acc.push({
-                fkNm: item.fkNm == undefined ? 'None' : item.fkNm,
-                fkParam: item.fkParam == undefined ? 'None' : item.fkParam,
-                caption: item.fkNm == undefined ? 'None' : item.fkNm
-              });
-            }
-            return acc;
-          }, []);
+    if (subYn) {
+      // console.log('data.subLinkReport:', data.subLinkReport);
+      if (data.subLinkReport.length > 0 &&
+        data.subLinkReport[0].subLinkParamInfo &&
+        data.subLinkReport[0].subLinkParamInfo.length > 0) {
+        // console.log(
+        //     'data.subLinkReport[0].subLinkParamInfo',
+        //     data.subLinkReport[0].subLinkParamInfo);
+        subFkNmOpts = data.subLinkReport[0].subLinkParamInfo;
+        // subFkNmOpts = data.subLinkReport[0].subLinkParamInfo.reduce(
+        //     (acc, item) => {
+        //       exists = acc.some((option) => option.fkNm === item.fkNm);
+        //       if (!exists && item.fkNm !== null) {
+        //         acc.push({
+        //           fkNm: item.fkNm == undefined ? 'None' : item.fkNm,
+        //           fkParam: item.fkParam == undefined ? 'None' : item.fkParam,
+        //           caption: item.fkNm == undefined ? 'None' : item.fkNm
+        //         });
+        //       }
+        //       return acc;
+        //     }, []);
+      } else {
+        subFkNmOpts = fkNmOpts;
+      }
     }
   }
+  // console.log('fkNmOpts:', fkNmOpts);
   setFkNmOptions(fkNmOpts);
   if (subYn) {
-    if (subLinkParamInfo.length > 0) {
+    // console.log('subFkNmOpts:', subFkNmOpts);
+    if (subFkNmOpts.length > 0) {
       setSubFkNmOptions(subFkNmOpts);
     }
     setSubFkNmOptions(fkNmOpts);

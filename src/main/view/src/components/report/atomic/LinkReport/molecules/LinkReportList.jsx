@@ -54,6 +54,7 @@ const LinkReportList = (
       alert('연결 보고서를 선택해주세요.');
       return;
     }
+    console.log('linkParamData reportId:', linkParamData?.reports[0]?.reportId);
     try {
       if (selectedRowData.id !== linkParamData?.reports[0]?.reportId) {
         const {data} =
@@ -63,7 +64,9 @@ const LinkReportList = (
               }
           );
         setLinkParamData(data);
+        console.log('First Load');
       }
+      console.log('Load');
       setPopupVisible(true);
     } catch (error) {
       console.error('Error fetching link report params:', error);

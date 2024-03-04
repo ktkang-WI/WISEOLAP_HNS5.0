@@ -22,6 +22,7 @@ import {selectSelectedItemId, selectCurrentItemType}
   from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 import {selectCurrentInformationas} from 'redux/selector/ParameterSelector';
+// import _ from 'lodash';
 
 const PopupWrapper = styled.div`
   width: 100%;
@@ -86,7 +87,7 @@ const LinkParamInfo = ({
   const [subFkNmOptions, setSubFkNmOptions] = useState([]);
   const dispatch = useDispatch();
   const {insertLink, updateLink} = LinkSlice.actions;
-  const prevLinkParamData = usePrevious(linkParamData);
+  const prevLinkParamData = usePrevious(linkParamData?.reports[0]?.reportId);
   const checkLinkReportList = useSelector(checkLinkReport);
   // (store.getState());
   const focusedItemId = useSelector(selectSelectedItemId);
@@ -97,8 +98,10 @@ const LinkParamInfo = ({
 
   useEffect(() => {
     if (linkParamData &&
-        JSON.stringify(linkParamData) !== JSON.stringify(prevLinkParamData)) {
+      linkParamData?.reports[0]?.reportId !== prevLinkParamData) {
+      console.log('different report');
       if (checkLinkReportList.hasOwnProperty(selectedRowData.id)) {
+        console.log('already have in LinkSlice state');
         processLinkParamData(
             checkLinkReportList[selectedRowData.id],
             setParamInfo,
@@ -112,6 +115,7 @@ const LinkParamInfo = ({
             subYn
         );
       } else {
+        console.log('New add in LinkSlice state');
         processLinkParamData(
             linkParamData,
             setParamInfo,
@@ -130,8 +134,9 @@ const LinkParamInfo = ({
     linkParamData,
     prevLinkParamData,
     setParamInfo,
-    setLinkFkInfo
-    // setSubLinkParamInfo
+    setLinkFkInfo,
+    setFkNmOptions,
+    setSubLinkParamInfo
   ]
   );
 
@@ -193,14 +198,18 @@ const LinkParamInfo = ({
       subLinkInfo.subLinkReportType = currentReportType;
       subLinkInfo.subLinkParamInfo = subLinkParamInfo;
     }
+    // console.log('linkReportInfo:', linkReportInfo);
     const immutableLinkReportInfo = JSON.parse(JSON.stringify(linkReportInfo));
     if (!checkLinkReportList.hasOwnProperty(linkReportId)) {
+      console.log('insertLink');
       dispatch(insertLink(immutableLinkReportInfo));
     } else {
+      console.log('updateLink');
       dispatch(updateLink(immutableLinkReportInfo));
     }
     onClose();
   };
+  // console.log('subFkNmOptions:', subFkNmOptions);
   return (
     <PopupWrapper>
       <StyledWrapper>
