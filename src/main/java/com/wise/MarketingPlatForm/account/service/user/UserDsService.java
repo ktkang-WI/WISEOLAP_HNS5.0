@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserDsPutDTO;
+import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.ds.UserDsModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
@@ -27,6 +30,56 @@ public class UserDsService {
 
     return userDsModel;
   };
+
+  @Transactional
+  public boolean putUserDs(List<UserDsPutDTO> userDsPutDTO) {
+
+    List<UserAuthDsMstrEntity> userAuthDsMstr = generateUserAuthDsObject(userDsPutDTO);
+
+    if (userAuthDsMstr == null) return false;
+
+    boolean result = false;
+  
+    result = accountDAO.deleteUserDs(userAuthDsMstr);
+    result = accountDAO.putUserDs(userAuthDsMstr);
+
+    return result;
+  };
+
+  public List<UserAuthDsMstrEntity> generateUserAuthDsObject(List<UserDsPutDTO> userDsPutDTO) {
+    List<UserAuthDsMstrEntity> result = new ArrayList<>();
+
+    for (UserDsPutDTO userDsPut : userDsPutDTO) {
+      int userNo = userDsPut.getUserNo();
+      List<Integer> dss = userDsPut.getDsIds();
+      int dsSize = dss.size();
+
+      if (dsSize == 0) {
+        UserAuthDsMstrEntity userAuthDsMstrEntity = UserAuthDsMstrEntity.builder()
+          .userNo(userNo)
+          .dsId(0)
+          .build();
+
+        result.add(userAuthDsMstrEntity);
+
+        continue;
+      }
+
+      for (Integer dsId : userDsPut.getDsIds()) {
+
+        UserAuthDsMstrEntity userAuthDsMstrEntity = UserAuthDsMstrEntity.builder()
+          .userNo(userNo)
+          .dsId(dsId)
+          .build();
+
+          result.add(userAuthDsMstrEntity);
+
+      }
+
+    }
+
+    return result;
+  }
 
   public List<UserDsModel> generateUserDsObject(List<UserDsDTO> userDsDTO) {
     

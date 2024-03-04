@@ -116,7 +116,7 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
-    
+
     @Autowired
     private FileUploadService fileUploadService;
 
@@ -130,47 +130,51 @@ public class ReportService {
     }
 
     public Map<String, Object> getReport(String reportId, String userId) {
-    	ReportMstrEntity entity = reportDAO.selectReport(reportId);
-        ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
-        Map<String, Object> returnMap = new HashMap<>();
-        if(!"newReport".equals(dto.getDatasetXml())) {
-        	ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
-        	returnMap = reportXmlParser.getReport(dto, userId);
-        } else {
-        	JSONObject items = new JSONObject(entity.getChartXml());
-        	JSONObject dataset = new JSONObject(entity.getDatasetXml());
-        	JSONObject layout = new JSONObject(entity.getLayoutXml());
-        	JSONArray informations = new JSONArray(entity.getParamXml());
-        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
-        		JSONObject spread = new JSONObject(entity.getReportXml());
-        		returnMap.put("spread", spread.toString());
-        	}
-        	returnMap.put("item", items.toString());
-        	returnMap.put("dataset", dataset.toString());
-        	returnMap.put("layout", layout.toString());
-        	returnMap.put("informations", informations.toString());
-        }
-        Map<String, Object> report = new HashMap<String, Object>();
-    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
-
-    	Map<String, Object> options = new HashMap<String, Object>();
-        options.put("order", entity.getReportOrdinal());
-    	options.put("reportNm", entity.getReportNm());
-    	options.put("fldId", entity.getFldId());
-    	options.put("fldType", entity.getFldType());
-    	options.put("reportType", entity.getReportType());
-    	options.put("reportTag", entity.getReportTag());
-    	options.put("reportDesc", entity.getReportDesc());
-    	options.put("reportSubTitle", entity.getReportSubTitle());
-    	options.put("reportPath", null);
-
-    	report.put("reportId", Integer.parseInt(reportId));
-    	report.put("options", options);
-
-    	reports.add(report);
-
-    	returnMap.put("reports", reports);
-        return returnMap;
+    	Map<String, Object> returnMap = new HashMap<>();
+    	try {
+    		ReportMstrEntity entity = reportDAO.selectReport(reportId);
+    		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
+    		if(!"newReport".equals(dto.getDatasetXml())) {
+    			ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
+    			returnMap = reportXmlParser.getReport(dto, userId);
+    		} else {
+    			JSONObject items = new JSONObject(entity.getChartXml());
+    			JSONObject dataset = new JSONObject(entity.getDatasetXml());
+    			JSONObject layout = new JSONObject(entity.getLayoutXml());
+    			JSONArray informations = new JSONArray(entity.getParamXml());
+    			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+    				JSONObject spread = new JSONObject(entity.getReportXml());
+    				returnMap.put("spread", spread.toString());
+    			}
+    			returnMap.put("item", items.toString());
+    			returnMap.put("dataset", dataset.toString());
+    			returnMap.put("layout", layout.toString());
+    			returnMap.put("informations", informations.toString());
+    		}
+    		Map<String, Object> report = new HashMap<String, Object>();
+    		List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+    		
+    		Map<String, Object> options = new HashMap<String, Object>();
+    		options.put("order", entity.getReportOrdinal());
+    		options.put("reportNm", entity.getReportNm());
+    		options.put("fldId", entity.getFldId());
+    		options.put("fldType", entity.getFldType());
+    		options.put("reportType", entity.getReportType());
+    		options.put("reportTag", entity.getReportTag());
+    		options.put("reportDesc", entity.getReportDesc());
+    		options.put("reportSubTitle", entity.getReportSubTitle());
+    		options.put("reportPath", null);
+    		
+    		report.put("reportId", Integer.parseInt(reportId));
+    		report.put("options", options);
+    		
+    		reports.add(report);
+    		
+    		returnMap.put("reports", reports);
+    	} catch (Exception e) {
+    		returnMap.put("error", "error");
+    	}
+    	return returnMap;
     }
 
     public ReportResult getItemData(DataAggregation dataAggreagtion) {
@@ -196,7 +200,7 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion);
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
 
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
@@ -246,16 +250,16 @@ public class ReportService {
         String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
         String[] items = layoutType.split("_");
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
         List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        
+
         for (String item : items) {
             ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
             result.put(item, dataMaker.make(dataAggreagtion, rowData));
         }
-        
+
         return result;
     }
 
@@ -529,6 +533,10 @@ public class ReportService {
         return map;
     }
 
+    public boolean patchConfigReport(ReportMstrEntity reportMstrEntity) {
+        return reportDAO.updateConfigReport(reportMstrEntity);
+    }
+
     public Map<String, Object> deleteReport(ReportMstrDTO reportMstrDTO) {
         Map<String, Object> map = new HashMap<String,Object>();
         boolean result = false;
@@ -640,7 +648,7 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggregation);
 
-        MartResultDTO martResultDTO = martDAO.select(query);
+        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
 
         return martResultDTO;
     }

@@ -20,6 +20,7 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -82,6 +83,22 @@ public class DatasetController {
         String dsId = param.getOrDefault("dsId", "");
 
         return datasetService.getDBTables(dsId);
+    }
+
+    @Operation(summary = "get dsview database tables", description = "지정한 DS_ID에 해당하는 데이터 원본 뷰의 설정된 테이블 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "DS_ID", example = "3000", required = true),
+            @Parameter(name = "dsViewId", description = "DS_VIEW_ID", example = "3000", required = true),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"2101\", \"dsViewId\": \"6260\"}")
+    }))
+    @PostMapping(value = "/dsview-db-tables")
+    public List<DsViewTableDTO> getDsViewDBTables(@RequestBody Map<String, String> param) {
+        String dsId = param.getOrDefault("dsId", "");
+        String dsViewId = param.getOrDefault("dsViewId", "");
+
+        return datasetService.getDsViewDBTables(dsId, dsViewId);
     }
 
     @Operation(summary = "get database columns", description = "지정한 DS_ID와 테이블에 해당하는 컬럼 정보를 가져옵니다. TreeView 양식에 맞춰져 있습니다.")
@@ -189,6 +206,29 @@ public class DatasetController {
                 
         return datasetService.getQueryData(dsId, query, parameters);
     }
+    
+    @Operation(summary = "dataset Data", description = "dataset data 불러오기")
+    @Parameters({
+            @Parameter(name = "query", description = "query contents", example = "select * from DEMO_01_D_공공_고객"),
+            @Parameter(name = "dsId", description = "DS id", example = "2703"),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
+    }))
+    @PostMapping(value = "/query-dataset-all-datas")
+    public MartResultDTO getQueryDatas(@RequestBody Map<String, String> datasource) {
+        String query = datasource.get("query");
+        int dsId = Integer.parseInt(datasource.get("dsId"));
+        String parameterStr = datasource.getOrDefault("parameter", "");
+
+        Gson gson = new Gson();
+
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+                }.getType());
+                
+        return datasetService.getQueryDatas(dsId, query, parameters);
+    }
 
     @Operation(summary = "get List Parameter Items", description = "리스트형 매개변수의 리스트 목록 및 defautlValue를 조회함.")
     @Parameters({
@@ -272,5 +312,35 @@ public class DatasetController {
         String uniqueName = param.getOrDefault("uniqueName", "");
 
         return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);
+    }
+
+    @Operation(summary = "get SingleTable DataSet Query", description = "단일테이블 쿼리 생성용.")
+    @Parameters({
+            @Parameter(name = "dsId", description = "데이터 원본 아이디"),
+            @Parameter(name = "columnList", description = "단일테이블 컬럼 목록"),
+            @Parameter(name = "parameter", description = "필터 정보"),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
+            @ExampleObject(name = "example", value = "{\"dsId\": \"5181\", \"columnList\": \"[{\"TBL_CAPTION\":\"F_교육기관\",\"PK_YN\":null,\"LENGTH\":\"255\",\"COL_CAPTION\":\"COL행정구\",\"ID\":\"[F_교육기관].[COL행정구]\",\"COL_ID\":\"7\",\"TBL_NM\":\"F_교육기관\",\"DATA_TYPE\":\"VARCHAR2\",\"COL_NM\":\"COL행정구\",\"PARENT_ID\":\"F_교육기관\",\"TYPE\":\"DIM\",\"columnTypeName\":\"varchar2\",\"columnName\":\"COL행정구\",\"order\":0,\"visibility\":true}]\", \"parameter\": \"\"}")
+    }))
+    @PostMapping(value = "/query-single-datas")
+    public String getSingleTableQuery(@RequestBody Map<String, String> params) {
+        Gson gson = new Gson();
+        int dsId = Integer.parseInt(params.get("dsId"));
+        String parameterStr = params.getOrDefault("parameter", "");
+        
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+            new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+            }.getType());
+        
+        String columnStr = params.getOrDefault("columnList", "");
+
+        List<Map<String, Object>> columnList = gson.fromJson(columnStr,
+            new TypeToken<ArrayList<Map<String, Object>>>() {
+            }.getType());
+        
+        String singleTableQuery = datasetService.generateSingleTableQuery(dsId, columnList, parameters);
+
+        return singleTableQuery;
     }
 }

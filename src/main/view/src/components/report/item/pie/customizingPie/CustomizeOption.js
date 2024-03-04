@@ -7,6 +7,7 @@ import customizeSuffixValue
 const CustomizeOption = (e, pieOption, type) => {
   const format = pieOption.format;
   const formatStrings = format.split('&');
+
   if (format === 'none') {
     return null;
   }

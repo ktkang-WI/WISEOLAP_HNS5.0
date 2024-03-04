@@ -26,6 +26,9 @@ import {SubLinkReportPopup}
   from 'components/report/util/ReportUtility';
 import styled from 'styled-components';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {generateLabelSuffix, formatNumber} from
+  'components/utils/NumberFormatUtility';
+
 
 const Container = styled.div`
   position: relative;
@@ -44,7 +47,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal} = useModal();
-  // const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
@@ -114,7 +116,17 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         }
       }
     }
+
+    if (area == 'data' && cell.dataType && cell.value) {
+      const newFormat = dataField.measure.map((item) => item.format);
+      const formData = newFormat[cell.dataIndex];
+      const labelSuffix = generateLabelSuffix(formData);
+      const formattedValue = formatNumber(cell.value, formData, labelSuffix);
+      cellElement.innerHTML =
+        cellElement.innerHTML.replace(cell.value, formattedValue);
+    }
   };
+
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
   const columnTotalPos = meta.positionOption.column.position == 'left';
@@ -181,6 +193,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         id={id}
         width={'100%'}
         height={'100%'}
+        showBorders={true}
         dataSource={mart.dataSourceConfig}
         showColumnTotals={meta.positionOption.column.totalVisible}
         showRowTotals={meta.positionOption.row.totalVisible}
@@ -210,7 +223,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
             const detailedDataMenu = {
               'text': localizedString.detailedData
             };
-
             const dims = meta.dataField.column.concat(meta.dataField.row);
 
             // 클릭 이벤트 생성

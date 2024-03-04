@@ -1,15 +1,26 @@
+import {EditMode} from 'components/config/configType';
 import localizedString from 'config/localization';
+import openViewerImg from 'assets/image/icon/button/open_viewer.png';
+import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
+  const {setEditMode} = ConfigSlice.actions;
 
   return {
     'Logo': {
       'id': 'logo',
       'type': 'Logo',
-      'height': '25px',
-      'width': '130px'
+      'height': 'auto',
+      'width': '220px'
+    },
+    'ReportTab': {
+      'id': 'report_tab',
+      'type': 'ReportTab',
+      'width': 'auto'
     },
     'ReportTabs': {
       'id': 'report_tabs',
@@ -26,10 +37,14 @@ const HeaderDefaultElement = () => {
     },
     'Viewer': {
       'id': 'viewer',
-      'label': localizedString.viewer,
-      'type': 'TextButton',
+      'buttonType': 'whiteRound',
+      'width': '94px',
+      'icon': openViewerImg,
+      'label': localizedString.openViewer,
+      'type': 'CommonButton',
       'onClick': (e) => {
         nav('viewer');
+        dispatch(setEditMode(EditMode.VIEWER));
       }
     },
     'ShowQuery': {
@@ -49,10 +64,14 @@ const HeaderDefaultElement = () => {
     },
     'Designer': {
       'id': 'designer',
-      'label': localizedString.designer,
-      'type': 'TextButton',
+      'label': localizedString.openDesigner,
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
       'onClick': (e) => {
         nav('/editds/dashany');
+        dispatch(setEditMode(EditMode.DESIGNER));
       }
     },
     'DownloadReport': {

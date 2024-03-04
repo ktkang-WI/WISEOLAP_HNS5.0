@@ -24,11 +24,13 @@ import {
   labelFormat,
   overlappingFormat
 } from './seriesOption/SeriesOption';
-import NumberFormatUtility from 'components/utils/NumberFormatUtility';
+import {generateLabelSuffix, formatNumber}
+  from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
+import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
@@ -199,6 +201,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
 
   const customizeLabel = (o, formats) => {
+    const formData = formats[o.series.tag.math];
+    if (!formData) console.error('format 데이터쪽 확인필요이상감지');
+    const labelSuffix = generateLabelSuffix(formData);
+    o.value = formatNumber(o.value, formData, labelSuffix);
     const fieldId = o.series.tag.fieldId;
     const dataField =
       seriesOptions.filter((item) => (item.fieldId === fieldId))[0];
@@ -208,33 +214,11 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     const direction = !dataField ?
       seriesOptionDefaultFormat.pointLabel.direction :
       directionFormat(dataField.pointLabel.direction);
-    // format label 적용 부분
-    const formData = formats[o.series.tag.math];
-    const labelSuffix = {
-      O: formData.suffixO,
-      K: formData.suffixK,
-      M: formData.suffixM,
-      B: formData.suffixB
-    };
-    const formatNumber = (value) => {
-      return NumberFormatUtility.formatNumber(
-          value,
-          formData.formatType,
-          formData.unit,
-          formData.precision,
-          formData.useDigitSeparator,
-          undefined,
-          labelSuffix,
-          formData.suffixEnabled,
-          formData.precisionType
-      );
-    };
-    // format label 적용 부분
     return {
       rotationAngle: direction,
       visible: label ? true : false,
       customizeText(e) {
-        return formatNumber(label);
+        return label;
       }
     };
   };
@@ -276,73 +260,92 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <CommonSeriesSettings
           ignoreEmptyPoints={ignoreEmptyPoints}
         >
-          <Point visible={pointerMarker} />
-        </CommonSeriesSettings>
-        <ArgumentAxis
-          inverted={reverseView} />
+        <Point visible={pointerMarker} />
+      </CommonSeriesSettings>
+      <ArgumentAxis
+        inverted={reverseView}
+        title={meta.xAxis.axisCutomText}
+        label={{
+          visible: meta.xAxis.xAxisMark,
+          displayMode: 'rotate',
+          rotationAngle: meta.xAxis.xAxisInclination
+        }} />
+      <ValueAxis
+        name="left"
+        position="left"
+        title={meta.yAxis.customText} // 사용자정의텍스트
+        showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
+        label={{
+          visible: meta.yAxis.useAxis, // y축 표시
+          customizeText: (e) => { // y축 custom Suffix
+            return valueAxisCustomLabel(e, meta.yAxis);
+          }
+        }}
+        inverted={reverseView}>
+        <Grid visible={true} />
+      </ValueAxis>
+      {
+        auxiliaryAxis ?
         <ValueAxis
-          name="left"
-          position="left"
+          name="right"
+          position="right"
+          title={meta.extraAxis.customText} // 사용자정의텍스트
+          showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+          label={{
+            visible: meta.extraAxis.useAxis, // y축 표시
+            customizeText: (e) => { // y축 custom Suffix
+              return valueAxisCustomLabel(e, meta.extraAxis);
+            }
+          }}
           inverted={reverseView}>
           <Grid visible={true} />
-        </ValueAxis>
-        {
-          auxiliaryAxis ?
-          <ValueAxis
-            name="right"
-            position="right"
-            inverted={reverseView}>
-            <Grid visible={true} />
-          </ValueAxis> : <></>
+        </ValueAxis> : <></>
+      }
+      <Legend
+        visible={meta.legend.useLegend}
+        position={meta.legend.position}
+        horizontalAlignment={meta.legend.horizontalAlignment}
+        verticalAlignment={meta.legend.verticalAlignment}
+        itemTextPosition={meta.legend.itemTextPosition}
+      />
+      <Tooltip
+        enabled={true}
+        location='edge'
+        customizeTooltip={
+          (info) => customizeTooltip(info, false, mart.formats)
         }
-        <Legend
-          visible={true}
-          position='outside'
-          horizontalAlignment='right'
-          verticalAlignment='top'
-        />
-        <Tooltip
-          enabled={true}
-          location='edge'
-          customizeTooltip={
-            (info) => customizeTooltip(info, false, mart.formats)
-          }
-        ></Tooltip>
-        {
-          seriesNames.map(
-              (valueField, i) =>
-                <Series
-                  axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
-                  key={valueField.summaryName+'-'+i}
-                  valueField={valueField.summaryName}
-                  argumentField='arg'
-                  tag={{
-                    fieldId: valueField.fieldId,
-                    math: Math.floor(i / mart.seriesLength)
-                  }}
-                  name={valueField.name || '\u2800'}
-                  type={
-                    getSeriesOptionType(
-                        valueField.fieldId,
-                        seriesOptions)
-                  }
-                  sizeField={
-                    getSeriesOptionType(valueField.fieldId, seriesOptions) ===
-                    'bubble' ? valueField.summaryName: null
-                  }
-                >
-                </Series>
-          )
-        }
-      </DevChart>
-      {showPopup && (
-        <SubLinkReportPopup
-          showButton={showPopup}
-          setShowButton={setShowPopup}
-          focusedItem={focusedItem}
-        />
-      )}
-    </>
+      ></Tooltip>
+      {
+        seriesNames.map(
+            (valueField, i) =>
+              <Series
+                axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
+                key={valueField.summaryName+'-'+i}
+                valueField={valueField.summaryName}
+                argumentField='arg'
+                tag={{
+                  fieldId: valueField.fieldId,
+                  math: Math.floor(i / mart.seriesLength)
+                }}
+                name={valueField.caption || '\u2800'}
+                type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
+                sizeField={
+                  getSeriesOptionType(valueField.fieldId, seriesOptions) ===
+                  'bubble' ? valueField.summaryName: null
+                }
+              >
+              </Series>
+        )
+      }
+    </DevChart>
+    {showPopup && (
+      <SubLinkReportPopup
+        showButton={showPopup}
+        setShowButton={setShowPopup}
+        focusedItem={focusedItem}
+      />
+    )}
+  </>
   );
 };
 

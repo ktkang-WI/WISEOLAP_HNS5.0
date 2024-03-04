@@ -19,11 +19,9 @@ public class MartConfig {
     MartSqlSession martSqlSession;
 
     public void setMartDataSource(DsMstrDTO dsMstrDTO) {
-        SqlSessionTemplate templateChecker = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
+    	SqlSessionTemplate templateChecker = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
 
-        if (templateChecker != null) {
-            martSqlSession.sessionTemplate = templateChecker;
-        } else {
+        if (templateChecker == null) {
             try {
                 SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
@@ -32,6 +30,8 @@ public class MartConfig {
                 hikariConfig.setJdbcUrl(dsMstrDTO.getDbmsType().getUrl(dsMstrDTO));
                 hikariConfig.setUsername(dsMstrDTO.getUserId());
                 hikariConfig.setPassword(dsMstrDTO.getPassword());
+                hikariConfig.setConnectionTimeout(120000);
+                hikariConfig.setIdleTimeout(1800000);
 
                 HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
@@ -40,11 +40,10 @@ public class MartConfig {
                 sqlSessionFactoryBean.setConfigLocation(new PathMatchingResourcePatternResolver()
                         .getResource("classpath:/mybatis/mybatis-mart-config.xml"));
                 sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                        .getResources("classpath:/mapper/mart/*.xml"));
+                        .getResources("classpath:/mapper/mart/Mart.xml"));
                 SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactoryBean.getObject());
 
                 martSqlSession.sessionTemplates.put(dsMstrDTO.getDsId(), template);
-                martSqlSession.sessionTemplate = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
             } catch (Exception e) {
             	 e.printStackTrace();
             }

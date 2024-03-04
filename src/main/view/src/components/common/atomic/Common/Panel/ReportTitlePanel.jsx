@@ -1,29 +1,38 @@
 import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const Wrapper = styled.div `
   height: 100%;
-  width: 100%;
+  width: auto;
   position: relative;
   margin: 0px 3px;
-  max-width: 256px;
+  border-radius: 8px 8px 0px 0px;
+  border: 1px solid ${theme.color.gray200};
+  padding: 0px 20px;
+  box-sizing: border-box;
+
+  &.selected {
+    border-bottom: none;
+    background: ${theme.color.background};
+  }
 `;
 
 const TitlePanel = styled.div`
   border-radius: 5px 5px 0 0;
   height: ${(props) => props.height};
   width: 100%;
-  position: absolute;
   bottom: 0;
-  max-width: 250px;
   display: flex;
   justify-content: start;
   align-items: center;
 `;
 
 
-const ReportTitlePanel = ({height='35px', children}) => {
+const ReportTitlePanel = ({height='52px', children, selected}) => {
   return (
-    <Wrapper>
+    <Wrapper className={selected? 'selected' : ''}>
       <TitlePanel height={height}>
         {children}
       </TitlePanel>

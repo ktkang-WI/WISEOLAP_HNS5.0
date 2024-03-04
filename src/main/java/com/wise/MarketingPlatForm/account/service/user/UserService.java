@@ -12,7 +12,7 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
 @Service
 public class UserService {
-  
+
   @Autowired
   private AccountDAO accountDAO;
 
@@ -42,6 +42,7 @@ public class UserService {
       .telNo(userMstr.getTelNo())
       .grpId(userMstr.getGrpId())
       .runMode(userMstr.getUserRunMode())
+      .userDesc(userMstr.getUserDesc())
       .build();
     return accountDAO.updateUser(user);
   };
@@ -70,15 +71,12 @@ public class UserService {
     return accountDAO.updateUserPasswd(user);
   };
 
-  public boolean deleteUser(UserGroupDTO userMstr){
-    UserMstrEntity user = UserMstrEntity.builder()
-      .userNo(userMstr.getUserNo())
-      .build();
-    return accountDAO.deleteUser(user);
+  public boolean deleteUser(UserMstrEntity userMstr){
+    return accountDAO.deleteUser(userMstr);
   }
 
   public List<UserMstrEntity> selectUserMstr() {
     return accountDAO.selectUserMstr();
-  } 
+  }
 
 }

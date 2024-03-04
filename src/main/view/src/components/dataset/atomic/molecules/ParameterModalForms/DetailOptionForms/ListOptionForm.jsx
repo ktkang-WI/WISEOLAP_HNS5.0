@@ -1,11 +1,13 @@
 import Form, {Item, Label} from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
+import {getTheme} from 'config/theme';
 import SelectTableModal from 'components/dataset/modal/SelectTableModal';
 import SelectColumnModal from 'components/dataset/modal/SelectColumnModal';
 
 const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
   const {openModal} = useModal();
+  const theme = getTheme();
   const dataSoureTypeSource = [
     {name: 'TABLE', caption: localizedString.table},
     {name: 'QUERY', caption: localizedString.query}
@@ -34,7 +36,9 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
             e.value = selectedTable.TBL_NM;
             onFieldDataChanged(e);
           },
-          dsId: param.dsId
+          dsId: param.dsId,
+          height: theme.size.middleModalHeight,
+          width: theme.size.smallModalWidth
         });
       }
     }

@@ -79,6 +79,10 @@ const reducers = {
       state[reportId].informations.filter((info) => info.name != paramNm);
     delete state[reportId].values[paramNm];
   },
+  deleteReportParameter(state, actions) {
+    const reportId = actions.payload.reportId;
+    delete state[reportId];
+  },
   deleteParameterByDatasetId(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;

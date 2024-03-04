@@ -1,12 +1,13 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import TreeList, {
   Column,
+  Editing,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 
 import models from 'models';
-import React, {useContext, useEffect, useState} from 'react';
-import Title from 'components/config/atoms/authority/Title';
+import React, {useContext, useEffect, useState, useRef} from 'react';
+import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
@@ -16,20 +17,22 @@ const DatasetTreeView = ({row}) => {
   const authoritycontext = useContext(AuthorityContext);
 
   // state
-  const [folders, setFolders] = useState([]);
+  const [dataSets, setDataSet] = useState([]);
   const [data] = authoritycontext.state.data;
+
+  const ref = useRef();
 
   useEffect(() => {
     models.Authority.getFolderDatasets()
         .then((response) => {
-          const newFolders = response.data.data.map((row) => {
+          const newDataSets = response.data.data.map((row) => {
             return {
               ...row,
               isAuth: false
             };
           });
 
-          setFolders(newFolders);
+          setDataSet(newDataSets);
         })
         .catch(() => {
           throw new Error('Data Loading Error');
@@ -38,8 +41,8 @@ const DatasetTreeView = ({row}) => {
 
   useEffect(() => {
     const updateFolders = (fldIdList) => {
-      const newFolders = folders.map((f) => {
-        if (fldIdList.includes(f.fldId)) {
+      const newDataSets = dataSets.map((f) => {
+        if (fldIdList?.includes(f.fldId)) {
           return {
             ...f,
             isAuth: true
@@ -51,32 +54,25 @@ const DatasetTreeView = ({row}) => {
         };
       });
 
-      setFolders(newFolders);
+      setDataSet(newDataSets);
     };
 
     if (row) {
       const groups = data.filter((d) => d.group);
       const users = data.filter((d) => d.user);
+      let fldIdList = [];
 
       if (groups.length > 0) {
         const group = data.find((d) => d.group?.grpId === row.grpId);
-        if (group) {
-          const fldIdList = group.dataset.map((d) => d.fldId);
-          updateFolders(fldIdList);
-        } else {
-          updateFolders([]);
-        }
+        fldIdList = group?.dataset;
       }
 
       if (users.length > 0) {
         const user = data.find((d) => d.user?.userNo === row.userNo);
-        if (user) {
-          const fldIdList = user.dataset.map((d) => d.fldId);
-          updateFolders(fldIdList);
-        } else {
-          updateFolders([]);
-        };
+        fldIdList = user?.dataset;
       }
+      fldIdList = fldIdList?.map((row) => row.fldId);
+      updateFolders(fldIdList);
     }
   }, [row]);
 
@@ -84,12 +80,20 @@ const DatasetTreeView = ({row}) => {
     <Wrapper>
       <Title title={localizedString.datasetFolderList}></Title>
       <TreeList
-        dataSource={folders}
+        ref={ref}
+        elementAttr={{
+          class: 'dataset-tree-view'
+        }}
+        dataSource={dataSets}
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         id="folderTreeView"
         height={'90%'}
       >
+        <Editing
+          mode="cell"
+          allowUpdating={true}
+        />
         <SearchPanel
           visible={true}
           width={250}

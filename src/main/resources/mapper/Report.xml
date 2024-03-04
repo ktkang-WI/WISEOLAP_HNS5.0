@@ -327,6 +327,20 @@
 		WHERE REPORT_ID = #{reportId}
 	</update>
 
+  <update id = "updateConfigReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+		UPDATE REPORT_MSTR
+		SET
+			REPORT_NM = #{reportNm},
+			REPORT_SUB_TITLE = #{reportSubTitle},
+			FLD_ID = #{fldId},
+			FLD_TYPE = #{fldType},
+			REPORT_ORDINAL = #{reportOrdinal},
+			REPORT_TYPE = #{reportType},
+			REPORT_DESC = #{reportDesc},
+      REPORT_TAG = #{reportTag}
+		WHERE REPORT_ID = #{reportId}
+	</update>
+
 	<update id="deleteReport" parameterType="int">
 		UPDATE REPORT_MSTR
 		SET DEL_YN = 'Y'

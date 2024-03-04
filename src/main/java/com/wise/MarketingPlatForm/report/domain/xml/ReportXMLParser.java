@@ -1,6 +1,5 @@
 package com.wise.MarketingPlatForm.report.domain.xml;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,20 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONPointer;
 import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
-import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.global.util.DBDataUtility;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
@@ -41,10 +33,10 @@ public abstract class ReportXMLParser {
 	protected Map<String, Object> returnReport = new HashMap<>();
 	
 	// 추상클래스
-	protected abstract void getReportXmlDTO(String reportXml);
-	protected abstract void getChartXmlDTO(String chartXml);
-	protected abstract void getlayoutXmlDTO(String layoutXml);
-	protected abstract void getDatasetXmlDTO(String datasetXml, String userId);
+	protected abstract void getReportXmlDTO(String reportXml) throws Exception;
+	protected abstract void getChartXmlDTO(String chartXml) throws Exception;
+	protected abstract void getlayoutXmlDTO(String layoutXml) throws Exception;
+	protected abstract void getDatasetXmlDTO(String datasetXml, String userId) throws Exception;
 	
 	// dataSource에 관련된 정보를 저장
 	/** 데이터 구조
@@ -62,31 +54,31 @@ public abstract class ReportXMLParser {
 	private Map<String, String> operationMapper = operationMapperCreator();
 	
 	/**
-	 * filter의 경우 모든 보고서에 공통으로 적용됨으로 불필요한 코드량을 줄이기 위하여 여기에 선언
+	 * filter의 경우 모든 보고서에 공통으로 적용됨
 	 * @param String paramXml : REPORT_MSTR 의 PARAM_XML 컬럼.
 	 */
-	protected void getParamXmlDTO(String paramXml) {
-		try {
-			JSONObject root = XML.toJSONObject(paramXml);
-			JSONObject paramObject = root.optJSONObject("PARAM_XML");
-			if(paramObject == null) return;
-			
-			Object paramsArr = paramObject.opt("PARAM");
-						
-			if (paramsArr instanceof JSONObject) {
-				getParameter((JSONObject) paramsArr);
-	        } else if (paramsArr instanceof JSONArray) {
-	        	((JSONArray) paramsArr).forEach((paramObj) -> {
-	        		getParameter((JSONObject) paramObj);
-	        	});
-	        }
-		} catch (Exception e) {
-			 e.printStackTrace();
-		}
+	protected void getParamXmlDTO(String paramXml) throws Exception {
+		JSONObject root = XML.toJSONObject(paramXml);
+		JSONObject paramObject = root.optJSONObject("PARAM_XML");
+		if(paramObject == null) return;
 		
+		Object paramsArr = paramObject.opt("PARAM");
+					
+		if (paramsArr instanceof JSONObject) {
+			getParameter((JSONObject) paramsArr);
+		} else if (paramsArr instanceof JSONArray) {
+			((JSONArray) paramsArr).forEach((paramObj) -> {
+				try {
+					getParameter((JSONObject) paramObj);
+				} catch (Exception e) {
+					Exception er = new Exception("ReportXMLParser getParameter error");
+					er.initCause(e);
+				}
+			});
+		}
 	};
 	
-	private void getParameter (JSONObject paramObj) {
+	private void getParameter (JSONObject paramObj) throws Exception {
 		Iterator<String> paramKeys = paramObj.keys();
 		Map<String, Object> information = new HashMap<>();
 		
@@ -119,10 +111,10 @@ public abstract class ReportXMLParser {
 			Object dsType = null;
 			if("DS_ID".equals(paramKey)) {
 				dsType = this.dsNmWithInfo.values()
-					    .stream()
-					    .filter(dataSourceInfo -> dataSourceInfo.get("dsId").equals(paramObj.get(paramKey)))
-					    .map(dataSourceInfo -> dataSourceInfo.get("dsType"))
-						.findFirst();
+					.stream()
+					.filter(dataSourceInfo -> dataSourceInfo.get("dsId").equals(paramObj.get(paramKey)))
+					.map(dataSourceInfo -> dataSourceInfo.get("dsType"))
+					.findFirst();
 				
 				information.put("dsType", dsType);
 			}
@@ -176,5 +168,5 @@ public abstract class ReportXMLParser {
 		}};
 	}
 	
-	public abstract Map<String, Object> getReport(ReportMstrDTO dto, String userId);
+	public abstract Map<String, Object> getReport(ReportMstrDTO dto, String userId) throws Exception;
 }

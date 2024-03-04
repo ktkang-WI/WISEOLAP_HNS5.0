@@ -61,7 +61,7 @@ public class MartInterceptor implements Interceptor {
             // Mart Data
             CloseableList<Map<String, Object>> rowData = new FileBackedMapList();
             while (rs.next()) {
-            	Map<String, Object> row = new HashMap<>();
+            	Map<String, Object> row = new LinkedHashMap<>();
             	for (int i = 1; i <= columnCount; i++) {
             		DataField field =  new DataField(i, rsmd, rs.getObject(i));
             		row.put(rsmd.getColumnLabel(i), JavaxtUtils.getValue(field));

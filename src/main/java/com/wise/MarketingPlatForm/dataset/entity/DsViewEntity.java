@@ -20,4 +20,9 @@ public class DsViewEntity {
   String ip;
   String dbType;
   String dbmsType;
+  String dsNm;
+  String userAreaYn;
+  String port;
+  String ownerNm;
+  String userId;
 }

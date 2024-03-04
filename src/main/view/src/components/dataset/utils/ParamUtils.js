@@ -51,7 +51,7 @@ const newCubeParamInformation = (name, dsId, dsType,
   return {
     ...newParamInformation(name, dsId, dsType, order),
     // newParamInformation 오버라이딩
-    caption: cubeColumnInfo.physicalColumnName,
+    caption: cubeColumnInfo.columnCaption,
     exceptionValue: cubeColumnInfo.physicalTableName + '.' +
        cubeColumnInfo.physicalColumnKey,
     uniqueName: cubeColumnInfo.logicalColumnName,
@@ -65,6 +65,21 @@ const newCubeParamInformation = (name, dsId, dsType,
         cubeColumnInfo.physicalColumnKey :
         cubeColumnInfo.physicalColumnName :
         cubeColumnInfo.physicalColumnKey, // 정렬 기준 항목
+    multiSelect: true // 다중 선택
+  };
+};
+
+const newSingleTableParamInformation = (name, dsId, dsType,
+    order = 1, sourceField) => {
+  return {
+    ...newParamInformation(name, dsId, dsType, order),
+    // newParamInformation 오버라이딩
+    caption: sourceField.uniqueName,
+    exceptionValue: 'A.' + sourceField.uniqueName,
+    uniqueName: sourceField.uniqueName,
+    dataSource: sourceField.TBL_NM,
+    itemCaption: sourceField.COL_NM, // 리스트에 보여줄 값
+    itemKey: sourceField.COL_NM, // 조회할 때 실제로 쿼리에 들어가는 값
     multiSelect: true // 다중 선택
   };
 };
@@ -261,5 +276,6 @@ export default {
   getCalendarNowDefaultValue,
   newCubeParamInformation,
   getCubeParameterNamesCube,
-  filterToParameter
+  filterToParameter,
+  newSingleTableParamInformation
 };

@@ -14,7 +14,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 public class QueryGenAggregationUtil {
 
     public static SelectCube makeCubeSelectAll(CubeTableColumn columnInfo, String dataTpye) {
-        
+
         SelectCube selCube = new SelectCube();
 
         switch (dataTpye) {
@@ -45,15 +45,16 @@ public class QueryGenAggregationUtil {
         List<CubeTableColumn> columnInfoList = cubeParamSet.getColumnInfoList();
         SelectCube selCube = new SelectCube();
 
-        if(!columnInfo.getOrderBy().trim().equalsIgnoreCase("Name Column") 
+        if(!columnInfo.getOrderBy().trim().equalsIgnoreCase("Name Column")
                     && !columnInfo.getOrderBy().trim().equalsIgnoreCase("")){
 
             for(CubeTableColumn orderColumn : columnInfoList) {
-                if(columnInfo.getOrderBy().trim().equals(orderColumn.getPhysicalColumnName().trim()) 
+                if(columnInfo.getOrderBy().trim().equals(orderColumn.getPhysicalColumnName().trim())
                     && columnInfo.getLogicalTableName().equalsIgnoreCase(orderColumn.getLogicalTableName()))
-                {          
+                {
                     selCube.setUNI_NM(orderColumn.getLogicalColumnName());
-                    selCube.setCAPTION(orderColumn.getPhysicalTableName()+"_"+orderColumn.getPhysicalColumnKey());
+                    // selCube.setCAPTION(orderColumn.getPhysicalTableName()+"_"+orderColumn.getPhysicalColumnKey());
+                    selCube.setCAPTION(orderColumn.getColumnCaption());
                     selCube.setDATA_TYPE(orderColumn.getDataType());
                     selCube.setTYPE("DIM");
                     break;
@@ -83,9 +84,9 @@ public class QueryGenAggregationUtil {
                 selectCubeMeasure.setMEA_AGG(columnInfo.getAggregationType());
             }
         }
-        
+
         selectCubeMeasure.setCOL_EXPRESS(columnInfo.getExpression());
-        
+
         return selectCubeMeasure;
     }
 
@@ -102,19 +103,19 @@ public class QueryGenAggregationUtil {
 
         if(selHie.getCOL_NM().equals(""))
             selHie.setCOL_NM(columnInfo.getPhysicalColumnKey());
-            
+
         return selHie;
     }
 
     private static Hierarchy getCubeHieFromColumList(CubeParamSet cubeParamSet, CubeTableColumn columnInfo) {
-        
+
         List<CubeTableColumn> columnInfoList = cubeParamSet.getColumnInfoList();
         Hierarchy selHie = new Hierarchy();
 
         for(CubeTableColumn orderColumn : columnInfoList) {
-            if(columnInfo.getOrderBy().trim().equals(orderColumn.getPhysicalColumnName().trim()) 
+            if(columnInfo.getOrderBy().trim().equals(orderColumn.getPhysicalColumnName().trim())
                 && columnInfo.getLogicalTableName().equalsIgnoreCase(orderColumn.getLogicalTableName()))
-            {          
+            {
                 selHie = new Hierarchy();
                 selHie.setDIM_UNI_NM(orderColumn.getLogicalTableName());
                 selHie.setHIE_UNI_NM(orderColumn.getLogicalColumnName());
@@ -125,7 +126,7 @@ public class QueryGenAggregationUtil {
                 break;
             }
         }
-       
+
         return selHie;
     }
 
@@ -142,7 +143,7 @@ public class QueryGenAggregationUtil {
             selHie.setCOL_NM(columnInfo.getPhysicalColumnKey());
             selHie.setCOL_EXPRESS(columnInfo.getExpression());
 
-        }else if(!columnInfo.getOrderBy().trim().equalsIgnoreCase("Name Column") 
+        }else if(!columnInfo.getOrderBy().trim().equalsIgnoreCase("Name Column")
                     && !columnInfo.getOrderBy().trim().equalsIgnoreCase("")){
 
             selHie = getCubeHieFromColumList(cubeParamSet,columnInfo);
@@ -177,7 +178,7 @@ public class QueryGenAggregationUtil {
                     paramValueString += ","+value.trim();
                 }
             }
-            
+
         }
         if("".equals(paramValueString)){
             paramValueString = "[All]";

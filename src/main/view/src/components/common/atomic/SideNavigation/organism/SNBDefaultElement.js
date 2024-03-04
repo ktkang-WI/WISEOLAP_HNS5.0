@@ -14,20 +14,25 @@ import preferenceActive
   from '../../../../../assets/image/icon/button/preference_active.png';
 import {useNavigate} from 'react-router';
 import {useDispatch} from 'react-redux';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import useReportSave from 'hooks/useReportSave';
 import useModal from 'hooks/useModal';
+import {useSelector} from 'react-redux';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SNBDefaultElement = () => {
   // actions
-  const {setDesignerMode} = ConfigSlice.actions;
+  const {setDesignerMode, setEditMode} = ConfigSlice.actions;
 
   // hook
   const dispatch = useDispatch();
   const nav = useNavigate();
   const {reload} = useReportSave();
   const {confirm} = useModal();
+
+  // redux
+  const designerMode = useSelector(selectCurrentDesignerMode);
 
   // local
   const onClick = (designerMode) => {
@@ -37,6 +42,7 @@ const SNBDefaultElement = () => {
   const changeNav = (designerMode) => {
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
+    dispatch(setEditMode(EditMode.DESIGNER));
     reload(designerMode);
   };
 
@@ -46,6 +52,7 @@ const SNBDefaultElement = () => {
       imgSrc: dashboard,
       hoveredImgSrc: dashboardActive,
       label: localizedString.dashboard,
+      active: designerMode == DesignerMode.DASHBOARD,
       onClick: (e) => {
         onClick(DesignerMode['DASHBOARD']);
       }
@@ -55,6 +62,7 @@ const SNBDefaultElement = () => {
       imgSrc: adhoc,
       hoveredImgSrc: adhocActive,
       label: localizedString.adhoc,
+      active: designerMode == DesignerMode.AD_HOC,
       onClick: (e) => {
         onClick(DesignerMode['AD_HOC']);
       }
@@ -64,6 +72,7 @@ const SNBDefaultElement = () => {
       imgSrc: spreadsheet,
       hoveredImgSrc: spreadsheetActive,
       label: localizedString.spreadsheet,
+      active: designerMode == DesignerMode.EXCEL,
       onClick: (e) => {
         onClick(DesignerMode['EXCEL']);
       }
@@ -78,8 +87,8 @@ const SNBDefaultElement = () => {
       }
     },
     // TODO: 임시용 입니다.
-    '환경 설정': {
-      id: '환경 설정',
+    'ConfigurationSetting': {
+      id: 'configurationSetting',
       imgSrc: preference,
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
@@ -88,22 +97,40 @@ const SNBDefaultElement = () => {
       }
     },
     // TODO: 임시용 입니다.
-    '사용자/그룹관리': {
-      id: '사용자/그룹관리',
+    'UserGroupManagement': {
+      id: 'userGroupManagement',
       imgSrc: preference,
       hoveredImgSrc: preferenceActive,
-      label: '사용자/그룹관리',
+      label: localizedString.userGroupManagement,
       onClick: (e) => {
         nav('user-group');
       }
     },
-    '권한': {
-      id: '권한',
+    'Authority': {
+      id: 'authority',
       imgSrc: preference,
       hoveredImgSrc: preferenceActive,
-      label: '권한',
+      label: localizedString.authority,
       onClick: (e) => {
         nav('auth');
+      }
+    },
+    'ReportFolderManagement': {
+      id: 'reportFolderManagement',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.reportFolderManagement,
+      onClick: (e) => {
+        nav('report-folder');
+      }
+    },
+    'DataSourceAddition': {
+      id: 'dataSourceAddition',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: localizedString.dataSourceAddition,
+      onClick: (e) => {
+        nav('add-datasource');
       }
     }
   };

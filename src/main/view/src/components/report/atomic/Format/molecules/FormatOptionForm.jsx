@@ -81,7 +81,7 @@ const FormatOptionForm = ({
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
       {axisSetting && <Item
-        dataField='useShowZero'
+        dataField='axisStartToZero'
         editorType='dxCheckBox'
         editorOptions={{
         }}
@@ -147,7 +147,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.precsion}: </Label>
+        <Label>{localizedString.precision}: </Label>
       </Item>
       <Item
         dataField='precisionType'
@@ -160,7 +160,7 @@ const FormatOptionForm = ({
           }
         }
       >
-        <Label>{localizedString.precsionOption}: </Label>
+        <Label>{localizedString.precisionOption}: </Label>
       </Item>
       <Item
         dataField='useDigitSeparator'

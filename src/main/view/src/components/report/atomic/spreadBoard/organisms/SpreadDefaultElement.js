@@ -153,7 +153,7 @@ const SpreadDefaultElement = () => {
   };
 
   const downloadReportTXT = () => {
-
+    alert('추후 개발 예정');
   };
 
   const datasetBinder = () => {
@@ -328,6 +328,8 @@ const SpreadDefaultElement = () => {
   const SpreadRibbonDefaultElement = {
     id: 'fileMenu',
     text: localizedString.file,
+    visibleWhen: '!TableSheetActive&& !DataManagerActive ' +
+     '&& !ContainMultipleHeaderCells || IsInTableSheetDesignMode',
     buttonGroups: [
       {
         commandGroup: {
