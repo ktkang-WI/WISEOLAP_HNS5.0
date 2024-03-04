@@ -260,92 +260,92 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <CommonSeriesSettings
           ignoreEmptyPoints={ignoreEmptyPoints}
         >
-        <Point visible={pointerMarker} />
-      </CommonSeriesSettings>
-      <ArgumentAxis
-        inverted={reverseView}
-        title={meta.xAxis.axisCutomText}
-        label={{
-          visible: meta.xAxis.xAxisMark,
-          displayMode: 'rotate',
-          rotationAngle: meta.xAxis.xAxisInclination
-        }} />
-      <ValueAxis
-        name="left"
-        position="left"
-        title={meta.yAxis.customText} // 사용자정의텍스트
-        showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
-        label={{
-          visible: meta.yAxis.useAxis, // y축 표시
-          customizeText: (e) => { // y축 custom Suffix
-            return valueAxisCustomLabel(e, meta.yAxis);
-          }
-        }}
-        inverted={reverseView}>
-        <Grid visible={true} />
-      </ValueAxis>
-      {
-        auxiliaryAxis ?
-        <ValueAxis
-          name="right"
-          position="right"
-          title={meta.extraAxis.customText} // 사용자정의텍스트
-          showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+          <Point visible={pointerMarker} />
+        </CommonSeriesSettings>
+        <ArgumentAxis
+          inverted={reverseView}
+          title={meta.xAxis.axisCutomText}
           label={{
-            visible: meta.extraAxis.useAxis, // y축 표시
+            visible: meta.xAxis.xAxisMark,
+            displayMode: 'rotate',
+            rotationAngle: meta.xAxis.xAxisInclination
+          }} />
+        <ValueAxis
+          name="left"
+          position="left"
+          title={meta.yAxis.customText} // 사용자정의텍스트
+          showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
+          label={{
+            visible: meta.yAxis.useAxis, // y축 표시
             customizeText: (e) => { // y축 custom Suffix
-              return valueAxisCustomLabel(e, meta.extraAxis);
+              return valueAxisCustomLabel(e, meta.yAxis);
             }
           }}
           inverted={reverseView}>
           <Grid visible={true} />
-        </ValueAxis> : <></>
-      }
-      <Legend
-        visible={meta.legend.useLegend}
-        position={meta.legend.position}
-        horizontalAlignment={meta.legend.horizontalAlignment}
-        verticalAlignment={meta.legend.verticalAlignment}
-        itemTextPosition={meta.legend.itemTextPosition}
-      />
-      <Tooltip
-        enabled={true}
-        location='edge'
-        customizeTooltip={
-          (info) => customizeTooltip(info, false, mart.formats)
+        </ValueAxis>
+        {
+          auxiliaryAxis ?
+          <ValueAxis
+            name="right"
+            position="right"
+            title={meta.extraAxis.customText} // 사용자정의텍스트
+            showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+            label={{
+              visible: meta.extraAxis.useAxis, // y축 표시
+              customizeText: (e) => { // y축 custom Suffix
+                return valueAxisCustomLabel(e, meta.extraAxis);
+              }
+            }}
+            inverted={reverseView}>
+            <Grid visible={true} />
+          </ValueAxis> : <></>
         }
-      ></Tooltip>
-      {
-        seriesNames.map(
-            (valueField, i) =>
-              <Series
-                axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
-                key={valueField.summaryName+'-'+i}
-                valueField={valueField.summaryName}
-                argumentField='arg'
-                tag={{
-                  fieldId: valueField.fieldId,
-                  math: Math.floor(i / mart.seriesLength)
-                }}
-                name={valueField.caption || '\u2800'}
-                type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
-                sizeField={
-                  getSeriesOptionType(valueField.fieldId, seriesOptions) ===
-                  'bubble' ? valueField.summaryName: null
-                }
-              >
-              </Series>
-        )
-      }
-    </DevChart>
-    {showPopup && (
-      <SubLinkReportPopup
-        showButton={showPopup}
-        setShowButton={setShowPopup}
-        focusedItem={focusedItem}
-      />
-    )}
-  </>
+        <Legend
+          visible={meta.legend.useLegend}
+          position={meta.legend.position}
+          horizontalAlignment={meta.legend.horizontalAlignment}
+          verticalAlignment={meta.legend.verticalAlignment}
+          itemTextPosition={meta.legend.itemTextPosition}
+        />
+        <Tooltip
+          enabled={true}
+          location='edge'
+          customizeTooltip={
+            (info) => customizeTooltip(info, false, mart.formats)
+          }
+        ></Tooltip>
+        {
+          seriesNames.map(
+              (valueField, i) =>
+                <Series
+                  axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
+                  key={valueField.summaryName+'-'+i}
+                  valueField={valueField.summaryName}
+                  argumentField='arg'
+                  tag={{
+                    fieldId: valueField.fieldId,
+                    math: Math.floor(i / mart.seriesLength)
+                  }}
+                  name={valueField.caption || '\u2800'}
+                  type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
+                  sizeField={
+                    getSeriesOptionType(valueField.fieldId, seriesOptions) ===
+                    'bubble' ? valueField.summaryName: null
+                  }
+                >
+                </Series>
+          )
+        }
+      </DevChart>
+      {showPopup && (
+        <SubLinkReportPopup
+          showButton={showPopup}
+          setShowButton={setShowPopup}
+          focusedItem={focusedItem}
+        />
+      )}
+    </>
   );
 };
 

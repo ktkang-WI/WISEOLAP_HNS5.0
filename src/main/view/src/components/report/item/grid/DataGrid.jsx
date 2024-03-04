@@ -278,6 +278,12 @@ const DataGrid = ({setItemExports, id, item}) => {
           />
         )}
       </DevDataGrid>
+      {showPopup &&
+      <SubLinkReportPopup
+        showButton={showPopup}
+        setShowButton={setShowPopup}
+        focusedItem={focusedItem}
+      />}
     </Container>
   );
 };
