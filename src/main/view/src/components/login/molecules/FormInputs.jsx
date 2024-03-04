@@ -1,14 +1,9 @@
 import {styled} from 'styled-components';
 import Input from '../atoms/Input';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import models from 'models';
-import useModal from 'hooks/useModal';
-import {setSpreadLicense}
-  from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {CheckBox} from 'devextreme-react';
 import {getTheme} from 'config/theme';
-// import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -44,9 +39,9 @@ const CheckBoxSpanWrap = styled.span`
   float: left;
 `;
 
-const createInputForm = (contents) => {
+const createInputForm = (contents, onSubmit) => {
   return (
-    <Input contents={contents}/>
+    <Input contents={contents} onSubmit={onSubmit}/>
   );
 };
 
@@ -69,10 +64,7 @@ const createCheckBox = (contents) => {
   }
 };
 
-const FormInputs = ({contents}) => {
-  const nav = useNavigate();
-  const {alert} = useModal();
-
+const FormInputs = ({contents, onSubmit}) => {
   const createFormBtn = (contents) => {
     const type = contents.type;
     // const btnTexts =
@@ -103,23 +95,7 @@ const FormInputs = ({contents}) => {
             key={index}
             borderRadius='8px'
             height='48px'
-            onClick={async () => {
-              const id = document.querySelector('#input-ID input').value;
-              const password =
-                document.querySelector('#input-Password input').value;
-              const res = await models.Login.login(id, password);
-              await setSpreadLicense();
-
-              if (res.status == 200) {
-                // TODO: 추후 권한 적용
-                // 임시적용 하드코딩
-                nav('dashany');
-              } else if (res.response?.status == 404) {
-                alert('사용자 정보가 잘못되었습니다.');
-              } else if (res.response?.status == 500) {
-                alert('서버에 문제가 발생하였습니다.');
-              }
-            }}
+            onClick={onSubmit}
           >
             {btnText.linkBtn ? btnText.linkBtn : btnText}
           </CommonButton>
@@ -129,7 +105,7 @@ const FormInputs = ({contents}) => {
   };
   return (
     <StyledForm id='send-login-data'>
-      {createInputForm(contents)}
+      {createInputForm(contents, onSubmit)}
       {createCheckBox(contents)}
       <FormInterval className='interval' props={contents.type}>
         {createFormBtn(contents)}

@@ -25,7 +25,7 @@ const labelMapper = {
   'Email': '이메일'
 };
 
-const Input = ({contents}) => {
+const Input = ({contents, onSubmit}) => {
   const handleValidation = (contents, input) => {
     if (input === 'ID') {
       return contents.idCheckRule;
@@ -46,6 +46,7 @@ const Input = ({contents}) => {
               <>
                 <TextBoxLabel>{labelMapper[input] || input}</TextBoxLabel>
                 <StyledTextBox
+                  onEnterKey={onSubmit}
                   key={index}
                   id={'input-' + input}
                   onKeyDown={contents.onKeyDown}
