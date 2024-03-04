@@ -2,10 +2,10 @@ import localizedString from 'config/localization';
 
 export const generateLabelSuffix = (formData) => {
   const labelSuffix = {
-    O: formData?.suffixO,
-    K: formData?.suffixK,
-    M: formData?.suffixM,
-    B: formData?.suffixB
+    O: formData.suffixO,
+    K: formData.suffixK,
+    M: formData.suffixM,
+    B: formData.suffixB
   };
   return labelSuffix;
 };
@@ -13,14 +13,14 @@ export const generateLabelSuffix = (formData) => {
 export const formatNumber = (value, formData, labelSuffix) => {
   return NumberFormatUtility.formatNumber(
       value,
-      formData?.formatType,
-      formData?.unit,
-      formData?.precision,
-      formData?.useDigitSeparator,
+      formData.formatType,
+      formData.unit,
+      formData.precision,
+      formData.useDigitSeparator,
       undefined,
       labelSuffix,
-      formData?.suffixEnabled,
-      formData?.precisionType
+      formData.suffixEnabled,
+      formData.precisionType
   );
 };
 
