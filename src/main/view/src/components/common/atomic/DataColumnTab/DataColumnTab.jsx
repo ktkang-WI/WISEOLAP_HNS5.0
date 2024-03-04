@@ -51,9 +51,11 @@ const DataColumnTab = () => {
         direction='vertical'
         showScrollbar={'never'}
       >
-        {
-          getColumnList()
-        }
+        <div>
+          {
+            getColumnList()
+          }
+        </div>
       </ScrollView>
     </Wrapper>
   );
