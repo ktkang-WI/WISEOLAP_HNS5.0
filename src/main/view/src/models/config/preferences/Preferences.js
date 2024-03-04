@@ -8,19 +8,16 @@ const contextRoot =
 const configPath = document.location.origin + contextRoot + '/config';
 
 export const getGeneralConfig = async () => {
-  const res = await axios.get(configPath + '/general');
-  return res;
+  return await axios.get(configPath + '/general');
 };
 
 export const updateGeneralConfig = async (general) => {
-  const res = await axios.patch(configPath + '/general', null, {
+  return await axios.patch(configPath + '/general', null, {
     params: general
   });
-  return res;
 };
 
-export const getSpread = async (general) => {
-  const res = await axios.get(configPath + '/general/spread');
-  return res;
+export const getSpread = async () => {
+  return await axios.get(configPath + '/general/spread');
 };
 
