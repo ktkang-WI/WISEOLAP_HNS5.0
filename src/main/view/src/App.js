@@ -13,12 +13,15 @@ import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
 import {setSpreadLicense}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {useEffect} from 'react';
 
 function App() {
   loadMessages(deMessages);
   locale(navigator.language);
   useAxiosSetting();
-  setSpreadLicense();
+  useEffect(() => {
+    setSpreadLicense();
+  }, []);
 
   return (
     <div className='App'>

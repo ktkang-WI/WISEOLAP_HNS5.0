@@ -181,7 +181,7 @@
           WHERE 1 = 1
     </update>
     
-    <select id="getSpreadLicense" resultType="hashmap">
+    <select id="getSpreadLicense" resultType="map">
 		SELECT
 	        SPREAD_JS_DESIGNER_LICENSE,
 	        SPREAD_JS_LICENSE    
