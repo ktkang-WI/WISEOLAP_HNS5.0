@@ -1,4 +1,3 @@
-import Header from 'components/common/atomic/Header/organism/Header';
 import {DesignerMode, EditMode} from 'components/config/configType';
 import ViewerContent from 'components/viewer/ViewerContent';
 import useReportSave from 'hooks/useReportSave';
@@ -6,7 +5,7 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 
-const Viewer = () => {
+const LinkViewer = () => {
   const dispatch = useDispatch();
   const {reload} = useReportSave();
   const {setEditMode} = ConfigSlice.actions;
@@ -17,14 +16,7 @@ const Viewer = () => {
   }, []);
 
   return (
-    <div>
-      <Header
-        left={['Logo', 'Designer', 'LinkReport', 'ReportTabs']}
-        right={['DownloadReport', 'ReportProperty']}
-      >
-      </Header>
-      <ViewerContent/>
-    </div>
+    <ViewerContent/>
   );
 };
-export default Viewer;
+export default LinkViewer;
