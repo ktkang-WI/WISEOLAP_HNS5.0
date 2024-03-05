@@ -25,6 +25,7 @@ public class ReportLinkMstrDTO {
 	int linkReportOrdinal;
 	String linkReportType;
 	String dataLinkType;
+	String linkReportNm;
 	boolean subYn;
   List<ReportLinkSubMstrDTO> subLinkReport;
 
@@ -34,6 +35,7 @@ public class ReportLinkMstrDTO {
 			.linkReportId(reportLinkMstrDTO.getLinkReportId())
 			.linkXml(reportLinkMstrDTO.getLinkXml())
 			.linkReportOrdinal(reportLinkMstrDTO.getLinkReportOrdinal())
+			.linkReportNm(reportLinkMstrDTO.getLinkReportNm())
 			.linkReportType(reportLinkMstrDTO.getLinkReportType())
 			.dataLinkType(reportLinkMstrDTO.getDataLinkType())
 			.build();

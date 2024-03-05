@@ -575,6 +575,22 @@ public class ReportService {
         return result.size() > 0 ? "Y" : "N";
     }
 
+    @Transactional
+    public void insertLinkReport(List<ReportLinkMstrDTO> reportLinkDTO) {
+        for (ReportLinkMstrDTO dto : reportLinkDTO) {
+            ReportLinkMstrEntity entity = ReportLinkMstrDTO.toEntity(dto);
+            reportDAO.insertLinkReport(entity);
+        }
+    }
+
+    @Transactional
+    public void insertSubLinkReport(List<ReportLinkSubMstrDTO> reportLinkSubDTO) {
+        for (ReportLinkSubMstrDTO dto : reportLinkSubDTO) {
+            ReportLinkSubMstrEntity entity = ReportLinkSubMstrDTO.toEntity(dto);
+            reportDAO.insertSubLinkReport(entity);
+        }
+    }
+
     public Map<String, Object> getLinkReportParam(String reportId) {
     	ReportMstrEntity entity = reportDAO.selectLinkReportParam(reportId);
         Map<String, Object> returnMap = new HashMap<>();
@@ -598,8 +614,15 @@ public class ReportService {
         return returnMap;
     }
 
-    public List<ReportLinkMstrDTO> getLinkReportList(String reportId) {
-        return reportDAO.selectLinkReportList(reportId);
+    public Map<String, Object> getAggregatedReportLinks(String reportId) {
+        Map<String, Object> result = new HashMap<>();
+        List<ReportLinkMstrEntity> linkReportList = reportDAO.selectLinkReportList(reportId);
+        List<ReportLinkSubMstrEntity> subLinkReportList = reportDAO.selectSubLinkReportList(reportId);
+
+        result.put("linkReports", linkReportList);
+        result.put("subLinkReports", subLinkReportList);
+
+        return result;
     }
 
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
@@ -651,22 +674,6 @@ public class ReportService {
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
 
         return martResultDTO;
-    }
-
-    @Transactional
-    public void insertLinkReport(List<ReportLinkMstrDTO> reportLinkDTO) {
-        for (ReportLinkMstrDTO dto : reportLinkDTO) {
-            ReportLinkMstrEntity entity = ReportLinkMstrDTO.toEntity(dto);
-            reportDAO.insertLinkReport(entity);
-        }
-    }
-
-    @Transactional
-    public void insertSubLinkReport(List<ReportLinkSubMstrDTO> reportLinkSubDTO) {
-        for (ReportLinkSubMstrDTO dto : reportLinkSubDTO) {
-            ReportLinkSubMstrEntity entity = ReportLinkSubMstrDTO.toEntity(dto);
-            reportDAO.insertSubLinkReport(entity);
-        }
     }
 
 }

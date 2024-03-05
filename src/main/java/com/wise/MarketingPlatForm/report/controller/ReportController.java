@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -488,10 +489,12 @@ public class ReportController {
         return reportService.getLinkReportParam(reportId);
 	}
 
-    @PostMapping(value = "/report-link-list")
-    public List<ReportLinkMstrDTO> getLinkReportList(@RequestBody String param) {
-        String reportId = param;
-        return reportService.getLinkReportList(reportId);
+    @PostMapping(value = "/report-link-list", consumes = "application/json")
+    public ResponseEntity<Map<String, Object>> getLinkReportList(@RequestBody Map<String, String> param) {
+        System.out.println("param = " + param);
+        String reportId = param.getOrDefault("reportId", "");
+        Map<String, Object> aggregatedReportLinks = reportService.getAggregatedReportLinks(reportId);
+        return new ResponseEntity<>(aggregatedReportLinks, HttpStatus.OK);
     }
 
 }

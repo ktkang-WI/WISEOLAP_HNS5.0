@@ -25,7 +25,8 @@ public interface ReportDAO {
     public boolean deleteReport(int reportId);
     public List<ReportMstrEntity> checkDuplicatedReport(ReportMstrEntity reportMstrDTO);
     public ReportMstrEntity selectLinkReportParam(String reportId);
-    public List<ReportLinkMstrDTO> selectLinkReportList(String reportId);
+    public List<ReportLinkMstrEntity> selectLinkReportList(String reportId);
+    public List<ReportLinkSubMstrEntity> selectSubLinkReportList(String reportId);
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);

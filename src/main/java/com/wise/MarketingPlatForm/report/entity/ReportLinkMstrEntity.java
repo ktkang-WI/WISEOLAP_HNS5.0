@@ -17,6 +17,7 @@ public class ReportLinkMstrEntity {
 	int linkReportId;
 	String linkXml;
 	int linkReportOrdinal;
+  String linkReportNm;
 	String linkReportType;
 	String dataLinkType;
 
@@ -26,6 +27,7 @@ public class ReportLinkMstrEntity {
       .linkReportId(reportLinkMstrEntity.getLinkReportId())
       .linkXml(reportLinkMstrEntity.getLinkXml())
       .linkReportOrdinal(reportLinkMstrEntity.getLinkReportOrdinal())
+      .linkReportNm(reportLinkMstrEntity.getLinkReportNm())
       .linkReportType(reportLinkMstrEntity.getLinkReportType())
       .dataLinkType(reportLinkMstrEntity.getDataLinkType())
       .build();

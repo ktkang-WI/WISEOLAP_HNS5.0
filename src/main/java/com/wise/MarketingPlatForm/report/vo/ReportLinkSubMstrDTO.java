@@ -28,6 +28,7 @@ public class ReportLinkSubMstrDTO {
 	int linkReportOrdinal;
   @SerializedName("subLinkReportType")
 	String linkReportType;
+  String linkReportNm;
 
   public static ReportLinkSubMstrEntity toEntity(ReportLinkSubMstrDTO reportLinkSubMstrDTO) {
     return ReportLinkSubMstrEntity.builder()
@@ -39,6 +40,7 @@ public class ReportLinkSubMstrDTO {
       .linkXmlData(reportLinkSubMstrDTO.getLinkXmlData())
       .linkReportOrdinal(reportLinkSubMstrDTO.getLinkReportOrdinal())
       .linkReportType(reportLinkSubMstrDTO.getLinkReportType())
+      .linkReportNm(reportLinkSubMstrDTO.getLinkReportNm())
       .build();
   }
 }

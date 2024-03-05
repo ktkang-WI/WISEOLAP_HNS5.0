@@ -170,28 +170,7 @@
                 TYPE,
                 ORDINAL
     </select>
-    
-    <!-- <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.LinkReportVO">
-		SELECT	A.REPORT_ID AS reportID,
-				A.LINK_REPORT_ID AS linkReportId,
-				B.REPORT_NM AS linkReportNm,
-				A.DATA_LINK_TYPE AS linkType,
-				A.LINK_XML AS linkXml,
-				B.REPORT_TYPE AS reportType
-		FROM REPORT_LINK_MSTR A
-		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
-		WHERE A.REPORT_ID = #{id}
-    </select> -->
 
-    <select id='selectLinkReportParam' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
-    SELECT A.PARAM_XML as paramXml FROM REPORT_MSTR A
-    WHERE 1=1
-      <if test='reportId != null'>
-        AND A.REPORT_ID = #{reportId}
-      </if>
-    </select>
-
-    
     <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
 					FLD_NM 						AS fldNm,
@@ -215,6 +194,39 @@
 		INNER JOIN USER_MSTR
 		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
 		WHERE USER_MSTR.USER_ID = #{userId}
+    </select>
+  
+      <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
+		SELECT	A.REPORT_ID AS reportId,
+				A.LINK_REPORT_ID AS linkReportId,
+				B.REPORT_NM AS linkReportNm,
+				A.DATA_LINK_TYPE AS dataLinkType,
+				A.LINK_XML AS linkXml,
+				A.LINK_REPORT_TYPE AS linkReportType
+		FROM REPORT_LINK_MSTR A
+		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
+		WHERE A.REPORT_ID = #{id}
+    </select>
+
+    <select id='selectSubLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity">
+		SELECT	A.REPORT_ID AS reportId,
+				A.LINK_REPORT_ID AS linkReportId,
+				B.REPORT_NM AS linkReportNm,
+				A.LINK_DATA_TYPE AS linkDataType,
+				A.LINK_XML_PARAM AS linkXmlParam,
+        A.LINK_XML_DATA As linkXmlData,
+				A.LINK_REPORT_TYPE AS linkReportType
+		FROM REPORT_LINK_SUB_MSTR A
+		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
+		WHERE A.REPORT_ID = #{id}
+    </select>
+
+    <select id='selectLinkReportParam' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+    SELECT A.PARAM_XML as paramXml FROM REPORT_MSTR A
+    WHERE 1=1
+      <if test='reportId != null'>
+        AND A.REPORT_ID = #{reportId}
+      </if>
     </select>
 
   <insert id = "insertLinkReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">

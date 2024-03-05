@@ -21,6 +21,7 @@ public class ReportLinkSubMstrEntity {
   String linkXmlData;
 	int linkReportOrdinal;
 	String linkReportType;
+  String linkReportNm;
 
   public static ReportLinkSubMstrDTO toDTO(ReportLinkSubMstrEntity reportLinkSubMstrEntity) {
     return ReportLinkSubMstrDTO.builder()
@@ -32,6 +33,7 @@ public class ReportLinkSubMstrEntity {
       .linkXmlData(reportLinkSubMstrEntity.getLinkXmlData())
       .linkReportOrdinal(reportLinkSubMstrEntity.getLinkReportOrdinal())
       .linkReportType(reportLinkSubMstrEntity.getLinkReportType())
+      .linkReportNm(reportLinkSubMstrEntity.getLinkReportNm())
       .build();
   }
 }
