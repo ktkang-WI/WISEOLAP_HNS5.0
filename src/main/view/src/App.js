@@ -11,12 +11,17 @@ import useAxiosSetting from 'hooks/useAxiosSetting';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
+import {setSpreadLicense}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {useEffect} from 'react';
 
 function App() {
   loadMessages(deMessages);
   locale(navigator.language);
-
   useAxiosSetting();
+  useEffect(() => {
+    setSpreadLicense();
+  }, []);
 
   return (
     <div className='App'>

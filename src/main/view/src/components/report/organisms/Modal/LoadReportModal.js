@@ -11,20 +11,20 @@ import {setIconReportList} from 'components/report/util/ReportUtility';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
+import {DesignerMode} from 'components/config/configType';
+import useSpread from 'hooks/useSpread';
 
 const theme = getTheme();
 
-const LoadReportModal = ({
-  loadExcelFile,
-  ...props}) => {
+const LoadReportModal = ({...props}) => {
   let selectedReport = {};
+  const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
   const {loadReport, querySearch} = useReportSave();
-
+  const reportType = selectCurrentDesignerMode(store.getState());
 
   useEffect(() => {
-    const reportType = selectCurrentDesignerMode(store.getState());
     models.Report.getList('admin', reportType, 'designer').then(({data}) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
@@ -32,28 +32,29 @@ const LoadReportModal = ({
     });
   }, []);
 
+  const getReport = () => {
+    if (reportType === DesignerMode['EXCEL']) {
+      setExcelFile(selectedReport.id);
+    }
+    models.Report.getReportById('admin', selectedReport.id)
+        .then(({data}) => {
+          try {
+            loadReport(data);
+            querySearch();
+          } catch {
+            alert(localizedString.reportCorrupted);
+          }
+        }).catch(() => {
+          alert(localizedString.reportCorrupted);
+        });
+  };
+
   return (
     <Modal
       onSubmit={() => {
         if (!_.isEmpty(selectedReport)) {
           if (selectedReport.type == 'REPORT') {
-            models.Report.getReportById('admin', selectedReport.id)
-                .then(({data}) => {
-                  try {
-                    if (loadExcelFile) {
-                      loadExcelFile({
-                        data: data
-                      });
-                    } else {
-                      loadReport(data);
-                      querySearch();
-                    }
-                  } catch {
-                    alert(localizedString.reportCorrupted);
-                  }
-                }).catch(() => {
-                  alert(localizedString.reportCorrupted);
-                });
+            getReport();
           } else {
             openModal(Alert, {
               message: '선택한 항목이 보고서가 아닙니다.'

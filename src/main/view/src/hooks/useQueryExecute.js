@@ -20,15 +20,15 @@ import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {setSpreadData} = SpreadSlice.actions;
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
-  const {bindData} = useSpread();
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -245,26 +245,36 @@ const useQueryExecute = () => {
 
   const executeSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
+    const currentReportId = selectCurrentReportId(store.getState());
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
     }
     const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos((store.getState()));
-    datasets.map(async (dataset) => {
-      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
-       !bindingInfos[dataset.datasetId].useBinding) {
-        alert(localizedString.spreadBindingInfoNot); return;
-      }
-      const dsId = dataset.dataSrcId;
-      const query = dataset.datasetQuery;
-      const datas = await models.DBInfo.
-          getAllDatasetDatas(dsId, query, parameters);
-      if (!datas.data.rowData) return;
-      bindData({
-        rowData: datas.data.rowData,
-        bindingInfo: bindingInfos[dataset.datasetId]
-      });
+    const bindingInfos = selectBindingInfos(store.getState());
+    const promises = [];
+    const datas = {};
+
+    datasets.forEach((dataset) => {
+      promises.push((async () => {
+        if (
+          _.isEmpty(bindingInfos[dataset.datasetId]) ||
+          !bindingInfos[dataset.datasetId].useBinding
+        ) {
+          alert(localizedString.spreadBindingInfoNot); return;
+        }
+        const dsId = dataset.dataSrcId;
+        const query = dataset.datasetQuery;
+        const data =
+          await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
+        if (!data.data.rowData) return;
+        datas[dataset.datasetId] = data.data.rowData;
+      })());
     });
+    await Promise.all(promises);
+    dispatch(setSpreadData({
+      reportId: currentReportId,
+      data: datas
+    }));
   };
 
   /**

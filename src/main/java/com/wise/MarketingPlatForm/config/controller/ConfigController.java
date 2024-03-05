@@ -1,7 +1,8 @@
 package com.wise.MarketingPlatForm.config.controller;
 
 import java.sql.SQLException;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
 import com.wise.MarketingPlatForm.config.service.GeneralService;
 
@@ -57,6 +57,11 @@ public class ConfigController {
       .build();
 
     return generalService.updateConfig(generalDTO);
+  }
+  
+  @GetMapping("/spread")
+  public Map<String, String> getSpreadLicense () {
+	  return generalService.getSpreadLicense();
   }
 
 }

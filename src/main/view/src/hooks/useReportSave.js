@@ -16,7 +16,7 @@ import useModal from './useModal';
 import {selectCurrentDesignerMode, selectEditMode}
   from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-import {selectBindingInfos, selectCurrentDesigner}
+import {selectSpreadMeta}
   from 'redux/selector/SpreadSelector';
 import {ConvertDesignerMode, DesignerMode, EditMode}
   from 'components/config/configType';
@@ -42,7 +42,6 @@ const useReportSave = () => {
   const parameterActions = ParameterSlice.actions;
   const spreadActions = SpreadSlice.actions;
 
-  const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReportId = useSelector(selectCurrentReportId);
 
   /**
@@ -71,7 +70,7 @@ const useReportSave = () => {
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
     if (reportType === DesignerMode['EXCEL']) {
-      param.reportXml = JSON.stringify(selectBindingInfos(store.getState()));
+      param.reportXml = JSON.stringify(selectSpreadMeta(store.getState()));
     } else {
       param.reportXml = JSON.stringify({
         reportId: param.reportId,
@@ -158,7 +157,6 @@ const useReportSave = () => {
     const reports = selectReports(store.getState());
 
     models.Report.deleteReport(param).then((res) => {
-      const designer = selectCurrentDesigner(store.getState());
       const data = res.data;
       const msg = data.msg;
       const result = data.result;
@@ -266,9 +264,13 @@ const useReportSave = () => {
         reportId: reportId,
         informations: data.informations
       }));
+      // spread 저장 데이터 구조 변경으로 인한 임시 코드 추후 제거 20240225
+      if (data.spread.bindingInfos === undefined) {
+        data.spread = {bindingInfos: data.spread};
+      }
       dispatch(spreadActions.changeSpread({
         reportId: reportId,
-        bindingInfos: data.spread
+        meta: data.spread
       }));
     } catch (error) {
       new Error('Report load Error');
@@ -296,9 +298,13 @@ const useReportSave = () => {
         reportId: reportId,
         informations: data.informations
       }));
-      dispatch(spreadActions.setViewSpread({
+      // spread 저장 데이터 구조 변경으로 인한 임시 코드 추후 제거 20240225
+      if (data.spread.bindingInfos === undefined) {
+        data.spread = {bindingInfos: data.spread};
+      }
+      dispatch(spreadActions.setSpread({
         reportId: reportId,
-        bindingInfos: data.spread
+        meta: data.spread
       }));
     } catch (error) {
       new Error('Report load Error');
@@ -315,7 +321,7 @@ const useReportSave = () => {
 
   const querySearch = () => {
     let parameters = selectRootParameter(store.getState());
-
+    const designerMode = selectCurrentDesignerMode(store.getState());
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
         executeItems();

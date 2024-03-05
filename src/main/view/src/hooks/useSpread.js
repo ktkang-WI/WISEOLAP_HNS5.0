@@ -1,45 +1,51 @@
-import {createColumnsAndRows, dataSourceMaker, deleteTables, generateColumns}
+import {
+  createColumnsAndRows,
+  dataSourceMaker,
+  deleteTables,
+  generateColumns,
+  createBorderStyle
+}
   from 'components/report/atomic/spreadBoard/util/spreadUtil';
 import {useDispatch, useSelector} from 'react-redux';
-import store from 'redux/modules';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectBindingInfos,
-  selectCurrentDesigner,
-  selectExcelConfig,
-  selectExcelIO,
-  selectSheets} from 'redux/selector/SpreadSelector';
-import localizedString from 'config/localization';
-import useModal from './useModal';
+import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import {excelIO, sheets, insertWorkbookJSON, designerRef, workbookRef}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {defaultWorkbookJSON, excelFileType, excelIOOpenOtions}
+  from 'components/report/atomic/spreadBoard/util/spreadContants';
+import useFile from './useFile';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
+import store from 'redux/modules';
 
 const useSpread = () => {
-  const sheets = selectSheets(store.getState());
   const dispatch = useDispatch();
-  const {setBindingInfo, setDesigner} = SpreadSlice.actions;
+  const {setBindingInfo} = SpreadSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
-  const excelIO = useSelector(selectExcelIO);
-  const editMode = useSelector(selectEditMode);
+  const {importFile} = useFile();
 
-  const {alert} = useModal();
+  const getWorkbook = () => {
+    const editMode = selectEditMode(store.getState());
+    if (editMode === EditMode['DESIGNER']) {
+      return designerRef.current.designer.getWorkbook();
+    } else if (editMode === EditMode['VIEWER']) {
+      return workbookRef.current.spread;
+    }
+  };
 
   const bindData = ({rowData, bindingInfo}) => {
-    let workBook;
-    if (editMode !== EditMode['VIEWER']) {
-      workBook = selectCurrentDesigner(store.getState()).getWorkbook();
-    } else {
-      workBook = sheets.findControl(document.querySelector('[gcuielement]'));
-    }
+    if (rowData.length === 0) return;
+    const workbook = getWorkbook();
     const {columns} = generateColumns(rowData, sheets);
-    let bindedSheet = workBook
+    let bindedSheet = workbook
         .getSheetFromName(bindingInfo.sheetNm);
 
     if (bindedSheet == undefined) {
-      workBook.addSheet(0,
+      workbook.addSheet(0,
           new sheets.Worksheet(bindingInfo.sheetNm));
-      bindedSheet = workBook
+      bindedSheet = workbook
           .getSheetFromName(bindingInfo.sheetNm);
     }
 
@@ -47,7 +53,7 @@ const useSpread = () => {
     createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
     deleteTables(bindedSheet);
 
-    workBook.suspendPaint();
+    workbook.suspendPaint();
 
     const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
         bindingInfo.rowIndex,
@@ -69,7 +75,7 @@ const useSpread = () => {
     bindedSheet.setDataSource(dataSource);
     table.filterButtonVisible(false);
 
-    workBook.resumePaint();
+    workbook.resumePaint();
   };
 
 
@@ -119,81 +125,50 @@ const useSpread = () => {
     });
   };
 
-  const createBorderStyle = (useBorder) => {
-    const tableStyle = new sheets.Tables.TableTheme();
-    let thinBorder = undefined;
-    if (useBorder) {
-      thinBorder = new sheets.LineBorder('black', 1);
-    }
-    tableStyle.wholeTableStyle(new sheets.Tables.TableStyle(
-        undefined, undefined, undefined, thinBorder,
-        thinBorder, thinBorder, thinBorder, thinBorder, thinBorder));
-    return tableStyle;
-  };
-
-  /**
-   * @param {int} reportId designer를 등록 할 reportId
-   * @param {Object} prevDesigner 이전 Designer 객체
-   * @param {Object} config ribbon 설정 객체 - 처음 SpreadContent에서만 생성 이후 state에서 불러옴
-   */
-  const createDesigner = ({reportId, prevDesigner, config}) => {
-    try {
-      if (prevDesigner) prevDesigner.destroy();
-      if (_.isEmpty(config)) config = selectExcelConfig(store.getState());
-      const designer =
-      new sheets.Designer
-          .Designer(document.getElementById('spreadWrapper'),
-              config);
-      dispatch(setDesigner({
-        reportId: reportId,
-        designer: designer
-      }));
-      sheetNameChangedListener(designer);
-      sheetChangedListener(designer);
-    } catch (error) {
-      console.error('createDesigner error');
-    }
-  };
-
   const createReportBlob = async () => {
-    const designer = selectCurrentDesigner(store.getState());
-    const json = designer.getWorkbook().toJSON({includeBindingSource: false});
+    const workbook = getWorkbook();
+    const json = workbook.toJSON({includeBindingSource: false});
     const blob = await new Promise((resolve, reject) => {
       excelIO.save(JSON.stringify(json), resolve, reject);
     });
     return blob;
   };
 
-  const setExcelFile = (data, querySearch) => {
-    const designer = selectCurrentDesigner(store.getState());
-    const workBook = designer.getWorkbook();
-    const excelIO = selectExcelIO(store.getState());
+  const setExcelFile = async (reportId) => {
+    const response = await importFile({fileName: reportId + '.xlsx'});
+    let data;
+    if (response.status !== 200) {
+      data = defaultWorkbookJSON;
+      insertWorkbookJSON({
+        reportId: reportId,
+        workbookJSON: defaultWorkbookJSON
+      });
+    } else {
+      data = response.data;
+    }
     const blob = new Blob(
         [data],
-        {type:
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        }
+        {type: excelFileType}
     );
+    await excelIoOpen(reportId, blob);
+  };
 
-    const options = {
-      excelOpenFlags: {
-        ignoreStyle: false,
-        ignoreFormula: false,
-        frozenColumnsAsRowHeaders: false,
-        frozenRowsAsColumnHeaders: false,
-        doNotRecalculateAfterLoad: true
-      },
-      password: ''
-    };
-    excelIO.open(blob, (json) => {
-      workBook.clearSheets();
-      const workbookObj = json;
-      workBook.fromJSON(workbookObj);
-      querySearch();
-    },
-    () => {
-      alert(localizedString.reportCorrupted);
-    }, options);
+  const excelIoOpen = async (reportId, file) => {
+    await excelIO.open(
+        file,
+        (json) => {
+          insertWorkbookJSON({
+            reportId: reportId,
+            workbookJSON: json
+          });
+        },
+        () => {
+          insertWorkbookJSON({
+            reportId: reportId,
+            workbookJSON: defaultWorkbookJSON
+          });
+        },
+        excelIOOpenOtions);
   };
 
   return {
@@ -201,7 +176,6 @@ const useSpread = () => {
     sheetChangedListener,
     sheetNameChangedListener,
     createReportBlob,
-    createDesigner,
     setExcelFile
   };
 };
