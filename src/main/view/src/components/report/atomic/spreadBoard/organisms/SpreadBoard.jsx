@@ -87,7 +87,7 @@ const SpreadBoard = () => {
           sheetChangedListener(designer);
           sheetNameChangedListener(designer);
         }}
-        styleInfo={{width: '100%', height: 'calc(100% - 40px)'}}
+        styleInfo={{width: '100%', height: '100%'}}
       >
       </Designer>
     </StyledWrapper>

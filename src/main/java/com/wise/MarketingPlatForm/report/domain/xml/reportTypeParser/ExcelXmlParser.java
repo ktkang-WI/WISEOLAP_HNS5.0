@@ -46,7 +46,6 @@ public class ExcelXmlParser extends ReportXMLParser {
 		JSONPointer exdendedNamePointer = new JSONPointer("/EXCEL_XML/FILE_EXT_ELEMENT/FILE_EXT");
 		String exdendedName = (String) exdendedNamePointer.queryFrom(root);
 		if(exdendedName != null) {
-			JSONPointer sheetsePointer = new JSONPointer("/EXCEL_XML/SHEET_ELEMENT/VISIBLE_SHEET");
 			Object sheets = exdendedNamePointer.queryFrom(root);
 			
 			JSONArray sheetsArray = new JSONArray();

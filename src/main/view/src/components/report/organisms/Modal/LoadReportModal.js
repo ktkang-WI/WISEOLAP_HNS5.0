@@ -32,9 +32,9 @@ const LoadReportModal = ({...props}) => {
     });
   }, []);
 
-  const getReport = () => {
+  const getReport = async () => {
     if (reportType === DesignerMode['EXCEL']) {
-      setExcelFile(selectedReport.id);
+      await setExcelFile(selectedReport.id);
     }
     models.Report.getReportById('admin', selectedReport.id)
         .then(({data}) => {

@@ -150,25 +150,30 @@ const useSpread = () => {
         [data],
         {type: excelFileType}
     );
+
     await excelIoOpen(reportId, blob);
   };
 
-  const excelIoOpen = async (reportId, file) => {
-    await excelIO.open(
-        file,
-        (json) => {
-          insertWorkbookJSON({
-            reportId: reportId,
-            workbookJSON: json
-          });
-        },
-        () => {
-          insertWorkbookJSON({
-            reportId: reportId,
-            workbookJSON: defaultWorkbookJSON
-          });
-        },
-        excelIOOpenOtions);
+  const excelIoOpen = (reportId, file) => {
+    return new Promise((resolve, reject) => {
+      excelIO.open(
+          file,
+          (json) => {
+            insertWorkbookJSON({
+              reportId: reportId,
+              workbookJSON: json
+            });
+            resolve();
+          },
+          () => {
+            insertWorkbookJSON({
+              reportId: reportId,
+              workbookJSON: defaultWorkbookJSON
+            });
+            reject(new Error('Failed to open excel'));
+          },
+          excelIOOpenOtions);
+    });
   };
 
   return {

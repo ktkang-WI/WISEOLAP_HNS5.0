@@ -4,11 +4,16 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import useReportSave from 'hooks/useReportSave';
+import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {setEditMode} = ConfigSlice.actions;
+  const initialDisplay = useSelector(selectInitialDisplay);
+  const {setEditMode, setDesignerMode} = ConfigSlice.actions;
+  const {reload} = useReportSave();
 
   return {
     'Logo': {
@@ -45,6 +50,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
+        reload();
       }
     },
     'ShowQuery': {
@@ -72,6 +78,8 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('/editds/dashany');
         dispatch(setEditMode(EditMode.DESIGNER));
+        dispatch(setDesignerMode(initialDisplay));
+        reload();
       }
     },
     'DownloadReport': {

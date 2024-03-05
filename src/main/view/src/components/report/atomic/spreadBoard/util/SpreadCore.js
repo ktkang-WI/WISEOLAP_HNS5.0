@@ -44,14 +44,14 @@ export const setWorkbookRef = (ref) => {
 
 // eslint-disable-next-line prefer-const
 export let workbookJSONs = {};
+export const initWorkkbookJSONs = () => {
+  workbookJSONs = {};
+};
 export const insertWorkbookJSON = ({reportId, workbookJSON}) => {
   workbookJSONs[reportId] = workbookJSON;
 };
 export const deleteWorkbookJSON = (reportId) => {
   delete workbookJSONs[reportId];
-};
-export const updateWorkbookJSON = ({reportId, workbookJSON}) => {
-
 };
 export const getWorkbookJSON = (reportId) => {
   return workbookJSONs[reportId];
