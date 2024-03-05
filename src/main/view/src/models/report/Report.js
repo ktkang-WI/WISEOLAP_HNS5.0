@@ -70,10 +70,13 @@ export const updateLinkReport = async (param) => {
 
 /**
  * 연결 보고서 목록 가져오기
- * @param {JSON} param
+ * @param {JSON} reportId
  * @return {JSON}
  */
-export const getLinkReportList = (param) => {
+export const getLinkReportList = (reportId) => {
+  const param = {
+    reportId: reportId
+  };
   return axios.post(path + '/report-link-list', param);
 };
 

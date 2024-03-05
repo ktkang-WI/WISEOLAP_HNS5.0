@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   height: 54px;
   display: flex;
   min-width: 200px;
-  position: absolute;
+  // position: absolute;
   top: 8px;
   left: 350px;
 `;

@@ -67,6 +67,14 @@ const ReportTabs = () => {
                 }).catch(() => {
                   alert(localizedString.reportCorrupted);
                 });
+            console.log('selectedReport' + selectedReport.id);
+            models.Report.getLinkReportList(selectedReport.id)
+                .then((res) => {
+                  const subLinkReports = res.data.subLinkReports;
+                  const linkReports = res.data.linkReports;
+                  console.log('Sub Link Reports:', subLinkReports);
+                  console.log('Link Reports:', linkReports);
+                });
           }
         }
       }}

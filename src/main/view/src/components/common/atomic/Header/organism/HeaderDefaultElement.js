@@ -4,6 +4,10 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import {getConfig} from 'config/config';
+
+const contextRoot =
+process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -74,10 +78,26 @@ const HeaderDefaultElement = () => {
         dispatch(setEditMode(EditMode.DESIGNER));
       }
     },
+    'LinkReport': {
+      'id': 'linkreport',
+      'label': localizedString.linkReport,
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        const urlString =
+          document.location.origin + contextRoot + '/editds' + '/viewer';
+        window.open(urlString);
+      }
+    },
     'DownloadReport': {
-      'id': 'designer',
+      'id': 'downlodreport',
       'label': localizedString.downloadReport,
-      'type': 'TextButton'
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton'
     }
   };
 };
