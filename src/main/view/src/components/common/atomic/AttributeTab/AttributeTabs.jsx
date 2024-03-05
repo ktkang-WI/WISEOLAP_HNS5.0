@@ -3,6 +3,21 @@ import ItemAttributeTab
 import DataColumntab from '../DataColumnTab/DataColumnTab';
 import localizedString from '../../../../config/localization';
 import CommonTab from '../Common/Interactive/CommonTab';
+import {styled} from 'styled-components';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
+
+const StyledTab = styled(CommonTab)`
+  border: 1px ${theme.color.gray200} solid;
+  border-radius: 0px 10px 10px 0px;
+  border-left: 1px solid ${theme.color.gray100};
+  margin-left: 0px;
+  width: calc(${theme.size.panelWidth} - 30px);
+  overflow: hidden;
+  padding: 10px 15px;
+  background: ${theme.color.white};
+`;
 
 const AttributeTabsSource = [
   {
@@ -29,11 +44,13 @@ const getTabContent = ({data}) => {
 
 const AttributeTabs = () => {
   return (
-    <CommonTab
+    <StyledTab
+      tabWidth={'500px'}
+      swipeEnabled={false}
       dataSource={AttributeTabsSource}
       itemComponent={getTabContent}
     >
-    </CommonTab>
+    </StyledTab>
   );
 };
 

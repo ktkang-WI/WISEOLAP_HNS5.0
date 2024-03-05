@@ -3,6 +3,8 @@ import {makeAdHocItemMart, makeMart}
 import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
 import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
+import {paletteCollection}
+  from 'components/common/atomic/Popover/organism/Palette';
 
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
@@ -46,6 +48,9 @@ const makeItem = (orgItem, countMap) => {
         },
         name: type[orgItem.type] + initNum,
         memo: '',
+        paletteType: 'palette',
+        palette: paletteCollection[0],
+        colorEdit: [],
         useCaption: true,
         dataField: {
           dataFieldQuantity: 0
@@ -77,7 +82,7 @@ const makeItem = (orgItem, countMap) => {
  */
 const makeAdHocItem = (orgItem) => {
   const meta = !orgItem.meta ? makeAdHocItemMeta(orgItem) : orgItem.meta;
-  const mart = !orgItem.mart ? makeAdHocItemMart() : orgItem.mart;
+  const mart = !orgItem.mart ? makeAdHocItemMart(orgItem.type) : orgItem.mart;
 
   return {
     ...orgItem,

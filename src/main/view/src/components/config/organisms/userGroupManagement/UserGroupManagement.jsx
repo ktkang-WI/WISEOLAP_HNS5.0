@@ -1,6 +1,6 @@
 import {createContext, useCallback, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {Button, TabPanel} from 'devextreme-react';
+import {Button} from 'devextreme-react';
 import {Mode, dataSource} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
@@ -10,6 +10,9 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal.js';
 import UserPasswordModal from
   'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
+import {getHint} from 'components/config/utility/utility.js';
+import CommonTab from
+  'components/common/atomic/Common/Interactive/CommonTab.jsx';
 
 // import useModal from 'hooks/useModal.js';
 
@@ -287,7 +290,11 @@ const UserGroupManagement = () => {
       return (
         btns.map((item, index) => (
           <NavBarItem key={index}>
-            <Button icon={item} onClick={handleBtnClick}></Button>
+            <Button
+              icon={item}
+              onClick={handleBtnClick}
+              hint={getHint(item)}
+            />
           </NavBarItem>
         ))
       );
@@ -296,7 +303,11 @@ const UserGroupManagement = () => {
         btns.filter((item) => item !== 'key')
             .map((item, index) => (
               <NavBarItem icon={item} key={index}>
-                <Button icon={item} onClick={handleBtnClick}></Button>
+                <Button
+                  icon={item}
+                  onClick={handleBtnClick}
+                  hint={getHint(item)}
+                />
               </NavBarItem>
             ))
       );
@@ -313,7 +324,7 @@ const UserGroupManagement = () => {
           </NavBar>
         </Header>
         <Content>
-          <TabPanel
+          <CommonTab
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -323,7 +334,7 @@ const UserGroupManagement = () => {
             itemComponent={TabPanelItem}
             onTitleClick={handleTabPanelItem}
           >
-          </TabPanel>
+          </CommonTab>
         </Content>
       </Wrapper>
     </UserGroupContext.Provider>

@@ -7,6 +7,23 @@ import useReportSave from 'hooks/useReportSave';
 import {useEffect, useRef} from 'react';
 import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {getTheme} from 'config/theme';
+import {styled} from 'styled-components';
+
+const theme = getTheme();
+
+const StyledWrapper = styled(Wrapper)`
+  height: 100%;
+  width: calc(100% - 10px);
+  flex: 1;
+  background: #f5f6fa;
+  display: flex;
+  min-height: 0px;
+  border: 1px solid ${theme.color.gray200};
+  border-radius: 10px;
+  overflow: hidden !important;
+  text-align: left;
+`;
 
 const SpreadViewer = () => {
   const report = useSelector(selectCurrentReport);
@@ -71,10 +88,11 @@ const SpreadViewer = () => {
   }, [report]);
 
   return (
-    <Wrapper
+    <StyledWrapper
+      className='section board'
       ref={sheetsRef}
     >
-    </Wrapper>
+    </StyledWrapper>
   );
 };
 

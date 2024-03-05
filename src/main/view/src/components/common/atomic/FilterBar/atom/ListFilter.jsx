@@ -22,9 +22,11 @@ const ListFilter = ({
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
+    if (keys.length === value.listItems.length) {
+      return allText;
+    }
     const keySet = new Set(keys);
     const captionArr = [];
-
     for (const item of value.listItems) {
       if (keySet.has(item.name)) {
         captionArr.push(item.caption);
@@ -43,14 +45,15 @@ const ListFilter = ({
 
   useEffect(() => {
     let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
-
     if (!value || !value.value) {
       setText('');
     } else if (!keys || keys == '[All]') {
       if (info.multiSelect) {
         keys = value.listItems.map((item) => item.name);
+      } else if (!info.multiSelect && info.useAll) {
+      } else if (!info.multiSelect && !info.useAll) {
+        keys = [value.listItems[0].name];
       }
-      setText(allText);
     } else {
       if (dataType === 'number') {
         keys = keys.split(', ').map((key) => {
@@ -59,8 +62,8 @@ const ListFilter = ({
       } else {
         keys = keys.split(', ');
       }
-      setText(generateCaptionText(keys));
     }
+    setText(generateCaptionText(keys));
     setSelectionKeys(keys);
   }, [info, value]);
 

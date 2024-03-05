@@ -12,31 +12,38 @@ const generateMeta = (item) => {
   setMeta(item, 'pieChartStyle', 'pie');
   setMeta(item, 'labelPosition', 'columns');
   setMeta(item, 'tooltip', {
-    billions: 'B',
+    suffixB: 'B',
     customPrefix: false,
-    customSuffix: false,
-    precsionOption: 'round',
+    suffixEnabled: false,
+    precisionType: 'round',
     inputPrefix: '',
     format: 'value',
-    millions: 'M',
-    thousands: 'K',
+    suffixM: 'M',
+    suffixK: 'K',
     unit: 'Ones',
-    precsion: 0,
-    ones: ''
+    precision: 0,
+    suffixO: ''
   });
   setMeta(item, 'labelEdit', {
     showTitle: true,
-    billions: 'B',
+    suffixB: 'B',
     customPrefix: false,
-    customSuffix: false,
-    precsionOption: 'round',
+    suffixEnabled: false,
+    precisionType: 'round',
     inputPrefix: '',
     format: 'value',
-    millions: 'M',
-    thousands: 'K',
+    suffixM: 'M',
+    suffixK: 'K',
     unit: 'Ones',
-    precsion: 0,
-    ones: ''
+    precision: 0,
+    suffixO: ''
+  });
+  setMeta(item, 'legend', {
+    useLegend: true,
+    position: 'outside',
+    horizontalAlignment: 'right',
+    verticalAlignment: 'top',
+    itemTextPosition: 'right'
   });
 };
 

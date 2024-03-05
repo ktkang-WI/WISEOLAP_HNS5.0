@@ -12,7 +12,7 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
 @Service
 public class UserService {
-  
+
   @Autowired
   private AccountDAO accountDAO;
 
@@ -42,6 +42,7 @@ public class UserService {
       .telNo(userMstr.getTelNo())
       .grpId(userMstr.getGrpId())
       .runMode(userMstr.getUserRunMode())
+      .userDesc(userMstr.getUserDesc())
       .build();
     return accountDAO.updateUser(user);
   };
@@ -76,6 +77,6 @@ public class UserService {
 
   public List<UserMstrEntity> selectUserMstr() {
     return accountDAO.selectUserMstr();
-  } 
+  }
 
 }

@@ -24,7 +24,6 @@ const FolderInformation = ({row, setRow}) => {
       onClick: (e) => {
         if (Object.keys(row).length > 0) {
           openModal(FolderListModal, {
-            infoInstance: ref.current._instance,
             row: row,
             setRow: setRow
           });

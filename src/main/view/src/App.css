@@ -1,10 +1,13 @@
 a {
   text-decoration: none;
 }
+
 .App {
   text-align: center;
   width: 100vw;
   height: 100vh;
+  font: normal 14px "Noto Sans KR";
+  background: #F6F8FC;
 }
 
 *{
@@ -55,10 +58,6 @@ img {
   color: #61dafb;
 }
 
-.dx-texteditor.dx-state-readonly {
-  border-style: solid;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -74,5 +73,37 @@ img {
 }
 
 #subMenu {
-  padding-left: 15px;
+  margin-left: 8px !important;
+}
+
+.section {
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.section .section {
+  margin-top: 0px;
+  margin-right: 0px;
+}
+
+.dx-drawer:not(.dx-drawer-opened) .board:first-child {
+  margin-left: 0px;
+}
+
+.dx-drawer.dx-drawer-opened div:not(.dx-state-invisible) .board:first-child {
+  margin-left: 10px !important;
+}
+
+.dx-drawer-content {
+  overflow: visible !important;
+}
+
+.szh-menu__item {
+  content: '>';
+  width: 80px;
+  padding: 5px 8px;
+}
+
+.szh-menu__submenu > .szh-menu__item{
+  content: '>';
 }

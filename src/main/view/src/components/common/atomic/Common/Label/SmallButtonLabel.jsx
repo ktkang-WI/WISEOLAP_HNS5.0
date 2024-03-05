@@ -4,11 +4,10 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 
 const SmallButtonLabel = styled.div`
-  height: 15px;
+  height: auto;
   width: 100%;
   text-align: center;
   font: ${theme.font.small};
-  color: ${theme.color.primaryFont};
   letter-spacing: -1px;
 `;
 

@@ -51,7 +51,7 @@ const newCubeParamInformation = (name, dsId, dsType,
   return {
     ...newParamInformation(name, dsId, dsType, order),
     // newParamInformation 오버라이딩
-    caption: cubeColumnInfo.physicalColumnName,
+    caption: cubeColumnInfo.columnCaption,
     exceptionValue: cubeColumnInfo.physicalTableName + '.' +
        cubeColumnInfo.physicalColumnKey,
     uniqueName: cubeColumnInfo.logicalColumnName,

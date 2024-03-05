@@ -12,6 +12,7 @@ import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsPutDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDsMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.ds.GroupDsModel;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
@@ -52,6 +53,19 @@ public class GroupDsService {
 
     for (GroupDsPutDTO groupdsPut : groupDsPutDTO) {
       int grpId = groupdsPut.getGrpId();
+      List<Integer> dss = groupdsPut.getDsIds();
+      int dsSize = dss.size();
+
+      if (dsSize == 0) {
+        GroupAuthDsMstrEntity groupAuthDsMstrEntity = GroupAuthDsMstrEntity.builder()
+          .grpId(grpId)
+          .dsId(0)
+          .build();
+
+          result.add(groupAuthDsMstrEntity);
+
+        continue;
+      }
 
       for (Integer dsId : groupdsPut.getDsIds()) {
 

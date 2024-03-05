@@ -6,7 +6,7 @@ import TreeList, {
   Selection} from 'devextreme-react/tree-list';
 
 import models from 'models';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
@@ -19,7 +19,8 @@ const DatasetTreeView = ({row}) => {
   // state
   const [dataSets, setDataSet] = useState([]);
   const [data] = authoritycontext.state.data;
-  const dataSetTreeViewRef = authoritycontext.ref.dataSetTreeViewRef;
+
+  const ref = useRef();
 
   useEffect(() => {
     models.Authority.getFolderDatasets()
@@ -79,7 +80,10 @@ const DatasetTreeView = ({row}) => {
     <Wrapper>
       <Title title={localizedString.datasetFolderList}></Title>
       <TreeList
-        ref={dataSetTreeViewRef}
+        ref={ref}
+        elementAttr={{
+          class: 'dataset-tree-view'
+        }}
         dataSource={dataSets}
         keyExpr="fldId"
         parentIdExpr="fldParentId"

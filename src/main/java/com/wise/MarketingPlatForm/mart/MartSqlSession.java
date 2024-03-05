@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component("martTemplates")
 public class MartSqlSession {
 	
-	public SqlSessionTemplate sessionTemplate;
 	public Map<Integer, SqlSessionTemplate> sessionTemplates;
 	
 	MartSqlSession(){
@@ -16,3 +15,6 @@ public class MartSqlSession {
 	}
 	
 }
+
+
+

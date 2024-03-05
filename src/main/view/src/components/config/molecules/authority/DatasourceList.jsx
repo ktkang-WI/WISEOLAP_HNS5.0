@@ -1,6 +1,7 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useRef,
+  useContext, useEffect, useState} from 'react';
 import models from 'models';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
@@ -15,7 +16,9 @@ const DatasourceList = ({row}) => {
   // state
   const [ds, setDs] = useState([]);
   const [data] = authorityContext.state.data;
-  const dataSourceListRef = authorityContext.ref.dataSourceListRef;
+
+  const ref = useRef();
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const getDsIdList = () => {
@@ -75,7 +78,10 @@ const DatasourceList = ({row}) => {
     <Wrapper>
       <Title title={localizedString.dataSourceList}></Title>
       <DataGrid
-        ref={dataSourceListRef}
+        ref={ref}
+        elementAttr={{
+          class: 'datasource-list'
+        }}
         dataSource={ds}
         showBorders={true}
         onRowClick={handleRowClick}

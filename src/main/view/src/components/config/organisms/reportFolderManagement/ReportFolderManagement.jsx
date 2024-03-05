@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {Button, TabPanel} from 'devextreme-react';
+import {Button} from 'devextreme-react';
 import styled from 'styled-components';
 import React, {createContext, useEffect, useState}
   from 'react';
@@ -10,6 +10,8 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import Form from 'devextreme/ui/form';
 import TreeList from 'devextreme/ui/tree_list';
+import {getHint, getRefInstance} from 'components/config/utility/utility';
+import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -92,7 +94,8 @@ const ReportFolderManagement = () => {
           ...v,
           key: 'r_'+ v.reportId,
           parentId: 'f_' + v.fldId,
-          name: v.reportNm
+          name: v.reportNm,
+          fldParentNm: v.fldNm
         });
 
         return acc;
@@ -134,13 +137,6 @@ const ReportFolderManagement = () => {
     init();
   }, []);
 
-  const getRefInstance = (component, classNm) => {
-    const element = Array.from(document.querySelectorAll('[role="tabpanel"]'))
-        .filter((row) => row.className.includes('dx-item-selected'))[0]
-        .getElementsByClassName(classNm);
-    return component.getInstance(element[0]);
-  };
-
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
     let instance = {};
@@ -162,21 +158,21 @@ const ReportFolderManagement = () => {
 
     switch (icon) {
       case 'plus':
-        handlePlus();
+        handlePlus(listRef);
         break;
       case 'save':
-        handleSave({instance, listRef, infoRef});
+        handleSave(instance, listRef, infoRef);
         break;
       case 'remove':
-        handleRemove({instance, listRef, infoRef});
+        handleRemove(instance, listRef, infoRef);
         break;
       default:
         break;
     }
   };
 
-  const handlePlus = () => {
-    clearRef(folderListRef);
+  const handlePlus = (listRef) => {
+    clearRef(listRef);
   };
 
   const handleSaveFolder = (folder, listRef, infoRef) => {
@@ -215,7 +211,7 @@ const ReportFolderManagement = () => {
     validateAndProcess(infoRef.validate(), saveReport);
   };
 
-  const handleSave = ({instance, listRef, infoRef}) => {
+  const handleSave = (instance, listRef, infoRef) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
       handleSaveReport(instance, listRef, infoRef);
     }
@@ -252,7 +248,7 @@ const ReportFolderManagement = () => {
         });
   };
 
-  const handleRemove = ({instance, listRef, infoRef}) => {
+  const handleRemove = (instance, listRef, infoRef) => {
     if (management.mode === Mode.REPORT_MANAGEMENT) {
       handleRemoveReport(instance, listRef, infoRef);
     }
@@ -266,7 +262,11 @@ const ReportFolderManagement = () => {
       return (
         btns.map((item, index) => (
           <NavBarItem key={index}>
-            <Button icon={item} onClick={handleBtnClick}></Button>
+            <Button
+              icon={item}
+              onClick={handleBtnClick}
+              hint={getHint(item)}
+            />
           </NavBarItem>
         ))
       );
@@ -275,7 +275,11 @@ const ReportFolderManagement = () => {
         btns.filter((item) => item !== 'plus')
             .map((item, index) => (
               <NavBarItem icon={item} key={index}>
-                <Button icon={item} onClick={handleBtnClick}></Button>
+                <Button
+                  icon={item}
+                  onClick={handleBtnClick}
+                  hint={getHint(item)}
+                />
               </NavBarItem>
             ))
       );
@@ -309,11 +313,7 @@ const ReportFolderManagement = () => {
           </NavBar>
         </Header>
         <Content>
-          <TabPanel
-            onOptionChanged={(e) => {
-              if (e.name == 'hoveredElement') return;
-              console.log(e);
-            }}
+          <CommonTab
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -324,7 +324,7 @@ const ReportFolderManagement = () => {
             onTitleClick={handleTabPanelItem}
             deferRendering
           >
-          </TabPanel>
+          </CommonTab>
         </Content>
       </Wrapper>
     </ReportFolderContext.Provider>

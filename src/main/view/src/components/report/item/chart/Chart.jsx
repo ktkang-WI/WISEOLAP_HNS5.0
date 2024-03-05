@@ -27,6 +27,7 @@ import {
 import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
+import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
@@ -239,10 +240,24 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <Point visible={pointerMarker} />
       </CommonSeriesSettings>
       <ArgumentAxis
-        inverted={reverseView} />
+        inverted={reverseView}
+        title={meta.xAxis.axisCutomText}
+        label={{
+          visible: meta.xAxis.xAxisMark,
+          displayMode: 'rotate',
+          rotationAngle: meta.xAxis.xAxisInclination
+        }} />
       <ValueAxis
         name="left"
         position="left"
+        title={meta.yAxis.customText} // 사용자정의텍스트
+        showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
+        label={{
+          visible: meta.yAxis.useAxis, // y축 표시
+          customizeText: (e) => { // y축 custom Suffix
+            return valueAxisCustomLabel(e, meta.yAxis);
+          }
+        }}
         inverted={reverseView}>
         <Grid visible={true} />
       </ValueAxis>
@@ -251,15 +266,24 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <ValueAxis
           name="right"
           position="right"
+          title={meta.extraAxis.customText} // 사용자정의텍스트
+          showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+          label={{
+            visible: meta.extraAxis.useAxis, // y축 표시
+            customizeText: (e) => { // y축 custom Suffix
+              return valueAxisCustomLabel(e, meta.extraAxis);
+            }
+          }}
           inverted={reverseView}>
           <Grid visible={true} />
         </ValueAxis> : <></>
       }
       <Legend
-        visible={true}
-        position='outside'
-        horizontalAlignment='right'
-        verticalAlignment='top'
+        visible={meta.legend.useLegend}
+        position={meta.legend.position}
+        horizontalAlignment={meta.legend.horizontalAlignment}
+        verticalAlignment={meta.legend.verticalAlignment}
+        itemTextPosition={meta.legend.itemTextPosition}
       />
       <Tooltip
         enabled={true}

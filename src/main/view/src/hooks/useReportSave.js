@@ -216,7 +216,7 @@ const useReportSave = () => {
       // 공통 데이터 가공
       data.item.items.forEach((i) => {
         if (designerMode == DesignerMode['AD_HOC']) {
-          i.mart = makeAdHocItemMart();
+          i.mart = makeAdHocItemMart(i.type);
         } else {
           i.mart = makeMart(i);
         }

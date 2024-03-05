@@ -1,6 +1,7 @@
 import localizedString from 'config/localization';
 import dimensionIcon from 'assets/image/icon/dataSource/dimension.png';
 import measureIcon from 'assets/image/icon/dataSource/measure.png';
+import sortByItemIcon from 'assets/image/icon/dataSource/sort_by_item.png';
 import ItemManager from './ItemManager';
 
 // 기본값
@@ -37,6 +38,7 @@ export const treeMapMeasure = {
 
 export const dataFieldSortByItem = {
   ...defaultMeasure,
+  icon: sortByItemIcon,
   label: localizedString.sortByItem,
   placeholder: localizedString.newSortByItem,
   required: false
@@ -68,10 +70,13 @@ const makeMart = (item) => {
   };
 };
 
-const makeAdHocItemMart = () => {
+const makeAdHocItemMart = (type) => {
+  // 비정형 -> type : chart or pivot
+  const ribbonItems = ItemManager.getRibbonItems(type);
+
   return {
     ...defaultMart,
-    ribbonItem: []
+    ribbonItems: ribbonItems
   };
 };
 

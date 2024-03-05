@@ -15,6 +15,7 @@ import useLayout from 'hooks/useLayout';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
+import {getTheme} from 'config/theme';
 
 import Choropleth from 'components/report/item/choropleth/Choropleth';
 import Chart from 'components/report/item/chart/Chart';
@@ -28,14 +29,37 @@ import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
+
+
+const theme = getTheme();
 
 const StyledBoard = styled.div`
   height: 100%;
-  width: 100%;
+  width: calc(100% - 10px);
   flex: 1;
-  background: #f5f6fa;
+  background: ${theme.color.background};
   display: flex;
   min-height: 0px;
+  margin-bottom: 0px;
+
+  .flexlayout__tabset {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+
+  .flexlayout__tab > div {
+    border-radius: 0px 0px 8px 8px;
+  }
+
+  .flexlayout__tabset_tabbar_outer {
+    font: ${theme.font.itemTitle};
+  }
+
+  .flexlayout__tabset_tabbar_outer span {
+    color: ${theme.color.gray500};
+  }
 `;
 
 const DownloadImage = styled.img`
@@ -43,6 +67,13 @@ const DownloadImage = styled.img`
   width: 20px;
 `;
 
+const Memo = styled.div`
+  font-size: 0.8rem;
+  border: 1px dashed black;
+  border-radius: 1px;
+  border-color: #c1c1c1;
+  padding: 2px 4px;
+`;
 
 const ItemBoard = () => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
@@ -57,6 +88,7 @@ const ItemBoard = () => {
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
 
   const itemFactory = {
@@ -232,12 +264,25 @@ const ItemBoard = () => {
     return action;
   }
 
+  const calcForFontWidth = (txt) => {
+    if (!txt) return 0;
+    const len = txt.split('')
+        .map((s) => s.charCodeAt(0))
+        .reduce((prev, c) =>
+          (prev + ((c === 10) ? 2 : ((c >> 7) ? 2 : 1.12))), 0);
+    if (len < 10) return 80;
+    return len * (0.8 * 9);
+  };
+
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
 
     if (tabNode) {
       const type = tabNode.getComponent();
       const id = tabNode.getId();
+      const item = items.filter((item) => item.id === id)[0];
+      const memo = item?.meta?.memo;
+      const memoWidth = calcForFontWidth(memo);
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
@@ -247,7 +292,9 @@ const ItemBoard = () => {
 
       renderValues.buttons.push(
           !rootItem.adHocOption &&
-          <button
+          (memo ?
+            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
+          (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
@@ -256,7 +303,7 @@ const ItemBoard = () => {
             }}
           >
           &#128473;&#xFE0E;
-          </button>,
+          </button>),
           <button
             key="download"
             title="Download"
@@ -302,8 +349,13 @@ const ItemBoard = () => {
     }
   };
 
+  model.doAction(Actions.updateModelAttributes({
+    tabSetHeaderHeight: 40,
+    tabSetTabStripHeight: 40
+  }));
+
   return (
-    <StyledBoard>
+    <StyledBoard className='section board'>
       <Layout
         model={model}
         factory={factory}

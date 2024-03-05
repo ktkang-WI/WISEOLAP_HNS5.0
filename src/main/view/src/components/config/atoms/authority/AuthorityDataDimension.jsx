@@ -1,7 +1,8 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState,
+  useRef} from 'react';
 import localizedString from 'config/localization';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
@@ -15,8 +16,8 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row, auth}) => {
   const [dimensionList, setDimensionList] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [data] = authorityContext.state.data;
-  const authorityDataDimensionRef =
-  authorityContext.ref.authorityDataDimensionRef;
+
+  const ref = useRef();
 
   useEffect(() => {
     const dsViewId = dsView.dsViewId;
@@ -58,7 +59,10 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row, auth}) => {
     <Wrapper>
       <Title title={localizedString.dimension}></Title>
       <DataGrid
-        ref={authorityDataDimensionRef}
+        ref={ref}
+        elementAttr={{
+          class: 'authority-data-dimension'
+        }}
         dataSource={dimensionList}
         showBorders={true}
         onRowClick={handleRowClick}

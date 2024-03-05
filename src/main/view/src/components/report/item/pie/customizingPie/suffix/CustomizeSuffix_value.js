@@ -3,18 +3,18 @@ const regularExpression = (num) => {
   return ((num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','));
 };
 
-const treatedNumber = (value, valueOfSuffix, precsion, precsionOption) => {
-  const suffixValue = valueOfSuffix / 10 ** (precsion);
+const treatedNumber = (value, valueOfSuffix, precision, precisionType) => {
+  const suffixValue = valueOfSuffix / 10 ** (precision);
   const mathRoundFunc = {
     round: Math.round,
-    roundUp: Math.ceil,
-    roundDown: Math.floor
+    ceil: Math.ceil,
+    floor: Math.floor
   };
 
   return (
     parseFloat(
-        (mathRoundFunc[precsionOption](value / suffixValue) * suffixValue) /
-          valueOfSuffix).toFixed(precsion)
+        (mathRoundFunc[precisionType](value / suffixValue) * suffixValue) /
+          valueOfSuffix).toFixed(precision)
   );
 };
 
@@ -36,35 +36,45 @@ const autoSuffix = (value) => {
 
 export default function CustomizeSuffixValue(value, options) {
   const defaultSuffix = {1: '', 1000: 'K', 1000000: 'M', 1000000000: 'B'};
+  const suffixO = options.suffixO ? options.suffixO : '';
   const suffix = {
-    [options.ones]: 1,
-    [options.thousands]: 10 ** 3,
-    [options.millions]: 10 ** 6,
-    [options.billions]: 10 ** 9
+    [suffixO]: 1,
+    [options.suffixK]: 10 ** 3,
+    [options.suffixM]: 10 ** 6,
+    [options.suffixB]: 10 ** 9
+  };
+  const units = {
+    'ones': suffixO,
+    'thousands': options.suffixK,
+    'millions': options.suffixM,
+    'billions': options.suffixB
   };
   const unit = options.unit.toLowerCase();
   const valueOfSuffix = unit !== 'auto' ?
-    suffix[options[unit]] : autoSuffix(value);
-  const precsion = options.precsion;
+    suffix[units[unit]] : autoSuffix(value);
+  const precision = options.precision;
 
   const num = treatedNumber(
-      value, valueOfSuffix, precsion, options.precsionOption
+      value, valueOfSuffix, precision, options.precisionType
   );
+  let resultNum = regularExpression(num);
 
-  if (options.customSuffix) {
+  if (options.useDigitSeparator == false) resultNum = num;
+
+  if (options.suffixEnabled) {
     if (unit === 'auto') {
       const customSuffix =
         Object.keys(suffix).find((key) => suffix[key] === valueOfSuffix);
 
-      return (regularExpression(num) + customSuffix);
+      return (resultNum + customSuffix);
     }
 
-    return (regularExpression(num) + options[unit]);
+    return (resultNum + units[unit]);
   } else {
-    if (unit === 'auto') {
-      return (regularExpression(num) + defaultSuffix[valueOfSuffix]);
+    if (unit === 'auto' || options.useAxis !== undefined) {
+      return (resultNum + defaultSuffix[valueOfSuffix]);
     }
 
-    return regularExpression(num);
+    return resultNum;
   }
 };
