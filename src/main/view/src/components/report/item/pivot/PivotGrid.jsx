@@ -260,4 +260,23 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   );
 };
 
-export default React.memo(PivotGrid);
+const getDataField = (state) => {
+  if (state.adHocOption) {
+    return state.adHocOption.dataField;
+  };
+  return state.item.meta.dataField;
+};
+
+const propsComparator = (prev, next) => {
+  const prevDataField = getDataField(prev);
+  const nextDataField = getDataField(next);
+
+  return prev.item.mart == next.item.mart &&
+  _.isEqual(prev.item.meta.interactiveOption,
+      next.item.meta.interactiveOption) &&
+  _.isEqual(prev.item.meta.positionOption,
+      next.item.meta.positionOption) &&
+  !_.isEqual(prevDataField.measure, nextDataField.measure);
+};
+
+export default React.memo(PivotGrid, propsComparator);
