@@ -213,9 +213,9 @@ const DataGrid = ({setItemExports, id, item}) => {
       event.preventDefault();
       setShowPopup(true);
     };
+    const gridInstance = dataGridRef.current.instance;
 
     const handleContentReady = () => {
-      const gridInstance = dxRef.current.instance;
       if (gridInstance) {
         const scrollable = gridInstance.getScrollable();
         const container = scrollable.element();
@@ -226,7 +226,6 @@ const DataGrid = ({setItemExports, id, item}) => {
       }
     };
 
-    const gridInstance = dxRef.current.instance;
     if (gridInstance) {
       gridInstance.on('contentReady', handleContentReady);
       return () => {
