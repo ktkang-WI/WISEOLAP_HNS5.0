@@ -271,11 +271,13 @@ const propsComparator = (prev, next) => {
   const prevDataField = getDataField(prev);
   const nextDataField = getDataField(next);
 
+  const prevMeta = prev.item.meta;
+  const nextMeta = next.item.meta;
+
   return prev.item.mart == next.item.mart &&
-  _.isEqual(prev.item.meta.interactiveOption,
-      next.item.meta.interactiveOption) &&
-  _.isEqual(prev.item.meta.positionOption,
-      next.item.meta.positionOption) &&
+  _.isEqual(prevMeta.interactiveOption, nextMeta.interactiveOption) &&
+  _.isEqual(prevMeta.positionOption, nextMeta.positionOption) &&
+  _.isEqual(prevMeta.removeNullData, nextMeta.removeNullData) &&
   !_.isEqual(prevDataField.measure, nextDataField.measure);
 };
 
