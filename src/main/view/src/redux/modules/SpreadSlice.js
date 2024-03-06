@@ -46,11 +46,11 @@ const reducers = {
     const prevId = actions.payload.reportId.prevId;
     const newId = actions.payload.reportId.newId;
     const meta = actions.payload.meta;
+    delete state[prevId];
     state[newId] = {
       ...initialState[0],
       meta: meta
     };
-    delete state[prevId];
   },
   setBindingInfos(state, actions) {
     const reportId = actions.payload.reportId;

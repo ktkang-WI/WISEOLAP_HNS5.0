@@ -29,6 +29,8 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {makeFieldIcon} from 'components/dataset/utils/DatasetUtil';
 import useQueryExecute from './useQueryExecute';
 import DatasetType from 'components/dataset/utils/DatasetType';
+import {initWorkkbookJSONs}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
@@ -204,6 +206,7 @@ const useReportSave = () => {
     dispatch(layoutActions.initLayout(designerMode));
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
+    initWorkkbookJSONs();
   };
 
   // 보고서 불러오기 - 추후 뷰어 및 디자이너 분기 처리.
@@ -265,7 +268,7 @@ const useReportSave = () => {
         informations: data.informations
       }));
       // spread 저장 데이터 구조 변경으로 인한 임시 코드 추후 제거 20240225
-      if (data.spread.bindingInfos === undefined) {
+      if (data.spread !== undefined && !('bindingInfos' in data.spread)) {
         data.spread = {bindingInfos: data.spread};
       }
       dispatch(spreadActions.changeSpread({
@@ -299,7 +302,7 @@ const useReportSave = () => {
         informations: data.informations
       }));
       // spread 저장 데이터 구조 변경으로 인한 임시 코드 추후 제거 20240225
-      if (data.spread.bindingInfos === undefined) {
+      if (data.spread !== undefined && !('bindingInfos' in data.spread)) {
         data.spread = {bindingInfos: data.spread};
       }
       dispatch(spreadActions.setSpread({

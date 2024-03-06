@@ -51,7 +51,6 @@ const SpreadViewer = () => {
   return (
     <StyledWrapper
       className='section board'
-      ref={sheetsRef}
     >
       <SpreadSheets
         ref={workbookRef}
