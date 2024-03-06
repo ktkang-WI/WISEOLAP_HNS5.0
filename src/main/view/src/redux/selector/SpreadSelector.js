@@ -11,7 +11,7 @@ export const selectSpreadMeta = createSelector(
 export const selectBindingInfos = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].meta.bindingInfos
+    (reportId, spread) => spread[reportId]?.meta?.bindingInfos
 );
 
 export const selectCurrentBindingInfo = createSelector(
@@ -23,5 +23,5 @@ export const selectCurrentBindingInfo = createSelector(
 export const selectCurrentSpreadData = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId].mart.spreadData
+    (reportId, spread) => spread[reportId]?.mart?.spreadData
 );

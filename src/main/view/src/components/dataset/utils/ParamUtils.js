@@ -223,6 +223,13 @@ const generateParameterForQueryExecute = (parameters) => {
             parseStringFromDate(date, p.calendarKeyFormat)
         );
       });
+    } else if (values.length == 0 && !p.defaultValueUseSql &&
+      p.paramType == 'CALENDAR' && p.calendarDefaultType == 'QUERY') {
+      p.defaultValue.map((value) => {
+        if (!_.isEmpty(value)) {
+          values.push(value);
+        }
+      });
     }
 
     return {

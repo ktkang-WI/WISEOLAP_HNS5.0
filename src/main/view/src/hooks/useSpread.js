@@ -145,17 +145,16 @@ const useSpread = () => {
       });
     } else {
       data = response.data;
+      const blob = new Blob(
+          [data],
+          {type: excelFileType}
+      );
+      await excelIoOpen(reportId, blob);
     }
-    const blob = new Blob(
-        [data],
-        {type: excelFileType}
-    );
-
-    await excelIoOpen(reportId, blob);
   };
 
   const excelIoOpen = (reportId, file) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       excelIO.open(
           file,
           (json) => {
@@ -170,7 +169,6 @@ const useSpread = () => {
               reportId: reportId,
               workbookJSON: defaultWorkbookJSON
             });
-            reject(new Error('Failed to open excel'));
           },
           excelIOOpenOtions);
     });
