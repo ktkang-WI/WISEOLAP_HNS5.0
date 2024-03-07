@@ -1,5 +1,5 @@
 import {DesignerMode, EditMode} from 'components/config/configType';
-import ViewerContent from 'components/viewer/ViewerContent';
+import LinkViewerContent from 'components/linkViewer/LinkViewerContent';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
@@ -16,7 +16,7 @@ const LinkViewer = () => {
   }, []);
 
   return (
-    <ViewerContent/>
+    <LinkViewerContent/>
   );
 };
 export default LinkViewer;

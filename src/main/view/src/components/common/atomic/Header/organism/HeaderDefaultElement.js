@@ -87,8 +87,17 @@ const HeaderDefaultElement = () => {
       'type': 'CommonButton',
       'onClick': (e) => {
         const urlString =
-          document.location.origin + contextRoot + '/editds' + '/viewer';
-        window.open(urlString);
+          document.location.origin + contextRoot + '/editds' + '/linkViewer';
+        localStorage.setItem('reportData', JSON.stringify({
+          reportId: '38test',
+          reportType: 'AdHoc'
+        }));
+        // Open the new window
+        const newWindow = window.open(urlString);
+        if (newWindow) {
+          // Focus the new window
+          newWindow.focus();
+        }
       }
     },
     'DownloadReport': {
