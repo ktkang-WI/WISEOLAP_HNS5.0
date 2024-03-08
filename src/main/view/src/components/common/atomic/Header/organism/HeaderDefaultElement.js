@@ -4,16 +4,19 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
-import {getConfig} from 'config/config';
+import {checkLinkReport} from 'redux/selector/LinkSelector';
+import models from 'models';
+import store from 'redux/modules';
+import useModal from 'hooks/useModal';
 
 const contextRoot =
-process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const {setEditMode} = ConfigSlice.actions;
-
+  const {alert} = useModal();
   return {
     'Logo': {
       'id': 'logo',
@@ -86,17 +89,31 @@ const HeaderDefaultElement = () => {
       'icon': openViewerImg,
       'type': 'CommonButton',
       'onClick': (e) => {
-        const urlString =
-          document.location.origin + contextRoot + '/editds' + '/linkViewer';
-        localStorage.setItem('reportData', JSON.stringify({
-          reportId: '38test',
-          reportType: 'AdHoc'
-        }));
-        // Open the new window
-        const newWindow = window.open(urlString);
-        if (newWindow) {
-          // Focus the new window
-          newWindow.focus();
+        const linkReport = checkLinkReport(store.getState());
+        if (linkReport&& Object.keys(linkReport).length > 0) {
+          const firstLinkReportKey = Object.keys(linkReport)[0];
+          const firstLinkReport = linkReport[firstLinkReportKey];
+          const linkReportId = firstLinkReport.linkReportId;
+          const linkReportType = firstLinkReport.linkReportType;
+          const tokenSource = {
+            userId: 'admin',
+            reportId: linkReportId,
+            reportType: linkReportType
+          };
+          models.Report.generateToken(tokenSource).then((res) => {
+            const token = res.data.token;
+            const urlString =
+              `${document.location.origin}${contextRoot}` +
+              `/editds/linkViewer?token=${token}`;
+            const newWindow = window.open(urlString, '_blank');
+            if (newWindow) {
+              newWindow.focus();
+            }
+          }).catch((error) => {
+            console.error('Error sending link report:', error);
+          });
+        } else {
+          alert('연결 보고서가 존재하지 않습니다.');
         }
       }
     },
