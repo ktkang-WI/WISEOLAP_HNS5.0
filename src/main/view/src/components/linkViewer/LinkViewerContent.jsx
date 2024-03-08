@@ -22,6 +22,10 @@ import FilterBar from
 import {styled} from 'styled-components';
 import {useEffect, useState} from 'react';
 import localizedString from 'config/localization';
+import models from 'models';
+import useReportSave from 'hooks/useReportSave';
+import {useDispatch} from 'react-redux';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const theme = getTheme();
 
@@ -38,7 +42,9 @@ const LinkViewerContent = ({children}) => {
   const {onDragEnd, onDragStart} = useDrag();
   const report = useSelector(selectCurrentReport);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
-
+  const {loadReport} = useReportSave();
+  const dispatch = useDispatch();
+  const {setDesignerMode} = ConfigSlice.actions;
   const buttons = [
     {
       icon: '',
@@ -54,10 +60,20 @@ const LinkViewerContent = ({children}) => {
   const enabled = report.options.reportType == 'AdHoc' && dataColumnOpened;
 
   useEffect(() => {
-    const reportData = localStorage.getItem('reportData');
-    if (reportData) {
-      // Handle the data as needed
-      console.log('Report data:', JSON.parse(reportData));
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      models.Report.retrieveLinkReport(token).then((response) => {
+        const loadReportId = response.data.reportId;
+        const loadReportUserId = response.data.userId;
+        const loadReportType = response.data.reportType;
+        models.Report.getReportById(
+            loadReportUserId,
+            loadReportId).then(({data}) => {
+          dispatch(setDesignerMode(loadReportType));
+          loadReport(data);
+        });
+      });
     }
   }, []);
 
