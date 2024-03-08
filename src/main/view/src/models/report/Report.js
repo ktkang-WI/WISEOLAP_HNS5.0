@@ -89,6 +89,21 @@ export const getLinkReportParam = (param) => {
   return axios.post(path + '/report-link-param', param);
 };
 
+export const retrieveLinkReport = (token) => {
+  // Ensure headers are set to indicate a JSON body
+  return axios.post(
+      `${path}/retrieve-link-report`,
+      JSON.stringify({token: token}), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+};
+
+export const generateToken = (param) => {
+  return axios.post(path + '/generate-token', param);
+};
+
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
