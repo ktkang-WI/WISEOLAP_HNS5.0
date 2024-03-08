@@ -24,7 +24,7 @@ const InputTxtModal = ({...props}) => {
       }}
       modalTitle={props.modalTitle}
       width={theme.size.smallModalWidth}
-      height={theme.size.tinyModalHeight}
+      height={'calc(' + theme.size.tinyModalHeight + ' + 90px)'}
     >
       <TextBox
         defaultValue={memo}
