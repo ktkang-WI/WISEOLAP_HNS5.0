@@ -17,7 +17,7 @@ const generateMeta = (item) => {
     suffixEnabled: false,
     precisionType: 'round',
     inputPrefix: '',
-    format: 'value',
+    format: 'argument&Value&Percent',
     suffixM: 'M',
     suffixK: 'K',
     unit: 'Ones',
@@ -31,7 +31,7 @@ const generateMeta = (item) => {
     suffixEnabled: false,
     precisionType: 'round',
     inputPrefix: '',
-    format: 'value',
+    format: 'argument&Percent',
     suffixM: 'M',
     suffixK: 'K',
     unit: 'Ones',
@@ -39,7 +39,7 @@ const generateMeta = (item) => {
     suffixO: ''
   });
   setMeta(item, 'legend', {
-    useLegend: true,
+    useLegend: false,
     position: 'outside',
     horizontalAlignment: 'right',
     verticalAlignment: 'top',
