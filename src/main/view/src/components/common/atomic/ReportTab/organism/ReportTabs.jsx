@@ -11,6 +11,7 @@ import {useDispatch} from 'react-redux';
 import {DesignerMode} from 'components/config/configType';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
+import LinkSlice from 'redux/modules/LinkSlice';
 
 const theme = getTheme();
 
@@ -39,7 +40,7 @@ const ReportTabs = () => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
-
+  const {setLinkReport} = LinkSlice.actions;
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
@@ -72,6 +73,11 @@ const ReportTabs = () => {
                 .then((res) => {
                   const subLinkReports = res.data.subLinkReports;
                   const linkReports = res.data.linkReports;
+                  if (subLinkReports.length > 0) {
+                    dispatch(setLinkReport(subLinkReports[0]));
+                  } else if (linkReports.length > 0) {
+                    dispatch(setLinkReport(linkReports[0]));
+                  }
                   console.log('Sub Link Reports:', subLinkReports);
                   console.log('Link Reports:', linkReports);
                 });
