@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -53,7 +54,6 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import oracle.jdbc.proxy.annotation.Post;
 
 
 @Tag(name = "report", description = "보고서와 관련된 요청을 처리합니다.")
@@ -496,6 +496,50 @@ public class ReportController {
         Map<String, Object> aggregatedReportLinks = reportService.getAggregatedReportLinks(reportId);
         return new ResponseEntity<>(aggregatedReportLinks, HttpStatus.OK);
     }
+
+    private Map<String, UserInfo> tokenStore = new HashMap<>();
+
+    // Endpoint to generate a one-time token
+    @PostMapping("/generate-token")
+    public Map<String, String> generateToken(@RequestBody Map<String, String> requestBody) {
+        String userId = requestBody.get("userId");
+        String reportId = requestBody.get("reportId");
+        String reportType = requestBody.get("reportType");
+        // Generate a random token
+        String token = UUID.randomUUID().toString();
+        // Associate the token with the reportId temporarily
+        tokenStore.put(token, new UserInfo(userId, reportId, reportType));
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return response;
+    }
+
+    @RequestMapping(value = "/retrieve-link-report", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<Map<String, String>> retrieveReportId(
+        @RequestParam(value = "token", required = false) String token,
+        @RequestBody(required = false) Map<String, String> requestBody) {
+        if (requestBody != null && requestBody.containsKey("token")) {
+            token = requestBody.get("token");
+            System.out.println("token = " + token);
+        }
+        if (token != null && tokenStore.containsKey(token)) {
+            System.out.println("Decoding token");
+            UserInfo userInfo = tokenStore.remove(token); // Ensure one-time use by removing the token
+            Map<String, String> response = new HashMap<>();
+            response.put("userId", userInfo.getUserId());
+            response.put("reportId", userInfo.getReportId());
+            response.put("reportType", userInfo.getReportType());
+            System.out.println("response = " + response);
+            return ResponseEntity.ok(response);
+        } else {
+            // Default response for invalid or missing token
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid or missing token");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    
 
 }
 
