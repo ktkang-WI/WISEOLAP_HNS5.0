@@ -196,7 +196,7 @@ const QueryDataSourceDesignerModal = ({
 
             onClose();
           } else {
-            alert('쿼리가 부적절 합니다. 다시 입력해 주세요.');
+            alert(localizedString.invalidQuery);
           }
         };
 

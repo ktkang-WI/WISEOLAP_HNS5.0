@@ -145,7 +145,12 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
         }
 
         newParamInfo = newParamInfo.
-            map((param) => ParamUtils.sanitizeParamInformation(param));
+            map((param) => {
+              if (param.paramType === 'CALENDAR') {
+                param = ParamUtils.setCalendarExceptionValue(param);
+              }
+              return ParamUtils.sanitizeParamInformation(param);
+            });
 
         const tempParameters = {
           informations: newParamInfo,
@@ -172,8 +177,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
             }
           }
         }
-
-        onSubmit(newParamInfo);
+        return await onSubmit(newParamInfo);
       }}
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
