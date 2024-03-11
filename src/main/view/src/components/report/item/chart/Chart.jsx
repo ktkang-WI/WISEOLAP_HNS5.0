@@ -330,6 +330,12 @@ const propsComparator = (prev, next) => {
   const prevDataField = getDataField(prev);
   const nextDataField = getDataField(next);
 
+  if (_.isEqual(prev.item.mart.data, next.item.mart.data)) {
+    if (!_.isEqual(prevDataField.datasetId, nextDataField.datasetId)) {
+      return true;
+    }
+  };
+
   const seriesOptionsComparator =
     _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
   const rotateComparator =
