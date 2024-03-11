@@ -13,6 +13,7 @@ public enum ItemType {
     AD_HOC("adHoc"),
     TREEMAP("treeMap"),
     CARD("card"),
+    CHOROPLETH("choropleth"),
     ;
 
     private final String symbol;

@@ -1,6 +1,6 @@
 import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
-import chartSeriesButtonIcon from 'assets/image/icon/button/series_type.png';
+import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
 
 

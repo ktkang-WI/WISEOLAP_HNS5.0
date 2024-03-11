@@ -11,10 +11,14 @@ import squariFied
   from '../../../../../../assets/image/icon/item/squariFied.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import ChoroplethModal
+  from 'components/common/atomic/Modal/organisms/ChoroplethModal';
+import useModal from 'hooks/useModal';
 
 const CustomChartDefaulElement = () => {
   const reportId = useSelector(selectCurrentReportId);
   const {insertFlexLayout} = useLayout();
+  const {openModal} = useModal();
   return {
     relationChart: [
       {
@@ -97,7 +101,14 @@ const CustomChartDefaulElement = () => {
         imgSrc: choroplethImg,
         label: '코로플레스',
         onClick: () => {
-          insertFlexLayout(reportId, 'choropleth');
+          openModal(ChoroplethModal, {
+            modalTitle: '코로플레스',
+            label: '코로플레스',
+            onSubmit: (returedData) => {
+              // 사용자 정의 데이터 추가 OR 업데이트
+              insertFlexLayout(reportId, 'choropleth', '', returedData);
+            }
+          });
         }
       }
     ],

@@ -6,12 +6,16 @@ const Card = ({setItemExports, id, item}) => {
   if (!mart.init) {
     return <></>;
   }
+  const seriesNames = mart.data.info.seriesMeasureNames;
 
   console.log(mart.data.data);
+  console.log(seriesNames);
 
   return (
     <DefaultCard
       dataSource={mart.data.data}
+      argumentField='arg'
+      valueFiled={seriesNames[0].summaryName}
       column={2}
     />
   );

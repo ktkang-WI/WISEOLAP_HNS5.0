@@ -72,7 +72,7 @@ const generateForCard = (dataSource, column) => {
   return result;
 };
 
-const DefaultCard = ({dataSource, column}) => {
+const DefaultCard = ({dataSource, argumentField, valueFiled, column}) => {
   const data = generateForCard(dataSource, column);
 
   return (
@@ -84,10 +84,12 @@ const DefaultCard = ({dataSource, column}) => {
               <CardColumn>
                 {
                   row.map((col, i) => {
+                    const title = col[argumentField];
+                    const content = col[valueFiled];
                     return (
                       <CardBoard key={i}>
-                        <Title>금액: 333,970,197,858123123123</Title>
-                        <Content>1</Content>
+                        <Title>{title}</Title>
+                        <Content>{content}</Content>
                       </CardBoard>
                     );
                   })
