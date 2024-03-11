@@ -29,6 +29,10 @@ const DataFieldTypeOfItemType = {
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION,
     DataFieldType.DIMENSION_GROUP
+  ],
+  [ItemType.BOX_PLOT]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
   ]
 };
 

@@ -27,6 +27,7 @@ import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 
 
 const theme = getTheme();
@@ -69,6 +70,8 @@ const Memo = styled.div`
   border-radius: 1px;
   border-color: #c1c1c1;
   padding: 2px 4px;
+  width: auto;
+  text-wrap: nowrap;
 `;
 
 const ItemBoard = () => {
@@ -91,7 +94,8 @@ const ItemBoard = () => {
     chart: Chart,
     pivot: PivotGrid,
     grid: DataGrid,
-    pie: Pie
+    pie: Pie,
+    boxPlot: BoxPlot
   };
 
   const itemExportsPicker = (id) => {
@@ -143,10 +147,9 @@ const ItemBoard = () => {
    * @return {ReactNode}
    */
   function factory(node) {
-    const component = node.getComponent();
     const id = node.getId();
-    const ItemComponent = itemFactory[component];
     const item = items.find((i) => id == i.id);
+    const ItemComponent = itemFactory[item.type];
     const adHocOption = rootItem.adHocOption;
 
     if (!item) return <></>;
@@ -256,16 +259,6 @@ const ItemBoard = () => {
     return action;
   }
 
-  const calcForFontWidth = (txt) => {
-    if (!txt) return 0;
-    const len = txt.split('')
-        .map((s) => s.charCodeAt(0))
-        .reduce((prev, c) =>
-          (prev + ((c === 10) ? 2 : ((c >> 7) ? 2 : 1.12))), 0);
-    if (len < 10) return 80;
-    return len * (0.8 * 9);
-  };
-
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
 
@@ -274,7 +267,6 @@ const ItemBoard = () => {
       const id = tabNode.getId();
       const item = items.filter((item) => item.id === id)[0];
       const memo = item?.meta?.memo;
-      const memoWidth = calcForFontWidth(memo);
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
@@ -285,7 +277,7 @@ const ItemBoard = () => {
       renderValues.buttons.push(
           !rootItem.adHocOption &&
           (memo ?
-            <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
+            <Memo>{memo}</Memo> : <></>),
           (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
             key="delete"
             title="Delete tabset"
