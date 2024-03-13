@@ -266,8 +266,7 @@ const useQueryExecute = () => {
         const query = dataset.datasetQuery;
         const data =
           await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
-        if (!data.data.rowData) return;
-        datas[dataset.datasetId] = data.data.rowData;
+        datas[dataset.datasetId] = data.data;
       })());
     });
     await Promise.all(promises);
