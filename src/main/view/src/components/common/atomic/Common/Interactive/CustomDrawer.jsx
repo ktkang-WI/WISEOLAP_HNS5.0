@@ -1,15 +1,12 @@
 import Drawer from 'devextreme-react/drawer';
 import Wrapper from '../Wrap/Wrapper';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {styled, css} from 'styled-components';
 import expandImg from 'assets/image/component/handle.png';
 import expandHoverImg from 'assets/image/component/handle_hover.png';
 import {getTheme} from 'config/theme';
-import {designerRef, workbookRef}
+import {designerRef}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
-import {EditMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -51,21 +48,13 @@ const CustomDrawer = ({
   opened=true, useExpandButton=true, children, index=0,
   defaultValue=true, visible=true, margin, ...props
 }) => {
+  const duration = 400;
   const ref = useRef(null);
 
   const [expanded, setExpanded] = useState(true);
+
   const expandDrawer = () => {
     setExpanded(!expanded);
-  };
-  const onOptionChanged = () => {
-    if (selectCurrentDesignerMode(store.getState()) === EditMode['DESIGNER']) {
-      if (designerRef) {
-        designerRef.current.designer.getWorkbook().refresh();
-        designerRef.current.designer.refresh();
-      }
-    } else {
-      if (workbookRef) workbookRef.current.spread.refresh();
-    }
   };
 
   const ExpandImage = styled.div`
@@ -80,6 +69,23 @@ const CustomDrawer = ({
     }
   `;
 
+  // SpreadContent의 width 조절을 위한 코드 bjsong
+  useEffect(() => {
+    const designerCompRef = designerRef;
+    const refreshSpreadBoard = () => {
+      if (designerCompRef?.current) {
+        designerCompRef.current.designer.refresh();
+      }
+    };
+
+    document.getElementsByClassName('dx-drawer-content')[0].style.width =
+      `calc(100% - ${theme.size.panelWidth})`;
+    refreshSpreadBoard();
+    ref.current.instance.content()
+        .addEventListener('transitionend', refreshSpreadBoard);
+  }, []);
+
+
   return (
     <Wrapper margin={margin} className='section'>
       {useExpandButton && !expanded &&
@@ -91,7 +97,7 @@ const CustomDrawer = ({
         position='left'
         openedStateMode='shrink'
         revealMode={'slide'}
-        onOptionChanged={onOptionChanged}
+        duration={duration}
         // NOTE: 뷰어에서 사용시 보고서 전환시 부자연스러움.
         // 애니메이션 해제
         animationEnabled={useExpandButton}
