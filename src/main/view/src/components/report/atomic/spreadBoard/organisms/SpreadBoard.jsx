@@ -5,7 +5,8 @@ import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {
   getWorkbookJSON,
   insertWorkbookJSON,
-  setDesignerRef}
+  setDesignerRef
+}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useSelector} from 'react-redux';
 import {selectBindingInfos, selectCurrentSpreadData}
@@ -77,6 +78,7 @@ const SpreadBoard = () => {
   return (
     <StyledWrapper className='section board'>
       <Designer
+        className={'dx-drawer-shader'}
         ref={spreaRef}
         designerInitialized={(designer) => {
           designer.setConfig(config);
@@ -87,7 +89,10 @@ const SpreadBoard = () => {
           sheetChangedListener(designer);
           sheetNameChangedListener(designer);
         }}
-        styleInfo={{width: '100%', height: '100%'}}
+        styleInfo={{
+          width: '100%',
+          height: '100%'
+        }}
       >
       </Designer>
     </StyledWrapper>
