@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const baseToFromatMapper = {
+const baseToFormatMapper = {
   'yyyy:': 'YEAR',
   'yyyyMM': 'MONTH',
   'yyyy-MM': 'MONTH',
@@ -155,7 +155,7 @@ const getCubeParameterNamesCube = (paramInfo, paramName) => {
  */
 const setCalendarExceptionValue = (info) => {
   const format = info.calendarKeyFormat;
-  const date = getCalendarNowDefaultValue(baseToFromatMapper[format], 0);
+  const date = getCalendarNowDefaultValue(baseToFormatMapper[format], 0);
   info.exceptionValue = parseStringFromDate(date, format);
   return info;
 };
@@ -293,7 +293,7 @@ const getCalendarNowDefaultValue = (base, value) => {
 };
 
 export default {
-  baseToFromatMapper,
+  baseToFormatMapper,
   newParamInformation,
   sanitizeParamInformation,
   getParameterNamesInQuery,
