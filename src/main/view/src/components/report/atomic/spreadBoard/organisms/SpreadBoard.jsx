@@ -2,19 +2,17 @@ import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
 import {useEffect, useRef} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
-import {
-  getWorkbookJSON,
+import {getWorkbookJSON,
   insertWorkbookJSON,
   setDesignerRef
 }
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useSelector} from 'react-redux';
-import {selectBindingInfos, selectCurrentSpreadData}
+import {selectCurrentSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import store from 'redux/modules';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 
@@ -59,14 +57,7 @@ const SpreadBoard = () => {
   }, []);
 
   useEffect(() => {
-    const bindingInfos = selectBindingInfos(store.getState());
-    Object.keys(spreadData).forEach((datasetId) => {
-      const bindingInfo = bindingInfos[datasetId];
-      bindData({
-        rowData: spreadData[datasetId],
-        bindingInfo: bindingInfo
-      });
-    });
+    bindData(spreadData);
   }, [spreadData]);
 
 

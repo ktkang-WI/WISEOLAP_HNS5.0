@@ -22,11 +22,11 @@ export const createColumnsAndRows = (
   };
 };
 
-export const generateColumns = (rowData, sheets) => {
+export const generateColumns = (metaData, sheets) => {
   const columns = [];
   const header = [];
-  const columnKeys = Object.keys(rowData[0]);
-  columnKeys.forEach((columnKey) => {
+  metaData.forEach((meta) => {
+    const columnKey = meta.columnName;
     const spreadColumnObj = new sheets.Tables.TableColumn();
     spreadColumnObj.name(columnKey);
     spreadColumnObj.dataField(columnKey);

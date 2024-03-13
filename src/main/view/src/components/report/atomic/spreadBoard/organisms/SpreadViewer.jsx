@@ -2,10 +2,9 @@ import {useSelector} from 'react-redux';
 import {getWorkbookJSON, setWorkbookRef} from '../util/SpreadCore';
 import {SpreadSheets} from '@grapecity/spread-sheets-react';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectBindingInfos, selectCurrentSpreadData}
+import {selectCurrentSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
-import store from 'redux/modules';
 import {useEffect, useRef} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {getTheme} from 'config/theme';
@@ -38,14 +37,7 @@ const SpreadViewer = () => {
   }, [reportId]);
 
   useEffect(() => {
-    const bindingInfos = selectBindingInfos(store.getState());
-    Object.keys(spreadData).forEach((datasetId) => {
-      const bindingInfo = bindingInfos[datasetId];
-      bindData({
-        rowData: spreadData[datasetId],
-        bindingInfo: bindingInfo
-      });
-    });
+    bindData(spreadData);
   }, [spreadData]);
 
   return (
