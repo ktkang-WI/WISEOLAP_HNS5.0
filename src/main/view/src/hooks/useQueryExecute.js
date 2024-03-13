@@ -478,10 +478,13 @@ const useQueryExecute = () => {
 
   const executeParameterDefaultValueQuery = async (param) => {
     const res = await models.Parameter.getDefaultValue(param);
+    if (res.status !== 200) {
+      throw new Error('get Default Query Error');
+    }
     return res.data;
   };
 
-  const executeParameters = () => {
+  const executeParameters = async () => {
     const parameters = selectRootParameter(store.getState());
     const reportId = selectCurrentReportId(store.getState());
 
@@ -498,11 +501,16 @@ const useQueryExecute = () => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
       dispatch(filterSearchComplete({reportId, id: name}));
     };
-
-    parameters.informations.map((param) => {
+    const promises = [];
+    parameters.informations.forEach(async (param) => {
       try {
         // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {
+          if (param.defaultValueUseSql) {
+            promises.push((async () => {
+              executeParameterDefaultValueQuery(param);
+            })());
+          }
           executeListParameter(param).then((data) => {
             if (data) {
               setValues(param.name, data);
@@ -538,6 +546,7 @@ const useQueryExecute = () => {
         filterSearchComplete({reportId, id: param.name});
       }
     });
+    await Promise.all(promises);
   };
 
   const validateRequiredField = (item) => {
@@ -571,7 +580,8 @@ const useQueryExecute = () => {
     clearAllFilter,
     executeParameters,
     executeLinkageFilter,
-    executeSpread
+    executeSpread,
+    executeParameterDefaultValueQuery
   };
 };
 
