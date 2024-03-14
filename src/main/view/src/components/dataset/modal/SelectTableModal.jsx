@@ -44,11 +44,11 @@ const SelectTableModal = ({dsId, dsViewId, onSubmit, ...props}) => {
                     column.DATA_TYPE.toLowerCase() == 'numeric') {
                   column.TYPE = 'MEA';
                   column.columnTypeName = 'decimal';
-                  column.columnName = column.COL_NM;
+                  column.columnName = column.COL_CAPTION;
                 } else {
                   column.TYPE = 'DIM';
                   column.columnTypeName = 'varchar2';
-                  column.columnName = column.COL_NM;
+                  column.columnName = column.COL_CAPTION;
                 }
 
                 column.order = i;
