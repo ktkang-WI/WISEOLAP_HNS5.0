@@ -13,12 +13,16 @@ import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
 import {getPagingOption} from './Utility';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {EditMode} from 'components/config/configType';
 
 const Container = styled.div`
   position: relative;
 `;
 const DataGrid = ({setItemExports, id, item}) => {
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataGridRef = createRef();
@@ -210,19 +214,23 @@ const DataGrid = ({setItemExports, id, item}) => {
   const focusedItem = useSelector(selectCurrentDataField);
   useEffect(() => {
     const handleContextMenu = (event) => {
-      event.preventDefault();
-      setShowPopup(true);
+      if (editMode === EditMode.DESIGNER) {
+        event.preventDefault();
+        setShowPopup(true);
+      }
     };
     const gridInstance = dataGridRef.current.instance;
 
     const handleContentReady = () => {
-      if (gridInstance) {
-        const scrollable = gridInstance.getScrollable();
-        const container = scrollable.element();
-        container.addEventListener('contextmenu', handleContextMenu);
-        return () => {
-          container.removeEventListener('contextmenu', handleContextMenu);
-        };
+      if (editMode === EditMode.DESIGNER) {
+        if (gridInstance) {
+          const scrollable = gridInstance.getScrollable();
+          const container = scrollable.element();
+          container.addEventListener('contextmenu', handleContextMenu);
+          return () => {
+            container.removeEventListener('contextmenu', handleContextMenu);
+          };
+        }
       }
     };
 

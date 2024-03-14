@@ -13,8 +13,13 @@ import {itemExportsObject}
 import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {EditMode} from 'components/config/configType';
 
 const Pie = ({setItemExports, id, item}) => {
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   if (!mart.init) {
@@ -54,21 +59,29 @@ const Pie = ({setItemExports, id, item}) => {
   const pies = seriesMeasureNames.map((dimension, idx) => {
     const [showPopup, setShowPopup] = useState(false);
     const focusedItem = useSelector(selectCurrentDataField);
+
     const handleContextMenu = useCallback((event) => {
-      event.preventDefault();
-      setShowPopup(true);
-    }, []);
+      if (editMode === EditMode.DESIGNER) {
+        event.preventDefault();
+        setShowPopup(true);
+      }
+    }, [editMode]);
 
     useEffect(() => {
-      const chartContainer =
-        dxRefs.current[idx].instance._renderer.root.element;
-      chartContainer &&
-        chartContainer.addEventListener('contextmenu', handleContextMenu);
-      return () => {
-        chartContainer &&
-          chartContainer.removeEventListener('contextmenu', handleContextMenu);
-      };
-    }, [handleContextMenu]);
+      if (editMode === EditMode.DESIGNER) {
+        const chartContainer =
+          dxRefs.current[idx].instance._renderer.root.element;
+        if (chartContainer) {
+          chartContainer.addEventListener('contextmenu', handleContextMenu);
+          return () => {
+            chartContainer.removeEventListener(
+                'contextmenu',
+                handleContextMenu
+            );
+          };
+        }
+      }
+    }, [handleContextMenu, editMode]);
 
     return (
       <>

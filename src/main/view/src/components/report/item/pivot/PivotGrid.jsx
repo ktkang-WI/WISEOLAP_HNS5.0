@@ -28,13 +28,16 @@ import styled from 'styled-components';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {generateLabelSuffix, formatNumber} from
   'components/utils/NumberFormatUtility';
-
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 
 const Container = styled.div`
   position: relative;
 `;
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -164,16 +167,20 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const focusedItem = useSelector(selectCurrentDataField);
   useEffect(() => {
     const handleContextMenu = (event) => {
-      event.preventDefault();
-      setShowPopup(true);
+      if (editMode === EditMode.DESIGNER) {
+        event.preventDefault();
+        setShowPopup(true);
+      }
     };
 
     const handleContentReady = () => {
-      const pivotInstance = ref.current.instance.element();
-      if (pivotInstance) {
-        pivotInstance.addEventListener('contextmenu', handleContextMenu);
-        return () =>
-          pivotInstance.removeEventListener('contextmenu', handleContextMenu);
+      if (editMode === EditMode.DESIGNER) {
+        const pivotInstance = ref.current.instance.element();
+        if (pivotInstance) {
+          pivotInstance.addEventListener('contextmenu', handleContextMenu);
+          return () =>
+            pivotInstance.removeEventListener('contextmenu', handleContextMenu);
+        }
       }
     };
 

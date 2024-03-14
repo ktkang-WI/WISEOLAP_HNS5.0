@@ -27,12 +27,22 @@ import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 import valueAxisCustomLabel from '../ValueAxisCustomLabel';
-import React, {useRef, useEffect, useState, useCallback} from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  useState
+} from 'react';
 import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {EditMode} from 'components/config/configType';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
+  const editMode = selectEditMode(store.getState());
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
   // TODO:  임시용 코드
@@ -58,7 +68,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   const {filterItems, clearAllFilter} = useQueryExecute();
 
-  const dxRef = useRef();
+  const dxRef = useRef([]);
 
   const itemExportObject =
    itemExportsObject(id, dxRef, 'CHART', mart.data.data);
@@ -81,19 +91,22 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const focusedItem = useSelector(selectCurrentDataField);
 
   const handleContextMenu = useCallback((event) => {
-    event.preventDefault();
-    setShowPopup(true);
-  }, []);
+    if (editMode === EditMode.DESIGNER) {
+      event.preventDefault();
+      setShowPopup(true);
+    }
+  }, [editMode]);
 
   useEffect(() => {
-    const chartContainer = dxRef.current.instance._renderer.root.element;
-    chartContainer &&
-      chartContainer.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      chartContainer &&
-        chartContainer.removeEventListener('contextmenu', handleContextMenu);
-    };
-  });
+    if (editMode === EditMode.DESIGNER) {
+      const chartContainer = dxRef.current.instance._renderer.root.element;
+      if (chartContainer) {
+        chartContainer.addEventListener('contextmenu', handleContextMenu);
+        return () =>
+          chartContainer.removeEventListener('contextmenu', handleContextMenu);
+      }
+    }
+  }, [handleContextMenu, editMode]);
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {
