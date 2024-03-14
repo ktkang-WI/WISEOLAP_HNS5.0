@@ -12,7 +12,6 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
-import React, {useRef, useEffect, useState, useCallback} from 'react';
 import {
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
@@ -27,10 +26,11 @@ import {
 import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
+import valueAxisCustomLabel from '../ValueAxisCustomLabel';
+import React, {useRef, useEffect, useState, useCallback} from 'react';
 import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
-import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
@@ -76,6 +76,24 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
+
+  const [showPopup, setShowPopup] = useState(false);
+  const focusedItem = useSelector(selectCurrentDataField);
+
+  const handleContextMenu = useCallback((event) => {
+    event.preventDefault();
+    setShowPopup(true);
+  }, []);
+
+  useEffect(() => {
+    const chartContainer = dxRef.current.instance._renderer.root.element;
+    chartContainer &&
+      chartContainer.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      chartContainer &&
+        chartContainer.removeEventListener('contextmenu', handleContextMenu);
+    };
+  });
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {
@@ -222,25 +240,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       }
     };
   };
-
-  // const popupRef = useRef(null);
-  const [showPopup, setShowPopup] = useState(false);
-  const focusedItem = useSelector(selectCurrentDataField);
-
-  const handleContextMenu = useCallback((event) => {
-    event.preventDefault();
-    setShowPopup(true);
-  }, []);
-
-  useEffect(() => {
-    const chartContainer = dxRef.current.instance._renderer.root.element;
-    chartContainer &&
-      chartContainer.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      chartContainer &&
-        chartContainer.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, [handleContextMenu]);
 
   return (
     <>
