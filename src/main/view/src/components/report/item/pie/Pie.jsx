@@ -38,6 +38,19 @@ const Pie = ({setItemExports, id, item}) => {
     });
   }, [mart.data.data]);
 
+  const getColor = () => {
+    let pickedColor = null;
+
+    if (meta.paletteType === 'colorEdit') {
+      const palette = meta.colorEdit.map((color) => color.value);
+
+      pickedColor = palette;
+    } else {
+      pickedColor = meta.palette?.colors;
+    }
+    return pickedColor;
+  };
+
   const pies = seriesMeasureNames.map((dimension, idx) => {
     const [showPopup, setShowPopup] = useState(false);
     const focusedItem = useSelector(selectCurrentDataField);
@@ -74,6 +87,7 @@ const Pie = ({setItemExports, id, item}) => {
             easing: 'easeOutCubic', // 애니메이션
             enabled: true
           }}
+          palette={getColor()}
         >
           <Legend // 범례
             visible={meta.legend.useLegend}

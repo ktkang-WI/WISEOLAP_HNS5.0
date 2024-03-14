@@ -120,6 +120,15 @@ const RibbonDefaultElement = () => {
     if (item.type === 'grid') {
       return item.meta.dataField.field.filter(
           (item) => item.fieldType === 'MEA');
+    } else if (item.type === 'pie') {
+      if (item.meta.colorEdit.length == 0) {
+        return item.mart.data.data.map(
+            (item, idx) => {
+              return {type: 'pie', caption: 'point' + idx};
+            }
+        );
+      }
+      return item.meta.colorEdit;
     } else {
       return item.meta.dataField.measure;
     }

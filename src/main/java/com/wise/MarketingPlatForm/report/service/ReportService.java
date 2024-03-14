@@ -15,7 +15,6 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +26,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
+import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -84,6 +86,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
+import javaxt.json.JSONArray;
 import javaxt.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -119,6 +122,9 @@ public class ReportService {
 
     @Autowired
     private FileUploadService fileUploadService;
+    
+    @Autowired
+    private CubeService cubeService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {
@@ -132,6 +138,7 @@ public class ReportService {
     public Map<String, Object> getReport(String reportId, String userId) {
     	Map<String, Object> returnMap = new HashMap<>();
     	try {
+    		Gson gson = new Gson();
     		ReportMstrEntity entity = reportDAO.selectReport(reportId);
     		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
     		if(!"newReport".equals(dto.getDatasetXml())) {
@@ -140,6 +147,17 @@ public class ReportService {
     		} else {
     			JSONObject items = new JSONObject(entity.getChartXml());
     			JSONObject dataset = new JSONObject(entity.getDatasetXml());
+    			if (dataset.get("datasets") != null) {
+    				JSONArray datasetArray = dataset.get("datasets").toJSONArray();
+    				for (int i= 0; i < datasetArray.length(); i++) {
+    					JSONObject datset = datasetArray.get(i).toJSONObject();
+    					if (datset.has("cubeId")) {
+    						CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
+    						datset.set("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						datset.set("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+    					}
+    				}
+    			}
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {

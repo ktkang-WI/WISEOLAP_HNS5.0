@@ -21,7 +21,7 @@ public abstract class ReportXMLParser {
 	/**
 	 * 모든 보고서에서 공통으로 필드
 	 */
-	protected Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
+	protected Logger log = LoggerFactory.getLogger(ReportXMLParser.class);
 	protected DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	protected Document document;
 	

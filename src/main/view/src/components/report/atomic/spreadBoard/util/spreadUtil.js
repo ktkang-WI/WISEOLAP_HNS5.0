@@ -1,3 +1,5 @@
+import {sheets} from './SpreadCore';
+
 export const createColumnsAndRows = (
     columns,
     invoice,
@@ -20,11 +22,11 @@ export const createColumnsAndRows = (
   };
 };
 
-export const generateColumns = (rowData, sheets) => {
+export const generateColumns = (metaData, sheets) => {
   const columns = [];
   const header = [];
-  const columnKeys = Object.keys(rowData[0]);
-  columnKeys.forEach((columnKey) => {
+  metaData.forEach((meta) => {
+    const columnKey = meta.columnName;
     const spreadColumnObj = new sheets.Tables.TableColumn();
     spreadColumnObj.name(columnKey);
     spreadColumnObj.dataField(columnKey);
@@ -101,5 +103,17 @@ export const dataSourceMaker = (rowData, sheets) => {
   const invoice = new Invoice(recodes);
   return {invoice: invoice,
     dataSource: new sheets.Bindings.CellBindingSource(invoice)};
+};
+
+export const createBorderStyle = (useBorder) => {
+  const tableStyle = new sheets.Tables.TableTheme();
+  let thinBorder = undefined;
+  if (useBorder) {
+    thinBorder = new sheets.LineBorder('black', 1);
+  }
+  tableStyle.wholeTableStyle(new sheets.Tables.TableStyle(
+      undefined, undefined, undefined, thinBorder,
+      thinBorder, thinBorder, thinBorder, thinBorder, thinBorder));
+  return tableStyle;
 };
 

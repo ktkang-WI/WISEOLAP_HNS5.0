@@ -128,7 +128,8 @@ const getRibbonItems = () => {
     'XAxisSetting',
     'YAxisSetting',
     'ExtraAxisSetting',
-    'ShowColorLegend'
+    'ShowColorLegend',
+    'InputTxt'
   ];
 };
 

@@ -12,11 +12,19 @@ import useModal from 'hooks/useModal';
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
+import useReportSave from 'hooks/useReportSave';
+import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
+
+
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {setEditMode} = ConfigSlice.actions;
   const {alert} = useModal();
+  const initialDisplay = useSelector(selectInitialDisplay);
+  const {setEditMode, setDesignerMode} = ConfigSlice.actions;
+  const {reload} = useReportSave();
+
   return {
     'Logo': {
       'id': 'logo',
@@ -52,6 +60,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
+        reload();
       }
     },
     'ShowQuery': {
@@ -79,6 +88,8 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('/editds/dashany');
         dispatch(setEditMode(EditMode.DESIGNER));
+        dispatch(setDesignerMode(initialDisplay));
+        reload();
       }
     },
     'LinkReport': {
@@ -118,7 +129,7 @@ const HeaderDefaultElement = () => {
       }
     },
     'DownloadReport': {
-      'id': 'downlodreport',
+      'id': 'downLoadReport',
       'label': localizedString.downloadReport,
       'buttonType': 'whiteRound',
       'width': '115px',
