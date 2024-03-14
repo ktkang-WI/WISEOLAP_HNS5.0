@@ -164,6 +164,7 @@ const useSpread = () => {
     return new Promise((resolve) => {
       excelIO.open(
           file,
+          // excel load success callback
           (json) => {
             insertWorkbookJSON({
               reportId: reportId,
@@ -171,6 +172,7 @@ const useSpread = () => {
             });
             resolve();
           },
+          // excel load fail callback
           () => {
             insertWorkbookJSON({
               reportId: reportId,
