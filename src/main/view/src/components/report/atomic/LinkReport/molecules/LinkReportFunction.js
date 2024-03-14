@@ -136,8 +136,8 @@ export const processLinkParamData = (
   // console.log('fkNmOpts:', fkNmOpts);
   setFkNmOptions(fkNmOpts);
   if (subYn) {
-    // console.log('subFkNmOpts:', subFkNmOpts);
-    if (subFkNmOpts.length > 0) {
+    console.log('subFkNmOpts:', subFkNmOpts);
+    if (subFkNmOpts && subFkNmOpts.length > 0) {
       setSubFkNmOptions(subFkNmOpts);
     }
     setSubFkNmOptions(fkNmOpts);
