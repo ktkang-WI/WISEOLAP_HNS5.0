@@ -18,6 +18,7 @@ const theme = getTheme();
 const StyledFilterBarWrapper = styled.div`
     height: 100%;
     min-height: ${theme.size.filterBarHeight};
+    line-height: ${theme.size.filterBarHeight};
     width: 100%;
     display: block;
     overflow: hidden;
@@ -83,10 +84,13 @@ const FilterBarWrapper = (props) => {
         >
           {
             parameters.informations.reduce((acc, filter) => {
-              if (!filter.visible) return;
+              if (!filter.visible) return acc;
+
+              if (filter.lineBreak) {
+                acc.push(<br/>);
+              }
 
               const filterProps = {
-                key: filter.name,
                 info: filter,
                 value: parameters.values[filter.name],
                 onValueChanged
@@ -101,7 +105,9 @@ const FilterBarWrapper = (props) => {
               }
 
               if (filter.operation == 'BETWEEN') {
-                acc.push(<Filter {...filterProps}/>);
+                acc.push(<Filter
+                  {...filterProps}
+                />);
                 acc.push(<Filter
                   isTo={true}
                   {...filterProps}
@@ -112,9 +118,6 @@ const FilterBarWrapper = (props) => {
                   onDeleted={onDeleted}/>);
               }
 
-              if (filter.lineBreak) {
-                acc.push(<br/>);
-              }
               return acc;
             }, [])
           }

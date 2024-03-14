@@ -1,3 +1,5 @@
+import {sheets} from './SpreadCore';
+
 export const createColumnsAndRows = (
     columns,
     invoice,
@@ -101,5 +103,17 @@ export const dataSourceMaker = (rowData, sheets) => {
   const invoice = new Invoice(recodes);
   return {invoice: invoice,
     dataSource: new sheets.Bindings.CellBindingSource(invoice)};
+};
+
+export const createBorderStyle = (useBorder) => {
+  const tableStyle = new sheets.Tables.TableTheme();
+  let thinBorder = undefined;
+  if (useBorder) {
+    thinBorder = new sheets.LineBorder('black', 1);
+  }
+  tableStyle.wholeTableStyle(new sheets.Tables.TableStyle(
+      undefined, undefined, undefined, thinBorder,
+      thinBorder, thinBorder, thinBorder, thinBorder, thinBorder));
+  return tableStyle;
 };
 

@@ -45,6 +45,7 @@
 				select  
 				  a.table_name as TBL_NM,
 				  a.column_name AS COL_NM,
+				  b.comments AS col_caption,
 				  CONCAT(CONCAT('[', CONCAT(a.table_name, '].[')),CONCAT(a.column_name, ']')) AS ID
 				  ,data_type as DATA_TYPE
 				  ,CAST(data_length as VARCHAR(50)) as LENGTH

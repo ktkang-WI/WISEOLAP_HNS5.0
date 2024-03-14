@@ -20,9 +20,11 @@ import QueryDataSourceDesignerModal
 import EditParamterModal from 'components/dataset/modal//EditParamterModal';
 import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
+import useQueryExecute from 'hooks/useQueryExecute';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
+  const {executeParameterDefaultValueQuery} = useQueryExecute();
   const dispatch = useDispatch();
   const {deleteDataset} = DatasetSlice.actions;
   const {deleteParameterByDatasetId,
@@ -77,14 +79,28 @@ const PanelTitleDefaultElement = () => {
           const cubeParamInfo = cubeParameters.informations;
           openModal(EditParamterModal, {
             parameterInfo: cubeParamInfo,
-            onSubmit: (p) => {
-              dispatch(updateParameterInformation({
-                datasetId: dataset.datasetId,
-                reportId: reportId,
-                informations: p
-              }));
-            }
-          });
+            onSubmit: async (params) => {
+              const promises = [];
+              params.forEach((param) => {
+                if (param.defaultValueUseSql) {
+                  promises.push(new Promise(async (resolve) => {
+                    try {
+                      await executeParameterDefaultValueQuery(param);
+                      resolve();
+                    } catch (e) {
+                      alert(param.caption + localizedString.invalidQuery);
+                    }
+                  }));
+                }
+              });
+              await Promise.all(promises).then(() => {
+                dispatch(updateParameterInformation({
+                  datasetId: dataset.datasetId,
+                  reportId: reportId,
+                  informations: params
+                }));
+              });
+            }});
         } else if (dataset.datasetType == DatasetType.DS_SINGLE) {
           const dataSourceRes = await models.
               DataSource.getByDsId(dataset.dataSrcId);

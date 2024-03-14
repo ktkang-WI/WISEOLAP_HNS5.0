@@ -1,6 +1,8 @@
 package com.wise.MarketingPlatForm.config.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +47,9 @@ public class GeneralService {
         result = configDAO.updateWbConfig(wbConfigMstrEntity);
     
     return result;
+  }
+
+  public Map<String, String> getSpreadLicense() {
+	return configDAO.getSpreadLicense();
   };
 }

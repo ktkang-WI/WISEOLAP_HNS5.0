@@ -20,15 +20,15 @@ import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import useSpread from './useSpread';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
+import SpreadSlice from 'redux/modules/SpreadSlice';
 
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
+  const {setSpreadData} = SpreadSlice.actions;
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
-  const {bindData} = useSpread();
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -245,26 +245,36 @@ const useQueryExecute = () => {
 
   const executeSpread = async () => {
     const datasets = selectCurrentDatasets(store.getState());
+    const currentReportId = selectCurrentReportId(store.getState());
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg); return;
     }
     const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos((store.getState()));
-    datasets.map(async (dataset) => {
-      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
-       !bindingInfos[dataset.datasetId].useBinding) {
-        alert(localizedString.spreadBindingInfoNot); return;
-      }
-      const dsId = dataset.dataSrcId;
-      const query = dataset.datasetQuery;
-      const datas = await models.DBInfo.
-          getAllDatasetDatas(dsId, query, parameters);
-      if (!datas.data.rowData) return;
-      bindData({
-        rowData: datas.data.rowData,
-        bindingInfo: bindingInfos[dataset.datasetId]
-      });
+    const bindingInfos = selectBindingInfos(store.getState());
+    const promises = [];
+    const datas = {};
+
+    datasets.forEach((dataset) => {
+      promises.push((async () => {
+        if (
+          _.isEmpty(bindingInfos[dataset.datasetId]) ||
+          !bindingInfos[dataset.datasetId].useBinding
+        ) {
+          alert(localizedString.spreadBindingInfoNot); return;
+        }
+        const dsId = dataset.dataSrcId;
+        const query = dataset.datasetQuery;
+        const data =
+          await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
+        if (!data.data.rowData) return;
+        datas[dataset.datasetId] = data.data.rowData;
+      })());
     });
+    await Promise.all(promises);
+    dispatch(setSpreadData({
+      reportId: currentReportId,
+      data: datas
+    }));
   };
 
   /**
@@ -468,10 +478,13 @@ const useQueryExecute = () => {
 
   const executeParameterDefaultValueQuery = async (param) => {
     const res = await models.Parameter.getDefaultValue(param);
+    if (res.status !== 200) {
+      throw new Error('get Default Query Error');
+    }
     return res.data;
   };
 
-  const executeParameters = () => {
+  const executeParameters = async () => {
     const parameters = selectRootParameter(store.getState());
     const reportId = selectCurrentReportId(store.getState());
 
@@ -488,11 +501,16 @@ const useQueryExecute = () => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
       dispatch(filterSearchComplete({reportId, id: name}));
     };
-
-    parameters.informations.map((param) => {
+    const promises = [];
+    parameters.informations.forEach(async (param) => {
       try {
         // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {
+          if (param.defaultValueUseSql) {
+            promises.push((async () => {
+              executeParameterDefaultValueQuery(param);
+            })());
+          }
           executeListParameter(param).then((data) => {
             if (data) {
               setValues(param.name, data);
@@ -528,6 +546,7 @@ const useQueryExecute = () => {
         filterSearchComplete({reportId, id: param.name});
       }
     });
+    await Promise.all(promises);
   };
 
   const validateRequiredField = (item) => {
@@ -561,7 +580,8 @@ const useQueryExecute = () => {
     clearAllFilter,
     executeParameters,
     executeLinkageFilter,
-    executeSpread
+    executeSpread,
+    executeParameterDefaultValueQuery
   };
 };
 

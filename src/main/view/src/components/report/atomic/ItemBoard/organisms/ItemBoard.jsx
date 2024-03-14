@@ -25,6 +25,8 @@ import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 
 const theme = getTheme();
@@ -33,7 +35,7 @@ const StyledBoard = styled.div`
   height: 100%;
   width: calc(100% - 10px);
   flex: 1;
-  background: ${theme.color.white};
+  background: ${theme.color.background};
   display: flex;
   min-height: 0px;
   margin-bottom: 0px;
@@ -82,6 +84,7 @@ const ItemBoard = () => {
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
 
   const itemFactory = {
@@ -283,7 +286,7 @@ const ItemBoard = () => {
           !rootItem.adHocOption &&
           (memo ?
             <Memo style={{width: memoWidth+'px'}}>{memo}</Memo> : <></>),
-          <button
+          (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
             key="delete"
             title="Delete tabset"
             onClick={(e) => {
@@ -292,7 +295,7 @@ const ItemBoard = () => {
             }}
           >
           &#128473;&#xFE0E;
-          </button>,
+          </button>),
           <button
             key="download"
             title="Download"

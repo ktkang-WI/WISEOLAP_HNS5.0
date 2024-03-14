@@ -3,18 +3,18 @@ const regularExpression = (num) => {
   return ((num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ','));
 };
 
-const treatedNumber = (value, valueOfSuffix, precsion, precsionOption) => {
-  const suffixValue = valueOfSuffix / 10 ** (precsion);
+const treatedNumber = (value, valueOfSuffix, precision, precisionType) => {
+  const suffixValue = valueOfSuffix / 10 ** (precision);
   const mathRoundFunc = {
     round: Math.round,
-    roundUp: Math.ceil,
-    roundDown: Math.floor
+    ceil: Math.ceil,
+    floor: Math.floor
   };
 
   return (
     parseFloat(
-        (mathRoundFunc[precsionOption](value / suffixValue) * suffixValue) /
-          valueOfSuffix).toFixed(precsion)
+        (mathRoundFunc[precisionType](value / suffixValue) * suffixValue) /
+          valueOfSuffix).toFixed(precision)
   );
 };
 

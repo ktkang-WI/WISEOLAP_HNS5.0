@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {Button, TabPanel} from 'devextreme-react';
+import {Button} from 'devextreme-react';
 import styled from 'styled-components';
 import React, {createContext, useEffect, useState}
   from 'react';
@@ -11,6 +11,7 @@ import useModal from 'hooks/useModal';
 import Form from 'devextreme/ui/form';
 import TreeList from 'devextreme/ui/tree_list';
 import {getHint, getRefInstance} from 'components/config/utility/utility';
+import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 
 const Header = styled.div`
   flex: 0 0 50px;
@@ -312,7 +313,7 @@ const ReportFolderManagement = () => {
           </NavBar>
         </Header>
         <Content>
-          <TabPanel
+          <CommonTab
             className='dx-theme-background-color'
             width='100%'
             height='100%'
@@ -323,7 +324,7 @@ const ReportFolderManagement = () => {
             onTitleClick={handleTabPanelItem}
             deferRendering
           >
-          </TabPanel>
+          </CommonTab>
         </Content>
       </Wrapper>
     </ReportFolderContext.Provider>

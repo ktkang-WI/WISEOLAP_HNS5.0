@@ -310,10 +310,10 @@
     {"name": "argument&Percent", "caption": "Argument & %"},
     {"name": "argument&Value&Percent", "caption": "Argument, Value & %"}
   ],
-  "precsionOptions": [
+  "precisionOptions": [
     {"name": "round", "caption": "Round"},
-    {"name": "roundUp", "caption": "Round Up"},
-    {"name": "roundDown", "caption": "Round Down"}
+    {"name": "ceil", "caption": "Round Up"},
+    {"name": "floor", "caption": "Round Down"}
   ],
   "labelDataEdit": "Label Edit",
   "none": "None",
@@ -335,8 +335,8 @@
   "thousands": "Unit of Thousands",
   "milions": "Unit of Milions",
   "bilions": "Unit of Bilions",
-  "precsion": "precsion",
-  "precsionOption": "precsion Option",
+  "precision": "precision",
+  "precisionOption": "precision Option",
   "all": "all",
   "showGrid": "View as a grid",
   "detailedData": "Detailed Data",
