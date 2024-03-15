@@ -54,7 +54,6 @@ const LinkReportList = (
       alert('연결 보고서를 선택해주세요.');
       return;
     }
-    console.log('linkParamData reportId:', linkParamData?.reports[0]?.reportId);
     try {
       if (selectedRowData.id !== linkParamData?.reports[0]?.reportId) {
         const {data} =

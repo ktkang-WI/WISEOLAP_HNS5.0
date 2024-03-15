@@ -99,9 +99,7 @@ const LinkParamInfo = ({
   useEffect(() => {
     if (linkParamData &&
       linkParamData?.reports[0]?.reportId !== prevLinkParamData) {
-      console.log('different report');
       if (checkLinkReportList.hasOwnProperty(selectedRowData.id)) {
-        console.log('already have in LinkSlice state');
         processLinkParamData(
             checkLinkReportList[selectedRowData.id],
             setParamInfo,
@@ -115,7 +113,6 @@ const LinkParamInfo = ({
             subYn
         );
       } else {
-        console.log('New add in LinkSlice state');
         processLinkParamData(
             linkParamData,
             setParamInfo,
@@ -198,18 +195,14 @@ const LinkParamInfo = ({
       subLinkInfo.subLinkReportType = currentReportType;
       subLinkInfo.subLinkParamInfo = subLinkParamInfo;
     }
-    // console.log('linkReportInfo:', linkReportInfo);
     const immutableLinkReportInfo = JSON.parse(JSON.stringify(linkReportInfo));
     if (!checkLinkReportList.hasOwnProperty(linkReportId)) {
-      console.log('insertLink');
       dispatch(insertLink(immutableLinkReportInfo));
     } else {
-      console.log('updateLink');
       dispatch(updateLink(immutableLinkReportInfo));
     }
     onClose();
   };
-  // console.log('subFkNmOptions:', subFkNmOptions);
   return (
     <PopupWrapper>
       <StyledWrapper>
