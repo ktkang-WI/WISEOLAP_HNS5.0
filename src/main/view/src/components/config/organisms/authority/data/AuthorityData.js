@@ -45,15 +45,16 @@ const saveAuthorityData = (ref, dsViewListRef, cubeRef, dimRef, userMode,
     for (const [key, value] of Object.entries(origin)) {
       const dsViewId = key;
       const cubeInfoList = value;
+      const acc = [];
 
-      list = list.concat(cubeInfoList.reduce((acc, v) => {
+      cubeInfoList.forEach((v, i) => {
         const result = {
           dsViewId: Number(dsViewId),
           [info]: info === 'dimUniNm' ? v.replace('[', '').replace(']', '') : v
         };
         acc.push(result);
-        return acc;
-      }, []));
+      });
+      list = list.concat(acc);
     }
     return list;
   };
