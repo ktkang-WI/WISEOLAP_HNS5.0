@@ -259,6 +259,8 @@ const DataGrid = ({setItemExports, id, item}) => {
         showRowLines={config.gridLine.row}
         AllowUserToAddRows={false}
         rowAlternationEnabled={config.gridLine.stripes}
+        columnResizingMode={'nextColumn'}
+        allowColumnResizing={!config.autoGridWidth}
         columnAutoWidth={config.autoGridWidth}
         showColumnHeaders={config.columnHeader}
         wordWrapEnabled={config.autoWrap}

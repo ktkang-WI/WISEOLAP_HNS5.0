@@ -22,7 +22,7 @@ const SaveDefaultElement = () => {
     save: [
       {
         label: localizedString.saveReport, // 저장
-        onClick: (afterClick) => {
+        onClick: (props) => {
           const currentReport = selectCurrentReport(store.getState());
           const dataSource = _.cloneDeep(currentReport.options);
 
@@ -45,8 +45,8 @@ const SaveDefaultElement = () => {
               alert(localizedString[msg]);
 
               if (result) patchReport(data);
-              if (afterClick) {
-                afterClick.createExcelFile(reportId);
+              if (props.createExcelFile) {
+                props.createExcelFile(reportId);
               }
             });
 
@@ -59,8 +59,8 @@ const SaveDefaultElement = () => {
       },
       {
         label: localizedString.saveAs, // 다른이름으로 저장
-        onClick: (afterClick) => {
-          openModal(ReportSaveModal, afterClick);
+        onClick: (props) => {
+          openModal(ReportSaveModal, props);
         }
       }
     ],
