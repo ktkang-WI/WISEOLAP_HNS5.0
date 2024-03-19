@@ -72,18 +72,15 @@ const ReportTabs = () => {
                 }).catch(() => {
                   alert(localizedString.reportCorrupted);
                 });
-            console.log('selectedReport' + selectedReport.id);
             models.Report.getLinkReportList(selectedReport.id)
                 .then((res) => {
                   const subLinkReports = res.data.subLinkReports;
                   const linkReports = res.data.linkReports;
                   if (subLinkReports.length > 0) {
                     dispatch(setLinkReport(subLinkReports[0]));
-                  } else if (linkReports.length > 0) {
+                  } else if (subLinkReports.length === 0) {
                     dispatch(setLinkReport(linkReports[0]));
                   }
-                  console.log('Sub Link Reports:', subLinkReports);
-                  console.log('Link Reports:', linkReports);
                 });
           }
         }
