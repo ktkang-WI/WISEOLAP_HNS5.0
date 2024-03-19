@@ -10,6 +10,10 @@ import ParameterSlice from './ParameterSlice';
 import SpreadSlice from './SpreadSlice';
 import LoadingSlice from './LoadingSlice';
 import LinkSlice from './LinkSlice';
+import GC from '@grapecity/spread-sheets';
+import {sheets, workbookJSONs}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+
 
 const metaReducer = combineReducers({
   config: ConfigSlice.reducer,
@@ -42,6 +46,11 @@ const store = configureStore(configure);
 
 if (process.env.NODE_ENV == 'development') {
   window.WI = store;
+  window.WI.spreadCore = {
+    GC: GC,
+    sheets: sheets,
+    workbookJSONs: workbookJSONs
+  };
 }
 
 export const getReportInitialState = () => ReportSlice.getInitialState();
