@@ -412,5 +412,7 @@
   "openViewer": "Open Viewer",
   "openDesigner": "Open Designer",
   "dataAttributeList": "Data attribute list",
-  "reportList": "Report list"
+  "reportList": "Report list",
+  "linkReport": "Link Report",
+  "linkReportAlready": "This report is already linked."
 }

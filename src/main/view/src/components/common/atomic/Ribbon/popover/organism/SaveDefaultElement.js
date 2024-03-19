@@ -6,10 +6,13 @@ import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import store from 'redux/modules';
+import {checkLinkReport} from 'redux/selector/LinkSelector';
+import useLinkReportSave from 'hooks/useLinkReportSave';
 
 const SaveDefaultElement = () => {
   const {openModal, alert} = useModal();
   const {patchReport, generateParameter} = useReportSave();
+  const {genLinkParam} = useLinkReportSave();
 
   const getElementByLable = (label) => {
     return saveElement.save.find((element) => element.label === label);
@@ -45,6 +48,11 @@ const SaveDefaultElement = () => {
               if (props.createExcelFile) {
                 props.createExcelFile(reportId);
               }
+            });
+
+            const linkReport = checkLinkReport(store.getState());
+            const linkParam = genLinkParam(linkReport);
+            models.Report.insertLinkReport(linkParam.data).then((res) => {
             });
           };
         }

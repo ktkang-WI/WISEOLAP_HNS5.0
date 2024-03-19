@@ -64,7 +64,6 @@ const SelectTableModal = ({dsId, dsViewId, onSubmit, ...props}) => {
       <CommonDataGrid
         dataSource={tables}
         onSelectionChanged={(e) => {
-          console.log(e);
           if (e.selectedRowsData.length > 0) {
             const tempTable = e.selectedRowsData[0];
             if (dsViewId) {
