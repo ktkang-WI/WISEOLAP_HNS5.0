@@ -13,6 +13,8 @@ import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
 import {DesignerMode} from 'components/config/configType';
 import useSpread from 'hooks/useSpread';
+import LinkSlice from 'redux/modules/LinkSlice';
+import {useDispatch} from 'react-redux';
 
 const theme = getTheme();
 
@@ -23,6 +25,7 @@ const LoadReportModal = ({...props}) => {
   const {openModal, alert} = useModal();
   const {loadReport, querySearch} = useReportSave();
   const reportType = selectCurrentDesignerMode(store.getState());
+  const dispatch = useDispatch();
 
   useEffect(() => {
     models.Report.getList('admin', reportType, 'designer').then(({data}) => {
@@ -33,6 +36,7 @@ const LoadReportModal = ({...props}) => {
   }, []);
 
   const getReport = async () => {
+    const {setLinkReport} = LinkSlice.actions;
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
@@ -46,6 +50,16 @@ const LoadReportModal = ({...props}) => {
           }
         }).catch(() => {
           alert(localizedString.reportCorrupted);
+        });
+    models.Report.getLinkReportList(selectedReport.id)
+        .then((res) => {
+          const subLinkReports = res.data.subLinkReports;
+          const linkReports = res.data.linkReports;
+          if (subLinkReports.length > 0) {
+            dispatch(setLinkReport(subLinkReports[0]));
+          } else if (subLinkReports.length === 0) {
+            dispatch(setLinkReport(linkReports[0]));
+          }
         });
   };
 

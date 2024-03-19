@@ -1,6 +1,7 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {TreeView} from 'devextreme-react';
+import React, {useRef, useCallback} from 'react';
 
 const theme = getTheme();
 
@@ -10,6 +11,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   display: inline-block;
+  border: solid 1px ${theme.color.breakLine};
   text-align: left;
 `;
 const StyledTreeView = styled(TreeView)`
@@ -24,12 +26,19 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = ({width, ...props}) => {
+const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
+  const dxRef = useRef();
+  const handleItemClick = useCallback(
+      (e) => {
+        if (onItemSelect) onItemSelect(e.itemData);
+      }, [onItemSelect]);
   return (
     <Wrapper
       width={width}
+      height={height}
     >
       <StyledTreeView
+        ref={dxRef}
         dataStructure="plain"
         displayExpr="name"
         parentIdExpr="upperId"
@@ -40,10 +49,11 @@ const ReportListTab = ({width, ...props}) => {
           placeholder: '검색'
         }}
         focusStateEnabled={true}
+        onItemClick={handleItemClick}
         {...props}
       />
     </Wrapper>
   );
 };
 
-export default ReportListTab;
+export default React.memo(ReportListTab);
