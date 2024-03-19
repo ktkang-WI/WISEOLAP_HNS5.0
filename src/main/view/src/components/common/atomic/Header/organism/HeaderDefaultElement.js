@@ -50,7 +50,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
-        reload();
+        reload(initialDisplay);
       }
     },
     'ShowQuery': {
@@ -79,7 +79,7 @@ const HeaderDefaultElement = () => {
         nav('/editds/dashany');
         dispatch(setEditMode(EditMode.DESIGNER));
         dispatch(setDesignerMode(initialDisplay));
-        reload();
+        reload(initialDisplay);
       }
     },
     'DownloadReport': {

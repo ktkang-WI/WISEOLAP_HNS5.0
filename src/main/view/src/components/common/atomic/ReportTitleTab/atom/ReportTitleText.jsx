@@ -11,6 +11,7 @@ const ReportTitleText = styled.div`
    '500' : '400'};
   cursor: pointer;
   text-wrap: nowrap;
+  user-select: text;
 `;
 
 export default ReportTitleText;
