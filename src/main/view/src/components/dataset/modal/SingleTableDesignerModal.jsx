@@ -156,7 +156,7 @@ const SingleTableDesignerModal = ({
                   if (row.visibility) onlyVisibleColumn.push(row);
                 });
 
-                const tempFields = makeFieldIcon(onlyVisibleColumn, true);
+                const tempFields = makeFieldIcon(onlyVisibleColumn);
 
                 dispatch(updateDataset({
                   reportId: selectedReportId,
