@@ -32,12 +32,14 @@ export const SubLinkReportPopup = (
     {
       showButton,
       setShowButton,
-      focusedItem
+      focusedItem,
+      editMode
     }
 ) => {
   const {openModal} = useModal();
   const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
   const [subLinkDim, setSubLinkDim] = useState([]);
+  console.log('editMode:', editMode);
 
   useEffect(() => {
     const handleContextMenu = (event) => {
@@ -93,7 +95,22 @@ export const SubLinkReportPopup = (
     setShowButton(false);
   };
 
-  return showButton ? (
+  if (editMode === 'viewer') {
+    return showButton ? (
+      <SubLinkReportPopupButton
+        style={
+          {
+            left: `${buttonPosition.x}px`,
+            top: `${buttonPosition.y}px`
+          }
+        }
+        onClick={handleClick}
+      >
+       보고서 이름
+      </SubLinkReportPopupButton>
+    ) : null;
+  } else {
+    return showButton ? (
       <SubLinkReportPopupButton
         style={
           {
@@ -106,6 +123,7 @@ export const SubLinkReportPopup = (
        서브 연결 보고서
       </SubLinkReportPopupButton>
     ) : null;
+  }
 };
 
 export const setIconReportList = (list) => {

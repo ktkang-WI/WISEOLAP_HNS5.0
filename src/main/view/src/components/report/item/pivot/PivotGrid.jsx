@@ -308,6 +308,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           showButton={showPopup}
           setShowButton={setShowPopup}
           focusedItem={focusedItem}
+          editMode={editMode}
         />}
     </Container>
   );
