@@ -22,6 +22,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -85,9 +86,8 @@ import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
-
-import javaxt.json.JSONArray;
-import javaxt.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -139,22 +139,24 @@ public class ReportService {
     	Map<String, Object> returnMap = new HashMap<>();
     	try {
     		Gson gson = new Gson();
+    		ObjectMapper objectMapper = new ObjectMapper();
+    		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
     		ReportMstrEntity entity = reportDAO.selectReport(reportId);
     		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
     		if(!"newReport".equals(dto.getDatasetXml())) {
     			ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
     			returnMap = reportXmlParser.getReport(dto, userId);
     		} else {
-    			JSONObject items = new JSONObject(entity.getChartXml());
-    			JSONObject dataset = new JSONObject(entity.getDatasetXml());
+    			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
+    			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
     			if (dataset.get("datasets") != null) {
-    				JSONArray datasetArray = dataset.get("datasets").toJSONArray();
+    				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
-    					JSONObject datset = datasetArray.get(i).toJSONObject();
+    					JSONObject datset = datasetArray.getJSONObject(i);
     					if (datset.has("cubeId")) {
     						CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
-    						datset.set("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
-    						datset.set("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}
     			}

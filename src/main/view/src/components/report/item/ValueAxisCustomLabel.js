@@ -24,8 +24,8 @@ const treatedNumber = (value, valueOfSuffix, precision, axisOption) => {
   const num = 10 ** valueOfSuffix;
   const mathRoundFunc = {
     round: Math.round,
-    roundUp: Math.ceil,
-    roundDown: Math.floor
+    ceil: Math.ceil,
+    floor: Math.floor
   };
 
   if (!value) return 0;

@@ -27,7 +27,7 @@ const SaveDefaultElement = () => {
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {
-            openModal(ReportSaveModal, afterClick);
+            openModal(ReportSaveModal, props);
           } else {
             dataSource.reportId = currentReport.reportId;
             const param = generateParameter(dataSource);
