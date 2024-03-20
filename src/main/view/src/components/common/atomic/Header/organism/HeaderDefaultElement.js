@@ -8,6 +8,7 @@ import {checkLinkReport} from 'redux/selector/LinkSelector';
 import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
+import {getConfig} from 'config/config';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');

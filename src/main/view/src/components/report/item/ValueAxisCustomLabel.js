@@ -37,9 +37,9 @@ const treatedNumber = (value, valueOfSuffix, precision, axisOption) => {
   );
 };
 
-const ValueAxisCustomLabel = (e, axisOption) => {
+const ValueAxisCustomLabel = (value, axisOption) => {
   const defaultSuffix = {1: '', 1000: 'K', 1000000: 'M', 1000000000: 'B'};
-  const unit = autoSuffix(e.value, defaultSuffix);
+  const unit = autoSuffix(value, defaultSuffix);
   const suffix = {
     'O': 1,
     'K': 10 ** 3,
@@ -48,15 +48,15 @@ const ValueAxisCustomLabel = (e, axisOption) => {
   };
   const map = {
     'Auto': '₩' +
-      parseFloat(e.value ? e.value / suffix[unit] : 0).toFixed(2) + unit,
-    'General': parseFloat(e.value).toFixed(e.value ? 3 : 0),
+      parseFloat(value ? value / suffix[unit] : 0).toFixed(2) + unit,
+    'General': parseFloat(value).toFixed(value ? 3 : 0),
     'Scientific':
-      treatedNumber(e.value, (e.value.toString().length - 1),
+      treatedNumber(value, (value.toString().length - 1),
           axisOption.precision, axisOption).toString() +
-          (e.value ? ('E' + '+' + (e.value.toString().length - 1)) : ''),
-    'Percent': parseFloat(e.value * 1000).toFixed(axisOption.precision) + '%',
-    'Number': customizeSuffixValue(e.value, axisOption),
-    'Currency': '₩' + customizeSuffixValue(e.value, axisOption)
+          (value ? ('E' + '+' + (value.toString().length - 1)) : ''),
+    'Percent': parseFloat(value * 1000).toFixed(axisOption.precision) + '%',
+    'Number': customizeSuffixValue(value, axisOption),
+    'Currency': '₩' + customizeSuffixValue(value, axisOption)
   };
   // , 처리
   return map[axisOption.formatType];
