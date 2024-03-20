@@ -4,11 +4,26 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import {checkLinkReport} from 'redux/selector/LinkSelector';
+import models from 'models';
+import store from 'redux/modules';
+import useModal from 'hooks/useModal';
+
+const contextRoot =
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
+import useReportSave from 'hooks/useReportSave';
+import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
+
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {setEditMode} = ConfigSlice.actions;
+  const {alert} = useModal();
+  const initialDisplay = useSelector(selectInitialDisplay);
+  const {setEditMode, setDesignerMode} = ConfigSlice.actions;
+  const {reload} = useReportSave();
 
   return {
     'Logo': {
@@ -45,6 +60,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
+        reload(initialDisplay);
       }
     },
     'ShowQuery': {
@@ -72,12 +88,53 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         nav('/editds/dashany');
         dispatch(setEditMode(EditMode.DESIGNER));
+        dispatch(setDesignerMode(initialDisplay));
+        reload(initialDisplay);
+      }
+    },
+    'LinkReport': {
+      'id': 'linkreport',
+      'label': localizedString.linkReport,
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        const linkReport = checkLinkReport(store.getState());
+        if (linkReport&& Object.keys(linkReport).length > 0) {
+          const firstLinkReportKey = Object.keys(linkReport)[0];
+          const firstLinkReport = linkReport[firstLinkReportKey];
+          const linkReportId = firstLinkReport.linkReportId;
+          const linkReportType = firstLinkReport.linkReportType;
+          const tokenSource = {
+            userId: 'admin',
+            reportId: linkReportId,
+            reportType: linkReportType
+          };
+          models.Report.generateToken(tokenSource).then((res) => {
+            const token = res.data.token;
+            const urlString =
+              `${document.location.origin}${contextRoot}` +
+              `/editds/linkViewer?token=${token}`;
+            const newWindow = window.open(urlString, '_blank');
+            if (newWindow) {
+              newWindow.focus();
+            }
+          }).catch((error) => {
+            console.error('Error sending link report:', error);
+          });
+        } else {
+          alert('연결 보고서가 존재하지 않습니다.');
+        }
       }
     },
     'DownloadReport': {
-      'id': 'designer',
+      'id': 'downLoadReport',
       'label': localizedString.downloadReport,
-      'type': 'TextButton'
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton'
     }
   };
 };

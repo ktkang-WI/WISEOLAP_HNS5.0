@@ -1,10 +1,18 @@
 import './spreadBoard.css';
-import spreadDefaultElement from './SpreadDefaultElement';
-import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useSpreadRibbon from './useSpreadRibbon';
+import {useEffect, useRef} from 'react';
+import {Designer} from '@grapecity/spread-sheets-designer-react';
+import {getWorkbookJSON,
+  insertWorkbookJSON,
+  setDesignerRef
+}
+  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {useSelector} from 'react-redux';
+import {selectCurrentSpreadData}
+  from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
-import SpreadSlice from 'redux/modules/SpreadSlice';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 
@@ -33,25 +41,51 @@ const StyledWrapper = styled(Wrapper)`
 `;
 
 const SpreadBoard = () => {
+  const spreaRef = useRef();
   // hook
-  const {setRibbonSetting} = spreadDefaultElement();
-  const config = setRibbonSetting();
-  const {createDesigner} = useSpread();
-  const dispatch = useDispatch();
-
-  const spreadActions = SpreadSlice.actions;
+  const {
+    sheetChangedListener,
+    sheetNameChangedListener,
+    bindData
+  } = useSpread();
+  const config = useSpreadRibbon();
+  const currentReportId = useSelector(selectCurrentReportId);
+  const spreadData = useSelector(selectCurrentSpreadData);
 
   useEffect(() => {
-    createDesigner({
-      config: config,
-      reportId: 0
-    });
-    dispatch(spreadActions.setConfig(config));
+    setDesignerRef(spreaRef);
   }, []);
+
+  useEffect(() => {
+    bindData(spreadData);
+  }, [spreadData]);
+
+
+  useEffect(() => {
+    const workbookJSON = getWorkbookJSON(currentReportId);
+    spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
+  }, [currentReportId]);
 
   return (
     <StyledWrapper className='section board'>
-      <Wrapper id="spreadWrapper"/>
+      <Designer
+        className={'dx-drawer-shader'}
+        ref={spreaRef}
+        designerInitialized={(designer) => {
+          designer.setConfig(config);
+          insertWorkbookJSON({
+            reportId: currentReportId,
+            workbookJSON: designer.getWorkbook().toJSON()
+          });
+          sheetChangedListener(designer);
+          sheetNameChangedListener(designer);
+        }}
+        styleInfo={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+      </Designer>
     </StyledWrapper>
   );
 };

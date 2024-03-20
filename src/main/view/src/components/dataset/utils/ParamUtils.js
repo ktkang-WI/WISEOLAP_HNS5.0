@@ -1,5 +1,13 @@
 import _ from 'lodash';
 
+const baseToFormatMapper = {
+  'yyyy:': 'YEAR',
+  'yyyyMM': 'MONTH',
+  'yyyy-MM': 'MONTH',
+  'yyyyMMdd': 'DAY',
+  'yyyy-MM-dd': 'DAY'
+};
+
 /**
  * 매개변수의 기본 데이터 구조 생성
  * order의 경우 information의 최대값 order - 1 사용
@@ -114,7 +122,6 @@ const sanitizeParamInformation = (param) => {
     delete info.linkageFilters;
   };
 
-
   if (info.paramType == 'LIST' || info.paramType == 'INPUT') {
     deleteCalendarValue();
     if (info.operation == 'BETWEEN') {
@@ -139,6 +146,18 @@ const getParameterNamesInQuery = (query) => {
 
 const getCubeParameterNamesCube = (paramInfo, paramName) => {
   return paramInfo.map((info) => info.name).concat(paramName);
+};
+
+/**
+ * 달력필터의 경우 exceptionValue를 현재 시점으로 추가.
+ * @param {JSON} info parameterInformation
+ * @return {JSON}
+ */
+const setCalendarExceptionValue = (info) => {
+  const format = info.calendarKeyFormat;
+  const date = getCalendarNowDefaultValue(baseToFormatMapper[format], 0);
+  info.exceptionValue = parseStringFromDate(date, format);
+  return info;
 };
 
 /**
@@ -223,6 +242,13 @@ const generateParameterForQueryExecute = (parameters) => {
             parseStringFromDate(date, p.calendarKeyFormat)
         );
       });
+    } else if (values.length == 0 && !p.defaultValueUseSql &&
+      p.paramType == 'CALENDAR' && p.calendarDefaultType == 'QUERY') {
+      p.defaultValue.map((value) => {
+        if (!_.isEmpty(value)) {
+          values.push(value);
+        }
+      });
     }
 
     return {
@@ -267,6 +293,7 @@ const getCalendarNowDefaultValue = (base, value) => {
 };
 
 export default {
+  baseToFormatMapper,
   newParamInformation,
   sanitizeParamInformation,
   getParameterNamesInQuery,
@@ -277,5 +304,6 @@ export default {
   newCubeParamInformation,
   getCubeParameterNamesCube,
   filterToParameter,
-  newSingleTableParamInformation
+  newSingleTableParamInformation,
+  setCalendarExceptionValue
 };

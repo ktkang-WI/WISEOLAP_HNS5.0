@@ -1,7 +1,5 @@
 import localizedString from 'config/localization';
 import store from 'redux/modules';
-import {selectCurrentDesigner, selectExcelIO, selectSheets}
-  from 'redux/selector/SpreadSelector';
 import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import saveDefaultElement
@@ -10,27 +8,35 @@ import ribbonDefaultElement
   from 'components/common/atomic/Ribbon/organism/RibbonDefaultElement';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import useSpread from 'hooks/useSpread';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentReport, selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {
+  sheets,
+  excelIO,
+  resetWorkbookJSON,
+  designerRef
+} from '../util/SpreadCore';
+import {
+  SpreadRibbonDefaultElement,
+  defaultWorkbookJSON,
+  spreadDownlaodReportModel
+} from 'components/report/atomic/spreadBoard/util/spreadContants.js';
 
-const SpreadDefaultElement = () => {
+const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
-  const {reload, loadReport, querySearch} = useReportSave();
-  const {importFile, uploadFile, deleteFile} = useFile();
+  const {reload} = useReportSave();
+  const {uploadFile, deleteFile} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {
-    createDesigner,
-    setExcelFile,
     createReportBlob
   } = useSpread();
 
-  // config의 경우 초기에만 생성하고 이후에 state에서 사용하는 형태로 변경
   const setRibbonSetting = () => {
-    const sheets = selectSheets(store.getState());
     const config = sheets.Designer.DefaultConfig;
     // csutomtab 메뉴 생성
     if (config.commandMap) return config;
@@ -43,47 +49,32 @@ const SpreadDefaultElement = () => {
     // customtab 메뉴 메소드 정의
     const commandMap = ribbonCommandMap();
     // ribbon download modal 정의
-    const downlaodReportDialog = downlaodReportModel;
+    const downlaodReportDialog = spreadDownlaodReportModel;
     // Template 기능 추가.
     addSpreadTemplate('downlaodReportDialog', downlaodReportDialog);
     config.commandMap = commandMap;
     return config;
   };
 
-  const newReport = () => {
-    const designer = selectCurrentDesigner(store.getState());
+  // spread ribbon menu 선언 부분
+  const newReport = (context) => {
     const designerMode = selectCurrentDesignerMode(store.getState());
+    context.getWorkbook().fromJSON(defaultWorkbookJSON);
     reload(designerMode);
-    createDesigner({
-      reportId: 0,
-      prevDesigner: designer
+  };
+
+  const openReportLocal = (context) => {
+    const currentReportId = selectCurrentReportId(store.getState());
+    sheets.Designer.getCommand('fileMenuPanel')
+        .execute(context, 'button_import_excel', null);
+    resetWorkbookJSON({
+      reportId: currentReportId,
+      workbookJSON: context.getWorkbook().toJSON()
     });
   };
 
-  const openReportLocal =(context) => {
-    const sheets = selectSheets(store.getState());
-    sheets.Designer.getCommand('fileMenuPanel')
-        .execute(context, 'button_import_excel', null);
-  };
-
   const openReport = () => {
-    const loadExcelFile = ({data}) => {
-      try {
-        const reportId = data.reports[0].reportId;
-        loadReport(data);
-        createDesigner({reportId: reportId});
-        importFile(
-            {fileName: reportId + '.xlsx'}
-        ).then((response) => {
-          setExcelFile(response.data, querySearch);
-        }).catch((e) => {
-          alert(localizedString.noneExcelFile);
-        });
-      } catch {
-        alert(localizedString.reportCorrupted);
-      }
-    };
-    openModal(LoadReportModal, {loadExcelFile: loadExcelFile});
+    openModal(LoadReportModal);
   };
 
   const createExcelFile = (reportId) => {
@@ -107,21 +98,13 @@ const SpreadDefaultElement = () => {
   };
 
   const deleteExcelFile = ({reportId, prevDesigner}) => {
-    createDesigner({
-      reportId: 0,
-      prevDesigner: prevDesigner
-    });
     deleteFile({fileName: reportId + '.xlsx'});
   };
 
   const downloadReportXLSX = () => {
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
-    const sheets = selectSheets(store.getState());
-    const designer = selectCurrentDesigner(store.getState());
-    const excelIO = selectExcelIO(store.getState());
-
-    reportNm = reportNm.replaceAll(/[\s\/\\:*?"<>]/gi, '_');
-    // 예외 처리 및  메소드 분리.
+    const designer = designerRef.current.designer;
+    reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',
@@ -166,7 +149,6 @@ const SpreadDefaultElement = () => {
   };
 
   const print = () => {
-    const designer = selectCurrentDesigner(store.getState());
     const workbook = designer.getWorkbook();
     const activeSheet = workbook.getActiveSheet();
     activeSheet.printInfo().margin(
@@ -177,7 +159,6 @@ const SpreadDefaultElement = () => {
   };
 
   const addSpreadTemplate = (templateName, templateMethod) => {
-    const sheets = selectSheets(store.getState());
     sheets.Designer.registerTemplate(templateName, templateMethod);
   };
 
@@ -192,7 +173,7 @@ const SpreadDefaultElement = () => {
         commandName: 'newReport',
         execute: (context, propertyName, fontItalicChecked) => {
           confirm(localizedString.reloadConfirmMsg, () => {
-            newReport();
+            newReport(context);
           });
         }
       },
@@ -292,123 +273,7 @@ const SpreadDefaultElement = () => {
     };
   };
 
-  const downlaodReportModel = {
-    templateName: 'downlaodReportDialog',
-    title: '파일 저장',
-    content: [{
-      type: 'FlexContainer',
-      children: [{
-        type: 'TextBlock',
-        margin: '0 0 0 10px',
-        text: '파일 이름:'
-      }, {
-        type: 'ColumnSet',
-        margin: '10px',
-        children: [{
-          type: 'Column',
-          children: [{
-            type: 'TextEditor',
-            bindingPath: 'fileName',
-            margin: '2px 2px 0 0'
-          }],
-          width: '200px'
-        }, {
-          type: 'Column',
-          children: [{
-            type: 'TextBlock',
-            bindingPath: 'extName',
-            style: 'line-height:30px'
-          }],
-          width: 'auto'
-        }]
-      }]
-    }]
-  };
-
-  const SpreadRibbonDefaultElement = {
-    id: 'fileMenu',
-    text: localizedString.file,
-    visibleWhen: '!TableSheetActive&& !DataManagerActive ' +
-     '&& !ContainMultipleHeaderCells || IsInTableSheetDesignMode',
-    buttonGroups: [
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'newReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'openReportLocal'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'openReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'saveReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'saveAsReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              commands: [
-                'deleteReport'
-              ]
-            },
-            {
-              direction: 'vertical',
-              command: 'downloadReport',
-              children: ['downloadReportXLSX', 'downloadReportTXT'],
-              type: 'dropdown'
-            }
-          ]
-        }
-      },
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'dataset'
-              ]
-            }
-          ]
-        }
-      },
-      {
-        commandGroup: {
-          children: [
-            {
-              direction: 'vertical',
-              commands: [
-                'print'
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  };
-
-  return {
-    setRibbonSetting
-  };
+  return setRibbonSetting();
 };
 
-export default SpreadDefaultElement;
+export default useSpreadRibbon;

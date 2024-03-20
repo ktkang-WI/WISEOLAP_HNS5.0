@@ -12,21 +12,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileUploadService {
-	
-	@Value("${upload.path}")
-	private String uploadPath;
+
+	private final File spreadReportFolder;
+
+	private FileUploadService() {
+		spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+		if (!this.spreadReportFolder.isDirectory()) {
+	        this.spreadReportFolder.mkdirs();
+	    }
+	}
 	
 	public void saveFile(MultipartFile file, String fileName) throws Exception {
         try (InputStream input = file.getInputStream()) {
-        	File folder = WebFileUtils.getWebFolder(true, "UploadFiles");
-        	File sysFile = WebFileUtils.getFile(folder, fileName);
+        	File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
         	if(sysFile == null) new Exception("spread File create Error");
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
 	public void deleteFile(String fileName) throws Exception {
-		File file = WebFileUtils.getWebFolder(false, "UploadFiles", fileName);
+		File file = WebFileUtils.getFile(spreadReportFolder, fileName);
 		if (!file.delete()) {
 			new Exception("spread File delete Exception");
 		}
@@ -35,7 +40,7 @@ public class FileUploadService {
 	
 	public byte[] fileImport(String fileName) throws Exception {
 		byte[] fileByte = null;
-		File file = WebFileUtils.getWebFolder(false, "UploadFiles", fileName);
+		File file = WebFileUtils.getFile(spreadReportFolder, fileName);
 		Path filePath = file.toPath();
 		fileByte = Files.readAllBytes(filePath);
 

@@ -60,6 +60,50 @@ export const updateReport = async (param) => {
   return await axios.patch(path + '/report-save', param);
 };
 
+export const insertLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-save', param);
+};
+
+export const updateLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-update', param);
+};
+
+/**
+ * 연결 보고서 목록 가져오기
+ * @param {JSON} reportId
+ * @return {JSON}
+ */
+export const getLinkReportList = (reportId) => {
+  const param = {
+    reportId: reportId
+  };
+  return axios.post(path + '/report-link-list', param);
+};
+
+/**
+ * 연결 보고서 필터정보 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getLinkReportParam = (param) => {
+  return axios.post(path + '/report-link-param', param);
+};
+
+export const retrieveLinkReport = (token) => {
+  // Ensure headers are set to indicate a JSON body
+  return axios.post(
+      `${path}/retrieve-link-report`,
+      JSON.stringify({token: token}), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+};
+
+export const generateToken = (param) => {
+  return axios.post(path + '/generate-token', param);
+};
+
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param

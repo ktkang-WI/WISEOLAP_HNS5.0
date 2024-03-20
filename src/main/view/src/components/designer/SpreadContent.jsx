@@ -10,6 +10,7 @@ import useDrag from 'hooks/useDrag';
 import SpreadBoard from '../report/atomic/spreadBoard/organisms/SpreadBoard';
 import ReportContentWrapper
   from 'components/common/atomic/Common/Wrap/ReportContentWrapper';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const theme = getTheme();
 
@@ -25,10 +26,12 @@ const SpreadContent = () => {
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
-          <ReportContentWrapper>
-            <FilterBar/>
-            <SpreadBoard/>
-          </ReportContentWrapper>
+          <Wrapper>
+            <ReportContentWrapper>
+              <FilterBar/>
+              <SpreadBoard/>
+            </ReportContentWrapper>
+          </Wrapper>
         </CustomDrawer>
       </DragDropContext>
     </Content>

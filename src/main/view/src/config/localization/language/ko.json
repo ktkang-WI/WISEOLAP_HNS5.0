@@ -576,5 +576,7 @@
   "validationFolderSelect": "폴더를 선택해주세요.",
   "validationReportNm": "보고서 명을 입력해 주세요.",
   "dataAttributeList": "데이터속성목록",
-  "reportList": "보고서목록"
+  "reportList": "보고서목록",
+  "linkReport": "연결 보고서",
+  "linkReportAlready": "이미 연결된 보고서 입니다."
 }

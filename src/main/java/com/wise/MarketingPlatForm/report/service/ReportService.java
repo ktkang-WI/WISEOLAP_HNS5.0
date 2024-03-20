@@ -15,21 +15,26 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
+import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -69,6 +74,8 @@ import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
+import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
+import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
@@ -76,9 +83,11 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
-
-import javaxt.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -113,6 +122,9 @@ public class ReportService {
 
     @Autowired
     private FileUploadService fileUploadService;
+    
+    @Autowired
+    private CubeService cubeService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {
@@ -126,14 +138,28 @@ public class ReportService {
     public Map<String, Object> getReport(String reportId, String userId) {
     	Map<String, Object> returnMap = new HashMap<>();
     	try {
+    		Gson gson = new Gson();
+    		ObjectMapper objectMapper = new ObjectMapper();
+    		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
     		ReportMstrEntity entity = reportDAO.selectReport(reportId);
     		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
     		if(!"newReport".equals(dto.getDatasetXml())) {
     			ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
     			returnMap = reportXmlParser.getReport(dto, userId);
     		} else {
-    			JSONObject items = new JSONObject(entity.getChartXml());
-    			JSONObject dataset = new JSONObject(entity.getDatasetXml());
+    			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
+    			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
+    			if (dataset.get("datasets") != null) {
+    				JSONArray datasetArray = dataset.getJSONArray("datasets");
+    				for (int i= 0; i < datasetArray.length(); i++) {
+    					JSONObject datset = datasetArray.getJSONObject(i);
+    					if (datset.has("cubeId")) {
+    						CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
+    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+    					}
+    				}
+    			}
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
@@ -569,6 +595,56 @@ public class ReportService {
         return result.size() > 0 ? "Y" : "N";
     }
 
+    @Transactional
+    public void insertLinkReport(List<ReportLinkMstrDTO> reportLinkDTO) {
+        for (ReportLinkMstrDTO dto : reportLinkDTO) {
+            ReportLinkMstrEntity entity = ReportLinkMstrDTO.toEntity(dto);
+            reportDAO.insertLinkReport(entity);
+        }
+    }
+
+    @Transactional
+    public void insertSubLinkReport(List<ReportLinkSubMstrDTO> reportLinkSubDTO) {
+        for (ReportLinkSubMstrDTO dto : reportLinkSubDTO) {
+            ReportLinkSubMstrEntity entity = ReportLinkSubMstrDTO.toEntity(dto);
+            reportDAO.insertSubLinkReport(entity);
+        }
+    }
+
+    public Map<String, Object> getLinkReportParam(String reportId) {
+    	ReportMstrEntity entity = reportDAO.selectLinkReportParam(reportId);
+        Map<String, Object> returnMap = new HashMap<>();
+
+        	JSONArray informations = new JSONArray(entity.getParamXml());
+        	if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
+        		JSONObject spread = new JSONObject(entity.getReportXml());
+        		returnMap.put("spread", spread.toString());
+        	}
+        	returnMap.put("informations", informations.toString());
+        
+        Map<String, Object> report = new HashMap<String, Object>();
+    	List<Map<String, Object>> reports = new ArrayList<Map<String, Object>>();
+
+
+    	report.put("reportId", Integer.parseInt(reportId));
+
+    	reports.add(report);
+
+    	returnMap.put("reports", reports);
+        return returnMap;
+    }
+
+    public Map<String, Object> getAggregatedReportLinks(String reportId) {
+        Map<String, Object> result = new HashMap<>();
+        List<ReportLinkMstrEntity> linkReportList = reportDAO.selectLinkReportList(reportId);
+        List<ReportLinkSubMstrEntity> subLinkReportList = reportDAO.selectSubLinkReportList(reportId);
+
+        result.put("linkReports", linkReportList);
+        result.put("subLinkReports", subLinkReportList);
+
+        return result;
+    }
+
     public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
         Map<String, List<FolderMasterVO>> result = new HashMap<>();
 
@@ -619,4 +695,5 @@ public class ReportService {
 
         return martResultDTO;
     }
+
 }

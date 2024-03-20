@@ -31,8 +31,8 @@ const Ribbon = () => {
           'LoadReport',
           'SaveReport',
           'DeleteReport',
+          'ConnectReport',
           'DownloadReport'
-          // 'ConnectReport'
         ]}
       />
       <CreateRibbonBtns

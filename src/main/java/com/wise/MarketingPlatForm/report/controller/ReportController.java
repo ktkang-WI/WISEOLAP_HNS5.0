@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,11 +14,13 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -41,7 +43,10 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import java.lang.reflect.Type;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -413,41 +418,40 @@ public class ReportController {
 	}
 
     @PatchMapping(value = "/update")
-  public ResponseEntity<RestAPIVO> patchConfigReportData(
-    @RequestParam(required = true) int reportId,
-    @RequestParam(required = false, defaultValue = "") String reportNm,
-    @RequestParam(required = false, defaultValue = "0") String reportSubTitle,
-    @RequestParam(required = false, defaultValue = "0") int fldId,
-    @RequestParam(required = false, defaultValue = "0") String fldType,
-    @RequestParam(required = false, defaultValue = "") int reportOrdinal,
-    @RequestParam(required = false, defaultValue = "") String reportType,
-    @RequestParam(required = false, defaultValue = "") String reportTag,
-    @RequestParam(required = false, defaultValue = "") String reportDesc
-  ) throws Exception {
-
-    ReportMstrEntity reportMstr = ReportMstrEntity.builder()
-        .reportId(reportId)
-        .reportNm(reportNm)
-        .reportSubTitle(reportSubTitle)
-        .fldId(fldId)
-        .fldType(fldType)
-        .reportOrdinal(reportOrdinal)
-        .reportType(reportType)
-        .reportDesc(reportDesc)
-        .reportTag(reportTag)
-        .build();
-
-    boolean result = reportService.patchConfigReport(reportMstr);
-
-    if (!result) return RestAPIVO.conflictResponse(false);
-
-    return RestAPIVO.okResponse(result);
-  }
+    public ResponseEntity<RestAPIVO> patchConfigReportData(
+      @RequestParam(required = true) int reportId,
+      @RequestParam(required = false, defaultValue = "") String reportNm,
+      @RequestParam(required = false, defaultValue = "0") String reportSubTitle,
+      @RequestParam(required = false, defaultValue = "0") int fldId,
+      @RequestParam(required = false, defaultValue = "0") String fldType,
+      @RequestParam(required = false, defaultValue = "") int reportOrdinal,
+      @RequestParam(required = false, defaultValue = "") String reportType,
+      @RequestParam(required = false, defaultValue = "") String reportTag,
+      @RequestParam(required = false, defaultValue = "") String reportDesc
+    ) throws Exception {
+    
+      ReportMstrEntity reportMstr = ReportMstrEntity.builder()
+          .reportId(reportId)
+          .reportNm(reportNm)
+          .reportSubTitle(reportSubTitle)
+          .fldId(fldId)
+          .fldType(fldType)
+          .reportOrdinal(reportOrdinal)
+          .reportType(reportType)
+          .reportDesc(reportDesc)
+          .reportTag(reportTag)
+          .build();
+    
+      boolean result = reportService.patchConfigReport(reportMstr);
+    
+      if (!result) return RestAPIVO.conflictResponse(false);
+    
+      return RestAPIVO.okResponse(result);
+    }
 
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(@RequestBody Map<String, String> param) {
         String userId = param.getOrDefault("userId", "");
-
         return reportService.getReportFolderList(userId);
 	}
 
@@ -463,6 +467,79 @@ public class ReportController {
 
             return ResponseEntity.ok().body(map);
     }
+    @PatchMapping(value = "/report-link-save")
+    public ResponseEntity<?> insertLinkReport(@RequestBody List<Map<String, Object>> linkReports) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<ReportLinkMstrDTO>>() {}.getType();
+        List<ReportLinkMstrDTO> reportLinkDTO = gson.fromJson(gson.toJson(linkReports), listType);
+        reportService.insertLinkReport(reportLinkDTO);
+        reportLinkDTO.forEach(subDto -> {
+            if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
+                List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
+                reportService.insertSubLinkReport(reportLinkSubDTO);
+            }
+        });
+        return ResponseEntity.ok().body("Link reports successfully saved.");
+    }
+    
+
+    @PostMapping(value = "/report-link-param")
+	public Map<String, Object> getLinkReportParam(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+        return reportService.getLinkReportParam(reportId);
+	}
+
+    @PostMapping(value = "/report-link-list", consumes = "application/json")
+    public ResponseEntity<Map<String, Object>> getLinkReportList(@RequestBody Map<String, String> param) {
+        System.out.println("param = " + param);
+        String reportId = param.getOrDefault("reportId", "");
+        Map<String, Object> aggregatedReportLinks = reportService.getAggregatedReportLinks(reportId);
+        return new ResponseEntity<>(aggregatedReportLinks, HttpStatus.OK);
+    }
+
+    private Map<String, UserInfo> tokenStore = new HashMap<>();
+
+    // Endpoint to generate a one-time token
+    @PostMapping("/generate-token")
+    public Map<String, String> generateToken(@RequestBody Map<String, String> requestBody) {
+        String userId = requestBody.get("userId");
+        String reportId = requestBody.get("reportId");
+        String reportType = requestBody.get("reportType");
+        // Generate a random token
+        String token = UUID.randomUUID().toString();
+        // Associate the token with the reportId temporarily
+        tokenStore.put(token, new UserInfo(userId, reportId, reportType));
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return response;
+    }
+
+    @RequestMapping(value = "/retrieve-link-report", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<Map<String, String>> retrieveReportId(
+        @RequestParam(value = "token", required = false) String token,
+        @RequestBody(required = false) Map<String, String> requestBody) {
+        if (requestBody != null && requestBody.containsKey("token")) {
+            token = requestBody.get("token");
+            System.out.println("token = " + token);
+        }
+        if (token != null && tokenStore.containsKey(token)) {
+            System.out.println("Decoding token");
+            UserInfo userInfo = tokenStore.remove(token); // Ensure one-time use by removing the token
+            Map<String, String> response = new HashMap<>();
+            response.put("userId", userInfo.getUserId());
+            response.put("reportId", userInfo.getReportId());
+            response.put("reportType", userInfo.getReportType());
+            System.out.println("response = " + response);
+            return ResponseEntity.ok(response);
+        } else {
+            // Default response for invalid or missing token
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid or missing token");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    
 
 }
 

@@ -3,6 +3,11 @@ import axios from 'axios';
 const accountPath = '/account';
 
 // 데이터셋
+export const getDs = () => {
+  const res = axios.get('/dataset/ds');
+  return res;
+};
+
 export const getDsView = () => {
   const res = axios.get('/dataset/ds-dsview');
   return res;
