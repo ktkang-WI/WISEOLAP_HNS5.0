@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   ${snbOnlyIcon? css`
     display: flex;
     justify-content: center;
-    height: calc(100% - ${theme.size.headerHeight});
+    height: calc(100% - ${theme.size.headerheight});
     flex-direction: column;
   `: useSNBDrawer? css`
     padding-top: 10px;
@@ -30,12 +30,12 @@ const ItemWrapper = styled.div`
 const getSNBItem = (item) => {
   if (snbOnlyIcon || useSNBDrawer) {
     return (
-      <ItemWrapper key={item.id} height={theme.size.snbWidth}>
+      <ItemWrapper key={item.id} height={theme.size.snbwidth}>
         <AnimatedButton
           label={item.label}
           imgSrc={item.imgSrc}
           title={item.label}
-          height={theme.size.snbWidth}
+          height={theme.size.snbwidth}
           direction={'row'}
           hoveredImgSrc={item.hoveredImgSrc}
           onClick={item.onClick}
@@ -51,7 +51,7 @@ const getSNBItem = (item) => {
           imgSrc={item.imgSrc}
           title={item.label}
           height={item.height}
-          width={theme.size.snbWidth}
+          width={theme.size.snbwidth}
           hoveredImgSrc={item.hoveredImgSrc}
           onClick={item.onClick}
           path={item.path}
@@ -71,8 +71,8 @@ const itemIterator = (snbDefaultItems, items) => {
 };
 
 const StyledSNB = styled.div`
-  width: ${theme.size.snbWidth};
-  height: calc(100vh - ${theme.size.headerHeight});
+  width: ${theme.size.snbwidth};
+  height: calc(100vh - ${theme.size.headerheight});
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;

@@ -14,7 +14,7 @@ const ListStyled = {
   width: '100%',
   height: '250px',
   border: '1px dashed darkgray',
-  borderRadius: '8px',
+  borderradius: '8px',
   padding: '10px'
 };
 

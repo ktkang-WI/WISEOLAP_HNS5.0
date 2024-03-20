@@ -6,11 +6,11 @@ const theme = getTheme();
 const AnimatedButtonLabel = styled.div`
   height: 15px;
   width: 100%;
-  text-align: ${(props) => props.textAlign || 'center'};
+  text-align: ${(props) => props.textalign || 'center'};
   font: ${theme.font.snb};
   letter-spacing: -1px;
   position: relative;
-  ${(props) => props.textAlign == 'left' && css`
+  ${(props) => props.textalign == 'left' && css`
     padding: 5px;
   `}
 `;

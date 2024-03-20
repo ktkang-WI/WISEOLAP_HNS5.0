@@ -93,7 +93,7 @@ const FormInputs = ({contents, onSubmit}) => {
             className='form-textBtn'
             font={theme.font.bigButton}
             key={index}
-            borderRadius='8px'
+            borderradius='8px'
             height='48px'
             onClick={onSubmit}
           >
