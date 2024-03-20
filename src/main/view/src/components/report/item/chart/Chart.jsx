@@ -289,8 +289,8 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
           label={{
             visible: meta.yAxis.useAxis, // y축 표시
-            customizeText: (e) => { // y축 custom Suffix
-              return valueAxisCustomLabel(e, meta.yAxis);
+            customizeText: ({value}) => { // y축 custom Suffix
+              return valueAxisCustomLabel(value, meta.yAxis);
             }
           }}
           inverted={reverseView}>
@@ -305,8 +305,8 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
             showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
             label={{
               visible: meta.extraAxis.useAxis, // y축 표시
-              customizeText: (e) => { // y축 custom Suffix
-                return valueAxisCustomLabel(e, meta.extraAxis);
+              customizeText: ({value}) => { // y축 custom Suffix
+                return valueAxisCustomLabel(value, meta.extraAxis);
               }
             }}
             inverted={reverseView}>

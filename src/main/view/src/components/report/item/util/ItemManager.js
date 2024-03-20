@@ -39,7 +39,7 @@ const generateParameter = (item, param) => {
 
 const generateDataFieldOption = (item) => {
   const dataFieldOptions = {};
-  const dataFieldOptionChild =utility[item.type].getDataFieldOptionChild();
+  const dataFieldOptionChild = utility[item.type].getDataFieldOptionChild();
 
   const makeDataFieldOptionChild = (type) =>
     ({[type]: dataFieldOptionChild[type]});
