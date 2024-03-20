@@ -56,7 +56,7 @@ const CustomChartDefaulElement = () => {
         imgSrc: liquidFillGaugeImg,
         label: '액체게이지',
         onClick: () => {
-          insertFlexLayout(reportId, 'liquidGauge');
+          insertFlexLayout(reportId, 'liquidFillGauge');
         }
       },
       {

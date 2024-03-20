@@ -5,6 +5,6 @@ export default {
   PIE_CHART: 'pie',
   CHOROPLETH: 'choropleth',
   TREEMAP: 'treeMap',
-  LIQUID_GAUGE: 'liquidGauge',
+  LIQUID_FILL_GAUGE: 'liquidFillGauge',
   CARD: 'card'
 };

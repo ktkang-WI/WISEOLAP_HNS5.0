@@ -24,13 +24,14 @@ import PivotGrid from 'components/report/item/pivot/PivotGrid';
 import Card from 'components/report/item/card/Card';
 import DataGrid from 'components/report/item/grid/DataGrid';
 import TreeMap from 'components/report/item/treeMap/TreeMap';
-import LiquidGauge from 'components/report/item/liquidGauge/LiquidGauge';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import LiquidFillGauge
+  from 'components/report/item/liquidFillGauge/LiquidFillGauge';
 
 
 const theme = getTheme();
@@ -98,7 +99,7 @@ const ItemBoard = () => {
     pie: Pie,
     choropleth: Choropleth,
     treeMap: TreeMap,
-    liquidGauge: LiquidGauge,
+    liquidFillGauge: LiquidFillGauge,
     card: Card
   };
 
@@ -166,7 +167,8 @@ const ItemBoard = () => {
           setItemExports={setItemExports}
           item={item}
           adHocOption={adHocOption}
-          id={item.id}/>
+          id={item.id}
+          node={node}/>
       </Item>
     );
   }

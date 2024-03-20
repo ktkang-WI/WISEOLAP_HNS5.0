@@ -38,7 +38,7 @@ const DataFieldTypeOfItemType = {
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION
   ],
-  [ItemType.LIQUID_GAUGE]: [
+  [ItemType.LIQUID_FILL_GAUGE]: [
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION
   ],

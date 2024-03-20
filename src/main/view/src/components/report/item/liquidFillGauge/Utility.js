@@ -1,14 +1,22 @@
-import {defaultDimension, defaultMeasure}
+import {defaultDimension, singleMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
+import {setMeta} from '../util/metaUtilityFactory';
 
-
+const liquidFillGaugeOption = {
+  notationFormat: 'value_argument_percent',
+  contentArray: {
+    autoNumberSet: true,
+    columnNumber: 5
+  }
+};
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  setMeta(item, 'liquidFillGaugeOption', liquidFillGaugeOption);
 };
 
 /**
@@ -31,7 +39,7 @@ const generateItem = (item, rootItem) => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
-    ...defaultMeasure,
+    ...singleMeasure,
     useButton: true,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
     buttonIcon: chartSeriesButtonIcon,
@@ -72,10 +80,10 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'Rotate',
-    'XAxisSetting',
-    'YAxisSetting',
-    'ExtraAxisSetting'
+    'Palette',
+    'NotationFormat',
+    'ContentArray',
+    'InputTxt'
   ];
 };
 
@@ -86,8 +94,7 @@ const getRibbonItems = () => {
 const getAttributeItems = () => {
   return [
     'InteractionNoDrillDown',
-    'InteractionConfiguration',
-    'TargetDimension'
+    'InteractionConfiguration'
   ];
 };
 

@@ -28,7 +28,7 @@ export const defaultMeasure = {
   type: 'MEA'
 };
 
-export const treeMapMeasure = {
+export const singleMeasure = {
   label: localizedString.treeMapMeasure,
   icon: measureIcon,
   placeholder: localizedString.measurePlaceholder,

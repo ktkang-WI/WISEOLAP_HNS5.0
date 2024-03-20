@@ -6,7 +6,6 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DefaultDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
-import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
@@ -23,9 +22,6 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.PIE_CHART) {
             result = new PieChartDataMaker();
-        }
-        if (itemType == ItemType.TREEMAP) {
-            result = new TreeMapDataMaker();
         }
 
         // Default Chart Maker 

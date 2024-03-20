@@ -21,7 +21,7 @@ const makeItem = (orgItem, countMap) => {
     pivot: '피벗',
     grid: '그리드',
     choropleth: '코로프레스',
-    liquidGauge: '액체게이지',
+    liquidFillGauge: '액체게이지',
     treeMap: '트리맵',
     card: '카드'
   };

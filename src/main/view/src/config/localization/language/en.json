@@ -219,7 +219,7 @@
   "compareToPositiveNegative": "Compare to Positive/Negative",
   "boxPlot": "BoxPlot",
   "neuralNetworkBar": "Neural Network Bar",
-  "liquidGauge": "Liquid Gauge",
+  "liquidFillGauge": "Liquid Gauge",
   "heatmap": "Heatmap",
   "sunburst": "Sunburst",
   "neuralNetworkTree": "Neural Network Tree",

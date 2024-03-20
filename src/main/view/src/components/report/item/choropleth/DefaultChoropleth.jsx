@@ -46,9 +46,8 @@ const DefaultChoropleth = ({
   handleCustomize,
   ref
 }) => {
-  if (!dataSource) throw Error('dataSource can not be value of null');
+  if (!dataSource) throw Error('dataSource is null');
 
-  // Edit option
   const
     {
       wheelEnabled,
@@ -56,7 +55,6 @@ const DefaultChoropleth = ({
       zoomingEnabled
     } = editOption(editable);
 
-  // Zoom option
   const
     {
       maxZoomFactor,
@@ -65,7 +63,7 @@ const DefaultChoropleth = ({
 
   return (
     <VectorMap
-      center={[127.59, 36.04]} // korea latitude and longitude
+      center={[127.59, 36.04]}
       maxZoomFactor={maxZoomFactor}
       zoomFactor={zoomFactor}
       wheelEnabled={wheelEnabled}

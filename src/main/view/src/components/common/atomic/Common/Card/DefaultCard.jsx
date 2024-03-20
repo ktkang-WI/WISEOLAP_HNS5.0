@@ -11,7 +11,7 @@ const CardContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
 `;
 
 const CardRow = styled.div`
@@ -54,13 +54,13 @@ const Content = styled.div`
   flex: 0 0 calc(90%);
 `;
 
-const generateForCard = (dataSource, column) => {
+const generateForCard = (dataSource, columnNumber) => {
   const length = dataSource.length;
   const result = [];
   let temp = [];
 
   for (let index = 1; index <= length; index++) {
-    const isThisLastColumn = (index % column) == 0;
+    const isThisLastColumn = (index % columnNumber) == 0;
 
     temp.push(dataSource[index - 1]);
 
@@ -72,8 +72,23 @@ const generateForCard = (dataSource, column) => {
   return result;
 };
 
-const DefaultCard = ({dataSource, argumentField, valueFiled, column}) => {
-  const data = generateForCard(dataSource, column);
+const autoCoulumnNumber = (autoCoulmn, width, columnNumber) => {
+  if (!autoCoulmn) return columnNumber;
+  const defaultColumnSize = [1, 2, 3, 4, 5];
+  const returnColumnNumber = defaultColumnSize[Math.floor(width / 350)];
+  return returnColumnNumber ? returnColumnNumber : 5;
+};
+
+const DefaultCard = ({
+  dataSource,
+  argumentField,
+  valueFiled,
+  width,
+  columnNumber = 2,
+  autoCoulmn = true
+}) => {
+  columnNumber = autoCoulumnNumber(autoCoulmn, width, columnNumber);
+  const data = generateForCard(dataSource, columnNumber);
 
   return (
     <CardContainer>

@@ -1,14 +1,18 @@
-import {defaultDimension, defaultMeasure}
+import {defaultDimension, singleMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
+import {setMeta} from '../util/metaUtilityFactory';
 
-
+const choroplethOption = {
+  legend: true
+};
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  setMeta(item, 'choroplethOption', choroplethOption);
 };
 
 /**
@@ -31,7 +35,7 @@ const generateItem = (item, rootItem) => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
-    ...defaultMeasure,
+    ...singleMeasure,
     useButton: true,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
     buttonIcon: chartSeriesButtonIcon,
@@ -72,10 +76,9 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'Rotate',
-    'XAxisSetting',
-    'YAxisSetting',
-    'ExtraAxisSetting'
+    'Palette',
+    'Legend',
+    'InputTxt'
   ];
 };
 
@@ -85,6 +88,8 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
+    'InteractionNoDrillDown',
+    'InteractionConfiguration'
   ];
 };
 

@@ -1,20 +1,22 @@
 import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
 
 
-const Card = ({setItemExports, id, item}) => {
+const Card = ({setItemExports, id, item, node}) => {
   const mart = item ? item.mart : null;
+  const meta = item ? item.meta : null;
   if (!mart.init) {
     return <></>;
   }
+  const dataSource = mart.data.data;
   const seriesNames = mart.data.info.seriesMeasureNames;
-
-  console.log(mart.data.data);
-  console.log(seriesNames);
 
   return (
     <DefaultCard
-      dataSource={mart.data.data}
+      width={node?._rect?.width}
+      dataSource={dataSource}
       argumentField='arg'
+      autoCoulmn={meta?.cardOption?.contentArray.autoNumberSet}
+      columnNumber={meta?.cardOption?.contentArray.columnNumber}
       valueFiled={seriesNames[0].summaryName}
       column={2}
     />

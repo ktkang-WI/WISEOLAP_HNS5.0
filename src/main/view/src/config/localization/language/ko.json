@@ -90,6 +90,9 @@
       }
     }
   },
+  "legned": "범례",
+  "notationFormat": "표기형식",
+  "contentArray": "콘테츠배열",
   "test": "테스트",
   "newWindow": "새 창 열기",
   "viewer": "뷰어",
@@ -331,7 +334,7 @@
   "compareToPositiveNegative": "긍정/부정 비교",
   "boxPlot": "박스플롯",
   "NeuralNetworkBar": "신경망 바",
-  "liquidGauge": "액체 게이지",
+  "liquidFillGauge": "액체 게이지",
   "heatmap": "히트맵",
   "sunburst": "선버스트",
   "neuralNetworkTree": "신경망 트리",
