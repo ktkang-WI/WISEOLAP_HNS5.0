@@ -217,6 +217,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         allowSortingBySummary={true}
         onContextMenuPreparing={(e) => {
           const contextMenu = [];
+          if (!e.cell || e.cell.columnType === undefined ||
+              e.cell.rowType === undefined) {
+            return;
+          }
           const isGrandTotal =
             (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
             e.cell.type == 'GT';
