@@ -1,6 +1,8 @@
 import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import {DataFieldType} from '../util/dataFieldType';
+import localizedString from 'config/localization';
+import {setMeta} from '../util/metaUtilityFactory';
 
 
 /**
@@ -8,6 +10,29 @@ import {DataFieldType} from '../util/dataFieldType';
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  const defaultAxis = {
+    formatType: 'Number',
+    unit: 'Ones',
+    axisStartToZero: true,
+    useAxis: true,
+    customText: false,
+    suffixEnabled: false,
+    suffix: {
+      O: '',
+      K: '천',
+      M: '백만',
+      B: '십억'
+    },
+    suffixO: '',
+    suffixK: localizedString.k,
+    suffixM: localizedString.m,
+    suffixB: localizedString.b,
+    precision: 0,
+    precisionType: 'round',
+    useDigitSeparator: true
+  };
+
+  setMeta(item, 'yAxis', defaultAxis);
 };
 
 /**
@@ -59,6 +84,9 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
+    'YAxisSetting',
+    'Palette',
+    'ColorEdit',
     'InputTxt'
   ];
 };

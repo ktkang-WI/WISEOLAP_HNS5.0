@@ -303,6 +303,33 @@ const rgbToFilterString = (rgb) => {
   return result.filter;
 }
 
+function darkenColor(color) {
+  let r, g, b;
+
+  // HEX 코드를 RGB로 변환
+  if (color.startsWith('#')) {
+    r = parseInt(color.substring(1, 3), 16);
+    g = parseInt(color.substring(3, 5), 16);
+    b = parseInt(color.substring(5, 7), 16);
+  } else {
+    let temp = color.substr(color.indexOf('(') + 1);
+    temp = temp.substr(0, temp.length - 1);
+    temp = temp.split(',');
+    r = parseInt(temp[0]);
+    g = parseInt(temp[1]);
+    b = parseInt(temp[2]);
+  }
+
+
+  r = Math.floor(r * 0.7);
+  g = Math.floor(g * 0.7);
+  b = Math.floor(b * 0.7);
+
+  let darkerHex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  
+  return darkerHex;
+}
+
 export {
-  hexToRgb, rgbToFilterString
+  hexToRgb, rgbToFilterString, darkenColor
 }

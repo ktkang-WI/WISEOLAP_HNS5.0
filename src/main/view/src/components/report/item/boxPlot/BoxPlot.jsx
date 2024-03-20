@@ -1,123 +1,136 @@
-import {ResponsiveBoxPlot} from '@nivo/boxplot';
-import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import * as d3 from 'd3';
+import {useRef, useEffect, useState, useCallback} from 'react';
+import D3BoxPlot from './component/D3BoxPlot';
+import useQueryExecute from 'hooks/useQueryExecute';
+
 
 const BoxPlot = ({item}) => {
   const mart = item ? item.mart : null;
-  // const meta = item ? item.meta : null;
+  const meta = item ? item.meta : null;
 
   if (!mart.init) {
     return <></>;
   }
 
-  window.d3 = d3;
+  const getDataField = useCallback(() => {
+    return meta.dataField;
+  }, [mart.data]);
+
+  const interactiveOption = meta.interactiveOption;
+  // TODO: 추후 팔레트 적용
+
+  let palette;
+
+  if (meta.paletteType === 'colorEdit') {
+    palette = meta.colorEdit;
+  } else {
+    palette = meta.palette.colors;
+  }
+
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [selectedItem, setSelectedItem] = useState([]);
+  const {filterItems, clearAllFilter} = useQueryExecute();
+
+  // svg 크기 조절 useEffect
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new ResizeObserver(() => {
+      setHeight(ref.current.offsetHeight);
+      setWidth(ref.current.offsetWidth);
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // 마스터 필터 관련 useEffect
+  useEffect(() => {
+    setSelectedItem([]);
+  }, [interactiveOption]);
+
+  useEffect(() => {
+    setSelectedItem([]);
+    filterItems(item, {});
+  }, [
+    interactiveOption.targetDimension,
+    interactiveOption.mode,
+    interactiveOption.enabled]);
+
+  useEffect(() => {
+    clearAllFilter(item);
+  }, [interactiveOption.crossDataSource]);
+
+  const ref = useRef();
+
+  const getFilter = (selectedItem) => {
+    const dataField = getDataField();
+    const dim = dataField.dimension;
+
+    // 선택된 데이터 '차원명': Set 형태로 가공
+    const filters = selectedItem.reduce((acc, filter) => {
+      filter.split(' - ').forEach((v, i) => {
+        if (dim.length <= i) return;
+        const name = dim[i].uniqueName;
+        if (v == '\u2800') {
+          v = null;
+        }
+
+        if (acc[name]) {
+          acc[name].add(v);
+        } else {
+          acc[name] = new Set([v]);
+        }
+      });
+      return acc;
+    }, {});
+
+    // Set Array로 변환
+    for (const filter in filters) {
+      if (filters[filter]) {
+        filters[filter] = [...filters[filter]];
+      }
+    }
+
+    return filters;
+  };
+
+  const selectItem = (key) => {
+    if (!interactiveOption.enabled) return;
+
+    let newSelectedItem = [];
+    // 이미 선택되어 있는 아이템 클릭시 해제
+    if (selectedItem.includes(key)) {
+      newSelectedItem = selectedItem.filter((name) => key != name);
+    } else {
+      if (interactiveOption.mode == 'single') {
+        newSelectedItem = [key];
+      } else {
+        newSelectedItem = [...selectedItem, key];
+      }
+    }
+
+    setSelectedItem(newSelectedItem);
+    filterItems(item, getFilter(newSelectedItem));
+  };
 
   return (
-    <Wrapper id={item.id}>
-      <ResponsiveBoxPlot
-        id={item.id}
-        data={mart.data.data}
-        onClick={(datum, e) => {
-          console.log(datum);
-          console.log(e.target);
-        }}
-        margin={{top: 60, right: 140, bottom: 60, left: 60}}
-        subGroupBy="subGroup"
-        padding={0.12}
-        enableGridX={true}
-        axisTop={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: '',
-          legendOffset: 36,
-          truncateTickAt: 0
-        }}
-        axisRight={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: '',
-          legendOffset: 0,
-          truncateTickAt: 0
-        }}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: 'group',
-          legendPosition: 'middle',
-          legendOffset: 32,
-          truncateTickAt: 0
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: 'value',
-          legendPosition: 'middle',
-          legendOffset: -40,
-          truncateTickAt: 0
-        }}
-        colors={{scheme: 'nivo'}}
-        borderRadius={2}
-        borderWidth={2}
-        borderColor={{
-          from: 'color',
-          modifiers: [
-            [
-              'darker',
-              0.3
-            ]
-          ]
-        }}
-        medianWidth={2}
-        medianColor={{
-          from: 'color',
-          modifiers: [
-            [
-              'darker',
-              0.3
-            ]
-          ]
-        }}
-        whiskerEndSize={0.6}
-        whiskerColor={{
-          from: 'color',
-          modifiers: [
-            [
-              'darker',
-              0.3
-            ]
-          ]
-        }}
-        motionConfig="stiff"
-        legends={[
-          {
-            anchor: 'right',
-            direction: 'column',
-            justify: false,
-            translateX: 100,
-            translateY: 0,
-            itemWidth: 60,
-            itemHeight: 20,
-            itemsSpacing: 3,
-            itemTextColor: '#999',
-            itemDirection: 'left-to-right',
-            symbolSize: 20,
-            symbolShape: 'square',
-            effects: [
-              {
-                on: 'hover',
-                style: {
-                  itemTextColor: '#000'
-                }
-              }
-            ]
-          }
-        ]}
-      />
-    </Wrapper>
+    <D3BoxPlot
+      width={width}
+      height={height}
+      d3Ref={ref}
+      data={mart.data}
+      id={item.id}
+      palette={palette}
+      selectedItem={selectedItem}
+      onClick={selectItem}
+      yAxis={meta.yAxis}
+      measures={getDataField().measure}
+    />
   );
 };
 

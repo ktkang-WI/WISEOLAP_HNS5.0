@@ -7,7 +7,7 @@ import {DesignerMode} from 'components/config/configType';
 
 const item = makeItem({
   id: 'item1',
-  type: 'boxPlot'
+  type: 'chart'
 });
 
 const adHocChartItem = makeAdHocItem({
