@@ -26,7 +26,7 @@ const dashboardInitialState = {
                 id: 'item1',
                 type: 'tab',
                 name: 'Chart 1',
-                component: 'boxPlot'
+                component: 'chart'
               }
             ]
           }
