@@ -36,7 +36,7 @@ import CalendarChart
   from 'components/report/item/calendar/Calendar';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
-
+import TextBox from 'components/report/item/textBox/TextBox';
 
 const theme = getTheme();
 
@@ -108,7 +108,8 @@ const ItemBoard = () => {
     liquidFillGauge: LiquidFillGauge,
     card: Card,
     calendar: CalendarChart,
-    boxPlot: BoxPlot
+    boxPlot: BoxPlot,
+    textBox: TextBox
   };
 
   const itemExportsPicker = (id) => {

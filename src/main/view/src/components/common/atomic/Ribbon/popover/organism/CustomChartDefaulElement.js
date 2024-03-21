@@ -5,6 +5,8 @@ import choroplethImg
   from '../../../../../../assets/image/icon/item/choropleth.png';
 import cardImg
   from '../../../../../../assets/image/icon/item/card.png';
+import textBoxImg
+  from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import liquidFillGaugeImg
   from '../../../../../../assets/image/icon/item/liquidFillGauge.png';
 import squariFied
@@ -92,8 +94,11 @@ const CustomChartDefaulElement = () => {
     ],
     restItem: [
       {
-        imgSrc: '',
-        label: 'ddd'
+        imgSrc: textBoxImg,
+        label: localizedString.textBox,
+        onClick: () => {
+          insertFlexLayout(reportId, 'textBox');
+        }
       },
       {
         imgSrc: cardImg,

@@ -28,7 +28,8 @@ const makeItem = (orgItem, countMap) => {
     liquidFillGauge: '액체게이지',
     calendar: '달력',
     treeMap: '트리맵',
-    card: '카드'
+    card: '카드',
+    textBox: '텍스트상자'
   };
 
   let initNum = 1;
