@@ -2,7 +2,7 @@ import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -62,4 +62,15 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   );
 };
 
-export default TreeMapChart;
+const propsComparator = (prev, next) => {
+  let result = true;
+  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+};
+
+export default React.memo(TreeMapChart, propsComparator);

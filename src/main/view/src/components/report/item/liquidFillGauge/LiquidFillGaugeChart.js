@@ -50,6 +50,7 @@ const getWidth = (dataSourceLengh, width, height, columnNumber) => {
 const LiquidFillGaugeChart = ({
   dataSource,
   valueField,
+  id,
   argumentField,
   columnNumber = 5, // 최대 10
   autoCoulmn = true,
@@ -93,7 +94,7 @@ const LiquidFillGaugeChart = ({
                     >
                       <D3LiquidFillGauge
                         width={allocatedWidth}
-                        elementId={childrenKey}
+                        elementId={id+'-'+parentKey+'-'+childrenKey}
                         dimension={dimension}
                         measure={measure}
                         value={percentage}

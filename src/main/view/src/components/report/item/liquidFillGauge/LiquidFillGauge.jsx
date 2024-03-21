@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {getOptionValue}
   from '../util/modal/organism/notationFormat/NotationFormatModal';
 import LiquidFillGaugeChart from './LiquidFillGaugeChart';
@@ -31,6 +31,7 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
   return (
     <LiquidFillGaugeChart
       ref={dxRef}
+      id={id}
       width={node?._rect?.width}
       height={node?._rect?.height}
       dataSource={dataSource}
@@ -45,5 +46,18 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
     />
   );
 };
+const propsComparator = (prev, next) => {
+  let result = true;
+  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.node?._rect?.width, next?.node?._rect?.width)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+};
 
-export default LiquidFillGauge;
+export default React.memo(LiquidFillGauge, propsComparator);

@@ -10,7 +10,7 @@ import {
   Source,
   Tooltip
 } from 'devextreme-react/vector-map';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 const generateColorGroups = (colorGroupIndex) => {
   return [...Array(7)].map((_, i) => i * colorGroupIndex);
@@ -96,7 +96,7 @@ const Choropleth = ({
       <Layer
         name='vector-map'
         dataSource={options.geoJson[0]}
-        palette={meta?.palette?.name ? meta?.palette?.name : 'Violet'}
+        palette={meta?.palette?.colors ? meta?.palette?.colors : 'Material'}
         colorGroupingField="measure"
         colorGroups={colorGroups}
         customize={handleCustomize}
@@ -108,4 +108,15 @@ const Choropleth = ({
   );
 };
 
-export default Choropleth;
+const propsComparator = (prev, next) => {
+  let result = true;
+  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+};
+
+export default React.memo(Choropleth, propsComparator);

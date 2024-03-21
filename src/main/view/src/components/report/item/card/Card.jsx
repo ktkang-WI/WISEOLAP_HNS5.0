@@ -1,7 +1,7 @@
 import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 
 const Card = ({setItemExports, id, item, node}) => {
@@ -41,5 +41,18 @@ const Card = ({setItemExports, id, item, node}) => {
     />
   );
 };
+const propsComparator = (prev, next) => {
+  let result = true;
+  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.node?._rect?.width, next?.node?._rect?.width)) {
+    result = false;
+  }
+  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+};
 
-export default Card;
+export default React.memo(Card, propsComparator);
