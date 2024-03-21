@@ -42,6 +42,16 @@ const ColorEditModal = ({popupName, ...props}) => {
     const isThisInitValue = colorEditLen <= index;
     object.caption = item.caption;
     object.fieldId = item.fieldId;
+
+    if (item.type === 'pie') {
+      object.type = 'pie';
+      item.value ?
+        object.value = item.value : object.value = getRandomHexColor();
+
+      state.push(useState(object));
+      return;
+    }
+
     if (isThisInitValue) {
       object.value = getRandomHexColor();
     } else {

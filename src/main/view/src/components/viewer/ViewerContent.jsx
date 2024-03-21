@@ -71,7 +71,7 @@ const ViewerContent = ({children}) => {
         width: '100%'
       }}
       marginHeight={'10px'}
-      headerHeight={theme.size.headerHeight}
+      headerheight={theme.size.headerheight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <FilterBar useSearchButton={true} buttons={buttons}/>

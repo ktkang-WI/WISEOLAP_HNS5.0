@@ -12,7 +12,7 @@ const AddRibbonBtn = ({item}) => {
         imgSrc={item.imgSrc}
         title={item.label}
         width={item.width}
-        height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
+        height={'calc(' + theme.size.ribbonheight + ' - 10px)'}
         useArrowButton={item.useArrowButton}
         onClick={item.onClick}
       />

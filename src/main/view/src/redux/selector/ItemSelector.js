@@ -38,6 +38,15 @@ export const selectCurrentDataField = createSelector(
     }
 );
 
+export const selectCurrentItemType = createSelector(
+    selectCurrentItem,
+    selectCurrentReportId,
+    (state) => state.meta.item,
+    (selectedItem) => {
+      return selectedItem.type;
+    }
+);
+
 export const selectCurrentDataMeasure = createSelector(
     selectCurrentItem,
     (selectedItem) => selectedItem.meta.dataField.measure

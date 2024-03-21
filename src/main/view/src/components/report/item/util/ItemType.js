@@ -6,5 +6,6 @@ export default {
   CHOROPLETH: 'choropleth',
   TREEMAP: 'treeMap',
   LIQUID_FILL_GAUGE: 'liquidFillGauge',
-  CARD: 'card'
+  CARD: 'card',
+  BOX_PLOT: 'boxPlot'
 };

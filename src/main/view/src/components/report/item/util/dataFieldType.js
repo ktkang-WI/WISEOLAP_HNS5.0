@@ -45,6 +45,10 @@ const DataFieldTypeOfItemType = {
   [ItemType.CARD]: [
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION
+  ],
+  [ItemType.BOX_PLOT]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
   ]
 };
 

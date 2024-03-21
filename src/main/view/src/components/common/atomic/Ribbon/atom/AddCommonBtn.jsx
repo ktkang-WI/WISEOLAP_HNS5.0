@@ -15,7 +15,7 @@ const AddCommonBtn = ({item}) => {
         height={item.height}
         font={theme.font.ribbonButton}
         onClick={item.onClick}
-        borderRadius='4px'
+        borderradius='4px'
       >
         {item.icon && <img src={item.icon}/>}
         {item.label}

@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   border-radius: 10px;
   border: solid 1px ${theme.color.breakLine};
   text-align: left;
-  ${(props) => props.designerMode == DesignerMode.EXCEL ?
+  ${(props) => props.designermode == DesignerMode.EXCEL ?
     'border-radius: 10px;' :
     `border-radius: 10px 0px 0px 10px;
     border-right: none;
@@ -74,7 +74,7 @@ const DataSourceTab = () => {
   }, [selectedDataset]);
 
   return (
-    <Wrapper designerMode={designerMode}>
+    <Wrapper designermode={designerMode}>
       <PanelTitle
         panelTitle={localizedString.dataSource}
         buttons={['CustomField', 'DataSourceModify', 'DataSourceRemove']}

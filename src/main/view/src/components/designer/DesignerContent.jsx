@@ -19,9 +19,9 @@ const DesignerContent = () => {
   const {onDragEnd, onDragStart} = useDrag();
   return (
     <Content
-      snbWidth={theme.size.snbWidth}
-      headerHeight={theme.size.headerHeight}
-      ribbonHeight={theme.size.ribbonHeight}
+      snbwidth={theme.size.snbwidth}
+      headerheight={theme.size.headerheight}
+      ribbonheight={theme.size.ribbonheight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>

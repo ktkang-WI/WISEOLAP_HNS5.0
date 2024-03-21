@@ -14,7 +14,8 @@ public enum ItemType {
     TREEMAP("treeMap"),
     CARD("card"),
     CHOROPLETH("choropleth"),
-    LIQUID_FILL_GAUGE("liquidFillGauge")
+    LIQUID_FILL_GAUGE("liquidFillGauge"),
+    BOX_PLOT("boxPlot")
     ;
 
     private final String symbol;

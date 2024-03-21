@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.factory;
 
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DefaultDataMaker;
@@ -22,6 +23,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.PIE_CHART) {
             result = new PieChartDataMaker();
+        }
+        if (itemType == ItemType.BOX_PLOT) {
+            return new BoxPlotDataMaker();
         }
 
         // Default Chart Maker 

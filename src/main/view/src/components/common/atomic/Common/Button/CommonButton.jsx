@@ -13,21 +13,21 @@ const Button = styled.div`
   border: ${(props) => props.border};
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  min-width: ${(props) => props.minWidth};
-  max-width: ${(props) => props.maxWidth};
+  min-width: ${(props) => props.minwidth};
+  max-width: ${(props) => props.maxwidth};
   margin: ${(props) => props.margin};
   font: ${(props) => props.font};
   box-sizing: border-box;
   padding: ${(props) => props.padding};
   
-  border-radius:${(props) => props.borderRadius || '0px'};
+  border-radius:${(props) => props.borderradius || '0px'};
 
   &:hover {
-    background: ${(props) => props.hoverBackground};
+    background: ${(props) => props.hoverbackground};
   }
 
   &:active {
-    background: ${(props) => props.activeBackground};
+    background: ${(props) => props.activebackground};
   }
 
   & + & {
@@ -47,8 +47,8 @@ const CommonButton = ({
   children,
   width='100%',
   height='40px',
-  minWidth='50px',
-  maxWidth='100%',
+  minwidth='50px',
+  maxwidth='100%',
   margin='0px',
   padding='0px 1px',
   ...props
@@ -56,32 +56,32 @@ const CommonButton = ({
   const themeType = {
     'primary': {
       background: theme.color.primary,
-      hoverBackground: theme.color.primaryHover,
-      activeBackground: theme.color.primaryActive,
+      hoverbackground: theme.color.primaryHover,
+      activebackground: theme.color.primaryActive,
       color: theme.color.white,
       border: 'none',
       font: theme.font.button,
-      minWidth: '60px',
-      borderRadius: '8px'
+      minwidth: '60px',
+      borderradius: '8px'
     },
     'secondary': {
       background: theme.color.secondary,
-      hoverBackground: theme.color.secondaryHover,
-      activeBackground: theme.color.secondaryActive,
+      hoverbackground: theme.color.secondaryHover,
+      activebackground: theme.color.secondaryActive,
       color: theme.color.gray600,
       border: 'solid 1px ' + theme.color.gray300,
       font: theme.font.button,
-      minWidth: '60px',
-      borderRadius: '8px'
+      minwidth: '60px',
+      borderradius: '8px'
     },
     'whiteRound': {
       background: theme.color.white,
       border: 'solid 1px ' + theme.color.gray200,
-      hoverBackground: '#F2F2F2',
-      activeBackground: '#E6E6E6',
+      hoverbackground: '#F2F2F2',
+      activebackground: '#E6E6E6',
       color: theme.color.gray600,
       font: theme.font.smallButton,
-      borderRadius: '74px'
+      borderradius: '74px'
     }
   };
 
@@ -90,8 +90,8 @@ const CommonButton = ({
     <Button
       width={width}
       height={height}
-      minWidth={minWidth}
-      maxWidth={maxWidth}
+      minwidth={minwidth}
+      maxwidth={maxwidth}
       margin={margin}
       {...(themeType[type]? themeType[type] : themeType['primary'])}
       {...props}

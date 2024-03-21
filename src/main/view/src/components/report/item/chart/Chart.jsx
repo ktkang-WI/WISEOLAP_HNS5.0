@@ -12,7 +12,6 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import useQueryExecute from 'hooks/useQueryExecute';
-import React, {useRef, useEffect} from 'react';
 import {
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
@@ -28,8 +27,22 @@ import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
 import _ from 'lodash';
 import valueAxisCustomLabel from '../ValueAxisCustomLabel';
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  useState
+} from 'react';
+import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
+import {EditMode} from 'components/config/configType';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
+  const editMode = selectEditMode(store.getState());
   const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
   let seriesOptions = null;
   // TODO:  임시용 코드
@@ -55,7 +68,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   const {filterItems, clearAllFilter} = useQueryExecute();
 
-  const dxRef = useRef();
+  const dxRef = useRef([]);
 
   const itemExportObject =
    itemExportsObject(id, dxRef, 'CHART', mart.data.data);
@@ -73,6 +86,27 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   // local: 리렌더링할 때마다 초기화되는 변수
   let selectedData = [];
+
+  const [showPopup, setShowPopup] = useState(false);
+  const focusedItem = useSelector(selectCurrentDataField);
+
+  const handleContextMenu = useCallback((event) => {
+    if (editMode === EditMode.DESIGNER) {
+      event.preventDefault();
+      setShowPopup(true);
+    }
+  }, [editMode]);
+
+  useEffect(() => {
+    if (editMode === EditMode.DESIGNER) {
+      const chartContainer = dxRef.current.instance._renderer.root.element;
+      if (chartContainer) {
+        chartContainer.addEventListener('contextmenu', handleContextMenu);
+        return () =>
+          chartContainer.removeEventListener('contextmenu', handleContextMenu);
+      }
+    }
+  }, [handleContextMenu, editMode]);
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {
@@ -221,100 +255,109 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   };
 
   return (
-    <DevChart
-      dataSource={mart.data.data}
-      width="100%"
-      height="100%"
-      customizeLabel={(o) => customizeLabel(o, mart.formats)}
-      resolveLabelOverlapping={overlapping}
-      id={id}
-      ref={dxRef}
-      onPointClick={onPointClick}
-      pointSelectionMode={'multiple'}
-      rotated={meta.useRotate}
-      seriesSelectionMode={interactiveOption.mode}
-    >
-      <CommonSeriesSettings
-        ignoreEmptyPoints={ignoreEmptyPoints}
+    <>
+      <DevChart
+        dataSource={mart.data.data}
+        width="100%"
+        height="100%"
+        customizeLabel={(o) => customizeLabel(o, mart.formats)}
+        resolveLabelOverlapping={overlapping}
+        id={id}
+        ref={dxRef}
+        onPointClick={onPointClick}
+        pointSelectionMode={'multiple'}
+        rotated={meta.useRotate}
+        seriesSelectionMode={interactiveOption.mode}
       >
-        <Point visible={pointerMarker} />
-      </CommonSeriesSettings>
-      <ArgumentAxis
-        inverted={reverseView}
-        title={meta.xAxis.axisCutomText}
-        label={{
-          visible: meta.xAxis.xAxisMark,
-          displayMode: 'rotate',
-          rotationAngle: meta.xAxis.xAxisInclination
-        }} />
-      <ValueAxis
-        name="left"
-        position="left"
-        title={meta.yAxis.customText} // 사용자정의텍스트
-        showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
-        label={{
-          visible: meta.yAxis.useAxis, // y축 표시
-          customizeText: (e) => { // y축 custom Suffix
-            return valueAxisCustomLabel(e, meta.yAxis);
-          }
-        }}
-        inverted={reverseView}>
-        <Grid visible={true} />
-      </ValueAxis>
-      {
-        auxiliaryAxis ?
-        <ValueAxis
-          name="right"
-          position="right"
-          title={meta.extraAxis.customText} // 사용자정의텍스트
-          showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+        <CommonSeriesSettings
+          ignoreEmptyPoints={ignoreEmptyPoints}
+        >
+          <Point visible={pointerMarker} />
+        </CommonSeriesSettings>
+        <ArgumentAxis
+          inverted={reverseView}
+          title={meta.xAxis.axisCutomText}
           label={{
-            visible: meta.extraAxis.useAxis, // y축 표시
-            customizeText: (e) => { // y축 custom Suffix
-              return valueAxisCustomLabel(e, meta.extraAxis);
+            visible: meta.xAxis.xAxisMark,
+            displayMode: 'rotate',
+            rotationAngle: meta.xAxis.xAxisInclination
+          }} />
+        <ValueAxis
+          name="left"
+          position="left"
+          title={meta.yAxis.customText} // 사용자정의텍스트
+          showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
+          label={{
+            visible: meta.yAxis.useAxis, // y축 표시
+            customizeText: ({value}) => { // y축 custom Suffix
+              return valueAxisCustomLabel(value, meta.yAxis);
             }
           }}
           inverted={reverseView}>
           <Grid visible={true} />
-        </ValueAxis> : <></>
-      }
-      <Legend
-        visible={meta.legend.useLegend}
-        position={meta.legend.position}
-        horizontalAlignment={meta.legend.horizontalAlignment}
-        verticalAlignment={meta.legend.verticalAlignment}
-        itemTextPosition={meta.legend.itemTextPosition}
-      />
-      <Tooltip
-        enabled={true}
-        location='edge'
-        customizeTooltip={
-          (info) => customizeTooltip(info, false, mart.formats)
+        </ValueAxis>
+        {
+          auxiliaryAxis ?
+          <ValueAxis
+            name="right"
+            position="right"
+            title={meta.extraAxis.customText} // 사용자정의텍스트
+            showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+            label={{
+              visible: meta.extraAxis.useAxis, // y축 표시
+              customizeText: ({value}) => { // y축 custom Suffix
+                return valueAxisCustomLabel(value, meta.extraAxis);
+              }
+            }}
+            inverted={reverseView}>
+            <Grid visible={true} />
+          </ValueAxis> : <></>
         }
-      ></Tooltip>
-      {
-        seriesNames.map(
-            (valueField, i) =>
-              <Series
-                axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
-                key={valueField.summaryName+'-'+i}
-                valueField={valueField.summaryName}
-                argumentField='arg'
-                tag={{
-                  fieldId: valueField.fieldId,
-                  math: Math.floor(i / mart.seriesLength)
-                }}
-                name={valueField.caption || '\u2800'}
-                type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
-                sizeField={
-                  getSeriesOptionType(valueField.fieldId, seriesOptions) ===
-                  'bubble' ? valueField.summaryName: null
-                }
-              >
-              </Series>
-        )
-      }
-    </DevChart>
+        <Legend
+          visible={meta.legend.useLegend}
+          position={meta.legend.position}
+          horizontalAlignment={meta.legend.horizontalAlignment}
+          verticalAlignment={meta.legend.verticalAlignment}
+          itemTextPosition={meta.legend.itemTextPosition}
+        />
+        <Tooltip
+          enabled={true}
+          location='edge'
+          customizeTooltip={
+            (info) => customizeTooltip(info, false, mart.formats)
+          }
+        ></Tooltip>
+        {
+          seriesNames.map(
+              (valueField, i) =>
+                <Series
+                  axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
+                  key={valueField.summaryName+'-'+i}
+                  valueField={valueField.summaryName}
+                  argumentField='arg'
+                  tag={{
+                    fieldId: valueField.fieldId,
+                    math: Math.floor(i / mart.seriesLength)
+                  }}
+                  name={valueField.caption || '\u2800'}
+                  type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
+                  sizeField={
+                    getSeriesOptionType(valueField.fieldId, seriesOptions) ===
+                    'bubble' ? valueField.summaryName: null
+                  }
+                >
+                </Series>
+          )
+        }
+      </DevChart>
+      {showPopup && (
+        <SubLinkReportPopup
+          showButton={showPopup}
+          setShowButton={setShowPopup}
+          focusedItem={focusedItem}
+        />
+      )}
+    </>
   );
 };
 

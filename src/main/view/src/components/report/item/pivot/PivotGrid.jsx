@@ -2,7 +2,12 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import React, {useEffect, useRef, useMemo} from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useMemo,
+  useState
+} from 'react';
 import {isDataCell, getCssStyle} from './DataHighlightUtility';
 import useModal from 'hooks/useModal';
 import ShowDataModal
@@ -17,10 +22,22 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {SubLinkReportPopup}
+  from 'components/report/util/ReportUtility';
+import styled from 'styled-components';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {generateLabelSuffix, formatNumber} from
   'components/utils/NumberFormatUtility';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
+
+const Container = styled.div`
+  position: relative;
+`;
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -146,117 +163,158 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
-  return (
-    <DevPivotGrid
-      ref={ref}
-      id={id}
-      width={'100%'}
-      height={'100%'}
-      showBorders={true}
-      dataSource={mart.dataSourceConfig}
-      showColumnTotals={meta.positionOption.column.totalVisible}
-      showRowTotals={meta.positionOption.row.totalVisible}
-      showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
-      showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
-      rowHeaderLayout={meta.layout}
-      dataFieldArea={meta.positionOption.dataPosition}
-      allowFiltering={meta.showFilter}
-      fieldPanel={fieldPanel}
-      showTotalsPrior={showTotalsPrior}
-      wordWrapEnabled={false}
-      onCellPrepared={onCellPrepared}
-      allowSorting={true}
-      allowSortingBySummary={true}
-      onContextMenuPreparing={(e) => {
-        const contextMenu = [];
+  const [showPopup, setShowPopup] = useState(false);
+  const focusedItem = useSelector(selectCurrentDataField);
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      if (editMode === EditMode.DESIGNER) {
+        event.preventDefault();
+        setShowPopup(true);
+      }
+    };
 
-        const isGrandTotal =
-          (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
-          e.cell.type == 'GT';
-
-        // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
-        // 상세데이터 contextMenu 시작
-        // row와 column 모두 총계인 셀은 선택 불가
-        if (detailedData && !isGrandTotal) {
-          // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
-          const regex = /\[([^\[\]]+)\]/;
-          const rowColFilters = [];
-          const detailedDataMenu = {
-            'text': localizedString.detailedData
-          };
-
-          const dims = meta.dataField.column.concat(meta.dataField.row);
-
-          // 클릭 이벤트 생성
-          detailedDataMenu.items = detailedData.filter((data) => {
-            return meta.dataField.measure.find((mea) => {
-              return data.targetTable == mea.uniqueName.match(regex)[0];
-            });
-          }).map((act) => ({
-            'text': act.actNm,
-            'onItemClick': async () => {
-              // 현재 선택된 row와 col 필터 generate
-              for (let i = 0; i < e.cell.columnPath.length; i++) {
-                const val = e.cell.columnPath[i];
-                const col = e.columnFields[i];
-
-                const dim = dims.find((d) => d.name == col.dataField);
-
-                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
-                    dataset.cubeId, dim.uniqueName);
-                const parameter = DetailedDataUtility.getParameterInformation(
-                    '@C_' + dim.name, dataset, cubeInfo, val);
-
-                rowColFilters.push(parameter);
-              }
-
-              for (let i = 0; i < e.cell.rowPath.length; i++) {
-                const val = e.cell.rowPath[i];
-                const row = e.rowFields[i];
-
-                const dim = dims.find((d) => d.name == row.dataField);
-
-                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
-                    dataset.cubeId, dim.uniqueName);
-                const parameter = DetailedDataUtility.getParameterInformation(
-                    '@R_' + dim.name, dataset, cubeInfo, val);
-
-                rowColFilters.push(parameter);
-              }
-
-              // 보고서에 적용된 필터와 합치기
-              const parameters = selectRootParameter(store.getState());
-              rowColFilters.push(
-                  ...ParamUtils.generateParameterForQueryExecute(parameters));
-
-              // 상세데이터 조회
-              const param = {
-                dsId: dataset.dsId,
-                cubeId: dataset.cubeId,
-                userId: 'admin',
-                actId: act.actId,
-                parameter: JSON.stringify(rowColFilters)
-              };
-
-              models.Item.getDetailedData(param).then((res) => {
-                openModal(ShowDataModal, {
-                  modalTitle: localizedString.detailedData + ' - ' + act.actNm,
-                  data: res.data.rowData
-                });
-              });
-            }
-          }));
-          if (detailedDataMenu.items.length > 0) {
-            contextMenu.push(detailedDataMenu);
-          }
+    const handleContentReady = () => {
+      if (editMode === EditMode.DESIGNER) {
+        const pivotInstance = ref.current.instance.element();
+        if (pivotInstance) {
+          pivotInstance.addEventListener('contextmenu', handleContextMenu);
+          return () =>
+            pivotInstance.removeEventListener('contextmenu', handleContextMenu);
         }
-        // contextMenu 저장(리턴)
-        e.items = contextMenu;
-      }}
-    >
-      <FieldChooser enabled={false}> </FieldChooser>
-      <Scrolling mode='virtual' />
-    </DevPivotGrid>
+      }
+    };
+
+    const pivotInstance = ref.current.instance;
+    if (pivotInstance) {
+      pivotInstance.on('contentReady', handleContentReady);
+      return () => {
+        pivotInstance.off('contentReady', handleContentReady);
+      };
+    }
+  }, []);
+
+  return (
+    <Container>
+      <DevPivotGrid
+        ref={ref}
+        id={id}
+        width={'100%'}
+        height={'100%'}
+        showBorders={true}
+        dataSource={mart.dataSourceConfig}
+        showColumnTotals={meta.positionOption.column.totalVisible}
+        showRowTotals={meta.positionOption.row.totalVisible}
+        showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
+        showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
+        rowHeaderLayout={meta.layout}
+        dataFieldArea={meta.positionOption.dataPosition}
+        allowFiltering={meta.showFilter}
+        fieldPanel={fieldPanel}
+        showTotalsPrior={showTotalsPrior}
+        wordWrapEnabled={false}
+        onCellPrepared={onCellPrepared}
+        allowSorting={true}
+        allowSortingBySummary={true}
+        onContextMenuPreparing={(e) => {
+          const contextMenu = [];
+          if (!e.cell || e.cell.columnType === undefined ||
+              e.cell.rowType === undefined) {
+            return;
+          }
+          const isGrandTotal =
+            (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
+            e.cell.type == 'GT';
+          // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
+          // 상세데이터 contextMenu 시작
+          // row와 column 모두 총계인 셀은 선택 불가
+          if (detailedData && !isGrandTotal) {
+            // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
+            const regex = /\[([^\[\]]+)\]/;
+            const rowColFilters = [];
+            const detailedDataMenu = {
+              'text': localizedString.detailedData
+            };
+            const dims = meta.dataField.column.concat(meta.dataField.row);
+
+            // 클릭 이벤트 생성
+            detailedDataMenu.items = detailedData.filter((data) => {
+              return meta.dataField.measure.find((mea) => {
+                return data.targetTable == mea.uniqueName.match(regex)[0];
+              });
+            }).map((act) => ({
+              'text': act.actNm,
+              'onItemClick': async () => {
+                // 현재 선택된 row와 col 필터 generate
+                for (let i = 0; i < e.cell.columnPath.length; i++) {
+                  const val = e.cell.columnPath[i];
+                  const col = e.columnFields[i];
+
+                  const dim = dims.find((d) => d.name == col.dataField);
+
+                  const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                      dataset.cubeId, dim.uniqueName);
+                  const parameter = DetailedDataUtility.getParameterInformation(
+                      '@C_' + dim.name, dataset, cubeInfo, val);
+
+                  rowColFilters.push(parameter);
+                }
+
+                for (let i = 0; i < e.cell.rowPath.length; i++) {
+                  const val = e.cell.rowPath[i];
+                  const row = e.rowFields[i];
+
+                  const dim = dims.find((d) => d.name == row.dataField);
+
+                  const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                      dataset.cubeId, dim.uniqueName);
+                  const parameter = DetailedDataUtility.getParameterInformation(
+                      '@R_' + dim.name, dataset, cubeInfo, val);
+
+                  rowColFilters.push(parameter);
+                }
+
+                // 보고서에 적용된 필터와 합치기
+                const parameters = selectRootParameter(store.getState());
+                rowColFilters.push(
+                    ...ParamUtils.generateParameterForQueryExecute(parameters));
+
+                // 상세데이터 조회
+                const param = {
+                  dsId: dataset.dsId,
+                  cubeId: dataset.cubeId,
+                  userId: 'admin',
+                  actId: act.actId,
+                  parameter: JSON.stringify(rowColFilters)
+                };
+
+                models.Item.getDetailedData(param).then((res) => {
+                  openModal(ShowDataModal, {
+                    modalTitle:
+                      localizedString.detailedData + ' - ' + act.actNm,
+                    data: res.data.rowData
+                  });
+                });
+              }
+            }));
+            if (detailedDataMenu.items.length > 0) {
+              contextMenu.push(detailedDataMenu);
+            }
+          }
+          // contextMenu 저장(리턴)
+          e.items = contextMenu;
+        }}
+      >
+        <FieldChooser enabled={false}> </FieldChooser>
+        <Scrolling mode='virtual' />
+      </DevPivotGrid>
+      {showPopup &&
+        <SubLinkReportPopup
+          showButton={showPopup}
+          setShowButton={setShowPopup}
+          focusedItem={focusedItem}
+          editMode={editMode}
+        />}
+    </Container>
   );
 };
 

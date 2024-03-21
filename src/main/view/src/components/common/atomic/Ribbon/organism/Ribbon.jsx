@@ -9,13 +9,13 @@ import {DesignerMode} from 'components/config/configType';
 const theme = getTheme();
 
 const StyledRibbon = styled.div`
-  width: calc(100% - ${theme.size.snbWidth} - 20px);
+  width: calc(100% - ${theme.size.snbwidth} - 20px);
   border-radius: 10px;
-  height: ${theme.size.ribbonHeight};
+  height: ${theme.size.ribbonheight};
   border: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
-  margin-left: calc(${theme.size.snbWidth} + 10px);
+  margin-left: calc(${theme.size.snbwidth} + 10px);
 `;
 
 const Ribbon = () => {
@@ -31,8 +31,8 @@ const Ribbon = () => {
           'LoadReport',
           'SaveReport',
           'DeleteReport',
+          'ConnectReport',
           'DownloadReport'
-          // 'ConnectReport'
         ]}
       />
       <CreateRibbonBtns

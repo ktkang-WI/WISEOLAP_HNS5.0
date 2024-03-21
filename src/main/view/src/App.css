@@ -107,3 +107,25 @@ img {
 .szh-menu__submenu > .szh-menu__item{
   content: '>';
 }
+
+#d3_tooltip {
+  position: absolute;
+  visibility: visible;
+  z-index: 10;
+  width: auto;
+  height: auto;
+  background: white;
+  box-shadow: rgb(0 0 0 / 40%) 0px 0px 6px 0px;
+  padding: 10px;
+  transform: translate(-50%, -100%);
+  font-size: 14px;
+  font-family: 'Noto Sans KR';
+}
+
+#d3_tooltip p{
+  margin-bottom: 0;
+}
+
+#d3_tooltip p + p{
+  margin: 0;
+}

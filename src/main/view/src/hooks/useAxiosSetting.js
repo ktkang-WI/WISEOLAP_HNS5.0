@@ -30,6 +30,10 @@ export default function useAxiosSetting() {
       },
       (error) => {
         dispatch(actions.endJob());
+
+        if (error?.response?.status == 401) {
+          location.href = error.config.baseURL;
+        }
         return error;
       }
   );

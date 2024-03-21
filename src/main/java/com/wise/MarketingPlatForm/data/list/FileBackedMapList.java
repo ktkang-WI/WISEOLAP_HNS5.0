@@ -299,8 +299,10 @@ public class FileBackedMapList  extends LinkedList<Map<String, Object>> implemen
 		}
 
 		try {
+            ObjectMapper objectMapper = new ObjectMapper();
 			for (Map<String, Object> elem : bufferedElems) {
-				dataAppender.println(elem.toString());
+                String json = objectMapper.writeValueAsString(elem);
+				dataAppender.println(json);
 				++writeCount;
 			}
 			dataAppender.flush();

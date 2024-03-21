@@ -149,7 +149,7 @@ public class CubeService {
 
         return cubeInfo;
     }
-
+    
     public List<RootFieldVO> getCubeFields() {
         return null;
     }

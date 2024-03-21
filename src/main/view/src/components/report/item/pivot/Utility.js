@@ -185,7 +185,7 @@ const getRibbonItems = () => {
     'DataPosition',
     'RemoveNullData',
     'ShowFilter',
-    'EditText'
+    'InputTxt'
   ];
 };
 

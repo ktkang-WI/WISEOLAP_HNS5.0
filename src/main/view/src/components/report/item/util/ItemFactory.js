@@ -20,11 +20,13 @@ const makeItem = (orgItem, countMap) => {
     pie: '파이',
     pivot: '피벗',
     grid: '그리드',
+    boxPlot: '박스플롯',
     choropleth: '코로프레스',
     liquidFillGauge: '액체게이지',
     treeMap: '트리맵',
     card: '카드'
   };
+
   let initNum = 1;
   if (countMap) {
     initNum = countMap[orgItem.type];
