@@ -54,14 +54,14 @@ const CustomChartDefaulElement = () => {
     compareDistritution: [
       {
         imgSrc: liquidFillGaugeImg,
-        label: '액체게이지',
+        label: localizedString.liquidFillGauge,
         onClick: () => {
           insertFlexLayout(reportId, 'liquidFillGauge');
         }
       },
       {
         imgSrc: squariFied,
-        label: '트리맵',
+        label: localizedString.Treemap,
         onClick: () => {
           insertFlexLayout(reportId, 'treeMap');
         }
@@ -92,18 +92,18 @@ const CustomChartDefaulElement = () => {
       },
       {
         imgSrc: cardImg,
-        label: '카드',
+        label: localizedString.card,
         onClick: () => {
           insertFlexLayout(reportId, 'card');
         }
       },
       {
         imgSrc: choroplethImg,
-        label: '코로플레스',
+        label: localizedString.choropleth,
         onClick: () => {
           openModal(ChoroplethModal, {
-            modalTitle: '코로플레스',
-            label: '코로플레스',
+            modalTitle: localizedString.choropleth,
+            label: localizedString.choropleth,
             onSubmit: (returedData) => {
               // 사용자 정의 데이터 추가 OR 업데이트
               insertFlexLayout(reportId, 'choropleth', '', returedData);

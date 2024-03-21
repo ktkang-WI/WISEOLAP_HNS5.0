@@ -1,6 +1,9 @@
+import {useEffect, useRef} from 'react';
 import {getOptionValue}
   from '../util/modal/organism/notationFormat/NotationFormatModal';
 import LiquidFillGaugeChart from './LiquidFillGaugeChart';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 
 const LiquidFillGauge = ({setItemExports, id, item, node}) => {
   const mart = item ? item.mart : null;
@@ -10,8 +13,24 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
   }
   const dataSource = mart.data.data;
   const seriesNames = mart.data.info.seriesMeasureNames;
+  const dxRef = useRef();
+  const itemExportObject =
+    itemExportsObject(id, dxRef, 'LIQUIDFILLGAUGE', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
   return (
     <LiquidFillGaugeChart
+      ref={dxRef}
       width={node?._rect?.width}
       height={node?._rect?.height}
       dataSource={dataSource}

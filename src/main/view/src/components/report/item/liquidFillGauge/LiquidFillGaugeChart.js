@@ -2,6 +2,8 @@
 import * as d3 from 'd3';
 import styled from 'styled-components';
 import D3LiquidFillGauge from './D3LiquidFillGauge';
+import {splitRowsByColumnNumber} from '../util/dataCleanupUtility';
+import {autoCoulumnNumber} from '../util/layoutUtility';
 
 const Container = styled.div`
   width: 100%;
@@ -20,26 +22,6 @@ const Row = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const cleaningDataForChart = (
-    dataSource,
-    columnNumber
-) => {
-  const returnObject = [];
-  let tempObject = [];
-  dataSource.forEach((item, index) => {
-    index = index + 1;
-    const isOkToInit = (index % (columnNumber)) === 0;
-    if (isOkToInit) {
-      tempObject.push((item));
-      returnObject.push(tempObject);
-      tempObject = [];
-    } else {
-      tempObject.push((item));
-    }
-  });
-  if (tempObject.length > 0) returnObject.push(tempObject);
-  return returnObject;
-};
 
 const generateWidth = (width, columnNumber) => {
   let factor;
@@ -51,13 +33,6 @@ const generateWidth = (width, columnNumber) => {
     factor = 14;
   }
   return (width / columnNumber) - (columnNumber * 2) * (factor / columnNumber);
-};
-
-const autoCoulumnNumber = (autoCoulmn, width, columnNumber) => {
-  if (!autoCoulmn) return columnNumber;
-  const defaultColumnSize = [1, 2, 3, 4, 5, 6];
-  const returnColumnNumber = defaultColumnSize[Math.floor(width / 200)];
-  return returnColumnNumber ? returnColumnNumber : 7;
 };
 
 const getWidth = (dataSourceLengh, width, height, columnNumber) => {
@@ -89,14 +64,14 @@ const LiquidFillGaugeChart = ({
         width,
         height,
         autoCoulmn ? autoCoulumnNumber(
-            autoCoulmn,
+            7,
             width,
-            columnNumber
+            200
         ) : columnNumber
     );
   const totalValue = d3.sum(dataSource.map((item) => item[valueField]));
   const cleanedDataSource =
-    cleaningDataForChart(dataSource, allocatedColumnNumber);
+    splitRowsByColumnNumber(dataSource, allocatedColumnNumber);
   let loopIndex = 0;
   return (
     <Container

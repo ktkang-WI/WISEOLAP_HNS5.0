@@ -114,35 +114,34 @@ const ItemBoard = () => {
       isOk = false;
       return isOk;
     }
-    if (pickItem.type === 'CHART') {
-      isOk = true;
-    }
-    if (pickItem.type === 'GRID') {
-      isOk = true;
-    }
-    if (pickItem.type === 'PIE') {
-      isOk = true;
-    }
-    if (pickItem.type === 'PIVOT') {
-      isOk = true;
-    }
+    isOk = [
+      'CHART',
+      'GRID',
+      'PIE',
+      'PIVOT',
+      'CHOROPLETH',
+      'TREEMAP',
+      'CARD',
+      'LIQUIDFILLGAUGE'
+    ].includes(pickItem.type);
+
     return isOk;
   };
 
-  const exportFile = (e, type) => {
+  const exportFile = (e, type, name) => {
     const pickItem = itemExportsPicker(e);
     if (!exportExceptionHandle(pickItem)) {
       console.error('아이템 및 데이터가 그려지지 않았습니다.');
       return;
     };
     if (Type.CSV === type) {
-      exportToFile(e, pickItem.data, Type.CSV);
+      exportToFile(name, pickItem.data, Type.CSV);
     } else if (Type.TXT === type) {
-      exportToFile(e, pickItem.data, Type.TXT);
+      exportToFile(name, pickItem.data, Type.TXT);
     } else if (Type.XLSX === type) {
-      exportToFile(e, pickItem.data, Type.XLSX);
+      exportToFile(name, pickItem.data, Type.XLSX);
     } else if (Type.IMG === type) {
-      exportToFile(e, pickItem, Type.IMG);
+      exportToFile(name, pickItem, Type.IMG);
     }
   };
 
@@ -288,6 +287,9 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
+      // TODO: 임시용 변수
+      const imgDownloadExcept = ['card', 'liquidFillGauge'];
+      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -315,18 +317,18 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
-              {isImg ?
+              {isImg && !isItPossibleToDownloadImg?
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.IMG);
+                exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
               }}>img</button> : null}
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.CSV);
+                exportFile(tabNode._attributes.id, Type.CSV, item.meta.name);
               }}>csv</button>
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.TXT);
+                exportFile(tabNode._attributes.id, Type.TXT, item.meta.name);
               }}>txt</button>
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.XLSX);
+                exportFile(tabNode._attributes.id, Type.XLSX, item.meta.name);
               }}>xlsx</button>
             </Popover>
           </button>,

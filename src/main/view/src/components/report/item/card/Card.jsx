@@ -1,4 +1,7 @@
 import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {useEffect, useRef} from 'react';
 
 
 const Card = ({setItemExports, id, item, node}) => {
@@ -10,8 +13,24 @@ const Card = ({setItemExports, id, item, node}) => {
   const dataSource = mart.data.data;
   const seriesNames = mart.data.info.seriesMeasureNames;
 
+  const dxRef = useRef();
+  const itemExportObject =
+    itemExportsObject(id, dxRef, 'CARD', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
   return (
     <DefaultCard
+      ref={dxRef}
       width={node?._rect?.width}
       dataSource={dataSource}
       argumentField='arg'

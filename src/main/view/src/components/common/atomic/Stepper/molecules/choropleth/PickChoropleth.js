@@ -9,6 +9,7 @@ import {ChoroplethContext}
   from 'components/common/atomic/Modal/organisms/ChoroplethModal';
 import DefaultChoropleth
   from 'components/report/item/choropleth/DefaultChoropleth';
+import localizedString from 'config/localization';
 
 const StyledPickMap = styled.div`
   flex: 0 0 1;
@@ -33,7 +34,7 @@ const ShowMap = ({children}) => {
     </StyledShowMap>
   );
 };
-
+// TODO: 데이터베이스 저장방식 향후 변경예정 GEOJSON파일 포함
 const dataSource = {
   'value': [
     {
@@ -77,7 +78,7 @@ const PickChoropleth = () => {
           <FilterRow visible={true} />
           <Column
             keyExpr="name"
-            caption="지도 목록"
+            caption={localizedString.listMap}
             dataField="name"/>
         </DataGrid>
       </PickMap>

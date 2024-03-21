@@ -1,5 +1,8 @@
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
+import {useEffect, useRef} from 'react';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -7,6 +10,21 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   if (!mart.init) {
     return <></>;
   }
+
+  const dxRef = useRef();
+  const itemExportObject =
+    itemExportsObject(id, dxRef, 'TREEMAP', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
 
   const seriesNames = mart.data.info.seriesMeasureNames;
   const treeMapOptions = {
@@ -26,6 +44,7 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   };
   return (
     <TreeMap
+      ref={dxRef}
       id={id}
       width={'100%'}
       height={'100%'}

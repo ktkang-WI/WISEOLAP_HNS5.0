@@ -1,3 +1,9 @@
+
+
+import {splitRowsByColumnNumber}
+  from 'components/report/item/util/dataCleanupUtility';
+import {autoCoulumnNumber}
+  from 'components/report/item/util/layoutUtility';
 import styled from 'styled-components';
 
 const CardColumn = styled.div`
@@ -24,8 +30,8 @@ const CardRow = styled.div`
 const CardBoard = styled.div`
   width: 100%;
   height: 100%;
-  min-width: 200px;
-  min-height: 250px;
+  min-width: 160px;
+  min-height: 230px;
   margin: 0 5px;
   background-color: #FAFAFA;
   border-radius: 10px;
@@ -54,31 +60,6 @@ const Content = styled.div`
   flex: 0 0 calc(90%);
 `;
 
-const generateForCard = (dataSource, columnNumber) => {
-  const length = dataSource.length;
-  const result = [];
-  let temp = [];
-
-  for (let index = 1; index <= length; index++) {
-    const isThisLastColumn = (index % columnNumber) == 0;
-
-    temp.push(dataSource[index - 1]);
-
-    if (isThisLastColumn) {
-      result.push(temp);
-      temp = [];
-    }
-  };
-  return result;
-};
-
-const autoCoulumnNumber = (autoCoulmn, width, columnNumber) => {
-  if (!autoCoulmn) return columnNumber;
-  const defaultColumnSize = [1, 2, 3, 4, 5];
-  const returnColumnNumber = defaultColumnSize[Math.floor(width / 350)];
-  return returnColumnNumber ? returnColumnNumber : 5;
-};
-
 const DefaultCard = ({
   dataSource,
   argumentField,
@@ -87,8 +68,8 @@ const DefaultCard = ({
   columnNumber = 2,
   autoCoulmn = true
 }) => {
-  columnNumber = autoCoulumnNumber(autoCoulmn, width, columnNumber);
-  const data = generateForCard(dataSource, columnNumber);
+  columnNumber = autoCoulmn ? autoCoulumnNumber(4, width, 390) : columnNumber;
+  const data = splitRowsByColumnNumber(dataSource, columnNumber);
 
   return (
     <CardContainer>

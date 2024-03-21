@@ -1,3 +1,5 @@
+import {itemExportsObject}
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {
   VectorMap
 } from 'devextreme-react';
@@ -8,6 +10,7 @@ import {
   Source,
   Tooltip
 } from 'devextreme-react/vector-map';
+import {useEffect, useRef} from 'react';
 
 const generateColorGroups = (colorGroupIndex) => {
   return [...Array(7)].map((_, i) => i * colorGroupIndex);
@@ -21,6 +24,21 @@ const Choropleth = ({
   if (!mart.init) {
     return <></>;
   }
+  const dxRef = useRef();
+  const itemExportObject =
+    itemExportsObject(id, dxRef, 'CHOROPLETH', mart.data.data);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
   const options = item ? item.options : null;
   const dataSource = mart.data.data;
   const [key] = options.key;
@@ -56,6 +74,7 @@ const Choropleth = ({
 
   return (
     <VectorMap
+      ref={dxRef}
       center={[127.59, 35.94]} // korea latitude and longitude
       maxZoomFactor={1300}
       minZoomFactor={45}

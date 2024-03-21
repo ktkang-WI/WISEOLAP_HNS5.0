@@ -16,6 +16,8 @@
     "middleModalHeight" : "70vh",
     "middleModalWidth" : "50vw",
     "width_450": "450px",
+    "bigModalWidthPx": "1400px",
+    "bigModalheightPx": "800px",
     "bigModalHeight" : "90%",
     "bigModalWidth" : "70%",
     "labelTextBoxHeight" : "36px",

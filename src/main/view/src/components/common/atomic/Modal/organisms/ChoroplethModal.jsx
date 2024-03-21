@@ -5,8 +5,12 @@ import {createContext, useState} from 'react';
 import {findGeoJsonMap}
   from 'components/report/item/choropleth/DefaultChoropleth';
 import useModal from 'hooks/useModal';
+import {getTheme} from 'config/theme';
+import localizedString from 'config/localization';
 
 export const ChoroplethContext = createContext();
+
+const theme = getTheme();
 
 const ChoroplethModal = ({
   onSubmit,
@@ -47,11 +51,11 @@ const ChoroplethModal = ({
     >
       <Modal
         modalTitle={modalTitle}
-        width='1400px'
-        height='800px'
+        width={theme.size.bigModalWidthPx}
+        height={theme.size.bigModalheightPx}
         onSubmit={() => {
           if (!isOk) {
-            alert('프로세스를 다 완료해주세요.');
+            alert(localizedString.requestWorkComplete);
             return true;
           }
           onSubmit(context.state);

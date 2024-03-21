@@ -90,6 +90,11 @@
       }
     }
   },
+  "map": {
+    "alert": {
+      "completePickMap": "지도 옵션 선택완료"
+    }
+  },
   "legned": "범례",
   "notationFormat": "표기형식",
   "contentArray": "콘테츠배열",
@@ -297,6 +302,7 @@
   "year": "년도",
   "month": "월",
   "day": "일",
+  "listMap": "지도목록",
   "datasetNotSelected": "데이터집합이 선택되지 않았습니다.",
   "dataHighlightList": "하이라이트 목록",
   "dataHighlightInfo": "하이라이트 정보",
@@ -580,5 +586,6 @@
   "validationFolderSelect": "폴더를 선택해주세요.",
   "validationReportNm": "보고서 명을 입력해 주세요.",
   "dataAttributeList": "데이터속성목록",
-  "reportList": "보고서목록"
+  "reportList": "보고서목록",
+  "requestWorkComplete": "작업을 완료해주세요."
 }

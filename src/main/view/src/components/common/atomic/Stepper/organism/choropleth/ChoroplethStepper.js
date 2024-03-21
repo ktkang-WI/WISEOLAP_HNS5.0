@@ -6,6 +6,7 @@ import useModal from 'hooks/useModal';
 import {ChoroplethContext}
   from 'components/common/atomic/Modal/organisms/ChoroplethModal';
 import {useContext} from 'react';
+import localizedString from 'config/localization';
 
 const steps = [
   {
@@ -23,7 +24,7 @@ const ChoroplethStepper = () => {
   const [, setIsOk] = getContext.isOk;
   const {alert} = useModal();
   const handleComplete = () => {
-    alert('지도 옵션 선택완료');
+    alert(localizedString.map.alert.completePickMap);
     setIsOk(true);
   };
 
