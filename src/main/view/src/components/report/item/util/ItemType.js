@@ -7,5 +7,6 @@ export default {
   TREEMAP: 'treeMap',
   LIQUID_FILL_GAUGE: 'liquidFillGauge',
   CARD: 'card',
+  CALENDAR: 'calendar',
   BOX_PLOT: 'boxPlot'
 };

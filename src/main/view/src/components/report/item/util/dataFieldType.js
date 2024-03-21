@@ -11,6 +11,32 @@ const DataFieldType = {
   SORT_BY_ITEM: 'sortByItem'
 };
 
+const dataFieldTypeOfItemTypeFunc = (type) => {
+  const dataFieldFormat = [];
+  switch (type) {
+    case ItemType.DATA_GRID: {
+      dataFieldFormat.push(DataFieldType.FIELD);
+      dataFieldFormat.push(DataFieldType.SPARKLINE);
+      break;
+    }
+    case ItemType.PIVOT_GRID: {
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.ROW);
+      dataFieldFormat.push(DataFieldType.COLUMN);
+      break;
+    }
+    case ItemType.CHART: {
+      dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
+    }
+    // COMMON DataFieldType
+    default: {
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+    }
+  };
+  return dataFieldFormat;
+};
+
 const DataFieldTypeOfItemType = {
   [ItemType.CHART]: [
     DataFieldType.MEASURE,
@@ -49,10 +75,15 @@ const DataFieldTypeOfItemType = {
   [ItemType.BOX_PLOT]: [
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION
+  ],
+  [ItemType.CALENDAR]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
   ]
 };
 
 export {
   DataFieldType,
-  DataFieldTypeOfItemType
+  DataFieldTypeOfItemType,
+  dataFieldTypeOfItemTypeFunc
 };

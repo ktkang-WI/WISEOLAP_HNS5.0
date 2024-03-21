@@ -32,6 +32,9 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
 import LiquidFillGauge
   from 'components/report/item/liquidFillGauge/LiquidFillGauge';
+import CalendarChart
+  from 'components/report/item/calendar/Calendar';
+
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 
 
@@ -104,6 +107,7 @@ const ItemBoard = () => {
     treeMap: TreeMap,
     liquidFillGauge: LiquidFillGauge,
     card: Card,
+    calendar: CalendarChart,
     boxPlot: BoxPlot
   };
 
@@ -126,6 +130,7 @@ const ItemBoard = () => {
       'CHOROPLETH',
       'TREEMAP',
       'CARD',
+      'CALENDAR',
       'LIQUIDFILLGAUGE'
     ].includes(pickItem.type);
 

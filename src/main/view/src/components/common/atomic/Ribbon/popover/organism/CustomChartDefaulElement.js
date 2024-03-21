@@ -9,6 +9,8 @@ import liquidFillGaugeImg
   from '../../../../../../assets/image/icon/item/liquidFillGauge.png';
 import squariFied
   from '../../../../../../assets/image/icon/item/squariFied.png';
+import calendarImg
+  from '../../../../../../assets/image/icon/item/ico_calendarviewchart.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -39,8 +41,11 @@ const CustomChartDefaulElement = () => {
     ],
     associativeChart: [
       {
-        imgSrc: '',
-        label: 'ddd'
+        imgSrc: calendarImg,
+        label: localizedString.calendar,
+        onClick: () => {
+          insertFlexLayout(reportId, 'calendar');
+        }
       },
       {
         imgSrc: '',
