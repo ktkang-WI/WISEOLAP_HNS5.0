@@ -414,5 +414,9 @@
   "dataAttributeList": "Data attribute list",
   "reportList": "Report list",
   "linkReport": "Link Report",
-  "linkReportAlready": "This report is already linked."
+  "linkReportAlready": "This report is already linked.",
+  "dataFieldLimitMsg": "Only up to N items can be raised.",
+  "startDate": "Date(Start)",
+  "endDate": "Date(End)",
+  "datePlaceholder": "New Date"
 }
