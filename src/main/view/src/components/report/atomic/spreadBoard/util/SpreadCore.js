@@ -11,23 +11,22 @@ require('@grapecity/spread-sheets-resources-ko');
 require('@grapecity/spread-sheets-designer-resources-ko');
 require('@grapecity/spread-sheets-designer');
 GC.Spread.Common.CultureManager.culture('ko-kr');
-import {getSpread} from 'models/config/preferences/Preferences';
 
-// set Spread License
-export const setSpreadLicense = async () => {
-  const res = await getSpread();
-  if (res.status !== 200) {
-    console.error('get spread License error');
-    return;
+/**
+ * @param {String} spreadJsDesignLicense
+ * @param {String} spreadJsLicense
+ */
+export const setSpreadLicense = async (
+    spreadJsDesignLicense, spreadJsLicense) => {
+  if (process.env.NODE_ENV != 'development') {
+    GC.Spread.Sheets.LicenseKey = spreadJsLicense;
+    ExcelIO.LicenseKey = spreadJsLicense;
+    GC.Spread.Sheets.Designer.LicenseKey = spreadJsDesignLicense;
   }
-  const {SPREAD_JS_LICENSE, SPREAD_JS_DESIGNER_LICENSE} = res.data;
-  GC.Spread.Sheets.LicenseKey = SPREAD_JS_LICENSE;
-  ExcelIO.LicenseKey = SPREAD_JS_LICENSE;
-  GC.Spread.Sheets.Designer.LicenseKey = SPREAD_JS_DESIGNER_LICENSE;
 };
 
 // spread Core Objects
-export const excelIO = new GC.Spread.Excel.IO();
+export const excelIO = new ExcelIO.IO();
 export const sheets = GC.Spread.Sheets;
 
 // eslint-disable-next-line prefer-const
