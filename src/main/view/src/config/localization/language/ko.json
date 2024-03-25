@@ -578,5 +578,6 @@
   "dataAttributeList": "데이터속성목록",
   "reportList": "보고서목록",
   "linkReport": "연결 보고서",
-  "linkReportAlready": "이미 연결된 보고서 입니다."
+  "linkReportAlready": "이미 연결된 보고서 입니다.",
+  "subLinkReportSetting": "서브 연결 보고서 설정"
 }

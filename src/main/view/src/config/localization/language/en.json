@@ -414,5 +414,6 @@
   "dataAttributeList": "Data attribute list",
   "reportList": "Report list",
   "linkReport": "Link Report",
-  "linkReportAlready": "This report is already linked."
+  "linkReportAlready": "This report is already linked.",
+  "subLinkReportSetting": "subLinkReportSetting"
 }
