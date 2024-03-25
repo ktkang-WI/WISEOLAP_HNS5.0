@@ -71,21 +71,10 @@ const TextBox = ({setItemExports, id, item, node}) => {
 
   const textBoxOption = (id, key, value) => {
     let textBoxOption = selectedItem.meta.textBoxOption;
-    const isThisRadio = id === key;
-    if (!isThisRadio) {
-      textBoxOption = {
-        ...textBoxOption,
-        [key]: {
-          ...textBoxOption[key],
-          [id]: value
-        }
-      };
-    } else {
-      textBoxOption = {
-        ...textBoxOption,
-        [key]: value
-      };
-    }
+    textBoxOption = {
+      ...textBoxOption,
+      [key]: value
+    };
 
     return setMeta('textBoxOption', textBoxOption);
   };
@@ -124,14 +113,20 @@ const TextBox = ({setItemExports, id, item, node}) => {
   return (
     <div className="widget-container">
       <HtmlEditor
+        className="custom-html-editor-container"
         width={node?._rect?.width - 40}
         height={node?._rect?.height - 30}
         defaultValue={dataSource}
         onValueChanged={handleValue}
+        readOnly={meta.textBoxOption.readOnly}
       >
         <MediaResizing enabled={true} />
         <ImageUpload tabs={currentTab} fileUploadMode="base64" />
-        <Toolbar multiline={isMultiline}>
+        {
+          meta.textBoxOption.toolBar ?
+        <Toolbar
+          multiline={isMultiline}
+        >
           <Item name="undo" />
           <Item name="redo" />
           <Item name="separator" />
@@ -163,7 +158,7 @@ const TextBox = ({setItemExports, id, item, node}) => {
           <Item name="background" />
           <Item name="separator" />
           <Item name="link" />
-          <Item name="image" />
+          <Item name="image"/>
           <Item name="separator" />
           <Item name="clear" />
           <Item name="codeBlock" />
@@ -177,7 +172,7 @@ const TextBox = ({setItemExports, id, item, node}) => {
           <Item name="insertColumnLeft" />
           <Item name="insertColumnRight" />
           <Item name="deleteColumn" />
-        </Toolbar>
+        </Toolbar> : <></>}
       </HtmlEditor>
     </div>
   );

@@ -315,7 +315,7 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
-              {isImg && !isItPossibleToDownloadImg?
+              {isImg && !isItPossibleToDownloadImg ?
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
               }}>img</button> : null}

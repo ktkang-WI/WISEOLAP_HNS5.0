@@ -589,5 +589,7 @@
   "reportList": "보고서목록",
   "requestWorkComplete": "작업을 완료해주세요.",
   "linkReport": "연결 보고서",
-  "linkReportAlready": "이미 연결된 보고서 입니다."
+  "linkReportAlready": "이미 연결된 보고서 입니다.",
+  "ToolbarVisible": "툴바표시",
+  "editable": "편집"
 }
