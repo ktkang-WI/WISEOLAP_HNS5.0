@@ -4,5 +4,6 @@ export default {
   DATA_GRID: 'grid',
   PIE_CHART: 'pie',
   BOX_PLOT: 'boxPlot',
-  TIMELINE: 'timeline'
+  TIMELINE: 'timeline',
+  CHORD: 'chord'
 };

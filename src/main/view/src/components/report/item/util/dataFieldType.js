@@ -36,6 +36,9 @@ const DataFieldTypeOfItemType = {
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION
   ],
+  [ItemType.CHORD]: [
+    DataFieldType.DIMENSION
+  ],
   [ItemType.TIMELINE]: [
     DataFieldType.DIMENSION,
     DataFieldType.DIMENSION_GROUP,

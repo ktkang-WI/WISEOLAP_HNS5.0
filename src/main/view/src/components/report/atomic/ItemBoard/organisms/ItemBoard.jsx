@@ -29,6 +29,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
+import Chord from 'components/report/item/chord/Chord';
 
 
 const theme = getTheme();
@@ -97,7 +98,8 @@ const ItemBoard = () => {
     grid: DataGrid,
     pie: Pie,
     boxPlot: BoxPlot,
-    timeline: Timeline
+    timeline: Timeline,
+    chord: Chord
   };
 
   const itemExportsPicker = (id) => {

@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.report.domain.item.factory;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
@@ -28,6 +29,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.TIMELINE) {
             return new TimelineDataMaker();
+        }
+        if (itemType == ItemType.CHORD) {
+            return new ChordDataMaker();
         }
 
         return null;

@@ -42,8 +42,8 @@ const Ribbon = () => {
             // 'AddContainer',
             'AddChart',
             'AddPivotGrid',
-            'AddGrid'
-            // 'AddCustomChart'
+            'AddGrid',
+            'AddCustomChart'
           ]}
       />
       <CreateRibbonBtns
