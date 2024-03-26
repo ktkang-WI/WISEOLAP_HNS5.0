@@ -76,6 +76,7 @@ const reducers = {
   },
 
   setLinkReport(state, action) {
+    if (!action.payload) return;
     const {linkReportId} = action.payload;
     if (state.informations[linkReportId]) {
       state.informations[linkReportId] = action.payload;
@@ -85,6 +86,7 @@ const reducers = {
   },
 
   setSubLinkReport(state, action) {
+    if (!action.payload) return;
     const {linkReportId} = action.payload;
     if (state.informations[linkReportId]) {
       state.informations[linkReportId] = action.payload;
