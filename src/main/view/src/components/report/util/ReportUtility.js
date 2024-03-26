@@ -28,6 +28,37 @@ const SubLinkReportPopupButton = styled.div`
   }
 `;
 
+export const linkReportPopup = (
+    {
+      focusedItem
+    }
+) => {
+  let newSubLinkDim = [];
+  if (focusedItem && focusedItem.dimension) {
+    newSubLinkDim = newSubLinkDim.concat(focusedItem.dimension);
+  }
+  if (focusedItem && (focusedItem.column || focusedItem.row)) {
+    if (focusedItem.column) {
+      newSubLinkDim = newSubLinkDim.concat(focusedItem.column);
+    }
+    if (focusedItem.row) {
+      if (!focusedItem.column || focusedItem.column !== focusedItem.row) {
+        newSubLinkDim = newSubLinkDim.concat(focusedItem.row);
+      }
+    }
+  }
+  if (focusedItem && focusedItem.field) {
+    focusedItem.field.forEach((item) => {
+      if (item.fieldType === 'DIM') {
+        newSubLinkDim.push(item);
+      }
+    });
+  }
+  const subLinkDim = (newSubLinkDim);
+
+  return subLinkDim;
+};
+
 export const SubLinkReportPopup = (
     {
       showButton,
