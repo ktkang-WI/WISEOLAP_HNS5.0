@@ -21,8 +21,7 @@ const D3Chord = ({
   data,
   onClick,
   palette,
-  selectedItem = [],
-  d3Ref
+  selectedItem = []
 }) => {
   const {matrix, groups} = data.info;
 
@@ -40,7 +39,7 @@ const D3Chord = ({
   if (radius <= 0) return <></>;
 
   const chord = d3.chord().padAngle(0.02).sortSubgroups(d3.descending)(matrix);
-  const arc = d3.arc().innerRadius(radius).outerRadius(radius + 20);
+  const arc = d3.arc().innerRadius(radius).outerRadius(radius + 18);
   const ribbon = d3.ribbon().radius(radius);
 
   const d3Palette = getPaletteForD3(palette, groups.length);
@@ -130,7 +129,7 @@ const D3Chord = ({
   ));
 
   return (
-    <StyledWrapper id={id} ref={d3Ref}>
+    <StyledWrapper id={id}>
       <svg
         width={width} height={height}
         x={x} y={y}

@@ -49,8 +49,8 @@ public class ChordDataMaker implements ItemDataMaker {
         int index = 0;
 
         // 그룹 및 인덱스 맵 생성
-        for (Map<String, Object> map : data) {
-            for (Dimension dimension : dimensions) {
+        for (Dimension dimension : dimensions) {
+            for (Map<String, Object> map : data) {
                 String value = map.get(dimension.getName()).toString();
                 if (!indexMap.containsKey(value)) {
                     Map<String, String> group = new HashMap<>();

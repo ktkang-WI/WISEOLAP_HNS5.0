@@ -207,7 +207,7 @@
   "hierarchyChart": "Hierarchy Chart",
   "networkReduce": "Network-Reduce",
   "networkMagnify": "Network-Magnify",
-  "dependencyWheel": "Dependency Wheel",
+  "chordDiagram": "Chord Diagram",
   "calendarView": "Calendar View",
   "calendarView2": "Calendar2 View",
   "calendarView3": "Calendar3 View",
@@ -418,5 +418,9 @@
   "dataFieldLimitMsg": "Only up to N items can be raised.",
   "startDate": "Date(Start)",
   "endDate": "Date(End)",
-  "datePlaceholder": "New Date"
+  "datePlaceholder": "New Date",
+  "relationVisualization": "Relation Visualization",
+  "connectionVisualization": "Connection Visualization",
+  "distributionVisualization": "Distribution Visualization",
+  "Filter": "Filter"
 }
