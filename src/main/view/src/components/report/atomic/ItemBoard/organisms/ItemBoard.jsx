@@ -28,6 +28,8 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
+import Timeline from 'components/report/item/timeline/Timeline';
+import Chord from 'components/report/item/chord/Chord';
 
 
 const theme = getTheme();
@@ -95,11 +97,13 @@ const ItemBoard = () => {
     pivot: PivotGrid,
     grid: DataGrid,
     pie: Pie,
-    boxPlot: BoxPlot
+    boxPlot: BoxPlot,
+    timeline: Timeline,
+    chord: Chord
   };
 
   const itemExportsPicker = (id) => {
-    return itemExports.filter((item) => item.id == id)[0];
+    return itemExports.find((item) => item.id == id);
   };
 
   // TODO: 임시 예외처리 차트용만 다운로드 구현 삭제예정
@@ -121,6 +125,10 @@ const ItemBoard = () => {
     if (pickItem.type === 'PIVOT') {
       isOk = true;
     }
+    if (['TIMELINE'].includes(pickItem.type)) {
+      isOk = true;
+    }
+
     return isOk;
   };
 

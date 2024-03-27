@@ -20,7 +20,9 @@ const makeItem = (orgItem, countMap) => {
     pie: '파이',
     pivot: '피벗',
     grid: '그리드',
-    boxPlot: '박스플롯'
+    boxPlot: '박스플롯',
+    timeline: '타임라인',
+    chord: '의존성 휠'
   };
 
   let initNum = 1;
