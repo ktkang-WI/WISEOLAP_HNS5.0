@@ -312,10 +312,10 @@ const LinkParamInfo = ({
         )}
       </StyledWrapper>
       <Footer>
-        <CommonButton type='primary' maxwidth='120px' onClick={confirm}>
+        <CommonButton type='primary' maxWidth='120px' onClick={confirm}>
           확인
         </CommonButton>
-        <CommonButton type='secondary' maxwidth='120px' onClick={onClose}>
+        <CommonButton type='secondary' maxWidth='120px' onClick={onClose}>
           취소
         </CommonButton>
       </Footer>

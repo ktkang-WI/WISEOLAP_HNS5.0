@@ -142,10 +142,10 @@ const ListFilter = ({
         >
         </StyledList>
         <Footer>
-          <CommonButton type='primary' maxwidth='120px' onClick={confirm}>
+          <CommonButton type='primary' maxWidth='120px' onClick={confirm}>
             확인
           </CommonButton>
-          <CommonButton type='secondary' maxwidth='120px' onClick={cancel}>
+          <CommonButton type='secondary' maxWidth='120px' onClick={cancel}>
             취소
           </CommonButton>
         </Footer>
@@ -169,11 +169,11 @@ const ListFilter = ({
       <Popover
         target={'#' + id + '_wrapper'}
         showEvent={'click'}
-        minwidth="200px"
+        minWidth="200px"
         height="300px"
         ref={popOverRef}
         width={width}
-        maxwidth={width || '200px'}
+        maxWidth={width || '200px'}
         hideOnOutsideClick
         contentRender={renderContent}
       >

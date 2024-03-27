@@ -14,13 +14,13 @@ const RibbonPopoverBtn = ({item}) => {
         imgSrc={item.imgSrc}
         title={item.label}
         width={item.width}
-        height={'calc(' + theme.size.ribbonheight + ' - 10px)'}
+        height={'calc(' + theme.size.ribbonHeight + ' - 10px)'}
         useArrowButton={item.useArrowButton}
       />
       <Popover
         target={'#' + item.id}
         showEvent={'click'}
-        minwidth="200px"
+        minWidth="200px"
         height={item.popoverHeight}
         width={item.popoverWidth}
         hideOnOutsideClick
