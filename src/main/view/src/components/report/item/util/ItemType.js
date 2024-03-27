@@ -3,5 +3,7 @@ export default {
   PIVOT_GRID: 'pivot',
   DATA_GRID: 'grid',
   PIE_CHART: 'pie',
-  BOX_PLOT: 'boxPlot'
+  BOX_PLOT: 'boxPlot',
+  TIMELINE: 'timeline',
+  CHORD: 'chord'
 };

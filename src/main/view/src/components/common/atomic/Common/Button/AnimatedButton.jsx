@@ -103,7 +103,7 @@ const AnimatedButton = ({
           'calc(' + height + ' - 8px)': height}
         margin={direction === 'row' ? '4px' : '0px'}
       />
-      <AnimatedButtonLabel textalign={direction == 'column'? 'center' : 'left'}>
+      <AnimatedButtonLabel textAlign={direction == 'column'? 'center' : 'left'}>
         {label}
       </AnimatedButtonLabel>
     </Button>

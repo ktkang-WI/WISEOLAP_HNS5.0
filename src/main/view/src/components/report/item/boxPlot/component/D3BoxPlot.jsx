@@ -4,7 +4,9 @@ import {AxisLeft} from './AxisLeft';
 import {AxisBottom} from './AxisBottomCategoric';
 import {VerticalBox} from './VerticalBox';
 import {styled} from 'styled-components';
-import {getHatchingPattern, getTextWidth} from '../../util/d3/CanvasUtility';
+import {
+  getHatchingPattern, getPaletteForD3, getTextWidth
+} from '../../util/d3/CanvasUtility';
 import valueAxisCustomLabel from '../../ValueAxisCustomLabel';
 
 const StyledWrapper = styled(Wrapper)`
@@ -56,6 +58,8 @@ const D3BoxPlot = ({
       .domain(data.data.map((row) => row.name))
       .padding(0.25);
 
+  const d3Palette = getPaletteForD3(palette, data.data.length);
+
   const allShapes = data.data.map((row, i) => {
     const [min, q1, median, q3, max] = row.data;
     let format = {};
@@ -81,8 +85,7 @@ const D3BoxPlot = ({
           q3={yScale(q3)}
           min={yScale(min)}
           max={yScale(max)}
-          stroke={palette[i % palette.length]}
-          fill={palette[i % palette.length]}
+          color={d3Palette[i]}
         />
       </g>
     );
