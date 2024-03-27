@@ -100,9 +100,12 @@ const makeAdHocOption = () => {
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
   const layoutType = ItemManager.getLayoutSetting();
+  const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
+
+  dataFieldOption.measure.useButton = true;
 
   return {
-    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
+    dataFieldOption: dataFieldOption,
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,
