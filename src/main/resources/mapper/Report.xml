@@ -211,6 +211,7 @@
 		SELECT	A.REPORT_ID AS reportId,
 				A.LINK_REPORT_ID AS linkReportId,
 				(SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = LINK_REPORT_ID) AS linkReportNm,
+        A.LINK_SUB_ITEM AS linkSubItem,
 				A.LINK_DATA_TYPE AS linkDataType,
 				A.LINK_XML_PARAM AS linkXmlParam,
         A.LINK_XML_DATA As linkXmlData,
