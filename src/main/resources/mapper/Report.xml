@@ -199,25 +199,24 @@
       <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
 		SELECT	A.REPORT_ID AS reportId,
 				A.LINK_REPORT_ID AS linkReportId,
-				B.REPORT_NM AS linkReportNm,
+				(SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = LINK_REPORT_ID) AS linkReportNm,
 				A.DATA_LINK_TYPE AS dataLinkType,
 				A.LINK_XML AS linkXml,
 				A.LINK_REPORT_TYPE AS linkReportType
 		FROM REPORT_LINK_MSTR A
-		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
 		WHERE A.REPORT_ID = #{id}
     </select>
 
     <select id='selectSubLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity">
 		SELECT	A.REPORT_ID AS reportId,
 				A.LINK_REPORT_ID AS linkReportId,
-				B.REPORT_NM AS linkReportNm,
+				(SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = LINK_REPORT_ID) AS linkReportNm,
+        A.LINK_SUB_ITEM AS linkSubItem,
 				A.LINK_DATA_TYPE AS linkDataType,
 				A.LINK_XML_PARAM AS linkXmlParam,
         A.LINK_XML_DATA As linkXmlData,
 				A.LINK_REPORT_TYPE AS linkReportType
 		FROM REPORT_LINK_SUB_MSTR A
-		INNER JOIN REPORT_MSTR B ON A.REPORT_ID = B.REPORT_ID 
 		WHERE A.REPORT_ID = #{id}
     </select>
 

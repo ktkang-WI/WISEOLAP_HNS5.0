@@ -415,6 +415,7 @@
   "reportList": "Report list",
   "linkReport": "Link Report",
   "linkReportAlready": "This report is already linked.",
+  "subLinkReportSetting": "subLinkReportSetting",
   "dataFieldLimitMsg": "Only up to N items can be raised.",
   "startDate": "Date(Start)",
   "endDate": "Date(End)",
