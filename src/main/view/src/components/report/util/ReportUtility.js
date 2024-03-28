@@ -8,8 +8,10 @@ import LinkReportModal from
 import useModal from 'hooks/useModal';
 import {styled} from 'styled-components';
 import {useState, useEffect} from 'react';
-
-// const theme = getTheme();
+import {checkLinkReport} from 'redux/selector/LinkSelector';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import models from 'models';
 
 const SubLinkReportPopupButton = styled.div`
   position: fixed;
@@ -67,6 +69,8 @@ export const SubLinkReportPopup = (
       editMode
     }
 ) => {
+  const contextRoot =
+    process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
   const {openModal} = useModal();
   const [buttonPosition, setButtonPosition] = useState({x: 0, y: 0});
   const [subLinkDim, setSubLinkDim] = useState([]);
@@ -126,6 +130,51 @@ export const SubLinkReportPopup = (
     setShowButton(false);
   };
 
+  const SubLinkInfo =
+      Object.values(
+          useSelector(checkLinkReport)).map(
+          (item) => item.subLinkReport
+      );
+
+  const selectCurrentItemVar =
+    useSelector(selectCurrentItem).type + useSelector(selectCurrentItem).id;
+  let subLinkReportNm;
+  SubLinkInfo.forEach((report) => {
+    if (report.subLinkItemId === selectCurrentItemVar) {
+      subLinkReportNm = report.sublinkReportNm;
+    }
+  });
+
+  const connectSubLinkReport = () => {
+    let subLinklinkReportId;
+    let subLinkReportType;
+    if (SubLinkInfo) {
+      SubLinkInfo.forEach((report) => {
+        if (report.sublinkReportNm === subLinkReportNm) {
+          subLinklinkReportId = report.linkReportId;
+          subLinkReportType = subLinkReportType;
+        }
+      });
+      const tokenSource = {
+        userId: 'admin',
+        reportId: subLinklinkReportId,
+        reportType: subLinkReportType
+      };
+      models.Report.generateToken(tokenSource).then((res) => {
+        const token = res.data.token;
+        const urlString =
+          `${document.location.origin}${contextRoot}` +
+          `/editds/linkViewer?token=${token}`;
+        const newWindow = window.open(urlString, '_blank');
+        if (newWindow) {
+          newWindow.focus();
+        }
+      }).catch((error) => {
+        console.error('Error sending link report:', error);
+      });
+    }
+  };
+
   if (editMode === 'viewer') {
     return showButton ? (
       <SubLinkReportPopupButton
@@ -135,9 +184,9 @@ export const SubLinkReportPopup = (
             top: `${buttonPosition.y}px`
           }
         }
-        onClick={handleClick}
+        onClick={connectSubLinkReport}
       >
-       보고서 이름
+        {subLinkReportNm}
       </SubLinkReportPopupButton>
     ) : null;
   } else {
