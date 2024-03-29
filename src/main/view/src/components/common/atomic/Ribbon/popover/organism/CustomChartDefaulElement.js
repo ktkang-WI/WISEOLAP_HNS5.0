@@ -3,7 +3,6 @@ import boxPlotImg from 'assets/image/icon/item/box_plot.png';
 
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
-import barImg from '../../../../../../assets/image/icon/item/bar.png';
 import choroplethImg
   from '../../../../../../assets/image/icon/item/choropleth.png';
 import cardImg
