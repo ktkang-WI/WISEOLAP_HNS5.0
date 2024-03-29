@@ -24,6 +24,7 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       event?.forEach((e) => e?.node?.select(true));
     },
     removeSelectionFunc: (event) => {
+      if (!dxRef?.current) return;
       dxRef.current.instance.clearSelection();
     }
   });

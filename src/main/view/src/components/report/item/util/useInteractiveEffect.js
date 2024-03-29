@@ -82,13 +82,15 @@ export const useInteractiveEffect =
   };
 
   const getFilter = () => {
-    const targetDiemnsion = interactiveOption.targetDimension;
+    const targetDiemnsion = interactiveOption?.targetDimension;
     const refineData = {};
+    if (!targetDiemnsion) throw Error('code check please!');
     if (targetDiemnsion == 'dimension') {
+      // TODO: 개발필요 차원
       const dim = meta.dataField.dimension;
       refineData[dim[0].uniqueName] = selectedData;
     } else {
-      // 차원
+      //  TODO: 개발필요 그룹
       // const dimGrp = meta.dataField.dimensionGroup;
     }
     return refineData;
@@ -125,7 +127,6 @@ export const useInteractiveEffect =
     masterFilterOption: {
       interactiveOption: interactiveOption
     },
-    callBackFilteringFunc, // 아이템별 무조건 정의가 되어야하는 함수
     functions: {
       setDataMasterFilter,
       masterFilterReload
