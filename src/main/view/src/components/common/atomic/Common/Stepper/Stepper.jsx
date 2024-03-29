@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {Fragment, useState} from 'react';
 import styled from 'styled-components';
 
 const StyledStepper = styled.div`
@@ -116,7 +116,7 @@ const Stepper = ({
     <StyledStepper>
       <StyledSteps>
         {steps.map((step, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             {
               index > 0 &&
               <StepLine
@@ -132,7 +132,7 @@ const Stepper = ({
                 <StepText>{step.label}</StepText>
               </StepLabel>
             </div>
-          </React.Fragment>
+          </Fragment>
         ))}
       </StyledSteps>
       <StyledContent>

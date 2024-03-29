@@ -25,7 +25,7 @@ public class ItemDataMakerFactory {
             result = new PieChartDataMaker();
         }
         if (itemType == ItemType.BOX_PLOT) {
-            return new BoxPlotDataMaker();
+            result = new BoxPlotDataMaker();
         }
 
         // Default Chart Maker 

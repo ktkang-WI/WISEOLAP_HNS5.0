@@ -27,29 +27,9 @@ const CustomChartDefaulElement = () => {
         onClick: () => {
           console.log(insertFlexLayout);
         }
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
       }
     ],
     associativeChart: [
-      {
-        imgSrc: '',
-        label: 'ddd'
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
     ],
     compareDistritution: [
       {
@@ -65,31 +45,11 @@ const CustomChartDefaulElement = () => {
         onClick: () => {
           insertFlexLayout(reportId, 'treeMap');
         }
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
       }
     ],
     filter: [
-      {
-        imgSrc: '',
-        label: 'ddd'
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
     ],
     restItem: [
-      {
-        imgSrc: '',
-        label: 'ddd'
-      },
       {
         imgSrc: cardImg,
         label: localizedString.card,

@@ -129,3 +129,7 @@ img {
 #d3_tooltip p + p{
   margin: 0;
 }
+
+.selected {
+  border: 2px dotted #b1b1b1;
+}

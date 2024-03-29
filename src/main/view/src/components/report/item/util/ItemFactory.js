@@ -1,6 +1,6 @@
 import {makeAdHocItemMart, makeMart}
   from './martUtilityFactory';
-import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+import {DataFieldType, dataFieldTypeOfItemTypeFunc} from './dataFieldType';
 import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 import {paletteCollection}
@@ -94,7 +94,7 @@ const makeAdHocItem = (orgItem) => {
 };
 
 const makeAdHocOption = () => {
-  const dataFieldTypes = DataFieldTypeOfItemType['pivot'];
+  const dataFieldTypes = dataFieldTypeOfItemTypeFunc('pivot');
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
   dataField[DataFieldType.SORT_BY_ITEM] = [];
