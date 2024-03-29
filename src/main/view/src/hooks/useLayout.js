@@ -104,6 +104,7 @@ export default function useLayout() {
       ...selectedItem,
       meta: {
         ...selectedItem.meta,
+        colorEdit: [],
         paletteType: 'palette',
         palette: paletteValue}
     };

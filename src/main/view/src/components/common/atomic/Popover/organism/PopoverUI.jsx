@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import RibbonPopoverContents from '../molecules/RibbonPopoverContents';
+import elementFactory from '../molecules/ElementFactory';
 
 const PopoverWrap = styled.div`
   background-color: #fff;
@@ -11,6 +12,7 @@ const PopoverWrap = styled.div`
 `;
 
 const PopoverUI = ({id, width, height, popoverType, titlePanel, props}) => {
+  const element = elementFactory();
   return (
     <PopoverWrap
       id={id}
@@ -21,6 +23,7 @@ const PopoverUI = ({id, width, height, popoverType, titlePanel, props}) => {
       {...props}
     >
       <RibbonPopoverContents
+        element={element[id]}
         id={id}
         titlePanel={titlePanel}
         popoverType={popoverType}

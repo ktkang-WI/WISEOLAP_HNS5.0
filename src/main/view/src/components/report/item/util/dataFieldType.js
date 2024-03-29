@@ -8,7 +8,9 @@ const DataFieldType = {
   ROW: 'row',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
-  SORT_BY_ITEM: 'sortByItem'
+  SORT_BY_ITEM: 'sortByItem',
+  START_DATE: 'start',
+  END_DATE: 'end'
 };
 
 const dataFieldTypeOfItemTypeFunc = (type) => {
@@ -24,6 +26,17 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.MEASURE);
       dataFieldFormat.push(DataFieldType.ROW);
       dataFieldFormat.push(DataFieldType.COLUMN);
+      break;
+    }
+    case ItemType.TIMELINE: {
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
+      dataFieldFormat.push(DataFieldType.START_DATE);
+      dataFieldFormat.push(DataFieldType.END_DATE);
+      break;
+    }
+    case ItemType.CHORD: {
+      dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
     case ItemType.CHART: {

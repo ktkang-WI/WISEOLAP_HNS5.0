@@ -7,5 +7,7 @@ export default {
   TREEMAP: 'treeMap',
   LIQUID_FILL_GAUGE: 'liquidFillGauge',
   CARD: 'card',
-  BOX_PLOT: 'boxPlot'
+  BOX_PLOT: 'boxPlot',
+  TIMELINE: 'timeline',
+  CHORD: 'chord'
 };

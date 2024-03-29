@@ -33,6 +33,8 @@ import {DesignerMode} from 'components/config/configType';
 import LiquidFillGauge
   from 'components/report/item/liquidFillGauge/LiquidFillGauge';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
+import Timeline from 'components/report/item/timeline/Timeline';
+import Chord from 'components/report/item/chord/Chord';
 
 
 const theme = getTheme();
@@ -104,11 +106,13 @@ const ItemBoard = () => {
     treeMap: TreeMap,
     liquidFillGauge: LiquidFillGauge,
     card: Card,
-    boxPlot: BoxPlot
+    boxPlot: BoxPlot,
+    timeline: Timeline,
+    chord: Chord
   };
 
   const itemExportsPicker = (id) => {
-    return itemExports.filter((item) => item.id == id)[0];
+    return itemExports.find((item) => item.id == id);
   };
 
   // TODO: 임시 예외처리 차트용만 다운로드 구현 삭제예정
@@ -126,7 +130,8 @@ const ItemBoard = () => {
       'CHOROPLETH',
       'TREEMAP',
       'CARD',
-      'LIQUIDFILLGAUGE'
+      'LIQUIDFILLGAUGE',
+      'TIMELINE'
     ].includes(pickItem.type);
 
     return isOk;

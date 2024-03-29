@@ -85,7 +85,7 @@ const LinkViewerContent = ({children}) => {
         width: '100%'
       }}
       marginHeight={'10px'}
-      headerheight={theme.size.headerheight}
+      headerHeight={theme.size.headerHeight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <FilterBar useSearchButton={true} buttons={buttons}/>

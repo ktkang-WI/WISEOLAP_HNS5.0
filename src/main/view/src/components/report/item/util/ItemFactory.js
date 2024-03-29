@@ -24,7 +24,9 @@ const makeItem = (orgItem, countMap) => {
     choropleth: '코로프레스',
     liquidFillGauge: '액체게이지',
     treeMap: '트리맵',
-    card: '카드'
+    card: '카드',
+    timeline: '타임라인',
+    chord: '의존성 휠'
   };
 
   let initNum = 1;
@@ -102,9 +104,12 @@ const makeAdHocOption = () => {
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
   const layoutType = ItemManager.getLayoutSetting();
+  const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
+
+  dataFieldOption.measure.useButton = true;
 
   return {
-    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
+    dataFieldOption: dataFieldOption,
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,

@@ -7,7 +7,6 @@ import {
 import InnerContentWrapper from '../atom/InnerContentWrapper';
 import PopoverTitlePanel from '../atom/PopoverTitlePanel';
 import IconWrap from '../atom/IconWrapper';
-import elementFactory from './ElementFactory';
 import {getTheme} from 'config/theme';
 import {ImgCheckBox} from
   '../../DataColumnTab/molecules/DataColumnSeriesOptions/Common/ImgCheckBox';
@@ -90,9 +89,8 @@ const popoverContents = (element, popoverType, titlePanel) => {
   return contents;
 };
 
-const RibbonPopoverContents = ({popoverType, titlePanel, id, props}) => {
-  const element = elementFactory(id);
-  if (id == 'add_default_chart') {
+const RibbonPopoverContents = ({popoverType, titlePanel, id, element}) => {
+  if (id == 'add_default_chart' || id == 'add_custom_chart') {
     const {data, onClick} = element;
 
     return (
