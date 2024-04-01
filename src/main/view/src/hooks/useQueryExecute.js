@@ -266,8 +266,7 @@ const useQueryExecute = () => {
         const query = dataset.datasetQuery;
         const data =
           await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
-        if (!data.data.rowData) return;
-        datas[dataset.datasetId] = data.data.rowData;
+        datas[dataset.datasetId] = data.data;
       })());
     });
     await Promise.all(promises);
@@ -520,7 +519,7 @@ const useQueryExecute = () => {
           if (param.defaultValueUseSql && param.calendarDefaultType != 'NOW') {
             // defaultValue 쿼리일 경우 쿼리 실행
             executeParameterDefaultValueQuery(param).then((data) => {
-              setValues(param.name, data);
+              setValues(param.name, {value: data});
             });
           } else if (param.calendarDefaultType == 'NOW') {
             // defaultValue calendarDefaultType 현재일 경우 계산

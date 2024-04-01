@@ -15,7 +15,16 @@ import {paletteCollection}
 const makeItem = (orgItem, countMap) => {
   let item = {};
   // 임시용
-  const type = {chart: '차트', pie: '파이', pivot: '피벗', grid: '그리드'};
+  const type = {
+    chart: '차트',
+    pie: '파이',
+    pivot: '피벗',
+    grid: '그리드',
+    boxPlot: '박스플롯',
+    timeline: '타임라인',
+    chord: '의존성 휠'
+  };
+
   let initNum = 1;
   if (countMap) {
     initNum = countMap[orgItem.type];
@@ -91,9 +100,12 @@ const makeAdHocOption = () => {
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
   const layoutType = ItemManager.getLayoutSetting();
+  const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
+
+  dataFieldOption.measure.useButton = true;
 
   return {
-    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
+    dataFieldOption: dataFieldOption,
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,

@@ -2,7 +2,11 @@ import DevPivotGrid, {
   FieldChooser,
   Scrolling
 } from 'devextreme-react/pivot-grid';
-import React, {useEffect, useRef, useMemo} from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useMemo
+} from 'react';
 import {isDataCell, getCssStyle} from './DataHighlightUtility';
 import useModal from 'hooks/useModal';
 import ShowDataModal
@@ -17,10 +21,20 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {generateLabelSuffix, formatNumber} from
   'components/utils/NumberFormatUtility';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
+import {linkReportPopup} from 'components/report/util/ReportUtility';
+import {selectCurrentReport}
+  from 'redux/selector/ReportSelector';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -32,7 +46,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const ref = useRef();
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
-  const {openModal} = useModal();
+  const {openModal, alert} = useModal();
 
   const datasets = useSelector(selectCurrentDatasets);
   const dataset = datasets.find((ds) =>
@@ -146,6 +160,34 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
+  const focusedItem = useSelector(selectCurrentDataField);
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      if (editMode === EditMode.DESIGNER) {
+        event.preventDefault();
+      }
+    };
+
+    const handleContentReady = () => {
+      if (editMode === EditMode.DESIGNER) {
+        const pivotInstance = ref.current.instance.element();
+        if (pivotInstance) {
+          pivotInstance.addEventListener('contextmenu', handleContextMenu);
+          return () =>
+            pivotInstance.removeEventListener('contextmenu', handleContextMenu);
+        }
+      }
+    };
+
+    const pivotInstance = ref.current.instance;
+    if (pivotInstance) {
+      pivotInstance.on('contentReady', handleContentReady);
+      return () => {
+        pivotInstance.off('contentReady', handleContentReady);
+      };
+    }
+  }, []);
+
   return (
     <DevPivotGrid
       ref={ref}
@@ -169,11 +211,14 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       allowSortingBySummary={true}
       onContextMenuPreparing={(e) => {
         const contextMenu = [];
-
+        if (!e.cell || e.cell.columnType === undefined ||
+            e.cell.rowType === undefined) {
+          return;
+        }
         const isGrandTotal =
           (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
           e.cell.type == 'GT';
-
+        let detailedDataMenu = {};
         // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
         // 상세데이터 contextMenu 시작
         // row와 column 모두 총계인 셀은 선택 불가
@@ -181,12 +226,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
           const regex = /\[([^\[\]]+)\]/;
           const rowColFilters = [];
-          const detailedDataMenu = {
+          detailedDataMenu = {
             'text': localizedString.detailedData
           };
-
           const dims = meta.dataField.column.concat(meta.dataField.row);
-
           // 클릭 이벤트 생성
           detailedDataMenu.items = detailedData.filter((data) => {
             return meta.dataField.measure.find((mea) => {
@@ -199,36 +242,27 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               for (let i = 0; i < e.cell.columnPath.length; i++) {
                 const val = e.cell.columnPath[i];
                 const col = e.columnFields[i];
-
                 const dim = dims.find((d) => d.name == col.dataField);
-
                 const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
                     dataset.cubeId, dim.uniqueName);
                 const parameter = DetailedDataUtility.getParameterInformation(
                     '@C_' + dim.name, dataset, cubeInfo, val);
-
                 rowColFilters.push(parameter);
               }
-
               for (let i = 0; i < e.cell.rowPath.length; i++) {
                 const val = e.cell.rowPath[i];
                 const row = e.rowFields[i];
-
                 const dim = dims.find((d) => d.name == row.dataField);
-
                 const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
                     dataset.cubeId, dim.uniqueName);
                 const parameter = DetailedDataUtility.getParameterInformation(
                     '@R_' + dim.name, dataset, cubeInfo, val);
-
                 rowColFilters.push(parameter);
               }
-
               // 보고서에 적용된 필터와 합치기
               const parameters = selectRootParameter(store.getState());
               rowColFilters.push(
                   ...ParamUtils.generateParameterForQueryExecute(parameters));
-
               // 상세데이터 조회
               const param = {
                 dsId: dataset.dsId,
@@ -237,10 +271,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 actId: act.actId,
                 parameter: JSON.stringify(rowColFilters)
               };
-
               models.Item.getDetailedData(param).then((res) => {
                 openModal(ShowDataModal, {
-                  modalTitle: localizedString.detailedData + ' - ' + act.actNm,
+                  modalTitle:
+                    localizedString.detailedData + ' - ' + act.actNm,
                   data: res.data.rowData
                 });
               });
@@ -249,6 +283,25 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           if (detailedDataMenu.items.length > 0) {
             contextMenu.push(detailedDataMenu);
           }
+        }
+        if (editMode === EditMode.DESIGNER) {
+          const currentReport = selectCurrentReport(store.getState());
+          const subLinkReportMenu = {
+            'text': localizedString.subLinkReportSetting,
+            'onItemClick': () => {
+              if (currentReport.reportId === 0) {
+                alert('보고서를 먼저 저장해주세요.');
+                return;
+              } else {
+                const subLinkDim = linkReportPopup({focusedItem});
+                openModal(
+                    LinkReportModal,
+                    {subYn: true, subLinkDim: subLinkDim}
+                );
+              }
+            }
+          };
+          contextMenu.push(subLinkReportMenu);
         }
         // contextMenu 저장(리턴)
         e.items = contextMenu;

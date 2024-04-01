@@ -8,7 +8,9 @@ const DataFieldType = {
   ROW: 'row',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
-  SORT_BY_ITEM: 'sortByItem'
+  SORT_BY_ITEM: 'sortByItem',
+  START_DATE: 'start',
+  END_DATE: 'end'
 };
 
 const DataFieldTypeOfItemType = {
@@ -29,6 +31,19 @@ const DataFieldTypeOfItemType = {
     DataFieldType.MEASURE,
     DataFieldType.DIMENSION,
     DataFieldType.DIMENSION_GROUP
+  ],
+  [ItemType.BOX_PLOT]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.CHORD]: [
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.TIMELINE]: [
+    DataFieldType.DIMENSION,
+    DataFieldType.DIMENSION_GROUP,
+    DataFieldType.START_DATE,
+    DataFieldType.END_DATE
   ]
 };
 

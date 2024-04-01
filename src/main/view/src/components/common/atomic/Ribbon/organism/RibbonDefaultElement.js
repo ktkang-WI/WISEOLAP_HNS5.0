@@ -33,11 +33,14 @@ import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import _ from 'lodash';
 import useQueryExecute from 'hooks/useQueryExecute';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
 import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
 import Palette from '../../Popover/organism/Palette';
 import ColorEditModal from '../../Modal/organisms/ColorEditModal';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
+
 
 const RibbonDefaultElement = () => {
   const {
@@ -117,6 +120,15 @@ const RibbonDefaultElement = () => {
     if (item.type === 'grid') {
       return item.meta.dataField.field.filter(
           (item) => item.fieldType === 'MEA');
+    } else if (item.type === 'pie') {
+      if (item.meta.colorEdit.length == 0) {
+        return item.mart.data.data.map(
+            (item, idx) => {
+              return {type: 'pie', caption: 'point' + idx};
+            }
+        );
+      }
+      return item.meta.colorEdit;
     } else {
       return item.meta.dataField.measure;
     }
@@ -202,14 +214,14 @@ const RibbonDefaultElement = () => {
       'id': 'delete_report',
       'label': localizedString.deleteReport,
       'imgSrc': deleteReport,
-      'onClick': (afterClick) => {
+      'onClick': (props) => {
         const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
         dataSource.reportId = selectedReportId;
 
         if (selectedReportId !== 0) {
           confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(dataSource, afterClick);
+            removeReport(dataSource, props);
           });
         } else {
           alert(localizedString.reportNotDeleteMsg);
@@ -240,6 +252,7 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
+        openModal(LinkReportModal, {subYn: false, subLinkDim: null});
       }
     },
     'AdHocLayout': {
@@ -308,7 +321,6 @@ const RibbonDefaultElement = () => {
       'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {
-        console.log('AddCustomChart');
         const props = {
           width: '900px',
           height: 'auto',

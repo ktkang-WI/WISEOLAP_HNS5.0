@@ -31,8 +31,8 @@ const Ribbon = () => {
           'LoadReport',
           'SaveReport',
           'DeleteReport',
+          'ConnectReport',
           'DownloadReport'
-          // 'ConnectReport'
         ]}
       />
       <CreateRibbonBtns
@@ -42,8 +42,8 @@ const Ribbon = () => {
             // 'AddContainer',
             'AddChart',
             'AddPivotGrid',
-            'AddGrid'
-            // 'AddCustomChart'
+            'AddGrid',
+            'AddCustomChart'
           ]}
       />
       <CreateRibbonBtns

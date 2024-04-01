@@ -35,47 +35,54 @@ const useSpread = () => {
     }
   };
 
-  const bindData = ({rowData, bindingInfo}) => {
-    if (rowData.length === 0) return;
+  const bindData = (spreadData) => {
+    const bindingInfos = selectBindingInfos(store.getState());
     const workbook = getWorkbook();
-    const {columns} = generateColumns(rowData, sheets);
-    let bindedSheet = workbook
-        .getSheetFromName(bindingInfo.sheetNm);
 
-    if (bindedSheet == undefined) {
-      workbook.addSheet(0,
-          new sheets.Worksheet(bindingInfo.sheetNm));
-      bindedSheet = workbook
+    Object.keys(spreadData).forEach((datasetId) => {
+      const bindingInfo = bindingInfos[datasetId];
+      const rowData = spreadData[datasetId].rowData;
+      const metaData = spreadData[datasetId].metaData;
+
+      const {columns} = generateColumns(metaData, sheets);
+      let bindedSheet = workbook
           .getSheetFromName(bindingInfo.sheetNm);
-    }
 
-    const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
-    createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
-    deleteTables(bindedSheet);
+      if (bindedSheet == undefined) {
+        workbook.addSheet(0,
+            new sheets.Worksheet(bindingInfo.sheetNm));
+        bindedSheet = workbook
+            .getSheetFromName(bindingInfo.sheetNm);
+      }
 
-    workbook.suspendPaint();
+      const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
+      createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
+      deleteTables(bindedSheet);
 
-    const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
-        bindingInfo.rowIndex,
-        bindingInfo.columnIndex,
-        invoice.records.length+1,
-        columns.length,
-        createBorderStyle(bindingInfo.useBorder));
+      workbook.suspendPaint();
 
-    table.showHeader(bindingInfo.useHeader);
-    table.autoGenerateColumns(false);
-    table.bindColumns(columns);
-    table.bindingPath('records');
-    table.bandRows(false);
-    table.bandColumns(false);
-    bindedSheet.options.gridline.showHorizontalGridline = true;
-    bindedSheet.options.gridline.showVerticalGridline = true;
-    bindedSheet.invalidateLayout();
+      const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
+          bindingInfo.rowIndex,
+          bindingInfo.columnIndex,
+          invoice.records.length+1,
+          columns.length,
+          createBorderStyle(bindingInfo.useBorder));
 
-    bindedSheet.setDataSource(dataSource);
-    table.filterButtonVisible(false);
+      table.showHeader(bindingInfo.useHeader);
+      table.autoGenerateColumns(false);
+      table.bindColumns(columns);
+      table.bindingPath('records');
+      table.bandRows(false);
+      table.bandColumns(false);
+      bindedSheet.options.gridline.showHorizontalGridline = true;
+      bindedSheet.options.gridline.showVerticalGridline = true;
+      bindedSheet.invalidateLayout();
 
-    workbook.resumePaint();
+      bindedSheet.setDataSource(dataSource);
+      table.filterButtonVisible(false);
+
+      workbook.resumePaint();
+    });
   };
 
 
@@ -157,6 +164,7 @@ const useSpread = () => {
     return new Promise((resolve) => {
       excelIO.open(
           file,
+          // excel load success callback
           (json) => {
             insertWorkbookJSON({
               reportId: reportId,
@@ -164,6 +172,7 @@ const useSpread = () => {
             });
             resolve();
           },
+          // excel load fail callback
           () => {
             insertWorkbookJSON({
               reportId: reportId,
@@ -175,6 +184,7 @@ const useSpread = () => {
   };
 
   return {
+    getWorkbook,
     bindData,
     sheetChangedListener,
     sheetNameChangedListener,

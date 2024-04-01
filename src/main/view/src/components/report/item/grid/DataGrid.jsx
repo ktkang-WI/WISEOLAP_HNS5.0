@@ -1,16 +1,35 @@
+import React,
+{
+  useEffect,
+  createRef
+} from 'react';
 import DevDataGrid,
 {Column, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
-import React, {createRef, useEffect} from 'react';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {linkReportPopup} from 'components/report/util/ReportUtility';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {useSelector} from 'react-redux';
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
 import {getPagingOption} from './Utility';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import localizedString from 'config/localization';
+import {selectEditMode}
+  from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
+import store from 'redux/modules';
+import {selectCurrentReport}
+  from 'redux/selector/ReportSelector';
+import useModal from 'hooks/useModal';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
 
 const DataGrid = ({setItemExports, id, item}) => {
+  const {openModal, alert} = useModal();
+  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataGridRef = createRef();
@@ -198,6 +217,8 @@ const DataGrid = ({setItemExports, id, item}) => {
     return value;
   };
 
+  const focusedItem = useSelector(selectCurrentDataField);
+
   return (
     <DevDataGrid
       ref={dataGridRef}
@@ -213,9 +234,34 @@ const DataGrid = ({setItemExports, id, item}) => {
       showRowLines={config.gridLine.row}
       AllowUserToAddRows={false}
       rowAlternationEnabled={config.gridLine.stripes}
+      columnResizingMode={'nextColumn'}
+      allowColumnResizing={!config.autoGridWidth}
       columnAutoWidth={config.autoGridWidth}
       showColumnHeaders={config.columnHeader}
       wordWrapEnabled={config.autoWrap}
+      onContextMenuPreparing={(e) => {
+        const contextMenu = [];
+        if (editMode === EditMode.DESIGNER) {
+          const currentReport = selectCurrentReport(store.getState());
+          const subLinkReportMenu = {
+            'text': localizedString.subLinkReportSetting,
+            'onItemClick': () => {
+              if (currentReport.reportId === 0) {
+                alert('보고서를 먼저 저장해주세요.');
+                return;
+              } else {
+                const subLinkDim = linkReportPopup({focusedItem});
+                openModal(
+                    LinkReportModal,
+                    {subYn: true, subLinkDim: subLinkDim}
+                );
+              }
+            }
+          };
+          contextMenu.push(subLinkReportMenu);
+        }
+        e.items = contextMenu;
+      }}
     >
       <Paging
         enabled={config.paging.pagination.isOk}
