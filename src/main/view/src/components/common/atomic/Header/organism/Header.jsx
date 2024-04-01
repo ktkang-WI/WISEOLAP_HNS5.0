@@ -88,6 +88,8 @@ const Header = ({left, middle, right}) => {
           width={item.width}
           key={item.id}
           position={item.position}
+          cursor={item.cursor}
+          onClick={item.onClick}
         >
           <HeaderLogoImage height={item.height}/>
         </HeaderPanel>

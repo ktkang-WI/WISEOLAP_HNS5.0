@@ -27,10 +27,10 @@ const NumberFormatModal = ({
       M: format.suffixM,
       B: format.suffixB
     },
-    suffixO: format.suffixO || '',
-    suffixK: format.suffixK || localizedString.k,
-    suffixM: format.suffixM || localizedString.m,
-    suffixB: format.suffixB || localizedString.b
+    suffixO: _.isNil(format.suffixO) ? '' : format.suffixO,
+    suffixK: _.isNil(format.suffixK) ? localizedString.k : format.suffixK,
+    suffixM: _.isNil(format.suffixM) ? localizedString.m : format.suffixM,
+    suffixB: _.isNil(format.suffixB) ? localizedString.b : format.suffixB
   };
 
   return (

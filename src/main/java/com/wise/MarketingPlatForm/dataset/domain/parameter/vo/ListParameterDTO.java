@@ -36,6 +36,8 @@ public class ListParameterDTO {
     String operation;
     String sortBy;
     String sortOrder;
+    boolean useAll;
+    boolean multiSelect;
 
     public static ListParameterDTO fromMap(Map<String, String> map) {
         Gson gson = new Gson();
@@ -59,6 +61,8 @@ public class ListParameterDTO {
         .operation(String.valueOf(map.get("operation")))
         .sortBy(String.valueOf(map.getOrDefault("sortBy", "")))
         .sortOrder(String.valueOf(map.getOrDefault("sortOrder", "")))
+        .useAll(Boolean.valueOf(String.valueOf(map.get("useAll"))))
+        .multiSelect(Boolean.valueOf(String.valueOf(map.get("multiSelect"))))
         .build();
     }
 }
