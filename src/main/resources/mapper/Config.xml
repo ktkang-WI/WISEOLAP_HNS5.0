@@ -180,13 +180,6 @@
               REPORT_DIRECT_VIEW = REPORT_DIRECT_VIEW
           WHERE 1 = 1
     </update>
-    
-    <select id="getSpreadLicense" resultType="map">
-		SELECT
-	        SPREAD_JS_DESIGNER_LICENSE,
-	        SPREAD_JS_LICENSE    
-        FROM WB_CONFIG_MSTR
-	</select>
   
     <update id="updateConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
         UPDATE PUB_FLD_MSTR

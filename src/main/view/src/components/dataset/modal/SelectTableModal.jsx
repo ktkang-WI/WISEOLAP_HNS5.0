@@ -26,6 +26,10 @@ const SelectTableModal = ({dsId, dsViewId, onSubmit, ...props}) => {
   return (
     <Modal
       onSubmit={() => {
+        if (_.isEmpty(selectedTable)) {
+          alert(localizedString.validationTableSelect);
+          return true;
+        }
         const tableName = dsViewId ?
             selectedTable.tableNm : selectedTable.TBL_NM;
         models.DBInfo.dbColumns(dsId, tableName)

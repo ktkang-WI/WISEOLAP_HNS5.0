@@ -419,6 +419,8 @@
   "dataFieldLimitMsg": "Only up to N items can be raised.",
   "startDate": "Date(Start)",
   "endDate": "Date(End)",
+  "validationTableSelect": "Please select a table.",
+  "dsDeleteMsg": "Do you want to delete datasource?",
   "datePlaceholder": "New Date",
   "relationVisualization": "Relation Visualization",
   "connectionVisualization": "Connection Visualization",
