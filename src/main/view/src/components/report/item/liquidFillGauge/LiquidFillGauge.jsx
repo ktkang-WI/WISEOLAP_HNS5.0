@@ -24,14 +24,14 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
       const refs = event.map((item) => item.ref);
       if (refs.length === 0) return;
       refs.forEach((ref) => {
-        ref.current.classList.toggle('liquid-selected ');
+        ref.current.classList.toggle('liquid-selected');
       });
     },
     removeSelectionFunc: (event) => {
       const refs = event.map((item) => item.ref);
       refs.forEach((ref) => {
         if (!ref?.current) return;
-        ref.current.classList.toggle('liquid-selected ');
+        ref.current.classList.toggle('liquid-selected');
       });
     }
   });
