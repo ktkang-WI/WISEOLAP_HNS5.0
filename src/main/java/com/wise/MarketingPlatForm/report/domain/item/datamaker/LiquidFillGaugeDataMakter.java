@@ -53,7 +53,9 @@ public class LiquidFillGaugeDataMakter implements ItemDataMaker  {
       List<String> dimNames = new ArrayList<>();
       List<Measure> seriesMeasureNames = new ArrayList<>();
       Map<String, Object> info = new HashMap<>();
-    
+      for (Dimension dim : dimensions) {
+        dimNames.add(dim.getName());
+      }
       for (Map<String, Object> row : data) {
           if (dimNames.size() == 0) {
               row.put("arg", "Grand Total");
