@@ -28,9 +28,6 @@ public class LiquidFillGaugeDataMakter implements ItemDataMaker  {
     
     DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
-      measures.remove(null);
-      dimensions.remove(null);
-      sortByItems.remove(null);
       List<Measure> allMeasure = new ArrayList<>();
 
       allMeasure.addAll(measures);
@@ -57,13 +54,6 @@ public class LiquidFillGaugeDataMakter implements ItemDataMaker  {
       List<Measure> seriesMeasureNames = new ArrayList<>();
       Map<String, Object> info = new HashMap<>();
     
-      for (Dimension dim : dimensions) {
-        // 비정형 보고서에서 조회 시, 행(row) -> 차원(dimension), 열(column) -> 차원그룹(dimensionGroup)
-        if ("dimension".equals(dim.getCategory()) || "row".equals(dim.getCategory())) {
-            dimNames.add(dim.getName());
-        }
-      }
-      
       for (Map<String, Object> row : data) {
           if (dimNames.size() == 0) {
               row.put("arg", "Grand Total");

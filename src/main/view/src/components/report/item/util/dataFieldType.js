@@ -41,6 +41,9 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
     }
     case ItemType.CHART: {
       dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      break;
     }
     default: {
       dataFieldFormat.push(DataFieldType.MEASURE);

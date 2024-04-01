@@ -1,10 +1,14 @@
 import {Fragment, useState} from 'react';
 import styled from 'styled-components';
+import localizedString from 'config/localization';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const StyledStepper = styled.div`
   box-sizing: border-box;
   width: 100%;
-  background-color: #f1f1f1;
+  background-color: ${theme.color.panelColor};
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -25,10 +29,12 @@ const StepLabel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.active ? 'white' : '#999'};
+  color: ${(props) => props.active ? theme.color.white : theme.color.primary};
   background-color:${(props) => props.active ?
-    '#c1c1c1' : (props.prev ? '#c1c1c1' : 'transparent')};
-  border: 2px solid ${(props) => props.active ?'#c1c1c1' : '#999'};
+    theme.color.dataColumnBorder :
+    (props.prev ? theme.color.dataColumnBorder : 'transparent')};
+  border: 2px solid ${(props) => props.active ?
+    theme.color.dataColumnBorder : theme.color.primary};
   border-radius: 50%;
   font-weight: bold;
   cursor: pointer;
@@ -41,7 +47,7 @@ const StepLine = styled.div`
   width: 250px;
   height: 2px;
   background-color: ${(props) => props.active ?
-    'black' : (props.prev ? 'black' : '#999')};
+    theme.color.black : (props.prev ? theme.color.black : theme.color.primary)};
   position: relative;
   top: 16px;
   z-index: 0;
@@ -57,15 +63,15 @@ const NavigationButtons = styled.div`
 const StyledButton = styled.button`
   padding: 10px 20px;
   margin-left: 5px;
-  background-color: #007bff;
-  color: white;
+  background-color: ${theme.color.primary};
+  color: ${theme.color.white};
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   
   &:hover {
-    background-color: #0056b3;
+    background-color: ${theme.color.primaryHover};
   }
 `;
 
@@ -80,14 +86,14 @@ const StepText = styled.div`
   width: 270px;
   height: 40px;
   font-size: 12px;
-  color: #333;
+  color: ${theme.color.black};
   position: absolute;
   text-align: center;
   top: 30px;
   margin-top: 5px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Checkmark = styled.div`
@@ -142,17 +148,17 @@ const Stepper = ({
         {activeStep >= 1 ?
           <StyledButton
             onClick={goToPreviousStep}>
-              이전
+            {localizedString.prevStep}
           </StyledButton> : <></>}
         {activeStep < steps.length -1 ?
           <StyledButton
             onClick={goToNextStep}>
-              다음
+            {localizedString.nextStep}
           </StyledButton> : <></>}
         {activeStep === steps.length - 1 ?
           <StyledButton
             onClick={onComplete}>
-              완료
+            {localizedString.completeStep}
           </StyledButton> : <></>}
       </NavigationButtons>
     </StyledStepper>

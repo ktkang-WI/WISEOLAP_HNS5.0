@@ -8,6 +8,7 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {getTheme} from 'config/theme';
 import {CheckBox, NumberBox} from 'devextreme-react';
 import {useState} from 'react';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
@@ -47,7 +48,7 @@ const ContentArrayModal = ({
     >
       <FieldSet>
         <Field>
-          <FieldLabel>컬럼개수 자동지정</FieldLabel>
+          <FieldLabel>{localizedString.columnNumberAutoSetting}</FieldLabel>
           <FieldValue
           >
             <CheckBox
@@ -57,7 +58,7 @@ const ContentArrayModal = ({
           </FieldValue>
         </Field>
         <Field>
-          <FieldLabel>컬럼개수</FieldLabel>
+          <FieldLabel>{localizedString.columnNumber}</FieldLabel>
           <FieldValue
           >
             <NumberBox

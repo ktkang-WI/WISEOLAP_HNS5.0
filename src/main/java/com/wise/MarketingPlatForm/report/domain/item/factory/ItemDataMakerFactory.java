@@ -5,7 +5,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
-import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChroplethDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
@@ -48,7 +48,7 @@ public class ItemDataMakerFactory {
             result = new LiquidFillGaugeDataMakter();
         }
         if (itemType == ItemType.CHOROPLETH) {
-            result = new ChroplethDataMaker();
+            result = new ChoroplethDataMaker();
         }
 
 

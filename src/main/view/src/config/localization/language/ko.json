@@ -599,5 +599,10 @@
   "relationVisualization": "관계 시각화",
   "connectionVisualization": "연관 시각화",
   "distributionVisualization": "분포 시각화",
-  "filter": "필터"
+  "filter": "필터",
+  "columnNumberAutoSetting": "컬럼개수 자동지정",
+  "columnNumber": "컬럼개수",
+  "nextStep": "다음",
+  "prevStep": "이전",
+  "completeStep": "완료"
 }
