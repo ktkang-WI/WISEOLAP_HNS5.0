@@ -4,21 +4,53 @@ import boxPlotImg from 'assets/image/icon/item/box_plot.png';
 
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
+import choroplethImg from 'assets/image/icon/item/choropleth.png';
+import cardImg from 'assets/image/icon/item/card.png';
+import liquidFillGaugeImg from 'assets/image/icon/item/liquidFillGauge.png';
+import squariFied from 'assets/image/icon/item/squariFied.png';
+import {useSelector} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import ChoroplethModal
+  from 'components/common/atomic/Modal/organisms/ChoroplethModal';
+import useModal from 'hooks/useModal';
 import ItemType from 'components/report/item/util/ItemType';
 import usePopover from 'hooks/usePopover';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {useSelector} from 'react-redux';
 
 const CustomChartDefaulElement = () => {
+  const reportId = useSelector(selectCurrentReportId);
   const {insertFlexLayout} = useLayout();
   const {closePopover} = usePopover();
-
+  const {openModal} = useModal();
   const selectedReportId = useSelector(selectCurrentReportId);
-
+  const {
+    LIQUID_FILL_GAUGE,
+    TREEMAP,
+    CHOROPLETH,
+    CARD,
+    CHORD,
+    BOX_PLOT
+  } = ItemType;
   const onClick = (type) => {
-    insertFlexLayout(selectedReportId, type);
+    onClickExecutor(type);
+  };
 
-    closePopover();
+  const onClickExecutor = (type) => {
+    switch (type) {
+      case CHOROPLETH: {
+        openModal(ChoroplethModal, {
+          modalTitle: localizedString.choropleth,
+          label: localizedString.choropleth,
+          onSubmit: (returedData) => {
+            insertFlexLayout(reportId, 'choropleth', '', returedData);
+          }
+        });
+        break;
+      }
+      default: {
+        insertFlexLayout(selectedReportId, type);
+        closePopover();
+      }
+    }
   };
 
   const data = [
@@ -32,7 +64,7 @@ const CustomChartDefaulElement = () => {
       checkboxs: [
         {
           title: localizedString.chordDiagram,
-          type: ItemType.CHORD_DIAGRAM,
+          type: CHORD,
           checked: false,
           src: chordImg
         },
@@ -49,9 +81,21 @@ const CustomChartDefaulElement = () => {
       checkboxs: [
         {
           title: localizedString.boxPlot,
-          type: ItemType.BOX_PLOT,
+          type: BOX_PLOT,
           checked: false,
           src: boxPlotImg
+        },
+        {
+          title: localizedString.liquidFillGauge,
+          type: LIQUID_FILL_GAUGE,
+          checked: false,
+          src: liquidFillGaugeImg
+        },
+        {
+          title: localizedString.Treemap,
+          type: TREEMAP,
+          checked: false,
+          src: squariFied
         }
       ]
     },
@@ -63,6 +107,18 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.etc,
       checkboxs: [
+        {
+          title: localizedString.card,
+          type: CARD,
+          checked: false,
+          src: cardImg
+        },
+        {
+          title: localizedString.choropleth,
+          type: CHOROPLETH,
+          checked: false,
+          src: choroplethImg
+        }
       ]
     }
   ];

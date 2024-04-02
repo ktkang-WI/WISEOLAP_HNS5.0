@@ -16,6 +16,7 @@ const contextRoot =
 import useReportSave from 'hooks/useReportSave';
 import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
+import {contextPath} from 'routes/Router';
 
 
 const HeaderDefaultElement = () => {
@@ -31,7 +32,16 @@ const HeaderDefaultElement = () => {
       'id': 'logo',
       'type': 'Logo',
       'height': 'auto',
-      'width': '220px'
+      'width': '220px',
+      'cursor': 'pointer',
+      'onClick': (e) => {
+        const href =
+          location.href.slice(
+              0,
+              location.href.indexOf(contextPath) + contextPath.length + 1
+          ) + initialDisplay.toLowerCase();
+        location.href = href;
+      }
     },
     'ReportTab': {
       'id': 'report_tab',

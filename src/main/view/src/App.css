@@ -136,7 +136,6 @@ img {
   transition: background-color 0.3s ease;
 }
 
-
 .custom-scrollbar:hover {
   background-color: #babac0;
   transition: background-color 0.3s ease;
@@ -168,4 +167,8 @@ img {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:active {
   background-color: #b0b0b8;
+}
+
+.liquid-selected {
+  border: 2px dotted #b1b1b1;
 }

@@ -1,6 +1,6 @@
 import {makeAdHocItemMart, makeMart}
   from './martUtilityFactory';
-import {DataFieldType, DataFieldTypeOfItemType} from './dataFieldType';
+import {DataFieldType, dataFieldTypeOfItemTypeFunc} from './dataFieldType';
 import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 import {paletteCollection}
@@ -21,6 +21,10 @@ const makeItem = (orgItem, countMap) => {
     pivot: '피벗',
     grid: '그리드',
     boxPlot: '박스플롯',
+    choropleth: '코로프레스',
+    liquidFillGauge: '액체게이지',
+    treeMap: '트리맵',
+    card: '카드',
     timeline: '타임라인',
     chord: '의존성 휠',
     arc: '아크 다이어그램'
@@ -93,7 +97,7 @@ const makeAdHocItem = (orgItem) => {
 };
 
 const makeAdHocOption = () => {
-  const dataFieldTypes = DataFieldTypeOfItemType['pivot'];
+  const dataFieldTypes = dataFieldTypeOfItemTypeFunc('pivot');
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
   dataField[DataFieldType.SORT_BY_ITEM] = [];

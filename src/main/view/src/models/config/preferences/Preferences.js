@@ -16,8 +16,3 @@ export const updateGeneralConfig = async (general) => {
     params: general
   });
 };
-
-export const getSpread = async () => {
-  return await axios.get(configPath + '/general/spread');
-};
-

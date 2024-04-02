@@ -17,16 +17,21 @@ import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
 
+import Choropleth from 'components/report/item/choropleth/Choropleth';
 import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
 import PivotGrid from 'components/report/item/pivot/PivotGrid';
+import Card from 'components/report/item/card/Card';
 import DataGrid from 'components/report/item/grid/DataGrid';
+import TreeMap from 'components/report/item/treeMap/TreeMap';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
 import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import LiquidFillGauge
+  from 'components/report/item/liquidFillGauge/LiquidFillGauge';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
@@ -98,6 +103,10 @@ const ItemBoard = () => {
     pivot: PivotGrid,
     grid: DataGrid,
     pie: Pie,
+    choropleth: Choropleth,
+    treeMap: TreeMap,
+    liquidFillGauge: LiquidFillGauge,
+    card: Card,
     boxPlot: BoxPlot,
     timeline: Timeline,
     chord: Chord,
@@ -115,39 +124,35 @@ const ItemBoard = () => {
       isOk = false;
       return isOk;
     }
-    if (pickItem.type === 'CHART') {
-      isOk = true;
-    }
-    if (pickItem.type === 'GRID') {
-      isOk = true;
-    }
-    if (pickItem.type === 'PIE') {
-      isOk = true;
-    }
-    if (pickItem.type === 'PIVOT') {
-      isOk = true;
-    }
-    if (['TIMELINE'].includes(pickItem.type)) {
-      isOk = true;
-    }
+    isOk = [
+      'CHART',
+      'GRID',
+      'PIE',
+      'PIVOT',
+      'CHOROPLETH',
+      'TREEMAP',
+      'CARD',
+      'LIQUIDFILLGAUGE',
+      'TIMELINE'
+    ].includes(pickItem.type);
 
     return isOk;
   };
 
-  const exportFile = (e, type) => {
+  const exportFile = (e, type, name) => {
     const pickItem = itemExportsPicker(e);
     if (!exportExceptionHandle(pickItem)) {
       console.error('아이템 및 데이터가 그려지지 않았습니다.');
       return;
     };
     if (Type.CSV === type) {
-      exportToFile(e, pickItem.data, Type.CSV);
+      exportToFile(name, pickItem.data, Type.CSV);
     } else if (Type.TXT === type) {
-      exportToFile(e, pickItem.data, Type.TXT);
+      exportToFile(name, pickItem.data, Type.TXT);
     } else if (Type.XLSX === type) {
-      exportToFile(e, pickItem.data, Type.XLSX);
+      exportToFile(name, pickItem.data, Type.XLSX);
     } else if (Type.IMG === type) {
-      exportToFile(e, pickItem, Type.IMG);
+      exportToFile(name, pickItem, Type.IMG);
     }
   };
 
@@ -171,7 +176,8 @@ const ItemBoard = () => {
           setItemExports={setItemExports}
           item={item}
           adHocOption={adHocOption}
-          id={item.id}/>
+          id={item.id}
+          node={node}/>
       </Item>
     );
   }
@@ -280,6 +286,9 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
+      // TODO: 임시용 변수
+      const imgDownloadExcept = ['card', 'liquidFillGauge'];
+      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -307,18 +316,18 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
-              {isImg ?
+              {isImg && !isItPossibleToDownloadImg?
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.IMG);
+                exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
               }}>img</button> : null}
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.CSV);
+                exportFile(tabNode._attributes.id, Type.CSV, item.meta.name);
               }}>csv</button>
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.TXT);
+                exportFile(tabNode._attributes.id, Type.TXT, item.meta.name);
               }}>txt</button>
               <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.XLSX);
+                exportFile(tabNode._attributes.id, Type.XLSX, item.meta.name);
               }}>xlsx</button>
             </Popover>
           </button>,

@@ -14,7 +14,7 @@ import {getHint} from 'components/config/utility/utility';
 export const DataSourceAdditionContext = createContext();
 
 const DataSourceAddition = () => {
-  const {alert} = useModal();
+  const {alert, confirm} = useModal();
 
   const [dataSource, setDataSource] = useState([]);
   const dataSourceListRef = useRef();
@@ -142,16 +142,18 @@ const DataSourceAddition = () => {
   };
 
   const handleRemove = ({instance}) => {
-    instance.deleteDs()
-        .then((res) => {
-          if (res.data.data) {
-            init();
-            alert(localizedString.successRemove);
-          }
-        })
-        .catch(() => {
-          throw new Error('Failed Remove Ds');
-        });
+    confirm(localizedString.dsDeleteMsg, () => {
+      instance.deleteDs()
+          .then((res) => {
+            if (res.data.data) {
+              init();
+              alert(localizedString.successRemove);
+            }
+          })
+          .catch(() => {
+            throw new Error('Failed Remove Ds');
+          });
+    });
   };
 
   const navBarItems = () => {
