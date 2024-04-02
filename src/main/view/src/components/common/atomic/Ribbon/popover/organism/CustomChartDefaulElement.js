@@ -6,8 +6,8 @@ import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
 import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
-import liquidFillGaugeImg from 'assets/image/icon/item/liquidFillGauge.png';
-import squariFied from 'assets/image/icon/item/squariFied.png';
+import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import treeMapImg from 'assets/image/icon/item/treemap.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -95,7 +95,7 @@ const CustomChartDefaulElement = () => {
           title: localizedString.Treemap,
           type: TREEMAP,
           checked: false,
-          src: squariFied
+          src: treeMapImg
         }
       ]
     },
