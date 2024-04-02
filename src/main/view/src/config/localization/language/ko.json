@@ -90,6 +90,15 @@
       }
     }
   },
+  "map": {
+    "alert": {
+      "completePickMap": "지도 옵션 선택완료"
+    }
+  },
+  "Treemap": "트리맵",
+  "legned": "범례",
+  "notationFormat": "표기형식",
+  "contentArray": "콘테츠배열",
   "test": "테스트",
   "newWindow": "새 창 열기",
   "viewer": "뷰어",
@@ -113,6 +122,7 @@
   "dimension": "차원",
   "dimensionGrop": "차원 그룹",
   "measure": "측정값",
+  "treeMapMeasure": "측정값 (1개)",
   "dimensionPlaceholder": "새 차원",
   "dimensionGroupPlaceholder": "새 차원 그룹",
   "measurePlaceholder": "새 측정값",
@@ -293,6 +303,7 @@
   "year": "년도",
   "month": "월",
   "day": "일",
+  "listMap": "지도목록",
   "datasetNotSelected": "데이터집합이 선택되지 않았습니다.",
   "dataHighlightList": "하이라이트 목록",
   "dataHighlightInfo": "하이라이트 정보",
@@ -330,7 +341,7 @@
   "compareToPositiveNegative": "긍정/부정 비교",
   "boxPlot": "박스플롯",
   "NeuralNetworkBar": "신경망 바",
-  "liquidGauge": "액체 게이지",
+  "liquidFillGauge": "액체 게이지",
   "heatmap": "히트맵",
   "sunburst": "선버스트",
   "neuralNetworkTree": "신경망 트리",
@@ -577,6 +588,7 @@
   "validationReportNm": "보고서 명을 입력해 주세요.",
   "dataAttributeList": "데이터속성목록",
   "reportList": "보고서목록",
+  "requestWorkComplete": "작업을 완료해주세요.",
   "linkReport": "연결 보고서",
   "linkReportAlready": "이미 연결된 보고서 입니다.",
   "subLinkReportSetting": "서브 연결 보고서 설정",
@@ -589,5 +601,10 @@
   "relationVisualization": "관계 시각화",
   "connectionVisualization": "연관 시각화",
   "distributionVisualization": "분포 시각화",
-  "filter": "필터"
+  "filter": "필터",
+  "columnNumberAutoSetting": "컬럼개수 자동지정",
+  "columnNumber": "컬럼개수",
+  "nextStep": "다음",
+  "prevStep": "이전",
+  "completeStep": "완료"
 }
