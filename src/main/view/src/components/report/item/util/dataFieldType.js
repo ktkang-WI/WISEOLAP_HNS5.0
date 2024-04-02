@@ -28,9 +28,6 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.COLUMN);
       break;
     }
-    case ItemType.CHART: {
-      dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
-    }
     // COMMON DataFieldType
     case ItemType.TIMELINE: {
       dataFieldFormat.push(DataFieldType.DIMENSION);
@@ -47,6 +44,9 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
       dataFieldFormat.push(DataFieldType.MEASURE);
       dataFieldFormat.push(DataFieldType.DIMENSION);
+      break;
+    }
+    case ItemType.CALENDAR: {
       break;
     }
     default: {
