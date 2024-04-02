@@ -109,7 +109,7 @@ const D3ArcDiagram = ({
 
       const getPath = () => {
         if (rotated) {
-          const pWidth = Math.min(r, itemWidth - 80);
+          const pWidth = Math.min(r, svgWidth - x);
 
           return ['M', x, start, // 시작 x, y
             'A',
