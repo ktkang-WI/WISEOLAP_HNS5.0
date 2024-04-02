@@ -129,3 +129,43 @@ img {
 #d3_tooltip p + p{
   margin: 0;
 }
+
+.custom-scrollbar {
+  background-image: linear-gradient(white, white);
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+
+.custom-scrollbar:hover {
+  background-color: #babac0;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+}  
+
+.custom-scrollbar:hover {
+  background-color: #babac0;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: inherit;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: #b0b0b8;
+}

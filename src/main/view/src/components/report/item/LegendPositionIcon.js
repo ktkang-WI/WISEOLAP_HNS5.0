@@ -134,70 +134,70 @@ const LegendPositionIcon = [
     position: 'outside',
     horizontalAlignment: 'center',
     verticalAlignment: 'bottom',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideHCenterTop,
     position: 'outside',
     horizontalAlignment: 'center',
     verticalAlignment: 'top',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideHLeftBottom,
     position: 'outside',
     horizontalAlignment: 'left',
     verticalAlignment: 'bottom',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideHLeftTop,
     position: 'outside',
     horizontalAlignment: 'left',
     verticalAlignment: 'top',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideHRightBottom,
     position: 'outside',
     horizontalAlignment: 'right',
     verticalAlignment: 'bottom',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideHRightTop,
     position: 'outside',
     horizontalAlignment: 'right',
     verticalAlignment: 'top',
-    itemTextPosition: 'right'
+    itemTextPosition: 'bottom'
   },
   {
     src: outSideVLeftBottom,
     position: 'outside',
     horizontalAlignment: 'left',
     verticalAlignment: 'bottom',
-    itemTextPosition: 'bottom'
+    itemTextPosition: 'right'
   },
   {
     src: outSideVLeftTop,
     position: 'outside',
     horizontalAlignment: 'left',
     verticalAlignment: 'top',
-    itemTextPosition: 'bottom'
+    itemTextPosition: 'right'
   },
   {
     src: outSideVRightBottom,
     position: 'outside',
     horizontalAlignment: 'right',
     verticalAlignment: 'bottom',
-    itemTextPosition: 'bottom'
+    itemTextPosition: 'right'
   },
   {
     src: outSideVRightTop,
     position: 'outside',
     horizontalAlignment: 'right',
     verticalAlignment: 'top',
-    itemTextPosition: 'bottom'
+    itemTextPosition: 'right'
   }
 ];
 export default LegendPositionIcon;

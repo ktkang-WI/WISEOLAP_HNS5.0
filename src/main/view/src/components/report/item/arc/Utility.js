@@ -1,7 +1,6 @@
-import {defaultDimension, defaultMeasure}
+import {defaultDimension}
   from 'components/report/item/util/martUtilityFactory';
 import {DataFieldType} from '../util/dataFieldType';
-import localizedString from 'config/localization';
 import {setMeta} from '../util/metaUtilityFactory';
 
 
@@ -10,27 +9,7 @@ import {setMeta} from '../util/metaUtilityFactory';
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
-  const defaultAxis = {
-    formatType: 'Number',
-    unit: 'Ones',
-    axisStartToZero: true,
-    useAxis: true,
-    customText: false,
-    suffixEnabled: false,
-    suffix: {
-      O: '',
-      K: '천',
-      M: '백만',
-      B: '십억'
-    },
-    suffixO: '',
-    suffixK: localizedString.k,
-    suffixM: localizedString.m,
-    suffixB: localizedString.b,
-    precision: 0,
-    precisionType: 'round',
-    useDigitSeparator: true
-  };
+  setMeta(item, 'useRotate', false);
   setMeta(item, 'legend', {
     useLegend: true,
     position: 'outside',
@@ -38,7 +17,6 @@ const generateMeta = (item) => {
     verticalAlignment: 'top',
     itemTextPosition: 'right'
   });
-  setMeta(item, 'yAxis', defaultAxis);
 };
 
 /**
@@ -54,29 +32,24 @@ const generateItem = (item, rootItem) => {
  * @return {JSON} dataFieldOption
  */
 const getDataFieldOptionChild = () => {
-  const dataFieldMeasure = {
-    ...defaultMeasure
-  };
-
   const dataFieldDimension = {
     ...defaultDimension
   };
 
   return {
-    [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.DIMENSION]: dataFieldDimension
   };
 };
 
 /**
- * 차트 커스텀 파라미터 삽입
+ * 조회시 사용하는 파라미터 생성
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
   param.dimension = dataField.dimension;
-  param.measure = dataField.measure;
+  param.measure = [];
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
@@ -90,7 +63,7 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'YAxisSetting',
+    'Rotate',
     'ShowColorLegendD3',
     'Palette',
     'ColorEdit',
@@ -99,7 +72,7 @@ const getRibbonItems = () => {
 };
 
 /**
- * 속셩 영역 아이템 배열을 반환합니다.
+ * 속성 영역 아이템 배열을 반환합니다.
  * @return {Array} attributeItems
  */
 const getAttributeItems = () => {

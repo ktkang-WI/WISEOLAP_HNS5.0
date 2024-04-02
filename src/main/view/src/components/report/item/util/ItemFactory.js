@@ -22,7 +22,8 @@ const makeItem = (orgItem, countMap) => {
     grid: '그리드',
     boxPlot: '박스플롯',
     timeline: '타임라인',
-    chord: '의존성 휠'
+    chord: '의존성 휠',
+    arc: '아크 다이어그램'
   };
 
   let initNum = 1;

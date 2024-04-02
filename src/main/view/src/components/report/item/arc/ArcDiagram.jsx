@@ -1,16 +1,19 @@
-import {useEffect, useState, useRef} from 'react';
+import {useEffect, useState, useCallback, useRef} from 'react';
 import useQueryExecute from 'hooks/useQueryExecute';
-import D3Chord from './component/D3Chord';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import D3ArcDiagram from './component/D3ArcDiagram';
 
-
-const Chord = ({item}) => {
+const ArcDiagram = ({item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
 
   if (!mart.init) {
     return <></>;
   }
+
+  const getDataField = useCallback(() => {
+    return meta.dataField;
+  }, [mart.data]);
 
   const interactiveOption = meta.interactiveOption;
 
@@ -53,46 +56,6 @@ const Chord = ({item}) => {
     clearAllFilter(item);
   }, [interactiveOption.crossDataSource]);
 
-  const getFilter = (selectedItem) => {
-    const filters = selectedItem.reduce((acc, filter) => {
-      let v = filter.value;
-      if (v == '\u2800') {
-        v = null;
-      }
-
-      if (acc[filter.field]) {
-        acc[filter.field].push(v);
-      } else {
-        acc[filter.field] = [v];
-      }
-
-      return acc;
-    }, {});
-
-    return filters;
-  };
-
-  const selectItem = (v) => {
-    if (!interactiveOption.enabled) return;
-
-    let newSelectedItem = [];
-    // 이미 선택되어 있는 아이템 클릭시 해제
-    if (selectedItem.find((i) => v.value == i.value)) {
-      newSelectedItem = selectedItem.filter((i) => v.value != i.value);
-    } else {
-      if (interactiveOption.mode == 'single') {
-        newSelectedItem = [v];
-      } else {
-        newSelectedItem = [...selectedItem, v];
-      }
-    }
-
-    setSelectedItem(newSelectedItem);
-    filterItems(item, getFilter(newSelectedItem));
-  };
-
-  // TODO: 추후 팔레트 적용
-
   let palette;
 
   if (meta.paletteType === 'colorEdit') {
@@ -101,14 +64,46 @@ const Chord = ({item}) => {
     palette = meta.palette.colors;
   }
 
+  const selectItem = (key, id) => {
+    if (!interactiveOption.enabled) return;
+
+    let newSelectedItem = [];
+    // 이미 선택되어 있는 아이템 클릭시 해제
+    if (selectedItem[key]?.includes(id)) {
+      newSelectedItem = {
+        ...selectedItem,
+        [key]: selectedItem[key].filter((name) => name != id)
+      };
+
+      if (newSelectedItem[key].length == 0) {
+        delete newSelectedItem[key];
+      }
+    } else {
+      if (interactiveOption.mode == 'single') {
+        newSelectedItem = {[key]: [id]};
+      } else {
+        newSelectedItem = {
+          ...selectedItem,
+          [key]: [...(selectedItem[key] || []), id]
+        };
+      }
+    }
+
+    setSelectedItem(newSelectedItem);
+    filterItems(item, newSelectedItem);
+  };
+
   return (
     <Wrapper ref={ref}>
-      <D3Chord
+      <D3ArcDiagram
         width={width}
         height={height}
         data={mart.data}
         id={item.id}
+        dimensions={getDataField().dimension}
         palette={palette}
+        rotated={meta.useRotate}
+        legend={meta.legend}
         selectedItem={selectedItem}
         onClick={selectItem}
       />
@@ -116,4 +111,4 @@ const Chord = ({item}) => {
   );
 };
 
-export default Chord;
+export default ArcDiagram;

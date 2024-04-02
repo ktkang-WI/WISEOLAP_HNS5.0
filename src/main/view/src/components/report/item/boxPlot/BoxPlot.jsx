@@ -1,6 +1,7 @@
 import {useRef, useEffect, useState, useCallback} from 'react';
 import D3BoxPlot from './component/D3BoxPlot';
 import useQueryExecute from 'hooks/useQueryExecute';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 
 const BoxPlot = ({item}) => {
@@ -119,18 +120,20 @@ const BoxPlot = ({item}) => {
   };
 
   return (
-    <D3BoxPlot
-      width={width}
-      height={height}
-      d3Ref={ref}
-      data={mart.data}
-      id={item.id}
-      palette={palette}
-      selectedItem={selectedItem}
-      onClick={selectItem}
-      yAxis={meta.yAxis}
-      measures={getDataField().measure}
-    />
+    <Wrapper ref={ref}>
+      <D3BoxPlot
+        width={width}
+        height={height}
+        data={mart.data}
+        id={item.id}
+        palette={palette}
+        selectedItem={selectedItem}
+        onClick={selectItem}
+        yAxis={meta.yAxis}
+        legend={meta.legend}
+        measures={getDataField().measure}
+      />
+    </Wrapper>
   );
 };
 

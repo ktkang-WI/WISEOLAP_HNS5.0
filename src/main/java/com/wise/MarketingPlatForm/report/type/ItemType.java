@@ -7,7 +7,8 @@ import java.util.stream.Stream;
 
 public enum ItemType {
     CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid"), PIE_CHART("pie"),
-    AD_HOC("adHoc"), BOX_PLOT("boxPlot"), TIMELINE("timeline"), CHORD("chord");
+    AD_HOC("adHoc"), BOX_PLOT("boxPlot"), TIMELINE("timeline"), CHORD_DIAGRAM("chord"),
+    ARC_DIAGRAM("arc");
 
     private final String symbol;
 

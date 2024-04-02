@@ -30,6 +30,7 @@ import {DesignerMode} from 'components/config/configType';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
+import ArcDiagram from 'components/report/item/arc/ArcDiagram';
 
 
 const theme = getTheme();
@@ -99,7 +100,8 @@ const ItemBoard = () => {
     pie: Pie,
     boxPlot: BoxPlot,
     timeline: Timeline,
-    chord: Chord
+    chord: Chord,
+    arc: ArcDiagram
   };
 
   const itemExportsPicker = (id) => {

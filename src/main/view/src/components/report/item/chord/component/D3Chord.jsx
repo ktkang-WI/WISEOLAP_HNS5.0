@@ -31,7 +31,7 @@ const D3Chord = ({
   let margin = 0;
 
   groups.forEach((group) => {
-    margin = Math.max(margin, getTextWidth(group.value, 14));
+    margin = Math.max(margin, getTextWidth(group.value, 14) + 10);
   });
 
   const radius = Math.min(width, height) / 2 - margin - 10;

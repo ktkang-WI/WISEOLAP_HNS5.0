@@ -1,4 +1,5 @@
 import chordImg from 'assets/image/icon/item/chord.png';
+import arcImg from 'assets/image/icon/item/arc.png';
 import boxPlotImg from 'assets/image/icon/item/box_plot.png';
 
 import localizedString from 'config/localization';
@@ -31,9 +32,15 @@ const CustomChartDefaulElement = () => {
       checkboxs: [
         {
           title: localizedString.chordDiagram,
-          type: ItemType.CHORD,
+          type: ItemType.CHORD_DIAGRAM,
           checked: false,
           src: chordImg
+        },
+        {
+          title: localizedString.arcDiagram,
+          type: ItemType.ARC_DIAGRAM,
+          checked: false,
+          src: arcImg
         }
       ]
     },
