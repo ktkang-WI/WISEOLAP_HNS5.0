@@ -4,6 +4,7 @@ import {getOptionValue}
 import LiquidFillGaugeChart from './LiquidFillGaugeChart';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import {useInteractiveEffect} from '../util/useInteractiveEffect';
 
 const LiquidFillGauge = ({setItemExports, id, item, node}) => {
   const mart = item ? item.mart : null;
@@ -14,6 +15,26 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
   const dataSource = mart.data.data;
   const seriesNames = mart.data.info.seriesMeasureNames;
   const dxRef = useRef();
+  const {
+    functions
+  } = useInteractiveEffect({
+    item: item,
+    meta: meta,
+    selectionFunc: (event) => {
+      const refs = event.map((item) => item.ref);
+      if (refs.length === 0) return;
+      refs.forEach((ref) => {
+        ref.current.classList.toggle('liquid-selected');
+      });
+    },
+    removeSelectionFunc: (event) => {
+      const refs = event.map((item) => item.ref);
+      refs.forEach((ref) => {
+        if (!ref?.current) return;
+        ref.current.classList.toggle('liquid-selected');
+      });
+    }
+  });
   const itemExportObject =
     itemExportsObject(id, dxRef, 'LIQUIDFILLGAUGE', mart.data.data);
 
@@ -28,6 +49,11 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
     });
   }, [mart.data.data]);
 
+  const handleClick = (e, data) => {
+    e.data = data.dimension;
+    functions.setDataMasterFilter(e.data);
+    functions.masterFilterReload(e);
+  };
   return (
     <LiquidFillGaugeChart
       ref={dxRef}
@@ -40,6 +66,7 @@ const LiquidFillGauge = ({setItemExports, id, item, node}) => {
       valueField={seriesNames[0].summaryName}
       columnNumber={meta?.liquidFillGaugeOption?.contentArray.columnNumber}
       palette={meta?.palette}
+      onClick={handleClick}
       notationFormat={
         getOptionValue(meta?.liquidFillGaugeOption?.notationFormat)
       }

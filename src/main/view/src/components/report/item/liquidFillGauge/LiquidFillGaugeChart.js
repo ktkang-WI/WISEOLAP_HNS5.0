@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import D3LiquidFillGauge from './D3LiquidFillGauge';
 import {splitRowsByColumnNumber} from '../util/dataCleanupUtility';
 import {autoCoulumnNumber} from '../util/layoutUtility';
+import React from 'react';
 
 const Container = styled.div`
   width: 100%;
@@ -36,6 +37,7 @@ const generateWidth = (width, columnNumber) => {
 };
 
 const getWidth = (dataSourceLengh, width, height, columnNumber) => {
+  if (dataSourceLengh < columnNumber) columnNumber = dataSourceLengh;
   if (dataSourceLengh !== 1) {
     return [generateWidth(width, columnNumber), columnNumber];
   }
@@ -57,6 +59,7 @@ const LiquidFillGaugeChart = ({
   width,
   height,
   palette,
+  onClick,
   notationFormat
 }) => {
   const [allocatedWidth, allocatedColumnNumber] =
@@ -99,7 +102,8 @@ const LiquidFillGaugeChart = ({
                         measure={measure}
                         value={percentage}
                         color={palette.colors[loopIndex % 6]}
-                        notationFormat={notationFormat}/>
+                        notationFormat={notationFormat}
+                        onClick={onClick} />
                     </RowItem>
                   );
                 })
@@ -112,4 +116,4 @@ const LiquidFillGaugeChart = ({
   );
 };
 
-export default LiquidFillGaugeChart;
+export default React.memo(LiquidFillGaugeChart);

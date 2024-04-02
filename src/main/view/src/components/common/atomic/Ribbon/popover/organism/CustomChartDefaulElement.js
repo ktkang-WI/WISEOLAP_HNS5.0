@@ -1,6 +1,8 @@
+import chordImg from 'assets/image/icon/item/chord.png';
+import boxPlotImg from 'assets/image/icon/item/box_plot.png';
+
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
-import barImg from '../../../../../../assets/image/icon/item/bar.png';
 import choroplethImg
   from '../../../../../../assets/image/icon/item/choropleth.png';
 import cardImg
@@ -16,115 +18,118 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
   from 'components/common/atomic/Modal/organisms/ChoroplethModal';
 import useModal from 'hooks/useModal';
+import ItemType from 'components/report/item/util/ItemType';
+import usePopover from 'hooks/usePopover';
 
 const CustomChartDefaulElement = () => {
   const reportId = useSelector(selectCurrentReportId);
   const {insertFlexLayout} = useLayout();
+  const {closePopover} = usePopover();
   const {openModal} = useModal();
-  return {
-    relationChart: [
-      {
-        imgSrc: barImg,
-        label: localizedString.histogram,
-        onClick: () => {
-          console.log(insertFlexLayout);
-        }
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
-    ],
-    associativeChart: [
-      {
-        imgSrc: calendarImg,
-        label: localizedString.calendar,
-        onClick: () => {
-          insertFlexLayout(reportId, 'calendar');
-        }
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
-    ],
-    compareDistritution: [
-      {
-        imgSrc: liquidFillGaugeImg,
-        label: localizedString.liquidFillGauge,
-        onClick: () => {
-          insertFlexLayout(reportId, 'liquidFillGauge');
-        }
-      },
-      {
-        imgSrc: squariFied,
-        label: localizedString.Treemap,
-        onClick: () => {
-          insertFlexLayout(reportId, 'treeMap');
-        }
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
-    ],
-    filter: [
-      {
-        imgSrc: '',
-        label: 'ddd'
-      },
-      {
-        imgSrc: '',
-        label: 'aaa'
-      },
-      {
-        imgSrc: '',
-        label: 'ccc'
-      }
-    ],
-    restItem: [
-      {
-        imgSrc: '',
-        label: 'ddd'
-      },
-      {
-        imgSrc: cardImg,
-        label: localizedString.card,
-        onClick: () => {
-          insertFlexLayout(reportId, 'card');
-        }
-      },
-      {
-        imgSrc: choroplethImg,
-        label: localizedString.choropleth,
-        onClick: () => {
-          openModal(ChoroplethModal, {
-            modalTitle: localizedString.choropleth,
-            label: localizedString.choropleth,
-            onSubmit: (returedData) => {
-              // 사용자 정의 데이터 추가 OR 업데이트
-              insertFlexLayout(reportId, 'choropleth', '', returedData);
-            }
-          });
-        }
-      }
-    ],
-    keys: [
-      'relationChart',
-      'associativeChart',
-      'compareDistritution',
-      'filter',
-      'restItem'
-    ]
+  const selectedReportId = useSelector(selectCurrentReportId);
+  const {
+    LIQUID_FILL_GAUGE,
+    TREEMAP,
+    CHOROPLETH,
+    CARD,
+    CHORD,
+    BOX_PLOT,
+    CALENDAR
+  } = ItemType;
+  const onClick = (type) => {
+    onClickExecutor(type);
   };
+
+  const onClickExecutor = (type) => {
+    switch (type) {
+      case CHOROPLETH: {
+        openModal(ChoroplethModal, {
+          modalTitle: localizedString.choropleth,
+          label: localizedString.choropleth,
+          onSubmit: (returedData) => {
+            insertFlexLayout(reportId, 'choropleth', '', returedData);
+          }
+        });
+        break;
+      }
+      default: {
+        insertFlexLayout(selectedReportId, type);
+        closePopover();
+      }
+    }
+  };
+
+  const data = [
+    {
+      title: localizedString.relationVisualization,
+      checkboxs: [
+      ]
+    },
+    {
+      title: localizedString.connectionVisualization,
+      checkboxs: [
+        {
+          title: localizedString.chordDiagram,
+          type: CHORD,
+          checked: false,
+          src: chordImg
+        },
+        {
+          title: localizedString.calendar,
+          type: CALENDAR,
+          checked: false,
+          src: calendarImg
+        }
+      ]
+    },
+    {
+      title: localizedString.distributionVisualization,
+      checkboxs: [
+        {
+          title: localizedString.boxPlot,
+          type: BOX_PLOT,
+          checked: false,
+          src: boxPlotImg
+        },
+        {
+          title: localizedString.liquidFillGauge,
+          type: LIQUID_FILL_GAUGE,
+          checked: false,
+          src: liquidFillGaugeImg
+        },
+        {
+          title: localizedString.Treemap,
+          type: TREEMAP,
+          checked: false,
+          src: squariFied
+        }
+      ]
+    },
+    {
+      title: localizedString.filter,
+      checkboxs: [
+      ]
+    },
+    {
+      title: localizedString.etc,
+      checkboxs: [
+        {
+          title: localizedString.card,
+          type: CARD,
+          checked: false,
+          src: cardImg
+        },
+        {
+          title: localizedString.choropleth,
+          type: CHOROPLETH,
+          checked: false,
+          src: choroplethImg
+        }
+      ]
+    }
+  ];
+
+  return {data, onClick};
 };
 
 export default CustomChartDefaulElement;

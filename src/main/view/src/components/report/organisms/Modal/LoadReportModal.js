@@ -36,7 +36,7 @@ const LoadReportModal = ({...props}) => {
   }, []);
 
   const getReport = async () => {
-    const {setLinkReport} = LinkSlice.actions;
+    const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
@@ -56,7 +56,7 @@ const LoadReportModal = ({...props}) => {
           const subLinkReports = res.data.subLinkReports;
           const linkReports = res.data.linkReports;
           if (subLinkReports.length > 0) {
-            dispatch(setLinkReport(subLinkReports[0]));
+            dispatch(setSubLinkReport(subLinkReports[0]));
           } else if (subLinkReports.length === 0) {
             dispatch(setLinkReport(linkReports[0]));
           }

@@ -47,6 +47,7 @@ const D3LiquidFillGauge = ({
   height,
   value = 75,
   color = '#178BCA',
+  onClick,
   notationFormat,
   config = liquidFillGaugeDefaultConfig()
 }) => {
@@ -182,7 +183,7 @@ const D3LiquidFillGauge = ({
           .attr('class', 'liquidFillGaugeText')
           .attr('text-anchor', textOption[type].textAnchor)
           .attr('font-size', textOption[type].fontSize)
-          .style('fill', config.textColor)
+          .style('fill', config.waveTextColor)
           .attr('transform', textOption[type].transform);
 
       const textWidth = textNode.node().getComputedTextLength();
@@ -322,7 +323,15 @@ const D3LiquidFillGauge = ({
   }, [config]);
 
   return (
-    <div ref={svgRef}/>
+    <div ref={svgRef}
+      onClick={(e) => {
+        e.ref = svgRef;
+        return onClick(e, {
+          dimension: dimension,
+          measure: measure
+        });
+      }}
+    />
   );
 };
 

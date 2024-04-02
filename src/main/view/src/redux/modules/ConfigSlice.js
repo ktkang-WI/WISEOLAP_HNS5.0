@@ -18,7 +18,8 @@ const initialState = {
   designerMode: setInitDesignerMode(),
   runMode: 'DashAny',
   initialDisplay: 'DashAny', // 'adHoc',
-  editMode: EditMode.DESIGNER
+  editMode: EditMode.DESIGNER,
+  configure: {}
   // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 
@@ -31,6 +32,9 @@ const reducers = {
   },
   setEditMode(state, actions) {
     state.editMode = actions.payload;
+  },
+  addConfigure(state, actions) {
+    Object.assign(state.configure, actions.payload);
   }
 };
 

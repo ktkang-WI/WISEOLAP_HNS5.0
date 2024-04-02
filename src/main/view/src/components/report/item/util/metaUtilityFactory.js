@@ -1,8 +1,5 @@
 import ItemManager from './ItemManager';
-import {
-  DataFieldType,
-  // DataFieldTypeOfItemType,
-  dataFieldTypeOfItemTypeFunc} from './dataFieldType';
+import {DataFieldType, dataFieldTypeOfItemTypeFunc} from './dataFieldType';
 // 추후 사용 예정.
 // import localizedString from 'config/localization';
 

@@ -31,7 +31,7 @@ const Modal = ({
 
   return (
     <motion.div
-      initial={{opacity: 0, zindex: 1000}}
+      initial={{opacity: 0, zIndex: 1000}}
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       style={{position: 'fixed'}}

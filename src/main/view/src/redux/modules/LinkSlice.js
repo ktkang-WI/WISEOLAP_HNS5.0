@@ -76,6 +76,7 @@ const reducers = {
   },
 
   setLinkReport(state, action) {
+    if (!action.payload) return;
     const {linkReportId} = action.payload;
     if (state.informations[linkReportId]) {
       state.informations[linkReportId] = action.payload;
@@ -85,12 +86,45 @@ const reducers = {
   },
 
   setSubLinkReport(state, action) {
-    const {linkReportId} = action.payload;
-    if (state.informations[linkReportId]) {
-      state.informations[linkReportId] = action.payload;
-    } else {
-      state.informations[linkReportId] = action.payload;
-    }
+    if (!action.payload) return;
+    state.informations = {};
+    const {
+      reportId,
+      linkReportId,
+      linkSubItem,
+      linkDataType,
+      linkXmlParam,
+      linkXmlData,
+      linkReportOrdinal,
+      linkReportType,
+      linkReportNm
+    } = action.payload;
+    const matchSubLinkInfo ={
+      reportId: reportId,
+      linkReportId: linkReportId,
+      subLinkItemId: linkSubItem,
+      dataLinkType: linkDataType,
+      subLinkXmlParam: linkXmlParam,
+      subLinkXmlData: linkXmlData,
+      subLinkReportOrdinal: linkReportOrdinal,
+      subLinkReportType: linkReportType,
+      sublinkReportNm: linkReportNm,
+      subLinkParamInfo: []
+    };
+    const matchLinkInfo = {
+      reportId: reportId,
+      linkReportId: linkReportId,
+      linkXmlParam: linkXmlParam,
+      linkReportOrdinal: linkReportOrdinal,
+      linkReportType: linkReportType,
+      dataLinkType: linkDataType,
+      linkReportNm: linkReportNm,
+      linkParamInfo: [],
+      linkFkInfo: [],
+      subYn: 'True',
+      subLinkReport: matchSubLinkInfo
+    };
+    state.informations[linkReportId] = matchLinkInfo;
   }
 };
 

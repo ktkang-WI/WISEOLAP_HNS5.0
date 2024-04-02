@@ -42,7 +42,7 @@ const ReportTabs = () => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
-  const {setLinkReport} = LinkSlice.actions;
+  const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
@@ -76,8 +76,10 @@ const ReportTabs = () => {
                 .then((res) => {
                   const subLinkReports = res.data.subLinkReports;
                   const linkReports = res.data.linkReports;
+                  console.log('subLinkReports', subLinkReports);
+                  console.log('linkReports', linkReports);
                   if (subLinkReports.length > 0) {
-                    dispatch(setLinkReport(subLinkReports[0]));
+                    dispatch(setSubLinkReport(subLinkReports[0]));
                   } else if (subLinkReports.length === 0) {
                     dispatch(setLinkReport(linkReports[0]));
                   }

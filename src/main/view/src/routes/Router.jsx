@@ -24,7 +24,7 @@ import DataSourceAddition
   from 'components/config/organisms/dataSourceAddition/DataSourceAddition';
 import LinkViewer from './LinkViewer';
 
-const contextPath = '/editds';
+export const contextPath = '/editds';
 
 const router = createBrowserRouter([
   {

@@ -48,8 +48,4 @@ public class GeneralService {
     
     return result;
   }
-
-  public Map<String, String> getSpreadLicense() {
-	return configDAO.getSpreadLicense();
-  };
 }

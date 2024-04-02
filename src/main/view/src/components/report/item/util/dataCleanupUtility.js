@@ -12,6 +12,12 @@ export const splitRowsByColumnNumber = (dataSource, columnNumber) => {
       result.push(temp);
       temp = [];
     }
+    if (index === length) {
+      if (temp.length > 0) {
+        result.push(temp);
+        temp = [];
+      }
+    }
   };
   return result;
 };

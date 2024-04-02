@@ -16,7 +16,9 @@ public enum ItemType {
     CHOROPLETH("choropleth"),
     CALENDAR("calendar"),
     LIQUID_FILL_GAUGE("liquidFillGauge"),
-    BOX_PLOT("boxPlot")
+    BOX_PLOT("boxPlot"),
+    TIMELINE("timeline"),
+    CHORD("chord")
     ;
 
     private final String symbol;

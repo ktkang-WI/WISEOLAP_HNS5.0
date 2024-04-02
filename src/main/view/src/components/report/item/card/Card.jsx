@@ -2,6 +2,7 @@ import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import React, {useEffect, useRef} from 'react';
+import {useInteractiveEffect} from '../util/useInteractiveEffect';
 
 
 const Card = ({setItemExports, id, item, node}) => {
@@ -14,6 +15,27 @@ const Card = ({setItemExports, id, item, node}) => {
   const seriesNames = mart.data.info.seriesMeasureNames;
 
   const dxRef = useRef();
+  const {
+    functions
+  } = useInteractiveEffect({
+    item: item,
+    meta: meta,
+    selectionFunc: (event) => {
+      const refs = event.map((item) => item.ref);
+      if (refs.length === 0) return;
+      refs.forEach((ref) => {
+        ref.current.style.backgroundColor = '#f1f1f1';
+      });
+    },
+    removeSelectionFunc: (event) => {
+      const refs = event.map((item) => item.ref);
+      refs.forEach((ref) => {
+        if (!ref?.current) return;
+        ref.current.style.backgroundColor = '';
+      });
+    }
+  });
+
   const itemExportObject =
     itemExportsObject(id, dxRef, 'CARD', mart.data.data);
 
@@ -28,6 +50,11 @@ const Card = ({setItemExports, id, item, node}) => {
     });
   }, [mart.data.data]);
 
+  const handleClick = (e, data) => {
+    e.data = data.title;
+    functions.setDataMasterFilter(e.data);
+    functions.masterFilterReload(e);
+  };
   return (
     <DefaultCard
       ref={dxRef}
@@ -37,6 +64,7 @@ const Card = ({setItemExports, id, item, node}) => {
       autoCoulmn={meta?.cardOption?.contentArray.autoNumberSet}
       columnNumber={meta?.cardOption?.contentArray.columnNumber}
       valueFiled={seriesNames[0].summaryName}
+      onClick={handleClick}
       column={2}
     />
   );

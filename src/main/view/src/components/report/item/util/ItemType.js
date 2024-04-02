@@ -8,5 +8,7 @@ export default {
   LIQUID_FILL_GAUGE: 'liquidFillGauge',
   CARD: 'card',
   CALENDAR: 'calendar',
-  BOX_PLOT: 'boxPlot'
+  BOX_PLOT: 'boxPlot',
+  TIMELINE: 'timeline',
+  CHORD: 'chord'
 };

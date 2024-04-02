@@ -39,7 +39,7 @@ import {useSelector} from 'react-redux';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
-import {EditMode} from 'components/config/configType';
+// import {EditMode} from 'components/config/configType';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -91,21 +91,21 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const focusedItem = useSelector(selectCurrentDataField);
 
   const handleContextMenu = useCallback((event) => {
-    if (editMode === EditMode.DESIGNER) {
-      event.preventDefault();
-      setShowPopup(true);
-    }
+    // if (editMode === EditMode.DESIGNER) {
+    event.preventDefault();
+    setShowPopup(true);
+    // }
   }, [editMode]);
 
   useEffect(() => {
-    if (editMode === EditMode.DESIGNER) {
-      const chartContainer = dxRef.current.instance._renderer.root.element;
-      if (chartContainer) {
-        chartContainer.addEventListener('contextmenu', handleContextMenu);
-        return () =>
-          chartContainer.removeEventListener('contextmenu', handleContextMenu);
-      }
+    // if (editMode === EditMode.DESIGNER) {
+    const chartContainer = dxRef.current.instance._renderer.root.element;
+    if (chartContainer) {
+      chartContainer.addEventListener('contextmenu', handleContextMenu);
+      return () =>
+        chartContainer.removeEventListener('contextmenu', handleContextMenu);
     }
+    // }
   }, [handleContextMenu, editMode]);
 
   // 마스터 필터 관련 useEffect
@@ -355,6 +355,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           showButton={showPopup}
           setShowButton={setShowPopup}
           focusedItem={focusedItem}
+          editMode={editMode}
         />
       )}
     </>

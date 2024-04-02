@@ -3,6 +3,7 @@ import {itemExportsObject}
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useEffect, useRef} from 'react';
+import {useInteractiveEffect} from '../util/useInteractiveEffect';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -10,8 +11,23 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   if (!mart.init) {
     return <></>;
   }
-
   const dxRef = useRef();
+  // 마스터 필터 START
+  // 마스터 필터 선언
+  const {
+    masterFilterOption,
+    functions
+  } = useInteractiveEffect({
+    item: item,
+    meta: meta,
+    selectionFunc: (event) => {
+      event?.forEach((e) => e?.node?.select(true));
+    },
+    removeSelectionFunc: (event) => {
+      if (!dxRef?.current) return;
+      dxRef.current.instance.clearSelection();
+    }
+  });
   const itemExportObject =
     itemExportsObject(id, dxRef, 'TREEMAP', mart.data.data);
 
@@ -25,7 +41,6 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       ];
     });
   }, [mart.data.data]);
-
   const seriesNames = mart.data.info.seriesMeasureNames;
   const treeMapOptions = {
     colorizer: {
@@ -42,6 +57,11 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       text: returnText
     };
   };
+  const handleClick = (e) => {
+    e.data = e?.node?.data['arg'];
+    functions.setDataMasterFilter(e.data);
+    functions.masterFilterReload(e);
+  };
   return (
     <TreeMap
       ref={dxRef}
@@ -52,6 +72,8 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       dataSource={mart.data.data} // mart
       valueField={seriesNames[0].summaryName}
       labelField='arg'
+      selectionMode={masterFilterOption.interactiveOption.mode}
+      onClick={handleClick}
     >
       <Tooltip
         enabled={true}
