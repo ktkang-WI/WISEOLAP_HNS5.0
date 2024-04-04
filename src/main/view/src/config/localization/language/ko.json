@@ -606,5 +606,6 @@
   "columnNumber": "컬럼개수",
   "nextStep": "다음",
   "prevStep": "이전",
-  "completeStep": "완료"
+  "completeStep": "완료",
+  "selectAll": "전체 선택"
 }

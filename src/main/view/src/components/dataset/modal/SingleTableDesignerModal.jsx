@@ -79,6 +79,21 @@ const SingleTableDesignerModal = ({
   const datasetId = orgDataset ?
     orgDataset.datasetId : 'dataset' + (datasetQuantity + 1);
 
+  const columnAllCheckBox = [{
+    text: `[${localizedString.visibility}] ${localizedString.selectAll}`,
+    onValueChanged: (e) => {
+      const setVisible = () => {
+        if (!columnList) return;
+        columnList.map((col) => {
+          const tempCol = _.cloneDeep(col);
+          tempCol.visibility = e.value;
+          return tempCol;
+        });
+      };
+      setColumList(setVisible());
+    }
+  }];
+
   // state
   const [dataset, setDataset] =
       useState(_.cloneDeep(orgDataset || defaultDataset));
@@ -203,6 +218,7 @@ const SingleTableDesignerModal = ({
           <ModalPanel
             title={localizedString.addDsSingle}
             headerButtons={paramterButtons}
+            headerCheckBoxs={columnAllCheckBox}
             height='90%'
             padding='10'>
             <TableColumnList
