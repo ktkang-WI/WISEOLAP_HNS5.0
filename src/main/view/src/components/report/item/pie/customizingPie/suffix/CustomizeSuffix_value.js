@@ -36,22 +36,21 @@ const autoSuffix = (value) => {
 
 export default function CustomizeSuffixValue(value, options) {
   const defaultSuffix = {1: '', 1000: 'K', 1000000: 'M', 1000000000: 'B'};
-  const suffixO = options.suffixO ? options.suffixO : '';
   const suffix = {
-    [suffixO]: 1,
-    [options.suffixK]: 10 ** 3,
-    [options.suffixM]: 10 ** 6,
-    [options.suffixB]: 10 ** 9
+    'ones': 1,
+    'thousands': 10 ** 3,
+    'millions': 10 ** 6,
+    'billions': 10 ** 9
   };
   const units = {
-    'ones': suffixO,
+    'ones': options.suffixO,
     'thousands': options.suffixK,
     'millions': options.suffixM,
     'billions': options.suffixB
   };
   const unit = options.unit.toLowerCase();
   const valueOfSuffix = unit !== 'auto' ?
-    suffix[units[unit]] : autoSuffix(value);
+    suffix[unit] : autoSuffix(value);
   const precision = options.precision;
 
   const num = treatedNumber(

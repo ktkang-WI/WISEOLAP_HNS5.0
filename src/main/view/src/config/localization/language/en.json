@@ -219,7 +219,7 @@
   "compareToPositiveNegative": "Compare to Positive/Negative",
   "boxPlot": "BoxPlot",
   "neuralNetworkBar": "Neural Network Bar",
-  "liquidGauge": "Liquid Gauge",
+  "liquidFillGauge": "Liquid Gauge",
   "heatmap": "Heatmap",
   "sunburst": "Sunburst",
   "neuralNetworkTree": "Neural Network Tree",
@@ -425,9 +425,12 @@
   "dataFieldLimitMsg": "Only up to N items can be raised.",
   "startDate": "Date(Start)",
   "endDate": "Date(End)",
+  "validationTableSelect": "Please select a table.",
+  "dsDeleteMsg": "Do you want to delete datasource?",
   "datePlaceholder": "New Date",
   "relationVisualization": "Relation Visualization",
   "connectionVisualization": "Connection Visualization",
   "distributionVisualization": "Distribution Visualization",
-  "Filter": "Filter"
+  "Filter": "Filter",
+  "selectAll": "Select all"
 }

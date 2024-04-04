@@ -24,12 +24,14 @@ const FormatOptionForm = ({
   const [preview, setPreview] = useState(formatValue(formData));
   useEffect(() => {
     if (formRef.current) {
-      const e = {
-        component: formRef.current.instance,
-        value: formData.formatType
-      };
-
-      updateFomatType(e);
+      Object.keys(formData).forEach((key) => {
+        const e = {
+          component: formRef.current.instance,
+          value: formData[key],
+          dataField: key
+        };
+        updateFomatType(e);
+      });
     }
   }, [formRef]);
 

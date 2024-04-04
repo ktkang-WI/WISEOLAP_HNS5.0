@@ -35,6 +35,8 @@ export const getListItems = (param, linkageValues) => {
     sortOrder: param.sortOrder,
     operation: param.operation,
     defaultValue: JSON.stringify(defaultValue),
-    defaultValueUseSql: param.defaultValueUseSql
+    defaultValueUseSql: param.defaultValueUseSql,
+    useAll: param.useAll,
+    multiSelect: param.multiSelect
   });
 };

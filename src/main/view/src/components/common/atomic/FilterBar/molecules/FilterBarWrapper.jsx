@@ -42,7 +42,8 @@ const FilterBarWrapper = (props) => {
   }, [parameters.informations, parameters.values]);
 
   const onValueChanged = (id, value, index) => {
-    const values = _.cloneDeep(parameters.values[id]);
+    const values =
+      _.cloneDeep(selectRootParameter(store.getState()).values[id]);
     if (!values) return;
     values.value[index] = value;
     dispatch(setParameterValues({reportId, values: {[id]: values}}));
@@ -60,7 +61,7 @@ const FilterBarWrapper = (props) => {
 
             for (const idx in values.value) {
               if (parameters.values[key].value[idx] != values.value[idx]) {
-                onValueChanged(param.name, values[idx], idx);
+                onValueChanged(param.name, values.value[idx], idx);
               }
             }
           });

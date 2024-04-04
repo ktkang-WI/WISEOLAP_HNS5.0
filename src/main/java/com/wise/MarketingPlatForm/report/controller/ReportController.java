@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import com.wise.MarketingPlatForm.utils.ListUtility;
+
 import java.lang.reflect.Type;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -148,6 +151,10 @@ public class ReportController {
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
         AdHocOption adHocOption = new AdHocOption(null, null);
+        
+        ListUtility.getInstance().removeNullInParameterList(measures);
+        ListUtility.getInstance().removeNullInParameterList(dimensions);
+        ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
