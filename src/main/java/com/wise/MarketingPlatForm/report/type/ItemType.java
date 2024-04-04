@@ -6,8 +6,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ItemType {
-    CHART("chart"), PIVOT_GRID("pivot"), DATA_GRID("grid"), PIE_CHART("pie"),
-    AD_HOC("adHoc"), BOX_PLOT("boxPlot"), TIMELINE("timeline"), CHORD("chord");
+    CHART("chart"),
+    PIVOT_GRID("pivot"),
+    DATA_GRID("grid"),
+    PIE_CHART("pie"),
+    AD_HOC("adHoc"),
+    TREEMAP("treeMap"),
+    CARD("card"),
+    CHOROPLETH("choropleth"),
+    LIQUID_FILL_GAUGE("liquidFillGauge"),
+    BOX_PLOT("boxPlot"),
+    TIMELINE("timeline"),
+    CHORD("chord")
+    ;
 
     private final String symbol;
 

@@ -13,41 +13,47 @@ const DataFieldType = {
   END_DATE: 'end'
 };
 
-const DataFieldTypeOfItemType = {
-  [ItemType.CHART]: [
-    DataFieldType.MEASURE,
-    DataFieldType.DIMENSION,
-    DataFieldType.DIMENSION_GROUP
-  ],
-  [ItemType.PIVOT_GRID]: [
-    DataFieldType.MEASURE,
-    DataFieldType.ROW,
-    DataFieldType.COLUMN],
-  [ItemType.DATA_GRID]: [
-    DataFieldType.FIELD,
-    DataFieldType.SPARKLINE
-  ],
-  [ItemType.PIE_CHART]: [
-    DataFieldType.MEASURE,
-    DataFieldType.DIMENSION,
-    DataFieldType.DIMENSION_GROUP
-  ],
-  [ItemType.BOX_PLOT]: [
-    DataFieldType.MEASURE,
-    DataFieldType.DIMENSION
-  ],
-  [ItemType.CHORD]: [
-    DataFieldType.DIMENSION
-  ],
-  [ItemType.TIMELINE]: [
-    DataFieldType.DIMENSION,
-    DataFieldType.DIMENSION_GROUP,
-    DataFieldType.START_DATE,
-    DataFieldType.END_DATE
-  ]
+const dataFieldTypeOfItemTypeFunc = (type) => {
+  const dataFieldFormat = [];
+
+  switch (type) {
+    case ItemType.DATA_GRID: {
+      dataFieldFormat.push(DataFieldType.FIELD);
+      dataFieldFormat.push(DataFieldType.SPARKLINE);
+      break;
+    }
+    case ItemType.PIVOT_GRID: {
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.ROW);
+      dataFieldFormat.push(DataFieldType.COLUMN);
+      break;
+    }
+    case ItemType.TIMELINE: {
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
+      dataFieldFormat.push(DataFieldType.START_DATE);
+      dataFieldFormat.push(DataFieldType.END_DATE);
+      break;
+    }
+    case ItemType.CHORD: {
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      break;
+    }
+    case ItemType.CHART: {
+      dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      break;
+    }
+    default: {
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+    }
+  };
+  return dataFieldFormat;
 };
 
 export {
   DataFieldType,
-  DataFieldTypeOfItemType
+  dataFieldTypeOfItemTypeFunc
 };

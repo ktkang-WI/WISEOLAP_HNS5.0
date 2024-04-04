@@ -10,6 +10,7 @@ const Panel = styled.div`
   height: 100%;
   display: inline-block;
   float: ${(props) => props.position};
+  cursor: ${(props) => props.cursor};
   vertical-align: top;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -37,13 +38,17 @@ const HeaderPanel = ({
   breakLine=true,
   children,
   itemAlignment='center',
-  position='left'
+  position='left',
+  cursor='default',
+  onClick=() => {}
 }) => {
   return (
     <Panel
       width={width}
       height={height}
       position={position}
+      onClick={onClick}
+      cursor={cursor}
     >
       <Wrapper height={height} item_alignment={itemAlignment}>
         {children}
