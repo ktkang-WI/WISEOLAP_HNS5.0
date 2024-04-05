@@ -171,7 +171,7 @@ public class CSVLoader {
 
 						valueQuery = query.replaceFirst(VALUES_REGEX, questionmarks);
 						System.out.println(valueQuery);
-						//martDAO.select(dsId,valueQuery);
+						martDAO.select(dsId,valueQuery);
 					}
 				}
 				
