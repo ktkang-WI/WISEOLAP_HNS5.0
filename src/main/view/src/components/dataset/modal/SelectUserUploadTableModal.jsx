@@ -66,16 +66,25 @@ const SelectUserUploadTableModal = ({
         <ColumnWrapper>
           <CommonDataGrid
             dataSource={tables}
-            onSelectionChanged={(e) => {
+            onRowClick={(e) => {
               console.log(e);
-              if (e.selectedRowsData.length > 0) {
-                setSelectedTable(e.selectedRowsData[0]);
+              if (selectedTable != {}) {
+                if (selectedTable == e.key) {
+                  if (e.component) {
+                    e.component.clearSelection();
+                  }
+                  setSelectedTable({});
+                } else {
+                  setSelectedTable(e.key);
+                }
               } else {
-                setSelectedTable({});
+                setSelectedTable(e.key);
               }
             }}
           >
-            <Selection mode='single'/>
+            <Selection
+              mode='single'
+            />
             <Column
               dataField='dataNm'
               caption={localizedString.dataSourceName}

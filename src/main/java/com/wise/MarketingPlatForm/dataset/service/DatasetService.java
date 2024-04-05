@@ -23,9 +23,6 @@ import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
-import com.wise.MarketingPlatForm.dataset.type.DbmsType;
-import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
-import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
@@ -352,7 +349,7 @@ public class DatasetService {
     }
 
     private String convertTopN(String sql, String dbType, int rowNum) {
-    	if (rowNum != 0) {
+        if (rowNum != 0) {
     		if ("MS_SQL".equals(dbType)) {
     			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
     		} else {

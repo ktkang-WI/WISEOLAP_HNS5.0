@@ -21,10 +21,13 @@ export const importFile = (param) => {
 };
 
 
-export const uploadUserData = (dsId, dataNm, uploadData) => {
+export const uploadUserData = (dsId, dataNm, uploadData,
+    appendTable, tableDeleteYN) => {
   return axios.post(path + '/upload-user-data', {
     dsId: parseInt(dsId),
     dataNm: dataNm,
-    uploadData: JSON.stringify(uploadData)
+    uploadData: JSON.stringify(uploadData),
+    appendTable: appendTable,
+    tableDeleteYN: tableDeleteYN
   });
 };

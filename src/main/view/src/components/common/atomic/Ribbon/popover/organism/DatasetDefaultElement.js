@@ -13,7 +13,6 @@ import UserUploadTableModal
 import SelectTableModal from 'components/dataset/modal/SelectTableModal';
 import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
-import {getTheme} from 'config/theme';
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
@@ -79,6 +78,15 @@ const DatasetDefaultElement = () => {
               openModal(SelectUserUploadTableModal, {
                 onSubmit: (selectedTable) => {
                   openModal(UserUploadTableModal, {
+                    onSubmit: (selectedTable, columns) => {
+                      openModal(SingleTableDesignerModal,
+                          {
+                            selectedDataSource: dataSource,
+                            selectedTable: selectedTable,
+                            columns: columns
+                          }
+                      );
+                    },
                     dsId: dataSource.dsId,
                     selectedTable: selectedTable
                   });

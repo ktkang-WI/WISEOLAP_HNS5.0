@@ -417,4 +417,28 @@
       ORDER BY
           T.ORDINAL
     </select>
+
+    <insert id="insertUserUpload" parameterType="com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity">
+        INSERT INTO USER_UPLOAD_MSTR(    
+				 DATA_SEQ
+				,DATA_NM                    
+				,TBL_NM         
+				,REG_USER_NO
+				,DATA_DESC                
+				,UPLOAD_XML
+				,REG_DT 
+				,UPD_DT
+				,DS_ID               
+			 ) VALUES (
+				 USER_DATA_FILE_MSTR_DATA_SEQ.NEXTVAL
+				,#{dataNm}                 
+				,#{tableNm}    
+				,#{regUserNo}  
+				,#{dataDesc}              
+				,#{uploadXml} 
+				,SYSDATE
+				,SYSDATE
+				,#{dsId}
+			 )
+    </insert>
 </mapper>

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 
 @RestController
 @RequestMapping("/upload")
@@ -89,18 +86,27 @@ public class FileUploadController {
     }
 
 	@PostMapping(value = "/upload-user-data")
-    public void uploadUserData(@RequestBody Map<String, String> params) {
+    public Map<String, Object> uploadUserData(HttpServletRequest request, @RequestBody Map<String, String> params) {
         Gson gson = new Gson();
         int dsId = Integer.parseInt(params.get("dsId"));
 
 		String dataNm = params.getOrDefault("dataNm", "");
 
+        String appendTable = params.getOrDefault("appendTable", "");
+
 		String uploadData = params.getOrDefault("uploadData", "");
+
+        String tableDeleteYN = params.getOrDefault("tableDeleteYN", "");
+
+        HttpSession session = request.getSession();
+        UserDTO userDTO = (UserDTO)session.getAttribute("user");
+
+        int userNo = userDTO.getUserNo();
 
         List<Map<String, Object>> uploadDataList = gson.fromJson(uploadData,
             new TypeToken<ArrayList<Map<String, Object>>>() {
             }.getType());
 
-		fileUploadService.createUploadDataTable(dsId, dataNm, uploadDataList);
+		return fileUploadService.createUploadDataTable(userNo, dsId, appendTable, dataNm, uploadDataList, tableDeleteYN);
     }
 }

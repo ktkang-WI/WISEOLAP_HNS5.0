@@ -1,9 +1,13 @@
 package com.wise.MarketingPlatForm.querygen.querysetting.dbms;
 
-public class SybaseSetting {
+import com.wise.MarketingPlatForm.querygen.querysetting.DBSetting;
+
+public class SybaseSetting implements DBSetting{
 
 	public SybaseSetting(){}
 	public String vbCrLf = "\r\n";
+	
+	@Override
 	public String DsDsViewOrderByRandomClause()
 	{
 		String sOrderBy = "";
@@ -13,11 +17,13 @@ public class SybaseSetting {
 		return sOrderBy;
 	}
 	
+	@Override
 	public String ConvertFileNm(String aFileNm)
 	{
 		return "[" + aFileNm + "]";
 	}
 	
+	@Override
 	public String FilterQuery(String aTblNm, String aCaptionColNm, String aKeyColNm, String aSortType)
 	{
 		String sQuery = "";
@@ -31,6 +37,7 @@ public class SybaseSetting {
 
 	}
 	
+	@Override
 	public String TblAliasNm(String aDimUniNm)
 	{
 		String sAliasNm = "";
@@ -41,6 +48,7 @@ public class SybaseSetting {
 
 	}
 	
+	@Override
 	public String ColumnAliasNm(String aColumnNm)
 	{
 		String sAliasNm = "";
@@ -51,15 +59,26 @@ public class SybaseSetting {
 
 	}
 	
-	public String GetAggregarion(String aAgg)
+	@Override
+	public String GetSelectMartTableSystemQuery()
 	{
-		String sReturn = aAgg;
+		StringBuilder query = new StringBuilder();
 
-		if(sReturn.equalsIgnoreCase("VAR")) 
-			sReturn = "VARIANCE";
-		
+		query.append(" ");
 
-		return sReturn;
+		// query.append(" SELECT  A.TABLE_NAME 										 ")
+		// 	 .append(" FROM	ALL_TABLES A, ALL_TAB_COMMENTS B 						 ")
+		// 	 .append(" WHERE	A.OWNER = B.OWNER									 ")
+		// 	 .append(" AND     A.TABLE_NAME = B.TABLE_NAME							 ")
+		// 	 .append(" AND     A.TABLE_NAME LIKE 'T_WISE_%'							 ")
+		// 	 .append(" ORDER BY 1													 ");
+	
+		return query.toString();
+	}
 
+	@Override
+	public String GetAggregarion(String aAgg) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'GetAggregarion'");
 	}
 }

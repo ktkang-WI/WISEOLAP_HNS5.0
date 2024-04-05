@@ -46,7 +46,8 @@ const SingleTableDesignerModal = ({
   orgDataset, onClose, query='', ...props
 }) => {
   const defaultDataset = {
-    datasetNm: selectedTable.TBL_NM,
+    datasetNm: selectedTable.datasetNm ?
+         selectedTable.datasetNm : selectedTable.TBL_NM,
     datasetType: DatasetType.DS_SINGLE,
     dataSrcId: selectedDataSource.dsId,
     datasetQuery: ''
@@ -84,7 +85,7 @@ const SingleTableDesignerModal = ({
     onValueChanged: (e) => {
       const setVisible = () => {
         if (!columnList) return;
-        columnList.map((col) => {
+        return columnList.map((col) => {
           const tempCol = _.cloneDeep(col);
           tempCol.visibility = e.value;
           return tempCol;

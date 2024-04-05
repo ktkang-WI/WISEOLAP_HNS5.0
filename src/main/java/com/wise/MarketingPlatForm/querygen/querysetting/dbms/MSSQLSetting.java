@@ -1,9 +1,13 @@
 package com.wise.MarketingPlatForm.querygen.querysetting.dbms;
 
-public class MSSQLSetting {
+import com.wise.MarketingPlatForm.querygen.querysetting.DBSetting;
+
+public class MSSQLSetting implements DBSetting {
 
 	public MSSQLSetting(){}
 	public String vbCrLf = "\r\n";
+
+	@Override
 	public String DsDsViewOrderByRandomClause()
 	{
 		String sOrderBy = "";
@@ -13,11 +17,13 @@ public class MSSQLSetting {
 		return sOrderBy;
 	}
 	
+	@Override
 	public String ConvertFileNm(String aFileNm)
 	{
 		return "[" + aFileNm + "]";
 	}
 	
+	@Override
 	public String FilterQuery(String aTblNm, String aCaptionColNm, String aKeyColNm, String aSortType)
 	{
 		String sQuery = "";
@@ -31,6 +37,7 @@ public class MSSQLSetting {
 
 	}
 	
+	@Override
 	public String TblAliasNm(String aDimUniNm)
 	{
 		String sAliasNm = "";
@@ -41,6 +48,7 @@ public class MSSQLSetting {
 
 	}
 	
+	@Override
 	public String ColumnAliasNm(String aColumnNm)
 	{
 		String sAliasNm = "";
@@ -51,6 +59,7 @@ public class MSSQLSetting {
 
 	}
 	
+	@Override
 	public String GetAggregarion(String aAgg)
 	{
 		String sReturn = aAgg;
@@ -62,4 +71,20 @@ public class MSSQLSetting {
 		return sReturn;
 
 	}
+
+	@Override
+	public String GetSelectMartTableSystemQuery()
+	{
+		StringBuilder query = new StringBuilder();
+
+		query.append(" ");
+
+		query.append(" SELECT  CAST(A.NAME AS NVARCHAR(200)) AS TABLE_NAME 			 ")
+			 .append(" FROM	SYSOBJECTS A 											 ")
+			 .append(" WHERE	A.xtype IN ('U', 'V') AND A.NAME LIKE 'T_WISE_%'	 ")
+			 .append(" ORDER BY 1  													 ");
+	
+		return query.toString();
+	}
+
 }
