@@ -84,7 +84,7 @@ const SingleTableDesignerModal = ({
     onValueChanged: (e) => {
       const setVisible = () => {
         if (!columnList) return;
-        columnList.map((col) => {
+        return columnList.map((col) => {
           const tempCol = _.cloneDeep(col);
           tempCol.visibility = e.value;
           return tempCol;
