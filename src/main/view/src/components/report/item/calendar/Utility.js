@@ -1,9 +1,21 @@
+import {defaultDimension, singleMeasure}
+  from 'components/report/item/util/martUtilityFactory';
+import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
+import {DataFieldType} from '../util/dataFieldType';
+import {setMeta} from '../util/metaUtilityFactory';
 
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
+const calendarOption = {
+  contentArray: {
+    autoNumberSet: true,
+    columnNumber: 5
+  }
+};
 const generateMeta = (item) => {
+  setMeta(item, 'calendarOption', calendarOption);
 };
 
 /**
@@ -12,8 +24,37 @@ const generateMeta = (item) => {
  * @param {*} rootItem root item
  */
 const generateItem = (item, rootItem) => {
+  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
+  const data = item.mart.data;
+  const measures = dataField.measure;
+  const meaLength = measures.length;
+  item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
+  item.mart.formats = measures.map((mea) => mea.format);
 };
+
+/**
+ * 아이템 객체의 데이터 항목 옵션
+ * @return {JSON} dataFieldOption
+ */
 const getDataFieldOptionChild = () => {
+  const dataFieldMeasure = {
+    ...singleMeasure,
+    useButton: false,
+    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
+    buttonIcon: chartSeriesButtonIcon,
+    buttonEvent: function(e) {
+      console.log(e);
+    }
+  };
+
+  const dataFieldDimension = {
+    ...defaultDimension
+  };
+
+  return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
+    [DataFieldType.DIMENSION]: dataFieldDimension
+  };
 };
 
 /**
@@ -22,6 +63,12 @@ const getDataFieldOptionChild = () => {
  * @param {JSON} param 파라미터 정보를 삽입할 객체
  */
 const generateParameter = (item, param) => {
+  const dataField = item.meta.dataField;
+  param.dimension = dataField.dimension.concat(dataField.dimensionGroup);
+  param.measure = dataField.measure;
+
+  param.dimension = JSON.stringify(param.dimension);
+  param.measure = JSON.stringify(param.measure);
 };
 
 /**
@@ -32,7 +79,8 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'Palette',
+    'Rotate',
+    'ContentArray',
     'InputTxt'
   ];
 };

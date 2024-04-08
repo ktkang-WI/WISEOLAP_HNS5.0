@@ -51,9 +51,6 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
-    case ItemType.CALENDAR: {
-      break;
-    }
     default: {
       dataFieldFormat.push(DataFieldType.MEASURE);
       dataFieldFormat.push(DataFieldType.DIMENSION);

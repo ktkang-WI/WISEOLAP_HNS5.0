@@ -12,7 +12,7 @@ import liquidFillGaugeImg
 import squariFied
   from '../../../../../../assets/image/icon/item/squariFied.png';
 import calendarImg
-  from '../../../../../../assets/image/icon/item/ico_calendarviewchart.png';
+  from '../../../../../../assets/image/icon/item/calendar_view.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -52,6 +52,18 @@ const CustomChartDefaulElement = () => {
         });
         break;
       }
+      /*
+      case CALENDAR: {
+        openModal(CalendarModal, {
+          modalTitle: localizedString.calendar,
+          label: localizedString.calendar,
+          onSubmit: (returedData) => {
+            insertFlexLayout(reportId, 'calendar', '', returedData);
+          }
+        });
+        break;
+      }
+      */
       default: {
         insertFlexLayout(selectedReportId, type);
         closePopover();
