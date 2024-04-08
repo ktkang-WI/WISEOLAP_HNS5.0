@@ -119,7 +119,7 @@ public class ChartDataMaker implements ItemDataMaker {
                         name : name + "-" + measure.getName();
 
                     Measure tempMeasure = Measure.builder()
-                        .caption(name + "-" + measure.getCaption())
+                        .caption(SeriesName)
                         .category(measure.getCategory())
                         .expression(measure.getExpression())
                         .fieldId(measure.getFieldId())

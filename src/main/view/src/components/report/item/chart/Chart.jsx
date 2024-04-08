@@ -11,7 +11,6 @@ import DevChart, {
   ValueAxis
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
-import useQueryExecute from 'hooks/useQueryExecute';
 import {
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
@@ -25,7 +24,6 @@ import {
 } from './seriesOption/SeriesOption';
 import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
-import _ from 'lodash';
 import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 import React, {
   useRef,
@@ -39,11 +37,25 @@ import {useSelector} from 'react-redux';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
-// import {EditMode} from 'components/config/configType';
+import useItemSetting from '../util/hook/useItemSetting';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
+  const dxRef = useRef();
+
+  const {itemTools, filterTools} = useItemSetting(
+      item,
+      adHocOption,
+      [],
+      adHocOption,
+      {
+        selectedItemType: 'REF',
+        clearSelection: () => {
+          dxRef?.current?.instance?.clearSelection();
+        }
+      });
+
   const editMode = selectEditMode(store.getState());
-  const dataFields = adHocOption ? adHocOption.dataField : item.meta.dataField;
+  const dataFields = itemTools.getDataField();
   let seriesOptions = null;
   // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
@@ -57,21 +69,9 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
 
-  if (!mart.init) {
-    return <></>;
-  }
-
-  const seriesNames = mart.data.info.seriesMeasureNames;
-
-  const interactiveOption = adHocOption ?
-  {} : meta.interactiveOption;
-
-  const {filterItems, clearAllFilter} = useQueryExecute();
-
-  const dxRef = useRef([]);
 
   const itemExportObject =
-   itemExportsObject(id, dxRef, 'CHART', mart.data.data);
+   itemExportsObject(id, dxRef, 'CHART', mart?.data?.data);
 
   useEffect(() => {
     setItemExports((prev) => {
@@ -83,9 +83,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       ];
     });
   }, [mart.data.data]);
-
-  // local: 리렌더링할 때마다 초기화되는 변수
-  let selectedData = [];
 
   const [showPopup, setShowPopup] = useState(false);
   const focusedItem = useSelector(selectCurrentDataField);
@@ -99,7 +96,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   useEffect(() => {
     // if (editMode === EditMode.DESIGNER) {
-    const chartContainer = dxRef.current.instance._renderer.root.element;
+    const chartContainer = dxRef?.current?.instance?._renderer?.root?.element;
     if (chartContainer) {
       chartContainer.addEventListener('contextmenu', handleContextMenu);
       return () =>
@@ -108,126 +105,55 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     // }
   }, [handleContextMenu, editMode]);
 
-  // 마스터 필터 관련 useEffect
-  useEffect(() => {
-    if (!adHocOption) {
-      dxRef.current.instance.clearSelection();
-    }
-  }, [interactiveOption]);
+  if (!mart.init) {
+    return <></>;
+  }
 
-  useEffect(() => {
-    if (!adHocOption) {
-      filterItems(item, {});
-    }
-  }, [
-    interactiveOption.targetDimension,
-    interactiveOption.mode,
-    interactiveOption.enabled]);
-
-  useEffect(() => {
-    if (!adHocOption) {
-      clearAllFilter(item);
-    }
-  }, [interactiveOption.crossDataSource]);
-
-  /**
-   * selectedData 기반으로 필터 정보를 반환합니다.
-   * @return {Array} filters
-   */
-  const getFilter = () => {
-    const targetDiemnsion = interactiveOption.targetDimension;
-    const dim = meta.dataField.dimension;
-    const dimGrp = meta.dataField.dimensionGroup;
-    // 선택된 데이터 '차원명': Set 형태로 가공
-    const filters = selectedData.reduce((acc, filter) => {
-      if (targetDiemnsion == 'dimension') {
-        filter.split('<br/>').reverse().forEach((v, i) => {
-          const name = dim[i].uniqueName;
-          if (v == '\u2800') {
-            v = null;
-          }
-
-          if (acc[name]) {
-            acc[name].add(v);
-          } else {
-            acc[name] = new Set([v]);
-          }
-        });
-      } else {
-        filter.split('-').forEach((v, i) => {
-          if (dimGrp.length <= i) return;
-          const name = dimGrp[i].uniqueName;
-          if (v == '\u2800') {
-            v = null;
-          }
-
-          if (acc[name]) {
-            acc[name].add(v);
-          } else {
-            acc[name] = new Set([v]);
-          }
-        });
-      }
-      return acc;
-    }, {});
-    // Set Array로 변환
-    for (const filter in filters) {
-      if (filters[filter]) {
-        filters[filter] = [...filters[filter]];
-      }
-    }
-    return filters;
-  };
+  const seriesNames = mart.data.info.seriesMeasureNames;
+  const interactiveOption = meta.interactiveOption || {};
 
   const onPointClick = ({target, component}) => {
     if (!interactiveOption.enabled) return;
     // 대상 차원이 차원일 경우
     if (interactiveOption.targetDimension == 'dimension') {
-      // 단일 마스터 필터일 경우 초기화
-      if (interactiveOption.mode == 'single') {
-        selectedData = [];
-        if (target.isSelected()) {
+      filterTools.setMasterFilterData(target.argument, () => {
+        if (interactiveOption.mode == 'single') {
+          if (target.isSelected()) {
+            component.clearSelection();
+            return;
+          }
           component.clearSelection();
-          filterItems(item, {});
-          return;
         }
-        component.clearSelection();
-      }
-      if (target.isSelected()) {
-        component.getAllSeries().forEach((series) => {
-          series.getPointsByArg(target.argument).forEach((point) => {
-            point.clearSelection();
+        if (target.isSelected()) {
+          component.getAllSeries().forEach((series) => {
+            series.getPointsByArg(target.argument).forEach((point) => {
+              point.clearSelection();
+            });
           });
-        });
-        selectedData = selectedData.filter((d) => d != target.argument);
-      } else {
-        component.getAllSeries().forEach((series) => {
-          series.getPointsByArg(target.argument).forEach((point) => {
-            point.select();
+        } else {
+          component.getAllSeries().forEach((series) => {
+            series.getPointsByArg(target.argument).forEach((point) => {
+              point.select();
+            });
           });
-        });
-        selectedData.push(target.argument);
-      }
+        }
+      });
     } else {
       // 대상 차원이 차원 그룹일 경우
+      filterTools.setMasterFilterData(target.series.name, true);
       if (interactiveOption.mode == 'single') {
-        selectedData = [];
         if (target.series.isSelected()) {
           component.clearSelection();
-          filterItems(item, {});
           return;
         }
         component.clearSelection();
       }
       if (target.series.isSelected()) {
         target.series.clearSelection();
-        selectedData = selectedData.filter((d) => d != target.series.name);
       } else {
         target.series.select();
-        selectedData.push(target.series.name);
       }
     }
-    filterItems(item, getFilter());
   };
 
 
@@ -362,35 +288,4 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   );
 };
 
-
-const getDataField = (state) => {
-  if (state.adHocOption) {
-    return state.adHocOption.dataField;
-  };
-  return state.item.meta.dataField;
-};
-
-const propsComparator = (prev, next) => {
-  const prevDataField = getDataField(prev);
-  const nextDataField = getDataField(next);
-
-  if (_.isEqual(prev.item.mart.data, next.item.mart.data)) {
-    if (!_.isEqual(prevDataField.datasetId, nextDataField.datasetId)) {
-      return true;
-    }
-  };
-
-  const seriesOptionsComparator =
-    _.isEqual(prevDataField.seriesOptions, nextDataField.seriesOptions);
-  const rotateComparator =
-    _.isEqual(prev.item.meta.useRotate, next.item.meta.useRotate);
-  return prev.item.mart == next.item.mart &&
-  _.isEqual(prev.item.meta.interactiveOption,
-      next.item.meta.interactiveOption) &&
-      seriesOptionsComparator &&
-      rotateComparator &&
-  _.isEqual(prev.adHocOption, next.adHocOption);
-};
-
-
-export default React.memo(Chart, propsComparator);
+export default React.memo(Chart);

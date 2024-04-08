@@ -154,7 +154,7 @@ const D3ArcDiagram = ({
         strokeWidth={4}
         strokeLinejoin=''
         fill={selected ? 'white' : d3Palette[group]}
-        onClick={() => onClick(key, id)}
+        onClick={() => onClick({[key]: id})}
         cy={rotated ? scalePoint(id) : y}
         cx={rotated ? x : scalePoint(id)}
         onMouseOver={(e) => onMouseOver(e, id, group)}

@@ -176,8 +176,7 @@ const ItemBoard = () => {
           setItemExports={setItemExports}
           item={item}
           adHocOption={adHocOption}
-          id={item.id}
-          node={node}/>
+          id={item.id}/>
       </Item>
     );
   }

@@ -27,7 +27,7 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
-    CHORD,
+    CHORD_DIAGRAM,
     BOX_PLOT
   } = ItemType;
   const onClick = (type) => {
@@ -64,7 +64,7 @@ const CustomChartDefaulElement = () => {
       checkboxs: [
         {
           title: localizedString.chordDiagram,
-          type: CHORD,
+          type: CHORD_DIAGRAM,
           checked: false,
           src: chordImg
         },

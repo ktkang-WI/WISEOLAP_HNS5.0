@@ -79,13 +79,13 @@ const D3Chord = ({
   const edges = chord.groups.map((group, i) => {
     const angle = (group.startAngle + group.endAngle) / 2;
     const d = arc(group);
-    const selected = selectedItem
-        .find((item) => item.value == groups[i].value);
+    const selected = selectedItem[groups[i].field]?.find(
+        (item) => item == groups[i].value);
     return (
       <g
         className='group'
         key={'chord-group-' + i}
-        onClick={() => onClick(groups[i])}
+        onClick={() => onClick({[groups[i].field]: groups[i].value})}
         onMouseOver={() => fade(0.1, 0.7, 0.5, i)}
         onMouseOut={() => fade(0.5, 0.5, 1, i)}
         transform={'rotate(' + rotation + ')'}>
