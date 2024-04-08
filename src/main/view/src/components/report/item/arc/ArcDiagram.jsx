@@ -3,6 +3,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import D3ArcDiagram from './component/D3ArcDiagram';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
+import ItemManager from '../util/ItemManager';
 
 const ArcDiagram = ({item}) => {
   const mart = item ? item.mart : null;
@@ -36,4 +37,4 @@ const ArcDiagram = ({item}) => {
   );
 };
 
-export default React.memo(ArcDiagram);
+export default React.memo(ArcDiagram, ItemManager.commonPropsComparator);

@@ -1,8 +1,9 @@
-import {useRef} from 'react';
+import React, {useRef} from 'react';
 import D3Chord from './component/D3Chord';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
+import ItemManager from '../util/ItemManager';
 
 
 const Chord = ({item}) => {
@@ -34,4 +35,4 @@ const Chord = ({item}) => {
   );
 };
 
-export default Chord;
+export default React.memo(Chord, ItemManager.commonPropsComparator);

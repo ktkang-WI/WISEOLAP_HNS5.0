@@ -36,6 +36,7 @@ import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
+import ItemManager from 'components/report/item/util/ItemManager';
 import store from 'redux/modules';
 import useItemSetting from '../util/hook/useItemSetting';
 
@@ -68,7 +69,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
-
 
   const itemExportObject =
    itemExportsObject(id, dxRef, 'CHART', mart?.data?.data);
@@ -140,19 +140,20 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       });
     } else {
       // 대상 차원이 차원 그룹일 경우
-      filterTools.setMasterFilterData(target.series.name, true);
-      if (interactiveOption.mode == 'single') {
-        if (target.series.isSelected()) {
+      filterTools.setMasterFilterData(target.series.name, () => {
+        if (interactiveOption.mode == 'single') {
+          if (target.series.isSelected()) {
+            component.clearSelection();
+            return;
+          }
           component.clearSelection();
-          return;
         }
-        component.clearSelection();
-      }
-      if (target.series.isSelected()) {
-        target.series.clearSelection();
-      } else {
-        target.series.select();
-      }
+        if (target.series.isSelected()) {
+          target.series.clearSelection();
+        } else {
+          target.series.select();
+        }
+      }, true);
     }
   };
 
@@ -288,4 +289,4 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   );
 };
 
-export default React.memo(Chart);
+export default React.memo(Chart, ItemManager.commonPropsComparator);

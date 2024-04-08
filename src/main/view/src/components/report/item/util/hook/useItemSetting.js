@@ -30,12 +30,32 @@ export default function useItemSetting(
   const [selectedItemState, setSelectedItemState] = useState([]);
   const selectedItemRef = useRef([]);
 
-  const getSelectedItem = () => {
+  /**
+   * 현재 선택된 데이터를 반환합니다.
+   * @param {boolean} onlyName true일시 현재 선택된 아이템 이름만 반환환
+   * @return {object}
+   */
+  const getSelectedItem = (onlyName) => {
+    let state = [];
     if (selectedItemType == 'STATE') {
-      return selectedItemState;
+      state = selectedItemState;
     } else {
-      return selectedItemRef.current;
+      state = selectedItemRef.current;
     }
+
+    if (onlyName) {
+      if (Array.isArray(state)) {
+        state = state.map((v) => v.name);
+      } else {
+        const keys = Object.keys(state);
+        state = keys.map((acc, key) => {
+          acc.push(...state[key]);
+          return acc;
+        }, []);
+      }
+    }
+
+    return state;
   };
 
   const setSelectedItem = (state) => {
@@ -45,14 +65,10 @@ export default function useItemSetting(
       selectedItemRef.current = state;
     }
   };
+
   useEffect(() => {
-    const selectedItem = getSelectedItem();
-    if (getSelectedItem().length > 0) {
-      if (selectedItem.func) {
-        selectedItem.func();
-      }
-    }
-  }, []);
+    reloadMasterFilter();
+  }, [item.meta, item.mart]);
 
   useEffect(() => {
     if (!filterCondition && item.mart.init) {
@@ -147,7 +163,9 @@ export default function useItemSetting(
 
     // 들어온 데이터 형태가 문자열인 경우
     if (typeof data == 'string') {
-      func();
+      if (func) {
+        func();
+      }
       filters = setMasterFilterDataForString(data, func, reverse);
     } else if (typeof data == 'object') {
       // 들어온 데이터의 형태가 {[key] : value}인 경우
@@ -181,7 +199,7 @@ export default function useItemSetting(
         }
 
         if (acc[name]) {
-          acc[name].add(v.name);
+          acc[name].add(v);
         } else {
           acc[name] = new Set([v]);
         }
@@ -212,11 +230,22 @@ export default function useItemSetting(
   /**
    * 현재 아이템에서 사용되고 있는 데이터 필드를 반환합니다.
    * fieldDependency가 별도로 존재하지 않는 경우 data가 변할 때만 값이 갱신됩니다.
+   * dataField 직접 참조시 필드가 제거되거나 수정될 경우 예상치 못한 예외가 발생할 가능성이 있으므로
+   * dataFeild를 가져올 땐 해당 메서드 사용을 권장합니다.
    * @return {JSON} dataField
    */
   const getDataField = useCallback(() => {
     return adHocOption?.dataField || item.meta.dataField;
   }, [item.mart.data, ...fieldDependency]);
+
+  const reloadMasterFilter = () => {
+    const selectedItem = getSelectedItem();
+    selectedItem.forEach((item) => {
+      if (item.func) {
+        item.func();
+      }
+    });
+  };
 
   return {
     itemTools: {
@@ -225,7 +254,8 @@ export default function useItemSetting(
     },
     filterTools: {
       getSelectedItem,
-      setMasterFilterData
+      setMasterFilterData,
+      reloadMasterFilter
     }
   };
 };

@@ -3,6 +3,7 @@ import D3BoxPlot from './component/D3BoxPlot';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
+import ItemManager from '../util/ItemManager';
 
 
 const BoxPlot = ({item}) => {
@@ -27,7 +28,7 @@ const BoxPlot = ({item}) => {
         data={mart.data}
         id={item.id}
         palette={getPalette()}
-        selectedItem={getSelectedItem()}
+        selectedItem={getSelectedItem(true)}
         onClick={setMasterFilterData}
         yAxis={meta.yAxis}
         legend={meta.legend}
@@ -37,4 +38,4 @@ const BoxPlot = ({item}) => {
   );
 };
 
-export default React.memo(BoxPlot);
+export default React.memo(BoxPlot, ItemManager.commonPropsComparator);
