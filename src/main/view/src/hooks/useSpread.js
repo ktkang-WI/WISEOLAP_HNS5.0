@@ -18,9 +18,12 @@ import useFile from './useFile';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 import store from 'redux/modules';
+import useModal from './useModal';
+import localizedString from 'config/localization';
 
 const useSpread = () => {
   const dispatch = useDispatch();
+  const {alert} = useModal();
   const {setBindingInfo} = SpreadSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
@@ -43,6 +46,11 @@ const useSpread = () => {
       const bindingInfo = bindingInfos[datasetId];
       const rowData = spreadData[datasetId].rowData;
       const metaData = spreadData[datasetId].metaData;
+
+      if (rowData[0]?.error) {
+        alert(localizedString.invalidQuery);
+        return true;
+      }
 
       const {columns} = generateColumns(metaData, sheets);
       let bindedSheet = workbook
