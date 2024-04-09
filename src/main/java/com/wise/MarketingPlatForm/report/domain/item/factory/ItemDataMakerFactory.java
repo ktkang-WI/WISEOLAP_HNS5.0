@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.factory;
 
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ArcDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
@@ -50,7 +51,9 @@ public class ItemDataMakerFactory {
         if (itemType == ItemType.CHOROPLETH) {
             result = new ChoroplethDataMaker();
         }
-
+        if (itemType == ItemType.ARC_DIAGRAM) {
+            result = new ArcDataMaker();
+        }
 
         // Default Chart Maker 
         if (result == null) {

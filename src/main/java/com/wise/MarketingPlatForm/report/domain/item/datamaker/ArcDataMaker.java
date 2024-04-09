@@ -1,8 +1,10 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -13,7 +15,7 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 
-public class ChordDataMaker implements ItemDataMaker {
+public class ArcDataMaker implements ItemDataMaker {
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
         List<Measure> measures = new ArrayList<> ();
@@ -43,47 +45,40 @@ public class ChordDataMaker implements ItemDataMaker {
             data = tempData;
         }
 
-        Map<String, Integer> indexMap = new HashMap<>();
-        List<Map<String, String>> groups = new ArrayList<>();
-        int index = 0;
+        List<Map<String, Object>> nodes = new ArrayList<> ();
+        List<Map<String, Object>> links = new ArrayList<> ();
 
-        // 그룹 및 인덱스 맵 생성
-        for (Dimension dimension : dimensions) {
-            for (Map<String, Object> map : data) {
-                String value = map.get(dimension.getName()).toString();
-                if (!indexMap.containsKey(value)) {
-                    Map<String, String> group = new HashMap<>();
-                    group.put("value", value);
-                    group.put("field", dimension.getUniqueName());
-                    groups.add(group);
-                    indexMap.put(value, index++);
+        for (int i = 0; i < dimensions.size(); i++) {
+            String targetName = dimensions.get(i).getName();
+            Set<String> names = new LinkedHashSet<>();
+
+            for (Map<String, Object> row : data) {
+                names.add(row.get(targetName).toString());
+        
+                for (int j = i + 1; j < dimensions.size(); j++) {
+                    String sourceName = dimensions.get(j).getName();
+                    Map<String, Object> link = new HashMap<>();
+
+                    link.put("target", row.get(targetName));
+                    link.put("source", row.get(sourceName));
+                    links.add(link);
                 }
+            }
+
+            for (String name : names) {
+                Map<String, Object> node = new HashMap<>();
+
+                node.put("id", name);
+                node.put("group", i);
+                nodes.add(node);
             }
         }
 
-        // 행렬 초기화
-        int[][] matrix = new int[groups.size()][groups.size()];
+        Map<String, Object> info = new HashMap<> ();
 
-        // 행렬 값 설정
-        for (Map<String, Object> map : data) {
-            for (Dimension source : dimensions) {
-                String key1 = map.get(source.getName()).toString();
-                matrix[indexMap.get(key1)][indexMap.get(key1)] = 1;
-                
-                for (Dimension target : dimensions) {
-                    if (source.getFieldId().equals(target.getFieldId())) continue;
-                    String key2 = map.get(target.getName()).toString();
+        info.put("nodes", nodes);
 
-                    matrix[indexMap.get(key1)][indexMap.get(key2)] = 1;
-                }
-            }
-        }
-
-        Map<String, Object> chordData = new HashMap<>();
-        chordData.put("groups", groups);
-        chordData.put("matrix", matrix);
-
-        CommonResult result = new CommonResult(data, "", chordData);
+        CommonResult result = new CommonResult(links, "", info);
 
         return result;
     }

@@ -4,6 +4,7 @@ import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useEffect, useRef} from 'react';
 import {useInteractiveEffect} from '../util/useInteractiveEffect';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -84,15 +85,4 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   );
 };
 
-const propsComparator = (prev, next) => {
-  let result = true;
-  if (!_.isEqual(prev.item.mart, next.item.mart)) {
-    result = false;
-  }
-  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
-    result = false;
-  }
-  return result;
-};
-
-export default React.memo(TreeMapChart, propsComparator);
+export default React.memo(TreeMapChart, ItemManager.commonPropsComparator);
