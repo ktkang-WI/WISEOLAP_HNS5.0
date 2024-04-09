@@ -7,6 +7,7 @@
     "@grapecity/spread-sheets": "16.2.6",
     "@grapecity/spread-sheets-io": "16.2.6",
     "@grapecity/spread-sheets-barcode": "16.2.6",
+    "@grapecity/spread-sheets-slicers": "16.2.6",
     "@grapecity/spread-sheets-charts": "16.2.6",
     "@grapecity/spread-sheets-designer": "16.2.6",
     "@grapecity/spread-sheets-designer-react": "16.2.6",

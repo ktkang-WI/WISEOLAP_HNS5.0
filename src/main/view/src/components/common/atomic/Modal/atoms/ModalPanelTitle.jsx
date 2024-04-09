@@ -1,6 +1,7 @@
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import CommonButton from '../../Common/Button/CommonButton';
+import {CheckBox} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -22,7 +23,10 @@ const Buttons = styled.div`
   display: flex;
 `;
 
-const ModalPanelTitle = ({buttons = [], children}) => {
+const ModalPanelTitle = ({
+  buttons = [],
+  checkBoxs = [],
+  children}) => {
   const generateButtons = () => {
     return buttons.map((button, i) => (
       <CommonButton
@@ -36,11 +40,27 @@ const ModalPanelTitle = ({buttons = [], children}) => {
     ));
   };
 
+  const generateCheckBoxs =() => {
+    return checkBoxs.map((checkBox, i) => (
+      <CheckBox
+        key={`modal-checkBox${i}`}
+        height='30px'
+        text={checkBox.text}
+        defaultValue={
+          _.isNull(checkBox.value) || _.isUndefined(checkBox.value) ?
+          true : checkBox.defaultValue
+        }
+        onValueChanged={checkBox.onValueChanged}
+      />
+    ));
+  };
+
   return (
     <TitleWrapper>
       {children}
       <Buttons>
         {generateButtons()}
+        {generateCheckBoxs()}
       </Buttons>
     </TitleWrapper>
   );
