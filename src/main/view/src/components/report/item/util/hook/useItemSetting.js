@@ -236,7 +236,7 @@ export default function useItemSetting(
    */
   const getDataField = useCallback(() => {
     return adHocOption?.dataField || item.meta.dataField;
-  }, [item.mart.data, ...fieldDependency]);
+  }, [item.mart, ...fieldDependency]);
 
   const reloadMasterFilter = () => {
     const selectedItem = getSelectedItem();
