@@ -6,6 +6,7 @@ import localizedString from 'config/localization';
 import {selectCurrentDataFieldOption} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 import {ScrollView} from 'devextreme-react';
+import {DataFieldType} from 'components/report/item/util/dataFieldType';
 
 const theme = getTheme();
 
@@ -24,17 +25,14 @@ const Wrapper = styled.div`
 
 const DataColumnTab = () => {
   const dataFieldOption = useSelector(selectCurrentDataFieldOption);
-
   const getColumnList = () => {
     const columnList = [];
 
-    for (const key in dataFieldOption) {
-      if (dataFieldOption) {
-        columnList.push(
-            <DataColumnList {...(dataFieldOption[key])} id={key}/>
-        );
+    Object.values(DataFieldType).forEach((key) => {
+      if (dataFieldOption[key]) {
+        columnList.push(<DataColumnList {...(dataFieldOption[key])} id={key}/>);
       }
-    }
+    });
     return columnList;
   };
 
