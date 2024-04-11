@@ -17,7 +17,8 @@ public enum ItemType {
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
     TIMELINE("timeline"),
-    CHORD("chord")
+    CHORD("chord"),
+    ARC_DIAGRAM("arc")
     ;
 
     private final String symbol;

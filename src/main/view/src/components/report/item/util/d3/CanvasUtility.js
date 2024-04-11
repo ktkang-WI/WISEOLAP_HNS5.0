@@ -45,3 +45,85 @@ export const getPaletteForD3 = (palette, length) => {
 
   return newPalette;
 };
+
+/**
+ * 범례를 그리기 위한 옵션을 계산합니다.
+ * @param {JSON} legend 범례 옵션
+ * @param {number} width 아이템 너비
+ * @param {number} height 아이템 높이
+ * @param {Array} legendData name으로 구성된 Array
+ * @return {JSON} {itemWidth, itemHeight, legendOptions}
+ */
+export const getLegendOptions = (legend, width, height, legendData) => {
+  const MARGIN = 30;
+  const textPos = legend.itemTextPosition;
+
+  let itemHeight = height;
+  let itemWidth = width;
+  let legendWidth = 0;
+  let legendHeight = 0;
+
+  // 1. 몇줄로 렌더링될지 구하기
+  // textPos가 right인 경우 세로로 그림.
+  // textPos가 bottom인 경우 가로로 그림.
+  const legendOption = {
+    maxWidth: [],
+    count: 0,
+    row: 0,
+    visible: false
+  };
+
+  if (!legend?.useLegend || !width || !height) {
+    return {itemHeight, itemWidth, legendOption};
+  }
+
+  if (textPos == 'bottom') {
+    // 마진을 포함한 가장 긴 라벨의 너비
+    const maxWidth = legendData.reduce((acc, {name}) => {
+      return Math.max(acc, getTextWidth(name, 12, 'Noto Sans KR'));
+    }, 0) + 20;
+
+    // 가로 한 줄에 들어가게 될 범례 수
+    const count = Math.floor((width - MARGIN) / maxWidth);
+    const row = Math.ceil(legendData.length / count);
+
+    legendHeight = row * 40;
+    legendOption.maxWidth = maxWidth;
+    legendOption.count = count;
+    legendOption.row = row;
+  } else {
+    // 세로 한 줄에 들어가게 될 범례 수
+    const count = Math.floor((height - MARGIN) / 25);
+    const row = Math.ceil(legendData.length / count);
+
+    const maxWidth = legendData.reduce((acc, name, i) => {
+      const idx = Math.floor(i / count);
+      acc[idx] = Math.max(acc[idx],
+          getTextWidth(name, 12, 'Noto Sans KR') + 30);
+      return acc;
+    }, Array(row).fill(0));
+
+    legendOption.maxWidth = maxWidth;
+    legendOption.count = count;
+    legendOption.row = row;
+
+    legendWidth = maxWidth.reduce((acc, num) => acc + num, 0);
+  }
+
+  itemHeight = itemHeight - legendHeight;
+  itemWidth = itemWidth - legendWidth;
+
+  // 범례가 절반 이상 차지할시 범례 그리지 않음.
+  if (itemHeight < legendHeight || itemWidth < legendWidth) {
+    itemHeight = height;
+    itemWidth = width;
+  } else {
+    legendOption.visible = true;
+  }
+
+  return {
+    itemHeight,
+    itemWidth,
+    legendOption
+  };
+};
