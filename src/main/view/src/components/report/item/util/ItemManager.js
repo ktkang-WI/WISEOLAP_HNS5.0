@@ -86,7 +86,7 @@ const getRibbonItems = (type) => {
 
 const commonPropsComparator = (prev, next) => {
   let result = true;
-  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+  if (prev.item.mart != next.item.mart) {
     result = false;
   } else if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
     result = false;
