@@ -3,6 +3,7 @@ import {itemExportsObject}
 import DevChart, {
   ArgumentAxis,
   CommonSeriesSettings,
+  CommonAxisSettings,
   Grid,
   Legend,
   Tooltip,
@@ -274,6 +275,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         >
           <Point visible={pointerMarker} />
         </CommonSeriesSettings>
+        <CommonAxisSettings aggregatedPointsPosition="crossTicks" />
         <ArgumentAxis
           inverted={reverseView}
           title={meta.xAxis.axisCutomText}
@@ -281,7 +283,8 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
             visible: meta.xAxis.xAxisMark,
             displayMode: 'rotate',
             rotationAngle: meta.xAxis.xAxisInclination
-          }} />
+          }}
+        />
         <ValueAxis
           name="left"
           position="left"
