@@ -142,7 +142,7 @@ const useSpread = () => {
 
   const createReportBlob = async () => {
     const workbook = getWorkbook();
-    const json = workbook.toJSON({includeBindingSource: false});
+    const json = workbook.toJSON({includeBindingSource: true});
     const blob = await new Promise((resolve, reject) => {
       excelIO.save(JSON.stringify(json), resolve, reject);
     });
