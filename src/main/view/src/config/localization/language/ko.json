@@ -601,6 +601,7 @@
   "relationVisualization": "관계 시각화",
   "connectionVisualization": "연관 시각화",
   "distributionVisualization": "분포 시각화",
+  "invalidValueErrorMsg": "유효하지 않은 데이터 형식입니다.",
   "filter": "필터",
   "columnNumberAutoSetting": "컬럼개수 자동지정",
   "columnNumber": "컬럼개수",

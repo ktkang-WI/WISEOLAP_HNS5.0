@@ -52,18 +52,6 @@ const CustomChartDefaulElement = () => {
         });
         break;
       }
-      /*
-      case CALENDAR: {
-        openModal(CalendarModal, {
-          modalTitle: localizedString.calendar,
-          label: localizedString.calendar,
-          onSubmit: (returedData) => {
-            insertFlexLayout(reportId, 'calendar', '', returedData);
-          }
-        });
-        break;
-      }
-      */
       default: {
         insertFlexLayout(selectedReportId, type);
         closePopover();

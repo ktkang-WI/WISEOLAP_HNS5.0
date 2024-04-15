@@ -2,6 +2,7 @@ import {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import D3CalendarPainter from './D3CalendarPainter';
 import useModal from 'hooks/useModal';
+import localizedString from '../../../../config/localization';
 
 const Svg = styled.div`
   width: 100%;
@@ -47,7 +48,7 @@ const D3Calendar = ({
   useEffect(() => {
     dataSource = dataSourceGenerator(dataSource, argumentField, valueFiled);
     if (!dataSource) {
-      alert('유효하지 않은 데이터 형식입니다.');
+      alert(localizedString.invalidValueErrorMsg);
       return;
     }
     const option = {

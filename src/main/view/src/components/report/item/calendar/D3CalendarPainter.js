@@ -1,4 +1,6 @@
+import {getTheme} from 'config/theme';
 import * as d3 from 'd3';
+const theme = getTheme();
 
 // public function
 const D3CalendarPainter = {};
@@ -38,7 +40,7 @@ D3CalendarPainter.init = ({
   D3CalendarPainter.self.isLoaded = true;
 };
 
-// public
+// public function
 D3CalendarPainter.painting = () => {
   if (!D3CalendarPainter.self.isLoaded) {
     return new Error('D3Init is not loaded!');
@@ -52,7 +54,7 @@ D3CalendarPainter.erasing = () => {
   D3CalendarPainter.self.container.innerHTML = '';
 };
 
-// private
+// private function
 painterObj.initContainer = () => {
   if (!D3CalendarPainter.self.container) {
     return new Error('The Container attribute can not be null');
@@ -116,7 +118,7 @@ painterObj.drawingYear = (svg) => {
   painterObj.drawingDayByYear(year, painterObj.drawingDayByYear.type.rect)
       .attr('fill', (d) => {
         if (!d.value) {
-          return '#f9f9f9';
+          return theme.color.Alabaster;
         } else {
           return option.color(d.value);
         }
@@ -153,7 +155,6 @@ painterObj.drawingDayByYear = (year, type) => {
       .attr('width', option.cellSize - 1)
       .attr('height', option.cellSize - 1)
       .attr('x', (d) => {
-        // 이부분 고쳐야함.
         const date = painterObj.convertToDate(d.date);
         let result =
         d3.timeWeek.count(d3.utcYear(date), date) * option.cellSize + 0.5;
@@ -200,7 +201,7 @@ painterObj.drawingMonth = () => {
 
   month.filter((d, i) => i).append('path')
       .attr('fill', 'none')
-      .attr('stroke', '#cc9999')
+      .attr('stroke', theme.color.Cranberry)
       .attr('stroke-width', 2)
       .attr('d', (i) => func.pathMonth(i));
 
