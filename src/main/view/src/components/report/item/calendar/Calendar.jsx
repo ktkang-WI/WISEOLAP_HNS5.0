@@ -1,16 +1,14 @@
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import {TreeMap} from 'devextreme-react';
-import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useEffect, useRef} from 'react';
+import D3Calendar from './D3Calendar';
 
-const CalendarChart = ({setItemExports, id, item}) => {
+const CalendarChart = ({setItemExports, id, item, node}) => {
   const mart = item ? item.mart : null;
-  // const meta = item ? item.meta : null;
   if (!mart.init) {
     return <></>;
   }
-
+  const dataSource = mart.data.data;
   const dxRef = useRef();
   const itemExportObject =
     itemExportsObject(id, dxRef, 'CALENDAR', mart.data.data);
@@ -29,22 +27,12 @@ const CalendarChart = ({setItemExports, id, item}) => {
   const seriesNames = mart.data.info.seriesMeasureNames;
 
   return (
-    <TreeMap
-      ref={dxRef}
-      id={id}
-      width={'100%'}
-      height={'100%'}
-      colorizer={treeMapOptions.colorizer}
-      dataSource={mart.data.data} // mart
-      valueField={seriesNames[0].summaryName}
-      labelField='arg'
-    >
-      <Tooltip
-        enabled={true}
-        customizeTooltip={(e) => customizeTooltip(e, seriesNames[0].caption)}
-      />
-      <Label visible={true} />
-    </TreeMap>
+    <D3Calendar
+      width={node?._rect?.width}
+      dataSource={dataSource}
+      argumentField='arg'
+      valueFiled={seriesNames[0].summaryName}
+    />
   );
 };
 

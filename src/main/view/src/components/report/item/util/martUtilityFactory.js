@@ -12,6 +12,13 @@ export const defaultDimension = {
   type: 'DIM'
 };
 
+export const dateDimension = {
+  label: localizedString.date,
+  icon: dimensionIcon,
+  placeholder: localizedString.dimensionPlaceholder,
+  type: 'DIM'
+};
+
 export const defaultAnyField = {
   icon: dimensionIcon,
   label: localizedString.field,

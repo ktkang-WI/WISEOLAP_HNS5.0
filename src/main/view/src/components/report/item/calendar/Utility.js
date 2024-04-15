@@ -1,4 +1,4 @@
-import {defaultDimension, singleMeasure}
+import {dateDimension, singleMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
@@ -48,7 +48,7 @@ const getDataFieldOptionChild = () => {
   };
 
   const dataFieldDimension = {
-    ...defaultDimension
+    ...dateDimension
   };
 
   return {
