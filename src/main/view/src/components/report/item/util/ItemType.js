@@ -10,5 +10,6 @@ export default {
   CALENDAR: 'calendar',
   BOX_PLOT: 'boxPlot',
   TIMELINE: 'timeline',
-  CHORD: 'chord'
+  CHORD_DIAGRAM: 'chord',
+  ARC_DIAGRAM: 'arc'
 };

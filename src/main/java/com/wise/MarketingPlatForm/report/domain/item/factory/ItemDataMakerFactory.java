@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.report.domain.item.factory;
 
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ArcDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CalendarDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
@@ -53,6 +54,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.CALENDAR) {
             result = new CalendarDataMaker();
+        }
+        if (itemType == ItemType.ARC_DIAGRAM) {
+            result = new ArcDataMaker();
         }
 
         // Default Chart Maker 

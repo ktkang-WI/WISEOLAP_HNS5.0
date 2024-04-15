@@ -38,6 +38,7 @@ import CalendarChart
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
+import ArcDiagram from 'components/report/item/arc/ArcDiagram';
 
 
 const theme = getTheme();
@@ -112,7 +113,8 @@ const ItemBoard = () => {
     calendar: CalendarChart,
     boxPlot: BoxPlot,
     timeline: Timeline,
-    chord: Chord
+    chord: Chord,
+    arc: ArcDiagram
   };
 
   const itemExportsPicker = (id) => {
@@ -179,8 +181,8 @@ const ItemBoard = () => {
           setItemExports={setItemExports}
           item={item}
           adHocOption={adHocOption}
-          id={item.id}
-          node={node}/>
+          node={node}
+          id={item.id}/>
       </Item>
     );
   }

@@ -27,7 +27,8 @@ const makeItem = (orgItem, countMap) => {
     treeMap: '트리맵',
     card: '카드',
     timeline: '타임라인',
-    chord: '의존성 휠'
+    chord: '의존성 휠',
+    arc: '아크 다이어그램'
   };
 
   let initNum = 1;

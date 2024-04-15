@@ -46,7 +46,7 @@ const ReportTabs = () => {
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
-      onItemClick={(e) => {
+      onItemClick={async (e) => {
         dblClick ++;
         setTimeout(() => {
           dblClick --;
@@ -57,7 +57,7 @@ const ReportTabs = () => {
           if (selectedReport && selectedReport.type == 'REPORT') {
             const reportType = selectedReport.reportType;
             if (reportType === DesignerMode['EXCEL']) {
-              setExcelFile(selectedReport.id);
+              await setExcelFile(selectedReport.id);
             }
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {

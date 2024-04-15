@@ -28,7 +28,7 @@ const ItemOptionManager = () => {
   const dispatch = useDispatch();
   const {updateItem} = ItemSlice.actions;
   const reportId = useSelector(selectCurrentReportId);
-  const getBtnAndImagePopover = () => {
+  const getBtnAndImagePopover = (compact) => {
     return <div>
       <Button
         width={200}
@@ -46,7 +46,7 @@ const ItemOptionManager = () => {
           dispatch(updateItem({reportId, item}));
         }}
       />
-      {legendPositionIcon.map((icon, idx) => {
+      {legendPositionIcon.slice(compact ? 12 : 0, 30).map((icon, idx) => {
         return <Button
           key={idx}
           icon={icon.src}
@@ -96,6 +96,15 @@ const ItemOptionManager = () => {
       'imgSrc': showColorLegend,
       'renderContent': () => {
         return getBtnAndImagePopover();
+      }
+    },
+    'ShowColorLegendD3': { // 범례
+      ...commonPopoverButtonElement,
+      'id': 'show_color_legend_d3',
+      'label': localizedString.showColorLegend,
+      'imgSrc': showColorLegend,
+      'renderContent': () => {
+        return getBtnAndImagePopover(true);
       }
     },
     'Palette': {

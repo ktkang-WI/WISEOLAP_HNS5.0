@@ -1,16 +1,13 @@
 import chordImg from 'assets/image/icon/item/chord.png';
+import arcImg from 'assets/image/icon/item/arc.png';
 import boxPlotImg from 'assets/image/icon/item/box_plot.png';
 
 import localizedString from 'config/localization';
 import useLayout from 'hooks/useLayout';
-import choroplethImg
-  from '../../../../../../assets/image/icon/item/choropleth.png';
-import cardImg
-  from '../../../../../../assets/image/icon/item/card.png';
-import liquidFillGaugeImg
-  from '../../../../../../assets/image/icon/item/liquidFillGauge.png';
-import squariFied
-  from '../../../../../../assets/image/icon/item/squariFied.png';
+import choroplethImg from 'assets/image/icon/item/choropleth.png';
+import cardImg from 'assets/image/icon/item/card.png';
+import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import treeMapImg from 'assets/image/icon/item/treemap.png';
 import calendarImg
   from '../../../../../../assets/image/icon/item/calendar_view.png';
 import {useSelector} from 'react-redux';
@@ -32,9 +29,9 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
-    CHORD,
-    BOX_PLOT,
-    CALENDAR
+    CALENDAR,
+    CHORD_DIAGRAM,
+    BOX_PLOT
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -70,7 +67,7 @@ const CustomChartDefaulElement = () => {
       checkboxs: [
         {
           title: localizedString.chordDiagram,
-          type: CHORD,
+          type: CHORD_DIAGRAM,
           checked: false,
           src: chordImg
         },
@@ -79,6 +76,12 @@ const CustomChartDefaulElement = () => {
           type: CALENDAR,
           checked: false,
           src: calendarImg
+        },
+        {
+          title: localizedString.arcDiagram,
+          type: ItemType.ARC_DIAGRAM,
+          checked: false,
+          src: arcImg
         }
       ]
     },
@@ -101,7 +104,7 @@ const CustomChartDefaulElement = () => {
           title: localizedString.Treemap,
           type: TREEMAP,
           checked: false,
-          src: squariFied
+          src: treeMapImg
         }
       ]
     },

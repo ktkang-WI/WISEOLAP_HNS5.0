@@ -13,6 +13,7 @@ import {selectSeriesOption}
 import localizedString from 'config/localization';
 import styled from 'styled-components';
 import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
+import {chartImages} from 'components/report/item/util/chartImageImporter';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
@@ -29,7 +30,7 @@ const TabPanelItem = ({children}) => {
 };
 
 const DataColumnSeriesOptions = (
-    {fieldId, onClose, parameterInfo, onSubmit}) => {
+    {fieldId, setButtonIconState, onClose, parameterInfo, onSubmit}) => {
   // useState
   const [tabPanelItem, setTabPanelItem] = useState(dataSource[0].component);
   const dispatch = useDispatch();
@@ -84,6 +85,7 @@ const DataColumnSeriesOptions = (
     tempSeriesOption.seriesOptions.type = type;
     tempSeriesOption.seriesOptions.pointLabel = pointLabel;
     dispatch(seriesOptionFetch(tempSeriesOption));
+    setButtonIconState(chartImages[type]);
   };
 
   return (
