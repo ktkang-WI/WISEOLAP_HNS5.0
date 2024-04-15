@@ -133,7 +133,7 @@ painterObj.drawingYear = (svg) => {
         if (!d.value) return;
         const date = painterObj.convertToDate(d.date);
         return `일자: ${
-          func.format.formatDate(dataObj.dataReturnYMD(date))
+          func.format.formatDate(dataObj.dataReturnToYMD(date))
         }
         값: ${
           !d.value ? '' : `${d.value}`}`;
@@ -227,7 +227,7 @@ dataObj.convertToDateTimeSetZero = (data) => {
   return new Date(tempDate);
 };
 
-dataObj.dataReturnYMD = (d) => {
+dataObj.dataReturnToYMD = (d) => {
   return {
     year: d.getFullYear(),
     month: String(d.getMonth() + 1).padStart(2, '0'),
@@ -371,10 +371,12 @@ initObj.initFunc = (option) => {
     const d = Math.max(0, Math.min(5, countDay(t.getUTCDay())));
     const w = d3.timeWeek.count(d3.utcYear(t), t);
     const cellSize = option.cellSize;
-    return `${d === 0 ? `M${w * option.cellSize},0` :
-    d === 7 ? `M${(w + 1) * cellSize},0` :
-    `M${(w + 1) * cellSize},0V
-    ${d * cellSize}H${w * cellSize}`}V${7 * cellSize}`;
+    return `${d === 0 ?
+      `M${w * option.cellSize},0` : d === 7 ?
+      `M${(w + 1) * cellSize},0` :
+      `M${(w + 1) * cellSize},0V ${
+        d * cellSize}H${w * cellSize
+      }`}V${7 * cellSize}`;
   };
   return {
     countDay,
