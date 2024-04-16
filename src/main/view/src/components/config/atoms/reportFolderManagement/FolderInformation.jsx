@@ -72,7 +72,6 @@ const FolderInformation = ({row, setRow}) => {
             }
           }}
         >
-          <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
         <Item
