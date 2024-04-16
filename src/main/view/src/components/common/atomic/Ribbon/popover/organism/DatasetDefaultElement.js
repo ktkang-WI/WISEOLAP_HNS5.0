@@ -13,11 +13,17 @@ import UserUploadTableModal
 import SelectTableModal from 'components/dataset/modal/SelectTableModal';
 import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
+import {getTheme} from 'config/theme';
+import {useSelector} from 'react-redux';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
+
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
   const theme = getTheme();
-  return {
+  const reportType = useSelector(selectCurrentDesignerMode);
+  const returnVal = {
     dataset: [
       {
         label: localizedString.addCUBE,
@@ -104,5 +110,10 @@ const DatasetDefaultElement = () => {
     ],
     keys: ['dataset']
   };
+
+  if (reportType === DesignerMode['EXCEL']) {
+    delete returnVal.dataset[0];
+  }
+  return returnVal;
 };
 export default DatasetDefaultElement;

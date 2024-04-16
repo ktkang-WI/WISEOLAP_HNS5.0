@@ -84,6 +84,16 @@ const getRibbonItems = (type) => {
   return utility[type].getRibbonItems();
 };
 
+const commonPropsComparator = (prev, next) => {
+  let result = true;
+  if (prev.item.mart != next.item.mart) {
+    result = false;
+  } else if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+};
+
 const getAttributeItems = (type) => {
   return utility[type].getAttributeItems();
 };
@@ -182,5 +192,6 @@ export default {
   getTopBottomInfo,
   getTabHeaderItems,
   useCustomEvent,
-  getLayoutSetting
+  getLayoutSetting,
+  commonPropsComparator
 };

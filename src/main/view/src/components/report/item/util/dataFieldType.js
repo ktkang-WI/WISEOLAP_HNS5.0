@@ -4,8 +4,8 @@ const DataFieldType = {
   MEASURE: 'measure',
   DIMENSION: 'dimension',
   DIMENSION_GROUP: 'dimensionGroup',
-  COLUMN: 'column',
   ROW: 'row',
+  COLUMN: 'column',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
   SORT_BY_ITEM: 'sortByItem',
@@ -39,7 +39,7 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       break;
     }
     case ItemType.CHORD:
-    {
+    case ItemType.ARC_DIAGRAM: {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
