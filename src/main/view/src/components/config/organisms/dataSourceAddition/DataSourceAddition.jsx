@@ -41,7 +41,6 @@ const DataSourceAddition = () => {
   const init = () => {
     models.DataSource.getDs()
         .then((response) => {
-          console.log(response.data.data);
           const newDs = response.data.data.reduce((acc, v) => {
             const dsIdList = acc.map((row) => row.dsId);
             if (!dsIdList.includes(v.dsId)) {
