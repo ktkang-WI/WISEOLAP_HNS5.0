@@ -1,4 +1,6 @@
+import React from 'react';
 import ItemManager from '../util/ItemManager';
+import useItemSetting from '../util/hook/useItemSetting';
 
 
 const Template = ({item}) => {
