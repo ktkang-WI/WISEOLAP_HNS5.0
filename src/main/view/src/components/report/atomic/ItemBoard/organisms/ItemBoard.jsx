@@ -39,6 +39,7 @@ import ArcDiagram from 'components/report/item/arc/ArcDiagram';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
+import _ from 'lodash';
 
 
 const theme = getTheme();
@@ -161,6 +162,12 @@ const ItemBoard = () => {
     }
   };
 
+  const nullDataCheck = (item) => {
+    return !item ||
+    item?.mart?.data?.data?.length == 0 ||
+    _.isEmpty(item?.mart?.data || {});
+  };
+
   /**
    * 아이템 type에 맞는 컴포넌트 생성
    * @param {*} node
@@ -172,7 +179,7 @@ const ItemBoard = () => {
     const ItemComponent = itemFactory[item.type];
     const adHocOption = rootItem.adHocOption;
 
-    if (!item) return <></>;
+    if (nullDataCheck(item)) return <Item></Item>;
 
 
     return (
