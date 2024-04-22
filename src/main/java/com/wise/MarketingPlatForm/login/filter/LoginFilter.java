@@ -40,7 +40,7 @@ public class LoginFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) req; 
         HttpServletResponse response = (HttpServletResponse) res; 
         HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("user");
+        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
 
         log.debug("Request URI == > " + request.getRequestURI());
         log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));

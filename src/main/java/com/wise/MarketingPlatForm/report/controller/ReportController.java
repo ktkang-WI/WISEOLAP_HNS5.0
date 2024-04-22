@@ -355,7 +355,7 @@ public class ReportController {
     public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
     	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
         HttpSession session = request.getSession();
-        UserDTO user = (UserDTO)session.getAttribute("user");
+        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
         String userId = user.getUserId();
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");

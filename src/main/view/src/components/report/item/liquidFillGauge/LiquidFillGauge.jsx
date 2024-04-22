@@ -40,7 +40,7 @@ const LiquidFillGauge = ({setItemExports, id, item}) => {
     }
   });
   const itemExportObject =
-    itemExportsObject(id, dxRef, 'LIQUIDFILLGAUGE', mart.data.data);
+    itemExportsObject(id, ref, 'LIQUIDFILLGAUGE', mart.data.data);
 
   useEffect(() => {
     setItemExports((prev) => {

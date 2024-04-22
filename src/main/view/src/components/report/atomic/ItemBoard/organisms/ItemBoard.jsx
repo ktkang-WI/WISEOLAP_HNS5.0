@@ -196,7 +196,13 @@ const ItemBoard = () => {
     const item = items.find((i) => id == i.id);
     const useCaption = item.meta.useCaption;
 
-    return <span>{useCaption? item.meta.name : false}</span>;
+    return <span style={
+      {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis'
+      }
+    }>{useCaption? item.meta.name : false}</span>;
   }
 
   function focusItem(itemId) {
