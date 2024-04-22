@@ -1,7 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import * as d3 from 'd3';
-import {AxisLeft} from './AxisLeft';
-import {AxisBottom} from './AxisBottomCategoric';
 import {VerticalBox} from './VerticalBox';
 import {styled} from 'styled-components';
 import {
@@ -9,6 +7,8 @@ import {
 } from '../../util/d3/CanvasUtility';
 import valueAxisCustomLabel from '../../ValueAxisCustomLabel';
 import D3Legend from '../../d3/D3Legend';
+import {AxisLeft} from '../../d3/AxisLeft';
+import {AxisBottom} from '../../d3/AxisBottomCategoric';
 
 const StyledWrapper = styled(Wrapper)`
   .box:hover {
