@@ -41,10 +41,10 @@ const AddBtn = styled.img`
 
 const selectedReportTypeHighlight = (selectedItem, reportType) => {
   if (reportType === 'AdHoc') {
-    return selectedItem[1].meta.dataHighlight.lengh !=0 ?
+    return selectedItem[1].meta.dataHighlight.length !=0 ?
           selectedItem[1].meta.dataHighlight : [];
   } else if (reportType === 'DashAny') {
-    return selectedItem.meta.dataHighlight.lengh !=0 ?
+    return selectedItem.meta.dataHighlight.length !=0 ?
           selectedItem.meta.dataHighlight : [];
   };
 };
@@ -103,7 +103,7 @@ const DataHighlightModal = ({...props}) => {
 
   // 하이라이트 목록에 추가.
   const onClick = () => {
-    const formData = _.cloneDeep(ref.current.props.formData);
+    const formData = ref.current.props.formData;
     const highlight = appliedHighlight(formData);
 
     // 유효성 검사.
@@ -221,6 +221,8 @@ const DataHighlightModal = ({...props}) => {
             measureNames={measureNames}
             showField={showField}
             setShowField={setShowField}
+            highlightList={highlightList}
+            setHighlightList={setHighlightList}
           />
         </ModalPanel>
       </StyledWrapper>
