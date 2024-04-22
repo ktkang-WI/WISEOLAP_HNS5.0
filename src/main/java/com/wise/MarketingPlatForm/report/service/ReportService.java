@@ -526,7 +526,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
-            .regUserNo(0)
+            .modUserNo(reportMstrDTO.getModUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
