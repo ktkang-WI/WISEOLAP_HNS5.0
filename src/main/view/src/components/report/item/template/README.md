@@ -17,18 +17,17 @@
   - ItemFactory에 해당 아이템 한글 이름 등록
   - 해당 폴더에 있는 Template.jsx 파일명 및 컴포넌트명 변경    ex) Template.jsx => BoxPlot.jsx
   - NormalChartDefaultElemnt 또는 CustomChartDefaultElement에서 아이템 추가 버튼 생성
+  - ItemBoard에 해당 아이템 컴포넌트 추가
 
 4. 아이템 기능 생성
-  - 마스터 필터: 미리 생성되어 있는 마스터 필터 전용 useEffect와
-    const {filterItems, clearAllFilter} = useQueryExecute();
-    위 메서드를 사용해 구현
-    filterItems(필터 객체, 아이템 객체)
+  - 기본 기능
+    1. useItemSetting hook으로 itemTools와 filterTools 가져오기
+    2. itemTools에서 팔레트, 데이터 필드 등 공통으로 사용하는 로직을 거쳐야하는 메서드 사용 또는 등록
 
-    필터 객체는 다음과 같음
-
-    {필드 uniqueName: [필터값1, 필터값2 ...]}
-
-    ex) {자동차명: ['k3', 'k5'], 생산회사이름: ['기아']}
+  - 마스터 필터
+    1. useItemSetting hook을 사용하여 가져온 filterTools 사용
+    2. setMasterFilterData에 '기아-K3' 형태 또는 {생산회사이름: '기아'} 형태의 데이터를 넘기기
+    3. useItemSetting 매개변수 또는 getSelectedItem()을 사용하여 Selection 렌더링 로직 구현
 
   - 리본 아이템 추가
     1. Utility getRibbonItems에 추가할 기능의 키값(String) 지정

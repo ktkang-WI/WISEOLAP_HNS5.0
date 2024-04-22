@@ -34,7 +34,7 @@ const useCustomEvent = () => {
         }));
       }
     },
-    'ShowColorLegend': {...commonRibbonBtn['ShowColorLegend']},
+    'ShowColorLegend': commonRibbonBtn['ShowColorLegend'],
     // TODO : x, y, 보조 축 설정 추가
     'XAxisSetting': {
       ...commonRibbonBtnElement,

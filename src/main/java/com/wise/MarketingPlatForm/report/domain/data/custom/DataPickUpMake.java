@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.ExpressionEngine;
@@ -187,7 +189,7 @@ public class DataPickUpMake {
         SetKey tempKey = null;
         for (Measure measure : measures) {
             tempKey = new SetKey();
-            tempKey.setKey(measure.getSummaryName());
+            tempKey.setKey(StringUtils.defaultString(measure.getSummaryName(), measure.getName()));
             if(measure.getExpression() != null) {
                 String expression = measure.getExpression();
                 for (Measure replace : measures) {
@@ -236,9 +238,9 @@ public class DataPickUpMake {
         List<Measure> distinctMeasures = new ArrayList<>();
         List<String> uniqueKeys = new ArrayList<>();
         measures.stream().forEach(item -> {
-            if (!uniqueKeys.contains(item.getSummaryName())) {
+            if (!uniqueKeys.contains(StringUtils.defaultString(item.getSummaryName(), item.getName()))) {
                 distinctMeasures.add(item);
-                uniqueKeys.add(item.getSummaryName());
+                uniqueKeys.add(StringUtils.defaultString(item.getSummaryName(), item.getName()));
             }
         });
         try {
