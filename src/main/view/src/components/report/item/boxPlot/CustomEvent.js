@@ -10,7 +10,7 @@ const useCustomEvent = () => {
 
 
   const ribbonConfig = {
-    'ShowColorLegendD3': {...commonRibbonBtn['ShowColorLegendD3']},
+    'ShowColorLegendD3': commonRibbonBtn['ShowColorLegendD3'],
     'YAxisSetting': {
       ...commonRibbonBtnElement,
       'id': 'yAxis_setting',

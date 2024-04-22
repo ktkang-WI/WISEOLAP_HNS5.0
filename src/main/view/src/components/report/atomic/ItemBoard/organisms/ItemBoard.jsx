@@ -209,7 +209,7 @@ const ItemBoard = () => {
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis'
       }
-    }>{useCaption? item.meta.name : false}</span>;
+    }>{useCaption ? item.meta.name : false}</span>;
   }
 
   function focusItem(itemId) {

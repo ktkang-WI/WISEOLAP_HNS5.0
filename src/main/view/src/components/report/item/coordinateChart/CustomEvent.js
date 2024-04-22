@@ -4,7 +4,7 @@ const useCustomEvent = () => {
   const {commonRibbonBtn} = itemOptionManager();
 
   const ribbonConfig = {
-    'ShowColorLegendD3': {...commonRibbonBtn['ShowColorLegendD3']}
+    'ShowColorLegendD3': commonRibbonBtn['ShowColorLegendD3']
   };
 
   return {
