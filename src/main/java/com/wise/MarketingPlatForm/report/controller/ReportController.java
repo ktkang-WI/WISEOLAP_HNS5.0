@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -394,14 +395,18 @@ public class ReportController {
 	)
         @PostMapping(value = "/report-save")
         public ResponseEntity<Map<String, Object>> insertReport(
-                @RequestBody Map<String, String> param
+                @RequestBody Map<String, String> param,
+                HttpServletRequest request
         ) throws SQLException {
                 Gson gson = new Gson();
+                HttpSession session = request.getSession();
+                UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
                 ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
                 String reportTypeStr = param.getOrDefault("reportType", "");
                 ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
                 reportDTO.setReportType(reportType);
+                reportDTO.setRegUserNo(userDTO.getUserNo());
 
                 Map<String, Object> map = reportService.insertReport(reportDTO);
 
