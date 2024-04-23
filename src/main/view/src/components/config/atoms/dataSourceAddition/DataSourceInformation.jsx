@@ -48,7 +48,7 @@ const DataSourceInformation = ({row}) => {
           dataField="dbmsType"
           editorType="dxSelectBox"
           editorOptions={{
-            dataSource: ['ORACLE', 'MS-SQL', 'MARIA'],
+            dataSource: ['ORACLE', 'MS-SQL', 'MARIA', 'DB2BLU'],
             onValueChanged: ({value}) => {
               setDbType(value);
             }
