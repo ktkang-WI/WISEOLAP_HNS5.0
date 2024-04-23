@@ -42,6 +42,7 @@ import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
+import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
@@ -475,7 +476,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
-            .regUserNo(0)
+            .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
@@ -525,7 +526,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
-            .regUserNo(0)
+            .modUserNo(reportMstrDTO.getModUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
