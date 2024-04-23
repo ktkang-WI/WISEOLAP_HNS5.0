@@ -65,9 +65,13 @@ const useSpread = () => {
 
       const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
       createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
-      deleteTables(bindedSheet);
 
       workbook.suspendPaint();
+      workbook.suspendCalcService();
+      workbook.suspendEvent();
+
+      deleteTables(bindedSheet);
+
 
       const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
           bindingInfo.rowIndex,
@@ -89,6 +93,8 @@ const useSpread = () => {
       bindedSheet.setDataSource(dataSource);
       table.filterButtonVisible(false);
 
+      workbook.resumeEvent();
+      workbook.resumeCalcService();
       workbook.resumePaint();
     });
   };
