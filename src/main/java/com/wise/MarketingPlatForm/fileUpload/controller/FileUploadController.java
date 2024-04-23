@@ -99,7 +99,7 @@ public class FileUploadController {
         String tableDeleteYN = params.getOrDefault("tableDeleteYN", "");
 
         HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("user");
+        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
 
         int userNo = userDTO.getUserNo();
 

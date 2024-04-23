@@ -5,7 +5,6 @@ import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import SelectDataSourceModal
   from 'components/dataset/modal/SelectDataSourceModal';
-import {getTheme} from 'config/theme';
 import SelectUserUploadTableModal
   from 'components/dataset/modal/SelectUserUploadTableModal';
 import UserUploadTableModal

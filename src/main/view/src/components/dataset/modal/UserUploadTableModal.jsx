@@ -26,7 +26,7 @@ const UserUploadTableModal = ({
   onClose, onSubmit, dsId, selectedTable, selectedDataSource, ...props
 }) => {
   const [uploadData, setUploadData] = useState([]);
-  const [dataNm, setDataNm] = useState();
+  const [dataNm, setDataNm] = useState('');
   const [deleteCheck, setDeleteCheck] = useState(true);
   const datasets = useSelector(selectCurrentDatasets);
   const datasetQuantity = useSelector(selectDatasetQuantity);
@@ -141,6 +141,7 @@ const UserUploadTableModal = ({
             onValueChange={onDatasetNmChanged}
           />
           <CheckBox
+            visible={dataNm != '' ? true : false}
             value={deleteCheck}
             onValueChange={onDeleteAfterInsert}
             text='데이터 삭제 후 추가'
