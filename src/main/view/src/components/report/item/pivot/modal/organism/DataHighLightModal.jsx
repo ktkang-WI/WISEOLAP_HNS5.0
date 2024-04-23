@@ -65,7 +65,8 @@ const DataHighlightModal = ({...props}) => {
     );
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
   const [data, setData] = useState({
-    'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true
+    'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true,
+    'status': 'new'
   });
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
   const ref = useRef(null);
@@ -91,11 +92,15 @@ const DataHighlightModal = ({...props}) => {
     const highlightData = {...formData, idx: idx};
     const findIdx = copyHighlight.findIndex(
         (data) => (data.dataItem === formData.dataItem &&
-          data.condition === formData.condition)
+          data.condition === formData.condition &&
+          data.valueFrom === formData.valueFrom)
     );
-    if (findIdx == -1) {
+
+    if (findIdx == -1 || formData.status == 'new') {
+      delete highlightData.status;
       copyHighlight.push(highlightData);
-    } else if (findIdx != -1) {
+    } else if (findIdx != -1 && formData.status == 'update') {
+      delete highlightData.status;
       copyHighlight[findIdx] = highlightData;
     }
     return copyHighlight;
@@ -187,8 +192,9 @@ const DataHighlightModal = ({...props}) => {
             onCellClick={(e) => {
               // 추가된 하이라이트 목록을 클릭 할 때 동작. -> 하이라이트 정보에 내용 출력.
               const rowData = _.cloneDeep(e.row ?
-                e.row.data :
-                {applyCell: true, applyTotal: true, applyGrandTotal: true});
+                {...e.row.data, status: 'update', rowIdx: e.rowIndex} :
+                {applyCell: true, applyTotal: true, applyGrandTotal: true,
+                  status: 'new'});
               rowData.condition === 'Between' && setShowField(true);
               rowData.condition !== 'Between' && setShowField(false);
               setData(rowData);

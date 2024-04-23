@@ -43,16 +43,11 @@ const DataHighlightForm = (
           setShowField(false);
         }
 
-        const listIdx = highlightList.findIndex(
-            (highlight) => (highlight.dataItem === formData.dataItem &&
-              highlight.condition === formData.condition)
-        );
-
         // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
         const copyHighlight = _.cloneDeep(highlightList);
 
-        if (listIdx !== -1) {
-          copyHighlight[listIdx] = formData;
+        if (formData.rowIdx != undefined && formData.status == 'update') {
+          copyHighlight[formData.rowIdx] = formData;
           setHighlightList(copyHighlight);
         }
       }}
