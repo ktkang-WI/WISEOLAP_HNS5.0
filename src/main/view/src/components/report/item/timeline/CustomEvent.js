@@ -29,7 +29,7 @@ const useCustomEvent = () => {
         }));
       }
     },
-    'ShowColorLegend': {...commonRibbonBtn['ShowColorLegend']}
+    'ShowColorLegend': commonRibbonBtn['ShowColorLegend']
   };
 
   return {

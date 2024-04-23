@@ -129,7 +129,7 @@
 						null,
 						null,
 						null,
-						null,
+			#{connectorType, jdbcType=VARCHAR},
 						null
         )
 		</insert>
@@ -154,6 +154,9 @@
               </if>
 							<if test='ownerNm != ""'>
                 OWNER_NM = #{ownerNm, jdbcType=VARCHAR},
+              </if>
+			  				<if test='connectorType != ""'>
+                CONN_TYPE = #{connectorType, jdbcType=VARCHAR},
               </if>
 							<if test='port != ""'>
                 PORT = #{port, jdbcType=VARCHAR},

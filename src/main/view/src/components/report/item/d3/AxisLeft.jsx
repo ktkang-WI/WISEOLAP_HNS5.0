@@ -1,10 +1,17 @@
 import {useMemo} from 'react';
-import valueAxisCustomLabel from '../../ValueAxisCustomLabel';
+import valueAxisCustomLabel from '../ValueAxisCustomLabel';
+import {formatNumber, generateLabelSuffix}
+  from 'components/utils/NumberFormatUtility';
 
 const TICK_LENGTH = 6;
 
 export const AxisLeft = ({
-  yScale, pixelsPerTick, width=0, yAxis, leftMargin=0
+  yScale,
+  pixelsPerTick=50,
+  width=0,
+  yAxis,
+  leftMargin=0,
+  customFormat
 }) => {
   const range = yScale.range();
 
@@ -17,6 +24,12 @@ export const AxisLeft = ({
       yOffset: yScale(value)
     }));
   }, [yScale]);
+
+  let labelSuffix = false;
+
+  if (customFormat) {
+    labelSuffix = generateLabelSuffix(customFormat);
+  }
 
   return (
     <>
@@ -49,7 +62,7 @@ export const AxisLeft = ({
           <line
             x2={-TICK_LENGTH}
             stroke='#767676'
-            transform={'translate(0, 0.5)'}
+            transform={'translate(0, 0)'}
           />
           {width &&
             <line
@@ -68,7 +81,9 @@ export const AxisLeft = ({
               transform: 'translate(-10px, 5px)'
             }}
           >
-            {yAxis ? valueAxisCustomLabel(value, yAxis) : value}
+            {yAxis ? valueAxisCustomLabel(value, yAxis) :
+            labelSuffix ? formatNumber(value, customFormat, labelSuffix) :
+            value}
           </text>
         </g>
       ))}

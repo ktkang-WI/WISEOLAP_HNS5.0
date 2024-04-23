@@ -41,8 +41,10 @@ const SignIn = () => {
                 // 임시적용 하드코딩
                 nav('dashany');
               } else if (res.response?.status == 404) {
+                document.activeElement.blur();
                 alert('사용자 정보가 잘못되었습니다.');
               } else if (res.response?.status == 500) {
+                document.activeElement.blur();
                 alert('서버에 문제가 발생하였습니다.');
               }
             }}

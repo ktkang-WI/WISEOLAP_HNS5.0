@@ -79,9 +79,9 @@ export const getLegendOptions = (legend, width, height, legendData) => {
 
   if (textPos == 'bottom') {
     // 마진을 포함한 가장 긴 라벨의 너비
-    const maxWidth = legendData.reduce((acc, {name}) => {
+    const maxWidth = legendData.reduce((acc, name) => {
       return Math.max(acc, getTextWidth(name, 12, 'Noto Sans KR'));
-    }, 0) + 20;
+    }, 0) + 10;
 
     // 가로 한 줄에 들어가게 될 범례 수
     const count = Math.floor((width - MARGIN) / maxWidth);
