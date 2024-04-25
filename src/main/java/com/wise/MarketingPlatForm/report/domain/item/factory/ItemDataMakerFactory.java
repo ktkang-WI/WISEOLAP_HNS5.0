@@ -13,6 +13,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
@@ -53,6 +54,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.ARC_DIAGRAM) {
             result = new ArcDataMaker();
+        }
+        if (itemType == ItemType.WORDCLOUD) {
+            result = new WordCloudMaker();
         }
 
         // Default Chart Maker 

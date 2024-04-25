@@ -7,6 +7,7 @@ import useLayout from 'hooks/useLayout';
 import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import wordCloudImg from 'assets/image/icon/item/wordcloud.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -28,7 +29,8 @@ const CustomChartDefaulElement = () => {
     CHOROPLETH,
     CARD,
     CHORD_DIAGRAM,
-    BOX_PLOT
+    BOX_PLOT,
+    WORDCLOUD
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -57,6 +59,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.wordCloudImg,
+          type: WORDCLOUD,
+          checked: false,
+          src: wordCloudImg
+        }
       ]
     },
     {

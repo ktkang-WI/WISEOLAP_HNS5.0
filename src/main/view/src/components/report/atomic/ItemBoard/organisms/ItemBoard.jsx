@@ -36,6 +36,7 @@ import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
 import ArcDiagram from 'components/report/item/arc/ArcDiagram';
+import WordCloud from 'components/report/item/wordCloud/WordCloud';
 
 
 const theme = getTheme();
@@ -110,7 +111,8 @@ const ItemBoard = () => {
     boxPlot: BoxPlot,
     timeline: Timeline,
     chord: Chord,
-    arc: ArcDiagram
+    arc: ArcDiagram,
+    wordCloud: WordCloud
   };
 
   const itemExportsPicker = (id) => {

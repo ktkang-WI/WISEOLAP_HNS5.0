@@ -27,7 +27,8 @@ const makeItem = (orgItem, countMap) => {
     card: '카드',
     timeline: '타임라인',
     chord: '의존성 휠',
-    arc: '아크 다이어그램'
+    arc: '아크 다이어그램',
+    wordCloud: '워드클라우드'
   };
 
   let initNum = 1;

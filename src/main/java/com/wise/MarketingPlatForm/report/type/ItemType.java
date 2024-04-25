@@ -18,7 +18,8 @@ public enum ItemType {
     BOX_PLOT("boxPlot"),
     TIMELINE("timeline"),
     CHORD("chord"),
-    ARC_DIAGRAM("arc")
+    ARC_DIAGRAM("arc"),
+    WORDCLOUD("wordCloud")
     ;
 
     private final String symbol;

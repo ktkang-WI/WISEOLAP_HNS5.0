@@ -10,5 +10,6 @@ export default {
   BOX_PLOT: 'boxPlot',
   TIMELINE: 'timeline',
   CHORD_DIAGRAM: 'chord',
-  ARC_DIAGRAM: 'arc'
+  ARC_DIAGRAM: 'arc',
+  WORDCLOUD: 'wordCloud'
 };
