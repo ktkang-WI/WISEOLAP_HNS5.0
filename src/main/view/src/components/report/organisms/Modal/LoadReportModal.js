@@ -20,6 +20,7 @@ const theme = getTheme();
 
 const LoadReportModal = ({...props}) => {
   let selectedReport = {};
+
   const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
@@ -63,25 +64,27 @@ const LoadReportModal = ({...props}) => {
         });
   };
 
+  const onSubmit = () => {
+    if (!_.isEmpty(selectedReport)) {
+      if (selectedReport.type == 'REPORT') {
+        getReport();
+      } else {
+        openModal(Alert, {
+          message: '선택한 항목이 보고서가 아닙니다.'
+        });
+        return true;
+      }
+    } else {
+      openModal(Alert, {
+        message: '보고서를 선택하지 않았습니다.'
+      });
+      return true;
+    }
+  };
+
   return (
     <Modal
-      onSubmit={() => {
-        if (!_.isEmpty(selectedReport)) {
-          if (selectedReport.type == 'REPORT') {
-            getReport();
-          } else {
-            openModal(Alert, {
-              message: '선택한 항목이 보고서가 아닙니다.'
-            });
-            return true;
-          }
-        } else {
-          openModal(Alert, {
-            message: '보고서를 선택하지 않았습니다.'
-          });
-          return true;
-        }
-      }}
+      onSubmit={onSubmit}
       modalTitle={localizedString.loadReport}
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
@@ -94,10 +97,11 @@ const LoadReportModal = ({...props}) => {
 
           if (nodes.length > 0) {
             selectedReport = nodes[0].itemData;
-          } else {
-            selectedReport = {};
           }
-        }}/>
+        }}
+        onSubmit={onSubmit}
+        onClose={props.onClose}
+      />
     </Modal>
   );
 };
