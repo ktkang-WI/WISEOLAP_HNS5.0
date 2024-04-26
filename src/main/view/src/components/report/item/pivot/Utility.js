@@ -29,6 +29,7 @@ const generateMeta = (item) => {
     dataPosition: 'row' // 측정값 위치
   });
   setMeta(item, 'layout', 'standard');
+  setMeta(item, 'autoSize', false);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
   setMeta(item, 'dataHighlight', []);
@@ -180,6 +181,7 @@ const getRibbonItems = () => {
     'Total',
     'GrandTotal',
     'Layout',
+    'AutoSize',
     'RowTotalPosition',
     'ColumnTotalPosition',
     'DataPosition',
