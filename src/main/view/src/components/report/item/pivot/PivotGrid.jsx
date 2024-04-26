@@ -192,8 +192,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     <DevPivotGrid
       ref={ref}
       id={id}
-      width={'100%'}
+      width={meta.autoSize ? '0px' : '100%'}
       height={'100%'}
+      elementAttr={meta.autoSize && {
+        width: '0px',
+        style: 'overflow: visible'
+      }}
       showBorders={true}
       dataSource={mart.dataSourceConfig}
       showColumnTotals={meta.positionOption.column.totalVisible}

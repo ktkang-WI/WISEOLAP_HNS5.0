@@ -112,6 +112,15 @@ const useCustomEvent = () => {
         return getRadioPopover('layout', selectedItem.meta.layout);
       }
     },
+    'AutoSize': {
+      ...commonPopoverButtonElement,
+      'id': 'autoSize',
+      'label': localizedString.autoSize,
+      'imgSrc': layoutImg,
+      'renderContent': () => {
+        return getCheckBoxPopover('autoSize');
+      }
+    },
     'RowTotalPosition': {
       ...commonPopoverButtonElement,
       'id': 'row_total_position',
@@ -216,6 +225,9 @@ const useCustomEvent = () => {
     },
     'layout': (e) => {
       return setMeta(selectedItem, 'layout', e.value);
+    },
+    'autoSize': (id, e) => {
+      return setMeta(selectedItem, id, e.value);
     },
     'columnTotalPosition': (e) => {
       return editPositionOption('columnTotalPosition', 'position', e.value);
