@@ -10,6 +10,7 @@ import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -110,6 +111,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.COORDINATE_DOT,
           checked: false,
           src: coordinateDotImg
+        },
+        {
+          title: localizedString.collapsibleTree,
+          type: ItemType.COLLAPSIBLE_TREE,
+          checked: false,
+          src: collapsibleTreeImg
         }
       ]
     },

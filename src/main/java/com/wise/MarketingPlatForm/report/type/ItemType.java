@@ -20,9 +20,10 @@ public enum ItemType {
     CHORD("chord"),
     ARC_DIAGRAM("arc"),
     COORDINATE_DOT("coordinateDot"),
-    COORDINATE_LINE("coordinateLine")
+    COORDINATE_LINE("coordinateLine"),
+    COLLAPSIBLETREE("collapsibleTree")
     ;
-
+    
     private final String symbol;
 
     ItemType(String symbol) {

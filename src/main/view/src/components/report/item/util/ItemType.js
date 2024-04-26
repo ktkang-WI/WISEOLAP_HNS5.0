@@ -12,5 +12,6 @@ export default {
   CHORD_DIAGRAM: 'chord',
   ARC_DIAGRAM: 'arc',
   COORDINATE_LINE: 'coordinateLine',
-  COORDINATE_DOT: 'coordinateDot'
+  COORDINATE_DOT: 'coordinateDot',
+  COLLAPSIBLE_TREE: 'collapsibleTree'
 };

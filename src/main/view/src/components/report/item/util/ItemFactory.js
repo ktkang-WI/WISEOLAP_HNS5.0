@@ -29,7 +29,8 @@ const makeItem = (orgItem, countMap) => {
     chord: '의존성 휠',
     arc: '아크 다이어그램',
     coordinateLine: '평면좌표 라인',
-    coordinateDot: '평면좌표 점'
+    coordinateDot: '평면좌표 점',
+    collapsibleTree: '신경망 트리'
   };
 
   let initNum = 1;
