@@ -42,19 +42,19 @@ const StyledWrapper = styled(Wrapper)`
 
 const SpreadBoard = () => {
   const spreaRef = useRef();
-  // hook
+  const config = useSpreadRibbon();
+  const currentReportId = useSelector(selectCurrentReportId);
+  const spreadData = useSelector(selectCurrentSpreadData);
+
   const {
     sheetChangedListener,
     sheetNameChangedListener,
     bindData
   } = useSpread();
-  const config = useSpreadRibbon();
-  const currentReportId = useSelector(selectCurrentReportId);
-  const spreadData = useSelector(selectCurrentSpreadData);
 
   useEffect(() => {
     setDesignerRef(spreaRef);
-  }, []);
+  }, [spreaRef]);
 
   useEffect(() => {
     bindData(spreadData);
