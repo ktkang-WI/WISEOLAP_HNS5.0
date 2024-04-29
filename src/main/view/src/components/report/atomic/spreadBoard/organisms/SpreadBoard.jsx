@@ -1,6 +1,6 @@
 import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {getWorkbookJSON,
   insertWorkbookJSON,
@@ -42,7 +42,6 @@ const StyledWrapper = styled(Wrapper)`
 
 const SpreadBoard = () => {
   const spreaRef = useRef();
-  const [initialized, setInialized] = useState(false);
   // hook
   const {
     sheetChangedListener,
@@ -54,19 +53,17 @@ const SpreadBoard = () => {
   const spreadData = useSelector(selectCurrentSpreadData);
 
   useEffect(() => {
-    initialized && setDesignerRef(spreaRef);
+    setDesignerRef(spreaRef);
   }, []);
 
   useEffect(() => {
-    initialized && bindData(spreadData);
+    bindData(spreadData);
   }, [spreadData]);
 
 
   useEffect(() => {
-    if (initialized) {
-      const workbookJSON = getWorkbookJSON(currentReportId);
-      spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
-    }
+    const workbookJSON = getWorkbookJSON(currentReportId);
+    spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
   }, [currentReportId]);
 
   return (
@@ -75,14 +72,15 @@ const SpreadBoard = () => {
         className={'dx-drawer-shader'}
         ref={spreaRef}
         designerInitialized={(designer) => {
-          setInialized(true);
-          designer.setConfig(config);
-          insertWorkbookJSON({
-            reportId: currentReportId,
-            workbookJSON: designer.getWorkbook().toJSON()
-          });
-          sheetChangedListener(designer);
-          sheetNameChangedListener(designer);
+          if (designer) {
+            designer.setConfig(config);
+            insertWorkbookJSON({
+              reportId: currentReportId,
+              workbookJSON: designer.getWorkbook().toJSON()
+            });
+            sheetChangedListener(designer);
+            sheetNameChangedListener(designer);
+          }
         }}
         styleInfo={{
           width: '100%',
