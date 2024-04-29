@@ -11,6 +11,7 @@ import treeMapImg from 'assets/image/icon/item/treemap.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -117,6 +118,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.COLLAPSIBLE_TREE,
           checked: false,
           src: collapsibleTreeImg
+        },
+        {
+          title: localizedString.radialNeuralNetwork,
+          type: ItemType.RADIAL_TREE,
+          checked: false,
+          src: radialTreeImg
         }
       ]
     },

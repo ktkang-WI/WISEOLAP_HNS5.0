@@ -13,5 +13,6 @@ export default {
   ARC_DIAGRAM: 'arc',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
-  COLLAPSIBLE_TREE: 'collapsibleTree'
+  COLLAPSIBLE_TREE: 'collapsibleTree',
+  RADIAL_TREE: 'radialTree'
 };

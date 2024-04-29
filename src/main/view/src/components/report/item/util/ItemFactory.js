@@ -30,7 +30,8 @@ const makeItem = (orgItem, countMap) => {
     arc: '아크 다이어그램',
     coordinateLine: '평면좌표 라인',
     coordinateDot: '평면좌표 점',
-    collapsibleTree: '신경망 트리'
+    collapsibleTree: '신경망 트리',
+    radialTree: '방사형신경망'
   };
 
   let initNum = 1;

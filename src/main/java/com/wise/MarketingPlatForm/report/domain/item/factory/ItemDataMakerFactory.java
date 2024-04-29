@@ -13,6 +13,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -59,8 +60,11 @@ public class ItemDataMakerFactory {
             itemType == ItemType.COORDINATE_LINE) {
             return new CoordinateChartDataMaker();
         }
-        if (itemType == ItemType.COLLAPSIBLETREE) {
+        if (itemType == ItemType.COLLAPSIBLE_TREE) {
             return new CollapsibleTreeMaker();
+        }
+        if (itemType == ItemType.RADIAL_TREE) {
+            return new RadialTreeMaker();
         }
 
         throw new IllegalArgumentException();

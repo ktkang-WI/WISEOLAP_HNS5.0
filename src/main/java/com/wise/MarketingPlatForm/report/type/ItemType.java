@@ -21,7 +21,8 @@ public enum ItemType {
     ARC_DIAGRAM("arc"),
     COORDINATE_DOT("coordinateDot"),
     COORDINATE_LINE("coordinateLine"),
-    COLLAPSIBLETREE("collapsibleTree")
+    COLLAPSIBLE_TREE("collapsibleTree"),
+    RADIAL_TREE("radialTree")
     ;
     
     private final String symbol;

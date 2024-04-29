@@ -43,6 +43,7 @@ import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
 import _ from 'lodash';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
+import RadialTree from 'components/report/item/radialTree/RadialTree';
 
 
 const theme = getTheme();
@@ -120,7 +121,8 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot,
-    collapsibleTree: CollapsibleTree
+    collapsibleTree: CollapsibleTree,
+    radialTree: RadialTree
   };
 
   const itemExportsPicker = (id) => {
