@@ -50,19 +50,19 @@ const DownloadDefaultElement = () => {
           },
           {
             label: localizedString.excelXls,
-            visible: true,
+            visible: false,
             onClick: () => {
             }
           },
           {
             label: localizedString.word,
-            visible: true,
+            visible: false,
             onClick: () => {
             }
           },
           {
             label: localizedString.powerpoint,
-            visible: true,
+            visible: false,
             onClick: () => {
             }
           }
@@ -70,7 +70,7 @@ const DownloadDefaultElement = () => {
       },
       {
         label: localizedString.hancom,
-        visible: true,
+        visible: false,
         contents: [
           {
             label: localizedString.hwp,
@@ -94,7 +94,7 @@ const DownloadDefaultElement = () => {
       },
       {
         label: localizedString.etc,
-        visible: true,
+        visible: false,
         contents: [
           {
             label: localizedString.img,
