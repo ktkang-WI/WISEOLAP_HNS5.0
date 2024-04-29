@@ -39,7 +39,10 @@ import ArcDiagram from 'components/report/item/arc/ArcDiagram';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
+
 import _ from 'lodash';
+import CollapsibleTree
+  from 'components/report/item/collapsibleTree/CollapsibleTree';
 
 
 const theme = getTheme();
@@ -116,7 +119,8 @@ const ItemBoard = () => {
     chord: Chord,
     arc: ArcDiagram,
     coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot
+    coordinateDot: CoordinateDot,
+    collapsibleTree: CollapsibleTree
   };
 
   const itemExportsPicker = (id) => {

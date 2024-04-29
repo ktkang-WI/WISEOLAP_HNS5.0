@@ -1,5 +1,8 @@
 package com.wise.MarketingPlatForm.utils.classfication;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ClassficationManager {
   
   String delimiter = "-"; // default delimiter
@@ -12,8 +15,15 @@ public class ClassficationManager {
     this.delimiter = delimiter;
   }
 
-  public String toString() {
-    return "{name: '', " + root.childrens.toString() + "}";
+  public String toJson() {
+    ObjectMapper mapper = new ObjectMapper();
+    String json = null;
+    try {
+        json = mapper.writeValueAsString(root);
+    } catch (JsonProcessingException e) {
+        e.printStackTrace();
+    }
+    return json;
   }
 
   public void push(String name, Object data){
@@ -25,26 +35,22 @@ public class ClassficationManager {
     for (int index = 0; index < nameLen; index ++) {
       currentNode = findNode(prevNode, names[index]);
       currentNode.setKey(names[index]);
+      if (index == (nameLen - 1)) currentNode.setValue(data);
       prevNode = currentNode;
     }
-  }
-
-  public String toJson() {
-
-    return null;
   }
 
   // to find base node.
   private ClassficationNode findNode(ClassficationNode baseNode, String name) {
     ClassficationNode result = null;
-    for (ClassficationNode child : baseNode.childrens) {
+    for (ClassficationNode child : baseNode.children) {
       if (child.name.equals(name)) {
         result = child;
       }
     }
     if (result == null) {
       result = new ClassficationNode();
-      baseNode.childrens.add(result);
+      baseNode.children.add(result);
     }
     return result;
   };

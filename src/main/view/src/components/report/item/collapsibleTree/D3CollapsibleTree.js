@@ -15,7 +15,7 @@ const D3CollapsibleTree = ({
     return () => {
       D3PainterForCollapsibleTree.erasing();
     };
-  }, []);
+  }, [dataSource]);
   return (
     <div
       ref={svgRef}

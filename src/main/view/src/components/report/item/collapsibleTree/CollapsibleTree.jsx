@@ -1,3 +1,4 @@
+import D3CollapsibleTree from './D3CollapsibleTree';
 
 const CollapsibleTree = ({
   setItemExports,
@@ -9,7 +10,9 @@ const CollapsibleTree = ({
     return <></>;
   }
   return (
-    <div>CollapsibleTree</div>
+    <D3CollapsibleTree
+      dataSource={JSON.parse(mart.data.info.jsonData)}
+    />
   );
 };
 

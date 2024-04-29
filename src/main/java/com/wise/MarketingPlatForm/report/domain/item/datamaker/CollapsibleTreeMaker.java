@@ -1,13 +1,11 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.json.JSONObject;
-
-import com.google.gson.JsonObject;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -52,9 +50,37 @@ public class CollapsibleTreeMaker implements ItemDataMaker{
       }
 
       // 차트 데이터 가공
+      List<String> dimNames = new ArrayList<>();
+      List<Measure> seriesMeasureNames = new ArrayList<>();
       Map<String, Object> info = new HashMap<>();
+      for (Dimension dim : dimensions) {
+        dimNames.add(dim.getName());
+      }
+      for (Map<String, Object> row : data) {
+          if (dimNames.size() == 0) {
+              row.put("arg", "Grand Total");
+          }
+
+          if (dimNames.size() == 1) {
+              row.put("arg", row.get(dimNames.get(0)));
+          }
+
+          if (dimNames.size() >= 2) {
+              List<String> args = new ArrayList<>();
+              for (String name : dimNames) {
+                  args.add(String.valueOf(row.get(name)));
+              }
+              Collections.reverse(args);
+              row.put("arg", String.join("<br/>", args));
+          }
+      }
+
+      for (Measure measure : measures) {
+        seriesMeasureNames.add(measure);
+      }
 
       String resultData = execute(dimensions, measures, data);
+      info.put("seriesMeasureNames", seriesMeasureNames);
       info.put("jsonData", resultData);
       CommonResult result = new CommonResult(data, "", info);
 
@@ -67,14 +93,14 @@ public class CollapsibleTreeMaker implements ItemDataMaker{
         ClassficationManager classficationManager = new ClassficationManager();
         for (Map<String, Object> data : datas) {
           String key = "";
-          Object value = data.get(measures.get(0).getName());
+          Object value = data.get(measures.get(0).getSummaryName());
           for (Dimension dim : dimensions) {
             if (key.equals("")) key = data.get(dim.getName()).toString();
             else key = key + "-" + data.get(dim.getName());
           }
           classficationManager.push(key, value);
         }
-    return classficationManager.toString();
+    return classficationManager.toJson();
   }
 
 }
