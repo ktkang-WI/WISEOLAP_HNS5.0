@@ -1,12 +1,12 @@
 import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
-import {getWorkbookJSON,
+import {
+  getWorkbookJSON,
   insertWorkbookJSON,
   setDesignerRef
-}
-  from 'components/report/atomic/spreadBoard/util/SpreadCore';
+} from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useSelector} from 'react-redux';
 import {selectCurrentSpreadData}
   from 'redux/selector/SpreadSelector';
@@ -90,4 +90,4 @@ const SpreadBoard = () => {
   );
 };
 
-export default SpreadBoard;
+export default React.memo(SpreadBoard);
