@@ -284,7 +284,7 @@ const getCalendarNowDefaultValue = (base, value) => {
     const month = date.getMonth() + Number(value);
     date = new Date(date.getFullYear(), month, date.getDate());
   }
-  if (base == 'DATE') {
+  if (base == 'DAY') {
     const day = date.getDate() + Number(value);
     date = new Date(date.getFullYear(), date.getMonth(), day);
   }
