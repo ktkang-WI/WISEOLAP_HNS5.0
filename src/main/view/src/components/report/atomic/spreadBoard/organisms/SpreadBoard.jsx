@@ -1,6 +1,6 @@
 import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {getWorkbookJSON,
   insertWorkbookJSON,
@@ -41,8 +41,8 @@ const StyledWrapper = styled(Wrapper)`
 `;
 
 const SpreadBoard = () => {
-  const [designerRenderChecker, setDesignerRenderChecker] = useState(false);
   const spreaRef = useRef();
+  const [initialized, setInialized] = useState(false);
   // hook
   const {
     sheetChangedListener,
@@ -54,26 +54,28 @@ const SpreadBoard = () => {
   const spreadData = useSelector(selectCurrentSpreadData);
 
   useEffect(() => {
-    setDesignerRef(spreaRef);
+    initialized && setDesignerRef(spreaRef);
   }, []);
 
   useEffect(() => {
-    bindData(spreadData);
+    initialized && bindData(spreadData);
   }, [spreadData]);
 
 
   useEffect(() => {
-    const workbookJSON = getWorkbookJSON(currentReportId);
-    spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
+    if (initialized) {
+      const workbookJSON = getWorkbookJSON(currentReportId);
+      spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
+    }
   }, [currentReportId]);
 
   return (
     <StyledWrapper className='section board'>
-      {designerRenderChecker && <Designer
+      <Designer
         className={'dx-drawer-shader'}
         ref={spreaRef}
         designerInitialized={(designer) => {
-          setDesignerRenderChecker(true);
+          setInialized(true);
           designer.setConfig(config);
           insertWorkbookJSON({
             reportId: currentReportId,
@@ -87,7 +89,7 @@ const SpreadBoard = () => {
           height: '100%'
         }}
       >
-      </Designer>}
+      </Designer>
     </StyledWrapper>
   );
 };
