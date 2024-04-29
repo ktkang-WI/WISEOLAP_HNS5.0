@@ -63,11 +63,13 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/viewer',
-    element: <Viewer/>
+    element: <Viewer/>,
+    loader: generalConfigure
   },
   {
     path: contextPath + '/linkViewer',
-    element: <LinkViewer/>
+    element: <LinkViewer/>,
+    loader: generalConfigure
   },
   {
     path: contextPath + '/config',
