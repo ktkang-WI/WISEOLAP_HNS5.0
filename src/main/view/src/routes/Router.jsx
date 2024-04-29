@@ -44,6 +44,7 @@ const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath + '',
     element: <Designer/>,
+    loader: generalLoader,
     children: [
       {
         path: DesignerMode['DASHBOARD'].toLowerCase(),
@@ -61,11 +62,13 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/viewer',
-    element: <Viewer/>
+    element: <Viewer/>,
+    loader: generalLoader
   },
   {
     path: contextPath + '/linkViewer',
-    element: <LinkViewer/>
+    element: <LinkViewer/>,
+    loader: generalLoader
   },
   {
     path: contextPath + '/config',
