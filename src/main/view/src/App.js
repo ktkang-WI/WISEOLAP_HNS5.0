@@ -13,10 +13,10 @@ import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
 import useConfig from 'hooks/useConfig';
 
-function App() {
+async function App() {
   loadMessages(deMessages);
   locale(navigator.language);
-  useAxiosSetting();
+  await useAxiosSetting();
   const {saveConfiguration} = useConfig();
   saveConfiguration();
 
