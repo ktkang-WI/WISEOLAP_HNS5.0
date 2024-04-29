@@ -11,7 +11,6 @@ import useAxiosSetting from 'hooks/useAxiosSetting';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
-import {useEffect} from 'react';
 import useConfig from 'hooks/useConfig';
 
 function App() {
@@ -19,9 +18,7 @@ function App() {
   locale(navigator.language);
   useAxiosSetting();
   const {saveConfiguration} = useConfig();
-  useEffect(() => {
-    saveConfiguration();
-  }, []);
+  saveConfiguration();
 
   return (
     <div className='App'>
