@@ -351,7 +351,8 @@ public class DatasetService {
     		if ("MS_SQL".equals(dbType)) {
     			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
     		} else if ("DB2".equals(dbType)) {
-                sql = "SELECT * FROM (\n" + sql + "\n) FETCH FIRST " + rowNum + " ROWS ONLY";
+                // sql = "SELECT * FROM (\n" + sql + "\n) FETCH FIRST " + rowNum + " ROWS ONLY";
+                sql =  "\n" +  sql + "\n FETCH FIRST " + rowNum + " ROWS ONLY";
             } else {
     			sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
     		}    		
