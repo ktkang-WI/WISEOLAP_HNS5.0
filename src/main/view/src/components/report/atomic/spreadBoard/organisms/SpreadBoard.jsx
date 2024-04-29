@@ -1,6 +1,6 @@
 import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
-import React, {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {getWorkbookJSON,
   insertWorkbookJSON,
@@ -40,7 +40,8 @@ const StyledWrapper = styled(Wrapper)`
   }
 `;
 
-const SpreadBoard = React.memo(() => {
+const SpreadBoard = () => {
+  const [designerRenderChecker, setDesignerRenderChecker] = useState(false);
   const spreaRef = useRef();
   // hook
   const {
@@ -68,10 +69,11 @@ const SpreadBoard = React.memo(() => {
 
   return (
     <StyledWrapper className='section board'>
-      <Designer
+      {designerRenderChecker && <Designer
         className={'dx-drawer-shader'}
         ref={spreaRef}
         designerInitialized={(designer) => {
+          setDesignerRenderChecker(true);
           designer.setConfig(config);
           insertWorkbookJSON({
             reportId: currentReportId,
@@ -85,11 +87,9 @@ const SpreadBoard = React.memo(() => {
           height: '100%'
         }}
       >
-      </Designer>
+      </Designer>}
     </StyledWrapper>
   );
-});
-
-SpreadBoard.displayName = 'SpreadBoard';
+};
 
 export default SpreadBoard;
