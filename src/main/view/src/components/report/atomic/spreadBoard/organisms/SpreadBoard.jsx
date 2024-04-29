@@ -1,6 +1,6 @@
 import './spreadBoard.css';
 import useSpreadRibbon from './useSpreadRibbon';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {getWorkbookJSON,
   insertWorkbookJSON,
