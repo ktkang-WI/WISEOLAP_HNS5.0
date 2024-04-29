@@ -11,14 +11,11 @@ import useAxiosSetting from 'hooks/useAxiosSetting';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
-import useConfig from 'hooks/useConfig';
 
-async function App() {
+function App() {
   loadMessages(deMessages);
   locale(navigator.language);
-  await useAxiosSetting();
-  const {saveConfiguration} = useConfig();
-  saveConfiguration();
+  useAxiosSetting();
 
   return (
     <div className='App'>
