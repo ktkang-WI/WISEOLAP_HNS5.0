@@ -11,7 +11,6 @@ import Spreadsheet from 'components/designer/Spreadsheet';
 import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import {
-  generalConfigure,
   generalConfigure as generalLoader,
   groupData as groupDataLoader,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
@@ -45,7 +44,7 @@ const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath + '',
     element: <Designer/>,
-    loader: generalConfigure,
+    loader: generalLoader,
     children: [
       {
         path: DesignerMode['DASHBOARD'].toLowerCase(),
@@ -64,12 +63,12 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/viewer',
     element: <Viewer/>,
-    loader: generalConfigure
+    loader: generalLoader
   },
   {
     path: contextPath + '/linkViewer',
     element: <LinkViewer/>,
-    loader: generalConfigure
+    loader: generalLoader
   },
   {
     path: contextPath + '/config',
