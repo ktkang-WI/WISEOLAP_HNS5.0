@@ -10,6 +10,7 @@ import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -30,7 +31,8 @@ const CustomChartDefaulElement = () => {
     CHOROPLETH,
     CARD,
     CHORD_DIAGRAM,
-    BOX_PLOT
+    BOX_PLOT,
+    HEAT_MAP
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -81,6 +83,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.distributionVisualization,
       checkboxs: [
+        {
+          title: localizedString.heatMap,
+          type: HEAT_MAP,
+          checked: false,
+          src: heatMapImg
+        },
         {
           title: localizedString.boxPlot,
           type: BOX_PLOT,

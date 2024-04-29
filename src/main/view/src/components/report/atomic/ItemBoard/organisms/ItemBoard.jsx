@@ -40,6 +40,7 @@ import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
 import _ from 'lodash';
+import HeatMap from 'components/report/item/heatMap/HeatMap';
 
 
 const theme = getTheme();
@@ -116,7 +117,8 @@ const ItemBoard = () => {
     chord: Chord,
     arc: ArcDiagram,
     coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot
+    coordinateDot: CoordinateDot,
+    heatMap: HeatMap
   };
 
   const itemExportsPicker = (id) => {

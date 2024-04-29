@@ -20,7 +20,8 @@ public enum ItemType {
     CHORD("chord"),
     ARC_DIAGRAM("arc"),
     COORDINATE_DOT("coordinateDot"),
-    COORDINATE_LINE("coordinateLine")
+    COORDINATE_LINE("coordinateLine"),
+    HEAT_MAP("heatMap")
     ;
 
     private final String symbol;

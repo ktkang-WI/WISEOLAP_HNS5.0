@@ -9,6 +9,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.HeatMapMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
@@ -57,6 +58,9 @@ public class ItemDataMakerFactory {
         if (itemType == ItemType.COORDINATE_DOT ||
             itemType == ItemType.COORDINATE_LINE) {
             return new CoordinateChartDataMaker();
+        }
+        if (itemType == itemType.HEAT_MAP) {
+            return new HeatMapMaker();
         }
 
         throw new IllegalArgumentException();
