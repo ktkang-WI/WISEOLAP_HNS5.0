@@ -11,6 +11,7 @@ import treeMapImg from 'assets/image/icon/item/treemap.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -32,7 +33,8 @@ const CustomChartDefaulElement = () => {
     CHOROPLETH,
     CARD,
     CHORD_DIAGRAM,
-    BOX_PLOT
+    BOX_PLOT,
+    SCATTER_PLOT
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -61,6 +63,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.scatterPlot,
+          type: SCATTER_PLOT,
+          checked: false,
+          src: scatterPlotImg
+        }
       ]
     },
     {

@@ -44,6 +44,7 @@ import _ from 'lodash';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
+import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
 
 
 const theme = getTheme();
@@ -122,7 +123,8 @@ const ItemBoard = () => {
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree
+    radialTree: RadialTree,
+    scatterPlot: ScatterPlot
   };
 
   const itemExportsPicker = (id) => {

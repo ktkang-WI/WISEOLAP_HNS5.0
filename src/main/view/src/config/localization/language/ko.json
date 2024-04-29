@@ -609,5 +609,7 @@
   "nextStep": "다음",
   "prevStep": "이전",
   "completeStep": "완료",
-  "selectAll": "전체 선택"
+  "selectAll": "전체 선택",
+  "yAxis": "Y축",
+  "xAxis": "X축"
 }
