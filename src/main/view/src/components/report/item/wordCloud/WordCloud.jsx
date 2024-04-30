@@ -3,7 +3,8 @@ import D3WordCloud from './D3WordCloud';
 const WordCloud = ({
   setItemExports,
   id,
-  item
+  item,
+  node
 }) => {
   const mart = item?.mart;
   if (!mart.init) {
@@ -15,8 +16,8 @@ const WordCloud = ({
 
   return (
     <D3WordCloud
-      width={'100%'}
-      height={'100%'}
+      width={node?._rect?.width}
+      height={node?._rect?.height}
       dataSource={mart.data.data}
       valueField={seriesNames[0].summaryName}
       labelField='arg'

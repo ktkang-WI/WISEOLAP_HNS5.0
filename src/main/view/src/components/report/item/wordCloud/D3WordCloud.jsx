@@ -18,13 +18,17 @@ const D3WordCloud = ({
     });
     D3PainterForWordCloud.init({
       container: svgRef.current,
-      dataSource: dataSource
+      dataSource: dataSource,
+      option: {
+        width: width,
+        height: height
+      }
     });
     D3PainterForWordCloud.painting();
     return () => {
       D3PainterForWordCloud.erasing();
     };
-  }, []);
+  }, [dataSource, width, height]);
   return (
     <div
       ref={svgRef}

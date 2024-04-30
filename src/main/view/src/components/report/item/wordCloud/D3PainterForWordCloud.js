@@ -4,7 +4,7 @@ import d3Cloud from 'd3-cloud';
 // public
 const D3PainterForWordCloud = {};
 
-D3PainterForWordCloud.defaultOption = () => {
+D3PainterForWordCloud.defaultOption = (option) => {
   return {
     size: (group) => group.length,
     word: (d) => d,
@@ -12,8 +12,8 @@ D3PainterForWordCloud.defaultOption = () => {
     marginRight: 0,
     marginBottom: 0,
     marginLeft: 0,
-    width: 1680,
-    height: 880,
+    width: option?.width ? option?.width - 50 : 0,
+    height: option?.height ? option?.height - 50 : 0,
     maxWords: 250,
     fontFamily: 'sans-serif',
     fontScale: 15,
@@ -26,7 +26,8 @@ D3PainterForWordCloud.defaultOption = () => {
 D3PainterForWordCloud.init = ({
   container,
   dataSource,
-  defaultOption = D3PainterForWordCloud.defaultOption()
+  option,
+  defaultOption = D3PainterForWordCloud.defaultOption(option)
 }) => {
   if (!container) return new Error('The Container attribute can\'t be null');
   D3PainterForWordCloud.self = {};
@@ -50,7 +51,57 @@ D3PainterForWordCloud.erasing = () => {
 
 // private
 const init = {};
+
+init.funcs = {};
 init.paint = {};
+
+init.funcs.divide = (size) => {
+  const sizes = [5, 10, 20, 40, 80, 160, 320, 640];
+
+  for (let index = 0; index < sizes.length; index++) {
+    if (size < sizes[index]) {
+      return sizes[index];
+    }
+  }
+  return 400;
+};
+
+init.funcs.fontSize = (option) => {
+  const size = Math.sqrt(
+      option.width * option.width + option.height * option.height);
+  const average = size / init.funcs.divide(option.length);
+  const section = average / 5;
+  const start = average - (section * 4);
+  const returnSizes = [];
+  for (let index = 1; index <= 5; index++) {
+    returnSizes.push(start * index);
+  };
+  return returnSizes;
+};
+init.funcs.measureSection = (dataSource) => {
+  const [min, max] = d3.extent(dataSource.map((d) => d.measure));
+  const average = max - min;
+  const section = average / 5;
+  const returnSizes = [];
+  for (let index = 1; index <= 5; index++) {
+    returnSizes.push(min + (section * (index - 1)));
+  };
+  return returnSizes;
+};
+init.funcs.measureIndex = (sections, value) => {
+  let returnIndex = 0;
+  for (let index = 0; index < sections.length; index++) {
+    if (value < sections[index]) {
+      returnIndex = index - 1;
+      break;
+    }
+    if (sections.length - 1 == index) {
+      returnIndex = index - 1;
+    }
+  }
+  return returnIndex;
+};
+
 init.paint.randomColor = () => {
   return 'hsla(' + ~~(360 * Math.random()) + ',' + '60%,'+ '60%,1)';
 };
@@ -74,14 +125,14 @@ init.paint.drawing = (svg) => {
             .attr('transform', `translate(${x},${y}) rotate(${rotate})`)
             .attr('opacity', 1.0)
             .attr('fill', init.paint.randomColor())
-            .text(text)
+            .text(text.replaceAll('<br/>', '-'))
             .on('mouseover', function(e) {
               // d3.select(e).attr('opacity', 0.6);
             })
             .on('mouseout', function() {
               // d3.select(e).attr('opacity', 1.0);
             })
-            .append('title').text('Frequency: ' + freq);
+            .append('title').text(text.replaceAll('<br/>', '-') + ': ' + freq);
       });
 
   cloud.start();
@@ -103,6 +154,11 @@ init.container = () => {
 
 init.data = (dataSource) => {
   const option = D3PainterForWordCloud.self.option;
+  const sections = init.funcs.measureSection(dataSource);
+  const fontSize = init.funcs.fontSize({
+    ...option,
+    length: dataSource.length
+  });
   return dataSource
       .map((d) => {
         return [
@@ -114,7 +170,7 @@ init.data = (dataSource) => {
       .slice(0, option.maxWords)
       .map(([key, size, freq]) =>
         ({text: option.word(key),
-          size: (size / 300),
+          size: fontSize[init.funcs.measureIndex(sections, size)],
           freq: option.word(freq)}));
 };
 
