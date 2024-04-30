@@ -12,6 +12,7 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
+import networkChartImg from 'assets/image/icon/item/network_big.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -32,7 +33,8 @@ const CustomChartDefaulElement = () => {
     CHOROPLETH,
     CARD,
     CHORD_DIAGRAM,
-    BOX_PLOT
+    BOX_PLOT,
+    NETWORK_CHART
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -66,6 +68,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.connectionVisualization,
       checkboxs: [
+        {
+          title: localizedString.networkChart,
+          type: NETWORK_CHART,
+          checked: false,
+          src: networkChartImg
+        },
         {
           title: localizedString.chordDiagram,
           type: CHORD_DIAGRAM,
