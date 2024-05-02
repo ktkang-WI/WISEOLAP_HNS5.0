@@ -16,10 +16,13 @@ import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.utils.structures.tree.Tree;
 import com.wise.MarketingPlatForm.utils.structures.tree.TreeList;
+import com.wise.MarketingPlatForm.utils.structures.tree.TreeUtils;
+import com.wise.MarketingPlatForm.utils.structures.tree.Tree.Type;
+import com.wise.MarketingPlatForm.utils.structures.tree.TreeUtils.OrderType;
+import com.wise.MarketingPlatForm.utils.structures.tree.Tree;
 
-public class CollapsibleTreeMaker implements ItemDataMaker{
+public class HierarchicalMaker implements ItemDataMaker{
   @Override
   public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
     List<Measure> measures = dataAggreagtion.getMeasures();
@@ -92,8 +95,9 @@ public class CollapsibleTreeMaker implements ItemDataMaker{
       List<Dimension> dimensions,
       List<Measure> measures,
       List<Map<String, Object>> datas) {
-        Tree<BigDecimal> classficationManager = new TreeList<>();
-         for (Map<String, Object> data : datas) {
+        TreeUtils<BigDecimal> treeUtils = new TreeUtils<>();
+        Tree<BigDecimal> treeList = new TreeList<>();
+        for (Map<String, Object> data : datas) {
           String key = "";
           Object getValue = data.get(measures.get(0).getSummaryName());
           BigDecimal value = new BigDecimal(getValue.toString());
@@ -101,9 +105,10 @@ public class CollapsibleTreeMaker implements ItemDataMaker{
             if (key.equals("")) key = data.get(dim.getName()).toString();
             else key = key + "." + data.get(dim.getName());
           }
-          classficationManager.push(key, value);
+          treeList.push(key);
+          treeList.setNodeValue(key, value, Type.INCLUDE_PARENT_NODE);
         }
-    return classficationManager.toString();
+      // treeUtils.orderBy(treeList, OrderType.ASC);
+      return treeList.toString();
   }
-
 }

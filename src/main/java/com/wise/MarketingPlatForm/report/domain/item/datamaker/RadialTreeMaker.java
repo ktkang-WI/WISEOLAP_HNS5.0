@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +16,8 @@ import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.utils.classfication.ClassficationManager;
+import com.wise.MarketingPlatForm.utils.structures.tree.Tree;
+import com.wise.MarketingPlatForm.utils.structures.tree.TreeList;
 
 public class RadialTreeMaker implements ItemDataMaker{
   @Override
@@ -90,17 +92,18 @@ public class RadialTreeMaker implements ItemDataMaker{
       List<Dimension> dimensions,
       List<Measure> measures,
       List<Map<String, Object>> datas) {
-        ClassficationManager classficationManager = new ClassficationManager();
+        Tree<BigDecimal> treeNode = new TreeList<>();
         for (Map<String, Object> data : datas) {
           String key = "";
-          Object value = data.get(measures.get(0).getSummaryName());
+          Object getValue = data.get(measures.get(0).getSummaryName());
+          BigDecimal value = new BigDecimal(getValue.toString());
           for (Dimension dim : dimensions) {
             if (key.equals("")) key = data.get(dim.getName()).toString();
-            else key = key + "-" + data.get(dim.getName());
+            else key = key + "." + data.get(dim.getName());
           }
-          classficationManager.push(key, value);
+          treeNode.push(key, value);
         }
-    return classficationManager.toJson();
+    return treeNode.toString();
   }
 
 }

@@ -32,7 +32,8 @@ const makeItem = (orgItem, countMap) => {
     coordinateDot: '평면좌표 점',
     collapsibleTree: '신경망 트리',
     radialTree: '방사형신경망',
-    networkChart: '네트워크 차트'
+    networkChart: '네트워크 차트',
+    hierarchicalChart: '계층형 차트'
   };
 
   let initNum = 1;

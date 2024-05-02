@@ -10,6 +10,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMak
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.HierarchicalMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.NetworkChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
@@ -69,6 +70,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.NETWORK_CHART) {
             return new NetworkChartMaker();
+        }
+        if (itemType == ItemType.HIERARCHICAL_CHART) {
+            return new HierarchicalMaker();
         }
 
         throw new IllegalArgumentException();

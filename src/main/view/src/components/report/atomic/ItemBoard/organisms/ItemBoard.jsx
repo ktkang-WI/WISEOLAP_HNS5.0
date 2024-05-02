@@ -45,6 +45,8 @@ import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
 import NetworkChart from 'components/report/item/networkChart/NetworkChart';
+import HierarchicalChart
+  from 'components/report/item/hierarchicalChart/HierarchicalChart';
 
 
 const theme = getTheme();
@@ -124,7 +126,8 @@ const ItemBoard = () => {
     coordinateDot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
-    networkChart: NetworkChart
+    networkChart: NetworkChart,
+    hierarchicalChart: HierarchicalChart
   };
 
   const itemExportsPicker = (id) => {

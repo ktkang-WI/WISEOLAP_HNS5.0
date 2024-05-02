@@ -15,5 +15,6 @@ export default {
   COORDINATE_DOT: 'coordinateDot',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
-  NETWORK_CHART: 'networkChart'
+  NETWORK_CHART: 'networkChart',
+  HIERARCHICAL_CHART: 'hierarchicalChart'
 };

@@ -23,7 +23,8 @@ public enum ItemType {
     COORDINATE_LINE("coordinateLine"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
-    NETWORK_CHART("networkChart")
+    NETWORK_CHART("networkChart"),
+    HIERARCHICAL_CHART("hierarchicalChart")
     ;
     
     private final String symbol;
