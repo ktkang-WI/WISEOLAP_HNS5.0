@@ -31,7 +31,7 @@ public class ItemDataMakerFactory {
             return new PieChartDataMaker();
         }
         if (itemType == ItemType.BOX_PLOT) {
-            result =  new BoxPlotDataMaker();
+            return new BoxPlotDataMaker();
         }
         if (itemType == ItemType.TIMELINE) {
             return new TimelineDataMaker();

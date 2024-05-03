@@ -44,6 +44,7 @@ import _ from 'lodash';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
+import ItemType from 'components/report/item/util/ItemType';
 
 const theme = getTheme();
 
@@ -116,8 +117,7 @@ const ItemBoard = () => {
     card: Card,
     calendar: CalendarChart,
     boxPlot: BoxPlot,
-    textBox: TextBox
-    boxPlot: BoxPlot,
+    textBox: TextBox,
     timeline: Timeline,
     chord: Chord,
     arc: ArcDiagram,
@@ -170,6 +170,7 @@ const ItemBoard = () => {
   };
 
   const nullDataCheck = (item) => {
+    if (item.type === ItemType.TEXT_BOX) return false;
     return !item ||
     item?.mart?.data?.data?.length == 0 ||
     _.isEmpty(item?.mart?.data || {});

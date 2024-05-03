@@ -47,6 +47,7 @@ const generateDataFieldOption = (item) => {
   Object.keys(dataFieldOptionChild).forEach((type) =>
     Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
 
+  if (item.type === ItemType.TEXT_BOX) return dataFieldOptions;
   // 정렬 기준 항목
   Object.assign(dataFieldOptions, {
     [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem
