@@ -45,6 +45,7 @@ import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
 import NetworkChart from 'components/report/item/networkChart/NetworkChart';
+import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 import HierarchicalChart
   from 'components/report/item/hierarchicalChart/HierarchicalChart';
 
@@ -127,7 +128,8 @@ const ItemBoard = () => {
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
     networkChart: NetworkChart,
-    hierarchicalChart: HierarchicalChart
+    hierarchicalChart: HierarchicalChart,
+    sunburstChart: SunBurstChart
   };
 
   const itemExportsPicker = (id) => {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -16,12 +17,11 @@ import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.utils.structures.tree.TreeList;
-import com.wise.MarketingPlatForm.utils.structures.tree.TreeUtils;
-import com.wise.MarketingPlatForm.utils.structures.tree.Tree.Type;
 import com.wise.MarketingPlatForm.utils.structures.tree.Tree;
+import com.wise.MarketingPlatForm.utils.structures.tree.Tree.Type;
+import com.wise.MarketingPlatForm.utils.structures.tree.TreeList;
 
-public class HierarchicalMaker implements ItemDataMaker{
+public class SunburstChartMaker implements ItemDataMaker{
   @Override
   public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
     List<Measure> measures = dataAggreagtion.getMeasures();
@@ -94,7 +94,6 @@ public class HierarchicalMaker implements ItemDataMaker{
       List<Dimension> dimensions,
       List<Measure> measures,
       List<Map<String, Object>> datas) {
-        TreeUtils<BigDecimal> treeUtils = new TreeUtils<>();
         Tree<BigDecimal> treeList = new TreeList<>();
         for (Map<String, Object> data : datas) {
           String key = "";
@@ -107,7 +106,6 @@ public class HierarchicalMaker implements ItemDataMaker{
           treeList.push(key);
           treeList.setNodeValue(key, value, Type.INCLUDE_PARENT_NODE);
         }
-      // treeUtils.orderBy(treeList, OrderType.ASC);
       return treeList.toString();
   }
 }

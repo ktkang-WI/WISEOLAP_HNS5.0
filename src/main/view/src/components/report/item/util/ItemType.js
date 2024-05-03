@@ -16,5 +16,6 @@ export default {
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
   NETWORK_CHART: 'networkChart',
-  HIERARCHICAL_CHART: 'hierarchicalChart'
+  HIERARCHICAL_CHART: 'hierarchicalChart',
+  SUNBURST_CHART: 'sunburstChart'
 };

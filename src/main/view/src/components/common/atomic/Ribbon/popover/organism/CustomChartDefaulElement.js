@@ -14,6 +14,7 @@ import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import networkChartImg from 'assets/image/icon/item/network_big.png';
 import hierarchicalChartImg from 'assets/image/icon/item/hierarchy.png';
+import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -139,6 +140,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.HIERARCHICAL_CHART,
           checked: false,
           src: hierarchicalChartImg
+        },
+        {
+          title: localizedString.sunburst,
+          type: ItemType.SUNBURST_CHART,
+          checked: false,
+          src: sunburstChartImg
         }
       ]
     },

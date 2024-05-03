@@ -33,7 +33,8 @@ const makeItem = (orgItem, countMap) => {
     collapsibleTree: '신경망 트리',
     radialTree: '방사형신경망',
     networkChart: '네트워크 차트',
-    hierarchicalChart: '계층형 차트'
+    hierarchicalChart: '계층형 차트',
+    sunburstChart: '선버스트'
   };
 
   let initNum = 1;

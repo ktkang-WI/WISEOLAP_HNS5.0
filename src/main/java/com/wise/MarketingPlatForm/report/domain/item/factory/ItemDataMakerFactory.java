@@ -16,6 +16,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.NetworkChartMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -73,6 +74,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.HIERARCHICAL_CHART) {
             return new HierarchicalMaker();
+        }
+        if (itemType == ItemType.SUNBURST_CHART) {
+            return new SunburstChartMaker();
         }
 
         throw new IllegalArgumentException();

@@ -24,7 +24,8 @@ public enum ItemType {
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
     NETWORK_CHART("networkChart"),
-    HIERARCHICAL_CHART("hierarchicalChart")
+    HIERARCHICAL_CHART("hierarchicalChart"),
+    SUNBURST_CHART("sunburstChart")
     ;
     
     private final String symbol;
