@@ -100,11 +100,11 @@ const useCustomEvent = () => {
       }
     },
     // 공통으로 사용 되는 리본 버튼.
-    'InputTxt': {...commonRibbonBtn['InputTxt']},
-    'ShowColorLegend': {...commonRibbonBtn['ShowColorLegend']},
-    'Palette': {...commonRibbonBtn['Palette']},
-    'ColorEdit': {...commonRibbonBtn['ColorEdit']},
-    'PointLabel': {...commonRibbonBtn['PointLabel']}
+    'InputTxt': commonRibbonBtn['InputTxt'],
+    'ShowColorLegend': commonRibbonBtn['ShowColorLegend'],
+    'Palette': commonRibbonBtn['Palette'],
+    'ColorEdit': commonRibbonBtn['ColorEdit'],
+    'PointLabel': commonRibbonBtn['PointLabel']
   };
 
   const setMeta = (item, key, value) => {

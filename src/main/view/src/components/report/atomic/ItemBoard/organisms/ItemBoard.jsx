@@ -39,6 +39,10 @@ import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
 import ArcDiagram from 'components/report/item/arc/ArcDiagram';
+import CoordinateLine
+  from 'components/report/item/coordinateLine/CoordinateLine';
+import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
+import _ from 'lodash';
 
 
 const theme = getTheme();
@@ -114,7 +118,9 @@ const ItemBoard = () => {
     boxPlot: BoxPlot,
     timeline: Timeline,
     chord: Chord,
-    arc: ArcDiagram
+    arc: ArcDiagram,
+    coordinateLine: CoordinateLine,
+    coordinateDot: CoordinateDot
   };
 
   const itemExportsPicker = (id) => {
@@ -161,6 +167,12 @@ const ItemBoard = () => {
     }
   };
 
+  const nullDataCheck = (item) => {
+    return !item ||
+    item?.mart?.data?.data?.length == 0 ||
+    _.isEmpty(item?.mart?.data || {});
+  };
+
   /**
    * 아이템 type에 맞는 컴포넌트 생성
    * @param {*} node
@@ -172,7 +184,7 @@ const ItemBoard = () => {
     const ItemComponent = itemFactory[item.type];
     const adHocOption = rootItem.adHocOption;
 
-    if (!item) return <></>;
+    if (nullDataCheck(item)) return <Item></Item>;
 
 
     return (
@@ -181,7 +193,6 @@ const ItemBoard = () => {
           setItemExports={setItemExports}
           item={item}
           adHocOption={adHocOption}
-          node={node}
           id={item.id}/>
       </Item>
     );
@@ -197,7 +208,13 @@ const ItemBoard = () => {
     const item = items.find((i) => id == i.id);
     const useCaption = item.meta.useCaption;
 
-    return <span>{useCaption? item.meta.name : false}</span>;
+    return <span style={
+      {
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis'
+      }
+    }>{useCaption ? item.meta.name : false}</span>;
   }
 
   function focusItem(itemId) {

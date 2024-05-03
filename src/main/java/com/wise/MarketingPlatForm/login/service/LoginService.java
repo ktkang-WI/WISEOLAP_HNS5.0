@@ -26,7 +26,7 @@ public class LoginService {
     }
 
     public void createLoginSession(HttpSession session, UserDTO userDTO) {
-        session.setAttribute("user", userDTO);
+        session.setAttribute("WI_SESSION_USER", userDTO);
         session.setMaxInactiveInterval(SESSION_TIME);
     }
 

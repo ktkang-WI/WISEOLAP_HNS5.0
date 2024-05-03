@@ -63,7 +63,7 @@ export default function CustomizeSuffixValue(value, options) {
   if (options.suffixEnabled) {
     if (unit === 'auto') {
       const customSuffix =
-        Object.keys(suffix).find((key) => suffix[key] === valueOfSuffix);
+        units[Object.keys(suffix).find((key) => suffix[key] === valueOfSuffix)];
 
       return (resultNum + customSuffix);
     }

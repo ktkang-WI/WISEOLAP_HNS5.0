@@ -3,9 +3,11 @@ import {Item, Label} from 'devextreme-react/form';
 import localizedString from '../../../../../../config/localization';
 import React, {useState} from 'react';
 import EmojiArr from './EmojiArr';
+import _ from 'lodash';
 
 const DataHighlightForm = (
-    {formData, measureNames, showField, setShowField}, ref) => {
+    {formData, measureNames, showField, setShowField,
+      highlightList, setHighlightList}, ref) => {
   // 선택한 아이콘 보여줌.
   const [selectedIcon, setSelectedIcon] = useState('');
 
@@ -39,6 +41,14 @@ const DataHighlightForm = (
           setShowField(true);
         } else if (e.dataField === 'condition' && e.value !== 'Between') {
           setShowField(false);
+        }
+
+        // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
+        const copyHighlight = _.cloneDeep(highlightList);
+
+        if (formData.rowIdx != undefined && formData.status == 'update') {
+          copyHighlight[formData.rowIdx] = formData;
+          setHighlightList(copyHighlight);
         }
       }}
     >
