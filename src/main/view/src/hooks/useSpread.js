@@ -3,7 +3,8 @@ import {
   dataSourceMaker,
   deleteTables,
   generateColumns,
-  createBorderStyle
+  createBorderStyle,
+  getJsonKey2ColInfos
 }
   from 'components/report/atomic/spreadBoard/util/spreadUtil';
 import {useDispatch, useSelector} from 'react-redux';
@@ -70,32 +71,43 @@ const useSpread = () => {
       workbook.suspendCalcService();
       workbook.suspendEvent();
 
-      deleteTables(bindedSheet);
+      // 추후 환경설정 SpreadBinding 값으로 분기처리
+      if (true) {
+        bindedSheet.reset();
+        bindedSheet.autoGenerateColumns = true;
+        const ds = getJsonKey2ColInfos(rowData);
+        if (ds.dataSourceHearder) {
+          const newRowData = [ds.dataSourceHearder, ...rowData];
+          bindedSheet.setDataSource(newRowData);
+          bindedSheet.bindColumns(ds.colInfos);
+        }
+      } else {
+        deleteTables(bindedSheet);
 
+        const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
+            bindingInfo.rowIndex,
+            bindingInfo.columnIndex,
+            invoice.records.length+1,
+            columns.length,
+            createBorderStyle(bindingInfo.useBorder));
 
-      const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
-          bindingInfo.rowIndex,
-          bindingInfo.columnIndex,
-          invoice.records.length+1,
-          columns.length,
-          createBorderStyle(bindingInfo.useBorder));
+        table.showHeader(bindingInfo.useHeader);
+        table.autoGenerateColumns(false);
+        table.bindColumns(columns);
+        table.bindingPath('records');
+        table.bandRows(false);
+        table.bandColumns(false);
+        bindedSheet.options.gridline.showHorizontalGridline = true;
+        bindedSheet.options.gridline.showVerticalGridline = true;
+        bindedSheet.invalidateLayout();
 
-      table.showHeader(bindingInfo.useHeader);
-      table.autoGenerateColumns(false);
-      table.bindColumns(columns);
-      table.bindingPath('records');
-      table.bandRows(false);
-      table.bandColumns(false);
-      bindedSheet.options.gridline.showHorizontalGridline = true;
-      bindedSheet.options.gridline.showVerticalGridline = true;
-      bindedSheet.invalidateLayout();
+        bindedSheet.setDataSource(dataSource);
+        table.filterButtonVisible(false);
 
-      bindedSheet.setDataSource(dataSource);
-      table.filterButtonVisible(false);
-
-      workbook.resumeEvent();
-      workbook.resumeCalcService();
-      workbook.resumePaint();
+        workbook.resumeEvent();
+        workbook.resumeCalcService();
+        workbook.resumePaint();
+      }
     });
   };
 
