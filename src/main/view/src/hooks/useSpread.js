@@ -103,11 +103,10 @@ const useSpread = () => {
 
         bindedSheet.setDataSource(dataSource);
         table.filterButtonVisible(false);
-
-        workbook.resumeEvent();
-        workbook.resumeCalcService();
-        workbook.resumePaint();
       }
+      workbook.resumeEvent();
+      workbook.resumeCalcService();
+      workbook.resumePaint();
     });
   };
 
