@@ -53,7 +53,7 @@ public class ItemDataMakerFactory {
             return new ChoroplethDataMaker();
         }
         if (itemType == ItemType.CALENDAR) {
-            result = new CalendarDataMaker();
+            return new CalendarDataMaker();
         }
         if (itemType == ItemType.ARC_DIAGRAM) {
             return new ArcDataMaker();

@@ -2,16 +2,19 @@ import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import React, {useEffect, useRef} from 'react';
 import D3Calendar from './D3Calendar';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useSizeObserver from '../util/hook/useSizeObserver';
 
-const CalendarChart = ({setItemExports, id, item, node}) => {
+const CalendarChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   if (!mart.init) {
     return <></>;
   }
   const dataSource = mart.data.data;
-  const dxRef = useRef();
+  const ref = useRef();
+  const {width} = useSizeObserver(ref);
   const itemExportObject =
-    itemExportsObject(id, dxRef, 'CALENDAR', mart.data.data);
+    itemExportsObject(id, ref, 'CALENDAR', mart.data.data);
 
   useEffect(() => {
     setItemExports((prev) => {
@@ -27,12 +30,16 @@ const CalendarChart = ({setItemExports, id, item, node}) => {
   const seriesNames = mart.data.info.seriesMeasureNames;
 
   return (
-    <D3Calendar
-      width={node?._rect?.width}
-      dataSource={dataSource}
-      argumentField='arg'
-      valueFiled={seriesNames[0].summaryName}
-    />
+    <Wrapper
+      ref={ref}
+    >
+      <D3Calendar
+        width={width}
+        dataSource={dataSource}
+        argumentField='arg'
+        valueFiled={seriesNames[0].summaryName}
+      />
+    </Wrapper>
   );
 };
 
