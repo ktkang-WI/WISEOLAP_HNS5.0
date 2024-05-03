@@ -1,27 +1,34 @@
-import React, {useEffect, createRef, useState} from 'react';
+import React,
+{
+  useEffect,
+  createRef
+} from 'react';
 import DevDataGrid,
 {Column, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
-import styled from 'styled-components';
+import {linkReportPopup} from 'components/report/util/ReportUtility';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {useSelector} from 'react-redux';
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
 import {getPagingOption} from './Utility';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import localizedString from 'config/localization';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
 import {EditMode} from 'components/config/configType';
+import store from 'redux/modules';
+import {selectCurrentReport}
+  from 'redux/selector/ReportSelector';
+import useModal from 'hooks/useModal';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
 
-const Container = styled.div`
-  position: relative;
-`;
 const DataGrid = ({setItemExports, id, item}) => {
+  const {openModal, alert} = useModal();
   const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
@@ -210,90 +217,74 @@ const DataGrid = ({setItemExports, id, item}) => {
     return value;
   };
 
-  const [showPopup, setShowPopup] = useState(false);
   const focusedItem = useSelector(selectCurrentDataField);
-  useEffect(() => {
-    const handleContextMenu = (event) => {
-      if (editMode === EditMode.DESIGNER) {
-        event.preventDefault();
-        setShowPopup(true);
-      }
-    };
-    const gridInstance = dataGridRef.current.instance;
-
-    const handleContentReady = () => {
-      if (editMode === EditMode.DESIGNER) {
-        if (gridInstance) {
-          const scrollable = gridInstance.getScrollable();
-          const container = scrollable.element();
-          container.addEventListener('contextmenu', handleContextMenu);
-          return () => {
-            container.removeEventListener('contextmenu', handleContextMenu);
-          };
-        }
-      }
-    };
-
-    if (gridInstance) {
-      gridInstance.on('contentReady', handleContentReady);
-      return () => {
-        gridInstance.off('contentReady', handleContentReady);
-      };
-    }
-  }, []);
-
 
   return (
-    <Container>
-      <DevDataGrid
-        ref={dataGridRef}
-        width='100%'
-        height='100%'
-        id={id}
-        dataSource={dataGridConfig.dataSource.data}
-        showBorders={true}
-        sorting={false}
-        onCellPrepared={onCellPrepared}
-        onOptionChanged={onOptionChanged}
-        showColumnLines={config.gridLine.column}
-        showRowLines={config.gridLine.row}
-        AllowUserToAddRows={false}
-        rowAlternationEnabled={config.gridLine.stripes}
-        columnResizingMode={'nextColumn'}
-        allowColumnResizing={!config.autoGridWidth}
-        columnAutoWidth={config.autoGridWidth}
-        showColumnHeaders={config.columnHeader}
-        wordWrapEnabled={config.autoWrap}
-      >
-        <Paging
-          enabled={config.paging.pagination.isOk}
-          defaultPageSize={dataGridConfig.pagingOption.pageRange} />
-        <Pager
-          displayMode={'full'}
-          enabled={config.paging.pageUsageOfPageCount.isOk}
-          showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
-          allowedPageSizes={allowedPageSizes}
+    <DevDataGrid
+      ref={dataGridRef}
+      width='100%'
+      height='100%'
+      id={id}
+      dataSource={dataGridConfig.dataSource.data}
+      showBorders={true}
+      sorting={false}
+      onCellPrepared={onCellPrepared}
+      onOptionChanged={onOptionChanged}
+      showColumnLines={config.gridLine.column}
+      showRowLines={config.gridLine.row}
+      AllowUserToAddRows={false}
+      rowAlternationEnabled={config.gridLine.stripes}
+      columnResizingMode={'nextColumn'}
+      allowColumnResizing={!config.autoGridWidth}
+      columnAutoWidth={config.autoGridWidth}
+      showColumnHeaders={config.columnHeader}
+      wordWrapEnabled={config.autoWrap}
+      onContextMenuPreparing={(e) => {
+        const contextMenu = [];
+        if (editMode === EditMode.DESIGNER) {
+          const currentReport = selectCurrentReport(store.getState());
+          const subLinkReportMenu = {
+            'text': localizedString.subLinkReportSetting,
+            'onItemClick': () => {
+              if (currentReport.reportId === 0) {
+                alert('보고서를 먼저 저장해주세요.');
+                return;
+              } else {
+                const subLinkDim = linkReportPopup({focusedItem});
+                openModal(
+                    LinkReportModal,
+                    {subYn: true, subLinkDim: subLinkDim}
+                );
+              }
+            }
+          };
+          contextMenu.push(subLinkReportMenu);
+        }
+        e.items = contextMenu;
+      }}
+    >
+      <Paging
+        enabled={config.paging.pagination.isOk}
+        defaultPageSize={dataGridConfig.pagingOption.pageRange} />
+      <Pager
+        displayMode={'full'}
+        enabled={config.paging.pageUsageOfPageCount.isOk}
+        showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
+        allowedPageSizes={allowedPageSizes}
+      />
+      <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
+      {dataGridConfig.dataSource.columns.map((column, i) =>
+        <Column
+          key={i}
+          caption={column.caption}
+          dataField={column.name}
+          visible={column.visible}
+          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
+          cellRender={(e) => cellRender(e, column, meta)}
+          width={column.detailSetting === 'bar' ? '500px' : undefined}
         />
-        <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
-        {dataGridConfig.dataSource.columns.map((column, i) =>
-          <Column
-            key={i}
-            caption={column.caption}
-            dataField={column.name}
-            visible={column.visible}
-            dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
-            cellRender={(e) => cellRender(e, column, meta)}
-            width={column.detailSetting === 'bar' ? '500px' : undefined}
-          />
-        )}
-      </DevDataGrid>
-      {showPopup &&
-      <SubLinkReportPopup
-        showButton={showPopup}
-        setShowButton={setShowPopup}
-        focusedItem={focusedItem}
-      />}
-    </Container>
+      )}
+    </DevDataGrid>
   );
 };
 

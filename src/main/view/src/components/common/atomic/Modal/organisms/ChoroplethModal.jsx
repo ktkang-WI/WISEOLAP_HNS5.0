@@ -52,7 +52,7 @@ const ChoroplethModal = ({
       <Modal
         modalTitle={modalTitle}
         width={theme.size.bigModalWidthPx}
-        height={theme.size.bigModalheightPx}
+        height={theme.size.bigModalHeightPx}
         onSubmit={() => {
           if (!isOk) {
             alert(localizedString.requestWorkComplete);

@@ -72,6 +72,16 @@ const useDrag = () => {
       return field;
     };
 
+    const checkFieldLimit = () => {
+      const limit = dataFieldOption[dest.droppableId]?.limit;
+      if (limit && dataField[dest.droppableId].length > limit) {
+        alert(localizedString.dataFieldLimitMsg.replace('N', limit));
+        return false;
+      }
+
+      return true;
+    };
+
     const getNewDataField = (sourceField) => {
       const getDataFieldType = () => {
         const category = dest.droppableId;
@@ -277,7 +287,7 @@ const useDrag = () => {
           }
         }
       } else {
-        // dataSource에서 출발한 경우 새로운 데이터항목 객체 생성성
+        // dataSource에서 출발한 경우 새로운 데이터항목 객체 생성
         if (source.droppableId == 'dataSource') {
           const sourceField = selectedDataset.fields.find((field) =>
             field.uniqueName == targetId
@@ -290,15 +300,19 @@ const useDrag = () => {
 
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
           dataField.datasetId = selectedDataset.datasetId;
-          dispatch(setItemField({reportId, dataField}));
-          onDragEndSeriesOption(tempField, reportId);
+          if (checkFieldLimit()) {
+            dispatch(setItemField({reportId, dataField}));
+            onDragEndSeriesOption(tempField, reportId);
+          }
         } else if (source.droppableId == dest.droppableId) {
           const sourceField = dataField[source.droppableId]
               .splice(source.index, 1);
 
           dataField[dest.droppableId].splice(dest.index, 0, sourceField[0]);
 
-          dispatch(setItemField({reportId, dataField}));
+          if (checkFieldLimit()) {
+            dispatch(setItemField({reportId, dataField}));
+          }
         } else {
           // 데이터 항목에서 출발한 경우 기존 데이터 항목 복제 및 삭제 후 추가
           let sourceField = dataField[source.droppableId]
@@ -310,7 +324,9 @@ const useDrag = () => {
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
           dataField[dest.droppableId].splice(dest.index, 0, sourceField);
 
-          dispatch(setItemField({reportId, dataField}));
+          if (checkFieldLimit()) {
+            dispatch(setItemField({reportId, dataField}));
+          }
         }
       }
     } else if (source.droppableId != 'dataSource') {

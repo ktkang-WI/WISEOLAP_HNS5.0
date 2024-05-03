@@ -460,14 +460,18 @@ const useQueryExecute = () => {
   /**
    * List의 아이템과 defaultValue 조회
    * @param {JSON} param
+   * @param {Object} promises filter param-list-items 통신 promises
    */
-  const executeListParameter = async (param) => {
+  const executeListParameter = async (param, promises) => {
     // QUERY일 경우 연계 필터인지 확인
     if (param.dataSourceType == 'QUERY') {
       const query = param.dataSource;
       const linkageFilter = ParamUtils.getParameterNamesInQuery(query);
 
       if (linkageFilter && linkageFilter.length > 0) {
+        const linkageFilterPromises = linkageFilter.map((linkage) =>
+          promises[linkage]);
+        await Promise.all(linkageFilterPromises);
         return await executeLinkageFilter(param, linkageFilter);
       } else {
         return await setListValues(param);
@@ -502,17 +506,17 @@ const useQueryExecute = () => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
       dispatch(filterSearchComplete({reportId, id: name}));
     };
-    const promises = [];
+    const promises = {};
     parameters.informations.forEach(async (param) => {
       try {
         // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {
           if (param.defaultValueUseSql) {
-            promises.push((async () => {
+            promises[param.uniqueName] = ((async () => {
               executeParameterDefaultValueQuery(param);
             })());
           }
-          executeListParameter(param).then((data) => {
+          executeListParameter(param, promises).then((data) => {
             if (data) {
               setValues(param.name, data);
             }
@@ -547,7 +551,7 @@ const useQueryExecute = () => {
         filterSearchComplete({reportId, id: param.name});
       }
     });
-    await Promise.all(promises);
+    await Promise.all(Object.values(promises));
   };
 
   const validateRequiredField = (item) => {

@@ -45,7 +45,7 @@ const Alert = ({
       // NOTE: DevExpress Overlay 위로 알림창 띄울 경우
       // Alert가 Overlay 뒤에 그려지는 현상 때문에 zIndex 1800으로 지정
       // DevExpress 컴포넌트 사용하는 한 추후 디자인 변경시도 유지
-      initial={{opacity: 0, zindex: 1800}}
+      initial={{opacity: 0, zIndex: 1800}}
       animate={{opacity: 1}}
       exit={{opacity: 0}}
       style={{position: 'fixed'}}

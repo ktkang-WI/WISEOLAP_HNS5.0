@@ -51,7 +51,7 @@ export class DataSource {
     this.ownerNm = ownerNm;
     this.dbmsType = dbmsType;
     this.connector = connector;
-    this.connetorType = connectorType;
+    this.connectorType = connectorType;
     this.dbNm = dbNm;
     this.dsDesc = dsDesc;
     this.hashYn = hashYn;
@@ -68,6 +68,7 @@ export class DataSource {
       dbNm: this.dbNm,
       dbmsType: this.dbmsType,
       ownerNm: this.ownerNm,
+      connectorType: this.connectorType,
       port: this.port,
       userId: this.userId,
       password: this.password

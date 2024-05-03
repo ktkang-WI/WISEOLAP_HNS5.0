@@ -1,9 +1,6 @@
 import {makeAdHocItemMart, makeMart}
   from './martUtilityFactory';
-import {
-  DataFieldType,
-  // DataFieldTypeOfItemType,
-  dataFieldTypeOfItemTypeFunc} from './dataFieldType';
+import {DataFieldType, dataFieldTypeOfItemTypeFunc} from './dataFieldType';
 import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 import {paletteCollection}
@@ -29,7 +26,12 @@ const makeItem = (orgItem, countMap) => {
     calendar: '달력',
     treeMap: '트리맵',
     card: '카드',
-    textBox: '텍스트상자'
+    textBox: '텍스트상자',
+    timeline: '타임라인',
+    chord: '의존성 휠',
+    arc: '아크 다이어그램',
+    coordinateLine: '평면좌표 라인',
+    coordinateDot: '평면좌표 점'
   };
 
   let initNum = 1;
@@ -99,7 +101,6 @@ const makeAdHocItem = (orgItem) => {
 };
 
 const makeAdHocOption = () => {
-  // const dataFieldTypes = DataFieldTypeOfItemType['pivot'];
   const dataFieldTypes = dataFieldTypeOfItemTypeFunc('pivot');
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
@@ -108,9 +109,12 @@ const makeAdHocOption = () => {
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
   const layoutType = ItemManager.getLayoutSetting();
+  const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
+
+  dataFieldOption.measure.useButton = true;
 
   return {
-    dataFieldOption: ItemManager.generateDataFieldOption({type: 'pivot'}),
+    dataFieldOption: dataFieldOption,
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,

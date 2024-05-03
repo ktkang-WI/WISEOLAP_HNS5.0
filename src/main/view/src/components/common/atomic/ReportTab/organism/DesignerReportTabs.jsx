@@ -14,7 +14,9 @@ const ReportTabSource = [
   }
 ];
 
-const DesignerReportTabs = ({reportList, onSelectionChanged}) => {
+const DesignerReportTabs = (
+    {reportList, onSelectionChanged, onSubmit, onClose}
+) => {
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
@@ -23,6 +25,8 @@ const DesignerReportTabs = ({reportList, onSelectionChanged}) => {
       selectionMode='single'
       selectByClick={true}
       selectNodesRecursive={false}
+      onSubmit={onSubmit}
+      onClose={onClose}
     />;
   };
 

@@ -350,7 +350,10 @@ public class DatasetService {
     	if (rowNum != 0) {
     		if ("MS_SQL".equals(dbType)) {
     			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
-    		} else {
+    		} else if ("DB2".equals(dbType)) {
+                // sql = "SELECT * FROM (\n" + sql + "\n) FETCH FIRST " + rowNum + " ROWS ONLY";
+                sql =  "\n" +  sql + "\n FETCH FIRST " + rowNum + " ROWS ONLY";
+            } else {
     			sql = "SELECT * FROM (\n" + sql + "\n) WHERE ROWNUM <= " + rowNum;
     		}    		
     	}
@@ -393,6 +396,16 @@ public class DatasetService {
         List<Map<String, Object>> listItems = ListParameterUtils.sanitize(result.getRowData(), listParameterDTO);
 
         List<String> defaultValue = listParameterDTO.getDefaultValue();
+
+        if (!listParameterDTO.isUseAll() && !listParameterDTO.isMultiSelect()) {
+        	List newDefaultValues = new ArrayList<>();
+        	if (result.getRowData().size() > 0) {
+        		newDefaultValues.add(result.getRowData().get(0).get(listParameterDTO.getItemKey()));
+        	} else {
+        		newDefaultValues.add("");
+        	}
+        	defaultValue = newDefaultValues;
+        }
 
         if (listParameterDTO.isDefaultValueUseSql()) {
             defaultValue = getDefaultValues(listParameterDTO.getDsId(), listParameterDTO.getDefaultValue());

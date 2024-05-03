@@ -16,6 +16,7 @@ import NumberFormatModal
 import {getContextMenu} from '../utils/contextMenu';
 import DataColumnSeriesOptions
   from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
+import {useState} from 'react';
 
 const theme = getTheme();
 
@@ -86,6 +87,7 @@ const DataColumn = ({
   const dispatch = useDispatch();
   const {openModal} = useModal();
   const {updateItemField} = ItemSlice.actions;
+  const [buttonIconState, setButtonIconState] = useState(buttonIcon);
 
   const contextItemRender = (e) => {
     const checkIcon = '\u2713';
@@ -137,7 +139,8 @@ const DataColumn = ({
     } else if (data.category === 'measure') {
       const fieldId = data.fieldId;
       openModal(DataColumnSeriesOptions, {
-        fieldId
+        fieldId,
+        setButtonIconState
       });
     } else {
       buttonEvent(data, e);
@@ -194,7 +197,7 @@ const DataColumn = ({
           // buttonEvent(data, e);
           buttonEventFunction(e);
         }}>
-          <IconImg src={buttonIcon}/>
+          <IconImg src={buttonIconState}/>
         </Button>
       }
     </ColumnWrapper>

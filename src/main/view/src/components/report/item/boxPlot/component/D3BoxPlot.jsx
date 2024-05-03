@@ -1,11 +1,14 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import * as d3 from 'd3';
-import {AxisLeft} from './AxisLeft';
-import {AxisBottom} from './AxisBottomCategoric';
 import {VerticalBox} from './VerticalBox';
 import {styled} from 'styled-components';
-import {getHatchingPattern, getTextWidth} from '../../util/d3/CanvasUtility';
+import {
+  getHatchingPattern, getLegendOptions, getPaletteForD3, getTextWidth
+} from '../../util/d3/CanvasUtility';
 import valueAxisCustomLabel from '../../ValueAxisCustomLabel';
+import D3Legend from '../../d3/D3Legend';
+import {AxisLeft} from '../../d3/AxisLeft';
+import {AxisBottom} from '../../d3/AxisBottomCategoric';
 
 const StyledWrapper = styled(Wrapper)`
   .box:hover {
@@ -25,10 +28,14 @@ const D3BoxPlot = ({
   onClick,
   palette,
   selectedItem = [],
-  d3Ref,
   yAxis,
+  legend,
   measures
 }) => {
+  const legendData = data.data.map((row) => row.name);
+  const {itemWidth, itemHeight, legendOption} = getLegendOptions(
+      legend, width, height, legendData);
+
   const info = data.info;
   const yMargin = (info.max - info.min) * 0.1;
   const yDomain = [yAxis.axisStartToZero ||
@@ -42,8 +49,8 @@ const D3BoxPlot = ({
       getTextWidth(minLabel, 12), getTextWidth(maxLabel, 12)) + 10 +
       (yAxis.customText ? 15 : 0);
 
-  const boundsWidth = width - MARGIN.right - axisYMargin;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  const boundsWidth = itemWidth - MARGIN.right - axisYMargin;
+  const boundsHeight = itemHeight - MARGIN.top - MARGIN.bottom;
 
   const yScale = d3
       .scaleLinear()
@@ -53,8 +60,10 @@ const D3BoxPlot = ({
   const xScale = d3
       .scaleBand()
       .range([0, boundsWidth])
-      .domain(data.data.map((row) => row.name))
+      .domain(legendData)
       .padding(0.25);
+
+  const d3Palette = getPaletteForD3(palette, data.data.length);
 
   const allShapes = data.data.map((row, i) => {
     const [min, q1, median, q3, max] = row.data;
@@ -81,33 +90,43 @@ const D3BoxPlot = ({
           q3={yScale(q3)}
           min={yScale(min)}
           max={yScale(max)}
-          stroke={palette[i % palette.length]}
-          fill={palette[i % palette.length]}
+          color={d3Palette[i]}
         />
       </g>
     );
   });
 
   return (
-    <StyledWrapper id={id} ref={d3Ref}>
-      <svg width={width} height={height}>
-        <defs>
-          {getHatchingPattern()}
-        </defs>
-        <g
-          width={boundsWidth}
-          height={boundsHeight}
-          transform={`translate(${[axisYMargin, MARGIN.top].join(',')})`}
-        >
-          <AxisLeft yScale={yScale} yAxis={yAxis}
-            pixelsPerTick={50} width={boundsWidth} leftMargin={axisYMargin}/>
-          {allShapes}
-          <g transform={`translate(0, ${boundsHeight})`}>
-            <AxisBottom xScale={xScale} width={boundsWidth}/>
+    <D3Legend
+      legend={legend}
+      legendOption={legendOption}
+      palette={d3Palette}
+      legendData={legendData}
+    >
+      <StyledWrapper
+        id={id}
+        width={itemWidth + 'px'}
+        height={itemHeight + 'px'}
+      >
+        <svg width={itemWidth} height={itemHeight}>
+          <defs>
+            {getHatchingPattern()}
+          </defs>
+          <g
+            width={boundsWidth}
+            height={boundsHeight}
+            transform={`translate(${[axisYMargin, MARGIN.top].join(',')})`}
+          >
+            <AxisLeft yScale={yScale} yAxis={yAxis}
+              pixelsPerTick={50} width={boundsWidth} leftMargin={axisYMargin}/>
+            {allShapes}
+            <g transform={`translate(0, ${boundsHeight})`}>
+              <AxisBottom xScale={xScale} width={boundsWidth}/>
+            </g>
           </g>
-        </g>
-      </svg>
-    </StyledWrapper>
+        </svg>
+      </StyledWrapper>
+    </D3Legend>
   );
 };
 

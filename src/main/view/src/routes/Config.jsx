@@ -33,7 +33,7 @@ const Config = () => {
       >
       </Header>
       <Container display='flex' direction='row'>
-        <Wrapper size={theme.size.snbwidth}>
+        <Wrapper size={theme.size.snbWidth}>
           <SideNavigationBar
             content={['ConfigurationSetting', 'UserGroupManagement',
               'Authority', 'ReportFolderManagement', 'DataSourceAddition']}

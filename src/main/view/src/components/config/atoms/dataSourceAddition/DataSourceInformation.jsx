@@ -4,7 +4,7 @@ import Form, {
   Label, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {DataSourceAdditionContext} from
   'components/config/organisms/dataSourceAddition/DataSourceAddition';
 import {RequiredRule} from 'devextreme-react/data-grid';
@@ -15,6 +15,7 @@ const DataSourceInformation = ({row}) => {
 
   // ref
   const dataInformationRef = dataSourceAdditionContext.ref.dataInformationRef;
+  const [dbType, setDbType] = useState('');
 
   return (
     <Panel title={localizedString.dataSourceInfo}>
@@ -47,12 +48,28 @@ const DataSourceInformation = ({row}) => {
           dataField="dbmsType"
           editorType="dxSelectBox"
           editorOptions={{
-            dataSource: ['ORACLE', 'MS-SQL', 'MARIA']
+            dataSource: ['ORACLE', 'MS-SQL', 'MARIA', 'DB2BLU'],
+            onValueChanged: ({value}) => {
+              setDbType(value);
+            }
           }}
         >
           <RequiredRule message={localizedString.validationDbmsType}/>
           <Label>{localizedString.dbType}</Label>
         </SimpleItem>
+        {
+          dbType === 'ORACLE' &&
+          <SimpleItem
+            dataField="connectorType"
+            editorType="dxSelectBox"
+            editorOptions={{
+              dataSource: ['SID', 'SERVICE NAME']
+            }}
+          >
+            <RequiredRule message={localizedString.validationDbmsType}/>
+            <Label>{localizedString.connType}</Label>
+          </SimpleItem>
+        }
         <SimpleItem
           dataField="ownerNm"
           editorType="dxTextBox"

@@ -40,14 +40,14 @@ public class LoginFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) req; 
         HttpServletResponse response = (HttpServletResponse) res; 
         HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("user");
+        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
 
         log.debug("Request URI == > " + request.getRequestURI());
         log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
 
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
-        "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**", "/v3/api-docs/**", "/config/general/spread"};
+        "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**", "/v3/api-docs/**", "/config/general"};
         boolean useFilter = true;
 
         for (String pattern : execludePatterns) {

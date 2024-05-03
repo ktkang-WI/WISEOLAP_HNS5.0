@@ -13,13 +13,12 @@ export const VerticalBox = ({
   q3,
   max,
   width,
-  stroke,
-  fill,
+  color,
   tooltipFormat,
   selected = false,
   onClick
 }) => {
-  const strokeColor = darkenColor(stroke);
+  const strokeColor = darkenColor(color);
   const start = width * 0.1;
   const end = width * 0.9;
 
@@ -71,7 +70,7 @@ export const VerticalBox = ({
         height={q1 - q3}
         stroke={strokeColor}
         strokeLinecap='round'
-        fill={fill}
+        fill={color}
         strokeWidth={STROKE_WIDTH}
       />
       <rect

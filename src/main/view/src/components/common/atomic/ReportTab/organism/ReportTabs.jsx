@@ -42,11 +42,11 @@ const ReportTabs = () => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
-  const {setLinkReport} = LinkSlice.actions;
+  const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
-      onItemClick={(e) => {
+      onItemClick={async (e) => {
         dblClick ++;
         setTimeout(() => {
           dblClick --;
@@ -57,7 +57,7 @@ const ReportTabs = () => {
           if (selectedReport && selectedReport.type == 'REPORT') {
             const reportType = selectedReport.reportType;
             if (reportType === DesignerMode['EXCEL']) {
-              setExcelFile(selectedReport.id);
+              await setExcelFile(selectedReport.id);
             }
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
@@ -76,8 +76,10 @@ const ReportTabs = () => {
                 .then((res) => {
                   const subLinkReports = res.data.subLinkReports;
                   const linkReports = res.data.linkReports;
+                  console.log('subLinkReports', subLinkReports);
+                  console.log('linkReports', linkReports);
                   if (subLinkReports.length > 0) {
-                    dispatch(setLinkReport(subLinkReports[0]));
+                    dispatch(setSubLinkReport(subLinkReports[0]));
                   } else if (subLinkReports.length === 0) {
                     dispatch(setLinkReport(linkReports[0]));
                   }

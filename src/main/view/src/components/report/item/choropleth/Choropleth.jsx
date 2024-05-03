@@ -11,6 +11,7 @@ import {
   Tooltip
 } from 'devextreme-react/vector-map';
 import React, {useEffect, useRef} from 'react';
+import {useInteractiveEffect} from '../util/useInteractiveEffect';
 
 const generateColorGroups = (colorGroupIndex) => {
   return [...Array(7)].map((_, i) => i * colorGroupIndex);
@@ -24,10 +25,24 @@ const Choropleth = ({
   if (!mart.init) {
     return <></>;
   }
+
+  // 마스터 필터 START
+  const {
+    masterFilterOption,
+    functions
+  } = useInteractiveEffect({
+    item: item,
+    meta: meta,
+    selectionFunc: (event) => {
+      event?.forEach((e) => e?.target?.selected(true));
+    }
+  });
+
+  // 마스터 필터 END
+
   const dxRef = useRef();
   const itemExportObject =
     itemExportsObject(id, dxRef, 'CHOROPLETH', mart.data.data);
-
   useEffect(() => {
     setItemExports((prev) => {
       const itemExports =
@@ -47,7 +62,6 @@ const Choropleth = ({
       null,
       mart.data.data.map((item) => item[seriesNames[0].summaryName])) / 6;
   const colorGroups = generateColorGroups(colorGroupIndex);
-
   const handleCustomize = (e) => {
     const matchingKey = seriesNames[0].summaryName;
     e.forEach((element, index) => {
@@ -67,11 +81,32 @@ const Choropleth = ({
     }
     return null;
   };
-
   const customizeText = (arg) => {
     return `${arg.start} ~ ${arg.end}`;
   };
 
+  const handleClickEventSwitching = (e) => {
+    const identifier = e?.target?.layer?.type;
+    if (!identifier) return;
+    switch (identifier) {
+      case 'area': {
+        handleLayerClick(e);
+        break;
+      }
+      default: {
+        return;
+      }
+    }
+  };
+  const handleLayerClick = (e) => {
+    // 마스터 필터 데이터 설정.
+    e.data = e?.target.attribute(key);
+    functions.setDataMasterFilter(e.data);
+    functions.masterFilterReload(e);
+  };
+  const handleClick = (e) => {
+    handleClickEventSwitching(e);
+  };
   return (
     <VectorMap
       ref={dxRef}
@@ -84,6 +119,7 @@ const Choropleth = ({
       wheelEnabled={false}
       panningEnabled={false}
       zoomingEnabled={false}
+      onClick={handleClick}
     >
       <Legend
         horizontalAlignment='right'
@@ -100,6 +136,7 @@ const Choropleth = ({
         colorGroupingField="measure"
         colorGroups={colorGroups}
         customize={handleCustomize}
+        selectionMode={masterFilterOption.interactiveOption.mode}
       >
         <Label enabled={true} dataField={key}></Label>
       </Layer>
@@ -110,7 +147,7 @@ const Choropleth = ({
 
 const propsComparator = (prev, next) => {
   let result = true;
-  if (!_.isEqual(prev.item.mart, next.item.mart)) {
+  if (!_.isEqual(prev?.item?.mart, next?.item?.mart)) {
     result = false;
   }
   if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {

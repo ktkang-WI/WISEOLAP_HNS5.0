@@ -6,10 +6,11 @@ import ItemOptionModal from '../pie/itemOptionModal/ItemOptionModal';
 
 const useCustomEvent = () => {
   const {openModal} = useModal();
-  const {commonRibbonBtnElement} = itemOptionManager();
+  const {commonRibbonBtnElement, commonRibbonBtn} = itemOptionManager();
 
 
   const ribbonConfig = {
+    'ShowColorLegendD3': commonRibbonBtn['ShowColorLegendD3'],
     'YAxisSetting': {
       ...commonRibbonBtnElement,
       'id': 'yAxis_setting',

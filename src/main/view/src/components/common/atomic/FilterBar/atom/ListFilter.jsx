@@ -50,10 +50,8 @@ const ListFilter = ({
     } else if (!keys || keys == '[All]') {
       if (info.multiSelect) {
         keys = value.listItems.map((item) => item.name);
-      } else if (!info.multiSelect && info.useAll) {
-      } else if (!info.multiSelect && !info.useAll) {
-        keys = [value.listItems[0].name];
       }
+      setText(allText);
     } else {
       if (dataType === 'number') {
         keys = keys.split(', ').map((key) => {
@@ -62,8 +60,8 @@ const ListFilter = ({
       } else {
         keys = keys.split(', ');
       }
+      setText(generateCaptionText(keys));
     }
-    setText(generateCaptionText(keys));
     setSelectionKeys(keys);
   }, [info, value]);
 
@@ -142,10 +140,10 @@ const ListFilter = ({
         >
         </StyledList>
         <Footer>
-          <CommonButton type='primary' maxwidth='120px' onClick={confirm}>
+          <CommonButton type='primary' maxWidth='120px' onClick={confirm}>
             확인
           </CommonButton>
-          <CommonButton type='secondary' maxwidth='120px' onClick={cancel}>
+          <CommonButton type='secondary' maxWidth='120px' onClick={cancel}>
             취소
           </CommonButton>
         </Footer>
@@ -169,11 +167,11 @@ const ListFilter = ({
       <Popover
         target={'#' + id + '_wrapper'}
         showEvent={'click'}
-        minwidth="200px"
+        minWidth="200px"
         height="300px"
         ref={popOverRef}
         width={width}
-        maxwidth={width || '200px'}
+        maxWidth={width || '200px'}
         hideOnOutsideClick
         contentRender={renderContent}
       >

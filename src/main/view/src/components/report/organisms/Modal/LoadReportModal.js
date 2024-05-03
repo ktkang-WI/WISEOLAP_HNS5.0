@@ -20,6 +20,7 @@ const theme = getTheme();
 
 const LoadReportModal = ({...props}) => {
   let selectedReport = {};
+
   const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
@@ -36,7 +37,7 @@ const LoadReportModal = ({...props}) => {
   }, []);
 
   const getReport = async () => {
-    const {setLinkReport} = LinkSlice.actions;
+    const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
@@ -56,32 +57,34 @@ const LoadReportModal = ({...props}) => {
           const subLinkReports = res.data.subLinkReports;
           const linkReports = res.data.linkReports;
           if (subLinkReports.length > 0) {
-            dispatch(setLinkReport(subLinkReports[0]));
+            dispatch(setSubLinkReport(subLinkReports[0]));
           } else if (subLinkReports.length === 0) {
             dispatch(setLinkReport(linkReports[0]));
           }
         });
   };
 
+  const onSubmit = () => {
+    if (!_.isEmpty(selectedReport)) {
+      if (selectedReport.type == 'REPORT') {
+        getReport();
+      } else {
+        openModal(Alert, {
+          message: '선택한 항목이 보고서가 아닙니다.'
+        });
+        return true;
+      }
+    } else {
+      openModal(Alert, {
+        message: '보고서를 선택하지 않았습니다.'
+      });
+      return true;
+    }
+  };
+
   return (
     <Modal
-      onSubmit={() => {
-        if (!_.isEmpty(selectedReport)) {
-          if (selectedReport.type == 'REPORT') {
-            getReport();
-          } else {
-            openModal(Alert, {
-              message: '선택한 항목이 보고서가 아닙니다.'
-            });
-            return true;
-          }
-        } else {
-          openModal(Alert, {
-            message: '보고서를 선택하지 않았습니다.'
-          });
-          return true;
-        }
-      }}
+      onSubmit={onSubmit}
       modalTitle={localizedString.loadReport}
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
@@ -94,10 +97,11 @@ const LoadReportModal = ({...props}) => {
 
           if (nodes.length > 0) {
             selectedReport = nodes[0].itemData;
-          } else {
-            selectedReport = {};
           }
-        }}/>
+        }}
+        onSubmit={onSubmit}
+        onClose={props.onClose}
+      />
     </Modal>
   );
 };

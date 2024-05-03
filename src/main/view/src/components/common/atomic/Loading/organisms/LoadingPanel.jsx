@@ -18,7 +18,7 @@ const LoadingPanel = () => {
   if (jobQuantity == 0) return <></>;
 
   return (
-    <Overlay zindex={2000}>
+    <Overlay zIndex={2000}>
       <ImgWrapper>
         <img src={loadingImg} width='64px' height='64px'/>
       </ImgWrapper>

@@ -18,7 +18,7 @@ const theme = getTheme();
 
 const StyledHeader = styled.div`
   width: 100vw;
-  height: ${theme.size.headerheight};
+  height: ${theme.size.headerHeight};
   border-bottom: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
@@ -88,6 +88,8 @@ const Header = ({left, middle, right}) => {
           width={item.width}
           key={item.id}
           position={item.position}
+          cursor={item.cursor}
+          onClick={item.onClick}
         >
           <HeaderLogoImage height={item.height}/>
         </HeaderPanel>
@@ -96,7 +98,7 @@ const Header = ({left, middle, right}) => {
       return (
         <HeaderPanel
           width={item.width}
-          height={theme.size.headerheight}
+          height={theme.size.headerHeight}
           itemAlignment='flex-start'
           key={item.id}
           position={item.position}
@@ -110,7 +112,7 @@ const Header = ({left, middle, right}) => {
       return (
         <HeaderPanel
           width={item.width}
-          height={theme.size.headerheight}
+          height={theme.size.headerHeight}
           itemAlignment='flex-start'
           key={item.id}
           position={item.position}
@@ -127,7 +129,7 @@ const Header = ({left, middle, right}) => {
           position={item.position}>
           <TextButton
             title={item.label}
-            height={theme.size.headerheight}
+            height={theme.size.headerHeight}
             onClick={item.onClick}
           >
             {item.label}

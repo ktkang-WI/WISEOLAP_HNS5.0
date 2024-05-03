@@ -13,7 +13,7 @@ public class LoginService {
     @Autowired
     AuthService authService;
     // 세션 유지 시간 1800(30분)
-    final int SESSION_TIME = 1800;
+    final int SESSION_TIME = 3600;
 
     public UserDTO getLoginUser(String id, String password) {
         UserDTO userDTO = authService.getUserById(id);
@@ -26,7 +26,7 @@ public class LoginService {
     }
 
     public void createLoginSession(HttpSession session, UserDTO userDTO) {
-        session.setAttribute("user", userDTO);
+        session.setAttribute("WI_SESSION_USER", userDTO);
         session.setMaxInactiveInterval(SESSION_TIME);
     }
 

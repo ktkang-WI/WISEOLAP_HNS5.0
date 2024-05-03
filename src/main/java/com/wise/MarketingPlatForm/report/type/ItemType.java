@@ -18,6 +18,11 @@ public enum ItemType {
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
     TEXT_BOX("textBox")
+    TIMELINE("timeline"),
+    CHORD("chord"),
+    ARC_DIAGRAM("arc"),
+    COORDINATE_DOT("coordinateDot"),
+    COORDINATE_LINE("coordinateLine")
     ;
 
     private final String symbol;

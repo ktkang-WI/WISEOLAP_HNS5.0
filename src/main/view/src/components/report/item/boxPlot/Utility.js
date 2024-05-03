@@ -13,7 +13,7 @@ const generateMeta = (item) => {
   const defaultAxis = {
     formatType: 'Number',
     unit: 'Ones',
-    axisStartToZero: true,
+    axisStartToZero: false,
     useAxis: true,
     customText: false,
     suffixEnabled: false,
@@ -31,7 +31,13 @@ const generateMeta = (item) => {
     precisionType: 'round',
     useDigitSeparator: true
   };
-
+  setMeta(item, 'legend', {
+    useLegend: true,
+    position: 'outside',
+    horizontalAlignment: 'right',
+    verticalAlignment: 'top',
+    itemTextPosition: 'right'
+  });
   setMeta(item, 'yAxis', defaultAxis);
 };
 
@@ -85,6 +91,7 @@ const getRibbonItems = () => {
     'CaptionView',
     'NameEdit',
     'YAxisSetting',
+    'ShowColorLegendD3',
     'Palette',
     'ColorEdit',
     'InputTxt'

@@ -1,38 +1,64 @@
 package com.wise.MarketingPlatForm.report.domain.item.factory;
 
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ArcDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.BoxPlotDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
-import com.wise.MarketingPlatForm.report.domain.item.datamaker.DefaultDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
     public ItemDataMaker getItemDataMaker(ItemType itemType) {
-        ItemDataMaker result = null;
         if (itemType == ItemType.CHART) {
-            result = new ChartDataMaker();
+            return new ChartDataMaker();
         }
         if (itemType == ItemType.PIVOT_GRID) {
-            result = new PivotGridDataMaker();
+            return new PivotGridDataMaker();
         }
         if (itemType == ItemType.DATA_GRID) {
-            result = new DataGridDataMaker();
+            return new DataGridDataMaker();
         }
         if (itemType == ItemType.PIE_CHART) {
-            result = new PieChartDataMaker();
+            return new PieChartDataMaker();
         }
         if (itemType == ItemType.BOX_PLOT) {
             result =  new BoxPlotDataMaker();
         }
-
-        // Default Chart Maker 
-        if (result == null) {
-            result = new DefaultDataMaker();
+        if (itemType == ItemType.TIMELINE) {
+            return new TimelineDataMaker();
+        }
+        if (itemType == ItemType.CHORD) {
+            return new ChordDataMaker();
+        }
+        if (itemType == ItemType.TREEMAP) {
+            return new TreeMapDataMaker();
+        }
+        if (itemType == ItemType.CARD) {
+            return new CardDataMaker();
+        }
+        if (itemType == ItemType.LIQUID_FILL_GAUGE) {
+            return new LiquidFillGaugeDataMakter();
+        }
+        if (itemType == ItemType.CHOROPLETH) {
+            return new ChoroplethDataMaker();
+        }
+        if (itemType == ItemType.ARC_DIAGRAM) {
+            return new ArcDataMaker();
+        }
+        if (itemType == ItemType.COORDINATE_DOT ||
+            itemType == ItemType.COORDINATE_LINE) {
+            return new CoordinateChartDataMaker();
         }
 
-        return result;
+        throw new IllegalArgumentException();
     }
 }

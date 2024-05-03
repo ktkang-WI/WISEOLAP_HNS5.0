@@ -43,6 +43,7 @@ public class DataSetDsController {
     @RequestParam(required = true) String dbNm,
     @RequestParam(required = true) String dbmsType,
     @RequestParam(required = true) String ownerNm,
+    @RequestParam(required = false, defaultValue = "") String connectorType,
     @RequestParam(required = true) String port,
     @RequestParam(required = true) String userId,
     @RequestParam(required = true) String password
@@ -54,6 +55,7 @@ public class DataSetDsController {
       .dbNm(dbNm)
       .dbmsType(dbmsType)
       .ownerNm(ownerNm)
+      .connectorType(connectorType)
       .port(port)
       .userId(userId)
       .password(password)
@@ -74,6 +76,7 @@ public class DataSetDsController {
     @RequestParam(required = false, defaultValue = "") String dbNm,
     @RequestParam(required = false, defaultValue = "") String dbmsType,
     @RequestParam(required = false, defaultValue = "") String ownerNm,
+    @RequestParam(required = false, defaultValue = "") String connectorType,
     @RequestParam(required = false, defaultValue = "") String port,
     @RequestParam(required = false, defaultValue = "") String userId,
     @RequestParam(required = false, defaultValue = "") String password
@@ -86,6 +89,7 @@ public class DataSetDsController {
       .dbNm(dbNm)
       .dbmsType(dbmsType)
       .ownerNm(ownerNm)
+      .connectorType(connectorType)
       .port(port)
       .userId(userId)
       .password(password)

@@ -58,10 +58,4 @@ public class ConfigController {
 
     return generalService.updateConfig(generalDTO);
   }
-  
-  @GetMapping("/spread")
-  public Map<String, String> getSpreadLicense () {
-	  return generalService.getSpreadLicense();
-  }
-
 }

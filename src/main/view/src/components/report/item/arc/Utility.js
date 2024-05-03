@@ -1,7 +1,7 @@
-import {defaultDimension, singleMeasure}
+import {defaultDimension}
   from 'components/report/item/util/martUtilityFactory';
-import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
+import {setMeta} from '../util/metaUtilityFactory';
 
 
 /**
@@ -9,6 +9,14 @@ import {DataFieldType} from '../util/dataFieldType';
  * @param {*} item 옵션을 삽입할 아이템 객체
  */
 const generateMeta = (item) => {
+  setMeta(item, 'useRotate', false);
+  setMeta(item, 'legend', {
+    useLegend: true,
+    position: 'outside',
+    horizontalAlignment: 'right',
+    verticalAlignment: 'top',
+    itemTextPosition: 'right'
+  });
 };
 
 /**
@@ -17,12 +25,6 @@ const generateMeta = (item) => {
  * @param {*} rootItem root item
  */
 const generateItem = (item, rootItem) => {
-  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
-  const data = item.mart.data;
-  const measures = dataField.measure;
-  const meaLength = measures.length;
-  item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
-  item.mart.formats = measures.map((mea) => mea.format);
 };
 
 /**
@@ -30,35 +32,24 @@ const generateItem = (item, rootItem) => {
  * @return {JSON} dataFieldOption
  */
 const getDataFieldOptionChild = () => {
-  const dataFieldMeasure = {
-    ...singleMeasure,
-    useButton: true,
-    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-    buttonIcon: chartSeriesButtonIcon,
-    buttonEvent: function(e) {
-      console.log(e);
-    }
-  };
-
   const dataFieldDimension = {
     ...defaultDimension
   };
 
   return {
-    [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.DIMENSION]: dataFieldDimension
   };
 };
 
 /**
- * 차트 커스텀 파라미터 삽입
+ * 조회시 사용하는 파라미터 생성
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
-  param.dimension = dataField.dimension.concat(dataField.dimensionGroup);
-  param.measure = dataField.measure;
+  param.dimension = dataField.dimension;
+  param.measure = [];
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
@@ -72,13 +63,16 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
+    'Rotate',
+    'ShowColorLegendD3',
     'Palette',
+    'ColorEdit',
     'InputTxt'
   ];
 };
 
 /**
- * 속셩 영역 아이템 배열을 반환합니다.
+ * 속성 영역 아이템 배열을 반환합니다.
  * @return {Array} attributeItems
  */
 const getAttributeItems = () => {

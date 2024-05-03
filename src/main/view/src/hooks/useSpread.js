@@ -18,9 +18,12 @@ import useFile from './useFile';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 import store from 'redux/modules';
+import useModal from './useModal';
+import localizedString from 'config/localization';
 
 const useSpread = () => {
   const dispatch = useDispatch();
+  const {alert} = useModal();
   const {setBindingInfo} = SpreadSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
@@ -44,6 +47,11 @@ const useSpread = () => {
       const rowData = spreadData[datasetId].rowData;
       const metaData = spreadData[datasetId].metaData;
 
+      if (rowData[0]?.error) {
+        alert(localizedString.invalidQuery);
+        return true;
+      }
+
       const {columns} = generateColumns(metaData, sheets);
       let bindedSheet = workbook
           .getSheetFromName(bindingInfo.sheetNm);
@@ -57,9 +65,13 @@ const useSpread = () => {
 
       const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
       createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
-      deleteTables(bindedSheet);
 
       workbook.suspendPaint();
+      workbook.suspendCalcService();
+      workbook.suspendEvent();
+
+      deleteTables(bindedSheet);
+
 
       const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
           bindingInfo.rowIndex,
@@ -81,6 +93,8 @@ const useSpread = () => {
       bindedSheet.setDataSource(dataSource);
       table.filterButtonVisible(false);
 
+      workbook.resumeEvent();
+      workbook.resumeCalcService();
       workbook.resumePaint();
     });
   };
@@ -134,7 +148,7 @@ const useSpread = () => {
 
   const createReportBlob = async () => {
     const workbook = getWorkbook();
-    const json = workbook.toJSON({includeBindingSource: false});
+    const json = workbook.toJSON({includeBindingSource: true});
     const blob = await new Promise((resolve, reject) => {
       excelIO.save(JSON.stringify(json), resolve, reject);
     });

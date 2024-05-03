@@ -4,6 +4,7 @@ import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import pie from 'assets/image/icon/button/pieChart.png';
+import timeline from 'assets/image/icon/item/timeline.png';
 import {chartImages} from 'components/report/item/util/chartImageImporter';
 import {chartItemType} from 'components/report/item/chart/chartItemType';
 
@@ -18,8 +19,8 @@ const NormalChartDefaultElement = () => {
   const label = localizedString.seriesOptions.label;
 
   const onClick = (chartType) => {
-    if (chartType == 'pie') {
-      insertFlexLayout(selectedReportId, 'pie');
+    if (['pie', 'timeline'].includes(chartType)) {
+      insertFlexLayout(selectedReportId, chartType);
     } else {
       insertFlexLayout(selectedReportId, 'chart', chartType);
     }
@@ -159,6 +160,12 @@ const NormalChartDefaultElement = () => {
           type: 'pie',
           checked: false,
           src: pie
+        },
+        {
+          title: localizedString.timeline,
+          type: 'timeline',
+          checked: false,
+          src: timeline
         }
       ]
     }
