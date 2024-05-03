@@ -4,6 +4,7 @@ import React, {useEffect, useRef} from 'react';
 import D3Calendar from './D3Calendar';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
+import ItemManager from '../util/ItemManager';
 
 const CalendarChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -37,21 +38,10 @@ const CalendarChart = ({setItemExports, id, item}) => {
         width={width}
         dataSource={dataSource}
         argumentField='arg'
-        valueFiled={seriesNames[0].summaryName}
+        valueField={seriesNames[0].summaryName}
       />
     </Wrapper>
   );
 };
 
-const propsComparator = (prev, next) => {
-  let result = true;
-  if (!_.isEqual(prev.item.mart, next.item.mart)) {
-    result = false;
-  }
-  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
-    result = false;
-  }
-  return result;
-};
-
-export default React.memo(CalendarChart, propsComparator);
+export default React.memo(CalendarChart, ItemManager.commonPropsComparator);

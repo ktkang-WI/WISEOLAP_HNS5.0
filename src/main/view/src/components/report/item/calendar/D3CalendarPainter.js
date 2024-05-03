@@ -126,7 +126,8 @@ painterObj.drawingYear = (svg) => {
       .attr('opacity', '0.75')
       .attr('cursor', 'pointer')
       .on('click', function(e) {
-        D3CalendarPainter.self.event.onClick(e);
+        const clickEvent = D3CalendarPainter?.self?.event?.onClick;
+        if (clickEvent) clickEvent(e);
       })
       .append('title')
       .text((d) => {

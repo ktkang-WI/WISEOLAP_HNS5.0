@@ -40,13 +40,13 @@ const D3Calendar = ({
   width,
   dataSource,
   argumentField,
-  valueFiled,
+  valueField,
   onClick
 }) => {
   const svgRef = useRef(null);
   const {alert} = useModal();
   useEffect(() => {
-    dataSource = dataSourceGenerator(dataSource, argumentField, valueFiled);
+    dataSource = dataSourceGenerator(dataSource, argumentField, valueField);
     if (!dataSource) {
       alert(localizedString.invalidValueErrorMsg);
       return;
