@@ -6,8 +6,8 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  width: 40%;
-  height: auto;
+  width: 100px;
+  height: 84px;
   display: flex;
   justify-content: center;
   border-radius: 4px;
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   word-break: keep-all;
   cursor: pointer;
   padding: 10px 5px;
+  margin-bottom: 8px;
 
   &:hover {
     background: #F6FAFF;

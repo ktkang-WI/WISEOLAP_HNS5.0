@@ -30,7 +30,7 @@ const ButtonWrapper = styled.div`
   height: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
 `;
 
 

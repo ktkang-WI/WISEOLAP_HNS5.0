@@ -13,10 +13,14 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import deltaValueImg
+  from 'assets/image/icon/adhoc/deltaValue.png';
+import topBottomImg
+  from 'assets/image/icon/adhoc/topBottom.png';
 import gridAttributeImg
-  from 'assets/image/icon/button/total.png';
+  from 'assets/image/icon/adhoc/gridAttribute.png';
 import dataHighlightImg
-  from '../../../../../assets/image/icon/highlight/ico_CHightLight.png';
+  from '../../../../../assets/image/icon/adhoc/dataHighlight.png';
 import useModal from 'hooks/useModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
@@ -218,7 +222,7 @@ const ItemAttributeDefaultElement = () => {
         {
           id: 'topBottom',
           label: 'Top/Bottom값 설정',
-          icon: dimensionGroupImg,
+          icon: topBottomImg,
           active: option.topBottom == 'topBottom',
           onClick: () => {
             const dataField = rootItem.adHocOption.dataField;
@@ -239,7 +243,7 @@ const ItemAttributeDefaultElement = () => {
           id: 'deltaValue',
           label: '변동 측정값',
           active: option.deltaValue == 'deltaValue',
-          icon: dimensionImg,
+          icon: deltaValueImg,
           onClick: () => {
             // 변동 측정값
           }
