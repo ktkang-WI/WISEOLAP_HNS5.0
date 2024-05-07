@@ -6,7 +6,7 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  width: 100%;
+  width: 40%;
   height: auto;
   display: flex;
   justify-content: center;
@@ -20,10 +20,6 @@ const Wrapper = styled.div`
 
   &:hover {
     background: #F6FAFF;
-  }
-
-  & + & {
-    margin-left: 7px;
   }
 
   div {

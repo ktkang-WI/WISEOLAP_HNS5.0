@@ -13,6 +13,8 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import gridAttributeImg
+  from 'assets/image/icon/button/total.png';
 import dataHighlightImg
   from '../../../../../assets/image/icon/highlight/ico_CHightLight.png';
 import useModal from 'hooks/useModal';
@@ -197,15 +199,6 @@ const ItemAttributeDefaultElement = () => {
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
-        // {
-        //   id: 'deltaValue',
-        //   label: '변동 측정값',
-        //   active: option.deltaValue == 'deltaValue',
-        //   icon: dimensionImg,
-        //   onClick: () => {
-        //     // 변동 측정값
-        //   }
-        // },
         {
           id: 'dataHighlight',
           label: localizedString.dataHighlight,
@@ -240,6 +233,24 @@ const ItemAttributeDefaultElement = () => {
             openModal(TopBottomModal, {
               topBottomInfo: rootItem.adHocOption.topBottomInfo
             });
+          }
+        },
+        {
+          id: 'deltaValue',
+          label: '변동 측정값',
+          active: option.deltaValue == 'deltaValue',
+          icon: dimensionImg,
+          onClick: () => {
+            // 변동 측정값
+          }
+        },
+        {
+          id: 'gridAttribute',
+          label: '그리드 속성',
+          active: option.gridAttribute == 'gridAttribute',
+          icon: gridAttributeImg,
+          onClick: () => {
+            // 그리드 속성
           }
         }
       ]
