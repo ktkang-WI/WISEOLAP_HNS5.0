@@ -35,14 +35,6 @@ export const defaultMeasure = {
   type: 'MEA'
 };
 
-export const singleMeasure = {
-  label: localizedString.treeMapMeasure,
-  icon: measureIcon,
-  placeholder: localizedString.measurePlaceholder,
-  required: true,
-  type: 'MEA'
-};
-
 export const dataFieldSortByItem = {
   ...defaultMeasure,
   icon: sortByItemIcon,
