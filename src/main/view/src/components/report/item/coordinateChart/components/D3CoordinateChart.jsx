@@ -56,7 +56,7 @@ const D3CoordinateChart = ({
 
   const fade = (arg, opacity1, opacity2) => {
     const elements = d3
-        .selectAll('#' + id + ' .chart-data:not(.selected)').data(info.args);
+        .selectAll('#' + id + ' .chart-data').data(info.args);
 
     elements
         .filter((d) => {
