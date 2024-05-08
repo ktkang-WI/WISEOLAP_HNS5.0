@@ -48,7 +48,7 @@ export const AxisBottom = ({
 
         if (value == 0 && !showZero) return (<></>);
 
-        const textWidth = getTextWidth(value, 12, 'Noto Sans KR') / 2;
+        const textWidth = getTextWidth(value, 13, 'Noto Sans KR') / 2;
 
         if (xOffset - textWidth < beforeLegendX ||
           xOffset + textWidth > width) {
