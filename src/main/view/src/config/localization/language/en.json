@@ -426,5 +426,7 @@
   "connectionVisualization": "Connection Visualization",
   "distributionVisualization": "Distribution Visualization",
   "Filter": "Filter",
-  "selectAll": "Select all"
+  "selectAll": "Select all",
+  "highlightDupleCheck": "There are highlights of duplicate conditions. If you want to change the content, please click on the highlight and make the change.",
+  "highlightDupleCheck2": "There are highlights of duplicate conditions."
 }

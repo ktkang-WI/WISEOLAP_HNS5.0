@@ -610,5 +610,7 @@
   "prevStep": "이전",
   "completeStep": "완료",
   "selectAll": "전체 선택",
-  "date": "일자"
+  "date": "일자",
+  "highlightDupleCheck1": "중복된 조건의 하이라이트가 존재 합니다. 내용 변경을 원하시면 해당 하이라이트를 클릭 후 변경해 주세요.",
+  "highlightDupleCheck2": "중복된 조건의 하이라이트가 존재 합니다."
 }
