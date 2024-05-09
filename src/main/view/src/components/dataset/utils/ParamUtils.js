@@ -156,8 +156,11 @@ const getCubeParameterNamesCube = (paramInfo, paramName) => {
 const setCalendarExceptionValue = (info) => {
   const format = info.calendarKeyFormat;
   const date = getCalendarNowDefaultValue(baseToFormatMapper[format], 0);
-  info.exceptionValue = parseStringFromDate(date, format);
-  return info;
+
+  return {
+    ...info,
+    exceptionValue: parseStringFromDate(date, format)
+  };
 };
 
 /**

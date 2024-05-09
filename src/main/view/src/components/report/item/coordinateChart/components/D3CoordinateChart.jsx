@@ -167,7 +167,9 @@ const D3CoordinateChart = ({
           <defs>
             {getHatchingPattern()}
           </defs>
-          {methods[type || 'dot']()}
+          <g>
+            {methods[type || 'dot']()}
+          </g>
           <g
             width={itemWidth}
             height={itemHeight}
