@@ -4,7 +4,7 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {getTheme} from 'config/theme';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
-import {Column, Editing, Selection} from 'devextreme-react/data-grid';
+import {Column, Selection, Button} from 'devextreme-react/data-grid';
 import styled from 'styled-components';
 import addHighLightIcon
   from '../../../../../../assets/image/icon/button/ico_zoom.png';
@@ -20,6 +20,7 @@ import DataHighlightForm from '../molecules/DataHighlightForm';
 import useModal from 'hooks/useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from '../../../../../config/configType';
+import deleteReport from 'assets/image/icon/button/crud_remove.png';
 
 const theme = getTheme();
 
@@ -51,7 +52,7 @@ const selectedReportTypeHighlight = (selectedItem, reportType) => {
 
 const DataHighlightModal = ({...props}) => {
   const dispatch = useDispatch();
-  const {alert} = useModal();
+  const {alert, confirm} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const reportType = useSelector(selectCurrentDesignerMode);
   const rootItem = useSelector(selectRootItem);
@@ -142,12 +143,18 @@ const DataHighlightModal = ({...props}) => {
 
   // 하이라이트 삭제 부분.
   const deleteHighlightList = (data) => {
-    if (data[0] && highlightList.length != 0) {
-      const deletedHighlight = highlightList.filter(
-          (highlight) => highlight !== data[0].key
-      );
-      setData({});
-      setHighlightList(deletedHighlight);
+    if (data.row && highlightList.length != 0) {
+      confirm(localizedString.deleteHighlight, () => {
+        const deletedHighlight = highlightList.filter(
+            (highlight) => highlight !== data.row.key
+        );
+
+        setData({
+          'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true,
+          'status': 'new'
+        });
+        setHighlightList(deletedHighlight);
+      });
     }
   };
 
@@ -201,11 +208,6 @@ const DataHighlightModal = ({...props}) => {
             }}
           >
             <Selection mode='single'/>
-            <Editing
-              mode='row'
-              allowDeleting={true}
-              onChangesChange={deleteHighlightList}
-            />
             <Column caption={localizedString.fieldName} dataField='dataItem'/>
             <Column caption={localizedString.condition} dataField='condition'/>
             <Column
@@ -214,6 +216,21 @@ const DataHighlightModal = ({...props}) => {
             <Column
               caption={localizedString.conditionValue + '(To)'}
               dataField='valueTo'/>
+            <Column type="buttons" width={80}>
+              <Button
+                cssClass='deleteHighlightBtn'
+                icon={deleteReport}
+                visible={true}
+                onClick={deleteHighlightList}
+                hint={localizedString.deleteReport}
+              />
+            </Column>
+            {/* <Editing
+              mode='row'
+              allowDeleting={true}
+              useIcons={true}
+              onChangesChange={deleteHighlightList}
+            /> */}
           </CommonDataGrid>
         </ModalPanel>
         <ModalPanel
