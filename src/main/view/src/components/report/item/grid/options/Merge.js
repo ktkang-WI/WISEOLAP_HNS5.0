@@ -22,39 +22,34 @@ const generateKey = (baseKey, depth) => {
 
 
 const generateRowSpan =
-  (depth, baseKey, fields, data, structure) => {
-    const isLastPoint = depth === fields.length || data.length == 0;
-    if (isLastPoint) return structure;
+(fields, datas, structure) => {
+  let baseKey = '';
+  datas.forEach((data, index) => {
+    baseKey = '';
+    fields.forEach((field, depth) => {
+      baseKey = generateKey(baseKey, depth);
+      const pickedItem = data;
+      const fieldName = field.name;
+      const node = _.cloneDeep(Node);
+      baseKey = baseKey.concat(pickedItem[fieldName]);
+      if (structure[baseKey]) {
+        structure[baseKey].value = structure[baseKey].value + 1;
+      } else {
+        structure[baseKey] = node;
+      }
+    });
+  });
 
-    baseKey = generateKey(baseKey, depth);
-    const pickedItem = data[0];
-    const fieldName = fields[depth].name;
-    const node = _.cloneDeep(Node);
-    const key = baseKey.concat(pickedItem[fieldName]);
+  return structure;
+};
 
-    if (structure[key]) {
-      structure[key].value = structure[key].value + 1;
-    } else {
-      structure[key] = node;
-    }
-    structure =
-      generateRowSpan(depth + 1, key, fields, data, structure);
-
-    data.shift();
-
-    structure =
-      generateRowSpan(0, '', fields, data, structure);
-
-    return structure;
-  };
 
 export const generateRowSpans = (data, fields) => {
   let rowSpansStructure = {};
   if (!data) return null;
   if (!fields) return null;
-
   rowSpansStructure =
-    generateRowSpan(0, '', fields, data, rowSpansStructure);
+    generateRowSpan(fields, data, rowSpansStructure);
 
   return rowSpansStructure;
 };
