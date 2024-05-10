@@ -8,11 +8,15 @@ import models from 'models';
 import useReportSave from 'hooks/useReportSave';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {useDispatch} from 'react-redux';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import useSpread from 'hooks/useSpread';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import LinkSlice from 'redux/modules/LinkSlice';
+import {useSelector} from 'react-redux';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {selectReports} from 'redux/selector/ReportSelector';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -40,6 +44,11 @@ const ReportTabs = () => {
   const {loadReport, querySearch} = useReportSave();
   const {setExcelFile} = useSpread();
   const dispatch = useDispatch();
+  const {alert} = useModal();
+
+  const editMode = useSelector(selectEditMode);
+  const reports = useSelector(selectReports);
+
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
   const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
@@ -55,6 +64,15 @@ const ReportTabs = () => {
         if (dblClick > 1) {
           const selectedReport = e.itemData;
           if (selectedReport && selectedReport.type == 'REPORT') {
+            if (editMode == EditMode.VIEWER) {
+              const isExist = (reports || []).find(
+                  (report) => report.reportId == selectedReport.id);
+
+              if (isExist) {
+                alert(localizedString.duplicatedReportMsg);
+                return;
+              }
+            }
             const reportType = selectedReport.reportType;
             if (reportType === DesignerMode['EXCEL']) {
               await setExcelFile(selectedReport.id);

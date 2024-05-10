@@ -426,5 +426,6 @@
   "connectionVisualization": "Connection Visualization",
   "distributionVisualization": "Distribution Visualization",
   "Filter": "Filter",
-  "selectAll": "Select all"
+  "selectAll": "Select all",
+  "duplicatedReportMsg": "The same report is already open."
 }
