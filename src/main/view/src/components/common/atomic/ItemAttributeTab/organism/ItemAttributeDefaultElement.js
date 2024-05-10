@@ -13,12 +13,8 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
-import deltaValueImg
-  from 'assets/image/icon/adhoc/deltaValue.png';
 import topBottomImg
   from 'assets/image/icon/adhoc/topBottom.png';
-import gridAttributeImg
-  from 'assets/image/icon/adhoc/gridAttribute.png';
 import dataHighlightImg
   from '../../../../../assets/image/icon/adhoc/dataHighlight.png';
 import useModal from 'hooks/useModal';
@@ -238,25 +234,26 @@ const ItemAttributeDefaultElement = () => {
               topBottomInfo: rootItem.adHocOption.topBottomInfo
             });
           }
-        },
-        {
-          id: 'deltaValue',
-          label: '변동 측정값',
-          active: option.deltaValue == 'deltaValue',
-          icon: deltaValueImg,
-          onClick: () => {
-            // 변동 측정값
-          }
-        },
-        {
-          id: 'gridAttribute',
-          label: '그리드 속성',
-          active: option.gridAttribute == 'gridAttribute',
-          icon: gridAttributeImg,
-          onClick: () => {
-            // 그리드 속성
-          }
         }
+        // TODO: 기능 개발 후 활성화
+        // {
+        //   id: 'deltaValue',
+        //   label: '변동 측정값',
+        //   active: option.deltaValue == 'deltaValue',
+        //   icon: deltaValueImg,
+        //   onClick: () => {
+        //     // 변동 측정값
+        //   }
+        // },
+        // {
+        //   id: 'gridAttribute',
+        //   label: '그리드 속성',
+        //   active: option.gridAttribute == 'gridAttribute',
+        //   icon: gridAttributeImg,
+        //   onClick: () => {
+        //     // 그리드 속성
+        //   }
+        // }
       ]
     }
   };
