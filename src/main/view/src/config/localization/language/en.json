@@ -426,5 +426,8 @@
   "connectionVisualization": "Connection Visualization",
   "distributionVisualization": "Distribution Visualization",
   "Filter": "Filter",
-  "selectAll": "Select all"
+  "selectAll": "Select all",
+  "duplicatedReportMsg": "The same report is already open.",
+  "maximumPeriodMsg": "Maximum query range cannot exceed N TYPEs.",
+  "invalidPeriodMsg": "The 'From' value must be less than the 'To' value."
 }

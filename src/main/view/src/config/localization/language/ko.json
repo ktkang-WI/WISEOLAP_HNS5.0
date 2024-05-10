@@ -301,7 +301,7 @@
   "now": "현재",
   "calendarKeyFormat": "Key Value 형식",
   "calendarCaptionFormat": "Caption Value 형식",
-  "year": "년도",
+  "year": "년",
   "month": "월",
   "day": "일",
   "listMap": "지도목록",
@@ -611,5 +611,8 @@
   "completeStep": "완료",
   "selectAll": "전체 선택",
   "date": "일자",
-  "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?"
+  "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
+  "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
+  "maximumPeriodMsg": "최대 조회 범위는 N TYPE 입니다.",
+  "invalidPeriodMsg": "From 값은 To 값보다 작아야 합니다."
 }
