@@ -40,6 +40,13 @@ const AddBtn = styled.img`
   }
 `;
 
+const init = {
+  applyCell: true,
+  applyTotal: true,
+  applyGrandTotal: true,
+  status: 'new'
+};
+
 const selectedReportTypeHighlight = (selectedItem, reportType) => {
   if (reportType === 'AdHoc') {
     return selectedItem[1].meta.dataHighlight.length !=0 ?
@@ -65,10 +72,7 @@ const DataHighlightModal = ({...props}) => {
         [...selectedReportTypeHighlight(selectedItem, reportType)]
     );
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
-  const [data, setData] = useState({
-    'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true,
-    'status': 'new'
-  });
+  const [data, setData] = useState(_.cloneDeep(init));
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
   const ref = useRef(null);
   const [showField, setShowField] = useState(false);
@@ -94,8 +98,13 @@ const DataHighlightModal = ({...props}) => {
     const findIdx = copyHighlight.findIndex(
         (data) => (data.dataItem === formData.dataItem &&
           data.condition === formData.condition &&
-          data.valueFrom === formData.valueFrom)
+          data.valueFrom === formData.valueFrom &&
+          data.valueTo === formData.valueTo)
     );
+    // 하이라이트 추가시 중복된 경우.
+    if (findIdx != -1 && formData.status == 'new') {
+      return false;
+    }
 
     if (findIdx == -1 || formData.status == 'new') {
       delete highlightData.status;
@@ -112,6 +121,12 @@ const DataHighlightModal = ({...props}) => {
     const formData = ref.current.props.formData;
     const highlight = appliedHighlight(formData);
 
+    if (highlight === false) {
+      alert(localizedString.highlightDupleCheck1);
+      setData(_.cloneDeep(init));
+      return;
+    }
+
     // 유효성 검사.
     if (!formData.dataItem || !formData.condition || !formData.valueFrom) {
       alert(localizedString.highlightInputEssentialValueMsg);
@@ -124,8 +139,7 @@ const DataHighlightModal = ({...props}) => {
         alert(localizedString.highlightBetweenValueCompareMsg);
       } else {
         setHighlightList(highlight);
-        const init = {applyCell: true, applyTotal: true, applyGrandTotal: true};
-        setData(init);
+        setData(_.cloneDeep(init));
         setShowField(false);
       }
     }
@@ -149,10 +163,7 @@ const DataHighlightModal = ({...props}) => {
             (highlight) => highlight !== data.row.key
         );
 
-        setData({
-          'applyCell': true, 'applyTotal': true, 'applyGrandTotal': true,
-          'status': 'new'
-        });
+        setData(_.cloneDeep(init));
         setHighlightList(deletedHighlight);
       });
     }
@@ -204,7 +215,7 @@ const DataHighlightModal = ({...props}) => {
                   status: 'new'});
               rowData.condition === 'Between' && setShowField(true);
               rowData.condition !== 'Between' && setShowField(false);
-              setData(rowData);
+              setData(_.cloneDeep(rowData));
             }}
           >
             <Selection mode='single'/>
