@@ -218,7 +218,7 @@ const DataHighlightModal = ({...props}) => {
               dataField='valueTo'/>
             <Column type="buttons" width={80}>
               <Button
-                cssClass='deleteHighlightBtn'
+                cssClass='dx-link'
                 icon={deleteReport}
                 visible={true}
                 onClick={deleteHighlightList}

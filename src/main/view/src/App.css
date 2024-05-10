@@ -172,10 +172,3 @@ img {
 .liquid-selected {
   border: 2px dotted #b1b1b1;
 }
-
-/* 데이터하이라이트 삭제 버튼 */
-.deleteHighlightBtn {
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-}
