@@ -614,5 +614,9 @@
   "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
   "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
   "maximumPeriodMsg": "최대 조회 범위는 N TYPE 입니다.",
-  "invalidPeriodMsg": "From 값은 To 값보다 작아야 합니다."
+  "invalidPeriodMsg": "From 값은 To 값보다 작아야 합니다.",
+  "highlightDupleCheck1": "중복된 조건의 하이라이트가 존재 합니다. 내용 변경을 원하시면 해당 하이라이트를 클릭 후 변경해 주세요.",
+  "highlightDupleCheck2": "중복된 조건의 하이라이트가 존재 합니다.",
+  "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
+  "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?"
 }

@@ -97,17 +97,15 @@ const ItemOptionModal = ({popupName, ...props}) => {
       height='600px'
     > <FieldSet>
         <Field>
-          <Field>
-            <FieldLabel>
-              페이징 사용 여부:
-            </FieldLabel>
-            <FieldValue>
-              <CheckBox
-                defaultValue={pagination.isOk}
-                onValueChanged={handlePagination}
-              />
-            </FieldValue>
-          </Field>
+          <FieldLabel>
+            페이징 사용 여부:
+          </FieldLabel>
+          <FieldValue>
+            <CheckBox
+              defaultValue={pagination.isOk}
+              onValueChanged={handlePagination}
+            />
+          </FieldValue>
         </Field>
         <Field>
           <FieldLabel>페이징 인덱스</FieldLabel>
@@ -133,18 +131,16 @@ const ItemOptionModal = ({popupName, ...props}) => {
           </FieldValue>
         </Field>
         <Field>
-          <Field>
-            <FieldLabel>
-              페이징 자동넘김 :
-            </FieldLabel>
-            <FieldValue>
-              <CheckBox
-                disabled={!pagination.isOk}
-                defaultValue={autoPaging.isOk}
-                onValueChanged={handleAutoPaging}
-              />
-            </FieldValue>
-          </Field>
+          <FieldLabel>
+            페이징 자동넘김 :
+          </FieldLabel>
+          <FieldValue>
+            <CheckBox
+              disabled={!pagination.isOk}
+              defaultValue={autoPaging.isOk}
+              onValueChanged={handleAutoPaging}
+            />
+          </FieldValue>
         </Field>
         <Field>
           <FieldLabel>시간 (초단위) </FieldLabel>
