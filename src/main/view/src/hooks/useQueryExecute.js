@@ -378,7 +378,7 @@ const useQueryExecute = () => {
     const designerMode = selectCurrentDesignerMode(store.getState());
 
     if (datasets.length === 0) {
-      alert(localizedString.dataSourceNotSelectedMsg);
+      alert(localizedString.reportNotSelectedMsg);
       return;
     };
 
