@@ -86,7 +86,8 @@ export const getCssStyle = (highlight, cellElement, cell) => {
   // 배경 및 글자색 적용.
   const colorStyle = {
     'background-color': highlight.backgroundColor,
-    'color': highlight.fontColor
+    'color': highlight.fontColor,
+    'white-space': 'normal'
   };
 
   const checkCondition = (condition, valueFrom, valueTo, cellValue) => {

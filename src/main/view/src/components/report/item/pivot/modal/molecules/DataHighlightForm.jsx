@@ -28,12 +28,6 @@ const DataHighlightForm = (
     );
   };
 
-  const validationRules = {
-    validation: [
-      {type: 'required'}
-    ]
-  };
-
   return (
     <Form
       formData={formData}
@@ -82,9 +76,9 @@ const DataHighlightForm = (
         editorType='dxSelectBox'
         editorOptions={{
           items: measureNames
-        }}
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.dataItem}: </Label>
+        }}>
+        <Label>{localizedString.dataItem}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='condition'
@@ -92,9 +86,9 @@ const DataHighlightForm = (
         editorType='dxSelectBox'
         editorOptions={{
           items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
-        }}
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.conditionType}: </Label>
+        }}>
+        <Label>{localizedString.conditionType}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='backgroundColor'
@@ -111,16 +105,16 @@ const DataHighlightForm = (
       <Item
         name='valueFrom'
         dataField='valueFrom'
-        editorType='dxTextBox'
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.valueFrom}: </Label>
+        editorType='dxTextBox'>
+        <Label>{localizedString.valueFrom}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       {showField && <Item // show in Between.
         name='valueTo'
         dataField='valueTo'
-        editorType='dxTextBox'
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.valueTo}: </Label>
+        editorType='dxTextBox'>
+        <Label>{localizedString.valueTo}
+          <span className='requireRule'> *</span>: </Label>
       </Item>}
       <Item
         name='emojiList'
