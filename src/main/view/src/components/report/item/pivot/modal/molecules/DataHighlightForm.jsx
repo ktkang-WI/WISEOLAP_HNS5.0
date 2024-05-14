@@ -78,7 +78,7 @@ const DataHighlightForm = (
           items: measureNames
         }}>
         <Label>{localizedString.dataItem}
-          <span id='requireRule'> *</span>: </Label>
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='condition'
@@ -88,7 +88,7 @@ const DataHighlightForm = (
           items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
         }}>
         <Label>{localizedString.conditionType}
-          <span id='requireRule'> *</span>: </Label>
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='backgroundColor'
@@ -107,14 +107,14 @@ const DataHighlightForm = (
         dataField='valueFrom'
         editorType='dxTextBox'>
         <Label>{localizedString.valueFrom}
-          <span id='requireRule'> *</span>: </Label>
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       {showField && <Item // show in Between.
         name='valueTo'
         dataField='valueTo'
         editorType='dxTextBox'>
         <Label>{localizedString.valueTo}
-          <span id='requireRule'> *</span>: </Label>
+          <span className='requireRule'> *</span>: </Label>
       </Item>}
       <Item
         name='emojiList'

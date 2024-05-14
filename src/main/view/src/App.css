@@ -181,6 +181,6 @@ img {
 }
 
 /* 데이터하이라이트 필수 정보 */
-#requireRule {
+.requireRule {
   color: red;
 }
