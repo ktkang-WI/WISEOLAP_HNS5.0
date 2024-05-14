@@ -23,5 +23,5 @@ export const selectCurrentBindingInfo = createSelector(
 export const selectCurrentSpreadData = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
-    (reportId, spread) => spread[reportId]?.mart?.spreadData
+    (reportId, spread) => _.cloneDeep(spread[reportId]?.mart?.spreadData)
 );
