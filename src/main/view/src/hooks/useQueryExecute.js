@@ -19,7 +19,8 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode,
+  selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 
@@ -376,9 +377,16 @@ const useQueryExecute = () => {
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
+    const editMode = selectEditMode(store.getState());
 
     if (datasets.length === 0) {
-      alert(localizedString.dataSourceNotSelectedMsg);
+      let msg = localizedString.dataSourceNotSelectedMsg;
+
+      if (editMode == 'viewer') {
+        msg = localizedString.reportNotSelectedMsg;
+      }
+
+      alert(msg);
       return;
     };
 
