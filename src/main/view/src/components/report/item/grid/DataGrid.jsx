@@ -4,7 +4,7 @@ import React,
   createRef
 } from 'react';
 import DevDataGrid,
-{Column, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
+{Column, LoadPanel, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
 import {itemExportsObject}
@@ -35,13 +35,20 @@ const DataGrid = ({setItemExports, id, item}) => {
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
-  const allowedPageSizes = config.paging.pageUsageOfPageCount.pageSizes;
   const itemExportObject =
     itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
   const dataGridConfig = {
     pagingOption: getPagingOption(config),
     dataSource: _.cloneDeep(mart.data),
     rowSpans: null
+  };
+
+  const generatePageSizes = () => {
+    const dataSize = mart?.data?.data?.length;
+    const pageSizes = config?.paging?.pageUsageOfPageCount?.pageSizes;
+    if (!pageSizes || !dataSize) throw Error();
+    return [...new Set(pageSizes.map((pageSize) =>
+      dataSize < pageSize ? dataSize - 1 : pageSize))];
   };
 
   if (!mart.init) {
@@ -83,7 +90,7 @@ const DataGrid = ({setItemExports, id, item}) => {
   const handlePagingIndex = () => {
     const dataGridInstance = dataGridRef?.current?.instance;
     if (!dataGridInstance) return;
-    const pageSizes = config?.paging?.pageUsageOfPageCount?.pageSizes;
+    const pageSizes = generatePageSizes();
     const pageIndex = dataGridConfig.pagingOption.pageIndex;
     let setPageRange = dataGridConfig.pagingOption.pageRange;
     if (pageSizes.indexOf(setPageRange) === -1) {
@@ -263,6 +270,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         e.items = contextMenu;
       }}
     >
+      <LoadPanel enabled />
       <Paging
         enabled={config.paging.pagination.isOk}
         defaultPageSize={dataGridConfig.pagingOption.pageRange} />
@@ -270,7 +278,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         displayMode={'full'}
         enabled={config.paging.pageUsageOfPageCount.isOk}
         showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
-        allowedPageSizes={allowedPageSizes}
+        allowedPageSizes={generatePageSizes()}
       />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
       {dataGridConfig.dataSource.columns.map((column, i) =>
