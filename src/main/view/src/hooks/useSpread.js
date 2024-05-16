@@ -73,7 +73,8 @@ const useSpread = () => {
 
       // 추후 환경설정 SpreadBinding 값으로 분기처리
       if (true) {
-        bindedSheet.reset();
+        // bindedSheet.reset();
+        bindedSheet.clear();
         bindedSheet.autoGenerateColumns = true;
         const ds = getJsonKey2ColInfos(rowData);
         if (ds.dataSourceHearder) {
