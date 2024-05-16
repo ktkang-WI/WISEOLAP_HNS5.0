@@ -11,9 +11,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
-import {excelIO, sheets, insertWorkbookJSON, designerRef, workbookRef}
+import {sheets, insertWorkbookJSON, designerRef, workbookRef}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
-import {defaultWorkbookJSON, excelFileType, excelIOOpenOtions}
+import {defaultWorkbookJSON, excelIOOpenOtions}
   from 'components/report/atomic/spreadBoard/util/spreadContants';
 import useFile from './useFile';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
@@ -159,15 +159,17 @@ const useSpread = () => {
 
   const createReportBlob = async () => {
     const workbook = getWorkbook();
-    const json = workbook.toJSON({includeBindingSource: true});
     const blob = await new Promise((resolve, reject) => {
-      excelIO.save(JSON.stringify(json), resolve, reject);
+      workbook.save((b) => {
+        resolve(b);
+      }, (e) => {
+      }, {includeBindingSource: true});
     });
     return blob;
   };
 
   const setExcelFile = async (reportId) => {
-    const response = await importFile({fileName: reportId + '.xlsx'});
+    const response = await importFile({fileName: reportId + '.sjs'});
     let data;
     if (response.status !== 200) {
       data = defaultWorkbookJSON;
@@ -178,8 +180,7 @@ const useSpread = () => {
     } else {
       data = response.data;
       const blob = new Blob(
-          [data],
-          {type: excelFileType}
+          [data]
       );
       await excelIoOpen(reportId, blob);
     }
@@ -187,24 +188,10 @@ const useSpread = () => {
 
   const excelIoOpen = (reportId, file) => {
     return new Promise((resolve) => {
-      excelIO.open(
-          file,
-          // excel load success callback
-          (json) => {
-            insertWorkbookJSON({
-              reportId: reportId,
-              workbookJSON: json
-            });
-            resolve();
-          },
-          // excel load fail callback
-          () => {
-            insertWorkbookJSON({
-              reportId: reportId,
-              workbookJSON: defaultWorkbookJSON
-            });
-          },
-          excelIOOpenOtions);
+      const workbook = getWorkbook();
+      workbook.open(file, () => {
+        resolve();
+      }, () => {}, excelIOOpenOtions);
     });
   };
 
