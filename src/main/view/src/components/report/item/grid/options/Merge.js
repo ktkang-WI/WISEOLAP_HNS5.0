@@ -28,14 +28,11 @@ const generateRowSpan =
     baseKey = '';
     fields.forEach((field, depth) => {
       baseKey = generateKey(baseKey, depth);
-      const pickedItem = data;
-      const fieldName = field.name;
-      const node = _.cloneDeep(Node);
-      baseKey = baseKey.concat(pickedItem[fieldName]);
+      baseKey = baseKey.concat(data[field.name]);
       if (structure[baseKey]) {
         structure[baseKey].value = structure[baseKey].value + 1;
       } else {
-        structure[baseKey] = node;
+        structure[baseKey] = _.cloneDeep(Node);
       }
     });
   });
