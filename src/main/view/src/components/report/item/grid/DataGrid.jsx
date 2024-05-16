@@ -4,7 +4,7 @@ import React,
   createRef
 } from 'react';
 import DevDataGrid,
-{Column, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
+{Column, LoadPanel, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
 import {itemExportsObject}
@@ -270,6 +270,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         e.items = contextMenu;
       }}
     >
+      <LoadPanel enabled />
       <Paging
         enabled={config.paging.pagination.isOk}
         defaultPageSize={dataGridConfig.pagingOption.pageRange} />
