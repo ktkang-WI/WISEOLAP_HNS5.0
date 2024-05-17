@@ -17,8 +17,14 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
 
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
       - name: Build Refactoring Project
         run: |
+          export NODE_OPTIONS="--max_old_space_size=8192"
           chmod -R 777 ./
           ./mvnw clean install
       - name: Undeploy Application

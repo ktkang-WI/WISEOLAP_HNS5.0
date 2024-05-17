@@ -5,22 +5,54 @@ import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
 import {useRef} from 'react';
 import {styled} from 'styled-components';
+import meaImg from 'assets/image/icon/dataSource/small_measure.png';
+import dimImg from 'assets/image/icon/dataSource/small_dimension.png';
+import fldImg from 'assets/image/icon/dataSource/folder.png';
+import meaGrpImg from
+  'assets/image/icon/dataSource/cube_measure.png';
+import dimGrpImg from
+  'assets/image/icon/dataSource/cube_dimension.png';
+import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
 
 const theme = getTheme();
 
 const StyledTreeView = styled(TreeView)`
-  color: ${theme.color.primaryFont};
+  color: ${theme.color.gray600};
   font: ${theme.font.dataSource};
   letter-spacing: -1px;
   .dx-treeview-toggle-item-visibility {
-    color: ${theme.color.primaryFont};
+    color: ${theme.color.gray600};
   }
   .dx-treeview-item-content {
     transform: none !important;
   }
+
+  .dx-treeview-node {
+    padding-left: 10px;
+  }
+
+  .dx-treeview-toggle-item-visibility::before {
+    content: '';
+    height: 22px;
+    background: url(${moreIcon}) no-repeat;
+    transform: rotate(270deg);
+    background-position: center;
+    margin-left: -12px;
+  }
+
+  .dx-treeview-toggle-item-visibility-opened::before {
+    transform: rotate(0deg);
+  }
 `;
 
-// TODO: 추후 Redux 연동 예정 현재는 임시 데이터 사용
+const iconMapper = {
+  'MEA': meaImg,
+  'DIM': dimImg,
+  'FLD': fldImg,
+  'DIMGRP': dimGrpImg,
+  'MEAGRP': meaGrpImg
+};
+
 const DataSourceFoldableList = ({dataset}) => {
   const ref = useRef();
 
@@ -47,14 +79,13 @@ const DataSourceFoldableList = ({dataset}) => {
     return getDraggableItem;
   };
 
-
   const itemRender = (item, index, snapshot) => {
     const shouldRenderClone = item.uniqueName === snapshot.draggingFromThisWith;
 
     if (shouldRenderClone) {
       return (
         <div className="dx-item-content dx-treeview-item-content">
-          <img src={item.icon} className="dx-icon"/>
+          <img width='16px' src={iconMapper[item.type]} className="dx-icon"/>
           <span>{item.name}</span>
         </div>
       );
@@ -71,7 +102,10 @@ const DataSourceFoldableList = ({dataset}) => {
             ref={provided.innerRef}
             className="dx-item-content dx-treeview-item-content"
           >
-            <img src={item.icon} className="dx-icon"/>
+            <img
+              style={{width: '16px', height: '16px', marginBottom: '1px'}}
+              src={iconMapper[item.type]}
+              className="dx-icon"/>
             <span>{item.name}</span>
           </div>
         )}
@@ -80,6 +114,10 @@ const DataSourceFoldableList = ({dataset}) => {
   };
 
   const data = dataset? _.cloneDeep(dataset.fields) : [];
+
+  if (data.length > 0 && dataset.datasetType != 'CUBE') {
+    data[0].expanded = true;
+  }
 
   return (
     <Wrapper>
@@ -95,6 +133,7 @@ const DataSourceFoldableList = ({dataset}) => {
             {...provided.droppableProps}
           >
             <StyledTreeView
+              expandedExpr="expanded"
               ref={ref}
               items={data}
               dataStructure="plain"

@@ -1,4 +1,5 @@
 import {Droppable} from 'react-beautiful-dnd';
+import localizedString from 'config/localization';
 import Filter from './Filter';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
@@ -10,27 +11,27 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import _ from 'lodash';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
 const StyledFilterBarWrapper = styled.div`
     height: 100%;
     min-height: ${theme.size.filterBarHeight};
-    width: calc(100% - 20px);
-    background: ${(props) => props.isExpand ?
-      theme.color.filterBarExpand : theme.color.filterBar};
+    line-height: ${theme.size.filterBarHeight};
+    width: 100%;
     display: block;
     overflow: hidden;
     box-sizing: border-box;
     text-align: left;
-    border-bottom: 1px solid ${theme.color.breakLine};
   `;
 
 const FilterBarWrapper = (props) => {
   const parameters = useSelector(selectRootParameter);
   const reportId = selectCurrentReportId(store.getState());
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
-  const {setParameterValues} = ParameterSlice.actions;
+  const {setParameterValues, deleteParameter} = ParameterSlice.actions;
+  const {confirm} = useModal();
   const dispatch = useDispatch();
 
   // 매개변수 정보 수정되면 재조회
@@ -41,7 +42,8 @@ const FilterBarWrapper = (props) => {
   }, [parameters.informations, parameters.values]);
 
   const onValueChanged = (id, value, index) => {
-    const values = _.cloneDeep(parameters.values[id]);
+    const values =
+      _.cloneDeep(selectRootParameter(store.getState()).values[id]);
     if (!values) return;
     values.value[index] = value;
     dispatch(setParameterValues({reportId, values: {[id]: values}}));
@@ -56,10 +58,22 @@ const FilterBarWrapper = (props) => {
             dispatch(setParameterValues({
               reportId, values: {[param.name]: values}
             }));
+
+            for (const idx in values.value) {
+              if (parameters.values[key].value[idx] != values.value[idx]) {
+                onValueChanged(param.name, values.value[idx], idx);
+              }
+            }
           });
         }
       }
     }
+  };
+
+  const deleteConfirm = (name) => {
+    confirm(localizedString.deleteParameterMsg, () => {
+      dispatch(deleteParameter({reportId, name}));
+    });
   };
 
   return (
@@ -71,23 +85,40 @@ const FilterBarWrapper = (props) => {
         >
           {
             parameters.informations.reduce((acc, filter) => {
-              acc.push(<Filter
-                key={filter.name}
-                info={filter}
-                value={parameters.values[filter.name]}
-                onValueChanged={onValueChanged}/>);
-              if (filter.operation == 'BETWEEN') {
-                acc.push(<Filter
-                  key={filter.name}
-                  info={filter}
-                  isTo={true}
-                  value={parameters.values[filter.name]}
-                  onValueChanged={onValueChanged}/>);
-              }
+              if (!filter.visible) return acc;
 
               if (filter.lineBreak) {
                 acc.push(<br/>);
               }
+
+              const filterProps = {
+                info: filter,
+                value: parameters.values[filter.name],
+                onValueChanged
+              };
+
+              let onDeleted = undefined;
+
+              if (filter.dsType == 'CUBE') {
+                onDeleted = () => {
+                  deleteConfirm(filter.name);
+                };
+              }
+
+              if (filter.operation == 'BETWEEN') {
+                acc.push(<Filter
+                  {...filterProps}
+                />);
+                acc.push(<Filter
+                  isTo={true}
+                  {...filterProps}
+                  onDeleted={onDeleted}/>);
+              } else {
+                acc.push(<Filter
+                  {...filterProps}
+                  onDeleted={onDeleted}/>);
+              }
+
               return acc;
             }, [])
           }

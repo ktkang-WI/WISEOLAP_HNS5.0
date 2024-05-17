@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -37,6 +36,8 @@ public class ListParameterDTO {
     String operation;
     String sortBy;
     String sortOrder;
+    boolean useAll;
+    boolean multiSelect;
 
     public static ListParameterDTO fromMap(Map<String, String> map) {
         Gson gson = new Gson();
@@ -54,11 +55,14 @@ public class ListParameterDTO {
         .dataType(String.valueOf(map.get("dataType")))
         .defaultValue(defaultValue)
         .linkageValues(linkageValues)
+        .defaultValueUseSql(Boolean.valueOf(map.get("defaultValueUseSql")))
         .itemCaption(String.valueOf(map.get("itemCaption")))
         .itemKey(String.valueOf(map.get("itemKey")))
         .operation(String.valueOf(map.get("operation")))
         .sortBy(String.valueOf(map.getOrDefault("sortBy", "")))
         .sortOrder(String.valueOf(map.getOrDefault("sortOrder", "")))
+        .useAll(Boolean.valueOf(String.valueOf(map.get("useAll"))))
+        .multiSelect(Boolean.valueOf(String.valueOf(map.get("multiSelect"))))
         .build();
     }
 }

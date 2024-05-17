@@ -7,12 +7,12 @@ import getElement from './PanelTitleDefaultElement';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  background: ${theme.color.secondaryGradient};
+  background: ${theme.color.white};
   width: 100%;
   height: ${theme.size.tabHeaderHeight};
   padding: 0px 15px;
   text-align: left;
-
+  border-bottom: 1px solid ${theme.color.gray100};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,7 +53,7 @@ const PanelTitle = ({panelTitle, buttons}) => {
 
   return (
     <Wrapper>
-      <PanelTitleText>{panelTitle}</PanelTitleText>
+      <PanelTitleText fontWeight={500}>{panelTitle}</PanelTitleText>
       <Buttons>
         {generateButtons(buttons)}
       </Buttons>

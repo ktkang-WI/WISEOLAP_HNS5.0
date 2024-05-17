@@ -9,6 +9,7 @@ const FilterLabel = styled.span`
   margin-right: 7px;
   font: ${theme.font.filterLabel};
   letter-spacing: -1px;
+  white-space: nowrap;
 `;
 
 export default FilterLabel;

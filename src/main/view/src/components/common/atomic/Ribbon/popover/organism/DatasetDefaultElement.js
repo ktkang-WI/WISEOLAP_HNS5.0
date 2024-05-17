@@ -5,10 +5,19 @@ import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
 import SelectDataSourceModal
   from 'components/dataset/modal/SelectDataSourceModal';
+import SelectTableModal from 'components/dataset/modal/SelectTableModal';
+import SingleTableDesignerModal
+  from 'components/dataset/modal/SingleTableDesignerModal';
+import {getTheme} from 'config/theme';
+import {useSelector} from 'react-redux';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
-  return {
+  const theme = getTheme();
+  const reportType = useSelector(selectCurrentDesignerMode);
+  const returnVal = {
     dataset: [
       {
         label: localizedString.addCUBE,
@@ -31,25 +40,50 @@ const DatasetDefaultElement = () => {
             }
           });
         }
+
       },
       {
         label: localizedString.addDsSingle,
         imgSrc: '',
         visible: true,
         onClick: () => {
-          console.log('singleTable');
-        }
-      },
-      {
-        label: localizedString.addDsUpload,
-        imgSrc: '',
-        visible: true,
-        onClick: () => {
-          console.log('upload');
+          openModal(SelectDataSourceModal, {
+            onSubmit: (dataSource) => {
+              openModal(SelectTableModal, {
+                onSubmit: (selectedTable, columns) => {
+                  openModal(SingleTableDesignerModal,
+                      {
+                        selectedDataSource: dataSource,
+                        selectedTable: selectedTable,
+                        columns: columns
+                      }
+                  );
+                },
+                dsId: dataSource.dsId,
+                dsViewId: dataSource.dsViewId,
+                height: theme.size.bigModalHeight,
+                width: theme.size.bigModalWidth
+              });
+            },
+            isSingleTable: true
+          });
         }
       }
+      // {
+      //   label: localizedString.addDsUpload,
+      //   imgSrc: '',
+      //   visible: true,
+      //   onClick: () => {
+      //     console.log('upload');
+      //   }
+      // }
     ],
     keys: ['dataset']
   };
+
+  if (reportType === DesignerMode['EXCEL']) {
+    delete returnVal.dataset[0];
+  }
+  return returnVal;
 };
 export default DatasetDefaultElement;

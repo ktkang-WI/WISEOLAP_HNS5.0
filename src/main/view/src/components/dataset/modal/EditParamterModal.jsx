@@ -15,6 +15,12 @@ import _ from 'lodash';
 import DetailOptionForm
   from '../atomic/molecules/ParameterModalForms/DetailOptionForm';
 import ParamUtils from '../utils/ParamUtils';
+import {
+  selectCurrentDatasets
+} from 'redux/selector/DatasetSelector';
+import store from 'redux/modules';
+import useModal from 'hooks/useModal';
+import models from 'models';
 
 const theme = getTheme();
 
@@ -49,13 +55,15 @@ const ScrollableColumnWrapper = styled.div`
 
 const HeightAutoModalPanel = styled.div`
   height: auto;
-  min-height: ${(props) => props.minHeight};
+  min-height: ${(props) => props.minHeight ||
+    'calc(100% - ' + INFO_HEIGHT + ')'};
   padding: ${PADDING + 'px'};
   box-sizing: border-box;
   width: 100%;
 `;
 
 const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
+  const datasets = selectCurrentDatasets(store.getState());
   const [paramInfo, setParamInfo] = useState(parameterInfo);
   const [selectedParam, setSelectedParam] = useReducer(
       (prev, next) => {
@@ -67,8 +75,10 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
         }
         return {...prev, ...next};
       },
-      {}
+      paramInfo.length > 0 ? paramInfo[0] : {}
   );
+
+  const {confirm, alert} = useModal();
 
   const getNewParamInfo = () => {
     const newParamInfo = paramInfo.map((info) => {
@@ -109,9 +119,25 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
     setSelectedParam({[e.dataField]: e.value});
   };
 
+  const deleteParameter = {
+    text: '삭제',
+    onClick: () => {
+      const tempParam = paramInfo.filter((param) => {
+        const p = selectedParam.name == param.name;
+        return p ? false : true;
+      });
+      setSelectedParam(false);
+      setParamInfo(tempParam);
+    }
+  };
+
+  const paramterButtons = datasets.length > 0 &&
+      (datasets[0].datasetType == 'CUBE' ||
+      datasets[0].datasetType == 'DS_SINGLE') ? [deleteParameter] : [];
+
   return (
     <Modal
-      onSubmit={() => {
+      onSubmit={async () => {
         let newParamInfo = paramInfo;
 
         if (!_.isEmpty(selectedParam)) {
@@ -119,9 +145,39 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
         }
 
         newParamInfo = newParamInfo.
-            map((param) => ParamUtils.sanitizeParamInformation(param));
+            map((param) => {
+              if (param.paramType === 'CALENDAR') {
+                param = ParamUtils.setCalendarExceptionValue(param);
+              }
+              return ParamUtils.sanitizeParamInformation(param);
+            });
 
-        onSubmit(newParamInfo);
+        const tempParameters = {
+          informations: newParamInfo,
+          values: {}
+        };
+
+        for (const param of newParamInfo) {
+          if (param.dataSourceType == 'QUERY') {
+            if (!param.dataSource.toLowerCase().includes('group by')) {
+              confirm(localizedString.cofirmGroupBy, () => {
+                onSubmit(newParamInfo);
+                onClose();
+              });
+
+              return true;
+            }
+
+            const res = await models.DBInfo.getDataByQueryMart(
+                param.dsId, param.dataSource, tempParameters);
+
+            if (res.data.rowData[0]?.error) {
+              alert(localizedString.invalidQuery);
+              return true;
+            }
+          }
+        }
+        return await onSubmit(newParamInfo);
       }}
       height={theme.size.bigModalHeight}
       width={theme.size.bigModalWidth}
@@ -131,23 +187,26 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
       <RowWrapper>
         <ModalPanel
           title={localizedString.parameterList}
+          headerButtons={paramterButtons}
           minHeight={'100%'}
           padding={PADDING}
           width={PARAM_LIST_WIDTH}
           height='100%'>
           <ParameterList
             compact={true}
-            // TODO: 해당 부분 추후 데이터 집합 수정 추가시 dataset에 해당하는 param만 보이게 필터 걸어야함.
             dataSource={paramInfo}
-            d={selectedParam}
+            selectedRowKeys={
+              _.isEmpty(selectedParam) ? [] : [selectedParam.name]
+            }
+            keyExpr='name'
             selection={{mode: 'single'}}
             onSelectionChanged={(e) => {
               if (!_.isEmpty(selectedParam)) {
+                if (selectedParam.name == e.selectedRowsData[0].name) return;
+
                 const newParamInfo = getNewParamInfo();
                 setParamInfo(newParamInfo);
               }
-
-              if (selectedParam.name == e.selectedRowsData[0].name) return;
 
               if (e.selectedRowsData.length > 0) {
                 setSelectedParam(e.selectedRowsData[0]);

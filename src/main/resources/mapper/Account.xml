@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.account.dao.AccountDAO">
+
+
+    <resultMap id="GroupMstrEntity" type="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="RUN_MODE" property="grpRunMode" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserMstrEntity" type="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="E_MAIL1" property="eMail1" javaType="String"/>
+      <result column="E_MAIL2" property="eMail2" javaType="String"/>
+      <result column="TEL_NO" property="telNo" javaType="String"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserGroupDTO" type="com.wise.MarketingPlatForm.account.dto.UserGroupDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="E_MAIL1" property="eMail1" javaType="String"/>
+      <result column="E_MAIL2" property="eMail2" javaType="String"/>
+      <result column="TEL_NO" property="telNo" javaType="String"/>
+      <result column="USER_RUN_MODE" property="userRunMode" javaType="String"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserDataDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserDataDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="DATA_XML" property="dataXml" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="GroupDataDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="DATA_XML" property="dataXml" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="GroupFolderDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
+      <result column="AUTH_VIEW" property="authView" javaType="String"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="String"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserFolderDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
+      <result column="AUTH_VIEW" property="authView" javaType="String"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="String"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="GroupDsDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="DS_ID" property="dsId" javaType="int"/>
+      <result column="DS_NM" property="dsNm" javaType="String"/>
+      <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+      <result column="OWNER_NM" property="ownerNm" javaType="String"/>
+      <result column="IP" property="ip" javaType="String"/>
+      <result column="DB_NM" property="dbNm" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserDsDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserDsDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_DESC" property="userDesc" javaType="String"/>
+      <result column="DS_ID" property="dsId" javaType="int"/>
+      <result column="DS_NM" property="dsNm" javaType="String"/>
+      <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+      <result column="OWNER_NM" property="ownerNm" javaType="String"/>
+      <result column="IP" property="ip" javaType="String"/>
+      <result column="DB_NM" property="dbNm" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="GroupDatasetDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="PARENT_FLD_ID" property="parentFldId" javaType="int"/>
+    </resultMap>
+
+    <resultMap id="UserDatasetDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="PARENT_FLD_ID" property="parentFldId" javaType="int"/>
+    </resultMap>
+
+
+    <select id="selectGroupMstr" resultMap="GroupMstrEntity">
+      SELECT
+        GRP_ID,
+        GRP_NM,
+        GRP_DESC,
+        RUN_MODE
+        FROM GRP_MSTR
+        WHERE DEL_YN = 'N'
+    </select>
+
+    <select id="selectUserMstr" resultMap="UserMstrEntity">
+      SELECT
+        USER_NO,
+        USER_ID,
+        USER_NM,
+        E_MAIL1,
+        E_MAIL2,
+        TEL_NO,
+        GRP_ID,
+        USER_DESC
+        FROM USER_MSTR
+        WHERE DEL_YN = 'N'
+    </select>
+
+    <select id="selectListGroupData" resultMap="UserGroupDTO">
+			SELECT
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_NM,
+        USER_MSTR.E_MAIL1,
+        USER_MSTR.E_MAIL2,
+        USER_MSTR.TEL_NO,
+        USER_MSTR.RUN_MODE AS USER_RUN_MODE,
+        USER_MSTR.USER_DESC,
+        GRP_MSTR.GRP_ID,
+        GRP_MSTR.GRP_NM,
+        GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,
+        GRP_MSTR.GRP_DESC
+        FROM USER_MSTR INNER JOIN GRP_MSTR
+            ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+            WHERE 1 = 1
+            AND USER_MSTR.DEL_YN = 'N'
+            AND GRP_MSTR.DEL_YN = 'N'
+		</select>
+
+    <select id="selectUserData" resultMap="UserDataDTO">
+      SELECT
+          USER_MSTR.USER_NO,
+          USER_MSTR.USER_ID,
+          USER_MSTR.USER_NM,
+          USER_AUTH_DATA_MSTR.DATA_XML
+          FROM USER_MSTR INNER JOIN USER_AUTH_DATA_MSTR
+              ON USER_MSTR.USER_NO = USER_AUTH_DATA_MSTR.USER_NO
+    </select>
+
+    <select id="selectGroupData" resultMap="GroupDataDTO">
+      SELECT
+          GRP_MSTR.GRP_ID,
+          GRP_MSTR.GRP_NM,
+          GRP_MSTR.GRP_DESC,
+          GRP_AUTH_DATA_MSTR.DATA_XML
+          FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR
+          ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR.GRP_ID
+    </select>
+
+    <select id="selectGroupFolder" resultMap="GroupFolderDTO">
+      SELECT
+          GRP_MSTR.GRP_ID,
+          GRP_MSTR.GRP_NM,
+          GRP_MSTR.GRP_DESC,
+          PUB_FLD_MSTR.FLD_ID,
+          PUB_FLD_MSTR.FLD_NM,
+          PUB_FLD_MSTR.FLD_LVL,
+          PUB_FLD_MSTR.FLD_PARENT_ID,
+          PUB_FLD_MSTR.FLD_ORDINAL,
+          GRP_AUTH_REPORT_MSTR.AUTH_VIEW,
+          GRP_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+          GRP_AUTH_REPORT_MSTR.AUTH_DATAITEM,
+          GRP_AUTH_REPORT_MSTR.AUTH_EXPORT
+          FROM GRP_AUTH_REPORT_MSTR
+              INNER JOIN PUB_FLD_MSTR
+              ON GRP_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
+              INNER JOIN GRP_MSTR
+              ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+              ORDER BY
+                  GRP_MSTR.GRP_ID,
+                  PUB_FLD_MSTR.FLD_ID,
+                  PUB_FLD_MSTR.FLD_LVL,
+                  PUB_FLD_MSTR.FLD_ORDINAL
+    </select>
+
+    <select id="selectUserFolder" resultMap="UserFolderDTO">
+      SELECT
+          USER_MSTR.USER_NO,
+          USER_MSTR.USER_ID,
+          GRP_MSTR.GRP_NM,
+          PUB_FLD_MSTR.FLD_ID,
+          PUB_FLD_MSTR.FLD_NM,
+          PUB_FLD_MSTR.FLD_LVL,
+          PUB_FLD_MSTR.FLD_PARENT_ID,
+          PUB_FLD_MSTR.FLD_ORDINAL,
+          USER_AUTH_REPORT_MSTR.AUTH_VIEW,
+          USER_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+          USER_AUTH_REPORT_MSTR.AUTH_DATAITEM,
+          USER_AUTH_REPORT_MSTR.AUTH_EXPORT
+          FROM USER_MSTR
+              INNER JOIN GRP_MSTR ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+              INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
+              INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
+              ORDER BY
+                  USER_MSTR.USER_NO,
+                  PUB_FLD_MSTR.FLD_ID,
+                  PUB_FLD_MSTR.FLD_LVL,
+                  PUB_FLD_MSTR.FLD_ORDINAL
+    </select>
+
+
+    <select id="selectGroupDs" resultMap="GroupDsDTO">
+      SELECT
+          GRP_MSTR.GRP_ID,
+          GRP_MSTR.GRP_NM,
+          GRP_MSTR.GRP_DESC,
+          DS_MSTR.DS_ID,
+          DS_MSTR.DS_NM,
+          DS_MSTR.DBMS_TYPE,
+          DS_MSTR.OWNER_NM,
+          DS_MSTR.IP,
+          DS_MSTR.DB_NM
+          FROM GRP_AUTH_DS_MSTR
+          INNER JOIN DS_MSTR ON GRP_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
+          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
+          ORDER BY
+              GRP_MSTR.GRP_ID,
+              DS_MSTR.DS_ID
+    </select>
+    <select id="selectUserDs" resultMap="UserDsDTO">
+      SELECT
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_DESC,
+        DS_MSTR.DS_ID,
+        DS_MSTR.DS_NM,
+        DS_MSTR.DBMS_TYPE,
+        DS_MSTR.OWNER_NM,
+        DS_MSTR.IP,
+        DS_MSTR.DB_NM
+        FROM USER_AUTH_DS_MSTR
+        INNER JOIN DS_MSTR ON USER_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
+        INNER JOIN USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_DS_MSTR.USER_NO
+        ORDER BY
+            USER_MSTR.USER_NO,
+            DS_MSTR.DS_ID
+    </select>
+
+    <select id="selectUserDataset" resultMap="UserDatasetDTO">
+      SELECT
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_NM,
+        GRP_MSTR.GRP_NM,
+        DATASET_FLD_MSTR.FLD_ID,
+        DATASET_FLD_MSTR.FLD_NM,
+        DATASET_FLD_MSTR.PARENT_FLD_ID
+        FROM USER_AUTH_DATASET_MSTR
+          INNER JOIN USER_MSTR ON USER_AUTH_DATASET_MSTR.USER_NO = USER_MSTR.USER_NO
+          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = USER_MSTR.GRP_ID
+          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = USER_AUTH_DATASET_MSTR.FLD_ID
+          ORDER BY
+            USER_MSTR.USER_NO,
+            DATASET_FLD_MSTR.FLD_ID
+    </select>
+    <select id="selectGroupDataset" resultMap="GroupDatasetDTO">
+    SELECT
+        GRP_MSTR.GRP_ID,
+        GRP_MSTR.GRP_NM,
+        GRP_MSTR.GRP_DESC,
+        DATASET_FLD_MSTR.FLD_ID,
+        DATASET_FLD_MSTR.FLD_NM,
+        DATASET_FLD_MSTR.PARENT_FLD_ID
+        FROM GRP_AUTH_DATASET_MSTR
+          INNER JOIN GRP_MSTR ON GRP_AUTH_DATASET_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = GRP_AUTH_DATASET_MSTR.FLD_ID
+          ORDER BY
+            GRP_MSTR.GRP_ID,
+            DATASET_FLD_MSTR.FLD_ID
+    </select>
+
+    <!-- TODO: 디비별 분기 처리-->
+    <insert id="createUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      INSERT INTO
+        USER_MSTR(
+            USER_NO,
+            GRP_ID,
+            USER_ID,
+            USER_NM,
+            PASSWD,
+            E_MAIL1,
+            E_MAIL2,
+            DEL_YN,
+            HP_NO,
+            TEL_NO,
+            USER_REL_CD,
+            USER_DESC,
+            RUN_MODE,
+            PW_CHANGE_DT,
+            COMP_CD,
+            LOCK_CNT,
+            HASH_YN
+        )
+        VALUES(
+            USER_MSTR_USER_NO_SEQ.NEXTVAL,
+            #{grpId, jdbcType=INTEGER},
+            #{userId, jdbcType=VARCHAR},
+            #{userNm, jdbcType=VARCHAR},
+            #{passwd, jdbcType=VARCHAR},
+            #{eMail1, jdbcType=VARCHAR},
+            #{eMail2, jdbcType=VARCHAR},
+            'N',
+            NULL,
+            #{telNo, jdbcType=VARCHAR},
+            NULL,
+            #{userDesc, jdbcType=VARCHAR},
+            #{runMode, jdbcType=VARCHAR},
+            NULL,
+            NULL,
+            NULL,
+            NULL
+        )
+    </insert>
+
+    <update id="updateUserDefaultGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE USER_MSTR
+          SET GRP_ID = 0
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateUser" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+        UPDATE USER_MSTR
+          SET
+              <if test='grpId != 0'>
+                GRP_ID = #{grpId, jdbcType=INTEGER},
+              </if>
+              <if test='userId != ""'>
+                USER_ID = #{userId, jdbcType=VARCHAR},
+              </if>
+              <if test='userNm != ""'>
+                USER_NM = #{userNm, jdbcType=VARCHAR},
+              </if>
+              <if test='eMail1 != ""'>
+                E_MAIL1 = #{eMail1, jdbcType=VARCHAR},
+              </if>
+              <if test='eMail2 != ""'>
+                E_MAIL2 = #{eMail2, jdbcType=VARCHAR},
+              </if>
+              <if test='telNo != ""'>
+                TEL_NO = #{telNo, jdbcType=VARCHAR},
+              </if>
+              <if test='userDesc != ""'>
+                USER_DESC = #{userDesc, jdbcType=VARCHAR},
+              </if>
+              <if test='runMode != ""'>
+                RUN_MODE = #{runMode, jdbcType=VARCHAR},
+              </if>
+              PASSWD = PASSWD
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateUsers" parameterType="java.util.List">
+      UPDATE USER_MSTR
+        SET
+        <if test='list[0].grpId != 0'>
+          GRP_ID = #{list[0].grpId, jdbcType=INTEGER},
+        </if>
+          PASSWD = PASSWD
+          WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </update>
+
+    <delete id="deleteGroupDs" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DS_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupDs" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DS_MSTR(
+              GRP_ID,
+              DS_ID
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.dsId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserDs" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DS_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserDs" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DS_MSTR(
+              USER_NO,
+              DS_ID
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.dsId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupDataset" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DATASET_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupDataset" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DATASET_MSTR(
+              GRP_ID,
+              FLD_ID
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserDataset" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DATASET_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserDataset" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DATASET_MSTR(
+              USER_NO,
+              FLD_ID
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupFolder" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_REPORT_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupFolder" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_REPORT_MSTR(
+              GRP_ID,
+              FLD_ID,
+              AUTH_VIEW,
+              AUTH_PUBLISH,
+              AUTH_DATAITEM,
+              AUTH_EXPORT
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER},
+            #{item.authView, jdbcType=VARCHAR},
+            #{item.authPublish, jdbcType=VARCHAR},
+            #{item.authDataItem, jdbcType=VARCHAR},
+            #{item.authExport, jdbcType=VARCHAR}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserFolder" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_REPORT_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserFolder" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_REPORT_MSTR(
+              USER_NO,
+              FLD_ID,
+              AUTH_VIEW,
+              AUTH_PUBLISH,
+              AUTH_DATAITEM,
+              AUTH_EXPORT
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.fldId, jdbcType=INTEGER},
+            #{item.authView, jdbcType=VARCHAR},
+            #{item.authPublish, jdbcType=VARCHAR},
+            #{item.authDataItem, jdbcType=VARCHAR},
+            #{item.authExport, jdbcType=VARCHAR}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserData" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DATA_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserData" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_DATA_MSTR(
+              USER_NO,
+              DATA_XML
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.dataXml, jdbcType=NCLOB}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupData" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DATA_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putGroupData" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_DATA_MSTR(
+              GRP_ID,
+              DATA_XML
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.dataXml, jdbcType=NCLOB}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+
+    <update id="updateUserPasswd" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      UPDATE USER_MSTR
+          SET PASSWD = #{passwd, jdbcType=VARCHAR}
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <update id="deleteUser"  parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
+      UPDATE USER_MSTR
+          SET DEL_YN = 'Y'
+          WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    </update>
+
+    <insert
+      id="createGroup"
+      parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+      INSERT INTO
+        GRP_MSTR(
+            GRP_ID,
+            GRP_NM,
+            GRP_DESC,
+            GRP_REL_CD,
+            DEL_YN,
+            RUN_MODE
+        )
+        VALUES(
+            GRP_MSTR_GRP_ID_SEQ.NEXTVAL,
+            #{grpNm, jdbcType=VARCHAR},
+            #{grpDesc, jdbcType=VARCHAR},
+            NULL,
+            'N',
+            #{grpRunMode, jdbcType=VARCHAR}
+        )
+      <selectKey resultType="int" keyProperty="grpId" order="AFTER">
+        SELECT GRP_MSTR_GRP_ID_SEQ.CURRVAL AS grpId FROM DUAL
+      </selectKey>
+    </insert>
+
+    <update id="updateGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE GRP_MSTR
+          SET
+              <if test='grpNm != ""'>
+                GRP_NM = #{grpNm, jdbcType=VARCHAR},
+              </if>
+              <if test='grpDesc != ""'>
+                GRP_DESC = #{grpDesc, jdbcType=VARCHAR},
+              </if>
+              <if test='grpRunMode != ""'>
+                RUN_MODE = #{grpRunMode, jdbcType=VARCHAR},
+              </if>
+              DEL_YN = DEL_YN
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+    <update id="deleteGroup" parameterType="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+        UPDATE GRP_MSTR
+          SET DEL_YN = 'Y'
+          WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
+    </update>
+</mapper>

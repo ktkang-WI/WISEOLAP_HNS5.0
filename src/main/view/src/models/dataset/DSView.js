@@ -1,17 +1,28 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
+const path = '/dataset';
 
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/dataset';
-
-
-export const getByUserId = async (userId) => {
-  const res = await axios.post(path + '/ds-views', {
+export const getByUserId = (userId) => {
+  return axios.post(path + '/ds-views', {
     userId: userId
   });
+};
 
-  return res.data;
+export class DsView {
+  dsId = 0;
+  dsViewId = 0;
+  dsViewNm = '';
+  dsViewDesc = '';
+  cube = {};
+  cubeDim = {};
+
+  constructor({dsId = 0, dsViewId = 0, dsViewNm = '', dsViewDesc = '',
+    cube = {}, cubeDim = {}}) {
+    this.dsId = dsId;
+    this.dsViewId = dsViewId;
+    this.dsViewNm = dsViewNm;
+    this.dsViewDesc = dsViewDesc;
+    this.cube = cube;
+    this.cubeDim = cubeDim;
+  }
 };

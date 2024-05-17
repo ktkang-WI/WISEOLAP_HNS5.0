@@ -15,7 +15,7 @@ import useDrag from 'hooks/useDrag';
 
 const theme = getTheme();
 
-const DesignerContent = ({children}) => {
+const DesignerContent = () => {
   const {onDragEnd, onDragStart} = useDrag();
   return (
     <Content
@@ -25,7 +25,7 @@ const DesignerContent = ({children}) => {
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
-          <CustomDrawer index={1} component={AttributeTabs}>
+          <CustomDrawer index={1} component={AttributeTabs} margin={'0px'}>
             <Wrapper>
               <ReportContentWrapper>
                 <FilterBar/>

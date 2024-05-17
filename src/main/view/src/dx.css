@@ -1,0 +1,353 @@
+*{
+  --primary: #005196;
+  --primaryHover: #00437A;
+  --primaryActive: #003561;
+  --primaryDisable: #80A8CB;
+  --secondary: #F7F7F9;
+  --secondaryHover: #E8E8EE;
+  --secondaryActive: #D9D9E3;
+  --secondaryDisable: #D3D5D9;
+  --background: #f5f6fa;
+  --gray50: #F7F7F9;
+  --gray100: #ECEEF0;
+  --gray200: #D4D7DC;
+  --gray300: #B5B9C0;
+  --gray400: #858B93;
+  --gray500: #50555C;
+  --gray600: #2E3033;
+  --white: #ffffff;
+}
+
+.dx-widget {
+  font-family: "Noto Sans KR" !important;
+}
+
+/* 체크박스 */
+
+.dx-checkbox-icon {
+  border-radius: 4px;
+  border: 1.4px solid var(--gray300);
+}
+
+.dx-checkbox.dx-state-hover .dx-checkbox-icon {
+  border-radius: 4px;
+  border: 1.4px solid var(--primary);
+}
+.dx-checkbox-checked .dx-checkbox-icon {
+  font-size: 14px;
+  border-color: var(--primary);
+}
+
+.dx-list.dx-list-select-decorator-enabled .dx-list-item.dx-state-hover .dx-checkbox-icon, .dx-list.dx-list-select-decorator-enabled .dx-list-item.dx-state-hover .dx-radiobutton-icon, .dx-list.dx-list-select-decorator-enabled .dx-list-select-all.dx-state-hover .dx-checkbox-icon, .dx-list.dx-list-select-decorator-enabled .dx-list-select-all.dx-state-hover .dx-radiobutton-icon {
+  border-color: var(--primary);
+}
+
+.dx-checkbox-icon {
+  color: var(--primary) !important;
+}
+
+.dx-checkbox-indeterminate .dx-checkbox-icon::before {
+  background-color: var(--primary);
+}
+
+.dx-checkbox.dx-state-readonly .dx-checkbox-icon {
+  border-color: #ffffff;
+  background-color: #F0F1F2;
+}
+
+
+/* 라디오 버튼 */
+.dx-radiobutton-icon {
+  border: 1.4px solid var(--gray300);
+}
+
+.dx-radiobutton.dx-state-hover .dx-radiobutton-icon {
+  border: 1.4px solid var(--primary);
+}
+
+.dx-radiobutton-icon .dx-radiobutton-icon-dot {
+  background-color: var(--gray200);
+  border: 6px solid var(--white);
+}
+
+.dx-radiobutton-icon-checked .dx-radiobutton-icon-dot {
+  border: 6px solid var(--primary);
+  background-color: var(--white);
+}
+
+.dx-state-disabled .dx-checkbox .dx-checkbox-icon, .dx-state-disabled .dx-checkbox-text, .dx-state-disabled.dx-checkbox .dx-checkbox-icon{
+  opacity: 1;
+  color: var(--white) !important;
+  background-color: #F0F1F2;
+  border-color: #F0F1F2;
+}
+
+/* 페이징 */
+.dx-pager .dx-pages .dx-page {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+}
+
+.dx-pager .dx-page-sizes .dx-selection, .dx-pager .dx-pages .dx-selection {
+  padding: 0px;
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+/* 달력 */
+
+.dx-calendar-navigator div {
+  border: none !important;
+}
+
+.dx-calendar-body td, .dx-calendar-body th{
+  color: var(--gray600);
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.dx-calendar-body thead {
+  height: 40px;
+}
+
+.dx-calendar-body thead tr th {
+  border-bottom: 1px solid var(--gray100);
+}
+
+.dx-calendar-body thead tr th:nth-child(7) {
+  color: #3679DA;
+}
+
+.dx-calendar-body thead tr th:nth-child(1) {
+  color: #DF0015;
+}
+.dx-calendar-cell span, .dx-calendar-cell.dx-calendar-contoured-date span {
+  box-shadow: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+.dx-calendar-cell.dx-calendar-selected-date span {
+  background-color: var(--primary);
+}
+
+.dx-calendar-view-century .dx-calendar-cell span, .dx-calendar-view-decade .dx-calendar-cell span, .dx-calendar-view-year .dx-calendar-cell span {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.dx-calendar-view-century.dx-calendar, .dx-calendar-view-decade.dx-calendar, .dx-calendar-view-year.dx-calendar {
+  width: 280px;
+  height: 264px;
+}
+
+.dx-calendar-navigator .dx-button-content{
+  font-size: 16px;
+}
+
+.dx-calendar-view-month.dx-calendar {
+  width: 280px;
+  height: 348px;
+}
+
+.dx-calendar-navigator {
+  padding-bottom: 10px;
+}
+
+.dx-calendar-cell.dx-calendar-today span {
+  border: none;
+}
+
+/* context menu */
+
+.dx-menu-item-expanded, .dx-menu-item.dx-state-hover {
+  background-color: #3679DA;
+  color: var(--white);
+}
+
+.dx-context-menu .dx-submenu {
+  color: var(--gray500);
+  font-size: 12px;
+  font-family: 'Noto Sans KR';
+  font-weight: 400;
+  border: none;
+  box-shadow: 0 0 4px 0px rgba(0,0,0,.25);
+}
+
+.dx-menu-base .dx-menu-item {
+  height: 28px;
+  line-height: 16px;
+}
+
+.dx-menu-item[aria-haspopup="true"] > .dx-item-content::before,
+.dx-menu-item:has(.dx-submenu) > .dx-item-content::before {
+  display: block;
+  content: '';
+  background: url(assets/image/icon/button/arrow.png) no-repeat;
+  width: 15px;
+  height: 20px;
+  position: absolute;
+  right: 8px;
+  background-position: center;
+}
+
+.dx-menu-item[aria-haspopup="true"] > .dx-item-content:has(.dx-icon)::before {
+  display: none;
+}
+
+.dx-menu-item-expanded:has(.dx-submenu) > .dx-item-content::before, .dx-menu-item.dx-state-hover:has(.dx-submenu) > .dx-item-content::before {
+  -webkit-filter: brightness(0) invert(1); 
+  filter: brightness(0) invert(1);
+}
+
+/* input  */
+
+.dx-texteditor input, .dx-texteditor.dx-editor-outlined {
+  border-radius: 8px;
+}
+
+.dx-texteditor.dx-state-readonly {
+  border-style: none;
+}
+
+.dx-state-readonly input {
+  background: var(--gray50);
+}
+
+.wise-filter input, .wise-filter .dx-texteditor.dx-editor-outlined {
+  border-radius: 4px;
+}
+
+.wise-filter .dx-texteditor.dx-state-readonly {
+  border-style: solid;
+}
+
+.wise-filter .dx-state-readonly input {
+  background: var(--white);
+}
+
+.dx-texteditor.dx-state-active.dx-editor-filled, .dx-texteditor.dx-state-active.dx-editor-outlined, .dx-texteditor.dx-state-active.dx-editor-underlined, .dx-texteditor.dx-state-focused.dx-editor-filled, .dx-texteditor.dx-state-focused.dx-editor-outlined, .dx-texteditor.dx-state-focused.dx-editor-underlined {
+  border-color: var(--gray400) !important;
+}
+
+.dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label-before, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-after, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label-before {
+  border-color: var(--gray400);
+}
+
+.dx-texteditor.dx-state-focused .dx-texteditor-label, .dx-texteditor.dx-state-focused.dx-state-hover .dx-texteditor-label {
+  color: var(--gray400);
+}
+
+.dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-floating-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-dropdowneditor-active.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused .dx-texteditor-label .dx-label, .dx-editor-outlined.dx-texteditor-with-label.dx-textarea.dx-state-focused.dx-state-hover .dx-texteditor-label .dx-label {
+  border-bottom: 1px solid var(--gray400);
+}
+
+.dx-texteditor.dx-editor-outlined {
+  border-color: var(--gray200);
+}
+
+.dx-placeholder {
+  color: var(--gray300);
+}
+
+.dx-texteditor-input {
+  color: var(--gray600);
+  font: 400 normal 16px 'Noto Sans KR';
+}
+
+.dx-selectbox .dx-dropdowneditor-icon::before {
+  content: '';
+  background: url(assets/image//icon/button/arrow.png) no-repeat;
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  position: static;
+  background-position: center;
+  transform: rotate(90deg);
+}
+
+.dx-datebox .dx-dropdowneditor-icon::before {
+  content: '';
+  background: url(assets/image//icon/button/calender.png) no-repeat;
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  position: static;
+  background-position: center;
+}
+
+.dx-searchbox .dx-icon-search::before {
+  content: '';
+  background: url(assets/image//icon/button/search.png) no-repeat;
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  position: static;
+  background-position: center;
+}
+
+.dx-button-mode-text.dx-button-default .dx-icon {
+color: var(--gray600);
+}
+
+/* 표 */
+.dx-pivotgrid, .dx-datagrid {
+  font-size: 13px;
+  font-family: 'Noto Sans KR';
+}
+
+.dx-pivotgrid thead, .dx-datagrid-headers {
+  background: var(--gray50);
+  font-weight: 500;
+}
+
+:not(.flexlayout__tab) .dx-datagrid-rowsview .dx-row {
+  border-bottom: 1px solid var(--gray200);
+}
+
+.flexlayout__tab .dx-datagrid-rowsview .dx-row {
+  border-bottom: initial;
+}
+
+.dx-pivotgrid .dx-pivotgrid-area td, .dx-datagrid td {
+  color: var(--gray600);
+  border-color: var(--gray200) !important;
+}
+
+.dx-pivotgrid .dx-grandtotal {
+  background: var(--gray50);
+}
+
+td[role="columnheader"] {
+  text-align: center !important;
+}
+
+/* Form */
+
+.dx-field:before {
+  content: '\2022';
+  width: 12px;
+  display: inline-block;
+  height: 40px;
+  float: left;
+  line-height: 36px;
+  font-size: 15px;
+  color: var(--gray400);
+}
+
+.dx-field-label {
+  width: calc(40% - 12px);
+}
+
+.dx-fieldset {
+  border-radius: 8px;
+  border: 1px solid var(--gray100);
+  margin: 10px 0px;
+  padding: 20px 20px;
+}

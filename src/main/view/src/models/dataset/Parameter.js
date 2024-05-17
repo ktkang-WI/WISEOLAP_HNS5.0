@@ -1,36 +1,29 @@
 import axios from 'axios';
 
-import {getConfig} from 'config/config';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
-const path = document.location.origin + contextRoot + '/dataset';
+const path = '/dataset';
 
 
-export const getDefaultValue = async (param) => {
+export const getDefaultValue = (param) => {
   let defaultValue = param.defaultValue;
 
   if (param.operation != 'BETWEEN') {
     defaultValue = [defaultValue[0]];
   }
 
-  const res = await axios.post(path + '/param-default-value', {
+  return axios.post(path + '/param-default-value', {
     dsId: param.dsId,
     defaultValue: JSON.stringify(defaultValue)
   });
-
-  return res.data;
 };
 
-export const getListItems = async (param, linkageValues) => {
+export const getListItems = (param, linkageValues) => {
   let defaultValue = param.defaultValue;
 
   if (param.operation != 'BETWEEN') {
     defaultValue = [defaultValue[0]];
   }
 
-  const res = await axios.post(path + '/param-list-items', {
+  return axios.post(path + '/param-list-items', {
     dsId: param.dsId,
     dataSourceType: param.dataSourceType,
     dataSource: param.dataSource,
@@ -42,8 +35,8 @@ export const getListItems = async (param, linkageValues) => {
     sortOrder: param.sortOrder,
     operation: param.operation,
     defaultValue: JSON.stringify(defaultValue),
-    defaultValueUseSql: param.defaultValueUseSql
+    defaultValueUseSql: param.defaultValueUseSql,
+    useAll: param.useAll,
+    multiSelect: param.multiSelect
   });
-
-  return res.data;
 };

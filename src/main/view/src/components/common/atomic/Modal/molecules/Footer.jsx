@@ -6,17 +6,17 @@ const ButtonWrapper = styled.div`
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  height: 70px;
-  justify-content: end;
+  height: 100px;
+  justify-content: center;
   align-items: center;
-  padding: 0px 40px;
+  padding: 0px 30px;
   padding-bottom: 20px;
-  position: absolute;
   bottom: 0px;
 `;
 
 const Footer = ({
-  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, ...props
+  onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, buttons=[],
+  ...props
 }) => {
   const onConfirm = async () => {
     if (!await onSubmit()) {
@@ -27,24 +27,38 @@ const Footer = ({
   return (
     <ButtonWrapper>
       {usePage && currentPage != 1 &&
-        <CommonButton width="60px" onClick={onPrev} visible>
+        <CommonButton width="180px" onClick={onPrev} visible>
           {localizedString.previous}
         </CommonButton>
       }
       {usePage && currentPage != maxPage &&
-        <CommonButton width="60px" onClick={onNext} visible>
+        <CommonButton width="180px" onClick={onNext} visible>
           {localizedString.next}
         </CommonButton>
       }
       {
         (!usePage || (usePage && currentPage == maxPage)) && onSubmit &&
-        <CommonButton width="60px" onClick={onConfirm}>
+        <CommonButton width="180px" onClick={onConfirm}>
           {localizedString.confirm}
         </CommonButton>
       }
-      <CommonButton width="60px" onClick={onClose}>
-        {onSubmit? localizedString.cancel : localizedString.confirm}
+      <CommonButton width={onSubmit ? '180px': '100%'} onClick={onClose}
+        type={onSubmit ? 'secondary' : 'primary'}>
+        {onSubmit ? localizedString.cancel : localizedString.confirm}
       </CommonButton>
+      {
+        buttons.map((button, i) => (
+          <CommonButton width="180px"
+            key={i}
+            onClick={async () => {
+              if (!await button.onClick()) {
+                onClose();
+              }
+            }}>
+            {button.text}
+          </CommonButton>
+        ))
+      }
     </ButtonWrapper>
   );
 };

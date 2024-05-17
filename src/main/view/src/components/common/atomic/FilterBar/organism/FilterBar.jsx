@@ -4,59 +4,125 @@ import {getTheme} from 'config/theme';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
 import FilterBarWrapper from '../molecules/FilterBarWrapper';
+import ribbonDefaultElement from '../../Ribbon/organism/RibbonDefaultElement';
+import CommonButton from '../../Common/Button/CommonButton';
+import useReportSave from 'hooks/useReportSave';
 
 const theme = getTheme();
 
-const FilterBar = ({useExpandButton=true}) => {
-  const [isExpand, setIsExpand] = useState(false);
-  const ExpandBtn = (props) => {
-    const BtnWrapper = styled.div`
-      width: 20px;
-      height: 100%;
-      display: flex;
-      border-right: 1px solid ${theme.color.breakLine};
-      border-bottom: 1px solid ${theme.color.breakLine};
-      background: ${props.isExpand ?
-      theme.color.filterBarExpand : theme.color.filterBar};
-      flex-direction: column;
-      box-sizing: border-box;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    `;
+const Img = styled.img`
+  width: ${(props) => props.width || '16px'};
+  height: auto;
+  ${(props) => props.rotate && css`
+      transform: rotate(180deg);
+  `}
+`;
 
-    const Img = styled.img`
-      width: ${(props) => props.width || '17px'};
-      height: auto;
-      ${(props) => props.rotate && css`
-          transform: rotate(180deg);
-      `}
-    `;
+const ButtonWrapper = styled.div`
+  width: calc(${theme.size.panelWidth} + 20px);
+  min-width: calc(${theme.size.panelWidth} + 20px);
+  height: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
 
-    return (
-      <BtnWrapper {...props}>
-        <Img src={filterImg}/>
-        <Img src={expandImg} width='12px' rotate={props.isExpand}/>
-      </BtnWrapper>
-    );
-  };
+  &::before {
+    content: '';
+    width: 1px;
+    display: block;
+    background: ${theme.color.breakLine};
+    height: calc(100% - 10px);
+    position: relative;
+    left: ${theme.size.panelWidth};
+  }
+`;
 
-  const Wrapper = styled.div`
-    width: 100%;
-    height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
+const FilterBarBtn = ({width, children, isExpand, ...props}) => {
+  const BtnWrapper = styled.div`
+    width: ${width || '40px'};
+    min-width: ${width || '40px'};
     display: flex;
+    height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
+    flex-direction: row;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    margin-right: 5px;
+    font: ${theme.font.small};
+
+    * + * {
+      margin-left: 5px;
+    }
   `;
 
   return (
-    <Wrapper>
-      {useExpandButton ?
-        (<ExpandBtn isExpand={isExpand}
-          onClick={() => setIsExpand(!isExpand)}></ExpandBtn>) :
-        !isExpand ? setIsExpand(true) : ''
+    <BtnWrapper {...props}>
+      {children}
+    </BtnWrapper>
+  );
+};
+
+const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
+  const [isExpand, setIsExpand] = useState(!useExpandButton);
+  const queryButton = ribbonDefaultElement()['QuerySearch'];
+  const {querySearch} = useReportSave();
+
+  const Wrapper = styled.div`
+    background: ${theme.color.white};
+    height: ${isExpand ?
+      'auto' : 'calc(' + theme.size.filterBarHeight + ' + 2px)'};
+    display: flex;
+    box-sizing: border-box;
+    border: 1px solid ${theme.color.gray200};
+    border-radius: 10px;
+  `;
+
+  return (
+    <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
+      {buttons &&
+        <ButtonWrapper>
+          {
+            buttons.map((button, i) => (
+              <FilterBarBtn isExpand={isExpand}
+                key={i}
+                width={button.width}
+                onClick={button.onClick}>
+                <Img src={filterImg}/>
+                <span>{button.label}</span>
+                <Img src={expandImg} width={'6px'} rotate={button.value}/>
+              </FilterBarBtn>
+            ))
+          }
+        </ButtonWrapper>
+      }
+      {useExpandButton &&
+        <FilterBarBtn isExpand={isExpand}
+          onClick={() => setIsExpand(!isExpand)}>
+          <Img src={filterImg}/>
+        </FilterBarBtn>
       }
       <FilterBarWrapper
         isExpand={isExpand}
       />
+      {useSearchButton &&
+        <FilterBarBtn width={queryButton.width} isExpand={isExpand}
+          onClick={() => setIsExpand(!isExpand)}>
+          <CommonButton
+            label={queryButton.label}
+            title={queryButton.label}
+            width={queryButton.width}
+            height={queryButton.height}
+            onClick={querySearch}
+            type='secondary'
+            borderRadius='4px'
+            font={theme.font.ribbonButton}
+          >
+            <img src={queryButton.icon}/>
+            {queryButton.label}
+          </CommonButton>
+        </FilterBarBtn>
+      }
     </Wrapper>
   );
 };

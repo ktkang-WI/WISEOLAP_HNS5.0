@@ -3,12 +3,11 @@ import {getTheme} from 'config/theme';
 
 const theme = getTheme();
 
-const InputFilter = ({info, value, isTo, onValueChanged, ...props}) => {
+const InputFilter = ({info, value, isTo, onValueChanged, id, width}) => {
   const index = isTo ? 1 : 0;
   return (
     <TextBox
-      focusStateEnabled={false}
-      hoverStateEnabled={false}
+      width={width}
       height={theme.size.filterHeight}
       value={value? value.value[index] : ''}
       onValueChanged={(e) => {

@@ -8,31 +8,115 @@ const contextRoot =
 const path = document.location.origin + contextRoot + '/report';
 
 /**
- * 보고서 저장
- * @param {JSON} param
- * @param {function} callback
+ * 보고서 조회
+ * @param {string} userId
+ * @param {string} reportId
  */
-export const addReport = (param, callback) => {
-  axios.post(path + '/save-report', param)
-      .then(callback);
+export const getReportById = async (userId, reportId) => {
+  const res = await axios.post(path + '/report', {
+    reportId: reportId,
+    userId: userId
+  });
+  Object.keys(res.data).forEach((key) => {
+    if (typeof res.data[key] === 'string') {
+      res.data[key] = JSON.parse(res.data[key]);
+    }
+  });
+  return res;
+};
+
+
+/**
+ * 보고서 목록 조회
+ *
+ * @param {string} userId
+ * @param {string} reportType
+ * @param {string} editMode
+ */
+export const getList = async (userId, reportType, editMode) => {
+  const res = await axios.post(path + '/report-list', {
+    editMode: editMode,
+    reportType: reportType,
+    userId: userId
+  });
+
+  return res;
+};
+/**
+ * 보고서 저장 / 새로운 보고서를 저장 합니다.(insert)
+ * @param {JSON} param
+ * @return {promise}
+ */
+export const insertReport = async (param) => {
+  return await axios.post(path + '/report-save', param);
+};
+
+/**
+ * 보고서 저장 / 기존 보고서를 업데이트 합니다.(update)
+ * @param {JSON} param
+ * @return {promise}
+ */
+export const updateReport = async (param) => {
+  return await axios.patch(path + '/report-save', param);
+};
+
+export const insertLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-save', param);
+};
+
+export const updateLinkReport = async (param) => {
+  return await axios.patch(path + '/report-link-update', param);
+};
+
+/**
+ * 연결 보고서 목록 가져오기
+ * @param {JSON} reportId
+ * @return {JSON}
+ */
+export const getLinkReportList = (reportId) => {
+  const param = {
+    reportId: reportId
+  };
+  return axios.post(path + '/report-link-list', param);
+};
+
+/**
+ * 연결 보고서 필터정보 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getLinkReportParam = (param) => {
+  return axios.post(path + '/report-link-param', param);
+};
+
+export const retrieveLinkReport = (token) => {
+  // Ensure headers are set to indicate a JSON body
+  return axios.post(
+      `${path}/retrieve-link-report`,
+      JSON.stringify({token: token}), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+};
+
+export const generateToken = (param) => {
+  return axios.post(path + '/generate-token', param);
 };
 
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
- * @param {function} callback
+ * @return {JSON}
  */
-export const getFolderList = (param, callback) => {
-  axios.post(path + '/report-folder-list', param)
-      .then(callback);
+export const getFolderList = (param) => {
+  return axios.post(path + '/report-folder-list', param);
 };
 
 /**
- * 보고서 삭제
+ * 보고서 삭제 / 보고서를 삭제 합니다. (delete)
  * @param {JSON} param
- * @param {function} callback
  */
-export const deleteReport = (param, callback) => {
-  axios.post(path + '/delete-report', param)
-      .then(callback);
+export const deleteReport = async (param) => {
+  return await axios.patch(path + '/report-delete', param);
 };

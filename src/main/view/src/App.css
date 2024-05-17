@@ -6,6 +6,17 @@ a {
   text-align: center;
   width: 100vw;
   height: 100vh;
+  font: normal 14px "Noto Sans KR";
+  background: #F6F8FC;
+}
+
+*{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .App-logo {
@@ -17,6 +28,19 @@ a {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+img {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
 .App-header {
@@ -34,10 +58,6 @@ a {
   color: #61dafb;
 }
 
-.dx-texteditor.dx-state-readonly {
-  border-style: solid;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -53,5 +73,114 @@ a {
 }
 
 #subMenu {
-  padding-left: 15px;
+  margin-left: 8px !important;
+}
+
+.section {
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.section .section {
+  margin-top: 0px;
+  margin-right: 0px;
+}
+
+.dx-drawer:not(.dx-drawer-opened) .board:first-child {
+  margin-left: 0px;
+}
+
+.dx-drawer.dx-drawer-opened div:not(.dx-state-invisible) .board:first-child {
+  margin-left: 10px !important;
+}
+
+.dx-drawer-content {
+  overflow: visible !important;
+}
+
+.szh-menu__item {
+  content: '>';
+  width: 80px;
+  padding: 5px 8px;
+}
+
+.szh-menu__submenu > .szh-menu__item{
+  content: '>';
+}
+
+#d3_tooltip {
+  position: absolute;
+  visibility: visible;
+  z-index: 10;
+  width: auto;
+  height: auto;
+  background: white;
+  box-shadow: rgb(0 0 0 / 40%) 0px 0px 6px 0px;
+  padding: 10px;
+  transform: translate(-50%, -100%);
+  font-size: 14px;
+  font-family: 'Noto Sans KR';
+}
+
+#d3_tooltip p{
+  margin-bottom: 0;
+}
+
+#d3_tooltip p + p{
+  margin: 0;
+}
+
+.custom-scrollbar {
+  background-image: linear-gradient(white, white);
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar:hover {
+  background-color: #babac0;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+}  
+
+.custom-scrollbar:hover {
+  background-color: #babac0;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: inherit;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: #b0b0b8;
+}
+
+.liquid-selected {
+  border: 2px dotted #b1b1b1;
+}
+
+/* 데이터하이라이트 삭제 버튼 */
+.deleteHighlightBtn {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+/* 데이터하이라이트 필수 정보 */
+.requireRule {
+  color: red;
 }

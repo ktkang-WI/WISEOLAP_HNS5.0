@@ -7,12 +7,16 @@ import {
 import InnerContentWrapper from '../atom/InnerContentWrapper';
 import PopoverTitlePanel from '../atom/PopoverTitlePanel';
 import IconWrap from '../atom/IconWrapper';
-import elementFactory from './ElementFactory';
+import {getTheme} from 'config/theme';
+import {ImgCheckBox} from
+  '../../DataColumnTab/molecules/DataColumnSeriesOptions/Common/ImgCheckBox';
+
+const theme = getTheme();
 
 const StyledDiv = styled.div`
   height: auto;
   list-style: none;
-  margin: 10px;
+  color: ${theme.color.gray500};
 `;
 
 const TitleWrap = styled.div`
@@ -27,6 +31,7 @@ const popoverSelector = (type, items) => {
           return (
             <IconWrap key={idx}>
               <PopoverLabelImageBtn
+                visible={item.visible ? true : false}
                 label={item.label}
                 imgSrc={item.imgSrc}
                 onClick={item.onClick}
@@ -66,23 +71,42 @@ const popoverSelector = (type, items) => {
   }
 };
 
-const RibbonPopoverContents = ({popoverType, titlePanel, id}) => {
-  const element = elementFactory(id);
-  return (
-    element['keys'].map((e, idx) => {
-      return (
-        <StyledDiv key={idx}>
-          {titlePanel &&
+const popoverContents = (element, popoverType, titlePanel) => {
+  const contents = element['keys'].map((e, idx) => {
+    return (
+      <StyledDiv key={idx}>
+        {titlePanel &&
             <TitleWrap>
               <PopoverTitlePanel>
                 {e}
               </PopoverTitlePanel>
             </TitleWrap>}
 
-          {popoverSelector(popoverType, element[e])}
-        </StyledDiv>
-      );
-    })
-  );
+        {popoverSelector(popoverType, element[e])}
+      </StyledDiv>
+    );
+  });
+  return contents;
+};
+
+const RibbonPopoverContents = ({popoverType, titlePanel, id, element}) => {
+  if (id == 'add_default_chart' || id == 'add_custom_chart') {
+    const {data, onClick} = element;
+
+    return (
+      <div style={{width: '500px', padding: '15px', paddingTop: '5px'}}>
+        {data.map((item, index) =>
+          <ImgCheckBox key={index}
+            onValueChanged={(e) => onClick(e.target.id)}
+            title={item.title}
+            useChecked={false}
+            checkboxs={item.checkboxs} />)}
+      </div>
+    );
+  } else {
+    const contents = popoverContents(element, popoverType, titlePanel);
+
+    return contents;
+  }
 };
 export default RibbonPopoverContents;

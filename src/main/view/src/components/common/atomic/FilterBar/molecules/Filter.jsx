@@ -4,6 +4,9 @@ import {getTheme} from 'config/theme';
 import InputFilter from '../atom/InputFilter';
 import ListFilter from '../atom/ListFilter';
 import CalendarFilter from '../atom/CalendarFilter';
+import {EditMode} from 'components/config/configType';
+import {useSelector} from 'react-redux';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
 
 const theme = getTheme();
 
@@ -18,8 +21,22 @@ const FilterWrapper = styled.div`
   }
 `;
 
+
+const DeleteButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 100%;
+    line-height: 100px;
+    font-weight: bold;
+    color: gray;
+  `;
+
 // TODO: 추후 각 필터에 onChangeValue 받아서 이벤트 처리 예정
-const Filter = ({info, value, isTo, onValueChanged}) => {
+const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
+  const editMode = useSelector(selectEditMode);
+
   const getParamId = (id) => {
     return id.slice(1);
   };
@@ -46,9 +63,15 @@ const Filter = ({info, value, isTo, onValueChanged}) => {
     <FilterWrapper>
       <FilterLabel
         width={info.useCaptionWidth ? info.captionWidth + 'px' : null}>
-        {isTo ? '~' : info.caption}
+        {isTo ? '~' : '\u2022 ' + info.caption}
       </FilterLabel>
       {getFilter(info.paramType)}
+      {onDeleted && editMode === EditMode.DESIGNER &&
+        <DeleteButton onClick={() => {
+          onDeleted();
+        }}>X</DeleteButton>
+      }
+
     </FilterWrapper>
   );
 };

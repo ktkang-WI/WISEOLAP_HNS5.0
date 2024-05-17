@@ -1,10 +1,42 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {makeItem} from 'components/report/item/util/ItemFactory';
+import seriesOptionSlice from './SeriesOption/SeriesOptionSlice';
+import {makeAdHocItem, makeAdHocOption, makeItem}
+  from 'components/report/item/util/ItemFactory';
+import ConfigSlice from './ConfigSlice';
+import {DesignerMode} from 'components/config/configType';
 
 const item = makeItem({
   id: 'item1',
   type: 'chart'
 });
+
+const adHocChartItem = makeAdHocItem({
+  id: 'item1',
+  type: 'chart'
+});
+
+const adHocPivotItem = makeAdHocItem({
+  id: 'item2',
+  type: 'pivot'
+});
+
+const dashboardInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: [item],
+    chartCount: {chart: 1}
+  }
+};
+
+const adHocInitialState = {
+  0: {
+    selectedItemId: 'item1',
+    itemQuantity: 1,
+    items: [adHocChartItem, adHocPivotItem],
+    adHocOption: makeAdHocOption()
+  }
+};
 
 const initialState = {
   0: {
@@ -14,10 +46,32 @@ const initialState = {
   }
 };
 
+const getInitialState = () => {
+  const mode = ConfigSlice.getInitialState().designerMode;
+
+  if (mode === DesignerMode['DASHBOARD']) {
+    return dashboardInitialState;
+  }
+
+  if (mode === DesignerMode['AD_HOC']) {
+    return adHocInitialState;
+  }
+
+  return dashboardInitialState;
+};
+
 const reducers = {
   /* REPORT */
-  initItems(state, actions) {
-    state = initialState;
+  initItems: (state, actions) => {
+    const mode = actions.payload;
+
+    if (mode === DesignerMode['DASHBOARD']) {
+      return {...dashboardInitialState};
+    } else if (mode === DesignerMode['AD_HOC']) {
+      return {...adHocInitialState};
+    } else if (mode === DesignerMode['EXCEL']) {
+      return {...dashboardInitialState};
+    }
   },
   changeItemReportId(state, actions) {
     const prevId = actions.payload.prevId;
@@ -46,13 +100,20 @@ const reducers = {
         items: []
       };
     }
+    // 아아템 이름에 번호 생성.
+    const countMap = state[reportId].chartCount;
+    const itemType = actions.payload.item.type;
 
+    countMap[itemType] = (countMap[itemType] || 0) + 1;
+
+    state[reportId].chartCount = countMap;
     state[reportId].itemQuantity++;
+
     const itemId = 'item' + state[reportId].itemQuantity;
 
     actions.payload.item.id = itemId;
 
-    const item = makeItem(actions.payload.item);
+    const item = makeItem(actions.payload.item, countMap);
 
     state[reportId].items =
       state[reportId].items.concat(item);
@@ -88,10 +149,10 @@ const reducers = {
     state[reportId].selectedItemId = selectedItemId;
   },
   // 파라미터로 reportId
-  deleteAllItems(state, actions) {
+  deleteReportItem(state, actions) {
     const reportId = actions.payload.reportId;
 
-    state[reportId].items = [];
+    delete state[reportId];
   },
   selectItem(state, actions) {
     const reportId = actions.payload.reportId;
@@ -103,61 +164,119 @@ const reducers = {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 
-    state[reportId].items.map((i) => {
-      if (i.meta.dataField.datasetId == datasetId) {
-        for (const fields in i.meta.dataField) {
-          if (typeof i.meta.dataField[fields] === 'object') {
-            i.meta.dataField[fields] = [];
+    if (state[reportId].adHocOption) {
+      const dataField = state[reportId].adHocOption.dataField;
+      if (dataField.datasetId == datasetId) {
+        for (const fields in dataField) {
+          if (typeof dataField[fields] === 'object') {
+            dataField[fields] = [];
           }
         }
-
-        delete i.meta.dataField.datasetId;
-        i.meta.dataField.dataFieldQuantity = 0;
+        delete dataField.datasetId;
+        dataField.dataFieldQuantity = 0;
       }
-    });
+    } else {
+      state[reportId].items.map((i) => {
+        if (i.meta.dataField.datasetId == datasetId) {
+          for (const fields in i.meta.dataField) {
+            if (typeof i.meta.dataField[fields] === 'object') {
+              i.meta.dataField[fields] = [];
+            }
+          }
+
+          delete i.meta.dataField.datasetId;
+          i.meta.dataField.dataFieldQuantity = 0;
+        }
+      });
+    }
   },
   setItemField(state, actions) {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
-    const itemIndex = state[reportId].items.findIndex(
-        (item) => item.id == state[reportId].selectedItemId
-    );
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField = dataField;
+    } else {
+      const itemIndex = state[reportId].items.findIndex(
+          (item) => item.id == state[reportId].selectedItemId
+      );
 
-    if (itemIndex >= 0) {
-      state[reportId].items[itemIndex].meta.dataField = dataField;
+      if (itemIndex >= 0) {
+        state[reportId].items[itemIndex].meta.dataField = dataField;
+      }
     }
   },
   updateItemField(state, actions) {
     const reportId = actions.payload.reportId;
     const dataField = actions.payload.dataField;
 
+    if (state[reportId].adHocOption) {
+      state[reportId].adHocOption.dataField[dataField.category] =
+        state[reportId].adHocOption.dataField[dataField.category]
+            .map((field) => {
+              if (field.fieldId == dataField.fieldId) {
+                return dataField;
+              }
+              return field;
+            });
+    } else {
+      const itemIndex = state[reportId].items.findIndex(
+          (item) => item.id == state[reportId].selectedItemId
+      );
+
+      if (itemIndex >= 0) {
+        state[reportId].items[itemIndex].meta.dataField[dataField.category] =
+            state[reportId].items[itemIndex].meta.dataField[dataField.category]
+                .map((field) => {
+                  if (field.fieldId == dataField.fieldId) {
+                    return dataField;
+                  }
+                  return field;
+                });
+      }
+    }
+  },
+  setItem(state, actions) {
+    const reportId = actions.payload.reportId;
+    state[reportId] = actions.payload.item;
+  },
+  updateInteractiveOption(state, actions) {
+    const reportId = actions.payload.reportId;
+
     const itemIndex = state[reportId].items.findIndex(
         (item) => item.id == state[reportId].selectedItemId
     );
 
-    if (itemIndex >= 0) {
-      state[reportId].items[itemIndex].meta.dataField[dataField.category] =
-          state[reportId].items[itemIndex].meta.dataField[dataField.category]
-              .map((field) => {
-                if (field.fieldId == dataField.fieldId) {
-                  return dataField;
-                }
-                return field;
-              });
-    }
+    Object.assign(state[reportId].items[itemIndex].meta.interactiveOption,
+        actions.payload.option);
   },
-  setItems(state, actions) {
+  updateTopBottomInfo(state, actions) {
     const reportId = actions.payload.reportId;
-    state[reportId] = actions.payload.items;
+    const topBottomInfo = actions.payload.topBottomInfo;
+
+    state[reportId].adHocOption.topBottomInfo = topBottomInfo;
+  },
+  updateLayoutSetting(state, actions) {
+    const reportId = actions.payload.reportId;
+    const layoutType = actions.payload.layoutType;
+
+    state[reportId].adHocOption.layoutSetting = layoutType;
+  },
+  changeItem(state, actions) {
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
+    delete state[prevId];
+    state[newId] = actions.payload.item;
   }
 };
 
-const extraReducers = {};
+const extraReducers = (builder) => {
+  seriesOptionSlice(builder);
+};
 
 const ItemSlice = createSlice({
   name: 'Item',
-  initialState: initialState,
+  initialState: getInitialState(),
   reducers: reducers,
   extraReducers: extraReducers
 });

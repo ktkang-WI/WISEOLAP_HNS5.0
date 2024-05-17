@@ -11,7 +11,7 @@ const SimpleInputModal = ({
     <Modal
       modalTitle={modalTitle}
       width='400px'
-      height='180px'
+      height='230px'
       onSubmit={() => {
         onSubmit(value);
       }}

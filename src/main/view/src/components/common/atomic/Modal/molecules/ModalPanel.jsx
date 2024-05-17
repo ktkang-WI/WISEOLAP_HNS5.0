@@ -20,11 +20,20 @@ const Content = styled.div`
 
 
 const ModalPanel = ({
-  title, children, padding = '10', headerButtons, footerButtons, ...props
+  title,
+  children,
+  padding = '10',
+  headerButtons,
+  footerButtons,
+  headerCheckBoxs,
+  ...props
 }) => {
   return (
     <StyledWrapper padding={padding} {...props}>
-      <ModalPanelTitle buttons={headerButtons}>{title}</ModalPanelTitle>
+      <ModalPanelTitle
+        buttons={headerButtons}
+        checkBoxs={headerCheckBoxs}
+      >{title}</ModalPanelTitle>
       <Content>
         {children}
       </Content>

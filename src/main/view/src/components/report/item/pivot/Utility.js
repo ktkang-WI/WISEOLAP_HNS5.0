@@ -1,4 +1,38 @@
-import {getPivotData} from 'models/report/Item';
+import {setMeta} from '../util/metaUtilityFactory';
+import {defaultDimension, defaultMeasure}
+  from 'components/report/item/util/martUtilityFactory';
+import localizedString from 'config/localization';
+import {DataFieldType} from '../util/dataFieldType';
+import chartSeriesButtonIcon from 'assets/image/icon/item/bar.png';
+import columnIcon from 'assets/image/icon/dataSource/column.png';
+import rowIcon from 'assets/image/icon/dataSource/row.png';
+import {DesignerMode} from 'components/config/configType';
+/**
+ * 아이템 객체에 meta 기본 데이터를 세팅합니다.
+ * @param {*} item 옵션을 삽입할 아이템 객체
+ */
+const generateMeta = (item) => {
+  setMeta(item, 'positionOption', {
+    column: {
+      totalVisible: true, // 열 합계 표시
+      grandTotalVisible: true, // 열 총 합계 표시
+      position: 'left', // 열 합계 위치
+      expand: true // 열 그룹 확장(초기상태)
+    },
+    row: {
+      totalVisible: true, // 행 합계 표시
+      grandTotalVisible: true, // 행 총 합계 표시
+      position: 'top', // 행 합계 위치
+      expand: true // 행 그룹 확장(초기상태)
+    },
+    dataPosition: 'row' // 측정값 위치
+  });
+  setMeta(item, 'layout', 'standard');
+  setMeta(item, 'autoSize', false);
+  setMeta(item, 'removeNullData', false);
+  setMeta(item, 'showFilter', false);
+  setMeta(item, 'dataHighlight', []);
+};
 
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
@@ -19,9 +53,11 @@ const generateItem = (item, param) => {
   const rows = dataField.row.map((r, i) => {
     return getField(r, 'column', dataField.row.length - 1 != i);
   });
+
   const columns = dataField.column.map((r, i) => {
     return getField(r, 'row', dataField.column.length - 1 != i);
   });
+
   const datas = dataField.measure.map((r, i) => {
     const temp = getField(r, 'data', dataField.column.length - 1 != i);
     temp.summaryType = r.summaryType;
@@ -29,6 +65,7 @@ const generateItem = (item, param) => {
   });
 
   const fields = rows.concat(columns).concat(datas);
+
   let matrixInfo;
 
   const dataSourceConfig = {
@@ -55,7 +92,6 @@ const generateItem = (item, param) => {
                 break;
             }
           });
-
           resolve([takeJson]);
         } else {
           // 추후 정렬 기준 항목 추가시 주석 해제
@@ -69,15 +105,12 @@ const generateItem = (item, param) => {
           //   loadOptions.groupSummary =
           //       loadOptions.groupSummary.concat(hiddenFields);
           // }
-
           if (loadOptions.group) {
             let maxColLength = 0;
             let maxRowLength = 0;
-
             // group에서 사용되고 있는 컬럼/로우 수
             let curColLength = 0;
             let curRowLength = 0;
-
             fields.map((field, i) => {
               // if (field.visible) {
               switch (field.area) {
@@ -86,10 +119,8 @@ const generateItem = (item, param) => {
               }
               // }
             });
-
             const makeDataByMatrix = () => {
               const data = {summary: [], data: []};
-
               for (let i = 0; i < loadOptions.group.length; i++) {
                 let isColumn = false;
                 for (let j = 0; j < dataField.row.length; j++) {
@@ -111,7 +142,6 @@ const generateItem = (item, param) => {
                   curRowLength++;
                 }
               }
-
               // 총계 계산
               if (loadOptions.totalSummary.length > 0) {
                 const vs = matrixInfo.matrix.cells[0][0].vs;
@@ -206,7 +236,6 @@ const generateItem = (item, param) => {
                         if (items.length == 0) {
                           items = null;
                         }
-
                         addSummary(cells[rowIdx][i].vs, summary);
 
                         arr.push({
@@ -216,16 +245,12 @@ const generateItem = (item, param) => {
                     });
                   }
                 };
-
                 makeTreeData(tempData, 1, curColLength,
                     1, curRowLength, null, 0);
-
                 data.data = tempData;
               }
-
               return data;
             };
-
             if (loadOptions.group.length == maxRowLength + maxColLength) {
               const parameter = {
                 // Pass if the remoteOperations option is set to true
@@ -243,11 +268,8 @@ const generateItem = (item, param) => {
                 // topBottom: JSON.stringify({}),
                 ...param
               };
-
               const result = await getPivotData(parameter);
-
               matrixInfo = result;
-
               const tempResult = makeDataByMatrix();
               resolve(tempResult);
             } else {
@@ -275,14 +297,53 @@ const generateItem = (item, param) => {
 };
 
 /**
+ * 아이템 객체의 데이터 항목 옵션
+ * @return {JSON} dataFieldOption
+ */
+const getDataFieldOptionChild = () => {
+  const dataFieldMeasure = {
+    ...defaultMeasure,
+    useButton:
+    window.location.href.includes(DesignerMode['DASHBOARD'].toLowerCase()) ?
+    false : true,
+    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
+    buttonIcon: chartSeriesButtonIcon,
+    buttonEvent: function(e) {
+      console.log(e);
+    }
+  };
+
+  const dataFieldColumn = {
+    ...defaultDimension,
+    icon: columnIcon,
+    label: localizedString.column,
+    placeholder: localizedString.columnPlaceholder
+  };
+
+  const dataFieldRow = {
+    ...defaultDimension,
+    icon: rowIcon,
+    label: localizedString.row,
+    placeholder: localizedString.rowPlaceholder
+  };
+
+  return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
+    [DataFieldType.ROW]: dataFieldRow,
+    [DataFieldType.COLUMN]: dataFieldColumn
+  };
+};
+
+/**
  * 차트 커스텀 파라미터 삽입
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
-  param.dimension = dataField.column.concat(dataField.row);
+  param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
+  param.removeNullData = item.meta.removeNullData;
 
   param.paging = {
     pagingEnabled: false,
@@ -307,7 +368,50 @@ const generateParameter = (item, param) => {
   param.paging = JSON.stringify(param.paging);
 };
 
+/**
+ * 리본 영역 아이템 배열을 반환합니다.
+ * @return {Array} ribbonItems
+ */
+const getRibbonItems = () => {
+  return [
+    'CaptionView',
+    'NameEdit',
+    'InitState',
+    'Total',
+    'GrandTotal',
+    'Layout',
+    'AutoSize',
+    'RowTotalPosition',
+    'ColumnTotalPosition',
+    'DataPosition',
+    'RemoveNullData',
+    'ShowFilter',
+    'InputTxt'
+  ];
+};
+
+/**
+ * 속셩 영역 아이템 배열을 반환합니다.
+ * @return {Array} attributeItems
+ */
+const getAttributeItems = () => {
+  return [
+    'InteractionConfiguration',
+    'DashAnyPivotOption'
+  ];
+};
+
+const getTabHeaderItems = () => {
+  // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
+  return ['ColRowSwitch', 'ShowGrid'];
+};
+
 export default {
+  generateMeta,
   generateItem,
-  generateParameter
+  getDataFieldOptionChild,
+  generateParameter,
+  getRibbonItems,
+  getAttributeItems,
+  getTabHeaderItems
 };

@@ -1,7 +1,11 @@
 import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link} from 'react-router-dom';
-import TextButton from 'components/common/atomic/Common/Button/CommonButton';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import {CheckBox} from 'devextreme-react';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const StyledForm = styled.form.attrs(() => ({
   action: 'http://localhost:3000/editds'
@@ -14,10 +18,6 @@ const StyledForm = styled.form.attrs(() => ({
   }
 `;
 
-const Span = styled.span`
-  color: #7f8fa4;
-`;
-
 const FormInterval = styled.div`
   padding-top: ${(props) => {
     if (props.props === 'login') {
@@ -26,16 +26,12 @@ const FormInterval = styled.div`
   }}
 `;
 
-const StyledInput = styled.input`
-  width: 14px;
-  height: 14px;
-  margin-right: 5px;
-  background-position: -341px -12px;
-  transform: translateY(20%);
-`;
-
 const CheckBoxWrap = styled.div`
   padding-top: 10px;
+
+  .dx-checkbox-text {
+    color: ${theme.color.gray400} !important;
+  }
 `;
 
 const CheckBoxSpanWrap = styled.span`
@@ -43,9 +39,9 @@ const CheckBoxSpanWrap = styled.span`
   float: left;
 `;
 
-const createInputForm = (contents) => {
+const createInputForm = (contents, onSubmit) => {
   return (
-    <Input contents={contents}/>
+    <Input contents={contents} onSubmit={onSubmit}/>
   );
 };
 
@@ -55,10 +51,7 @@ const createCheckBox = (contents) => {
     return (
       <CheckBoxWrap>
         <CheckBoxSpanWrap>
-          <StyledInput type='checkBox' id='remainId'/>
-          <label htmlFor='remainId'>
-            <Span>ID Remember</Span>
-          </label>
+          <CheckBox text='아이디 저장'/>
         </CheckBoxSpanWrap>
       </CheckBoxWrap>
     );
@@ -71,49 +64,48 @@ const createCheckBox = (contents) => {
   }
 };
 
-const createFormBtn = (contents) => {
-  const type = contents.type;
-  const btnTexts =
-    type === 'login' ? ['로그인', {linkBtn: '회원가입'}] : ['회원가입', {linkBtn: '취소'}];
-  const path = type === 'login' ? '/editds/regist' : '/editds';
-  return btnTexts.map((btnText, index) => {
-    if (btnText.linkBtn) {
-      return (
-        <Link
-          to={path}
-          key={index}
-        >
-          <TextButton
-            className='link-textBtn'
-            border-radius= '5px;'
-          >
-            {btnText.linkBtn ? btnText.linkBtn : btnText}
-          </TextButton>
-        </Link>
-      );
-    } else {
-      return (
-        <Link
-          to={btnText === '로그인' ? '/editds/dashboard' : ''}
-          key={index}
-        >
-          <TextButton
-            className='form-textBtn'
+const FormInputs = ({contents, onSubmit}) => {
+  const createFormBtn = (contents) => {
+    const type = contents.type;
+    // const btnTexts =
+    //   type === 'login' ? ['로그인', {linkBtn: '회원가입'}] :
+    // ['회원가입', {linkBtn: '취소'}];
+    const btnTexts = ['로그인'];
+    const path = type === 'login' ? '/editds/regist' : '/editds';
+    return btnTexts.map((btnText, index) => {
+      if (btnText.linkBtn) {
+        return (
+          <Link
+            to={path}
             key={index}
-            border-radius= '5px;'
+          >
+            <CommonButton
+              className='link-textBtn'
+              border-radius= '5px;'
+            >
+              {btnText.linkBtn ? btnText.linkBtn : btnText}
+            </CommonButton>
+          </Link>
+        );
+      } else {
+        return (
+          <CommonButton
+            className='form-textBtn'
+            font={theme.font.bigButton}
+            key={index}
+            borderRadius='8px'
+            height='48px'
+            onClick={onSubmit}
           >
             {btnText.linkBtn ? btnText.linkBtn : btnText}
-          </TextButton>
-        </Link>
-      );
-    }
-  });
-};
-
-const FormInputs = ({contents}) => {
+          </CommonButton>
+        );
+      }
+    });
+  };
   return (
     <StyledForm id='send-login-data'>
-      {createInputForm(contents)}
+      {createInputForm(contents, onSubmit)}
       {createCheckBox(contents)}
       <FormInterval className='interval' props={contents.type}>
         {createFormBtn(contents)}

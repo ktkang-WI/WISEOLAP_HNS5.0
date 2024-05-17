@@ -11,7 +11,7 @@ const Button = styled.div`
   cursor: pointer;
 
   & + & {
-    margin-left: 5px;
+    margin-left: 10px;
   }
 `;
 

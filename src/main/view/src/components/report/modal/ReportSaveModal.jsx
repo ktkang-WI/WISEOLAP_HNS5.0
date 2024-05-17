@@ -8,8 +8,9 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import useReportSave from 'hooks/useReportSave';
-import useModal from 'hooks/useModal';
 import {useRef} from 'react';
+import models from 'models';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -31,12 +32,13 @@ const StyledModalPanel = styled(ModalPanel)`
     }
   `;
 
-const ReportSaveModal = ({...props}) => {
+const ReportSaveModal = ({createExcelFile, ...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
   const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
-  const {saveReport} = useReportSave();
+  const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
+
   /**
    * SaveReportModal state(dataSource) 값 설정
    * ReportSaveForm.jsx 현재 파일의 state를 변경하기 위함
@@ -47,30 +49,51 @@ const ReportSaveModal = ({...props}) => {
     setDataSource((dataSource) => ({...dataSource, ...param}));
   };
 
+  // 저장 팝업창 확인 버튼 클릭 시
+  const onSubmit = async () => {
+    const formInstance = ref.current.instance;
+
+    if (!dataSource.reportNm?.trim()) {
+      formInstance.getEditor('reportNm').focus();
+      alert('보고서명을 입력해 주세요.');
+    } else if (!dataSource.fldName?.trim()) {
+      formInstance.getEditor('fldName').focus();
+      alert('폴더를 선택해 주세요.');
+    } else {
+      const param = generateParameter(dataSource);
+      let isOk = false;
+      await models.Report.insertReport(param).then((res) => {
+        if (res.status != 200) {
+          alert(localizedString.faildSaveReportMsg);
+          return;
+        }
+        const reportId = res.data.report.reportId;
+        const data = res.data;
+        const msg = data.msg;
+        const result = data.result;
+
+
+        alert(localizedString[msg]);
+
+        if (result) {
+          addReport(data);
+          isOk = true;
+          if (createExcelFile) createExcelFile(reportId);
+        } else {
+          return;
+        }
+      });
+      return !isOk;
+    }
+    return true;
+  };
+
   return (
     <Modal
       modalTitle={localizedString.saveReport}
       height={theme.size.bigModalHeight}
       width={theme.size.middleModalHeight}
-      onSubmit={(e) => {
-        const formInstance = ref.current.instance;
-
-        if (!dataSource.reportNm?.trim()) {
-          formInstance.getEditor('reportNm').focus();
-          alert('보고서명을 입력해 주세요.');
-        } else if (!dataSource.fldName?.trim()) {
-          formInstance.getEditor('fldName').focus();
-          alert('폴더를 선택해 주세요.');
-        } else {
-          // 팝업창 으로 저장 할 경우 (새로 저장 or 다른이름으로 저장)에는
-          // reportId 를 0 으로 하여 무조건 insert 하게 한다.
-          dataSource.reportId = 0;
-          saveReport(dataSource);
-          return;
-        }
-
-        return true;
-      }}
+      onSubmit={onSubmit}
       {...props}
     >
       <StyledModalPanel title={localizedString.saveReport}>

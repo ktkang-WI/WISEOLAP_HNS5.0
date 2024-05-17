@@ -19,6 +19,7 @@ import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.AuthCubeVO;
 import com.wise.MarketingPlatForm.auth.vo.AuthDataDTO;
 import com.wise.MarketingPlatForm.auth.vo.AuthDimVO;
+import com.wise.MarketingPlatForm.auth.vo.AuthMemVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 
 @Service
@@ -55,6 +56,7 @@ public class AuthService {
 
         List<AuthDimVO> authDims = new ArrayList<>();
         List<AuthCubeVO> authCubes = new ArrayList<>();
+        List<AuthMemVO> authMems = new ArrayList<>();
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -96,6 +98,24 @@ public class AuthService {
                     }
 
                     authCubes.add(new AuthCubeVO(dsViewId, cubeId));
+                } else if (node.getNodeName().equals("Auth_Mem")) {
+                    NodeList authMem = node.getChildNodes();
+                    int dsViewId = 0;
+                    String dimUniNm = "";
+                    String hieUniNm = "";
+                    String memberNm = "";
+                    for (int j = 0; j < authMem.getLength(); j++) {
+                        if (authMem.item(j).getNodeName().equals("DS_VIEW_ID")) {
+                            dsViewId = Integer.parseInt(authMem.item(j).getTextContent());
+                        } else if (authMem.item(j).getNodeName().equals("DIM_UNI_NM")) {
+                            dimUniNm = authMem.item(j).getTextContent();
+                        } else if (authMem.item(j).getNodeName().equals("HIE_UNI_NM")) {
+                            hieUniNm = authMem.item(j).getTextContent();
+                        } else if (authMem.item(j).getNodeName().equals("MEMBER_NM")) {
+                            memberNm = authMem.item(j).getTextContent();
+                        }
+                    }
+                    authMems.add(new AuthMemVO(dsViewId, dimUniNm, hieUniNm, memberNm));
                 }
             }
         } catch (Exception e) {
@@ -104,6 +124,7 @@ public class AuthService {
 
         authData.setAuthDim(authDims);
         authData.setAuthCube(authCubes);
+        authData.setAuthMem(authMems);
 
         return authData;
     };
@@ -138,6 +159,7 @@ public class AuthService {
     public UserDTO getUserById(String userId) {
         UserEntity entity = authDAO.selectUserById(userId);
 
+        if (entity == null) return null;
         // TODO: 추후 필요한 정보 있으면 추가
         return UserDTO.builder()
                 .userId(userId)
