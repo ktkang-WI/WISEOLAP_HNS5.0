@@ -8,7 +8,7 @@ import useModal from 'hooks/useModal';
 
 const DataHighlightForm = (
     {formData, measureNames, showField, setShowField,
-      highlightList, setHighlightList}, ref) => {
+      highlightList, setHighlightList, setData}, ref) => {
   // 선택한 아이콘 보여줌.
   const [selectedIcon, setSelectedIcon] = useState('');
   const {alert} = useModal();
@@ -55,8 +55,9 @@ const DataHighlightForm = (
         );
         // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
         let isOtherChange = true;
-        if (findIdx != -1) {
-          if (e.dataField == 'dataItem' || e.dataField == 'condition') {
+        if (findIdx != -1 && (e.dataField == 'dataItem' ||
+        e.dataField == 'condition' || e.dataField == 'valueFrom')) {
+          if (copyHighlight[findIdx][e.dataField] == e.value) {
             isOtherChange = false;
           }
         }
@@ -72,6 +73,12 @@ const DataHighlightForm = (
             setHighlightList(copyHighlight);
           } else {
             alert(localizedString.highlightDupleCheck2);
+            setData({
+              applyCell: true,
+              applyTotal: true,
+              applyGrandTotal: true,
+              status: 'new'
+            });
           }
         }
       }}

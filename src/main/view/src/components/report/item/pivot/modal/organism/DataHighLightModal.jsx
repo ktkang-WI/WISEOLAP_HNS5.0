@@ -89,6 +89,9 @@ const DataHighlightModal = ({...props}) => {
   const appliedHighlight = (formData) => {
     const copyHighlight = [...highlightList];
 
+    if (_.isEmpty(formData)) {
+      return copyHighlight;
+    }
     // 선택한 측정값의 순서(인덱스)를 가져옴.
     const idx = measureNames.findIndex((measure) =>
       measure == formData.dataItem
@@ -127,22 +130,36 @@ const DataHighlightModal = ({...props}) => {
       return;
     }
 
+    validation(formData, highlight);
+  };
+
+  const validation = (formData, highlight, flag) => {
     // 유효성 검사.
+    let validation = true;
     if (!formData.dataItem || !formData.condition || !formData.valueFrom) {
       alert(localizedString.highlightInputEssentialValueMsg);
+      validation = false;
     } else if (isNaN(Number(formData.valueFrom))) {
       alert(localizedString.highlightOnlyNumberMsg);
+      validation = false;
     } else {
-      if (formData.condition === 'Between' && formData.valueTo === undefined) {
+      if (formData.condition === 'Between' && formData.valueTo === undefined ||
+        formData.valueTo === '') {
         alert(localizedString.highlightBetweenValueEssentialMsg);
+        validation = false;
       } else if (Number(formData.valueFrom) > Number(formData.valueTo)) {
         alert(localizedString.highlightBetweenValueCompareMsg);
+        validation = false;
       } else {
-        setHighlightList(highlight);
-        setData(_.cloneDeep(init));
-        setShowField(false);
+        // flag = 확인 버튼 클릭시 불필요하게 state setting 방지.
+        if (!flag) {
+          setHighlightList(highlight);
+          setData(_.cloneDeep(init));
+          setShowField(false);
+        }
       }
     }
+    return validation;
   };
 
   const setMeta = (item, key, value) => {
@@ -177,8 +194,21 @@ const DataHighlightModal = ({...props}) => {
         const isNullData =
           formData.dataItem && formData.condition ? true : false;
         let resultHighlightList = [];
+        const newFormData = !isNullData ? [] : formData;
 
-        const highlight = appliedHighlight(formData);
+        const highlight = appliedHighlight(newFormData);
+
+        if (!highlight) {
+          alert(localizedString.highlightDupleCheck2);
+          setData(_.cloneDeep(init));
+          return true;
+        }
+
+        for (let i = 0; i < highlight.length; i++) {
+          if (!validation(highlight[i], highlight, 'flag')) {
+            return true;
+          }
+        }
 
         if (isNullData) {
           resultHighlightList= highlight;
@@ -252,6 +282,7 @@ const DataHighlightModal = ({...props}) => {
           <DataHighlightForm
             ref={ref}
             formData={data}
+            setData={setData}
             measureNames={measureNames}
             showField={showField}
             setShowField={setShowField}
