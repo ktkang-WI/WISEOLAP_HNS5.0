@@ -159,24 +159,21 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   };
 
   const getTemporaryMeasures = (measures, customData) => {
-    // STEP1 clean data by expression of customData
     const expressions = customData
-        .filter((fd) => fd.type === 'MEA') // pick up MEA
-        .map((md) => md.expression); // pick up expression
+        .filter((fd) => fd.type === 'MEA')
+        .map((md) => md.expression);
     const cleaningMeasure = new Set();
     expressions.forEach((expression) => {
       const extractedMeasures = extractMeasureByRegex(expression);
       extractedMeasures.forEach((measure) => cleaningMeasure.add(measure));
     });
 
-    // STEP2 clean data by measures of dataField
     dataField.measure.forEach((measure) => {
       if ([...cleaningMeasure].includes(measure.name)) {
         cleaningMeasure.delete(measure.name);
       }
     });
 
-    // dataField.measure
     return measures.filter((measure) =>
       [...cleaningMeasure].includes(measure.name));
   };
@@ -275,7 +272,6 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   };
 
   // 리덕스 STATE 저장
-  // TODO: 데이터베이스 값 저장은 보고서 저장 클릭시 진행
   const handleConfirm = () => {
     let isok = false;
     if (!handleException(customDataList)) {

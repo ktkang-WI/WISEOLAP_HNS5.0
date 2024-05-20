@@ -185,6 +185,7 @@ img {
   color: red;
 }
 
+/* TODO: 툴팁관련 공용컴포넌트 있으면 알려주세요.*/
 .tooltip {
   position: relative;
   display: inline-block;

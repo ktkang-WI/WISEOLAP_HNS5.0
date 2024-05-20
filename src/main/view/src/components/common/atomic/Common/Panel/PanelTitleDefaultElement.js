@@ -40,7 +40,6 @@ const PanelTitleDefaultElement = () => {
     }
     const dataSource = await models?.DataSource?.getByDsId(dataset?.dataSrcId);
     if (!dataSource) {
-      // TODO: 명칭 생각중.
       alert(localizedString.datasetNotSelected);
       return;
     }
