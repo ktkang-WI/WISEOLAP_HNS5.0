@@ -270,19 +270,26 @@ const useQueryExecute = () => {
         models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
             .then((res) => {
               resolve({datasetId: dataset.datasetId, data: res.data});
+            })
+            .catch((e) => {
+              reject(e);
             });
       });
     });
 
-    Promise.all(promises).then((res) => {
-      res.forEach((v) => {
-        datas[v.datasetId] = v.data;
-      });
-      dispatch(setSpreadData({
-        reportId: currentReportId,
-        data: datas
-      }));
-    });
+    Promise.all(promises)
+        .then((res) => {
+          res.forEach((v) => {
+            datas[v.datasetId] = v.data;
+          });
+          dispatch(setSpreadData({
+            reportId: currentReportId,
+            data: datas
+          }));
+        })
+        .catch((res) => {
+          console.log(res);
+        });
   };
 
   /**
