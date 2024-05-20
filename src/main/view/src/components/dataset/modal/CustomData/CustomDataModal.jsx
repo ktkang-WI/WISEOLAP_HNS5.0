@@ -6,8 +6,6 @@ import CustomData
   from 'components/dataset/atomic/organism/CustomData/CustomData';
 import {createContext, useEffect, useState} from 'react';
 import CustomDataCalcModal from './CustomDataCalcModal';
-import meaImg from 'assets/image/icon/dataSource/measure.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useSelector} from 'react-redux';
@@ -15,43 +13,24 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import {measuresFetch} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 import {getMeasuresValueUpdateFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
+import {
+  customDataInitial,
+  handleException
+} from './utility';
+import {
+  makeCustomDataFieldIcon,
+  uniqueNameType
+} from 'components/dataset/utils/DatasetUtil';
+import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
+import {selectCurrentDataField} from 'redux/selector/ItemSelector';
+import {getNewDataField}
+  from 'components/common/atomic/DataColumnTab/utils/utility';
+import store from 'redux/modules';
+import _ from 'lodash';
 
 export const CustomDataContext = createContext();
 
 const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
-  // TODO: 직접쿼리 입력과 틀 맞춤 임시용
-  const generateFields = (tempFields) => {
-    let generatedFields = null;
-    generatedFields = tempFields.map((field) => {
-      return {
-        isCustomData: true,
-        icon: meaImg,
-        parentId: '987654321',
-        uniqueName: field.fieldName,
-        name: field.fieldName,
-        expression: field.expression,
-        type: 'MEA'
-      };
-    });
-    generatedFields.unshift({
-      name: '계산된 필드',
-      type: 'FLD',
-      parentId: '0',
-      uniqueName: '987654321',
-      icon: folderImg
-    });
-    return generatedFields;
-  };
-
-  const customDataInitial = () => {
-    return {
-      fieldId: 1,
-      fieldName: '',
-      expression: '',
-      type: 'decimal'
-    };
-  };
-
   // UseState
   const [customDataList, setCustomDataList] = useState([]);
   const [selectedRowKey, setSelectedRowKey] = useState(null);
@@ -70,7 +49,8 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
 
   // Selector
   const selectedReportId = useSelector(selectCurrentReportId);
-
+  const selectedCurrentDataset = useSelector(selectCurrentDataset);
+  const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
   // Context
   const context = {
     state: {
@@ -137,7 +117,8 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   // 데이터 집합 필드
   const getCurrentFields = () => {
     return dataset.fields.filter((item) =>
-      item.uniqueName != '987654321' && item.parentId != '987654321');
+      item.uniqueName != uniqueNameType.CUSTOM_DATA &&
+      item.parentId != uniqueNameType.CUSTOM_DATA);
   };
 
   // TODO: 함수명 이름추천 해주면 좋을듯 합니다.
@@ -147,7 +128,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     if (dataset.fields) {
       const fetchCustomDataList =
         dataset.fields.filter((item) =>
-          item.type != 'FLD' && item.parentId == '987654321');
+          item.type != 'FLD' && item.parentId == uniqueNameType.CUSTOM_DATA);
       fetchCustomDataList.forEach((item, index) => {
         setCustomDataList((prev) => {
           return [
@@ -156,7 +137,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
               fieldId: index + 1,
               fieldName: item.uniqueName,
               expression: item.expression,
-              type: 'decimal'
+              type: 'numeric'
             }
           ];
         });
@@ -170,35 +151,60 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     }
   };
 
-  // TODO: 함수명 이름추천 해주면 좋을듯 합니다.
+  const extractMeasureByRegex = (str) => {
+    const regex = /\[([^\]]+)\]/g;
+    const matches = [...str.matchAll(regex)];
+    const extractedData = matches.map((match) => match[1]);
+    return extractedData;
+  };
+
+  const getTemporaryMeasures = (measures, customData) => {
+    // STEP1 clean data by expression of customData
+    const expressions = customData
+        .filter((fd) => fd.type === 'MEA') // pick up MEA
+        .map((md) => md.expression); // pick up expression
+    const cleaningMeasure = new Set();
+    expressions.forEach((expression) => {
+      const extractedMeasures = extractMeasureByRegex(expression);
+      extractedMeasures.forEach((measure) => cleaningMeasure.add(measure));
+    });
+
+    // STEP2 clean data by measures of dataField
+    dataField.measure.forEach((measure) => {
+      if ([...cleaningMeasure].includes(measure.name)) {
+        cleaningMeasure.delete(measure.name);
+      }
+    });
+
+    // dataField.measure
+    return measures.filter((measure) =>
+      [...cleaningMeasure].includes(measure.name));
+  };
+
   const reduxUpdateCustomDataList = (tempFields) => {
     const fields = getCurrentFields();
-
+    const measures = selectedCurrentDataset.fields.filter((field) =>
+      field.type == 'MEA' && !(field?.isCustomData));
     if (!fields) return;
     let isok = false;
+    const temporaryMeasures = getTemporaryMeasures(measures, tempFields);
     if (tempFields) {
       dispatch(updateDataset({
         reportId: selectedReportId,
         dataset: {
           ...dataset,
           fields: [...fields, ...tempFields],
-          customData: [...tempFields]
+          customDatas: {
+            customData: [...tempFields],
+            measures: temporaryMeasures?.map((measure) => {
+              return getNewDataField(dataField, false, measure, false);
+            })
+          }
         }
       }));
       isok = true;
     };
     return isok;
-  };
-
-  // TODO: 임시기능요 NULL 체크
-  const nullCheck = (...args) => {
-    let isOk = true;
-    args.forEach((item) => {
-      if (!item) {
-        isOk = false;
-      }
-    });
-    return isOk;
   };
 
   // 계산식 이동
@@ -218,7 +224,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
 
   // 추가 , 업데이트 로직
   const customDataService = (customData) => {
-    const isNull = nullCheck(customData.expression);
+    const isNull = customData?.expression;
     if (isNull) {
       const isUpdate = customDataUpdate(customData);
       if (!isUpdate) {
@@ -268,28 +274,15 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     return isUpdate;
   };
 
-  const handleException = () => {
-    let isok = true;
-    // 사용자 정의 데이터 NULL 체크
-    customDataList.forEach((item)=>{
-      isok = nullCheck(item.fieldName, item.expression, item.type);
-      if (isok === false) {
-        return isok;
-      }
-    });
-
-    return isok;
-  };
-
   // 리덕스 STATE 저장
   // TODO: 데이터베이스 값 저장은 보고서 저장 클릭시 진행
   const handleConfirm = () => {
     let isok = false;
-    if (!handleException()) {
+    if (!handleException(customDataList)) {
       alert(localizedString.alertInfo.customData.empty);
       isok = true;
     };
-    const tempFields = generateFields(customDataList);
+    const tempFields = makeCustomDataFieldIcon(customDataList);
 
     if (!reduxUpdateCustomDataList(tempFields)) {
       alert(localizedString.alertInfo.customData.empty);

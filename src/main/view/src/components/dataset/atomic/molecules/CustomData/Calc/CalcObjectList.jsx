@@ -1,12 +1,13 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {dataSource}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
-import {removeDuplicate} from 'components/utils/utility';
+// import {removeDuplicate} from 'components/utils/utility';
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
+import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import {
-  selectCurrentDataField
+// selectCurrentDataField
 } from 'redux/selector/ItemSelector';
 
 
@@ -30,12 +31,13 @@ const CalcObjectList = () => {
   const [explanation, setExplanation] = useState('');
 
   // Selector
-  const selectedCurrentDataField = useSelector(selectCurrentDataField);
+  // const selectedCurrentDataField = useSelector(selectCurrentDataField);
+  const selectedCurrentDataset = useSelector(selectCurrentDataset);
   // 초기화
   useEffect(() => {
     initColumns();
   }, []);
-
+  /*
   const locatedFields = (selectedCurrentDataField) => {
     let measures = selectedCurrentDataField.measure;
 
@@ -67,16 +69,22 @@ const CalcObjectList = () => {
 
     return selectedMeasureFields;
   };
-
+  */
+  const locatedFields = (selectedCurrentDataset) => {
+    return selectedCurrentDataset.fields.filter((field) =>
+      field.type == 'MEA' && !(field?.isCustomData));
+  };
   const initColumns = () => {
-    const fields = locatedFields(selectedCurrentDataField);
+    // const fields = locatedFields(selectedCurrentDataField);
+    const fields = locatedFields(selectedCurrentDataset);
 
     if (!fields) return;
     // Get dataItems
     const dataItems = fields.map((item) => {
       return {
-        key: `[${item.key}]`,
-        explanation: item.explanation
+        key: `[${item.name}]`,
+        // explanation: item.explanation
+        explanation: item.dataType
       };
     });
 

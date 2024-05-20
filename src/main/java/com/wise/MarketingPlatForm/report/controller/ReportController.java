@@ -123,6 +123,7 @@ public class ReportController {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
+        String temporaryMeasuresStr = param.get("temporaryMeasures");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
@@ -130,12 +131,14 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
-        String adHocOptionStr = param.get("adHocOption");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
                 }.getType());
         List<Measure> measures = gson.fromJson(measuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<Measure> temporaryMeasures = gson.fromJson(temporaryMeasuresStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
         List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
@@ -154,12 +157,19 @@ public class ReportController {
         AdHocOption adHocOption = new AdHocOption(null, null);
         
         ListUtility.getInstance().removeNullInParameterList(measures);
+        ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
         ListUtility.getInstance().removeNullInParameterList(dimensions);
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
+        List<Measure> mergeMeasures = new ArrayList<>();
+
+        for (Measure measure : temporaryMeasures) mergeMeasures.add(measure);
+        for (Measure measure : measures) mergeMeasures.add(measure);
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
-                .measures(measures)
+                .measures(mergeMeasures)
+                .originalMeasures(measures)
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)
@@ -234,6 +244,7 @@ public class ReportController {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
+        String temporaryMeasuresStr = param.get("temporaryMeasures");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
@@ -247,6 +258,9 @@ public class ReportController {
         List<Measure> measures = gson.fromJson(measuresStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
+        List<Measure> temporaryMeasures = gson.fromJson(temporaryMeasuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
         List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
@@ -258,9 +272,22 @@ public class ReportController {
         AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
         ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
+
+        ListUtility.getInstance().removeNullInParameterList(measures);
+        ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
+        ListUtility.getInstance().removeNullInParameterList(dimensions);
+        ListUtility.getInstance().removeNullInParameterList(sortByItems);
+
+        List<Measure> mergeMeasures = new ArrayList<>();
+
+        for (Measure measure : temporaryMeasures) mergeMeasures.add(measure);
+        for (Measure measure : measures) mergeMeasures.add(measure);
+
+
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
-                .measures(measures)
+                .measures(mergeMeasures)
+                .originalMeasures(measures)
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)

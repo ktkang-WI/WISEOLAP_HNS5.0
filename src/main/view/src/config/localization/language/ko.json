@@ -5,7 +5,8 @@
       "invalid":"유효하지않습니다."
     },
     "customData": {
-      "empty":"필드명,계산식,타입이 빈값이 있습니다."
+      "empty":"필드명,계산식,타입이 빈값이 있습니다.",
+      "notSelectedRowForUpdating": "업데이트할 로우가 선택되지 않았습니다."
     },
     "customDataCalc": {
       "empty":"필드명,계산식,타입이 빈값이 있습니다.",
@@ -200,6 +201,7 @@
   "order": "순서",
   "conditionName": "조건 명",
   "defaultDatasetName": "데이터집합",
+  "defaultCustomDataName": "계산된 필드",
   "dataSourceNotSelectedMsg": "데이터 원본을 선택하지 않았습니다.",
   "selectDataSource": "데이터 원본 선택",
   "dataSourceName": "데이터 원본 명",

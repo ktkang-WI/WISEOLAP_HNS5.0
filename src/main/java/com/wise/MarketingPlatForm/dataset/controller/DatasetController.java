@@ -66,7 +66,7 @@ public class DatasetController {
     @PostMapping(value = "/data-source")
     public DsMstrDTO getDataSource(@RequestBody Map<String, String> param) {
         String dsId = param.getOrDefault("dsId", "");
-
+        if (dsId.equals("")) throw new NullPointerException("dsId is null");
         return datasetService.getDataSource(Integer.parseInt(dsId));
     }
 

@@ -32,25 +32,26 @@ const PanelTitleDefaultElement = () => {
   } = ParameterSlice.actions;
   const {initItemByDatsetId} = ItemSlice.actions;
 
+  const handleCustomData = async () => {
+    const dataset = selectCurrentDataset(store?.getState());
+    if (!dataset) {
+      alert(localizedString.datasetNotSelected);
+      return;
+    }
+    const dataSource = await models?.DataSource?.getByDsId(dataset?.dataSrcId);
+    if (!dataSource) {
+      // TODO: 명칭 생각중.
+      alert(localizedString.datasetNotSelected);
+      return;
+    }
+    openModal(UserDefinedDataModal,
+        {selectedDataSource: dataSource, orgDataset: dataset});
+  };
   return {
     CustomField: {
       id: 'custom_field',
       onClick: async () => {
-        // TODO: 기존 직접쿼리입력 로직 Format 변경필요.
-        const dataset = selectCurrentDataset(store.getState());
-        if (!dataset) {
-          alert(localizedString.datasetNotSelected);
-          return;
-        }
-        if (dataset.datasetType == DatasetType.DS_SQL) {
-          const dataSource = await models.
-              DataSource.getByDsId(dataset.dataSrcId);
-
-          openModal(UserDefinedDataModal,
-              {selectedDataSource: dataSource, orgDataset: dataset});
-        } else if (dataset.datasetType == 'CUBE') {
-          alert('주제영역 사용자 정의 개발 예정');
-        }
+        handleCustomData();
       },
       src: customFieldImg,
       label: localizedString.addCustomField
