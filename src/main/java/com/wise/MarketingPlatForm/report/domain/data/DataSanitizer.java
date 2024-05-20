@@ -6,11 +6,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,6 +24,8 @@ import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import com.wise.MarketingPlatForm.data.list.CloseableList;
+import com.wise.MarketingPlatForm.data.list.FileBackedMapList;
 import com.wise.MarketingPlatForm.global.util.GroupingUtils;
 import com.wise.MarketingPlatForm.global.util.StringCompareUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -113,6 +118,19 @@ public final class DataSanitizer {
         return this;
     }
 
+    public final DataSanitizer temporaryColumnsAdd() {
+        data
+            .stream()
+            .forEach((d)-> {
+                measures
+                    .stream()
+                    .filter(m -> data.stream().anyMatch(item -> !item.containsKey(m.getName())))
+                    .forEach((fm) -> {
+                        d.put(fm.getName(), "");
+                    });
+            });
+        return this;
+    }
     /**
      * 차원(Dimension) 이름을 기준으로 데이터를 그룹화하여 측정값(Measure)을 집계합니다.
      * 이 과정에서 "SummaryType_측정값명"으로 집계 컬럼이 추가됩니다.

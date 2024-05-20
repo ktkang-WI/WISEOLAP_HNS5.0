@@ -34,10 +34,12 @@ public class BoxPlotDataMaker implements ItemDataMaker {
         // 데이터 기본 가공
         data = sanitizer
                 .dataFiltering(dataAggreagtion.getFilter())
+                .temporaryColumnsAdd()
                 .orderBy()
                 .columnFiltering()
                 .replaceNullData()
                 .getData();
+
         DataPickUpMake customData = new DataPickUpMake(data);
         List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
         if(tempData != null) {
