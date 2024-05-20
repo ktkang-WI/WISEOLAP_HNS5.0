@@ -9,6 +9,7 @@ import {
   from 'components/report/atomic/spreadBoard/util/spreadUtil';
 import {useDispatch, useSelector} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import {sheets, insertWorkbookJSON, designerRef, workbookRef}
@@ -26,6 +27,7 @@ const useSpread = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {setBindingInfo} = SpreadSlice.actions;
+  const loadingActions = LoadingSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
   const {importFile} = useFile();
@@ -42,6 +44,10 @@ const useSpread = () => {
   const bindData = (spreadData) => {
     const bindingInfos = selectBindingInfos(store.getState());
     const workbook = getWorkbook();
+
+    workbook.suspendPaint();
+    workbook.suspendCalcService();
+    workbook.suspendEvent();
 
     Object.keys(spreadData).forEach((datasetId) => {
       const bindingInfo = bindingInfos[datasetId];
@@ -67,10 +73,6 @@ const useSpread = () => {
       const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
       createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
 
-      workbook.suspendPaint();
-      workbook.suspendCalcService();
-      workbook.suspendEvent();
-
       // 추후 환경설정 SpreadBinding 값으로 분기처리
       if (true) {
         // bindedSheet.reset();
@@ -79,6 +81,7 @@ const useSpread = () => {
         const ds = getJsonKey2ColInfos(rowData);
         if (ds.dataSourceHearder) {
           const newRowData = [ds.dataSourceHearder, ...rowData];
+          // bindedSheet.setArray(0, 0, newRowData);
           bindedSheet.setDataSource(newRowData);
           bindedSheet.bindColumns(ds.colInfos);
         }
@@ -105,10 +108,11 @@ const useSpread = () => {
         bindedSheet.setDataSource(dataSource);
         table.filterButtonVisible(false);
       }
-      workbook.resumeEvent();
-      workbook.resumeCalcService();
-      workbook.resumePaint();
     });
+
+    workbook.resumeEvent();
+    workbook.resumeCalcService();
+    workbook.resumePaint();
   };
 
 
@@ -183,13 +187,15 @@ const useSpread = () => {
       const blob = new Blob(
           [data]
       );
-      await excelIoOpen(reportId, blob);
+      await excelIoOpen(reportId, blob)
+          .then(() => dispatch(loadingActions.endJob()));
     }
   };
 
   const excelIoOpen = (reportId, file) => {
     return new Promise((resolve) => {
       const workbook = getWorkbook();
+      dispatch(loadingActions.startJob());
       workbook.open(file, () => {
         resolve();
       }, () => {}, excelIOOpenOtions);
