@@ -193,8 +193,7 @@ public class DataPickUpMake {
             if(measure.getExpression() != null) {
                 String expression = measure.getExpression();
                 for (Measure replace : measures) {
-                    if (replace.getExpression() != null) continue;
-                    if (replace.getSummaryName() == null) continue;
+                    if (replace.getExpression() != null || replace.getSummaryName() == null) continue;
                     expression = expression.replaceAll(replace.getName(), replace.getSummaryName());
                 }
                 tempKey.setExpression(expression);

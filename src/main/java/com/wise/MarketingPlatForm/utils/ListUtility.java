@@ -1,6 +1,5 @@
 package com.wise.MarketingPlatForm.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;

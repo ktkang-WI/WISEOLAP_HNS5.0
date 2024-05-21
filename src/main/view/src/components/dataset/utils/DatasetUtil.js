@@ -1,6 +1,5 @@
 import localizedString from 'config/localization';
 import meaImg from 'assets/image/icon/dataSource/measure.png';
-import folderImg from 'assets/image/icon/report/folder_load.png';
 export const uniqueNameType = {
   CUSTOM_DATA: '987654321'
 };
@@ -8,7 +7,7 @@ export const makeFieldIcon = (fields) => {
   fields = fields.reduce((returnArr, field) => {
     if (field.uniqueName != 0) {
       returnArr.push({
-        parentId: '0',
+        parentId: field?.parentId ? field.parentId : null,
         uniqueName: field.columnName,
         name: field.columnName,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
@@ -41,9 +40,7 @@ export const makeCustomDataFieldIcon = (fields) => {
   generatedFields.unshift({
     name: localizedString.defaultCustomDataName,
     type: 'FLD',
-    parentId: null,
-    uniqueName: uniqueNameType.CUSTOM_DATA,
-    icon: folderImg
+    uniqueName: uniqueNameType.CUSTOM_DATA
   });
   return generatedFields;
 };

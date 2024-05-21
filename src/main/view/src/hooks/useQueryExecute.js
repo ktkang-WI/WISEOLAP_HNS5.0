@@ -96,7 +96,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
-    param.temporaryMeasures = JSON.stringify(orgDataset.customDatas.measures);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
     ItemManager.generateParameter(item, param);
 
@@ -143,6 +144,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem =
     JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
     ItemManager.generateAdHocParameter(rootItem, param);

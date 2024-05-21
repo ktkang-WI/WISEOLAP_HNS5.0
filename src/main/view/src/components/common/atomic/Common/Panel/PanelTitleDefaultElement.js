@@ -44,7 +44,7 @@ const PanelTitleDefaultElement = () => {
       alert(localizedString.datasetNotSelected);
       return;
     }
-    const dataSource = await models?.DataSource?.getByDsId(dataset?.dataSrcId);
+    const dataSource = await models?.DataSource?.getByDsId(dataset?.dsId);
     if (!dataSource) {
       alert(localizedString.datasetNotSelected);
       return;

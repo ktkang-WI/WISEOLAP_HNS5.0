@@ -150,6 +150,7 @@ public class ReportService {
     		} else {
     			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
     			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
+                /* TODO: 송봉조 주임 삭제 요청
     			if (dataset.get("datasets") != null) {
     				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
@@ -160,7 +161,7 @@ public class ReportService {
     						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}
-    			}
+    			} */
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
