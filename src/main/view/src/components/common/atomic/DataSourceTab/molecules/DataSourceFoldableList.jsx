@@ -106,11 +106,11 @@ const DataSourceFoldableList = ({dataset}) => {
               style={{width: '16px', height: '16px', marginBottom: '1px'}}
               src={iconMapper[item.type]}
               className="dx-icon"/>
-            <div className='tooltip'>
+            <span className='ct-tooltip'>
               {item.name}
               {item.expression ?
-              <span className='tooltiptext'>{item.expression}</span> : <></>}
-            </div>
+              <span className='ct-tooltiptext'>{item.expression}</span> : <></>}
+            </span>
           </div>
         )}
       </Draggable>

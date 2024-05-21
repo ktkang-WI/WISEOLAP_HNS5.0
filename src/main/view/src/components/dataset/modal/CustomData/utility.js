@@ -8,14 +8,14 @@ export const customDataInitial = () => {
 };
 
 export const handleException = (customDataList) => {
-  let isok = true;
+  const isok = false;
   // 사용자 정의 데이터 NULL 체크
+  if (customDataList.length == 0) return isok;
   customDataList.forEach((item)=>{
-    isok = item?.fieldName && item?.expression && item?.type;
-    if (isok === false) {
+    if (item?.fieldName && item?.expression && item?.type) {
       return isok;
     }
   });
 
-  return isok;
+  return !isok;
 };

@@ -54,7 +54,7 @@ const CustomDataCalcModal = ({...props}) => {
     let isOk =
       customData?.fieldName && customData?.expression && customData?.type;
     // 사용자 정의 데이터 NULL 체크
-    if (isOk === false) {
+    if (!isOk) {
       alert(localizedString.alertInfo.customDataCalc.empty);
       return isOk;
     }

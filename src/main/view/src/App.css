@@ -186,13 +186,12 @@ img {
 }
 
 /* TODO: 툴팁관련 공용컴포넌트 있으면 알려주세요.*/
-.tooltip {
+.ct-tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black;
 }
 
-.tooltip .tooltiptext {
+.ct-tooltip .ct-tooltiptext {
   margin-left: 20px;
   visibility: hidden;
   width: 120px;
@@ -209,6 +208,6 @@ img {
 
 }
 
-.tooltip:hover .tooltiptext {
+.ct-tooltip:hover .ct-tooltiptext {
   visibility: visible;
 }

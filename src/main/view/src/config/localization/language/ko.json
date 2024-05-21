@@ -202,6 +202,7 @@
   "conditionName": "조건 명",
   "defaultDatasetName": "데이터집합",
   "defaultCustomDataName": "계산된 필드",
+  "itemNotSelected": "아이템이 없습니다.",
   "dataSourceNotSelectedMsg": "데이터 원본을 선택하지 않았습니다.",
   "selectDataSource": "데이터 원본 선택",
   "dataSourceName": "데이터 원본 명",

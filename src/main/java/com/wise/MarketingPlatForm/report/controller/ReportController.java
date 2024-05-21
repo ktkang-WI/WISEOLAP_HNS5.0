@@ -48,6 +48,8 @@ import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import com.wise.MarketingPlatForm.utils.Function;
+import com.wise.MarketingPlatForm.utils.ListDataUtility;
 import com.wise.MarketingPlatForm.utils.ListUtility;
 
 import java.lang.reflect.Type;
@@ -65,8 +67,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/report")
 public class ReportController {
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
-
     private final ReportService reportService;
+    
+    @Autowired
+    private ListDataUtility<Measure> listDataUtility;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -161,10 +165,12 @@ public class ReportController {
         ListUtility.getInstance().removeNullInParameterList(dimensions);
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
-        List<Measure> mergeMeasures = new ArrayList<>();
-
-        for (Measure measure : temporaryMeasures) mergeMeasures.add(measure);
-        for (Measure measure : measures) mergeMeasures.add(measure);
+        Function<Measure> func = (m1, m2) -> {
+            if (m1.getName() == m2.getName()) return false;
+            else return true;
+        };
+        List<Measure> mergeMeasures =
+            listDataUtility.mergeList(measures, temporaryMeasures, func);
         
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)

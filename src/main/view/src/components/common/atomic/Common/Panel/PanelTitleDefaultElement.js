@@ -21,6 +21,8 @@ import EditParamterModal from 'components/dataset/modal//EditParamterModal';
 import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
 import useQueryExecute from 'hooks/useQueryExecute';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -31,9 +33,13 @@ const PanelTitleDefaultElement = () => {
     updateParameterInformation
   } = ParameterSlice.actions;
   const {initItemByDatsetId} = ItemSlice.actions;
-
+  const selectedCurrentItem = useSelector(selectCurrentItem);
   const handleCustomData = async () => {
     const dataset = selectCurrentDataset(store?.getState());
+    if (!selectedCurrentItem) {
+      alert(localizedString.itemNotSelected);
+      return;
+    }
     if (!dataset) {
       alert(localizedString.datasetNotSelected);
       return;

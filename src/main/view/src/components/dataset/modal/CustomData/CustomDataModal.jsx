@@ -25,7 +25,6 @@ import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {getNewDataField}
   from 'components/common/atomic/DataColumnTab/utils/utility';
-import store from 'redux/modules';
 import _ from 'lodash';
 
 export const CustomDataContext = createContext();
@@ -50,7 +49,10 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
   // Selector
   const selectedReportId = useSelector(selectCurrentReportId);
   const selectedCurrentDataset = useSelector(selectCurrentDataset);
-  const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
+  const selectedCurrentDataField = useSelector(selectCurrentDataField);
+  if (!selectCurrentDataField) return;
+
+  const dataField = _.cloneDeep(selectedCurrentDataField);
   // Context
   const context = {
     state: {
@@ -276,7 +278,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
     let isok = false;
     if (!handleException(customDataList)) {
       alert(localizedString.alertInfo.customData.empty);
-      isok = true;
+      return !isok;
     };
     const tempFields = makeCustomDataFieldIcon(customDataList);
 
