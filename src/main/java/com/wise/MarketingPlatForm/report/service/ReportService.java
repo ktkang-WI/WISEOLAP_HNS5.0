@@ -70,7 +70,6 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryMa
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
@@ -222,38 +221,13 @@ public class ReportService {
         String query = queryGenerator.getQuery(dataAggreagtion);
 
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
-
+        
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
-
+       
         result = itemDataMaker.make(dataAggreagtion, martResultDTO.getRowData());
+        result.setQuery(query);
 
-        return result;
-    }
-
-    public ReportResult getPivotData(final Map<String, String> param, final PagingParam pagingParam,
-            DataAggregation dataAggreagtion) throws Exception {
-        final SummaryMatrix matrix = getPivotSummaryMatrix(param, pagingParam, dataAggreagtion);
-
-        if (matrix == null) {
-            return null;
-        }
-
-        final Paging paging = new Paging();
-        paging.setOffset(pagingParam.getOffset());
-        paging.setLimit(pagingParam.getLimit());
-
-        final SummaryMatrix pagedMatrix;
-
-        if (!paging.isPagingEnabled() || (paging.getOffset() == 0 && matrix.getRows() <= paging.getLimit())) {
-            pagedMatrix = matrix;
-        } else {
-            pagedMatrix = SummaryMatrixFactory.slicePageSummaryMatrix(matrix, paging);
-        }
-
-        PivotResult result = new PivotResult();
-
-        result.setMatrix(pagedMatrix);
         return result;
     }
 
@@ -278,7 +252,11 @@ public class ReportService {
         for (String item : items) {
             ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
-            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+            ReportResult pivotResult = dataMaker.make(dataAggreagtion, rowData);
+            
+            pivotResult.setQuery(query);
+            
+            result.put(item, pivotResult);
         }
 
         return result;
