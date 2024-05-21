@@ -17,12 +17,13 @@ import useReportSave from 'hooks/useReportSave';
 import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
+import ViewQuery from '../modal/ViewQuery';
 
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {alert} = useModal();
+  const {alert, openModal} = useModal();
   const initialDisplay = useSelector(selectInitialDisplay);
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
@@ -77,7 +78,13 @@ const HeaderDefaultElement = () => {
     'ShowQuery': {
       'id': 'show_query',
       'label': localizedString.showQuery,
-      'type': 'TextButton'
+      'buttonType': 'whiteRound',
+      'width': '94px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ViewQuery);
+      }
     },
     'ReportSetting': {
       'id': 'report_setting',

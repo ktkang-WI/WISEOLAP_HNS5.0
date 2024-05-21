@@ -2,6 +2,12 @@ import {createSelector} from 'reselect';
 import {selectCurrentReportId} from './ReportSelector';
 import {selectCurrentDataset} from './DatasetSelector';
 
+export const selectSpread = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.spread,
+    (reportId, spread) => spread[reportId]
+);
+
 export const selectSpreadMeta = createSelector(
     selectCurrentReportId,
     (state) => state.meta.spread,
