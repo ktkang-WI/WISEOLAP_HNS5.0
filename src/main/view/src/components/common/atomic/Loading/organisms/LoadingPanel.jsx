@@ -10,6 +10,18 @@ const ImgWrapper = styled(Wrapper)`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 64px;
+  height: 64px;
+  z-index: 99999999999;
+  background-image: url(${loadingImg});
+  background-repeat: no-repeat;
+  background-size: 64px 64px;
 `;
 
 const LoadingPanel = () => {
@@ -19,9 +31,7 @@ const LoadingPanel = () => {
 
   return (
     <Overlay zIndex={2000}>
-      <ImgWrapper>
-        <img src={loadingImg} width='64px' height='64px'/>
-      </ImgWrapper>
+      <ImgWrapper/>
     </Overlay>
   );
 };
