@@ -81,7 +81,7 @@ const useSpreadRibbon = () => {
     createReportBlob().then(
         (blob) => uploadFile(
             blob,
-            {fileName: reportId + '.xlsx'}
+            {fileName: reportId + '.sjs'}
         ));
   };
   const saveReport = () => {

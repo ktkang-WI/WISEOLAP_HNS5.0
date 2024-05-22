@@ -8,8 +8,7 @@ import models from 'models';
 import useReportSave from 'hooks/useReportSave';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {useDispatch} from 'react-redux';
-import {DesignerMode, EditMode} from 'components/config/configType';
-import useSpread from 'hooks/useSpread';
+import {EditMode} from 'components/config/configType';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import LinkSlice from 'redux/modules/LinkSlice';
@@ -42,7 +41,6 @@ const StyledTab = styled(CommonTab)`
 const ReportTabs = () => {
   const [reportList, setReportList] = useState();
   const {loadReport, querySearch} = useReportSave();
-  const {setExcelFile} = useSpread();
   const dispatch = useDispatch();
   const {alert} = useModal();
 
@@ -73,10 +71,7 @@ const ReportTabs = () => {
                 return;
               }
             }
-            const reportType = selectedReport.reportType;
-            if (reportType === DesignerMode['EXCEL']) {
-              await setExcelFile(selectedReport.id);
-            }
+
             models.Report.getReportById('admin', selectedReport.id)
                 .then(({data}) => {
                   try {
