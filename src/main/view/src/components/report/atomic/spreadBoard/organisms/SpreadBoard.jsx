@@ -57,7 +57,9 @@ const SpreadBoard = () => {
   }, []);
 
   useEffect(() => {
-    bindData(spreadData);
+    if (Object.keys(spreadData).length > 0) {
+      bindData(spreadData);
+    }
   }, [spreadData]);
 
 
