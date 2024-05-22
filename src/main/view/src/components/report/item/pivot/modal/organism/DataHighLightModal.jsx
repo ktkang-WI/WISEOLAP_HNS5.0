@@ -8,7 +8,7 @@ import {Column, Selection, Button} from 'devextreme-react/data-grid';
 import styled from 'styled-components';
 import addHighLightIcon
   from '../../../../../../assets/image/icon/button/ico_zoom.png';
-import {useMemo, useRef, useState} from 'react';
+import {createContext, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem, selectCurrentItems, selectRootItem}
   from 'redux/selector/ItemSelector';
@@ -57,6 +57,8 @@ const selectedReportTypeHighlight = (selectedItem, reportType) => {
   };
 };
 
+export const highlightFormContext = createContext(null);
+
 const DataHighlightModal = ({...props}) => {
   const dispatch = useDispatch();
   const {alert, confirm} = useModal();
@@ -72,7 +74,7 @@ const DataHighlightModal = ({...props}) => {
         [...selectedReportTypeHighlight(selectedItem, reportType)]
     );
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
-  const [data, setData] = useState(_.cloneDeep(init));
+  const [formData, setData] = useState(_.cloneDeep(init));
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
   const ref = useRef(null);
   const [showField, setShowField] = useState(false);
@@ -126,7 +128,7 @@ const DataHighlightModal = ({...props}) => {
 
     if (highlight === false) {
       alert(localizedString.highlightDupleCheck1);
-      setData(_.cloneDeep(init));
+      setData({...init});
       return;
     }
 
@@ -180,7 +182,7 @@ const DataHighlightModal = ({...props}) => {
             (highlight) => highlight !== data.row.key
         );
 
-        setData(_.cloneDeep(init));
+        setData({...init});
         setHighlightList(deletedHighlight);
       });
     }
@@ -200,15 +202,14 @@ const DataHighlightModal = ({...props}) => {
 
         if (!highlight) {
           alert(localizedString.highlightDupleCheck2);
-          setData(_.cloneDeep(init));
+          setData({...init});
           return true;
         }
+        // 적용 전 유효성 검사.
+        const isInvalid =
+          highlight.some((item) => !validation(item, highlight, 'flag'));
 
-        for (let i = 0; i < highlight.length; i++) {
-          if (!validation(highlight[i], highlight, 'flag')) {
-            return true;
-          }
-        }
+        if (isInvalid) return isInvalid;
 
         if (isNullData) {
           resultHighlightList= highlight;
@@ -266,12 +267,6 @@ const DataHighlightModal = ({...props}) => {
                 hint={localizedString.deleteReport}
               />
             </Column>
-            {/* <Editing
-              mode='row'
-              allowDeleting={true}
-              useIcons={true}
-              onChangesChange={deleteHighlightList}
-            /> */}
           </CommonDataGrid>
         </ModalPanel>
         <ModalPanel
@@ -279,16 +274,17 @@ const DataHighlightModal = ({...props}) => {
           width='40%'
           padding='10'>
           {/* 하이라이트 정보를 구성. dev의 <Form> 사용. */}
-          <DataHighlightForm
-            ref={ref}
-            formData={data}
-            setData={setData}
-            measureNames={measureNames}
-            showField={showField}
-            setShowField={setShowField}
-            highlightList={highlightList}
-            setHighlightList={setHighlightList}
-          />
+          <highlightFormContext.Provider value={{
+            ref,
+            formData,
+            setData,
+            measureNames,
+            showField,
+            setShowField,
+            highlightList,
+            setHighlightList}}>
+            <DataHighlightForm/>
+          </highlightFormContext.Provider>
         </ModalPanel>
       </StyledWrapper>
     </Modal>

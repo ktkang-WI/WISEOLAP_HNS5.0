@@ -1,18 +1,16 @@
 import {Form, Template} from 'devextreme-react';
 import {Item, Label} from 'devextreme-react/form';
 import localizedString from '../../../../../../config/localization';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import EmojiArr from './EmojiArr';
 import _ from 'lodash';
 import useModal from 'hooks/useModal';
+import {highlightFormContext} from '../organism/DataHighLightModal';
 
-const DataHighlightForm = (
-    {formData, measureNames, showField, setShowField,
-      highlightList, setHighlightList, setData}, ref) => {
+const DataHighlightForm = () => {
   // 선택한 아이콘 보여줌.
   const [selectedIcon, setSelectedIcon] = useState('');
   const {alert} = useModal();
-
   const emojiSelectBox = (src) => {
     if (src !== '') {
       return (
@@ -27,6 +25,17 @@ const DataHighlightForm = (
       <div className='dx-dropdowneditor-icon'></div>
     );
   };
+
+  const {
+    formData,
+    measureNames,
+    showField,
+    setShowField,
+    highlightList,
+    setHighlightList,
+    setData,
+    ref
+  } = useContext(highlightFormContext);
 
   return (
     <Form
@@ -49,10 +58,12 @@ const DataHighlightForm = (
         );
         // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
         let isOtherChange = true;
-        if (findIdx != -1 && (e.dataField == 'dataItem' ||
-        e.dataField == 'condition' || e.dataField == 'valueFrom')) {
-          if (copyHighlight[findIdx][e.dataField] == e.value) {
-            isOtherChange = false;
+        if (findIdx != -1) {
+          const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
+          if (dataFieldList.includes(e.dataField)) {
+            if (copyHighlight[findIdx][e.dataField] == e.value) {
+              isOtherChange = false;
+            }
           }
         }
 
