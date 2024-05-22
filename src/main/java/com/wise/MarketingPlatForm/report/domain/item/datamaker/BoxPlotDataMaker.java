@@ -58,7 +58,7 @@ public class BoxPlotDataMaker implements ItemDataMaker {
         info.put("min", baseData.getMin());
         info.put("max", baseData.getMax());
 
-        CommonResult result = new CommonResult(boxPlotData, "", info);
+        CommonResult result = new CommonResult(boxPlotData, info);
 
         return result;
     }

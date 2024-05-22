@@ -57,6 +57,25 @@ public class LoginController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "check password", description = "id와 비밀번호가 일치하는지 확인합니다.")
+    @Parameters({
+            @Parameter(name = "id", description = "아이디"),
+            @Parameter(name = "password", description = "패스워드"),
+    })
+    @PostMapping("/check-password")
+    public ResponseEntity<Object> checkPassword(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        String id = param.getOrDefault("id", "");
+        String password = param.getOrDefault("password", "");
+
+        UserDTO userDTO = loginService.getLoginUser(id, password);
+
+        if (userDTO != null) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @Operation(summary = "logout", description = "사용자의 모든 세션을 삭제합니다.")
     @GetMapping("/logout")
     @ResponseBody

@@ -70,7 +70,7 @@ public class TimelineDataMaker implements ItemDataMaker {
             timelineData.add(nRow);
         }
 
-        CommonResult result = new CommonResult(timelineData, "", null);
+        CommonResult result = new CommonResult(timelineData, null);
 
         return result;
     }

@@ -311,6 +311,10 @@ color: var(--gray600);
   border-bottom: 1px solid var(--gray200);
 }
 
+.flexlayout__tab .dx-datagrid-rowsview .dx-row {
+  border-bottom: initial;
+}
+
 .dx-pivotgrid .dx-pivotgrid-area td, .dx-datagrid td {
   color: var(--gray600);
   border-color: var(--gray200) !important;
