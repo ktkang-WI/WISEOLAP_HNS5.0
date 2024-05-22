@@ -125,6 +125,7 @@ const useSpreadRibbon = () => {
         e.fileName += e.extName;
       }
       const fileName = e.fileName;
+      // 다운로드 방식 변경
       e.designer.getWorkbook().export((blob) => {
         saveAs(blob, fileName);
       }, () => {
