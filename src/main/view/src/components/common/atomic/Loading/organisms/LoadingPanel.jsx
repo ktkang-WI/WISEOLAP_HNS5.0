@@ -23,17 +23,13 @@ const ImgWrapper = styled(Wrapper)`
   background-repeat: no-repeat;
   background-size: 64px 64px;
 `;
-
 const LoadingPanel = () => {
   const jobQuantity = useSelector(selectJobQuantity);
-
   if (jobQuantity == 0) return <></>;
-
   return (
     <Overlay zIndex={2000}>
       <ImgWrapper/>
     </Overlay>
   );
 };
-
 export default LoadingPanel;
