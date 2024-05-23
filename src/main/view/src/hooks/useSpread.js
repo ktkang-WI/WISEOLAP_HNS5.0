@@ -41,6 +41,34 @@ const useSpread = () => {
     }
   };
 
+  // TODO: 정규표현식 공용 코드로 관리되도록 고려
+  // 추가 적인 정규표현식을 사용하는 경우 여기서 참고하여 사용할 수 있음
+  const isDateString = (value) => {
+    const datePatterns = [
+      /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+      /^\d{4}\/\d{2}\/\d{2}$/, // YYYY/MM/DD
+      /^\d{2}-\d{2}-\d{4}$/, // MM-DD-YYYY
+      /^\d{4}\.\d{2}\.\d{2}\s\d{2}:\d{2}:\d{2}$/, // YYYY.MM.DD HH:mm:ss
+      /^\d{2}\.\d{2}\.\d{2}\s\d{2}:\d{2}:\d{2}$/ // DD.MM.YY HH:mm:ss
+      // 추가적인 날짜 형식에 대한 정규 표현식들을 여기에 추가할 수 있음
+    ];
+
+    // 어떤 하나의 정규 표현식에도 매치되지 않으면 날짜 형식이 아님
+    return datePatterns.some((pattern) => pattern.test(value));
+  };
+
+  const convertDates = (obj) => {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof obj[key] === 'string' && isDateString(obj[key])) {
+          const date = new Date(obj[key]);
+          date.setHours(0, 0, 0, 0); // 시간 정보를 0으로 설정
+          obj[key] = date;
+        }
+      }
+    }
+  };
+
   const bindData = (spreadData) => {
     const bindingInfos = selectBindingInfos(store.getState());
     const workbook = getWorkbook();
@@ -79,6 +107,7 @@ const useSpread = () => {
         bindedSheet.clear();
         bindedSheet.autoGenerateColumns = true;
         const ds = getJsonKey2ColInfos(rowData);
+        rowData.forEach((row) => convertDates(row));
         if (ds.dataSourceHearder) {
           const newRowData = [ds.dataSourceHearder, ...rowData];
           // bindedSheet.setArray(0, 0, newRowData);
