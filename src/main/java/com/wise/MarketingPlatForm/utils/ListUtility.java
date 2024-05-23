@@ -23,6 +23,9 @@ public class ListUtility {
 
   public <T> boolean removeNullInParameterList(List<T> list) {
     boolean isOk = false;
+    if (list == null) {
+      logger.debug("");
+    }
     if (list.remove(null)) {
         isOk = true;
         logger.debug("매개변수에 Null 요소가 포함된 배열이 입력되어 해당 요소가 삭제되었습니다.");

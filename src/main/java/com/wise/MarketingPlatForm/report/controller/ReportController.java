@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.report.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
-import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -66,14 +61,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/report")
 public class ReportController {
-    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     private final ReportService reportService;
     
     @Autowired
     private ListDataUtility<Measure> listDataUtility;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     ReportController(ReportService reportService) {
         this.reportService = reportService;
@@ -166,8 +157,7 @@ public class ReportController {
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
         Function<Measure> func = (m1, m2) -> {
-            if (m1.getName() == m2.getName()) return false;
-            else return true;
+            return !m1.getName().equals(m2.getName());
         };
         List<Measure> mergeMeasures =
             listDataUtility.mergeList(measures, temporaryMeasures, func);
@@ -284,11 +274,12 @@ public class ReportController {
         ListUtility.getInstance().removeNullInParameterList(dimensions);
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
-        List<Measure> mergeMeasures = new ArrayList<>();
-
-        for (Measure measure : temporaryMeasures) mergeMeasures.add(measure);
-        for (Measure measure : measures) mergeMeasures.add(measure);
-
+        
+        Function<Measure> func = (m1, m2) -> {
+            return !m1.getName().equals(m2.getName());
+        };
+        List<Measure> mergeMeasures =
+            listDataUtility.mergeList(measures, temporaryMeasures, func);
 
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)

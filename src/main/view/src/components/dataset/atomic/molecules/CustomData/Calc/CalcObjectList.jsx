@@ -1,15 +1,10 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {dataSource}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
-// import {removeDuplicate} from 'components/utils/utility';
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
-import {
-// selectCurrentDataField
-} from 'redux/selector/ItemSelector';
-
 
 const ListStyled = {
   width: '100%',

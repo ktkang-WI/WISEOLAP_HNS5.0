@@ -139,9 +139,4 @@ public class ChartDataMaker implements ItemDataMaker {
         return result;
     }
 
-    private Map<String, Measure> generateSingleDataMap(String key, Object o) {
-        Map<String, Measure> temp = new HashMap<>();
-        temp.put(key, (Measure) o);
-        return temp;
-    }
 }
