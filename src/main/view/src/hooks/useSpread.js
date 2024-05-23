@@ -41,6 +41,8 @@ const useSpread = () => {
     }
   };
 
+  // TODO: 정규표현식 공용 코드로 관리되도록 고려
+  // 추가 적인 정규표현식을 사용하는 경우 여기서 참고하여 사용할 수 있음
   const isDateString = (value) => {
     const datePatterns = [
       /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
