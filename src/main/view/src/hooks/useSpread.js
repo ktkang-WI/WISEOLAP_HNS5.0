@@ -35,7 +35,6 @@ const useSpread = () => {
   const getWorkbook = () => {
     const editMode = selectEditMode(store.getState());
     if (editMode === EditMode['DESIGNER']) {
-      console.log(designerRef.current);
       return designerRef.current.designer.getWorkbook();
     } else if (editMode === EditMode['VIEWER']) {
       return workbookRef.current.spread;
