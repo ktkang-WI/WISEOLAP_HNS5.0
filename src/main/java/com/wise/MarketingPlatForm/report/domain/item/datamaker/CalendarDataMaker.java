@@ -80,8 +80,8 @@ public class CalendarDataMaker implements ItemDataMaker  {
       seriesMeasureNames.add(measure);
     }
 
-    info.put("seriesMeasureNames", seriesMeasureNames);
-    CommonResult result = new CommonResult(data, "", info);
+      info.put("seriesMeasureNames", seriesMeasureNames);
+      CommonResult result = new CommonResult(data, info);
 
     return result;
   }

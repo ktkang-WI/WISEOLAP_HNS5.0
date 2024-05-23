@@ -27,6 +27,7 @@ public class UserService {
       .grpId(userMstr.getGrpId())
       .runMode(userMstr.getUserRunMode())
       .passwd(userMstr.getPasswd())
+      .userDesc(userMstr.getUserDesc())
       .build();
 
     return accountDAO.createUser(user);

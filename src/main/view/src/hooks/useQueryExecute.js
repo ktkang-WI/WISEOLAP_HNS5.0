@@ -249,36 +249,51 @@ const useQueryExecute = () => {
   };
 
   const executeSpread = async () => {
-    const datasets = selectCurrentDatasets(store.getState());
-    const currentReportId = selectCurrentReportId(store.getState());
+    const state = store.getState();
+    const datasets = selectCurrentDatasets(state);
+    const currentReportId = selectCurrentReportId(state);
+
     if (_.isEmpty(datasets)) {
-      alert(localizedString.dataSourceNotSelectedMsg); return;
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
     }
-    const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos(store.getState());
-    const promises = [];
+
+    const parameters = selectRootParameter(state);
+    const bindingInfos = selectBindingInfos(state);
     const datas = {};
 
-    datasets.forEach((dataset) => {
-      promises.push((async () => {
-        if (
-          _.isEmpty(bindingInfos[dataset.datasetId]) ||
-          !bindingInfos[dataset.datasetId].useBinding
-        ) {
-          alert(localizedString.spreadBindingInfoNot); return;
-        }
-        const dsId = dataset.dataSrcId;
-        const query = dataset.datasetQuery;
-        const data =
-          await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
-        datas[dataset.datasetId] = data.data;
-      })());
+    const promises = datasets.map((dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+      !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot);
+        return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      return new Promise((resolve, reject) => {
+        models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
+            .then((res) => {
+              resolve({datasetId: dataset.datasetId, data: res.data});
+            })
+            .catch((e) => {
+              reject(e);
+            });
+      });
     });
-    await Promise.all(promises);
-    dispatch(setSpreadData({
-      reportId: currentReportId,
-      data: datas
-    }));
+
+    Promise.all(promises)
+        .then((res) => {
+          res.forEach((v) => {
+            datas[v.datasetId] = v.data;
+          });
+          dispatch(setSpreadData({
+            reportId: currentReportId,
+            data: datas
+          }));
+        })
+        .catch((res) => {
+          console.log(res);
+        });
   };
 
   /**

@@ -75,7 +75,7 @@ public class ChordDataMaker implements ItemDataMaker {
         chordData.put("groups", groups);
         chordData.put("matrix", matrix);
 
-        CommonResult result = new CommonResult(data, "", chordData);
+        CommonResult result = new CommonResult(data, chordData);
 
         return result;
     }

@@ -43,8 +43,8 @@ public class UserController {
   public ResponseEntity<RestAPIVO> createUser(
       @RequestParam(required = true) String userId,
       @RequestParam(required = true) String userNm,
-      @RequestParam(required = false, defaultValue = "") String email_1,
-      @RequestParam(required = false, defaultValue = "") String email_2,
+      @RequestParam(required = false, defaultValue = "") String email1,
+      @RequestParam(required = false, defaultValue = "") String email2,
       @RequestParam(required = false, defaultValue = "") String telNo,
       @RequestParam(required = false, defaultValue = "0") int grpId,
       @RequestParam(required = true) String userRunMode,
@@ -55,8 +55,8 @@ public class UserController {
     UserGroupDTO userMstr = UserGroupDTO.builder()
       .userId(userId)
       .userNm(userNm)
-      .eMail1(email_1)
-      .eMail2(email_2)
+      .eMail1(email1)
+      .eMail2(email2)
       .telNo(telNo)
       .grpId(grpId)
       .userRunMode(userRunMode)

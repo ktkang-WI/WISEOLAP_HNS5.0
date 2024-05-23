@@ -502,7 +502,7 @@
   "highlightBetweenValueCompareMsg": "조건 값(To)이 조건 값(From)보다 커야 합니다.",
   "highlightBetweenValueEssentialMsg": "조건유형 Between은 조건 값(To)도 필수 입력입니다.",
   "highlightOnlyNumberMsg": "조건 값은 숫자만 입력해 주세요.",
-  "highlightInputEssentialValueMsg": "데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다.",
+  "highlightInputEssentialValueMsg": "필수 입력 항목을 입력해 주세요.\n필수 입력(데이터항목, 조건유형, 조건값(From) 조건유형이 Between인 경우 조건값(To))",
   "reportCorrupted": "보고서 데이터가 손상되어 있습니다.\n 관리자에게 문의해 주세요",
   "menuChangeConfirm": "저장되지 않은 작업 내용이 손실될 수 있습니다.\n 이동하시겠습니까?",
   "saveReportMsg": "보고서를 저장했습니다.",

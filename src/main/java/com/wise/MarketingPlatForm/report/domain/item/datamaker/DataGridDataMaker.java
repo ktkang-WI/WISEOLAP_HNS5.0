@@ -44,7 +44,7 @@ public class DataGridDataMaker implements ItemDataMaker {
         Map<String, Object> info = new HashMap<String, Object>();
         info.put("maxPage", sanitizer.getMaxPage());
         info.put("totalRows", sanitizer.getGrpDataLenth());
-        CommonResult result = new CommonResult(data, "", info);
+        CommonResult result = new CommonResult(data, info);
 
         return result;
     }

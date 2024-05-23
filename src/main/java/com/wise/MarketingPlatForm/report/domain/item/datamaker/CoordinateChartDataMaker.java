@@ -81,7 +81,7 @@ public class CoordinateChartDataMaker implements ItemDataMaker {
     info.put("yRange", yRange);
     info.put("x", xName);
     info.put("y", yName);
-    CommonResult result = new CommonResult(data, "", info);
+    CommonResult result = new CommonResult(data, info);
 
     return result;
   }
