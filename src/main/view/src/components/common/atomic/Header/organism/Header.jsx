@@ -13,8 +13,16 @@ import ReportTitleText from '../../ReportTitleTab/atom/ReportTitleText';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
+import division from 'assets/image/icon/button/Rectangle_327.png';
+import {Popover} from 'devextreme-react';
 
 const theme = getTheme();
+
+const Division = styled.img`
+  src: ${(props) => props.src};
+  padding-right: 20px;
+  padding-left: 10px;
+`;
 
 const StyledHeader = styled.div`
   width: 100vw;
@@ -155,6 +163,37 @@ const Header = ({left, middle, right}) => {
             {' '}
             {item.label}
           </CommonButton>
+        </HeaderPanel>
+      );
+    } else if (item.type === 'UserInfoButton') {
+      return (
+        <HeaderPanel
+          width={'auto'}
+          position={item.position}
+        >
+          <Division src={division}/>
+          <CommonButton
+            id={item.id}
+            title={item.label}
+            type={item.buttonType}
+            width={item.width}
+            height={'32px'}
+            onClick={item.onClick}
+          >
+            <span>안녕하세요!&ensp;&ensp;</span>
+            <span
+              style={{textDecoration: 'underline',
+                color: '#005196'
+              }}>{item.label + ' 님'}</span>
+            <Popover
+              target={'#' + item.id}
+              contentRender={item.contentRender}
+              // popover 속성
+              {...item.popoverProps}
+            >
+            </Popover>
+          </CommonButton>
+          &ensp;&ensp;
         </HeaderPanel>
       );
     } else {
