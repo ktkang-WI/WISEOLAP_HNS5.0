@@ -10,7 +10,8 @@ export const login = (id, password) => {
 };
 
 export const logout = () => {
-  return axios.get(path + '/logout');
+  const res = axios.get(path + '/logout');
+  return res;
 };
 
 export const checkPassword = (id, password) => {

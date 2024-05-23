@@ -36,12 +36,14 @@ const UserInfoPopover = () => {
           height={'32px'}
           type='onlyImageText'
           onClick={() => {
-            confirm(localizedString.confirmLogoutMsg, async () => {
-              const res = await models.Login.logout();
-
-              if (res.status == 200 ) {
-                nav(defaultPath);
-              }
+            confirm(localizedString.confirmLogoutMsg, () => {
+              models.Login.logout().then((response) => {
+                if (response.status == 200 ) {
+                  nav(defaultPath);
+                }
+              }).catch(() => {
+                throw new Error(localizedString.failedLogout);
+              });
             });
           }}
         >

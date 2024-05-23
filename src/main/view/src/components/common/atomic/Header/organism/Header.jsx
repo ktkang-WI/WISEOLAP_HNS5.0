@@ -13,16 +13,9 @@ import ReportTitleText from '../../ReportTitleTab/atom/ReportTitleText';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
-import division from 'assets/image/icon/button/Rectangle_327.png';
-import {Popover} from 'devextreme-react';
+import UserInfoButtonUI from '../atom/UserInfoButtonUI';
 
 const theme = getTheme();
-
-const Division = styled.img`
-  src: ${(props) => props.src};
-  padding-right: 20px;
-  padding-left: 10px;
-`;
 
 const StyledHeader = styled.div`
   width: 100vw;
@@ -60,6 +53,9 @@ const Header = ({left, middle, right}) => {
   const report = useSelector(selectCurrentReport);
 
   const getHeaderItem = (item) => {
+    const useInfoBtn =
+      item.id == 'user_info' && <UserInfoButtonUI name={item.label}/>;
+
     if (item.type === 'AnimatedImageButton') {
       return (
         <HeaderPanel
@@ -153,47 +149,19 @@ const Header = ({left, middle, right}) => {
           width={'auto'}
           position={item.position}>
           <CommonButton
-            title={item.label}
-            type={item.buttonType}
-            width={item.width}
-            height={'32px'}
-            onClick={item.onClick}
-          >
-            {item.icon && <img src={item.icon}/>}
-            {' '}
-            {item.label}
-          </CommonButton>
-        </HeaderPanel>
-      );
-    } else if (item.type === 'UserInfoButton') {
-      return (
-        <HeaderPanel
-          width={'auto'}
-          position={item.position}
-        >
-          <Division src={division}/>
-          <CommonButton
             id={item.id}
             title={item.label}
             type={item.buttonType}
             width={item.width}
             height={'32px'}
             onClick={item.onClick}
+            usePopover={item.usePopover}
+            popoverProps={item.popoverProps}
+            contentRender={item.contentRender}
           >
-            <span>안녕하세요!&ensp;&ensp;</span>
-            <span
-              style={{textDecoration: 'underline',
-                color: '#005196'
-              }}>{item.label + ' 님'}</span>
-            <Popover
-              target={'#' + item.id}
-              contentRender={item.contentRender}
-              // popover 속성
-              {...item.popoverProps}
-            >
-            </Popover>
+            {item.icon && <img src={item.icon}/>}
+            {useInfoBtn ? useInfoBtn : ' ' + item.label}
           </CommonButton>
-          &ensp;&ensp;
         </HeaderPanel>
       );
     } else {

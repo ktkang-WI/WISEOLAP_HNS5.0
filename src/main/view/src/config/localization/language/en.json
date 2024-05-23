@@ -18,6 +18,7 @@
   "dataSourceModify": "data source modify",
   "dataSourceRemove": "data source remove",
   "dataItem": "Data Item",
+  "hello": "hello",
   "dimension": "Dimension",
   "dimensionGrop": "Dimension Group",
   "measure": "Measure",
@@ -436,5 +437,6 @@
   "reportNotSelectedMsg":"There are no open reports.",
   "logout": "logout",
   "mypage": "my page",
-  "confirmLogoutMsg": "Do you want to log out?"
+  "confirmLogoutMsg": "Do you want to log out?",
+  "failedLogout": "Logout failed. Please contact the administrator."
 }

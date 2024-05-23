@@ -20,6 +20,7 @@ import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
+// import styled from 'styled-components';
 
 
 const HeaderDefaultElement = () => {
@@ -29,6 +30,7 @@ const HeaderDefaultElement = () => {
   const initialDisplay = useSelector(selectInitialDisplay);
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
+  // TODO: 임시용
   const test = '관리자';
 
   return {
@@ -98,9 +100,10 @@ const HeaderDefaultElement = () => {
         'position': 'bottom'
       },
       'id': 'user_info',
+      'usePopover': true,
       'label': test, // 임시 적용.
       'buttonType': 'onlyImageText',
-      'type': 'UserInfoButton',
+      'type': 'CommonButton',
       'contentRender': (e) => {
         return (<UserInfoPopover/>);
       }

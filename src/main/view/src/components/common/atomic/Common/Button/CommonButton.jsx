@@ -1,5 +1,6 @@
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
+import {Popover} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -52,6 +53,7 @@ const CommonButton = ({
   margin='0px',
   padding='0px 1px',
   justify= 'center',
+  usePopover= false,
   ...props
 }) => {
   const themeType = {
@@ -104,6 +106,13 @@ const CommonButton = ({
       {...props}
     >
       <span>{children}</span>
+      {/* 팝오버도 같이 사용하고 싶은 경우. default로 사용 안함.*/}
+      {usePopover && <Popover
+        target={'#' + props.id}
+        contentRender={props.contentRender}
+        // HeaderDefaultElement.js에 popover 속성 객체로 전달.
+        {...props.popoverProps}
+      />}
     </Button>
   );
 };
