@@ -433,5 +433,8 @@
   "highlightDupleCheck2": "There are highlights of duplicate conditions.",
   "deleteHighlight": "Do you want to delete selected data highlights?",
   "duplicatedReportMsg": "The same report is already open.",
-  "reportNotSelectedMsg":"There are no open reports."
+  "reportNotSelectedMsg":"There are no open reports.",
+  "logout": "logout",
+  "mypage": "my page",
+  "confirmLogoutMsg": "Do you want to log out?"
 }
