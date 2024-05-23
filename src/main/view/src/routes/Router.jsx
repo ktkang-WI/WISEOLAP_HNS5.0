@@ -23,6 +23,7 @@ import ReportFolderManagement from
 import DataSourceAddition
   from 'components/config/organisms/dataSourceAddition/DataSourceAddition';
 import LinkViewer from './LinkViewer';
+import MyPage from 'components/useInfo/organism/Mypage';
 
 export const contextPath = '/editds';
 
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
         element: <DataSourceAddition/>
       }
     ]
+  },
+  {
+    path: contextPath + '/myPage',
+    element: <MyPage/>
   }
 ]);
 

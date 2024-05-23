@@ -56,8 +56,9 @@ const Designer = () => {
         middle={['ReportTab']}
         right={[
           // 'NewWindow',
-          'ShowQuery'
           // 'ReportProperty'
+          'ShowQuery',
+          'UserInfo'
         ]}
       >
       </Header>

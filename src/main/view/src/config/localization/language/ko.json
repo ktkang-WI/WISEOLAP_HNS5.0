@@ -96,6 +96,7 @@
     }
   },
   "Treemap": "트리맵",
+  "hello": "안녕하세요",
   "legned": "범례",
   "notationFormat": "표기형식",
   "contentArray": "콘테츠배열",
@@ -617,5 +618,9 @@
   "invalidPeriodMsg": "From 값은 To 값보다 작아야 합니다.",
   "highlightDupleCheck1": "중복된 조건의 하이라이트가 존재 합니다. 내용 변경을 원하시면 해당 하이라이트를 클릭 후 변경해 주세요.",
   "highlightDupleCheck2": "중복된 조건의 하이라이트가 존재 합니다.",
-  "reportNotSelectedMsg":"열려있는 보고서가 없습니다."
+  "reportNotSelectedMsg":"열려있는 보고서가 없습니다.",
+  "logout": "로그아웃",
+  "mypage": "마이페이지",
+  "confirmLogoutMsg": "로그아웃 하시겠습니까?",
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요."
 }
