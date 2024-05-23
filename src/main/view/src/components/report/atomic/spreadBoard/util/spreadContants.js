@@ -20,7 +20,8 @@ export const excelIOOpenOtions = {
     frozenRowsAsColumnHeaders: false,
     doNotRecalculateAfterLoad: true
   },
-  password: ''
+  password: '',
+  openMode: 1
 };
 
 export const SpreadRibbonDefaultElement = {

@@ -122,8 +122,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       const formData = newFormat[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.innerHTML =
-        cellElement.innerHTML.replace(cell.value, formattedValue);
+      cellElement.innerHTML.replace(
+          '<span>' + cell.value, '<span>' + formattedValue
+      );
     }
   };
 

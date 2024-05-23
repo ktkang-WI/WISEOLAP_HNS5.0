@@ -1,19 +1,21 @@
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import {TreeMap} from 'devextreme-react';
-import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useEffect, useRef} from 'react';
+import D3Calendar from './D3Calendar';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useSizeObserver from '../util/hook/useSizeObserver';
+import ItemManager from '../util/ItemManager';
 
 const CalendarChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
-  // const meta = item ? item.meta : null;
   if (!mart.init) {
     return <></>;
   }
-
-  const dxRef = useRef();
+  const dataSource = mart.data.data;
+  const ref = useRef();
+  const {width} = useSizeObserver(ref);
   const itemExportObject =
-    itemExportsObject(id, dxRef, 'CALENDAR', mart.data.data);
+    itemExportsObject(id, ref, 'CALENDAR', mart.data.data);
 
   useEffect(() => {
     setItemExports((prev) => {
@@ -29,34 +31,17 @@ const CalendarChart = ({setItemExports, id, item}) => {
   const seriesNames = mart.data.info.seriesMeasureNames;
 
   return (
-    <TreeMap
-      ref={dxRef}
-      id={id}
-      width={'100%'}
-      height={'100%'}
-      colorizer={treeMapOptions.colorizer}
-      dataSource={mart.data.data} // mart
-      valueField={seriesNames[0].summaryName}
-      labelField='arg'
+    <Wrapper
+      ref={ref}
     >
-      <Tooltip
-        enabled={true}
-        customizeTooltip={(e) => customizeTooltip(e, seriesNames[0].caption)}
+      <D3Calendar
+        width={width}
+        dataSource={dataSource}
+        argumentField='arg'
+        valueField={seriesNames[0].summaryName}
       />
-      <Label visible={true} />
-    </TreeMap>
+    </Wrapper>
   );
 };
 
-const propsComparator = (prev, next) => {
-  let result = true;
-  if (!_.isEqual(prev.item.mart, next.item.mart)) {
-    result = false;
-  }
-  if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
-    result = false;
-  }
-  return result;
-};
-
-export default React.memo(CalendarChart, propsComparator);
+export default React.memo(CalendarChart, ItemManager.commonPropsComparator);

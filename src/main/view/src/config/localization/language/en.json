@@ -371,7 +371,7 @@
   "highlightBetweenValueCompareMsg": "The condition value (To) must be greater than the condition value (From).",
   "highlightBetweenValueEssentialMsg": "For the condition type Between, the condition value (To) is also required.",
   "highlightOnlyNumberMsg": "Please enter only numbers as condition values.",
-  "highlightInputEssentialValueMsg": "Data item, condition type, and condition value are required input items.",
+  "highlightInputEssentialValueMsg": "Please enter required input items.\nRequired input (data item, condition type, condition value (From), condition value (To) if condition type is Between)",
   "noneFile": "The file does not exist.",
   "use": "use",
   "dontUse": "Don't use",
@@ -426,5 +426,12 @@
   "connectionVisualization": "Connection Visualization",
   "distributionVisualization": "Distribution Visualization",
   "Filter": "Filter",
-  "selectAll": "Select all"
+  "selectAll": "Select all",
+  "maximumPeriodMsg": "Maximum query range cannot exceed N TYPEs.",
+  "invalidPeriodMsg": "The 'From' value must be less than the 'To' value.",
+  "highlightDupleCheck": "There are highlights of duplicate conditions. If you want to change the content, please click on the highlight and make the change.",
+  "highlightDupleCheck2": "There are highlights of duplicate conditions.",
+  "deleteHighlight": "Do you want to delete selected data highlights?",
+  "duplicatedReportMsg": "The same report is already open.",
+  "reportNotSelectedMsg":"There are no open reports."
 }

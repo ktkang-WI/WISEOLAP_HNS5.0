@@ -8,3 +8,11 @@ export const login = (id, password) => {
     password: password
   });
 };
+
+export const checkPassword = (id, password) => {
+  return axios.post(path + '/check-password', {
+    id: id,
+    password: password
+  });
+};
+

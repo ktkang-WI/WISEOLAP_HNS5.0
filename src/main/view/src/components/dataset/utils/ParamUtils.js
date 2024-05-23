@@ -141,7 +141,7 @@ const sanitizeParamInformation = (param) => {
  * @return {Array} names를 담은 배열
  */
 const getParameterNamesInQuery = (query) => {
-  return _.uniq(query.match(/@[^()\s]+/g));
+  return _.uniq(query.match(/@[^()\s,]+/g));
 };
 
 const getCubeParameterNamesCube = (paramInfo, paramName) => {
@@ -156,8 +156,11 @@ const getCubeParameterNamesCube = (paramInfo, paramName) => {
 const setCalendarExceptionValue = (info) => {
   const format = info.calendarKeyFormat;
   const date = getCalendarNowDefaultValue(baseToFormatMapper[format], 0);
-  info.exceptionValue = parseStringFromDate(date, format);
-  return info;
+
+  return {
+    ...info,
+    exceptionValue: parseStringFromDate(date, format)
+  };
 };
 
 /**
@@ -284,7 +287,7 @@ const getCalendarNowDefaultValue = (base, value) => {
     const month = date.getMonth() + Number(value);
     date = new Date(date.getFullYear(), month, date.getDate());
   }
-  if (base == 'DATE') {
+  if (base == 'DAY') {
     const day = date.getDate() + Number(value);
     date = new Date(date.getFullYear(), date.getMonth(), day);
   }

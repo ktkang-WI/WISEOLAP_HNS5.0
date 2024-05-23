@@ -19,7 +19,8 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode,
+  selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ItemType from 'components/report/item/util/ItemType';
@@ -246,36 +247,51 @@ const useQueryExecute = () => {
   };
 
   const executeSpread = async () => {
-    const datasets = selectCurrentDatasets(store.getState());
-    const currentReportId = selectCurrentReportId(store.getState());
+    const state = store.getState();
+    const datasets = selectCurrentDatasets(state);
+    const currentReportId = selectCurrentReportId(state);
+
     if (_.isEmpty(datasets)) {
-      alert(localizedString.dataSourceNotSelectedMsg); return;
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
     }
-    const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos(store.getState());
-    const promises = [];
+
+    const parameters = selectRootParameter(state);
+    const bindingInfos = selectBindingInfos(state);
     const datas = {};
 
-    datasets.forEach((dataset) => {
-      promises.push((async () => {
-        if (
-          _.isEmpty(bindingInfos[dataset.datasetId]) ||
-          !bindingInfos[dataset.datasetId].useBinding
-        ) {
-          alert(localizedString.spreadBindingInfoNot); return;
-        }
-        const dsId = dataset.dataSrcId;
-        const query = dataset.datasetQuery;
-        const data =
-          await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
-        datas[dataset.datasetId] = data.data;
-      })());
+    const promises = datasets.map((dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+      !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot);
+        return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      return new Promise((resolve, reject) => {
+        models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
+            .then((res) => {
+              resolve({datasetId: dataset.datasetId, data: res.data});
+            })
+            .catch((e) => {
+              reject(e);
+            });
+      });
     });
-    await Promise.all(promises);
-    dispatch(setSpreadData({
-      reportId: currentReportId,
-      data: datas
-    }));
+
+    Promise.all(promises)
+        .then((res) => {
+          res.forEach((v) => {
+            datas[v.datasetId] = v.data;
+          });
+          dispatch(setSpreadData({
+            reportId: currentReportId,
+            data: datas
+          }));
+        })
+        .catch((res) => {
+          console.log(res);
+        });
   };
 
   /**
@@ -378,9 +394,16 @@ const useQueryExecute = () => {
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
+    const editMode = selectEditMode(store.getState());
 
     if (datasets.length === 0) {
-      alert(localizedString.dataSourceNotSelectedMsg);
+      let msg = localizedString.dataSourceNotSelectedMsg;
+
+      if (editMode == 'viewer') {
+        msg = localizedString.reportNotSelectedMsg;
+      }
+
+      alert(msg);
       return;
     };
 
