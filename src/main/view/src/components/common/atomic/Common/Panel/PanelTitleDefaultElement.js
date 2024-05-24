@@ -30,7 +30,7 @@ const PanelTitleDefaultElement = () => {
   const {deleteParameterByDatasetId,
     updateParameterInformation
   } = ParameterSlice.actions;
-  const {initItemByDatsetId} = ItemSlice.actions;
+  const {initItemByDatasetId} = ItemSlice.actions;
 
   return {
     CustomField: {
@@ -133,7 +133,7 @@ const PanelTitleDefaultElement = () => {
           const datasetId = dataset.datasetId;
           dispatch(deleteDataset({datasetId, reportId}));
           dispatch(deleteParameterByDatasetId({reportId, datasetId}));
-          dispatch(initItemByDatsetId({reportId, datasetId}));
+          dispatch(initItemByDatasetId({reportId, datasetId}));
         });
       },
       src: removeImg,

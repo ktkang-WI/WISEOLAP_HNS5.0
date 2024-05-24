@@ -160,7 +160,7 @@ const reducers = {
   },
   // 파라미터로 reportId, datasetId.
   // 넘어온 datasetId 사용하는 아이템 dataField 초기화
-  initItemByDatsetId(state, actions) {
+  initItemByDatasetId(state, actions) {
     const reportId = actions.payload.reportId;
     const datasetId = actions.payload.datasetId;
 

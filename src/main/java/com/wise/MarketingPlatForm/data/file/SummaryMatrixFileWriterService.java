@@ -20,15 +20,26 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Striped;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.AvroSummaryMatrixUtils;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryMatrix;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.impl.SummaryMatrixUtils;
 
 @Service
 public class SummaryMatrixFileWriterService {
 
-    private static Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
+	private static final String EXTENSION_JSON = ".json";
 
+	private static final String EXTENSION_JSON_TMP = ".json.tmp";
+
+	private static final String EXTENSION_AVRO_PART2 = ".avro.p2";
+
+    private static final String EXTENSION_AVRO_PART2_TMP = ".avro.p2.tmp";
+
+	private static Logger log = LoggerFactory.getLogger(SummaryMatrixFileWriterService.class);
+    
     private static final Pattern DATE_FOLDER_NAME_PATTERN = Pattern.compile("^\\d{8}$");
+
+    private static final int ROW_COUNT_IN_PART1 = 600;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,9 +58,18 @@ public class SummaryMatrixFileWriterService {
         }
     }
 
+    public int getRowCountInPart1() {
+    	return ROW_COUNT_IN_PART1;
+    }
+
     public File getSummaryMatrixFile(final String cacheKey, String relDirPath) {
         final File folder = new File(this.reportBaseDir, relDirPath);
-        return new File(folder, cacheKey + ".json");
+        return new File(folder, cacheKey + EXTENSION_JSON);
+    }
+
+    public File getSummaryMatrixFileForPart2(final String cacheKey, String relDirPath) {
+        final File folder = new File(this.reportBaseDir, relDirPath);
+        return new File(folder, cacheKey + EXTENSION_AVRO_PART2);
     }
 
     public void writeSummaryMatrix(final String cacheKey, String relDirPath,
@@ -59,18 +79,20 @@ public class SummaryMatrixFileWriterService {
         JsonGenerator gen = null;
 
         Lock lock = null;
+        
+        File folder = null;
         File file = null;
         File tempFile = null;
 
         try {
             // 생성할 파일 객체 생성
-            final File folder = new File(this.reportBaseDir, relDirPath);
+            folder = new File(this.reportBaseDir, relDirPath);
 
             if (!folder.isDirectory()) {
                 folder.mkdirs();
             }
 
-            file = new File(folder, cacheKey + ".json");
+            file = new File(folder, cacheKey + EXTENSION_JSON);
 
             // 파일이 존재하면 다른 스레드에서 생성한 것이므로 진행하지 않음
             if (!file.isFile()) {
@@ -83,7 +105,7 @@ public class SummaryMatrixFileWriterService {
                 if (!file.isFile()) {
 
                     // temp파일 생성후 내용 Write
-                    tempFile = File.createTempFile(cacheKey, ".json.tmp", folder);
+                    tempFile = File.createTempFile(cacheKey, EXTENSION_JSON_TMP, folder);
 
                     fos = new FileOutputStream(tempFile);
                     bos = new BufferedOutputStream(fos);
@@ -100,6 +122,15 @@ public class SummaryMatrixFileWriterService {
                     IOUtils.closeQuietly(fos);
                     fos = null;
 
+                    if (matrix.getRows() > ROW_COUNT_IN_PART1) {
+                    	try {
+                    		writeSummaryMatrixPart2(folder, cacheKey, matrix);
+                    	} catch (Exception e2) {
+                            log.error("Failed to write part2 summary matrix data to json file.", e2);
+                            throw e2;
+                        }
+                    }
+
                     // 다 쓰고나서 Rename 처리
                     FileUtils.moveFile(tempFile, file);
                 }
@@ -109,7 +140,7 @@ public class SummaryMatrixFileWriterService {
             }
         }
         catch (Exception e) {
-            log.error("Failed to write summary matrix data to json file.", e);
+            log.error("Failed to write main summary matrix data to json file.", e);
         }
         finally {
             IOUtils.closeQuietly(gen, bos, fos);
@@ -119,40 +150,58 @@ public class SummaryMatrixFileWriterService {
             }
         }
     }
+    
+	private void writeSummaryMatrixPart2(final File folder, final String cacheKey, final SummaryMatrix matrix)
+			throws Exception {
+	    final File file = new File(folder, cacheKey + EXTENSION_AVRO_PART2);
+	
+	    if (file.isFile()) {
+	    	return;
+	    }
+	
+        File tempFile = File.createTempFile(cacheKey, EXTENSION_AVRO_PART2_TMP, folder);
 
-    //@Scheduled(cron = "* * * * * *") // once every minute for debugging
-    @Scheduled(cron = "0 0 0-4,22-23 * * *") // once every hour between 22:00 and 04:00 every day
+        try (FileOutputStream fos = new FileOutputStream(tempFile);
+        		BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+	        AvroSummaryMatrixUtils.serializeAvroSummaryCellRowsToAvroData(bos, matrix.getSummaryCells(), ROW_COUNT_IN_PART1);
+        }
+
+        FileUtils.moveFile(tempFile, file);
+    }
+
+    @Scheduled(cron = "0 0 0-4,22-23 * * *")
     public void clearOldCacheFiles() {
-        log.info("Scheduler starts clearing old summary matrix cache files...");
-
-        final File baseDir = this.reportBaseDir;
-
-        if (!baseDir.isDirectory()) {
-            log.info("Scheduler stops as the base dir doesn't exist at {}", baseDir);
-            return;
-        }
-
-        final String curSubFolderName = DateFormatUtils.format(new Date(), "yyyyMMdd");
-        final String[] oldSubFolderNames = baseDir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                final Matcher m = DATE_FOLDER_NAME_PATTERN.matcher(name);
-                return m.matches() && name.compareTo(curSubFolderName) < 0;
-            }
-        });
-
-        if (oldSubFolderNames != null) {
-            for (String subFolderName : oldSubFolderNames) {
-                final File subFolder = new File(baseDir, subFolderName);
-                try {
-                    FileUtils.deleteDirectory(subFolder);
-                    log.info("Scheduler deleted old summary matrix cache folder at {}", subFolder);
-                } catch (Exception e) {
-                    log.error("Failed to delete old cache folder at {}", subFolder, e);
-                }
-            }
-        }
-
-        log.info("Scheduler ends clearing old summary matrix cache files...");
+ 	   log.info("Scheduler starts clearing old query result cache fiels...");
+ 	   
+ 	   final File baseDir = this.reportBaseDir;
+ 	   
+ 	   if(!baseDir.isDirectory()) {
+ 		  log.info("Scheduler stops as the base dir doesn't exist at {}", baseDir);
+ 		  return;
+ 	   }
+ 	   
+ 	   final String curSubFolderName = DateFormatUtils.format(new Date(),  "yyyyMMdd");
+ 	   final String[] oldSubFolderNames = baseDir.list(new FilenameFilter() {
+ 		   @Override
+ 		   public boolean accept(File dir, String name) {
+ 			   final Matcher m = DATE_FOLDER_NAME_PATTERN.matcher(name);
+// 			   return m.matches() && name.compareTo(curSubFolderName) < 0;
+ 			   return m.matches();
+ 		   }
+ 	   });
+ 	   
+ 	   if (oldSubFolderNames != null) {
+ 		   for (String subFolderName : oldSubFolderNames) {
+ 			   final File subFolder = new File(baseDir, subFolderName);
+ 			   try {
+ 				   FileUtils.deleteDirectory(subFolder);
+ 				   log.info("Scheduler deleted old summary matrix cache folder at {}", subFolder );
+ 			   } catch (Exception e) {
+ 				   log.error("Failed to delete old cache folder at {}", subFolder, e);
+ 			   }
+ 		   }
+ 	   }
+ 	   
+ 	   log.info("Scheduler ends clearing old query result cache files...");
     }
 }

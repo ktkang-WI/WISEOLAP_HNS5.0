@@ -45,13 +45,25 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
 
     @Override
     public WeakReference<SummaryMatrix> doSlicePageSummaryMatrix(final SummaryMatrix matrix,
-            final Paging paging) {
+            final Paging paging, String showRowGrandTotals, String showRowTotals) {
         final int rowDimensionMaxDepth = matrix.getRowGroupParams().size();
 
         if (paging.getOffset() < 0 || paging.getLimit() <= 0) {
             return createEmptyPageSummaryMatrix(matrix);
         }
-
+        int distinctRowsRemoveTotal = 0;
+        
+        SummaryDimension[] rowFlattendSummaryDimensions = matrix.getRowFlattendSummaryDimensions();
+        final int matrixlength = rowFlattendSummaryDimensions.length;
+        final List<Integer> removeTotalPageableRowIndices = new LinkedList<>();
+        for (int i = 0; i < matrixlength; i++) {
+        	int realRowDept = rowFlattendSummaryDimensions[i].getDepth();
+        	if(realRowDept == rowDimensionMaxDepth) {
+        		distinctRowsRemoveTotal++;
+        		removeTotalPageableRowIndices.add(i);
+        	}
+		};
+        
         final int distinctRows = matrix.getRows();
 
         final List<Integer> pageableRowIndices = new LinkedList<>();
@@ -60,29 +72,109 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
             pageableRowIndices.add(i);
         }
 
-        insertAncestorRowIndicesForPaging(pageableRowIndices, matrix, paging.getLimit(),
-                rowDimensionMaxDepth);
-
-        final int pageableTotalRows = pageableRowIndices.size();
-
-        final int beginIndex = paging.getOffset();
-        final int endIndex = Math.min(pageableTotalRows, beginIndex + paging.getLimit());
-
-        final List<Integer> pagedRowIndices = pageableRowIndices.subList(beginIndex, endIndex);
-        final int count = pagedRowIndices.size();
-
-        paging.setTotal(pageableTotalRows);
-        paging.setDistinctTotal(distinctRows);
-        paging.setCount(count);
-
-        if (beginIndex >= pageableTotalRows || count <= 0) {
-            return createEmptyPageSummaryMatrix(matrix);
-        }
-
-        final WeakReference<SummaryMatrix> sliced = new WeakReference<SummaryMatrix>(matrix.sliceRows(pagedRowIndices));
-        ((DefaultSummaryMatrixImpl) sliced.get()).setCacheKey(matrix.getCacheKey());
+//        insertAncestorRowIndicesForPaging(pageableRowIndices, matrix, paging.getLimit(),
+//                rowDimensionMaxDepth);
         
-        return sliced;
+       /*if("Y".equalsIgnoreCase(showRowTotals)) {
+            final int pageableTotalRows = pageableRowIndices.size();
+
+            int beginIndex = paging.getOffset();
+            int endIndex = Math.min(pageableTotalRows, beginIndex + paging.getLimit());
+            
+            if(!"Y".equalsIgnoreCase(showRowGrandTotals)) {
+            	if(beginIndex > 0) {
+            		beginIndex = beginIndex + 1;
+            	}
+            	if(pageableTotalRows > endIndex) {
+            		endIndex = endIndex +1;
+            	}
+            }
+
+            List<Integer> pagedRowIndices = pageableRowIndices.subList(beginIndex, endIndex);
+            
+            insertAncestorRowIndicesForPaging(pagedRowIndices, matrix, paging.getLimit(),
+                    rowDimensionMaxDepth);
+            
+            final int count = pagedRowIndices.size();
+
+            paging.setTotal(pageableTotalRows);
+            paging.setDistinctTotal(distinctRows);
+            paging.setCount(count);
+            paging.setDistinctRemoveTotal(distinctRowsRemoveTotal);
+
+            if (beginIndex >= pageableTotalRows || count <= 0) {
+                return createEmptyPageSummaryMatrix(matrix);
+            }
+
+            final WeakReference<SummaryMatrix> sliced = new WeakReference<SummaryMatrix>(matrix.sliceRows(pagedRowIndices));
+            ((DefaultSummaryMatrixImpl) sliced.get()).setCacheKey(matrix.getCacheKey());
+            
+            return sliced;
+        } else {*/
+        	/*행 합계 표시 안함*/
+        	int pageableTotalRows = removeTotalPageableRowIndices.size();
+
+            int beginIndex = paging.getOffset();
+            int endIndex = Math.min(pageableTotalRows, beginIndex + paging.getLimit());
+            if(beginIndex >= endIndex) {
+            	beginIndex = 0;
+            }
+//            if(beginIndex > 0) {
+//            	 if("Y".equalsIgnoreCase(showRowGrandTotals)) {
+//            		 beginIndex = beginIndex -1;
+//                 }
+//            }
+
+            List<Integer> tempPagedRowIndices = removeTotalPageableRowIndices.subList(beginIndex, endIndex);
+            int realEndIndex = 0;
+            int realBeginIndex = 0;
+            if(tempPagedRowIndices.size() > 0) {
+            	realEndIndex =  pageableRowIndices.indexOf(tempPagedRowIndices.get(tempPagedRowIndices.size()-1)) + 1;
+            	
+            	if(beginIndex > 0) {
+                	realBeginIndex =  pageableRowIndices.indexOf(tempPagedRowIndices.get(0));
+                }
+            }
+            /*행 총합계 표시 여부 계산식 만들어야함*/
+//            if(!"Y".equalsIgnoreCase(showRowGrandTotals)) {
+//            	realEndIndex = realEndIndex + 1;
+//            	
+//        		if(realEndIndex == (pageableRowIndices.size() - 1)) {
+//        			realEndIndex = realEndIndex - 1;
+//            	}
+//            } 
+//            else {
+//            	if(beginIndex > 0) {
+//        			realEndIndex = realEndIndex - 1;
+//        			
+//        			if(realEndIndex == (pageableRowIndices.size() - 1)) {
+//            			realEndIndex = realEndIndex + 1;
+//            		} 
+//            		
+//            	}
+//            }
+            
+            List<Integer> pagedRowIndices = pageableRowIndices.subList(realBeginIndex, realEndIndex);
+            
+            insertAncestorRowIndicesForPaging(pagedRowIndices, matrix, paging.getLimit(),
+                    rowDimensionMaxDepth);
+            
+            int count = pagedRowIndices.size();
+
+            paging.setTotal(pageableTotalRows);
+            paging.setDistinctTotal(distinctRows);
+            paging.setCount(count);
+            paging.setDistinctRemoveTotal(distinctRowsRemoveTotal);
+
+            if (beginIndex >= pageableTotalRows || count <= 0) {
+                return createEmptyPageSummaryMatrix(matrix);
+            }
+
+            final WeakReference<SummaryMatrix> sliced = new WeakReference<SummaryMatrix>(matrix.sliceRows(pagedRowIndices));
+            ((DefaultSummaryMatrixImpl) sliced.get()).setCacheKey(matrix.getCacheKey());
+            
+            return sliced;
+//        }
     }
 
     private void insertAncestorRowIndicesForPaging(final List<Integer> pageRowIndices,
@@ -170,7 +262,7 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
     
     private void sortSummaryDimensions(final SummaryDimensionImpl dimension,
     		final Map<String, SortInfoParam> sortInfoParamsMap,
-    		final Map<String, Map<String, String>> columnSortValues) {
+    		Map<String, Map<String, String>> columnSortValues) {
     	if (!dimension.hasChild()) {
     		return;
     	}
@@ -188,6 +280,8 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
     	}
     	
     	for (SummaryDimension childDimension : dimension.getChildren()) {
+    		SummaryDimensionImpl childDimensionImpl =  (SummaryDimensionImpl) childDimension;
+    		columnSortValues = childDimensionImpl.getColumnSortValuesMap();
     		sortSummaryDimensions((SummaryDimensionImpl) childDimension, sortInfoParamsMap, columnSortValues);
     	}
     }
@@ -213,6 +307,8 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
                 childDimension = (SummaryDimensionImpl) ((SummaryDimensionImpl) baseRowDimension)
                         .addChild(new SummaryDimensionImpl(baseGroup.getKey()));
             }
+            
+            childDimension.addColumnSortValue(baseGroup.getColumnSortValuesMap());
 
             if (childGroups != null && !childGroups.isEmpty()) {
                 for (DataGroup childDataGroup : childGroups) {
@@ -230,7 +326,9 @@ public class DefaultSummaryFactoryImpl extends SummaryMatrixFactory {
                 childDimension = (SummaryDimensionImpl) ((SummaryDimensionImpl) baseColDimension)
                         .addChild(new SummaryDimensionImpl(baseGroup.getKey()));
             }
-
+            
+            childDimension.addColumnSortValue(baseGroup.getColumnSortValuesMap());
+            
             if (childCount > 0) {
                 for (DataGroup childDataGroup : childGroups) {
                     fillRowAndColSummaryDimensions(childDataGroup, rowDimensionMaxDepth,

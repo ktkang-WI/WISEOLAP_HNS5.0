@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
@@ -39,6 +41,9 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
+import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
@@ -123,6 +128,7 @@ public class ReportController {
     public ReportResult getItemData(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
+        ListUtility listUtility = ListUtility.getInstance();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
@@ -133,6 +139,7 @@ public class ReportController {
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
         String adHocOptionStr = param.get("adHocOption");
+        String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -151,13 +158,14 @@ public class ReportController {
                 }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
+        PivotOption pivotOption = gson.fromJson(pivotOptionStr, PivotOption.class);
         ItemType itemType = ItemType.fromString(ItemTypeStr).get();
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
         AdHocOption adHocOption = new AdHocOption(null, null);
         
-        ListUtility.getInstance().removeNullInParameterList(measures);
-        ListUtility.getInstance().removeNullInParameterList(dimensions);
-        ListUtility.getInstance().removeNullInParameterList(sortByItems);
+        listUtility.removeNullInParameterList(measures);
+        listUtility.removeNullInParameterList(dimensions);
+        listUtility.removeNullInParameterList(sortByItems);
 
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
@@ -171,20 +179,8 @@ public class ReportController {
                 .pagingOption(pagingOption)
                 .filter(filter)
                 .adHocOption(adHocOption)
+                .pivotOption(pivotOption)
                 .build();
-
-        // 추후 PivotMatrix 적용시 주석 해제
-        // if (itemType == ItemType.PIVOT_GRID) {
-        //     final String pagingParamValue = param.get("paging");
-        //     final ObjectNode pagingParamNode = StringUtils.isNotBlank(pagingParamValue)
-        //             ? (ObjectNode) objectMapper.readTree(pagingParamValue)
-        //             : null;
-        //     final PagingParam pagingParam = ParamUtils.toPagingParam(objectMapper, pagingParamNode);
-
-        //     return reportService.getPivotData(param, pagingParam, dataAggreagtion);
-        // } else {
-        //     return reportService.getItemData(dataAggreagtion);
-        // }
 
         return reportService.getItemData(dataAggreagtion);
     }
@@ -260,6 +256,7 @@ public class ReportController {
         AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
         ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(measures)
@@ -280,7 +277,7 @@ public class ReportController {
         // } else {
         //     return reportService.getItemData(dataAggreagtion);
         // }
-        
+
         return reportService.getAdHocItemData(dataAggreagtion);
     }
 
@@ -329,6 +326,7 @@ public class ReportController {
 	        }
 	    )
 	)
+
     @PostMapping(value = "/detailed-data")
     public MartResultDTO getDetailedData(@RequestBody Map<String, String> param) {
         Gson gson = new Gson();
@@ -376,7 +374,7 @@ public class ReportController {
         return reportService.getReportList(userId, reportType, editMode);
     }
 
-        @Operation(
+    @Operation(
 	    summary = "insert report",
 	    description = "새로운 보고서를 생성합니다.")
 	@Parameters({
@@ -403,44 +401,44 @@ public class ReportController {
 	        }
 	    )
 	)
-        @PostMapping(value = "/report-save")
-        public ResponseEntity<Map<String, Object>> insertReport(
-                @RequestBody Map<String, String> param,
-                HttpServletRequest request
-        ) throws SQLException {
-                Gson gson = new Gson();
-                HttpSession session = request.getSession();
-                UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
-                ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
+    @PostMapping(value = "/report-save")
+    public ResponseEntity<Map<String, Object>> insertReport(
+            @RequestBody Map<String, String> param,
+            HttpServletRequest request
+    ) throws SQLException {
+            Gson gson = new Gson();
+            HttpSession session = request.getSession();
+            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
-                String reportTypeStr = param.getOrDefault("reportType", "");
-                ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
-                reportDTO.setReportType(reportType);
-                reportDTO.setRegUserNo(userDTO.getUserNo());
+            String reportTypeStr = param.getOrDefault("reportType", "");
+            ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
+            reportDTO.setReportType(reportType);
+            reportDTO.setRegUserNo(userDTO.getUserNo());
 
-                Map<String, Object> map = reportService.insertReport(reportDTO);
+            Map<String, Object> map = reportService.insertReport(reportDTO);
 
-                return ResponseEntity.ok().body(map);
+            return ResponseEntity.ok().body(map);
 	}
 
-        @PatchMapping(value = "/report-save")
-        public ResponseEntity<Map<String, Object>> updateReport(
-                @RequestBody Map<String, String> param,
-                HttpServletRequest request
-        ) throws SQLException {
-                Gson gson = new Gson();
-                HttpSession session = request.getSession();
-                UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
-                ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
+    @PatchMapping(value = "/report-save")
+    public ResponseEntity<Map<String, Object>> updateReport(
+            @RequestBody Map<String, String> param,
+            HttpServletRequest request
+    ) throws SQLException {
+            Gson gson = new Gson();
+            HttpSession session = request.getSession();
+            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
-                String reportTypeStr = param.getOrDefault("reportType", "");
-                ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
-                reportDTO.setReportType(reportType);
-                reportDTO.setModUserNo(userDTO.getUserNo());
+            String reportTypeStr = param.getOrDefault("reportType", "");
+            ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
+            reportDTO.setReportType(reportType);
+            reportDTO.setModUserNo(userDTO.getUserNo());
 
-                Map<String, Object> map = reportService.updateReport(reportDTO);
+            Map<String, Object> map = reportService.updateReport(reportDTO);
 
-                return ResponseEntity.ok().body(map);
+            return ResponseEntity.ok().body(map);
 	}
 
     @PatchMapping(value = "/update")

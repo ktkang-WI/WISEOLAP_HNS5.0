@@ -23,6 +23,8 @@ public class SummaryDimensionImpl implements SummaryDimension {
     private List<SummaryDimension> children;
     private List<SummaryDimension> unmodifiableChildren;
     private Map<String, SummaryDimension> childMapByKey;
+    
+    private Map<String, Map<String, String>> columnSortValuesMap;
 
     private SummaryDimension parent;
     private int depth;
@@ -169,6 +171,26 @@ public class SummaryDimensionImpl implements SummaryDimension {
     		}
     	}
     }
+    
+    public Map<String, Map<String, String>> getColumnSortValuesMap() {
+    	if (columnSortValuesMap == null) {
+    		return Collections.emptyMap();
+    	}
+    	
+    	return Collections.unmodifiableMap(columnSortValuesMap);
+    }
+    
+    public void addColumnSortValue(Map<String, Map<String, String>> columnSortValuesMapList) {
+    	if (columnSortValuesMap == null) {
+    		columnSortValuesMap = new HashMap<>();
+    	}
+    	if(columnSortValuesMapList == null) {
+    		
+    	}else {
+    		columnSortValuesMap = columnSortValuesMapList;
+    	}
+    	
+    }
 
     @JsonIgnore
     @Override
@@ -200,4 +222,3 @@ public class SummaryDimensionImpl implements SummaryDimension {
 		}
 	}
 }
-

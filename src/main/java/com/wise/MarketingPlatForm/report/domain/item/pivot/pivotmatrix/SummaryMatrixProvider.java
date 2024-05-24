@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
@@ -15,13 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +24,15 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.data.map.MapListDataFrame;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
-import com.wise.MarketingPlatForm.data.list.CloseableList;
-import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.diagnos.WdcTask;
 import com.wise.MarketingPlatForm.global.util.ServiceTimeoutUtils;
+import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
+import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.model.DataFrame;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.model.PivotDataAggregation;
@@ -51,21 +44,11 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.param.SummaryParam;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.param.TopBottomParam;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.param.UdfGroupParam;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.impl.SummaryMatrixUtils;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
-import com.wise.MarketingPlatForm.report.service.ReportService;
+import com.wise.MarketingPlatForm.report.controller.ReportController;
 
 @Service
 public class SummaryMatrixProvider {
 	private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
-
-	@Resource(name = "reportService")
-    private ReportService reportService;
-	
-	@Resource(name = "dataSetService")
-    private DatasetService dataSetServiceImpl;
-	
-	@Autowired
-    private ObjectMapper objectMapper;
 	
 	@Autowired
     private DataAggregator dataAggregator;
@@ -79,27 +62,10 @@ public class SummaryMatrixProvider {
     @Autowired
     private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
     
-	public WeakReference<SummaryMatrix> getPivotSummaryMatrix(final HttpServletRequest request,
-		final Map<String, Object> allParameters, final PagingParam pagingParam, final QueryExecutor executor) throws Exception {
-		final String sqlLikeOption = allParameters.get("sqlLikeOption").toString();
-		final String filter = allParameters.get("filter").toString();
-		final String udfGroups = allParameters.get("udfGroups").toString();
-		final String group = allParameters.get("group").toString();
-		final String groupSummary = allParameters.get("groupSummary").toString();
-		final String totalSummary = allParameters.get("totalSummary").toString();
-		final String sortInfo = allParameters.get("sortInfo").toString();
-		final String topBottom = allParameters.get("topBottom").toString();
-		final String topBottomArray = allParameters.get("topBottomArray").toString();
-		final String useWithQueryParam = allParameters.containsKey("useWithQuery")? allParameters.get("useWithQuery").toString() : "Y";
-		
-		final boolean useWithQuery = useWithQueryParam.equals("Y")? true : false;
-
-		final String argsInfo = new StringBuilder(1024).append(sqlLikeOption).append(':').append(filter).append(':')
-				.append(udfGroups).append(':').append(group).append(':').append(groupSummary).append(':')
-				.append(totalSummary).append(':').append(sortInfo).append(':').append(topBottom).append(':')
-				.append(topBottomArray).append(':').append(useWithQuery).append(':').toString();
-
+	public WeakReference<SummaryMatrix> getPivotSummaryMatrix(final DataAggregation dataAggregation, final PivotOption opt, final List<Map<String, Object>> dataArray) throws Exception {
+		final String argsInfo = opt.generateCacheKey(dataAggregation);
 		final String cacheKey = DigestUtils.sha256Hex(argsInfo);
+        final PagingParam pagingParam = opt.getPagingParam();
 
 		final WeakReference<SummaryMatrix> cachedSummaryMatrix = getPivotSummaryMatrixFromCache(cacheKey, pagingParam);
 
@@ -109,63 +75,15 @@ public class SummaryMatrixProvider {
 		
 		ServiceTimeoutUtils.checkServiceTimeout();
 		
-		final ArrayNode filterParamsNode = StringUtils.isNotBlank(filter) ? (ArrayNode) objectMapper.readTree(filter)
-				: null;
-		final FilterParam rootFilter = ParamUtils.toFilterParam(filterParamsNode);
-
-		final ArrayNode udfGroupParamsNode = StringUtils.isNotBlank(udfGroups)
-				? (ArrayNode) objectMapper.readTree(udfGroups)
-				: null;
-		final List<UdfGroupParam> udfGroupParams = ParamUtils.toUdfGroupParams(objectMapper, udfGroupParamsNode);
-
-		final ArrayNode groupParamsNode = StringUtils.isNotBlank(group) ? (ArrayNode) objectMapper.readTree(group)
-				: null;
-		final List<GroupParam> groupParams = ParamUtils.toGroupParams(objectMapper, groupParamsNode);
+		final FilterParam filterParam = opt.getFilterParam();
+		final List<UdfGroupParam> udfGroupParams = opt.getUdfGroupParams();
+		final List<GroupParam> groupParams = opt.getGroupParams();
 		final int groupParamCount = groupParams.size();
-
-		final ArrayNode groupSummaryParamsNode = StringUtils.isNotBlank(groupSummary)
-				? (ArrayNode) objectMapper.readTree(groupSummary)
-				: null;
-		final List<SummaryParam> groupSummaryParams = ParamUtils.toSummaryParams(objectMapper, groupSummaryParamsNode);
-
-		final ArrayNode totalSummaryParamsNode = StringUtils.isNotBlank(totalSummary)
-				? (ArrayNode) objectMapper.readTree(totalSummary)
-				: null;
-		final List<SummaryParam> totalSummaryParams = ParamUtils.toSummaryParams(objectMapper, totalSummaryParamsNode);
-
-		final ArrayNode sortInfoParamsNode = StringUtils.isNotBlank(sortInfo)
-				? (ArrayNode) objectMapper.readTree(sortInfo)
-				: null;
-		final List<SortInfoParam> sortInfoParams = ParamUtils.toSortInfoParams(objectMapper, sortInfoParamsNode);
-
-		final ObjectNode topBottomParamNode = StringUtils.isNotBlank(topBottom)
-				? (ObjectNode) objectMapper.readTree(topBottom)
-				: null;
-		final TopBottomParam topBottomParam = ParamUtils.toTopBottomParam(objectMapper, topBottomParamNode);
+		final List<SummaryParam> groupSummaryParams = opt.getGroupSummaryParams();
+		final List<SummaryParam> totalSummaryParams = opt.getTotalSummaryParams();
+		final List<SortInfoParam> sortInfoParams = opt.getSortInfoParams();
+		final List<TopBottomParam> topBottomParams = opt.getTopBottomParams();
 		
-		final ArrayNode topBottomParamNodeArray = StringUtils.isNotBlank(topBottomArray)
-                ? (ArrayNode) objectMapper.readTree(topBottomArray) : null;
-				
-				
-		final List<TopBottomParam> topBottomParamList = new ArrayList<TopBottomParam>();
-		
- 		   
-	    if(topBottomParamNode != null) {
-	        topBottomParamList.add(topBottomParam);
-	    }
-	
-	    if(topBottomParamNodeArray != null) {
-		   for(int i = 0; i < topBottomParamNodeArray.size(); i++) {
-			  TopBottomParam topBottomParamTemp = ParamUtils.toTopBottomParam(objectMapper, topBottomParamNodeArray.get(i));
-			
-		 	  topBottomParamList.add(topBottomParamTemp);
-		   }
-	    }
-		
-		
-		
-		
-
 		final List<GroupParam> rowGroupParams = pagingParam.getRowGroupParams();
 		final int rowGroupParamCount = rowGroupParams.size();
 		final List<GroupParam> colGroupParams = new ArrayList<>();
@@ -188,26 +106,20 @@ public class SummaryMatrixProvider {
 		if (!isFullyExpandedGroups) {
 			return null;
 		}
-		
-		final CloseableList<Map<String, Object>> dataArray;
-		
-		try(WdcTask task = WDC.getCurrentTask().startSubtask("summaryMatrixProivder.executeSqlLike")){
-			dataArray = executor.execute(sqlLikeOption, useWithQuery);
-		}
-		
+
 		ServiceTimeoutUtils.checkServiceTimeout();
 		
 		final List<String> colNames = dataArray != null && dataArray.size() > 0
 				? new ArrayList<>(dataArray.get(0).keySet())
 				: Collections.emptyList();
 
-		final DataFrame dataFrame = new JSONArrayDataFrame(dataArray, colNames.toArray(new String[colNames.size()]));
+		final DataFrame dataFrame = new MapListDataFrame(dataArray, colNames.toArray(new String[colNames.size()]));
 		
 		final WeakReference<PivotDataAggregation> aggregation;
 		
 		try(WdcTask task = WDC.getCurrentTask().startSubtask("summaryMatrixProivder.createDataAggregation")){
-			aggregation = dataAggregator.createDataAggregation(dataFrame, rootFilter, udfGroupParams,
-				groupParams, groupSummaryParams, totalSummaryParams, null, sortInfoParams, topBottomParamList, true);
+			aggregation = dataAggregator.createDataAggregation(dataFrame, filterParam, udfGroupParams,
+				groupParams, groupSummaryParams, totalSummaryParams, null, sortInfoParams, topBottomParams, true);
 		}
 
 		ServiceTimeoutUtils.checkServiceTimeout();
@@ -223,11 +135,8 @@ public class SummaryMatrixProvider {
 		
 		ServiceTimeoutUtils.checkServiceTimeout();
 		
+        // TODO: 캐시 추후 적용
 		if (matrix.get() != null) {
-			final String sql = (String) dataArray.getAttribute("sql");
-			if (sql != null) {
-				matrix.get().setAttribute("sql", new String(Base64.encode(sql.getBytes())));
-			}
 			putPivotSummaryMatrixToCache(cacheKey, matrix.get(), pagingParam);
 		}
 

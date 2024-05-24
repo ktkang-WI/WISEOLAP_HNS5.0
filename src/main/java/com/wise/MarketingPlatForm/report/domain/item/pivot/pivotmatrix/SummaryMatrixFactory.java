@@ -18,8 +18,8 @@ public abstract class SummaryMatrixFactory {
 	protected SummaryMatrixFactory() {
 	}
 
-	public static WeakReference<SummaryMatrix> slicePageSummaryMatrix(final SummaryMatrix matrix, final Paging paging) {
-		return theFactory.doSlicePageSummaryMatrix(matrix, paging);
+	public static WeakReference<SummaryMatrix> slicePageSummaryMatrix(final SummaryMatrix matrix, final Paging paging, String showRowGrandTotals, String showRowTotals) {
+		return theFactory.doSlicePageSummaryMatrix(matrix, paging, showRowGrandTotals, showRowTotals);
 	}
 
 	public static WeakReference<SummaryMatrix> createEmptyPageSummaryMatrix(final SummaryMatrix matrix) {
@@ -34,7 +34,7 @@ public abstract class SummaryMatrixFactory {
 				rowGroupParams, colGroupParams, summaryParams, sortInfoParams, udfGroupParams);
 	}
 
-	abstract public WeakReference<SummaryMatrix> doSlicePageSummaryMatrix(final SummaryMatrix matrix, final Paging paging);
+	abstract public WeakReference<SummaryMatrix> doSlicePageSummaryMatrix(SummaryMatrix matrix, Paging paging, String showRowGrandTotals, String showRowTotals);
 
 	abstract public WeakReference<SummaryMatrix> doCreateEmptyPageSummaryMatrix(final SummaryMatrix matrix);
 

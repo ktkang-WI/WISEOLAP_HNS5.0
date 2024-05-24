@@ -119,7 +119,7 @@ public class DataAggregator {
             updateSummaryContainerSummary(dataAggregation, row, totalSummaryParams);
 
             contributeDataRowToDataAggregationOnEachGroup(row, dataAggregation, groupParams,
-                    groupSummaryParams);
+                    groupSummaryParams, sortInfoParams, totalSummaryParams);
 
             if(hasSortInfoParams) {
             	addColumnSortValues(row, dataAggregation, sortInfoParams, totalSummaryParams);
@@ -130,7 +130,7 @@ public class DataAggregator {
             	updateSummaryContainerSummary(pageAggregation, row, totalSummaryParams);
             	
                 contributeDataRowToDataAggregationOnEachGroup(row, pageAggregation,
-                        pagingParam.getRowGroupParams(), groupSummaryParams);
+                        pagingParam.getRowGroupParams(), groupSummaryParams,  sortInfoParams, totalSummaryParams);
             }
             
             if(localCounter % 200 == 0) {
@@ -202,9 +202,9 @@ public class DataAggregator {
             dataAggregation.setPagingApplied(true);
         }
         
-        WeakReference<PivotDataAggregation> newDataAggregation = new WeakReference<PivotDataAggregation>(dataAggregation);
+        WeakReference<PivotDataAggregation> newPivotDataAggregation = new WeakReference<PivotDataAggregation>(dataAggregation);
         
-        return newDataAggregation;
+        return newPivotDataAggregation;
     }
 
     private void resolveCustomColumnsInDataRow(final DataRow row,
@@ -262,7 +262,8 @@ public class DataAggregator {
                 	for (int i = 0; i < size; i++) {
                         final SummaryParam summaryParam = summaryParams.get(i);
                         final String fieldName = summaryParam.getSelector();
-                        if(fieldName.equalsIgnoreCase(sortByField)) sortByMeasureCheck = true;
+//                        if(fieldName.equalsIgnoreCase(sortByField)) sortByMeasureCheck = true;
+                        if(fieldName.equalsIgnoreCase(sortByField) && SummaryType.SUM == summaryParam.getSummaryType()) sortByMeasureCheck = true;
                     }
                 }
     		}
@@ -278,9 +279,11 @@ public class DataAggregator {
 
     private void contributeDataRowToDataAggregationOnEachGroup(final DataRow row,
             final PivotDataAggregation dataAggregation, final List<GroupParam> groupParams,
-            List<SummaryParam> groupSummaryParams) {
+            List<SummaryParam> groupSummaryParams, List<SortInfoParam> sortInfoParams, List<SummaryParam> totalSummaryParams) {
         AbstractSummaryContainer<?> parentGroup = dataAggregation;
 
+        final boolean hasSortInfoParams = sortInfoParams != null && !sortInfoParams.isEmpty();
+        
         for (GroupParam groupParam : groupParams) {
             parentGroup.setChildDataGroupKey(groupParam.getKey());
 
@@ -295,13 +298,50 @@ public class DataAggregator {
 
             if (!groupSummaryParams.isEmpty()) {
                 updateSummaryContainerSummary(childDataGroup, row, groupSummaryParams);
+                
+                if(hasSortInfoParams) {
+                	addColumnSortValuesToDataGroup(row, childDataGroup, sortInfoParams, totalSummaryParams);
+                }
             }
 
             parentGroup = childDataGroup;
         }
     }
 
-    private <T> void updateSummaryContainerSummary(final SummaryContainer<T> summaryContainer,
+    private void addColumnSortValuesToDataGroup(DataRow row, DataGroup childDataGroup, List<SortInfoParam> sortInfoParams,
+			List<SummaryParam> summaryParams) {
+    	for (SortInfoParam sortInfoParam : sortInfoParams) {
+    		final String dataField = sortInfoParam.getDataField();
+    		final String sortByField = sortInfoParam.getSortByField();
+    		boolean sortByMeasureCheck = false;
+    		final String dataFieldValue = row.getStringValue(dataField);
+    		
+    		final int size = summaryParams != null ? summaryParams.size() : 0;
+
+    		
+    		if(childDataGroup.getSummaryValues() != null) {
+    			if (size == 0) {
+                    
+                }else {
+                	for (int i = 0; i < size; i++) {
+                        final SummaryParam summaryParam = summaryParams.get(i);
+                        final String fieldName = summaryParam.getSelector();
+                        if(fieldName.equalsIgnoreCase(sortByField) && SummaryType.SUM == summaryParam.getSummaryType()) sortByMeasureCheck = true;
+                    }
+                }
+    		}
+    		
+    		if (StringUtils.isNotEmpty(dataFieldValue)) {
+    			final String sortByFieldValue = StringUtils.isEmpty(sortByField) ? dataFieldValue
+    					: row.getStringValue(sortByField);
+    			childDataGroup.addColumnSortValue(dataField, dataFieldValue,
+    					sortByFieldValue, sortByMeasureCheck);
+    		}
+    	}
+		
+	}
+    
+	private <T> void updateSummaryContainerSummary(final SummaryContainer<T> summaryContainer,
             final DataRow dataRow, final List<SummaryParam> summaryParams) {
         final int size = summaryParams != null ? summaryParams.size() : 0;
 
@@ -525,6 +565,11 @@ public class DataAggregator {
         }
         else if (">=".equals(operator)) {
             if (comparingValue.compareTo(rowValue) > 0) {
+                return false;
+            }
+        }
+        else if ("<>".equals(operator)) {
+        	if (Objects.equals(comparingValue, rowValue)) {
                 return false;
             }
         }
