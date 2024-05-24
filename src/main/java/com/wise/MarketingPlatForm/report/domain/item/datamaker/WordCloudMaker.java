@@ -25,6 +25,7 @@ public class WordCloudMaker implements ItemDataMaker {
     TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
       null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
     
+    // TODO:WORDCLOUD 사용자정의데이터 추가
     DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
 
       List<Measure> allMeasure = new ArrayList<>();
@@ -81,7 +82,7 @@ public class WordCloudMaker implements ItemDataMaker {
       }
 
       info.put("seriesMeasureNames", seriesMeasureNames);
-      CommonResult result = new CommonResult(data, "", info);
+      CommonResult result = new CommonResult(data, info);
 
     return result;
   }
