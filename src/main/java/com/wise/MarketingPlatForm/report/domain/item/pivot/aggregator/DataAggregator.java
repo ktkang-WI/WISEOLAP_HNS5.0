@@ -141,7 +141,7 @@ public class DataAggregator {
         
         checkMili = System.currentTimeMillis();
         checkMin = (checkMili - (double) startMili) / 1000;
-        System.out.println("Datarow to PivotDataAggregation : " + checkMin + "초");
+        logger.debug("Datarow to PivotDataAggregation : " + checkMin + "초");
         
         
         startMili = System.currentTimeMillis();

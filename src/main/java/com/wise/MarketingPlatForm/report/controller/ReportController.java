@@ -26,14 +26,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.global.diagnos.WDC;
-import com.wise.MarketingPlatForm.global.diagnos.WdcTask;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
-import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -42,8 +38,6 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
@@ -74,9 +68,6 @@ public class ReportController {
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     private final ReportService reportService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     ReportController(ReportService reportService) {
         this.reportService = reportService;
@@ -128,7 +119,7 @@ public class ReportController {
     public ReportResult getItemData(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> param)
             throws Exception {
         Gson gson = new Gson();
-        ListUtility listUtility = ListUtility.getInstance();
+        final ListUtility listUtility = ListUtility.getInstance();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
@@ -269,14 +260,6 @@ public class ReportController {
                 .pagingOption(pagingOption)
                 .adHocOption(adHocOption)
                 .build();
-
-        // if (itemType == ItemType.PIVOT_GRID) {
-        //     try(WdcTask task = WDC.getCurrentTask().startSubtask("pivotSummaryMatrix")){
-		// 	    reportService.internalPivotSummaryMatrix(response, request, param);
-        //     }
-        // } else {
-        //     return reportService.getItemData(dataAggreagtion);
-        // }
 
         return reportService.getAdHocItemData(dataAggreagtion);
     }
