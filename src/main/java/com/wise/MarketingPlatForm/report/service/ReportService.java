@@ -37,6 +37,7 @@ import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
@@ -115,6 +116,7 @@ public class ReportService {
     		} else {
     			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
     			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
+                /* TODO: 송봉조 주임 삭제 요청
     			if (dataset.get("datasets") != null) {
     				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
@@ -125,7 +127,7 @@ public class ReportService {
     						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}
-    			}
+    			} */
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
@@ -187,11 +189,12 @@ public class ReportService {
         String query = queryGenerator.getQuery(dataAggreagtion);
 
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
-
+        
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
-
+       
         result = itemDataMaker.make(dataAggreagtion, martResultDTO.getRowData());
+        result.setQuery(query);
 
         return result;
     }
@@ -221,7 +224,11 @@ public class ReportService {
 
             ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
-            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+            ReportResult pivotResult = dataMaker.make(dataAggreagtion, rowData);
+            
+            pivotResult.setQuery(query);
+            
+            result.put(item, pivotResult);
         }
 
         return result;

@@ -55,10 +55,10 @@ const Designer = () => {
         left={['Logo', 'Viewer']}
         middle={['ReportTab']}
         right={[
-          // 'Viewer'
           // 'NewWindow',
-          // 'ShowQuery',
           // 'ReportProperty'
+          'ShowQuery',
+          'UserInfo'
         ]}
       >
       </Header>

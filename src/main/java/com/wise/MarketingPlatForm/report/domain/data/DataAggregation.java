@@ -22,6 +22,7 @@ import lombok.Setter;
 public class DataAggregation {
     String userId;
     List<Measure> measures;
+    List<Measure> originalMeasures;
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     ItemType itemType;

@@ -14,6 +14,7 @@ import com.wise.MarketingPlatForm.global.diagnos.WdcTask;
 import com.wise.MarketingPlatForm.report.controller.ReportController;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
+import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
@@ -32,18 +33,19 @@ public class PivotGridDataMaker implements ItemDataMaker {
 
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = dataAggreagtion.getMeasures();
+        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
+        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
         TopBottomInfo topBottomInfo = dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
-        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
 
         List<Measure> allMeasure = new ArrayList<>();
 
         allMeasure.addAll(measures);
         allMeasure.addAll(sortByItems);
-
+        
         // 데이터 기본 가공
         sanitizer
             .dataFiltering(dataAggreagtion.getFilter())
@@ -59,12 +61,13 @@ public class PivotGridDataMaker implements ItemDataMaker {
 
         data = sanitizer.getData();
 
-        // DataPickUpMake customData = new DataPickUpMake(data);
-        // List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
-        // if(tempData != null) {
-        //     data = tempData;
-        // }
+        DataPickUpMake customData = new DataPickUpMake(data);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
+        if(tempData != null) {
+            data = tempData;
+        }
 
+        
         Map<String, Object> info = new HashMap<> ();
 
         PivotOption pivotOption = dataAggreagtion.getPivotOption();
@@ -73,7 +76,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
             internalPivotSummaryMatrix(dataAggreagtion, pivotOption, data, info);
         }
 
-        CommonResult result = new CommonResult(null, "", info);
+        CommonResult result = new CommonResult(data, info);
 
         return result;
     }

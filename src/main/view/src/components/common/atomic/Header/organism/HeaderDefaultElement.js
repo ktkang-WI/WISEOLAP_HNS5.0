@@ -9,6 +9,7 @@ import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
+import showQuery from 'assets/image/icon/button/showQuery.png';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -17,15 +18,20 @@ import useReportSave from 'hooks/useReportSave';
 import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
+import ViewQuery from '../modal/ViewQuery';
+import UserInfoPopover from '../popover/UserInfoPopover';
+// import styled from 'styled-components';
 
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {alert} = useModal();
+  const {alert, openModal} = useModal();
   const initialDisplay = useSelector(selectInitialDisplay);
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
+  // TODO: 임시용
+  const test = '관리자';
 
   return {
     'Logo': {
@@ -77,7 +83,30 @@ const HeaderDefaultElement = () => {
     'ShowQuery': {
       'id': 'show_query',
       'label': localizedString.showQuery,
-      'type': 'TextButton'
+      'buttonType': 'onlyImageText',
+      'width': '80px',
+      'icon': showQuery,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ViewQuery);
+      }
+    },
+    'UserInfo': {
+      // 팝오버 속성 설정.
+      'popoverProps': {
+        'width': 'auto',
+        'height': '80',
+        'showEvent': 'click',
+        'position': 'bottom'
+      },
+      'id': 'user_info',
+      'usePopover': true,
+      'label': test, // 임시 적용.
+      'buttonType': 'onlyImageText',
+      'type': 'CommonButton',
+      'contentRender': (e) => {
+        return (<UserInfoPopover/>);
+      }
     },
     'ReportSetting': {
       'id': 'report_setting',

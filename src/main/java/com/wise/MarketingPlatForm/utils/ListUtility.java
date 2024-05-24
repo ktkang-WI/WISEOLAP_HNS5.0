@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class ListUtility {
   private static final Logger logger = LoggerFactory.getLogger(ListUtility.class);
   private static ListUtility _instance;
@@ -24,6 +23,10 @@ public class ListUtility {
 
   public <T> boolean removeNullInParameterList(List<T> list) {
     boolean isOk = false;
+    if (list == null) {
+      logger.debug("파라미터 LIST 값이 빈값이 들어 있습니다.");
+      return isOk;
+    }
     if (list.remove(null)) {
         isOk = true;
         logger.debug("매개변수에 Null 요소가 포함된 배열이 입력되어 해당 요소가 삭제되었습니다.");

@@ -28,12 +28,13 @@ const StyledWrapper = styled(Wrapper)`
 const SpreadViewer = () => {
   const reportId = useSelector(selectCurrentReportId);
   const spreadData = useSelector(selectCurrentSpreadData);
-  const {bindData} = useSpread();
+  const {bindData, setExcelFile} = useSpread();
   const workbookRef = useRef();
 
   useEffect(() => {
     const workbookJSON = getWorkbookJSON(reportId);
     workbookRef.current.spread.fromJSON(workbookJSON);
+    setExcelFile(reportId);
   }, [reportId]);
 
   useEffect(() => {
