@@ -171,8 +171,10 @@ const ItemBoard = () => {
 
   const nullDataCheck = (item) => {
     const isOk =
-      [ItemType.TEXT_BOX, ItemType.PIVOT_GRID]
-          .some((item) => item === item.type);
+      [
+        ItemType.TEXT_BOX,
+        ItemType.PIVOT_GRID
+      ].some((item) => item === item.type);
     if (isOk) return !isOk;
 
     return !item ||
