@@ -170,7 +170,10 @@ const ItemBoard = () => {
   };
 
   const nullDataCheck = (item) => {
-    if (item.type === ItemType.TEXT_BOX) return false;
+    if (Object.values(ItemType).some((item) => item === item.type)) {
+      return false;
+    }
+
     return !item ||
     item?.mart?.data?.data?.length == 0 ||
     _.isEmpty(item?.mart?.data || {});
