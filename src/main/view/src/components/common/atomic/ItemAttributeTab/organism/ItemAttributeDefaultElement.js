@@ -204,6 +204,7 @@ const ItemAttributeDefaultElement = () => {
           label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
+          width: '50%',
           onClick: () => {
             const chartMartInit = rootItem.items[0].mart.init;
             const pivotMartInit = rootItem.items[1].mart.init;
@@ -220,6 +221,7 @@ const ItemAttributeDefaultElement = () => {
           label: 'Top/Bottom값 설정',
           icon: topBottomImg,
           active: option.topBottom == 'topBottom',
+          width: '50%',
           onClick: () => {
             const dataField = rootItem.adHocOption.dataField;
             if (dataField.measure.length === 0) {
@@ -241,10 +243,11 @@ const ItemAttributeDefaultElement = () => {
         //   label: '변동 측정값',
         //   active: option.deltaValue == 'deltaValue',
         //   icon: deltaValueImg,
+        //   width: '50%',
         //   onClick: () => {
         //     // 변동 측정값
         //   }
-        // },
+        // }
         // {
         //   id: 'gridAttribute',
         //   label: '그리드 속성',

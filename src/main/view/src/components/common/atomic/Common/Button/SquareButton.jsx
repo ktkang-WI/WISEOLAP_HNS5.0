@@ -6,8 +6,7 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  width: 100%;
-  flex: 1;
+  width: ${(props) => props.width || '100px'};
   height: 84px;
   display: flex;
   justify-content: center;
