@@ -14,12 +14,15 @@ public enum ItemType {
     TREEMAP("treeMap"),
     CARD("card"),
     CHOROPLETH("choropleth"),
+    CALENDAR("calendar"),
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
     TIMELINE("timeline"),
     CHORD("chord"),
     ARC_DIAGRAM("arc"),
-    WORDCLOUD("wordCloud")
+    WORDCLOUD("wordCloud"),
+    COORDINATE_DOT("coordinateDot"),
+    COORDINATE_LINE("coordinateLine")
     ;
 
     private final String symbol;

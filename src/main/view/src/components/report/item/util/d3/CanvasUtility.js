@@ -79,13 +79,13 @@ export const getLegendOptions = (legend, width, height, legendData) => {
 
   if (textPos == 'bottom') {
     // 마진을 포함한 가장 긴 라벨의 너비
-    const maxWidth = legendData.reduce((acc, {name}) => {
+    const maxWidth = legendData.reduce((acc, name) => {
       return Math.max(acc, getTextWidth(name, 12, 'Noto Sans KR'));
-    }, 0) + 20;
+    }, 0) + 10;
 
     // 가로 한 줄에 들어가게 될 범례 수
-    const count = Math.floor((width - MARGIN) / maxWidth);
-    const row = Math.ceil(legendData.length / count);
+    const count = Math.max(Math.floor((width - MARGIN) / maxWidth), 1);
+    const row = Math.max(Math.ceil(legendData.length / count), 1);
 
     legendHeight = row * 40;
     legendOption.maxWidth = maxWidth;
@@ -93,8 +93,8 @@ export const getLegendOptions = (legend, width, height, legendData) => {
     legendOption.row = row;
   } else {
     // 세로 한 줄에 들어가게 될 범례 수
-    const count = Math.floor((height - MARGIN) / 25);
-    const row = Math.ceil(legendData.length / count);
+    const count = Math.max(Math.floor((height - MARGIN) / 25), 1);
+    const row = Math.max(Math.ceil(legendData.length / count), 1);
 
     const maxWidth = legendData.reduce((acc, name, i) => {
       const idx = Math.floor(i / count);

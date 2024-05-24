@@ -92,7 +92,7 @@ const D3Legend = ({legend, legendOption, legendData, palette, children}) => {
     const vertical = legend.verticalAlignment;
     const horizontal = legend.horizontalAlignment;
 
-    const flexDirectMapper = {
+    const flexDirectionMapper = {
       'left': 'row',
       'right': 'row-reverse',
       'top': 'column',
@@ -108,10 +108,10 @@ const D3Legend = ({legend, legendOption, legendData, palette, children}) => {
     };
 
     if (textPos == 'right') {
-      option.flexDirection = flexDirectMapper[horizontal];
+      option.flexDirection = flexDirectionMapper[horizontal];
       option.alignItems = alignItemsMapper[vertical];
     } else {
-      option.flexDirection = flexDirectMapper[vertical];
+      option.flexDirection = flexDirectionMapper[vertical];
       option.alignItems = alignItemsMapper[horizontal];
     }
 

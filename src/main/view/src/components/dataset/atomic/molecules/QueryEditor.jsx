@@ -1,14 +1,23 @@
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/ext-inline_autocomplete';
+import 'ace-builds/src-noconflict/ext-searchbox';
+import {useEffect} from 'react';
 
 const QueryEditor = ({editorRef, ...props}) => {
+  useEffect(() => {
+    const editor = editorRef.current.editor;
+
+    editor.commands.addCommand({
+      name: 'customSearch',
+      bindKey: {win: 'Ctrl-F', mac: 'Command-F'},
+      exec: () => {
+        editor.execCommand('find');
+      }
+    });
+  }, []);
+
   return (
-    /**
-     * @Author : KJH
-     * @Explain : Drag and Drop 을 적용하기 위해 추가 작성
-     * @Date : 20231214
-     */
     <div style={{width: '100%', height: '100%'}}
       onDragOver={props.onDragOver}
       onDrop={props.onDrop}>

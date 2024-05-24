@@ -127,7 +127,7 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         info.put("seriesMeasureNames", seriesMeasureNames);
 
-        CommonResult result = new CommonResult(data, "", info);
+        CommonResult result = new CommonResult(data, info);
 
         return result;
 	}

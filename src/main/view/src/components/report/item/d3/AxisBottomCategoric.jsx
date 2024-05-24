@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import {getTextWidth} from '../../util/d3/CanvasUtility';
+import {getTextWidth} from '../util/d3/CanvasUtility';
 
 // tick length
 const TICK_LENGTH = 6;

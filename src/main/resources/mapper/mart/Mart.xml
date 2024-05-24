@@ -37,6 +37,15 @@
 				OR UPPER(CAST(B.VALUE AS NVARCHAR(200))) LIKE '%%')
 				AND C.name = 'dbo' ORDER BY 1
 		</if>
+		<if test='dbType.equalsIgnoreCase("DB2")'>
+			SELECT  TABNAME TBL_NM, 
+				TABNAME ID, 
+				COALESCE(REMARKS, TABNAME) TBL_CAPTION,
+				-1 AS PARENT_ID
+			FROM    SYSCAT.TABLES
+			WHERE   TYPE IN ('T', 'V') AND OWNERTYPE = 'U'  
+			AND     TABSCHEMA = '${owner}'
+		</if>
 	</select>
 	
 	<select id="selectQueryDataCol" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO" parameterType="hashMap">
@@ -101,6 +110,24 @@
               AND A.[name] = #{table}
             </if>
 		      	ORDER BY B.colorder
+		</if>
+		<if test='dbType.equalsIgnoreCase("DB2")'>
+			SELECT A.TABNAME TBL_NM 
+			, B.COLNAME COL_NM
+			, NVL(B.REMARKS, B.COLNAME) COL_CAPTION 
+			,CONCAT(CONCAT('[', CONCAT(A.TABNAME, '].[')),CONCAT(B.COLNAME, ']')) AS ID
+			, B.TYPENAME DATA_TYPE 
+			, B.LENGTH LENGTH 
+			, B.COLNO COL_ID 
+			, CASE WHEN B.KEYSEQ > 0 THEN 1 ELSE 0 END PK_YN 
+			, NVL(A.REMARKS, A.TABNAME) TBL_CAPTION 
+			,A.TABNAME AS PARENT_ID
+			FROM SYSCAT.TABLES A  
+			INNER JOIN SYSCAT.COLUMNS B ON A.TABSCHEMA = B.TABSCHEMA AND A.TABNAME = B.TABNAME  
+			WHERE A.TYPE IN ('T', 'V')  
+			AND A.OWNERTYPE = 'U'  
+			AND A.OWNER = '${owner}'
+			ORDER BY B.COLNO
 		</if>
 	</select>
 </mapper>

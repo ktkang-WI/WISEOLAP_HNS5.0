@@ -2,15 +2,17 @@ import ItemType from './ItemType';
 
 const DataFieldType = {
   MEASURE: 'measure',
+  X: 'x',
+  Y: 'y',
+  START_DATE: 'start',
+  END_DATE: 'end',
   DIMENSION: 'dimension',
   DIMENSION_GROUP: 'dimensionGroup',
   ROW: 'row',
   COLUMN: 'column',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
-  SORT_BY_ITEM: 'sortByItem',
-  START_DATE: 'start',
-  END_DATE: 'end'
+  SORT_BY_ITEM: 'sortByItem'
 };
 
 const dataFieldTypeOfItemTypeFunc = (type) => {
@@ -43,6 +45,11 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
+    case ItemType.COORDINATE_LINE:
+    case ItemType.COORDINATE_DOT:
+      dataFieldFormat.push(DataFieldType.X);
+      dataFieldFormat.push(DataFieldType.Y);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
     case ItemType.CHART:
     case ItemType.PIE_CHART:
     {
@@ -59,7 +66,53 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
   return dataFieldFormat;
 };
 
+const DataFieldTypeOfItemType = {
+  [ItemType.CHART]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION,
+    DataFieldType.DIMENSION_GROUP
+  ],
+  [ItemType.PIVOT_GRID]: [
+    DataFieldType.MEASURE,
+    DataFieldType.ROW,
+    DataFieldType.COLUMN],
+  [ItemType.DATA_GRID]: [
+    DataFieldType.FIELD,
+    DataFieldType.SPARKLINE
+  ],
+  [ItemType.PIE_CHART]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION,
+    DataFieldType.DIMENSION_GROUP
+  ],
+  [ItemType.CHOROPLETH]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.TREEMAP]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.LIQUID_FILL_GAUGE]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.CARD]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.BOX_PLOT]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ],
+  [ItemType.CALENDAR]: [
+    DataFieldType.MEASURE,
+    DataFieldType.DIMENSION
+  ]
+};
+
 export {
   DataFieldType,
+  DataFieldTypeOfItemType,
   dataFieldTypeOfItemTypeFunc
 };

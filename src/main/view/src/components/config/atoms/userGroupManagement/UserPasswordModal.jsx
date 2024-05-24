@@ -6,6 +6,7 @@ import {AsyncRule, Item, Label, RequiredRule, SimpleItem}
 import useModal from 'hooks/useModal';
 import {useRef} from 'react';
 import {getTheme} from 'config/theme';
+import models from 'models';
 
 const theme = getTheme();
 
@@ -18,6 +19,16 @@ const UserPasswordModal = ({...props}) => {
     const formInstance = ref.current._instance;
     const validate = formInstance.validate();
     let isClose = true;
+
+    const curPassword =
+      formInstance.getEditor('currentPassword').option('value');
+
+    const res = await models.Login.checkPassword(user.userId, curPassword);
+
+    if (res.status != 200) {
+      alert(localizedString.checkPasword);
+      return true;
+    }
 
     await validate.complete?.then(async (res) => {
       if (res.isValid) {

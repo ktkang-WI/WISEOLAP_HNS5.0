@@ -9,6 +9,10 @@ import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
 import wordCloudImg from 'assets/image/icon/item/wordcloud.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
+import calendarImg
+  from '../../../../../../assets/image/icon/item/calendar_view.png';
+import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
+import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -28,6 +32,7 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
+    CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
     WORDCLOUD
@@ -77,6 +82,12 @@ const CustomChartDefaulElement = () => {
           src: chordImg
         },
         {
+          title: localizedString.calendar,
+          type: CALENDAR,
+          checked: false,
+          src: calendarImg
+        },
+        {
           title: localizedString.arcDiagram,
           type: ItemType.ARC_DIAGRAM,
           checked: false,
@@ -104,6 +115,18 @@ const CustomChartDefaulElement = () => {
           type: TREEMAP,
           checked: false,
           src: treeMapImg
+        },
+        {
+          title: localizedString.planeCoordinateLine,
+          type: ItemType.COORDINATE_LINE,
+          checked: false,
+          src: coordinateLineImg
+        },
+        {
+          title: localizedString.planeCoordinatePoint,
+          type: ItemType.COORDINATE_DOT,
+          checked: false,
+          src: coordinateDotImg
         }
       ]
     },

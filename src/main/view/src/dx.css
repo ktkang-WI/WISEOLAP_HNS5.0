@@ -118,11 +118,11 @@
   border-bottom: 1px solid var(--gray100);
 }
 
-.dx-calendar-body thead tr th:nth-child(6) {
+.dx-calendar-body thead tr th:nth-child(7) {
   color: #3679DA;
 }
 
-.dx-calendar-body thead tr th:nth-child(7) {
+.dx-calendar-body thead tr th:nth-child(1) {
   color: #DF0015;
 }
 .dx-calendar-cell span, .dx-calendar-cell.dx-calendar-contoured-date span {
@@ -293,7 +293,7 @@
 }
 
 .dx-button-mode-text.dx-button-default .dx-icon {
-  color: var(--gray600);
+color: var(--gray600);
 }
 
 /* 표 */
@@ -307,8 +307,12 @@
   font-weight: 500;
 }
 
-.dx-datagrid-rowsview .dx-row {
+:not(.flexlayout__tab) .dx-datagrid-rowsview .dx-row {
   border-bottom: 1px solid var(--gray200);
+}
+
+.flexlayout__tab .dx-datagrid-rowsview .dx-row {
+  border-bottom: initial;
 }
 
 .dx-pivotgrid .dx-pivotgrid-area td, .dx-datagrid td {

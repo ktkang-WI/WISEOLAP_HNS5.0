@@ -17,6 +17,8 @@
     "ribbonHoverBorder": "#c5c5c5",
     "ribbonHover": "#f5f6fa",
     "breakLine": "#D4D7DC",
+    "Cranberry": "#cc9999",
+    "Alabaster": "#f9f9f9",
     "dashedBorder": "#c3c8d9",
     "selectedTabHeader": "#ececec",
     "queryBackgroundImage": "-webkit-gradient(linear, left top, left bottom, from(#005196), to(#2b5eff))",

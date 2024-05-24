@@ -3,11 +3,12 @@ import Header from 'components/common/atomic/Header/organism/Header';
 import SideNavigationBar
   from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {DesignerMode} from 'components/config/configType';
+import useConfig from 'hooks/useConfig';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
-import {Outlet} from 'react-router-dom';
+import {Outlet, useLoaderData} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
@@ -15,6 +16,9 @@ const Designer = () => {
   // hooks
   const dispatch = useDispatch();
   const {reload} = useReportSave();
+  const {generalConfigure} = useLoaderData();
+  const {saveConfiguration} = useConfig();
+  saveConfiguration(generalConfigure);
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions
@@ -51,10 +55,10 @@ const Designer = () => {
         left={['Logo', 'Viewer']}
         middle={['ReportTab']}
         right={[
-          // 'Viewer'
           // 'NewWindow',
-          // 'ShowQuery',
           // 'ReportProperty'
+          'ShowQuery',
+          'UserInfo'
         ]}
       >
       </Header>

@@ -78,7 +78,7 @@ public class ArcDataMaker implements ItemDataMaker {
 
         info.put("nodes", nodes);
 
-        CommonResult result = new CommonResult(links, "", info);
+        CommonResult result = new CommonResult(links, info);
 
         return result;
     }
