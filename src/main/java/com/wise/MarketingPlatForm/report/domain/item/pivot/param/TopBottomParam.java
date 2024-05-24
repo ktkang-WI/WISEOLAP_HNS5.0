@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TopBottomParam {
 
     private String dataFieldName;
+    private String dataUniName;
     private String applyFieldName;
+    private String applyUniName;
     private String topBottomType;
     private int topBottomCount;
     private boolean inPercent;
@@ -37,6 +39,15 @@ public class TopBottomParam {
     public void setDataFieldName(String dataFieldName) {
         this.dataFieldName = dataFieldName;
     }
+    
+    @JsonProperty("DATA_UNI_NM")
+    public String getDataUniName() {
+    	return dataUniName;
+    }
+    
+    public void setDataUniNam(String dataUniName) {
+    	this.dataUniName = dataUniName;
+    }
 
     @JsonProperty("APPLY_FLD_NM")
     public String getApplyFieldName() {
@@ -45,6 +56,15 @@ public class TopBottomParam {
 
     public void setApplyFieldName(String applyFieldName) {
         this.applyFieldName = applyFieldName;
+    }
+    
+    @JsonProperty("APPLY_UNI_NM")
+    public String getApplyUniName() {
+    	return applyUniName;
+    }
+    
+    public void setApplyUniName(String applyUniName) {
+    	this.applyUniName = applyUniName;
     }
 
     @JsonProperty("TOPBOTTOM_TYPE")

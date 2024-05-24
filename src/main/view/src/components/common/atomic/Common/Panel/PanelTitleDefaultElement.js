@@ -32,7 +32,7 @@ const PanelTitleDefaultElement = () => {
   const {deleteParameterByDatasetId,
     updateParameterInformation
   } = ParameterSlice.actions;
-  const {initItemByDatsetId} = ItemSlice.actions;
+  const {initItemByDatasetId} = ItemSlice.actions;
   const selectedCurrentItem = useSelector(selectCurrentItem);
   const handleCustomData = async () => {
     const dataset = selectCurrentDataset(store?.getState());
@@ -139,7 +139,7 @@ const PanelTitleDefaultElement = () => {
           const datasetId = dataset.datasetId;
           dispatch(deleteDataset({datasetId, reportId}));
           dispatch(deleteParameterByDatasetId({reportId, datasetId}));
-          dispatch(initItemByDatsetId({reportId, datasetId}));
+          dispatch(initItemByDatasetId({reportId, datasetId}));
         });
       },
       src: removeImg,
