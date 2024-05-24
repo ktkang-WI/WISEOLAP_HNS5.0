@@ -92,10 +92,14 @@
 }
 
 .dx-pager .dx-page-sizes .dx-selection, .dx-pager .dx-pages .dx-selection {
-  padding: 0px;
   background-color: transparent;
   border: 1px solid var(--primary);
   color: var(--primary);
+  line-height: 12px;
+}
+
+.dx-pager .dx-pages .dx-page {
+  padding: 7px 0px 9px 0px;
 }
 
 /* 달력 */

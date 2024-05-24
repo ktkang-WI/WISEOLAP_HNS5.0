@@ -27,7 +27,6 @@ const Config = () => {
         right={[
           'Viewer',
           'NewWindow',
-          'ShowQuery',
           'ReportProperty'
         ]}
       >

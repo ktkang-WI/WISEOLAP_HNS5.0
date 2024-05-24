@@ -1,14 +1,10 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {dataSource}
   from 'components/dataset/atomic/organism/CustomData/Data/customObjectList';
-import {removeDuplicate} from 'components/utils/utility';
 import {List, TextArea} from 'devextreme-react';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {
-  selectCurrentDataField
-} from 'redux/selector/ItemSelector';
-
+import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
 
 const ListStyled = {
   width: '100%',
@@ -30,53 +26,24 @@ const CalcObjectList = () => {
   const [explanation, setExplanation] = useState('');
 
   // Selector
-  const selectedCurrentDataField = useSelector(selectCurrentDataField);
+  const selectedCurrentDataset = useSelector(selectCurrentDataset);
   // 초기화
   useEffect(() => {
     initColumns();
   }, []);
 
-  const locatedFields = (selectedCurrentDataField) => {
-    let measures = selectedCurrentDataField.measure;
-
-    if (!measures) {
-      measures =
-      selectedCurrentDataField.field.filter((item) => item.fieldType === 'MEA');
-    }
-    measures = removeDuplicate(
-        (measure) => measure.summaryType + '_' + measure.name,
-        measures);
-
-    const isMeasureEmpty = measures.length === 0;
-    let isSelectedMeasureFieldsEmpty = true;
-    let selectedMeasureFields = null;
-
-    if (isMeasureEmpty) return null;
-
-    selectedMeasureFields =
-      measures.filter((item) => item.expression == null)
-          .map((item) => {
-            return {
-              key: item.name,
-              explanation: item.type === 'DIM' ? 'varchar2' : 'decimal'
-            };
-          });
-
-    isSelectedMeasureFieldsEmpty = selectedMeasureFields.length == 0;
-    if (isSelectedMeasureFieldsEmpty) return null;
-
-    return selectedMeasureFields;
+  const locatedFields = (selectedCurrentDataset) => {
+    return selectedCurrentDataset.fields.filter((field) =>
+      field.type == 'MEA' && !(field?.isCustomData));
   };
-
   const initColumns = () => {
-    const fields = locatedFields(selectedCurrentDataField);
+    const fields = locatedFields(selectedCurrentDataset);
 
     if (!fields) return;
-    // Get dataItems
     const dataItems = fields.map((item) => {
       return {
-        key: `[${item.key}]`,
-        explanation: item.explanation
+        key: `[${item.name}]`,
+        explanation: item.dataType
       };
     });
 

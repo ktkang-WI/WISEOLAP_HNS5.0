@@ -64,7 +64,13 @@ const generateMeta = (item) => {
  * @param {*} item 옵션을 삽입할 아이템
  * @param {*} rootItem root item
  */
-const generateItem = (item, rootItem) => {
+/**
+ * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
+ * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} param 아이템 조회 파라미터
+ * @param {*} rootItem rootItem
+ */
+const generateItem = (item, param, rootItem) => {
   const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
   const data = item.mart.data;
   const measures = dataField.measure;

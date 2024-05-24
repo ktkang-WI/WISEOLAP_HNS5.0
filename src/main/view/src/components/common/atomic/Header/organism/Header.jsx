@@ -13,6 +13,7 @@ import ReportTitleText from '../../ReportTitleTab/atom/ReportTitleText';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
+import UserInfoButtonUI from '../atom/UserInfoButtonUI';
 
 const theme = getTheme();
 
@@ -52,6 +53,9 @@ const Header = ({left, middle, right}) => {
   const report = useSelector(selectCurrentReport);
 
   const getHeaderItem = (item) => {
+    const useInfoBtn =
+      item.id == 'user_info' && <UserInfoButtonUI name={item.label}/>;
+
     if (item.type === 'AnimatedImageButton') {
       return (
         <HeaderPanel
@@ -145,15 +149,18 @@ const Header = ({left, middle, right}) => {
           width={'auto'}
           position={item.position}>
           <CommonButton
+            id={item.id}
             title={item.label}
             type={item.buttonType}
             width={item.width}
             height={'32px'}
             onClick={item.onClick}
+            usePopover={item.usePopover}
+            popoverProps={item.popoverProps}
+            contentRender={item.contentRender}
           >
             {item.icon && <img src={item.icon}/>}
-            {' '}
-            {item.label}
+            {useInfoBtn ? useInfoBtn : ' ' + item.label}
           </CommonButton>
         </HeaderPanel>
       );

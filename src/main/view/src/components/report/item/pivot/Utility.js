@@ -1,4 +1,3 @@
-import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import {setMeta} from '../util/metaUtilityFactory';
 import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
@@ -8,6 +7,15 @@ import chartSeriesButtonIcon from 'assets/image/icon/item/bar.png';
 import columnIcon from 'assets/image/icon/dataSource/column.png';
 import rowIcon from 'assets/image/icon/dataSource/row.png';
 import {DesignerMode} from 'components/config/configType';
+import {getItemData} from 'models/report/Item';
+import ItemType from '../util/ItemType';
+import store from 'redux/modules';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentItems} from 'redux/selector/ItemSelector';
+
+const cache = new Map();
+
 /**
  * 아이템 객체에 meta 기본 데이터를 세팅합니다.
  * @param {*} item 옵션을 삽입할 아이템 객체
@@ -33,43 +41,58 @@ const generateMeta = (item) => {
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
   setMeta(item, 'dataHighlight', []);
+  setMeta(item, 'pagingOption', {
+    pagination: {
+      isOk: true,
+      content: '',
+      pagingRange: 20,
+      index: 1
+    },
+    pageUsageOfPageCount: {
+      isOk: true,
+      pageSizes: [10, 20, 50]
+    }
+  });
 };
 
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
- * @param {*} rootItem root item
+ * @param {*} param 아이템 조회 파라미터
+ * @param {*} rootItem rootItem
  */
-const generateItem = (item, rootItem) => {
+const generateItem = (item, param, rootItem) => {
   const fields = [];
-  const metaFields = item.meta.dataField || rootItem.adHocOption.dataField;
+  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
 
-  const allMeasure = metaFields.measure.concat(metaFields.sortByItem);
+  const {updateItem} = ItemSlice.actions;
+  const reportId = selectCurrentReportId(store.getState());
+  const allMeasure = dataField.measure.concat(dataField.sortByItem);
   const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
     acc[data.fieldId] = data;
     return acc;
   }, {});
 
-  for (const field of metaFields.measure) {
+  for (const field of dataField.measure) {
     fields.push({
       caption: field.caption,
-      summaryType: 'sum',
+      summaryType: 'SUM',
       dataField: field.summaryType + '_' + field.name,
       area: 'data'
     });
   }
 
-  for (const field of metaFields.sortByItem) {
+  for (const field of dataField.sortByItem) {
     fields.push({
       caption: field.caption,
-      summaryType: 'sum',
+      summaryType: 'SUM',
       dataField: field.summaryType + '_' + field.name,
       area: 'data',
       visible: false
     });
   }
 
-  for (const field of metaFields.row) {
+  for (const field of dataField.row) {
     fields.push({
       caption: field.caption,
       dataField: field.name,
@@ -79,7 +102,7 @@ const generateItem = (item, rootItem) => {
     });
   }
 
-  for (const field of metaFields.column) {
+  for (const field of dataField.column) {
     let sortBy = {};
 
     if (field.sortBy && field.sortBy != field.fieldId) {
@@ -110,10 +133,317 @@ const generateItem = (item, rootItem) => {
     });
   }
 
-  item.mart.dataSourceConfig = new PivotGridDataSource({
-    fields: fields,
-    store: item.mart.data.data
-  });
+  const rowGroups = dataField.row.map((r) => ({selector: r.name}));
+
+  item.mart.paging = {
+    dataLength: 0,
+    size: item.meta.pagingOption.pagination.pagingRange,
+    page: item.meta.pagingOption.pagination.index
+  };
+
+  let matrixInfo;
+
+  const dataSourceConfig = {
+    remoteOperations: true,
+    load: (loadOptions) => {
+      const promise = new Promise(async (resolve, reject) => {
+        // 페이징 호출 시 조회를 하지 않더라도 load가 호출되므로
+        // item 객체를 갱신시켜 줌
+        const items = selectCurrentItems(store.getState());
+        const curItem = items.find((i) => i.id == item.id);
+        if (loadOptions.take == 20) {
+          const takeJson = {};
+          // 매트릭스 정보 초기화
+          matrixInfo = null;
+          fields.map((_fieds, _fieldsIndex) => {
+            switch (_fieds.area) {
+              case 'row':
+                takeJson[_fieds.dataField] = 'text';
+                break;
+              case 'column':
+                takeJson[_fieds.dataField] = 'text';
+                break;
+              case 'data':
+                takeJson[_fieds.dataField] = 123;
+                break;
+              default:
+                takeJson[_fieds.dataField] = 'text';
+                break;
+            }
+          });
+          resolve([takeJson]);
+          return;
+        }
+
+        if (!loadOptions.group) {
+          loadOptions.group = [];
+        }
+
+        let maxColLength = 0;
+        let maxRowLength = 0;
+        // group에서 사용되고 있는 컬럼/로우 수
+        let curColLength = 0;
+        let curRowLength = 0;
+        fields.map((field, i) => {
+          // if (field.visible) {
+          switch (field.area) {
+            case 'row': maxRowLength++; break;
+            case 'column': maxColLength++; break;
+          }
+          // }
+        });
+
+        const makeDataByMatrix = () => {
+          const data = {summary: [], data: []};
+          for (let i = 0; i < loadOptions.group.length; i++) {
+            let isColumn = false;
+            for (let j = 0; j < dataField.column.length; j++) {
+              if (loadOptions.group[i].selector ==
+                  dataField.column[j].name) {
+                isColumn = true;
+                break;
+              }
+            }
+            // row랑 col 내용 바뀌어있음.
+            // 행열 변환 추가시 주석 해제
+            if (isColumn != curItem.meta.colRowSwitch) {
+              loadOptions.group[i].area = 'col';
+              loadOptions.group[i].index = curColLength;
+              curColLength++;
+            } else {
+              loadOptions.group[i].area = 'row';
+              loadOptions.group[i].index = curRowLength;
+              curRowLength++;
+            }
+          }
+          // 총계 계산
+          if (loadOptions.totalSummary.length > 0) {
+            const vs = matrixInfo.matrix.cells[0][0].vs;
+            for (let i = 0; i < vs.length; i++) {
+              data.summary.push(vs[i].s);
+            }
+          }
+          // 그룹 데이터 계산
+          if (loadOptions.group) {
+            const tempData = [];
+            const addSummary = (cells, summary) => {
+              cells.map((cell, j) => {
+                const type = cell.t;
+                switch (type) {
+                  case 'COUNT':
+                    summary.push(cell.c);
+                    break;
+                  case 'COUNTDISTINCT':
+                    summary.push(cell.dv.length);
+                    break;
+                  case 'SUM':
+                  case 'CUSTOM':
+                    summary.push(cell.s);
+                    break;
+                  case 'AVG':
+                    if (cell.s == 0 && cell.c == 0) {
+                      // if (userJsonObject.showNullValue) {
+                      //   summary.push(null);
+                      // } else {
+                      summary.push(0);
+                      // }
+                    } else if (cell.s == 0 && cell.c > 0) {
+                      summary.push(0);
+                    } else if (!cell.s) {
+                      summary.push(null);
+                    } else {
+                      summary.push(cell.s / cell.c);
+                    }
+                    break;
+                  case 'MIN':
+                  case 'MAX':
+                    if (cell.v == 9223372036854776000) {
+                      summary.push(0);
+                    } else {
+                      summary.push(cell.v);
+                    }
+                    break;
+                  default:
+                    summary.push(cell.v || cell.s);
+                    break;
+                }
+              });
+            };
+
+            const makeTreeData = (arr, curColDepth, maxColDepth,
+                curRowDepth, maxRowDepth, parentKey, rowIdx) => {
+              const cells = matrixInfo.matrix.cells;
+              const meta = matrixInfo.meta;
+
+              if (curRowDepth <= maxRowDepth) {
+                meta.rowFlattendSummaryDimensions.map((dim, i) => {
+                  if (dim.depth == curRowDepth &&
+                    (dim.parentPath == parentKey || !parentKey)) {
+                    let items = [];
+                    const summary = [];
+                    if (curRowDepth < maxRowDepth || maxRowDepth > 0) {
+                      makeTreeData(items, curColDepth, maxColDepth,
+                          curRowDepth + 1, maxRowDepth, dim.path, i);
+                    }
+                    if (items.length == 0) {
+                      items = null;
+                    }
+
+                    addSummary(cells[i][0].vs, summary);
+
+                    arr.push({
+                      key: dim.key, summary: summary, items: items
+                    });
+                  }
+                });
+              } else if (curColDepth <= maxColDepth) {
+                meta.colFlattendSummaryDimensions.map((dim, i) => {
+                  if (dim.depth == curColDepth &&
+                      (dim.parentPath == parentKey || !parentKey ||
+                        curColDepth == 1)) {
+                    let items = [];
+                    const summary = [];
+                    if (curColDepth < maxColDepth) {
+                      makeTreeData(items, curColDepth + 1, maxColDepth,
+                          curRowDepth, maxRowDepth, dim.path, rowIdx);
+                    }
+                    if (items.length == 0) {
+                      items = null;
+                    }
+                    addSummary(cells[rowIdx][i].vs, summary);
+
+                    arr.push({
+                      key: dim.key, summary: summary, items: items
+                    });
+                  }
+                });
+              }
+            };
+            makeTreeData(tempData, 1, curColLength,
+                1, curRowLength, null, 0);
+            data.data = tempData;
+          }
+          return data;
+        };
+        if (loadOptions.group.length == maxRowLength + maxColLength) {
+          const pagingParam = {
+            offset: 0,
+            limit: 0
+          };
+
+          const usePaging = curItem.meta.pagingOption.pagination.isOk;
+
+          const {page, size, dataLength} = curItem.mart.paging;
+
+          if (usePaging) {
+            pagingParam.offset = (page - 1) * size;
+            pagingParam.limit = size;
+
+            if (dataLength) {
+              if (pagingParam.offset > dataLength) {
+                const maxPage = Math.ceil(dataLength / size);
+                pagingParam.offset = size * (maxPage - 1);
+              }
+            };
+          }
+
+          const parameter = {
+            // Pass if the remoteOperations option is set to true
+            pivotOption: JSON.stringify({
+              take: loadOptions.take,
+              skip: loadOptions.skip,
+              groupParams: loadOptions.group ||[],
+              filterParam: loadOptions.filter || {},
+              totalSummaryParams: loadOptions.totalSummary || [],
+              groupSummaryParams: loadOptions.groupSummary || [],
+              udfGroupsParams: [],
+              topBottomParams: [],
+              pagingParam: {
+                ...pagingParam,
+                rowGroupParams: rowGroups
+              },
+              sortInfoParams: param.sortInfo || []
+            }),
+            ...param,
+            itemType: ItemType.PIVOT_GRID,
+            sortInfo: undefined
+          };
+
+          const key = JSON.stringify(parameter);
+
+          let res = {};
+          if (usePaging) {
+            if (cache.has(key)) {
+              res = cache.get(key);
+            } else {
+              res = await getItemData(parameter);
+              cache.set(key, res);
+            }
+          } else {
+            res = await getItemData(parameter);
+          }
+
+
+          matrixInfo = res.data.info;
+
+          if (usePaging && dataLength != matrixInfo.paging.total) {
+            const tempItem = {
+              ...item,
+              mart: {
+                ...curItem.mart,
+                paging: {
+                  ...(curItem.mart.paging || {}),
+                  dataLength: matrixInfo.paging.total
+                }
+              }
+            };
+            store.dispatch(updateItem({reportId, item: tempItem}));
+          }
+          const tempResult = makeDataByMatrix();
+          resolve(tempResult);
+        } else {
+          const matrixLoadWaitFunc = setInterval(() => {
+            const usePaging = curItem.meta.pagingOption.pagination.isOk;
+
+            if (usePaging) {
+              const {page, size, dataLength} = curItem.mart.paging;
+              let offset = 0;
+
+              offset = (page - 1) * size;
+
+              if (dataLength) {
+                if (offset > dataLength) {
+                  const maxPage = Math.ceil(dataLength / size);
+                  offset = size * (maxPage - 1);
+                }
+
+                if (matrixInfo.paging.limit != size ||
+                  matrixInfo.paging.offset != offset) {
+                  return;
+                }
+              };
+            } else if (matrixInfo?.paging?.limit != 0) {
+              return;
+            }
+
+            if (matrixInfo) {
+              try {
+                const result = makeDataByMatrix();
+                resolve(result);
+                clearInterval(matrixLoadWaitFunc);
+              } catch (e) {
+                clearInterval(matrixLoadWaitFunc);
+              }
+            }
+          }, 100);
+        }
+      });
+      return promise;
+    },
+    fields: fields
+  };
+
+  item.mart.dataSourceConfig = dataSourceConfig;
 };
 
 /**
@@ -165,8 +495,17 @@ const generateParameter = (item, param) => {
   param.measure = dataField.measure;
   param.removeNullData = item.meta.removeNullData;
 
+  param.sortInfo = param.dimension.map((dim) => {
+    return {
+      sortOrder: 'asc',
+      dataField: dim.name,
+      sortByField: dim.name
+    };
+  });
+
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
+  param.paging = JSON.stringify(param.paging);
 };
 
 /**
@@ -187,6 +526,7 @@ const getRibbonItems = () => {
     'DataPosition',
     'RemoveNullData',
     'ShowFilter',
+    'Paging',
     'InputTxt'
   ];
 };
