@@ -17,18 +17,19 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 public class PivotGridDataMaker implements ItemDataMaker {
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = dataAggreagtion.getMeasures();
+        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
+        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
         TopBottomInfo topBottomInfo = dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
-        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
 
         List<Measure> allMeasure = new ArrayList<>();
 
         allMeasure.addAll(measures);
         allMeasure.addAll(sortByItems);
-
+        
         // 데이터 기본 가공
         sanitizer
             .dataFiltering(dataAggreagtion.getFilter())
@@ -45,7 +46,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
         data = sanitizer.getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
         if(tempData != null) {
             data = tempData;
         }

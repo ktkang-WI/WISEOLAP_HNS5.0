@@ -30,7 +30,7 @@ const CustomDataBtn = () => {
       fieldId: 1,
       fieldName: '',
       expression: '',
-      type: 'decimal'
+      type: 'numeric'
     };
   };
 

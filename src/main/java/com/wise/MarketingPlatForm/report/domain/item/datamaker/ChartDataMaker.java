@@ -22,13 +22,14 @@ import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 public class ChartDataMaker implements ItemDataMaker {
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = dataAggreagtion.getMeasures();
+        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
+        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
         TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
         null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
 
-        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
 
         List<Measure> allMeasure = new ArrayList<>();
 
@@ -46,7 +47,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 .getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
         if(tempData != null) {
             data = tempData;
         }
@@ -138,9 +139,4 @@ public class ChartDataMaker implements ItemDataMaker {
         return result;
     }
 
-    private Map<String, Measure> generateSingleDataMap(String key, Object o) {
-        Map<String, Measure> temp = new HashMap<>();
-        temp.put(key, (Measure) o);
-        return temp;
-    }
 }

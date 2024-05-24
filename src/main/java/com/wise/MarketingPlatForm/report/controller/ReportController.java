@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.report.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
-import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -48,6 +43,8 @@ import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import com.wise.MarketingPlatForm.utils.Function;
+import com.wise.MarketingPlatForm.utils.ListDataUtility;
 import com.wise.MarketingPlatForm.utils.ListUtility;
 
 import java.lang.reflect.Type;
@@ -64,12 +61,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/report")
 public class ReportController {
-    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
-
     private final ReportService reportService;
-
+    
     @Autowired
-    private ObjectMapper objectMapper;
+    private ListDataUtility<Measure> listDataUtility;
 
     ReportController(ReportService reportService) {
         this.reportService = reportService;
@@ -123,6 +118,7 @@ public class ReportController {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
+        String temporaryMeasuresStr = param.get("temporaryMeasures");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
@@ -130,12 +126,14 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
-        String adHocOptionStr = param.get("adHocOption");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
                 }.getType());
         List<Measure> measures = gson.fromJson(measuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
+        List<Measure> temporaryMeasures = gson.fromJson(temporaryMeasuresStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
         List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
@@ -154,12 +152,20 @@ public class ReportController {
         AdHocOption adHocOption = new AdHocOption(null, null);
         
         ListUtility.getInstance().removeNullInParameterList(measures);
+        ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
         ListUtility.getInstance().removeNullInParameterList(dimensions);
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
 
+        Function<Measure> func = (m1, m2) -> {
+            return !m1.getName().equals(m2.getName());
+        };
+        List<Measure> mergeMeasures =
+            listDataUtility.mergeList(measures, temporaryMeasures, func);
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
-                .measures(measures)
+                .measures(mergeMeasures)
+                .originalMeasures(measures)
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)
@@ -234,6 +240,7 @@ public class ReportController {
         Gson gson = new Gson();
         String dimensionsStr = param.getOrDefault("dimension", "[]");
         String measuresStr = param.getOrDefault("measure", "[]");
+        String temporaryMeasuresStr = param.get("temporaryMeasures");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
@@ -247,6 +254,9 @@ public class ReportController {
         List<Measure> measures = gson.fromJson(measuresStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
+        List<Measure> temporaryMeasures = gson.fromJson(temporaryMeasuresStr,
+                new TypeToken<ArrayList<Measure>>() {
+                }.getType());
         List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
@@ -258,9 +268,23 @@ public class ReportController {
         AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
         ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
+
+        ListUtility.getInstance().removeNullInParameterList(measures);
+        ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
+        ListUtility.getInstance().removeNullInParameterList(dimensions);
+        ListUtility.getInstance().removeNullInParameterList(sortByItems);
+
+        
+        Function<Measure> func = (m1, m2) -> {
+            return !m1.getName().equals(m2.getName());
+        };
+        List<Measure> mergeMeasures =
+            listDataUtility.mergeList(measures, temporaryMeasures, func);
+
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
-                .measures(measures)
+                .measures(mergeMeasures)
+                .originalMeasures(measures)
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)

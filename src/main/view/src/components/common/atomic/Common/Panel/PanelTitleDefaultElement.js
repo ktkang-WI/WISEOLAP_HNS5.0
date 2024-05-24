@@ -21,6 +21,8 @@ import EditParamterModal from 'components/dataset/modal//EditParamterModal';
 import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
 import useQueryExecute from 'hooks/useQueryExecute';
+import {useSelector} from 'react-redux';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -31,26 +33,30 @@ const PanelTitleDefaultElement = () => {
     updateParameterInformation
   } = ParameterSlice.actions;
   const {initItemByDatsetId} = ItemSlice.actions;
-
+  const selectedCurrentItem = useSelector(selectCurrentItem);
+  const handleCustomData = async () => {
+    const dataset = selectCurrentDataset(store?.getState());
+    if (!selectedCurrentItem) {
+      alert(localizedString.itemNotSelected);
+      return;
+    }
+    if (!dataset) {
+      alert(localizedString.datasetNotSelected);
+      return;
+    }
+    const dataSource = await models?.DataSource?.getByDsId(dataset?.dsId);
+    if (!dataSource) {
+      alert(localizedString.datasetNotSelected);
+      return;
+    }
+    openModal(UserDefinedDataModal,
+        {selectedDataSource: dataSource, orgDataset: dataset});
+  };
   return {
     CustomField: {
       id: 'custom_field',
       onClick: async () => {
-        // TODO: 기존 직접쿼리입력 로직 Format 변경필요.
-        const dataset = selectCurrentDataset(store.getState());
-        if (!dataset) {
-          alert(localizedString.datasetNotSelected);
-          return;
-        }
-        if (dataset.datasetType == DatasetType.DS_SQL) {
-          const dataSource = await models.
-              DataSource.getByDsId(dataset.dataSrcId);
-
-          openModal(UserDefinedDataModal,
-              {selectedDataSource: dataSource, orgDataset: dataset});
-        } else if (dataset.datasetType == 'CUBE') {
-          alert('주제영역 사용자 정의 개발 예정');
-        }
+        handleCustomData();
       },
       src: customFieldImg,
       label: localizedString.addCustomField
