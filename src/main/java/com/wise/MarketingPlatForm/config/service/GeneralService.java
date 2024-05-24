@@ -41,6 +41,7 @@ public class GeneralService {
         .spreadJsLicense(generalDTO.getSpreadJsLicense())
         .spreadJsDesignLicense(generalDTO.getSpreadJsDesignLicense())
         .kakaoMapApiKey(generalDTO.getKakaoMapApiKey())
+        // .menuConfig(generalDTO.getKakaoMapApiKey())
         .build();
 
         result = configDAO.updateConfig(configMstrEntity);

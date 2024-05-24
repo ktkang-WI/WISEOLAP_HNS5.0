@@ -315,6 +315,11 @@
     {"name": "ceil", "caption": "Round Up"},
     {"name": "floor", "caption": "Round Down"}
   ],
+  "initPages": [
+    {"name": "Adhoc", "caption": "Adhoc"},
+    {"name": "DashAny", "caption": "Dashboard"},
+    {"name": "Spread", "caption": "Spread sheet"}
+  ],
   "labelDataEdit": "Label Edit",
   "none": "None",
   "argument": "Argument",

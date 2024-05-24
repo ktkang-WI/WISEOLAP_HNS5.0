@@ -6,6 +6,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import CusTomFileUploader from '../../userGroupManagement/common/FileUploader';
 import {useContext} from 'react';
 import {ConfigureContext} from '../ConfigurationSetting';
+import localizedString from 'config/localization';
 
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
@@ -64,6 +65,17 @@ const GeneralConfigure = () => {
             </Wrapper>
           </Wrapper>
         </Item>
+      </GroupItem>
+      <GroupItem colCount={1} caption='초기화면'>
+        <Item
+          dataField="menuConfig"
+          editorType='dxSelectBox'
+          editorOptions={{
+            items: localizedString.initPages,
+            displayExpr: 'caption',
+            valueExpr: 'name'
+          }}
+        ></Item>
       </GroupItem>
     </Form>
   );

@@ -42,6 +42,8 @@ public class ConfigController {
       @RequestParam(required = false, defaultValue = "") String spreadJsLicense,
       @RequestParam(required = false, defaultValue = "") String spreadJsDesignLicense,
       @RequestParam(required = false, defaultValue = "") String kakaoMapApiKey
+      // menu-config 객체.
+      // @RequestParam(required = false, defaultValue = "") String initPage
   )  throws SQLException{
     logger.info("general-data request is successful");
 

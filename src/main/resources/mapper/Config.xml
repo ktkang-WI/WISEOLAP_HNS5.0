@@ -39,6 +39,7 @@
       <result column="SPREAD_JS_LICENSE" property="spreadJsLicense" javaType="String"/>
       <result column="SPREAD_JS_DESIGNER_LICENSE" property="spreadJsDesignLicense" javaType="String"/>
       <result column="KAKAO_MAP_API_KEY" property="kakaoMapApiKey" javaType="String"/>
+      <result column="MENU_CONFIG" property="menuConfig" javaType="String"/>
     </resultMap>
 
     <resultMap id="ConfigFolderDatasetDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO">
@@ -82,7 +83,8 @@
         WB_CONFIG_MSTR.LOGO,
         WB_CONFIG_MSTR.SPREAD_JS_LICENSE,
         WB_CONFIG_MSTR.SPREAD_JS_DESIGNER_LICENSE,
-        WB_CONFIG_MSTR.KAKAO_MAP_API_KEY
+        WB_CONFIG_MSTR.KAKAO_MAP_API_KEY,
+        WB_CONFIG_MSTR.MENU_CONFIG
         FROM CONFIG_MSTR INNER JOIN WB_CONFIG_MSTR ON 1 = 1
 		</select>
 

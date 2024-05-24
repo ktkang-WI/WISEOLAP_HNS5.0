@@ -5,6 +5,8 @@ import inputElements from './InputElements';
 import {useNavigate} from 'react-router-dom';
 import useModal from 'hooks/useModal';
 import models from 'models';
+import {useSelector} from 'react-redux';
+import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 
 const StyledSignIn = styled.div`
   min-height: inherit;
@@ -22,6 +24,7 @@ const FormWrap = styled.div`
 const SignIn = () => {
   const nav = useNavigate();
   const {alert} = useModal();
+  const initialDisplay = useSelector(selectInitialDisplay);
 
   return (
     <StyledSignIn>
@@ -39,7 +42,8 @@ const SignIn = () => {
               if (res.status == 200) {
                 // TODO: 추후 권한 적용
                 // 임시적용 하드코딩
-                nav('dashany');
+                const initPage = initialDisplay.toLowerCase();
+                nav(initPage);
               } else if (res.response?.status == 404) {
                 document.activeElement.blur();
                 alert('사용자 정보가 잘못되었습니다.');

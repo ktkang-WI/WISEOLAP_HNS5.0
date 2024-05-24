@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class GeneralDTO {
   String mainTitle;
   String licensesKey;
@@ -20,4 +22,5 @@ public class GeneralDTO {
   String spreadJsLicense;
   String spreadJsDesignLicense;
   String kakaoMapApiKey;
+  String menuConfig;
 }
