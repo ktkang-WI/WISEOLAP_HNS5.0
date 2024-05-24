@@ -114,13 +114,17 @@ public final class DataSanitizer {
     }
 
     public final DataSanitizer temporaryColumnsAdd() {
+        List<Measure> cleanedMeasures = measures
+            .stream()
+            .filter(m -> data
+                            .stream()
+                            .anyMatch(item -> !item.containsKey(m.getName())))
+                            .collect(Collectors.toList());
         data
             .stream()
             .forEach((d)-> {
-                measures
-                    .stream()
-                    .filter(m -> data.stream().anyMatch(item -> !item.containsKey(m.getName())))
-                    .forEach((fm) -> {
+                cleanedMeasures
+                .forEach((fm) -> {
                         d.put(fm.getName(), "");
                     });
             });

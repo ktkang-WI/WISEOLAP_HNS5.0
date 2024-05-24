@@ -9,27 +9,27 @@ import org.springframework.stereotype.Component;
 public class ListDataUtility<T> {
   
   public List<T> mergeList(List<T> first, List<T> second) {
-    List<T> mergeMeasures = new ArrayList<>();
+    List<T> mergedMeasures = new ArrayList<>();
     first
         .stream()
-        .forEach(fm -> mergeMeasures.add(fm));
+        .forEach(fm -> mergedMeasures.add(fm));
     second
         .stream()
-        .forEach(fm -> mergeMeasures.add(fm));
+        .forEach(fm -> mergedMeasures.add(fm));
 
-    return mergeMeasures;
+    return mergedMeasures;
   }
 
   public List<T> mergeList(List<T> first, List<T> second, Function<T> func) {
-    List<T> mergeMeasures = new ArrayList<>();
+    List<T> mergedMeasures = new ArrayList<>();
     first
         .stream()
-        .forEach(fm -> mergeMeasures.add(fm));
+        .forEach(fm -> mergedMeasures.add(fm));
     second
         .stream()
         .filter(m -> first.stream().anyMatch(mm -> func.execute(m, mm)))
-        .forEach(fm -> mergeMeasures.add(fm));
+        .forEach(fm -> mergedMeasures.add(fm));
 
-    return mergeMeasures;
+    return mergedMeasures;
   }
 }

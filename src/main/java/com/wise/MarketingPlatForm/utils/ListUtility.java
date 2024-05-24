@@ -24,7 +24,8 @@ public class ListUtility {
   public <T> boolean removeNullInParameterList(List<T> list) {
     boolean isOk = false;
     if (list == null) {
-      logger.debug("");
+      logger.debug("파라미터 LIST 값이 빈값이 들어 있습니다.");
+      return isOk;
     }
     if (list.remove(null)) {
         isOk = true;

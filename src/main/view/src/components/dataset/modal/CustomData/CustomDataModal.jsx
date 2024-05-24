@@ -272,19 +272,19 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
 
   // 리덕스 STATE 저장
   const handleConfirm = () => {
-    let isok = false;
+    let isOk = false;
     if (!handleException(customDataList)) {
       alert(localizedString.alertInfo.customData.empty);
-      return !isok;
+      return !isOk;
     };
     const tempFields = makeCustomDataFieldIcon(customDataList);
 
     if (!reduxUpdateCustomDataList(tempFields)) {
       alert(localizedString.alertInfo.customData.empty);
-      isok = true;
+      isOk = true;
     };
 
-    if (!isok) {
+    if (!isOk) {
       const customDatas = tempFields.filter((item) => item.type === 'MEA');
       const measuresUpdateFormat = getMeasuresValueUpdateFormat();
       measuresUpdateFormat.customDatas = customDatas;
@@ -292,7 +292,7 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
       dispatch(measuresFetch(measuresUpdateFormat));
     }
 
-    return isok;
+    return isOk;
   };
 
   // 취소
