@@ -10,6 +10,7 @@ export const makeFieldIcon = (fields) => {
         parentId: field?.parentId ? field.parentId : null,
         uniqueName: field.columnName,
         name: field.columnName,
+        alias: field.columnLabel,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
         ...field
       });

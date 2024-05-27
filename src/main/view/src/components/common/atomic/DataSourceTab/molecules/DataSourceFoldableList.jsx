@@ -108,7 +108,7 @@ const DataSourceFoldableList = ({dataset}) => {
               className="dx-icon"/>
             {/* 기존 포맷 유지*/}
             <span className='ct-tooltip'>
-              {item.name}
+              {item.alias || item.name}
               {item.expression ?
               <span className='ct-tooltiptext'>{item.expression}</span> : <></>}
             </span>
@@ -142,9 +142,9 @@ const DataSourceFoldableList = ({dataset}) => {
               ref={ref}
               items={data}
               dataStructure="plain"
-              displayExpr="name"
+              displayExpr="alias"
               parentIdExpr="parentId"
-              keyExpr="uniqueName"
+              keyExpr="alias"
               searchEnabled={true}
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
