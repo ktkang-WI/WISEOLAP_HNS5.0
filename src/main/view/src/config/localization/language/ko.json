@@ -370,6 +370,8 @@
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
+  "gridAttibute": "그리드 속성",
+  "topBottom": "Top/Bottom값 설정",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
   "tooltip": "툴팁",

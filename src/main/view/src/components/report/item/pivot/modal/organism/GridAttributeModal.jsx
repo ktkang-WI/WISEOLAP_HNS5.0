@@ -1,0 +1,129 @@
+import Modal from 'components/common/atomic/Modal/organisms/Modal';
+import {getTheme} from 'config/theme';
+import {CheckBox, DataGrid} from 'devextreme-react';
+import {useState, useEffect, useCallback} from 'react';
+import localizedString from 'config/localization';
+import {Column} from 'devextreme-react/data-grid';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import useQueryExecute from 'hooks/useQueryExecute';
+import ItemSlice from 'redux/modules/ItemSlice';
+
+const theme = getTheme();
+
+const generateDataSource = (dataField, gridAttribute) => {
+  return [
+    ...dataField.row,
+    ...dataField.column,
+    ...dataField.measure
+  ].map((data) => ({
+    ...data,
+    chartVisibility: gridAttribute?.[data.name]?.chartVisibility ?? true,
+    gridVisibility: gridAttribute?.[data.name]?.gridVisibility ?? true
+  }));
+};
+
+const generateGridAttribute = (dataSource) => {
+  return dataSource.reduce((acc, data) => {
+    acc[data.name] = {
+      chartVisibility: data.chartVisibility,
+      gridVisibility: data.gridVisibility
+    };
+    return acc;
+  }, {});
+};
+
+const GridAttributeModal = ({
+  onClose,
+  dataField,
+  gridAttribute: initialGridAttribute
+}) => {
+  const {executeItems} = useQueryExecute();
+  const dispatch = useDispatch();
+  const selectedReportId = useSelector(selectCurrentReportId);
+  const [dataSource, setDataSource] = useState([]);
+  const [gridAttribute, setGridAttribute] = useState({});
+
+  useEffect(() => {
+    const initialDataSource =
+    generateDataSource(dataField, initialGridAttribute);
+    setDataSource(initialDataSource);
+    setGridAttribute(generateGridAttribute(initialDataSource));
+  }, [dataField, initialGridAttribute]);
+
+  const handleVisibility = useCallback((e, cellData, property) => {
+    const key = cellData.values[1];
+    setGridAttribute((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        [property]: !e.value
+      }
+    }));
+    setDataSource((prev) =>
+      prev.map((data) =>
+        data.name === key ? {...data, [property]: !e.value} : data
+      )
+    );
+  }, []);
+
+  const handleChartVisibility = useCallback((e, cellData) => {
+    handleVisibility(e, cellData, 'chartVisibility');
+  }, [handleVisibility]);
+
+  const handleGridVisibility = useCallback((e, cellData) => {
+    handleVisibility(e, cellData, 'gridVisibility');
+  }, [handleVisibility]);
+
+  const onSubmit = useCallback(() => {
+    dispatch(ItemSlice.actions.updateGridAttribute({
+      reportId: selectedReportId,
+      gridAttribute: gridAttribute
+    }));
+    executeItems();
+  }, [dispatch, selectedReportId, gridAttribute, executeItems]);
+
+  return (
+    <Modal
+      onSubmit={onSubmit}
+      onClose={onClose}
+      modalTitle={localizedString.gridAttribute}
+      width={theme.size.bigModalWidth}
+      height={theme.size.bigModalHeight}
+    >
+      <DataGrid
+        dataSource={dataSource}
+        showBorders={true}
+      >
+        <Column dataField="type" caption="타입" dataType="string" />
+        <Column dataField="name" caption="필드명" dataType="string" />
+        <Column dataField="caption" caption="데이터 항목 명" dataType="string" />
+        <Column
+          dataField="chartVisibility"
+          caption="차트 표시 여부"
+          dataType="boolean"
+          cellRender={(cellData) => (
+            <CheckBox
+              value={cellData.row.data.chartVisibility}
+              onValueChanged={(e) => handleChartVisibility(e, cellData)}
+            />
+          )}
+        />
+        <Column
+          dataField="gridVisibility"
+          caption="그리드 표시 여부"
+          dataType="boolean"
+          cellRender={(cellData) => (
+            <CheckBox
+              value={cellData.row.data.gridVisibility}
+              onValueChanged={(e) => handleGridVisibility(e, cellData)}
+            />
+          )}
+        />
+        <Column dataField="summaryType" caption="합계유형" dataType="string" />
+      </DataGrid>
+    </Modal>
+  );
+};
+
+export default GridAttributeModal;
