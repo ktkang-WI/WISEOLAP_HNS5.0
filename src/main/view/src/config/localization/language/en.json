@@ -316,6 +316,11 @@
     {"name": "ceil", "caption": "Round Up"},
     {"name": "floor", "caption": "Round Down"}
   ],
+  "initPages": [
+    {"name": "AdHoc", "caption": "Adhoc"},
+    {"name": "DashAny", "caption": "Dashboard"},
+    {"name": "Excel", "caption": "Spread sheet"}
+  ],
   "labelDataEdit": "Label Edit",
   "none": "None",
   "argument": "Argument",
@@ -383,6 +388,8 @@
   "noneExcelFile": "There is no Excel file for that report.",
   "failToUpload": "File upload failed.",
   "failToDelete": "File deletion failed.",
+  "selectUploadFile": "Select a Upload File.",
+  "selectFile": "Select a File.",
   "deleteDatasetMsg": "Would you like to delete this dataset?",
   "cofirmGroupBy": "If there is no GROUP BY clause in the query, it may take a long time to retrieve the data. Would you like to continue?",
   "filterErrorMsg": "Filter settings using the drag function are only possible in 'Subject' and 'Single Table'.",
@@ -414,6 +421,10 @@
   "openDesigner": "Open Designer",
   "dataAttributeList": "Data attribute list",
   "reportList": "Report list",
+  "length": "Length",
+  "emptyDatasetNmMsg": "Empty Dataset Name.",
+  "emptyUploadDataMsg": "Empty Upload Data.",
+  "duplicatedDatasetNameMsg": "Duplicated Dataset Name.",
   "linkReport": "Link Report",
   "linkReportAlready": "This report is already linked.",
   "subLinkReportSetting": "subLinkReportSetting",

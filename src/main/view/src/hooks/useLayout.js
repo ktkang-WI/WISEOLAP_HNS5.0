@@ -122,6 +122,11 @@ export default function useLayout() {
     dispatch(layoutSlice.adHocLayoutUpdate(param));
   };
 
+  const afterLoginInitSettingLayout = (reportTypes) => {
+    dispatch(layoutSlice.initLayout(reportTypes));
+    dispatch(itemSlice.initItems(reportTypes));
+  };
+
   return {
     insertFlexLayout,
     setLayout,
@@ -133,6 +138,7 @@ export default function useLayout() {
     adHocLayoutUpdate,
     editPalette,
     editColor,
-    editMemo
+    editMemo,
+    afterLoginInitSettingLayout
   };
 };

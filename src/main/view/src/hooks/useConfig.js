@@ -5,7 +5,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const useConfig = () => {
   const dispatch = useDispatch();
-  const {addConfigure} = ConfigSlice.actions;
+  const {addConfigure, setDisplayConfig} = ConfigSlice.actions;
 
   const saveConfiguration = (general) => {
     dispatch(addConfigure(general));
@@ -17,6 +17,11 @@ const useConfig = () => {
     );
   };
 
+  const afterLoginInitSettingConfig = (initPage, general) => {
+    dispatch(setDisplayConfig(initPage));
+    saveConfiguration(general);
+  };
+
   const remove = () => {
     console.log('config delete');
   };
@@ -25,7 +30,11 @@ const useConfig = () => {
     document.title = title;
   };
 
-  return {saveConfiguration, remove};
+  return {
+    saveConfiguration,
+    remove,
+    afterLoginInitSettingConfig
+  };
 };
 
 export default useConfig;

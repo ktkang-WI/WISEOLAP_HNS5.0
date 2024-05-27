@@ -7,6 +7,7 @@ import useLayout from 'hooks/useLayout';
 import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import wordCloudImg from 'assets/image/icon/item/wordcloud.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
 import calendarImg
   from '../../../../../../assets/image/icon/item/calendar_view.png';
@@ -36,6 +37,7 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    WORDCLOUD,
     TEXT_BOX
   } = ItemType;
   const onClick = (type) => {
@@ -65,6 +67,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.wordCloud,
+          type: WORDCLOUD,
+          checked: false,
+          src: wordCloudImg
+        }
       ]
     },
     {

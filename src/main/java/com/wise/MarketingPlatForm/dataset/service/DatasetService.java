@@ -17,10 +17,12 @@ import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResul
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.util.ListParameterUtils;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
-import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
+import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
+import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
@@ -348,7 +350,7 @@ public class DatasetService {
     }
 
     private String convertTopN(String sql, String dbType, int rowNum) {
-    	if (rowNum != 0) {
+        if (rowNum != 0) {
     		if ("MS_SQL".equals(dbType)) {
     			sql = "SELECT TOP " + rowNum + " * FROM (\n" + sql + "\n) AS A";
     		} else if ("DB2".equals(dbType)) {
@@ -553,4 +555,27 @@ public class DatasetService {
 
         return dsViewTableDtoList;
     }
+	
+	public List<UserUploadMstrDTO> getDBUploadTables(int dsId) {
+        
+        List<UserUploadMstrEntity> userUploadMstrEntityList = datasetDAO.selectUserUploadTables(dsId);
+
+        List<UserUploadMstrDTO> userUploadTableList = new ArrayList<UserUploadMstrDTO>();
+
+        for (UserUploadMstrEntity userUploadMstrEntity : userUploadMstrEntityList) {
+            UserUploadMstrDTO userUploadMstrDTO = UserUploadMstrDTO.builder()
+                        .dataSeq(userUploadMstrEntity.getDataSeq())
+                        .dataNm(userUploadMstrEntity.getDataNm())
+                        .tableNm(userUploadMstrEntity.getTableNm())
+                        .regUserNo(userUploadMstrEntity.getRegUserNo())
+                        .dataDesc(userUploadMstrEntity.getDataDesc())
+                        .uploadXml(userUploadMstrEntity.getUploadXml())
+                        .dsId(userUploadMstrEntity.getDsId())
+                        .build();
+
+            userUploadTableList.add(userUploadMstrDTO);
+        }
+        
+        return userUploadTableList;
+	}
 }

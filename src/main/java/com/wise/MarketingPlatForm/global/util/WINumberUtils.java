@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.global.util;
 import org.apache.commons.lang3.math.NumberUtils;
 
 public final class WINumberUtils {
+	
 	private WINumberUtils() {
 		
 	}
