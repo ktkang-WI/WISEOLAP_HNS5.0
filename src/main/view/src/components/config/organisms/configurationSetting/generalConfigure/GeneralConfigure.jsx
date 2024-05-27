@@ -4,7 +4,7 @@ import Form, {
 import {Button} from 'devextreme-react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import CusTomFileUploader from '../../userGroupManagement/common/FileUploader';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {ConfigureContext} from '../ConfigurationSetting';
 import localizedString from 'config/localization';
 
@@ -86,4 +86,4 @@ const GeneralConfigure = () => {
   );
 };
 
-export default React.forwardRef(GeneralConfigure);
+export default GeneralConfigure;

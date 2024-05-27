@@ -62,7 +62,7 @@ const ConfigurationSetting = () => {
   }, [general]);
 
   const handleBtnClick = (e) => {
-    // 일반 설정
+    // 일반 설정 menuConfig Json->string
     const param = configJosnToString(general);
     updateGeneralConfig(param)
         .then((res) => {
