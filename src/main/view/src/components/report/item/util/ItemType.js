@@ -13,6 +13,7 @@ export default {
   TIMELINE: 'timeline',
   CHORD_DIAGRAM: 'chord',
   ARC_DIAGRAM: 'arc',
+  WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot'
 };

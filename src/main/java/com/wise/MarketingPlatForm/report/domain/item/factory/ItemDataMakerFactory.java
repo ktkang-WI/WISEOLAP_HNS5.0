@@ -15,6 +15,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
@@ -61,6 +62,9 @@ public class ItemDataMakerFactory {
         if (itemType == ItemType.COORDINATE_DOT ||
             itemType == ItemType.COORDINATE_LINE) {
             return new CoordinateChartDataMaker();
+        }
+        if (itemType == ItemType.WORDCLOUD) {
+            return new WordCloudMaker();
         }
 
         throw new IllegalArgumentException();
