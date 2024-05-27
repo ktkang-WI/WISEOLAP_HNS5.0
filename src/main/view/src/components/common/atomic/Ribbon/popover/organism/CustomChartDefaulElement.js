@@ -12,6 +12,8 @@ import treeMapImg from 'assets/image/icon/item/treemap.png';
 import calendarImg
   from '../../../../../../assets/image/icon/item/calendar_view.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
+import textBoxImg
+  from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -35,7 +37,8 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
-    WORDCLOUD
+    WORDCLOUD,
+    TEXT_BOX
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -149,6 +152,12 @@ const CustomChartDefaulElement = () => {
           type: CHOROPLETH,
           checked: false,
           src: choroplethImg
+        },
+        {
+          title: localizedString.textBox,
+          type: TEXT_BOX,
+          checked: false,
+          src: textBoxImg
         }
       ]
     }

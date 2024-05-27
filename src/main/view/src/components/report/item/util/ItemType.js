@@ -9,6 +9,7 @@ export default {
   CARD: 'card',
   CALENDAR: 'calendar',
   BOX_PLOT: 'boxPlot',
+  TEXT_BOX: 'textBox',
   TIMELINE: 'timeline',
   CHORD_DIAGRAM: 'chord',
   ARC_DIAGRAM: 'arc',

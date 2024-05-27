@@ -34,8 +34,6 @@ import LiquidFillGauge
   from 'components/report/item/liquidFillGauge/LiquidFillGauge';
 import CalendarChart
   from 'components/report/item/calendar/Calendar';
-
-import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
 import ArcDiagram from 'components/report/item/arc/ArcDiagram';
@@ -44,8 +42,10 @@ import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
 import _ from 'lodash';
-import ItemType from 'components/report/item/util/ItemType';
 
+import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
+import TextBox from 'components/report/item/textBox/TextBox';
+import ItemType from 'components/report/item/util/ItemType';
 
 const theme = getTheme();
 
@@ -118,6 +118,7 @@ const ItemBoard = () => {
     card: Card,
     calendar: CalendarChart,
     boxPlot: BoxPlot,
+    textBox: TextBox,
     timeline: Timeline,
     chord: Chord,
     arc: ArcDiagram,
@@ -171,9 +172,12 @@ const ItemBoard = () => {
   };
 
   const nullDataCheck = (item) => {
-    if (item.type == ItemType.PIVOT_GRID) {
-      return false;
-    }
+    const isOk =
+      [
+        ItemType.TEXT_BOX,
+        ItemType.PIVOT_GRID
+      ].some((item) => item === item.type);
+    if (isOk) return !isOk;
 
     return !item ||
     item?.mart?.data?.data?.length == 0 ||
@@ -317,7 +321,7 @@ const ItemBoard = () => {
 
       // TODO: 임시용 변수
       const imgDownloadExcept = ['card', 'liquidFillGauge'];
-      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item?.type);
+      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -345,7 +349,7 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
-              {isImg && !isItPossibleToDownloadImg?
+              {isImg && !isItPossibleToDownloadImg ?
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
               }}>img</button> : null}

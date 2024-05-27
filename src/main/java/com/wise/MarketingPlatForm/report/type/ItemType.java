@@ -17,6 +17,7 @@ public enum ItemType {
     CALENDAR("calendar"),
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
+    TEXT_BOX("textBox"),
     TIMELINE("timeline"),
     CHORD("chord"),
     ARC_DIAGRAM("arc"),

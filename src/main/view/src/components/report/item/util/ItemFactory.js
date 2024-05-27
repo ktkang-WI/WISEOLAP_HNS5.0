@@ -26,6 +26,7 @@ const makeItem = (orgItem, countMap) => {
     calendar: '달력',
     treeMap: '트리맵',
     card: '카드',
+    textBox: '텍스트상자',
     timeline: '타임라인',
     chord: '의존성 휠',
     arc: '아크 다이어그램',
