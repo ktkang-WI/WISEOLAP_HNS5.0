@@ -29,6 +29,16 @@ a {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.custom-html-editor-container {
+  border: none !important;
+}
+.custom-not-select {
+  user-select: none;
+  -drag: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
 
 img {
   -webkit-user-select: none;
