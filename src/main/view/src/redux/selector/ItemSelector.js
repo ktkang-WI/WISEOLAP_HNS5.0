@@ -10,20 +10,20 @@ export const selectRootItem = createSelector(
 export const selectSelectedItemId = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
-    (reportId, item) => item[reportId].selectedItemId
+    (reportId, item) => item[reportId]?.selectedItemId
 );
 
 export const selectCurrentItem = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
     (reportId, item) =>
-      item[reportId].items.find((i) => i.id == item[reportId].selectedItemId)
+      item[reportId].items.find((i) => i.id == item[reportId]?.selectedItemId)
 );
 
 export const selectCurrentItems = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
-    (reportId, item) => item[reportId].items
+    (reportId, item) => item[reportId]?.items
 );
 
 export const selectCurrentDataField = createSelector(
@@ -34,7 +34,7 @@ export const selectCurrentDataField = createSelector(
       if (item[reportId].adHocOption) {
         return item[reportId].adHocOption.dataField;
       }
-      return selectedItem.meta.dataField;
+      return selectedItem?.meta?.dataField;
     }
 );
 
@@ -43,7 +43,7 @@ export const selectCurrentItemType = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
     (selectedItem) => {
-      return selectedItem.type;
+      return selectedItem?.type;
     }
 );
 

@@ -18,13 +18,13 @@ import ParamUtils from 'components/dataset/utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import models from 'models';
-import {makeMetaDataField, metaDataField}
-  from 'components/report/item/util/metaUtilityFactory';
 import localizedString from 'config/localization';
 import {getSeriesOptionInitFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 import useModal from './useModal';
+import {getNewDataField}
+  from 'components/common/atomic/DataColumnTab/utils/utility';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -66,12 +66,6 @@ const useDrag = () => {
     const targetId = e.draggableId;
     const datasetId = selectedDataset.datasetId;
 
-    const getCustomDatas = (field, sourceField) => {
-      if (!sourceField.isCustomData) return null;
-      field.expression = sourceField.expression;
-      return field;
-    };
-
     const checkFieldLimit = () => {
       const limit = dataFieldOption[dest.droppableId]?.limit;
       if (limit && dataField[dest.droppableId].length > limit) {
@@ -80,71 +74,6 @@ const useDrag = () => {
       }
 
       return true;
-    };
-
-    const getNewDataField = (sourceField) => {
-      const getDataFieldType = () => {
-        const category = dest.droppableId;
-        if (category === 'field') {
-          return sourceField.type;
-        }
-        return dataFieldOption[category].type;
-      };
-
-      let tempField = {
-        name: sourceField.name,
-        uniqueName: sourceField.uniqueName,
-        caption: sourceField.caption || sourceField.name,
-        category: dest.droppableId,
-        fieldType: sourceField.type, // 데이터 항목 원본 타입
-        type: getDataFieldType() // 실제 조회할 때 적용되어야 할 type
-      };
-      const customDatas = getCustomDatas(tempField, sourceField);
-
-      if (customDatas) tempField = customDatas;
-
-      // 필드아이디가 있는 경우 기존 아이템 이동
-      if (sourceField.fieldId) {
-        tempField = {...sourceField, ...tempField};
-      } else {
-        tempField.fieldId = 'dataItem' + (dataField.dataFieldQuantity++);
-      }
-
-      const measureOption = {
-        format: {
-          formatType: 'Number',
-          unit: 'Ones',
-          suffixEnabled: false,
-          suffix: {
-            O: '',
-            K: localizedString.k,
-            M: localizedString.m,
-            B: localizedString.b
-          },
-          precision: 0,
-          precisionType: 'round',
-          useDigitSeparator: true
-        },
-        summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
-      };
-
-      const dimensionOption = {
-        sortBy: tempField.fieldId,
-        sortOrder: 'ASC'
-      };
-
-      if (!sourceField.fieldId ||
-        (sourceField.fieldId && sourceField.type != tempField.type)) {
-        if (tempField.type == 'MEA') {
-          tempField = {...tempField, ...measureOption};
-        } else {
-          tempField = {...tempField, ...dimensionOption};
-        }
-      }
-      if (metaDataField[tempField.category]) {
-        tempField = makeMetaDataField(tempField, tempField.category);
-      }
-      return tempField;
     };
 
     const generateCubeParameter = (newParamInfo, sourceField, order, name) => {
@@ -296,7 +225,11 @@ const useDrag = () => {
           const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
           if (noDragItems.includes(sourceField.type)) return;
 
-          const tempField = getNewDataField(sourceField);
+          const tempField = getNewDataField(
+              dataField,
+              dataFieldOption,
+              sourceField,
+              dest.droppableId);
 
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
           dataField.datasetId = selectedDataset.datasetId;
@@ -318,7 +251,11 @@ const useDrag = () => {
           let sourceField = dataField[source.droppableId]
               .splice(source.index, 1);
 
-          sourceField = getNewDataField(sourceField[0]);
+          sourceField = getNewDataField(
+              dataField,
+              dataFieldOption,
+              sourceField[0],
+              dest.droppableId);
 
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.

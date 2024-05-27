@@ -50,3 +50,4 @@ public class SummaryValueConverter implements AvroConverter<SummaryValue, AvroSu
         return sv;
     }
 }
+

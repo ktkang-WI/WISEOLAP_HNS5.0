@@ -11,10 +11,6 @@ export const getItemData = (param) => {
   return axios.post(path + '/item-data', param);
 };
 
-export const getPivotData = async (param) => {
-  return axios.post(path + '/item-data', param);
-};
-
 export const getDetailedData = (param) => {
   return axios.post(path + '/detailed-data', param);
 };

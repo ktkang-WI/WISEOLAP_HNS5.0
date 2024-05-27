@@ -9,6 +9,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
+import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 import lombok.Builder;
@@ -21,6 +22,7 @@ import lombok.Setter;
 public class DataAggregation {
     String userId;
     List<Measure> measures;
+    List<Measure> originalMeasures;
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     ItemType itemType;
@@ -30,4 +32,5 @@ public class DataAggregation {
     List<Parameter> parameters;
     Map<String, List<String>> filter;
     AdHocOption adHocOption;
+    PivotOption pivotOption;
 }

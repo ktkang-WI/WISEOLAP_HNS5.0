@@ -43,6 +43,7 @@ import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
 import _ from 'lodash';
+import ItemType from 'components/report/item/util/ItemType';
 
 
 const theme = getTheme();
@@ -168,6 +169,10 @@ const ItemBoard = () => {
   };
 
   const nullDataCheck = (item) => {
+    if (item.type == ItemType.PIVOT_GRID) {
+      return false;
+    }
+
     return !item ||
     item?.mart?.data?.data?.length == 0 ||
     _.isEmpty(item?.mart?.data || {});
@@ -310,7 +315,7 @@ const ItemBoard = () => {
 
       // TODO: 임시용 변수
       const imgDownloadExcept = ['card', 'liquidFillGauge'];
-      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
+      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item?.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;

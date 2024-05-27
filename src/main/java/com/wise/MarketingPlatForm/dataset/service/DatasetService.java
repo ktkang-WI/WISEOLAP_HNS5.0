@@ -329,6 +329,7 @@ public class DatasetService {
 
         try {
             resultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+            resultDTO.setQuery(query);
             List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
             for (MetaDTO metaDTO : metaDTOs) {
