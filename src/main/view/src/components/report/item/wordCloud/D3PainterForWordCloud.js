@@ -8,6 +8,7 @@ D3PainterForWordCloud.defaultOption = (option) => {
   return {
     size: (group) => group.length,
     word: (d) => d,
+    sectionSize: option?.sectionSize ? option?.sectionSize : 5,
     marginTop: 0,
     marginRight: 0,
     marginBottom: 0,
@@ -56,55 +57,42 @@ init.funcs = {};
 init.paint = {};
 
 init.funcs.divide = (size) => {
-  const sizes = [5, 10, 20, 40, 80, 160, 320, 640];
-
-  for (let index = 0; index < sizes.length; index++) {
-    if (size < sizes[index]) {
-      return sizes[index];
-    }
-  }
-  return 400;
+  const sizes = Array.from({length: 8}, (_, i) => 5 * (2 ** i));
+  return sizes.find((s) => size < s) || 400;
 };
 
 init.funcs.fontSize = (option) => {
   const size = Math.sqrt(
       option.width * option.width + option.height * option.height);
   const average = size / init.funcs.divide(option.length);
-  const section = average / 5;
-  const start = average - (section * 4);
-  const returnSizes = [];
-  for (let index = 1; index <= 5; index++) {
-    returnSizes.push(start * index);
-  };
-  return returnSizes;
+  const section = average / option.sectionSize;
+  const start = average - (section * 4) || 2;
+  return Array.from({length: option.sectionSize}).reduce((acc, _, i) => {
+    acc.push(start * (i + 1));
+    return acc;
+  }, []);
 };
+
 init.funcs.measureSection = (dataSource) => {
+  const option = D3PainterForWordCloud.self.option;
   const [min, max] = d3.extent(dataSource.map((d) => d.measure));
   const average = max - min;
-  const section = average / 5;
-  const returnSizes = [];
-  for (let index = 1; index <= 5; index++) {
-    returnSizes.push(min + (section * (index - 1)));
-  };
-  return returnSizes;
+  const section = average / option.sectionSize;
+  return Array.from({length: option.sectionSize}).reduce((acc, _, i) => {
+    acc.push(min + (section * (i)));
+    return acc;
+  }, []);
 };
+
 init.funcs.measureIndex = (sections, value) => {
-  let returnIndex = 0;
-  for (let index = 0; index < sections.length; index++) {
-    if (value < sections[index]) {
-      returnIndex = index - 1;
-      break;
-    }
-    if (sections.length - 1 == index) {
-      returnIndex = index - 1;
-    }
-  }
-  return returnIndex;
+  const index = sections.findIndex((section) => value < section);
+  return index === -1 ? sections.length - 1 : index - 1;
 };
 
 init.paint.randomColor = () => {
   return 'hsla(' + ~~(360 * Math.random()) + ',' + '60%,'+ '60%,1)';
 };
+
 init.paint.drawing = (svg) => {
   const option = D3PainterForWordCloud.self.option;
   const g = svg.append('g').
@@ -126,12 +114,6 @@ init.paint.drawing = (svg) => {
             .attr('opacity', 1.0)
             .attr('fill', init.paint.randomColor())
             .text(text.replaceAll('<br/>', '-'))
-            .on('mouseover', function(e) {
-              // d3.select(e).attr('opacity', 0.6);
-            })
-            .on('mouseout', function() {
-              // d3.select(e).attr('opacity', 1.0);
-            })
             .append('title').text(text.replaceAll('<br/>', '-') + ': ' + freq);
       });
 

@@ -21,7 +21,8 @@ const D3WordCloud = ({
       dataSource: dataSource,
       option: {
         width: width,
-        height: height
+        height: height,
+        sectionSize: 5
       }
     });
     D3PainterForWordCloud.painting();

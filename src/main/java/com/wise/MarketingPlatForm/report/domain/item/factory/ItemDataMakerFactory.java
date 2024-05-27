@@ -64,7 +64,7 @@ public class ItemDataMakerFactory {
             return new CoordinateChartDataMaker();
         }
         if (itemType == ItemType.WORDCLOUD) {
-            result = new WordCloudMaker();
+            return new WordCloudMaker();
         }
 
         throw new IllegalArgumentException();
