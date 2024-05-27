@@ -80,7 +80,6 @@ const makeMetaDataField = (defaultMetaDataField, category) => {
  * @param {JSON} item 아이템 객체
  */
 const initDataFieldMeta = (item) => {
-  // const dataFieldTypes = DataFieldTypeOfItemType[item.type];
   const dataFieldTypes = dataFieldTypeOfItemTypeFunc(item.type);
   dataFieldTypes.forEach((type) => item.meta.dataField[type] = []);
   item.meta.dataField[DataFieldType.SORT_BY_ITEM] = [];

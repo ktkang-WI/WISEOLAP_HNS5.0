@@ -597,6 +597,8 @@
   "requestWorkComplete": "작업을 완료해주세요.",
   "linkReport": "연결 보고서",
   "linkReportAlready": "이미 연결된 보고서 입니다.",
+  "ToolbarVisible": "툴바표시",
+  "editable": "편집",
   "subLinkReportSetting": "서브 연결 보고서 설정",
   "dataFieldLimitMsg": "최대 N개의 항목만 올릴 수 있습니다.",
   "startDate": "날짜(시작)",

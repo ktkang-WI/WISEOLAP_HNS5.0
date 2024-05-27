@@ -45,6 +45,7 @@ const useQueryExecute = () => {
   const generateParameter = async (item, datasets, parameters, filter={}) => {
     const param = {};
 
+    if (item.type === ItemType.TEXT_BOX) return;
     // TODO: 로그인 추가 후 유저 아이디 수정
     param.userId = 'admin';
     param.itemType = item.type;
