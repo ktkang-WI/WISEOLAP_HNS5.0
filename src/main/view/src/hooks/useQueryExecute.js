@@ -23,6 +23,7 @@ import {selectCurrentDesignerMode,
   selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
+import ItemType from 'components/report/item/util/ItemType';
 
 
 const useQueryExecute = () => {
@@ -96,6 +97,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
     ItemManager.generateParameter(item, param);
 
@@ -142,6 +145,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem =
     JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
     ItemManager.generateAdHocParameter(rootItem, param);
@@ -177,8 +182,13 @@ const useQueryExecute = () => {
           }
           chartItem.mart.init = true;
           chartItem.mart.data = response.data['chart'];
-          ItemManager.generateItem(chartItem, cloneItem);
+          ItemManager.generateItem(chartItem, param, cloneItem);
           dispatch(updateItem({reportId, item: chartItem}));
+
+          /* NOTE: 피벗그리드 remoteOperations */
+          pivotItem.mart.init = true;
+          ItemManager.generateItem(pivotItem, param, cloneItem);
+          dispatch(updateItem({reportId, item: pivotItem}));
         }
         if (response.data['pivot']) {
           if (response.data['pivot'].data.length == 0) {
@@ -187,7 +197,7 @@ const useQueryExecute = () => {
           }
           pivotItem.mart.init = true;
           pivotItem.mart.data = response.data['pivot'];
-          ItemManager.generateItem(pivotItem, cloneItem);
+          ItemManager.generateItem(pivotItem, param, cloneItem);
           dispatch(updateItem({reportId, item: pivotItem}));
         }
       });
@@ -214,30 +224,30 @@ const useQueryExecute = () => {
       const reportId = selectCurrentReportId(store.getState());
 
       // TODO: 추후 PivotMatrix 적용할 때 해제
-      // if (item.type == ItemType.PIVOT_GRID) {
-      //   tempItem.mart.init = true;
-      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
-
-      //   dispatch(updateItem({reportId, item: tempItem}));
-      // } else {
-
-      models.Item.getItemData(param).then((response) => {
-        if (response.status != 200) {
-          return;
-        }
-        const data = response.data;
-        if (data.data.length === 0) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
-
+      if (item.type == ItemType.PIVOT_GRID) {
         tempItem.mart.init = true;
-        tempItem.mart.data = data;
-        tempItem.mart.currentFilter = filter || {};
-
-        ItemManager.generateItem(tempItem);
+        ItemManager.generateItem(tempItem, param);
 
         dispatch(updateItem({reportId, item: tempItem}));
-      });
+      } else {
+        models.Item.getItemData(param).then((response) => {
+          if (response.status != 200) {
+            return;
+          }
+          const data = response.data;
+          if (data.data.length === 0) {
+            alert(`${item.meta.name}${localizedString.noneData}`);
+          }
+
+          tempItem.mart.init = true;
+          tempItem.mart.data = data;
+          tempItem.mart.currentFilter = filter || {};
+
+          ItemManager.generateItem(tempItem, param);
+
+          dispatch(updateItem({reportId, item: tempItem}));
+        });
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);

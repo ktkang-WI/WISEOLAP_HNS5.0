@@ -113,6 +113,23 @@ public final class DataSanitizer {
         return this;
     }
 
+    public final DataSanitizer temporaryColumnsAdd() {
+        List<Measure> cleanedMeasures = measures
+            .stream()
+            .filter(m -> data
+                            .stream()
+                            .anyMatch(item -> !item.containsKey(m.getName())))
+                            .collect(Collectors.toList());
+        data
+            .stream()
+            .forEach((d)-> {
+                cleanedMeasures
+                .forEach((fm) -> {
+                        d.put(fm.getName(), "");
+                    });
+            });
+        return this;
+    }
     /**
      * 차원(Dimension) 이름을 기준으로 데이터를 그룹화하여 측정값(Measure)을 집계합니다.
      * 이 과정에서 "SummaryType_측정값명"으로 집계 컬럼이 추가됩니다.

@@ -10,14 +10,18 @@ public class SummaryParam {
 
     private String selector;
     private SummaryType summaryType = SummaryType.SUM;
+    private String precision;
+    private String precisionOption;
 
     public SummaryParam() {
 
     }
 
-    public SummaryParam(final String selector, final SummaryType summaryType) {
+    public SummaryParam(final String selector, final SummaryType summaryType, final String precision, final String precisionOption) {
         this.selector = selector;
         this.summaryType = summaryType;
+        this.precision = precision;
+        this.precisionOption = precisionOption;
     }
 
     public String getSelector() {
@@ -57,12 +61,29 @@ public class SummaryParam {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(selector).append(summaryType).toHashCode();
+        return new HashCodeBuilder().append(selector).append(summaryType).append(precision).append(precisionOption).toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("selector", selector)
-                .append("summaryType", summaryType).toString();
+                .append("summaryType", summaryType).append("precision", precision).append("precisionOption", precisionOption).toString();
     }
+
+	public String getPrecision() {
+		return precision;
+	}
+
+	public void setPrecision(String precision) {
+		this.precision = precision;
+	}
+
+	public String getPrecisionOption() {
+		return precisionOption;
+	}
+
+	public void setPrecisionOption(String precisionOption) {
+		this.precisionOption = precisionOption;
+	}
+
 }

@@ -184,3 +184,31 @@ img {
 .requireRule {
   color: red;
 }
+
+/* TODO: 툴팁관련 공용컴포넌트 있으면 알려주세요.
+*/
+.ct-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.ct-tooltip .ct-tooltiptext {
+  margin-left: 20px;
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 2px 0px;
+  text-overflow: ellipsis;
+
+  /* Position the tooltip */
+  position: fixed;
+  z-index: 1;
+
+}
+
+.ct-tooltip:hover .ct-tooltiptext {
+  visibility: visible;
+}

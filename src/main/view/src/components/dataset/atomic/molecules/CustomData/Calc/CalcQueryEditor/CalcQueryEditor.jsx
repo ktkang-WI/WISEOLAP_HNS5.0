@@ -4,6 +4,7 @@ import './mode-custom';
 import {useContext, useEffect, useState} from 'react';
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
+import localizedString from 'config/localization';
 
 const CalcQueryEditor = ({editorRef, ...props}) => {
   const [annotations, setAnnotations] = useState([]);
@@ -67,7 +68,9 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
 
       if (errorCheck) {
         const message =
-          aggregateCheck ? '집계함수 명칭을 사용할수 없습니다.' : '계산식이 잘못되었습니다.';
+          aggregateCheck ?
+            localizedString.alertInfo.errorNamingOfAggregateFunc :
+            localizedString.alertInfo.customDataCalc.Inspection;
         newAnnotations.push({
           row: index,
           column: 0,

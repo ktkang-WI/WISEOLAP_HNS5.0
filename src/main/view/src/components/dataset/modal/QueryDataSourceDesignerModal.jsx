@@ -175,7 +175,7 @@ const QueryDataSourceDesignerModal = ({
             let tempFields = response.data.metaData;
             tempFields = makeFieldIcon(tempFields);
             if (dataset.customData) {
-              tempFields = [...tempFields, ...dataset.customData];
+              tempFields = [...tempFields, ...dataset.customDatas.customData];
             }
 
             dispatch(updateDataset({
