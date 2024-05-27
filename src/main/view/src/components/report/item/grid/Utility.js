@@ -37,7 +37,7 @@ const dataGridOptionConfig = {
     column: true,
     stripes: false
   },
-  cellMerging: true,
+  cellMerging: false,
   columnHeader: true,
   paging: {
     autoPaging: {
@@ -45,13 +45,13 @@ const dataGridOptionConfig = {
       time: 5
     },
     pagination: {
-      isOk: false,
+      isOk: true,
       content: '',
       pagingRange: 20,
       index: 1
     },
     pageUsageOfPageCount: {
-      isOk: false,
+      isOk: true,
       pageSizes: [10, 20, 50]
     }
   },

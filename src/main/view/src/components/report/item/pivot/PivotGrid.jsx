@@ -122,8 +122,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       const formData = newFormat[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.innerHTML =
-        cellElement.innerHTML.replace(cell.value, formattedValue);
+      cellElement.innerHTML.replace(
+          '<span>' + cell.value, '<span>' + formattedValue
+      );
     }
   };
 
@@ -192,8 +193,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     <DevPivotGrid
       ref={ref}
       id={id}
-      width={'100%'}
+      width={meta.autoSize ? '0px' : '100%'}
       height={'100%'}
+      elementAttr={meta.autoSize && {
+        width: '0px',
+        style: 'overflow: visible'
+      }}
       showBorders={true}
       dataSource={mart.dataSourceConfig}
       showColumnTotals={meta.positionOption.column.totalVisible}

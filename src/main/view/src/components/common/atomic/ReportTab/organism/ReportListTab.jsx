@@ -28,9 +28,22 @@ const StyledTreeView = styled(TreeView)`
 
 const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
   const dxRef = useRef();
+  let dblClick = 0;
+
   const handleItemClick = useCallback(
-      (e) => {
-        if (onItemSelect) onItemSelect(e.itemData);
+      async (e) => {
+        dblClick ++;
+        setTimeout(() => {
+          dblClick--;
+        }, 300);
+
+        if (dblClick > 1) {
+          if (!await props.onSubmit()) {
+            props.onClose();
+          };
+        } else {
+          if (onItemSelect) onItemSelect(e.itemData);
+        }
       }, [onItemSelect]);
   return (
     <Wrapper

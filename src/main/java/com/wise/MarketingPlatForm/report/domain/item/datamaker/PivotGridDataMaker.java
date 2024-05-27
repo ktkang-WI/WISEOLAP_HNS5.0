@@ -50,7 +50,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
             data = tempData;
         }
 
-        CommonResult result = new CommonResult(data, "", null);
+        CommonResult result = new CommonResult(data, null);
 
         return result;
     }

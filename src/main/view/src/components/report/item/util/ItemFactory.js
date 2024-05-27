@@ -23,6 +23,7 @@ const makeItem = (orgItem, countMap) => {
     boxPlot: '박스플롯',
     choropleth: '코로프레스',
     liquidFillGauge: '액체게이지',
+    calendar: '달력',
     treeMap: '트리맵',
     card: '카드',
     timeline: '타임라인',

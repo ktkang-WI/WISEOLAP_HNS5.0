@@ -17,8 +17,7 @@ import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
-public class ChoroplethDataMaker implements ItemDataMaker {
-  
+public class CalendarDataMaker implements ItemDataMaker  {
   @Override
   public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
     List<Measure> measures = dataAggreagtion.getMeasures();

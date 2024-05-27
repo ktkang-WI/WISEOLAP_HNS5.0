@@ -8,6 +8,8 @@ import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
+import calendarImg
+  from '../../../../../../assets/image/icon/item/calendar_view.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import {useSelector} from 'react-redux';
@@ -29,6 +31,7 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
+    CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT
   } = ItemType;
@@ -69,6 +72,12 @@ const CustomChartDefaulElement = () => {
           type: CHORD_DIAGRAM,
           checked: false,
           src: chordImg
+        },
+        {
+          title: localizedString.calendar,
+          type: CALENDAR,
+          checked: false,
+          src: calendarImg
         },
         {
           title: localizedString.arcDiagram,

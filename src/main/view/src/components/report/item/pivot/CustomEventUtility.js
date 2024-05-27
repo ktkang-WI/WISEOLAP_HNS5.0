@@ -53,6 +53,13 @@ const getFormItems = (item) => {
         text: localizedString.treeLayout
       }
     ],
+    'autoSize': [
+      {
+        id: 'autoSize',
+        text: localizedString.autoSize,
+        value: item.meta.autoSize
+      }
+    ],
     'rowTotalPosition': [
       {
         id: 'top',

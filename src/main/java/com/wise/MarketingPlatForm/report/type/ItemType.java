@@ -14,6 +14,7 @@ public enum ItemType {
     TREEMAP("treeMap"),
     CARD("card"),
     CHOROPLETH("choropleth"),
+    CALENDAR("calendar"),
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
     TIMELINE("timeline"),

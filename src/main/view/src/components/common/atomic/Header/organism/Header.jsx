@@ -114,6 +114,7 @@ const Header = ({left, middle, right}) => {
           width={item.width}
           height={theme.size.headerHeight}
           itemAlignment='flex-start'
+          verticalAlignment='end'
           key={item.id}
           position={item.position}
         >

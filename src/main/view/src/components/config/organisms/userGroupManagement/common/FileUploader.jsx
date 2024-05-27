@@ -37,7 +37,7 @@ const DropZoneImage = styled.img`
 
 const DropZoneExternal = styled(Container)`
   width: 100%;
-  height: 200px;
+  height: 80px;
   background-color: rgba(183, 183, 183, 0.1);
   border-width: 2px;
   border-style: dashed;

@@ -42,6 +42,7 @@ import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.exception.ServiceTimeoutException;
+import com.wise.MarketingPlatForm.login.service.LoginService;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
@@ -69,7 +70,6 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryMa
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.ParamUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
-import com.wise.MarketingPlatForm.report.domain.result.result.PivotResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
@@ -221,38 +221,13 @@ public class ReportService {
         String query = queryGenerator.getQuery(dataAggreagtion);
 
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
-
+        
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
-
+       
         result = itemDataMaker.make(dataAggreagtion, martResultDTO.getRowData());
+        result.setQuery(query);
 
-        return result;
-    }
-
-    public ReportResult getPivotData(final Map<String, String> param, final PagingParam pagingParam,
-            DataAggregation dataAggreagtion) throws Exception {
-        final SummaryMatrix matrix = getPivotSummaryMatrix(param, pagingParam, dataAggreagtion);
-
-        if (matrix == null) {
-            return null;
-        }
-
-        final Paging paging = new Paging();
-        paging.setOffset(pagingParam.getOffset());
-        paging.setLimit(pagingParam.getLimit());
-
-        final SummaryMatrix pagedMatrix;
-
-        if (!paging.isPagingEnabled() || (paging.getOffset() == 0 && matrix.getRows() <= paging.getLimit())) {
-            pagedMatrix = matrix;
-        } else {
-            pagedMatrix = SummaryMatrixFactory.slicePageSummaryMatrix(matrix, paging);
-        }
-
-        PivotResult result = new PivotResult();
-
-        result.setMatrix(pagedMatrix);
         return result;
     }
 
@@ -277,7 +252,11 @@ public class ReportService {
         for (String item : items) {
             ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
             List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
-            result.put(item, dataMaker.make(dataAggreagtion, rowData));
+            ReportResult pivotResult = dataMaker.make(dataAggreagtion, rowData);
+            
+            pivotResult.setQuery(query);
+            
+            result.put(item, pivotResult);
         }
 
         return result;
@@ -475,7 +454,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
-            .regUserNo(0)
+            .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
@@ -525,7 +504,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
-            .regUserNo(0)
+            .modUserNo(reportMstrDTO.getModUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
