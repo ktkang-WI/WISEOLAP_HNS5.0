@@ -6,9 +6,10 @@ import {getTheme} from 'config/theme';
 const theme = getTheme();
 
 const Wrapper = styled.div`
-  width: ${(props) => props.width || '100px'};
+  width: ${(props) => props.width};
   height: 84px;
   display: flex;
+  flex: ${(props) => props.width === '100%' && 1};
   justify-content: center;
   border-radius: 4px;
   align-items: center;
@@ -44,10 +45,16 @@ const SquareButton = ({
   width='100%',
   height='100%',
   onClick,
-  active
+  active,
+  flex
 }) => {
   return (
-    <Wrapper onClick={onClick} active={active}>
+    <Wrapper
+      onClick={onClick}
+      active={active}
+      width={width}
+      flex={flex}
+    >
       <SmallButtonImage src={icon}></SmallButtonImage>
       <SmallButtonLabel>{label}</SmallButtonLabel>
     </Wrapper>

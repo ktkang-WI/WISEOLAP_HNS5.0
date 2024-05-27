@@ -243,7 +243,7 @@ const ItemAttributeDefaultElement = () => {
         //   label: '변동 측정값',
         //   active: option.deltaValue == 'deltaValue',
         //   icon: deltaValueImg,
-        //   width: '50%',
+
         //   onClick: () => {
         //     // 변동 측정값
         //   }
