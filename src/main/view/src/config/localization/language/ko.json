@@ -455,9 +455,9 @@
     {"name": "floor", "caption": "버림"}
   ],
   "initPages": [
-    {"name": "Adhoc", "caption": "비정형 보고서"},
+    {"name": "AdHoc", "caption": "비정형 보고서"},
     {"name": "DashAny", "caption": "대시보드"},
-    {"name": "Spread", "caption": "스프레드"}
+    {"name": "Excel", "caption": "스프레드"}
   ],
   "labelDataEdit": "라벨 데이터 편집",
   "showTitle": "제목 보기",

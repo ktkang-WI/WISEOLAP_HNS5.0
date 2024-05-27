@@ -179,6 +179,9 @@
               <if test='kakaoMapApiKey != ""'>
                 KAKAO_MAP_API_KEY = #{kakaoMapApiKey, jdbcType=VARCHAR},
               </if>
+              <if test='menuConfig != ""'>
+                MENU_CONFIG = #{menuConfig, jdbcType=VARCHAR},
+              </if>
               REPORT_DIRECT_VIEW = REPORT_DIRECT_VIEW
           WHERE 1 = 1
     </update>

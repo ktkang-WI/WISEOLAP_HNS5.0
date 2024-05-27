@@ -9,6 +9,7 @@ import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
 import {getHint} from 'components/config/utility/utility.js';
 import CommonTab from
   'components/common/atomic/Common/Interactive/CommonTab.jsx';
+import configureUtility from './ConfigureUtility.js';
 
 const NavBar = styled.div`
   width:100%;
@@ -45,9 +46,10 @@ export const ConfigureContext = createContext();
 const ConfigurationSetting = () => {
   const {alert} = useModal();
   const {generalConfigure} = useLoaderData();
-
+  const {configStringToJson, configJosnToString} = configureUtility();
+  const jsonGeneral = configStringToJson(generalConfigure);
   const btns = ['save'];
-  const [general, setGeneral] = useState(generalConfigure);
+  const [general, setGeneral] = useState(jsonGeneral);
 
   const context = {
     state: {
@@ -61,7 +63,8 @@ const ConfigurationSetting = () => {
 
   const handleBtnClick = (e) => {
     // 일반 설정
-    updateGeneralConfig(general)
+    const param = configJosnToString(general);
+    updateGeneralConfig(param)
         .then((res) => {
           if (res.status === 200) {
             console.log('Successfully ConfigurationSetting Data Save');

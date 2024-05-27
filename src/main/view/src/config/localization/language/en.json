@@ -316,9 +316,9 @@
     {"name": "floor", "caption": "Round Down"}
   ],
   "initPages": [
-    {"name": "Adhoc", "caption": "Adhoc"},
+    {"name": "AdHoc", "caption": "Adhoc"},
     {"name": "DashAny", "caption": "Dashboard"},
-    {"name": "Spread", "caption": "Spread sheet"}
+    {"name": "Excel", "caption": "Spread sheet"}
   ],
   "labelDataEdit": "Label Edit",
   "none": "None",

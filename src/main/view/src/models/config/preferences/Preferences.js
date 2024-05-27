@@ -12,11 +12,7 @@ export const getGeneralConfig = async () => {
 };
 
 export const updateGeneralConfig = async (general) => {
-  const newGeneral = {
-    ...general,
-    menuconfig: JSON.stringify(general.menuconfig)
-  };
   return await axios.patch(configPath + '/general', null, {
-    params: newGeneral
+    params: general
   });
 };
