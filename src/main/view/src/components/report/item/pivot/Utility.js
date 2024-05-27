@@ -40,6 +40,7 @@ const generateMeta = (item) => {
   setMeta(item, 'autoSize', false);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', false);
+  setMeta(item, 'colRowSwitch', false);
   setMeta(item, 'dataHighlight', []);
   setMeta(item, 'pagingOption', {
     pagination: {
@@ -488,9 +489,10 @@ const getDataFieldOptionChild = () => {
  * 차트 커스텀 파라미터 삽입
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
+ * @param {JSON} rootItem 루트 아이템
  */
-const generateParameter = (item, param) => {
-  const dataField = item.meta.dataField;
+const generateParameter = (item, param, rootItem) => {
+  const dataField = item.meta?.dataField || rootItem.adHocOption.dataField;
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
   param.removeNullData = item.meta.removeNullData;
