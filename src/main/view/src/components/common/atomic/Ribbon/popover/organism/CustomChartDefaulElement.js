@@ -68,7 +68,7 @@ const CustomChartDefaulElement = () => {
       title: localizedString.relationVisualization,
       checkboxs: [
         {
-          title: localizedString.wordCloudImg,
+          title: localizedString.wordCloud,
           type: WORDCLOUD,
           checked: false,
           src: wordCloudImg
