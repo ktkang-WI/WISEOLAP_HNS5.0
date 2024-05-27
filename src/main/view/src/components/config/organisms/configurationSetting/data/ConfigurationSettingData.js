@@ -11,11 +11,11 @@ export const dataSource = [
     mode: Mode['GENERATE_CONFIGURE'],
     title: localizedString.generateConfigure,
     component: <GeneralConfigure/>
-  }
+  },
   // TODO: 보고서 설정 추후 추가
-  // {
-  //   mode: Mode['REPORT_CONFIGURE'],
-  //   title: localizedString.reportConfigure,
-  //   component: <ReportConfigure/>
-  // }
+  {
+    mode: Mode['REPORT_CONFIGURE'],
+    title: localizedString.reportConfigure
+    // component: <ReportConfigure/>
+  }
 ];
