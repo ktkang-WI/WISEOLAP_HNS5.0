@@ -46,7 +46,8 @@ const SingleTableDesignerModal = ({
   orgDataset, onClose, query='', ...props
 }) => {
   const defaultDataset = {
-    datasetNm: selectedTable.TBL_NM,
+    datasetNm: selectedTable.datasetNm ?
+         selectedTable.datasetNm : selectedTable.TBL_NM,
     datasetType: DatasetType.DS_SINGLE,
     dataSrcId: selectedDataSource.dsId,
     datasetQuery: ''

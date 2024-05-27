@@ -19,3 +19,15 @@ export const importFile = (param) => {
     responseType: 'arraybuffer'
   });
 };
+
+
+export const uploadUserData = (dsId, dataNm, uploadData,
+    appendTable, tableDeleteYN) => {
+  return axios.post(path + '/upload-user-data', {
+    dsId: parseInt(dsId),
+    dataNm: dataNm,
+    uploadData: JSON.stringify(uploadData),
+    appendTable: appendTable,
+    tableDeleteYN: tableDeleteYN
+  });
+};
