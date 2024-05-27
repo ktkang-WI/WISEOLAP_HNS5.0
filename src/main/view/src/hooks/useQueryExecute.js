@@ -610,6 +610,7 @@ const useQueryExecute = () => {
 
   return {
     generateParameter,
+    generateAdHocParamter,
     executeItem,
     executeItems,
     filterItem,

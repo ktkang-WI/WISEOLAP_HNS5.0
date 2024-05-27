@@ -174,7 +174,7 @@ const ItemBoard = () => {
       [
         ItemType.TEXT_BOX,
         ItemType.PIVOT_GRID
-      ].some((item) => item === item.type);
+      ].some((type) => type === item.type);
     if (isOk) return !isOk;
 
     return !item ||
