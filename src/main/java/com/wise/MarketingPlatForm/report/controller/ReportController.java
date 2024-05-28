@@ -126,7 +126,7 @@ public class ReportController {
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
         String ItemTypeStr = param.get("itemType");
-        String gridAttributeStr = param.get("gridAttribute");
+        String gridAttributeStr = param.getOrDefault("gridAttribute", "{}");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");

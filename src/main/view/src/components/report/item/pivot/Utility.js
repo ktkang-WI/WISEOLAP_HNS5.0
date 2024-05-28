@@ -55,6 +55,12 @@ const generateMeta = (item) => {
     }
   });
 };
+
+const gridAttributeOptionCheck = (dataFieldName, gridAttribute) => {
+  if (!gridAttribute) return true;
+  if (!gridAttribute[dataFieldName]) return true;
+  return gridAttribute[dataFieldName]?.gridVisibility;
+};
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
@@ -66,6 +72,7 @@ const generateItem = (item, param, rootItem) => {
   const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
 
   const {updateItem} = ItemSlice.actions;
+  const gridAttribute = rootItem?.adHocOption?.gridAttribute;
   const reportId = selectCurrentReportId(store.getState());
   const allMeasure = dataField.measure.concat(dataField.sortByItem);
   const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
@@ -75,6 +82,7 @@ const generateItem = (item, param, rootItem) => {
 
   for (const field of dataField.measure) {
     const dataFieldName = field.summaryType + '_' + field.name;
+    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     fields.push({
       caption: field.caption,
       summaryType: 'SUM',
@@ -85,6 +93,7 @@ const generateItem = (item, param, rootItem) => {
 
   for (const field of dataField.sortByItem) {
     const dataFieldName = field.summaryType + '_' + field.name;
+    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     fields.push({
       caption: field.caption,
       summaryType: 'SUM',
@@ -96,6 +105,7 @@ const generateItem = (item, param, rootItem) => {
 
   for (const field of dataField.row) {
     const dataFieldName = field.name;
+    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
@@ -107,6 +117,7 @@ const generateItem = (item, param, rootItem) => {
 
   for (const field of dataField.column) {
     const dataFieldName = field.name;
+    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     let sortBy = {};
 
     if (field.sortBy && field.sortBy != field.fieldId) {
@@ -137,7 +148,10 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
-  const rowGroups = dataField.row.map((r) => ({selector: r.name}));
+  const rowGroups = dataField.row
+      .map((r) => ({selector: r.name}))
+      .filter((rowGroup) =>
+        gridAttributeOptionCheck(rowGroup.selector, gridAttribute));
 
   item.mart.paging = {
     dataLength: 0,

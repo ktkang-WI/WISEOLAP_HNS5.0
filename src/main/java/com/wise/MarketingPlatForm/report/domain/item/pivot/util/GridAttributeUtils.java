@@ -20,7 +20,9 @@ public class GridAttributeUtils {
     ) {
     if (gridAttribute.size() == 0) return measures;
     final List<Measure> result = measures.stream().filter((measure) -> {
-      final HashMap<String, Object> option = gridAttribute.get(measure.getSummaryType() + "_" + measure.getName());
+      final String key = measure.getSummaryType() + "_" + measure.getName();
+      if (!gridAttribute.containsKey(key)) return true;
+      final HashMap<String, Object> option = gridAttribute.get(key);
       boolean isOk = true;
       if (itemType == ItemType.PIVOT_GRID) {
         isOk = Boolean.valueOf(option.get("gridVisibility").toString());
@@ -39,7 +41,9 @@ public class GridAttributeUtils {
     ) {
     if (gridAttribute.size() == 0) return dimensions;
     final List<Dimension> result =  dimensions.stream().filter((dimension) -> {
-      final HashMap<String, Object> option = gridAttribute.get(dimension.getName());
+      final String key = dimension.getName();
+      if (!gridAttribute.containsKey(key)) return true;
+      final HashMap<String, Object> option = gridAttribute.get(key);
       boolean isOk = true;
       if (itemType == ItemType.PIVOT_GRID) {
         isOk = Boolean.valueOf(option.get("gridVisibility").toString());
