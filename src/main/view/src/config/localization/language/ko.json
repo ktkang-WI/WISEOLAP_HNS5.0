@@ -640,5 +640,10 @@
   "logout": "로그아웃",
   "mypage": "마이페이지",
   "confirmLogoutMsg": "로그아웃 하시겠습니까?",
-  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요."
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "adHocLayoutOptions":  [
+    {"id": "chart", "text": "차트만 보기"},
+    {"id": "pivot", "text": "피벗그리드만 보기"},
+    {"id": "chart_pivot", "text": "차트, 피벗 전부 보기"}
+  ]
 }

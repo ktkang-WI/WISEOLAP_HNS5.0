@@ -5,6 +5,7 @@ import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 import {paletteCollection}
   from 'components/common/atomic/Popover/organism/Palette';
+import {AdHocLayoutTypes} from 'components/config/configType';
 
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
@@ -109,7 +110,6 @@ const makeAdHocOption = () => {
   dataField.dataFieldQuantity = 0;
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
-  const layoutType = ItemManager.getLayoutSetting();
   const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
 
   dataFieldOption.measure.useButton = true;
@@ -119,7 +119,7 @@ const makeAdHocOption = () => {
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,
-    layoutSetting: layoutType['chart_pivot']
+    layoutSetting: AdHocLayoutTypes['CTGB']
   };
 };
 
