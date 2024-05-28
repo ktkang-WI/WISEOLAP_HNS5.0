@@ -101,7 +101,6 @@ const useQueryExecute = () => {
     param.temporaryMeasures =
       JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
-    param.gridAttribute = rootItem?.adHocOption?.gridAttribute;
     ItemManager.generateParameter(item, param);
 
     return param;
