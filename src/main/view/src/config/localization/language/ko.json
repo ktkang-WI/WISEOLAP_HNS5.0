@@ -112,6 +112,7 @@
   "userInfomation": "사용자 정보",
   "dashboard": "대시보드",
   "adhoc": "비정형 보고서",
+  "adhocSetting": "비정형 보고서 설정",
   "spreadsheet": "스프레드 시트",
   "dataset": "데이터집합",
   "preference": "환경설정",
