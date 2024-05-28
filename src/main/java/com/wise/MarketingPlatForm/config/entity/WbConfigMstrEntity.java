@@ -13,4 +13,5 @@ public class WbConfigMstrEntity {
   String spreadJsLicense;
   String spreadJsDesignLicense;
   String kakaoMapApiKey;
+  String menuConfig;
 }

@@ -36,7 +36,7 @@ const useCustomEvent = () => {
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
-  const {generateParameter} = useQueryExecute();
+  const {generateParameter, generateAdHocParamter} = useQueryExecute();
   const {updateItem} = ItemSlice.actions;
   const {
     commonPopoverButtonElement,
@@ -306,9 +306,18 @@ const useCustomEvent = () => {
 
         const datasets = selectCurrentDatasets(store.getState());
         const parameters = selectRootParameter(store.getState());
-        const param = await generateParameter(
-            item, datasets, parameters, item.mart.filter);
-        Utility.generateParameter(item, param);
+        let param = {};
+        if (item.meta.dataField) {
+          param = await generateParameter(
+              item, datasets, parameters, item.mart.filter);
+          Utility.generateParameter(item, param);
+        } else {
+          param = await generateAdHocParamter(
+              rootItem, datasets, parameters);
+
+          Utility.generateParameter(item, param, rootItem);
+        }
+
         Utility.generateItem(item, param, rootItem);
 
         dispatch(updateItem({reportId, item}));

@@ -5,6 +5,11 @@ import inputElements from './InputElements';
 import {useNavigate} from 'react-router-dom';
 import useModal from 'hooks/useModal';
 import models from 'models';
+import {generalConfigure as generalLoader} from 'routes/loader/LoaderConfig';
+import useConfig from 'hooks/useConfig';
+import configureUtility
+  from 'components/config/organisms/configurationSetting/ConfigureUtility';
+import useLayout from 'hooks/useLayout';
 
 const StyledSignIn = styled.div`
   min-height: inherit;
@@ -22,6 +27,22 @@ const FormWrap = styled.div`
 const SignIn = () => {
   const nav = useNavigate();
   const {alert} = useModal();
+  const {afterLoginInitSettingConfig} = useConfig();
+  const {configStringToJson} = configureUtility();
+  const {afterLoginInitSettingLayout} = useLayout();
+
+  const getInitPageAndSetingFunc = (config) => {
+    const configJson = configStringToJson(config.generalConfigure);
+    const initPage =
+      configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
+
+    // 로그인 후 state : configure setting
+    afterLoginInitSettingConfig(initPage, configJson);
+    // 로그인 후 state : initDisplay, layout, item 변경.
+    afterLoginInitSettingLayout(initPage);
+
+    return initPage;
+  };
 
   return (
     <StyledSignIn>
@@ -37,9 +58,11 @@ const SignIn = () => {
               const res = await models.Login.login(id, password);
 
               if (res.status == 200) {
+                const config = await generalLoader();
+                const getInitPage = getInitPageAndSetingFunc(config);
+
                 // TODO: 추후 권한 적용
-                // 임시적용 하드코딩
-                nav('dashany');
+                nav(getInitPage.toLowerCase());
               } else if (res.response?.status == 404) {
                 document.activeElement.blur();
                 alert('사용자 정보가 잘못되었습니다.');

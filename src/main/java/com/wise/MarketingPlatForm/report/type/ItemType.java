@@ -21,6 +21,7 @@ public enum ItemType {
     TIMELINE("timeline"),
     CHORD("chord"),
     ARC_DIAGRAM("arc"),
+    WORDCLOUD("wordCloud"),
     COORDINATE_DOT("coordinateDot"),
     COORDINATE_LINE("coordinateLine")
     ;

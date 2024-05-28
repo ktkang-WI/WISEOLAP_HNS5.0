@@ -459,6 +459,11 @@
     {"name": "ceil", "caption": "올림"},
     {"name": "floor", "caption": "버림"}
   ],
+  "initPages": [
+    {"name": "AdHoc", "caption": "비정형 보고서"},
+    {"name": "DashAny", "caption": "대시보드"},
+    {"name": "Excel", "caption": "스프레드"}
+  ],
   "labelDataEdit": "라벨 데이터 편집",
   "showTitle": "제목 보기",
   "formatType": "표기 형식",
@@ -623,6 +628,7 @@
   "prevStep": "이전",
   "completeStep": "완료",
   "selectAll": "전체 선택",
+  "wordCloud": "워드클라우드",
   "date": "일자",
   "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
   "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",

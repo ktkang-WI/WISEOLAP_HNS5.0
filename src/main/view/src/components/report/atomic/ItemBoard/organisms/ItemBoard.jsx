@@ -37,6 +37,7 @@ import CalendarChart
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
 import ArcDiagram from 'components/report/item/arc/ArcDiagram';
+import WordCloud from 'components/report/item/wordCloud/WordCloud';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
@@ -121,6 +122,7 @@ const ItemBoard = () => {
     timeline: Timeline,
     chord: Chord,
     arc: ArcDiagram,
+    wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot
   };
@@ -174,7 +176,7 @@ const ItemBoard = () => {
       [
         ItemType.TEXT_BOX,
         ItemType.PIVOT_GRID
-      ].some((item) => item === item.type);
+      ].some((type) => type === item.type);
     if (isOk) return !isOk;
 
     return !item ||
