@@ -5,17 +5,22 @@ export const uniqueNameType = {
 };
 export const makeFieldIcon = (fields) => {
   fields = fields.reduce((returnArr, field) => {
-    if (field.uniqueName != 0) {
+    // uniqueName 형식 [TableName].[ColumnName]
+    // 단일테이블인 경우 ID 와 형식이 동일
+    const uniqueName = field.uniqueName || field.ID;
+
+    if (uniqueName) {
       returnArr.push({
         parentId: field?.parentId ? field.parentId : null,
-        uniqueName: field.uniqueName,
+        uniqueName: uniqueName,
         name: field.columnName,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
         ...field
       });
+      return returnArr;
     }
-    return returnArr;
   }, []);
+
   fields.unshift({
     name: localizedString.defaultDatasetName,
     type: 'FLD',
