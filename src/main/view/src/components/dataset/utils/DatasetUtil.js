@@ -8,9 +8,8 @@ export const makeFieldIcon = (fields) => {
     if (field.uniqueName != 0) {
       returnArr.push({
         parentId: field?.parentId ? field.parentId : null,
-        uniqueName: field.columnName,
+        uniqueName: field.uniqueName,
         name: field.columnName,
-        alias: field.columnLabel,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
         ...field
       });
