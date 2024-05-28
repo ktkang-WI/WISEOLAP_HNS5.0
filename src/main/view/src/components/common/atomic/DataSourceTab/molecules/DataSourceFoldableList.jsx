@@ -142,7 +142,6 @@ const DataSourceFoldableList = ({dataset}) => {
               ref={ref}
               items={data}
               dataStructure="plain"
-              displayExpr="name"
               parentIdExpr="parentId"
               keyExpr="uniqueName"
               searchEnabled={true}
