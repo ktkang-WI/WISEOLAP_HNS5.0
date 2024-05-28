@@ -36,7 +36,7 @@ const SNBDefaultElement = () => {
 
   // redux
   const designerMode = useSelector(selectCurrentDesignerMode);
-  const condigure = useSelector(selectCurrentConfigure);
+  const configure = useSelector(selectCurrentConfigure);
 
   // local
   const onClick = (designerMode) => {
@@ -47,7 +47,7 @@ const SNBDefaultElement = () => {
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
-    reload(designerMode, condigure.adHocLayout);
+    reload(designerMode, configure.adHocLayout);
   };
 
   return {
