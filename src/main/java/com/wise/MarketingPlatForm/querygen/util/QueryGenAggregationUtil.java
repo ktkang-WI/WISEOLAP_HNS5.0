@@ -58,6 +58,8 @@ public class QueryGenAggregationUtil {
                     selCube.setDATA_TYPE(orderColumn.getDataType());
                     selCube.setTYPE("DIM");
                     break;
+                }  else {
+                    selCube = null;
                 }
             }
 
@@ -124,6 +126,8 @@ public class QueryGenAggregationUtil {
                 selHie.setCOL_NM(orderColumn.getPhysicalColumnKey());
                 selHie.setCOL_EXPRESS(orderColumn.getExpression());
                 break;
+            } else {
+                selHie = null;
             }
         }
 
@@ -136,13 +140,18 @@ public class QueryGenAggregationUtil {
 
         if(columnInfo.getOrderBy().trim().equalsIgnoreCase("Key Column")){
 
-            selHie.setDIM_UNI_NM(columnInfo.getLogicalTableName());
-            selHie.setHIE_UNI_NM(columnInfo.getLogicalColumnName());
-            selHie.setHIE_CAPTION(columnInfo.getColumnCaption());
-            selHie.setTBL_NM(columnInfo.getPhysicalTableName());
-            selHie.setCOL_NM(columnInfo.getPhysicalColumnKey());
-            selHie.setCOL_EXPRESS(columnInfo.getExpression());
-
+            if(!columnInfo.getPhysicalColumnName().contains(columnInfo.getPhysicalColumnKey()))
+            {
+                selHie.setDIM_UNI_NM(columnInfo.getLogicalTableName());
+                selHie.setHIE_UNI_NM(columnInfo.getLogicalColumnName());
+                selHie.setHIE_CAPTION(columnInfo.getColumnCaption());
+                selHie.setTBL_NM(columnInfo.getPhysicalTableName());
+                selHie.setCOL_NM(columnInfo.getPhysicalColumnKey());
+                selHie.setCOL_EXPRESS(columnInfo.getExpression());
+            } else {
+                selHie = null;
+            }
+            
         }else if(!columnInfo.getOrderBy().trim().equalsIgnoreCase("Name Column")
                     && !columnInfo.getOrderBy().trim().equalsIgnoreCase("")){
 

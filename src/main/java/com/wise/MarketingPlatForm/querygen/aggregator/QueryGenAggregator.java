@@ -55,8 +55,13 @@ public class QueryGenAggregator {
 
                 //측정값에 포함되어있는지 확인
                 if(isIncludeByMeasures(columnInfo,measures)){
-                    updateCubeSelectAll(queryGenAggregation,cubeParamSet, columnInfo, "measure");
-                    updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo);
+                    if ("measure".equalsIgnoreCase(columnInfo.getColumnType())) {
+                        updateCubeSelectAll(queryGenAggregation,cubeParamSet, columnInfo, "measure");
+                        updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo);
+                    } else if ("dimension".equalsIgnoreCase(columnInfo.getColumnType())) {
+                        updateCubeSelectAll(queryGenAggregation, cubeParamSet, columnInfo, "dimension");
+                        updateCubeHie(queryGenAggregation, cubeParamSet, columnInfo);
+                    }
                 }
                 
                 //필터에 포함되어있는지 확인
@@ -185,7 +190,6 @@ public class QueryGenAggregator {
             for(Measure measure : measures){
                 if(measure.getUniqueName() == null) continue;
                 if(!measure.getUniqueName().contains(columnInfo.getLogicalColumnName())) continue;
-                if(!columnInfo.getColumnType().equalsIgnoreCase("measure"))continue;
 
                 isIncludeByMeasures = true;
             }
