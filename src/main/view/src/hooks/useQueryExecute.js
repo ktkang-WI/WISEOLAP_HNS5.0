@@ -119,6 +119,7 @@ const useQueryExecute = () => {
 
     // TODO: 로그인 추가 후 유저 아이디 수정
     param.userId = 'admin';
+    param.itemType = ItemType.CHART;
     param.dataset = {};
 
     // dataset
@@ -163,6 +164,8 @@ const useQueryExecute = () => {
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
+  // NOTE: 해당 함수는 비정형 데이터에서 차트 메이커에 접근하여 데이터를 가져온다.
+  // NOTE: 유저 데이터 요청 -> 차트데이터 -> 피벗그리드 -> 데이터 요청 -> 피벗그리드
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     try {
       validateRequiredField(rootItem);
@@ -172,37 +175,24 @@ const useQueryExecute = () => {
       const param = generateAdHocParamter(cloneItem, datasets, parameters);
       const reportId = selectCurrentReportId(store.getState());
 
-      models.Item.getAdHocItemData(param).then((response) => {
+      models.Item.getItemData(param).then((response) => {
         if (response.status != 200) {
-          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
           return;
         }
-
-        if (response.data['chart']) {
-          if (response.data['chart'].data.length == 0) {
-            alert(`${localizedString.adhoc}${localizedString.noneData}`);
-            return;
-          }
-          chartItem.mart.init = true;
-          chartItem.mart.data = response.data['chart'];
-          ItemManager.generateItem(chartItem, param, cloneItem);
-          dispatch(updateItem({reportId, item: chartItem}));
-
-          /* NOTE: 피벗그리드 remoteOperations */
-          pivotItem.mart.init = true;
-          ItemManager.generateItem(pivotItem, param, cloneItem);
-          dispatch(updateItem({reportId, item: pivotItem}));
+        const data = response.data;
+        if (data.data.length === 0) {
+          alert(`${item.meta.name}${localizedString.noneData}`);
         }
-        if (response.data['pivot']) {
-          if (response.data['pivot'].data.length == 0) {
-            alert(`${localizedString.adhoc}${localizedString.noneData}`);
-            return;
-          }
-          pivotItem.mart.init = true;
-          pivotItem.mart.data = response.data['pivot'];
-          ItemManager.generateItem(pivotItem, param, cloneItem);
-          dispatch(updateItem({reportId, item: pivotItem}));
-        }
+
+        chartItem.mart.init = true;
+        chartItem.mart.data = data;
+
+        ItemManager.generateItem(chartItem, param, cloneItem);
+        dispatch(updateItem({reportId, item: chartItem}));
+
+        pivotItem.mart.init = true;
+        ItemManager.generateItem(pivotItem, param, cloneItem);
+        dispatch(updateItem({reportId, item: pivotItem}));
       });
     } catch (error) {
       console.error(error);
