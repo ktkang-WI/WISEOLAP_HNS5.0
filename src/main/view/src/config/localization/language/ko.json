@@ -630,7 +630,6 @@
   "prevStep": "이전",
   "completeStep": "완료",
   "selectAll": "전체 선택",
-  "wordCloud": "워드클라우드",
   "date": "일자",
   "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
   "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
@@ -642,5 +641,8 @@
   "logout": "로그아웃",
   "mypage": "마이페이지",
   "confirmLogoutMsg": "로그아웃 하시겠습니까?",
-  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요."
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "gridVisibility": "그리드 표시 여부",
+  "chartVisibility": "차트 표시 여부",
+  "summaryType": "합계유형"
 }

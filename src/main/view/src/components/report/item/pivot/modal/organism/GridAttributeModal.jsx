@@ -11,23 +11,33 @@ import ItemSlice from 'redux/modules/ItemSlice';
 
 const theme = getTheme();
 
+const getSummaryName = (data) => {
+  const type = data?.summaryType ? data?.summaryType + '_' : '';
+  return type + data?.name;
+};
+
 const generateDataSource = (dataField, gridAttribute) => {
   return [
     ...dataField.row,
     ...dataField.column,
     ...dataField.measure
-  ].map((data) => ({
-    ...data,
-    chartVisibility: gridAttribute?.[data.name]?.chartVisibility ?? true,
-    gridVisibility: gridAttribute?.[data.name]?.gridVisibility ?? true
-  }));
+  ].map((data) => {
+    const summaryName = getSummaryName(data);
+    return ({
+      ...data,
+      chartVisibility: gridAttribute?.[summaryName]?.chartVisibility ?? true,
+      gridVisibility: gridAttribute?.[summaryName]?.gridVisibility ?? true
+    });
+  });
 };
 
 const generateGridAttribute = (dataSource) => {
   return dataSource.reduce((acc, data) => {
-    acc[data.name] = {
+    const summaryName = getSummaryName(data);
+    acc[summaryName] = {
       chartVisibility: data.chartVisibility,
-      gridVisibility: data.gridVisibility
+      gridVisibility: data.gridVisibility,
+      type: data.type
     };
     return acc;
   }, {});
@@ -52,11 +62,12 @@ const GridAttributeModal = ({
   }, [dataField, initialGridAttribute]);
 
   const handleVisibility = useCallback((e, cellData, property) => {
-    const key = cellData.values[1];
+    const key = cellData.data.name;
+    const summaryName = getSummaryName(cellData?.data);
     setGridAttribute((prev) => ({
       ...prev,
-      [key]: {
-        ...prev[key],
+      [summaryName]: {
+        ...prev[summaryName],
         [property]: !e.value
       }
     }));
@@ -95,12 +106,21 @@ const GridAttributeModal = ({
         dataSource={dataSource}
         showBorders={true}
       >
-        <Column dataField="type" caption="타입" dataType="string" />
-        <Column dataField="name" caption="필드명" dataType="string" />
-        <Column dataField="caption" caption="데이터 항목 명" dataType="string" />
+        <Column
+          dataField="type"
+          caption={localizedString.fieldType}
+          dataType="string" />
+        <Column
+          dataField="name"
+          caption={localizedString.fieldName}
+          dataType="string" />
+        <Column
+          dataField="caption"
+          caption={localizedString.dataItem}
+          dataType="string" />
         <Column
           dataField="chartVisibility"
-          caption="차트 표시 여부"
+          caption={localizedString.chartVisibility}
           dataType="boolean"
           cellRender={(cellData) => (
             <CheckBox
@@ -111,7 +131,7 @@ const GridAttributeModal = ({
         />
         <Column
           dataField="gridVisibility"
-          caption="그리드 표시 여부"
+          caption={localizedString.gridVisibility}
           dataType="boolean"
           cellRender={(cellData) => (
             <CheckBox
@@ -120,7 +140,10 @@ const GridAttributeModal = ({
             />
           )}
         />
-        <Column dataField="summaryType" caption="합계유형" dataType="string" />
+        <Column
+          dataField="summaryType"
+          caption={localizedString.summaryType}
+          dataType="string" />
       </DataGrid>
     </Modal>
   );

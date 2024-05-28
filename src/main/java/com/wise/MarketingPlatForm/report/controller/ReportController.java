@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +33,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GridAttributeUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
@@ -131,7 +129,6 @@ public class ReportController {
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
-        String adHocOptionStr = param.get("adHocOption");
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
 
 
@@ -231,6 +228,7 @@ public class ReportController {
                     "    \"pagingOption\": \"{\\\"pagingEnabled\\\": true, \\\"start\\\": 0, \\\"size\\\": 3}\"\r\n" + //
                     "}")
     }))
+    // TODO: [참고] 추후 변경필요 해당 URL은 비정형 아이템중 차트 데이터를 가져올때만 사용되고 있습니다.
     @PostMapping(value = "/adhoc-item-data")
     public Map<String, ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
             throws Exception {
@@ -239,11 +237,13 @@ public class ReportController {
         String measuresStr = param.getOrDefault("measure", "[]");
         String temporaryMeasuresStr = param.get("temporaryMeasures");
         String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
+        String gridAttributeStr = param.get("gridAttribute");
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String adHocOptionStr = param.get("adHocOption");
+        String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -257,6 +257,9 @@ public class ReportController {
         List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
                 new TypeToken<ArrayList<Measure>>() {
                 }.getType());
+        Map<String, HashMap<String, Object>> gridAttribute = gson.fromJson(gridAttributeStr,
+                new TypeToken<HashMap<String, HashMap<String, Object>>> () {
+                }.getType());
         List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
                 new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
                 }.getType());
@@ -265,19 +268,25 @@ public class ReportController {
         AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
         ItemType itemType = ItemType.AD_HOC;
         boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
-
+        PivotOption pivotOption = gson.fromJson(pivotOptionStr, PivotOption.class);
+        
         ListUtility.getInstance().removeNullInParameterList(measures);
         ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
         ListUtility.getInstance().removeNullInParameterList(dimensions);
         ListUtility.getInstance().removeNullInParameterList(sortByItems);
-
         
+        
+        GridAttributeUtils gridAttributeUtils = new GridAttributeUtils();
+        ItemType itemTypeChart = ItemType.CHART;
+        measures = gridAttributeUtils.applyAttrMeasure(measures, itemTypeChart, gridAttribute);
+        dimensions = gridAttributeUtils.applyAttrDimension(dimensions, itemTypeChart, gridAttribute);
+
         Function<Measure> func = (m1, m2) -> {
             return !m1.getName().equals(m2.getName());
         };
         List<Measure> mergeMeasures =
             listDataUtility.mergeList(measures, temporaryMeasures, func);
-
+        
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(mergeMeasures)
@@ -290,6 +299,8 @@ public class ReportController {
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
                 .adHocOption(adHocOption)
+                .pivotOption(pivotOption)
+                .gridAttribute(gridAttribute)
                 .build();
 
         return reportService.getAdHocItemData(dataAggreagtion);
