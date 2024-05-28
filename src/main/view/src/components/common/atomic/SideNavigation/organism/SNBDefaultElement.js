@@ -19,7 +19,10 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 import useReportSave from 'hooks/useReportSave';
 import useModal from 'hooks/useModal';
 import {useSelector} from 'react-redux';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {
+  selectCurrentConfigure,
+  selectCurrentDesignerMode
+} from 'redux/selector/ConfigSelector';
 
 const SNBDefaultElement = () => {
   // actions
@@ -33,6 +36,7 @@ const SNBDefaultElement = () => {
 
   // redux
   const designerMode = useSelector(selectCurrentDesignerMode);
+  const condigure = useSelector(selectCurrentConfigure);
 
   // local
   const onClick = (designerMode) => {
@@ -43,7 +47,7 @@ const SNBDefaultElement = () => {
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
-    reload(designerMode);
+    reload(designerMode, condigure.adHocLayout);
   };
 
   return {

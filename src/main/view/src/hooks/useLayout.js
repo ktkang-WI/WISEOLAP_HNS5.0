@@ -1,4 +1,6 @@
+import {AdHocLayoutTypes, DesignerMode} from 'components/config/configType';
 import {useDispatch} from 'react-redux';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 
@@ -6,6 +8,7 @@ export default function useLayout() {
   const dispatch = useDispatch();
   const layoutSlice = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
+  const configSlice = ConfigSlice.actions;
 
   const initLayout = (reportTypes) => {
     dispatch(layoutSlice.initLayout(reportTypes));
@@ -122,9 +125,16 @@ export default function useLayout() {
     dispatch(layoutSlice.adHocLayoutUpdate(param));
   };
 
-  const afterLoginInitSettingLayout = (reportTypes) => {
+  const afterLoginInitSettingLayout = (reportTypes, general) => {
     dispatch(layoutSlice.initLayout(reportTypes));
     dispatch(itemSlice.initItems(reportTypes));
+    dispatch(configSlice.setInitDisplayConfig(reportTypes));
+
+    // 로그인 성공 후 path 가 비정형인 경우 비정형 레이아웃도 같이 설정.
+    if (reportTypes == DesignerMode['AD_HOC']) {
+      // 로그인 후 reportId = 0;
+      adHocLayoutUpdate(0, AdHocLayoutTypes[general.adHocLayout]);
+    }
   };
 
   return {

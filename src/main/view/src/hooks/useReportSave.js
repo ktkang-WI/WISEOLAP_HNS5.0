@@ -18,7 +18,7 @@ import {selectCurrentDesignerMode, selectEditMode}
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectSpreadMeta}
   from 'redux/selector/SpreadSelector';
-import {ConvertDesignerMode, DesignerMode, EditMode}
+import {ConvertDesignerMode, DesignerMode, EditMode, AdHocLayoutTypes}
   from 'components/config/configType';
 import models from 'models';
 import localizedString from 'config/localization';
@@ -199,13 +199,21 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (designerMode) => {
+  const reload = (designerMode, adHocLayout) => {
     dispatch(reportActions.initReport(designerMode));
     dispatch(datasetActions.initDatasets());
     dispatch(itemActions.initItems(designerMode));
     dispatch(layoutActions.initLayout(designerMode));
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
+    // 비정형으로 이동 시 adhocOption의 layoutSetting 설정.
+    if (designerMode == DesignerMode['AD_HOC']) {
+      const param = {
+        reportId: currentReportId,
+        layoutType: AdHocLayoutTypes[adHocLayout]
+      };
+      dispatch(layoutActions.adHocLayoutUpdate(param));
+    }
     initWorkkbookJSONs();
   };
 
