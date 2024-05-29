@@ -34,7 +34,7 @@ const SignIn = () => {
   const getInitPageAndSetingFunc = (config) => {
     const configJson = configStringToJson(config.generalConfigure);
     const initPage =
-      configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
+      configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
 
     // 로그인 후 state : configure setting
     afterLoginInitSettingConfig(initPage, configJson);
