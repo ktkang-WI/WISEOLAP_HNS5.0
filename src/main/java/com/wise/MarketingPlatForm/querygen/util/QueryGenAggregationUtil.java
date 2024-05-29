@@ -68,7 +68,7 @@ public class QueryGenAggregationUtil {
         return selCube;
     }
 
-    public static SelectCubeMeasure makeCubeSelectMeasures(CubeTableColumn columnInfo, String itemType) {
+    public static SelectCubeMeasure makeCubeSelectMeasures(String summaryType, CubeTableColumn columnInfo, String itemType) {
 
         SelectCubeMeasure selectCubeMeasure = new SelectCubeMeasure();
 
@@ -80,10 +80,22 @@ public class QueryGenAggregationUtil {
         if("HISTOGRAM_CHART".equals(itemType) || "BOX_PLOT".equals(itemType)) {
             selectCubeMeasure.setMEA_AGG("Round");
         }else {
-            if(columnInfo.getAggregationType() == null) {
-                selectCubeMeasure.setMEA_AGG("");
-            }else {
-                selectCubeMeasure.setMEA_AGG(columnInfo.getAggregationType());
+            if (!"".equalsIgnoreCase(summaryType)) {
+                switch (summaryType) {
+                    case "COUNTDISTINCT":
+                        selectCubeMeasure.setMEA_AGG("Distinct Count");
+                        break;
+                    default:
+                        selectCubeMeasure.setMEA_AGG(summaryType);
+                        break;
+                }
+                
+            } else {
+                if(columnInfo.getAggregationType() == null) {
+                    selectCubeMeasure.setMEA_AGG("");
+                }else {
+                    selectCubeMeasure.setMEA_AGG(columnInfo.getAggregationType());
+                }
             }
         }
 

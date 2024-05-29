@@ -57,7 +57,7 @@ public class QueryGenAggregator {
                 if(isIncludeByMeasures(columnInfo,measures)){
                     if ("measure".equalsIgnoreCase(columnInfo.getColumnType())) {
                         updateCubeSelectAll(queryGenAggregation,cubeParamSet, columnInfo, "measure");
-                        updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo);
+                        updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo, measures);
                     } else if ("dimension".equalsIgnoreCase(columnInfo.getColumnType())) {
                         updateCubeSelectAll(queryGenAggregation, cubeParamSet, columnInfo, "dimension");
                         updateCubeHie(queryGenAggregation, cubeParamSet, columnInfo);
@@ -139,9 +139,16 @@ public class QueryGenAggregator {
     }
 
     private void updateCubeSelectMeasure(QueryGenAggregation queryGenAggregation, CubeParamSet cubeParamSet,
-            CubeTableColumn columnInfo) {
+            CubeTableColumn columnInfo, List<Measure> measures) {
+
+        String summaryType = "Sum";
+        for(Measure measure : measures){
+            if (measure.getUniqueName().contains(columnInfo.getLogicalColumnName())) {
+                summaryType = measure.getSummaryType().toString();
+            }
+        }
         
-        SelectCubeMeasure selectCubeMeasure = QueryGenAggregationUtil.makeCubeSelectMeasures(columnInfo, this.itemType);
+        SelectCubeMeasure selectCubeMeasure = QueryGenAggregationUtil.makeCubeSelectMeasures(summaryType, columnInfo, this.itemType);
         
         if(selectCubeMeasure != null){
             queryGenAggregation.addSelectCubeMeasure(selectCubeMeasure);
@@ -190,6 +197,7 @@ public class QueryGenAggregator {
             for(Measure measure : measures){
                 if(measure.getUniqueName() == null) continue;
                 if(!measure.getUniqueName().contains(columnInfo.getLogicalColumnName())) continue;
+                // if(!columnInfo.getColumnType().equalsIgnoreCase("measure"))continue;
 
                 isIncludeByMeasures = true;
             }
