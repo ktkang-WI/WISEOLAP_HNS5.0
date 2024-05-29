@@ -18,7 +18,8 @@ public class GridAttributeUtils {
     ItemType itemType,
     Map<String, HashMap<String, Object>> gridAttribute
     ) {
-    if (gridAttribute.size() == 0) return measures;
+    final boolean isUsedGridAttribute = gridAttribute.size() != 0;
+    if (!isUsedGridAttribute) return measures;
     final List<Measure> result = measures.stream().filter((measure) -> {
       final String key = measure.getSummaryType() + "_" + measure.getName();
       if (!gridAttribute.containsKey(key)) return true;
@@ -39,7 +40,8 @@ public class GridAttributeUtils {
     ItemType itemType,
     Map<String, HashMap<String, Object>> gridAttribute
     ) {
-    if (gridAttribute.size() == 0) return dimensions;
+    final boolean isUsedGridAttribute = gridAttribute.size() != 0;
+    if (!isUsedGridAttribute) return dimensions;
     final List<Dimension> result =  dimensions.stream().filter((dimension) -> {
       final String key = dimension.getName();
       if (!gridAttribute.containsKey(key)) return true;

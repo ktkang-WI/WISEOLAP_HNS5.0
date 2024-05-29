@@ -57,9 +57,11 @@ const generateMeta = (item) => {
 };
 
 const gridAttributeOptionCheck = (dataFieldName, gridAttribute) => {
-  if (!gridAttribute) return true;
-  if (!gridAttribute[dataFieldName]) return true;
-  return gridAttribute[dataFieldName]?.gridVisibility;
+  const noGridAttribute = !gridAttribute;
+  const noFieldInGridAttribute = !gridAttribute?.[dataFieldName];
+  const fieldIsVisible = gridAttribute?.[dataFieldName]?.gridVisibility;
+
+  return noGridAttribute || noFieldInGridAttribute || fieldIsVisible;
 };
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성

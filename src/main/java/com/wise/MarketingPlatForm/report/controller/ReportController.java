@@ -166,7 +166,8 @@ public class ReportController {
         listUtility.removeNullInParameterList(sortByItems);
         listUtility.removeNullInParameterList(temporaryMeasures);
 
-        if (gridAttribute.size() != 0) {
+        final boolean isUsedGridAttribute = gridAttribute.size() != 0;
+        if (isUsedGridAttribute) {
             GridAttributeUtils gridAttributeUtils = new GridAttributeUtils();
             measures = gridAttributeUtils.applyAttrMeasure(measures, itemType, gridAttribute);
             dimensions = gridAttributeUtils.applyAttrDimension(dimensions, itemType, gridAttribute);
