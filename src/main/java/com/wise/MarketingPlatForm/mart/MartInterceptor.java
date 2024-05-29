@@ -55,6 +55,7 @@ public class MartInterceptor implements Interceptor {
                 columnMeta.setColumnLabel(rsmd.getColumnLabel(i));
                 columnMeta.setColumnType(String.valueOf(rsmd.getColumnType(i)));
                 columnMeta.setColumnTypeName(rsmd.getColumnTypeName(i));
+                columnMeta.setUniqueName(rsmd.getTableName(i));
                 metaData.add(columnMeta);
             }
             
