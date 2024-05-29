@@ -6,15 +6,15 @@ import {AdHocLayoutTypes, DesignerMode} from 'components/config/configType';
 import configureUtility
   from 'components/config/organisms/configurationSetting/ConfigureUtility';
 import useConfig from 'hooks/useConfig';
-import useLayout from 'hooks/useLayout';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {Outlet, useLoaderData} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import LayoutSlice from 'redux/modules/LayoutSlice';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const Designer = () => {
   // hooks
@@ -22,9 +22,7 @@ const Designer = () => {
   const {reload} = useReportSave();
   const {generalConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
-  const {adHocLayoutUpdate} = useLayout();
   // selector
-  const reportId = useSelector(selectCurrentReportId);
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions
   const {setDesignerMode, reloadDisplaySetting} = ConfigSlice.actions;
@@ -41,7 +39,13 @@ const Designer = () => {
 
     if (designerMode == DesignerMode['AD_HOC']) {
       const layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
-      adHocLayoutUpdate(reportId, layout);
+      const param = {
+        mode: designerMode,
+        adhocLayout: layout
+      };
+
+      dispatch(LayoutSlice.actions.initLayout(param));
+      dispatch(ItemSlice.actions.initItems(param));
     }
 
     dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));

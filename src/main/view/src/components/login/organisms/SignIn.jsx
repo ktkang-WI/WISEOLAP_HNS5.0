@@ -34,7 +34,7 @@ const SignIn = () => {
     const initPage =
       configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
 
-    // 로그인 후 state : initDisplay, layout, item 변경.
+    // 로그인 후 state : initDisplay 변경.
     afterLoginInitSettingLayout(initPage, configJson);
 
     return initPage;

@@ -50,7 +50,7 @@ const resultLayout = (
 
 // 비정형 보고서 배열 모양(tabsetType)이 세로로 2개 -> tabset, 가로로 2개 -> row
 const AdHocLayoutSetting = (layoutType, reportId, state) => {
-  const resultState = state[reportId];
+  const resultState = {...state[reportId]};
   const tabsetType = state[reportId].layoutConfig.layout.children[0].type;
   const selectedLayoutId = {
     'chart': 'item1',
