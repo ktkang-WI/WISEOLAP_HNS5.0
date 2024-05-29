@@ -25,7 +25,8 @@ const Viewer = () => {
     <div>
       <Header
         left={['Logo', 'Designer', 'LinkReport', 'ReportTabs']}
-        right={['DownloadReport', 'ReportProperty']}
+        right={['DownloadReport', 'SaveAs', 'UserInfo']}
+        // 'ReportProperty' TODO : 추후 추가
       >
       </Header>
       <ViewerContent/>

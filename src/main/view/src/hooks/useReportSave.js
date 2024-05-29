@@ -36,6 +36,7 @@ const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {executeItems, executeSpread} = useQueryExecute();
+  const editMode = useSelector(selectEditMode);
 
   const reportActions = ReportSlice.actions;
   const itemActions = ItemSlice.actions;
@@ -137,7 +138,15 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.changeReport(report));
+    if (editMode == EditMode.VIEWER) {
+      const param = {
+        prevId: reportId.prevId, newId: reportId.newId, report: report
+      };
+      dispatch(reportActions.changeReportViewer(param));
+    } else {
+      // 디자이너
+      dispatch(reportActions.changeReport(report));
+    }
     dispatch(itemActions.changeItemReportId(reportId));
     dispatch(layoutActions.changeLayoutReportId(reportId));
     dispatch(datasetActions.changeDatasetReportId(reportId));

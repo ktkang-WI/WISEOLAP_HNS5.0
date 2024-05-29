@@ -38,6 +38,22 @@ const reducers = {
     return actions.payload;
   },
   /*
+   * 뷰어용 보고서 변경 :
+   * 뷰어는 보고서 추가 시 보고서 변경 (덮어쓰기)가 아닌 해당 reportId에 맞는 보고서 내용을 변경 해줘야 함.
+   */
+  changeReportViewer(state, actions) {
+    const prevId = actions.payload.prevId;
+    const newId = actions.payload.newId;
+    const report = actions.payload.report;
+
+    if (prevId != newId) {
+      const idx =
+        state.reports.findIndex((report) => report.reportId == prevId);
+      state.selectedReportId = newId;
+      state.reports[idx] = report.reports[0];
+    }
+  },
+  /*
    * 보고서 추가
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
    */
