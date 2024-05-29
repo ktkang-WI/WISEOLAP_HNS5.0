@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +33,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GridAttributeUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
@@ -128,10 +126,10 @@ public class ReportController {
         String datasetStr = param.get("dataset");
         String parameterStr = param.getOrDefault("parameter", "[]");
         String ItemTypeStr = param.get("itemType");
+        String gridAttributeStr = param.getOrDefault("gridAttribute", "{}");
         String userId = param.get("userId");
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
-        String adHocOptionStr = param.get("adHocOption");
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
 
 
@@ -153,6 +151,9 @@ public class ReportController {
         Map<String, List<String>> filter = gson.fromJson(filterStr,
                 new TypeToken<HashMap<String, ArrayList<String>>> () {
                 }.getType());
+        Map<String, HashMap<String, Object>> gridAttribute = gson.fromJson(gridAttributeStr,
+                new TypeToken<HashMap<String, HashMap<String, Object>>> () {
+                }.getType());
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         PivotOption pivotOption = gson.fromJson(pivotOptionStr, PivotOption.class);
@@ -164,6 +165,13 @@ public class ReportController {
         listUtility.removeNullInParameterList(dimensions);
         listUtility.removeNullInParameterList(sortByItems);
         listUtility.removeNullInParameterList(temporaryMeasures);
+
+        final boolean isUsedGridAttribute = gridAttribute.size() != 0;
+        if (isUsedGridAttribute) {
+            GridAttributeUtils gridAttributeUtils = new GridAttributeUtils();
+            measures = gridAttributeUtils.applyAttrMeasure(measures, itemType, gridAttribute);
+            dimensions = gridAttributeUtils.applyAttrDimension(dimensions, itemType, gridAttribute);
+        }
 
         Function<Measure> func = (m1, m2) -> {
             return !m1.getName().equals(m2.getName());
@@ -188,111 +196,6 @@ public class ReportController {
                 .build();
 
         return reportService.getItemData(dataAggreagtion);
-    }
-
-    @Operation(summary = "adhoc-item-data", description = "아이템의 데이터를 조회합니다.")
-    @Parameters({
-            @Parameter(name = "dataset", description = "데이터 집합 정보"),
-            @Parameter(name = "dimensions", description = "차원 데이터 항목 목록"),
-            @Parameter(name = "measures", description = "측정값 데이터 항목 목록"),
-            @Parameter(name = "userId", description = "현재 접속한 유저의 아이디"),
-            @Parameter(name = "itemType", description = "아이템 타입"),
-            @Parameter(name = "pagingOption", description = "적용할 페이징 옵션"),
-    })
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(examples = {
-            @ExampleObject(name = "example", value = "{\r\n" + //
-                    "    \"dataset\": \"{ \\\"dsId\\\": 2144, \\\"dsType\\\": \\\"DS_SQL\\\", \\\"query\\\": \\\"SELECT  Sum([F_자동차_작업일지].[금액]) AS [금액],\\n"
-                    + //
-                    "        Sum([F_자동차_작업일지].[부가세]) AS [부가세],\\n" + //
-                    "        Sum([F_자동차_작업일지].[소계]) AS [소계],\\n" + //
-                    "        D_생산회사.[생산회사코드] AS [생산회사코드],\\n" + //
-                    "        D_생산회사.[생산회사이름] AS [생산회사이름],\\n" + //
-                    "        D_자동차종류.[자동차코드] AS [자동차코드],\\n" + //
-                    "        D_자동차종류.[자동차명] AS [자동차명],\\n" + //
-                    "        D_결재구분.[결재코드] AS [결재코드],\\n" + //
-                    "        D_결재구분.[결재구분명] AS [결재구분명] \\n" + //
-                    "FROM    F_자동차_작업일지  INNER JOIN D_자동차종류 D_자동차종류 ON F_자동차_작업일지.[자동차] = D_자동차종류.[자동차코드]\\n" + //
-                    "        INNER JOIN D_생산회사 D_생산회사 ON D_자동차종류.[생산회사코드] = D_생산회사.[생산회사코드]\\n" + //
-                    "        INNER JOIN D_결재구분 D_결재구분 ON F_자동차_작업일지.[결재구분] = D_결재구분.[결재코드]\\n" + //
-                    "        \\n" + //
-                    "WHERE   (1=1)\\n" + //
-                    "\\t\\n" + //
-                    "GROUP BY\\tD_생산회사.[생산회사코드],\\n" + //
-                    "\\t\\tD_생산회사.[생산회사이름],\\n" + //
-                    "\\t\\tD_자동차종류.[자동차코드],\\n" + //
-                    "\\t\\tD_자동차종류.[자동차명],\\n" + //
-                    "\\t\\tD_결재구분.[결재코드],\\n" + //
-                    "\\t\\tD_결재구분.[결재구분명]\\\"}\",\r\n" + //
-                    "    \"userId\": \"admin\",\r\n" + //
-                    "    \"measure\": \"[{\\\"name\\\": \\\"금액\\\", \\\"uniqueName\\\": \\\"금액\\\", \\\"caption\\\": \\\"금액\\\", \\\"fieldId\\\": \\\"dataItem0\\\", \\\"summaryType\\\": \\\"SUM\\\"}]\",\r\n"
-                    + //
-                    "    \"dimension\": \"[{\\\"name\\\":\\\"생산회사이름\\\",\\\"uniqueName\\\":\\\"생산회사이름\\\",\\\"caption\\\":\\\"생산회사이름\\\",\\\"fieldId\\\":\\\"dataItem1\\\"},{\\\"name\\\":\\\"결재구분명\\\",\\\"uniqueName\\\":\\\"결재구분명\\\",\\\"caption\\\":\\\"결재구분명\\\",\\\"fieldId\\\":\\\"dataItem2\\\"}]\",\r\n"
-                    + //
-                    "    \"pagingOption\": \"{\\\"pagingEnabled\\\": true, \\\"start\\\": 0, \\\"size\\\": 3}\"\r\n" + //
-                    "}")
-    }))
-    @PostMapping(value = "/adhoc-item-data")
-    public Map<String, ReportResult> getAdHocItemData(HttpServletResponse response, @RequestBody Map<String, String> param)
-            throws Exception {
-        Gson gson = new Gson();
-        String dimensionsStr = param.getOrDefault("dimension", "[]");
-        String measuresStr = param.getOrDefault("measure", "[]");
-        String temporaryMeasuresStr = param.get("temporaryMeasures");
-        String sortByItemsStr = param.getOrDefault("sortByItem", "[]");
-        String datasetStr = param.get("dataset");
-        String parameterStr = param.getOrDefault("parameter", "[]");
-        String userId = param.get("userId");
-        String pagingOptionStr = param.getOrDefault("pagingOption", "");
-        String adHocOptionStr = param.get("adHocOption");
-
-        List<Dimension> dimensions = gson.fromJson(dimensionsStr,
-                new TypeToken<ArrayList<Dimension>>() {
-                }.getType());
-        List<Measure> measures = gson.fromJson(measuresStr,
-                new TypeToken<ArrayList<Measure>>() {
-                }.getType());
-        List<Measure> temporaryMeasures = gson.fromJson(temporaryMeasuresStr,
-                new TypeToken<ArrayList<Measure>>() {
-                }.getType());
-        List<Measure> sortByItems = gson.fromJson(sortByItemsStr,
-                new TypeToken<ArrayList<Measure>>() {
-                }.getType());
-        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
-                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
-                }.getType());
-        Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
-        PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
-        AdHocOption adHocOption = gson.fromJson(adHocOptionStr, AdHocOption.class);
-        ItemType itemType = ItemType.AD_HOC;
-        boolean removeNullData = param.getOrDefault("removeNullData", "false").equals("true");
-
-        ListUtility.getInstance().removeNullInParameterList(measures);
-        ListUtility.getInstance().removeNullInParameterList(temporaryMeasures);
-        ListUtility.getInstance().removeNullInParameterList(dimensions);
-        ListUtility.getInstance().removeNullInParameterList(sortByItems);
-
-        
-        Function<Measure> func = (m1, m2) -> {
-            return !m1.getName().equals(m2.getName());
-        };
-        List<Measure> mergeMeasures =
-            listDataUtility.mergeList(measures, temporaryMeasures, func);
-
-        DataAggregation dataAggreagtion = DataAggregation.builder()
-                .dataset(dataset)
-                .measures(mergeMeasures)
-                .originalMeasures(measures)
-                .dimensions(dimensions)
-                .sortByItems(sortByItems)
-                .itemType(itemType)
-                .userId(userId)
-                .parameters(parameters)
-                .removeNullData(removeNullData)
-                .pagingOption(pagingOption)
-                .adHocOption(adHocOption)
-                .build();
-
-        return reportService.getAdHocItemData(dataAggreagtion);
     }
 
     @Operation(

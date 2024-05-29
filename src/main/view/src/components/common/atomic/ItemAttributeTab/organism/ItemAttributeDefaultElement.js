@@ -26,6 +26,8 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import TopBottomModal from '../modal/TopBottomModal';
 import DataHighlightModal
   from 'components/report/item/pivot/modal/organism/DataHighLightModal';
+import GridAttributeModal
+  from 'components/report/item/pivot/modal/organism/GridAttributeModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -218,7 +220,7 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'topBottom',
-          label: 'Top/Bottom값 설정',
+          label: localizedString.topBottom,
           icon: topBottomImg,
           active: option.topBottom == 'topBottom',
           width: '50%',
@@ -234,6 +236,21 @@ const ItemAttributeDefaultElement = () => {
 
             openModal(TopBottomModal, {
               topBottomInfo: rootItem.adHocOption.topBottomInfo
+            });
+          }
+        },
+        {
+          id: 'gridAttribute',
+          label: localizedString.gridAttibute,
+          icon: dimensionGroupImg,
+          active: option?.gridAttibute == 'gridAttribute',
+          onClick: () => {
+            // TODO: Get Grid Attribute List
+            const gridAttribute = rootItem?.adHocOption?.gridAttribute;
+            const dataField = rootItem?.adHocOption?.dataField;
+            openModal(GridAttributeModal, {
+              dataField: dataField,
+              gridAttribute: gridAttribute
             });
           }
         }

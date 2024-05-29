@@ -197,41 +197,6 @@ public class ReportService {
         return result;
     }
 
-    public Map<String, ReportResult> getAdHocItemData(DataAggregation dataAggreagtion) {
-        Map<String, ReportResult> result = new HashMap<String, ReportResult>();
-
-        QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
-        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
-
-        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
-
-        martConfig.setMartDataSource(dsMstrDTO);
-
-        String query = queryGenerator.getQuery(dataAggreagtion);
-        String layoutType = dataAggreagtion.getAdHocOption().getLayoutSetting();
-        String[] items = layoutType.split("_");
-
-        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
-        List<Map<String, Object>> chartRowData = martResultDTO.getRowData();
-        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-
-        for (String item : items) {
-            if (ItemType.fromString(item).get().equals(ItemType.PIVOT_GRID)) {
-                continue;
-            }
-
-            ItemDataMaker dataMaker = itemDataMakerFactory.getItemDataMaker(ItemType.fromString(item).get());
-            List<Map<String, Object>> rowData = martResultDTO.deepCloneList(chartRowData);
-            ReportResult pivotResult = dataMaker.make(dataAggreagtion, rowData);
-            
-            pivotResult.setQuery(query);
-            
-            result.put(item, pivotResult);
-        }
-
-        return result;
-    }
-
     public Map<String, Object> insertReport(ReportMstrDTO reportMstrDTO) throws SQLException{
         Map<String, Object> map = new HashMap<String,Object>();
         boolean result = false;
