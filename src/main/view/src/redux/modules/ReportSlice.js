@@ -42,8 +42,8 @@ const reducers = {
    * 뷰어는 보고서 추가 시 보고서 변경 (덮어쓰기)가 아닌 해당 reportId에 맞는 보고서 내용을 변경 해줘야 함.
    */
   changeReportViewer(state, actions) {
-    const prevId = actions.payload.prevId;
-    const newId = actions.payload.newId;
+    const prevId = actions.payload.reportId.prevId;
+    const newId = actions.payload.reportId.newId;
     const report = actions.payload.report;
 
     if (prevId != newId) {

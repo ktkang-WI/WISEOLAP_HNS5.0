@@ -148,7 +148,7 @@ const RibbonDefaultElement = () => {
       }}
       valueExpr={'id'}
       displayExpr={'text'}
-      value={rootItem.adHocOption?.layoutSetting}
+      value={rootItem?.adHocOption?.layoutSetting}
       items={data}/>;
   };
 
