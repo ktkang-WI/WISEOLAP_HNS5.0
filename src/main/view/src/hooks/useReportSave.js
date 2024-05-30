@@ -36,6 +36,7 @@ const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {executeItems, executeSpread} = useQueryExecute();
+  const editMode = useSelector(selectEditMode);
 
   const reportActions = ReportSlice.actions;
   const itemActions = ItemSlice.actions;
@@ -125,11 +126,8 @@ const useReportSave = () => {
     return report;
   };
 
-  /**
-   * 보고서 저장 (새로운 보고서를 추가 합니다.)
-   * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
-   */
-  const addReport = (response) => {
+  // 보고서 저장 시 필요한 파라미터 정리.
+  const generateParam = (response) => {
     const reportId = {
       prevId: currentReportId,
       newId: response.report.reportId
@@ -137,12 +135,27 @@ const useReportSave = () => {
 
     const report = generateReport(response.report);
 
-    dispatch(reportActions.changeReport(report));
-    dispatch(itemActions.changeItemReportId(reportId));
-    dispatch(layoutActions.changeLayoutReportId(reportId));
-    dispatch(datasetActions.changeDatasetReportId(reportId));
-    dispatch(parameterActions.changeParameterReportId(reportId));
-    dispatch(spreadActions.changeSpreadReportId(reportId));
+    return {reportId: reportId, report: report};
+  };
+
+  /**
+   * 보고서 저장 (새로운 보고서를 추가 합니다.)
+   * @param {JSON} response 저장 후 REPORT_MSTR 테이블에 저장된 보고서 정보
+   */
+  const addReport = (response) => {
+    const reportParams = generateParam(response);
+
+    if (editMode == EditMode.VIEWER) {
+      dispatch(reportActions.changeReportViewer(reportParams));
+    } else {
+      // 디자이너
+      dispatch(reportActions.changeReport(reportParams.report));
+    }
+    dispatch(itemActions.changeItemReportId(reportParams.reportId));
+    dispatch(layoutActions.changeLayoutReportId(reportParams.reportId));
+    dispatch(datasetActions.changeDatasetReportId(reportParams.reportId));
+    dispatch(parameterActions.changeParameterReportId(reportParams.reportId));
+    dispatch(spreadActions.changeSpreadReportId(reportParams.reportId));
   };
 
   /**

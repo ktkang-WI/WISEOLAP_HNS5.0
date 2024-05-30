@@ -10,6 +10,7 @@ import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
+import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -20,6 +21,7 @@ import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
+import ReportSaveModal from 'components/report/modal/ReportSaveModal';
 // import styled from 'styled-components';
 
 
@@ -91,6 +93,17 @@ const HeaderDefaultElement = () => {
       'type': 'CommonButton',
       'onClick': (e) => {
         openModal(ViewQuery);
+      }
+    },
+    'SaveAs': {
+      'id': 'save_as',
+      'label': localizedString.saveAs,
+      'buttonType': 'onlyImageText',
+      'width': 'auto',
+      'icon': saveAsImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ReportSaveModal);
       }
     },
     'UserInfo': {
