@@ -239,7 +239,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
           // 상세데이터 contextMenu 시작
           // row와 column 모두 총계인 셀은 선택 불가
-          if (detailedData && !isGrandTotal) {
+          if (detailedData && !isGrandTotal && meta.dataField) {
             // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
             const regex = /\[([^\[\]]+)\]/;
             const rowColFilters = [];
