@@ -57,11 +57,23 @@ export default function useModal() {
     });
   };
 
+  /**
+   * 성공창을 엽니다.
+   * @param {string} msg
+   */
+  const success = (msg) => {
+    openModal(Alert, {
+      type: 'success',
+      message: msg
+    });
+  };
+
   return {
     openModal,
     closeModal,
     alert,
     warning,
-    confirm
+    confirm,
+    success
   };
 };
