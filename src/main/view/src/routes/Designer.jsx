@@ -2,7 +2,9 @@ import {createBrowserHistory} from '@remix-run/router';
 import Header from 'components/common/atomic/Header/organism/Header';
 import SideNavigationBar
   from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
-import {DesignerMode} from 'components/config/configType';
+import {AdHocLayoutTypes, DesignerMode} from 'components/config/configType';
+import configureUtility
+  from 'components/config/organisms/configurationSetting/ConfigureUtility';
 import useConfig from 'hooks/useConfig';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
@@ -10,6 +12,8 @@ import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {Outlet, useLoaderData} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import ItemSlice from 'redux/modules/ItemSlice';
+import LayoutSlice from 'redux/modules/LayoutSlice';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const Designer = () => {
@@ -22,8 +26,32 @@ const Designer = () => {
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions
-  const {setDesignerMode} = ConfigSlice.actions;
+  const {setDesignerMode, reloadDisplaySetting} = ConfigSlice.actions;
   const history = createBrowserHistory();
+  // function js
+  const {configStringToJson} = configureUtility();
+
+  // 브라우저 새로고침 문제.
+  useEffect(() => {
+    // 아이템, 레이아웃
+    const configJson = configStringToJson(generalConfigure);
+    const initPage =
+      configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
+
+    if (designerMode == DesignerMode['AD_HOC']) {
+      const layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
+      const param = {
+        mode: designerMode,
+        adhocLayout: layout
+      };
+
+      dispatch(LayoutSlice.actions.initLayout(param));
+      dispatch(ItemSlice.actions.initItems(param));
+    }
+
+    dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));
+    saveConfiguration(generalConfigure);
+  }, []);
 
   useEffect(() => {
     const listenBackEvent = (reportType) => {

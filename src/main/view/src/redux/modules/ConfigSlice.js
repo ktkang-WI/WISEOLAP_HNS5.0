@@ -36,7 +36,13 @@ const reducers = {
   addConfigure(state, actions) {
     Object.assign(state.configure, actions.payload);
   },
-  setDisplayConfig(state, actions) {
+  reloadDisplaySetting(state, actions) {
+    // 브라우저 새로고침시 다시 설정.
+    state.initialDisplay = actions.payload.init;
+    state.designerMode = actions.payload.currPage;
+    state.runMode = actions.payload.currPage;
+  },
+  setInitDisplayConfig(state, actions) {
     state.designerMode = actions.payload;
     state.runMode = actions.payload;
     state.initialDisplay = actions.payload;

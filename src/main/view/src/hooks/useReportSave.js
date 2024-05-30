@@ -18,7 +18,7 @@ import {selectCurrentDesignerMode, selectEditMode}
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectSpreadMeta}
   from 'redux/selector/SpreadSelector';
-import {ConvertDesignerMode, DesignerMode, EditMode}
+import {AdHocLayoutTypes, ConvertDesignerMode, DesignerMode, EditMode}
   from 'components/config/configType';
 import models from 'models';
 import localizedString from 'config/localization';
@@ -199,11 +199,16 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (designerMode) => {
+  const reload = (designerMode, adHocLayout) => {
+    const param = {
+      mode: designerMode,
+      adhocLayout: AdHocLayoutTypes[adHocLayout]
+    };
+
     dispatch(reportActions.initReport(designerMode));
     dispatch(datasetActions.initDatasets());
-    dispatch(itemActions.initItems(designerMode));
-    dispatch(layoutActions.initLayout(designerMode));
+    dispatch(itemActions.initItems(param));
+    dispatch(layoutActions.initLayout(param));
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
     initWorkkbookJSONs();

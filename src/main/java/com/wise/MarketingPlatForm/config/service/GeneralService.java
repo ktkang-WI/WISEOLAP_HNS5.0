@@ -33,6 +33,7 @@ public class GeneralService {
         .mainTitle(generalDTO.getMainTitle())
         .licensesKey(generalDTO.getLicensesKey())
         .webUrl(generalDTO.getWebUrl())
+        .adHocLayout(generalDTO.getAdHocLayout())
         .build();
 
     WbConfigMstrEntity wbConfigMstrEntity = WbConfigMstrEntity.builder()
