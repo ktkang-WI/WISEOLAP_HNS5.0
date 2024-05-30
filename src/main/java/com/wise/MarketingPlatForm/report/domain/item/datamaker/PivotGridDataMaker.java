@@ -82,7 +82,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
     }
 
     private void internalPivotSummaryMatrix(DataAggregation dataAggregation, PivotOption opt, List<Map<String, Object>> data, Map<String, Object> map) {
-        final SummaryMatrixProvider summaryMatrixProvider = BeanContext.get(SummaryMatrixProvider.class);
+        final SummaryMatrixProvider summaryMatrixProvider = BeanContext.getBean(SummaryMatrixProvider.class);
         final PagingParam pagingParam = opt.getPagingParam();
         final String showRowGrandTotals = opt.getShowRowGrandTotals();
         final String showRowTotals = opt.getShowRowTotals();
