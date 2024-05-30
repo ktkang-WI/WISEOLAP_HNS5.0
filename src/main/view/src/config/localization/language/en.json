@@ -6,6 +6,7 @@
   "reportProperty": "Report Property",
   "dashboard": "Dashboard",
   "adhoc": "AdHoc",
+  "adhocSetting": "AdHoc settings",
   "dataset": "Dataset",
   "preference": "Preference",
   "dataSource": "Data Source",
@@ -449,5 +450,10 @@
   "logout": "logout",
   "mypage": "my page",
   "confirmLogoutMsg": "Do you want to log out?",
-  "failedLogout": "Logout failed. Please contact the administrator."
+  "failedLogout": "Logout failed. Please contact the administrator.",
+  "adHocLayoutOptions":  [
+    {"id": "chart", "text": "Only chart"},
+    {"id": "pivot", "text": "Only PivotGrid"},
+    {"id": "chart_pivot", "text": "Show both"}
+  ]
 }

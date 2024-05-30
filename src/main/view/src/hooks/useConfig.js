@@ -5,7 +5,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const useConfig = () => {
   const dispatch = useDispatch();
-  const {addConfigure, setDisplayConfig} = ConfigSlice.actions;
+  const {addConfigure} = ConfigSlice.actions;
 
   const saveConfiguration = (general) => {
     dispatch(addConfigure(general));
@@ -15,11 +15,6 @@ const useConfig = () => {
         general.spreadJsDesignLicense,
         general.spreadJsLicense
     );
-  };
-
-  const afterLoginInitSettingConfig = (initPage, general) => {
-    dispatch(setDisplayConfig(initPage));
-    saveConfiguration(general);
   };
 
   const remove = () => {
@@ -32,8 +27,7 @@ const useConfig = () => {
 
   return {
     saveConfiguration,
-    remove,
-    afterLoginInitSettingConfig
+    remove
   };
 };
 

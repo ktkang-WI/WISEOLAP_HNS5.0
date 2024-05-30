@@ -112,6 +112,7 @@
   "userInfomation": "사용자 정보",
   "dashboard": "대시보드",
   "adhoc": "비정형 보고서",
+  "adhocSetting": "비정형 보고서 설정",
   "spreadsheet": "스프레드 시트",
   "dataset": "데이터집합",
   "preference": "환경설정",
@@ -370,6 +371,8 @@
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
+  "gridAttibute": "그리드 속성",
+  "topBottom": "Top/Bottom값 설정",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
   "tooltip": "툴팁",
@@ -628,7 +631,6 @@
   "prevStep": "이전",
   "completeStep": "완료",
   "selectAll": "전체 선택",
-  "wordCloud": "워드클라우드",
   "date": "일자",
   "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
   "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
@@ -640,5 +642,13 @@
   "logout": "로그아웃",
   "mypage": "마이페이지",
   "confirmLogoutMsg": "로그아웃 하시겠습니까?",
-  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요."
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "adHocLayoutOptions":  [
+    {"id": "chart", "text": "차트만 보기"},
+    {"id": "pivot", "text": "피벗그리드만 보기"},
+    {"id": "chart_pivot", "text": "차트, 피벗 전부 보기"}
+  ],
+  "gridVisibility": "그리드 표시 여부",
+  "chartVisibility": "차트 표시 여부",
+  "summaryType": "합계유형"
 }

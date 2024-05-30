@@ -16,12 +16,12 @@ const ImgWrapper = styled(Wrapper)`
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 64px;
-  height: 64px;
+  width: 100px;
+  height: 100px;
   z-index: 99999999999;
   background-image: url(${loadingImg});
   background-repeat: no-repeat;
-  background-size: 64px 64px;
+  background-size: 100px 100px;
 `;
 const LoadingPanel = () => {
   const jobQuantity = useSelector(selectJobQuantity);

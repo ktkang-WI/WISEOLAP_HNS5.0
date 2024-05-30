@@ -111,7 +111,7 @@ const ConfigurationSetting = () => {
             itemComponent={TabPanelItem}
           >
           </CommonTab>
-        </Content>,
+        </Content>
       </Wrapper>
     </ConfigureContext.Provider>
   );

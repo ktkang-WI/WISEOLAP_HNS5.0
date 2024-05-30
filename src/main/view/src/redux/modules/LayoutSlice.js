@@ -123,14 +123,19 @@ const getInitialState = () => {
 const reducers = {
   // initLayout -> dashboard, adhoc Layout 다르게.
   initLayout: (state, actions) => {
-    const mode = actions.payload;
+    const action = actions.payload;
+    const mode = action.mode ? action.mode : action;
 
     if (mode === DesignerMode['DASHBOARD']) {
       return {...dashboardInitialState};
     }
 
     if (mode === DesignerMode['AD_HOC']) {
-      return {...adHocInitialState};
+      const adhocLayout = action.adhocLayout;
+      const adHocInitial =
+        adHocLayoutSetting(adhocLayout, 0, adHocInitialState);
+
+      return {0: {...adHocInitial}};
     }
 
     if (mode === DesignerMode['EXCEL']) {

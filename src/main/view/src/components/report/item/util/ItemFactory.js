@@ -101,7 +101,7 @@ const makeAdHocItem = (orgItem) => {
   };
 };
 
-const makeAdHocOption = () => {
+const makeAdHocOption = (layout) => {
   const dataFieldTypes = dataFieldTypeOfItemTypeFunc('pivot');
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
@@ -109,7 +109,6 @@ const makeAdHocOption = () => {
   dataField.dataFieldQuantity = 0;
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
-  const layoutType = ItemManager.getLayoutSetting();
   const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
 
   dataFieldOption.measure.useButton = true;
@@ -119,7 +118,7 @@ const makeAdHocOption = () => {
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,
-    layoutSetting: layoutType['chart_pivot']
+    layoutSetting: layout || 'chart_pivot'
   };
 };
 
