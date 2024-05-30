@@ -22,6 +22,7 @@ const Designer = () => {
   const {reload} = useReportSave();
   const {generalConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
+  saveConfiguration(generalConfigure);
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions

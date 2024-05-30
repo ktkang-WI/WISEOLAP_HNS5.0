@@ -371,6 +371,8 @@
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
+  "gridAttibute": "그리드 속성",
+  "topBottom": "Top/Bottom값 설정",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
   "tooltip": "툴팁",
@@ -629,7 +631,6 @@
   "prevStep": "이전",
   "completeStep": "완료",
   "selectAll": "전체 선택",
-  "wordCloud": "워드클라우드",
   "date": "일자",
   "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
   "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
@@ -646,5 +647,8 @@
     {"id": "chart", "text": "차트만 보기"},
     {"id": "pivot", "text": "피벗그리드만 보기"},
     {"id": "chart_pivot", "text": "차트, 피벗 전부 보기"}
-  ]
+  ],
+  "gridVisibility": "그리드 표시 여부",
+  "chartVisibility": "차트 표시 여부",
+  "summaryType": "합계유형"
 }

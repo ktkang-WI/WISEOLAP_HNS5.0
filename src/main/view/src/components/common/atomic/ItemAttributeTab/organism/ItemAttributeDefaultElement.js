@@ -13,8 +13,10 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
+import topBottomImg
+  from 'assets/image/icon/adhoc/topBottom.png';
 import dataHighlightImg
-  from '../../../../../assets/image/icon/highlight/ico_CHightLight.png';
+  from '../../../../../assets/image/icon/adhoc/dataHighlight.png';
 import useModal from 'hooks/useModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
@@ -24,6 +26,8 @@ import useQueryExecute from 'hooks/useQueryExecute';
 import TopBottomModal from '../modal/TopBottomModal';
 import DataHighlightModal
   from 'components/report/item/pivot/modal/organism/DataHighLightModal';
+import GridAttributeModal
+  from 'components/report/item/pivot/modal/organism/GridAttributeModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -197,20 +201,12 @@ const ItemAttributeDefaultElement = () => {
     AdHocOptions: {
       title: '비정형 옵션',
       items: [
-        // {
-        //   id: 'deltaValue',
-        //   label: '변동 측정값',
-        //   active: option.deltaValue == 'deltaValue',
-        //   icon: dimensionImg,
-        //   onClick: () => {
-        //     // 변동 측정값
-        //   }
-        // },
         {
           id: 'dataHighlight',
           label: localizedString.dataHighlight,
           icon: dataHighlightImg,
           active: option.dataHighlight == 'dataHighlight',
+          width: '50%',
           onClick: () => {
             const chartMartInit = rootItem.items[0].mart.init;
             const pivotMartInit = rootItem.items[1].mart.init;
@@ -224,9 +220,10 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'topBottom',
-          label: 'Top/Bottom값 설정',
-          icon: dimensionGroupImg,
+          label: localizedString.topBottom,
+          icon: topBottomImg,
           active: option.topBottom == 'topBottom',
+          width: '50%',
           onClick: () => {
             const dataField = rootItem.adHocOption.dataField;
             if (dataField.measure.length === 0) {
@@ -241,7 +238,42 @@ const ItemAttributeDefaultElement = () => {
               topBottomInfo: rootItem.adHocOption.topBottomInfo
             });
           }
+        },
+        {
+          id: 'gridAttribute',
+          label: localizedString.gridAttibute,
+          icon: dimensionGroupImg,
+          active: option?.gridAttibute == 'gridAttribute',
+          onClick: () => {
+            // TODO: Get Grid Attribute List
+            const gridAttribute = rootItem?.adHocOption?.gridAttribute;
+            const dataField = rootItem?.adHocOption?.dataField;
+            openModal(GridAttributeModal, {
+              dataField: dataField,
+              gridAttribute: gridAttribute
+            });
+          }
         }
+        // TODO: 기능 개발 후 활성화
+        // {
+        //   id: 'deltaValue',
+        //   label: '변동 측정값',
+        //   active: option.deltaValue == 'deltaValue',
+        //   icon: deltaValueImg,
+
+        //   onClick: () => {
+        //     // 변동 측정값
+        //   }
+        // }
+        // {
+        //   id: 'gridAttribute',
+        //   label: '그리드 속성',
+        //   active: option.gridAttribute == 'gridAttribute',
+        //   icon: gridAttributeImg,
+        //   onClick: () => {
+        //     // 그리드 속성
+        //   }
+        // }
       ]
     }
   };
