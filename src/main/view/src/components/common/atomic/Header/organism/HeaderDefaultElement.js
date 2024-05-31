@@ -98,8 +98,8 @@ const HeaderDefaultElement = () => {
     'SaveAs': {
       'id': 'save_as',
       'label': localizedString.saveAs,
-      'buttonType': 'onlyImageText',
-      'width': 'auto',
+      'buttonType': 'whiteRound',
+      'width': '140px',
       'icon': saveAsImg,
       'type': 'CommonButton',
       'onClick': (e) => {
