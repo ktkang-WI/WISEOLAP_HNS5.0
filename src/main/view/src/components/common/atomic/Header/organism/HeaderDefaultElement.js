@@ -22,6 +22,15 @@ import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
+import {handleDownload} from 'components/report/util/ReportDownload';
+import {
+  selectCurrentItems,
+  selectRootItem
+} from 'redux/selector/ItemSelector';
+import {
+  selectCurrentInformationas
+} from 'redux/selector/ParameterSelector';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
 // import styled from 'styled-components';
 
 
@@ -34,6 +43,26 @@ const HeaderDefaultElement = () => {
   const {reload} = useReportSave();
   // TODO: 임시용
   const test = '관리자';
+
+  const rootItem = useSelector(selectRootItem);
+  const currentItem = useSelector(selectCurrentItems);
+  const currentParameter = useSelector(selectCurrentInformationas);
+  const currentReport = useSelector(selectCurrentReport);
+  const dataSource = _.cloneDeep(currentReport.options);
+  const filterdLayoutItem = () => {
+    if (!rootItem.adHocOption) return currentItem;
+
+    let items = currentItem.filter((item) =>
+      item.type == rootItem.adHocOption.layoutSetting
+    );
+
+    if (items.length === 0) { // 차트 피벗 전부 보기인 경우.
+      items = currentItem;
+    }
+
+    return items;
+  };
+
 
   return {
     'Logo': {
@@ -189,7 +218,12 @@ const HeaderDefaultElement = () => {
       'buttonType': 'whiteRound',
       'width': '115px',
       'icon': openViewerImg,
-      'type': 'CommonButton'
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        const newCurrentItem = filterdLayoutItem();
+
+        handleDownload(newCurrentItem, currentParameter, dataSource);
+      }
     }
   };
 };
