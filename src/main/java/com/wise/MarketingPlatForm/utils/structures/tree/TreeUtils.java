@@ -2,8 +2,11 @@ package com.wise.MarketingPlatForm.utils.structures.tree;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.formula.functions.T;
+
+import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 
 @SuppressWarnings("hiding")
 public class TreeUtils<T> {
@@ -26,6 +29,17 @@ public class TreeUtils<T> {
     for(TreeNode<BigDecimal> node : root) {
       orderBy(node.getChildren(), type);
     }
+  }
+
+  public String generateKey(Map<String, Object> data, List<Dimension> dimensions) {
+    StringBuilder keyBuilder = new StringBuilder();
+    for (Dimension dim : dimensions) {
+        if (keyBuilder.length() > 0) {
+            keyBuilder.append(".");
+        }
+        keyBuilder.append(data.get(dim.getName()));
+    }
+    return keyBuilder.toString();
   }
 
   public void orderBy(Tree<BigDecimal> tree, OrderType type) {
