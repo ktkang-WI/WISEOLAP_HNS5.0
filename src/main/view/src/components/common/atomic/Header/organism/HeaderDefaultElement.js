@@ -11,6 +11,7 @@ import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
 import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
+import TextBox from 'devextreme/ui/text_box';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -31,6 +32,7 @@ import {
   selectCurrentInformationas
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 // import styled from 'styled-components';
 
 
@@ -63,6 +65,27 @@ const HeaderDefaultElement = () => {
     return items;
   };
 
+  const handleSearch = (e) => {
+    const searchValue = getSearchValue(e);
+    if (searchValue.length > 0) {
+      openModal(LoadReportModal, {
+        'searchValue': searchValue,
+        'searchEnabled': false
+      });
+    }
+  };
+
+  const getSearchValue = (e) => {
+    let searchValue = '';
+    if (e.component.NAME === 'dxTextBox') {
+      searchValue = e.component.option('value');
+    } else {
+      const element = document.getElementById('report_search');
+      const instance = TextBox.getInstance(element);
+      searchValue = instance.option('value');
+    }
+    return searchValue;
+  };
 
   return {
     'Logo': {
@@ -112,6 +135,23 @@ const HeaderDefaultElement = () => {
         dispatch(setEditMode(EditMode.VIEWER));
         reload(initialDisplay);
       }
+    },
+    'ReportSearch': {
+      'id': 'report_search',
+      'type': 'TextBox',
+      'button': {
+        name: 'reportSearch',
+        location: 'after',
+        options: {
+          visible: true,
+          stylingMode: 'text',
+          icon: 'search',
+          type: 'default',
+          disabled: false,
+          onClick: handleSearch
+        }
+      },
+      'onEnterKey': handleSearch
     },
     'ShowQuery': {
       'id': 'show_query',

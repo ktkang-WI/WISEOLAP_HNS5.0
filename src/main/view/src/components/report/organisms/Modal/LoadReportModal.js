@@ -100,6 +100,8 @@ const LoadReportModal = ({...props}) => {
           }
         }}
         onSubmit={onSubmit}
+        searchValue={props.searchValue}
+        searchEnabled={props.searchEnabled}
         onClose={props.onClose}
       />
     </Modal>
