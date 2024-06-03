@@ -2,13 +2,19 @@ import {useEffect, useRef} from 'react';
 import D3PainterForCollapsibleTree from './D3PainterForCollapsibleTree';
 
 const D3CollapsibleTree = ({
-  dataSource
+  dataSource,
+  height,
+  width
 }) => {
   const svgRef = useRef(null);
   useEffect(() => {
     D3PainterForCollapsibleTree.init({
       container: svgRef.current,
-      dataSource: dataSource
+      dataSource: dataSource,
+      option: {
+        width: width,
+        height: height
+      }
     });
     D3PainterForCollapsibleTree.painting();
 

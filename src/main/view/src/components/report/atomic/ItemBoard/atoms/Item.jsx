@@ -1,6 +1,8 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
+import ItemType from 'components/report/item/util/ItemType';
+import ScrollSetting from 'components/report/util/ScrollSetting';
 
 const theme = getTheme();
 
@@ -10,6 +12,7 @@ const ItemWrapper = styled(Wrapper)`
   height: 100%;
   width: 100%;
   overflow: hidden;
+  overflow-y: ${(props) => props.overflowY ? props.overflowY : 'hidden'};
 `;
 
 const ItemContent = styled.div`
@@ -20,8 +23,15 @@ const ItemContent = styled.div`
 
 // TODO: 추후 아이템별로 나눠야함.
 const Item = ({children}) => {
+  const {className, overflowY} = ScrollSetting.getScrollOptions({
+    overflowYItems: [ItemType.COLLAPSIBLE_TREE],
+    type: children?.type?.type?.name
+  });
   return (
-    <ItemWrapper>
+    <ItemWrapper
+      className={className}
+      overflowY={overflowY}
+    >
       <ItemContent>
         {children}
       </ItemContent>

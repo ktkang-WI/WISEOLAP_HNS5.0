@@ -3,10 +3,10 @@ import * as d3 from 'd3';
 // public
 const D3PainterForCollapsibleTree = {};
 
-D3PainterForCollapsibleTree.defaultOption = () => {
+D3PainterForCollapsibleTree.defaultOption = (option) => {
   return {
-    width: 928,
-    height: 10,
+    width: option.width,
+    height: option.height,
     marginTop: 10,
     marginRight: 10,
     marginBottom: 10,
@@ -17,7 +17,8 @@ D3PainterForCollapsibleTree.defaultOption = () => {
 D3PainterForCollapsibleTree.init = ({
   container,
   dataSource,
-  defaultOption = D3PainterForCollapsibleTree.defaultOption()
+  option,
+  defaultOption = D3PainterForCollapsibleTree.defaultOption(option)
 }) => {
   if (!container) return new Error('The Container attribute can\'t be null');
   D3PainterForCollapsibleTree.self = {};

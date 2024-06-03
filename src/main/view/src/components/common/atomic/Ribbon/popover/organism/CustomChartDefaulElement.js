@@ -17,8 +17,6 @@ import textBoxImg
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
-import networkChartImg from 'assets/image/icon/item/network_big.png';
-import hierarchicalChartImg from 'assets/image/icon/item/hierarchy.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -41,7 +39,6 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
-    NETWORK_CHART,
     WORDCLOUD,
     TEXT_BOX
   } = ItemType;
@@ -83,12 +80,6 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.connectionVisualization,
       checkboxs: [
-        {
-          title: localizedString.networkChart,
-          type: NETWORK_CHART,
-          checked: false,
-          src: networkChartImg
-        },
         {
           title: localizedString.chordDiagram,
           type: CHORD_DIAGRAM,
@@ -153,12 +144,6 @@ const CustomChartDefaulElement = () => {
           type: ItemType.RADIAL_TREE,
           checked: false,
           src: radialTreeImg
-        },
-        {
-          title: localizedString.hierarchicalChart,
-          type: ItemType.HIERARCHICAL_CHART,
-          checked: false,
-          src: hierarchicalChartImg
         }
       ]
     },

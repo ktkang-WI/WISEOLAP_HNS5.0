@@ -11,9 +11,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMak
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
-import com.wise.MarketingPlatForm.report.domain.item.datamaker.HierarchicalMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
-import com.wise.MarketingPlatForm.report.domain.item.datamaker.NetworkChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
@@ -72,12 +70,6 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.RADIAL_TREE) {
             return new RadialTreeMaker();
-        }
-        if (itemType == ItemType.NETWORK_CHART) {
-            return new NetworkChartMaker();
-        }
-        if (itemType == ItemType.HIERARCHICAL_CHART) {
-            return new HierarchicalMaker();
         }
         if (itemType == ItemType.WORDCLOUD) {
             return new WordCloudMaker();

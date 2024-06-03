@@ -333,7 +333,6 @@
   "scatterPlotMatrix": "산점도 행렬",
   "bivariateChart": "이분법 차트",
   "sankeyChart": "센키차트",
-  "hierarchicalChart": "계층차트",
   "networkReduce": "네트워크-축소",
   "networkMagnify": "네트워크-확대",
   "networkChart": "네트워크 차트",

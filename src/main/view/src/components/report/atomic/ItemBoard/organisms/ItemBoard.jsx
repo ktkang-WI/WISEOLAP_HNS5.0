@@ -46,9 +46,6 @@ import _ from 'lodash';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
-import NetworkChart from 'components/report/item/networkChart/NetworkChart';
-import HierarchicalChart
-  from 'components/report/item/hierarchicalChart/HierarchicalChart';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
@@ -133,9 +130,7 @@ const ItemBoard = () => {
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree,
-    networkChart: NetworkChart,
-    hierarchicalChart: HierarchicalChart
+    radialTree: RadialTree
   };
 
   const itemExportsPicker = (id) => {

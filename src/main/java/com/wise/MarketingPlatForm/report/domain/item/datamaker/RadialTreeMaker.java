@@ -84,7 +84,7 @@ public class RadialTreeMaker implements ItemDataMaker{
       String resultData = execute(dimensions, measures, data);
       info.put("seriesMeasureNames", seriesMeasureNames);
       info.put("jsonData", resultData);
-      CommonResult result = new CommonResult(data, "", info);
+      CommonResult result = new CommonResult(data, info);
 
     return result;
   }
