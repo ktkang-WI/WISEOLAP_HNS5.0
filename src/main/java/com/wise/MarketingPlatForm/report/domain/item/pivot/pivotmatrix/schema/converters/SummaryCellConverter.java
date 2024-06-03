@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.wise.MarketingPlatForm.report.domain.item.pivot.model.SummaryValue;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryCell;
+import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.impl.SummaryCellImpl;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.AvroConverter;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro.AvroSummaryCell;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.schema.avro.AvroSummaryValue;
@@ -25,17 +26,21 @@ public class SummaryCellConverter implements AvroConverter<SummaryCell, AvroSumm
         }
         return new AvroSummaryCell(asvs);
     }
-
+    
     @Override
     public SummaryCell unconvert(AvroSummaryCell converted) {
-        final SummaryCell sc = new SummaryCell();
         final List<AvroSummaryValue> asvs = converted.getSummaryValues();
+        List<SummaryValue> svs = null;
+
         if (asvs != null) {
-            for (AvroSummaryValue asv : asvs) {
-                sc.addSummaryValue(summaryValueConverter.unconvert(asv));
+        	svs = new ArrayList<>(asvs.size());
+
+        	for (AvroSummaryValue asv : asvs) {
+            	svs.add(summaryValueConverter.unconvert(asv));
             }
         }
-        return sc;
+
+        return new SummaryCellImpl(svs);
     }
 
 }

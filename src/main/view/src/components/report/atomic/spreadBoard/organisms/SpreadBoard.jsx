@@ -57,7 +57,9 @@ const SpreadBoard = () => {
   }, []);
 
   useEffect(() => {
-    bindData(spreadData);
+    if (Object.keys(spreadData).length > 0) {
+      bindData(spreadData);
+    }
   }, [spreadData]);
 
 
@@ -72,13 +74,15 @@ const SpreadBoard = () => {
         className={'dx-drawer-shader'}
         ref={spreaRef}
         designerInitialized={(designer) => {
-          designer.setConfig(config);
-          insertWorkbookJSON({
-            reportId: currentReportId,
-            workbookJSON: designer.getWorkbook().toJSON()
-          });
-          sheetChangedListener(designer);
-          sheetNameChangedListener(designer);
+          if (designer) {
+            designer.setConfig(config);
+            insertWorkbookJSON({
+              reportId: currentReportId,
+              workbookJSON: designer.getWorkbook().toJSON()
+            });
+            sheetChangedListener(designer);
+            sheetNameChangedListener(designer);
+          }
         }}
         styleInfo={{
           width: '100%',

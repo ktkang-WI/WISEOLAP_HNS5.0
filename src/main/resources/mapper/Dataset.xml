@@ -49,19 +49,30 @@
 	</resultMap>
 
 	<resultMap id="DatasetDsDsviewCubeDTO" type="com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO">
-		<result column="DS_CUBE_ID" property="dsCubeId" javaType="int"/>
+	  <result column="DS_CUBE_ID" property="dsCubeId" javaType="int"/>
 	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
 	  <result column="DS_ID" property="dsId" javaType="int"/>
 	  <result column="CUBE_ID" property="cubeId" javaType="int"/>
 	  <result column="DIM_UNI_NM" property="dimUniNm" javaType="String"/>
-		<result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
+	  <result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
 	  <result column="DS_NM" property="dsNm" javaType="String"/>
 	  <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	  <result column="OWNER_NM" property="ownerNm" javaType="String"/>
 	  <result column="IP" property="ip" javaType="String"/>
-		<result column="DB_NM" property="dbNm" javaType="String"/>
+	  <result column="DB_NM" property="dbNm" javaType="String"/>
 	  <result column="CUBE_NM" property="cubeNm" javaType="String"/>
 	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
+	</resultMap>
+
+	<resultMap id="UserUploadMstr" type="com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity">
+	  <result column="DATA_SEQ" property="dataSeq" javaType="int"/>
+	  <result column="DATA_NM" property="dataNm" javaType="String"/>
+	  <result column="TBL_NM" property="tableNm" javaType="String"/>
+	  <result column="REG_USER_NO" property="regUserNo" javaType="int"/>
+	  <result column="DATA_DESC" property="dataDesc" javaType="String"/>
+	  <result column="UPLOAD_XML" property="uploadXml" javaType="String"/>
+	  <result column="DS_ID" property="dsId" javaType="int"/>
+
 	</resultMap>
 
 	<resultMap id="DsViewTable" type="com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity">
@@ -284,6 +295,13 @@
 		WHERE DS_ID = #{dsId}
 	</select>
 
+	<select id="selectUserUploadTables" parameterType="int" resultMap="UserUploadMstr">
+		SELECT *
+		FROM USER_UPLOAD_MSTR
+		WHERE DS_ID = #{ds_id}
+		ORDER BY DATA_SEQ
+	</select>
+
 	<select id="selectDsViewTables" parameterType="String" resultMap="DsViewTable">
 		SELECT	TBL_NM AS TBL_NM ,
 		TBL_CAPTION AS TBL_CAPTION 
@@ -291,7 +309,6 @@
 		WHERE	DS_VIEW_ID = #{dsView_id}
 	</select>
 
-	
 	
 <!-- Query End -->
 </mapper>

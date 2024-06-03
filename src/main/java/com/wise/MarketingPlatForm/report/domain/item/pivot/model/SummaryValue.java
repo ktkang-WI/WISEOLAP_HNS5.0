@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class SummaryValue implements Cloneable {
 
     private static final BigDecimal ZERO = BigDecimal.valueOf(0);
@@ -26,19 +26,23 @@ public class SummaryValue implements Cloneable {
     private BigDecimal value;
     private String textValue;
     private Set<BigDecimal> distinctValues;
+    private String precision;
+    private String precisionOption;
 
     public SummaryValue() {
-        this(null, null, null);
+        this(null, null, null, null, null);
     }
 
     public SummaryValue(final String fieldName, final SummaryType summaryType) {
-        this(fieldName, summaryType, null);
+        this(fieldName, summaryType, null, null, null);
     }
 
-    public SummaryValue(final String fieldName, final SummaryType summaryType, final BigDecimal value) {
+    public SummaryValue(final String fieldName, final SummaryType summaryType, final BigDecimal value, final String precision, final String precisionOption) {
         this.fieldName = fieldName;
         this.summaryType = summaryType;
         this.value = value;
+        this.precision = precision;
+        this.precisionOption = precisionOption;
     }
 
     @JsonInclude(Include.NON_NULL)
@@ -134,6 +138,9 @@ public class SummaryValue implements Cloneable {
     @JsonIgnore
     public BigDecimal getRepresentingValue() {
         switch (summaryType) {
+        case SUM:
+        case CUSTOM:
+           return sum;
         case COUNT:
             return BigDecimal.valueOf(count);
         case COUNTDISTINCT:
@@ -143,7 +150,22 @@ public class SummaryValue implements Cloneable {
             if (count == 0) {
                 return ZERO;
             }
-            return sum.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
+            if(precision == null) {
+            	precision = "0";
+            }
+            
+            if(precisionOption != null) {
+        		if("올림".equalsIgnoreCase(precisionOption)) {
+        			return sum.divide(BigDecimal.valueOf(count), Integer.parseInt(precision), RoundingMode.CEILING);
+        		}else if("내림".equalsIgnoreCase(precisionOption)) {
+        			return sum.divide(BigDecimal.valueOf(count), Integer.parseInt(precision), RoundingMode.DOWN);
+        		} else {
+        			return sum.divide(BigDecimal.valueOf(count), Integer.parseInt(precision), RoundingMode.HALF_UP);
+        		}
+            }else {
+            	return sum.divide(BigDecimal.valueOf(count), Integer.parseInt(precision), RoundingMode.HALF_UP);
+            }
+            
         default:
             break;
         }
@@ -163,7 +185,7 @@ public class SummaryValue implements Cloneable {
 
         final SummaryValue that = (SummaryValue) o;
 
-        if (!Objects.equals(fieldName, that.fieldName)) {
+        if (!StringUtils.equals(fieldName, that.fieldName)) {
             return false;
         }
 
@@ -220,4 +242,20 @@ public class SummaryValue implements Cloneable {
         clone.distinctValues = distinctValues != null ? new HashSet<>(distinctValues) : null;
         return clone;
     }
+
+	public String getPrecision() {
+		return precision;
+	}
+
+	public void setPrecision(String precision) {
+		this.precision = precision;
+	}
+
+	public String getPrecisionOption() {
+		return precisionOption;
+	}
+
+	public void setPrecisionOption(String precisionOption) {
+		this.precisionOption = precisionOption;
+	}
 }

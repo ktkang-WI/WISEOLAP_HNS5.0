@@ -1,9 +1,13 @@
 package com.wise.MarketingPlatForm.querygen.querysetting.dbms;
 
-public class TiberoSetting {
+import com.wise.MarketingPlatForm.querygen.querysetting.DBSetting;
+
+public class TiberoSetting implements DBSetting {
 
 	public TiberoSetting(){}
 	public String vbCrLf = "\r\n";
+	
+	@Override
 	public String DsDsViewOrderByRandomClause()
 	{
 		String sOrderBy = "";
@@ -13,11 +17,13 @@ public class TiberoSetting {
 		return sOrderBy;
 	}
 	
+	@Override
 	public String ConvertFileNm(String aFileNm)
 	{
 		return "[" + aFileNm + "]";
 	}
 	
+	@Override
 	public String FilterQuery(String aTblNm, String aCaptionColNm, String aKeyColNm, String aSortType)
 	{
 		String sQuery = "";
@@ -31,6 +37,7 @@ public class TiberoSetting {
 
 	}
 	
+	@Override
 	public String TblAliasNm(String aDimUniNm)
 	{
 		String sAliasNm = "";
@@ -41,6 +48,7 @@ public class TiberoSetting {
 
 	}
 	
+	@Override
 	public String ColumnAliasNm(String aColumnNm)
 	{
 		String sAliasNm = "";
@@ -51,6 +59,7 @@ public class TiberoSetting {
 
 	}
 	
+	@Override
 	public String GetAggregarion(String aAgg)
 	{
 		String sReturn = aAgg;
@@ -62,4 +71,22 @@ public class TiberoSetting {
 		return sReturn;
 
 	}
+
+	@Override
+	public String GetSelectMartTableSystemQuery()
+	{
+		StringBuilder query = new StringBuilder();
+
+		query.append(" ");
+
+		query.append(" SELECT  A.TABLE_NAME AS TABLE_NAME							 ")
+			 .append(" FROM	ALL_TABLES A, ALL_TAB_COMMENTS B 						 ")
+			 .append(" WHERE	A.OWNER = B.OWNER									 ")
+			 .append(" AND     A.TABLE_NAME = B.TABLE_NAME							 ")
+			 .append(" AND     A.TABLE_NAME LIKE 'T_WISE_%'							 ")
+			 .append(" ORDER BY 1													 ");
+	
+		return query.toString();
+	}
+
 }

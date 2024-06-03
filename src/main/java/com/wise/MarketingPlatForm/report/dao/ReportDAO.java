@@ -3,14 +3,13 @@ package com.wise.MarketingPlatForm.report.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
+import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
-import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 
 @Mapper
 public interface ReportDAO {
@@ -30,4 +29,5 @@ public interface ReportDAO {
     public List<FolderMasterVO> selectPublicReportFolderList(String userId);
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
+    public void insertUserUpload(UserUploadMstrEntity userUploadTable);
 }

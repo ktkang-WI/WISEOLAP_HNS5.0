@@ -239,12 +239,15 @@ export default function useItemSetting(
   }, [item.mart, ...fieldDependency]);
 
   const reloadMasterFilter = () => {
-    const selectedItem = getSelectedItem();
-    selectedItem.forEach((item) => {
-      if (item.func) {
-        item.func();
-      }
-    });
+    const selectedItem = getSelectedItem() || [];
+
+    if (Array.isArray(selectedItem)) {
+      selectedItem.forEach((item) => {
+        if (item.func) {
+          item.func();
+        }
+      });
+    }
   };
 
   return {

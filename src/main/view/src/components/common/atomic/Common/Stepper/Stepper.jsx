@@ -8,6 +8,7 @@ const theme = getTheme();
 const StyledStepper = styled.div`
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
   background-color: ${theme.color.panelColor};
   padding: 20px;
   border-radius: 8px;
@@ -77,6 +78,7 @@ const StyledButton = styled.button`
 
 const StyledContent = styled.div`
   width: 100%;
+  height: 100%;
   margin-top: 35px;
   display: flex;
   justify-content: center;

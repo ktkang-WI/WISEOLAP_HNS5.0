@@ -7,8 +7,13 @@ import useLayout from 'hooks/useLayout';
 import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import wordCloudImg from 'assets/image/icon/item/wordcloud.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
+import calendarImg
+  from '../../../../../../assets/image/icon/item/calendar_view.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
+import textBoxImg
+  from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
@@ -33,9 +38,12 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
+    CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
-    NETWORK_CHART
+    NETWORK_CHART,
+    WORDCLOUD,
+    TEXT_BOX
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -64,6 +72,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.wordCloud,
+          type: WORDCLOUD,
+          checked: false,
+          src: wordCloudImg
+        }
       ]
     },
     {
@@ -80,6 +94,12 @@ const CustomChartDefaulElement = () => {
           type: CHORD_DIAGRAM,
           checked: false,
           src: chordImg
+        },
+        {
+          title: localizedString.calendar,
+          type: CALENDAR,
+          checked: false,
+          src: calendarImg
         },
         {
           title: localizedString.arcDiagram,
@@ -161,6 +181,12 @@ const CustomChartDefaulElement = () => {
           type: CHOROPLETH,
           checked: false,
           src: choroplethImg
+        },
+        {
+          title: localizedString.textBox,
+          type: TEXT_BOX,
+          checked: false,
+          src: textBoxImg
         }
       ]
     }

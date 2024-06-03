@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.report.domain.item.pivot.util;
+// package com.wise.MarketingPlatForm.report.domain.item.pivot.util;
 
 // import java.math.BigDecimal;
 // import java.util.ArrayList;
@@ -25,10 +25,10 @@ package com.wise.MarketingPlatForm.report.domain.item.pivot.util;
 // import net.sf.json.JSONArray;
 // import net.sf.json.JSONObject;
 
-/*
- 피벗그리드용 다운로드 Util Class 
- */
-public final class PivotGridDownloadUtils {
+// /*
+//  피벗그리드용 다운로드 Util Class 
+//  */
+// public final class PivotGridDownloadUtils {
 	
 // 	/*
 // 	  피벗그리드용 sql like Excel Download
@@ -271,12 +271,9 @@ public final class PivotGridDownloadUtils {
 // 		for (CTPivotField ctPivotField : pivotTable.getCTPivotTableDefinition().getPivotFields().getPivotFieldList()) {
 // 			ctPivotField.setAutoShow(false);
 // 			ctPivotField.setOutline(false);
-// //					ctPivotField.setSumSubtotal(false);
-// //					ctPivotField.setProductSubtotal(false);
-// //					ctPivotField.setDefaultSubtotal(false);
-// //					ctPivotField.setSubtotalTop(false);
+
 // 		}
 		
 // 		wb.setSheetHidden(wb.getNumberOfSheets() - 1, true);
 // 	}
-}
+// }

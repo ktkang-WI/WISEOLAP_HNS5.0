@@ -58,6 +58,10 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
+    case ItemType.TEXT_BOX:
+    {
+      break;
+    }
     default: {
       dataFieldFormat.push(DataFieldType.MEASURE);
       dataFieldFormat.push(DataFieldType.DIMENSION);
