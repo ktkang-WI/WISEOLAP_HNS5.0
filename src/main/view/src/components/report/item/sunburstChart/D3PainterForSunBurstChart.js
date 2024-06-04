@@ -122,8 +122,8 @@ init.paint.drawing = (svg) => {
       .append('tspan')
       .attr('x', 0)
       .attr('y', 0)
-      .attr('dy', '1.5em')
-      .text('of visits begin with this sequence');
+      .attr('dy', '1.5em');
+  // .text('of visits begin with this sequence');
 
   svg
       .attr('viewBox', [-option.cx, -option.cy, option.width, option.height])
@@ -171,12 +171,13 @@ init.paint.drawing = (svg) => {
         path.attr('fill-opacity', (node) =>
           sequence.indexOf(node) >= 0 ? 1.0 : 0.3
         );
-        const percentage = ((100 * d.value) / root.value).toPrecision(3);
+        const value =
+          d.data.name + ':' + ((100 * d.value) / root.value).toPrecision(3);
         label
             .style('visibility', null)
             .select('.percentage')
-            .text(percentage + '%');
-        element.value = {sequence, percentage};
+            .text(value + '%');
+        element.value = {sequence, value};
         element.dispatchEvent(new CustomEvent('input'));
       });
 };

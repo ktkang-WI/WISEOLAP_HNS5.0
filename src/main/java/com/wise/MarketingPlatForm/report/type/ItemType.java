@@ -26,8 +26,6 @@ public enum ItemType {
     COORDINATE_LINE("coordinateLine"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
-    NETWORK_CHART("networkChart"),
-    HIERARCHICAL_CHART("hierarchicalChart"),
     SUNBURST_CHART("sunburstChart")
     ;
     
