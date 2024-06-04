@@ -32,6 +32,8 @@ import {
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import {useRef} from 'react';
 // import styled from 'styled-components';
 
 
@@ -50,6 +52,10 @@ const HeaderDefaultElement = () => {
   const currentParameter = useSelector(selectCurrentInformationas);
   const currentReport = useSelector(selectCurrentReport);
   const dataSource = _.cloneDeep(currentReport.options);
+
+  // 보고서 검색 textBox Reference
+  const textBoxRef = useRef(null);
+
   const filterdLayoutItem = () => {
     if (!rootItem.adHocOption) return currentItem;
 
@@ -64,6 +70,15 @@ const HeaderDefaultElement = () => {
     return items;
   };
 
+  const handleSearch = () => {
+    const searchValue = textBoxRef?.current?.instance?.option('value');
+    if (searchValue.length > 0) {
+      openModal(LoadReportModal, {
+        'searchValue': searchValue,
+        'searchEnabled': false
+      });
+    }
+  };
 
   return {
     'Logo': {
@@ -116,6 +131,24 @@ const HeaderDefaultElement = () => {
         dispatch(setEditMode(EditMode.VIEWER));
         reload(initialDisplay);
       }
+    },
+    'ReportSearch': {
+      'id': 'report_search',
+      'ref': textBoxRef,
+      'type': 'TextBox',
+      'button': {
+        name: 'reportSearch',
+        location: 'after',
+        options: {
+          visible: true,
+          stylingMode: 'text',
+          icon: 'search',
+          type: 'default',
+          disabled: false,
+          onClick: handleSearch
+        }
+      },
+      'onEnterKey': handleSearch
     },
     'ShowQuery': {
       'id': 'show_query',

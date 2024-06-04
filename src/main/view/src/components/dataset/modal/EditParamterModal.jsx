@@ -217,6 +217,7 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
           />
         </ModalPanel>
         <ScrollableColumnWrapper
+          className='custom-scrollbar'
           width={'calc(100% - ' + PARAM_LIST_WIDTH + ')'}>
           <RowWrapper height={INFO_HEIGHT}>
             <ModalPanel

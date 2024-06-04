@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.account.dto.group.GroupDataPutDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataPutDTO;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.user.UserDataService;

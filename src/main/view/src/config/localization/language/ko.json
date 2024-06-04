@@ -652,4 +652,5 @@
   "chartVisibility": "차트 표시 여부",
   "summaryType": "합계유형",
   "editReportName": "보고서명 편집"
+  "reportDescription": "보고서 설명"
 }
