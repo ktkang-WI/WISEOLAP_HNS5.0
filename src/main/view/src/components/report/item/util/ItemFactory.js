@@ -38,7 +38,10 @@ const makeItem = (orgItem, countMap) => {
     sunburstChart: '선버스트',
     zoomableCicle: '계층형 네모차트',
     ciclePacking: '버블팩',
-    scatterPlot: '산점도'
+    scatterPlot: '산점도',
+    comboBox: '콤보상자',
+    listBox: '목록상자',
+    treeView: '트리보기'
   };
 
   let initNum = 1;

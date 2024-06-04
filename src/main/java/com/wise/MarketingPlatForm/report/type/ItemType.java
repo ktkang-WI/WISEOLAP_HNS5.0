@@ -29,7 +29,10 @@ public enum ItemType {
     ZOOMABLE_CICLE("zoomableCicle"),
     CICLE_PACKING("ciclePacking"),
     SCATTER_PLOT("scatterPlot"),
-    SUNBURST_CHART("sunburstChart")
+    SUNBURST_CHART("sunburstChart"),
+    COMBO_BOX("comboBox"),
+    LIST_BOX("listBox"),
+    TREE_VIEW("treeView")
     ;
     
     private final String symbol;

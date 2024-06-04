@@ -21,5 +21,8 @@ export default {
   SUNBURST_CHART: 'sunburstChart',
   ZOOMABLE_CICLE: 'zoomableCicle',
   CICLE_PACKING: 'ciclePacking',
-  SCATTER_PLOT: 'scatterPlot'
+  SCATTER_PLOT: 'scatterPlot',
+  COMBO_BOX: 'comboBox',
+  LIST_BOX: 'listBox',
+  TREE_VIEW: 'treeView'
 };

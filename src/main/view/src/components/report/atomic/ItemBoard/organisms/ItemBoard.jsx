@@ -54,6 +54,9 @@ import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
 import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
+import ComboBox from 'components/report/item/comboBox/ComboBox';
+import ListBox from 'components/report/item/listBox/ListBox';
+import TreeView from 'components/report/item/treeView/TreeView';
 
 const theme = getTheme();
 
@@ -138,7 +141,10 @@ const ItemBoard = () => {
     sunburstChart: SunBurstChart,
     zoomableCicle: ZoomableCicle,
     ciclePacking: CiclePacking,
-    scatterPlot: ScatterPlot
+    scatterPlot: ScatterPlot,
+    comboBox: ComboBox,
+    listBox: ListBox,
+    treeView: TreeView
   };
 
   const itemExportsPicker = (id) => {

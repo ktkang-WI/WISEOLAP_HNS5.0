@@ -10,9 +10,11 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CirclePackingDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ComboBoxMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ListBoxMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
@@ -20,9 +22,12 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ScatterPlotMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeViewMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ZoomableIcicleDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
+
+import javafx.scene.control.ComboBox;
 
 public class ItemDataMakerFactory {
     public ItemDataMaker getItemDataMaker(ItemType itemType) {
@@ -89,6 +94,15 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.CICLE_PACKING) {
             return new CirclePackingDataMaker();
+        }
+        if (itemType == ItemType.COMBO_BOX) {
+            return new ComboBoxMaker();
+        }
+        if (itemType == ItemType.LIST_BOX) {
+            return new ListBoxMaker();
+        }
+        if (itemType == ItemType.TREE_VIEW) {
+            return new TreeViewMaker();
         }
 
         throw new IllegalArgumentException();
