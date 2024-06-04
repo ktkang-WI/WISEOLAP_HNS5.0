@@ -58,7 +58,7 @@ const UserInfoPopover = () => {
           height={'32px'}
           type='onlyImageText'
           onClick={() => {
-            nav('myPage');
+            nav('/editds/myPage/user-info');
           }}
         >
           <StyledImg src={mypage}/>

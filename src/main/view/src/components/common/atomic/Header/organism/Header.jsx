@@ -54,7 +54,7 @@ const Header = ({left, middle, right}) => {
 
   const getHeaderItem = (item) => {
     const useInfoBtn =
-      item.id == 'user_info' && <UserInfoButtonUI name={item.label}/>;
+      item.id == 'user_info_popover' && <UserInfoButtonUI name={item.label}/>;
 
     if (item.type === 'AnimatedImageButton') {
       return (
@@ -109,7 +109,9 @@ const Header = ({left, middle, right}) => {
         >
           <ReportTitleText
             font={theme.font.reportTitleForDesigner}
-          >{report.options.reportNm}</ReportTitleText>
+          >
+            {item.id === 'myPage' ? item.name : report.options.reportNm}
+          </ReportTitleText>
         </HeaderPanel>
       );
     } else if (item.type === 'ReportTabs') {
@@ -180,6 +182,9 @@ const Header = ({left, middle, right}) => {
     }
 
     return itemArr.map((item, i) => {
+      if (item['myPage']) {
+        return getHeaderItem(item['myPage']);
+      }
       if (typeof item === 'string') {
         return getHeaderItem({
           ...headerDefaultItems[item],
