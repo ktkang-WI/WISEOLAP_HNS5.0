@@ -12,6 +12,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.CirclePackingData
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.FunnelMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
@@ -89,6 +90,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.CICLE_PACKING) {
             return new CirclePackingDataMaker();
+        }
+        if (itemType == ItemType.FUNNEL_CHART) {
+            return new FunnelMaker();
         }
 
         throw new IllegalArgumentException();
