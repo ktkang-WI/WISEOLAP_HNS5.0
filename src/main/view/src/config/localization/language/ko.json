@@ -356,6 +356,7 @@
   "ciclePacking": "버블팩",
   "neuralNetworkTree": "신경망 트리",
   "radialNeuralNetwork": "방사형신경망",
+  "funnel": "깔때기 차트",
   "timeline": "타임라인",
   "planeCoordinateLine": "평면좌표라인",
   "planeCoordinatePoint": "평면좌표점",

@@ -29,7 +29,8 @@ public enum ItemType {
     ZOOMABLE_CICLE("zoomableCicle"),
     CICLE_PACKING("ciclePacking"),
     SCATTER_PLOT("scatterPlot"),
-    SUNBURST_CHART("sunburstChart")
+    SUNBURST_CHART("sunburstChart"),
+    FUNNEL_CHART("funnelChart")
     ;
     
     private final String symbol;
