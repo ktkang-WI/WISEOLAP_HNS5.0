@@ -18,5 +18,7 @@ export default {
   COORDINATE_DOT: 'coordinateDot',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
-  SUNBURST_CHART: 'sunburstChart'
+  SUNBURST_CHART: 'sunburstChart',
+  ZOOMABLE_CICLE: 'zoomableCicle',
+  CICLE_PACKING: 'ciclePacking'
 };

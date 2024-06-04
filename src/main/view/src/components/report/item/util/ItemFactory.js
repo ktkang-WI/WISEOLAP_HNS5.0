@@ -35,7 +35,9 @@ const makeItem = (orgItem, countMap) => {
     coordinateDot: '평면좌표 점',
     collapsibleTree: '신경망 트리',
     radialTree: '방사형신경망',
-    sunburstChart: '선버스트'
+    sunburstChart: '선버스트',
+    zoomableCicle: '계층형 네모차트',
+    ciclePacking: '버블팩'
   };
 
   let initNum = 1;

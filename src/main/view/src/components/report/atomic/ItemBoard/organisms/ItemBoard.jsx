@@ -51,6 +51,8 @@ import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
+import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
+import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 
 const theme = getTheme();
 
@@ -132,7 +134,9 @@ const ItemBoard = () => {
     coordinateDot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
-    sunburstChart: SunBurstChart
+    sunburstChart: SunBurstChart,
+    zoomableCicle: ZoomableCicle,
+    ciclePacking: CiclePacking
   };
 
   const itemExportsPicker = (id) => {
