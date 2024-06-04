@@ -25,7 +25,8 @@ public enum ItemType {
     COORDINATE_DOT("coordinateDot"),
     COORDINATE_LINE("coordinateLine"),
     COLLAPSIBLE_TREE("collapsibleTree"),
-    RADIAL_TREE("radialTree")
+    RADIAL_TREE("radialTree"),
+    SUNBURST_CHART("sunburstChart")
     ;
     
     private final String symbol;

@@ -17,5 +17,6 @@ export default {
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
   COLLAPSIBLE_TREE: 'collapsibleTree',
-  RADIAL_TREE: 'radialTree'
+  RADIAL_TREE: 'radialTree',
+  SUNBURST_CHART: 'sunburstChart'
 };

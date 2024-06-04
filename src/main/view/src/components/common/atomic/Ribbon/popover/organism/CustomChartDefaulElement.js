@@ -17,6 +17,7 @@ import textBoxImg
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
+import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -144,6 +145,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.RADIAL_TREE,
           checked: false,
           src: radialTreeImg
+        },
+        {
+          title: localizedString.sunburst,
+          type: ItemType.SUNBURST_CHART,
+          checked: false,
+          src: sunburstChartImg
         }
       ]
     },

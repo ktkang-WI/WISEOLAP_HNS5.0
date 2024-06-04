@@ -46,6 +46,7 @@ import _ from 'lodash';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
+import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
@@ -130,7 +131,8 @@ const ItemBoard = () => {
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree
+    radialTree: RadialTree,
+    sunburstChart: SunBurstChart
   };
 
   const itemExportsPicker = (id) => {

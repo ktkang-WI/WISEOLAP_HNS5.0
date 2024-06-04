@@ -15,6 +15,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDa
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
@@ -73,6 +74,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.WORDCLOUD) {
             return new WordCloudMaker();
+        }
+        if (itemType == ItemType.SUNBURST_CHART) {
+            return new SunburstChartMaker();
         }
 
         throw new IllegalArgumentException();
