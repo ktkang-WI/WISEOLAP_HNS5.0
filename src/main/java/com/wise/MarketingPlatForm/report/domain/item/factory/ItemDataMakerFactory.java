@@ -18,6 +18,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ScatterPlotMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.StarChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
@@ -93,6 +94,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.FUNNEL_CHART) {
             return new FunnelMaker();
+        }
+        if (itemType == ItemType.STAR_CHART) {
+            return new StarChartMaker();
         }
 
         throw new IllegalArgumentException();

@@ -39,7 +39,8 @@ const makeItem = (orgItem, countMap) => {
     funnelChart: '깔때기',
     zoomableCicle: '계층형 네모차트',
     ciclePacking: '버블팩',
-    scatterPlot: '산점도'
+    scatterPlot: '산점도',
+    starChart: '스타차트'
   };
 
   let initNum = 1;

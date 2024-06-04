@@ -22,6 +22,7 @@ import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
 import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -180,6 +181,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.FUNNEL_CHART,
           checked: false,
           src: funnelImg
+        },
+        {
+          title: localizedString.starChart,
+          type: ItemType.STAR_CHART,
+          checked: false,
+          src: starChartImg
         }
       ]
     },
