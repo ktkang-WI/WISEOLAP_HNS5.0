@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import com.wise.MarketingPlatForm.global.util.WINumberUtils;
 abstract public class AbstractDataRow implements DataRow {
 
     private static final Pattern DATE_PATTERN = Pattern.compile("^(\\d+)-(\\d+)-(\\d+).*$");
@@ -107,7 +108,8 @@ abstract public class AbstractDataRow implements DataRow {
     
     @Override
     public boolean isString(final String columnName) {
-    	return !NumberUtils.isCreatable(this.getStringValue(columnName));
+    	final String strValue = this.getStringValue(columnName);
+    	
+    	return !WINumberUtils.isNumber(strValue);
     }
 }
-

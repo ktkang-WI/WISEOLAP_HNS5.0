@@ -26,6 +26,10 @@
       <id>javaxt.com</id>
       <url>https://www.javaxt.com/maven</url>
     </repository>
+    <!-- <repository>
+      <id>nexus-releases</id>
+      <url>http://localhost:8081/repository/maven-releases/</url>
+    </repository> -->
   </repositories>
 
   <dependencies>
@@ -306,6 +310,14 @@
       <artifactId>json</artifactId>
       <version>20231013</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.9</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -325,7 +337,7 @@
         <version>1.12.1</version>
         <configuration>
           <workingDirectory>src/main/view</workingDirectory>
-          <installDirectory>target</installDirectory>
+          <installDirectory>src/main/view</installDirectory>
         </configuration>
         <executions>
           <execution>

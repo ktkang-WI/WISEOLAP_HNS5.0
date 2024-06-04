@@ -6,15 +6,17 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import CusTomFileUploader from '../../userGroupManagement/common/FileUploader';
 import {useContext} from 'react';
 import {ConfigureContext} from '../ConfigurationSetting';
+import localizedString from 'config/localization';
 
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
   const [general] = getContext.state.general;
-
+  const ref = getContext.state.ref;
   const nameEditorOptions = {disabled: false};
 
   return (
     <Form
+      ref={ref}
       formData={general}>
       <GroupItem colCount={1} caption='라이센스 정보'>
         <Item
@@ -64,6 +66,21 @@ const GeneralConfigure = () => {
             </Wrapper>
           </Wrapper>
         </Item>
+      </GroupItem>
+      <GroupItem colCount={1} caption='초기화면'>
+        <Item
+          dataField="WI_DEFAULT_PAGE"
+          editorType='dxSelectBox'
+          editorOptions={{
+            items: localizedString.initPages,
+            displayExpr: 'caption',
+            valueExpr: 'name',
+            value: general.menuConfig.Menu.WI_DEFAULT_PAGE,
+            onValueChanged: (e) => {
+              general.menuConfig.Menu.WI_DEFAULT_PAGE = e.value;
+            }
+          }}
+        ></Item>
       </GroupItem>
     </Form>
   );

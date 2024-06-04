@@ -8,6 +8,7 @@ import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
 import colRowSwitchImg from 'assets/image/icon/button/col_row_switch.png';
 import showGridImg from 'assets/image/icon/button/show_grid.png';
 import filterImg from 'assets/image/icon/report/filter.png';
+import paging from 'assets/image/icon/button/ico_layout.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -23,6 +24,11 @@ import useModal from 'hooks/useModal';
 import ShowDataModal
   from 'components/common/atomic/Modal/organisms/ShowDataModal';
 import store from 'redux/modules';
+import useQueryExecute from 'hooks/useQueryExecute';
+import PagingOptionModal from './modal/organism/PagingOptionModal';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import {selectRootParameter} from 'redux/selector/ParameterSelector';
+import {getItemData} from 'models/report/Item';
 
 const useCustomEvent = () => {
   const dispatch = useDispatch();
@@ -30,8 +36,12 @@ const useCustomEvent = () => {
   const reportId = useSelector(selectCurrentReportId);
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
+  const {generateParameter, generateAdHocParamter} = useQueryExecute();
   const {updateItem} = ItemSlice.actions;
-  const {commonPopoverButtonElement} = itemOptionManager();
+  const {
+    commonPopoverButtonElement,
+    commonRibbonBtnElement
+  } = itemOptionManager();
   let formItems = {};
 
   // Ribbon 영역 CustomEvent
@@ -74,6 +84,19 @@ const useCustomEvent = () => {
     </>;
   };
 
+  const getModal = (key, params, Component) => {
+    return openModal(Component,
+        {
+          ...params,
+          onSubmit: (returnedOptions) => {
+            const item =
+            ribbonEvent[key](returnedOptions);
+            dispatch(updateItem({reportId, item}));
+          }
+        }
+    );
+  };
+
   // ribbon Element 객체
   const ribbonConfig = {
     'InitState': {
@@ -112,6 +135,15 @@ const useCustomEvent = () => {
         return getRadioPopover('layout', selectedItem.meta.layout);
       }
     },
+    'AutoSize': {
+      ...commonPopoverButtonElement,
+      'id': 'autoSize',
+      'label': localizedString.autoSize,
+      'imgSrc': layoutImg,
+      'renderContent': () => {
+        return getCheckBoxPopover('autoSize');
+      }
+    },
     'RowTotalPosition': {
       ...commonPopoverButtonElement,
       'id': 'row_total_position',
@@ -130,6 +162,16 @@ const useCustomEvent = () => {
       'renderContent': () => {
         return getRadioPopover('columnTotalPosition',
             selectedItem.meta.positionOption.column.position);
+      }
+    },
+    'Paging': {
+      ...commonRibbonBtnElement,
+      'id': 'input_paging',
+      'label': localizedString.paging,
+      'imgSrc': paging,
+      'onClick': () => {
+        return getModal('paging',
+            {options: selectedItem.meta.pagingOption}, PagingOptionModal);
       }
     },
     'DataPosition': {
@@ -217,6 +259,25 @@ const useCustomEvent = () => {
     'layout': (e) => {
       return setMeta(selectedItem, 'layout', e.value);
     },
+    'autoSize': (id, e) => {
+      return setMeta(selectedItem, id, e.value);
+    },
+    'paging': (e) => {
+      const item = setMeta(selectedItem, 'pagingOption', e.paging);
+      const newItem = {
+        ...item,
+        mart: {
+          ...item.mart,
+          paging: {
+            ...item.mart.paging,
+            size: e.paging.pagination.pagingRange,
+            page: e.paging.pagination.index
+          }
+        }
+      };
+
+      return newItem;
+    },
     'columnTotalPosition': (e) => {
       return editPositionOption('columnTotalPosition', 'position', e.value);
     },
@@ -238,11 +299,26 @@ const useCustomEvent = () => {
   const tabButtonConfig = {
     'ColRowSwitch': {
       title: localizedString.colRowSwitch,
-      onClick: (id) => {
+      onClick: async (id) => {
         const item = _.cloneDeep(items.find((i) => id == i.id));
         const rootItem = selectRootItem(store.getState());
         item.meta.colRowSwitch = !item.meta.colRowSwitch;
-        Utility.generateItem(item, rootItem);
+
+        const datasets = selectCurrentDatasets(store.getState());
+        const parameters = selectRootParameter(store.getState());
+        let param = {};
+        if (item.meta.dataField) {
+          param = await generateParameter(
+              item, datasets, parameters, item.mart.filter);
+          Utility.generateParameter(item, param);
+        } else {
+          param = await generateAdHocParamter(
+              rootItem, datasets, parameters);
+
+          Utility.generateParameter(item, param, rootItem);
+        }
+
+        Utility.generateItem(item, param, rootItem);
 
         dispatch(updateItem({reportId, item}));
       },
@@ -250,7 +326,7 @@ const useCustomEvent = () => {
     },
     'ShowGrid': {
       title: localizedString.showGrid,
-      onClick: (id) => {
+      onClick: async (id) => {
         const item = items.find((i) => id == i.id);
         const columns = [];
         const rootItem = selectRootItem(store.getState());
@@ -263,12 +339,27 @@ const useCustomEvent = () => {
           caption: mea.caption
         })));
 
-        // TODO: 피벗 matrix 적용시 재조회하는 방식으로 바꿔야 함.
-        openModal(ShowDataModal, {
-          modalTitle: localizedString.showGrid + ' - ' + item.meta.name,
-          data: item.mart.data.data,
-          columns: columns
-        });
+        // remoteOpertion일 경우에만 적용
+        const datasets = selectCurrentDatasets(store.getState());
+        const parameters = selectRootParameter(store.getState());
+        const param = await generateParameter(
+            item, datasets, parameters, item.mart.filter);
+        Utility.generateParameter(item, param);
+        param.sortInfo = undefined;
+        param.itemType = 'grid';
+
+        const res = await getItemData(param);
+
+        if (res.status == 200) {
+          // TODO: 피벗 matrix 적용시 재조회하는 방식으로 바꿔야 함.
+          openModal(ShowDataModal, {
+            modalTitle: localizedString.showGrid + ' - ' + item.meta.name,
+            data: res.data.data,
+            columns: columns
+          });
+        } else {
+          alert('그리드 조회에 실패하였습니다.');
+        }
       },
       icon: <img width={'17px'} src={showGridImg}></img>
     }

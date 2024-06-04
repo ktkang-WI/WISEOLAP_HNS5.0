@@ -13,6 +13,8 @@ import ReportTitleText from '../../ReportTitleTab/atom/ReportTitleText';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
+import UserInfoButtonUI from '../atom/UserInfoButtonUI';
+import {TextBox} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -52,6 +54,9 @@ const Header = ({left, middle, right}) => {
   const report = useSelector(selectCurrentReport);
 
   const getHeaderItem = (item) => {
+    const useInfoBtn =
+      item.id === 'user_info' && <UserInfoButtonUI name={item.label}/>;
+
     if (item.type === 'AnimatedImageButton') {
       return (
         <HeaderPanel
@@ -105,6 +110,7 @@ const Header = ({left, middle, right}) => {
         >
           <ReportTitleText
             font={theme.font.reportTitleForDesigner}
+            onClick={item.onClick}
           >{report.options.reportNm}</ReportTitleText>
         </HeaderPanel>
       );
@@ -114,6 +120,7 @@ const Header = ({left, middle, right}) => {
           width={item.width}
           height={theme.size.headerHeight}
           itemAlignment='flex-start'
+          verticalAlignment='end'
           key={item.id}
           position={item.position}
         >
@@ -144,16 +151,39 @@ const Header = ({left, middle, right}) => {
           width={'auto'}
           position={item.position}>
           <CommonButton
+            id={item.id}
             title={item.label}
             type={item.buttonType}
             width={item.width}
             height={'32px'}
             onClick={item.onClick}
+            usePopover={item.usePopover}
+            popoverProps={item.popoverProps}
+            contentRender={item.contentRender}
           >
             {item.icon && <img src={item.icon}/>}
-            {' '}
-            {item.label}
+            {useInfoBtn ? useInfoBtn : ' ' + item.label}
           </CommonButton>
+        </HeaderPanel>
+      );
+    } else if (item.type === 'TextBox') {
+      return (
+        <HeaderPanel
+          breakLine={item.index !== item.length - 1}
+          key={item.id}
+          width={'auto'}
+          position={item.position}>
+          <TextBox
+            height={'32px'}
+            readOnly={false}
+            buttons={[item.button]}
+            ref={item.ref}
+            elementAttr={{
+              id: item.id
+            }}
+            onEnterKey={item.onEnterKey}
+          >
+          </TextBox>
         </HeaderPanel>
       );
     } else {

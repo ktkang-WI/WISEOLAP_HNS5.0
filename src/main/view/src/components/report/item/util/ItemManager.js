@@ -21,10 +21,11 @@ const generateMeta = (item) => {
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} param 아이템 조회 파라미터
  * @param {*} rootItem rootItem
  */
-const generateItem = (item, rootItem) => {
-  utility[item.type].generateItem(item, rootItem);
+const generateItem = (item, param, rootItem) => {
+  utility[item.type].generateItem(item, param, rootItem);
 };
 
 /**
@@ -47,6 +48,7 @@ const generateDataFieldOption = (item) => {
   Object.keys(dataFieldOptionChild).forEach((type) =>
     Object.assign(dataFieldOptions, makeDataFieldOptionChild(type)));
 
+  if (item.type === ItemType.TEXT_BOX) return dataFieldOptions;
   // 정렬 기준 항목
   Object.assign(dataFieldOptions, {
     [DataFieldType.SORT_BY_ITEM]: dataFieldSortByItem

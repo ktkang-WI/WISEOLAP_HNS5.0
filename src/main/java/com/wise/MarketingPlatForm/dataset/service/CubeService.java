@@ -143,7 +143,6 @@ public class CubeService {
                     .build());
         }
 
-        // TODO: 상세데이터 정보 추가해야함.
         cubeInfo.setFields(fields);
         cubeInfo.setDetailedData(detailedData);
 

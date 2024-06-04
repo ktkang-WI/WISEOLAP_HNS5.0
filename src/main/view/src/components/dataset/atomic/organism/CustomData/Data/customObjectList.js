@@ -1,5 +1,5 @@
 export const typeData = [
-  {id: 'decimal', text: 'DECIMAL'}
+  {id: 'numeric', text: 'NUMERIC'}
 ];
 export const dataSource = [
   {

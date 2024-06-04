@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   height: ${(props) => props.height};
   display: flex;
   justify-content: ${(props) => props.item_alignment};
-  align-items: center;
+  align-items: ${(props) => props.vertical_alignment};
   flex-direction: row;
 `;
 
@@ -40,6 +40,7 @@ const HeaderPanel = ({
   itemAlignment='center',
   position='left',
   cursor='default',
+  verticalAlignment='center',
   onClick=() => {}
 }) => {
   return (
@@ -50,7 +51,10 @@ const HeaderPanel = ({
       onClick={onClick}
       cursor={cursor}
     >
-      <Wrapper height={height} item_alignment={itemAlignment}>
+      <Wrapper
+        height={height}
+        item_alignment={itemAlignment}
+        vertical_alignment={verticalAlignment}>
         {children}
       </Wrapper>
       {breakLine && (<BreakLine/>)}

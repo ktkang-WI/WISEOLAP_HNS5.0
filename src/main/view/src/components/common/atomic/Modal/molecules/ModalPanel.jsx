@@ -14,8 +14,9 @@ const Content = styled.div`
   width: 100%;
   padding-top: 10px;
   box-sizing: border-box;
-  overflow-x: clip;
-  text-wrap: nowrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-y: auto;
 `;
 
 
@@ -34,7 +35,7 @@ const ModalPanel = ({
         buttons={headerButtons}
         checkBoxs={headerCheckBoxs}
       >{title}</ModalPanelTitle>
-      <Content>
+      <Content className='custom-scrollbar'>
         {children}
       </Content>
     </StyledWrapper>

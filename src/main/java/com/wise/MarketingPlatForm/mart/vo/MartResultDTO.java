@@ -13,6 +13,7 @@ import lombok.Setter;
 public class MartResultDTO {
 	List<MetaDTO> metaData;
 	List<Map<String, Object>> rowData;
+	String query;
 
 	public List<Map<String, Object>> deepCloneList(List<Map<String, Object>> rowData) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

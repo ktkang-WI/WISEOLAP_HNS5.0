@@ -37,7 +37,7 @@ const dataGridOptionConfig = {
     column: true,
     stripes: false
   },
-  cellMerging: true,
+  cellMerging: false,
   columnHeader: true,
   paging: {
     autoPaging: {
@@ -45,13 +45,13 @@ const dataGridOptionConfig = {
       time: 5
     },
     pagination: {
-      isOk: false,
+      isOk: true,
       content: '',
       pagingRange: 20,
       index: 1
     },
     pageUsageOfPageCount: {
-      isOk: false,
+      isOk: true,
       pageSizes: [10, 20, 50]
     }
   },
@@ -68,8 +68,10 @@ const generateMeta = (item) => {
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} param 아이템 조회 파라미터
+ * @param {*} rootItem rootItem
  */
-const generateItem = (item) => {
+const generateItem = (item, param, rootItem) => {
   const columnsConfig = {
     allowEditing: false
   };

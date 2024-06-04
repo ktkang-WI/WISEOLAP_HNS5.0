@@ -7,6 +7,7 @@ import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 
 @Mapper
@@ -34,4 +35,7 @@ public interface DatasetDAO {
   public boolean updateDs(DsMstrEntity dsMstrEntity);
   
   public boolean createDs(DsMstrEntity dsMstrEntity);
+  
+  public List<UserUploadMstrEntity> selectUserUploadTables(int dsId);
+
 }

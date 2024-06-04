@@ -35,7 +35,7 @@ const TopBtns = () => {
     setCustomData((prev) => {
       return {
         ...prev,
-        type: 'decimal'
+        type: 'numeric'
       };
     });
   }, []);
@@ -107,7 +107,7 @@ const TopBtns = () => {
           dataSource={typeData}
           valueExpr="id"
           displayExpr="text"
-          value={'decimal'}
+          value={'numeric'}
           onValueChanged={handleSelectBox}
         />
       </Wrapper>

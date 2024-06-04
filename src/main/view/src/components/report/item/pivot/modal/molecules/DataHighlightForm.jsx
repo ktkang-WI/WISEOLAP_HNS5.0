@@ -1,16 +1,16 @@
 import {Form, Template} from 'devextreme-react';
 import {Item, Label} from 'devextreme-react/form';
 import localizedString from '../../../../../../config/localization';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import EmojiArr from './EmojiArr';
 import _ from 'lodash';
+import useModal from 'hooks/useModal';
+import {highlightFormContext} from '../organism/DataHighLightModal';
 
-const DataHighlightForm = (
-    {formData, measureNames, showField, setShowField,
-      highlightList, setHighlightList}, ref) => {
+const DataHighlightForm = () => {
   // 선택한 아이콘 보여줌.
   const [selectedIcon, setSelectedIcon] = useState('');
-
+  const {alert} = useModal();
   const emojiSelectBox = (src) => {
     if (src !== '') {
       return (
@@ -26,11 +26,16 @@ const DataHighlightForm = (
     );
   };
 
-  const validationRules = {
-    validation: [
-      {type: 'required'}
-    ]
-  };
+  const {
+    formData,
+    measureNames,
+    showField,
+    setShowField,
+    highlightList,
+    setHighlightList,
+    setData,
+    ref
+  } = useContext(highlightFormContext);
 
   return (
     <Form
@@ -40,15 +45,46 @@ const DataHighlightForm = (
         if (e.dataField === 'condition' && e.value === 'Between') {
           setShowField(true);
         } else if (e.dataField === 'condition' && e.value !== 'Between') {
+          delete formData.valueTo;
           setShowField(false);
         }
 
         // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
         const copyHighlight = _.cloneDeep(highlightList);
 
+        const findIdx = copyHighlight.findIndex(
+            (data) => (data.dataItem === formData.dataItem &&
+            data.condition === formData.condition)
+        );
+        // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
+        let isOtherChange = true;
+        if (findIdx != -1) {
+          const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
+          if (dataFieldList.includes(e.dataField)) {
+            if (copyHighlight[findIdx][e.dataField] == e.value) {
+              isOtherChange = false;
+            }
+          }
+        }
+
         if (formData.rowIdx != undefined && formData.status == 'update') {
-          copyHighlight[formData.rowIdx] = formData;
-          setHighlightList(copyHighlight);
+          if (formData.valueTo && formData.valueFrom) {
+            if (Number(formData.valueFrom) > Number(formData.valueTo)) {
+              alert(localizedString.highlightBetweenValueCompareMsg);
+            }
+          }
+          if (isOtherChange) {
+            copyHighlight[formData.rowIdx] = formData;
+            setHighlightList(copyHighlight);
+          } else {
+            alert(localizedString.highlightDupleCheck2);
+            setData({
+              applyCell: true,
+              applyTotal: true,
+              applyGrandTotal: true,
+              status: 'new'
+            });
+          }
         }
       }}
     >
@@ -58,9 +94,9 @@ const DataHighlightForm = (
         editorType='dxSelectBox'
         editorOptions={{
           items: measureNames
-        }}
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.dataItem}: </Label>
+        }}>
+        <Label>{localizedString.dataItem}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='condition'
@@ -68,9 +104,9 @@ const DataHighlightForm = (
         editorType='dxSelectBox'
         editorOptions={{
           items: ['=', '<>', '>', '>=', '<', '<=', 'Between']
-        }}
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.conditionType}: </Label>
+        }}>
+        <Label>{localizedString.conditionType}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
         name='backgroundColor'
@@ -87,16 +123,16 @@ const DataHighlightForm = (
       <Item
         name='valueFrom'
         dataField='valueFrom'
-        editorType='dxTextBox'
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.valueFrom}: </Label>
+        editorType='dxTextBox'>
+        <Label>{localizedString.valueFrom}
+          <span className='requireRule'> *</span>: </Label>
       </Item>
       {showField && <Item // show in Between.
         name='valueTo'
         dataField='valueTo'
-        editorType='dxTextBox'
-        validationRules={validationRules.validation}>
-        <Label>{localizedString.valueTo}: </Label>
+        editorType='dxTextBox'>
+        <Label>{localizedString.valueTo}
+          <span className='requireRule'> *</span>: </Label>
       </Item>}
       <Item
         name='emojiList'

@@ -62,3 +62,10 @@ export const getAllDatasetDatas = (dsId, query, parameters) => {
     parameter: JSON.stringify(parameter)
   });
 };
+
+export const dbUploadTables = (dsId, search) => {
+  return axios.post(path + '/db-upload-tables', {
+    dsId: dsId,
+    search: search
+  });
+};

@@ -20,4 +20,6 @@ public class GeneralDTO {
   String spreadJsLicense;
   String spreadJsDesignLicense;
   String kakaoMapApiKey;
+  String menuConfig;
+  String adHocLayout;
 }

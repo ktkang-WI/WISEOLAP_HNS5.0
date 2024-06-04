@@ -30,8 +30,14 @@ import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 import {linkReportPopup} from 'components/report/util/ReportUtility';
-import {selectCurrentReport}
+import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
+import Pager from './components/Pager';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {useDispatch} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
+import ReportDescriptionModal
+  from 'components/report/modal/ReportDescriptionModal';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -44,11 +50,14 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const {updateItem} = ItemSlice.actions;
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal, alert} = useModal();
+  const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
+  const reportId = useSelector(selectCurrentReportId);
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
@@ -90,6 +99,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     });
   }, [mart.data.data]);
 
+  useEffect(() => {
+    ref.current.instance.getDataSource().reload();
+  }, [mart.paging]);
+
   // highlight 추가, 변경 시 repaint(컴포넌트를 다시 그려줌)
   useEffect(() => {
     ref.current.instance.repaint();
@@ -122,8 +135,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       const formData = newFormat[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.innerHTML =
-        cellElement.innerHTML.replace(cell.value, formattedValue);
+      cellElement.innerHTML = '<span>' + formattedValue + '</span>';
     }
   };
 
@@ -141,7 +153,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     showTotalsPrior = 'none';
   }
 
-  const fieldCount = mart.dataSourceConfig.fields().reduce((acc, f) => {
+  const fieldCount = mart.dataSourceConfig.fields.reduce((acc, f) => {
     if (f.area == 'column') {
       acc.column++;
     }
@@ -188,128 +200,189 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
   }, []);
 
+  const usePage = meta.pagingOption.pagination.isOk;
+
   return (
-    <DevPivotGrid
-      ref={ref}
-      id={id}
-      width={'100%'}
-      height={'100%'}
-      showBorders={true}
-      dataSource={mart.dataSourceConfig}
-      showColumnTotals={meta.positionOption.column.totalVisible}
-      showRowTotals={meta.positionOption.row.totalVisible}
-      showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
-      showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
-      rowHeaderLayout={meta.layout}
-      dataFieldArea={meta.positionOption.dataPosition}
-      allowFiltering={meta.showFilter}
-      fieldPanel={fieldPanel}
-      showTotalsPrior={showTotalsPrior}
-      wordWrapEnabled={false}
-      onCellPrepared={onCellPrepared}
-      allowSorting={true}
-      allowSortingBySummary={true}
-      onContextMenuPreparing={(e) => {
-        const contextMenu = [];
-        if (!e.cell || e.cell.columnType === undefined ||
-            e.cell.rowType === undefined) {
-          return;
-        }
-        const isGrandTotal =
-          (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
-          e.cell.type == 'GT';
-        let detailedDataMenu = {};
-        // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
-        // 상세데이터 contextMenu 시작
-        // row와 column 모두 총계인 셀은 선택 불가
-        if (detailedData && !isGrandTotal) {
-          // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
-          const regex = /\[([^\[\]]+)\]/;
-          const rowColFilters = [];
-          detailedDataMenu = {
-            'text': localizedString.detailedData
-          };
-          const dims = meta.dataField.column.concat(meta.dataField.row);
-          // 클릭 이벤트 생성
-          detailedDataMenu.items = detailedData.filter((data) => {
-            return meta.dataField.measure.find((mea) => {
-              return data.targetTable == mea.uniqueName.match(regex)[0];
-            });
-          }).map((act) => ({
-            'text': act.actNm,
-            'onItemClick': async () => {
-              // 현재 선택된 row와 col 필터 generate
-              for (let i = 0; i < e.cell.columnPath.length; i++) {
-                const val = e.cell.columnPath[i];
-                const col = e.columnFields[i];
-                const dim = dims.find((d) => d.name == col.dataField);
-                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
-                    dataset.cubeId, dim.uniqueName);
-                const parameter = DetailedDataUtility.getParameterInformation(
-                    '@C_' + dim.name, dataset, cubeInfo, val);
-                rowColFilters.push(parameter);
-              }
-              for (let i = 0; i < e.cell.rowPath.length; i++) {
-                const val = e.cell.rowPath[i];
-                const row = e.rowFields[i];
-                const dim = dims.find((d) => d.name == row.dataField);
-                const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
-                    dataset.cubeId, dim.uniqueName);
-                const parameter = DetailedDataUtility.getParameterInformation(
-                    '@R_' + dim.name, dataset, cubeInfo, val);
-                rowColFilters.push(parameter);
-              }
-              // 보고서에 적용된 필터와 합치기
-              const parameters = selectRootParameter(store.getState());
-              rowColFilters.push(
-                  ...ParamUtils.generateParameterForQueryExecute(parameters));
-              // 상세데이터 조회
-              const param = {
-                dsId: dataset.dsId,
-                cubeId: dataset.cubeId,
-                userId: 'admin',
-                actId: act.actId,
-                parameter: JSON.stringify(rowColFilters)
-              };
-              models.Item.getDetailedData(param).then((res) => {
-                openModal(ShowDataModal, {
-                  modalTitle:
-                    localizedString.detailedData + ' - ' + act.actNm,
-                  data: res.data.rowData
-                });
-              });
+    <Wrapper>
+      <DevPivotGrid
+        ref={ref}
+        id={id}
+        width={meta.autoSize ? '0px' : '100%'}
+        height={usePage ? 'calc(100% - 50px)' : '100%'}
+        elementAttr={meta.autoSize && {
+          width: '0px',
+          style: 'overflow: visible'
+        }}
+        showBorders={true}
+        dataSource={mart.dataSourceConfig}
+        showColumnTotals={meta.positionOption.column.totalVisible}
+        showRowTotals={meta.positionOption.row.totalVisible}
+        showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
+        showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
+        rowHeaderLayout={meta.layout}
+        dataFieldArea={meta.positionOption.dataPosition}
+        allowFiltering={meta.showFilter}
+        fieldPanel={fieldPanel}
+        showTotalsPrior={showTotalsPrior}
+        wordWrapEnabled={false}
+        onCellPrepared={onCellPrepared}
+        allowSorting={true}
+        allowSortingBySummary={true}
+        onContextMenuPreparing={(e) => {
+          const contextMenu = [{
+            text: localizedString.reportDescription,
+            onItemClick: () => {
+              openModal(ReportDescriptionModal);
             }
-          }));
-          if (detailedDataMenu.items.length > 0) {
-            contextMenu.push(detailedDataMenu);
+          }];
+          if (!e.cell || e.cell.columnType === undefined ||
+              e.cell.rowType === undefined) {
+            return;
           }
-        }
-        if (editMode === EditMode.DESIGNER) {
-          const currentReport = selectCurrentReport(store.getState());
-          const subLinkReportMenu = {
-            'text': localizedString.subLinkReportSetting,
-            'onItemClick': () => {
-              if (currentReport.reportId === 0) {
-                alert('보고서를 먼저 저장해주세요.');
-                return;
-              } else {
-                const subLinkDim = linkReportPopup({focusedItem});
-                openModal(
-                    LinkReportModal,
-                    {subYn: true, subLinkDim: subLinkDim}
-                );
+          const isGrandTotal =
+            (e.cell.columnType == 'GT' && e.cell.rowType == 'GT') ||
+            e.cell.type == 'GT';
+          let detailedDataMenu = {};
+          // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
+          // 상세데이터 contextMenu 시작
+          // row와 column 모두 총계인 셀은 선택 불가
+          if (detailedData && !isGrandTotal && meta.dataField) {
+            // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
+            const regex = /\[([^\[\]]+)\]/;
+            const rowColFilters = [];
+            detailedDataMenu = {
+              'text': localizedString.detailedData
+            };
+            const dims = meta.dataField.column.concat(meta.dataField.row);
+            // 클릭 이벤트 생성
+            detailedDataMenu.items = detailedData.filter((data) => {
+              return meta.dataField.measure.find((mea) => {
+                return data.targetTable == mea.uniqueName.match(regex)[0];
+              });
+            }).map((act) => ({
+              'text': act.actNm,
+              'onItemClick': async () => {
+                // 현재 선택된 row와 col 필터 generate
+                for (let i = 0; i < e.cell.columnPath.length; i++) {
+                  const val = e.cell.columnPath[i];
+                  const col = e.columnFields[i];
+                  const dim = dims.find((d) => d.name == col.dataField);
+                  const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                      dataset.cubeId, dim.uniqueName);
+                  const parameter = DetailedDataUtility.getParameterInformation(
+                      '@C_' + dim.name, dataset, cubeInfo, val);
+                  rowColFilters.push(parameter);
+                }
+                for (let i = 0; i < e.cell.rowPath.length; i++) {
+                  const val = e.cell.rowPath[i];
+                  const row = e.rowFields[i];
+                  const dim = dims.find((d) => d.name == row.dataField);
+                  const cubeInfo = await DetailedDataUtility.getCubeColumnInfo(
+                      dataset.cubeId, dim.uniqueName);
+                  const parameter = DetailedDataUtility.getParameterInformation(
+                      '@R_' + dim.name, dataset, cubeInfo, val);
+                  rowColFilters.push(parameter);
+                }
+                // 보고서에 적용된 필터와 합치기
+                const parameters = selectRootParameter(store.getState());
+                rowColFilters.push(
+                    ...ParamUtils.generateParameterForQueryExecute(parameters));
+                // 상세데이터 조회
+                const param = {
+                  dsId: dataset.dsId,
+                  cubeId: dataset.cubeId,
+                  userId: 'admin',
+                  actId: act.actId,
+                  parameter: JSON.stringify(rowColFilters)
+                };
+                models.Item.getDetailedData(param).then((res) => {
+                  openModal(ShowDataModal, {
+                    modalTitle:
+                      localizedString.detailedData + ' - ' + act.actNm,
+                    data: res.data.rowData
+                  });
+                });
               }
+            }));
+            if (detailedDataMenu.items.length > 0) {
+              contextMenu.push(detailedDataMenu);
             }
-          };
-          contextMenu.push(subLinkReportMenu);
-        }
-        // contextMenu 저장(리턴)
-        e.items = contextMenu;
-      }}
-    >
-      <FieldChooser enabled={false}> </FieldChooser>
-      <Scrolling mode='virtual' />
-    </DevPivotGrid>
+          }
+          if (editMode === EditMode.DESIGNER) {
+            const currentReport = selectCurrentReport(store.getState());
+            const subLinkReportMenu = {
+              'text': localizedString.subLinkReportSetting,
+              'onItemClick': () => {
+                if (currentReport.reportId === 0) {
+                  alert('보고서를 먼저 저장해주세요.');
+                  return;
+                } else {
+                  const subLinkDim = linkReportPopup({focusedItem});
+                  openModal(
+                      LinkReportModal,
+                      {subYn: true, subLinkDim: subLinkDim}
+                  );
+                }
+              }
+            };
+            contextMenu.push(subLinkReportMenu);
+          }
+          // contextMenu 저장(리턴)
+          e.items = contextMenu;
+        }}
+      >
+        <FieldChooser enabled={false}> </FieldChooser>
+        <Scrolling mode='virtual' />
+      </DevPivotGrid>
+      {
+        usePage &&
+        <Pager
+          onChagedPage={(page) => {
+            const tempItem = {
+              ...item,
+              mart: {
+                ...item.mart,
+                paging: {
+                  ...(item.mart.paging || {}),
+                  page: page
+                }
+              }
+            };
+
+            dispatch(updateItem({reportId, item: tempItem}));
+          }}
+          onChagedPageSize={(size) => {
+            const {page, dataLength} = item.mart.paging;
+            const paging = {
+              page,
+              size,
+              dataLength
+            };
+            if (dataLength && (page - 1) * size > dataLength) {
+              paging.page = Math.ceil(dataLength / size);
+            }
+            const tempItem = {
+              ...item,
+              mart: {
+                ...item.mart,
+                paging: {
+                  ...paging,
+                  size: size
+                }
+              }
+            };
+
+            dispatch(updateItem({reportId, item: tempItem}));
+          }}
+          page={mart?.paging?.page ||
+              meta.pagingOption.pagination.index}
+          pageSize={mart?.paging?.size ||
+              meta.pagingOption.pagination.pagingRange}
+          dataLength={mart.paging?.dataLength || 1}
+          pagingOption={meta.pagingOption}
+        />
+      }
+    </Wrapper>
   );
 };
 

@@ -9,6 +9,8 @@ import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
+import showQuery from 'assets/image/icon/button/showQuery.png';
+import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -17,15 +19,66 @@ import useReportSave from 'hooks/useReportSave';
 import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
+import ViewQuery from '../modal/ViewQuery';
+import UserInfoPopover from '../popover/UserInfoPopover';
+import ReportSaveModal from 'components/report/modal/ReportSaveModal';
+import {handleDownload} from 'components/report/util/ReportDownload';
+import {
+  selectCurrentItems,
+  selectRootItem
+} from 'redux/selector/ItemSelector';
+import {
+  selectCurrentInformationas
+} from 'redux/selector/ParameterSelector';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import EditReportName from '../modal/EditReportName';
+import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import {useRef} from 'react';
+// import styled from 'styled-components';
 
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {alert} = useModal();
+  const {alert, openModal} = useModal();
   const initialDisplay = useSelector(selectInitialDisplay);
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
+  // TODO: 임시용
+  const test = '관리자';
+
+  const rootItem = useSelector(selectRootItem);
+  const currentItem = useSelector(selectCurrentItems);
+  const currentParameter = useSelector(selectCurrentInformationas);
+  const currentReport = useSelector(selectCurrentReport);
+  const dataSource = _.cloneDeep(currentReport.options);
+
+  // 보고서 검색 textBox Reference
+  const textBoxRef = useRef(null);
+
+  const filterdLayoutItem = () => {
+    if (!rootItem.adHocOption) return currentItem;
+
+    let items = currentItem.filter((item) =>
+      item.type == rootItem.adHocOption.layoutSetting
+    );
+
+    if (items.length === 0) { // 차트 피벗 전부 보기인 경우.
+      items = currentItem;
+    }
+
+    return items;
+  };
+
+  const handleSearch = () => {
+    const searchValue = textBoxRef?.current?.instance?.option('value');
+    if (searchValue.length > 0) {
+      openModal(LoadReportModal, {
+        'searchValue': searchValue,
+        'searchEnabled': false
+      });
+    }
+  };
 
   return {
     'Logo': {
@@ -46,7 +99,10 @@ const HeaderDefaultElement = () => {
     'ReportTab': {
       'id': 'report_tab',
       'type': 'ReportTab',
-      'width': 'auto'
+      'width': 'auto',
+      'onClick': (e) => {
+        openModal(EditReportName);
+      }
     },
     'ReportTabs': {
       'id': 'report_tabs',
@@ -69,15 +125,69 @@ const HeaderDefaultElement = () => {
       'label': localizedString.openViewer,
       'type': 'CommonButton',
       'onClick': (e) => {
-        nav('viewer');
+        // TODO: 추후 환경설정으로 새창 여부 분기처리 해야함
+        // nav('viewer');
+        window.open('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
         reload(initialDisplay);
       }
     },
+    'ReportSearch': {
+      'id': 'report_search',
+      'ref': textBoxRef,
+      'type': 'TextBox',
+      'button': {
+        name: 'reportSearch',
+        location: 'after',
+        options: {
+          visible: true,
+          stylingMode: 'text',
+          icon: 'search',
+          type: 'default',
+          disabled: false,
+          onClick: handleSearch
+        }
+      },
+      'onEnterKey': handleSearch
+    },
     'ShowQuery': {
       'id': 'show_query',
       'label': localizedString.showQuery,
-      'type': 'TextButton'
+      'buttonType': 'onlyImageText',
+      'width': '80px',
+      'icon': showQuery,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ViewQuery);
+      }
+    },
+    'SaveAs': {
+      'id': 'save_as',
+      'label': localizedString.saveAs,
+      'buttonType': 'whiteRound',
+      'width': '140px',
+      'icon': saveAsImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ReportSaveModal);
+      }
+    },
+    'UserInfo': {
+      // 팝오버 속성 설정.
+      'popoverProps': {
+        'width': 'auto',
+        'height': '80',
+        'showEvent': 'click',
+        'position': 'bottom'
+      },
+      'id': 'user_info',
+      'usePopover': true,
+      'label': test, // 임시 적용.
+      'buttonType': 'onlyImageText',
+      'type': 'CommonButton',
+      'contentRender': (e) => {
+        return (<UserInfoPopover/>);
+      }
     },
     'ReportSetting': {
       'id': 'report_setting',
@@ -145,7 +255,12 @@ const HeaderDefaultElement = () => {
       'buttonType': 'whiteRound',
       'width': '115px',
       'icon': openViewerImg,
-      'type': 'CommonButton'
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        const newCurrentItem = filterdLayoutItem();
+
+        handleDownload(newCurrentItem, currentParameter, dataSource);
+      }
     }
   };
 };

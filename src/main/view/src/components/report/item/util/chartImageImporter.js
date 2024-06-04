@@ -16,6 +16,7 @@ import stackedSplineArea from 'assets/image/icon/item/stacked_spline_area.png';
 import fullStackedSplineArea
   from 'assets/image/icon/item/full_stacked_spline_area.png';
 import bubble from 'assets/image/icon/item/bubble.png';
+import wordCloud from 'assets/image/icon/item/wordcloud.png';
 
 export const chartImages = {
   bar: bar,
@@ -34,5 +35,6 @@ export const chartImages = {
   splinearea: splineArea,
   stackedsplinearea: stackedSplineArea,
   fullstackedsplinearea: fullStackedSplineArea,
-  bubble: bubble
+  bubble: bubble,
+  wordcloud: wordCloud
 };

@@ -1,0 +1,67 @@
+사용방법
+TreeList
+
+Tree<타입> treeList = new TreeList<>(); // 생성자 delimiter 변경가능.
+treeList.push(path);
+treeList.setNodeValue(path, value, Type.INCLUDE_PARENT_NODE);
+Type.INCLUDE_PARENT_NODE -> 상단 부모까지 집계를 한다.
+Type.CURRENT_NODE_ONLY -> 최하위 노드만 값을 넣는다.
+
+EX) 
+path 2017.12.31 value 1500
+path 2017.12.21 value 2000
+
+- 2017 -> 3500
+ - 12-> 3500
+  - 31-> 1500
+  - 27-> 2000
+
+treeList.get(path) 
+-> 2017.12 입력시 해당 노드 가져온다. 미입력시 최상위 노드 가져온다.
+
+treeList.toString();
+
+{
+  name: "",
+  value: 3500,
+  childrens: [
+    {
+      name: "2017",
+      value: 3500,
+      childrens: [
+        {
+          name: "12",
+          value: 3500,
+          childrens: [
+            {
+              name: "31",
+              value: 1500,
+              childrens
+            },
+            {
+              name: "27",
+              value: 2000,
+              childrens
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
+treeUtils
+
+treeUtils.orderBy(treeList, OrderType.ASC or OrderType.DESC);
+-> 트리 정렬 
+
+treeUtils.orderBy(treeList, path, OrderType.ASC or OrderType.DESC);
+-> 트리 정렬 path 2017.12 <- 입력시 해당 하위만 정렬
+
+treeUtils.top(Tree<BigDecimal> tree, int topN);
+-> 트리 Top  
+
+treeUtils.top(Tree<BigDecimal> tree, String path, int topN) ;
+-> 트리 Top path 2017.12 <- 입력시 해당 하위만 Top 가져온다.
+

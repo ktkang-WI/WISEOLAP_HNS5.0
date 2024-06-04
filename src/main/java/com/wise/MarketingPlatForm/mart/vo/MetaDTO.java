@@ -10,4 +10,9 @@ public class MetaDTO {
 	String columnLabel;
 	String columnType;
 	String columnTypeName;
+	String uniqueName;
+
+	public void setUniqueName(String tableName) {
+		this.uniqueName = "[" + tableName + "]." + "[" + this.columnName + "]";
+	}
 }
