@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
+import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
@@ -114,7 +115,7 @@ public class ReportService {
     		} else {
     			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
     			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
-                /* TODO: 송봉조 주임 삭제 요청
+                /* TODO: 송봉조 주임 삭제 요청 - 주제영역 불러오기 임시 해제 */
     			if (dataset.get("datasets") != null) {
     				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
@@ -125,7 +126,7 @@ public class ReportService {
     						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}
-    			} */
+    			}
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
