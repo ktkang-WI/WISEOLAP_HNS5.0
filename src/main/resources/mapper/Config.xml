@@ -62,6 +62,22 @@
       <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
     </resultMap>
 
+    <resultMap id="MyPageFolderReportDTO" type="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
+      <result column="ID" property="id" javaType="int"/>
+      <result column="NAME" property="name" javaType="String"/>
+      <result column="FLD_LVL" property="fldLvl" javaType="int"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="ORDINAL" property="ordinal" javaType="int"/>
+      <result column="TYPE" property="type" javaType="String"/>
+      <result column="SUBTITLE" property="subtitle" javaType="String"/>
+      <result column="TAG" property="tag" javaType="String"/>
+      <result column="DESCRIPTION" property="desc" javaType="String"/>
+      <result column="QUERY" property="query" javaType="String"/>
+      <result column="CREATED_DATE" property="createdDate" javaType="String"/>
+      <result column="PROMPT" property="prompt" javaType="String"/>
+      <result column="CREATED_BY" property="createdBy" javaType="String"/>
+    </resultMap>
+
     <select id="selectConfigFolder" resultMap="FldMstr">
 			SELECT
         FLD_ID,
@@ -73,6 +89,118 @@
         FROM PUB_FLD_MSTR
             ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
 		</select>
+
+    <select id="selectMyPageFolderCount" resultType="int">
+      SELECT COUNT(*) FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
+    </select>
+    <!-- 임시 작성 추후 변경가능. -->
+    <select id="selectMyPageFolderReport" resultMap="MyPageFolderReportDTO">
+      SELECT 
+        REPORTANDFOLDER.ID,
+        REPORTANDFOLDER.NAME,
+        REPORTANDFOLDER.FLD_LVL,
+        REPORTANDFOLDER.ORDINAL,
+        REPORTANDFOLDER.FLD_PARENT_ID,
+        REPORTANDFOLDER.TYPE,
+        REPORTANDFOLDER.SUBTITLE,
+        REPORTANDFOLDER.TAG,
+        REPORTANDFOLDER.DESCRIPTION,
+        REPORTANDFOLDER.QUERY,
+        REPORTANDFOLDER.CREATED_DATE,
+	      REPORTANDFOLDER.PROMPT,
+        REPORTANDFOLDER.CREATED_BY
+          FROM
+          (
+          SELECT 
+            FLD_ID AS ID,
+            FLD_NM AS NAME,
+            FLD_LVL,
+            FLD_ORDINAL AS ORDINAL,
+            FLD_PARENT_ID,
+            CAST('FOLDER' AS NVARCHAR2(20)) AS TYPE,
+            NULL AS SUBTITLE,
+            NULL AS TAG,
+            NULL AS DESCRIPTION,
+            NULL AS QUERY,
+            NULL AS PROMPT,
+						NULL AS CREATED_DATE,
+            #{userNm} AS CREATED_BY
+              FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
+          UNION ALL
+          SELECT 
+            REPORT_ID AS ID,
+            REPORT_NM AS NAME,
+            987654321 AS FLD_LVL,
+            REPORT_ORDINAL AS ORDINAL,
+            FLD_ID AS FLD_PARENT_ID,
+            REPORT_TYPE AS TYPE,
+            REPORT_SUB_TITLE AS SUBTITLE,
+            REPORT_TAG AS TAG,
+            REPORT_DESC AS DESCRIPTION,
+            DATASET_QUERY AS QUERY,
+            PROMPT_YN AS PROMPT,
+	          REG_DT AS CREATED_DATE,
+            #{userNm} AS CREATED_BY
+              FROM REPORT_MSTR WHERE FLD_ID IN (
+                    SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
+                  ) AND DEL_YN = 'N'
+        ) REPORTANDFOLDER
+    </select>
+
+    <update id="updateMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
+      UPDATE USER_FLD_MSTR
+          SET 
+            <if test='name != ""'>
+              FLD_NM = #{name, jdbcType=VARCHAR}
+            </if>
+          WHERE FLD_ID = #{id}
+    </update>
+
+    <update id="updateMyReprot" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
+      UPDATE REPORT_MSTR
+          SET 
+            <if test='name != ""'>
+              REPORT_NM = #{name, jdbcType=VARCHAR},
+            </if>
+            <if test='type != ""'>
+              REPORT_TYPE = #{type, jdbcType=VARCHAR},
+            </if>
+            <if test='subtitle != ""'>
+              REPORT_SUB_TITLE = #{subtitle, jdbcType=VARCHAR},
+            </if>
+            <if test='tag != ""'>
+              REPORT_TAG = #{tag, jdbcType=VARCHAR},
+            </if>
+            <if test='type != ""'>
+              REPORT_DESC = #{desc, jdbcType=VARCHAR},
+            </if>
+            <if test='prompt != ""'>
+              PROMPT_YN = #{prompt, jdbcType=VARCHAR}
+            </if>
+          WHERE REPORT_ID = #{id}
+    </update>
+
+    <insert id="createMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
+        INSERT INTO
+        USER_FLD_MSTR(
+            FLD_ID,
+            USER_NO,
+            FLD_NM,
+            FLD_LVL,
+            FLD_PARENT_ID,
+            FLD_ORDINAL,
+            FLD_DESC
+        )
+        VALUES(
+            USER_FLD_MSTR_FLD_ID_SEQ.NEXTVAL,
+            #{userNo, jdbcType=INTEGER},
+            #{name, jdbcType=VARCHAR},
+            #{fldLvl, jdbcType=INTEGER},
+            #{fldParentId, jdbcType=INTEGER},
+            #{ordinal, jdbcType=INTEGER},
+            #{desc, jdbcType=VARCHAR}
+        )
+    </insert>
 
 		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
 			SELECT
@@ -233,4 +361,38 @@
               WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
     </delete>
 
+    <delete id="deleteMyFolder" parameterType="java.util.List">
+      DELETE FROM USER_FLD_MSTR 
+              WHERE
+        <if test="list != null and list.size != 1">
+          FLD_ID IN
+          <foreach item="id" index="index" collection="list" separator="," open="(" close=")">
+            #{id, jdbcType=INTEGER}
+          </foreach>
+        </if>
+        <if test="list != null and list.size == 1">
+          FLD_ID =
+          <foreach item="id" collection="list">
+            #{id, jdbcType=INTEGER}
+          </foreach>
+        </if>
+    </delete>
+
+    <update id="deleteChildReports" parameterType="java.util.List">
+      UPDATE 	REPORT_MSTR
+      SET		DEL_YN = 'Y'
+      WHERE
+      <if test="list != null and list.size != 1">
+        FLD_ID IN
+        <foreach item="id" index="index" collection="list" separator="," open="(" close=")">
+          #{id, jdbcType=INTEGER}
+        </foreach>
+      </if>
+      <if test="list != null and list.size == 1">
+        FLD_ID =
+        <foreach item="id" collection="list">
+          #{id, jdbcType=INTEGER}
+        </foreach>
+      </if>
+    </update>
 </mapper>
