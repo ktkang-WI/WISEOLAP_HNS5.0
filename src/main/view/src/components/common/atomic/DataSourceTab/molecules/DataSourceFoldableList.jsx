@@ -118,6 +118,14 @@ const DataSourceFoldableList = ({dataset}) => {
     );
   };
 
+  const onItemRendered = ({itemElement, itemData}) => {
+    let description = '';
+    if (itemData.description !== null) {
+      description = itemData.description;
+    }
+    itemElement.title = '설명: ' + description;
+  };
+
   const data = dataset? _.cloneDeep(dataset.fields) : [];
 
   if (data.length > 0 && dataset.datasetType != 'CUBE') {
@@ -148,6 +156,7 @@ const DataSourceFoldableList = ({dataset}) => {
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
+              onItemRendered={onItemRendered}
             />
           </Wrapper>
         )

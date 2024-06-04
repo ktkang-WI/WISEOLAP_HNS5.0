@@ -92,6 +92,7 @@ public class CubeService {
                     .parentId(entity.getTableName())
                     .dataType(entity.getDataType())
                     .uniqueName(entity.getUniqueName())
+                    .description(entity.getDescription())
                     .build());
         }
 
@@ -127,6 +128,7 @@ public class CubeService {
                         .dataType(entity.getDataType())
                         .orderBy(entity.getOrderBy())
                         .uniqueName(entity.getUniqueName())
+                        .description(entity.getDescription())
                         .build());
             }
         }
