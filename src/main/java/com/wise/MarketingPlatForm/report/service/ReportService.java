@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +13,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
-import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
-import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
-import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
-import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -34,7 +28,6 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
@@ -53,7 +46,6 @@ import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class ReportService {
@@ -65,6 +57,7 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
+    private QueryResultCacheManager queryResultCacheManager;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {
