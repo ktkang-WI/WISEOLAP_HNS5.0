@@ -37,7 +37,8 @@ const makeItem = (orgItem, countMap) => {
     radialTree: '방사형신경망',
     sunburstChart: '선버스트',
     zoomableCicle: '계층형 네모차트',
-    ciclePacking: '버블팩'
+    ciclePacking: '버블팩',
+    scatterPlot: '산점도'
   };
 
   let initNum = 1;

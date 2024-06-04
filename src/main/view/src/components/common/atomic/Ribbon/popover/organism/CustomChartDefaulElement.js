@@ -16,6 +16,7 @@ import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
@@ -42,6 +43,7 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
   } = ItemType;
@@ -72,6 +74,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.scatterPlot,
+          type: SCATTER_PLOT,
+          checked: false,
+          src: scatterPlotImg
+        },
         {
           title: localizedString.wordCloud,
           type: WORDCLOUD,
