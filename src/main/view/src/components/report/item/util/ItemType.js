@@ -15,5 +15,7 @@ export default {
   ARC_DIAGRAM: 'arc',
   WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
-  COORDINATE_DOT: 'coordinateDot'
+  COORDINATE_DOT: 'coordinateDot',
+  COLLAPSIBLE_TREE: 'collapsibleTree',
+  RADIAL_TREE: 'radialTree'
 };

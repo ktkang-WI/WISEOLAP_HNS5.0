@@ -41,7 +41,11 @@ import WordCloud from 'components/report/item/wordCloud/WordCloud';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
+
 import _ from 'lodash';
+import CollapsibleTree
+  from 'components/report/item/collapsibleTree/CollapsibleTree';
+import RadialTree from 'components/report/item/radialTree/RadialTree';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
@@ -124,7 +128,9 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot
+    coordinateDot: CoordinateDot,
+    collapsibleTree: CollapsibleTree,
+    radialTree: RadialTree
   };
 
   const itemExportsPicker = (id) => {

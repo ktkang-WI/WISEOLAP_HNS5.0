@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   justify-content: ${(props) => props.center ? props.center : 'start'};
   align-items: ${(props) => props.center ? props.center : 'start'};
   padding: ${(props) => props.padding ? props.padding : '0px'};
-  ${(props) => props.margin ? 'margin: ' + props.margin + ';' : ''}
+  ${(props) => props.margin ? 'margin: ' + props.margin + ';' : ''};
 `;
 
 export default Wrapper;

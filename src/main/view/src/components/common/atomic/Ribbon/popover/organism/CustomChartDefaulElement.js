@@ -15,6 +15,8 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -130,6 +132,18 @@ const CustomChartDefaulElement = () => {
           type: ItemType.COORDINATE_DOT,
           checked: false,
           src: coordinateDotImg
+        },
+        {
+          title: localizedString.collapsibleTree,
+          type: ItemType.COLLAPSIBLE_TREE,
+          checked: false,
+          src: collapsibleTreeImg
+        },
+        {
+          title: localizedString.radialNeuralNetwork,
+          type: ItemType.RADIAL_TREE,
+          checked: false,
+          src: radialTreeImg
         }
       ]
     },

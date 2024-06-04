@@ -23,9 +23,11 @@ public enum ItemType {
     ARC_DIAGRAM("arc"),
     WORDCLOUD("wordCloud"),
     COORDINATE_DOT("coordinateDot"),
-    COORDINATE_LINE("coordinateLine")
+    COORDINATE_LINE("coordinateLine"),
+    COLLAPSIBLE_TREE("collapsibleTree"),
+    RADIAL_TREE("radialTree")
     ;
-
+    
     private final String symbol;
 
     ItemType(String symbol) {
