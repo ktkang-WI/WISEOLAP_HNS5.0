@@ -2,9 +2,7 @@ package com.wise.MarketingPlatForm.utils.structures.tree;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,19 +36,6 @@ public abstract class Tree<T> {
     return json;
   }
 
-  public List<Map<String, Object>> toListMap(List<String> dimensions) {
-    TreeNode<T> root = getRootNode();
-    toListMap(dimensions, root.getChildren());
-
-    return null;
-  }
-
-  private List<Map<String, Object>> toListMap(List<String> dimensions, List<TreeNode<T>> children) {
-
-
-    return null;
-  }
-
   public String getDelimiter() {
     if (this.delimiter.equals(".")) return "\\" + this.delimiter;
 
@@ -59,22 +44,27 @@ public abstract class Tree<T> {
 
   public String getPakageName(TreeNode<T> cur) {
     if (cur.parent == null) return "";
-    final List<String> parentNames = new ArrayList<>();
-    String fullName = "";
-    do {
-      cur = cur._getParent();
-      parentNames.add(cur.getName());
-    } while (!(cur.parent == null));
-
-    for (int i = parentNames.size() - 1; i >= 0; i--) {
-      if (parentNames.get(i).equals("")) continue;
-      if (fullName.equals("")) {
-        fullName = parentNames.get(i);
-        continue;
+    final StringBuilder fullName = new StringBuilder();
+    cur = cur._getParent();
+    
+    while (cur.parent != null) {
+      if (!cur.getName().isEmpty()) {
+          if (fullName.length() > 0) {
+              fullName.insert(0, ".");
+          }
+          fullName.insert(0, cur.getName());
       }
-      fullName = fullName+"."+parentNames.get(i);
+      cur = cur._getParent();
     }
-    return fullName;
+    
+    if (!cur.getName().isEmpty()) {
+        if (fullName.length() > 0) {
+            fullName.insert(0, ".");
+        }
+        fullName.insert(0, cur.getName());
+    }
+    
+    return fullName.toString();
   }
 
   public TreeNode<T> get(String path) {
