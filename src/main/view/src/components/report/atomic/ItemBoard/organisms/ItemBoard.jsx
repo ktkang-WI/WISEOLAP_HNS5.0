@@ -46,6 +46,7 @@ import _ from 'lodash';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
+import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
 import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
@@ -129,9 +130,10 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot,
+    Dot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
+    scatterPlot: ScatterPlot,
     sunburstChart: SunBurstChart
   };
 
