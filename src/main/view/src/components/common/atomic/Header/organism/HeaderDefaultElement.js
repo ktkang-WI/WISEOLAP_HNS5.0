@@ -31,6 +31,7 @@ import {
   selectCurrentInformationas
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import EditReportName from '../modal/EditReportName';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
 // import styled from 'styled-components';
@@ -98,7 +99,10 @@ const HeaderDefaultElement = () => {
     'ReportTab': {
       'id': 'report_tab',
       'type': 'ReportTab',
-      'width': 'auto'
+      'width': 'auto',
+      'onClick': (e) => {
+        openModal(EditReportName);
+      }
     },
     'ReportTabs': {
       'id': 'report_tabs',

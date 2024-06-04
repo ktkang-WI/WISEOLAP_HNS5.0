@@ -1,6 +1,14 @@
 import {createSelector} from 'reselect';
 
 /**
+ * ROOT 보고서 선택
+ */
+export const selectRootReport = createSelector(
+    (state) => state.meta.report,
+    (report) => report
+);
+
+/**
  * 보고서 목록 선택
  */
 export const selectReports = createSelector(
