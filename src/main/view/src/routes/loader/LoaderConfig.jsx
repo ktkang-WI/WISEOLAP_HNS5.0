@@ -46,3 +46,15 @@ export async function userData() {
   });
   return data;
 }
+
+export async function userFolderData() {
+  const data =
+  await models.ReportFolderManagement.getMypageFolderReport().then((res) => {
+    if (res.status != 200) {
+      return res.error;
+    }
+
+    return res.data.data;
+  });
+  return data;
+}
