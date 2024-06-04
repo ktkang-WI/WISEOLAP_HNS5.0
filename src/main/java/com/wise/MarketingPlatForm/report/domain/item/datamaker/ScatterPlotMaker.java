@@ -1,89 +1,90 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
-import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
 public class ScatterPlotMaker implements ItemDataMaker {
   @Override
-  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-    List<Measure> measures = dataAggreagtion.getMeasures();
+  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> datas) {
+    List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
+    List<Measure> measures = dataAggreagtion.getOriginalMeasures();
     List<Dimension> dimensions = dataAggreagtion.getDimensions();
     List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-    TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
-      null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
     
-    DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+    DataSanitizer sanitizer = new DataSanitizer(datas, temporaryMeasures, dimensions, sortByItems);
 
-      List<Measure> allMeasure = new ArrayList<>();
+    // 데이터 기본 가공
+    datas = sanitizer
+            .dataFiltering(dataAggreagtion.getFilter())
+            .temporaryColumnsAdd()
+            .replaceNullData()
+            .orderBy()
+            .columnFiltering()
+            .getData();
 
-      allMeasure.addAll(measures);
-      allMeasure.addAll(sortByItems);
+    DataPickUpMake customData = new DataPickUpMake(datas);
+    List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
+    if(tempData != null) {
+      datas = tempData;
+    }
+    final List<String> dimNames = dimensions
+        .stream()
+        .map((dim) -> dim.getName())
+        .collect(Collectors.toList());
+    datas = datas.stream()
+      .map((row) -> generateArg(dimNames, row))
+      .collect(Collectors.toList());
 
-      // 데이터 기본 가공
-      data = sanitizer
-              .dataFiltering(dataAggreagtion.getFilter())
-              .groupBy()
-              .replaceNullData()
-              .topBottom(topBottomInfo)
-              .orderBy()
-              .columnFiltering()
-              .getData();
-
-      DataPickUpMake customData = new DataPickUpMake(data);
-      List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
-      if(tempData != null) {
-          data = tempData;
-      }
-
-      // 차트 데이터 가공
-      List<String> dimNames = new ArrayList<>();
-      List<Measure> seriesMeasureNames = new ArrayList<>();
-      Map<String, Object> info = new HashMap<>();
-
-      for (Dimension dim : dimensions) {
-        dimNames.add(dim.getName());
-      }
-
-      for (Map<String, Object> row : data) {
-          if (dimNames.size() == 0) {
-              row.put("arg", "Grand Total");
+    datas = datas.stream()
+      .map((d) -> {
+        BigDecimal yValue = null;
+        BigDecimal xValue = null;
+        for (Measure measure : measures) {
+          if (measure.getCategory().equals("x")) {
+            xValue = new BigDecimal(d.get(measure.getName()).toString());
           }
-
-          if (dimNames.size() == 1) {
-              row.put("arg", row.get(dimNames.get(0)));
+          if (measure.getCategory().equals("y")) {
+            yValue = new BigDecimal(d.get(measure.getName()).toString());
           }
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("x", xValue);
+        data.put("y", yValue);
+        data.put("name", d.get("arg"));
 
-          if (dimNames.size() >= 2) {
-              List<String> args = new ArrayList<>();
-              for (String name : dimNames) {
-                  args.add(String.valueOf(row.get(name)));
-              }
-              Collections.reverse(args);
-              row.put("arg", String.join("<br/>", args));
-          }
-      }
+        return data;
+      })
+      .collect(Collectors.toList());
 
-      for (Measure measure : measures) {
-        seriesMeasureNames.add(measure);
-      }
-
-      info.put("seriesMeasureNames", seriesMeasureNames);
-      CommonResult result = new CommonResult(data, "", info);
+    Map<String, Object> info = new HashMap<>();
+    CommonResult result = new CommonResult(datas, info);
 
     return result;
+  }
+  private Map<String, Object> generateArg(List<String> dimNames, Map<String, Object> row) {
+    if (dimNames.size() == 0) {
+      row.put("arg", "Grand Total");
+      return row;
+    }
+
+    final List<String> args = dimNames.stream()
+                                      .map(name -> String.valueOf(row.get(name)))
+                                      .collect(Collectors.toList());
+    Collections.reverse(args);
+    row.put("arg", String.join("<br/>", args));
+    return row;
   }
 }

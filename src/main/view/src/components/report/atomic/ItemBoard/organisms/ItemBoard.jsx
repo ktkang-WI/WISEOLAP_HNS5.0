@@ -130,7 +130,7 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot,
+    Dot: CoordinateDot,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
     scatterPlot: ScatterPlot,
