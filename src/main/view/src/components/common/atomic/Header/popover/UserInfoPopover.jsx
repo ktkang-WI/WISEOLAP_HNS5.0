@@ -25,7 +25,7 @@ const StyledImg = styled.img`
 const UserInfoPopover = () => {
   const nav = useNavigate();
   const {confirm} = useModal();
-  const defaultPath = contextPath;
+  const defaultPath = contextPath + '/';
 
   return (
     <StyledDiv>

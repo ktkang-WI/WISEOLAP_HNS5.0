@@ -42,7 +42,8 @@ public class ConfigController {
       @RequestParam(required = false, defaultValue = "") String spreadJsLicense,
       @RequestParam(required = false, defaultValue = "") String spreadJsDesignLicense,
       @RequestParam(required = false, defaultValue = "") String kakaoMapApiKey,
-      @RequestParam(required = false, defaultValue = "") String menuConfig
+      @RequestParam(required = false, defaultValue = "") String menuConfig,
+      @RequestParam(required = false, defaultValue = "") String adHocLayout
   )  throws SQLException{
     logger.info("general-data request is successful");
 
@@ -56,6 +57,7 @@ public class ConfigController {
       .spreadJsDesignLicense(spreadJsDesignLicense)
       .kakaoMapApiKey(kakaoMapApiKey)
       .menuConfig(menuConfig)
+      .adHocLayout(adHocLayout)
       .build();
 
     return generalService.updateConfig(generalDTO);

@@ -8,7 +8,7 @@ export const makeFieldIcon = (fields) => {
     if (field.uniqueName != 0) {
       returnArr.push({
         parentId: field?.parentId ? field.parentId : null,
-        uniqueName: field.columnName,
+        uniqueName: field.uniqueName || field.ID,
         name: field.columnName,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
         ...field

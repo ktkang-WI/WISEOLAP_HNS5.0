@@ -7,6 +7,7 @@ import Overlay from '../../Common/Wrap/Overlay';
 import {styled} from 'styled-components';
 import warningImg from 'assets/image/component/warning.png';
 import alertImg from 'assets/image/component/alert.png';
+import successImg from 'assets/image/component/success.png';
 import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 
@@ -64,10 +65,11 @@ const Alert = ({
             >
               <Content width={width} height={height}>
                 <AlertInnenr>
-                  <img src={type == 'warning' ? warningImg : alertImg}/>
+                  <img src={type == 'warning' ? warningImg :
+                       type == 'success' ? successImg : alertImg}/>
                   <AlertTitle
-                    color={type == 'warning' ?
-                    theme.color.red : theme.color.green}>
+                    color={type == 'warning' ? theme.color.red :
+                    type == 'success' ? theme.color.blue : theme.color.green}>
                     {localizedString[type]}
                   </AlertTitle>
                   {message}

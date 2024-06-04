@@ -15,5 +15,12 @@ export default {
   ARC_DIAGRAM: 'arc',
   WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
-  COORDINATE_DOT: 'coordinateDot'
+  COORDINATE_DOT: 'coordinateDot',
+  COLLAPSIBLE_TREE: 'collapsibleTree',
+  RADIAL_TREE: 'radialTree',
+  SUNBURST_CHART: 'sunburstChart',
+  ZOOMABLE_CICLE: 'zoomableCicle',
+  CICLE_PACKING: 'ciclePacking',
+  SCATTER_PLOT: 'scatterPlot',
+  FUNNEL_CHART: 'funnelChart'
 };

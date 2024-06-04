@@ -21,4 +21,5 @@ public class GeneralDTO {
   String spreadJsDesignLicense;
   String kakaoMapApiKey;
   String menuConfig;
+  String adHocLayout;
 }

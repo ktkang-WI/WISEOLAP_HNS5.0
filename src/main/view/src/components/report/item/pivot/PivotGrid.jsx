@@ -36,6 +36,8 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
+import ReportDescriptionModal
+  from 'components/report/modal/ReportDescriptionModal';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -133,9 +135,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       const formData = newFormat[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.innerHTML.replace(
-          '<span>' + cell.value, '<span>' + formattedValue
-      );
+      cellElement.innerHTML = '<span>' + formattedValue + '</span>';
     }
   };
 
@@ -229,7 +229,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         allowSorting={true}
         allowSortingBySummary={true}
         onContextMenuPreparing={(e) => {
-          const contextMenu = [];
+          const contextMenu = [{
+            text: localizedString.reportDescription,
+            onItemClick: () => {
+              openModal(ReportDescriptionModal);
+            }
+          }];
           if (!e.cell || e.cell.columnType === undefined ||
               e.cell.rowType === undefined) {
             return;
@@ -241,7 +246,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           // TODO: 추후 비정형 보고서에서만 보이게 수정해야 함.
           // 상세데이터 contextMenu 시작
           // row와 column 모두 총계인 셀은 선택 불가
-          if (detailedData && !isGrandTotal) {
+          if (detailedData && !isGrandTotal && meta.dataField) {
             // 현재 사용하고 있는 측정값의 테이블에 해당하는 상세 데이터만 렌더링
             const regex = /\[([^\[\]]+)\]/;
             const rowColFilters = [];

@@ -69,11 +69,8 @@ const RibbonDefaultElement = () => {
     commonPopoverButtonElement
   } = itemOptionManager();
 
-  const data = [
-    {id: 'chart', text: '차트만 보기'},
-    {id: 'pivot', text: '피벗그리드만 보기'},
-    {id: 'chart_pivot', text: '차트, 피벗 전부 보기'}
-  ];
+  // 비정형 레이아웃 옵션
+  const data = localizedString.adHocLayoutOptions;
 
   const getPalettePopover = (item) => {
     const palette = item?.meta?.palette;
@@ -148,7 +145,7 @@ const RibbonDefaultElement = () => {
       }}
       valueExpr={'id'}
       displayExpr={'text'}
-      value={rootItem.adHocOption.layoutSetting}
+      value={rootItem?.adHocOption?.layoutSetting}
       items={data}/>;
   };
 

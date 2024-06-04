@@ -63,12 +63,17 @@ const getInitialState = () => {
 const reducers = {
   /* REPORT */
   initItems: (state, actions) => {
-    const mode = actions.payload;
+    const action = actions.payload;
+    const mode = action.mode ? action.mode : action;
 
     if (mode === DesignerMode['DASHBOARD']) {
       return {...dashboardInitialState};
     } else if (mode === DesignerMode['AD_HOC']) {
-      return {...adHocInitialState};
+      const layout = action.adhocLayout;
+
+      return {
+        0: {...adHocInitialState[0], adHocOption: makeAdHocOption(layout)}
+      };
     } else if (mode === DesignerMode['EXCEL']) {
       return {...dashboardInitialState};
     }
@@ -255,6 +260,12 @@ const reducers = {
     const topBottomInfo = actions.payload.topBottomInfo;
 
     state[reportId].adHocOption.topBottomInfo = topBottomInfo;
+  },
+  updateGridAttribute(state, actions) {
+    const reportId = actions.payload.reportId;
+    const gridAttribute = actions.payload.gridAttribute;
+
+    state[reportId].adHocOption.gridAttribute = gridAttribute;
   },
   updateLayoutSetting(state, actions) {
     const reportId = actions.payload.reportId;

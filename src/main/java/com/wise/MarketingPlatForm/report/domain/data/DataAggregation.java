@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.report.domain.data;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,5 @@ public class DataAggregation {
     Map<String, List<String>> filter;
     AdHocOption adHocOption;
     PivotOption pivotOption;
+    Map<String, HashMap<String, Object>> gridAttribute;
 }

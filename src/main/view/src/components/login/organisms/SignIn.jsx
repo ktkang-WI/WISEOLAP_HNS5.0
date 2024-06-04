@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom';
 import useModal from 'hooks/useModal';
 import models from 'models';
 import {generalConfigure as generalLoader} from 'routes/loader/LoaderConfig';
-import useConfig from 'hooks/useConfig';
 import configureUtility
   from 'components/config/organisms/configurationSetting/ConfigureUtility';
 import useLayout from 'hooks/useLayout';
@@ -27,19 +26,16 @@ const FormWrap = styled.div`
 const SignIn = () => {
   const nav = useNavigate();
   const {alert} = useModal();
-  const {afterLoginInitSettingConfig} = useConfig();
   const {configStringToJson} = configureUtility();
   const {afterLoginInitSettingLayout} = useLayout();
 
   const getInitPageAndSetingFunc = (config) => {
     const configJson = configStringToJson(config.generalConfigure);
     const initPage =
-      configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
+      configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
 
-    // 로그인 후 state : configure setting
-    afterLoginInitSettingConfig(initPage, configJson);
-    // 로그인 후 state : initDisplay, layout, item 변경.
-    afterLoginInitSettingLayout(initPage);
+    // 로그인 후 state : initDisplay 변경.
+    afterLoginInitSettingLayout(initPage, configJson);
 
     return initPage;
   };

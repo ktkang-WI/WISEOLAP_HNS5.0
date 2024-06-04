@@ -40,6 +40,7 @@
       <result column="SPREAD_JS_DESIGNER_LICENSE" property="spreadJsDesignLicense" javaType="String"/>
       <result column="KAKAO_MAP_API_KEY" property="kakaoMapApiKey" javaType="String"/>
       <result column="MENU_CONFIG" property="menuConfig" javaType="String"/>
+      <result column="DEFAULT_LAYOUT" property="adHocLayout" javaType="String"/>
     </resultMap>
 
     <resultMap id="ConfigFolderDatasetDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO">
@@ -205,6 +206,7 @@
 		<select id="selectGeneralData" resultMap="ConfigGeneralDTO">
 			SELECT
         CONFIG_MSTR.MAIN_TITLE,
+        CONFIG_MSTR.DEFAULT_LAYOUT,
         CONFIG_MSTR.LICENSES_KEY,
         CONFIG_MSTR.WEB_URL,
         WB_CONFIG_MSTR.LOGIN_IMAGE,
@@ -284,6 +286,9 @@
               </if>
               <if test='webUrl != ""'>
                 WEB_URL = #{webUrl, jdbcType=VARCHAR},
+              </if>
+              <if test='adHocLayout != ""'>
+                DEFAULT_LAYOUT = #{adHocLayout, jdbcType=VARCHAR},
               </if>
               MAIN_TAB_EX = MAIN_TAB_EX
           WHERE 1 = 1

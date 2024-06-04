@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
 import UserInfoButtonUI from '../atom/UserInfoButtonUI';
+import {TextBox} from 'devextreme-react';
 
 const theme = getTheme();
 
@@ -164,6 +165,26 @@ const Header = ({left, middle, right}) => {
             {item.icon && <img src={item.icon}/>}
             {useInfoBtn ? useInfoBtn : ' ' + item.label}
           </CommonButton>
+        </HeaderPanel>
+      );
+    } else if (item.type === 'TextBox') {
+      return (
+        <HeaderPanel
+          breakLine={item.index !== item.length - 1}
+          key={item.id}
+          width={'auto'}
+          position={item.position}>
+          <TextBox
+            height={'32px'}
+            readOnly={false}
+            buttons={[item.button]}
+            ref={item.ref}
+            elementAttr={{
+              id: item.id
+            }}
+            onEnterKey={item.onEnterKey}
+          >
+          </TextBox>
         </HeaderPanel>
       );
     } else {

@@ -15,6 +15,13 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import scatterPlotImg from 'assets/image/icon/item/scatter.png';
+import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
+import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
+import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
+import funnelImg from 'assets/image/icon/item/funnel.png';
+import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -37,6 +44,7 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
   } = ItemType;
@@ -68,6 +76,12 @@ const CustomChartDefaulElement = () => {
       title: localizedString.relationVisualization,
       checkboxs: [
         {
+          title: localizedString.scatterPlot,
+          type: SCATTER_PLOT,
+          checked: false,
+          src: scatterPlotImg
+        },
+        {
           title: localizedString.wordCloud,
           type: WORDCLOUD,
           checked: false,
@@ -95,6 +109,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.ARC_DIAGRAM,
           checked: false,
           src: arcImg
+        },
+        {
+          title: localizedString.zoomableCicle,
+          type: ItemType.ZOOMABLE_CICLE,
+          checked: false,
+          src: zoomableCicleImg
         }
       ]
     },
@@ -130,6 +150,36 @@ const CustomChartDefaulElement = () => {
           type: ItemType.COORDINATE_DOT,
           checked: false,
           src: coordinateDotImg
+        },
+        {
+          title: localizedString.collapsibleTree,
+          type: ItemType.COLLAPSIBLE_TREE,
+          checked: false,
+          src: collapsibleTreeImg
+        },
+        {
+          title: localizedString.radialNeuralNetwork,
+          type: ItemType.RADIAL_TREE,
+          checked: false,
+          src: radialTreeImg
+        },
+        {
+          title: localizedString.sunburst,
+          type: ItemType.SUNBURST_CHART,
+          checked: false,
+          src: sunburstChartImg
+        },
+        {
+          title: localizedString.ciclePacking,
+          type: ItemType.CICLE_PACKING,
+          checked: false,
+          src: bubblePackImg
+        },
+        {
+          title: localizedString.funnel,
+          type: ItemType.FUNNEL_CHART,
+          checked: false,
+          src: funnelImg
         }
       ]
     },

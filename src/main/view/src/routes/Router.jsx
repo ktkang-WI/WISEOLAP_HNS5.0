@@ -49,6 +49,7 @@ const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath + '',
     element: <Designer/>,
+    loader: generalLoader,
     children: [
       {
         path: DesignerMode['DASHBOARD'].toLowerCase(),

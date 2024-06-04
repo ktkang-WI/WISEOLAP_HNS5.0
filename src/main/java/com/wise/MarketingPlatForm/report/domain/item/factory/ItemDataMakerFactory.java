@@ -8,14 +8,21 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.CirclePackingDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.FunnelMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ScatterPlotMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ZoomableIcicleDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
@@ -63,8 +70,29 @@ public class ItemDataMakerFactory {
             itemType == ItemType.COORDINATE_LINE) {
             return new CoordinateChartDataMaker();
         }
+        if (itemType == ItemType.COLLAPSIBLE_TREE) {
+            return new CollapsibleTreeMaker();
+        }
+        if (itemType == ItemType.RADIAL_TREE) {
+            return new RadialTreeMaker();
+        }
+        if (itemType == ItemType.SCATTER_PLOT) {
+            return new ScatterPlotMaker();
+        }
         if (itemType == ItemType.WORDCLOUD) {
             return new WordCloudMaker();
+        }
+        if (itemType == ItemType.SUNBURST_CHART) {
+            return new SunburstChartMaker();
+        }
+        if (itemType == ItemType.ZOOMABLE_CICLE) {
+            return new ZoomableIcicleDataMaker();
+        }
+        if (itemType == ItemType.CICLE_PACKING) {
+            return new CirclePackingDataMaker();
+        }
+        if (itemType == ItemType.FUNNEL_CHART) {
+            return new FunnelMaker();
         }
 
         throw new IllegalArgumentException();

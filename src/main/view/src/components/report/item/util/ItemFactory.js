@@ -32,7 +32,14 @@ const makeItem = (orgItem, countMap) => {
     arc: '아크 다이어그램',
     wordCloud: '워드클라우드',
     coordinateLine: '평면좌표 라인',
-    coordinateDot: '평면좌표 점'
+    coordinateDot: '평면좌표 점',
+    collapsibleTree: '신경망 트리',
+    radialTree: '방사형신경망',
+    sunburstChart: '선버스트',
+    funnelChart: '깔때기',
+    zoomableCicle: '계층형 네모차트',
+    ciclePacking: '버블팩',
+    scatterPlot: '산점도'
   };
 
   let initNum = 1;
@@ -101,7 +108,7 @@ const makeAdHocItem = (orgItem) => {
   };
 };
 
-const makeAdHocOption = () => {
+const makeAdHocOption = (layout) => {
   const dataFieldTypes = dataFieldTypeOfItemTypeFunc('pivot');
   const dataField = {};
   dataFieldTypes.forEach((type) => dataField[type] = []);
@@ -109,7 +116,6 @@ const makeAdHocOption = () => {
   dataField.dataFieldQuantity = 0;
   const attributeItems = ItemManager.getAdHocAttributeItems();
   const topBottomInfo = ItemManager.getTopBottomInfo();
-  const layoutType = ItemManager.getLayoutSetting();
   const dataFieldOption = ItemManager.generateDataFieldOption({type: 'pivot'});
 
   dataFieldOption.measure.useButton = true;
@@ -119,7 +125,7 @@ const makeAdHocOption = () => {
     dataField: dataField,
     attributeItems: attributeItems,
     topBottomInfo: topBottomInfo,
-    layoutSetting: layoutType['chart_pivot']
+    layoutSetting: layout || 'chart_pivot'
   };
 };
 
