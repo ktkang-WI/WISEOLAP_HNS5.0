@@ -640,5 +640,7 @@
   "logout": "로그아웃",
   "mypage": "마이페이지",
   "confirmLogoutMsg": "로그아웃 하시겠습니까?",
-  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요."
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "folder": "폴더",
+  "report": "보고서"
 }

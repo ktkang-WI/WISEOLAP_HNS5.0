@@ -449,5 +449,7 @@
   "logout": "logout",
   "mypage": "my page",
   "confirmLogoutMsg": "Do you want to log out?",
-  "failedLogout": "Logout failed. Please contact the administrator."
+  "failedLogout": "Logout failed. Please contact the administrator.",
+  "folder": "Folder",
+  "report": "Report"
 }
