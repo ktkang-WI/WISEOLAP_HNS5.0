@@ -151,7 +151,7 @@ public final class DataSanitizer {
                                     String name = measure.getName();
                                     Object value = row.get(name);
                                     measure.setSummaryName(measure.getSummaryType().toString() + "_" + name);
-                                    // TODO: 추후 정렬 기준 항목 추가시 보수 필요
+                                    
                                     if (value == null) {
                                         acc.put(measure.getSummaryName(), null);
                                     } else {

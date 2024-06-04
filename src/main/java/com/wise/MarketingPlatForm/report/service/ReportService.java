@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +17,9 @@ import com.wise.MarketingPlatForm.data.file.CacheFileWritingTaskExecutorService;
 import com.wise.MarketingPlatForm.data.file.SummaryMatrixFileWriterService;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
-import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
-import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -35,7 +31,6 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
-import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.DataAggregator;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
@@ -54,51 +49,23 @@ import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class ReportService {
 
     private final ReportDAO reportDAO;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
-    private final QueryResultCacheManager queryResultCacheManager;
-    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
-
-    private static final long MAX_CACHEABLE_SUMMARY_MATRIX_SIZE = 100L * 1024L * 1024L; // 100MB
-
-    private static final long DEFAULT_SERVICE_TIME_OUT = 20L * 60L * 1000L; // 20 minutes
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private DataAggregator dataAggregator;
-
-    @Autowired
-    private SummaryMatrixFileWriterService summaryMatrixFileWriterService;
-
-    @Autowired
-    private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
-    @Autowired
-    private FileUploadService fileUploadService;
-    
-    @Autowired
-    private CubeService cubeService;
-
-    ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager) {
+    ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.datasetService = datasetService;
-        this.queryResultCacheManager = queryResultCacheManager;
     }
 
     public Map<String, Object> getReport(String reportId, String userId) {

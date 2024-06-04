@@ -455,5 +455,6 @@
     {"id": "chart", "text": "Only chart"},
     {"id": "pivot", "text": "Only PivotGrid"},
     {"id": "chart_pivot", "text": "Show both"}
-  ]
+  ],
+  "reportDescription": "Report Description"
 }

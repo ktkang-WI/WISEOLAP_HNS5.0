@@ -36,6 +36,8 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
+import ReportDescriptionModal
+  from 'components/report/modal/ReportDescriptionModal';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -227,7 +229,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         allowSorting={true}
         allowSortingBySummary={true}
         onContextMenuPreparing={(e) => {
-          const contextMenu = [];
+          const contextMenu = [{
+            text: localizedString.reportDescription,
+            onItemClick: () => {
+              openModal(ReportDescriptionModal);
+            }
+          }];
           if (!e.cell || e.cell.columnType === undefined ||
               e.cell.rowType === undefined) {
             return;

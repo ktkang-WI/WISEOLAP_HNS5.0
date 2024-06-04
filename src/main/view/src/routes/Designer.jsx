@@ -85,6 +85,7 @@ const Designer = () => {
         right={[
           // 'NewWindow',
           // 'ReportProperty'
+          'ReportSearch',
           'ShowQuery',
           'UserInfo'
         ]}
