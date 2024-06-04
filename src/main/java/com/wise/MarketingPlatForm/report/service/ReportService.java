@@ -56,40 +56,15 @@ import org.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class ReportService {
 
     private final ReportDAO reportDAO;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final DatasetService datasetService;
-    private final QueryResultCacheManager queryResultCacheManager;
-    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
-
-    private static final long MAX_CACHEABLE_SUMMARY_MATRIX_SIZE = 100L * 1024L * 1024L; // 100MB
-
-    private static final long DEFAULT_SERVICE_TIME_OUT = 20L * 60L * 1000L; // 20 minutes
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private DataAggregator dataAggregator;
-
-    @Autowired
-    private SummaryMatrixFileWriterService summaryMatrixFileWriterService;
-
-    @Autowired
-    private CacheFileWritingTaskExecutorService cacheFileWritingTaskExecutorService;
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
-
-    @Autowired
-    private FileUploadService fileUploadService;
-    
-    @Autowired
-    private CubeService cubeService;
 
     ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
             QueryResultCacheManager queryResultCacheManager) {

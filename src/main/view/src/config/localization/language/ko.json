@@ -650,5 +650,6 @@
   ],
   "gridVisibility": "그리드 표시 여부",
   "chartVisibility": "차트 표시 여부",
-  "summaryType": "합계유형"
+  "summaryType": "합계유형",
+  "reportDescription": "보고서 설명"
 }
