@@ -11,7 +11,6 @@ import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
 import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
-import TextBox from 'devextreme/ui/text_box';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -33,6 +32,7 @@ import {
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
+import {useRef} from 'react';
 // import styled from 'styled-components';
 
 
@@ -51,6 +51,10 @@ const HeaderDefaultElement = () => {
   const currentParameter = useSelector(selectCurrentInformationas);
   const currentReport = useSelector(selectCurrentReport);
   const dataSource = _.cloneDeep(currentReport.options);
+
+  // 보고서 검색 textBox Reference
+  const textBoxRef = useRef(null);
+
   const filterdLayoutItem = () => {
     if (!rootItem.adHocOption) return currentItem;
 
@@ -65,26 +69,14 @@ const HeaderDefaultElement = () => {
     return items;
   };
 
-  const handleSearch = (e) => {
-    const searchValue = getSearchValue(e);
+  const handleSearch = () => {
+    const searchValue = textBoxRef?.current?.instance?.option('value');
     if (searchValue.length > 0) {
       openModal(LoadReportModal, {
         'searchValue': searchValue,
         'searchEnabled': false
       });
     }
-  };
-
-  const getSearchValue = (e) => {
-    let searchValue = '';
-    if (e.component.NAME === 'dxTextBox') {
-      searchValue = e.component.option('value');
-    } else {
-      const element = document.getElementById('report_search');
-      const instance = TextBox.getInstance(element);
-      searchValue = instance.option('value');
-    }
-    return searchValue;
   };
 
   return {
@@ -138,6 +130,7 @@ const HeaderDefaultElement = () => {
     },
     'ReportSearch': {
       'id': 'report_search',
+      'ref': textBoxRef,
       'type': 'TextBox',
       'button': {
         name: 'reportSearch',

@@ -176,6 +176,7 @@ const Header = ({left, middle, right}) => {
             height={'32px'}
             readOnly={false}
             buttons={[item.button]}
+            ref={item.ref}
             elementAttr={{
               id: item.id
             }}
