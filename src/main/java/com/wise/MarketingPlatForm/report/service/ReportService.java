@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.wise.MarketingPlatForm.data.QueryResultCacheManager;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
@@ -57,15 +56,12 @@ public class ReportService {
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
-    private QueryResultCacheManager queryResultCacheManager;
 
-    ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService,
-            QueryResultCacheManager queryResultCacheManager) {
+    ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.datasetService = datasetService;
-        this.queryResultCacheManager = queryResultCacheManager;
     }
 
     public Map<String, Object> getReport(String reportId, String userId) {
