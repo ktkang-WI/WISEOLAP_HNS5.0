@@ -3,30 +3,36 @@ import ModalPanelTitle from '../../Modal/atoms/ModalPanelTitle';
 import {getTheme} from 'config/theme';
 import {TextBox} from 'devextreme-react';
 import {useSelector} from 'react-redux';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
+import {selectRootReport} from 'redux/selector/ReportSelector';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
 const EditReportName = ({...props}) => {
-  const currentReport= useSelector(selectCurrentReport);
-  const ref = useRef(null);
+  // hook
   const dispatch = useDispatch();
+  const ref = useRef(null);
 
+  // state
+  const rootReport= useSelector(selectRootReport);
+
+  // slice
   const reportActions = ReportSlice.actions;
 
   return (
     <Modal
-      modalTitle={'보고서 명 편집'}
+      modalTitle={localizedString.editReportName}
       width={theme.size.smallModalWidth}
+      height={'auto'}
       {...props}
       onSubmit={() => {
-        const value = ref.current.instance.option('value');
+        const value = ref?.current?.instance?.option('value');
         if (value.length > 0) {
-          const newReport = _.cloneDeep(currentReport);
-          newReport.options.reportNm = value;
+          const newReport = _.cloneDeep(rootReport);
+          newReport.reports[0].options.reportNm = value;
           dispatch(reportActions.updateReport(newReport));
         }
 
@@ -34,11 +40,11 @@ const EditReportName = ({...props}) => {
       }}
     >
       <ModalPanelTitle>
-        {'보고서 이름'}
+        {localizedString.reportName}
       </ModalPanelTitle>
       <TextBox
         ref={ref}
-        text={currentReport.options.reportNm}
+        text={rootReport.reports[0].options.reportNm}
       />
     </Modal>);
 };
