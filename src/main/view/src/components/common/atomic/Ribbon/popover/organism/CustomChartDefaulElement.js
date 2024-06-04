@@ -7,13 +7,16 @@ import useLayout from 'hooks/useLayout';
 import choroplethImg from 'assets/image/icon/item/choropleth.png';
 import cardImg from 'assets/image/icon/item/card.png';
 import liquidFillGaugeImg from 'assets/image/icon/item/water_gauge.png';
+import wordCloudImg from 'assets/image/icon/item/wordcloud.png';
 import treeMapImg from 'assets/image/icon/item/treemap.png';
+import calendarImg
+  from '../../../../../../assets/image/icon/item/calendar_view.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
+import textBoxImg
+  from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
-import networkChartImg from 'assets/image/icon/item/network_big.png';
-import hierarchicalChartImg from 'assets/image/icon/item/hierarchy.png';
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -34,9 +37,11 @@ const CustomChartDefaulElement = () => {
     TREEMAP,
     CHOROPLETH,
     CARD,
+    CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
-    NETWORK_CHART
+    WORDCLOUD,
+    TEXT_BOX
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -65,22 +70,28 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.relationVisualization,
       checkboxs: [
+        {
+          title: localizedString.wordCloud,
+          type: WORDCLOUD,
+          checked: false,
+          src: wordCloudImg
+        }
       ]
     },
     {
       title: localizedString.connectionVisualization,
       checkboxs: [
         {
-          title: localizedString.networkChart,
-          type: NETWORK_CHART,
-          checked: false,
-          src: networkChartImg
-        },
-        {
           title: localizedString.chordDiagram,
           type: CHORD_DIAGRAM,
           checked: false,
           src: chordImg
+        },
+        {
+          title: localizedString.calendar,
+          type: CALENDAR,
+          checked: false,
+          src: calendarImg
         },
         {
           title: localizedString.arcDiagram,
@@ -136,12 +147,6 @@ const CustomChartDefaulElement = () => {
           src: radialTreeImg
         },
         {
-          title: localizedString.hierarchicalChart,
-          type: ItemType.HIERARCHICAL_CHART,
-          checked: false,
-          src: hierarchicalChartImg
-        },
-        {
           title: localizedString.sunburst,
           type: ItemType.SUNBURST_CHART,
           checked: false,
@@ -168,6 +173,12 @@ const CustomChartDefaulElement = () => {
           type: CHOROPLETH,
           checked: false,
           src: choroplethImg
+        },
+        {
+          title: localizedString.textBox,
+          type: TEXT_BOX,
+          checked: false,
+          src: textBoxImg
         }
       ]
     }

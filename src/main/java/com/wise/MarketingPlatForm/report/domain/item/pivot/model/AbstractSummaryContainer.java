@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.report.domain.item.pivot.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,12 +11,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wise.MarketingPlatForm.global.util.WINumberUtils;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix.SummaryDimension;
 
 abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T> {
@@ -34,9 +37,12 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
     private List<DataGroup> childDataGroups;
     private List<DataGroup> unmodifiableChildDataGroups;
     private Map<String, DataGroup> childDataGroupsMap;
+    
+    private Map<String, Map<String, String>> columnSortValuesMap;
 
     private boolean visible;
-
+    private boolean isOtherData;
+    
     private String path = "";
 
     public AbstractSummaryContainer() {
@@ -172,13 +178,54 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-
+    
+    public boolean getIsOtherData() {
+    	return isOtherData;
+    }
+    
+    public void setIsOtherData(boolean isOtherData) {
+    	this.isOtherData = isOtherData;
+    }
+    
     public String getPath() {
         return path;
     }
 
     public void setPath(final String path) {
         this.path = path;
+    }
+    
+    public Map<String, Map<String, String>> getColumnSortValuesMap() {
+    	if (columnSortValuesMap == null) {
+    		return Collections.emptyMap();
+    	}
+    	
+    	return Collections.unmodifiableMap(columnSortValuesMap);
+    }
+    
+    public void addColumnSortValue(final String columnName, final String originValue, final String sortByValue, boolean sortByMeasureCheck) {
+    	if (columnSortValuesMap == null) {
+    		columnSortValuesMap = new HashMap<>();
+    	}
+    	
+    	Map<String, String> sortValuesMap = columnSortValuesMap.get(columnName);
+    	if (sortValuesMap == null) {
+    		sortValuesMap = new HashMap<>();
+    		columnSortValuesMap.put(columnName, sortValuesMap);
+    	}
+    	if(sortByValue != null && WINumberUtils.isNumber(sortByValue) && sortByMeasureCheck) {
+    		if(sortValuesMap.get(originValue)!= null) {
+    			BigDecimal A = new BigDecimal(sortValuesMap.get(originValue)); 
+            	BigDecimal B = new BigDecimal(sortByValue);
+            	String addAB = (A.add(B).toString())+"";
+            	sortValuesMap.put(originValue, addAB);
+    		}else {
+    			sortValuesMap.put(originValue, sortByValue != null ? sortByValue : originValue);
+    		}
+    		
+    	}else {
+    		sortValuesMap.put(originValue, sortByValue != null ? sortByValue : originValue);
+    	}
     }
 
     @Override
@@ -189,7 +236,7 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
 
         final AbstractSummaryContainer<?> that = (AbstractSummaryContainer<?>) o;
 
-        if (!Objects.equals(key, that.key)) {
+        if (!StringUtils.equals(key, that.key)) {
             return false;
         }
 
@@ -205,7 +252,7 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
             return false;
         }
 
-        if (!Objects.equals(childDataGroupKey, that.childDataGroupKey)) {
+        if (!StringUtils.equals(childDataGroupKey, that.childDataGroupKey)) {
             return false;
         }
 
@@ -230,4 +277,3 @@ abstract public class AbstractSummaryContainer<T> implements SummaryContainer<T>
                 .append("visible", visible).toString();
     }
 }
-

@@ -57,7 +57,7 @@ public class TreeList<T> extends Tree<T>{
       
       TreeNode<BigDecimal> parentNode = currentNode._getParent();
       while (parentNode != null) {
-        BigDecimal tempData = parentNode.getValue() == null ? new BigDecimal(0) : parentNode.getValue();
+        BigDecimal tempData = parentNode.getValue() != null ? parentNode.getValue() : BigDecimal.ZERO;
         BigDecimal addedData = data.add(tempData);
         parentNode.setValue(addedData);
         parentNode = parentNode._getParent();

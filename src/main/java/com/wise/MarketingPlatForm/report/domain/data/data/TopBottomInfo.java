@@ -104,7 +104,7 @@ public class TopBottomInfo {
         .collect(Collectors.toList());
     } else {
         totalData = groupingData.stream()
-        .collect(Collectors.groupingBy(GroupingUtils.groupingDimensionsMapper(dimensionList)))
+        .collect(Collectors.groupingBy(GroupingUtils.groupingDimensionsMapper(dimensionList.subList(0, 1))))
         .entrySet().stream()
         .map(e -> TopBottomUtils.summarizeGroup(e.getValue(), name))
         .map((row) -> TopBottomUtils.convertSummaryCalculators(row, name))

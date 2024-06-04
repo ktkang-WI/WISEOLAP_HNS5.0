@@ -7,15 +7,16 @@ export default {
   TREEMAP: 'treeMap',
   LIQUID_FILL_GAUGE: 'liquidFillGauge',
   CARD: 'card',
+  CALENDAR: 'calendar',
   BOX_PLOT: 'boxPlot',
+  TEXT_BOX: 'textBox',
   TIMELINE: 'timeline',
   CHORD_DIAGRAM: 'chord',
   ARC_DIAGRAM: 'arc',
+  WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
-  NETWORK_CHART: 'networkChart',
-  HIERARCHICAL_CHART: 'hierarchicalChart',
   SUNBURST_CHART: 'sunburstChart'
 };

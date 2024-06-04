@@ -17,7 +17,11 @@ public class MartDAO {
 
     public MartResultDTO select(Integer dsId, String query) {
         List<MartResultDTO> result = martSqlSession.sessionTemplates.get(dsId).selectList("Mart.select", query);
-        return (MartResultDTO) result.get(0);
+        if(result.size() == 0){
+            return null;
+        }else {
+            return (MartResultDTO) result.get(0);
+        }
     }
 
     public MartResultDTO selectQueryDataTbl(Integer dsId, Map<String, String> param) {

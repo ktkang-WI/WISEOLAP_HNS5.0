@@ -23,6 +23,7 @@ import ReportFolderManagement from
 import DataSourceAddition
   from 'components/config/organisms/dataSourceAddition/DataSourceAddition';
 import LinkViewer from './LinkViewer';
+import MyPage from 'components/useInfo/organism/Mypage';
 
 export const contextPath = '/editds';
 
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath + '',
     element: <Designer/>,
+    loader: generalLoader,
     children: [
       {
         path: DesignerMode['DASHBOARD'].toLowerCase(),
@@ -61,11 +63,13 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/viewer',
-    element: <Viewer/>
+    element: <Viewer/>,
+    loader: generalLoader
   },
   {
     path: contextPath + '/linkViewer',
-    element: <LinkViewer/>
+    element: <LinkViewer/>,
+    loader: generalLoader
   },
   {
     path: contextPath + '/config',
@@ -95,6 +99,10 @@ const router = createBrowserRouter([
         element: <DataSourceAddition/>
       }
     ]
+  },
+  {
+    path: contextPath + '/myPage',
+    element: <MyPage/>
   }
 ]);
 

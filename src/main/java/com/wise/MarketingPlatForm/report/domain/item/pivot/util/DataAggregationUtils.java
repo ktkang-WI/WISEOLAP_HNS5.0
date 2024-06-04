@@ -36,9 +36,7 @@ public final class DataAggregationUtils {
         final GroupParam rowGroupParam = rowGroupParamIndex <= rowGroupParams.size() - 1
                 ? rowGroupParams.get(rowGroupParamIndex) : null;
 
-        if (!StringUtils.equals(rowGroupParam.getKey(), parentDataGroup.getChildDataGroupKey())
-                || !StringUtils.equals(rowGroupParam.getKey(),
-                        parentPageGroup.getChildDataGroupKey())) {
+        if (!StringUtils.equals(rowGroupParam.getKey(), parentDataGroup.getChildDataGroupKey())|| !StringUtils.equals(rowGroupParam.getKey(),parentPageGroup.getChildDataGroupKey())) {
             return;
         }
 
@@ -57,11 +55,22 @@ public final class DataAggregationUtils {
 
             if (!pageGroupKeyValues.contains(childDataGroupKey)) {
                 childDataGroup.setVisible(false);
+                
+                if(childDataGroup.getChildDataGroups() != null) {
+                	markRelevantSummaryContainersVisibleChild(childDataGroup);
+                }
             }
             else {
-                final DataGroup childPageGroup = (i <= childPageGroupCount - 1)
+            	
+            	DataGroup childPageGroup = (i <= childPageGroupCount - 1)
                         ? childPageGroups.get(i) : null;
-
+            	
+            	for(int j = 0; j < childPageGroups.size(); j ++) {
+            		if(childDataGroupKey.equals(childPageGroups.get(j).getKey())){
+            			childPageGroup = childPageGroups.get(j);
+            		}
+            	}
+                
                 if (childPageGroup != null) {
                     markRelevantSummaryContainersVisible(childDataGroup, childPageGroup,
                             rowGroupParams, rowGroupParamIndex + 1);
@@ -69,7 +78,22 @@ public final class DataAggregationUtils {
             }
         }
     }
+    
+    private static void markRelevantSummaryContainersVisibleChild(DataGroup parentDataGroup) {
+		// TODO Auto-generated method stub
+    	final List<DataGroup> containerChildDataGroups = parentDataGroup.getChildDataGroups();
+        final int childDataGroupCount = containerChildDataGroups != null ? containerChildDataGroups.size() : 0;
+        
+        for (int i = 0; i < childDataGroupCount; i++) {
+            final DataGroup childDataGroup = containerChildDataGroups.get(i);
 
+            childDataGroup.setVisible(false);
+                
+            if(childDataGroup.getChildDataGroups() != null) {
+            	markRelevantSummaryContainersVisibleChild(childDataGroup);
+            }
+        }
+	}
     public static void markPaginatedSummaryContainersVisible(final PivotDataAggregation dataAggregation,
             final PagingParam pagingParam) {
         final int offset = pagingParam.getOffset();

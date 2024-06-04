@@ -1,9 +1,13 @@
 package com.wise.MarketingPlatForm.querygen.querysetting.dbms;
 
-public class IMPALASetting {
+import com.wise.MarketingPlatForm.querygen.querysetting.DBSetting;
+
+public class IMPALASetting implements DBSetting{
 
 	public IMPALASetting(){}
 	public String vbCrLf = "\r\n";
+
+	@Override
 	public String DsDsViewOrderByRandomClause()
 	{
 		String sOrderBy = "";
@@ -13,11 +17,13 @@ public class IMPALASetting {
 		return sOrderBy;
 	}
 	
+	@Override
 	public String ConvertFileNm(String aFileNm)
 	{
 		return "[" + aFileNm + "]";
 	}
 	
+	@Override
 	public String FilterQuery(String aTblNm, String aCaptionColNm, String aKeyColNm, String aSortType)
 	{
 		String sQuery = "";
@@ -31,6 +37,7 @@ public class IMPALASetting {
 
 	}
 	
+	@Override
 	public String TblAliasNm(String aDimUniNm)
 	{
 		String sAliasNm = "";
@@ -41,6 +48,7 @@ public class IMPALASetting {
 
 	}
 	
+	@Override
 	public String ColumnAliasNm(String aColumnNm)
 	{
 		String sAliasNm = "";
@@ -51,6 +59,7 @@ public class IMPALASetting {
 
 	}
 	
+	@Override
 	public String GetAggregarion(String aAgg)
 	{
 		String sReturn = aAgg;
@@ -61,5 +70,17 @@ public class IMPALASetting {
 
 		return sReturn;
 
+	}
+
+	@Override
+	public String GetSelectMartTableSystemQuery()
+	{
+		StringBuilder query = new StringBuilder();
+
+		query.append(" ");
+
+		query.append(" SHOW TABLES LIKE 't_wise_*'									 ");
+	
+		return query.toString();
 	}
 }

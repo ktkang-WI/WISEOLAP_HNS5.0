@@ -35,7 +35,10 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
 
     private int rows;
     private int cols;
-    SummaryCell[][] summaryCells;
+    SummaryCellImpl[][] summaryCells;
+    private String cacheKey;
+    
+    private Map<String, String> attributes;
 
     private DefaultSummaryMatrixImpl() {
     }
@@ -77,13 +80,13 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
         rows = rowFlattenedSummaryDimensions.length;
         cols = colFlattenedSummaryDimensions.length;
 
-        summaryCells = new SummaryCell[rows][cols];
+        summaryCells = new SummaryCellImpl[rows][cols];
 
-        final SummaryCell rootCell = new SummaryCell();
+        final SummaryCellImpl rootCell = new SummaryCellImpl();
         summaryCells[0][0] = rootCell;
 
         for (int i = 0; i < rows; i++) {
-            final SummaryCell cell = new SummaryCell();
+            final SummaryCellImpl cell = new SummaryCellImpl();
 
             final List<Integer> indices = new LinkedList<>();
             for (int index = 1; index < cols; index++) {
@@ -99,7 +102,7 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
         }
 
         for (int j = 1; j < cols; j++) {
-            final SummaryCell cell = new SummaryCell();
+            final SummaryCellImpl cell = new SummaryCellImpl();
 
             final List<Integer> indices = new LinkedList<>();
             for (int index = 1; index < rows; index++) {
@@ -118,7 +121,7 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
             final SummaryDimension rowDimension = rowFlattenedSummaryDimensions[i];
 
             for (int j = 1; j < cols; j++) {
-                final SummaryCell cell = new SummaryCell();
+                final SummaryCellImpl cell = new SummaryCellImpl();
                 summaryCells[i][j] = cell;
 
                 final SummaryDimension colDimension = colFlattenedSummaryDimensions[j];
@@ -128,10 +131,11 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
                     final int childDepth = colDimension.getDepth() + 1;
                     for (int index = j + 1; index < cols; index++) {
                         SummaryDimension childDimension = colFlattenedSummaryDimensions[index];
-                        if (childDimension.getDepth() != childDepth) {
+                        if (childDimension.getDepth() < childDepth) {
                             break;
+                        }else if(childDimension.getDepth() == childDepth) {
+                        	indices.add(index);
                         }
-                        indices.add(index);
                     }
                     cell.setColChildCellIndices(indices);
                     cell.setColChildrenRowIndex(i);
@@ -142,10 +146,11 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
                     final int childDepth = rowDimension.getDepth() + 1;
                     for (int index = i + 1; index < rows; index++) {
                         SummaryDimension childDimension = rowFlattenedSummaryDimensions[index];
-                        if (childDimension.getDepth() != childDepth) {
+                        if (childDimension.getDepth() < childDepth) {
                             break;
+                        }else if(childDimension.getDepth() == childDepth) {
+                        	indices.add(index);
                         }
-                        indices.add(index);
                     }
                     cell.setRowChildCellIndices(indices);
                     cell.setRowChildrenColIndex(j);
@@ -182,12 +187,12 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
 
     @Override
     public SummaryDimension[] getRowFlattendSummaryDimensions() {
-        return rowFlattenedSummaryDimensions;
+    	return rowFlattenedSummaryDimensions;
     }
 
     @Override
     public SummaryDimension[] getColFlattendSummaryDimensions() {
-        return colFlattenedSummaryDimensions;
+    	return colFlattenedSummaryDimensions;
     }
 
     @Override
@@ -206,7 +211,7 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
         return summaryCells;
     }
 
-    public void setSummaryCells(SummaryCell[][] summaryCells) {
+    void setSummaryCells(SummaryCellImpl[][] summaryCells) {
         this.summaryCells = summaryCells;
     }
 
@@ -256,7 +261,7 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
         sliced.rows = rowIndices.size();
         sliced.cols = cols;
 
-        sliced.summaryCells = new SummaryCell[rowIndices.size()][cols];
+        sliced.summaryCells = new SummaryCellImpl[rowIndices.size()][cols];
 
         sliced.rowFlattenedSummaryDimensions = new SummaryDimension[rowIndices.size()];
         int i = 0;
@@ -289,5 +294,41 @@ public class DefaultSummaryMatrixImpl implements SummaryMatrix {
                 fillSummaryDimensionsToList(list, child, summaryDimensionPathMap);
             }
         }
+    }
+
+	public String getCacheKey() {
+		return cacheKey;
+	}
+
+	void setCacheKey(String cacheKey) {
+		this.cacheKey = cacheKey;
+	}
+
+	@Override
+	public Map<String, String> getAttributes() {
+		return attributes != null ? Collections.unmodifiableMap(attributes) : Collections.emptyMap();
+	}
+
+	@Override
+	public void setAttributes(Map<String, String> attributes) {
+		if (attributes == null) {
+			this.attributes = null;
+		}
+		else {
+			this.attributes = new HashMap<>(attributes);
+		}
+	}
+    
+    @Override
+    public String getAttribute(final String name) {
+    	return attributes != null ? attributes.get(name) : null;
+    }
+
+    @Override
+    public void setAttribute(final String name, final String value) {
+    	if (attributes == null) {
+    		attributes = new HashMap<>();
+    	}
+    	attributes.put(name, value);
     }
 }

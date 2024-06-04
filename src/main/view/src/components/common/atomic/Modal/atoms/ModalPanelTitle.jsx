@@ -44,6 +44,7 @@ const ModalPanelTitle = ({
     return checkBoxs.map((checkBox, i) => (
       <CheckBox
         key={`modal-checkBox${i}`}
+        width={checkBox.width || 'auto'}
         height='30px'
         text={checkBox.text}
         defaultValue={

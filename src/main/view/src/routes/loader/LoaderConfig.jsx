@@ -6,7 +6,6 @@ export async function generalConfigure() {
     if (res.status != 200) {
       return res.error;
     }
-
     return res.data;
   });
   return {generalConfigure};

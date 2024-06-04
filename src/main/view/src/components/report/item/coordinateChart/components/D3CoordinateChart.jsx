@@ -56,7 +56,7 @@ const D3CoordinateChart = ({
 
   const fade = (arg, opacity1, opacity2) => {
     const elements = d3
-        .selectAll('#' + id + ' .chart-data:not(.selected)').data(info.args);
+        .selectAll('#' + id + ' .chart-data').data(info.args);
 
     elements
         .filter((d) => {
@@ -167,17 +167,33 @@ const D3CoordinateChart = ({
           <defs>
             {getHatchingPattern()}
           </defs>
-          {methods[type || 'dot']()}
+          <g>
+            {methods[type || 'dot']()}
+          </g>
           <g
             width={itemWidth}
             height={itemHeight}
             transform={`translate(${[itemWidth / 2, MARGIN].join(',')})`}
           >
+            <text
+              fontFamily='Noto Sans KR'
+              fontSize='12px'
+              fill='#767676'
+              textAnchor='end'
+              transform='translate(-10, 0)'
+            >{dataField.y[0].caption}</text>
             <AxisLeft yScale={yScale}
               customFormat={dataField.y[0].format}
               pixelsPerTick={50}/>
           </g>
           <g transform={`translate(${MARGIN + 0.3}, ${itemHeight / 2})`}>
+            <text
+              fontFamily='Noto Sans KR'
+              fontSize='12px'
+              fill='#767676'
+              textAnchor='end'
+              transform={'translate(' + (itemWidth - 10) + ', -10)'}
+            >{dataField.x[0].caption}</text>
             <AxisBottom
               xScale={xScale}
               customFormat={dataField.x[0].format}
