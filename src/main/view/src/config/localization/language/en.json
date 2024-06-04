@@ -456,6 +456,6 @@
     {"id": "pivot", "text": "Only PivotGrid"},
     {"id": "chart_pivot", "text": "Show both"}
   ],
-  "editReportName": "Edit ReportName"
+  "editReportName": "Edit ReportName",
   "reportDescription": "Report Description"
 }

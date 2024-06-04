@@ -1,4 +1,4 @@
-import {defaultDimension, singleMeasure}
+import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
@@ -31,22 +31,28 @@ const generateItem = (item, rootItem) => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldMeasure = {
-    ...singleMeasure,
+    ...defaultMeasure,
     useButton: false,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
     buttonIcon: chartSeriesButtonIcon,
-    buttonEvent: function(e) {
-      console.log(e);
-    }
+    limit: 1
+  };
+  const dataFieldX = {
+    ...defaultDimension,
+    label: 'X',
+    limit: 1
   };
 
-  const dataFieldDimension = {
-    ...defaultDimension
+  const dataFieldY = {
+    ...defaultDimension,
+    label: 'Y',
+    limit: 1
   };
 
   return {
     [DataFieldType.MEASURE]: dataFieldMeasure,
-    [DataFieldType.DIMENSION]: dataFieldDimension
+    [DataFieldType.X]: dataFieldX,
+    [DataFieldType.Y]: dataFieldY
   };
 };
 
