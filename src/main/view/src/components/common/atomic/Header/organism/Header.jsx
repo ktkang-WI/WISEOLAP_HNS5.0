@@ -109,6 +109,7 @@ const Header = ({left, middle, right}) => {
         >
           <ReportTitleText
             font={theme.font.reportTitleForDesigner}
+            onClick={item.onClick}
           >{report.options.reportNm}</ReportTitleText>
         </HeaderPanel>
       );
