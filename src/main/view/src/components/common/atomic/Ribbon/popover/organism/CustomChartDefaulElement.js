@@ -17,7 +17,11 @@ import textBoxImg
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
+import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
+import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
+import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -41,6 +45,7 @@ const CustomChartDefaulElement = () => {
     CHORD_DIAGRAM,
     BOX_PLOT,
     HEAT_MAP,
+    SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
   } = ItemType;
@@ -72,6 +77,12 @@ const CustomChartDefaulElement = () => {
       title: localizedString.relationVisualization,
       checkboxs: [
         {
+          title: localizedString.scatterPlot,
+          type: SCATTER_PLOT,
+          checked: false,
+          src: scatterPlotImg
+        },
+        {
           title: localizedString.wordCloud,
           type: WORDCLOUD,
           checked: false,
@@ -99,6 +110,12 @@ const CustomChartDefaulElement = () => {
           type: ItemType.ARC_DIAGRAM,
           checked: false,
           src: arcImg
+        },
+        {
+          title: localizedString.zoomableCicle,
+          type: ItemType.ZOOMABLE_CICLE,
+          checked: false,
+          src: zoomableCicleImg
         }
       ]
     },
@@ -152,6 +169,18 @@ const CustomChartDefaulElement = () => {
           type: ItemType.RADIAL_TREE,
           checked: false,
           src: radialTreeImg
+        },
+        {
+          title: localizedString.sunburst,
+          type: ItemType.SUNBURST_CHART,
+          checked: false,
+          src: sunburstChartImg
+        },
+        {
+          title: localizedString.ciclePacking,
+          type: ItemType.CICLE_PACKING,
+          checked: false,
+          src: bubblePackImg
         }
       ]
     },

@@ -47,10 +47,14 @@ import HeatMap from 'components/report/item/heatMap/HeatMap';
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
+import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
+import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
+import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
+import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 
 const theme = getTheme();
 
@@ -132,7 +136,11 @@ const ItemBoard = () => {
     coordinateDot: CoordinateDot,
     heatMap: HeatMap,
     collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree
+    radialTree: RadialTree,
+    sunburstChart: SunBurstChart,
+    zoomableCicle: ZoomableCicle,
+    ciclePacking: CiclePacking,
+    scatterPlot: ScatterPlot
   };
 
   const itemExportsPicker = (id) => {

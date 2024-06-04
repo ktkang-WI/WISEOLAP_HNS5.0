@@ -12,6 +12,11 @@ public class SqlQueryGenerator implements QueryGenerator {
 
     @Override
     public String getQuery(DataAggregation dataAggreagtion) {
+        return getQuery(dataAggreagtion, "");
+    }
+
+    @Override
+    public String getQuery(DataAggregation dataAggreagtion, String ownerNm) {
         String query = dataAggreagtion.getDataset().getQuery();
         query = applyParameter(dataAggreagtion.getParameters(), query);
 

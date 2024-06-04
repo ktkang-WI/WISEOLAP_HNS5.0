@@ -1782,7 +1782,7 @@ public class QuerySettingEx {
 				aDtEtc, aDtSelHIe,"");
 	}
 
-	public String CubeQuerySetting(QueryGenAggregation queygenAggregation) {
+	public String CubeQuerySetting(QueryGenAggregation queygenAggregation, String owner) {
 		ArrayList<SelectCube> aDtSel = queygenAggregation.getCubeSelectAll();
 		ArrayList<Hierarchy> aDtSelHIe = queygenAggregation.getCubeHie();
 		ArrayList<SelectCubeMeasure> aDtSelMea = queygenAggregation.getCubeSelectMeasures();
@@ -1794,7 +1794,7 @@ public class QuerySettingEx {
 		ArrayList<SelectCubeEtc> aDtEtc = queygenAggregation.getCubeEtc();
 
 		return CubeQuerySetting(aDtSel, aDtSelHIe, aDtSelMea, aDtWhere, aDtOrder, aDBMSType, aDtCubeRel, aDtDsViewRel,
-				aDtEtc, aDtSelHIe,"");
+				aDtEtc, aDtSelHIe,owner);
 	}
 
 	// 20210511 AJKIM 차원 멤버 groupBy 절에서 제거하기 위해 CubeQuerySetting 오버로딩 (aDtSelHIeJoin

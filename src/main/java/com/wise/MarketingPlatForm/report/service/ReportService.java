@@ -148,10 +148,11 @@ public class ReportService {
         // } catch (Exception e) {
         // e.printStackTrace();
         // }
-
         martConfig.setMartDataSource(dsMstrDTO);
 
-        String query = queryGenerator.getQuery(dataAggreagtion);
+        String ownerNm = dsMstrDTO.getOwnerNm();
+
+        String query = queryGenerator.getQuery(dataAggreagtion, ownerNm);
 
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
         

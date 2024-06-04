@@ -52,7 +52,7 @@ const getDataFieldOptionChild = () => {
  * 차트 커스텀 파라미터 삽입
  * @param {JSON} item 아이템 객체
  * @param {JSON} param 파라미터 정보를 삽입할 객체
-*/
+ */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
   param.dimension = dataField.dimension.concat(dataField.dimensionGroup);

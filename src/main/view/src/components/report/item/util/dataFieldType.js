@@ -45,6 +45,7 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
+    case ItemType.SCATTER_PLOT:
     case ItemType.COORDINATE_LINE:
     case ItemType.COORDINATE_DOT:
       dataFieldFormat.push(DataFieldType.X);
