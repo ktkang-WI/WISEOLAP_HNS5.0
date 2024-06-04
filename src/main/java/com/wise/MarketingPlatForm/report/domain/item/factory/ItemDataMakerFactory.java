@@ -8,6 +8,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.CardDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChordDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ChoroplethDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.CirclePackingDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
@@ -20,6 +21,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMake
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.ZoomableIcicleDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
 public class ItemDataMakerFactory {
@@ -81,6 +83,12 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.SUNBURST_CHART) {
             return new SunburstChartMaker();
+        }
+        if (itemType == ItemType.ZOOMABLE_CICLE) {
+            return new ZoomableIcicleDataMaker();
+        }
+        if (itemType == ItemType.CICLE_PACKING) {
+            return new CirclePackingDataMaker();
         }
 
         throw new IllegalArgumentException();

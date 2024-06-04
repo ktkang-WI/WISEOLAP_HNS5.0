@@ -26,6 +26,8 @@ public enum ItemType {
     COORDINATE_LINE("coordinateLine"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
+    ZOOMABLE_CICLE("zoomableCicle"),
+    CICLE_PACKING("ciclePacking"),
     SCATTER_PLOT("scatterPlot"),
     SUNBURST_CHART("sunburstChart")
     ;
