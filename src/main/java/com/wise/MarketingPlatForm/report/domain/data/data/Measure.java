@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.report.domain.data.data;
 
 import org.apache.ibatis.type.Alias;
 
-import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
 import com.wise.MarketingPlatForm.report.type.SummaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

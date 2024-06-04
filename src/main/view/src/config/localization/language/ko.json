@@ -2,14 +2,16 @@
   "dataColumnSeriesOptions": "시리즈 옵션",
   "alertInfo": {
     "common": {
-      "invalid":"유효하지않습니다."
+      "invalid": "유효하지않습니다."
     },
     "customData": {
-      "empty":"필드명,계산식,타입이 빈값이 있습니다."
+      "empty": "필드명,계산식,타입이 빈값이 있습니다.",
+      "notSelectedRowForUpdating": "업데이트할 로우가 선택되지 않았습니다."
     },
     "customDataCalc": {
-      "empty":"필드명,계산식,타입이 빈값이 있습니다.",
-      "Inspection":"계산식에 올바르지 않습니다."
+      "empty": "필드명,계산식,타입이 빈값이 있습니다.",
+      "errorNamingOfAggregateFunc": "집계함수 명칭을 사용할수 없습니다.",
+      "Inspection": "계산식에 올바르지 않습니다."
     }
   },
   "customData": {
@@ -96,6 +98,7 @@
     }
   },
   "Treemap": "트리맵",
+  "hello": "안녕하세요",
   "legned": "범례",
   "notationFormat": "표기형식",
   "contentArray": "콘테츠배열",
@@ -109,6 +112,7 @@
   "userInfomation": "사용자 정보",
   "dashboard": "대시보드",
   "adhoc": "비정형 보고서",
+  "adhocSetting": "비정형 보고서 설정",
   "spreadsheet": "스프레드 시트",
   "dataset": "데이터집합",
   "preference": "환경설정",
@@ -200,6 +204,8 @@
   "order": "순서",
   "conditionName": "조건 명",
   "defaultDatasetName": "데이터집합",
+  "defaultCustomDataName": "계산된 필드",
+  "itemNotSelected": "아이템이 없습니다.",
   "dataSourceNotSelectedMsg": "데이터 원본을 선택하지 않았습니다.",
   "selectDataSource": "데이터 원본 선택",
   "dataSourceName": "데이터 원본 명",
@@ -301,7 +307,7 @@
   "now": "현재",
   "calendarKeyFormat": "Key Value 형식",
   "calendarCaptionFormat": "Caption Value 형식",
-  "year": "년도",
+  "year": "년",
   "month": "월",
   "day": "일",
   "listMap": "지도목록",
@@ -327,9 +333,9 @@
   "scatterPlotMatrix": "산점도 행렬",
   "bivariateChart": "이분법 차트",
   "sankeyChart": "센키차트",
-  "hierarchyChart": "계층차트",
   "networkReduce": "네트워크-축소",
   "networkMagnify": "네트워크-확대",
+  "networkChart": "네트워크 차트",
   "chordDiagram": "의존성 휠",
   "calendarView": "캘린더 뷰",
   "calendarView2": "캘린더2 뷰",
@@ -343,6 +349,7 @@
   "boxPlot": "박스플롯",
   "NeuralNetworkBar": "신경망 바",
   "liquidFillGauge": "액체 게이지",
+  "collapsibleTree": "신경망 트리",
   "heatmap": "히트맵",
   "sunburst": "선버스트",
   "neuralNetworkTree": "신경망 트리",
@@ -366,6 +373,8 @@
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
+  "gridAttibute": "그리드 속성",
+  "topBottom": "Top/Bottom값 설정",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
   "tooltip": "툴팁",
@@ -455,6 +464,11 @@
     {"name": "ceil", "caption": "올림"},
     {"name": "floor", "caption": "버림"}
   ],
+  "initPages": [
+    {"name": "AdHoc", "caption": "비정형 보고서"},
+    {"name": "DashAny", "caption": "대시보드"},
+    {"name": "Excel", "caption": "스프레드"}
+  ],
   "labelDataEdit": "라벨 데이터 편집",
   "showTitle": "제목 보기",
   "formatType": "표기 형식",
@@ -499,7 +513,7 @@
   "highlightBetweenValueCompareMsg": "조건 값(To)이 조건 값(From)보다 커야 합니다.",
   "highlightBetweenValueEssentialMsg": "조건유형 Between은 조건 값(To)도 필수 입력입니다.",
   "highlightOnlyNumberMsg": "조건 값은 숫자만 입력해 주세요.",
-  "highlightInputEssentialValueMsg": "데이터항목, 조건유형, 조건 값은 필수 입력 항목입니다.",
+  "highlightInputEssentialValueMsg": "필수 입력 항목을 입력해 주세요.\n필수 입력(데이터항목, 조건유형, 조건값(From) 조건유형이 Between인 경우 조건값(To))",
   "reportCorrupted": "보고서 데이터가 손상되어 있습니다.\n 관리자에게 문의해 주세요",
   "menuChangeConfirm": "저장되지 않은 작업 내용이 손실될 수 있습니다.\n 이동하시겠습니까?",
   "saveReportMsg": "보고서를 저장했습니다.",
@@ -521,6 +535,8 @@
   "noneExcelFile": "해당 보고서의 Excel 파일이 없습니다.",
   "failToUpload": "파일 업로드에 실패했습니다.",
   "failToDelete": "파일 삭제에 실패했습니다.",
+  "selectUploadFile": "업로드 파일 선택",
+  "selectFile": "파일 선택",
   "deleteDatasetMsg": "데이터 집합을 삭제하시겠습니까?",
   "cofirmGroupBy": "쿼리에 GROUP BY 가 없을 경우 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?",
   "filterErrorMsg": "드레그 기능을 이용한 필터 설정은 '주제영역', '단일 테이블'에서만 가능합니다.",
@@ -549,6 +565,10 @@
   "reportDownload": "보고서 내려받기",
   "groupList": "그룹 목록",
   "invalidQuery": "쿼리가 부적절 합니다. 다시 입력해 주세요.",
+  "length": "길이",
+  "emptyDatasetNmMsg": "데이터 집합 명을 입력해 주세요.",
+  "emptyUploadDataMsg": "업로드된 데이터가 없습니다. 파일을 선택해 주세요.",
+  "duplicatedDatasetNameMsg": "중복된 데이터 집합 명입니다. 다시 입력해 주세요.",
   "openViewer": "뷰어 열기",
   "openDesigner": "디자이너 열기",
   "reportId": "보고서 ID",
@@ -593,6 +613,8 @@
   "requestWorkComplete": "작업을 완료해주세요.",
   "linkReport": "연결 보고서",
   "linkReportAlready": "이미 연결된 보고서 입니다.",
+  "ToolbarVisible": "툴바표시",
+  "editable": "편집",
   "subLinkReportSetting": "서브 연결 보고서 설정",
   "dataFieldLimitMsg": "최대 N개의 항목만 올릴 수 있습니다.",
   "startDate": "날짜(시작)",
@@ -603,11 +625,34 @@
   "relationVisualization": "관계 시각화",
   "connectionVisualization": "연관 시각화",
   "distributionVisualization": "분포 시각화",
+  "invalidValueErrorMsg": "유효하지 않은 데이터 형식입니다.",
   "filter": "필터",
   "columnNumberAutoSetting": "컬럼개수 자동지정",
   "columnNumber": "컬럼개수",
   "nextStep": "다음",
   "prevStep": "이전",
   "completeStep": "완료",
-  "selectAll": "전체 선택"
+  "selectAll": "전체 선택",
+  "date": "일자",
+  "deleteHighlight": "선택한 데이터 하이라이트를 삭제 하시겠습니까?",
+  "duplicatedReportMsg": "동일한 보고서가 이미 열려 있습니다.",
+  "maximumPeriodMsg": "최대 조회 범위는 N TYPE 입니다.",
+  "invalidPeriodMsg": "From 값은 To 값보다 작아야 합니다.",
+  "highlightDupleCheck1": "중복된 조건의 하이라이트가 존재 합니다. 내용 변경을 원하시면 해당 하이라이트를 클릭 후 변경해 주세요.",
+  "highlightDupleCheck2": "중복된 조건의 하이라이트가 존재 합니다.",
+  "reportNotSelectedMsg":"열려있는 보고서가 없습니다.",
+  "logout": "로그아웃",
+  "mypage": "마이페이지",
+  "confirmLogoutMsg": "로그아웃 하시겠습니까?",
+  "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "adHocLayoutOptions":  [
+    {"id": "chart", "text": "차트만 보기"},
+    {"id": "pivot", "text": "피벗그리드만 보기"},
+    {"id": "chart_pivot", "text": "차트, 피벗 전부 보기"}
+  ],
+  "gridVisibility": "그리드 표시 여부",
+  "chartVisibility": "차트 표시 여부",
+  "summaryType": "합계유형",
+  "editReportName": "보고서명 편집"
+  "reportDescription": "보고서 설명"
 }

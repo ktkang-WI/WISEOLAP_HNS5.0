@@ -19,9 +19,11 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import {DesignerMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode,
+  selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
+import ItemType from 'components/report/item/util/ItemType';
 
 
 const useQueryExecute = () => {
@@ -43,6 +45,7 @@ const useQueryExecute = () => {
   const generateParameter = async (item, datasets, parameters, filter={}) => {
     const param = {};
 
+    if (item.type === ItemType.TEXT_BOX) return;
     // TODO: 로그인 추가 후 유저 아이디 수정
     param.userId = 'admin';
     param.itemType = item.type;
@@ -95,6 +98,8 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
     ItemManager.generateParameter(item, param);
 
@@ -113,6 +118,7 @@ const useQueryExecute = () => {
 
     // TODO: 로그인 추가 후 유저 아이디 수정
     param.userId = 'admin';
+    param.itemType = ItemType.CHART;
     param.dataset = {};
 
     // dataset
@@ -141,10 +147,13 @@ const useQueryExecute = () => {
 
     param.parameter = JSON.stringify(parameter);
     param.dataset = JSON.stringify(param.dataset);
+    param.temporaryMeasures =
+      JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem =
-    JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
+      JSON.stringify(rootItem.adHocOption.dataField.sortByItem);
+    param.gridAttribute =
+      JSON.stringify(rootItem?.adHocOption?.gridAttribute) || '{}';
     ItemManager.generateAdHocParameter(rootItem, param);
-
     return param;
   };
 
@@ -154,6 +163,8 @@ const useQueryExecute = () => {
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    */
+  // NOTE: 해당 함수는 비정형 데이터에서 차트 메이커에 접근하여 데이터를 가져온다.
+  // NOTE: 유저 데이터 요청 -> 차트데이터 -> 피벗그리드 -> 데이터 요청 -> 피벗그리드
   const executeAdHocItem = (rootItem, datasets, parameters) => {
     try {
       validateRequiredField(rootItem);
@@ -163,32 +174,24 @@ const useQueryExecute = () => {
       const param = generateAdHocParamter(cloneItem, datasets, parameters);
       const reportId = selectCurrentReportId(store.getState());
 
-      models.Item.getAdHocItemData(param).then((response) => {
+      models.Item.getItemData(param).then((response) => {
         if (response.status != 200) {
-          alert('보고서 조회에 실패했습니다. 관리자에게 문의하세요.');
           return;
         }
+        const data = response.data;
+        if (data.data.length === 0) {
+          alert(`${item.meta.name}${localizedString.noneData}`);
+        }
 
-        if (response.data['chart']) {
-          if (response.data['chart'].data.length == 0) {
-            alert(`${localizedString.adhoc}${localizedString.noneData}`);
-            return;
-          }
-          chartItem.mart.init = true;
-          chartItem.mart.data = response.data['chart'];
-          ItemManager.generateItem(chartItem, cloneItem);
-          dispatch(updateItem({reportId, item: chartItem}));
-        }
-        if (response.data['pivot']) {
-          if (response.data['pivot'].data.length == 0) {
-            alert(`${localizedString.adhoc}${localizedString.noneData}`);
-            return;
-          }
-          pivotItem.mart.init = true;
-          pivotItem.mart.data = response.data['pivot'];
-          ItemManager.generateItem(pivotItem, cloneItem);
-          dispatch(updateItem({reportId, item: pivotItem}));
-        }
+        chartItem.mart.init = true;
+        chartItem.mart.data = data;
+
+        ItemManager.generateItem(chartItem, param, cloneItem);
+        dispatch(updateItem({reportId, item: chartItem}));
+
+        pivotItem.mart.init = true;
+        ItemManager.generateItem(pivotItem, param, cloneItem);
+        dispatch(updateItem({reportId, item: pivotItem}));
       });
     } catch (error) {
       console.error(error);
@@ -213,30 +216,30 @@ const useQueryExecute = () => {
       const reportId = selectCurrentReportId(store.getState());
 
       // TODO: 추후 PivotMatrix 적용할 때 해제
-      // if (item.type == ItemType.PIVOT_GRID) {
-      //   tempItem.mart.init = true;
-      //   ItemUtilityFactory[tempItem.type].generateItem(tempItem, param);
-
-      //   dispatch(updateItem({reportId, item: tempItem}));
-      // } else {
-
-      models.Item.getItemData(param).then((response) => {
-        if (response.status != 200) {
-          return;
-        }
-        const data = response.data;
-        if (data.data.length === 0) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
-
+      if (item.type == ItemType.PIVOT_GRID) {
         tempItem.mart.init = true;
-        tempItem.mart.data = data;
-        tempItem.mart.currentFilter = filter || {};
-
-        ItemManager.generateItem(tempItem);
+        ItemManager.generateItem(tempItem, param);
 
         dispatch(updateItem({reportId, item: tempItem}));
-      });
+      } else {
+        models.Item.getItemData(param).then((response) => {
+          if (response.status != 200) {
+            return;
+          }
+          const data = response.data;
+          if (data.data.length === 0) {
+            alert(`${item.meta.name}${localizedString.noneData}`);
+          }
+
+          tempItem.mart.init = true;
+          tempItem.mart.data = data;
+          tempItem.mart.currentFilter = filter || {};
+
+          ItemManager.generateItem(tempItem, param);
+
+          dispatch(updateItem({reportId, item: tempItem}));
+        });
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -244,36 +247,51 @@ const useQueryExecute = () => {
   };
 
   const executeSpread = async () => {
-    const datasets = selectCurrentDatasets(store.getState());
-    const currentReportId = selectCurrentReportId(store.getState());
+    const state = store.getState();
+    const datasets = selectCurrentDatasets(state);
+    const currentReportId = selectCurrentReportId(state);
+
     if (_.isEmpty(datasets)) {
-      alert(localizedString.dataSourceNotSelectedMsg); return;
+      alert(localizedString.dataSourceNotSelectedMsg);
+      return;
     }
-    const parameters = selectRootParameter(store.getState());
-    const bindingInfos = selectBindingInfos(store.getState());
-    const promises = [];
+
+    const parameters = selectRootParameter(state);
+    const bindingInfos = selectBindingInfos(state);
     const datas = {};
 
-    datasets.forEach((dataset) => {
-      promises.push((async () => {
-        if (
-          _.isEmpty(bindingInfos[dataset.datasetId]) ||
-          !bindingInfos[dataset.datasetId].useBinding
-        ) {
-          alert(localizedString.spreadBindingInfoNot); return;
-        }
-        const dsId = dataset.dataSrcId;
-        const query = dataset.datasetQuery;
-        const data =
-          await models.DBInfo.getAllDatasetDatas(dsId, query, parameters);
-        datas[dataset.datasetId] = data.data;
-      })());
+    const promises = datasets.map((dataset) => {
+      if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
+      !bindingInfos[dataset.datasetId].useBinding) {
+        alert(localizedString.spreadBindingInfoNot);
+        return;
+      }
+      const dsId = dataset.dataSrcId;
+      const query = dataset.datasetQuery;
+      return new Promise((resolve, reject) => {
+        models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
+            .then((res) => {
+              resolve({datasetId: dataset.datasetId, data: res.data});
+            })
+            .catch((e) => {
+              reject(e);
+            });
+      });
     });
-    await Promise.all(promises);
-    dispatch(setSpreadData({
-      reportId: currentReportId,
-      data: datas
-    }));
+
+    Promise.all(promises)
+        .then((res) => {
+          res.forEach((v) => {
+            datas[v.datasetId] = v.data;
+          });
+          dispatch(setSpreadData({
+            reportId: currentReportId,
+            data: datas
+          }));
+        })
+        .catch((res) => {
+          console.log(res);
+        });
   };
 
   /**
@@ -376,9 +394,16 @@ const useQueryExecute = () => {
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
+    const editMode = selectEditMode(store.getState());
 
     if (datasets.length === 0) {
-      alert(localizedString.dataSourceNotSelectedMsg);
+      let msg = localizedString.dataSourceNotSelectedMsg;
+
+      if (editMode == 'viewer') {
+        msg = localizedString.reportNotSelectedMsg;
+      }
+
+      alert(msg);
       return;
     };
 
@@ -576,6 +601,7 @@ const useQueryExecute = () => {
 
   return {
     generateParameter,
+    generateAdHocParamter,
     executeItem,
     executeItems,
     filterItem,

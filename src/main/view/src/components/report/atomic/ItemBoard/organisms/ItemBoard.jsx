@@ -32,16 +32,25 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
 import LiquidFillGauge
   from 'components/report/item/liquidFillGauge/LiquidFillGauge';
-import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
+import CalendarChart
+  from 'components/report/item/calendar/Calendar';
 import Timeline from 'components/report/item/timeline/Timeline';
 import Chord from 'components/report/item/chord/Chord';
 import ArcDiagram from 'components/report/item/arc/ArcDiagram';
+import WordCloud from 'components/report/item/wordCloud/WordCloud';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
 import _ from 'lodash';
 import HeatMap from 'components/report/item/heatMap/HeatMap';
 
+import CollapsibleTree
+  from 'components/report/item/collapsibleTree/CollapsibleTree';
+import RadialTree from 'components/report/item/radialTree/RadialTree';
+
+import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
+import TextBox from 'components/report/item/textBox/TextBox';
+import ItemType from 'components/report/item/util/ItemType';
 
 const theme = getTheme();
 
@@ -112,13 +121,18 @@ const ItemBoard = () => {
     treeMap: TreeMap,
     liquidFillGauge: LiquidFillGauge,
     card: Card,
+    calendar: CalendarChart,
     boxPlot: BoxPlot,
+    textBox: TextBox,
     timeline: Timeline,
     chord: Chord,
     arc: ArcDiagram,
+    wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
     coordinateDot: CoordinateDot,
-    heatMap: HeatMap
+    heatMap: HeatMap,
+    collapsibleTree: CollapsibleTree,
+    radialTree: RadialTree
   };
 
   const itemExportsPicker = (id) => {
@@ -140,6 +154,7 @@ const ItemBoard = () => {
       'CHOROPLETH',
       'TREEMAP',
       'CARD',
+      'CALENDAR',
       'LIQUIDFILLGAUGE',
       'TIMELINE'
     ].includes(pickItem.type);
@@ -165,6 +180,13 @@ const ItemBoard = () => {
   };
 
   const nullDataCheck = (item) => {
+    const isOk =
+      [
+        ItemType.TEXT_BOX,
+        ItemType.PIVOT_GRID
+      ].some((type) => type === item.type);
+    if (isOk) return !isOk;
+
     return !item ||
     item?.mart?.data?.data?.length == 0 ||
     _.isEmpty(item?.mart?.data || {});
@@ -335,7 +357,7 @@ const ItemBoard = () => {
               target={'#'+tabNode._attributes.id+'btn'}
               showEvent="click"
             >
-              {isImg && !isItPossibleToDownloadImg?
+              {isImg && !isItPossibleToDownloadImg ?
               <button onClick={() => {
                 exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
               }}>img</button> : null}

@@ -7,6 +7,9 @@ import ReportListTab
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {getFolderList} from 'models/report/Report';
 import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -24,6 +27,10 @@ const ReportTabSource = [
 const ReportFolderSelectorModal = ({...props}) => {
   const [items, setItems] = useState({});
   let selectedFolder = {};
+  const editMode = useSelector(selectEditMode);
+  // 뷰어에서 공용 폴더 가림. 추후 공용폴더도 사용하면 삭제 예정.
+  const ReportTab =
+    editMode == EditMode['VIEWER'] ? [ReportTabSource[1]] : ReportTabSource;
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
@@ -89,7 +96,7 @@ const ReportFolderSelectorModal = ({...props}) => {
     >
       <ModalPanel title={localizedString.folderList}>
         <CommonTab
-          dataSource={ReportTabSource}
+          dataSource={ReportTab}
           itemComponent={getTabContent}
           width={'100%'}
         />

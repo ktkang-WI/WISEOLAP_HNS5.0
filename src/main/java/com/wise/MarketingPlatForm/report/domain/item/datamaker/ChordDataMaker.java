@@ -11,12 +11,11 @@ import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
-import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 
 public class ChordDataMaker implements ItemDataMaker {
     @Override
     public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = new ArrayList<> ();
+        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
 
@@ -35,13 +34,6 @@ public class ChordDataMaker implements ItemDataMaker {
                 .orderBy()
                 .columnFiltering()
                 .getData();
-
-        DataPickUpMake customData = new DataPickUpMake(data);
-        List<Map<String, Object>> tempData = customData.executer(dimensions, measures);
-
-        if(tempData != null) {
-            data = tempData;
-        }
 
         Map<String, Integer> indexMap = new HashMap<>();
         List<Map<String, String>> groups = new ArrayList<>();
@@ -83,7 +75,7 @@ public class ChordDataMaker implements ItemDataMaker {
         chordData.put("groups", groups);
         chordData.put("matrix", matrix);
 
-        CommonResult result = new CommonResult(data, "", chordData);
+        CommonResult result = new CommonResult(data, chordData);
 
         return result;
     }

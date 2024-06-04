@@ -1,4 +1,5 @@
 import {useDispatch} from 'react-redux';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 
@@ -6,6 +7,7 @@ export default function useLayout() {
   const dispatch = useDispatch();
   const layoutSlice = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
+  const configSlice = ConfigSlice.actions;
 
   const initLayout = (reportTypes) => {
     dispatch(layoutSlice.initLayout(reportTypes));
@@ -122,6 +124,10 @@ export default function useLayout() {
     dispatch(layoutSlice.adHocLayoutUpdate(param));
   };
 
+  const afterLoginInitSettingLayout = (reportTypes, general) => {
+    dispatch(configSlice.setInitDisplayConfig(reportTypes));
+  };
+
   return {
     insertFlexLayout,
     setLayout,
@@ -133,6 +139,7 @@ export default function useLayout() {
     adHocLayoutUpdate,
     editPalette,
     editColor,
-    editMemo
+    editMemo,
+    afterLoginInitSettingLayout
   };
 };

@@ -1,190 +1,41 @@
 package com.wise.MarketingPlatForm.report.domain.item.pivot.pivotmatrix;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class SummaryDimension {
-
-    private static Logger log = LoggerFactory.getLogger(SummaryDimension.class);
+public interface SummaryDimension {
 
     public static final String PATH_DELIMITER = "~|_";
 
-    private String childDataGroupKey;
-    private String key;
+    public String getChildDataGroupKey();
 
-    private List<SummaryDimension> children;
-    private List<SummaryDimension> unmodifiableChildren;
-    private Map<String, SummaryDimension> childMapByKey;
+	public String getKey();
 
-    private SummaryDimension parent;
-    private int depth;
+    public boolean hasChild();
 
-    private String path = "";
-    private String parentPath;
+    public SummaryDimension getChild(final String key);
 
-    private Map<String, Object> attributes;
+    public List<SummaryDimension> getChildren();
 
-    public SummaryDimension() {
-        this.key = null;
-    }
-
-    public String getChildDataGroupKey() {
-        return childDataGroupKey;
-    }
-
-    public void setChildDataGroupKey(String childDataGroupKey) {
-        this.childDataGroupKey = childDataGroupKey;
-    }
-
-    public SummaryDimension(final String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public boolean hasChild() {
-        return children != null && !children.isEmpty();
-    }
-
-    public SummaryDimension getChild(final String key) {
-        if (childMapByKey != null) {
-            return childMapByKey.get(key);
-        }
-
-        return null;
-    }
-
-    public SummaryDimension addChild(final SummaryDimension child) {
-        if (children == null) {
-            children = new LinkedList<>();
-            unmodifiableChildren = Collections.unmodifiableList(children);
-            childMapByKey = new HashMap<>();
-        }
-
-        final boolean added = children.add(child);
-
-        if (!added) {
-            throw new IllegalStateException("Child not added!");
-        }
-
-        childMapByKey.put(child.getKey(), child);
-
-        child.setParent(this);
-        child.depth = depth + 1;
-        child.path = path + PATH_DELIMITER + child.getKey();
-
-        return child;
-    }
-
-    public List<SummaryDimension> getChildren() {
-        return unmodifiableChildren;
-    }
-
-    public void setChildren(List<SummaryDimension> children) {
-        if (this.children == null) {
-            this.children = new LinkedList<>();
-            unmodifiableChildren = Collections.unmodifiableList(this.children);
-            childMapByKey = new HashMap<>();
-        }
-
-        if (children != null) {
-            for (SummaryDimension child : children) {
-                this.children.add(child);
-                childMapByKey.put(child.getKey(), child);
-            }
-        }
-    }
+;    @JsonIgnore
+    public int getChildCount();
 
     @JsonIgnore
-    public int getChildCount() {
-        return unmodifiableChildren != null ? unmodifiableChildren.size() : 0;
-    }
+    public SummaryDimension getParent();
+    
+	public int getDepth();
+
+    public String getPath();
+
+;	public String getParentPath();;
 
     @JsonIgnore
-    public SummaryDimension getParent() {
-        return parent;
-    }
-
-    public void setParent(SummaryDimension parent) {
-        this.parent = parent;
-        this.parentPath = parent == null ? null : parent.getPath();
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getParentPath() {
-        return parentPath;
-    }
-
-    public void setParentPath(String parentPath) {
-        this.parentPath = parentPath;
-    }
-
-    public void sortChildSummaryDimensions(final Comparator<SummaryDimension> comparator) {
-        if (children != null) {
-            try {
-                Collections.sort(children, comparator);
-            }
-            catch (Exception e) {
-                log.error("Failed to sort child summary dimensions using comparator: " + comparator
-                        + ". children: {}", children, e);
-            }
-        }
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getAttributes() {
-        if (attributes == null) {
-            return Collections.emptyMap();
-        }
-
-        return Collections.unmodifiableMap(attributes);
-    }
-
-    public Object getAttribute(final String name) {
-        return attributes != null ? attributes.get(name) : null;
-    }
-
-    public void setAttribute(final String name, final Object value) {
-        if (attributes == null) {
-            attributes = new HashMap<>();
-        }
-
-        attributes.put(name, value);
-    }
-
-    public void removeAttribute(final String name) {
-        if (attributes != null) {
-            attributes.remove(name);
-        }
-    }
+    public Map<String, Object> getAttributes();
+    
+	public Object getAttribute(final String name);
+	
+	public void setAttribute(final String name, final Object value);
 }

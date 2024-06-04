@@ -20,9 +20,15 @@ const EditMode = {
   VIEWER: 'viewer'
 };
 
+const AdHocLayoutTypes = {
+  C: 'chart', G: 'pivot', CTGB: 'chart_pivot',
+  chart: 'C', pivot: 'G', chart_pivot: 'CTGB'
+};
+
 export {
   DesignerMode,
   ConvertDesignerMode,
   RunMode,
-  EditMode
+  EditMode,
+  AdHocLayoutTypes
 };

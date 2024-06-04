@@ -33,6 +33,7 @@ public class GeneralService {
         .mainTitle(generalDTO.getMainTitle())
         .licensesKey(generalDTO.getLicensesKey())
         .webUrl(generalDTO.getWebUrl())
+        .adHocLayout(generalDTO.getAdHocLayout())
         .build();
 
     WbConfigMstrEntity wbConfigMstrEntity = WbConfigMstrEntity.builder()
@@ -41,6 +42,7 @@ public class GeneralService {
         .spreadJsLicense(generalDTO.getSpreadJsLicense())
         .spreadJsDesignLicense(generalDTO.getSpreadJsDesignLicense())
         .kakaoMapApiKey(generalDTO.getKakaoMapApiKey())
+        .menuConfig(generalDTO.getMenuConfig())
         .build();
 
         result = configDAO.updateConfig(configMstrEntity);

@@ -4,7 +4,10 @@ import {defaultDimension, defaultMeasure}
 import chartSeriesButtonIcon from 'assets/image/icon/item/bar.png';
 import localizedString from 'config/localization';
 import {DataFieldType} from '../util/dataFieldType';
-
+import {selectSeriesOption}
+  from 'redux/selector/SeriesOption/SeriesOptionSelector';
+import store from 'redux/modules';
+import {chartImages} from '../util/chartImageImporter';
 
 const seriesOption = localizedString.seriesOptions.data;
 
@@ -61,7 +64,13 @@ const generateMeta = (item) => {
  * @param {*} item 옵션을 삽입할 아이템
  * @param {*} rootItem root item
  */
-const generateItem = (item, rootItem) => {
+/**
+ * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
+ * @param {*} item 옵션을 삽입할 아이템 객체
+ * @param {*} param 아이템 조회 파라미터
+ * @param {*} rootItem rootItem
+ */
+const generateItem = (item, param, rootItem) => {
   const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
   const data = item.mart.data;
   const measures = dataField.measure;
@@ -79,7 +88,18 @@ const getDataFieldOptionChild = () => {
     ...defaultMeasure,
     useButton: true,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-    buttonIcon: chartSeriesButtonIcon,
+    buttonIcon: (column) => {
+      const seriesOptions = selectSeriesOption(store.getState()) || [];
+
+      const seriesOption = seriesOptions.find(
+          (opt) => column?.fieldId == opt?.fieldId);
+
+      if (seriesOption) {
+        return chartImages[seriesOption.type] || chartSeriesButtonIcon;
+      }
+
+      return chartSeriesButtonIcon;
+    },
     buttonEvent: function(e) {
       console.log(e);
     }

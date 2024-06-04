@@ -81,7 +81,7 @@ const useSpreadRibbon = () => {
     createReportBlob().then(
         (blob) => uploadFile(
             blob,
-            {fileName: reportId + '.xlsx'}
+            {fileName: reportId + '.sjs'}
         ));
   };
   const saveReport = () => {
@@ -125,13 +125,12 @@ const useSpreadRibbon = () => {
         e.fileName += e.extName;
       }
       const fileName = e.fileName;
-      const json = JSON.stringify(
-          e.designer.getWorkbook().toJSON({includeBindingSource: true}));
-      e.excelIO.save(json, (blob) => {
+      // 다운로드 방식 변경
+      e.designer.getWorkbook().export((blob) => {
         saveAs(blob, fileName);
-      }, (e) => {
+      }, () => {
         alert(localizedString.reportCorrupted);
-      });
+      }, {includeBindingSource: true, fileType: 0});
     }
   };
 

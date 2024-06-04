@@ -10,5 +10,6 @@ import lombok.Setter;
 public class ConfigMstrEntity {
   String mainTitle;
   String licensesKey;
-  String webUrl; 
+  String webUrl;
+  String adHocLayout;
 }

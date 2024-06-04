@@ -29,6 +29,16 @@ a {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.custom-html-editor-container {
+  border: none !important;
+}
+.custom-not-select {
+  user-select: none;
+  -drag: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
 
 img {
   -webkit-user-select: none;
@@ -165,10 +175,59 @@ img {
   transition: background-color 0.3s ease;
 }
 
+.custom-scrollbar-container::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar-container {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb:active {
   background-color: #b0b0b8;
 }
 
 .liquid-selected {
   border: 2px dotted #b1b1b1;
+}
+
+/* 데이터하이라이트 삭제 버튼 */
+.deleteHighlightBtn {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+/* 데이터하이라이트 필수 정보 */
+.requireRule {
+  color: red;
+}
+
+/* TODO: 툴팁관련 공용컴포넌트 있으면 알려주세요.
+*/
+.ct-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.ct-tooltip .ct-tooltiptext {
+  margin-left: 20px;
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 2px 0px;
+  text-overflow: ellipsis;
+
+  /* Position the tooltip */
+  position: fixed;
+  z-index: 1;
+
+}
+
+.ct-tooltip:hover .ct-tooltiptext {
+  visibility: visible;
 }

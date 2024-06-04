@@ -117,3 +117,26 @@ export const createBorderStyle = (useBorder) => {
   return tableStyle;
 };
 
+export const getJsonKey2ColInfos = (rowData) => {
+  if (_.isEmpty(rowData)) return {colInfos: [], dataSourceHearder: []};
+  const key = Object.keys(rowData[0]);
+  const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let disName = '';
+  const colInfos =[];
+  const dataSourceHearder = {};
+
+  key.map((value, index) => {
+    if (index < str.length ) {
+      disName = str.charAt(index);
+    } else if (index < (str.lengthx2)) {
+      disName = 'A' + str.charAt(index - 25);
+    } else {
+      disName = 'B' + str.charAt(index - 50);
+    }
+    colInfos.push({name: key[index], displayName: disName});
+    dataSourceHearder[key[index]] = key[index];
+  });
+
+  return {colInfos: colInfos, dataSourceHearder: dataSourceHearder};
+};
+

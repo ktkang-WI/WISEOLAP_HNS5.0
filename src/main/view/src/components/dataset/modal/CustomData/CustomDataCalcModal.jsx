@@ -50,25 +50,11 @@ const CustomDataCalcModal = ({...props}) => {
     }
   };
 
-  // TODO: 임시기능요 NULL 체크
-  const nullCheck = (...args) => {
-    let isOk = true;
-    args.forEach((item) => {
-      if (!item) {
-        isOk = false;
-      }
-    });
-    return isOk;
-  };
-
   const handleException = () => {
-    let isOk = true;
+    let isOk =
+      customData?.fieldName && customData?.expression && customData?.type;
     // 사용자 정의 데이터 NULL 체크
-    isOk = nullCheck(
-        customData.fieldName,
-        customData.expression,
-        customData.type);
-    if (isOk === false) {
+    if (!isOk) {
       alert(localizedString.alertInfo.customDataCalc.empty);
       return isOk;
     }

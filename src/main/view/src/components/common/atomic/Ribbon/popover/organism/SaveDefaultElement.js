@@ -10,7 +10,7 @@ import {checkLinkReport} from 'redux/selector/LinkSelector';
 import useLinkReportSave from 'hooks/useLinkReportSave';
 
 const SaveDefaultElement = () => {
-  const {openModal, alert} = useModal();
+  const {openModal, alert, success} = useModal();
   const {patchReport, generateParameter} = useReportSave();
   const {genLinkParam} = useLinkReportSave();
 
@@ -42,7 +42,7 @@ const SaveDefaultElement = () => {
                 return;
               }
 
-              alert(localizedString[msg]);
+              success(localizedString[msg]);
 
               if (result) patchReport(data);
               if (props.createExcelFile) {
