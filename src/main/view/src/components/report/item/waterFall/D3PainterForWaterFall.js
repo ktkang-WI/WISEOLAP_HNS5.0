@@ -5,8 +5,8 @@ const D3PainterForWaterFall = {};
 
 D3PainterForWaterFall.defaultOption = (option) => {
   return {
-    width: option.width,
-    height: option.height,
+    width: option.width - 50,
+    height: option.height - 50,
     margin: {top: 20, right: 30, bottom: 30, left: 50},
     padding: 0.3
   };
@@ -92,15 +92,16 @@ init.paint.drawing = (svg) => {
       .append('rect')
       .attr('class', 'bar')
       .attr('x', (d) => x(d[labelField]))
-      .attr('y', (d) =>
-        d[labelField] === 'End' ? y(d.start) : y(Math.max(0, d.cumulative)))
-      .attr('height', (d) =>
-        d[labelField] === 'End' ?
+      .attr('y', (d, i) =>
+        i === cumulativeData.length - 1 ?
+      y(d.start) : y(Math.max(0, d.cumulative)))
+      .attr('height', (d, i) =>
+        i === cumulativeData.length - 1 ?
         Math.abs(y(d.start) - y(0)) :
         Math.abs(y(d.cumulative) - y(d.cumulative - d[valueField])))
       .attr('width', x.bandwidth())
-      .attr('fill', (d) =>
-        d[labelField] === 'End' ?
+      .attr('fill', (d, i) =>
+        i === cumulativeData.length - 1 ?
       'red' : (d[valueField] >= 0 ? 'steelblue' : 'red'));
 
   // Add the text labels
@@ -110,10 +111,10 @@ init.paint.drawing = (svg) => {
       .append('text')
       .attr('class', 'label')
       .attr('x', (d) => x(d[labelField]) + x.bandwidth() / 2)
-      .attr('y', (d) =>
-        d[labelField] === 'End' ? y(d.start) - 5 : y(d.cumulative) - 5)
+      .attr('y', (d, i) =>
+        i === cumulativeData.length - 1 ? y(d.start) - 5 : y(d.cumulative) - 5)
       .attr('text-anchor', 'middle')
-      .text((d) => d[labelField] === 'End' ? d.start : d.cumulative);
+      .text((d, i) => i === cumulativeData.length - 1 ? d.start : d.cumulative);
 };
 
 init.container = () => {
