@@ -23,6 +23,7 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.StarChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.WaterFallMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ZoomableIcicleDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -101,6 +102,9 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.STAR_CHART) {
             return new StarChartMaker();
+        }
+        if (itemType == ItemType.WATER_FALL) {
+            return new WaterFallMaker();
         }
 
         throw new IllegalArgumentException();
