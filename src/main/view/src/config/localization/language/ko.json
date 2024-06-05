@@ -358,6 +358,7 @@
   "radialNeuralNetwork": "방사형신경망",
   "funnel": "깔때기 차트",
   "timeline": "타임라인",
+  "heatMap": "히트맵",
   "planeCoordinateLine": "평면좌표라인",
   "planeCoordinatePoint": "평면좌표점",
   "synchronizedLineChart": "동기화라인차트",

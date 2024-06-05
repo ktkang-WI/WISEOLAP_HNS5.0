@@ -41,8 +41,9 @@ import WordCloud from 'components/report/item/wordCloud/WordCloud';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
-
 import _ from 'lodash';
+import HeatMap from 'components/report/item/heatMap/HeatMap';
+
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
@@ -134,7 +135,8 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
-    Dot: CoordinateDot,
+    coordinateDot: CoordinateDot,
+    heatMap: HeatMap,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
     sunburstChart: SunBurstChart,

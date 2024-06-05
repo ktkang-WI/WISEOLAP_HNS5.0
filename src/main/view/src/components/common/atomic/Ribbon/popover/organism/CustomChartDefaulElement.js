@@ -15,6 +15,7 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
@@ -45,6 +46,7 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    HEAT_MAP,
     SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
@@ -122,6 +124,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.distributionVisualization,
       checkboxs: [
+        {
+          title: localizedString.heatMap,
+          type: HEAT_MAP,
+          checked: false,
+          src: heatMapImg
+        },
         {
           title: localizedString.boxPlot,
           type: BOX_PLOT,

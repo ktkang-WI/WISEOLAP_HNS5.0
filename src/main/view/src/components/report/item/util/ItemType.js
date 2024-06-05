@@ -16,6 +16,7 @@ export default {
   WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
+  HEAT_MAP: 'heatMap',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
   SUNBURST_CHART: 'sunburstChart',

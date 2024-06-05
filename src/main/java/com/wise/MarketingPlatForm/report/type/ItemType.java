@@ -24,6 +24,7 @@ public enum ItemType {
     WORDCLOUD("wordCloud"),
     COORDINATE_DOT("coordinateDot"),
     COORDINATE_LINE("coordinateLine"),
+    HEAT_MAP("heatMap"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
     ZOOMABLE_CICLE("zoomableCicle"),

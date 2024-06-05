@@ -45,6 +45,13 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
+    case ItemType.HEAT_MAP:
+    {
+      dataFieldFormat.push(DataFieldType.X);
+      dataFieldFormat.push(DataFieldType.Y);
+      dataFieldFormat.push(DataFieldType.MEASURE);
+      break;
+    }
     case ItemType.SCATTER_PLOT:
     case ItemType.COORDINATE_LINE:
     case ItemType.COORDINATE_DOT:
