@@ -25,6 +25,7 @@ const StyledUl = styled.ul`
   padding: 0px 15px;
   padding-bottom: 10px;
   list-style-type: none;
+  text-wrap: pretty;
 `;
 
 const StyledLi = styled.li`
