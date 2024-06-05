@@ -17,12 +17,6 @@ const generateMeta = (item) => {
  * @param {*} rootItem root item
  */
 const generateItem = (item, rootItem) => {
-  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
-  const data = item.mart.data;
-  const measures = dataField.measure;
-  const meaLength = measures.length;
-  item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
-  item.mart.formats = measures.map((mea) => mea.format);
 };
 
 /**
@@ -63,7 +57,7 @@ const getDataFieldOptionChild = () => {
  */
 const generateParameter = (item, param) => {
   const dataField = item.meta.dataField;
-  param.dimension = dataField.dimension.concat(dataField.dimensionGroup);
+  param.dimension = dataField.x.concat(dataField.y);
   param.measure = dataField.measure;
 
   param.dimension = JSON.stringify(param.dimension);

@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,10 +63,30 @@ public class HeatMapMaker implements ItemDataMaker {
          .map((row) -> generateArg(dimNames, row))
          .collect(Collectors.toList());
 
-    final Map<String, Object> info = new HashMap<String, Object>() {{
-      put("seriesMeasureNames", measures);
-      put("dimensions", dimensions);
-    }};
+    
+    datas = datas.stream()
+      .map((d) -> {
+        String xValue = null;
+        String yValue = null;
+        for (Dimension dimension : dimensions) {
+          if (dimension.getCategory().equals("x")) {
+            xValue = d.get(dimension.getName()).toString();
+          }
+          if (dimension.getCategory().equals("y")) {
+            yValue = d.get(dimension.getName()).toString();
+          }
+        }
+        Measure measure = measures.get(0);
+        Map<String, Object> data = new HashMap<>();
+        data.put("x", xValue);
+        data.put("y", yValue);
+        data.put("value", d.get(measure.getSummaryName()));
+        
+        return data;
+      })
+      .collect(Collectors.toList());
+
+    final Map<String, Object> info = new HashMap<>();
     final CommonResult result = new CommonResult(datas, info);
 
     return result;

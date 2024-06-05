@@ -9,14 +9,11 @@ const HeatMap = ({
   id,
   item
 }) => {
-  const mart = item ? item.mart : null;
+  const mart = item?.mart;
   if (!mart.init) {
     return <></>;
   }
   const ref = useRef();
-  const seriesNames = mart.data.info.seriesMeasureNames;
-  const dimensions = mart.data.info.dimensions;
-
   const {height, width} = useSizeObserver(ref);
   return (
     <Wrapper
@@ -24,9 +21,6 @@ const HeatMap = ({
     >
       <D3HeatMap
         dataSource={mart.data.data}
-        valueField={seriesNames[0].summaryName}
-        dimensions={dimensions}
-        labelField='arg'
         width={width}
         height={height}
       />

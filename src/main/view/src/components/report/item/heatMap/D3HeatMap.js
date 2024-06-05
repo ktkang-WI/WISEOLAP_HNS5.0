@@ -3,36 +3,30 @@ import D3PainterForHeatMap from './D3PainterForHeatMap';
 
 const D3HeatMap = ({
   dataSource,
-  valueField,
-  dimensions,
-  labelField,
   width,
   height
 }) => {
   const svgRef = useRef(null);
   useEffect(() => {
     const xDomain =
-      [...new Set(dataSource.map((item) => item[dimensions[0].name]))];
+      [...new Set(dataSource.map((item) => item.x))];
     const yDomain =
-      [...new Set(dataSource.map((item) => item[dimensions[1].name]))];
-    dataSource = dataSource.map((item) => {
-      return {
-        x: item[dimensions[0].name],
-        y: item[dimensions[1].name],
-        value: item[valueField]
-      };
-    });
+      [...new Set(dataSource.map((item) => item.y))];
     D3PainterForHeatMap.init({
       container: svgRef.current,
       dataSource: dataSource,
       xDomain: xDomain,
-      yDomain: yDomain
+      yDomain: yDomain,
+      option: {
+        width: width,
+        height: height
+      }
     });
     D3PainterForHeatMap.painting();
     return () => {
       D3PainterForHeatMap.erasing();
     };
-  }, []);
+  }, [dataSource, width, height]);
   return (
     <div
       ref={svgRef}
