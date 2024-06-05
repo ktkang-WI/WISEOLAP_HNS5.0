@@ -65,7 +65,7 @@ const UserReprotManagement = () => {
     }
   };
   const onClickSave = (e) => {
-    confirm('보고서 내용을 변경 하시겠습니까?', () => {
+    confirm(localizedString.changeReportNmConfirm, () => {
       const report = data;
       updateMyPageReport(report).then((response) => {
         if (response.status == 200) {
@@ -80,9 +80,9 @@ const UserReprotManagement = () => {
   const onClickRemove = (e) => {
     const reportId = data.id;
     if (reportId == '') {
-      console.log('보고서를 선택 후 삭제 버튼을 눌러주세요.');
+      alert(localizedString.selectReportAndDeleteConfirm);
     } else {
-      confirm('보고서를 삭제 하시겠니까?', () => {
+      confirm(localizedString.reportDeleteConfirm, () => {
         deleteReport({reportId: reportId}).then((response) => {
           if (response.status == 200) {
             userFolderData().then((respose) => {
@@ -114,10 +114,10 @@ const UserReprotManagement = () => {
               selectionMode='single'
               parentIdExpr="fldParentId"
               keyExpr="id"
-              noDataText="조회된 보고서가 없습니다." // localized
+              noDataText={localizedString.noReports}
               searchEnabled={true}
               searchEditorOptions={{
-                placeholder: '검색',
+                placeholder: localizedString.search,
                 width: '300px'
               }}
               focusStateEnabled={true}
@@ -127,7 +127,7 @@ const UserReprotManagement = () => {
               <CommonButton
                 width='100px'
                 onClick={onClickRemove}
-              >삭제</CommonButton>
+              >{localizedString.deleteReport}</CommonButton>
             </div>
           </div>
         </ModalPanel>
@@ -140,7 +140,9 @@ const UserReprotManagement = () => {
           <Context.Provider value={context}>
             <MyPageReportForm/>
           </Context.Provider>
-          <CommonButton onClick={onClickSave}>저장</CommonButton>
+          <CommonButton onClick={onClickSave}>
+            {localizedString.saveReport}
+          </CommonButton>
         </ModalPanel>
       </Wrapper>
     </>

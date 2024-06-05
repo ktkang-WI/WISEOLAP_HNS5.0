@@ -6,6 +6,7 @@ import useModal from 'hooks/useModal';
 import {createMyPageFolder, deleteMyPageFolder, updateMyPageFolder}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
+import localizedString from 'config/localization';
 
 const ReportFolderUtility = () => {
   const {alert, confirm, openModal} = useModal();
@@ -15,22 +16,24 @@ const ReportFolderUtility = () => {
     userFolderData().then((respose) => {
       setTreeViewData(respose);
     }).catch(() => {
-      alert('에러 발생. 관리자에게 문의 하세요.');
+      alert(localizedString['axiosReport&folderError']);
     });
   };
 
   const checkValidation = {
     nameDuple: (value, treeViewData) => {
       const check = treeViewData.findIndex((data) => value == data.name);
-      if (check > -1) alert('이름이 중복 되었습니다. 다시 작성해 주세요.');
+      if (check > -1) alert(localizedString.nameDupleAlert);
       return check > -1 ? false : true;
     },
     emptyName: (value) => {
-      if (value == '') alert('이름을 작성해 주세요.');
+      if (value == '') alert(localizedString.emptyNameAlert);
       return value == '' ? false : true;
     },
     noSelection: (itemData) => {
-      if (!Object.keys(itemData).length) alert('아무것도 선택되지 않았습니다.');
+      if (!Object.keys(itemData).length) {
+        alert(localizedString.noSelectionAlert);
+      }
       return !Object.keys(itemData).length ? false : true;
     }
   };
@@ -49,9 +52,9 @@ const ReportFolderUtility = () => {
   };
 
   const newUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
-    confirm('폴더를 생성 하시겠습니까?', () => {
+    confirm(localizedString.createFolderConfirm, () => {
       openModal(InputTxtAndCheckBox, {
-        modalTitle: '폴더 생성',
+        modalTitle: localizedString.createFolder,
         onSubmit: (value, check) => {
           let isOk= checkValidation.emptyName(value);
           isOk = checkValidation.nameDuple(value, treeViewData);
@@ -87,7 +90,7 @@ const ReportFolderUtility = () => {
   };
 
   const deleteUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
-    confirm('삭제 하시겠습니까?', () => {
+    confirm(localizedString.deleteConfirm, () => {
       const flds = treeViewData.folder.filter((fld) => fld.id == itemData.id);
 
       getRecursiveUserFolderId(treeViewData, itemData, flds);
@@ -102,9 +105,9 @@ const ReportFolderUtility = () => {
   };
 
   const updateUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
-    confirm('폴더 이름을 변경 하시겠습니까?', () => {
+    confirm(localizedString.changeFolderNmConfirm, () => {
       openModal(SimpleInputModal, {
-        modalTitle: '폴더 이름 변경',
+        modalTitle: localizedString.changeFolderNm,
         defaultValue: itemData.name,
         onSubmit: (value) => {
           let isOk= checkValidation.emptyName(value);

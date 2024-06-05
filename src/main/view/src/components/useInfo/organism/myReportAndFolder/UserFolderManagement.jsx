@@ -94,10 +94,10 @@ const UserFolderManagement = () => {
             selectionMode='single'
             parentIdExpr="fldParentId"
             keyExpr="id"
-            noDataText="조회된 보고서가 없습니다."
+            noDataText={localizedString.noReports}
             searchEnabled={true}
             searchEditorOptions={{
-              placeholder: '검색',
+              placeholder: localizedString.search,
               width: '300px'
             }}
             selectByClick={false}
@@ -108,15 +108,15 @@ const UserFolderManagement = () => {
             <CommonButton
               width='150px'
               onClick={newUserFolder}
-            >새로만들기</CommonButton>
+            >{localizedString.newReport}</CommonButton>
             <CommonButton
               width='100px'
               onClick={updateUserFolder}
-            >편집</CommonButton>
+            >{localizedString.editable}</CommonButton>
             <CommonButton
               width='100px'
               onClick={deleteUserFolder}
-            >삭제</CommonButton>
+            >{localizedString.deleteReport}</CommonButton>
           </div>
         </div>
       </Wrapper>
