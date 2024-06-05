@@ -91,7 +91,7 @@ const ReportFolderUtility = () => {
 
   const deleteUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
     confirm(localizedString.deleteConfirm, () => {
-      const flds = treeViewData.folder.filter((fld) => fld.id == itemData.id);
+      const flds = treeViewData.filter((fld) => fld.id == itemData.id);
 
       getRecursiveUserFolderId(treeViewData, itemData, flds);
 
