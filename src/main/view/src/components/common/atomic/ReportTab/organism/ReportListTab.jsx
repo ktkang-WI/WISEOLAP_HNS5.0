@@ -62,6 +62,7 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
         }}
         focusStateEnabled={true}
         onItemClick={handleItemClick}
+        searchEnabled={true}
         {...props}
       />
     </Wrapper>
