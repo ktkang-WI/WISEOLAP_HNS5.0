@@ -3,10 +3,10 @@ import * as d3 from 'd3';
 // public
 const D3PainterForWaterFall = {};
 
-D3PainterForWaterFall.defaultOption = () => {
+D3PainterForWaterFall.defaultOption = (option) => {
   return {
-    width: 800,
-    height: 450,
+    width: option.width,
+    height: option.height,
     margin: {top: 20, right: 30, bottom: 30, left: 50},
     padding: 0.3
   };
@@ -17,7 +17,8 @@ D3PainterForWaterFall.init = ({
   dataSource,
   valueField,
   labelField,
-  defaultOption = D3PainterForWaterFall.defaultOption()
+  option,
+  defaultOption = D3PainterForWaterFall.defaultOption(option)
 }) => {
   if (!container) {
     return new Error('The Container attribute can\'t be null');
