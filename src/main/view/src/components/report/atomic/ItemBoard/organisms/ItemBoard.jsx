@@ -57,6 +57,7 @@ import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
 import StarChart from 'components/report/item/starChart/StarChart';
+import WaterFall from 'components/report/item/waterFall/WaterFall';
 
 const theme = getTheme();
 
@@ -144,7 +145,8 @@ const ItemBoard = () => {
     ciclePacking: CiclePacking,
     scatterPlot: ScatterPlot,
     funnelChart: FunnelChart,
-    starChart: StarChart
+    starChart: StarChart,
+    waterFall: WaterFall
   };
 
   const itemExportsPicker = (id) => {

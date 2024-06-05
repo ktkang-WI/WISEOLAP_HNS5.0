@@ -32,7 +32,8 @@ public enum ItemType {
     SCATTER_PLOT("scatterPlot"),
     SUNBURST_CHART("sunburstChart"),
     FUNNEL_CHART("funnelChart"),
-    STAR_CHART("starChart")
+    STAR_CHART("starChart"),
+    WATER_FALL("waterFall")
     ;
     
     private final String symbol;

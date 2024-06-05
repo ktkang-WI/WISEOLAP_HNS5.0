@@ -41,7 +41,8 @@ const makeItem = (orgItem, countMap) => {
     zoomableCicle: '계층형 네모차트',
     ciclePacking: '버블팩',
     scatterPlot: '산점도',
-    starChart: '스타차트'
+    starChart: '스타차트',
+    waterFall: '폭포수'
   };
 
   let initNum = 1;

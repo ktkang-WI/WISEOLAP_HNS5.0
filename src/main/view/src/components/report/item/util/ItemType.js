@@ -24,5 +24,6 @@ export default {
   CICLE_PACKING: 'ciclePacking',
   SCATTER_PLOT: 'scatterPlot',
   FUNNEL_CHART: 'funnelChart',
-  STAR_CHART: 'starChart'
+  STAR_CHART: 'starChart',
+  WATER_FALL: 'waterFall'
 };
