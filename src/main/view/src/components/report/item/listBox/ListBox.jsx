@@ -1,33 +1,54 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import ItemManager from 'components/report/item/util/ItemManager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {List} from 'devextreme-react';
+import {useInteractiveEffect} from '../util/useInteractiveEffect';
 
 const ListBox = ({setItemExports, id, item}) => {
   const mart = item?.mart;
+  const meta = item?.meta;
   if (!mart.init) {
     return <></>;
   }
+
+  const {
+    functions
+  } = useInteractiveEffect({
+    item: item,
+    meta: meta,
+    selectionFunc: (event) => {
+      event?.forEach((e) => e?.target?.selected(true));
+    }
+  });
+
   const ref = useRef();
   const [selectionMode] = useState('all');
   const [selectAllMode] = useState('page');
-  const [selectedItemKeys] = useState([]);
+  const [selectedItemKeys, setSelectedItemKeys] = useState([]);
   const [selectByClick] = useState(false);
-  const {height, width} = useSizeObserver(ref);
-  console.log(height);
-  console.log(width);
 
-  /*
-  const dataSource = new ArrayStore({
-    key: 'id',
-    data: tasks,
-  { id: 6, text: '2016 Brochure Designs' },
-  { id: 7, text: 'Brochure Design Review' },
-  }); */
+  const handleOnItemClick = useCallback((e) => {
+    const selectedItemKey = e.itemData.arg;
+    const index = selectedItemKeys.indexOf(selectedItemKey);
+    if (index === -1) {
+      setSelectedItemKeys([...selectedItemKeys, selectedItemKey]);
+    } else {
+      setSelectedItemKeys(selectedItemKeys.filter((key) =>
+        key !== selectedItemKey));
+    }
 
-  const onSelectedItemKeysChange = (e) => {
+    functions.setDataMasterFilter(selectedItemKey);
+    functions.masterFilterReload(e);
+  }, [selectedItemKeys, setSelectedItemKeys, functions]);
 
-  };
+  const onSelectedItemKeysChange = useCallback(({name, value}) => {
+    if (name === 'selectedItemKeys') {
+      if (selectionMode !== 'none' || selectedItemKeys.length !== 0) {
+        setSelectedItemKeys(value);
+      }
+    }
+  }, [selectionMode, selectedItemKeys, setSelectedItemKeys]);
+
   return (
     <Wrapper
       ref={ref}
@@ -42,8 +63,9 @@ const ListBox = ({setItemExports, id, item}) => {
         displayExpr='arg'
         keyExpr='arg'
         selectByClick={selectByClick}
-        onOptionChanged={onSelectedItemKeysChange}>
-      </List>
+        onItemClick={handleOnItemClick}
+        onOptionChanged={onSelectedItemKeysChange}
+      />
     </Wrapper>
   );
 };

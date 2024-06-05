@@ -31,7 +31,6 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.WordCloudMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ZoomableIcicleDataMaker;
 import com.wise.MarketingPlatForm.report.type.ItemType;
 
-import javafx.scene.control.ComboBox;
 
 public class ItemDataMakerFactory {
     public ItemDataMaker getItemDataMaker(ItemType itemType) {

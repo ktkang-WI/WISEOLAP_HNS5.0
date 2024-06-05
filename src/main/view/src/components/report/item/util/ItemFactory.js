@@ -52,6 +52,8 @@ const makeItem = (orgItem, countMap) => {
   if (countMap) {
     initNum = countMap[orgItem.type];
   }
+  const fixMasterFilter = ['listBox', 'treeView', 'comboBox'];
+  const isFixMasterFilter = fixMasterFilter.includes(orgItem.type);
   const seriesType = orgItem.chartType;
   delete orgItem.chartType;
   // meta 값 있는 경우 불러오기로 간주
@@ -61,12 +63,13 @@ const makeItem = (orgItem, countMap) => {
       ...orgItem,
       meta: {
         interactiveOption: {
-          mode: 'single', // 마스터 필터 모드 'signle' or 'multiple'
-          enabled: false, // 마스터 필터 사용 여부
-          ignoreMasterFilter: false, // 마스터 필터 무시
+          mode: isFixMasterFilter ?
+            'multiple': 'single', // 마스터 필터 모드 'signle' or 'multiple'
+          enabled: isFixMasterFilter, // 마스터 필터 사용 여부
+          ignoreMasterFilter: isFixMasterFilter, // 마스터 필터 무시
           // 교차 데이터 소스 필터링 (마스터 필터가 enable 돼 있는데 해당 옵션 true면
           // 데이터 집합 관계없이 마스터 필터 일괄 적용)
-          crossDataSource: false,
+          crossDataSource: isFixMasterFilter,
           targetDimension: 'dimension' // 대상 차원
         },
         name: type[orgItem.type] + initNum,
