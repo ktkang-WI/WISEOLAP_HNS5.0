@@ -60,6 +60,7 @@ import ListBox from 'components/report/item/listBox/ListBox';
 import TreeView from 'components/report/item/treeView/TreeView';
 import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
 import StarChart from 'components/report/item/starChart/StarChart';
+import WaterFall from 'components/report/item/waterFall/WaterFall';
 
 const theme = getTheme();
 
@@ -150,7 +151,8 @@ const ItemBoard = () => {
     listBox: ListBox,
     treeView: TreeView,
     funnelChart: FunnelChart,
-    starChart: StarChart
+    starChart: StarChart,
+    waterFall: WaterFall
   };
 
   const itemExportsPicker = (id) => {

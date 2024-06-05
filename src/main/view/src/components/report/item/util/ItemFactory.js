@@ -44,7 +44,8 @@ const makeItem = (orgItem, countMap) => {
     comboBox: '콤보상자',
     listBox: '목록상자',
     treeView: '트리보기',
-    starChart: '스타차트'
+    starChart: '스타차트',
+    waterFall: '폭포수'
   };
 
   let initNum = 1;

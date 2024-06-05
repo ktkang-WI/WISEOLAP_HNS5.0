@@ -28,6 +28,7 @@ import treeViewImg from 'assets/image/icon/item/tree_view.png';
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
 import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import waterFallImg from 'assets/image/icon/item/waterfall.png';
 import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -94,6 +95,12 @@ const CustomChartDefaulElement = () => {
           type: WORDCLOUD,
           checked: false,
           src: wordCloudImg
+        },
+        {
+          title: localizedString.waterFall,
+          type: ItemType.WATER_FALL,
+          checked: false,
+          src: waterFallImg
         }
       ]
     },
