@@ -30,18 +30,21 @@ const makeItem = (orgItem, countMap) => {
     timeline: '타임라인',
     chord: '의존성 휠',
     arc: '아크 다이어그램',
+    heatMap: '히트맵',
     wordCloud: '워드클라우드',
     coordinateLine: '평면좌표 라인',
     coordinateDot: '평면좌표 점',
     collapsibleTree: '신경망 트리',
     radialTree: '방사형신경망',
     sunburstChart: '선버스트',
+    funnelChart: '깔때기',
     zoomableCicle: '계층형 네모차트',
     ciclePacking: '버블팩',
     scatterPlot: '산점도',
     comboBox: '콤보상자',
     listBox: '목록상자',
-    treeView: '트리보기'
+    treeView: '트리보기',
+    starChart: '스타차트'
   };
 
   let initNum = 1;

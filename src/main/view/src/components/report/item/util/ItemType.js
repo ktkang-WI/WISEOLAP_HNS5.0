@@ -16,6 +16,7 @@ export default {
   WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
+  HEAT_MAP: 'heatMap',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
   SUNBURST_CHART: 'sunburstChart',
@@ -24,5 +25,7 @@ export default {
   SCATTER_PLOT: 'scatterPlot',
   COMBO_BOX: 'comboBox',
   LIST_BOX: 'listBox',
-  TREE_VIEW: 'treeView'
+  TREE_VIEW: 'treeView',
+  FUNNEL_CHART: 'funnelChart',
+  STAR_CHART: 'starChart'
 };

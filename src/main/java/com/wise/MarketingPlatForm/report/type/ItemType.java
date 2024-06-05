@@ -24,6 +24,7 @@ public enum ItemType {
     WORDCLOUD("wordCloud"),
     COORDINATE_DOT("coordinateDot"),
     COORDINATE_LINE("coordinateLine"),
+    HEAT_MAP("heatMap"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
     ZOOMABLE_CICLE("zoomableCicle"),
@@ -32,7 +33,9 @@ public enum ItemType {
     SUNBURST_CHART("sunburstChart"),
     COMBO_BOX("comboBox"),
     LIST_BOX("listBox"),
-    TREE_VIEW("treeView")
+    TREE_VIEW("treeView"),
+    FUNNEL_CHART("funnelChart"),
+    STAR_CHART("starChart")
     ;
     
     private final String symbol;

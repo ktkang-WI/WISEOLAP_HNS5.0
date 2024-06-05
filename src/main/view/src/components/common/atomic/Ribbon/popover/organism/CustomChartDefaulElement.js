@@ -15,6 +15,7 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
@@ -25,7 +26,9 @@ import listBoxImg from 'assets/image/icon/item/list_box.png';
 import treeViewImg from 'assets/image/icon/item/tree_view.png';
 
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
+import funnelImg from 'assets/image/icon/item/funnel.png';
 import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -48,6 +51,7 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    HEAT_MAP,
     SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
@@ -126,6 +130,12 @@ const CustomChartDefaulElement = () => {
       title: localizedString.distributionVisualization,
       checkboxs: [
         {
+          title: localizedString.heatMap,
+          type: HEAT_MAP,
+          checked: false,
+          src: heatMapImg
+        },
+        {
           title: localizedString.boxPlot,
           type: BOX_PLOT,
           checked: false,
@@ -178,6 +188,18 @@ const CustomChartDefaulElement = () => {
           type: ItemType.CICLE_PACKING,
           checked: false,
           src: bubblePackImg
+        },
+        {
+          title: localizedString.funnel,
+          type: ItemType.FUNNEL_CHART,
+          checked: false,
+          src: funnelImg
+        },
+        {
+          title: localizedString.starChart,
+          type: ItemType.STAR_CHART,
+          checked: false,
+          src: starChartImg
         }
       ]
     },

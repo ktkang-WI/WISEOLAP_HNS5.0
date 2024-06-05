@@ -41,8 +41,9 @@ import WordCloud from 'components/report/item/wordCloud/WordCloud';
 import CoordinateLine
   from 'components/report/item/coordinateLine/CoordinateLine';
 import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
-
 import _ from 'lodash';
+import HeatMap from 'components/report/item/heatMap/HeatMap';
+
 import CollapsibleTree
   from 'components/report/item/collapsibleTree/CollapsibleTree';
 import RadialTree from 'components/report/item/radialTree/RadialTree';
@@ -57,6 +58,8 @@ import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 import ComboBox from 'components/report/item/comboBox/ComboBox';
 import ListBox from 'components/report/item/listBox/ListBox';
 import TreeView from 'components/report/item/treeView/TreeView';
+import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
+import StarChart from 'components/report/item/starChart/StarChart';
 
 const theme = getTheme();
 
@@ -135,7 +138,8 @@ const ItemBoard = () => {
     arc: ArcDiagram,
     wordCloud: WordCloud,
     coordinateLine: CoordinateLine,
-    Dot: CoordinateDot,
+    coordinateDot: CoordinateDot,
+    heatMap: HeatMap,
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
     sunburstChart: SunBurstChart,
@@ -144,7 +148,9 @@ const ItemBoard = () => {
     scatterPlot: ScatterPlot,
     comboBox: ComboBox,
     listBox: ListBox,
-    treeView: TreeView
+    treeView: TreeView,
+    funnelChart: FunnelChart,
+    starChart: StarChart
   };
 
   const itemExportsPicker = (id) => {
