@@ -1,6 +1,7 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import ItemManager from 'components/report/item/util/ItemManager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {List} from 'devextreme-react';
 
 const ListBox = ({setItemExports, id, item}) => {
   const mart = item?.mart;
@@ -8,16 +9,41 @@ const ListBox = ({setItemExports, id, item}) => {
     return <></>;
   }
   const ref = useRef();
+  const [selectionMode] = useState('all');
+  const [selectAllMode] = useState('page');
+  const [selectedItemKeys] = useState([]);
+  const [selectByClick] = useState(false);
   const {height, width} = useSizeObserver(ref);
+  console.log(height);
+  console.log(width);
+
+  /*
+  const dataSource = new ArrayStore({
+    key: 'id',
+    data: tasks,
+
+    
+  { id: 6, text: '2016 Brochure Designs' },
+  { id: 7, text: 'Brochure Design Review' },
+  }); */
+
+  const onSelectedItemKeysChange = (e) => {
+
+  };
   return (
     <Wrapper
       ref={ref}
     >
-      <D3CollapsibleTree
-        dataSource={JSON.parse(mart.data.info.jsonData)}
-        width={width}
-        height={height}
-      />
+      <List
+        dataSource={dataSource}
+        height={400}
+        showSelectionControls={true}
+        selectionMode={selectionMode}
+        selectAllMode={selectAllMode}
+        selectedItemKeys={selectedItemKeys}
+        selectByClick={selectByClick}
+        onOptionChanged={onSelectedItemKeysChange}>
+      </List>
     </Wrapper>
   );
 };

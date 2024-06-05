@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import ItemManager from 'components/report/item/util/ItemManager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {SelectBox} from 'devextreme-react';
 
 const ComboBox = ({setItemExports, id, item}) => {
   const mart = item?.mart;
@@ -8,15 +9,16 @@ const ComboBox = ({setItemExports, id, item}) => {
     return <></>;
   }
   const ref = useRef();
-  const {height, width} = useSizeObserver(ref);
+  const {width} = useSizeObserver(ref);
   return (
     <Wrapper
       ref={ref}
     >
-      <D3CollapsibleTree
-        dataSource={JSON.parse(mart.data.info.jsonData)}
+      <SelectBox
         width={width}
-        height={height}
+        items={[...pageUsageOfPageCount.pageSizes]}
+        defaultValue={''}
+        // onValueChanged={handlePaginationValue}
       />
     </Wrapper>
   );
