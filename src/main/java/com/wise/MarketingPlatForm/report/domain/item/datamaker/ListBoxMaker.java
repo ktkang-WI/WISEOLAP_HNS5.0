@@ -76,7 +76,7 @@ public class ListBoxMaker implements ItemDataMaker {
                                       .map(name -> String.valueOf(row.get(name)))
                                       .collect(Collectors.toList());
     Collections.reverse(args);
-    row.put("arg", String.join("<br/>", args));
+    row.put("arg", String.join("-", args));
     return row;
   }
 }

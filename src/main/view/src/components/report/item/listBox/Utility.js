@@ -25,7 +25,8 @@ const generateItem = (item, param, rootItem) => {
  */
 const getDataFieldOptionChild = () => {
   const dataFieldDimension = {
-    ...defaultDimension
+    ...defaultDimension,
+    limit: 1
   };
 
   return {

@@ -52,8 +52,21 @@ const makeItem = (orgItem, countMap) => {
   if (countMap) {
     initNum = countMap[orgItem.type];
   }
-  const fixMasterFilter = ['listBox', 'treeView', 'comboBox'];
-  const isFixMasterFilter = fixMasterFilter.includes(orgItem.type);
+  const fixMasterFilter = [
+    {
+      name: 'listBox',
+      mode: 'multiple'
+    },
+    {
+      name: 'treeView',
+      mode: 'multiple'
+    },
+    {
+      name: 'comboBox',
+      mode: 'single'
+    }];
+  const isFixMasterFilter =
+    fixMasterFilter.map((d) => d.name).includes(orgItem.type);
   const seriesType = orgItem.chartType;
   delete orgItem.chartType;
   // meta 값 있는 경우 불러오기로 간주
@@ -63,8 +76,10 @@ const makeItem = (orgItem, countMap) => {
       ...orgItem,
       meta: {
         interactiveOption: {
-          mode: isFixMasterFilter ?
-            'multiple': 'single', // 마스터 필터 모드 'signle' or 'multiple'
+          mode:
+            fixMasterFilter.find((d) =>
+              d.name == seriesType)?.mode || 'single',
+          // 마스터 필터 모드 'signle' or 'multiple'
           enabled: isFixMasterFilter, // 마스터 필터 사용 여부
           ignoreMasterFilter: isFixMasterFilter, // 마스터 필터 무시
           // 교차 데이터 소스 필터링 (마스터 필터가 enable 돼 있는데 해당 옵션 true면

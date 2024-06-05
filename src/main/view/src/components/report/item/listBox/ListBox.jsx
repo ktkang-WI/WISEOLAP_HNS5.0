@@ -41,10 +41,18 @@ const ListBox = ({setItemExports, id, item}) => {
     functions.masterFilterReload(e);
   }, [selectedItemKeys, setSelectedItemKeys, functions]);
 
-  const onSelectedItemKeysChange = useCallback(({name, value}) => {
-    if (name === 'selectedItemKeys') {
+  const onSelectedItemKeysChange = useCallback((e) => {
+    if (e.name === 'selectedItemKeys') {
       if (selectionMode !== 'none' || selectedItemKeys.length !== 0) {
-        setSelectedItemKeys(value);
+        const selectedItemKeyAdd =
+          e.value.find((v) => !e.previousValue.includes(v));
+        const selectedItemKeyRemove =
+          e.previousValue.find((v) => !e.value.includes(v));
+
+        setSelectedItemKeys(e.value);
+        functions.setDataMasterFilter(
+            selectedItemKeyAdd || selectedItemKeyRemove);
+        functions.masterFilterReload(e);
       }
     }
   }, [selectionMode, selectedItemKeys, setSelectedItemKeys]);
