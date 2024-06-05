@@ -21,8 +21,6 @@ const ListBox = ({setItemExports, id, item}) => {
   const dataSource = new ArrayStore({
     key: 'id',
     data: tasks,
-
-    
   { id: 6, text: '2016 Brochure Designs' },
   { id: 7, text: 'Brochure Design Review' },
   }); */
@@ -35,12 +33,14 @@ const ListBox = ({setItemExports, id, item}) => {
       ref={ref}
     >
       <List
-        dataSource={dataSource}
+        dataSource={mart.data.data}
         height={400}
         showSelectionControls={true}
         selectionMode={selectionMode}
         selectAllMode={selectAllMode}
         selectedItemKeys={selectedItemKeys}
+        displayExpr='arg'
+        keyExpr='arg'
         selectByClick={selectByClick}
         onOptionChanged={onSelectedItemKeysChange}>
       </List>

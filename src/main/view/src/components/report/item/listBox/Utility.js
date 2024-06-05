@@ -1,6 +1,5 @@
-import {defaultDimension, defaultMeasure}
+import {defaultDimension}
   from 'components/report/item/util/martUtilityFactory';
-import chartSeriesButtonIcon from 'assets/image/icon/button/add_chart.png';
 import {DataFieldType} from '../util/dataFieldType';
 
 
@@ -18,12 +17,6 @@ const generateMeta = (item) => {
  * @param {*} rootItem rootItem
  */
 const generateItem = (item, param, rootItem) => {
-  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
-  const data = item.mart.data;
-  const measures = dataField.measure;
-  const meaLength = measures.length;
-  item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
-  item.mart.formats = measures.map((mea) => mea.format);
 };
 
 /**
@@ -31,20 +24,11 @@ const generateItem = (item, param, rootItem) => {
  * @return {JSON} dataFieldOption
  */
 const getDataFieldOptionChild = () => {
-  const dataFieldMeasure = {
-    ...defaultMeasure,
-    useButton: false,
-    // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-    buttonIcon: chartSeriesButtonIcon,
-    limit: 1
-  };
-
   const dataFieldDimension = {
     ...defaultDimension
   };
 
   return {
-    [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.DIMENSION]: dataFieldDimension
   };
 };
@@ -82,8 +66,6 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
-    'InteractionNoDrillDown',
-    'InteractionConfiguration'
   ];
 };
 
