@@ -37,9 +37,11 @@ const makeItem = (orgItem, countMap) => {
     collapsibleTree: '신경망 트리',
     radialTree: '방사형신경망',
     sunburstChart: '선버스트',
+    funnelChart: '깔때기',
     zoomableCicle: '계층형 네모차트',
     ciclePacking: '버블팩',
-    scatterPlot: '산점도'
+    scatterPlot: '산점도',
+    starChart: '스타차트'
   };
 
   let initNum = 1;

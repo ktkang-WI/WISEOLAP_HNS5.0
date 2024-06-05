@@ -22,5 +22,7 @@ export default {
   SUNBURST_CHART: 'sunburstChart',
   ZOOMABLE_CICLE: 'zoomableCicle',
   CICLE_PACKING: 'ciclePacking',
-  SCATTER_PLOT: 'scatterPlot'
+  SCATTER_PLOT: 'scatterPlot',
+  FUNNEL_CHART: 'funnelChart',
+  STAR_CHART: 'starChart'
 };

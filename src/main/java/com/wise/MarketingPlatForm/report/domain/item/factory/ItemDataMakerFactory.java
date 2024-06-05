@@ -13,11 +13,13 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.CollapsibleTreeMa
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.CoordinateChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.DataGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.HeatMapMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.FunnelMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.LiquidFillGaugeDataMakter;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ScatterPlotMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.StarChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TimelineDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.TreeMapDataMaker;
@@ -93,6 +95,12 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.CICLE_PACKING) {
             return new CirclePackingDataMaker();
+        }
+        if (itemType == ItemType.FUNNEL_CHART) {
+            return new FunnelMaker();
+        }
+        if (itemType == ItemType.STAR_CHART) {
+            return new StarChartMaker();
         }
 
         throw new IllegalArgumentException();
