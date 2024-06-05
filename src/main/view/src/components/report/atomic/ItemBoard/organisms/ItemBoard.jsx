@@ -54,7 +54,8 @@ import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
 import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
-import FunnelChart from 'components/report/item/Funnel/FunnelChart';
+import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
+import StarChart from 'components/report/item/starChart/StarChart';
 
 const theme = getTheme();
 
@@ -140,7 +141,8 @@ const ItemBoard = () => {
     zoomableCicle: ZoomableCicle,
     ciclePacking: CiclePacking,
     scatterPlot: ScatterPlot,
-    funnelChart: FunnelChart
+    funnelChart: FunnelChart,
+    starChart: StarChart
   };
 
   const itemExportsPicker = (id) => {
