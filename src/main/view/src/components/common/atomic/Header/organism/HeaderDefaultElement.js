@@ -180,7 +180,7 @@ const HeaderDefaultElement = () => {
         'showEvent': 'click',
         'position': 'bottom'
       },
-      'id': 'user_info',
+      'id': 'user_info_popover',
       'usePopover': true,
       'label': test, // 임시 적용.
       'buttonType': 'onlyImageText',

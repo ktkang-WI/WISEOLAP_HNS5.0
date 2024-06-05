@@ -651,6 +651,8 @@
   "mypage": "마이페이지",
   "confirmLogoutMsg": "로그아웃 하시겠습니까?",
   "failedLogout": "로그아웃에 실패했습니다. 관리자에게 문의해 주세요.",
+  "folder": "폴더",
+  "report": "보고서",
   "adHocLayoutOptions":  [
     {"id": "chart", "text": "차트만 보기"},
     {"id": "pivot", "text": "피벗그리드만 보기"},
@@ -660,5 +662,19 @@
   "chartVisibility": "차트 표시 여부",
   "summaryType": "합계유형",
   "editReportName": "보고서명 편집",
-  "reportDescription": "보고서 설명"
+  "reportDescription": "보고서 설명",
+  "changeReportNmConfirm": "보고서 내용을 변경 하시겠습니까?",
+  "reportDeleteConfirm": "보고서를 삭제 하시겠니까?",
+  "selectReportAndDeleteConfirm": "보고서를 선택 후 삭제 버튼을 눌러주세요.",
+  "noReports": "조회된 보고서가 없습니다.",
+  "changeFolderNm": "폴더 이름 변경",
+  "changeFolderNmConfirm": "폴더 이름을 변경 하시겠습니까?",
+  "deleteConfirm": "삭제 하시겠습니까?",
+  "createFolder": "폴더 생성",
+  "createFolderConfirm": "폴더를 생성 하시겠습니까?",
+  "axiosReport&folderError": "폴더, 보고서를 가져오는데 실패 했습니다.\n 관리자에게 문의하세요",
+  "emptyNameAlert": "이름을 작성해 주세요.",
+  "nameDupleAlert": "이름이 중복 되었습니다. 다시 작성해 주세요.",
+  "noSelectionAlert": "아무것도 선택되지 않았습니다. 다시 선택해 주세요.",
+  "search": "검색"
 }
