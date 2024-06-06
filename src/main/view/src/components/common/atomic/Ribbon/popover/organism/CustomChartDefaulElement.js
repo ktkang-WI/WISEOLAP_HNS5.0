@@ -28,6 +28,7 @@ import treeViewImg from 'assets/image/icon/item/tree_view.png';
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
 import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import schedulerImg from 'assets/image/icon/item/scheduler.png';
 import waterFallImg from 'assets/image/icon/item/waterfall.png';
 import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
@@ -253,6 +254,12 @@ const CustomChartDefaulElement = () => {
           type: TEXT_BOX,
           checked: false,
           src: textBoxImg
+        },
+        {
+          title: localizedString.scheduler,
+          type: ItemType.SCHEDULER_COMPONENT,
+          checked: false,
+          src: schedulerImg
         }
       ]
     }

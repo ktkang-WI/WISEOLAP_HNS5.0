@@ -54,29 +54,30 @@ public class TreeViewMaker implements ItemDataMaker {
       .stream()
       .map((dim) -> dim.getName())
       .collect(Collectors.toList());
-    
-    datas = datas.stream()
-         .map((row) -> generateArg(dimNames, row))
-         .collect(Collectors.toList());
-
+    List<Map<String, Object>> treeDatas = new ArrayList<Map<String, Object>>();
+    datas
+      .stream()
+      .forEach((d) -> {
+        String id = "";
+        String parentId = "";
+        for (Dimension dimension : dimensions) {
+          String value = d.get(dimension.getName()).toString();
+          Map<String, Object> temp = new HashMap<>();
+          parentId = id;
+          id = id + value;
+          temp.put("name", value);
+          temp.put("ID", id);
+          temp.put("parentId", parentId);
+          temp.put("expanded", true);
+          treeDatas.add(temp);
+        }
+      });
+    datas = treeDatas;
     final Map<String, Object> info = new HashMap<String, Object>() {{
       put("seriesMeasureNames", measures);
     }};
     final CommonResult result = new CommonResult(datas, info);
 
     return result;
-  }
-  private Map<String, Object> generateArg(List<String> dimNames, Map<String, Object> row) {
-    if (dimNames.size() == 0) {
-      row.put("arg", "Grand Total");
-      return row;
-    }
-
-    final List<String> args = dimNames.stream()
-                                      .map(name -> String.valueOf(row.get(name)))
-                                      .collect(Collectors.toList());
-    Collections.reverse(args);
-    row.put("arg", String.join("<br/>", args));
-    return row;
   }
 }

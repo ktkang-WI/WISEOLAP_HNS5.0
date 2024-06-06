@@ -28,5 +28,6 @@ export default {
   TREE_VIEW: 'treeView',
   FUNNEL_CHART: 'funnelChart',
   STAR_CHART: 'starChart',
-  WATER_FALL: 'waterFall'
+  WATER_FALL: 'waterFall',
+  SCHEDULER_COMPONENT: 'schedulerComponent'
 };

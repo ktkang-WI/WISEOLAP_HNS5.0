@@ -66,6 +66,7 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
+    case ItemType.SCHEDULER_COMPONENT:
     case ItemType.TEXT_BOX:
     {
       break;

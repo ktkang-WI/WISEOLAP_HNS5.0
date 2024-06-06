@@ -8,6 +8,7 @@ import {
   SearchPanel,
   Selection
 } from 'devextreme-react/tree-list';
+import useSizeObserver from '../util/hook/useSizeObserver';
 
 const TreeView = ({setItemExports, id, item}) => {
   const mart = item?.mart;
@@ -17,8 +18,6 @@ const TreeView = ({setItemExports, id, item}) => {
   const ref = useRef();
   const {height, width} = useSizeObserver(ref);
 
-  console.log(height);
-  console.log(width);
   const expandedKeys = [1, 2];
   const selectedKeys = [1, 29, 42];
   return (
@@ -26,21 +25,23 @@ const TreeView = ({setItemExports, id, item}) => {
       ref={ref}
     >
       <TreeList
-        dataSource={dataSourceOptions}
+        width={width}
+        height={height}
+        dataSource={mart.data.data}
         showBorders={true}
         columnAutoWidth={true}
         wordWrapEnabled={true}
         defaultExpandedRowKeys={expandedKeys}
         defaultSelectedRowKeys={selectedKeys}
-        keyExpr="Task_ID"
-        parentIdExpr="Task_Parent_ID"
+        keyExpr="ID"
+        parentIdExpr="parentId"
         id="tasks"
       >
         <SearchPanel visible={true} width={250} />
         <Selection mode="multiple" />
         <ColumnChooser enabled={true} />
 
-        <Column dataField="arg" width={300} />
+        <Column dataField="name" width={300} />
 
       </TreeList>
     </Wrapper>
