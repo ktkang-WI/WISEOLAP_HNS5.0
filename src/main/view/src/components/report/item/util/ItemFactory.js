@@ -79,7 +79,7 @@ const makeItem = (orgItem, countMap) => {
         interactiveOption: {
           mode:
             fixMasterFilter.find((d) =>
-              d.name == seriesType)?.mode || 'single',
+              d.name == orgItem.type)?.mode || 'single',
           // 마스터 필터 모드 'signle' or 'multiple'
           enabled: isFixMasterFilter, // 마스터 필터 사용 여부
           ignoreMasterFilter: isFixMasterFilter, // 마스터 필터 무시

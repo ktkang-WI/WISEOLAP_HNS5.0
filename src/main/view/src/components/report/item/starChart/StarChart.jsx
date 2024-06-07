@@ -4,7 +4,6 @@ import {useRef} from 'react';
 import {
   PolarChart,
   CommonSeriesSettings,
-  Export,
   Series,
   Tooltip
 } from 'devextreme-react/polar-chart';
@@ -46,7 +45,6 @@ const StarChart = ({
           )
         }
         <CommonSeriesSettings type="line" />
-        <Export enabled={true} />
         <Tooltip enabled={true} />
       </PolarChart>
     </Wrapper>
