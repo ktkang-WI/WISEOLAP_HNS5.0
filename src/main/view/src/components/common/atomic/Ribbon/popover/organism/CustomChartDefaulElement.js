@@ -20,9 +20,15 @@ import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
+
+import comboBoxImg from 'assets/image/icon/item/combo_box.png';
+import listBoxImg from 'assets/image/icon/item/list_box.png';
+import treeViewImg from 'assets/image/icon/item/tree_view.png';
+
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
 import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import schedulerImg from 'assets/image/icon/item/scheduler.png';
 import waterFallImg from 'assets/image/icon/item/waterfall.png';
 import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
@@ -208,6 +214,24 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.filter,
       checkboxs: [
+        {
+          title: localizedString.comboBox,
+          type: ItemType.COMBO_BOX,
+          checked: false,
+          src: comboBoxImg
+        },
+        {
+          title: localizedString.listBox,
+          type: ItemType.LIST_BOX,
+          checked: false,
+          src: listBoxImg
+        },
+        {
+          title: localizedString.treeView,
+          type: ItemType.TREE_VIEW,
+          checked: false,
+          src: treeViewImg
+        }
       ]
     },
     {
@@ -230,6 +254,12 @@ const CustomChartDefaulElement = () => {
           type: TEXT_BOX,
           checked: false,
           src: textBoxImg
+        },
+        {
+          title: localizedString.scheduler,
+          type: ItemType.SCHEDULER_COMPONENT,
+          checked: false,
+          src: schedulerImg
         }
       ]
     }

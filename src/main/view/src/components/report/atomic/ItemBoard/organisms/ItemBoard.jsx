@@ -55,9 +55,14 @@ import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
 import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
+import ComboBox from 'components/report/item/comboBox/ComboBox';
+import ListBox from 'components/report/item/listBox/ListBox';
+import TreeView from 'components/report/item/treeView/TreeView';
 import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
 import StarChart from 'components/report/item/starChart/StarChart';
 import WaterFall from 'components/report/item/waterFall/WaterFall';
+import SchedulerComponent
+  from 'components/report/item/schedulerComponent/SchedulerComponent';
 
 const theme = getTheme();
 
@@ -144,9 +149,13 @@ const ItemBoard = () => {
     zoomableCicle: ZoomableCicle,
     ciclePacking: CiclePacking,
     scatterPlot: ScatterPlot,
+    comboBox: ComboBox,
+    listBox: ListBox,
+    treeView: TreeView,
     funnelChart: FunnelChart,
     starChart: StarChart,
-    waterFall: WaterFall
+    waterFall: WaterFall,
+    schedulerComponent: SchedulerComponent
   };
 
   const itemExportsPicker = (id) => {
@@ -197,6 +206,7 @@ const ItemBoard = () => {
     const isOk =
       [
         ItemType.TEXT_BOX,
+        ItemType.SCHEDULER_COMPONENT,
         ItemType.PIVOT_GRID
       ].some((type) => type === item.type);
     if (isOk) return !isOk;

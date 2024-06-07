@@ -175,6 +175,13 @@
       "dxDataGrid-filterPanelCreateFilter": "필터 생성",
       "dxDataGrid-filterPanelClearFilter": "지우기",
       "dxDataGrid-filterPanelFilterEnabledHint": "필터 사용",
+      
+      "dxScheduler-editorLabelTitle": "제목",
+      "dxScheduler-editorLabelStartDate": "시작일자",
+      "dxScheduler-editorLabelEndDate": "종료일자",
+      "dxScheduler-editorLabelDescription": "설명",
+      "dxScheduler-editorLabelRecurrence": "반복",
+
       "dxScheduler-switcherDay": "일",
       "dxScheduler-switcherWeek": "주",
       "dxScheduler-switcherWorkWeek": "근무 주",

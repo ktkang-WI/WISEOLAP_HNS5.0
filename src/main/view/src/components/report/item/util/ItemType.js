@@ -23,7 +23,11 @@ export default {
   ZOOMABLE_CICLE: 'zoomableCicle',
   CICLE_PACKING: 'ciclePacking',
   SCATTER_PLOT: 'scatterPlot',
+  COMBO_BOX: 'comboBox',
+  LIST_BOX: 'listBox',
+  TREE_VIEW: 'treeView',
   FUNNEL_CHART: 'funnelChart',
   STAR_CHART: 'starChart',
-  WATER_FALL: 'waterFall'
+  WATER_FALL: 'waterFall',
+  SCHEDULER_COMPONENT: 'schedulerComponent'
 };

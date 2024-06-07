@@ -17,7 +17,6 @@ public enum ItemType {
     CALENDAR("calendar"),
     LIQUID_FILL_GAUGE("liquidFillGauge"),
     BOX_PLOT("boxPlot"),
-    TEXT_BOX("textBox"),
     TIMELINE("timeline"),
     CHORD("chord"),
     ARC_DIAGRAM("arc"),
@@ -31,6 +30,9 @@ public enum ItemType {
     CICLE_PACKING("ciclePacking"),
     SCATTER_PLOT("scatterPlot"),
     SUNBURST_CHART("sunburstChart"),
+    COMBO_BOX("comboBox"),
+    LIST_BOX("listBox"),
+    TREE_VIEW("treeView"),
     FUNNEL_CHART("funnelChart"),
     STAR_CHART("starChart"),
     WATER_FALL("waterFall")
