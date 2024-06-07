@@ -4,7 +4,6 @@ import {useRef} from 'react';
 import {Funnel} from 'devextreme-react';
 import {
   Border,
-  Export,
   Item,
   Label,
   Tooltip
@@ -37,7 +36,6 @@ const FunnelChart = ({
         labelField='arg'
         valueField={seriesNames[0].summaryName}
       >
-        <Export enabled={true} />
         <Tooltip enabled={true} format="fixedPoint" />
         <Item>
           <Border visible={true} />
