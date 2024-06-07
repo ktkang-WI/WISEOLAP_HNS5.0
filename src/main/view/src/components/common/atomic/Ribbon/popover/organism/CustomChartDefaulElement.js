@@ -23,7 +23,7 @@ import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
 
 import comboBoxImg from 'assets/image/icon/item/combo_box.png';
 import listBoxImg from 'assets/image/icon/item/list_box.png';
-import treeViewImg from 'assets/image/icon/item/tree_view.png';
+// import treeViewImg from 'assets/image/icon/item/tree_view.png';
 
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
@@ -225,13 +225,15 @@ const CustomChartDefaulElement = () => {
           type: ItemType.LIST_BOX,
           checked: false,
           src: listBoxImg
-        },
+        }
+        /* TODO: 추후개발
         {
           title: localizedString.treeView,
           type: ItemType.TREE_VIEW,
           checked: false,
           src: treeViewImg
         }
+        */
       ]
     },
     {
