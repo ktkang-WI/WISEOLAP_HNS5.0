@@ -26,6 +26,12 @@ export const selectCurrentItems = createSelector(
     (reportId, item) => item[reportId]?.items
 );
 
+export const selectCurrentAdHocOption = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.item,
+    (reportId, item) => item[reportId].adHocOption
+);
+
 export const selectCurrentDataField = createSelector(
     selectCurrentItem,
     selectCurrentReportId,
@@ -40,8 +46,6 @@ export const selectCurrentDataField = createSelector(
 
 export const selectCurrentItemType = createSelector(
     selectCurrentItem,
-    selectCurrentReportId,
-    (state) => state.meta.item,
     (selectedItem) => {
       return selectedItem?.type;
     }

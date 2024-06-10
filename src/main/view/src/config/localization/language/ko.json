@@ -372,7 +372,7 @@
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
-  "gridAttibute": "그리드 속성",
+  "gridAttribute": "그리드 속성",
   "topBottom": "Top/Bottom값 설정",
   "dataLabelEdit": "라벨 편집",
   "labelPosition": "라벨 위치",
@@ -653,5 +653,21 @@
   "chartVisibility": "차트 표시 여부",
   "summaryType": "합계유형",
   "editReportName": "보고서명 편집",
-  "reportDescription": "보고서 설명"
+  "reportDescription": "보고서 설명",
+  "variationValueType": {
+    "absoluteVariation": "변화량",
+    "percentVariation": "변화비율",
+    "percentOfColumnTotal": "열 기준 비율",
+    "percentOfRowTotal": "행 기준 비율",
+    "percentOfColumnGrandTotal": "열 총 합계 기준 비율",
+    "percentOfRowGrandTotal": "행 총 합계 기준 비율",
+    "percentOfGrandTotal": "총 합계 기준 비율"
+  },
+  "variationValueName": "변동 측정값 명",
+  "targetFieldName": "기준 항목 명",
+  "type": "유형",
+  "variationValueWarning": "변동측정값은 그리드에만 표시됩니다.",
+  "variationValue": "변동 측정값",
+  "variationValueList": "변동 측정값 목록",
+  "variationValueInfo": "변동 측정값 정보"
 }

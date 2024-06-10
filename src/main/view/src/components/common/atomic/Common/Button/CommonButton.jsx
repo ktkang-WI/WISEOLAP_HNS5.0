@@ -102,6 +102,7 @@ const CommonButton = ({
       maxWidth={maxWidth}
       margin={margin}
       justify={justify}
+      padding={padding}
       {...(themeType[type]? themeType[type] : themeType['primary'])}
       {...props}
     >

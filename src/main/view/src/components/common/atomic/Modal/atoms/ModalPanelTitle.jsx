@@ -7,13 +7,12 @@ const theme = getTheme();
 
 const TitleWrapper = styled.div`
   width: 100%;
-  height: 32px;
+  height: 24x;
   display: block;
   padding-bottom: 5px;
-  line-height: 32px;
-  font: ${theme.font.modalTitle};
-  color: ${theme.color.primary};
-  border-bottom: solid 1px ${theme.color.breakLine};
+  line-height: 24px;
+  font: ${theme.font.modalPanelTitle};
+  color: ${theme.color.gray600};
   text-align: left;
 `;
 
@@ -26,7 +25,8 @@ const Buttons = styled.div`
 const ModalPanelTitle = ({
   buttons = [],
   checkBoxs = [],
-  children}) => {
+  children
+}) => {
   const generateButtons = () => {
     return buttons.map((button, i) => (
       <CommonButton
