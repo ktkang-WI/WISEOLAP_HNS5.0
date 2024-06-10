@@ -15,9 +15,22 @@ import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
 import textBoxImg
   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
+import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
+import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
+import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
+
+import comboBoxImg from 'assets/image/icon/item/combo_box.png';
+import listBoxImg from 'assets/image/icon/item/list_box.png';
+// import treeViewImg from 'assets/image/icon/item/tree_view.png';
+
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
+import funnelImg from 'assets/image/icon/item/funnel.png';
+import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import schedulerImg from 'assets/image/icon/item/scheduler.png';
+import waterFallImg from 'assets/image/icon/item/waterfall.png';
+import starChartImg from 'assets/image/icon/item/star.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import ChoroplethModal
@@ -40,6 +53,8 @@ const CustomChartDefaulElement = () => {
     CALENDAR,
     CHORD_DIAGRAM,
     BOX_PLOT,
+    HEAT_MAP,
+    SCATTER_PLOT,
     WORDCLOUD,
     TEXT_BOX
   } = ItemType;
@@ -71,10 +86,22 @@ const CustomChartDefaulElement = () => {
       title: localizedString.relationVisualization,
       checkboxs: [
         {
+          title: localizedString.scatterPlot,
+          type: SCATTER_PLOT,
+          checked: false,
+          src: scatterPlotImg
+        },
+        {
           title: localizedString.wordCloud,
           type: WORDCLOUD,
           checked: false,
           src: wordCloudImg
+        },
+        {
+          title: localizedString.waterFall,
+          type: ItemType.WATER_FALL,
+          checked: false,
+          src: waterFallImg
         }
       ]
     },
@@ -98,12 +125,24 @@ const CustomChartDefaulElement = () => {
           type: ItemType.ARC_DIAGRAM,
           checked: false,
           src: arcImg
+        },
+        {
+          title: localizedString.zoomableCicle,
+          type: ItemType.ZOOMABLE_CICLE,
+          checked: false,
+          src: zoomableCicleImg
         }
       ]
     },
     {
       title: localizedString.distributionVisualization,
       checkboxs: [
+        {
+          title: localizedString.heatMap,
+          type: HEAT_MAP,
+          checked: false,
+          src: heatMapImg
+        },
         {
           title: localizedString.boxPlot,
           type: BOX_PLOT,
@@ -151,12 +190,50 @@ const CustomChartDefaulElement = () => {
           type: ItemType.SUNBURST_CHART,
           checked: false,
           src: sunburstChartImg
+        },
+        {
+          title: localizedString.ciclePacking,
+          type: ItemType.CICLE_PACKING,
+          checked: false,
+          src: bubblePackImg
+        },
+        {
+          title: localizedString.funnel,
+          type: ItemType.FUNNEL_CHART,
+          checked: false,
+          src: funnelImg
+        },
+        {
+          title: localizedString.starChart,
+          type: ItemType.STAR_CHART,
+          checked: false,
+          src: starChartImg
         }
       ]
     },
     {
       title: localizedString.filter,
       checkboxs: [
+        {
+          title: localizedString.comboBox,
+          type: ItemType.COMBO_BOX,
+          checked: false,
+          src: comboBoxImg
+        },
+        {
+          title: localizedString.listBox,
+          type: ItemType.LIST_BOX,
+          checked: false,
+          src: listBoxImg
+        }
+        /* TODO: 추후개발
+        {
+          title: localizedString.treeView,
+          type: ItemType.TREE_VIEW,
+          checked: false,
+          src: treeViewImg
+        }
+        */
       ]
     },
     {
@@ -179,6 +256,12 @@ const CustomChartDefaulElement = () => {
           type: TEXT_BOX,
           checked: false,
           src: textBoxImg
+        },
+        {
+          title: localizedString.scheduler,
+          type: ItemType.SCHEDULER_COMPONENT,
+          checked: false,
+          src: schedulerImg
         }
       ]
     }

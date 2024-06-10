@@ -16,7 +16,18 @@ export default {
   WORDCLOUD: 'wordCloud',
   COORDINATE_LINE: 'coordinateLine',
   COORDINATE_DOT: 'coordinateDot',
+  HEAT_MAP: 'heatMap',
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
-  SUNBURST_CHART: 'sunburstChart'
+  SUNBURST_CHART: 'sunburstChart',
+  ZOOMABLE_CICLE: 'zoomableCicle',
+  CICLE_PACKING: 'ciclePacking',
+  SCATTER_PLOT: 'scatterPlot',
+  COMBO_BOX: 'comboBox',
+  LIST_BOX: 'listBox',
+  TREE_VIEW: 'treeView',
+  FUNNEL_CHART: 'funnelChart',
+  STAR_CHART: 'starChart',
+  WATER_FALL: 'waterFall',
+  SCHEDULER_COMPONENT: 'schedulerComponent'
 };

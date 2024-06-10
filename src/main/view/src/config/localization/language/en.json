@@ -451,6 +451,8 @@
   "mypage": "my page",
   "confirmLogoutMsg": "Do you want to log out?",
   "failedLogout": "Logout failed. Please contact the administrator.",
+  "folder": "Folder",
+  "report": "Report",
   "adHocLayoutOptions":  [
     {"id": "chart", "text": "Only chart"},
     {"id": "pivot", "text": "Only PivotGrid"},
@@ -473,5 +475,19 @@
   "variationValueWarning": "Variation values are displayed only on the grid.",
   "variationValue": "Variation Value",
   "variationValueList": "Variation Value List",
-  "variationValueInfo": "Variation Value Information"
+  "variationValueInfo": "Variation Value Information",
+  "changeReportNmConfirm": "Would you like to change the contents of the report?",
+  "reportDeleteConfirm": "Are you sure you want to delete the report?",
+  "selectReportAndDeleteConfirm": "Select the report and press the delete button.",
+  "noReports": "There are no reports viewed.",
+  "changeFolderNm": "Change folder name",
+  "changeFolderNmConfirm": "Do you want to change the folder name?",
+  "deleteConfirm": "Are you sure you want to delete?",
+  "createFolder": "Create folder",
+  "createFolderConfirm": "Would you like to create a folder?",
+  "axiosReport&folderError": "Failed to import folder and report.\n Please contact the administrator.",
+  "emptyNameAlert": "Please write your name.",
+  "nameDupleAlert": "The name is duplicated. Please write again.",
+  "noSelectionAlert": "Nothing has been selected. Please select again.",
+  "search": "Search"
 }

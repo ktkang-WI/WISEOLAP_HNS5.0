@@ -39,7 +39,7 @@ public class QueryGenService {
     }
 
     @Transactional
-    public String createCubeParamSet(DataAggregation dataAggreagtion) {
+    public String createCubeParamSet(DataAggregation dataAggreagtion,String ownerNm) {
         // 주제 영역 쿼리 생성을 위한 Param 사전 준비 작업
         QuerySettingEx sqlQenQuery = new QuerySettingEx();
         String cubeQueryString = null;
@@ -66,7 +66,10 @@ public class QueryGenService {
             QueryGenAggregation queygenAggregation;
             queygenAggregation = queryGenAggregator.createQueryGenAggregation(cubeParamSet);
 
-            cubeQueryString = sqlQenQuery.CubeQuerySetting(queygenAggregation);
+            
+            cubeQueryString = sqlQenQuery.CubeQuerySetting(queygenAggregation, ownerNm);
+
+            
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -13,6 +13,7 @@ import UserGroupManagement
 import {
   generalConfigure as generalLoader,
   groupData as groupDataLoader,
+  userFolderData as myPageFolderData,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
@@ -24,6 +25,9 @@ import DataSourceAddition
   from 'components/config/organisms/dataSourceAddition/DataSourceAddition';
 import LinkViewer from './LinkViewer';
 import MyPage from 'components/useInfo/organism/Mypage';
+import ReportFolderTab
+  from 'components/useInfo/organism/myReportAndFolder/ReportFolderTab';
+import UserInfoManagement from 'components/useInfo/organism/UserInfoManagement';
 
 export const contextPath = '/editds';
 
@@ -102,7 +106,19 @@ const router = createBrowserRouter([
   },
   {
     path: contextPath + '/myPage',
-    element: <MyPage/>
+    element: <MyPage/>,
+    children: [
+      {
+        path: 'user-info',
+        element: <UserInfoManagement/>
+        // loader: 개인정보
+      },
+      {
+        path: 'myReport-folder',
+        element: <ReportFolderTab/>,
+        loader: myPageFolderData
+      }
+    ]
   }
 ]);
 

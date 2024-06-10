@@ -6,7 +6,6 @@ import com.wise.MarketingPlatForm.querygen.service.QueryGenService;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
-
 import com.wise.MarketingPlatForm.global.context.BeanContext;
 
 public class CubeQueryGenerator implements QueryGenerator {
@@ -15,8 +14,14 @@ public class CubeQueryGenerator implements QueryGenerator {
 
     @Override
     public String getQuery(DataAggregation dataAggreagtion) {
+        return getQuery(dataAggreagtion, "");
+    }
+
+    @Override
+    public String getQuery(DataAggregation dataAggreagtion, String ownerNm) {
         queryGenService = BeanContext.getBean(QueryGenService.class);
-        String query = queryGenService.createCubeParamSet(dataAggreagtion);
+
+        String query = queryGenService.createCubeParamSet(dataAggreagtion, ownerNm);
         return query;
     }
 
