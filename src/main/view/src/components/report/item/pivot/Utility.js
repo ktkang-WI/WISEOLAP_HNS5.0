@@ -75,6 +75,7 @@ const generateItem = (item, param, rootItem) => {
 
   const {updateItem} = ItemSlice.actions;
   const gridAttribute = rootItem?.adHocOption?.gridAttribute;
+  const variationValues = rootItem?.adHocOption?.variationValues || [];
   const reportId = selectCurrentReportId(store.getState());
   const allMeasure = dataField.measure.concat(dataField.sortByItem);
   const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
@@ -150,10 +151,30 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
+  for (const variationValue of variationValues) {
+    const targets = [...dataField.measure, ...dataField.sortByItem];
+    const target = targets.find((t) => t.fieldId == variationValue.targetId);
+
+    if (!target) continue;
+
+    const field = {
+      area: 'data',
+      dataField: target.summaryType + '_' + target.name,
+      caption: variationValue.name,
+      summaryType: 'SUM',
+      summaryDisplayMode: variationValue.type
+    };
+
+    fields.push(field);
+  }
+
   const rowGroups = dataField.row
-      .map((r) => ({selector: r.name}))
-      .filter((rowGroup) =>
-        gridAttributeOptionCheck(rowGroup.selector, gridAttribute));
+      .reduce((acc, r) => {
+        if (gridAttributeOptionCheck(r.name, gridAttribute)) {
+          acc.push({selector: r.name});
+        }
+        return acc;
+      }, []);
 
   item.mart.paging = {
     dataLength: 0,

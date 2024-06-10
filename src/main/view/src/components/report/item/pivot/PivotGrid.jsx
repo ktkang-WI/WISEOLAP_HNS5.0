@@ -5,7 +5,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react';
 import {isDataCell, getCssStyle} from './DataHighlightUtility';
 import useModal from 'hooks/useModal';
@@ -24,8 +25,12 @@ import {itemExportsObject}
 import LinkReportModal from
   'components/report/atomic/LinkReport/organisms/LinkReportModal';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
-import {generateLabelSuffix, formatNumber} from
-  'components/utils/NumberFormatUtility';
+import {
+  generateLabelSuffix,
+  formatNumber,
+  getDefaultFormat,
+  getDefaultFormatRatio
+} from 'components/utils/NumberFormatUtility';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
@@ -61,6 +66,22 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
+
+  const getFormats = useCallback(() => {
+    const formats = dataField.measure.map((item) => item.format);
+    (adHocOption.variationValues || []).forEach((v) => {
+      const target = dataField.measure.find((m) => m.fieldId == v.targetId);
+      if (v.type == 'absoluteVariation') {
+        formats.push(target.format || getDefaultFormat());
+      } else if (v.type.startsWith('Rank')) {
+        formats.push(getDefaultFormat());
+      } else {
+        formats.push(getDefaultFormatRatio());
+      }
+    });
+
+    return formats;
+  }, [mart]);
 
   useEffect(() => {
     const item = ref.current;
@@ -131,8 +152,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
 
     if (area == 'data' && cell.dataType && cell.value) {
-      const newFormat = dataField.measure.map((item) => item.format);
-      const formData = newFormat[cell.dataIndex];
+      const formats = getFormats();
+      const formData = formats[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
       cellElement.innerHTML = '<span>' + formattedValue + '</span>';

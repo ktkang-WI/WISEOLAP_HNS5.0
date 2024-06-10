@@ -334,7 +334,7 @@ td[role="columnheader"] {
 
 /* Form */
 
-.dx-field:before {
+.dx-field:before{
   content: '\2022';
   width: 12px;
   display: inline-block;
@@ -343,6 +343,31 @@ td[role="columnheader"] {
   line-height: 36px;
   font-size: 15px;
   color: var(--gray400);
+}
+
+.dx-field-item-custom-label-content:before {
+  content: '\2022';
+  width: 12px;
+  display: inline-block;
+  float: left;
+  font-size: 15px;
+  color: var(--gray400);
+}
+
+.dx-item[required] .dx-field-item-custom-label-content:after {
+  content: '\2022';
+  width: 12px;
+  display: inline-block;
+  float: right;
+  font-size: 15px;
+  color: #DF0015;
+  position: absolute;
+  transform: translateY(-10px);
+}
+
+
+.dx-field-item-label-location-left {
+  padding-right: 40px;
 }
 
 .dx-field-label {
