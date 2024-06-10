@@ -12,6 +12,19 @@ export const defaultDimension = {
   type: 'DIM'
 };
 
+export const axisX = {
+  label: localizedString.xAxis,
+  icon: dimensionIcon,
+  placeholder: localizedString.xAxis,
+  type: 'DIM'
+};
+
+export const axisY = {
+  label: localizedString.yAxis,
+  icon: dimensionIcon,
+  placeholder: localizedString.yAxis,
+  type: 'DIM'
+};
 export const dateDimension = {
   label: localizedString.date,
   icon: dimensionIcon,

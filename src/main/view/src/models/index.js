@@ -12,6 +12,8 @@ import * as UserGroupManagement
 import * as Authority from './config/authority/Authority';
 import * as File from './upload/File';
 import * as Login from './auth/Login';
+import * as ReportFolderManagement
+  from './config/reportFolderManagement/ReportFolderManagement';
 
 export default {
   DataSource,
@@ -26,5 +28,6 @@ export default {
   Login,
   Preferences,
   UserGroupManagement,
-  Authority
+  Authority,
+  ReportFolderManagement
 };

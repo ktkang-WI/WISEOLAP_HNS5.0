@@ -13,6 +13,42 @@ export const getFolders = () => {
   return res;
 };
 
+export const getMypageFolderReport = () => {
+  const res = axios.get(configPath + '/my-page-folder');
+  return res;
+};
+
+export const createMyPageFolder = (param) => {
+  const res =
+    axios.post(configPath + '/my-page-folder', null, {params: param});
+  return res;
+};
+
+export const deleteMyPageFolder = (param) => {
+  const res =
+    axios.post(configPath + '/my-page-folder/delete', param);
+  return res;
+};
+
+export const updateMyPageFolder = (id, value) => {
+  const param = {
+    id: id,
+    name: value
+  };
+
+  const res =
+    axios.patch(
+        configPath + '/my-page-folder/edit-name', null, {params: param}
+    );
+  return res;
+};
+
+export const updateMyPageReport = (param) => {
+  const res =
+    axios.patch(configPath + '/my-page-folder', null, {params: param});
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';
