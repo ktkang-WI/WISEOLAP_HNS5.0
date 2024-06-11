@@ -13,6 +13,7 @@ import meaGrpImg from
 import dimGrpImg from
   'assets/image/icon/dataSource/cube_dimension.png';
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
+import {createRoot} from 'react-dom/client';
 
 const theme = getTheme();
 
@@ -42,6 +43,52 @@ const StyledTreeView = styled(TreeView)`
 
   .dx-treeview-toggle-item-visibility-opened::before {
     transform: rotate(0deg);
+  }
+  
+  .dx-treeview-item {
+    display: inline-block;
+    position: relative;
+  }
+  .dx-treeview-item:hover .tooltip {
+    display:block;
+  }
+  .dx-treeview-item:hover .tooltipWrapper {
+    width: 200px;
+    height: 25px;
+  }
+`;
+
+const SubTitle = styled.div`
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 400;
+  position: absolute;
+  top: 30px;
+  left: 40%;
+  width: auto;
+  z-index: 99;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0 auto;
+  transform: translateX(-50%);
+  background: ${theme.color.white};
+  border-radius: 2px;
+  border: 1px solid ${theme.color.primary};
+  padding: 3px 7px;
+  color: ${theme.color.primary};
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, .15);
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    transform: rotate(45deg);
+    background: #ffffff;
+    left: calc(50% - 2px);
+    top: -3px;
+    border-left: 1px solid ${theme.color.primary};
+    border-top: 1px solid ${theme.color.primary};
   }
 `;
 
@@ -118,12 +165,25 @@ const DataSourceFoldableList = ({dataset}) => {
     );
   };
 
+  const getSubTitle = (title) => {
+    return <SubTitle className='tooltip'>{title}</SubTitle>;
+  };
+
+  const activeTootip = (itemElement, itemData) => {
+    const description = itemData.descript !== null ? '' : itemData.description;
+    const subTitle = getSubTitle('설명: ' + description);
+    const container = document.createElement('div');
+    container.className = 'tooltipWrapper';
+    itemElement.appendChild(container);
+
+    const root = createRoot(container);
+    root.render(subTitle);
+  };
+
   const onItemRendered = ({itemElement, itemData}) => {
-    let description = '';
-    if (itemData.description !== null) {
-      description = itemData.description;
+    if (dataset.datasetType === 'CUBE') {
+      activeTootip(itemElement, itemData);
     }
-    itemElement.title = '설명: ' + description;
   };
 
   const data = dataset? _.cloneDeep(dataset.fields) : [];
