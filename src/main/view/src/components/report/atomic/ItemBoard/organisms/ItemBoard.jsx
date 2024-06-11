@@ -231,7 +231,7 @@ const ItemBoard = () => {
 
 
     return (
-      <Item>
+      <Item item={item}>
         <ItemComponent
           setItemExports={setItemExports}
           item={item}

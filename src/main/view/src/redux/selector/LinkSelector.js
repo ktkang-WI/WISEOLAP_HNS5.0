@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-export const checkLinkReport = createSelector(
+export const selectLinkedReport = createSelector(
     (state) => state.meta.link.informations,
     (link) => link
 );

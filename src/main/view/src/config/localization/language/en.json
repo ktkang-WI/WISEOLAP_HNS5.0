@@ -489,5 +489,12 @@
   "emptyNameAlert": "Please write your name.",
   "nameDupleAlert": "The name is duplicated. Please write again.",
   "noSelectionAlert": "Nothing has been selected. Please select again.",
-  "search": "Search"
+  "search": "Search",
+  "hyperlink": "Hyperlink",
+  "hyperlinkSetting": "Hyperlink Setting",
+  "hyperlinkInformation": "Hyperlink information",
+  "hyperlinkList": "Hyperlink list",
+  "name": "Name",
+  "new": "New",
+  "save": "Save"
 }

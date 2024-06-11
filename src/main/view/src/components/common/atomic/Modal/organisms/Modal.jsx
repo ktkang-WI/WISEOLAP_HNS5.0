@@ -36,7 +36,7 @@ const Modal = ({
       exit={{opacity: 0}}
       style={{position: 'fixed'}}
     >
-      <Overlay>
+      <Overlay className='wise-modal'>
         <Draggable
           handle='.modal-header'
         >
