@@ -44,13 +44,13 @@ const generateMeta = (item) => {
   setMeta(item, 'dataHighlight', []);
   setMeta(item, 'pagingOption', {
     pagination: {
-      isOk: true,
+      isOk: false,
       content: '',
       pagingRange: 20,
       index: 1
     },
     pageUsageOfPageCount: {
-      isOk: true,
+      isOk: false,
       pageSizes: [10, 20, 50]
     }
   });
@@ -114,7 +114,8 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
-      expanded: item.meta.positionOption.row.expand
+      expanded: !item.meta.positionOption.row.expand ?
+        true :item.meta.positionOption.row.expand
     });
   }
 
@@ -146,7 +147,8 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'row' : 'column',
       sortOrder: field.sortOrder.toLowerCase(),
-      expanded: item.meta.positionOption.column.expand,
+      expanded: !item.meta.positionOption.column.expand ?
+          true :item.meta.positionOption.column.expand,
       ...sortBy
     });
   }
@@ -181,6 +183,8 @@ const generateItem = (item, param, rootItem) => {
     size: item.meta.pagingOption.pagination.pagingRange,
     page: item.meta.pagingOption.pagination.index
   };
+
+  queryExcuteCheck = true;
 
   let matrixInfo;
 
@@ -588,6 +592,14 @@ const getTabHeaderItems = () => {
   // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
   return ['ColRowSwitch', 'ShowGrid'];
 };
+let queryExcuteCheck = true;
+const getExcuteQueryInit = () => {
+  return queryExcuteCheck;
+};
+
+const setExcuteQueryInit = (checkValue) => {
+  queryExcuteCheck = checkValue;
+};
 
 export default {
   generateMeta,
@@ -596,5 +608,7 @@ export default {
   generateParameter,
   getRibbonItems,
   getAttributeItems,
-  getTabHeaderItems
+  getTabHeaderItems,
+  getExcuteQueryInit,
+  setExcuteQueryInit
 };
