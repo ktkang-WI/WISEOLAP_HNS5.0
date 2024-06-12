@@ -22,9 +22,6 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import LinkReportModal from
-  'components/report/atomic/LinkReport/organisms/LinkReportModal';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import {
   generateLabelSuffix,
   formatNumber,
@@ -34,8 +31,7 @@ import {
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
-import {linkReportPopup} from 'components/report/util/ReportUtility';
-import {selectCurrentReport, selectCurrentReportId}
+import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
@@ -44,6 +40,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
+import useContextMenu from 'hooks/useContextMenu';
 import ItemManager from 'components/report/item/util/ItemManager';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
@@ -57,10 +54,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const {getContextMenuItems} = useContextMenu(item);
   const {updateItem} = ItemSlice.actions;
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
-  const {openModal, alert} = useModal();
+  const {openModal} = useModal();
   const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
@@ -196,7 +194,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
-  const focusedItem = useSelector(selectCurrentDataField);
   useEffect(() => {
     const handleContextMenu = (event) => {
       if (editMode === EditMode.DESIGNER) {
@@ -355,25 +352,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               contextMenu.push(detailedDataMenu);
             }
           }
-          if (editMode === EditMode.DESIGNER) {
-            const currentReport = selectCurrentReport(store.getState());
-            const subLinkReportMenu = {
-              'text': localizedString.subLinkReportSetting,
-              'onItemClick': () => {
-                if (currentReport.reportId === 0) {
-                  alert('보고서를 먼저 저장해주세요.');
-                  return;
-                } else {
-                  const subLinkDim = linkReportPopup({focusedItem});
-                  openModal(
-                      LinkReportModal,
-                      {subYn: true, subLinkDim: subLinkDim}
-                  );
-                }
-              }
-            };
-            contextMenu.push(subLinkReportMenu);
-          }
+
+          contextMenu.push(...getContextMenuItems());
           // contextMenu 저장(리턴)
           e.items = contextMenu;
         }}

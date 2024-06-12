@@ -442,8 +442,10 @@ public class ReportController {
 
     // Endpoint to generate a one-time token
     @PostMapping("/generate-token")
-    public Map<String, String> generateToken(@RequestBody Map<String, String> requestBody) {
-        String userId = requestBody.get("userId");
+    public Map<String, String> generateToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+        HttpSession session = request.getSession();
+        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        String userId = userDTO.getUserId();
         String reportId = requestBody.get("reportId");
         String reportType = requestBody.get("reportType");
         // Generate a random token

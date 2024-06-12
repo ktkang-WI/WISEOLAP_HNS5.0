@@ -28,17 +28,9 @@ import {generateLabelSuffix, formatNumber}
 import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 import React, {
   useRef,
-  useEffect,
-  useCallback,
-  useState
+  useEffect
 } from 'react';
-import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
-import {useSelector} from 'react-redux';
-import {selectEditMode}
-  from 'redux/selector/ConfigSelector';
 import ItemManager from 'components/report/item/util/ItemManager';
-import store from 'redux/modules';
 import useItemSetting from '../util/hook/useItemSetting';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
@@ -56,7 +48,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         }
       });
 
-  const editMode = selectEditMode(store.getState());
   const dataFields = itemTools.getDataField();
   let seriesOptions = null;
   // TODO:  임시용 코드
@@ -84,27 +75,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       ];
     });
   }, [mart.data.data]);
-
-  const [showPopup, setShowPopup] = useState(false);
-  const focusedItem = useSelector(selectCurrentDataField);
-
-  const handleContextMenu = useCallback((event) => {
-    // if (editMode === EditMode.DESIGNER) {
-    event.preventDefault();
-    setShowPopup(true);
-    // }
-  }, [editMode]);
-
-  useEffect(() => {
-    // if (editMode === EditMode.DESIGNER) {
-    const chartContainer = dxRef?.current?.instance?._renderer?.root?.element;
-    if (chartContainer) {
-      chartContainer.addEventListener('contextmenu', handleContextMenu);
-      return () =>
-        chartContainer.removeEventListener('contextmenu', handleContextMenu);
-    }
-    // }
-  }, [handleContextMenu, editMode]);
 
   if (!mart.init) {
     return <></>;
@@ -280,14 +250,6 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           )
         }
       </DevChart>
-      {showPopup && (
-        <SubLinkReportPopup
-          showButton={showPopup}
-          setShowButton={setShowPopup}
-          focusedItem={focusedItem}
-          editMode={editMode}
-        />
-      )}
     </>
   );
 };

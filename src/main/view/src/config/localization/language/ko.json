@@ -693,5 +693,12 @@
   "emptyNameAlert": "이름을 작성해 주세요.",
   "nameDupleAlert": "이름이 중복 되었습니다. 다시 작성해 주세요.",
   "noSelectionAlert": "아무것도 선택되지 않았습니다. 다시 선택해 주세요.",
-  "search": "검색"
+  "search": "검색",
+  "hyperlink": "하이퍼링크",
+  "hyperlinkSetting": "하이퍼링크 설정",
+  "hyperlinkInformation": "하이퍼링크 정보",
+  "hyperlinkList": "하이퍼링크 목록",
+  "name": "이름",
+  "new": "새로 만들기",
+  "save": "저장"
 }
