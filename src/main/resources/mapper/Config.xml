@@ -218,6 +218,12 @@
         FROM CONFIG_MSTR INNER JOIN WB_CONFIG_MSTR ON 1 = 1
 		</select>
 
+    <select id="selectSiteNm" resultType="string">
+			SELECT
+        SITE_NM
+        FROM CONFIG_MSTR
+		</select>
+
     <select id="selectConfigFolderDataset" resultMap="ConfigFolderDatasetDTO">
 			SELECT
         FLD_ID,

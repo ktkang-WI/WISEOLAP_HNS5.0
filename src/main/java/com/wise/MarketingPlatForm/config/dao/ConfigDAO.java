@@ -16,6 +16,7 @@ import com.wise.MarketingPlatForm.config.entity.WbConfigMstrEntity;
 @Mapper
 public interface ConfigDAO {
   public GeneralDTO selectGeneralData();
+  public String selectSiteNm();
   public boolean updateConfig(ConfigMstrEntity configMstr);
   public boolean updateWbConfig(WbConfigMstrEntity wbConfigMstr);
   public List<ConfigFolderDTO> selectConfigFolderGroup();

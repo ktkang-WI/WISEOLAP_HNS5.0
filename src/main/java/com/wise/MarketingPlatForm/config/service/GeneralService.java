@@ -24,6 +24,10 @@ public class GeneralService {
     return configDAO.selectGeneralData();
   };
 
+  public String getSiteNm() {
+    return configDAO.selectSiteNm();
+  };
+
   @Transactional
   public boolean updateConfig(GeneralDTO generalDTO) throws SQLException{
 
