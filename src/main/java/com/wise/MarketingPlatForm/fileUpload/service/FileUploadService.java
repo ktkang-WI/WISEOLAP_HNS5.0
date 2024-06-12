@@ -75,7 +75,7 @@ public class FileUploadService {
 	
     public void initFolderPath() {
         String siteNm = generalService.getSiteNm();
-        if (siteNm.equals("HNS")) {
+        if ("HNS".equals(siteNm)) {
             spreadReportFolder = new File("/olapnas");
         } else {
             spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
