@@ -34,6 +34,7 @@
       <result column="MAIN_TITLE" property="mainTitle" javaType="String"/>
       <result column="LICENSES_KEY" property="licensesKey" javaType="String"/>
       <result column="WEB_URL" property="webUrl" javaType="String"/>
+      <result column="SITE_NM" property="siteNm" javaType="String"/>
       <result column="LOGIN_IMAGE" property="loginImage" javaType="String"/>
       <result column="LOGO" property="logo" javaType="String"/>
       <result column="SPREAD_JS_LICENSE" property="spreadJsLicense" javaType="String"/>
@@ -209,6 +210,7 @@
         CONFIG_MSTR.DEFAULT_LAYOUT,
         CONFIG_MSTR.LICENSES_KEY,
         CONFIG_MSTR.WEB_URL,
+        CONFIG_MSTR.SITE_NM,
         WB_CONFIG_MSTR.LOGIN_IMAGE,
         WB_CONFIG_MSTR.LOGO,
         WB_CONFIG_MSTR.SPREAD_JS_LICENSE,
