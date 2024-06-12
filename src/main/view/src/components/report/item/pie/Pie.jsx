@@ -7,19 +7,11 @@ import {
   Size,
   Tooltip} from 'devextreme-react/pie-chart';
 import customizeOption from './customizingPie/CustomizeOption';
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import {SubLinkReportPopup} from 'components/report/util/ReportUtility';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
-import {useSelector} from 'react-redux';
-import {selectEditMode}
-  from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
-import {EditMode} from 'components/config/configType';
 
 const Pie = ({setItemExports, id, item}) => {
-  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   if (!mart.init) {
@@ -57,32 +49,6 @@ const Pie = ({setItemExports, id, item}) => {
   };
 
   const pies = seriesMeasureNames.map((dimension, idx) => {
-    const [showPopup, setShowPopup] = useState(false);
-    const focusedItem = useSelector(selectCurrentDataField);
-
-    const handleContextMenu = useCallback((event) => {
-      if (editMode === EditMode.DESIGNER) {
-        event.preventDefault();
-        setShowPopup(true);
-      }
-    }, [editMode]);
-
-    useEffect(() => {
-      if (editMode === EditMode.DESIGNER) {
-        const chartContainer =
-          dxRefs.current[idx].instance._renderer.root.element;
-        if (chartContainer) {
-          chartContainer.addEventListener('contextmenu', handleContextMenu);
-          return () => {
-            chartContainer.removeEventListener(
-                'contextmenu',
-                handleContextMenu
-            );
-          };
-        }
-      }
-    }, [handleContextMenu, editMode]);
-
     return (
       <>
         <PieChart
@@ -130,13 +96,6 @@ const Pie = ({setItemExports, id, item}) => {
           </Series>
           <Size width={'100%'} />
         </PieChart>
-        {showPopup && (
-          <SubLinkReportPopup
-            showButton={showPopup}
-            setShowButton={setShowPopup}
-            focusedItem={focusedItem}
-          />
-        )}
       </>
     );
   });

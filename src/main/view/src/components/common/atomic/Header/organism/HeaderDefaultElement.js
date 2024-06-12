@@ -4,7 +4,7 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
-import {checkLinkReport} from 'redux/selector/LinkSelector';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
@@ -221,7 +221,7 @@ const HeaderDefaultElement = () => {
       'icon': openViewerImg,
       'type': 'CommonButton',
       'onClick': (e) => {
-        const linkReport = checkLinkReport(store.getState());
+        const linkReport = selectLinkedReport(store.getState());
         if (linkReport&& Object.keys(linkReport).length > 0) {
           const firstLinkReportKey = Object.keys(linkReport)[0];
           const firstLinkReport = linkReport[firstLinkReportKey];

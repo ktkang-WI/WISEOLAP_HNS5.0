@@ -1,5 +1,39 @@
 import localizedString from 'config/localization';
 
+export const getDefaultFormat = () => {
+  return {
+    formatType: 'Number',
+    unit: 'Ones',
+    suffixEnabled: false,
+    suffix: {
+      O: '',
+      K: localizedString.k,
+      M: localizedString.m,
+      B: localizedString.b
+    },
+    precision: 0,
+    precisionType: 'round',
+    useDigitSeparator: true
+  };
+};
+
+export const getDefaultFormatRatio = () => {
+  return {
+    formatType: 'Percent',
+    unit: 'Ones',
+    suffixEnabled: false,
+    suffix: {
+      O: '',
+      K: localizedString.k,
+      M: localizedString.m,
+      B: localizedString.b
+    },
+    precision: 2,
+    precisionType: 'round',
+    useDigitSeparator: true
+  };
+};
+
 export const generateLabelSuffix = (formData) => {
   const labelSuffix = {
     O: formData.suffixO,

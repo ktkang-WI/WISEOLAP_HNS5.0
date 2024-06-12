@@ -6,7 +6,7 @@ import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import store from 'redux/modules';
-import {checkLinkReport} from 'redux/selector/LinkSelector';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import useLinkReportSave from 'hooks/useLinkReportSave';
 
 const SaveDefaultElement = () => {
@@ -50,7 +50,7 @@ const SaveDefaultElement = () => {
               }
             });
 
-            const linkReport = checkLinkReport(store.getState());
+            const linkReport = selectLinkedReport(store.getState());
             const linkParam = genLinkParam(linkReport);
             models.Report.insertLinkReport(linkParam.data).then((res) => {
             });
