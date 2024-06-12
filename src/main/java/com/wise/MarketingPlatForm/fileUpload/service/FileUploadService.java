@@ -17,10 +17,14 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
+import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
+import com.wise.MarketingPlatForm.config.service.GeneralService;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DbmsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
+import com.wise.MarketingPlatForm.fileUpload.controller.FileUploadController;
 import com.wise.MarketingPlatForm.fileUpload.store.UploadGenerator;
 import com.wise.MarketingPlatForm.fileUpload.store.factory.UploadGeneratorFatory;
 import com.wise.MarketingPlatForm.fileUpload.util.CSVLoader;
@@ -34,6 +38,9 @@ import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import javaxt.utils.Date;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -47,50 +54,106 @@ import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 
 @Service
 public class FileUploadService {
-    
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadService.class);
 
-    private final File spreadReportFolder;
+    private File spreadReportFolder;
     private final DatasetService datasetService;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
+    private final GeneralService generalService;
 
-    FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO) {
+    FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO, GeneralService generalService) {
         this.datasetService = datasetService;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.reportDAO = reportDAO;
-        
-        
-        spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-		if (!this.spreadReportFolder.isDirectory()) {
+        this.generalService = generalService;
+    
+        initFolderPath();
+    }
+	
+    public void initFolderPath() {
+        String siteNm = generalService.getSiteNm();
+        if (siteNm.equals("HNS")) {
+            spreadReportFolder = new File("/olapnas");
+        } else {
+            spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+        }
+        if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
 	    }
     }
-	
+
 	public void saveFile(MultipartFile file, String fileName) throws Exception {
         try (InputStream input = file.getInputStream()) {
-        	File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
-        	if(sysFile == null) new Exception("spread File create Error");
+            File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
+        	if(sysFile == null) {
+                new Exception("spread File create Error");
+            }
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            logger.info("파일이 성공적으로 저장되었습니다: " + sysFile.getAbsolutePath());
+        } catch (IOException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            throw e; 
+        }
+    }
+
+    public void hnsDrmUpload(MultipartFile file) throws Exception {
+        try (InputStream input = file.getInputStream()) {
+            // 디렉토리 생성
+            File folder = new File("/HNSimg/temp/drm/upload");
+
+            if (!folder.exists()) {
+                if (folder.mkdirs()) {
+                    logger.info("디렉토리가 생성되었습니다." + folder.getAbsolutePath());
+                } else {
+                    throw new IOException("디렉토리 생성에 실패했습니다." + folder.getAbsolutePath());
+                }
+            }
+
+            // 업로드할 파일 객체 생성
+        	File sysFile = WebFileUtils.getFile(folder, file.getOriginalFilename());
+        	if(sysFile == null) {
+                new Exception("스프레드 파일 생성에 실패했습니다");
+            }
+
+            // 파일 복사
+			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            logger.info("파일이 성공적으로 업로드 되었습니다." + folder.getAbsolutePath());
+        } catch (IOException e){
+            logger.error("HNSDRM Upload 오류 발생", e);
         }
     }
 
 	public void deleteFile(String fileName) throws Exception {
 		File file = WebFileUtils.getFile(spreadReportFolder, fileName);
+
+        if (file == null || !file.exists()) {
+            throw new IOException("파일을 찾을 수 없습니다: " + fileName);
+        }
 		if (!file.delete()) {
-			new Exception("spread File delete Exception");
+			throw new IOException("파일 삭제에 실패했습니다: " + fileName);
 		}
-		
+
+		logger.info("파일이 성공적으로 삭제되었습니다: " + file.getAbsolutePath());
 	}
 	
 	public byte[] fileImport(String fileName) throws Exception {
-		byte[] fileByte = null;
 		File file = WebFileUtils.getFile(spreadReportFolder, fileName);
-		Path filePath = file.toPath();
-		fileByte = Files.readAllBytes(filePath);
+        if (file == null || !file.exists()) {
+            throw new IOException("파일을 찾을 수 없습니다: " + fileName);
+        }
+        Path filePath = file.toPath();
 
-		return fileByte;
+        try {
+            byte[] fileBytes = Files.readAllBytes(filePath);
+            logger.info("파일이 성공적으로 읽혔습니다: " + file.getAbsolutePath());
+            return fileBytes;
+        } catch (IOException e) {
+            logger.error("파일 읽기 중 오류가 발생했습니다: " + fileName, e);
+            throw e;
+        }
 	}
 
 	public ArrayList<JSONObject> getUploadDataColumnList(HttpServletRequest request) throws IOException {
