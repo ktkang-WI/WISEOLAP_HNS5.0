@@ -41,8 +41,10 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -66,6 +68,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
+  const loadingAction = LoadingSlice.actions;
 
   const getFormats = useCallback(() => {
     const formats = dataField.measure.map((item) => item.format);
@@ -201,11 +204,33 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     };
 
-    const handleContentReady = () => {
+    const handleContentReady = (e) => {
       if (editMode === EditMode.DESIGNER) {
         const pivotInstance = ref.current.instance.element();
         if (pivotInstance) {
           pivotInstance.addEventListener('contextmenu', handleContextMenu);
+          const queryCheck = ItemManager.getExcuteQueryInit(item);
+          if (queryCheck) {
+            dispatch(loadingAction.startJob());
+
+            const pivotDataSource = e.component.getDataSource();
+            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
+            const pivotColumnFields =
+                pivotDataSource.getAreaFields('column', true);
+            if (!item.meta.positionOption.row.expand) {
+              pivotRowFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+
+            if (!item.meta.positionOption.row.expand) {
+              pivotColumnFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+            ItemManager.setExcuteQueryInit(item, false);
+            dispatch(loadingAction.endJobForce());
+          }
           return () =>
             pivotInstance.removeEventListener('contextmenu', handleContextMenu);
         }
@@ -249,6 +274,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         onCellPrepared={onCellPrepared}
         allowSorting={true}
         allowSortingBySummary={true}
+        allowExpandAll={true}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{
             text: localizedString.reportDescription,
@@ -369,6 +395,23 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 }
               }
             };
+
+            const pvDataSource = ref.current.instance.getDataSource();
+            const dsFields = pvDataSource.fields();
+
+            for (const field of dsFields) {
+              if (field.area == 'row') {
+                pvDataSource.expandAll(field.index);
+              }
+            }
+
+            for (const field of dsFields) {
+              if (field.area == 'column') {
+                pvDataSource.expandAll(field.index);
+              }
+            }
+
+            ItemManager.setExcuteQueryInit(item, true);
 
             dispatch(updateItem({reportId, item: tempItem}));
           }}
