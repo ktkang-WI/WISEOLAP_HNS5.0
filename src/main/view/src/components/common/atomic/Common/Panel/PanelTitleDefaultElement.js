@@ -1,4 +1,6 @@
 import customFieldImg from 'assets/image/icon/button/custom_field.png';
+import fieldDescriptionImg
+  from 'assets/image/icon/button/field_description.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
 import localizedString from 'config/localization';
@@ -23,6 +25,8 @@ import SingleTableDesignerModal
 import useQueryExecute from 'hooks/useQueryExecute';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import FieldDescriptionModal
+  from 'components/dataset/modal/FieldDescriptionModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -34,6 +38,7 @@ const PanelTitleDefaultElement = () => {
   } = ParameterSlice.actions;
   const {initItemByDatasetId} = ItemSlice.actions;
   const selectedCurrentItem = useSelector(selectCurrentItem);
+
   const handleCustomData = async () => {
     const dataset = selectCurrentDataset(store?.getState());
     if (!selectedCurrentItem) {
@@ -52,12 +57,11 @@ const PanelTitleDefaultElement = () => {
     openModal(UserDefinedDataModal,
         {selectedDataSource: dataSource, orgDataset: dataset});
   };
+
   return {
     CustomField: {
       id: 'custom_field',
-      onClick: async () => {
-        handleCustomData();
-      },
+      onClick: handleCustomData,
       src: customFieldImg,
       label: localizedString.addCustomField
     },
@@ -144,6 +148,14 @@ const PanelTitleDefaultElement = () => {
       },
       src: removeImg,
       label: localizedString.dataSourceRemove
+    },
+    FieldDescription: {
+      id: 'field_description',
+      onClick: () => {
+        openModal(FieldDescriptionModal);
+      },
+      src: fieldDescriptionImg,
+      label: localizedString.addFieldDescription
     }
   };
 };

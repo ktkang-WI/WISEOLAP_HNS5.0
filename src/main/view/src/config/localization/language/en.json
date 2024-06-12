@@ -496,5 +496,6 @@
   "hyperlinkList": "Hyperlink list",
   "name": "Name",
   "new": "New",
-  "save": "Save"
+  "save": "Save",
+  "addFieldDescription": "Add Field Description"
 }

@@ -60,6 +60,7 @@ const ContentWrapper = styled.div`
 const DataSourceTab = () => {
   const reportId = useSelector(selectCurrentReportId);
   const datasets = useSelector(selectCurrentDatasets);
+  const currentDataset = useSelector(selectCurrentDataset);
   const selectedDataset = useSelector(selectCurrentDataset);
   const designerMode = useSelector(selectCurrentDesignerMode);
 
@@ -73,11 +74,21 @@ const DataSourceTab = () => {
     }));
   }, [selectedDataset]);
 
+  const buttons = [
+    'CustomField',
+    'DataSourceModify',
+    'DataSourceRemove'
+  ];
+
+  if (currentDataset?.datasetType == 'DS_SQL') {
+    buttons.unshift('FieldDescription');
+  }
+
   return (
     <Wrapper designerMode={designerMode}>
       <PanelTitle
         panelTitle={localizedString.dataSource}
-        buttons={['CustomField', 'DataSourceModify', 'DataSourceRemove']}
+        buttons={buttons}
       />
       <ContentWrapper>
         <SelectBox

@@ -54,7 +54,6 @@ const StyledTreeView = styled(TreeView)`
   }
   .dx-treeview-item:hover .tooltipWrapper {
     width: 200px;
-    height: 25px;
   }
 `;
 
@@ -169,9 +168,8 @@ const DataSourceFoldableList = ({dataset}) => {
     return <SubTitle className='tooltip'>{title}</SubTitle>;
   };
 
-  const activeTootip = (itemElement, itemData) => {
-    const description = itemData.descript !== null ? '' : itemData.description;
-    const subTitle = getSubTitle('설명: ' + description);
+  const activeTootip = (itemElement, description) => {
+    const subTitle = getSubTitle(description);
     const container = document.createElement('div');
     container.className = 'tooltipWrapper';
     itemElement.appendChild(container);
@@ -181,8 +179,17 @@ const DataSourceFoldableList = ({dataset}) => {
   };
 
   const onItemRendered = ({itemElement, itemData}) => {
+    let description = '';
+
     if (dataset.datasetType === 'CUBE') {
-      activeTootip(itemElement, itemData);
+      description = itemData.descript ? itemData.description : '';
+    } else if (dataset.datasetType === 'DS_SQL') {
+      const fieldDesc = dataset.fieldDescription || {};
+      description = fieldDesc[itemData.name];
+    }
+
+    if (description) {
+      activeTootip(itemElement, description);
     }
   };
 
