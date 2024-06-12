@@ -5,11 +5,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 
 @RestController
 @RequestMapping("/upload")
 public class FileUploadController {
-	
+	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 	@Autowired
 	FileUploadService fileUploadService;
 	
@@ -38,6 +42,12 @@ public class FileUploadController {
 			@RequestPart("param") Map<String, String> param) throws Exception {
 		String fileName = param.get("fileName");
 		fileUploadService.saveFile(file, fileName);
+    }
+
+    @PostMapping(value="/hnsDrmUpload")
+    public void hnsDrmUpload(
+        @RequestPart("file") MultipartFile file) throws Exception {
+        fileUploadService.hnsDrmUpload(file);
     }
 	
 	@PostMapping("/delete")

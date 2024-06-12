@@ -15,6 +15,8 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
+import models from 'models';
+import {excelIOOpenOtions} from '../util/spreadContants';
 
 const theme = getTheme();
 
@@ -68,6 +70,27 @@ const SpreadBoard = () => {
     spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
   }, [currentReportId]);
 
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    const workbook = spreaRef.current.designer.getWorkbook();
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        models.File.hnsDrmUpload(formData);
+
+        // TODO:
+        // 복호화 api 호출 추가
+
+        workbook.import(selectedFile, () => {}, () => {}, excelIOOpenOtions);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
+
   return (
     <StyledWrapper className='section board'>
       <Designer
@@ -90,6 +113,13 @@ const SpreadBoard = () => {
         }}
       >
       </Designer>
+      <input
+        type='file'
+        id='fileInput'
+        accept='.xlsx, xls'
+        style={{display: 'none'}}
+        onChange={handleFileChange}
+      />
     </StyledWrapper>
   );
 };

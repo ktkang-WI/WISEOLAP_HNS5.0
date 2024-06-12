@@ -31,3 +31,11 @@ export const uploadUserData = (dsId, dataNm, uploadData,
     tableDeleteYN: tableDeleteYN
   });
 };
+
+export const hnsDrmUpload = (param) => {
+  return axios.post(path + '/hnsDrmUpload', param, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};

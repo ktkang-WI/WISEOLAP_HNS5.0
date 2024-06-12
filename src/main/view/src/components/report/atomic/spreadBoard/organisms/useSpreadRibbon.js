@@ -13,7 +13,8 @@ import {selectCurrentReport, selectCurrentReportId}
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentConfigure, selectCurrentDesignerMode}
+  from 'redux/selector/ConfigSelector';
 import {
   sheets,
   excelIO,
@@ -65,8 +66,17 @@ const useSpreadRibbon = () => {
 
   const openReportLocal = (context) => {
     const currentReportId = selectCurrentReportId(store.getState());
-    sheets.Designer.getCommand('fileMenuPanel')
-        .execute(context, 'button_import_excel', null);
+    const configure = selectCurrentConfigure(store.getState());
+
+    // 홈앤쇼핑 커스터마이징 (DRM 파일 복호화 기능 추가)
+    if (configure.siteNm === 'HNS') {
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
+    } else {
+      sheets.Designer.getCommand('fileMenuPanel')
+          .execute(context, 'button_import_excel', null);
+    }
+
     resetWorkbookJSON({
       reportId: currentReportId,
       workbookJSON: context.getWorkbook().toJSON()
@@ -98,7 +108,7 @@ const useSpreadRibbon = () => {
   };
 
   const deleteExcelFile = ({reportId, prevDesigner}) => {
-    deleteFile({fileName: reportId + '.xlsx'});
+    deleteFile({fileName: reportId + '.sjs'});
   };
 
   const downloadReportXLSX = () => {
