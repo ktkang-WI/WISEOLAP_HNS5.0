@@ -40,6 +40,7 @@ const Column = styled.div`
   line-height: ${theme.size.dataColumn};
   text-align: left;
   padding-left: ${(props) => props.sortOrder ? '27px' : '12px'};
+  padding-right: 20px;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -76,6 +77,13 @@ const OtherMenuButton = styled.img `
     width: auto;
     height: 16px;
     cursor: pointer;
+`;
+
+const EllipsisSpan = styled.span`
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const DataColumn = ({
@@ -153,6 +161,7 @@ const DataColumn = ({
       {...props}
     >
       <Column
+        title={children}
         sortOrder={sortOrder}
         onClick={(e) => {
           if (sortOrder && e.target.tagName != 'IMG' &&
@@ -168,7 +177,7 @@ const DataColumn = ({
         {data?.type === 'DIM' &&
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
-        {children}
+        <EllipsisSpan>{children}</EllipsisSpan>
         {showContextMenu &&
           <OtherMenuButton id={otherMenuId} src={otherMenuImg}/>
         }
