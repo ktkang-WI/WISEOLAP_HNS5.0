@@ -181,9 +181,6 @@ const useQueryExecute = () => {
           return;
         }
         const data = response.data;
-        if (data.data.length === 0) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
 
         chartItem.mart.init = true;
         chartItem.mart.data = data;

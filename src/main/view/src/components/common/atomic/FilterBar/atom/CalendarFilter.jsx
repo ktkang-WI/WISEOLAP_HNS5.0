@@ -39,7 +39,10 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
       break;
     case 'yyyyMMdd':
     case 'yyyy-MM-dd':
-      zoomLevels = {};
+      zoomLevels = {
+        zoomLevel: 'month',
+        maxZoomLevel: 'month'
+      };
       break;
   }
 

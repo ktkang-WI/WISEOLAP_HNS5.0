@@ -26,7 +26,8 @@ const ItemContent = styled.div`
   padding: 10px 20px;
 `;
 
-const Item = ({children, item}) => {
+// TODO: 추후 아이템별로 나눠야함.
+const Item = ({children, ...props}) => {
   const {className, overflowY} = ScrollSetting.getScrollOptions({
     overflowYItems: [ItemType.COLLAPSIBLE_TREE],
     type: children?.type?.type?.name
