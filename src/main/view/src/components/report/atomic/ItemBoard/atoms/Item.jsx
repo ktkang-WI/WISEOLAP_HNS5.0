@@ -22,7 +22,7 @@ const ItemContent = styled.div`
 `;
 
 // TODO: 추후 아이템별로 나눠야함.
-const Item = ({children}) => {
+const Item = ({children, ...props}) => {
   const {className, overflowY} = ScrollSetting.getScrollOptions({
     overflowYItems: [ItemType.COLLAPSIBLE_TREE],
     type: children?.type?.type?.name
