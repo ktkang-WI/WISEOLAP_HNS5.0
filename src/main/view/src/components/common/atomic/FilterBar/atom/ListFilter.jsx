@@ -1,11 +1,9 @@
-import {TextBox, Popover, List} from 'devextreme-react';
+import {TextBox, Popover} from 'devextreme-react';
 import {getTheme} from 'config/theme';
-import {styled} from 'styled-components';
-import Wrapper from '../../Common/Wrap/Wrapper';
-import CommonButton from '../../Common/Button/CommonButton';
 import {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import localizedString from 'config/localization';
+import ListFilterPopoverList from './ListFilterPopoverList';
 
 const theme = getTheme();
 
@@ -65,89 +63,56 @@ const ListFilter = ({
     setSelectionKeys(keys);
   }, [info, value]);
 
-  const Footer = styled.div`
-    display: flex;
-    flex-direction: row;
-    height: 50px;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    justify-content: center;
-  `;
-
-  const renderContent = () => {
-    const StyledList = styled(List)`
-      .dx-list-item-content {
-        font: ${theme.font.filterContent};
+  const confirm = (_selectionKeys, _dataSource) => {
+    if (_selectionKeys) {
+      listRef?.current?.instance?.option('selectedItemKeys', _selectionKeys);
+    }
+    const selectionKeys = _selectionKeys ||
+    listRef.current.instance.option('selectedItemKeys');
+    const dataSource = _dataSource ||
+      listRef.current.instance.option('dataSource');
+    let selection;
+    if (selectionKeys.length == 0 ||
+        selectionKeys.length == dataSource.length ||
+        (info.useAll && !info.multiSelect &&
+        selectionKeys.length == dataSource.length - 1)) {
+      selection = '[All]';
+      setText(allText);
+    } else {
+      if (typeof selectionKeys[0] === 'number') {
+        setDataType(typeof selectionKeys[0]);
       }
-    `;
-
-    const confirm = () => {
-      const selectionKeys = listRef.current.instance.option('selectedItemKeys');
-      let selection;
-      if (selectionKeys.length == 0 ||
-          selectionKeys.length == dataSource.length ||
-          (info.useAll && !info.multiSelect &&
-          selectionKeys.length == dataSource.length - 1)) {
-        selection = '[All]';
-        setText(allText);
-      } else {
-        if (typeof selectionKeys[0] === 'number') {
-          setDataType(typeof selectionKeys[0]);
-        }
-        selection = selectionKeys.join(', ');
-        setText(generateCaptionText(selectionKeys));
-      }
-
-      onValueChanged(info.name, selection, index);
-      setSelectionKeys(selectionKeys);
-      popOverRef.current.instance.hide();
-    };
-
-    const cancel = () => {
-      listRef.current.instance.option('selectedItemKeys', selectionKeys);
-      popOverRef.current.instance.hide();
-    };
-
-    const dataSource = value ? _.cloneDeep(value.listItems) : [];
-    let selectionMode = info.multiSelect ? 'multiple' : 'single';
-
-    if (selectionMode == 'multiple' && info.useAll) {
-      selectionMode = 'all';
-    } else if (info.useAll) {
-      dataSource.unshift({
-        name: '[All]',
-        caption: allText
-      });
+      selection = selectionKeys.join(', ');
+      setText(generateCaptionText(selectionKeys));
     }
 
+    onValueChanged(info.name, selection, index);
+    setSelectionKeys(selectionKeys);
+    popOverRef.current.instance.hide();
+  };
+
+  const cancel = () => {
+    listRef.current.instance.option('selectedItemKeys', selectionKeys);
+    popOverRef.current.instance.hide();
+  };
+
+  let selectionMode = info.multiSelect ? 'multiple' : 'single';
+
+  if (selectionMode == 'multiple' && info.useAll) {
+    selectionMode = 'all';
+  }
+
+  const renderContent = () => {
     return (
-      <Wrapper>
-        <StyledList
-          selectionMode={selectionMode}
-          showSelectionControls={true}
-          selectAllText={allText}
-          selectAllMode={'allPage'}
-          selectedByClick={true}
-          height='200px'
-          displayExpr='caption'
-          keyExpr='name'
-          ref={listRef}
-          defaultSelectedItemKeys={selectionKeys}
-          dataSource={dataSource}
-          searchEnabled={info.useSearch}
-          searchMode='contains'
-          searchExpr={'caption'}
-        >
-        </StyledList>
-        <Footer>
-          <CommonButton type='primary' maxWidth='120px' onClick={confirm}>
-            확인
-          </CommonButton>
-          <CommonButton type='secondary' maxWidth='120px' onClick={cancel}>
-            취소
-          </CommonButton>
-        </Footer>
-      </Wrapper>
+      <ListFilterPopoverList
+        info={info}
+        listRef={listRef}
+        confirm={confirm}
+        cancel={cancel}
+        allText={allText}
+        orgDataSource={value.listItems || []}
+        selectionKeys={selectionKeys}
+      />
     );
   };
 
@@ -158,9 +123,23 @@ const ListFilter = ({
           focusStateEnabled={false}
           hoverStateEnabled={false}
           height={theme.size.filterHeight}
-          readOnly={true}
           value={text}
           width={width}
+          onValueChanged={(e) => {
+            const dataSource = value.listItems || [];
+            const captions = e.value.split(',');
+            const tempSelectionKeys = [];
+
+            for (let caption of captions) {
+              caption = caption.trim();
+              const item = dataSource.find((item) => item.caption == caption);
+              if (item) {
+                tempSelectionKeys.push(item.name);
+              }
+            }
+
+            confirm(tempSelectionKeys, dataSource);
+          }}
           {...props}
         />
       </div>
