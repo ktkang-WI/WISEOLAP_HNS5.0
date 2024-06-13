@@ -7,6 +7,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
+import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
 import com.wise.MarketingPlatForm.login.service.LoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +30,9 @@ import io.swagger.v3.oas.annotations.Parameters;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
+
+    @Autowired
+    MyPageDesignerConfigService myPageDesignerConfig;
 
     private final LoginService loginService;
     private ObjectMapper mapper = new ObjectMapper();
@@ -51,7 +57,15 @@ public class LoginController {
 
         if (userDTO != null) {
             loginService.createLoginSession(session, userDTO);
-            return ResponseEntity.ok().build();
+            // 로그인 성공 직후 개인설정 가져오기.
+            int userNo = userDTO.getUserNo();
+            MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
+            
+            if (model == null) {
+                return ResponseEntity.ok().build();
+            }
+            
+            return ResponseEntity.ok().body(model);
         }
 
         return ResponseEntity.notFound().build();

@@ -219,6 +219,26 @@ public class ReportController {
 
         return reportService.getReport(reportId, userId);
 	}
+    
+    @Operation(
+	    summary = "get only report name",
+	    description = "reportId로 보고서 이름만 불러옵니다.")
+	@Parameters({
+	    @Parameter(name = "reportId", description = "report id", example = "8486", required = true),
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+	    content = @Content(
+	        examples = {
+	            @ExampleObject(name = "example", value = "{\"reportId\": \"8486\"}")
+	        }
+	    )
+	)
+    @PostMapping(value = "/report-name")
+	public String getOnlyReportNm(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+
+        return reportService.getOnlyReportName(reportId);
+	}
 
     @Operation(
 	    summary = "get detailed data",
