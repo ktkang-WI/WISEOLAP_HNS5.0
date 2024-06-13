@@ -304,6 +304,7 @@ color: var(--gray600);
 .dx-pivotgrid, .dx-datagrid {
   font-size: 13px;
   font-family: 'Noto Sans KR';
+  font-weight: bold;
 }
 
 .dx-pivotgrid thead, .dx-datagrid-headers {
@@ -325,6 +326,14 @@ color: var(--gray600);
 }
 
 .dx-pivotgrid .dx-grandtotal {
+  background: var(--gray50);
+}
+
+.dx-pivotgrid .dx-total {
+  background: var(--gray50);
+}
+
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-description-cell {
   background: var(--gray50);
 }
 
