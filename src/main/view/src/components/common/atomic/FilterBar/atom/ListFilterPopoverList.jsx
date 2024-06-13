@@ -95,7 +95,7 @@ const ListFilterPopoverList = ({
       >
       </StyledList>
       <Footer>
-        <CommonButton type='primary' maxWidth='120px' onClick={confirm}>
+        <CommonButton type='primary' maxWidth='120px' onClick={() => confirm()}>
           {localizedString.confirm}
         </CommonButton>
         <CommonButton type='secondary' maxWidth='120px' onClick={cancel}>
