@@ -491,7 +491,7 @@
   "noSelectionAlert": "Nothing has been selected. Please select again.",
   "search": "Search",
   "apply": "apply",
-  "myPageAdHocLayoutHint": "When you check Apply, My Page's irregular layout settings are applied.",
+  "myPageAdHocLayoutHint": "When checking Apply, My Page's AdHoc layout settings are applied first.",
   "hyperlink": "Hyperlink",
   "hyperlinkSetting": "Hyperlink Setting",
   "hyperlinkInformation": "Hyperlink information",

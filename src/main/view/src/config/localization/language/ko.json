@@ -695,7 +695,7 @@
   "noSelectionAlert": "아무것도 선택되지 않았습니다. 다시 선택해 주세요.",
   "search": "검색",
   "apply": "적용",
-  "myPageAdHocLayoutHint": "적용 체크시 마이페이지의 비정형 레이아웃 설정이 적용 됩니다.",
+  "myPageAdHocLayoutHint": "적용 체크시 마이페이지의 비정형 레이아웃 설정이 먼저 적용 됩니다.",
   "hyperlink": "하이퍼링크",
   "hyperlinkSetting": "하이퍼링크 설정",
   "hyperlinkInformation": "하이퍼링크 정보",
