@@ -12,9 +12,9 @@ const Viewer = () => {
   const dispatch = useDispatch();
   const {reload} = useReportSave();
   const {setEditMode} = ConfigSlice.actions;
-  const {generalConfigure} = useLoaderData();
+  const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
-  saveConfiguration(generalConfigure);
+  saveConfiguration(generalConfigure, myPageConfigure);
 
   useEffect(() => {
     dispatch(setEditMode(EditMode.VIEWER));

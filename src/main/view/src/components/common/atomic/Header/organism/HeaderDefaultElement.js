@@ -41,12 +41,12 @@ const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const {alert, openModal} = useModal();
-  const initialDisplay = useSelector(selectInitialDisplay);
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
   // TODO: 임시용
   const test = '관리자';
 
+  const initialDisplay = useSelector(selectInitialDisplay);
   const rootItem = useSelector(selectRootItem);
   const currentItem = useSelector(selectCurrentItems);
   const currentParameter = useSelector(selectCurrentInformationas);
@@ -129,7 +129,6 @@ const HeaderDefaultElement = () => {
         // nav('viewer');
         window.open('viewer');
         dispatch(setEditMode(EditMode.VIEWER));
-        reload(initialDisplay);
       }
     },
     'ReportSearch': {

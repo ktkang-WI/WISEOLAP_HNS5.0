@@ -49,6 +49,25 @@ export const updateMyPageReport = (param) => {
   return res;
 };
 
+export const getUserDesignerConfig = () => {
+  const res =
+    axios.get(configPath + '/my-page-designer-config');
+  return res;
+};
+
+export const updateDesignerConfig = (param) => {
+  const res =
+    axios.post(configPath + '/my-page-designer-config', null, {params: param});
+  return res;
+};
+
+export const resetDesignerConfig = () => {
+  const res =
+    axios.post(
+        configPath + '/my-page-designer-config/reset', null, {params: null});
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';

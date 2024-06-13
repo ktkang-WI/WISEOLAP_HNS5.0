@@ -19,7 +19,8 @@ const initialState = {
   runMode: 'DashAny',
   initialDisplay: 'DashAny',
   editMode: EditMode.DESIGNER,
-  configure: {}
+  configure: {},
+  myPageConfigure: {}
   // TODO: 추후 환경설정의 초기화면, designerMode 로 대체 가능 개발시 고려
 };
 
@@ -46,6 +47,9 @@ const reducers = {
     state.designerMode = actions.payload;
     state.runMode = actions.payload;
     state.initialDisplay = actions.payload;
+  },
+  setMyPageConfigure(state, actions) {
+    state.myPageConfigure = actions.payload;
   }
 };
 

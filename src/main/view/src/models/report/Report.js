@@ -24,7 +24,17 @@ export const getReportById = async (userId, reportId) => {
   });
   return res;
 };
+/**
+ * 보고서 이름만 조회
+ * @param {string} reportId
+ */
+export const getOnlyReportName = async (reportId) => {
+  const res = await axios.post(path + '/report-name', {
+    reportId: reportId
+  });
 
+  return res;
+};
 
 /**
  * 보고서 목록 조회
