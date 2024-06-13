@@ -13,6 +13,8 @@ import meaGrpImg from
 import dimGrpImg from
   'assets/image/icon/dataSource/cube_dimension.png';
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
+import {createRoot} from 'react-dom/client';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const theme = getTheme();
 
@@ -42,6 +44,51 @@ const StyledTreeView = styled(TreeView)`
 
   .dx-treeview-toggle-item-visibility-opened::before {
     transform: rotate(0deg);
+  }
+  
+  .dx-treeview-item {
+    display: inline-block;
+    position: relative;
+  }
+  .dx-treeview-item:hover .tooltip {
+    display:block;
+  }
+  .dx-treeview-item:hover .tooltipWrapper {
+    width: 200px;
+  }
+`;
+
+const SubTitle = styled.div`
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 400;
+  position: absolute;
+  top: 30px;
+  left: 40%;
+  width: auto;
+  z-index: 99;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0 auto;
+  transform: translateX(-50%);
+  background: ${theme.color.white};
+  border-radius: 2px;
+  border: 1px solid ${theme.color.primary};
+  padding: 3px 7px;
+  color: ${theme.color.primary};
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, .15);
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    transform: rotate(45deg);
+    background: #ffffff;
+    left: calc(50% - 2px);
+    top: -3px;
+    border-left: 1px solid ${theme.color.primary};
+    border-top: 1px solid ${theme.color.primary};
   }
 `;
 
@@ -118,6 +165,36 @@ const DataSourceFoldableList = ({dataset}) => {
     );
   };
 
+  const getSubTitle = (title) => {
+    return <SubTitle className='tooltip'>{title}</SubTitle>;
+  };
+
+  const activeTootip = (itemElement, description) => {
+    const subTitle = getSubTitle(description);
+    const container = document.createElement('div');
+    container.className = 'tooltipWrapper';
+    itemElement.appendChild(container);
+
+    const root = createRoot(container);
+    root.render(subTitle);
+  };
+
+  // TODO: 추후 itemRendered 로 변경
+  const onItemRendered = ({itemElement, itemData}) => {
+    let description = '';
+
+    if (dataset.datasetType === DatasetType.CUBE) {
+      description = itemData.descript ? itemData.description : '';
+    } else if (dataset.datasetType === DatasetType.DS_SQL) {
+      const fieldDesc = dataset.fieldDescription || {};
+      description = fieldDesc[itemData.name];
+    }
+
+    if (description) {
+      activeTootip(itemElement, description);
+    }
+  };
+
   const data = dataset? _.cloneDeep(dataset.fields) : [];
 
   if (data.length > 0 && dataset.datasetType != 'CUBE') {
@@ -148,6 +225,7 @@ const DataSourceFoldableList = ({dataset}) => {
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
+              onItemRendered={onItemRendered}
             />
           </Wrapper>
         )
