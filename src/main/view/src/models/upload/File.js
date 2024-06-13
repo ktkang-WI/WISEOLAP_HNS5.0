@@ -20,6 +20,11 @@ export const importFile = (param) => {
   });
 };
 
+export const loadDecryptionFile = (param) => {
+  return axios.post(path + '/loadDecryptionFile', param, {
+    responseType: 'arraybuffer'
+  });
+};
 
 export const uploadUserData = (dsId, dataNm, uploadData,
     appendTable, tableDeleteYN) => {

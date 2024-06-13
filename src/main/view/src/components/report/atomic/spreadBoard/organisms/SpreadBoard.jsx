@@ -15,8 +15,6 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
-import models from 'models';
-import {excelIOOpenOtions} from '../util/spreadContants';
 
 const theme = getTheme();
 
@@ -48,7 +46,8 @@ const SpreadBoard = () => {
   const {
     sheetChangedListener,
     sheetNameChangedListener,
-    bindData
+    bindData,
+    hnsDrmUpload
   } = useSpread();
   const config = useSpreadRibbon();
   const currentReportId = useSelector(selectCurrentReportId);
@@ -72,19 +71,10 @@ const SpreadBoard = () => {
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
-    const workbook = spreaRef.current.designer.getWorkbook();
 
     if (selectedFile) {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
       try {
-        models.File.hnsDrmUpload(formData);
-
-        // TODO:
-        // 복호화 api 호출 추가
-
-        workbook.import(selectedFile, () => {}, () => {}, excelIOOpenOtions);
+        hnsDrmUpload(selectedFile);
       } catch (error) {
         console.error('Error uploading file:', error);
       }

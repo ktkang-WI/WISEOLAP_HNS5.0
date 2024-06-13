@@ -22,6 +22,7 @@ import {EditMode} from 'components/config/configType';
 import store from 'redux/modules';
 import useModal from './useModal';
 import localizedString from 'config/localization';
+import models from 'models';
 
 const useSpread = () => {
   const dispatch = useDispatch();
@@ -231,13 +232,98 @@ const useSpread = () => {
     });
   };
 
+  const hnsDrmUpload = async (selectedFile) => {
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      dispatch(loadingActions.startJob());
+
+      // 파일 업로드
+      const uploadResponse = await models.File.hnsDrmUpload(formData);
+
+      if (uploadResponse.status === 200) {
+        // 복호화 API 호출 (TODO: 실제 복호화 API 호출 추가)
+        await fetchData(selectedFile.name);
+
+        // 복호화 된 파일 불러오기
+        await importHnsFile(selectedFile.name);
+
+        dispatch(loadingActions.endJob());
+      } else {
+        throw new Error(
+            `File upload failed with status: ${uploadResponse.status}`
+        );
+      }
+    } catch (error) {
+      console.error('Error during hnsDrmUpload:', error);
+      dispatch(loadingActions.endJob());
+    }
+  };
+
+  const importHnsFile = async (fileName) => {
+    try {
+      const workbook = getWorkbook();
+
+      const response = await models.File.loadDecryptionFile({
+        fileName: `${fileName}`
+      });
+
+      if (response.status === 200) {
+        const blob = new Blob([response.data],
+            // eslint-disable-next-line max-len
+            {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+        return new Promise((resolve, reject) => {
+          workbook.import(
+              blob,
+              () => {
+                resolve();
+              },
+              (error) => {
+                reject(error);
+              },
+              excelIOOpenOtions
+          );
+        });
+      } else {
+        throw new Error(`Failed to load file: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error importing file:', error);
+      throw error;
+    }
+  };
+
+  const fetchData = async (fileName) => {
+    try {
+      const url = `http://drmapi.hns.tv/drm/fs/v1/dec?fileName=${encodeURIComponent(fileName)}&edGb=D`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      // TODO:여기서 받은 데이터를 처리
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  };
+
   return {
     getWorkbook,
     bindData,
     sheetChangedListener,
     sheetNameChangedListener,
     createReportBlob,
-    setExcelFile
+    setExcelFile,
+    hnsDrmUpload
   };
 };
 

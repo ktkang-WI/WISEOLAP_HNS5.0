@@ -62,6 +62,9 @@ public class FileUploadService {
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
     private final GeneralService generalService;
+    private final String SHARED_FOLDER = "/olapnas";
+    private final String DECRYTION_INPUT_FOLDER = "/HNSimg/temp/drm/upload";
+    private final String DECRYTION_OUTPUT_FOLDER = "/HNSimg/temp/drm";
 
     FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO, GeneralService generalService) {
         this.datasetService = datasetService;
@@ -76,7 +79,7 @@ public class FileUploadService {
     public void initFolderPath() {
         String siteNm = generalService.getSiteNm();
         if ("HNS".equals(siteNm)) {
-            spreadReportFolder = new File("/olapnas");
+            spreadReportFolder = new File(SHARED_FOLDER);
         } else {
             spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
         }
@@ -100,9 +103,11 @@ public class FileUploadService {
     }
 
     public void hnsDrmUpload(MultipartFile file) throws Exception {
+        File sysFile = null;
+        
         try (InputStream input = file.getInputStream()) {
             // 디렉토리 생성
-            File folder = new File("/HNSimg/temp/drm/upload");
+            File folder = new File(DECRYTION_INPUT_FOLDER);
 
             if (!folder.exists()) {
                 if (folder.mkdirs()) {
@@ -113,7 +118,7 @@ public class FileUploadService {
             }
 
             // 업로드할 파일 객체 생성
-        	File sysFile = WebFileUtils.getFile(folder, file.getOriginalFilename());
+        	sysFile = WebFileUtils.getFile(folder, file.getOriginalFilename());
         	if(sysFile == null) {
                 new Exception("스프레드 파일 생성에 실패했습니다");
             }
@@ -123,6 +128,9 @@ public class FileUploadService {
             logger.info("파일이 성공적으로 업로드 되었습니다." + folder.getAbsolutePath());
         } catch (IOException e){
             logger.error("HNSDRM Upload 오류 발생", e);
+        } catch (Exception e) {
+            logger.error("HNSDRM Upload 중 오류 발생", e);
+            throw e; // 예외를 다시 던져서 호출자가 처리할 수 있게 합니다.
         }
     }
 
@@ -149,6 +157,26 @@ public class FileUploadService {
         try {
             byte[] fileBytes = Files.readAllBytes(filePath);
             logger.info("파일이 성공적으로 읽혔습니다: " + file.getAbsolutePath());
+            return fileBytes;
+        } catch (IOException e) {
+            logger.error("파일 읽기 중 오류가 발생했습니다: " + fileName, e);
+            throw e;
+        }
+	}
+
+    // 복호화된 DRM 파일 불러오기
+    public byte[] loadDecrytionFile(String fileName) throws Exception {
+        // TODO: DRM 복호화 API 적용 후 DECRYTION_OUTPUT_FOLDER 로 변경
+        File decryptionFolder = new File(DECRYTION_INPUT_FOLDER);
+		File decryptionFile = WebFileUtils.getFile(decryptionFolder, fileName);
+        if (decryptionFile == null || !decryptionFile.exists()) {
+            throw new IOException("파일을 찾을 수 없습니다: " + fileName);
+        }
+        Path filePath = decryptionFile.toPath();
+
+        try {
+            byte[] fileBytes = Files.readAllBytes(filePath);
+            logger.info("파일이 성공적으로 읽혔습니다: " + decryptionFile.getAbsolutePath());
             return fileBytes;
         } catch (IOException e) {
             logger.error("파일 읽기 중 오류가 발생했습니다: " + fileName, e);

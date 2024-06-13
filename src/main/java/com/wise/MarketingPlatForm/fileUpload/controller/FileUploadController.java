@@ -66,6 +66,16 @@ public class FileUploadController {
                 .body(fileBytes);
 	}
 
+    @PostMapping(value="/loadDecryptionFile")
+	public ResponseEntity<byte[]> loadDecrytionFile(@RequestBody Map<String, String> param) throws Exception {
+		String fileName = param.get("fileName");
+		byte[] fileBytes = fileUploadService.loadDecrytionFile(fileName);
+		return ResponseEntity
+                .ok()
+                .header("Content-Disposition", "attachment; filename=binary-data.txt")
+                .body(fileBytes);
+	}
+
     @PostMapping(value = "/upload-data-column")
     public void getUploadDataColumn(HttpServletRequest request, HttpServletResponse response) {
         
