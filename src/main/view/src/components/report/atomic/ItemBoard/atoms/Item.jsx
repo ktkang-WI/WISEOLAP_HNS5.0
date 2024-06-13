@@ -3,7 +3,7 @@ import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import ItemType from 'components/report/item/util/ItemType';
 import ScrollSetting from 'components/report/util/ScrollSetting';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ContextMenu} from 'devextreme-react';
 import useContextMenu from 'hooks/useContextMenu';
 
@@ -30,25 +30,32 @@ const Item = ({children, item, ...props}) => {
     type: children?.type?.type?.name
   });
 
+  const targetRef = useRef();
   const contextMenuRef = useRef();
   const {getContextMenuItems} = useContextMenu(item);
+  const [target, setTarget] = useState(false);
+
+  useEffect(() => {
+    setTarget(targetRef.current);
+  }, []);
 
   return (
     <ItemWrapper
-      id={item.id + '_wrapper'}
+      ref={targetRef}
       className={className}
       overflowY={overflowY}>
       <ItemContent>{children}</ItemContent>
-      <ContextMenu
-        items={getContextMenuItems()}
-        onItemClick={(e) => {
-          e.itemData?.onItemClick();
-        }}
-        target={'#' + item.id + '_wrapper'}
-        ref={contextMenuRef}
-      />
+      {
+        target && <ContextMenu
+          items={getContextMenuItems()}
+          onItemClick={(e) => {
+            e.itemData?.onItemClick();
+          }}
+          target={target}
+          ref={contextMenuRef}
+        />
+      }
     </ItemWrapper>
   );
 };
-
 export default Item;
