@@ -14,6 +14,7 @@ import dimGrpImg from
   'assets/image/icon/dataSource/cube_dimension.png';
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
 import {createRoot} from 'react-dom/client';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const theme = getTheme();
 
@@ -181,9 +182,9 @@ const DataSourceFoldableList = ({dataset}) => {
   const onItemRendered = ({itemElement, itemData}) => {
     let description = '';
 
-    if (dataset.datasetType === 'CUBE') {
+    if (dataset.datasetType === DatasetType.CUBE) {
       description = itemData.descript ? itemData.description : '';
-    } else if (dataset.datasetType === 'DS_SQL') {
+    } else if (dataset.datasetType === DatasetType.DS_SQL) {
       const fieldDesc = dataset.fieldDescription || {};
       description = fieldDesc[itemData.name];
     }
