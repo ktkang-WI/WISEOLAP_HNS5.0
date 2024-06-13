@@ -38,42 +38,6 @@ const DataGrid = ({setItemExports, id, item}) => {
       dataSize < pageSize ? dataSize - 1 : pageSize))];
   };
 
-  if (!mart.init) {
-    return <></>;
-  }
-
-  useEffect(() => {
-    const dataGridInstance = dataGridRef.current.instance;
-    const pageRange = dataGridConfig.pagingOption.pageRange;
-    const totalRows = dataGridConfig.dataSource.info.totalRows;
-    const lastIndex = Math.floor(totalRows / pageRange);
-    let index = 0;
-    const id = setInterval(() => {
-      if (lastIndex > index) {
-        index = index + 1;
-      } else {
-        index = 0;
-      }
-      if (config.paging.autoPaging.isOk) dataGridInstance.pageIndex(index);
-    }, config.paging.autoPaging.time * 1000);
-    return () => clearInterval(id);
-  }, [config.paging.autoPaging]);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
-
-  useEffect(() => {
-    handlePagingIndex();
-  }, [mart, dataGridConfig.pagingOption]);
-
   const handlePagingIndex = () => {
     const dataGridInstance = dataGridRef?.current?.instance;
     if (!dataGridInstance) return;
@@ -125,6 +89,45 @@ const DataGrid = ({setItemExports, id, item}) => {
     }
     cellMerge(e, dataGridConfig.rowSpans, mart.data.columns);
   };
+
+  useEffect(() => {
+    const dataGridInstance = dataGridRef?.current?.instance;
+
+    if (!dataGridInstance) return;
+
+    const pageRange = dataGridConfig.pagingOption.pageRange;
+    const totalRows = dataGridConfig.dataSource.info.totalRows;
+    const lastIndex = Math.floor(totalRows / pageRange);
+    let index = 0;
+    const id = setInterval(() => {
+      if (lastIndex > index) {
+        index = index + 1;
+      } else {
+        index = 0;
+      }
+      if (config.paging.autoPaging.isOk) dataGridInstance.pageIndex(index);
+    }, config.paging.autoPaging.time * 1000);
+    return () => clearInterval(id);
+  }, [config.paging.autoPaging]);
+
+  useEffect(() => {
+    setItemExports((prev) => {
+      const itemExports =
+        prev.filter((item) => item.id !== itemExportObject.id);
+      return [
+        ...itemExports,
+        itemExportObject
+      ];
+    });
+  }, [mart.data.data]);
+
+  useEffect(() => {
+    handlePagingIndex();
+  }, [mart, dataGridConfig.pagingOption]);
+
+  if (!mart.init) {
+    return <></>;
+  }
 
   const onCellPrepared = (e) => {
     if (config.cellMerging) {
