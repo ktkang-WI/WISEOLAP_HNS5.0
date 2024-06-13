@@ -63,6 +63,9 @@ import StarChart from 'components/report/item/starChart/StarChart';
 import WaterFall from 'components/report/item/waterFall/WaterFall';
 import SchedulerComponent
   from 'components/report/item/schedulerComponent/SchedulerComponent';
+import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const theme = getTheme();
 
@@ -111,6 +114,7 @@ const Memo = styled.div`
 const ItemBoard = () => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
+  const {alert} = useModal();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
   const layoutConfig = useSelector(selectFlexLayoutConfig);
@@ -227,11 +231,25 @@ const ItemBoard = () => {
     const ItemComponent = itemFactory[item.type];
     const adHocOption = rootItem.adHocOption;
 
-    if (nullDataCheck(item)) return <Item></Item>;
+    if (item?.mart?.init && nullDataCheck(item)) {
+      alert(`${item?.meta?.name}${localizedString.noneData}`);
+
+      return <Item>
+        <Wrapper style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: theme.color.gray400,
+          font: theme.font.item
+        }}>
+          No Data
+        </Wrapper>
+      </Item>;
+    }
 
 
     return (
-      <Item>
+      <Item item={item}>
         <ItemComponent
           setItemExports={setItemExports}
           item={item}

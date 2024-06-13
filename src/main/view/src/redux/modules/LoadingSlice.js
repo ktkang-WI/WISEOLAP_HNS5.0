@@ -11,6 +11,9 @@ const reducers = {
       return state - 1;
     }
     return 0;
+  },
+  endJobForce() {
+    return 0;
   }
 };
 

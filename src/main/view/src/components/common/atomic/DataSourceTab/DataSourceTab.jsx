@@ -13,6 +13,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useCallback} from 'react';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const theme = getTheme();
 
@@ -60,6 +61,7 @@ const ContentWrapper = styled.div`
 const DataSourceTab = () => {
   const reportId = useSelector(selectCurrentReportId);
   const datasets = useSelector(selectCurrentDatasets);
+  const currentDataset = useSelector(selectCurrentDataset);
   const selectedDataset = useSelector(selectCurrentDataset);
   const designerMode = useSelector(selectCurrentDesignerMode);
 
@@ -73,11 +75,21 @@ const DataSourceTab = () => {
     }));
   }, [selectedDataset]);
 
+  const buttons = [
+    'CustomField',
+    'DataSourceModify',
+    'DataSourceRemove'
+  ];
+
+  if (currentDataset?.datasetType == DatasetType.DS_SQL) {
+    buttons.unshift('FieldDescription');
+  }
+
   return (
     <Wrapper designerMode={designerMode}>
       <PanelTitle
         panelTitle={localizedString.dataSource}
-        buttons={['CustomField', 'DataSourceModify', 'DataSourceRemove']}
+        buttons={buttons}
       />
       <ContentWrapper>
         <SelectBox

@@ -25,7 +25,6 @@ const ModalPanel = ({
   children,
   padding = '10',
   headerButtons,
-  footerButtons,
   headerCheckBoxs,
   ...props
 }) => {

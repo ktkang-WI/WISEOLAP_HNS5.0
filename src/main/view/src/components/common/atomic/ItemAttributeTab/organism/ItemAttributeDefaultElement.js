@@ -15,6 +15,8 @@ import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
 import topBottomImg
   from 'assets/image/icon/adhoc/topBottom.png';
+import deltaValueImg
+  from 'assets/image/icon/adhoc/deltaValue.png';
 import dataHighlightImg
   from '../../../../../assets/image/icon/adhoc/dataHighlight.png';
 import useModal from 'hooks/useModal';
@@ -28,6 +30,8 @@ import DataHighlightModal
   from 'components/report/item/pivot/modal/organism/DataHighLightModal';
 import GridAttributeModal
   from 'components/report/item/pivot/modal/organism/GridAttributeModal';
+import VariationValueModal
+  from 'components/report/item/pivot/modal/organism/VariationValueModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -241,9 +245,9 @@ const ItemAttributeDefaultElement = () => {
         },
         {
           id: 'gridAttribute',
-          label: localizedString.gridAttibute,
+          label: localizedString.gridAttribute,
           icon: dimensionGroupImg,
-          active: option?.gridAttibute == 'gridAttribute',
+          active: option?.gridAttribute == 'gridAttribute',
           onClick: () => {
             // TODO: Get Grid Attribute List
             const gridAttribute = rootItem?.adHocOption?.gridAttribute;
@@ -253,27 +257,23 @@ const ItemAttributeDefaultElement = () => {
               gridAttribute: gridAttribute
             });
           }
-        }
+        },
         // TODO: 기능 개발 후 활성화
-        // {
-        //   id: 'deltaValue',
-        //   label: '변동 측정값',
-        //   active: option.deltaValue == 'deltaValue',
-        //   icon: deltaValueImg,
+        {
+          id: 'deltaValue',
+          label: '변동 측정값',
+          active: option?.deltaValue == 'deltaValue',
+          icon: deltaValueImg,
+          onClick: () => {
+            const pivotMartInit = focusedItem.mart.init;
 
-        //   onClick: () => {
-        //     // 변동 측정값
-        //   }
-        // }
-        // {
-        //   id: 'gridAttribute',
-        //   label: '그리드 속성',
-        //   active: option.gridAttribute == 'gridAttribute',
-        //   icon: gridAttributeImg,
-        //   onClick: () => {
-        //     // 그리드 속성
-        //   }
-        // }
+            if (!pivotMartInit) {
+              return;
+            }
+
+            openModal(VariationValueModal);
+          }
+        }
       ]
     }
   };

@@ -2,7 +2,7 @@ import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link} from 'react-router-dom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import {CheckBox} from 'devextreme-react';
+// import {CheckBox} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
@@ -50,9 +50,9 @@ const createCheckBox = (contents) => {
   if (type === 'login') {
     return (
       <CheckBoxWrap>
-        <CheckBoxSpanWrap>
+        {/* <CheckBoxSpanWrap>
           <CheckBox text='아이디 저장'/>
-        </CheckBoxSpanWrap>
+        </CheckBoxSpanWrap> */}
       </CheckBoxWrap>
     );
   } else {

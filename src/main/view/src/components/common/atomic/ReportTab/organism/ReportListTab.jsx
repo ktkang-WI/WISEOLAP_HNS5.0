@@ -11,7 +11,6 @@ const Wrapper = styled.div`
   height: 100%;
   width: 100%;
   display: inline-block;
-  border: solid 1px ${theme.color.breakLine};
   text-align: left;
 `;
 const StyledTreeView = styled(TreeView)`
@@ -48,9 +47,9 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
   return (
     <Wrapper
       width={width}
-      height={height}
     >
       <StyledTreeView
+        height={'calc(100% - 3px)'}
         ref={dxRef}
         dataStructure="plain"
         displayExpr="name"

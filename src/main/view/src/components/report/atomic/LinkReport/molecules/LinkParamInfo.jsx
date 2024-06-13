@@ -11,7 +11,7 @@ import {useDispatch} from 'react-redux';
 import LinkSlice from 'redux/modules/LinkSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {checkLinkReport} from 'redux/selector/LinkSelector';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import {
   // processSubLinkParamData,
   processLinkParamData,
@@ -88,7 +88,7 @@ const LinkParamInfo = ({
   const dispatch = useDispatch();
   const {insertLink, updateLink} = LinkSlice.actions;
   const prevLinkParamData = usePrevious(linkParamData?.reports[0]?.reportId);
-  const checkLinkReportList = useSelector(checkLinkReport);
+  const selectLinkedReportList = useSelector(selectLinkedReport);
   // (store.getState());
   const focusedItemId = useSelector(selectSelectedItemId);
   const focusedItemType = useSelector(selectCurrentItemType);
@@ -99,9 +99,9 @@ const LinkParamInfo = ({
   useEffect(() => {
     if (linkParamData &&
       linkParamData?.reports[0]?.reportId !== prevLinkParamData) {
-      if (checkLinkReportList.hasOwnProperty(selectedRowData.id)) {
+      if (selectLinkedReportList.hasOwnProperty(selectedRowData.id)) {
         processLinkParamData(
-            checkLinkReportList[selectedRowData.id],
+            selectLinkedReportList[selectedRowData.id],
             setParamInfo,
             setFkNmOptions,
             setLinkFkInfo,
@@ -144,6 +144,7 @@ const LinkParamInfo = ({
     dataLinkType: 'LP',
     subLinkXmlParam: '',
     subLinkXmlData: '',
+    subLinkReportNm: '',
     subLinkReportOrdinal: 0,
     subLinkReportType: '',
     subLinkParamInfo: []
@@ -155,6 +156,7 @@ const LinkParamInfo = ({
     linkReportOrdinal: 0,
     linkReportType: '',
     dataLinkType: 'LP',
+    linkReportNm: '',
     linkParamInfo: [],
     linkFkInfo: [],
     // subLinkReport Parameter Point
@@ -185,6 +187,7 @@ const LinkParamInfo = ({
     linkReportInfo.linkReportType = currentReportType;
     linkReportInfo.linkParamInfo = paramInfo;
     linkReportInfo.linkFkInfo = linkFkInfo;
+    linkReportInfo.linkReportNm = linkParamData.reports[0].reportNm;
     if (subYn) {
       linkReportInfo.subYn = 'True';
       subLinkInfo.reportId = currentReportId;
@@ -196,7 +199,7 @@ const LinkParamInfo = ({
       subLinkInfo.subLinkParamInfo = subLinkParamInfo;
     }
     const immutableLinkReportInfo = JSON.parse(JSON.stringify(linkReportInfo));
-    if (!checkLinkReportList.hasOwnProperty(linkReportId)) {
+    if (!selectLinkedReportList.hasOwnProperty(linkReportId)) {
       dispatch(insertLink(immutableLinkReportInfo));
     } else {
       dispatch(updateLink(immutableLinkReportInfo));

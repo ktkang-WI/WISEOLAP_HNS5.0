@@ -184,6 +184,14 @@ const useCustomEvent = () => {
   };
 };
 
+const getExcuteQueryInit = (item) => {
+  return utility[item.type].getExcuteQueryInit();
+};
+
+const setExcuteQueryInit = (item, checkValue) => {
+  utility[item.type].setExcuteQueryInit(checkValue);
+};
+
 export default {
   generateMeta,
   generateItem,
@@ -198,5 +206,7 @@ export default {
   getTabHeaderItems,
   useCustomEvent,
   getLayoutSetting,
-  commonPropsComparator
+  commonPropsComparator,
+  getExcuteQueryInit,
+  setExcuteQueryInit
 };

@@ -460,6 +460,22 @@
   ],
   "editReportName": "Edit ReportName",
   "reportDescription": "Report Description",
+  "variationValueType": {
+    "absoluteVariation": "Absolute variation",
+    "percentVariation": "Percent variation",
+    "percentOfColumnTotal": "Percent of column total",
+    "percentOfRowTotal": "Percent of row total",
+    "percentOfColumnGrandTotal": "Percent of column grand total",
+    "percentOfRowGrandTotal": "Percent of row grand total",
+    "percentOfGrandTotal": "Percent of grand total"
+  },
+  "variationValueName": "Name",
+  "targetFieldName": "Target field name",
+  "type": "Type",
+  "variationValueWarning": "Variation values are displayed only on the grid.",
+  "variationValue": "Variation Value",
+  "variationValueList": "Variation Value List",
+  "variationValueInfo": "Variation Value Information",
   "changeReportNmConfirm": "Would you like to change the contents of the report?",
   "reportDeleteConfirm": "Are you sure you want to delete the report?",
   "selectReportAndDeleteConfirm": "Select the report and press the delete button.",
@@ -475,5 +491,13 @@
   "noSelectionAlert": "Nothing has been selected. Please select again.",
   "search": "Search",
   "apply": "apply",
-  "myPageAdHocLayoutHint": "When you check Apply, My Page's irregular layout settings are applied."
+  "myPageAdHocLayoutHint": "When you check Apply, My Page's irregular layout settings are applied.",
+  "hyperlink": "Hyperlink",
+  "hyperlinkSetting": "Hyperlink Setting",
+  "hyperlinkInformation": "Hyperlink information",
+  "hyperlinkList": "Hyperlink list",
+  "name": "Name",
+  "new": "New",
+  "save": "Save",
+  "addFieldDescription": "Add Field Description"
 }

@@ -5,7 +5,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react';
 import {isDataCell, getCssStyle} from './DataHighlightUtility';
 import useModal from 'hooks/useModal';
@@ -21,23 +22,26 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import LinkReportModal from
-  'components/report/atomic/LinkReport/organisms/LinkReportModal';
-import {selectCurrentDataField} from 'redux/selector/ItemSelector';
-import {generateLabelSuffix, formatNumber} from
-  'components/utils/NumberFormatUtility';
+import {
+  generateLabelSuffix,
+  formatNumber,
+  getDefaultFormat,
+  getDefaultFormatRatio
+} from 'components/utils/NumberFormatUtility';
 import {selectEditMode}
   from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
-import {linkReportPopup} from 'components/report/util/ReportUtility';
-import {selectCurrentReport, selectCurrentReportId}
+import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
+import useContextMenu from 'hooks/useContextMenu';
+import ItemManager from 'components/report/item/util/ItemManager';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const editMode = selectEditMode(store.getState());
@@ -50,10 +54,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const {getContextMenuItems} = useContextMenu(item);
   const {updateItem} = ItemSlice.actions;
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
-  const {openModal, alert} = useModal();
+  const {openModal} = useModal();
   const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
@@ -61,6 +66,23 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
+  const loadingAction = LoadingSlice.actions;
+
+  const getFormats = useCallback(() => {
+    const formats = dataField.measure.map((item) => item.format);
+    (adHocOption.variationValues || []).forEach((v) => {
+      const target = dataField.measure.find((m) => m.fieldId == v.targetId);
+      if (v.type == 'absoluteVariation') {
+        formats.push(target.format || getDefaultFormat());
+      } else if (v.type.startsWith('Rank')) {
+        formats.push(getDefaultFormat());
+      } else {
+        formats.push(getDefaultFormatRatio());
+      }
+    });
+
+    return formats;
+  }, [mart]);
 
   useEffect(() => {
     const item = ref.current;
@@ -131,8 +153,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
 
     if (area == 'data' && cell.dataType && cell.value) {
-      const newFormat = dataField.measure.map((item) => item.format);
-      const formData = newFormat[cell.dataIndex];
+      const formats = getFormats();
+      const formData = formats[cell.dataIndex];
       const labelSuffix = generateLabelSuffix(formData);
       const formattedValue = formatNumber(cell.value, formData, labelSuffix);
       cellElement.innerHTML = '<span>' + formattedValue + '</span>';
@@ -172,7 +194,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
-  const focusedItem = useSelector(selectCurrentDataField);
   useEffect(() => {
     const handleContextMenu = (event) => {
       if (editMode === EditMode.DESIGNER) {
@@ -180,11 +201,33 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     };
 
-    const handleContentReady = () => {
+    const handleContentReady = (e) => {
       if (editMode === EditMode.DESIGNER) {
         const pivotInstance = ref.current.instance.element();
         if (pivotInstance) {
           pivotInstance.addEventListener('contextmenu', handleContextMenu);
+          const queryCheck = ItemManager.getExcuteQueryInit(item);
+          if (queryCheck) {
+            dispatch(loadingAction.startJob());
+
+            const pivotDataSource = e.component.getDataSource();
+            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
+            const pivotColumnFields =
+                pivotDataSource.getAreaFields('column', true);
+            if (!item.meta.positionOption.row.expand) {
+              pivotRowFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+
+            if (!item.meta.positionOption.row.expand) {
+              pivotColumnFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+            ItemManager.setExcuteQueryInit(item, false);
+            dispatch(loadingAction.endJobForce());
+          }
           return () =>
             pivotInstance.removeEventListener('contextmenu', handleContextMenu);
         }
@@ -228,6 +271,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         onCellPrepared={onCellPrepared}
         allowSorting={true}
         allowSortingBySummary={true}
+        allowExpandAll={true}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{
             text: localizedString.reportDescription,
@@ -308,25 +352,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               contextMenu.push(detailedDataMenu);
             }
           }
-          if (editMode === EditMode.DESIGNER) {
-            const currentReport = selectCurrentReport(store.getState());
-            const subLinkReportMenu = {
-              'text': localizedString.subLinkReportSetting,
-              'onItemClick': () => {
-                if (currentReport.reportId === 0) {
-                  alert('보고서를 먼저 저장해주세요.');
-                  return;
-                } else {
-                  const subLinkDim = linkReportPopup({focusedItem});
-                  openModal(
-                      LinkReportModal,
-                      {subYn: true, subLinkDim: subLinkDim}
-                  );
-                }
-              }
-            };
-            contextMenu.push(subLinkReportMenu);
-          }
+
+          contextMenu.push(...getContextMenuItems());
           // contextMenu 저장(리턴)
           e.items = contextMenu;
         }}
@@ -348,6 +375,23 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 }
               }
             };
+
+            const pvDataSource = ref.current.instance.getDataSource();
+            const dsFields = pvDataSource.fields();
+
+            for (const field of dsFields) {
+              if (field.area == 'row') {
+                pvDataSource.expandAll(field.index);
+              }
+            }
+
+            for (const field of dsFields) {
+              if (field.area == 'column') {
+                pvDataSource.expandAll(field.index);
+              }
+            }
+
+            ItemManager.setExcuteQueryInit(item, true);
 
             dispatch(updateItem({reportId, item: tempItem}));
           }}
