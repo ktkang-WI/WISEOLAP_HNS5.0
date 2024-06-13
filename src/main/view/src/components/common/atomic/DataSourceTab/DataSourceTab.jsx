@@ -13,6 +13,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useCallback} from 'react';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const theme = getTheme();
 
@@ -80,7 +81,7 @@ const DataSourceTab = () => {
     'DataSourceRemove'
   ];
 
-  if (currentDataset?.datasetType == 'DS_SQL') {
+  if (currentDataset?.datasetType == DatasetType.DS_SQL) {
     buttons.unshift('FieldDescription');
   }
 
