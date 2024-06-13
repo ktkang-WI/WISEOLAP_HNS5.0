@@ -23,6 +23,8 @@ import store from 'redux/modules';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 
+const fileCache = new Map();
+
 const useSpread = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
@@ -202,7 +204,6 @@ const useSpread = () => {
     return blob;
   };
 
-  const fileCache = new Map();
   const setExcelFile = async (reportId) => {
     if (fileCache.has(reportId)) {
       await excelIoOpen(reportId, fileCache.get(reportId))
