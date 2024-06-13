@@ -53,7 +53,7 @@ const useContextMenu = (item) => {
   const getHyperlinkItems = () => {
     const hyperlinkItems = [];
 
-    for (const link of (item.meta.hyperlinks || [])) {
+    for (const link of (item?.meta?.hyperlinks || [])) {
       hyperlinkItems.push({
         text: link.name,
         onItemClick: () => {
