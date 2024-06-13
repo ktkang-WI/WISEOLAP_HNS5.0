@@ -677,5 +677,7 @@
   "emptyNameAlert": "이름을 작성해 주세요.",
   "nameDupleAlert": "이름이 중복 되었습니다. 다시 작성해 주세요.",
   "noSelectionAlert": "아무것도 선택되지 않았습니다. 다시 선택해 주세요.",
-  "search": "검색"
+  "search": "검색",
+  "apply": "적용",
+  "myPageAdHocLayoutHint": "적용 체크시 마이페이지의 비정형 레이아웃 설정이 적용 됩니다."
 }

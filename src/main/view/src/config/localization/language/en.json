@@ -473,5 +473,7 @@
   "emptyNameAlert": "Please write your name.",
   "nameDupleAlert": "The name is duplicated. Please write again.",
   "noSelectionAlert": "Nothing has been selected. Please select again.",
-  "search": "Search"
+  "search": "Search",
+  "apply": "apply",
+  "myPageAdHocLayoutHint": "When you check Apply, My Page's irregular layout settings are applied."
 }
