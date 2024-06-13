@@ -179,6 +179,7 @@ const DataSourceFoldableList = ({dataset}) => {
     root.render(subTitle);
   };
 
+  // TODO: 추후 itemRendered 로 변경
   const onItemRendered = ({itemElement, itemData}) => {
     let description = '';
 
