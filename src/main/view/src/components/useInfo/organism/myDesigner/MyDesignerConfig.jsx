@@ -1,15 +1,15 @@
-// import Header from 'components/common/atomic/Header/organism/Header';
-import MyPageDesignerElements
-  from 'components/useInfo/molcule/MyPageDesignerElements';
+import MyPageDesignerElements from
+  'components/useInfo/molcule/myPageDesignerMolecule/MyPageDesignerElements';
 import {getTheme} from 'config/theme';
 import {useLoaderData} from 'react-router-dom';
+import localizedString from 'config/localization';
 import {useState} from 'react';
 import styled from 'styled-components';
-// import models from 'models';
 import {resetDesignerConfig, updateDesignerConfig}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import useModal from 'hooks/useModal';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import {designerConfigItems} from './MypageDesignerUtil';
 
 const theme = getTheme();
 
@@ -34,14 +34,6 @@ const Wrapper = styled.div`
   text-align: left;
   box-sizing: border-box;
 `;
-
-const items = [
-  // {id: 'defaultDatasetId', title: '기본 데이터 집합', label: '즐겨찾기'},
-  {id: 'defaultReportId', title: '기본 보고서', label: '즐겨찾기'},
-  {id: 'defaultItem', title: '기본 아이템', label: '즐겨찾기'},
-  {id: 'defaultPalette', title: '기본 색상', label: '즐겨찾기'},
-  {id: 'defaultLayout', title: '비정형 보고서 설정'}
-];
 
 const seperateConfig = (designerConfig) => {
   const object = designerConfig;
@@ -81,21 +73,21 @@ const MyDesignerConfig = () => {
 
     updateDesignerConfig(saveConfig).then((response) => {
       if (response.status == 200) {
-        success('저장 성공');
+        success(localizedString.successSave);
       } else {
-        alert('저장 실패');
+        alert(localizedString.saveFail);
       }
     });
   };
 
   const onClickAllReset = () => {
     // reset -> 전부 null로
-    confirm('설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?', () => {
+    confirm(localizedString.resetAllConfirmMsg, () => {
       resetDesignerConfig().then((response) => {
         if (response.status == 200) {
-          success('초기화 완료');
+          success(localizedString.resetSuccess);
         } else {
-          alert('초기화 실패');
+          alert(localizedString.resetFail);
         }
       });
     });
@@ -105,16 +97,24 @@ const MyDesignerConfig = () => {
     <Content>
       <Wrapper>
         <MyPageDesignerElements
-          setConfig={setConfig} data={config} items={items}/>
+          setConfig={setConfig}
+          data={config}
+          // 각 설정 항목
+          items={designerConfigItems}
+        />
         <div style={{display: 'flex'}}>
           <CommonButton
             width='200px'
             onClick={onClickSave}
-          >저장</CommonButton>
+          >
+            {localizedString.saveReport}
+          </CommonButton>
           <CommonButton
             width='200px'
             onClick={onClickAllReset}
-          >초기화(ALL)</CommonButton>
+          >
+            {localizedString.resetFilter + '(ALL)'}
+          </CommonButton>
         </div>
       </Wrapper>
     </Content>

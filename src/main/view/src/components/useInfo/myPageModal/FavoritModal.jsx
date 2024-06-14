@@ -2,12 +2,16 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import DesignerReportTabs
   from 'components/common/atomic/ReportTab/organism/DesignerReportTabs';
 import {setIconReportList} from 'components/report/util/ReportUtility';
+import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import {SelectBox} from 'devextreme-react';
 import models from 'models';
 import React, {useEffect, useState} from 'react';
-import {defaultItemList} from '../organism/MyPageUtility';
 import useModal from 'hooks/useModal';
+import {
+  MyDesignerContance,
+  defaultItemList
+} from '../organism/myDesigner/MypageDesignerUtil';
 
 const theme = getTheme();
 
@@ -28,8 +32,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
   const {alert} = useModal();
 
   useEffect(() => {
-    props.id == 'defaultReportId' &&
-      models.Report.getList('admin', null, 'designer').then(({data}) => {
+    props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+      models.Report.getList(null, 'designer').then(({data}) => {
         setIconReportList(data.privateReport);
         setIconReportList(data.publicReport);
         setReportList(data);
@@ -48,7 +52,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       width={theme.size.smallModalWidth}
       onSubmit={() => {
         if (value.type && value.type == 'FOLDER') {
-          alert('보고서를 선택해 주세요.');
+          alert(localizedString.selectReportAlert);
           return;
         }
 
@@ -56,14 +60,13 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       }}
       {...props}
     >
-      {props.id == 'defaultDatasetId' &&
+      {/* {props.id == 'defaultDatasetId' &&
         <div>기본 데이터셋</div>
-      }
+      } */}
 
-      {props.id == 'defaultReportId' &&
+      {props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
         <DesignerReportTabs
           reportList={reportList}
-          // onClose={}
           onSelectionChanged={(e) => {
             const param = e.component.getSelectedNodes()[0];
 
@@ -78,7 +81,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
           onSubmit={onSubmit}
         />}
 
-      {props.id == 'defaultItem' &&
+      {props.id == MyDesignerContance['DEFAULT_ITEM'] &&
         <>
           <div>기본 아이템</div>
           <SelectBox
@@ -94,7 +97,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       }
 
       {
-        props.id == 'defaultPalette' &&
+        props.id == MyDesignerContance['DEFAULT_PALETTE'] &&
         <>
           <div>기본 색상</div>
           <SelectBox

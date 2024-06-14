@@ -591,6 +591,7 @@
   "folderId": "폴더 ID",
   "dataSourceAddition": "데이터 원본 추가",
   "successSave": "저장 했습니다.",
+  "saveFail": "저장에 실패 했습니다.",
   "successUpdate": "업데이트 했습니다.",
   "successRemove": "삭제 했습니다.",
   "validationPassword": "비밀번호 를 입력 해주세요.",
@@ -703,5 +704,10 @@
   "name": "이름",
   "new": "새로 만들기",
   "save": "저장",
-  "addFieldDescription": "필드 설명 추가"
+  "addFieldDescription": "필드 설명 추가",
+  "selectReportAlert": "보고서를 선택해 주세요.",
+  "resetAllConfirmMsg": "설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?",
+  "resetSuccess": "초기화에 성공 했습니다.",
+  "resetFail": "초기화에 실패 했습니다.",
+  "favorit": "즐겨찾기"
 }

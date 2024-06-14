@@ -1,9 +1,11 @@
 import HeaderPanel from 'components/common/atomic/Common/Panel/HeaderPanel';
 import styled from 'styled-components';
 import middleDot from '../../../assets/image/component/middleDot.png';
-import {CheckBox, SelectBox} from 'devextreme-react';
+import {CheckBox, SelectBox, TextBox} from 'devextreme-react';
 import localizedString from 'config/localization';
-import {adHocLayoutSelectList} from '../organism/MyPageUtility';
+import {layoutSelectList}
+  from '../organism/myDesigner/MypageDesignerUtil';
+import {useState} from 'react';
 
 const LabelStyled = styled.span`
   display: inline-block;
@@ -33,20 +35,31 @@ export const MyDesignerLabel = ({label}) => {
   );
 };
 
-export const LayoutSelectBox = ({isCheck, setConfig, data}) => {
+export const MyPageTextBox = ({value}) => {
+  return (
+    <TextBox
+      className='favoritTextBox'
+      readOnly={true}
+      width= '400px'
+      value={value}
+    />
+  );
+};
+
+const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
   return (
     <SelectBox
       disabled= {!isCheck}
       width= '400px'
       // CTGB, C, G -> utility로
-      items={adHocLayoutSelectList()}
+      items={layoutSelectList(id)}
       displayExpr='name'
       valueExpr='id'
-      value={data.defaultLayout?.layout || 'CTGB'}
+      value={data[id]?.layout}
       onSelectionChanged={(e) => {
         setConfig({
           ...data,
-          'defaultLayout': {
+          [id]: {
             check: isCheck,
             layout: e.selectedItem.id
           }
@@ -56,21 +69,32 @@ export const LayoutSelectBox = ({isCheck, setConfig, data}) => {
   );
 };
 
-export const LayoutApplyCheckBox = ({isCheck, setIsCheck, setConfig, data}) => {
+export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
+  const [isCheck, setIsCheck] = useState(
+    data.defaultLayout ? data.defaultLayout.check : false
+  );
   return (
-    <CheckBox
-      text={localizedString.apply}
-      hint={localizedString.myPageAdHocLayoutHint}
-      value={isCheck}
-      onValueChanged={(e) => {
-        setIsCheck(e.value);
-        setConfig({...data,
-          'defaultLayout': {
-            ...data.defaultLayout,
-            check: e.value
-          }
-        });
-      }}
-    />
+    <>
+      <CheckBox
+        text={localizedString.apply}
+        hint={localizedString.myPageAdHocLayoutHint}
+        value={isCheck}
+        onValueChanged={(e) => {
+          setIsCheck(e.value);
+          setConfig({...data,
+            [id]: {
+              ...data.defaultLayout,
+              check: e.value
+            }
+          });
+        }}
+      />
+      <LayoutSelectBox
+        id={id}
+        isCheck={isCheck}
+        data={data}
+        setConfig={setConfig}
+      />
+    </>
   );
 };

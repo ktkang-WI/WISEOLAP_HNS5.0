@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -213,9 +214,12 @@ public class ReportController {
 	    )
 	)
     @PostMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestBody Map<String, String> param) {
+	public Map<String, Object> getReport(@RequestBody Map<String, String> param, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        
+        String userId = user.getUserId(); 
         String reportId = param.getOrDefault("reportId", "");
-        String userId = param.getOrDefault("userId", "");
 
         return reportService.getReport(reportId, userId);
 	}
@@ -298,7 +302,7 @@ public class ReportController {
 	    )
 	)
 	@PostMapping(value = "/report-list")
-    public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
     	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
