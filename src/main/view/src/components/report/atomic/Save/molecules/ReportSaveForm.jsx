@@ -4,8 +4,22 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import ReportFolderSelectorModal
   from 'components/report/modal/ReportFolderSelectorModal';
+import styled from 'styled-components';
 
 const theme = getTheme();
+
+const StyledForm = styled(Form)`
+  .dx-field-item-custom-label-content:before {
+    content: '';
+    width: 0px;
+  }
+
+  .dx-field-item-custom-label-content {
+    padding: 10px 5px;
+    color: ${theme.color.gray400};
+  }
+
+`;
 
 const ReportSaveForm = ({dataSource, createDataSource, formRef,
   ...props}) => {
@@ -29,7 +43,7 @@ const ReportSaveForm = ({dataSource, createDataSource, formRef,
   };
 
   return (
-    <Form
+    <StyledForm
       labelMode='outside'
       labelLocation='top'
       formData={dataSource}
@@ -120,7 +134,7 @@ const ReportSaveForm = ({dataSource, createDataSource, formRef,
           {localizedString.description}
         </Label>
       </Item>
-    </Form>
+    </StyledForm>
   );
 };
 
