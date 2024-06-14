@@ -6,7 +6,8 @@ const D3PainterForZoomableCicle = {};
 D3PainterForZoomableCicle.defaultOption = (option) => {
   return {
     width: option?.width,
-    height: option?.height
+    height: option?.height,
+    palette: option.palette
   };
 };
 
@@ -53,11 +54,9 @@ init.funcs.partition = (data) => {
 };
 
 init.paint.drawing = (svg) => {
-  const {root, dataSource} = D3PainterForZoomableCicle.self.data;
+  const option = D3PainterForZoomableCicle.self.option;
+  const {root} = D3PainterForZoomableCicle.self.data;
   const format = d3.format(',d');
-  const color =
-    d3.scaleOrdinal(
-        d3.quantize(d3.interpolateRainbow, dataSource.children.length + 1));
   const cell = svg
       .selectAll()
       .data(root.descendants())
@@ -73,10 +72,10 @@ init.paint.drawing = (svg) => {
       .attr('width', (d) => d.y1 - d.y0)
       .attr('height', (d) => d.x1 - d.x0)
       .attr('fill-opacity', 0.6)
-      .attr('fill', (d) => {
+      .attr('fill', (d, i) => {
         if (!d.depth) return '#ccc';
         while (d.depth > 1) d = d.parent;
-        return color(d.data.name);
+        return option.palette[i];
       });
 
   // Add labels and a title.

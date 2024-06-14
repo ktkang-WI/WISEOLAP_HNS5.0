@@ -20,7 +20,8 @@ D3PainterForWordCloud.defaultOption = (option) => {
     fontScale: 15,
     padding: 0,
     rotate: 0,
-    invalidation: null
+    invalidation: null,
+    palette: option.palette
   };
 };
 
@@ -97,6 +98,7 @@ init.paint.drawing = (svg) => {
   const option = D3PainterForWordCloud.self.option;
   const g = svg.append('g').
       attr('transform', `translate(${option.marginLeft},${option.marginTop})`);
+
   const cloud = d3Cloud()
       .size(
           [option.width - option.marginLeft -
@@ -107,12 +109,12 @@ init.paint.drawing = (svg) => {
       .rotate(option.rotate)
       .font(option.fontFamily)
       .fontSize((d) => Math.sqrt(d.size) * option.fontScale)
-      .on('word', ({size, x, y, rotate, text, freq}) => {
+      .on('word', ({size, x, y, rotate, text, freq, index}) => {
         g.append('text')
             .attr('font-size', size)
             .attr('transform', `translate(${x},${y}) rotate(${rotate})`)
             .attr('opacity', 1.0)
-            .attr('fill', init.paint.randomColor())
+            .attr('fill', option.palette[index])
             .text(text.replaceAll('<br/>', '-'))
             .append('title').text(text.replaceAll('<br/>', '-') + ': ' + freq);
       });
@@ -150,10 +152,11 @@ init.data = (dataSource) => {
         ];
       })
       .slice(0, option.maxWords)
-      .map(([key, size, freq]) =>
+      .map(([key, size, freq], index) =>
         ({text: option.word(key),
           size: fontSize[init.funcs.measureIndex(sections, size)],
-          freq: option.word(freq)}));
+          freq: option.word(freq),
+          index: index}));
 };
 
 export default D3PainterForWordCloud;

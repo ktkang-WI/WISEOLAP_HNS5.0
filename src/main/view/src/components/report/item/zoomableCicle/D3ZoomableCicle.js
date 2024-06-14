@@ -3,6 +3,7 @@ import D3PainterForZoomableCicle from './D3PainterForZoomableCicle';
 
 const D3ZoomableCicle = ({
   dataSource,
+  palette,
   height,
   width
 }) => {
@@ -13,7 +14,8 @@ const D3ZoomableCicle = ({
       dataSource: dataSource,
       option: {
         width: width,
-        height: height
+        height: height,
+        palette
       }
     });
     D3PainterForZoomableCicle.painting();

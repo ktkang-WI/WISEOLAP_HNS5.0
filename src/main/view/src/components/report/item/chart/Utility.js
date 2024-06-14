@@ -145,6 +145,7 @@ const getRibbonItems = () => {
     'CaptionView',
     'NameEdit',
     'Rotate',
+    'Palette',
     'XAxisSetting',
     'YAxisSetting',
     'ExtraAxisSetting',
