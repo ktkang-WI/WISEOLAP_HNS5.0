@@ -178,7 +178,7 @@ const QueryDataSourceDesignerModal = ({
               tempFields = [...tempFields, ...dataset.customDatas.customData];
             }
 
-            const orgFieldDesc = dataset.fieldDescription;
+            const orgFieldDesc = dataset.fieldDescription || {};
             const tempFieldDesc = {};
 
             // 지워진 필드의 필드 설명 지우기
