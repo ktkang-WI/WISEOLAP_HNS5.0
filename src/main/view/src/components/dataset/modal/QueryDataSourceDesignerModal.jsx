@@ -178,13 +178,24 @@ const QueryDataSourceDesignerModal = ({
               tempFields = [...tempFields, ...dataset.customDatas.customData];
             }
 
+            const orgFieldDesc = dataset.fieldDescription || {};
+            const tempFieldDesc = {};
+
+            // 지워진 필드의 필드 설명 지우기
+            for (const field of tempFields) {
+              if (orgFieldDesc[field.name]) {
+                tempFieldDesc[field.name] = orgFieldDesc[field.name];
+              }
+            }
+
             dispatch(updateDataset({
               reportId: selectedReportId,
               dataset: {
                 ...dataset,
                 datasetId: datasetId,
                 datasetQuery: query,
-                fields: tempFields
+                fields: tempFields,
+                fieldDescription: tempFieldDesc
               }
             }));
 

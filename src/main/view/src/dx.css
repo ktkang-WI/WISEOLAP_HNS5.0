@@ -262,7 +262,7 @@
 
 .dx-texteditor-input {
   color: var(--gray600);
-  font: 400 normal 16px 'Noto Sans KR';
+  font: 400 normal 14px 'Noto Sans KR';
 }
 
 .dx-selectbox .dx-dropdowneditor-icon::before {
@@ -304,6 +304,7 @@ color: var(--gray600);
 .dx-pivotgrid, .dx-datagrid {
   font-size: 13px;
   font-family: 'Noto Sans KR';
+  font-weight: bold;
 }
 
 .dx-pivotgrid thead, .dx-datagrid-headers {
@@ -325,6 +326,14 @@ color: var(--gray600);
 }
 
 .dx-pivotgrid .dx-grandtotal {
+  background: var(--gray50);
+}
+
+.dx-pivotgrid .dx-total {
+  background: var(--gray50);
+}
+
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-description-cell {
   background: var(--gray50);
 }
 
@@ -416,4 +425,8 @@ td[role="columnheader"] {
   border: 1px solid var(--gray200);
   padding:5px;
   border-radius: 8px;
+}
+
+.dx-treeview-node-container {
+  overflow: visible;
 }

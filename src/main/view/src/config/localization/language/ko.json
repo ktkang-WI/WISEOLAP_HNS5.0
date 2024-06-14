@@ -700,5 +700,6 @@
   "hyperlinkList": "하이퍼링크 목록",
   "name": "이름",
   "new": "새로 만들기",
-  "save": "저장"
+  "save": "저장",
+  "addFieldDescription": "필드 설명 추가"
 }

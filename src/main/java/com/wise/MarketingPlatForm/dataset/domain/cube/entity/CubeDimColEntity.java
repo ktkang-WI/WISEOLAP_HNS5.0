@@ -20,4 +20,5 @@ public class CubeDimColEntity {
   String orderBy;
   String captionName;
   int order;
+  String description;
 }

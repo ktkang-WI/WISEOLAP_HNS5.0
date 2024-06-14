@@ -110,6 +110,7 @@ const Header = ({left, middle, right}) => {
         >
           <ReportTitleText
             font={theme.font.reportTitleForDesigner}
+            onClick={item.onClick}
           >
             {item.id === 'myPage' ? item.name : report.options.reportNm}
           </ReportTitleText>

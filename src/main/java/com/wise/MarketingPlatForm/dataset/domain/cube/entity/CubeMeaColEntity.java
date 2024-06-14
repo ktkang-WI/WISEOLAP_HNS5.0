@@ -21,4 +21,5 @@ public class CubeMeaColEntity {
   String expression;
   String format;
   int meaOrder;
+  String description;
 }

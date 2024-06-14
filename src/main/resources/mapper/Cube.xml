@@ -164,6 +164,7 @@
 			   ,T2.TBL_NM as physicalTableName
         	   ,T2.KEY_COL as physicalColumnId
         	   ,T2.NAME_COL as physicalColumnName
+			   ,T2.HIE_DESC AS description
 		       ,CASE WHEN T1.displayType is not null then T1.displayType
 	            ELSE
 	              CASE WHEN T2.HIE_DSP_FLD IS NULL OR T2.HIE_DSP_FLD = '' THEN
@@ -458,6 +459,7 @@
 		         AND	T1.COL_NM = T2.MEA_COL_NM) AS dataType
 		       , T2.MEA_TBL_NM as logicalTableName
 		       , T2.MEA_COL_NM as logicalColumnName
+			   , T2.MEA_DESC  as description
 		FROM	CUBE_MEA_MSTR T2
 		WHERE	T2.CUBE_ID = #{cubeId}
 		ORDER BY  T2.MEA_ORDINAL

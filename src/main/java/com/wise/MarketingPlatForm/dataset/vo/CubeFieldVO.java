@@ -12,4 +12,5 @@ public class CubeFieldVO extends RootFieldVO{
   String orderByKey;
   String orderByName;
   int order;
+  String description;
 }

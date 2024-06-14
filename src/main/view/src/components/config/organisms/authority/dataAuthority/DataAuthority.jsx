@@ -46,7 +46,7 @@ const DataAuthority = ({data}) => {
           />
         }
       </Wrapper>
-      <Wrapper size="2" display='flex' direction='column'>
+      <Wrapper display='flex' direction='column'>
         <Wrapper height="55%" padding='10px'>
           {
             (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) &&
