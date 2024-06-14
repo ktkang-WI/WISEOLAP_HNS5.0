@@ -29,6 +29,19 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
   const dxRef = useRef();
   let dblClick = 0;
 
+  const itemRender = (item, index) => {
+    return (
+      <>
+        <div className="dx-item-content dx-treeview-item-content">
+          <img
+            src={item.icon}
+            className="dx-icon"/>
+          <span>{item.name}</span>
+        </div>
+      </>
+    );
+  };
+
   const handleItemClick = useCallback(
       async (e) => {
         dblClick ++;
@@ -59,6 +72,7 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
         searchEditorOptions={{
           placeholder: '검색'
         }}
+        itemRender={itemRender}
         focusStateEnabled={true}
         onItemClick={handleItemClick}
         searchEnabled={true}

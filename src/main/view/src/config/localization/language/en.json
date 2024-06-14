@@ -497,5 +497,6 @@
   "name": "Name",
   "new": "New",
   "save": "Save",
-  "addFieldDescription": "Add Field Description"
+  "addFieldDescription": "Add Field Description",
+  "requester": "Requester"
 }
