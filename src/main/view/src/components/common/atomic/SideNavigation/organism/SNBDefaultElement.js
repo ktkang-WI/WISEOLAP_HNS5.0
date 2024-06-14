@@ -21,7 +21,8 @@ import useModal from 'hooks/useModal';
 import {useSelector} from 'react-redux';
 import {
   selectCurrentConfigure,
-  selectCurrentDesignerMode
+  selectCurrentDesignerMode,
+  selectMyPageDesignerConfig
 } from 'redux/selector/ConfigSelector';
 
 const SNBDefaultElement = () => {
@@ -37,6 +38,7 @@ const SNBDefaultElement = () => {
   // redux
   const designerMode = useSelector(selectCurrentDesignerMode);
   const configure = useSelector(selectCurrentConfigure);
+  const myPageConfigure = useSelector(selectMyPageDesignerConfig);
 
   // local
   const onClick = (designerMode) => {
@@ -44,10 +46,17 @@ const SNBDefaultElement = () => {
   };
 
   const changeNav = (designerMode) => {
+    let adHocLayout = configure.adHocLayout;
+    const defaultItem = myPageConfigure.defaultItem;
+
+    if (myPageConfigure.defaultLayout.check) {
+      adHocLayout = myPageConfigure.defaultLayout.layout || 'CTGB';
+    }
+
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
-    reload(designerMode, configure.adHocLayout);
+    reload(designerMode, adHocLayout, defaultItem);
   };
 
   return {

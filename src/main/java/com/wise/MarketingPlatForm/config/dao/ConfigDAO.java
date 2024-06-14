@@ -21,16 +21,17 @@ public interface ConfigDAO {
   public List<ConfigFolderDTO> selectConfigFolderGroup();
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
   public List<FldMstrEntity> selectConfigFolder();
-  public List<FldMstrEntity> selectMyPageFolder(int userNo);
-  public int selectMyPageFolderCount(int userNo);
   public ArrayList<MyPageFolderReportDTO> selectMyPageFolderReport(int userNo, String userNm);
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
   public boolean createConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean updateConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean deleteConfigFolder(FldMstrEntity fldMstrEntity);
+  // myPage 이동 에정
   public boolean updateMyReprot(MyPageFolderReportDTO myPageFolderReportDTO);
   public boolean createMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   public boolean deleteMyFolder(List<Integer> data);
   public boolean deleteChildReports(List<Integer> data);
   public boolean updateMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
+  public List<FldMstrEntity> selectMyPageFolder(int userNo);
+  public int selectMyPageFolderCount(int userNo);
 }

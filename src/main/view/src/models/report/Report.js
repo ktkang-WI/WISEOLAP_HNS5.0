@@ -9,13 +9,11 @@ const path = document.location.origin + contextRoot + '/report';
 
 /**
  * 보고서 조회
- * @param {string} userId
  * @param {string} reportId
  */
-export const getReportById = async (userId, reportId) => {
+export const getReportById = async (reportId) => {
   const res = await axios.post(path + '/report', {
-    reportId: reportId,
-    userId: userId
+    reportId: reportId
   });
   Object.keys(res.data).forEach((key) => {
     if (typeof res.data[key] === 'string') {
@@ -24,20 +22,28 @@ export const getReportById = async (userId, reportId) => {
   });
   return res;
 };
+/**
+ * 보고서 이름만 조회
+ * @param {string} reportId
+ */
+export const getOnlyReportName = async (reportId) => {
+  const res = await axios.post(path + '/report-name', {
+    reportId: reportId
+  });
 
+  return res;
+};
 
 /**
  * 보고서 목록 조회
  *
- * @param {string} userId
  * @param {string} reportType
  * @param {string} editMode
  */
-export const getList = async (userId, reportType, editMode) => {
+export const getList = async (reportType, editMode) => {
   const res = await axios.post(path + '/report-list', {
     editMode: editMode,
-    reportType: reportType,
-    userId: userId
+    reportType: reportType
   });
 
   return res;

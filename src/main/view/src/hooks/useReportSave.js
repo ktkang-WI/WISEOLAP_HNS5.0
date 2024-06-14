@@ -212,10 +212,11 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (designerMode, adHocLayout) => {
+  const reload = (designerMode, adHocLayout, defaultItem) => {
     const param = {
       mode: designerMode,
-      adhocLayout: AdHocLayoutTypes[adHocLayout]
+      adhocLayout: AdHocLayoutTypes[adHocLayout],
+      defaultItem: defaultItem
     };
 
     dispatch(reportActions.initReport(designerMode));

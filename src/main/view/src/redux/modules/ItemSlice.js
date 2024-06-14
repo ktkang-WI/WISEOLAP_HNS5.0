@@ -5,10 +5,12 @@ import {makeAdHocItem, makeAdHocOption, makeItem}
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
 
-const item = makeItem({
-  id: 'item1',
-  type: 'chart'
-});
+const item = (defaultItem) => {
+  return makeItem({
+    id: 'item1',
+    type: defaultItem || 'chart'
+  });
+};
 
 const adHocChartItem = makeAdHocItem({
   id: 'item1',
@@ -20,13 +22,15 @@ const adHocPivotItem = makeAdHocItem({
   type: 'pivot'
 });
 
-const dashboardInitialState = {
-  0: {
-    selectedItemId: 'item1',
-    itemQuantity: 1,
-    items: [item],
-    chartCount: {chart: 1}
-  }
+const dashboardInitialState = (defaultItem) => {
+  return {
+    0: {
+      selectedItemId: 'item1',
+      itemQuantity: 1,
+      items: [item(defaultItem)],
+      chartCount: {[defaultItem]: 1}
+    }
+  };
 };
 
 const adHocInitialState = {
@@ -67,7 +71,8 @@ const reducers = {
     const mode = action.mode ? action.mode : action;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return {...dashboardInitialState};
+      const defaultItem = actions.payload.defaultItem;
+      return {...dashboardInitialState(defaultItem)};
     } else if (mode === DesignerMode['AD_HOC']) {
       const layout = action.adhocLayout;
 
@@ -75,7 +80,7 @@ const reducers = {
         0: {...adHocInitialState[0], adHocOption: makeAdHocOption(layout)}
       };
     } else if (mode === DesignerMode['EXCEL']) {
-      return {...dashboardInitialState};
+      return {...dashboardInitialState('chart')};
     }
   },
   changeItemReportId(state, actions) {

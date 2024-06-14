@@ -50,8 +50,19 @@ const Wrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const menuButtons = [
+const menuButtons = [ // label localizedString
   {id: 'user_info', label: '개인정보 관리', path: '/user-info'},
+  {
+    id: 'myDesigner_config',
+    label: '디자이너 설정',
+    path: '/myPage-designerConfig'
+  },
+  {id: 'myViewer_config',
+    label: '뷰어 설정',
+    path: '/myPage-viewerConfig'},
+  {id: 'myFont_config',
+    label: '폰트 설정',
+    path: '/myPage-fontConfig'},
   {id: 'myReport_folder', label: '개인 보고서 및 폴더 관리', path: '/myReport-folder'}
 ];
 
