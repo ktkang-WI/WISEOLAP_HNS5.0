@@ -24,6 +24,7 @@ import {selectCurrentDesignerMode,
 import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ItemType from 'components/report/item/util/ItemType';
+import {nullDataCheck} from 'components/report/util/ReportUtility';
 
 
 const useQueryExecute = () => {
@@ -185,6 +186,8 @@ const useQueryExecute = () => {
         chartItem.mart.init = true;
         chartItem.mart.data = data;
 
+        alert(`${item?.meta?.name}${localizedString.noneData}`);
+
         ItemManager.generateItem(chartItem, param, cloneItem);
         dispatch(updateItem({reportId, item: chartItem}));
 
@@ -226,13 +229,14 @@ const useQueryExecute = () => {
             return;
           }
           const data = response.data;
-          if (data.data.length === 0) {
-            alert(`${item.meta.name}${localizedString.noneData}`);
-          }
 
           tempItem.mart.init = true;
           tempItem.mart.data = data;
           tempItem.mart.currentFilter = filter || {};
+
+          if (nullDataCheck(tempItem)) {
+            alert(`${item.meta.name}${localizedString.noneData}`);
+          }
 
           ItemManager.generateItem(tempItem, param);
 

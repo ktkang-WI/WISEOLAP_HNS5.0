@@ -16,56 +16,15 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
-
-import Choropleth from 'components/report/item/choropleth/Choropleth';
-import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
-import PivotGrid from 'components/report/item/pivot/PivotGrid';
-import Card from 'components/report/item/card/Card';
-import DataGrid from 'components/report/item/grid/DataGrid';
-import TreeMap from 'components/report/item/treeMap/TreeMap';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
-import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
-import LiquidFillGauge
-  from 'components/report/item/liquidFillGauge/LiquidFillGauge';
-import CalendarChart
-  from 'components/report/item/calendar/Calendar';
-import Timeline from 'components/report/item/timeline/Timeline';
-import Chord from 'components/report/item/chord/Chord';
-import ArcDiagram from 'components/report/item/arc/ArcDiagram';
-import WordCloud from 'components/report/item/wordCloud/WordCloud';
-import CoordinateLine
-  from 'components/report/item/coordinateLine/CoordinateLine';
-import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
-import _ from 'lodash';
-import HeatMap from 'components/report/item/heatMap/HeatMap';
-
-import CollapsibleTree
-  from 'components/report/item/collapsibleTree/CollapsibleTree';
-import RadialTree from 'components/report/item/radialTree/RadialTree';
-import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
-import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
-
-import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
-import TextBox from 'components/report/item/textBox/TextBox';
-import ItemType from 'components/report/item/util/ItemType';
-import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
-import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
-import ComboBox from 'components/report/item/comboBox/ComboBox';
-import ListBox from 'components/report/item/listBox/ListBox';
-import TreeView from 'components/report/item/treeView/TreeView';
-import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
-import StarChart from 'components/report/item/starChart/StarChart';
-import WaterFall from 'components/report/item/waterFall/WaterFall';
-import SchedulerComponent
-  from 'components/report/item/schedulerComponent/SchedulerComponent';
-import localizedString from 'config/localization';
-import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {nullDataCheck} from 'components/report/util/ReportUtility';
+import {itemComponents} from 'components/report/item/util/ItemMappers';
 
 const theme = getTheme();
 
@@ -114,7 +73,6 @@ const Memo = styled.div`
 const ItemBoard = () => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
-  const {alert} = useModal();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
   const selectedReportId = useSelector(selectCurrentReportId);
   const layoutConfig = useSelector(selectFlexLayoutConfig);
@@ -127,41 +85,6 @@ const ItemBoard = () => {
   const model = Model.fromJson(layoutConfig);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
-
-  const itemFactory = {
-    chart: Chart,
-    pivot: PivotGrid,
-    grid: DataGrid,
-    pie: Pie,
-    choropleth: Choropleth,
-    treeMap: TreeMap,
-    liquidFillGauge: LiquidFillGauge,
-    card: Card,
-    calendar: CalendarChart,
-    boxPlot: BoxPlot,
-    textBox: TextBox,
-    timeline: Timeline,
-    chord: Chord,
-    arc: ArcDiagram,
-    wordCloud: WordCloud,
-    coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot,
-    heatMap: HeatMap,
-    collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree,
-    sunburstChart: SunBurstChart,
-    zoomableCicle: ZoomableCicle,
-    ciclePacking: CiclePacking,
-    scatterPlot: ScatterPlot,
-    comboBox: ComboBox,
-    listBox: ListBox,
-    treeView: TreeView,
-    funnelChart: FunnelChart,
-    starChart: StarChart,
-    waterFall: WaterFall,
-    schedulerComponent: SchedulerComponent
-  };
-
   const itemExportsPicker = (id) => {
     return itemExports.find((item) => item.id == id);
   };
@@ -206,20 +129,6 @@ const ItemBoard = () => {
     }
   };
 
-  const nullDataCheck = (item) => {
-    const isOk =
-      [
-        ItemType.TEXT_BOX,
-        ItemType.SCHEDULER_COMPONENT,
-        ItemType.PIVOT_GRID
-      ].some((type) => type === item.type);
-    if (isOk) return !isOk;
-
-    return !item ||
-    item?.mart?.data?.data?.length == 0 ||
-    _.isEmpty(item?.mart?.data || {});
-  };
-
   /**
    * 아이템 type에 맞는 컴포넌트 생성
    * @param {*} node
@@ -228,12 +137,10 @@ const ItemBoard = () => {
   function factory(node) {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
-    const ItemComponent = itemFactory[item.type];
+    const ItemComponent = itemComponents[item.type];
     const adHocOption = rootItem.adHocOption;
 
     if (item?.mart?.init && nullDataCheck(item)) {
-      alert(`${item?.meta?.name}${localizedString.noneData}`);
-
       return <Item>
         <Wrapper style={{
           display: 'flex',

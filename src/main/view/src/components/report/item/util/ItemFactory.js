@@ -5,6 +5,7 @@ import ItemManager from './ItemManager';
 import {initDataFieldMeta, makeAdHocItemMeta} from './metaUtilityFactory';
 import {paletteCollection}
   from 'components/common/atomic/Popover/organism/Palette';
+import {defaultItemNames} from './ItemMappers';
 
 /**
  * 아이템의 meta값을 가지고 mart를 세팅
@@ -14,40 +15,6 @@ import {paletteCollection}
  */
 const makeItem = (orgItem, countMap) => {
   let item = {};
-  // 임시용
-  const type = {
-    chart: '차트',
-    pie: '파이',
-    pivot: '피벗',
-    grid: '그리드',
-    boxPlot: '박스플롯',
-    choropleth: '코로프레스',
-    liquidFillGauge: '액체게이지',
-    calendar: '달력',
-    treeMap: '트리맵',
-    card: '카드',
-    textBox: '텍스트상자',
-    schedulerComponent: '스케줄러',
-    timeline: '타임라인',
-    chord: '의존성 휠',
-    arc: '아크 다이어그램',
-    heatMap: '히트맵',
-    wordCloud: '워드클라우드',
-    coordinateLine: '평면좌표 라인',
-    coordinateDot: '평면좌표 점',
-    collapsibleTree: '신경망 트리',
-    radialTree: '방사형신경망',
-    sunburstChart: '선버스트',
-    funnelChart: '깔때기',
-    zoomableCicle: '계층형 네모차트',
-    ciclePacking: '버블팩',
-    scatterPlot: '산점도',
-    comboBox: '콤보상자',
-    listBox: '목록상자',
-    treeView: '트리보기',
-    starChart: '스타차트',
-    waterFall: '폭포수'
-  };
 
   let initNum = 1;
   if (countMap) {
@@ -88,7 +55,7 @@ const makeItem = (orgItem, countMap) => {
           crossDataSource: isFixMasterFilter,
           targetDimension: 'dimension' // 대상 차원
         },
-        name: type[orgItem.type] + initNum,
+        name: defaultItemNames[orgItem.type] + initNum,
         memo: '',
         paletteType: 'palette',
         palette: paletteCollection[0],
