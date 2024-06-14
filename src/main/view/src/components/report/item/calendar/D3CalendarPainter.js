@@ -15,7 +15,8 @@ D3CalendarPainter.optionGenerator = (defaultOption) => {
   return {
     width: width,
     cellSize: cellSize,
-    height: cellSize * 7
+    height: cellSize * 7,
+    palette: defaultOption.palette
   };
 };
 
@@ -388,7 +389,9 @@ initObj.initFunc = (option) => {
 
 initObj.initOption = (data, defaultOption) => {
   const max = d3.quantile(data.pairData, 0.9975, (d) => Math.abs(d.value));
-  const color = d3.scaleSequential(d3.interpolatePiYG).domain([-max, +max]);
+  // const color = d3.scaleSequential(d3.interpolatePiYG).domain([-max, +max]);
+  const color =
+    d3.scaleLinear().domain([-max, +max]).range(defaultOption.palette);
   const width = defaultOption?.width || '100%';
   const cellSize = defaultOption?.cellSize || 7;
   const height = cellSize * 9;

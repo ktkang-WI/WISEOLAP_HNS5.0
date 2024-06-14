@@ -15,6 +15,7 @@ const FunnelChart = ({
   item
 }) => {
   const mart = item?.mart;
+  const meta = item?.meta;
   if (!mart.init) {
     return <></>;
   }
@@ -31,7 +32,7 @@ const FunnelChart = ({
         width={width}
         height={height}
         dataSource={mart.data.data}
-        palette="Soft Pastel"
+        palette={meta?.palette?.name} // Dev Default blend
         argumentField='arg'
         labelField='arg'
         valueField={seriesNames[0].summaryName}

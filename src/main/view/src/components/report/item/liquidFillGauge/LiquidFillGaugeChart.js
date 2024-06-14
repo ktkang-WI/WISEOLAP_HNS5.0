@@ -101,7 +101,7 @@ const LiquidFillGaugeChart = ({
                         dimension={dimension}
                         measure={measure}
                         value={percentage}
-                        color={palette.colors[loopIndex % 6]}
+                        color={palette[loopIndex]}
                         notationFormat={notationFormat}
                         onClick={onClick} />
                     </RowItem>
