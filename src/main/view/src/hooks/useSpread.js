@@ -23,6 +23,8 @@ import store from 'redux/modules';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 
+const fileCache = new Map();
+
 const useSpread = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
@@ -203,21 +205,27 @@ const useSpread = () => {
   };
 
   const setExcelFile = async (reportId) => {
-    const response = await importFile({fileName: reportId + '.sjs'});
-    let data;
-    if (response.status !== 200) {
-      data = defaultWorkbookJSON;
-      insertWorkbookJSON({
-        reportId: reportId,
-        workbookJSON: defaultWorkbookJSON
-      });
-    } else {
-      data = response.data;
-      const blob = new Blob(
-          [data]
-      );
-      await excelIoOpen(reportId, blob)
+    if (fileCache.has(reportId)) {
+      await excelIoOpen(reportId, fileCache.get(reportId))
           .then(() => dispatch(loadingActions.endJob()));
+    } else {
+      const response = await importFile({fileName: reportId + '.sjs'});
+      let data;
+      if (response.status !== 200) {
+        data = defaultWorkbookJSON;
+        insertWorkbookJSON({
+          reportId: reportId,
+          workbookJSON: defaultWorkbookJSON
+        });
+      } else {
+        data = response.data;
+        const blob = new Blob(
+            [data]
+        );
+        fileCache.set(reportId, blob);
+        await excelIoOpen(reportId, blob)
+            .then(() => dispatch(loadingActions.endJob()));
+      }
     }
   };
 
