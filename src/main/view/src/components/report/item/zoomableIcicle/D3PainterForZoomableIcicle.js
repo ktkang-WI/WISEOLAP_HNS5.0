@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 
 
-const D3PainterForZoomableCicle = {};
+const D3PainterForZoomableIcicle = {};
 
-D3PainterForZoomableCicle.defaultOption = (option) => {
+D3PainterForZoomableIcicle.defaultOption = (option) => {
   return {
     width: option?.width,
     height: option?.height,
@@ -11,30 +11,30 @@ D3PainterForZoomableCicle.defaultOption = (option) => {
   };
 };
 
-D3PainterForZoomableCicle.init = ({
+D3PainterForZoomableIcicle.init = ({
   container,
   dataSource,
   option,
-  defaultOption = D3PainterForZoomableCicle.defaultOption(option)
+  defaultOption = D3PainterForZoomableIcicle.defaultOption(option)
 }) => {
   if (!container) return new Error('The Container attribute can\'t be null');
-  D3PainterForZoomableCicle.self = {};
-  D3PainterForZoomableCicle.self.container = container;
-  D3PainterForZoomableCicle.self.option = defaultOption;
-  D3PainterForZoomableCicle.self.data = init.data(dataSource);
-  D3PainterForZoomableCicle.self.isLoaded = true;
+  D3PainterForZoomableIcicle.self = {};
+  D3PainterForZoomableIcicle.self.container = container;
+  D3PainterForZoomableIcicle.self.option = defaultOption;
+  D3PainterForZoomableIcicle.self.data = init.data(dataSource);
+  D3PainterForZoomableIcicle.self.isLoaded = true;
 };
 
-D3PainterForZoomableCicle.painting = () => {
-  if (!D3PainterForZoomableCicle.self.isLoaded) {
+D3PainterForZoomableIcicle.painting = () => {
+  if (!D3PainterForZoomableIcicle.self.isLoaded) {
     return new Error('D3Init is not loaded!');
   }
   const svg = init.container();
   init.paint.drawing(svg);
 };
 
-D3PainterForZoomableCicle.erasing = () => {
-  D3PainterForZoomableCicle.self.container.innerHTML = '';
+D3PainterForZoomableIcicle.erasing = () => {
+  D3PainterForZoomableIcicle.self.container.innerHTML = '';
 };
 
 
@@ -43,7 +43,7 @@ const init = {};
 init.paint = {};
 init.funcs = {};
 init.funcs.partition = (data) => {
-  const option = D3PainterForZoomableCicle.self.option;
+  const option = D3PainterForZoomableIcicle.self.option;
   const partition = d3.partition()
       .size([option.height, option.width])
       .padding(1);
@@ -54,8 +54,8 @@ init.funcs.partition = (data) => {
 };
 
 init.paint.drawing = (svg) => {
-  const option = D3PainterForZoomableCicle.self.option;
-  const {root} = D3PainterForZoomableCicle.self.data;
+  const option = D3PainterForZoomableIcicle.self.option;
+  const {root} = D3PainterForZoomableIcicle.self.data;
   const format = d3.format(',d');
   const cell = svg
       .selectAll()
@@ -92,11 +92,11 @@ init.paint.drawing = (svg) => {
 };
 
 init.container = () => {
-  if (!D3PainterForZoomableCicle.self.container) {
+  if (!D3PainterForZoomableIcicle.self.container) {
     return new Error('The Container attribute can\'t be null');
   }
-  const option = D3PainterForZoomableCicle.self.option;
-  return d3.select(D3PainterForZoomableCicle.self.container)
+  const option = D3PainterForZoomableIcicle.self.option;
+  return d3.select(D3PainterForZoomableIcicle.self.container)
       .append('svg')
       .attr('viewBox', [0, 0, option.width, option.height])
       .attr('width', option.width)
@@ -113,4 +113,4 @@ init.data = (dataSource) => {
 };
 
 
-export default D3PainterForZoomableCicle;
+export default D3PainterForZoomableIcicle;

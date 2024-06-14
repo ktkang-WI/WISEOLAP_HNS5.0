@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
-import D3PainterForZoomableCicle from './D3PainterForZoomableCicle';
+import D3PainterForZoomableIcicle from './D3PainterForZoomableIcicle';
 
-const D3ZoomableCicle = ({
+const D3ZoomableIcicle = ({
   dataSource,
   palette,
   height,
@@ -9,7 +9,7 @@ const D3ZoomableCicle = ({
 }) => {
   const svgRef = useRef(null);
   useEffect(() => {
-    D3PainterForZoomableCicle.init({
+    D3PainterForZoomableIcicle.init({
       container: svgRef.current,
       dataSource: dataSource,
       option: {
@@ -18,10 +18,10 @@ const D3ZoomableCicle = ({
         palette
       }
     });
-    D3PainterForZoomableCicle.painting();
+    D3PainterForZoomableIcicle.painting();
 
     return () => {
-      D3PainterForZoomableCicle.erasing();
+      D3PainterForZoomableIcicle.erasing();
     };
   }, [dataSource]);
   return (
@@ -32,4 +32,4 @@ const D3ZoomableCicle = ({
   );
 };
 
-export default D3ZoomableCicle;
+export default D3ZoomableIcicle;

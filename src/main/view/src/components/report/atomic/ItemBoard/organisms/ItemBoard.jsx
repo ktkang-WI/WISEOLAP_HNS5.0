@@ -53,7 +53,8 @@ import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
 import ItemType from 'components/report/item/util/ItemType';
-import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
+import ZoomableIcicle
+  from 'components/report/item/zoomableIcicle/ZoomableIcicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 import ComboBox from 'components/report/item/comboBox/ComboBox';
 import ListBox from 'components/report/item/listBox/ListBox';
@@ -150,7 +151,7 @@ const ItemBoard = () => {
     collapsibleTree: CollapsibleTree,
     radialTree: RadialTree,
     sunburstChart: SunBurstChart,
-    zoomableCicle: ZoomableCicle,
+    zoomableIcicle: ZoomableIcicle,
     ciclePacking: CiclePacking,
     scatterPlot: ScatterPlot,
     comboBox: ComboBox,

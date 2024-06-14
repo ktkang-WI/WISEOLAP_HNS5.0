@@ -1,10 +1,10 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import D3ZoomableCicle from './D3ZoomableCicle';
+import D3ZoomableIcicle from './D3ZoomableIcicle';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import {useMemo, useRef} from 'react';
 import {getBlendColor} from '../util/ColorManager';
 
-const ZoomableCicle = ({
+const ZoomableIcicle = ({
   setItemExports,
   id,
   item
@@ -24,7 +24,7 @@ const ZoomableCicle = ({
     <Wrapper
       ref={ref}
     >
-      <D3ZoomableCicle
+      <D3ZoomableIcicle
         dataSource={JSON.parse(mart.data.info.jsonData)}
         palette={palette}
         width={width}
@@ -34,4 +34,4 @@ const ZoomableCicle = ({
   );
 };
 
-export default ZoomableCicle;
+export default ZoomableIcicle;

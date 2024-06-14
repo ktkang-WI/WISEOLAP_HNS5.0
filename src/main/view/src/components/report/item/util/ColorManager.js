@@ -21,7 +21,7 @@ const generateColorSize = (color, item) => {
       computedSize = item?.mart?.data?.info?.args?.length;
       break;
     case ItemType.LIQUID_FILL_GAUGE:
-    case ItemType.ZOOMABLE_CICLE:
+    case ItemType.ZOOMABLE_ICICLE:
     case ItemType.SUNBURST_CHART:
     case ItemType.WORDCLOUD:
       computedSize = item?.mart?.data?.data?.length;
