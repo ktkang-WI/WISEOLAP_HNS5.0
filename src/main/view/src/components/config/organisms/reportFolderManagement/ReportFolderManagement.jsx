@@ -103,8 +103,10 @@ const ReportFolderManagement = () => {
     }
 
     if (mode === Mode.FOLDER_MANAGEMENT) {
-      const getParentFldNm = (fld) => data
-          .find((d) => d.fldId === fld.fldParentId).fldNm;
+      const getParentFldNm = (fld) => {
+        const parentFld = data.find((d) => d.fldId === fld.fldParentId);
+        return parentFld ? parentFld.fldNm : null; // 부모 필드가 없을 경우 null 반환
+      };
       return data.map((row) => {
         let newRow = {};
         if (row.fldParentId === 0) {
