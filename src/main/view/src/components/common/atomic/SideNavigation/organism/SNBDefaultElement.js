@@ -24,6 +24,8 @@ import {
   selectCurrentDesignerMode,
   selectMyPageDesignerConfig
 } from 'redux/selector/ConfigSelector';
+import {clearSheets} from
+  'components/report/atomic/spreadBoard/util/SpreadCore';
 
 const SNBDefaultElement = () => {
   // actions
@@ -41,8 +43,13 @@ const SNBDefaultElement = () => {
   const myPageConfigure = useSelector(selectMyPageDesignerConfig);
 
   // local
-  const onClick = (designerMode) => {
-    confirm(localizedString.menuChangeConfirm, () => changeNav(designerMode));
+  const onClick = (designerMode, executeFn) => {
+    confirm(localizedString.menuChangeConfirm, () => {
+      changeNav(designerMode);
+      if (typeof executeFn === 'function') {
+        executeFn();
+      }
+    });
   };
 
   const changeNav = (designerMode) => {
@@ -87,7 +94,7 @@ const SNBDefaultElement = () => {
       label: localizedString.spreadsheet,
       active: designerMode == DesignerMode.EXCEL,
       onClick: (e) => {
-        onClick(DesignerMode['EXCEL']);
+        onClick(DesignerMode['EXCEL'], clearSheets);
       }
     },
     'Preference': {
