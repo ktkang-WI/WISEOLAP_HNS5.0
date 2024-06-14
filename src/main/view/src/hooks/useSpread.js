@@ -252,7 +252,7 @@ const useSpread = () => {
 
       if (uploadResponse.status === 200) {
         // 복호화 API 호출 (TODO: 실제 복호화 API 호출 추가)
-        await fetchData(selectedFile.name);
+        // await fetchData(selectedFile.name);
 
         // 복호화 된 파일 불러오기
         await importHnsFile(selectedFile.name);
@@ -303,6 +303,7 @@ const useSpread = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const fetchData = async (fileName) => {
     try {
       const url = `http://drmapi.hns.tv/drm/fs/v1/dec?fileName=${encodeURIComponent(fileName)}&edGb=D`;

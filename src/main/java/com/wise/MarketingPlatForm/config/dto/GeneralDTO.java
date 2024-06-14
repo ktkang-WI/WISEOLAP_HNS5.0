@@ -22,5 +22,4 @@ public class GeneralDTO {
   String kakaoMapApiKey;
   String menuConfig;
   String adHocLayout;
-  String siteNm;
 }

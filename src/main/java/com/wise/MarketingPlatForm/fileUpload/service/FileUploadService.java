@@ -77,12 +77,9 @@ public class FileUploadService {
     }
 	
     public void initFolderPath() {
-        String siteNm = generalService.getSiteNm();
-        if ("HNS".equals(siteNm)) {
-            spreadReportFolder = new File(SHARED_FOLDER);
-        } else {
-            spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-        }
+        // 기존 경로
+        // spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+        spreadReportFolder = new File(SHARED_FOLDER);
         if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
 	    }

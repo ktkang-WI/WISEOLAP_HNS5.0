@@ -13,7 +13,7 @@ import {selectCurrentReport, selectCurrentReportId}
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
-import {selectCurrentConfigure, selectCurrentDesignerMode}
+import {selectCurrentDesignerMode}
   from 'redux/selector/ConfigSelector';
 import {
   sheets,
@@ -66,16 +66,12 @@ const useSpreadRibbon = () => {
 
   const openReportLocal = (context) => {
     const currentReportId = selectCurrentReportId(store.getState());
-    const configure = selectCurrentConfigure(store.getState());
-
+    // 기존 파일 불러오기
+    // sheets.Designer.getCommand('fileMenuPanel')
+    // .execute(context, 'button_import_excel', null);
     // 홈앤쇼핑 커스터마이징 (DRM 파일 복호화 기능 추가)
-    if (configure.siteNm === 'HNS') {
-      const fileInput = document.getElementById('fileInput');
-      fileInput.click();
-    } else {
-      sheets.Designer.getCommand('fileMenuPanel')
-          .execute(context, 'button_import_excel', null);
-    }
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
 
     resetWorkbookJSON({
       reportId: currentReportId,
