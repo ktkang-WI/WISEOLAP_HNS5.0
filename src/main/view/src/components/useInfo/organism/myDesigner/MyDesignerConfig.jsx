@@ -36,6 +36,9 @@ const Wrapper = styled.div`
 `;
 
 const seperateConfig = (designerConfig) => {
+  if (designerConfig == null) {
+    return {};
+  }
   const object = designerConfig;
   // 현재 개인설정 비정형 보고서는 DB에 컬럼이 없어 임시로 Default_Item 컬럼에 저장.
   // TODO: 추후 DB에 개인설정 비정형 보고서 컬럼 생성 하면 바꿀예정.
