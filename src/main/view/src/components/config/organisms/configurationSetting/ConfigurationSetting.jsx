@@ -10,6 +10,7 @@ import {getHint} from 'components/config/utility/utility.js';
 import CommonTab from
   'components/common/atomic/Common/Interactive/CommonTab.jsx';
 import configureUtility from './ConfigureUtility.js';
+import localizedString from 'config/localization';
 
 const NavBar = styled.div`
   width:100%;
@@ -67,12 +68,12 @@ const ConfigurationSetting = () => {
     updateGeneralConfig(param)
         .then((res) => {
           if (res.status === 200) {
-            console.log('Successfully ConfigurationSetting Data Save');
-            alert('저장 되었습니다.');
+            alert(localizedString.successSave);
           };
         })
-        .catch(() => {
-          throw new Error('ConfigurationSetting Data Save Error');
+        .catch((e) => {
+          throw new Error('ConfigurationSetting Data Save Error :' + e);
+          alert(localizedString.saveFail);
         });
   };
 

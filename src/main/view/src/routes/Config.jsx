@@ -4,35 +4,33 @@ import SideNavigationBar from
   'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {getTheme} from 'config/theme';
 import {Outlet} from 'react-router-dom';
-import styled from 'styled-components';
 
 const theme = getTheme();
 
-const Container = styled.div`
-  width: 100%;
-  height: 89.8%;
-  display: ${(props)=> props.display ? props.display : 'block'};
-  flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
-  flex: 0 0 ${(props)=>props.size ? props.size : 1};
-  justify-content: ${(props)=>props.center ? props.center : 'start'};
-`;
-
-// Config 는 임시용 입니다.
 const Config = () => {
   const left = ['Logo'];
   return (
-    <>
-      <Header
-        left={left}
-        right={[
-          'Viewer',
-          'NewWindow',
-          'ReportProperty'
-        ]}
+    <Wrapper
+      display='flex' direction='column'
+    >
+      <Wrapper
+        size={`0 0 ${theme.size.headerHeight}`}
       >
-      </Header>
-      <Container display='flex' direction='row'>
-        <Wrapper size={theme.size.snbWidth}>
+        <Header
+          left={left}
+          right={[
+            'Viewer',
+            'NewWindow',
+            'ReportProperty'
+          ]}
+        >
+        </Header>
+      </Wrapper>
+      <Wrapper
+        display='flex'
+        direction='row'>
+        <Wrapper
+          size={`0 0 ${theme.size.snbWidth}`}>
           <SideNavigationBar
             content={['ConfigurationSetting', 'UserGroupManagement',
               'Authority', 'ReportFolderManagement', 'DataSourceAddition']}
@@ -41,8 +39,8 @@ const Config = () => {
         <Wrapper>
           <Outlet/>
         </Wrapper>
-      </Container>
-    </>
+      </Wrapper>
+    </Wrapper>
   );
 };
 export default Config;
