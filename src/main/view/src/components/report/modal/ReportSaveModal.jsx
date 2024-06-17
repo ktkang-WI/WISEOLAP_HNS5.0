@@ -72,7 +72,6 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
         const msg = data.msg;
         const result = data.result;
 
-
         alert(localizedString[msg]);
 
         if (result) {

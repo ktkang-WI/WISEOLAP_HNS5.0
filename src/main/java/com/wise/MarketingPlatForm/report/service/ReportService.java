@@ -85,11 +85,11 @@ public class ReportService {
     			if (dataset.get("datasets") != null) {
     				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
-    					JSONObject datset = datasetArray.getJSONObject(i);
-    					if (datset.has("cubeId")) {
-    						CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
-    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
-    						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+    					JSONObject obj = datasetArray.getJSONObject(i);
+    					if (obj.has("cubeId")) {
+    						CubeInfoDTO cubeInfo = cubeService.getCube(obj.get("cubeId").toString(), userId);
+    						obj.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						obj.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}
     			}
@@ -111,6 +111,7 @@ public class ReportService {
     		options.put("order", entity.getReportOrdinal());
     		options.put("reportNm", entity.getReportNm());
     		options.put("fldId", entity.getFldId());
+            options.put("requester", entity.getGridInfo());
     		options.put("fldType", entity.getFldType());
     		options.put("reportType", entity.getReportType());
     		options.put("reportTag", entity.getReportTag());
@@ -181,6 +182,7 @@ public class ReportService {
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
+            .gridInfo(reportMstrDTO.getGridInfo())
             .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
@@ -230,6 +232,7 @@ public class ReportService {
             .reportType(reportMstrDTO.getReportType().toString())
             .reportDesc(reportMstrDTO.getReportDesc())
             .reportTag(reportMstrDTO.getReportTag())
+            .gridInfo(reportMstrDTO.getGridInfo())
             .paramXml(reportMstrDTO.getParamXml())
             .modUserNo(reportMstrDTO.getModUserNo())
             .chartXml(reportMstrDTO.getChartXml())

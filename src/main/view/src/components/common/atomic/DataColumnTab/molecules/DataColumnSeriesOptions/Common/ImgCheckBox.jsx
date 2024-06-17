@@ -3,6 +3,8 @@ import {getTheme} from 'config/theme';
 import {useState} from 'react';
 import styled from 'styled-components';
 import expandIcon from 'assets/image/icon/button/arrow.png';
+import BubbleTooltip
+  from 'components/common/atomic/Common/Popover/BubbleTooltip';
 
 const theme = getTheme();
 
@@ -61,40 +63,6 @@ const StyledTitle = styled.div`
 const Img = styled.img`
   display: block;
   margin: 0 auto;
-`;
-
-const SubTitle = styled.div`
-  display: none;
-  font-size: 0.75rem;
-  font-weight: 400;
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  width: auto;
-  z-index: 3;
-  white-space: nowrap;
-  text-align: center;
-  margin: 0 auto;
-  transform: translateX(-50%);
-  background: ${theme.color.white};
-  border-radius: 2px;
-  border: 1px solid ${theme.color.primary};
-  padding: 3px 7px;
-  color: ${theme.color.primary};
-  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, .15);
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    transform: rotate(45deg);
-    background: #ffffff;
-    left: calc(50% - 2px);
-    top: -3px;
-    border-left: 1px solid ${theme.color.primary};
-    border-top: 1px solid ${theme.color.primary};
-  }
 `;
 
 const Label = styled.label`
@@ -162,7 +130,7 @@ const CheckBox = ({onValueChanged, id, src, title, checked}) => (
         <Img src={src} title={title}/>
       </Wrapper>
     </Label>
-    <SubTitle className='tooltip'>{title}</SubTitle>
+    <BubbleTooltip className='tooltip'>{title}</BubbleTooltip>
   </StyledLi>
 );
 
