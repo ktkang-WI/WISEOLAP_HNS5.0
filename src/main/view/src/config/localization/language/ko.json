@@ -353,7 +353,7 @@
   "heatmap": "히트맵",
   "sunburst": "선버스트",
   "waterFall": "폭포수",
-  "zoomableCicle": "계층형 네모차트",
+  "zoomableIcicle": "계층형 네모차트",
   "ciclePacking": "버블팩",
   "neuralNetworkTree": "신경망 트리",
   "radialNeuralNetwork": "방사형신경망",
@@ -591,6 +591,7 @@
   "folderId": "폴더 ID",
   "dataSourceAddition": "데이터 원본 추가",
   "successSave": "저장 했습니다.",
+  "saveFail": "저장에 실패 했습니다.",
   "successUpdate": "업데이트 했습니다.",
   "successRemove": "삭제 했습니다.",
   "validationPassword": "비밀번호 를 입력 해주세요.",
@@ -694,6 +695,8 @@
   "nameDupleAlert": "이름이 중복 되었습니다. 다시 작성해 주세요.",
   "noSelectionAlert": "아무것도 선택되지 않았습니다. 다시 선택해 주세요.",
   "search": "검색",
+  "apply": "적용",
+  "myPageAdHocLayoutHint": "적용 체크시 마이페이지의 비정형 레이아웃 설정이 먼저 적용 됩니다.",
   "hyperlink": "하이퍼링크",
   "hyperlinkSetting": "하이퍼링크 설정",
   "hyperlinkInformation": "하이퍼링크 정보",
@@ -702,5 +705,10 @@
   "new": "새로 만들기",
   "save": "저장",
   "addFieldDescription": "필드 설명 추가",
-  "requester": "요청자"
+  "requester": "요청자",
+  "selectReportAlert": "보고서를 선택해 주세요.",
+  "resetAllConfirmMsg": "설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?",
+  "resetSuccess": "초기화에 성공 했습니다.",
+  "resetFail": "초기화에 실패 했습니다.",
+  "favorit": "즐겨찾기"
 }

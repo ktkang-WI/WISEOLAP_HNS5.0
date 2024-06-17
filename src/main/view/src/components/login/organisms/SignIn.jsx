@@ -29,13 +29,13 @@ const SignIn = () => {
   const {configStringToJson} = configureUtility();
   const {afterLoginInitSettingLayout} = useLayout();
 
-  const getInitPageAndSetingFunc = (config) => {
+  const getInitPageAndSetingFunc = (config, personalConfig) => {
     const configJson = configStringToJson(config.generalConfigure);
     const initPage =
       configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
 
-    // 로그인 후 state : initDisplay 변경.
-    afterLoginInitSettingLayout(initPage, configJson);
+    // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.
+    afterLoginInitSettingLayout(initPage, personalConfig);
 
     return initPage;
   };
@@ -54,8 +54,10 @@ const SignIn = () => {
               const res = await models.Login.login(id, password);
 
               if (res.status == 200) {
+                const personalConfig = res.data;
                 const config = await generalLoader();
-                const getInitPage = getInitPageAndSetingFunc(config);
+                const getInitPage =
+                  getInitPageAndSetingFunc(config, personalConfig);
 
                 // TODO: 추후 권한 적용
                 nav(getInitPage.toLowerCase());

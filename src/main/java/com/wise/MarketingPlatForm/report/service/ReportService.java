@@ -405,4 +405,8 @@ public class ReportService {
         return martResultDTO;
     }
 
+    public String getOnlyReportName(String reportId) {
+        return reportDAO.selectReportName(reportId);
+    }
+
 }

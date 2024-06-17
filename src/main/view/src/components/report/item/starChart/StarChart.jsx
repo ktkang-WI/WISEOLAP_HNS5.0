@@ -14,6 +14,7 @@ const StarChart = ({
   item
 }) => {
   const mart = item?.mart;
+  const meta = item?.meta;
   if (!mart.init) {
     return <></>;
   }
@@ -30,6 +31,7 @@ const StarChart = ({
         width={width}
         height={height}
         dataSource={mart?.data?.data}
+        palette={meta?.palette?.name} // Dev Default blend
         useSpiderWeb={true}
       >
         {

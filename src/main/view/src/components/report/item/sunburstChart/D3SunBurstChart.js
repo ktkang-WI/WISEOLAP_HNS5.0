@@ -3,6 +3,7 @@ import D3PainterForSunBurstChart from './D3PainterForSunBurstChart';
 
 const D3SunBurstChart = ({
   dataSource,
+  palette,
   height,
   width
 }) => {
@@ -13,7 +14,8 @@ const D3SunBurstChart = ({
       dataSource: dataSource,
       option: {
         width: width,
-        height: height
+        height: height,
+        palette: palette
       }
     });
     D3PainterForSunBurstChart.painting();

@@ -27,7 +27,7 @@ import listBoxImg from 'assets/image/icon/item/list_box.png';
 
 import sunburstChartImg from 'assets/image/icon/item/sunburst.png';
 import funnelImg from 'assets/image/icon/item/funnel.png';
-import zoomableCicleImg from 'assets/image/icon/item/zoomableIcicle.png';
+import zoomableIcicleImg from 'assets/image/icon/item/zoomableIcicle.png';
 import schedulerImg from 'assets/image/icon/item/scheduler.png';
 import waterFallImg from 'assets/image/icon/item/waterfall.png';
 import starChartImg from 'assets/image/icon/item/star.png';
@@ -127,10 +127,10 @@ const CustomChartDefaulElement = () => {
           src: arcImg
         },
         {
-          title: localizedString.zoomableCicle,
-          type: ItemType.ZOOMABLE_CICLE,
+          title: localizedString.zoomableIcicle,
+          type: ItemType.ZOOMABLE_ICICLE,
           checked: false,
-          src: zoomableCicleImg
+          src: zoomableIcicleImg
         }
       ]
     },

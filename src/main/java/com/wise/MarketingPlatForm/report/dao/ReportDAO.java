@@ -30,4 +30,5 @@ public interface ReportDAO {
     public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
     public void insertUserUpload(UserUploadMstrEntity userUploadTable);
+    public String selectReportName(String reportId);
 }

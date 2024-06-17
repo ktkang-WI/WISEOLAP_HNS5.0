@@ -29,7 +29,7 @@ const LoadReportModal = ({...props}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    models.Report.getList('admin', reportType, 'designer').then(({data}) => {
+    models.Report.getList(reportType, 'designer').then(({data}) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);

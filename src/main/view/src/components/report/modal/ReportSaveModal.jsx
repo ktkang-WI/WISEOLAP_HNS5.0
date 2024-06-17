@@ -2,8 +2,6 @@ import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import ReportSaveForm from '../atomic/Save/molecules/ReportSaveForm';
-import styled from 'styled-components';
-import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
@@ -13,24 +11,6 @@ import models from 'models';
 import useModal from 'hooks/useModal';
 
 const theme = getTheme();
-
-const StyledModalPanel = styled(ModalPanel)`
-    .dx-field-item-label {
-      width: 100%;
-      display: block;
-      font: ${theme.font.modalTitle};
-      color: ${theme.color.primary};
-      margin-bottom: 5px;
-    }
-    .dx-field-item-custom-label-content {
-      display: block;
-      border-bottom: solid 1px ${theme.color.breakLine};
-      padding-bottom: 5px;
-    }
-    .dx-item-content {
-      padding: 10px;
-    }
-  `;
 
 const ReportSaveModal = ({createExcelFile, ...props}) => {
   const {alert} = useModal();
@@ -91,17 +71,15 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
     <Modal
       modalTitle={localizedString.saveReport}
       height={theme.size.bigModalHeight}
-      width={theme.size.middleModalHeight}
+      width={theme.size.smallModalWidth}
       onSubmit={onSubmit}
       {...props}
     >
-      <StyledModalPanel title={localizedString.saveReport}>
-        <ReportSaveForm
-          dataSource={dataSource}
-          createDataSource={createDataSource}
-          formRef={ref}
-        />
-      </StyledModalPanel>
+      <ReportSaveForm
+        dataSource={dataSource}
+        createDataSource={createDataSource}
+        formRef={ref}
+      />
     </Modal>
   );
 };
