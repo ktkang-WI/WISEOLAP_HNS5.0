@@ -19,7 +19,8 @@ import {
   sheets,
   excelIO,
   resetWorkbookJSON,
-  designerRef
+  designerRef,
+  clearSheets
 } from '../util/SpreadCore';
 import {
   SpreadRibbonDefaultElement,
@@ -105,6 +106,7 @@ const useSpreadRibbon = () => {
 
   const deleteExcelFile = ({reportId, prevDesigner}) => {
     deleteFile({fileName: reportId + '.sjs'});
+    clearSheets();
   };
 
   const downloadReportXLSX = () => {

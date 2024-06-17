@@ -444,4 +444,8 @@
 				,#{dsId}
 			 )
     </insert>
+
+    <select id='selectReportName' resultType='string'>
+      SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = #{reportId}
+    </select>
 </mapper>

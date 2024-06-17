@@ -12,7 +12,8 @@ D3PainterForHeatMap.defaultOption = (option) => {
       left: 40,
       right: 40,
       bottom: 50
-    }
+    },
+    palette: option.palette
   };
 };
 
@@ -64,7 +65,7 @@ init.paint.drawing = (svg) => {
   const yScale =
       d3.scaleBand().domain(yDomain).range([option.height, 0]);
   const colorScale =
-    d3.scaleLinear().domain([0, 100]).range(['#fff', '#A3320B']);
+    d3.scaleLinear().domain([0, 100]).range(option.palette);
 
   g.append('g')
       .attr('transform', 'translate(0,' + option.height +')')

@@ -72,7 +72,7 @@ const ReportTabs = () => {
               }
             }
 
-            models.Report.getReportById('admin', selectedReport.id)
+            models.Report.getReportById(selectedReport.id)
                 .then(({data}) => {
                   try {
                     dispatch(setDesignerMode(selectedReport.reportType));
@@ -104,7 +104,7 @@ const ReportTabs = () => {
   };
 
   useEffect(() => {
-    models.Report.getList('admin', null, 'viewer').then(({data}) => {
+    models.Report.getList(null, 'viewer').then(({data}) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);

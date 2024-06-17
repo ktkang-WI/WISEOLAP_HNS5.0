@@ -86,3 +86,10 @@ export const resetWorkbookJSON = ({reportId, workbookJSON}) => {
   workbookJSONs = {};
   workbookJSONs[reportId] = workbookJSON;
 };
+export const clearSheets = () => {
+  if (designerRef?.current) {
+    const workbook = designerRef.current.designer.getWorkbook();
+    workbook.clearSheets();
+    workbook.addSheet(0, new GC.Spread.Sheets.Worksheet('Sheet1'));
+  }
+};

@@ -41,7 +41,8 @@ const D3Calendar = ({
   dataSource,
   argumentField,
   valueField,
-  onClick
+  onClick,
+  palette
 }) => {
   const svgRef = useRef(null);
   const {alert} = useModal();
@@ -52,7 +53,8 @@ const D3Calendar = ({
       return;
     }
     const option = {
-      width
+      width,
+      palette
     };
     D3CalendarPainter.init({
       container: svgRef.current,
@@ -66,7 +68,7 @@ const D3Calendar = ({
     return () => {
       D3CalendarPainter.erasing();
     };
-  }, [dataSource]);
+  }, [dataSource, palette]);
   return (
     <Svg
       ref={svgRef}

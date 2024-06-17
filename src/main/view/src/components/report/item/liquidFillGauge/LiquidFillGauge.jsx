@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {getOptionValue}
   from '../util/modal/organism/notationFormat/NotationFormatModal';
 import LiquidFillGaugeChart from './LiquidFillGaugeChart';
@@ -7,6 +7,7 @@ import {itemExportsObject}
 import {useInteractiveEffect} from '../util/useInteractiveEffect';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
+import {getBlendColor} from '../util/ColorManager';
 
 const LiquidFillGauge = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -58,6 +59,10 @@ const LiquidFillGauge = ({setItemExports, id, item}) => {
     functions.setDataMasterFilter(e.data);
     functions.masterFilterReload(e);
   };
+  const palette = useMemo(() => getBlendColor({
+    color: meta?.palette?.colors,
+    item: item
+  }), [meta?.palette?.colors]);
   return (
     <Wrapper
       ref={ref}
@@ -71,7 +76,7 @@ const LiquidFillGauge = ({setItemExports, id, item}) => {
         autoCoulmn={meta?.liquidFillGaugeOption?.contentArray.autoNumberSet}
         valueField={seriesNames[0].summaryName}
         columnNumber={meta?.liquidFillGaugeOption?.contentArray.columnNumber}
-        palette={meta?.palette}
+        palette={palette}
         onClick={handleClick}
         notationFormat={
           getOptionValue(meta?.liquidFillGaugeOption?.notationFormat)

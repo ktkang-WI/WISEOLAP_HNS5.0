@@ -490,6 +490,8 @@
   "nameDupleAlert": "The name is duplicated. Please write again.",
   "noSelectionAlert": "Nothing has been selected. Please select again.",
   "search": "Search",
+  "apply": "apply",
+  "myPageAdHocLayoutHint": "When checking Apply, My Page's AdHoc layout settings are applied first.",
   "hyperlink": "Hyperlink",
   "hyperlinkSetting": "Hyperlink Setting",
   "hyperlinkInformation": "Hyperlink information",
@@ -497,5 +499,11 @@
   "name": "Name",
   "new": "New",
   "save": "Save",
-  "addFieldDescription": "Add Field Description"
+  "addFieldDescription": "Add Field Description",
+  "selectReportAlert": "Please select a report.",
+  "saveFail": "Save failed.",
+  "resetAllConfirmMsg": "All settings will be reset. Do you want to proceed?",
+  "resetSuccess": "Initialization was successful.",
+  "resetFail": "Initialization failed.",
+  "favorit": "Favorites"
 }
