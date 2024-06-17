@@ -186,7 +186,9 @@ const useQueryExecute = () => {
         chartItem.mart.init = true;
         chartItem.mart.data = data;
 
-        alert(`${item?.meta?.name}${localizedString.noneData}`);
+        if (nullDataCheck(chartItem)) {
+          alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
+        }
 
         ItemManager.generateItem(chartItem, param, cloneItem);
         dispatch(updateItem({reportId, item: chartItem}));
