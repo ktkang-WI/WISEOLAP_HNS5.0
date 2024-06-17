@@ -5,7 +5,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
@@ -25,20 +25,26 @@ const StyledWrapper = styled(Wrapper)`
   text-align: left;
 `;
 
-const SpreadViewer = () => {
-  const reportId = useSelector(selectCurrentReportId);
+const SpreadViewer = ({reportId}) => {
+  const spreadId = reportId || useSelector(selectCurrentReportId);
   const spreadData = useSelector(selectCurrentSpreadData);
   const {bindData, setExcelFile} = useSpread();
+  // 뷰어에서 처음 열 때만 바인딩
+  const [bindingCount, setBindingCount] = useState(0);
   const workbookRef = useRef();
 
   useEffect(() => {
-    const workbookJSON = getWorkbookJSON(reportId);
+    if (bindingCount == 2) return;
+    const workbookJSON = getWorkbookJSON(spreadId);
     workbookRef.current.spread.fromJSON(workbookJSON);
-    setExcelFile(reportId);
-  }, [reportId]);
+    setExcelFile(spreadId);
+    setBindingCount((state) => state + 1);
+  }, [spreadId]);
 
   useEffect(() => {
+    if (bindingCount == 2) return;
     bindData(spreadData);
+    setBindingCount((state) => state + 1);
   }, [spreadData]);
 
   return (
