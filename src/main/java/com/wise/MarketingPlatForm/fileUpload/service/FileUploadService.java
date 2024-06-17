@@ -61,17 +61,15 @@ public class FileUploadService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
-    private final GeneralService generalService;
     private final String SHARED_FOLDER = "/olapnas";
-    private final String DECRYTION_INPUT_FOLDER = "/HNSimg/temp/drm/upload";
-    private final String DECRYTION_OUTPUT_FOLDER = "/HNSimg/temp/drm";
+    private final String DECRYTION_INPUT_FOLDER = "/drm/upload";
+    private final String DECRYTION_OUTPUT_FOLDER = "/drm";
 
-    FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO, GeneralService generalService) {
+    FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO) {
         this.datasetService = datasetService;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.reportDAO = reportDAO;
-        this.generalService = generalService;
     
         initFolderPath();
     }
