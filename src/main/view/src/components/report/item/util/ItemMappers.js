@@ -36,6 +36,7 @@ import SchedulerComponent
   from 'components/report/item/schedulerComponent/SchedulerComponent';
 import ItemType from 'components/report/item/util/ItemType';
 
+// TODO: 추후 아이템 타입 자동 감지하여 추가하게 수정
 export const itemComponents = {
   [ItemType.CHART]: Chart,
   [ItemType.PIVOT_GRID]: PivotGrid,
