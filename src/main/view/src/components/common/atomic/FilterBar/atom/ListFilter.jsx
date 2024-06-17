@@ -110,7 +110,7 @@ const ListFilter = ({
         confirm={confirm}
         cancel={cancel}
         allText={allText}
-        orgDataSource={value.listItems || []}
+        orgDataSource={value?.listItems || []}
         selectionKeys={selectionKeys}
       />
     );

@@ -58,3 +58,15 @@ export async function userFolderData() {
   });
   return data;
 }
+
+export async function userDesignerConfig() {
+  const data =
+  await models.ReportFolderManagement.getUserDesignerConfig().then((res) => {
+    if (res.status != 200) {
+      return res.error;
+    }
+
+    return res.data.data;
+  });
+  return data;
+}

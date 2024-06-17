@@ -26,7 +26,7 @@ public enum ItemType {
     HEAT_MAP("heatMap"),
     COLLAPSIBLE_TREE("collapsibleTree"),
     RADIAL_TREE("radialTree"),
-    ZOOMABLE_CICLE("zoomableCicle"),
+    ZOOMABLE_ICICLE("zoomableIcicle"),
     CICLE_PACKING("ciclePacking"),
     SCATTER_PLOT("scatterPlot"),
     SUNBURST_CHART("sunburstChart"),

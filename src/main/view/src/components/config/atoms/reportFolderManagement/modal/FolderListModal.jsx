@@ -62,10 +62,18 @@ const FolderListModal = ({...props}) => {
   };
 
   const onClick = (e) => {
-    const newRow = {
-      fldParentId: row.fldId,
-      fldParentNm: row.fldNm
-    };
+    let newRow = {};
+    if (props.type === 'report') {
+      newRow = {
+        fldId: row.fldId,
+        fldNm: row.fldNm
+      };
+    } else {
+      newRow = {
+        fldParentId: row.fldId,
+        fldParentNm: row.fldNm
+      };
+    }
     props.setRow({
       ...props.row,
       ...newRow

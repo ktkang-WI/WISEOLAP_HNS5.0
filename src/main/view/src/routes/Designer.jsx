@@ -20,9 +20,9 @@ const Designer = () => {
   // hooks
   const dispatch = useDispatch();
   const {reload} = useReportSave();
-  const {generalConfigure} = useLoaderData();
+  const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
-  saveConfiguration(generalConfigure);
+  // saveConfiguration(generalConfigure, myPageConfigure);
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
   // actions
@@ -39,7 +39,12 @@ const Designer = () => {
       configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
 
     if (designerMode == DesignerMode['AD_HOC']) {
-      const layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
+      let layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
+
+      if (myPageConfigure.defaultLayout.check) {
+        layout = AdHocLayoutTypes[myPageConfigure.defaultLayout.layout];
+      }
+
       const param = {
         mode: designerMode,
         adhocLayout: layout
@@ -49,8 +54,17 @@ const Designer = () => {
       dispatch(ItemSlice.actions.initItems(param));
     }
 
+    if (designerMode == DesignerMode['DASHBOARD']) {
+      const param = {
+        mode: designerMode,
+        defaultItem: myPageConfigure.defaultItem
+      };
+      dispatch(LayoutSlice.actions.initLayout(param));
+      dispatch(ItemSlice.actions.initItems(param));
+    }
+
     dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));
-    saveConfiguration(generalConfigure);
+    saveConfiguration(generalConfigure, myPageConfigure);
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,10 @@
 import {createSelector} from 'reselect';
 
+export const selectRootConfig = createSelector(
+    (state) => state.meta.config,
+    (config) => config
+);
+
 export const selectCurrentConfigure = createSelector(
     (state) => state.meta.config.configure,
     (configure) => configure
@@ -18,5 +23,10 @@ export const selectEditMode = createSelector(
 export const selectInitialDisplay = createSelector(
     (state) => state.meta.config.initialDisplay,
     (initialDisplay) => initialDisplay
+);
+
+export const selectMyPageDesignerConfig = createSelector(
+    (state) => state.meta.config.myPageConfigure,
+    (myPageConfigure) => myPageConfigure
 );
 

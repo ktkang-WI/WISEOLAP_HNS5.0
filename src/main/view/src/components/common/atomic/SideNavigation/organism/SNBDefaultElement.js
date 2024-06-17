@@ -21,8 +21,11 @@ import useModal from 'hooks/useModal';
 import {useSelector} from 'react-redux';
 import {
   selectCurrentConfigure,
-  selectCurrentDesignerMode
+  selectCurrentDesignerMode,
+  selectMyPageDesignerConfig
 } from 'redux/selector/ConfigSelector';
+import {clearSheets} from
+  'components/report/atomic/spreadBoard/util/SpreadCore';
 
 const SNBDefaultElement = () => {
   // actions
@@ -37,17 +40,30 @@ const SNBDefaultElement = () => {
   // redux
   const designerMode = useSelector(selectCurrentDesignerMode);
   const configure = useSelector(selectCurrentConfigure);
+  const myPageConfigure = useSelector(selectMyPageDesignerConfig);
 
   // local
-  const onClick = (designerMode) => {
-    confirm(localizedString.menuChangeConfirm, () => changeNav(designerMode));
+  const onClick = (designerMode, executeFn) => {
+    confirm(localizedString.menuChangeConfirm, () => {
+      changeNav(designerMode);
+      if (typeof executeFn === 'function') {
+        executeFn();
+      }
+    });
   };
 
   const changeNav = (designerMode) => {
+    let adHocLayout = configure.adHocLayout;
+    const defaultItem = myPageConfigure.defaultItem;
+
+    if (myPageConfigure.defaultLayout.check) {
+      adHocLayout = myPageConfigure.defaultLayout.layout || 'CTGB';
+    }
+
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
-    reload(designerMode, configure.adHocLayout);
+    reload(designerMode, adHocLayout, defaultItem);
   };
 
   return {
@@ -78,7 +94,7 @@ const SNBDefaultElement = () => {
       label: localizedString.spreadsheet,
       active: designerMode == DesignerMode.EXCEL,
       onClick: (e) => {
-        onClick(DesignerMode['EXCEL']);
+        onClick(DesignerMode['EXCEL'], clearSheets);
       }
     },
     'Preference': {

@@ -427,6 +427,6 @@ td[role="columnheader"] {
   border-radius: 8px;
 }
 
-.dx-treeview-node-container {
+.dx-treeview-node-container:hover {
   overflow: visible;
 }

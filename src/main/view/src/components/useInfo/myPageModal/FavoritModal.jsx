@@ -1,0 +1,115 @@
+import Modal from 'components/common/atomic/Modal/organisms/Modal';
+import DesignerReportTabs
+  from 'components/common/atomic/ReportTab/organism/DesignerReportTabs';
+import {setIconReportList} from 'components/report/util/ReportUtility';
+import localizedString from 'config/localization';
+import {getTheme} from 'config/theme';
+import {SelectBox} from 'devextreme-react';
+import models from 'models';
+import React, {useEffect, useState} from 'react';
+import useModal from 'hooks/useModal';
+import {
+  MyDesignerContance,
+  defaultItemList
+} from '../organism/myDesigner/MypageDesignerUtil';
+
+const theme = getTheme();
+
+const getSelectBoxValue = (id, data) => {
+  if (id == 'defaultItem') {
+    return data.defaultItem;
+  } else if (id == 'defaultPalette') {
+    return data.defaultPalette;
+  } else {
+    return null;
+  }
+};
+
+const FavoritModal = ({onSubmit, data, ...props}) => {
+  const selectBoxValue = getSelectBoxValue(props.id, data);
+  const [value, setValue] = useState(selectBoxValue);
+  const [reportList, setReportList] = useState();
+  const {alert} = useModal();
+
+  useEffect(() => {
+    props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+      models.Report.getList(null, 'designer').then(({data}) => {
+        setIconReportList(data.privateReport);
+        setIconReportList(data.publicReport);
+        setReportList(data);
+      });
+
+    // props.id == 'defaultDatasetId' &&
+    //   // 기본 데이터 집합 가져오기.
+    //   models.Report.getList('admin', null, 'designer').then(({data}) => {
+    //   });
+  }, []);
+
+  return (
+    <Modal
+      modalTitle={props.title}
+      height={theme.size.middleModalHeight}
+      width={theme.size.smallModalWidth}
+      onSubmit={() => {
+        if (value.type && value.type == 'FOLDER') {
+          alert(localizedString.selectReportAlert);
+          return;
+        }
+
+        onSubmit(value);
+      }}
+      {...props}
+    >
+      {/* {props.id == 'defaultDatasetId' &&
+        <div>기본 데이터셋</div>
+      } */}
+
+      {props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+        <DesignerReportTabs
+          reportList={reportList}
+          onSelectionChanged={(e) => {
+            const param = e.component.getSelectedNodes()[0];
+
+            const val = {
+              type: param.itemData.type,
+              id: param.key,
+              name: param.text
+            };
+
+            setValue(val);
+          }}
+          onSubmit={onSubmit}
+        />}
+
+      {props.id == MyDesignerContance['DEFAULT_ITEM'] &&
+        <>
+          <div>기본 아이템</div>
+          <SelectBox
+            items={defaultItemList()}
+            valueExpr='id'
+            displayExpr='name'
+            value={value}
+            onValueChanged={(e) => {
+              setValue(e.value);
+            }}
+          />
+        </>
+      }
+
+      {
+        props.id == MyDesignerContance['DEFAULT_PALETTE'] &&
+        <>
+          <div>기본 색상</div>
+          <SelectBox
+            items={['Matarial', 'Office']}
+            value={value}
+            onValueChanged={(e) => {
+              setValue(e.value);
+            }}
+          />
+        </>
+      }
+    </Modal>
+  );
+};
+export default React.memo(FavoritModal);

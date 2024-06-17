@@ -5,10 +5,11 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const useConfig = () => {
   const dispatch = useDispatch();
-  const {addConfigure} = ConfigSlice.actions;
+  const {addConfigure, setMyPageConfigure} = ConfigSlice.actions;
 
-  const saveConfiguration = (general) => {
+  const saveConfiguration = (general, myPageConfigure) => {
     dispatch(addConfigure(general));
+    dispatch(setMyPageConfigure(myPageConfigure));
 
     setMainTitle(general.mainTitle);
     setSpreadLicense(
