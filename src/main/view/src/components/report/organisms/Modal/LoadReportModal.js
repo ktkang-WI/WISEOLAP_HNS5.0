@@ -41,7 +41,7 @@ const LoadReportModal = ({...props}) => {
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
-    models.Report.getReportById('admin', selectedReport.id)
+    models.Report.getReportById(selectedReport.id)
         .then(({data}) => {
           try {
             loadReport(data);
@@ -49,7 +49,8 @@ const LoadReportModal = ({...props}) => {
           } catch {
             alert(localizedString.reportCorrupted);
           }
-        }).catch(() => {
+        }).catch((e) => {
+          console.error(e);
           alert(localizedString.reportCorrupted);
         });
     models.Report.getLinkReportList(selectedReport.id)

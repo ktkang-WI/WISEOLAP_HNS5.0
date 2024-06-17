@@ -1,11 +1,11 @@
 import {useSelector} from 'react-redux';
 import {getWorkbookJSON, setWorkbookRef} from '../util/SpreadCore';
 import {SpreadSheets} from '@grapecity/spread-sheets-react';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentSpreadData}
+// import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
@@ -26,25 +26,20 @@ const StyledWrapper = styled(Wrapper)`
 `;
 
 const SpreadViewer = ({reportId}) => {
-  const spreadId = reportId || useSelector(selectCurrentReportId);
-  const spreadData = useSelector(selectCurrentSpreadData);
+  const spreadData = useSelector((state) => selectSpreadData(state, reportId));
   const {bindData, setExcelFile} = useSpread();
-  // 뷰어에서 처음 열 때만 바인딩
-  const [bindingCount, setBindingCount] = useState(0);
+
   const workbookRef = useRef();
 
   useEffect(() => {
-    if (bindingCount == 2) return;
-    const workbookJSON = getWorkbookJSON(spreadId);
+    // 컴포넌트 생성될 때 1회만 파일 열기
+    const workbookJSON = getWorkbookJSON(reportId);
     workbookRef.current.spread.fromJSON(workbookJSON);
-    setExcelFile(spreadId);
-    setBindingCount((state) => state + 1);
-  }, [spreadId]);
+    setExcelFile(reportId);
+  }, []);
 
   useEffect(() => {
-    if (bindingCount == 2) return;
-    bindData(spreadData);
-    setBindingCount((state) => state + 1);
+    bindData(spreadData, workbookRef.current.spread);
   }, [spreadData]);
 
   return (
