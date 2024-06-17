@@ -78,7 +78,8 @@ const useReportSave = () => {
 
     const chartXml = selectRootItem(store.getState());
     const newChartXml = _.cloneDeep(chartXml);
-    newChartXml.items.forEach((item) => delete item['mart']);
+    newChartXml.items =
+      newChartXml.items.map((item) => _.omit(item, 'mart'));
     param.chartXml = JSON.stringify(newChartXml);
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
