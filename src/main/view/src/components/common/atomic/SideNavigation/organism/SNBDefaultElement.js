@@ -54,9 +54,9 @@ const SNBDefaultElement = () => {
 
   const changeNav = (designerMode) => {
     let adHocLayout = configure.adHocLayout;
-    const defaultItem = myPageConfigure.defaultItem;
+    const defaultItem = myPageConfigure?.defaultItem || 'chart';
 
-    if (myPageConfigure.defaultLayout.check) {
+    if (myPageConfigure?.defaultLayout.check) {
       adHocLayout = myPageConfigure.defaultLayout.layout || 'CTGB';
     }
 
