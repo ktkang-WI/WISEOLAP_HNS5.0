@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   display: inline-block;
   text-align: left;
 `;
+
 const StyledTreeView = styled(TreeView)`
   color: ${theme.color.primaryFont};
   font: ${theme.font.dataSource};
@@ -29,16 +30,29 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
   const dxRef = useRef();
   let dblClick = 0;
 
-  const itemRender = (item, index) => {
+  const getReportTooltipMsg = (data) => {
+    const writer = data.modUserName || data.regUserName || '';
+    const requester = data.requester || '';
+    let date = data.modDt || data.regDt || '';
+    const tag = data.reportTag || '';
+    const desc = data.reportDesc || '';
+
+    if (date) {
+      date = new Date(date).toLocaleString();
+    }
+
+    return `게시자: ${writer}\n요청자: ${requester}\n`+
+      `최종수정일자: ${date}\n주석: ${tag}\n설명: ${desc}`;
+  };
+
+  const itemRender = (item) => {
     return (
-      <>
-        <div className="dx-item-content dx-treeview-item-content">
-          <img
-            src={item.icon}
-            className="dx-icon"/>
-          <span>{item.name}</span>
-        </div>
-      </>
+      <div className="dx-item-content dx-treeview-item-content"
+        title={item.type == 'REPORT' ? getReportTooltipMsg(item) : ''}
+      >
+        <img src={item.icon} className="dx-icon"/>
+        <span>{item.name}</span>
+      </div>
     );
   };
 
@@ -57,6 +71,7 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
           if (onItemSelect) onItemSelect(e.itemData);
         }
       }, [onItemSelect]);
+
   return (
     <Wrapper
       width={width}
