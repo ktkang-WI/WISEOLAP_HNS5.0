@@ -82,7 +82,7 @@ const SingleTableDesignerModal = ({
 
   const columnAllCheckBox = [{
     text: `[${localizedString.visibility}] ${localizedString.selectAll}`,
-    width: '280px',
+    width: 'auto',
     onValueChanged: (e) => {
       const setVisible = () => {
         if (!columnList) return;
