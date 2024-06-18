@@ -5,7 +5,7 @@ import {useLoaderData} from 'react-router-dom';
 import localizedString from 'config/localization';
 import {useState} from 'react';
 import styled from 'styled-components';
-import {resetDesignerConfig, updateDesignerConfig}
+import {updateDesignerConfig}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import useModal from 'hooks/useModal';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
@@ -62,9 +62,9 @@ const MyDesignerConfig = () => {
 
   const onClickSave = () => {
     const defaultItem = {
-      item: config.defaultItem,
-      check: config.defaultLayout.check,
-      layout: config.defaultLayout.layout
+      item: config.defaultItem || '',
+      check: config.defaultLayout?.check || false,
+      layout: config.defaultLayout?.layout || ''
     };
 
     const saveConfig = {
@@ -75,7 +75,7 @@ const MyDesignerConfig = () => {
     delete saveConfig.defaultLayout;
 
     updateDesignerConfig(saveConfig).then((response) => {
-      if (response.status == 200) {
+      if (response.status == 200 && response.data != false) {
         success(localizedString.successSave);
       } else {
         alert(localizedString.saveFail);
@@ -86,13 +86,8 @@ const MyDesignerConfig = () => {
   const onClickAllReset = () => {
     // reset -> 전부 null로
     confirm(localizedString.resetAllConfirmMsg, () => {
-      resetDesignerConfig().then((response) => {
-        if (response.status == 200) {
-          success(localizedString.resetSuccess);
-        } else {
-          alert(localizedString.resetFail);
-        }
-      });
+      setConfig({});
+      alert(localizedString.resetSuccess);
     });
   };
 
