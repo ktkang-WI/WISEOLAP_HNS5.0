@@ -1,3 +1,4 @@
+import ItemType from 'components/report/item/util/ItemType';
 import {DataFieldType} from 'components/report/item/util/dataFieldType';
 import localizedString from 'config/localization';
 
@@ -44,16 +45,6 @@ const dimensionSummaryType = [
     'text': localizedString.distinctCount,
     'value': 'COUNTDISTINCT',
     'type': 'SummaryType'
-  },
-  {
-    'text': localizedString.min,
-    'value': 'MIN',
-    'type': 'SummaryType'
-  },
-  {
-    'text': localizedString.max,
-    'value': 'MAX',
-    'type': 'SummaryType'
   }
 ];
 
@@ -69,19 +60,29 @@ const format = {
   'type': 'Format'
 };
 
-// const topN = {
-//   'text': localizedString.topN,
-//   'value': 'TOP_N',
-//   'type': 'TopN'
-// };
+
+const topN = {
+  'text': localizedString.topN,
+  'value': 'TOP_N',
+  'type': 'TopN'
+};
+
+
+const TOP_N_ITEMS = [
+  ItemType.CHART,
+  ItemType.PIE_CHART,
+  ItemType.DATA_GRID,
+  ItemType.PIVOT_GRID
+];
 
 /**
  * DataColumn의 contextMenu dataSource를 생성합니다.
+ * @param {string} itemType 아이템 타입
  * @param {JSON} data DataColumn 데이터
  * @param {Array} sortItems 차원일 경우 Sort By에 들어가는 항목. 없을 경우 기본값 []
  * @return {JSON}
  */
-export const getContextMenu = (data, sortItems = []) => {
+export const getContextMenu = (itemType, data, sortItems = []) => {
   let obj = [];
   const type = data.type;
   const fieldType = data.fieldType;
@@ -107,8 +108,11 @@ export const getContextMenu = (data, sortItems = []) => {
       }].concat(sortItems)
     };
 
-
     obj = [...obj, sortBy];
+
+    if (TOP_N_ITEMS.includes(itemType)) {
+      obj.push(topN);
+    }
   }
 
   return [...obj, rename];

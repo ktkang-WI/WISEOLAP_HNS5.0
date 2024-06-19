@@ -70,7 +70,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
 
   const getFormats = useCallback(() => {
     const formats = dataField.measure.map((item) => item.format);
-    (adHocOption.variationValues || []).forEach((v) => {
+    (adHocOption?.variationValues || []).forEach((v) => {
       const target = dataField.measure.find((m) => m.fieldId == v.targetId);
       if (v.type == 'absoluteVariation') {
         formats.push(target.format || getDefaultFormat());

@@ -38,6 +38,7 @@ public class PieChartDataMaker implements ItemDataMaker {
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .replaceNullData()
+                .topBottom()
                 .orderBy()
                 .columnFiltering()
                 .getData();
