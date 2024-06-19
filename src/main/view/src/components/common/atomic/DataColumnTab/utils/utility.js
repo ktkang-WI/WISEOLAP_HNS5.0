@@ -34,7 +34,7 @@ const measureOption = (tempField) => {
 const getDataFieldType = (dataFieldOption, sourceField, droppableId) => {
   const category = droppableId;
   if (category === 'field') {
-    return sourceField.type;
+    return sourceField.fieldType || sourceField.type;
   }
   return dataFieldOption[category].type;
 };
@@ -45,7 +45,7 @@ const tempField = (dataFieldOption, sourceField, droppableId) => {
     uniqueName: sourceField.uniqueName,
     caption: sourceField.caption || sourceField.name,
     category: droppableId ? droppableId : 'measure',
-    fieldType: sourceField.type, // 데이터 항목 원본 타입
+    fieldType: sourceField.fieldType || sourceField.type, // 데이터 항목 원본 타입
     type: dataFieldOption && sourceField && droppableId ? getDataFieldType(
         dataFieldOption,
         sourceField,

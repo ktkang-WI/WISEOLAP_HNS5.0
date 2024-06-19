@@ -55,7 +55,7 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
       items={layoutSelectList(id)}
       displayExpr='name'
       valueExpr='id'
-      value={data[id]?.layout}
+      value={data[id]?.layout || 'CTGB'}
       onSelectionChanged={(e) => {
         setConfig({
           ...data,
@@ -78,7 +78,7 @@ export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
       <CheckBox
         text={localizedString.apply}
         hint={localizedString.myPageAdHocLayoutHint}
-        value={isCheck}
+        value={Object.keys(data).length == 0 ? false : isCheck}
         onValueChanged={(e) => {
           setIsCheck(e.value);
           setConfig({...data,

@@ -216,7 +216,7 @@ const useReportSave = () => {
     const param = {
       mode: designerMode,
       adhocLayout: AdHocLayoutTypes[adHocLayout],
-      defaultItem: defaultItem
+      defaultItem: defaultItem || 'chart'
     };
 
     dispatch(reportActions.initReport(designerMode));

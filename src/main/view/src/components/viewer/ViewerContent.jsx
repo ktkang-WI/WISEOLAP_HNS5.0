@@ -14,13 +14,14 @@ import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
 import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useSelector} from 'react-redux';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentReport,
+  selectReports} from 'redux/selector/ReportSelector';
 import useDrag from 'hooks/useDrag';
 import SpreadViewer from
   'components/report/atomic/spreadBoard/organisms/SpreadViewer';
 import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
 import {styled} from 'styled-components';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import localizedString from 'config/localization';
 
 const theme = getTheme();
@@ -37,8 +38,21 @@ const StyledWrapper = styled.div`
 const ViewerContent = ({children}) => {
   const {onDragEnd, onDragStart} = useDrag();
   const report = useSelector(selectCurrentReport);
+  const reports = useSelector(selectReports);
+
   const [reportListOpened, setReportListOpened] = useState(true);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
+  const componentCache = useMemo(() => ({}), []);
+
+  const getComponent = (id) => {
+    if (!componentCache[id]) {
+      componentCache[id] = (report.options.reportType == 'Excel' ?
+        <SpreadViewer key={id} reportId={id}/> :
+        <ItemBoard key={id} reportId={id}/>);
+    }
+
+    return componentCache[id];
+  };
 
   const buttons = [
     {
@@ -96,11 +110,21 @@ const ViewerContent = ({children}) => {
               <Wrapper>
                 <ReportContentWrapper>
                   <ReportContent>
-                    {report && report.reportId != 0 &&
-                      (report.options.reportType == 'Excel' ?
-                        <SpreadViewer /> :
-                        <ItemBoard/>)
-                    }
+                    {reports.map((r) => {
+                      if (r.reportId == 0) return;
+                      if (r.reportId == report.reportId) {
+                        return (
+                          <Wrapper key={r.reportId} style={{display: 'block'}}>
+                            {getComponent(r.reportId)}
+                          </Wrapper>
+                        );
+                      }
+                      return (
+                        <Wrapper key={r.reportId} style={{display: 'none'}}>
+                          {getComponent(r.reportId)}
+                        </Wrapper>
+                      );
+                    })}
                   </ReportContent>
                 </ReportContentWrapper>
               </Wrapper>

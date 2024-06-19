@@ -1,5 +1,4 @@
 import useModal from 'hooks/useModal';
-import {useState} from 'react';
 import styled from 'styled-components';
 import FavoritModal from '../../myPageModal/FavoritModal';
 import {
@@ -34,9 +33,6 @@ const Content = styled.div`
 `;
 
 const MyPageDesignerElements = ({setConfig, data, items}) => {
-  const [isCheck, setIsCheck] = useState(
-    data.defaultLayout ? data.defaultLayout.check : false
-  );
   const {openModal} = useModal();
 
   const handleClick = (modalTitle, itemId) => {
@@ -82,9 +78,7 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
           <>
             <LayoutApplyCheckBox
               id={item.id}
-              isCheck={isCheck}
               setConfig={setConfig}
-              setIsCheck={setIsCheck}
               data={data}/>
           </>
         );

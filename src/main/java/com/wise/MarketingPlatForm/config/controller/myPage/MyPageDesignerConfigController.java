@@ -32,8 +32,6 @@ public class MyPageDesignerConfigController {
   @Autowired
   MyPageDesignerConfigService myPageDesignerConfig;
   
-  private static final Logger logger = LoggerFactory.getLogger(ConfigController.class);
-
   @GetMapping
   public ResponseEntity<RestAPIVO> getDesignerConfig(HttpServletRequest request) throws Exception {
     HttpSession session = request.getSession();
@@ -42,18 +40,6 @@ public class MyPageDesignerConfigController {
     int userNo = userDTO.getUserNo();
 
     MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo); 
-    
-    if (model != null) {
-      if (model.getDefaultReportId() != null) {
-        String reportNm = myPageDesignerConfig.getOnlyReportName(model.getDefaultReportId().intValue());
-        model.setDefaultReportNm(reportNm);
-      }
-  
-      if (model.getDefaultDatasetId() != null) {
-        String datasetNm = myPageDesignerConfig.getOnlyDatasetName(model.getDefaultReportId().intValue());
-        model.setDefaultDatasetNm(datasetNm);
-      }
-    }
   
     return RestAPIVO.okResponse(model);
   } 
