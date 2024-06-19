@@ -27,7 +27,8 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import usePopover from 'hooks/usePopover';
 import PopoverUI from '../../Popover/organism/PopoverUI';
 import useReportSave from 'hooks/useReportSave';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode,
+  selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
@@ -40,6 +41,7 @@ import colorEdit from 'assets/image/icon/button/edit_color.png';
 import Palette from '../../Popover/organism/Palette';
 import ColorEditModal from '../../Modal/organisms/ColorEditModal';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
+import {AdHocLayoutTypes} from 'components/config/configType';
 
 
 const RibbonDefaultElement = () => {
@@ -58,6 +60,7 @@ const RibbonDefaultElement = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
+  const mypageConfig = useSelector(selectMyPageDesignerConfig);
   const {querySearch} = useReportSave();
   const {executeItems} = useQueryExecute();
   const {openModal, confirm, alert} = useModal();
@@ -157,7 +160,27 @@ const RibbonDefaultElement = () => {
       'imgSrc': newReport,
       'onClick': () => {
         confirm(localizedString.reloadConfirmMsg, () => {
-          reload(designerMode);
+          let adHocLayout = rootItem;
+          const defaultLayout = mypageConfig?.defaultLayout;
+          if (adHocLayout.adHocOption) {
+            const commonAdHocLayout = adHocLayout.adHocOption.layoutSetting;
+
+            if (defaultLayout?.check) {
+              adHocLayout = defaultLayout?.layout;
+            } else {
+              adHocLayout = AdHocLayoutTypes[commonAdHocLayout];
+            }
+          }
+
+          adHocLayout = adHocLayout || 'CTGB';
+
+          let defaultItem = 'chart';
+
+          if (mypageConfig?.defaultItem) {
+            defaultItem = mypageConfig.defaultItem;
+          }
+
+          reload(designerMode, adHocLayout, defaultItem);
         });
       }
     },

@@ -71,9 +71,9 @@ const useSpread = () => {
     }
   };
 
-  const bindData = (spreadData) => {
+  const bindData = (spreadData, _workbook) => {
     const bindingInfos = selectBindingInfos(store.getState());
-    const workbook = getWorkbook();
+    const workbook = _workbook || getWorkbook();
 
     workbook.suspendPaint();
     workbook.suspendCalcService();

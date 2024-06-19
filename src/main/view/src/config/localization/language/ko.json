@@ -708,7 +708,7 @@
   "requester": "요청자",
   "selectReportAlert": "보고서를 선택해 주세요.",
   "resetAllConfirmMsg": "설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?",
-  "resetSuccess": "초기화에 성공 했습니다.",
+  "resetSuccess": "초기화 되었습니다. 적용 하시려면 저장 해주세요.",
   "resetFail": "초기화에 실패 했습니다.",
   "favorit": "즐겨찾기"
 }

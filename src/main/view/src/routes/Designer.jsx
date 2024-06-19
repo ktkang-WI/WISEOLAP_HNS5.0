@@ -41,7 +41,7 @@ const Designer = () => {
     if (designerMode == DesignerMode['AD_HOC']) {
       let layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
 
-      if (myPageConfigure.defaultLayout.check) {
+      if (myPageConfigure?.defaultLayout.check) {
         layout = AdHocLayoutTypes[myPageConfigure.defaultLayout.layout];
       }
 
@@ -57,7 +57,7 @@ const Designer = () => {
     if (designerMode == DesignerMode['DASHBOARD']) {
       const param = {
         mode: designerMode,
-        defaultItem: myPageConfigure.defaultItem
+        defaultItem: myPageConfigure?.defaultItem || 'chart'
       };
       dispatch(LayoutSlice.actions.initLayout(param));
       dispatch(ItemSlice.actions.initItems(param));
