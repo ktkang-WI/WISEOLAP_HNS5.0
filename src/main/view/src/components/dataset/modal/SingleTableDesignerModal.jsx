@@ -106,6 +106,7 @@ const SingleTableDesignerModal = ({
 
   const editParameter = {
     text: '매개변수',
+    width: '80px',
     onClick: () => {
       openModal(EditParamterModal, {
         parameterInfo: paramInfo,

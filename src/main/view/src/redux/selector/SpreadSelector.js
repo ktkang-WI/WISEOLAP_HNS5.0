@@ -34,6 +34,6 @@ export const selectCurrentSpreadData = createSelector(
 
 export const selectSpreadData = createSelector(
     [(state) => state.meta.spread, (state, reportId) => reportId],
-    (spread, reportId) => spread[reportId]?.mart?.spreadData
+    (spread, reportId) => _.cloneDeep(spread[reportId]?.mart?.spreadData)
 );
 
