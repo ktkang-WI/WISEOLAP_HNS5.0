@@ -50,7 +50,6 @@ const LoadReportModal = ({...props}) => {
             alert(localizedString.reportCorrupted);
           }
         }).catch((e) => {
-          console.error(e);
           alert(localizedString.reportCorrupted);
         });
     models.Report.getLinkReportList(selectedReport.id)

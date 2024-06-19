@@ -9,6 +9,7 @@ import {useEffect, useRef} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
@@ -27,6 +28,7 @@ const StyledWrapper = styled(Wrapper)`
 
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
+  const currentReportId = useSelector(selectCurrentReportId);
   const {bindData, setExcelFile} = useSpread();
 
   const workbookRef = useRef();
@@ -39,6 +41,8 @@ const SpreadViewer = ({reportId}) => {
   }, []);
 
   useEffect(() => {
+    if (reportId != currentReportId) return;
+
     bindData(spreadData, workbookRef.current.spread);
   }, [spreadData]);
 
