@@ -50,7 +50,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
         sanitizer
             .dataFiltering(dataAggreagtion.getFilter())
             .groupBy()
-            .topBottom(topBottomInfo)
+            .topBottom()
             .orderBy()
             .columnFiltering(true);
 
