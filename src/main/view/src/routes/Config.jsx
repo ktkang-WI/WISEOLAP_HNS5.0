@@ -10,11 +10,19 @@ const theme = getTheme();
 
 const Container = styled.div`
   width: 100%;
-  height: 89.8%;
+  height: calc(100% - ${theme.size.headerHeight});
   display: ${(props)=> props.display ? props.display : 'block'};
   flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
   flex: 0 0 ${(props)=>props.size ? props.size : 1};
   justify-content: ${(props)=>props.center ? props.center : 'start'};
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .dx-multiview-item-content {
+    overflow: auto;
+  }
 `;
 
 // Config 는 임시용 입니다.
@@ -32,13 +40,26 @@ const Config = () => {
       >
       </Header>
       <Container display='flex' direction='row'>
-        <Wrapper size={theme.size.snbWidth}>
+        <Wrapper
+          className='section'
+          width={theme.size.snbWidth}
+          height={'calc(100% - 20px)'}
+        >
           <SideNavigationBar
-            content={['ConfigurationSetting', 'UserGroupManagement',
-              'Authority', 'ReportFolderManagement', 'DataSourceAddition']}
+            content={[
+              'ConfigurationSetting',
+              'UserGroupManagement',
+              'Authority',
+              'ReportFolderManagement',
+              'DataSourceAddition',
+              'Log']}
           />
         </Wrapper>
-        <Wrapper>
+        <Wrapper
+          className='section'
+          width={'calc(100% - ' + theme.size.snbWidth + ' - 20px)'}
+          height={'calc(100% - 20px)'}
+        >
           <Outlet/>
         </Wrapper>
       </Container>

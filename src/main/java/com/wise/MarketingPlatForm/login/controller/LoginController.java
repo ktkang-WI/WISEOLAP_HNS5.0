@@ -1,15 +1,11 @@
 package com.wise.MarketingPlatForm.login.controller;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.login.service.LoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +31,6 @@ public class LoginController {
     MyPageDesignerConfigService myPageDesignerConfig;
 
     private final LoginService loginService;
-    private ObjectMapper mapper = new ObjectMapper();
 
     LoginController(LoginService loginService) {
         this.loginService = loginService;
@@ -51,12 +46,10 @@ public class LoginController {
         String id = param.getOrDefault("id", "");
         String password = param.getOrDefault("password", "");
 
-        HttpSession session = request.getSession();
-
         UserDTO userDTO = loginService.getLoginUser(id, password);
 
         if (userDTO != null) {
-            loginService.createLoginSession(session, userDTO);
+            SessionUtility.setSessionUser(request, userDTO);
             // 로그인 성공 직후 개인설정 가져오기.
             int userNo = userDTO.getUserNo();
             MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
@@ -94,8 +87,7 @@ public class LoginController {
     @GetMapping("/logout")
     @ResponseBody
     public ResponseEntity<Object> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        loginService.deleteSession(session);
+        SessionUtility.clearSessionUser(request);
 
         return ResponseEntity.ok().build();
     }

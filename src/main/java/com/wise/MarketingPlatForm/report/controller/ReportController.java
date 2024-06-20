@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -215,10 +216,9 @@ public class ReportController {
 	)
     @PostMapping(value = "/report")
 	public Map<String, Object> getReport(@RequestBody Map<String, String> param, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
         
-        String userId = user.getUserId(); 
+        String userId = userDTO.getUserId(); 
         String reportId = param.getOrDefault("reportId", "");
 
         return reportService.getReport(reportId, userId);
@@ -303,10 +303,8 @@ public class ReportController {
 	)
 	@PostMapping(value = "/report-list")
         public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
-    	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
-        String userId = user.getUserId();
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = userDTO.getUserId();
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");
 
@@ -348,8 +346,7 @@ public class ReportController {
             HttpServletRequest request
     ) throws SQLException {
             Gson gson = new Gson();
-            HttpSession session = request.getSession();
-            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            UserDTO userDTO = SessionUtility.getSessionUser(request);
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
             String reportTypeStr = param.getOrDefault("reportType", "");
@@ -368,8 +365,7 @@ public class ReportController {
             HttpServletRequest request
     ) throws SQLException {
             Gson gson = new Gson();
-            HttpSession session = request.getSession();
-            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            UserDTO userDTO = SessionUtility.getSessionUser(request);
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
             String reportTypeStr = param.getOrDefault("reportType", "");
@@ -467,8 +463,7 @@ public class ReportController {
     // Endpoint to generate a one-time token
     @PostMapping("/generate-token")
     public Map<String, String> generateToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
         String userId = userDTO.getUserId();
         String reportId = requestBody.get("reportId");
         String reportType = requestBody.get("reportType");

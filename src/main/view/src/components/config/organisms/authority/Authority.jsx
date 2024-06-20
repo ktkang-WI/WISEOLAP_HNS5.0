@@ -12,7 +12,7 @@ import TreeList from 'devextreme/ui/tree_list';
 import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 
 const Header = styled.div`
-  flex: 0 0 50px;
+  width: 50px;
   background-color:#e1e1e1;
 `;
 
@@ -207,7 +207,7 @@ const Authority = () => {
   return (
     <AuthorityContext.Provider
       value={context}>
-      <Wrapper display='flex' direction='column'>
+      <Wrapper display='flex' direction='row'>
         <Header>
           <NavBar>
             {navBarItems(auth.mode)}

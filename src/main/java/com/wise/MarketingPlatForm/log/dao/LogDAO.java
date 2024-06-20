@@ -1,0 +1,24 @@
+package com.wise.MarketingPlatForm.log.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.wise.MarketingPlatForm.log.vo.ExportLogDTO;
+import com.wise.MarketingPlatForm.log.vo.LogParamVO;
+import com.wise.MarketingPlatForm.log.vo.LoginLogDTO;
+import com.wise.MarketingPlatForm.log.vo.QueryLogDTO;
+import com.wise.MarketingPlatForm.log.vo.ReportLogDTO;
+
+@Mapper
+public interface LogDAO {
+
+    List<ExportLogDTO> selectExportLog(LogParamVO logParamVO);
+
+    List<ReportLogDTO> selectReportLog(LogParamVO logParamVO);
+
+    List<QueryLogDTO> selectQueryLog(LogParamVO logParamVO);
+
+    List<LoginLogDTO> selectLoginLog(LogParamVO logParamVO);
+
+}
