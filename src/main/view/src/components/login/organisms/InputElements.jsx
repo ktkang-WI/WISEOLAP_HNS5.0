@@ -91,6 +91,15 @@ const InputElements = () => {
       mode: {
         Password: 'Password'
       },
+      // TODO: 아이디저장 임시용
+      onChange: (e) => {
+        if (e.element.id === 'input-ID') {
+          if (localStorage.getItem('rememberId')) {
+            localStorage.setItem('sessionId', e.event.target.value);
+          }
+        }
+        console.log(e);
+      },
       onKeyDown: (e) => {
         if (e.event.key == ' ') {
           e.event.originalEvent.returnValue = false;

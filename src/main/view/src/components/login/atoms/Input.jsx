@@ -37,29 +37,43 @@ const Input = ({contents, onSubmit}) => {
       return contents.passwordCheckRule;
     }
   };
+  // TODO: 아이디저장 임시용
+  const handleContentReady = (e) => {
+    if (e.element.id === 'input-ID') {
+      e.component.option('value', localStorage.getItem('sessionId'));
+    }
+  };
   const type = contents.type;
   return (
     <div>
       {
         contents.inputs.map(
-            (input, index) =>
-              <>
-                <TextBoxLabel>{labelMapper[input] || input}</TextBoxLabel>
-                <StyledTextBox
-                  onEnterKey={onSubmit}
-                  key={index}
-                  id={'input-' + input}
-                  onKeyDown={contents.onKeyDown}
-                  mode={
-                    input.includes('Password')?
-                      contents.mode['Password'] : 'text'
-                  }
-                  maxLength={20}
-                >
-                  {type === 'register' ? handleValidation(contents, input) : ''}
-                  {input === 'ID' ? contents.checkBtn : ''}
-                </StyledTextBox>
-              </>
+            (input, index) => {
+              return (
+                <>
+                  <TextBoxLabel>{labelMapper[input] || input}</TextBoxLabel>
+                  <StyledTextBox
+                    onEnterKey={onSubmit}
+                    key={index}
+                    id={'input-' + input}
+                    onKeyDown={contents.onKeyDown}
+                    onChange={contents?.onChange} // TODO: 아이디저장 임시용
+                    mode={
+                      input.includes('Password')?
+                        contents.mode['Password'] : 'text'
+                    }
+                    onContentReady={
+                      handleContentReady
+                    }
+                    maxLength={20}
+                  >
+                    {type === 'register' ?
+                    handleValidation(contents, input) : ''}
+                    {input === 'ID' ? contents.checkBtn : ''}
+                  </StyledTextBox>
+                </>
+              );
+            }
         )
       }
     </div>
