@@ -26,9 +26,7 @@ public class ChartDataMaker implements ItemDataMaker {
         List<Measure> measures = dataAggreagtion.getOriginalMeasures();
         List<Dimension> dimensions = dataAggreagtion.getDimensions();
         List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-        TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
-        null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
-
+        
         DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
 
         List<Measure> allMeasure = new ArrayList<>();
@@ -41,7 +39,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
                 .replaceNullData()
-                .topBottom(topBottomInfo)
+                .topBottom()
                 .orderBy()
                 .columnFiltering()
                 .getData();
