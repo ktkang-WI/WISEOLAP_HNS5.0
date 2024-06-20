@@ -23,4 +23,5 @@ public interface MyPageConfigDAO {
   public boolean updateDesignerConfig(MyDesignerDTO myDesignerDTO);
   public String selectOnlyReportNm(int reportId);
   public String selectOnlyDatasetNm(int datasetId);
+  public boolean insertDesignerConfig(MyDesignerDTO myDesignerDTO);
 }

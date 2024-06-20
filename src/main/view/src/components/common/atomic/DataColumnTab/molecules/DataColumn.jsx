@@ -16,6 +16,7 @@ import NumberFormatModal
 import {getContextMenu} from '../utils/contextMenu';
 import DataColumnSeriesOptions
   from '../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
+import TopBottomModal from '../modal/TopBottomModal';
 
 const theme = getTheme();
 
@@ -87,8 +88,21 @@ const EllipsisSpan = styled.span`
 `;
 
 const DataColumn = ({
-  data, children, provided, onClick, showContextMenu, type, useButton,
-  buttonEvent, buttonIcon, sortOrder, fixed, sortItems, reportId, ...props
+  data,
+  children,
+  provided,
+  onClick,
+  showContextMenu,
+  type,
+  useButton,
+  buttonEvent,
+  buttonIcon,
+  sortOrder,
+  fixed,
+  sortItems,
+  reportId,
+  itemType,
+  ...props
 }) => {
   const otherMenuId = 'a' + uuid();
   const dispatch = useDispatch();
@@ -136,6 +150,15 @@ const DataColumn = ({
     'SortBy': (e) => {
       dispatch(updateItemField({reportId,
         dataField: {...data, sortBy: e.itemData.value}}));
+    },
+    'TopN': (e) => {
+      openModal(TopBottomModal, {
+        data,
+        onSubmit: (topBottom) => {
+          dispatch(updateItemField({reportId,
+            dataField: {...data, topBottom}}));
+        }
+      });
     }
   };
 
@@ -184,7 +207,7 @@ const DataColumn = ({
         {showContextMenu &&
           <ContextMenu
             className='other-menu'
-            dataSource={getContextMenu(data, sortItems)}
+            dataSource={getContextMenu(itemType, data, sortItems)}
             width={120}
             showEvent='click'
             target={'#' + otherMenuId}

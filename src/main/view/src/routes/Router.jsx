@@ -42,7 +42,10 @@ const multipleLoader = async () => {
   const generalConfigure = await generalLoader().then((result) => {
     return result;
   });
+
   const myPageConfigure = await userDesignerConfig().then((result) => {
+    if (result == null) return result;
+
     const object = result;
     const json = JSON.parse(object.defaultItem);
 

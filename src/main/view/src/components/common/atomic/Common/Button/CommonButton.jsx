@@ -64,7 +64,8 @@ const CommonButton = ({
       color: theme.color.white,
       border: 'none',
       font: theme.font.button,
-      minWidth: '60px',
+      margin: '2px',
+      // minWidth: '60px',
       borderRadius: '8px'
     },
     'secondary': {
@@ -74,7 +75,8 @@ const CommonButton = ({
       color: theme.color.gray600,
       border: 'solid 1px ' + theme.color.gray300,
       font: theme.font.button,
-      minWidth: '60px',
+      margin: '2px',
+      // minWidth: '60px',
       borderRadius: '8px'
     },
     'whiteRound': {

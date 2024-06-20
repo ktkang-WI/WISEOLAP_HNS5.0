@@ -6,7 +6,7 @@ import plusImg from 'assets/image/icon/button/plus.png';
 import PanelTitleText from '../../Common/Panel/PanelTitleText';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
 import DataColumn from './DataColumn';
-import {selectCurrentDataField, selectCurrentDataFieldOption}
+import {selectCurrentDataField, selectCurrentDataFieldOption, selectCurrentItem}
   from 'redux/selector/ItemSelector';
 import {useSelector, useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -86,6 +86,7 @@ const DataColumnList = ({
 }) => {
   const {setItemField} = ItemSlice.actions;
   const reportId = selectCurrentReportId(store.getState());
+  const item = useSelector(selectCurrentItem);
   const dataFields = useSelector(selectCurrentDataField);
   const dataFieldOptions = useSelector(selectCurrentDataFieldOption);
   const columns = dataFields[id];
@@ -151,6 +152,7 @@ const DataColumnList = ({
                 index={index}>
                 {(provided) => (
                   <DataColumn
+                    itemType={item?.type}
                     reportId={reportId}
                     type={type}
                     sortOrder={column.sortOrder}

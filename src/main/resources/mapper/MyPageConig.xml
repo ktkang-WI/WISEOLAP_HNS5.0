@@ -41,4 +41,35 @@
           DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR}
       WHERE USER_NO = #{userNo}
   </update>
+  <insert id="insertDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    INSERT INTO 
+    WB_USER_CONFIG_MSTR (
+      USER_NO,
+      DEFAULT_REPORT_ID,
+      DEFAULT_ITEM,
+      DEFAULT_PALETTE,
+      FONT_CONFIG,
+      USER_IMAGE, 
+      DEFAULT_DATASET_ID,
+      DEFAULT_REPORT_NM,
+      DEFAULT_REPORT_TYPE,
+      DEFAULT_VIEWER_REPORT_ID,
+      DEFAULT_VIEWER_REPORT_NM,
+      DEFAULT_VIEWER_REPORT_TYPE
+    ) 
+    VALUES (
+      #{userNo, jdbcType=INTEGER},
+      #{defaultReportId, jdbcType=INTEGER},
+      #{defaultItem, jdbcType=VARCHAR},
+      #{defaultPalette, jdbcType=VARCHAR},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ) 
+  </insert>
 </mapper>

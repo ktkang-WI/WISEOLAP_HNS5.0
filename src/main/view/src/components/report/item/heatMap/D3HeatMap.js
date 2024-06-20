@@ -4,7 +4,8 @@ import D3PainterForHeatMap from './D3PainterForHeatMap';
 const D3HeatMap = ({
   dataSource,
   width,
-  height
+  height,
+  palette
 }) => {
   const svgRef = useRef(null);
   useEffect(() => {
@@ -19,14 +20,15 @@ const D3HeatMap = ({
       yDomain: yDomain,
       option: {
         width: width,
-        height: height
+        height: height,
+        palette
       }
     });
     D3PainterForHeatMap.painting();
     return () => {
       D3PainterForHeatMap.erasing();
     };
-  }, [dataSource, width, height]);
+  }, [dataSource, width, height, palette]);
   return (
     <div
       ref={svgRef}

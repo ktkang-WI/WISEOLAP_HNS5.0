@@ -126,7 +126,7 @@ const ListFilter = ({
           value={text}
           width={width}
           onValueChanged={(e) => {
-            const dataSource = value.listItems || [];
+            const dataSource = value?.listItems || [];
             const captions = e.value.split(',');
             const tempSelectionKeys = [];
 

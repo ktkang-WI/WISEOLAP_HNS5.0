@@ -73,7 +73,8 @@ const useContextMenu = (item) => {
     const key = item?.type + item?.id;
 
     Object.values(linkedReport).forEach((info) => {
-      if (info.subYn === 'True' && key == info.subLinkReport[0].subLinkItemId) {
+      if (info?.subYn === 'True' &&
+           key == info?.subLinkReport[0]?.subLinkItemId) {
         subLinkedListItems.push({
           text: info.linkReportId,
           onItemClick: () => {

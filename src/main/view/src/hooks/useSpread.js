@@ -71,79 +71,81 @@ const useSpread = () => {
     }
   };
 
-  const bindData = (spreadData) => {
+  const bindData = (spreadData, _workbook) => {
     const bindingInfos = selectBindingInfos(store.getState());
-    const workbook = getWorkbook();
+    const workbook = _workbook || getWorkbook();
 
-    workbook.suspendPaint();
-    workbook.suspendCalcService();
-    workbook.suspendEvent();
+    if (bindingInfos) {
+      workbook.suspendPaint();
+      workbook.suspendCalcService();
+      workbook.suspendEvent();
 
-    Object.keys(spreadData).forEach((datasetId) => {
-      const bindingInfo = bindingInfos[datasetId];
-      const rowData = spreadData[datasetId].rowData;
-      const metaData = spreadData[datasetId].metaData;
+      Object.keys(spreadData).forEach((datasetId) => {
+        const bindingInfo = bindingInfos[datasetId];
+        const rowData = _.cloneDeep(spreadData[datasetId].rowData);
+        const metaData = spreadData[datasetId].metaData;
 
-      if (rowData[0]?.error) {
-        alert(localizedString.invalidQuery);
-        return true;
-      }
-
-      const {columns} = generateColumns(metaData, sheets);
-      let bindedSheet = workbook
-          .getSheetFromName(bindingInfo.sheetNm);
-
-      if (bindedSheet == undefined) {
-        workbook.addSheet(0,
-            new sheets.Worksheet(bindingInfo.sheetNm));
-        bindedSheet = workbook
-            .getSheetFromName(bindingInfo.sheetNm);
-      }
-
-      const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
-      createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
-
-      // 추후 환경설정 SpreadBinding 값으로 분기처리
-      if (true) {
-        // bindedSheet.reset();
-        bindedSheet.clear();
-        bindedSheet.autoGenerateColumns = true;
-        const ds = getJsonKey2ColInfos(rowData);
-        rowData.forEach((row) => convertDates(row));
-        if (ds.dataSourceHearder) {
-          const newRowData = [ds.dataSourceHearder, ...rowData];
-          // bindedSheet.setArray(0, 0, newRowData);
-          bindedSheet.setDataSource(newRowData);
-          bindedSheet.bindColumns(ds.colInfos);
+        if (rowData[0]?.error) {
+          alert(localizedString.invalidQuery);
+          return true;
         }
-      } else {
-        deleteTables(bindedSheet);
 
-        const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
-            bindingInfo.rowIndex,
-            bindingInfo.columnIndex,
-            invoice.records.length+1,
-            columns.length,
-            createBorderStyle(bindingInfo.useBorder));
+        const {columns} = generateColumns(metaData, sheets);
+        let bindedSheet = workbook
+            .getSheetFromName(bindingInfo.sheetNm);
 
-        table.showHeader(bindingInfo.useHeader);
-        table.autoGenerateColumns(false);
-        table.bindColumns(columns);
-        table.bindingPath('records');
-        table.bandRows(false);
-        table.bandColumns(false);
-        bindedSheet.options.gridline.showHorizontalGridline = true;
-        bindedSheet.options.gridline.showVerticalGridline = true;
-        bindedSheet.invalidateLayout();
+        if (bindedSheet == undefined) {
+          workbook.addSheet(0,
+              new sheets.Worksheet(bindingInfo.sheetNm));
+          bindedSheet = workbook
+              .getSheetFromName(bindingInfo.sheetNm);
+        }
 
-        bindedSheet.setDataSource(dataSource);
-        table.filterButtonVisible(false);
-      }
-    });
+        const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
+        createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
 
-    workbook.resumeEvent();
-    workbook.resumeCalcService();
-    workbook.resumePaint();
+        // 추후 환경설정 SpreadBinding 값으로 분기처리
+        if (true) {
+          // bindedSheet.reset();
+          bindedSheet.clear();
+          bindedSheet.autoGenerateColumns = true;
+          const ds = getJsonKey2ColInfos(rowData);
+          rowData.forEach((row) => convertDates(row));
+          if (ds.dataSourceHearder) {
+            const newRowData = [ds.dataSourceHearder, ...rowData];
+            // bindedSheet.setArray(0, 0, newRowData);
+            bindedSheet.setDataSource(newRowData);
+            bindedSheet.bindColumns(ds.colInfos);
+          }
+        } else {
+          deleteTables(bindedSheet);
+
+          const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
+              bindingInfo.rowIndex,
+              bindingInfo.columnIndex,
+              invoice.records.length+1,
+              columns.length,
+              createBorderStyle(bindingInfo.useBorder));
+
+          table.showHeader(bindingInfo.useHeader);
+          table.autoGenerateColumns(false);
+          table.bindColumns(columns);
+          table.bindingPath('records');
+          table.bandRows(false);
+          table.bandColumns(false);
+          bindedSheet.options.gridline.showHorizontalGridline = true;
+          bindedSheet.options.gridline.showVerticalGridline = true;
+          bindedSheet.invalidateLayout();
+
+          bindedSheet.setDataSource(dataSource);
+          table.filterButtonVisible(false);
+        }
+      });
+
+      workbook.resumeEvent();
+      workbook.resumeCalcService();
+      workbook.resumePaint();
+    }
   };
 
 

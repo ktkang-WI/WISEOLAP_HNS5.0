@@ -95,7 +95,7 @@ public class ItemDataMakerFactory {
         if (itemType == ItemType.SUNBURST_CHART) {
             return new SunburstChartMaker();
         }
-        if (itemType == ItemType.ZOOMABLE_CICLE) {
+        if (itemType == ItemType.ZOOMABLE_ICICLE) {
             return new ZoomableIcicleDataMaker();
         }
         if (itemType == ItemType.CICLE_PACKING) {

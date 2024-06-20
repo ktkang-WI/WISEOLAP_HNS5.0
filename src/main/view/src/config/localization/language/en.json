@@ -503,7 +503,13 @@
   "selectReportAlert": "Please select a report.",
   "saveFail": "Save failed.",
   "resetAllConfirmMsg": "All settings will be reset. Do you want to proceed?",
-  "resetSuccess": "Initialization was successful.",
+  "resetSuccess": "It has been initialized. Please save to apply.",
   "resetFail": "Initialization failed.",
-  "favorit": "Favorites"
+  "favorit": "Favorites",
+  "topBottomForm": {
+    "topBottomType": "Top/Bottom Distinction",
+    "count": "Top/Bottom Count",
+    "percentage": "Apply %",
+    "others": "Display other items besides Top/Bottom values as 'Others'"
+  }
 }
