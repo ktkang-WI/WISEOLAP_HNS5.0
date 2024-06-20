@@ -6,7 +6,6 @@ import localizedString from 'config/localization';
 
 const AuthorityDataMember = () => {
   const ref = useRef();
-  const groupsFormat = {};
   const handleRowClick = () => {
     return;
   };
@@ -14,7 +13,6 @@ const AuthorityDataMember = () => {
     <Wrapper>
       <Title title={localizedString.member}></Title>
       <DataGrid
-        dataSource={groupsFormat}
         showBorders={true}
         onRowClick={handleRowClick}
         ref={ref}

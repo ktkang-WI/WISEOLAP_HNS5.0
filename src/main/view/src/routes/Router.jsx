@@ -11,14 +11,15 @@ import Spreadsheet from 'components/designer/Spreadsheet';
 import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import {
+  authorityLoader,
   generalConfigure as generalLoader,
-  groupData as groupDataLoader,
   userFolderData as myPageFolderData,
   userDesignerConfig,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
-import Authority from 'components/config/organisms/authority/Authority';
+import Authority
+  from 'components/config/organisms/authority/Authority';
 import {DesignerMode} from 'components/config/configType';
 import ReportFolderManagement from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
       {
         path: 'auth',
         element: <Authority/>,
-        loader: groupDataLoader
+        loader: authorityLoader
       },
       {
         path: 'report-folder',

@@ -186,9 +186,9 @@
           GRP_MSTR.GRP_ID,
           GRP_MSTR.GRP_NM,
           GRP_MSTR.GRP_DESC,
-          GRP_AUTH_DATA_MSTR.DATA_XML
-          FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR
-          ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR.GRP_ID
+          GRP_AUTH_DATA_MSTR_DEV.DATA_XML
+          FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR_DEV
+          ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR_DEV.GRP_ID
     </select>
 
     <select id="selectGroupFolder" resultMap="GroupFolderDTO">
@@ -591,7 +591,7 @@
     </insert>
 
     <delete id="deleteGroupData" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DATA_MSTR
+      DELETE FROM GRP_AUTH_DATA_MSTR_DEV
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
@@ -601,7 +601,7 @@
     <insert id="putGroupData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_DATA_MSTR(
+          INTO GRP_AUTH_DATA_MSTR_DEV(
               GRP_ID,
               DATA_XML
           )

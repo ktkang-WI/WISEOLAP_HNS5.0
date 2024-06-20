@@ -1,77 +1,51 @@
-import DataGrid, {Column, SearchPanel, Selection}
+import DataGrid, {Column, HeaderFilter, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useCallback, useRef,
-  useContext, useEffect, useState} from 'react';
-import models from 'models';
+import React, {useRef, useContext, useState, useEffect} from 'react';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext}
+import {AuthorityContext, getKeys, mode, path}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
 
-const DatasourceList = ({row}) => {
+export const getDatasourceList = (data, keys) => {
+  return data?.filter((d) => keys.includes(d.dsId));
+};
+
+const DatasourceList = ({mainKey, dependency}) => {
   // context
-  const authorityContext = useContext(AuthorityContext);
-  // state
-  const [ds, setDs] = useState([]);
-  const [data] = authorityContext.state.data;
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const [dataSource] = useState(getContext.state.dataSourceData);
+  const selected = getContext.state.selected;
+  const data = getContext.state.data;
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const {alert} = useModal();
+
+  // useState
 
   const ref = useRef();
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const getDsIdList = () => {
-    let dsIdList = [];
-    const groups = data.filter((d) => d.group);
-    const users = data.filter((d) => d.user);
-
-    if (groups.length > 0) {
-      const dsList = groups.find((g) => g.group.grpId === row?.grpId)
-          ?.ds;
-      dsIdList = dsList?.map((ds) => ds.dsId);
-    }
-
-    if (users.length > 0) {
-      const dsList = users.find((u) => u.user.userNo === row?.userNo)
-          ?.ds;
-      dsIdList = dsList?.map((ds) => ds.dsId);
-    }
-
-    return dsIdList ? dsIdList : [];
-  };
-
   useEffect(() => {
-    models.Authority.getDs()
-        .then((response) => {
-          const newDs = response.data.data.reduce((acc, v) => {
-            const dsIdList = acc.map((row) => row.dsId);
-            if (!dsIdList.includes(v.dsId)) {
-              acc.push(v);
-            }
-            return acc;
-          }, []);
-          setDs(newDs);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
-        });
-  }, []);
+    const dataSetMode =
+      currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      const dsIds = data.next.find((d) => d.grpId == nextId).dsIds;
+      setSelectedKeys(dsIds);
+    };
+    updateData();
+  }, [dependency]);
 
-  useEffect(() => {
-    const dsIdList = getDsIdList();
-    setSelectedRowKeys(dsIdList);
-  }, [row]);
 
-  const onSelectionChanged = useCallback(
-      ({selectedRowKeys: changedRowKeys}) => {
-        setSelectedRowKeys(changedRowKeys);
-      },
-      [row],
-  );
-
-  const handleRowClick = ({data}) => {
-    // setDsView(data);
+  const handleSelectedKey = (selectedItems) => {
+    if (!selected?.user?.next && !selected?.group?.next) {
+      alert(localizedString.clickMe);
+      setSelectedKeys([]);
+    } else {
+      setSelectedKeys(selectedItems.selectedRowKeys);
+    };
   };
 
   return (
@@ -82,14 +56,13 @@ const DatasourceList = ({row}) => {
         elementAttr={{
           class: 'datasource-list'
         }}
-        dataSource={ds}
+        dataSource={dataSource}
         showBorders={true}
-        onRowClick={handleRowClick}
-        height={'90%'}
         keyExpr="dsId"
-        selectedRowKeys={selectedRowKeys}
-        onSelectionChanged={onSelectionChanged}
+        selectedRowKeys={selectedKeys}
+        onSelectionChanged={handleSelectedKey}
       >
+        <HeaderFilter visible={false} />
         <Selection
           mode="multiple"
           showCheckBoxesMode={'always'}

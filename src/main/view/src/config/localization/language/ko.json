@@ -136,6 +136,7 @@
   "dataSourceModify": "데이터집합 수정",
   "dataSourceRemove": "데이터집합 삭제",
   "dataItem": "데이터 항목",
+  "clickMe": "왼쪽 항목을 선택해주세요",
   "dimension": "차원",
   "dimensionGrop": "차원 그룹",
   "measure": "측정값",

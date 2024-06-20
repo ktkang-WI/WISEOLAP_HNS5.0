@@ -4,100 +4,19 @@ import TreeList, {
   Editing,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-import React, {useContext, useRef, useEffect, useState} from 'react';
+import React, {useContext, useRef} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import {AuthorityContext} from
   'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
-import {getFolders}
-  from 'models/config/reportFolderManagement/ReportFolderManagement';
 
 const FolderTreeView = ({row}) => {
   // context
-  const authoritycontext = useContext(AuthorityContext);
-
-  // state
-  const [folders, setFolders] = useState([]);
-  const [data] = authoritycontext.state.data;
+  const getContext = useContext(AuthorityContext);
+  const dataSource = getContext.state.folder;
+  const data = getContext.state.data;
   const ref = useRef();
-
-  useEffect(() => {
-    getFolders()
-        .then((response) => {
-          const newFolders = response.data.data.map((row) => {
-            return {
-              ...row,
-              authView: false,
-              authPublish: false,
-              authDataItem: false,
-              authExport: false
-            };
-          });
-          setFolders(newFolders);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
-        });
-  }, []);
-
-  useEffect(() => {
-    const updateFolders = (folderList) => {
-      const newFolders = folders.map((row) => {
-        const fldId = row.fldId;
-        const auth = folderList?.find((f) => fldId === f.folder.fldId)?.auth;
-
-        if (auth) {
-          if (typeof auth.authView === 'string') {
-            auth.authView = auth.authView === 'Y' ? true : false;
-            auth.authPublish = auth.authPublish === 'Y' ? true : false;
-            auth.authDataItem = auth.authDataItem === 'Y' ? true : false;
-            auth.authExport = auth.authExport === 'Y' ? true : false;
-          }
-          return {
-            ...row,
-            ...auth
-          };
-        }
-        return {
-          ...row,
-          authView: false,
-          authPublish: false,
-          authDataItem: false,
-          authExport: false
-        };
-      });
-
-      setFolders(newFolders);
-    };
-
-    if (row) {
-      const groups = data.filter((d) => d.group);
-      const users = data.filter((d) => d.user);
-      let folderList = [];
-
-      if (groups.length > 0) {
-        const group = data.find((d) => d.group?.grpId === row.grpId);
-        folderList = group?.folderList;
-      }
-
-      if (users.length > 0) {
-        const user = data.find((d) => d.user?.userNo === row.userNo);
-        folderList = user?.folderList;
-      }
-      updateFolders(folderList);
-    }
-  }, [row]);
-
-  const onRowUpdating = (e) => {
-    const newFolders = folders.map((folder) => {
-      if (folder.fldParentId !== e.oldData.fldId) {
-        return folder;
-      }
-      return {...folder, ...e.newData};
-    });
-
-    setFolders(newFolders);
-  };
+  console.log(data);
 
   return (
     <Wrapper>
@@ -107,12 +26,12 @@ const FolderTreeView = ({row}) => {
         elementAttr={{
           class: 'folder-tree-view'
         }}
-        dataSource={folders}
+        dataSource={dataSource}
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         id="folderTreeView"
+        editable={false}
         height={'90%'}
-        onRowUpdating={onRowUpdating}
       >
         <Editing
           mode="cell"

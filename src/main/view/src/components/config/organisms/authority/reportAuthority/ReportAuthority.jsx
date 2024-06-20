@@ -1,32 +1,47 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+
+import React, {useContext, useEffect} from 'react';
+import {AuthorityContext, path} from '../Authority';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
-import {Mode} from '../data/AuthorityData';
 import FolderTreeView
   from 'components/config/molecules/authority/FolderTreeView';
-import React, {useState} from 'react';
 
-const ReportAuthority = ({data}) => {
-  const [row, setRow] = useState();
-  const auth = data;
+const ReportAuthority = ({mainKey, ...props}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  const data = getContext.state.data;
+  if (currentTab !== mainKey) return <></>;
+
+  useEffect(() => {
+    console.log(data);
+    console.log(currentTab);
+  }, [currentTab]);
+
+  const handleRowClickGroup = (e) => {
+    console.log(e.data);
+  };
+  const handleRowClickUser = (e) => {
+    console.log(e.data);
+  };
 
   return (
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_REPORT &&
-          <GroupList setRow={setRow}/>
+          currentTab === path.GROUP_REPORT &&
+          <GroupList onRowClick={handleRowClickGroup}/>
         }
         {
-          auth.mode === Mode.USER_REPORT &&
-          <UserList setRow={setRow}/>
+          currentTab === path.USER_REPORT &&
+          <UserList onRowClick={handleRowClickUser}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>
         {
-          (auth.mode === Mode.GROUP_REPORT ||
-          auth.mode === Mode.USER_REPORT) &&
-          <FolderTreeView row={row}/>
+          (currentTab === path.GROUP_REPORT ||
+           currentTab === path.USER_REPORT) &&
+          <FolderTreeView row={data}/>
         }
       </Wrapper>
     </Wrapper>
@@ -34,3 +49,4 @@ const ReportAuthority = ({data}) => {
 };
 
 export default React.memo(ReportAuthority);
+

@@ -1,59 +1,51 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-import React, {useEffect, useState} from 'react';
-import {Mode} from '../data/AuthorityData';
+import React, {useContext, useEffect} from 'react';
+import {AuthorityContext, path} from '../Authority';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
 import DatasourceViewList
   from 'components/config/molecules/authority/DatasourceViewList';
+import AuthorityDataCube
+  from 'components/config/atoms/authority/AuthorityDataCube';
 import AuthorityDataDimension
   from 'components/config/atoms/authority/AuthorityDataDimension';
-import AuthorityDataMember from
-  'components/config/atoms/authority/AuthorityDataMember';
-import AuthorityDataCube from
-  'components/config/atoms/authority/AuthorityDataCube';
+import AuthorityDataMember
+  from 'components/config/atoms/authority/AuthorityDataMember';
 
-import models from 'models';
+const DataAuthority = ({mainKey, ...props}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
 
-const DataAuthority = ({data}) => {
-  const [row, setRow] = useState({});
-  const [dsView, setDsView] = useState({});
-  const [dsViewCube, setDsViewCube] = useState([]);
-
-  const auth = data;
   useEffect(() => {
-    if ((auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA)) {
-      models.Authority.getDsViewCube()
-          .then((response) => {
-            setDsViewCube(response.data.data);
-          });
-    }
-  }, [dsView]);
+    console.log(currentTab);
+  }, [currentTab]);
+
+  const handleRowClickGroup = (e) => {
+    console.log(e.data);
+  };
+  const handleRowClickUser = (e) => {
+    console.log(e.data);
+  };
 
   return (
-    <Wrapper display='flex' direction='row'>
+    <Wrapper display='flex' direction='row' overflow='hidden'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_DATA &&
-          <GroupList
-            setRow={setRow}
-          />
+          currentTab === path.GROUP_DATA &&
+          <GroupList onRowClick={handleRowClickGroup}/>
         }
         {
-          auth.mode === Mode.USER_DATA &&
-          <UserList
-            setRow={setRow}
-          />
+          currentTab === path.USER_DATA &&
+          <UserList onRowClick={handleRowClickUser}/>
         }
       </Wrapper>
       <Wrapper display='flex' direction='column'>
         <Wrapper height="55%" padding='10px'>
           {
-            (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) &&
-            <DatasourceViewList
-              row={row}
-              setDsView={setDsView}
-            />
+            (currentTab === path.GROUP_DATA || currentTab === path.USER_DATA) &&
+            <DatasourceViewList />
           }
         </Wrapper>
         <Wrapper
@@ -64,27 +56,13 @@ const DataAuthority = ({data}) => {
           padding='10px'
         >
           <Wrapper>
-            <AuthorityDataCube
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-              auth={auth}
-            />
+            <AuthorityDataCube/>
           </Wrapper>
           <Wrapper>
-            <AuthorityDataDimension
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-              auth={auth}
-            />
+            <AuthorityDataDimension/>
           </Wrapper>
           <Wrapper>
-            <AuthorityDataMember
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-            />
+            <AuthorityDataMember/>
           </Wrapper>
         </Wrapper>
       </Wrapper>

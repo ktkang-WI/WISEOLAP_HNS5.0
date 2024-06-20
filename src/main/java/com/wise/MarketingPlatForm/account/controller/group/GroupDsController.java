@@ -62,7 +62,7 @@ public class GroupDsController {
 
     if (!result) return RestAPIVO.conflictResponse(null);
 
-    return RestAPIVO.okResponse(result);
+    return RestAPIVO.okResponse(true);
   }
 
 }

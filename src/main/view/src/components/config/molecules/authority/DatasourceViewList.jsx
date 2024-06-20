@@ -1,7 +1,6 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useContext, useRef, useEffect, useState} from 'react';
-import models from 'models';
+import React, {useContext} from 'react';
 import {AuthorityContext}
   from 'components/config/organisms/authority/Authority';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
@@ -10,68 +9,19 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 
-const DatasourceViewList = ({row, setDsView}) => {
+const DatasourceViewList = () => {
   // context
-  const authoritycontext = useContext(AuthorityContext);
-  // state
-  const [ds, setDs] = useState([]);
-  const [data] = authoritycontext.state.data;
-  const ref = useRef();
-
-  const getDsViewIdList = () => {
-    let dsViewIdList = [];
-    const groups = data.filter((d) => d.group);
-    const users = data.filter((d) => d.user);
-
-    if (groups.length > 0) {
-      dsViewIdList = groups.find((g) => g.group.grpId === row.grpId)
-          ?.dsViews?.dsViewId;
-    }
-
-    if (users.length > 0) {
-      dsViewIdList = users.find((u) => u.user.userNo === row.userNo)
-          ?.dsViews?.dsViewId;
-    }
-
-    return dsViewIdList ? dsViewIdList : [];
-  };
-
-  useEffect(() => {
-    models.Authority.getDsView()
-        .then((response) => {
-          setDs(response.data.data);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
-        });
-  }, []);
-
-  useEffect(() => {
-    const dsViewIdList = getDsViewIdList();
-    const newDs = ds.map((ds) => {
-      return {
-        ...ds,
-        isAuth: dsViewIdList?.includes(ds.dsViewId) ? true: false
-      };
-    });
-    setDs(newDs);
-    ref.current._instance.clearSelection();
-  }, [row, data]);
-
-  const handleRowClick = ({data}) => {
-    setDsView(data);
-  };
-
+  const getContext = useContext(AuthorityContext);
+  const dataSource = getContext.state.dsView;
 
   return (
     <Wrapper>
       <Title title={localizedString.dsViewList}></Title>
       <DataGrid
-        dataSource={ds}
+        dataSource={dataSource}
         showBorders={true}
-        onRowClick={handleRowClick}
+        width={'90%'}
         height={'90%'}
-        ref={ref}
         elementAttr={{
           class: 'datasource-view-list'
         }}
