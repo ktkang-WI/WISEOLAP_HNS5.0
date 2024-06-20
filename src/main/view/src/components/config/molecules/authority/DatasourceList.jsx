@@ -18,14 +18,13 @@ const DatasourceList = ({mainKey, dependency}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
-  const [dataSource] = useState(getContext.state.dataSourceData);
+  const dataSource = getContext.state.dataSourceData;
   const selected = getContext.state.selected;
   const data = getContext.state.data;
   const [selectedKeys, setSelectedKeys] = useState([]);
   const {alert} = useModal();
 
   // useState
-
   const ref = useRef();
   useEffect(() => {
     const dataSetMode =

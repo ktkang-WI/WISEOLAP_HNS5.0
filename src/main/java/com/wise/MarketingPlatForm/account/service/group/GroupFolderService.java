@@ -8,15 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
-import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class GroupFolderService {
@@ -63,10 +60,10 @@ public class GroupFolderService {
         GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
           .grpId(grpId)
           .fldId(0)
-          .authDataItem("N")
-          .authExport("N")
-          .authPublish("N")
-          .authView("N")
+          .authDataItem(false)
+          .authExport(false)
+          .authPublish(false)
+          .authView(false)
           .build();
 
           result.add(groupAuthReportMstrEntity);

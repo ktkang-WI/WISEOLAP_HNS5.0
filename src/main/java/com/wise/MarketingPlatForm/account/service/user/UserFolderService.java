@@ -64,10 +64,10 @@ public class UserFolderService {
         UserAuthReportMstrEntity userAuthDatasetMstrEntity = UserAuthReportMstrEntity.builder()
           .userNo(userNo)
           .fldId(0)
-          .authDataItem("N")
-          .authExport("N")
-          .authPublish("N")
-          .authView("N")
+          .authDataItem(false)
+          .authExport(false)
+          .authPublish(false)
+          .authView(false)
           .build();
           result.add(userAuthDatasetMstrEntity);
 

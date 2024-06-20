@@ -4,25 +4,49 @@ import TreeList, {
   Editing,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-import React, {useContext, useRef} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext} from
+import {AuthorityContext, getKeys, mode, path} from
   'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
 
-const FolderTreeView = ({row}) => {
+const FolderTreeView = ({mainKey, dependency}) => {
   // context
   const getContext = useContext(AuthorityContext);
-  const dataSource = getContext.state.folder;
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const [dataSource, setDataSource] = useState(getContext.state.folder);
+  const selected = getContext.state.selected;
   const data = getContext.state.data;
-  const ref = useRef();
-  console.log(data);
+
+  useEffect(() => {
+    const dataSetMode =
+      currentTab === path.GROUP_REPORT ? mode.GROUP : mode.USER;
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      const selectedTreeView = data.next.find((d) => d.grpId === nextId);
+      if (!selectedTreeView) return;
+
+      const selectedFlds = selectedTreeView.fldIds;
+      const cleaningDataSource = dataSource.map((d) => {
+        const isThereFld =
+        selectedFlds.find((selectedData) => selectedData.fldId === d.fldId);
+        if (!isThereFld) return d;
+        return {
+          ...d,
+          ...isThereFld
+        };
+      });
+      setDataSource(cleaningDataSource);
+    };
+    updateData();
+  }, [dependency]);
 
   return (
     <Wrapper>
       <Title title={localizedString.publicReportFolderList}></Title>
       <TreeList
-        ref={ref}
         elementAttr={{
           class: 'folder-tree-view'
         }}
@@ -32,6 +56,7 @@ const FolderTreeView = ({row}) => {
         id="folderTreeView"
         editable={false}
         height={'90%'}
+        // onItemSelectionChanged={handleTreeViewSelectionChanged}
       >
         <Editing
           mode="cell"
