@@ -99,7 +99,7 @@ public class UserFolderService {
     List<UserFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserGroupDTO user = null;
+    int user = 0;
     UserFolderModel userFolderModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -112,42 +112,26 @@ public class UserFolderService {
 
       if (lastUserIdNumber) {
         userFolderModel = UserFolderModel.builder()
-          .user(user)
-          .folderList(folderListMode)
+          .userNo(user)
+          .fldIds(folderListMode)
           .build();
         result.add(userFolderModel);
         folderListMode = new ArrayList<>();
       }
 
       if (!isUserContained) {
-        user = UserGroupDTO.builder()
-          .userNo(userData.getUserNo())
-          .userId(userData.getUserId())
-          .grpNm(userData.getGrpNm())
-          .build();
-          userkeys.add(userNo);
+        user = userNo;
+        userkeys.add(userNo);
       }
 
-      FldMstrEntity pubFldMstrEntity = FldMstrEntity.builder()
+      FolderListModel folderListModel = FolderListModel.builder()
         .fldId(userData.getFldId())
-        .fldLvl(userData.getFldLvl())
-        .fldNm(userData.getFldNm())
-        .fldOrdinal(userData.getFldOrdinal())
-        .fldParentId(userData.getFldParentId())
-        .build();
-
-      AuthReportMstrEntity authReportMstrEntity = AuthReportMstrEntity.builder()
         .authView(userData.getAuthView())
         .authDataItem(userData.getAuthDataItem())
         .authExport(userData.getAuthExport())
         .authPublish(userData.getAuthPublish())
         .build();
-
-      FolderListModel folderListModel = FolderListModel.builder()
-        .folder(pubFldMstrEntity)
-        .auth(authReportMstrEntity)
-        .build();
-
+  
       folderListMode.add(folderListModel);
 
       prevUserNo = userNo;
@@ -157,8 +141,8 @@ public class UserFolderService {
 
     if (isThereToSave) {
       userFolderModel = UserFolderModel.builder()
-        .user(user)
-        .folderList(folderListMode)
+        .userNo(user)
+        .fldIds(folderListMode)
         .build();
         result.add(userFolderModel);
     }

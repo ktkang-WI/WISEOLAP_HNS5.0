@@ -32,12 +32,46 @@ const DatasourceList = ({mainKey, dependency}) => {
       currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
-      const dsIds = data.next.find((d) => d.grpId == nextId).dsIds;
-      setSelectedKeys(dsIds);
+      if (!nextId) return;
+      const dsIds = data?.next?.find((d) => {
+        if (dataSetMode === mode.GROUP) {
+          return d?.grpId == nextId;
+        } else if (dataSetMode === mode.USER) {
+          return d?.userNo == nextId;
+        }
+      });
+      if (!dsIds) {
+        const newItem = {
+          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
+          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          dsIds: []
+        };
+        data.next.push(newItem);
+      }
+      setSelectedKeys(dsIds?.dsIds ?? []);
     };
     updateData();
   }, [dependency]);
 
+  useEffect(() => {
+    if (!data?.next) return;
+    const dataSetMode =
+      currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
+    const {nextId} = getKeys(dataSetMode, selected);
+    data.prev = data.next;
+    data.next = data.next.map((d) => {
+      if (dataSetMode === mode.GROUP) {
+        if (d?.grpId == nextId) {
+          d.dsIds = [...new Set(selectedKeys)];
+        }
+      } else if (dataSetMode === mode.USER) {
+        if (d?.userNo == nextId) {
+          d.dsIds = [...new Set(selectedKeys)];
+        }
+      }
+      return d;
+    });
+  }, [selectedKeys]);
 
   const handleSelectedKey = (selectedItems) => {
     if (!selected?.user?.next && !selected?.group?.next) {

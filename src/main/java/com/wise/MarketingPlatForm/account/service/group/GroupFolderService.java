@@ -12,7 +12,6 @@ import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
@@ -99,7 +98,7 @@ public class GroupFolderService {
     List<GroupFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    UserGroupDTO group = null;
+    int group = 0;
     GroupFolderModel groupFolderModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -112,40 +111,24 @@ public class GroupFolderService {
 
       if (lastGroupIdNumber) {
         groupFolderModel = GroupFolderModel.builder()
-        .group(group)
-        .folderList(folderListMode)
+        .grpId(group)
+        .fldIds(folderListMode)
         .build();
         result.add(groupFolderModel);
         folderListMode = new ArrayList<>();
       }
 
       if (!isGroupContained) {
-        group = UserGroupDTO.builder()
-        .grpId(grpId)
-        .grpNm(groupData.getGrpNm())
-        .grpDesc(groupData.getGrpDesc())
-        .build();
+        group = grpId;
         groupkeys.add(grpId);
       }
 
-      FldMstrEntity pubFldMstrEntity = FldMstrEntity.builder()
+      FolderListModel folderListModel = FolderListModel.builder()
         .fldId(groupData.getFldId())
-        .fldLvl(groupData.getFldLvl())
-        .fldNm(groupData.getFldNm())
-        .fldOrdinal(groupData.getFldOrdinal())
-        .fldParentId(groupData.getFldParentId())
-        .build();
-
-      AuthReportMstrEntity authReportMstrEntity = AuthReportMstrEntity.builder()
         .authView(groupData.getAuthView())
         .authDataItem(groupData.getAuthDataItem())
         .authExport(groupData.getAuthExport())
         .authPublish(groupData.getAuthPublish())
-        .build();
-
-      FolderListModel folderListModel = FolderListModel.builder()
-        .folder(pubFldMstrEntity)
-        .auth(authReportMstrEntity)
         .build();
 
       folderListMode.add(folderListModel);
@@ -157,8 +140,8 @@ public class GroupFolderService {
 
     if (isThereToSave) {
       groupFolderModel = GroupFolderModel.builder()
-        .group(group)
-        .folderList(folderListMode)
+        .grpId(group)
+        .fldIds(folderListMode)
         .build();
         result.add(groupFolderModel);
     }

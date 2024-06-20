@@ -2,20 +2,18 @@ import axios from 'axios';
 import {path} from '../Authority';
 
 export const generateAxios = async (currentTab, data) => {
-  if (currentTab == path.GROUP_DATASOURCE) {
+  if (
+    currentTab == path.GROUP_DATASOURCE ||
+    currentTab == path.USER_DATASOURCE
+  ) {
     return await generatePutDsAxios(currentTab, data);
   }
 };
 
 const generatePutDsAxios = async (currentTab, data) => {
-  const generatedData = data.map((d) => {
-    return {
-      grpId: d.group.grpId,
-      dsIds: d.ds.map((ds) => ds.dsId)
-    };
-  });
+  const filteredData = data.filter((item) => item.dsIds.length > 0);
   const res = axios.put(currentTab, {
-    data: generatedData
+    data: filteredData
   });
   return res;
 };

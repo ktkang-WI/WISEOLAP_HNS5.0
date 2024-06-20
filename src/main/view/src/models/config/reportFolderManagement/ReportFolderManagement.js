@@ -7,7 +7,10 @@ export const getFolderReports = () => {
   const res = axios.get(configPath + '/folder-report');
   return res;
 };
-
+export const getFolderPubs = () => {
+  const res = axios.get(configPath + '/folder-pub');
+  return res;
+};
 export const getFolders = () => {
   const res = axios.get(configPath + '/folder');
   return res;

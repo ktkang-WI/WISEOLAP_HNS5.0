@@ -13,6 +13,16 @@
       <result column="FLD_DESC" property="fldDesc" javaType="String"/>
     </resultMap>
 
+    <resultMap id="ConfigFolderPub" type="com.wise.MarketingPlatForm.config.model.folder.ConfigFolderPubModel">
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
+    </resultMap>
+
     <resultMap id="ConfigFolderReportDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO">
       <result column="FLD_ID" property="fldId" javaType="int"/>
       <result column="FLD_NM" property="fldNm" javaType="String"/>
@@ -87,6 +97,19 @@
         FLD_PARENT_ID,
         FLD_ORDINAL,
         FLD_DESC
+        FROM PUB_FLD_MSTR
+            ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
+		</select>
+
+    <select id="selectConfigPubFolder" resultMap="ConfigFolderPub">
+			SELECT
+        FLD_ID,
+        FLD_NM,
+        FLD_PARENT_ID,
+        'false' AS AUTH_VIEW,
+        'false' AS AUTH_PUBLISH,
+        'false' AS AUTH_DATAITEM,
+        'false' AS AUTH_EXPORT
         FROM PUB_FLD_MSTR
             ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
 		</select>

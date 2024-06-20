@@ -75,7 +75,7 @@ export async function authorityLoader() {
     await models.Authority.getDsView().then((res) => getData(res));
   // FOLDER_LIST
   const folder =
-    await models.ReportFolderManagement.getFolders()
+    await models.ReportFolderManagement.getFolderPubs()
         .then((res) => getData(res));
 
   return {
