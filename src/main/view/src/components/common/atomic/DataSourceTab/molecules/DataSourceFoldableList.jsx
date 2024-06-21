@@ -15,6 +15,9 @@ import dimGrpImg from
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
 import {createRoot} from 'react-dom/client';
 import DatasetType from 'components/dataset/utils/DatasetType';
+// import {useSelector} from 'react-redux';
+// import {selectEditMode} from 'redux/selector/ConfigSelector';
+// import {EditMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -101,6 +104,7 @@ const iconMapper = {
 };
 
 const DataSourceFoldableList = ({dataset}) => {
+  // const editMode = useSelector(selectEditMode);
   const ref = useRef();
 
   const getRenderItem = (items) => {
@@ -195,6 +199,19 @@ const DataSourceFoldableList = ({dataset}) => {
     }
   };
 
+  // let data = [];
+  // if (dataset) {
+  //   // 뷰어인 경우.
+  //   if (editMode == EditMode['VIEWER']) {
+  //     data = _.cloneDeep(
+  //         dataset.fields.filter(
+  //             (field) => field?.check != false
+  //         )
+  //     );
+  //   } else {
+  //     data = _.cloneDeep(dataset.fields);
+  //   }
+  // }
   const data = dataset? _.cloneDeep(dataset.fields) : [];
 
   if (data.length > 0 && dataset.datasetType != 'CUBE') {

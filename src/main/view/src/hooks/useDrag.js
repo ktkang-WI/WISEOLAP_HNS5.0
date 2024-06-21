@@ -217,6 +217,12 @@ const useDrag = () => {
         }
       } else {
         // dataSource에서 출발한 경우 새로운 데이터항목 객체 생성
+        // const fieldObject = {
+        //   reportId: reportId,
+        //   datasetId: datasetId,
+        //   uniqueName: targetId
+        // };
+
         if (source.droppableId == 'dataSource') {
           const sourceField = selectedDataset.fields.find((field) =>
             field.uniqueName == targetId
@@ -235,6 +241,7 @@ const useDrag = () => {
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
+            // dispatch(datasetAppliedFields(fieldObject));
             onDragEndSeriesOption(tempField, reportId);
           }
         } else if (source.droppableId == dest.droppableId) {

@@ -27,6 +27,9 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import FieldDescriptionModal
   from 'components/dataset/modal/FieldDescriptionModal';
+import viewerPosting from 'assets/image/icon/button/preview.png';
+import ViewerPostingDataModal
+  from 'components/dataset/modal/ViewPostingData/ViewerPostingDataModal';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -58,7 +61,34 @@ const PanelTitleDefaultElement = () => {
         {selectedDataSource: dataSource, orgDataset: dataset});
   };
 
+  const viewerPostingFunc = () => {
+    const dataset = selectCurrentDataset(store?.getState());
+
+    if (dataset) {
+      const fields = dataset.fields.filter((data) =>
+        data.type == 'MEA' || data.type == 'DIM'
+      );
+
+      const selectRowKeys = dataset.selectedFields || [];
+
+      openModal(ViewerPostingDataModal, {
+        fields: fields,
+        datasetId: dataset.datasetId,
+        selectRowKeys: selectRowKeys
+      });
+    } else {
+      alert('데이터 집합을 선택해 주세요.');
+      return;
+    }
+  };
+
   return {
+    ViewerPostingData: {
+      id: 'viewer_posting_data',
+      onClick: viewerPostingFunc,
+      src: viewerPosting,
+      label: '뷰어 데이터 항목 선택 표시 기능'
+    },
     CustomField: {
       id: 'custom_field',
       onClick: handleCustomData,

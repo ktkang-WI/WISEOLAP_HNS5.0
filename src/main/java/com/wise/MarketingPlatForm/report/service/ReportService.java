@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,19 @@ public class ReportService {
     				for (int i= 0; i < datasetArray.length(); i++) {
     					JSONObject datset = datasetArray.getJSONObject(i);
     					if (datset.has("cubeId")) {
-    						CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
-    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						JSONArray fields = datset.getJSONArray("fields");
+                            CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
+                            JSONArray newFields = new JSONArray(gson.toJson(cubeInfo.getFields()));
+                            for (int j = 0; j < fields.length(); j++) {
+                                if (!fields.getJSONObject(j).has("check")) continue;
+                                for (int a = 0; a < newFields.length(); a++) {
+                                    if (newFields.getJSONObject(a).getString("uniqueName").equals(fields.getJSONObject(j).getString("uniqueName"))) {
+                                        newFields.getJSONObject(a).put("check", fields.getJSONObject(j).getBoolean("check"));
+                                        break;
+                                    }
+                                }
+                            }
+    						datset.put("fields", newFields);
     						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
     					}
     				}

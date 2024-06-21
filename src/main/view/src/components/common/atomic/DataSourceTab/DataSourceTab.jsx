@@ -76,6 +76,7 @@ const DataSourceTab = () => {
   }, [selectedDataset]);
 
   const buttons = [
+    'ViewerPostingData',
     'CustomField',
     'DataSourceModify',
     'DataSourceRemove'
