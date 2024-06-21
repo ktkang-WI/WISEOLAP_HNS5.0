@@ -1,16 +1,22 @@
 package com.wise.MarketingPlatForm.dataset.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterResultVO;
@@ -25,6 +31,10 @@ import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.global.util.Timer;
+import com.wise.MarketingPlatForm.log.service.LogService;
+import com.wise.MarketingPlatForm.log.vo.QueryLogDTO;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
@@ -37,17 +47,20 @@ import com.wise.MarketingPlatForm.querygen.dto.SelectCubeWhere;
 import com.wise.MarketingPlatForm.querygen.service.QuerySettingEx;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.store.datastore.SqlQueryGenerator;
+import com.wise.MarketingPlatForm.report.type.ReportType;
 
 @Service
 public class DatasetService {
 
     private static Logger log = LoggerFactory.getLogger(DatasetService.class);
     private final DatasetDAO datasetDAO;
+    private final LogService logService;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
 
-    DatasetService(DatasetDAO datasetDAO, MartConfig martConfig, MartDAO martDAO) {
+    DatasetService(DatasetDAO datasetDAO, LogService logService, MartConfig martConfig, MartDAO martDAO) {
         this.datasetDAO = datasetDAO;
+        this.logService = logService;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
     }
@@ -304,7 +317,7 @@ public class DatasetService {
          return resultDTO;
     }
     
-    public MartResultDTO getQueryDatas(int dsId, String query, List<Parameter> parameters) {
+    public MartResultDTO getQueryDatas(HttpServletRequest request, int reportId, int dsId, String query, List<Parameter> parameters) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
@@ -327,6 +340,10 @@ public class DatasetService {
         
         MartResultDTO resultDTO = new MartResultDTO();
 
+        Timer timer = new Timer();
+
+        timer.start();
+
         try {
             resultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
             resultDTO.setQuery(query);
@@ -346,6 +363,27 @@ public class DatasetService {
 
             resultDTO.setRowData(err);
         }
+
+        timer.end();
+
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        QueryLogDTO queryLogDTO = QueryLogDTO.builder()
+                .eventStamp(new Timestamp(timer.getStartTime()))
+                .reportId(reportId)
+                .userId(user.getUserId())
+                .reportType(ReportType.EXCEL.toString())
+                .userNo(user.getUserNo())
+                .userNm(user.getUserNm())
+                .grpId(user.getGrpId())
+                .accessIp(request.getRemoteAddr())
+                .runQuery(query)
+                .dsId(dsMstrDTO.getDsId())
+                .runTime(timer.getInterval())
+                .build();
+
+        logService.insertQueryLog(queryLogDTO);
+
         return resultDTO;
     }
 

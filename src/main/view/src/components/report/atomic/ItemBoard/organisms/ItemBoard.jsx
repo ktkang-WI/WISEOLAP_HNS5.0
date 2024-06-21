@@ -12,7 +12,8 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
 import useLayout from 'hooks/useLayout';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectCurrentReport, selectCurrentReportId}
+  from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
@@ -67,6 +68,7 @@ import SchedulerComponent
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import models from 'models';
 
 const theme = getTheme();
 
@@ -125,6 +127,7 @@ const ItemBoard = () => {
   const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
+  const report = useSelector(selectCurrentReport);
   const model = Model.fromJson(layoutConfig);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
@@ -205,6 +208,14 @@ const ItemBoard = () => {
     } else if (Type.IMG === type) {
       exportToFile(name, pickItem, Type.IMG);
     }
+
+    models.Log.insertDownloadLog(
+        reportId || '1001',
+        report?.options?.reportNm || 'New Report',
+        report?.options?.reportType,
+        e,
+        name
+    );
   };
 
   const nullDataCheck = (item) => {

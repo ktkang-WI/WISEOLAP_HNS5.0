@@ -9,6 +9,7 @@
     <result column="EVENT_TIME" property="eventTime" javaType="String"/>
     <result column="LOG_TYPE" property="logType" javaType="String"/>
     <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
     <result column="USER_NO" property="userNo" javaType="int"/>
     <result column="GRP_ID" property="groupId" javaType="int"/>
     <result column="GRP_NM" property="groupNm" javaType="String"/>
@@ -443,6 +444,135 @@
 					AND DATE_FORMAT(A.EVENT_DT, '%Y%m%d') BETWEEN #{startDt} AND #{endDt}
 		</if> -->
 	</select>
+
+  <select id="insertLoginLog" parameterType="com.wise.MarketingPlatForm.log.vo.LoginLogDTO">
+		INSERT INTO LOG_LOGINOUT
+		VALUES (
+			#{eventStamp},
+			#{logType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{groupId},
+			null,
+			#{accessIp},
+			null,
+			#{modUserNo},
+			#{modStamp},
+			'WB'
+		)
+	</select>
+
+  <insert id="insertQueryLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+		INSERT INTO LOG_EXEC_QUERY
+		(
+			EVENT_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			ACCESS_GUID,
+			RUN_QUERY,
+			DS_ID,
+			RUN_TIME,
+			PROG_TYPE
+		)
+		VALUES
+		(
+			#{eventStamp},
+			#{reportId},
+			null,
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			null,
+			#{runQuery},
+			#{dsId},
+			#{runTime},
+			'WB'
+		)
+	</insert>
+	<insert id="insertExportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ExportLogDTO">
+		INSERT INTO LOG_EXPORT_USE
+		(
+			EVENT_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			ACCESS_GUID,
+			PROG_TYPE,
+			CTRL_ID,
+			CTRL_CAPTION
+		)
+		VALUES
+		(
+			#{eventStamp},
+			#{reportId},
+			#{reportNm},
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			null,
+			'WB',
+			#{ctrlId},
+			#{ctrlCaption}
+		)
+	</insert>
+  <insert id="insertReportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+		INSERT INTO LOG_REPORT_USE2
+		(
+			LOG_SEQ,
+			ST_DT,
+			ED_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			STATUS_CD,
+			PROG_TYPE
+		)
+		VALUES
+		(
+			#{logSeq},
+			#{startStamp},
+			#{endStamp},
+			#{reportId},
+			#{reportNm},
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			#{statusCd},
+			'WB'
+		)
+	</insert>
 
 
 </mapper>

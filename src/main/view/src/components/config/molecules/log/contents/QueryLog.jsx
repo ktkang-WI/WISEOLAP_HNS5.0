@@ -33,10 +33,12 @@ const QueryLog = ({display, dataSource}) => {
       >
         <Column
           dataField='eventDt'
+          sortOrder='desc'
           caption={localizedString.log.date}
         />
         <Column
           dataField='eventTime'
+          sortOrder='desc'
           caption={localizedString.log.time}
         />
         <Column
@@ -68,15 +70,11 @@ const QueryLog = ({display, dataSource}) => {
           caption={localizedString.log.dbNm}
         />
         <Column
-          dataField='dbIp'
-          caption={localizedString.log.dbIp}
-        />
-        <Column
           dataField='dbmsType'
           caption={localizedString.log.dbmsType}
         />
         <Column
-          dataField='eventTime'
+          dataField='runTime'
           caption={localizedString.log.eventTime}
         />
       </DataGrid>

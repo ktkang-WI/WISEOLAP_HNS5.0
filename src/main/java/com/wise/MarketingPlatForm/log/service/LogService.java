@@ -35,4 +35,20 @@ public class LogService {
     public List<LoginLogDTO> getLoginLog(LogParamVO logParamVO) {
         return logDAO.selectLoginLog(logParamVO);
     }
+
+    public void insertExportLog(ExportLogDTO logDto) {
+        logDAO.insertExportLog(logDto);
+    }
+
+    public void insertReportLog(ReportLogDTO logDto) {
+        logDAO.insertReportLog(logDto);
+    }
+
+    public void insertLoginLog(LoginLogDTO logDto) {
+        logDAO.insertLoginLog(logDto);
+    }
+
+    public void insertQueryLog(QueryLogDTO logDto) {
+        logDAO.insertQueryLog(logDto);
+    }
 }

@@ -15,10 +15,12 @@ const LoginLog = ({display, dataSource}) => {
       >
         <Column
           dataField='eventDt'
+          sortOrder='desc'
           caption={localizedString.log.date}
         />
         <Column
           dataField='eventTime'
+          sortOrder='desc'
           caption={localizedString.log.time}
         />
         <Column

@@ -129,7 +129,9 @@ public class ReportController {
         String parameterStr = param.getOrDefault("parameter", "[]");
         String ItemTypeStr = param.get("itemType");
         String gridAttributeStr = param.getOrDefault("gridAttribute", "{}");
-        String userId = param.get("userId");
+        UserDTO user = SessionUtility.getSessionUser(request);
+        String reportId = param.getOrDefault("reportId", "");
+        ReportType reportType = ReportType.fromString(param.getOrDefault("reportType", "AdHoc")).get();
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
@@ -188,7 +190,10 @@ public class ReportController {
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)
-                .userId(userId)
+                .user(user)
+                .userId(user.getUserId())
+                .reportId(reportId)
+                .reportType(reportType)
                 .parameters(parameters)
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
@@ -197,7 +202,7 @@ public class ReportController {
                 .pivotOption(pivotOption)
                 .build();
 
-        return reportService.getItemData(dataAggreagtion);
+        return reportService.getItemData(request, dataAggreagtion);
     }
 
     @Operation(
@@ -215,13 +220,10 @@ public class ReportController {
 	    )
 	)
     @PostMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestBody Map<String, String> param, HttpServletRequest request) {
-        UserDTO userDTO = SessionUtility.getSessionUser(request);
-        
-        String userId = userDTO.getUserId(); 
+	public Map<String, Object> getReport(HttpServletRequest request, @RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
 
-        return reportService.getReport(reportId, userId);
+        return reportService.getReport(request, reportId);
 	}
     
     @Operation(

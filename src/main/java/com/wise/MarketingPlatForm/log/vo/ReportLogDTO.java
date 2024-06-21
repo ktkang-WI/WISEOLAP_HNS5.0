@@ -1,6 +1,9 @@
 package com.wise.MarketingPlatForm.log.vo;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ReportLogDTO {
     String statusCd;
     int reportId;
@@ -17,8 +21,12 @@ public class ReportLogDTO {
     String reportType;
     String startDt;
     String endDt;
+    Timestamp startStamp;
+    Timestamp endStamp;
     String userId;
     String userNm;
+    int userNo;
+    int grpId;
     String grpNm;
     String accessIp;
 }

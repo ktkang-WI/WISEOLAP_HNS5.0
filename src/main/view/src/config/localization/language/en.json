@@ -530,7 +530,7 @@
     "query": "Query",
     "reportId": "Report ID",
     "reportNm": "Report Name",
-    "stratTime": "Start Time",
+    "startTime": "Start Time",
     "endTime": "End Time",
     "ctrlId": "Control ID",
     "ctrnCaption": "Control Name"

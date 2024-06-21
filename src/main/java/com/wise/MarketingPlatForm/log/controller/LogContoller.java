@@ -1,11 +1,15 @@
 package com.wise.MarketingPlatForm.log.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -139,6 +143,49 @@ public class LogContoller {
         List<ExportLogDTO> result = logService.getExportLog(logParamVO);
 
         return RestAPIVO.okResponse(result);
+    }
+
+    @Operation(summary = "insert export log", description = "다운로드 로그를 생성합니다.")
+    @Parameters({
+            @Parameter(name = "reportID", description = "보고서 ID", example = "1001", required = false),
+            @Parameter(name = "reportNm", description = "보고서 명", example = "새 보고서", required = true),
+            @Parameter(name = "reportType", description = "보고서 타입", example = "AdHoc", required = true),
+            @Parameter(name = "ctrlId", description = "아이템 ID", example = "item1", required = false),
+            @Parameter(name = "ctrlCaption", description = "아이템 명", example = "아이템1", required = false),
+    })
+    @PostMapping(value = "/export")
+    public ResponseEntity<RestAPIVO> insertExportLog(
+        HttpServletRequest request,
+        @RequestBody Map<String, String> param
+    ) {
+        String reportId = param.getOrDefault("reportId", "1001");
+        String reportNm = param.getOrDefault("reportNm", "New Report");
+        String reportType = param.get("reportType");
+        String ctrlId = param.getOrDefault("ctrlId", "");
+        String ctrlCaption = param.getOrDefault("ctrlCaption", "");
+        UserDTO user = SessionUtility.getSessionUser(request);
+    
+        if (user == null) {
+            return RestAPIVO.unauthorizedResponse("세션이 존재하지 않습니다.");
+        }
+
+        ExportLogDTO logDTO = ExportLogDTO.builder()
+                .eventStamp(new Timestamp(System.currentTimeMillis()))
+                .reportId(Integer.parseInt(reportId))
+                .reportNm(reportNm)
+                .reportType(reportType)
+                .userId(user.getUserId())
+                .userNm(user.getUserNm())
+                .userNo(user.getUserNo())
+                .grpId(user.getGrpId())
+                .accessIp(request.getRemoteAddr())
+                .ctrlId(ctrlId)
+                .ctrlCaption(ctrlCaption)
+                .build();
+
+        logService.insertExportLog(logDTO);
+
+        return RestAPIVO.okResponse(true);
     }
 
     String getUserId(String type, HttpServletRequest request) {

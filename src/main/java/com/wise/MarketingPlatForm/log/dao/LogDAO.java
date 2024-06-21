@@ -21,4 +21,12 @@ public interface LogDAO {
 
     List<LoginLogDTO> selectLoginLog(LogParamVO logParamVO);
 
+    void insertLoginLog(LoginLogDTO logDto);
+
+    void insertReportLog(ReportLogDTO logDto);
+
+    void insertExportLog(ExportLogDTO logDto);
+
+    void insertQueryLog(QueryLogDTO logDto);
+
 }
