@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -160,17 +162,18 @@ public class FileUploadService {
 	}
 
     // 복호화된 DRM 파일 불러오기
-    public byte[] loadDecrytionFile(String fileName) throws Exception {
+    public byte[] loadDecrytionFile(String fileName, String filePath) throws Exception {
         // TODO: DRM 복호화 API 적용 후 DECRYTION_OUTPUT_FOLDER 로 변경
-        File decryptionFolder = new File(DECRYTION_INPUT_FOLDER);
+        File decryptionFolder = new File(DECRYTION_OUTPUT_FOLDER + filePath);
+        logger.info("folderName: " + DECRYTION_OUTPUT_FOLDER + filePath);
 		File decryptionFile = WebFileUtils.getFile(decryptionFolder, fileName);
         if (decryptionFile == null || !decryptionFile.exists()) {
             throw new IOException("파일을 찾을 수 없습니다: " + fileName);
         }
-        Path filePath = decryptionFile.toPath();
+        Path decrptionFilePath = decryptionFile.toPath();
 
         try {
-            byte[] fileBytes = Files.readAllBytes(filePath);
+            byte[] fileBytes = Files.readAllBytes(decrptionFilePath);
             logger.info("파일이 성공적으로 읽혔습니다: " + decryptionFile.getAbsolutePath());
             return fileBytes;
         } catch (IOException e) {

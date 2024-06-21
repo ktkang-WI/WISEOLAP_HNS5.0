@@ -69,7 +69,8 @@ public class FileUploadController {
     @PostMapping(value="/loadDecryptionFile")
 	public ResponseEntity<byte[]> loadDecrytionFile(@RequestBody Map<String, String> param) throws Exception {
 		String fileName = param.get("fileName");
-		byte[] fileBytes = fileUploadService.loadDecrytionFile(fileName);
+        String filePath = param.get("filePath");
+		byte[] fileBytes = fileUploadService.loadDecrytionFile(fileName, filePath);
 		return ResponseEntity
                 .ok()
                 .header("Content-Disposition", "attachment; filename=binary-data.txt")

@@ -254,10 +254,10 @@ const useSpread = () => {
 
       if (uploadResponse.status === 200) {
         // 복호화 API 호출 (TODO: 실제 복호화 API 호출 추가)
-        // await fetchData(selectedFile.name);
+        const responseData = await fetchData(selectedFile.name);
 
         // 복호화 된 파일 불러오기
-        await importHnsFile(selectedFile.name);
+        await importHnsFile(responseData.fileName, responseData.filePath);
 
         dispatch(loadingActions.endJob());
       } else {
@@ -271,12 +271,13 @@ const useSpread = () => {
     }
   };
 
-  const importHnsFile = async (fileName) => {
+  const importHnsFile = async (fileName, filePath) => {
     try {
       const workbook = getWorkbook();
 
       const response = await models.File.loadDecryptionFile({
-        fileName: `${fileName}`
+        fileName: `${fileName}`,
+        filePath: `${filePath}`
       });
 
       if (response.status === 200) {
@@ -316,11 +317,11 @@ const useSpread = () => {
         throw new Error('Network response was not ok');
       }
 
-      const data = await response.json();
+      const data = response.json();
 
       // TODO:여기서 받은 데이터를 처리
       console.log(data);
-      return data;
+      return data.responseData;
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;
