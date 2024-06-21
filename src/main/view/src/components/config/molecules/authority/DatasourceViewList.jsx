@@ -46,7 +46,12 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   }, [dependency]);
 
   const handleSelectedKey = (selectedItems) => {
-    setDsViewId(selectedItems.selectedRowKeys[0].dsViewId);
+    if (!selected?.user?.next && !selected?.group?.next) {
+      alert(localizedString.clickMe);
+      setSelectedKeys([]);
+    } else {
+      setDsViewId(selectedItems.selectedRowKeys[0].dsViewId);
+    }
   };
 
   return (

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.wise.MarketingPlatForm.dataset.dao.DatasetDAO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
-import com.wise.MarketingPlatForm.dataset.entity.CubeDimMstrEntity;
+import com.wise.MarketingPlatForm.dataset.model.CubeDimMstrModel;
 import com.wise.MarketingPlatForm.dataset.model.DatasetDsDsviewCubeModel;
 
 @Service
@@ -34,7 +34,7 @@ public class DataSetDsDsviewCubeService {
 
     List<DatasetDsDsviewCubeModel> result = new ArrayList<>();
     List<CubeMstrEntity> cubeMstrList = new ArrayList<>();
-    List<CubeDimMstrEntity> cubeDimMstrList = new ArrayList<>();
+    List<CubeDimMstrModel> cubeDimMstrList = new ArrayList<>();
     DatasetDsDsviewCubeDTO dsView = null;
     CubeMstrEntity cube = null;
     DatasetDsDsviewCubeModel datasetDsDSviewCubeModel = null;
@@ -89,7 +89,9 @@ public class DataSetDsDsviewCubeService {
         cubeMstrKeys.add(cubeId);
       }
 
-      CubeDimMstrEntity cubeDim = CubeDimMstrEntity.builder()
+      CubeDimMstrModel cubeDim = CubeDimMstrModel.builder()
+        .dsViewId(dsViewId)
+        .cubeNm(datasetDsDsviewCubeData.getCubeNm())
         .dimDimUniNm(datasetDsDsviewCubeData.getDimUniNm())
         .cubeId(datasetDsDsviewCubeData.getCubeId())
         .dimCaption(datasetDsDsviewCubeData.getDimCaption())

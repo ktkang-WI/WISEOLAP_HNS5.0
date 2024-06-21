@@ -10,8 +10,6 @@ import AuthorityDataCube
   from 'components/config/atoms/authority/AuthorityDataCube';
 import AuthorityDataDimension
   from 'components/config/atoms/authority/AuthorityDataDimension';
-import AuthorityDataMember
-  from 'components/config/atoms/authority/AuthorityDataMember';
 
 const DataAuthority = ({mainKey, ...props}) => {
   const getContext = useContext(AuthorityContext);
@@ -62,20 +60,19 @@ const DataAuthority = ({mainKey, ...props}) => {
           direction='row'
           padding='10px'
         >
-          <Wrapper>
+          <Wrapper
+            size="1"
+          >
             <AuthorityDataCube
               mainKey={mainKey}
               dependency={dependency}
-              dsViewId={dsViewId}/>
+              dsViewId={dsViewId}
+              setDependency={setDependency}/>
           </Wrapper>
-          <Wrapper>
+          <Wrapper
+            size="2"
+          >
             <AuthorityDataDimension
-              mainKey={mainKey}
-              dependency={dependency}
-              dsViewId={dsViewId}/>
-          </Wrapper>
-          <Wrapper>
-            <AuthorityDataMember
               mainKey={mainKey}
               dependency={dependency}
               dsViewId={dsViewId}/>

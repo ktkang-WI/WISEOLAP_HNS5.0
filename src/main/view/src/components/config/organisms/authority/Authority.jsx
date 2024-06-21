@@ -134,7 +134,6 @@ const Authority = () => {
   const {
     userData,
     groupData,
-    getData,
     groupAuthData,
     dataSourceData,
     folderDataSets,
@@ -162,13 +161,14 @@ const Authority = () => {
 
   const data = useMemo(() => ({
     [modeData.PREV]: null,
-    [modeData.NEXT]: getData
+    [modeData.NEXT]: null
   }), [currentTab]);
 
   // init data
   useEffect(() => {
     setInnerData(groupAuthData);
     setCurrentTab(path.GROUP_DATA);
+    data[modeData.NEXT] = groupAuthData;
   }, []);
 
   useEffect(() => {

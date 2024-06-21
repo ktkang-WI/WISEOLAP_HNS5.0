@@ -82,7 +82,6 @@ export async function authorityLoader() {
 
   return {
     userData,
-    getData,
     groupData,
     groupAuthData,
     dataSourceData,
