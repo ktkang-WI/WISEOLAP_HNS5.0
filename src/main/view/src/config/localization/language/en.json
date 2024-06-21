@@ -500,6 +500,7 @@
   "new": "New",
   "save": "Save",
   "addFieldDescription": "Add Field Description",
+  "requester": "Requester",
   "selectReportAlert": "Please select a report.",
   "saveFail": "Save failed.",
   "resetAllConfirmMsg": "All settings will be reset. Do you want to proceed?",

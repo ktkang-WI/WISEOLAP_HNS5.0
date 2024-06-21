@@ -430,3 +430,7 @@ td[role="columnheader"] {
 .dx-treeview-node-container:hover {
   overflow: visible;
 }
+
+.dx-item.dx-treeview-item {
+  width: 100%;
+}

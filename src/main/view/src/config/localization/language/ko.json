@@ -705,6 +705,7 @@
   "new": "새로 만들기",
   "save": "저장",
   "addFieldDescription": "필드 설명 추가",
+  "requester": "요청자",
   "selectReportAlert": "보고서를 선택해 주세요.",
   "resetAllConfirmMsg": "설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?",
   "resetSuccess": "초기화 되었습니다. 적용 하시려면 저장 해주세요.",

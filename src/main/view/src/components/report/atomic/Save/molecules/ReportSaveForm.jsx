@@ -124,6 +124,17 @@ const ReportSaveForm = ({dataSource, createDataSource, formRef,
         </Label>
       </Item>
       <Item
+        editorType='dxTextBox'
+        dataField='requester'
+        editorOptions={{
+          height: theme.size.labelTextBoxHeight
+        }}
+      >
+        <Label>
+          {localizedString.requester}
+        </Label>
+      </Item>
+      <Item
         editorType='dxTextArea'
         dataField='reportDesc'
         editorOptions={{

@@ -351,7 +351,9 @@ public class ReportController {
             HttpSession session = request.getSession();
             UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
-
+            
+            // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
+            reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -372,6 +374,8 @@ public class ReportController {
             UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
+            // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
+            reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);

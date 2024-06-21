@@ -115,7 +115,11 @@ const generateItem = (item, param, rootItem) => {
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
       expanded: !item.meta.positionOption.row.expand ?
-        true :item.meta.positionOption.row.expand
+        true :item.meta.positionOption.row.expand,
+      customizeText: (e) =>{
+        const cText = e?.valueText == 'null' ? '' : e?.valueText;
+        return cText;
+      }
     });
   }
 
@@ -149,6 +153,10 @@ const generateItem = (item, param, rootItem) => {
       sortOrder: field.sortOrder.toLowerCase(),
       expanded: !item.meta.positionOption.column.expand ?
           true :item.meta.positionOption.column.expand,
+      customizeText: (e) =>{
+        const cText = e?.valueText == 'null' ? '' : e?.valueText;
+        return cText;
+      },
       ...sortBy
     });
   }
