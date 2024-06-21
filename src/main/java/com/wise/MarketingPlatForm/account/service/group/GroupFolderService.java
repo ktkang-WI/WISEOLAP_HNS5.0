@@ -9,11 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
-import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
 
 @Service
 public class GroupFolderService {
@@ -33,7 +31,7 @@ public class GroupFolderService {
   };
 
   @Transactional
-  public boolean patchGroupFolder(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+  public boolean patchGroupFolder(List<GroupFolderModel> groupFolderPatchDTO) {
 
     List<GroupAuthReportMstrEntity> groupFolderMstr = generateGroupFolderPatchObject(groupFolderPatchDTO);
 
@@ -48,12 +46,12 @@ public class GroupFolderService {
   };
 
 
-  private List<GroupAuthReportMstrEntity> generateGroupFolderPatchObject(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+  private List<GroupAuthReportMstrEntity> generateGroupFolderPatchObject(List<GroupFolderModel> groupFolderPatchDTO) {
     List<GroupAuthReportMstrEntity> result = new ArrayList<>();
 
-    for (GroupFolderPatchDTO groupFolder : groupFolderPatchDTO) {
+    for (GroupFolderModel groupFolder : groupFolderPatchDTO) {
       int grpId = groupFolder.getGrpId();
-      List<ConfigFolderDTO> fldIds = groupFolder.getFldIds();
+      List<FolderListModel> fldIds = groupFolder.getFldIds();
       int fldsSize = fldIds.size();
 
       if (fldsSize == 0) {
@@ -71,7 +69,7 @@ public class GroupFolderService {
         continue;
       }
 
-      for (ConfigFolderDTO configFolderDTO : groupFolder.getFldIds()) {
+      for (FolderListModel configFolderDTO : groupFolder.getFldIds()) {
 
         GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
           .grpId(grpId)

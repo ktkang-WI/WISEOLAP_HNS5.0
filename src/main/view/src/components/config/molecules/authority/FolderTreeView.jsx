@@ -6,9 +6,16 @@ import TreeList, {
   Selection} from 'devextreme-react/tree-list';
 import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext, getKeys, mode, path} from
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path} from
   'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
 
 const FolderTreeView = ({mainKey, dependency}) => {
   // context
@@ -17,16 +24,36 @@ const FolderTreeView = ({mainKey, dependency}) => {
   if (currentTab !== mainKey) return <></>;
   const [dataSource, setDataSource] = useState(getContext.state.folder);
   const selected = getContext.state.selected;
+  const {alert} = useModal();
   const data = getContext.state.data;
-
+  const dataSetMode =
+    currentTab === path.GROUP_REPORT ? mode.GROUP : mode.USER;
+  const returnItem = (item, setFalse) => {
+    return {
+      fldId: item.fldId,
+      authView: setFalse ? false : item.authView,
+      authPublish: setFalse ? false : item.authPublish,
+      authDataItem: setFalse ? false : item.authDataItem,
+      authExport: setFalse ? false : item.authExport
+    };
+  };
+  const initDataSource = () => {
+    setDataSource(dataSource.map((d) => {
+      return {
+        ...d,
+        ...returnItem(d, true)
+      };
+    }));
+  };
   useEffect(() => {
-    const dataSetMode =
-      currentTab === path.GROUP_REPORT ? mode.GROUP : mode.USER;
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      const selectedTreeView = data.next.find((d) => d.grpId === nextId);
-      if (!selectedTreeView) return;
+      const selectedTreeView = getUserOrGroup(dataSetMode, data, nextId);
+      if (!selectedTreeView) {
+        initDataSource();
+        return;
+      }
 
       const selectedFlds = selectedTreeView.fldIds;
       const cleaningDataSource = dataSource.map((d) => {
@@ -43,6 +70,41 @@ const FolderTreeView = ({mainKey, dependency}) => {
     updateData();
   }, [dependency]);
 
+  const onRowUpdating = (e) => {
+    if (!selected?.user?.next && !selected?.group?.next) {
+      alert(localizedString.clickMe);
+      initDataSource();
+      return;
+    }
+    const newData = {...e.oldData, ...e.newData};
+    const {nextId} = getKeys(dataSetMode, selected);
+    const isUpdate = data.next.some((d) => (d?.grpId || d?.userNo) === nextId);
+
+    if (!isUpdate) {
+      const newAuthData = {
+        ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+        fldIds: dataSource.map((f) =>
+          returnItem((f.fldId === e.key ? newData : f)), false)
+      };
+      data.next.push(newAuthData);
+      return;
+    }
+
+    data.next = data.next.map((d) => {
+      if (nextId !== (d?.grpId || d?.userNo)) {
+        return {
+          ...getDataObjectOfUserOrGroup(dataSetMode, (d.grpId || d.userNo)),
+          fldIds: d.fldIds
+        };
+      }
+      return {
+        ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+        fldIds: d.fldIds.map((f) =>
+          returnItem((f.fldId === e.key ? newData : f)), false)
+      };
+    });
+  };
+
   return (
     <Wrapper>
       <Title title={localizedString.publicReportFolderList}></Title>
@@ -54,9 +116,8 @@ const FolderTreeView = ({mainKey, dependency}) => {
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         id="folderTreeView"
-        editable={false}
         height={'90%'}
-        // onItemSelectionChanged={handleTreeViewSelectionChanged}
+        onRowUpdating={onRowUpdating}
       >
         <Editing
           mode="cell"

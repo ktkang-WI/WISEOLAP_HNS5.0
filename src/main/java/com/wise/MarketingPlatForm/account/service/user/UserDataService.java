@@ -115,7 +115,7 @@ public class UserDataService {
 
       UserDataModel userDataModel = UserDataModel.builder()
         .user(user)
-        .dsViews(UGDataService.dataXmlParsing(userData.getDataXml()))
+        .datas(UGDataService.dataXmlParsing(userData.getDataXml()))
         .build();
 
       result.add(userDataModel);

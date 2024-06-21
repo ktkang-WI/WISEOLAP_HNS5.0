@@ -31,7 +31,7 @@ public class GroupFolderController {
   @Autowired
   private GroupFolderService groupFolderService;
 
-  private Type groupFolderPatchType = new TypeToken<ArrayList<GroupFolderPatchDTO>>() {}.getType();
+  private Type groupFolderPatchType = new TypeToken<ArrayList<GroupFolderModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -56,7 +56,7 @@ public class GroupFolderController {
       return RestAPIVO.badRequest(false);
     }
 
-    List<GroupFolderPatchDTO> groupFolderPatchDTO = gson.fromJson(groupFolderPatchData, groupFolderPatchType);
+    List<GroupFolderModel> groupFolderPatchDTO = gson.fromJson(groupFolderPatchData, groupFolderPatchType);
 
     boolean result = groupFolderService.patchGroupFolder(groupFolderPatchDTO);
 

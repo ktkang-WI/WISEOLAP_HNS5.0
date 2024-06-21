@@ -1,14 +1,18 @@
 package com.wise.MarketingPlatForm.account.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
-import com.wise.MarketingPlatForm.account.model.common.DataSetXmlModel;
+import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
 import com.wise.MarketingPlatForm.utils.XMLParser;
 
 @Service
@@ -16,57 +20,74 @@ public class UserGroupDataService {
 
   private Base64 base64 = new Base64();
 
-  public DataSetXmlModel dataXmlParsing(String dataXml) throws Exception{
-    Map<Integer,List<Integer>> cubeIdTemp = new HashMap<>();
-    Map<Integer,List<String>> cubeDimNmTemp = new HashMap<>();
-    List<Integer> dsViewIdTemp = new ArrayList<>();
-
-    List<Integer> cubeId = new ArrayList<>();
-    List<String> cubeDimId = new ArrayList<>();
-
-    String decodedString = new String(base64.decode(dataXml.getBytes()),"UTF-8");
+  public List<DataModel> dataXmlParsing(String dataXml) throws Exception{
+    List<DataModel> result = new ArrayList<>();
+    String decodedString = new String(base64.decode(dataXml.getBytes()), "UTF-8");
     XMLParser xmlParser = new XMLParser(decodedString);
     xmlParser.createDocument();
 
+    // Auth_Cubes 처리
     xmlParser.setParentElement("Auth_Cubes");
     List<Map<String,Object>> auth_Cubes = xmlParser.getChildrenElement("DS_VIEW_ID","CUBE_ID");
+    auth_Cubes.sort(Comparator.comparing(m -> Integer.parseInt(m.get("DS_VIEW_ID").toString())));
 
+    // Auth_Dim 처리
     xmlParser.setParentElement("Auth_Dim");
     List<Map<String,Object>> auth_Dim = xmlParser.getChildrenElement("DS_VIEW_ID","DIM_UNI_NM");
+    auth_Dim.sort(Comparator.comparing(m -> Integer.parseInt(m.get("DS_VIEW_ID").toString())));
 
-    for (Map<String,Object> authCube : auth_Cubes) {
-      int getDsViewId = Integer.parseInt(authCube.get("DS_VIEW_ID").toString());
-      int getcubeId = Integer.parseInt(authCube.get("CUBE_ID").toString());
-
-      if (!dsViewIdTemp.contains(getDsViewId)) {
-        dsViewIdTemp.add(getDsViewId);
-        cubeId = new ArrayList<>();
-      }
-      cubeId.add(getcubeId);
-      cubeIdTemp.put(getDsViewId, cubeId);
+    // 공통 DS_VIEW_ID 추출
+    Set<String> dsViewIds = new HashSet<>();
+    for (Map<String, Object> map : auth_Cubes) {
+        String dvId = map.get("DS_VIEW_ID").toString();
+        dsViewIds.add(dvId);
+    }
+    for (Map<String, Object> map : auth_Dim) {
+        String dvId = map.get("DS_VIEW_ID").toString();
+        dsViewIds.add(dvId);
     }
 
-    for (Map<String,Object> authDim : auth_Dim) {
-      int getDsViewId = Integer.parseInt(authDim.get("DS_VIEW_ID").toString());
-      String getcubeDimNm = authDim.get("DIM_UNI_NM").toString();
-      
-      if (!dsViewIdTemp.contains(getDsViewId)) {
-        dsViewIdTemp.add(getDsViewId);
-        cubeDimId = new ArrayList<>();
-      }
+    // DataModel 생성
+    for (String dsViewId : dsViewIds) {
+        List<Integer> cubeIds = new ArrayList<>();
+        List<String> cubeDims = new ArrayList<>();
 
-      cubeDimId.add(getcubeDimNm);
-      cubeDimNmTemp.put(getDsViewId, cubeDimId);
+        // Auth_Cubes 처리
+        Iterator<Map<String, Object>> cubeIterator = auth_Cubes.iterator();
+        while (cubeIterator.hasNext()) {
+            Map<String, Object> map = cubeIterator.next();
+            int getcubeId = Integer.parseInt(map.get("CUBE_ID").toString());
+            if (map.containsKey("DS_VIEW_ID") && map.get("DS_VIEW_ID").equals(dsViewId)) {
+                cubeIds.add(getcubeId);
+                cubeIterator.remove();
+            } else {
+                break;
+            }
+        }
 
+        // Auth_Dim 처리
+        Iterator<Map<String, Object>> dimIterator = auth_Dim.iterator();
+        while (dimIterator.hasNext()) {
+            Map<String, Object> map = dimIterator.next();
+            String getcubeDimNm = map.get("DIM_UNI_NM").toString();
+            if (map.containsKey("DS_VIEW_ID") && map.get("DS_VIEW_ID").equals(dsViewId)) {
+                cubeDims.add(getcubeDimNm);
+                dimIterator.remove();
+            } else {
+                break;
+            }
+        }
+
+        DataModel dataModel = DataModel.builder()
+                .dsViewId(Integer.parseInt(dsViewId))
+                .cubeId(cubeIds)
+                .dimUniNm(cubeDims)
+                .build();
+        result.add(dataModel);
     }
 
-    DataSetXmlModel result = DataSetXmlModel.builder()
-      .dsViewId(dsViewIdTemp)
-      .cubeId(cubeIdTemp)
-      .cubeDimNm(cubeDimNmTemp)
-      .build();
-    
     return result;
+
   }
 
   

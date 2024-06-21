@@ -76,10 +76,10 @@
       <result column="FLD_LVL" property="fldLvl" javaType="int"/>
       <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
       <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
-      <result column="AUTH_VIEW" property="authView" javaType="String"/>
-      <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
-      <result column="AUTH_DATAITEM" property="authDataItem" javaType="String"/>
-      <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
+      <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
     </resultMap>
 
     <resultMap id="GroupDsDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO">
@@ -201,14 +201,14 @@
           PUB_FLD_MSTR.FLD_LVL,
           PUB_FLD_MSTR.FLD_PARENT_ID,
           PUB_FLD_MSTR.FLD_ORDINAL,
-          CASE WHEN GRP_AUTH_REPORT_MSTR.AUTH_VIEW = 'Y' THEN 1 ELSE 0 END AS AUTH_VIEW,
-          CASE WHEN GRP_AUTH_REPORT_MSTR.AUTH_PUBLISH = 'Y' THEN 1 ELSE 0 END AS AUTH_PUBLISH,
-          CASE WHEN GRP_AUTH_REPORT_MSTR.AUTH_DATAITEM = 'Y' THEN 1 ELSE 0 END AS AUTH_DATAITEM,
-          CASE WHEN GRP_AUTH_REPORT_MSTR.AUTH_EXPORT = 'Y' THEN 1 ELSE 0 END AS AUTH_EXPORT
+          AUTH_VIEW,
+          AUTH_PUBLISH,
+          AUTH_DATAITEM,
+          AUTH_EXPORT
       FROM
-          GRP_AUTH_REPORT_MSTR
-          INNER JOIN PUB_FLD_MSTR ON GRP_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
-          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+          GRP_AUTH_REPORT_MSTR_TEMP
+          INNER JOIN PUB_FLD_MSTR ON GRP_AUTH_REPORT_MSTR_TEMP.FLD_ID = PUB_FLD_MSTR.FLD_ID
+          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR_TEMP.GRP_ID
       ORDER BY
           GRP_MSTR.GRP_ID,
           PUB_FLD_MSTR.FLD_ID,
@@ -226,14 +226,14 @@
           PUB_FLD_MSTR.FLD_LVL,
           PUB_FLD_MSTR.FLD_PARENT_ID,
           PUB_FLD_MSTR.FLD_ORDINAL,
-          USER_AUTH_REPORT_MSTR.AUTH_VIEW,
-          USER_AUTH_REPORT_MSTR.AUTH_PUBLISH,
-          USER_AUTH_REPORT_MSTR.AUTH_DATAITEM,
-          USER_AUTH_REPORT_MSTR.AUTH_EXPORT
+          USER_AUTH_REPORT_MSTR_TEMP.AUTH_VIEW,
+          USER_AUTH_REPORT_MSTR_TEMP.AUTH_PUBLISH,
+          USER_AUTH_REPORT_MSTR_TEMP.AUTH_DATAITEM,
+          USER_AUTH_REPORT_MSTR_TEMP.AUTH_EXPORT
           FROM USER_MSTR
               INNER JOIN GRP_MSTR ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-              INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
-              INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
+              INNER JOIN USER_AUTH_REPORT_MSTR_TEMP ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR_TEMP.USER_NO
+              INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR_TEMP.FLD_ID = PUB_FLD_MSTR.FLD_ID
               ORDER BY
                   USER_MSTR.USER_NO,
                   PUB_FLD_MSTR.FLD_ID,
@@ -502,7 +502,7 @@
     </insert>
 
     <delete id="deleteGroupFolder" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_REPORT_MSTR
+      DELETE FROM GRP_AUTH_REPORT_MSTR_TEMP
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
@@ -512,7 +512,7 @@
     <insert id="putGroupFolder" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_REPORT_MSTR(
+          INTO GRP_AUTH_REPORT_MSTR_TEMP(
               GRP_ID,
               FLD_ID,
               AUTH_VIEW,
@@ -524,17 +524,17 @@
           (
             #{item.grpId, jdbcType=INTEGER},
             #{item.fldId, jdbcType=INTEGER},
-            #{item.authView, jdbcType=VARCHAR},
-            #{item.authPublish, jdbcType=VARCHAR},
-            #{item.authDataItem, jdbcType=VARCHAR},
-            #{item.authExport, jdbcType=VARCHAR}
+            #{item.authView, jdbcType=BOOLEAN},
+            #{item.authPublish, jdbcType=BOOLEAN},
+            #{item.authDataItem, jdbcType=BOOLEAN},
+            #{item.authExport, jdbcType=BOOLEAN}
           )
       </foreach>
       SELECT * FROM DUAL
     </insert>
 
     <delete id="deleteUserFolder" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_REPORT_MSTR
+      DELETE FROM USER_AUTH_REPORT_MSTR_TEMP
               WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
@@ -544,7 +544,7 @@
     <insert id="putUserFolder" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO USER_AUTH_REPORT_MSTR(
+          INTO USER_AUTH_REPORT_MSTR_TEMP(
               USER_NO,
               FLD_ID,
               AUTH_VIEW,
@@ -556,10 +556,10 @@
           (
             #{item.userNo, jdbcType=INTEGER},
             #{item.fldId, jdbcType=INTEGER},
-            #{item.authView, jdbcType=VARCHAR},
-            #{item.authPublish, jdbcType=VARCHAR},
-            #{item.authDataItem, jdbcType=VARCHAR},
-            #{item.authExport, jdbcType=VARCHAR}
+            #{item.authView, jdbcType=BOOLEAN},
+            #{item.authPublish, jdbcType=BOOLEAN},
+            #{item.authDataItem, jdbcType=BOOLEAN},
+            #{item.authExport, jdbcType=BOOLEAN}
           )
       </foreach>
       SELECT * FROM DUAL

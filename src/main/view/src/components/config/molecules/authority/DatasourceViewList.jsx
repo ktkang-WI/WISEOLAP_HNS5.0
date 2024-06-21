@@ -1,7 +1,7 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useContext} from 'react';
-import {AuthorityContext}
+import React, {useContext, useEffect, useState} from 'react';
+import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
   from 'components/config/organisms/authority/Authority';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
@@ -9,10 +9,45 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 
-const DatasourceViewList = () => {
+const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   // context
   const getContext = useContext(AuthorityContext);
-  const dataSource = getContext.state.dsView;
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const [dataSource, setDataSource] = useState(getContext.state.dsView);
+  const selected = getContext.state.selected;
+  const data = getContext.state.data;
+  const dataSetMode =
+  currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
+
+  useEffect(() => {
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      const datas = getUserOrGroup(dataSetMode, data, nextId);
+      if (!datas) {
+        const newItem = {
+          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
+          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          datas: []
+        };
+        data.next.push(newItem);
+      }
+      const key = datas?.datas?.map((d) => d.dsViewId) ?? [];
+      if (key.length === 0) return;
+      setDataSource(dataSource.map((d) => {
+        return {
+          isAuth: key.includes(d.dsViewId),
+          ...d
+        };
+      }));
+    };
+    updateData();
+  }, [dependency]);
+
+  const handleSelectedKey = (selectedItems) => {
+    setDsViewId(selectedItems.selectedRowKeys[0].dsViewId);
+  };
 
   return (
     <Wrapper>
@@ -25,6 +60,7 @@ const DatasourceViewList = () => {
         elementAttr={{
           class: 'datasource-view-list'
         }}
+        onSelectionChanged={handleSelectedKey}
       >
         <Selection mode="single" />
         <SearchPanel visible={true} />

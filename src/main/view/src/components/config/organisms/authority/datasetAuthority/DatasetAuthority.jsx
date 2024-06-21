@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-import React, {useContext, useEffect} from 'react';
-import {AuthorityContext, path} from '../Authority';
+import React, {useContext, useState} from 'react';
+import {AuthorityContext, mode, path} from '../Authority';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
 import DatasetTreeView
@@ -12,15 +12,18 @@ const DatasetAuthority = ({mainKey, ...props}) => {
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
 
-  useEffect(() => {
-    console.log(currentTab);
-  }, [currentTab]);
+  const selected = getContext.state.selected;
+  const [dependency, setDependency] = useState(false);
 
-  const handleRowClickGroup = (e) => {
-    console.log(e.data);
-  };
-  const handleRowClickUser = (e) => {
-    console.log(e.data);
+  const handleRowClick = (e) => {
+    if (currentTab === path.GROUP_DATASET) {
+      selected[mode.GROUP].prev = selected[mode.GROUP].next;
+      selected[mode.GROUP].next = e.data;
+    } else {
+      selected[mode.USER].prev = selected[mode.USER].next;
+      selected[mode.USER].next = e.data;
+    }
+    setDependency((prev) => !prev);
   };
 
   return (
@@ -28,17 +31,20 @@ const DatasetAuthority = ({mainKey, ...props}) => {
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATASET &&
-          <GroupList onRowClick={handleRowClickGroup}/>
+          <GroupList onRowClick={handleRowClick}/>
         }
         {
           currentTab === path.USER_DATASET &&
-          <UserList onRowClick={handleRowClickUser}/>
+          <UserList onRowClick={handleRowClick}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>
         {
           (currentTab=== path.GROUP_DATASET ||
-           currentTab === path.USER_DATASET) && <DatasetTreeView />
+           currentTab === path.USER_DATASET) &&
+          <DatasetTreeView
+            mainKey={mainKey}
+            dependency={dependency}/>
         }
       </Wrapper>
     </Wrapper>

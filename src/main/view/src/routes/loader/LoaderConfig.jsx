@@ -77,15 +77,19 @@ export async function authorityLoader() {
   const folder =
     await models.ReportFolderManagement.getFolderPubs()
         .then((res) => getData(res));
+  const dsViewCube =
+    await models.Authority.getDsViewCube().then((res) => getData(res));
 
   return {
     userData,
+    getData,
     groupData,
     groupAuthData,
     dataSourceData,
     folderDataSets,
     dsView,
-    folder
+    folder,
+    dsViewCube
   };
 }
 

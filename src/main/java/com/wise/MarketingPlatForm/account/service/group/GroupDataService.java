@@ -106,16 +106,10 @@ public class GroupDataService {
     List<GroupDataModel> result = new ArrayList<>();
     
     for (GroupDataDTO groupData : groupDataDTO) {
-
-      UserGroupDTO group = UserGroupDTO.builder()
+    
+      GroupDataModel groupDataModel = GroupDataModel.builder()
         .grpId(groupData.getGrpId())
-        .grpNm(groupData.getGrpNm())
-        .grpDesc(groupData.getGrpDesc())
-        .build();
-
-        GroupDataModel groupDataModel = GroupDataModel.builder()
-        .group(group)
-        .dsViews(UGDataService.dataXmlParsing(groupData.getDataXml()))
+        .datas(UGDataService.dataXmlParsing(groupData.getDataXml()))
         .build();
 
       result.add(groupDataModel);

@@ -8,13 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetPutDTO;
-import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.dataset.UserDatasetModel;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class UserDatasetService {
@@ -85,9 +82,9 @@ public class UserDatasetService {
   public List<UserDatasetModel> generateUserDatasetObject(List<UserDatasetDTO> userDatasetDTO) {
 
     List<UserDatasetModel> result = new ArrayList<>();
-    List<FldMstrEntity> datasetList = new ArrayList<>();
+    List<Integer> datasetList = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserGroupDTO user = null;
+    Integer user = 0;
     UserDatasetModel userDatasetModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -100,31 +97,19 @@ public class UserDatasetService {
 
       if (lastUserIdNumber) {
         userDatasetModel = UserDatasetModel.builder()
-        .user(user)
-        .dataset(datasetList)
+        .userNo(user)
+        .fldId(datasetList)
         .build();
         result.add(userDatasetModel);
         datasetList = new ArrayList<>();
       }
 
       if (!isUserContained) {
-        user = UserGroupDTO.builder()
-        .userNo(userDatasetData.getUserNo())
-        .userId(userDatasetData.getUserId())
-        .userNm(userDatasetData.getUserNm())
-        .grpNm(userDatasetData.getGrpNm())
-        .build();
+        user = userDatasetData.getUserNo();
         userkeys.add(userNo);
       }
-
-      FldMstrEntity dataset = FldMstrEntity.builder()
-        .fldId(userDatasetData.getFldId())
-        .fldNm(userDatasetData.getFldNm())
-        .fldParentId(userDatasetData.getParentFldId())
-        .build();
-
-
-      datasetList.add(dataset);
+    
+      datasetList.add(userDatasetData.getFldId());
 
       prevUserNo = userNo;
     }
@@ -133,8 +118,8 @@ public class UserDatasetService {
 
     if (isThereToSave) {
       userDatasetModel = UserDatasetModel.builder()
-        .user(user)
-        .dataset(datasetList)
+        .userNo(user)
+        .fldId(datasetList)
         .build();
         result.add(userDatasetModel);
     }

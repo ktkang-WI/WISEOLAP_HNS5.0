@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupDataPutDTO {
   int grpId;
-  List<DatasetDsDsviewCubeDTO> dsView;
-  List<CubeMstrEntity> cube;
-  List<DataDsviewCubeDimDTO> cubeDim;
+  List<DatasetDsDsviewCubeDTO> dsView; // List<Integer>
+  List<CubeMstrEntity> cube; // List<CubeModel> CubeModel - Integer dsViewId , List<Integer> cubeId
+  List<DataDsviewCubeDimDTO> cubeDim; // list<CubeDimModel> cubeDimModel - Integer dsViewId , List<String> dimUniNm
 }

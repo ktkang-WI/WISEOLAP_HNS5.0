@@ -4,7 +4,7 @@ import React, {useRef, useContext, useState, useEffect} from 'react';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext, getKeys, mode, path}
+import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -23,22 +23,16 @@ const DatasourceList = ({mainKey, dependency}) => {
   const data = getContext.state.data;
   const [selectedKeys, setSelectedKeys] = useState([]);
   const {alert} = useModal();
+  const dataSetMode =
+    currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
 
   // useState
   const ref = useRef();
   useEffect(() => {
-    const dataSetMode =
-      currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      const dsIds = data?.next?.find((d) => {
-        if (dataSetMode === mode.GROUP) {
-          return d?.grpId == nextId;
-        } else if (dataSetMode === mode.USER) {
-          return d?.userNo == nextId;
-        }
-      });
+      const dsIds = getUserOrGroup(dataSetMode, data, nextId);
       if (!dsIds) {
         const newItem = {
           ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
@@ -57,16 +51,9 @@ const DatasourceList = ({mainKey, dependency}) => {
     const dataSetMode =
       currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
     const {nextId} = getKeys(dataSetMode, selected);
-    data.prev = data.next;
     data.next = data.next.map((d) => {
-      if (dataSetMode === mode.GROUP) {
-        if (d?.grpId == nextId) {
-          d.dsIds = [...new Set(selectedKeys)];
-        }
-      } else if (dataSetMode === mode.USER) {
-        if (d?.userNo == nextId) {
-          d.dsIds = [...new Set(selectedKeys)];
-        }
+      if (nextId === (d?.grpId || d?.userNo)) {
+        d.dsIds = [...new Set(selectedKeys)];
       }
       return d;
     });

@@ -1,14 +1,25 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import React from 'react';
+import React, {useContext} from 'react';
 import localizedString from 'config/localization';
+import {AuthorityContext}
+  from 'components/config/organisms/authority/Authority';
 
-const AuthorityDataDimension = () => {
+const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const dataSource = [];
+  const dsViewCube = getContext.state.dsViewCube;
+  dsViewCube.forEach((d) => d.cubeDim.forEach((c) => {
+    dataSource.push(c);
+  }));
   return (
     <Wrapper>
       <Title title={localizedString.dimension}></Title>
       <DataGrid
+        dataSource={dataSource.filter((d) => d.dsViewId == dsViewId)}
         elementAttr={{
           class: 'authority-data-dimension'
         }}

@@ -77,7 +77,25 @@ const dataSource = [
     component: <DatasourceAuthority mainKey={path.USER_DATASOURCE}/>
   }
 ];
-
+export const getUserGroupKeys = (currentTab, data) => {
+  let result = null;
+  if (currentTab == path.USER_REPORT || currentTab == path.GROUP_REPORT) {
+    result = data.next.filter((d) => {
+      return d.fldIds.some((f) => Object.values(f).includes(true));
+    });
+  } else if (
+    currentTab == path.USER_DATASOURCE ||
+    currentTab == path.GROUP_DATASOURCE) {
+    result = data.next.filter((d) => d.dsIds.length > 0);
+  } else if (
+    currentTab == path.USER_DATASET ||
+    currentTab == path.GROUP_DATASET) {
+    result = data.next.filter((d) => d.fldId.length > 0);
+  } else {
+    result = [];
+  }
+  return result.map((d) => (d.grpId || d.userNo));
+};
 export const AuthorityContext = createContext();
 export const getKeys = (condition, selected) => {
   let prevId;
@@ -94,20 +112,39 @@ export const getKeys = (condition, selected) => {
   }
   return {prevId, nextId, isPrevKey};
 };
+export const getUserOrGroup = (dataSetMode, data, nextId) => {
+  return data?.next?.find((d) => {
+    if (dataSetMode === mode.GROUP) {
+      return d?.grpId == nextId;
+    } else if (dataSetMode === mode.USER) {
+      return d?.userNo == nextId;
+    }
+  });
+};
+
+export const getDataObjectOfUserOrGroup = (dataSetMode, comparisonKey) => {
+  return {
+    ...(dataSetMode === mode.GROUP ? {grpId: comparisonKey} : {}),
+    ...(dataSetMode === mode.USER ? {userNo: comparisonKey} : {})
+  };
+};
 
 const Authority = () => {
   const btns = ['save'];
   const {
     userData,
     groupData,
+    getData,
     groupAuthData,
     dataSourceData,
     folderDataSets,
     dsView,
-    folder
+    folder,
+    dsViewCube
   } = useLoaderData();
   const [innerData, setInnerData] = useState();
   const [currentTab, setCurrentTab] = useState(null);
+  const [, setAction] = useState(false);
   const TabPanelItem = ({data}) => {
     return data.component;
   };
@@ -125,7 +162,7 @@ const Authority = () => {
 
   const data = useMemo(() => ({
     [modeData.PREV]: null,
-    [modeData.NEXT]: null
+    [modeData.NEXT]: getData
   }), [currentTab]);
 
   // init data
@@ -148,12 +185,14 @@ const Authority = () => {
       dataSourceData: dataSourceData, // stationary
       folderDataSets: folderDataSets, // stationary
       dsView: dsView, // stationary
-      folder: folder // stationary
+      folder: folder, // stationary
+      dsViewCube: dsViewCube
     }
   };
 
   const onAction = async () => {
     await generateAxios(currentTab, data.next);
+    setAction((prev) => !prev);
   };
 
   const bindData = async (e) => {

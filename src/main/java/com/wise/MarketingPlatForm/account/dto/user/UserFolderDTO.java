@@ -20,6 +20,7 @@ public class UserFolderDTO {
   boolean authPublish;
   boolean authDataItem;
   boolean authExport;
+
   public boolean getAuthView() {
     return authView;
   }

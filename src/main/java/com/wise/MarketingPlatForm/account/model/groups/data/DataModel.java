@@ -7,7 +7,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GroupDataModel {
-  Integer grpId;
-  List<DataModel> datas;
+public class DataModel {
+  Integer dsViewId;
+  List<Integer> cubeId;
+  List<String> dimUniNm;
 }
