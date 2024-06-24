@@ -105,7 +105,7 @@ const useSpread = () => {
         createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
 
         // 추후 환경설정 SpreadBinding 값으로 분기처리
-        if (false) {
+        if (true) {
           // bindedSheet.reset();
           bindedSheet.clear();
           bindedSheet.autoGenerateColumns = true;
