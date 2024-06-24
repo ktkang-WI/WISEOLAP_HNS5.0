@@ -30,7 +30,8 @@ public class ReportMstrEntity {
     @Builder.Default
     String reportSubTitle = "";
     String reportLayout;
-    String gridInfo;
+    @Builder.Default
+    String gridInfo = "";
     int dataSrcId;
     String datasrcType;
     String datasetType;

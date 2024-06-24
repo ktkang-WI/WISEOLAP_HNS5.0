@@ -124,8 +124,19 @@ export default function useLayout() {
     dispatch(layoutSlice.adHocLayoutUpdate(param));
   };
 
-  const afterLoginInitSettingLayout = (reportTypes, general) => {
+  const afterLoginInitSettingLayout = (reportTypes, personalConfig) => {
     dispatch(configSlice.setInitDisplayConfig(reportTypes));
+
+    if (personalConfig !== '') {
+      const object = personalConfig;
+      const stringToJson = JSON.parse(personalConfig.defaultItem);
+
+      object.defaultItem = stringToJson.item;
+      object.defaultLayout =
+        {check: stringToJson.check, layout: stringToJson.layout};
+
+      dispatch(configSlice.setMyPageConfigure(object));
+    }
   };
 
   return {

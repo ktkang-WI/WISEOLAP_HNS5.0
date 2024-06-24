@@ -3,37 +3,39 @@ import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
 import adHocLayoutSetting from 'components/utils/AdhocLayoutSetting';
 
-const dashboardInitialState = {
-  0: {
-    layoutQuantity: 1,
-    layoutConfig: {
-      global: {
-        tabEnableClose: false,
-        tabEnableRename: false,
-        tabSetEnableDrop: false
-      },
-      borders: [],
-      layout: {
-        type: 'row',
-        children: [
-          {
-            type: 'tabset',
-            weight: 50,
-            selected: 0,
-            children: [
-              {
-                className: 'item1',
-                id: 'item1',
-                type: 'tab',
-                name: 'Chart 1',
-                component: 'chart'
-              }
-            ]
-          }
-        ]
+const dashboardInitialState = (defaultItem) => {
+  return {
+    0: {
+      layoutQuantity: 1,
+      layoutConfig: {
+        global: {
+          tabEnableClose: false,
+          tabEnableRename: false,
+          tabSetEnableDrop: false
+        },
+        borders: [],
+        layout: {
+          type: 'row',
+          children: [
+            {
+              type: 'tabset',
+              weight: 50,
+              selected: 0,
+              children: [
+                {
+                  className: 'item1',
+                  id: 'item1',
+                  type: 'tab',
+                  name: 'Chart 1',
+                  component: defaultItem
+                }
+              ]
+            }
+          ]
+        }
       }
     }
-  }
+  };
 };
 
 const adHocInitialState = {
@@ -127,7 +129,9 @@ const reducers = {
     const mode = action.mode ? action.mode : action;
 
     if (mode === DesignerMode['DASHBOARD']) {
-      return {...dashboardInitialState};
+      const defaultItem = actions.payload.defaultItem;
+      const test = dashboardInitialState(defaultItem);
+      return {...test};
     }
 
     if (mode === DesignerMode['AD_HOC']) {

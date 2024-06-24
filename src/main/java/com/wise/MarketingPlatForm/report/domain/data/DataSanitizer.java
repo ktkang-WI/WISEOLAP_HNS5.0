@@ -36,6 +36,7 @@ public final class DataSanitizer {
     int orgDataLength;
     int grpDataLenth;
     int maxPage;
+    TopBottomFilter topBottomFilter;
 
     @Getter
     @AllArgsConstructor
@@ -54,6 +55,7 @@ public final class DataSanitizer {
         allMeasures = new ArrayList<>();
         allMeasures.addAll(measures);
         allMeasures.addAll(sortByItems);
+        topBottomFilter = new TopBottomFilter(dimensions, allMeasures);
 
         orgDataLength = data.size();
     }
@@ -104,6 +106,18 @@ public final class DataSanitizer {
         return columnNames;
     }
 
+    /**
+     * Top/Bottom을 적용합니다.
+     * groupBy()하는 데이터의 경우 topBottom() 사용 이후 한 번 더 groupBy()를 호출하는 것을 추천드립니다.
+     * @return DataSanitizer
+     */
+    public final DataSanitizer topBottom() {
+        data = topBottomFilter.applyTopBottom(data);
+
+        grpDataLenth = data.size();
+        return this;
+    }
+
     public final DataSanitizer topBottom(TopBottomInfo topBottomInfo) {
         if (topBottomInfo != null && 
         	(topBottomInfo.getApplyFieldId() != null && !"".equals(topBottomInfo.getApplyFieldId()))) {
@@ -117,9 +131,9 @@ public final class DataSanitizer {
         List<Measure> cleanedMeasures = measures
             .stream()
             .filter(m -> data
-                            .stream()
-                            .anyMatch(item -> !item.containsKey(m.getName())))
-                            .collect(Collectors.toList());
+                    .stream()
+                    .anyMatch(item -> !item.containsKey(m.getName())))
+                    .collect(Collectors.toList());
         data
             .stream()
             .forEach((d)-> {

@@ -70,7 +70,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
 
   const getFormats = useCallback(() => {
     const formats = dataField.measure.map((item) => item.format);
-    (adHocOption.variationValues || []).forEach((v) => {
+    (adHocOption?.variationValues || []).forEach((v) => {
       const target = dataField.measure.find((m) => m.fieldId == v.targetId);
       if (v.type == 'absoluteVariation') {
         formats.push(target.format || getDefaultFormat());
@@ -225,9 +225,31 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 pivotDataSource.collapseAll(field.index);
               });
             }
+
+            const dataSource = e.component.getDataSource();
+            const items = dataSource.getData().rows;
+
+            const collapseSingleChildItems = (items, path) => {
+              items.forEach((item) => {
+                const currentPath = path.concat(item.value);
+                if (item.children && item.children.length === 1 &&
+                     (item.children[0]?.text == '' ||
+                        item.children[0]?.text == 'null')) {
+                  pivotInstance.collapseHeaderItem('row', currentPath);
+                } else {
+                  if (item.children) {
+                    collapseSingleChildItems(item.children, currentPath);
+                  }
+                }
+              });
+            };
+
+            collapseSingleChildItems(items, []);
+
             ItemManager.setExcuteQueryInit(item, false);
             dispatch(loadingAction.endJobForce());
           }
+
           return () =>
             pivotInstance.removeEventListener('contextmenu', handleContextMenu);
         }

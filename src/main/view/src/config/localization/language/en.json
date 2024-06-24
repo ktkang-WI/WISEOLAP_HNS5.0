@@ -490,6 +490,8 @@
   "nameDupleAlert": "The name is duplicated. Please write again.",
   "noSelectionAlert": "Nothing has been selected. Please select again.",
   "search": "Search",
+  "apply": "apply",
+  "myPageAdHocLayoutHint": "When checking Apply, My Page's AdHoc layout settings are applied first.",
   "hyperlink": "Hyperlink",
   "hyperlinkSetting": "Hyperlink Setting",
   "hyperlinkInformation": "Hyperlink information",
@@ -497,5 +499,18 @@
   "name": "Name",
   "new": "New",
   "save": "Save",
-  "addFieldDescription": "Add Field Description"
+  "addFieldDescription": "Add Field Description",
+  "requester": "Requester",
+  "selectReportAlert": "Please select a report.",
+  "saveFail": "Save failed.",
+  "resetAllConfirmMsg": "All settings will be reset. Do you want to proceed?",
+  "resetSuccess": "It has been initialized. Please save to apply.",
+  "resetFail": "Initialization failed.",
+  "favorit": "Favorites",
+  "topBottomForm": {
+    "topBottomType": "Top/Bottom Distinction",
+    "count": "Top/Bottom Count",
+    "percentage": "Apply %",
+    "others": "Display other items besides Top/Bottom values as 'Others'"
+  }
 }

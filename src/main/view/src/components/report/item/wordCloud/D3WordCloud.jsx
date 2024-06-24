@@ -5,6 +5,7 @@ const D3WordCloud = ({
   dataSource,
   valueField,
   labelField,
+  palette,
   width,
   height
 }) => {
@@ -22,14 +23,15 @@ const D3WordCloud = ({
       option: {
         width: width,
         height: height,
-        sectionSize: 5
+        sectionSize: 5,
+        palette
       }
     });
     D3PainterForWordCloud.painting();
     return () => {
       D3PainterForWordCloud.erasing();
     };
-  }, [dataSource, width, height]);
+  }, [dataSource, width, height, palette]);
   return (
     <div
       ref={svgRef}

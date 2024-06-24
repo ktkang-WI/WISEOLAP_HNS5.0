@@ -8,7 +8,8 @@ D3PainterForWaterFall.defaultOption = (option) => {
     width: option.width - 50,
     height: option.height - 50,
     margin: {top: 20, right: 30, bottom: 30, left: 50},
-    padding: 0.3
+    padding: 0.3,
+    palette: option.palette
   };
 };
 
@@ -102,7 +103,8 @@ init.paint.drawing = (svg) => {
       .attr('width', x.bandwidth())
       .attr('fill', (d, i) =>
         i === cumulativeData.length - 1 ?
-      'red' : (d[valueField] >= 0 ? 'steelblue' : 'red'));
+      option.palette[1] :
+      (d[valueField] >= 0 ? option.palette[0] : option.palette[1]));
 
   // Add the text labels
   svg.selectAll('.label')

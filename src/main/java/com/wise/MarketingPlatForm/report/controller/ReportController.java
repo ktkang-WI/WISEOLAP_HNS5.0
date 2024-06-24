@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -213,11 +214,34 @@ public class ReportController {
 	    )
 	)
     @PostMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestBody Map<String, String> param) {
+	public Map<String, Object> getReport(@RequestBody Map<String, String> param, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        
+        String userId = user.getUserId(); 
         String reportId = param.getOrDefault("reportId", "");
-        String userId = param.getOrDefault("userId", "");
 
         return reportService.getReport(reportId, userId);
+	}
+    
+    @Operation(
+	    summary = "get only report name",
+	    description = "reportId로 보고서 이름만 불러옵니다.")
+	@Parameters({
+	    @Parameter(name = "reportId", description = "report id", example = "8486", required = true),
+	})
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+	    content = @Content(
+	        examples = {
+	            @ExampleObject(name = "example", value = "{\"reportId\": \"8486\"}")
+	        }
+	    )
+	)
+    @PostMapping(value = "/report-name")
+	public String getOnlyReportNm(@RequestBody Map<String, String> param) {
+        String reportId = param.getOrDefault("reportId", "");
+
+        return reportService.getOnlyReportName(reportId);
 	}
 
     @Operation(
@@ -278,7 +302,7 @@ public class ReportController {
 	    )
 	)
 	@PostMapping(value = "/report-list")
-    public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
     	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
@@ -327,7 +351,9 @@ public class ReportController {
             HttpSession session = request.getSession();
             UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
-
+            
+            // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
+            reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -348,6 +374,8 @@ public class ReportController {
             UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
+            // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
+            reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);

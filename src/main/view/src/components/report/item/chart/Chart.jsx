@@ -160,6 +160,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         height="100%"
         customizeLabel={(o) => customizeLabel(o, mart.formats)}
         resolveLabelOverlapping={overlapping}
+        palette={meta?.palette?.name} // Dev Default blend
         id={id}
         ref={dxRef}
         onPointClick={onPointClick}

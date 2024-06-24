@@ -11,6 +11,15 @@
     <result column="ORDINAL" property="ordinal" javaType="int"/>
     <result column="REPORT_TYPE" property="reportType" javaType="String"/>
     <result column="TYPE" property="type" javaType="String"/>
+    <result column="REQUESTER" property="requester" javaType="String"/>
+    <result column="REG_DT" property="regDt" javaType="java.sql.Timestamp"/>
+    <result column="MOD_DT" property="modDt" javaType="java.sql.Timestamp"/>
+    <result column="REPORT_TAG" property="reportTag" javaType="String"/>
+    <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
+    <result column="REG_USER_NO" property="regUserNo" javaType="int"/>
+    <result column="MOD_USER_NO" property="modUserNo" javaType="int"/>
+    <result column="REG_USER_NM" property="regUserName" javaType="String"/>
+    <result column="MOD_USER_NM" property="modUserName" javaType="String"/>
 	</resultMap>
 
   <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
@@ -64,111 +73,180 @@
                 AND A.REPORT_ID = #{reportId}
             </if>
     </select>
-
+  
     <select id="selectPublicReportList" resultMap="ReportList">
-        SELECT 	DISTINCT ID,
-            TEXT,
-            UPPERID,
-            ORDINAL,
-            REPORT_TYPE,
-            TYPE,
-            REG_DT
-        FROM ((SELECT DISTINCT 	PUB_FLD_MSTR.FLD_ID				AS ID,
-                      PUB_FLD_MSTR.FLD_NM				AS TEXT,
-                            PUB_FLD_MSTR.FLD_PARENT_ID 		AS UPPERID,
-                            PUB_FLD_MSTR.FLD_ORDINAL   		AS ORDINAL,
-                            NULL 							AS REPORT_TYPE,
-                            'FOLDER'                   		AS TYPE,
-                            NULL						  	AS REG_DT
-              FROM   				USER_AUTH_REPORT_MSTR
-            INNER JOIN 			USER_MSTR 						ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
-            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID
-            <if test='editMode == "designer"'>
-              WHERE  				USER_MSTR.USER_ID = #{userId}
-              AND 				AUTH_PUBLISH != 'N'
-            </if>
-            <if test='editMode == "viewer"'>
-              WHERE  				USER_MSTR.USER_ID = #{userId}
-              AND 				AUTH_VIEW != 'N'
-            </if>
-            )
-                UNION ALL
-              (SELECT DISTINCT 	PUB_FLD_MSTR.FLD_ID        		AS ID,
-                            PUB_FLD_MSTR.FLD_NM       		AS TEXT,
-                            PUB_FLD_MSTR.FLD_PARENT_ID 		AS UPPERID,
-                            PUB_FLD_MSTR.FLD_ORDINAL   		AS ORDINAL,
-                            NULL 							AS REPORT_TYPE,
-                            'FOLDER'                  	 	AS TYPE,
-                            NULL						  	AS REG_DT
-            FROM   				GRP_AUTH_REPORT_MSTR
-            INNER JOIN 			USER_MSTR 						ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
-            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
-            <if test='editMode == "designer"'>
-              WHERE  				USER_MSTR.USER_ID = #{userId}
-              AND 				AUTH_PUBLISH != 'N'
-            </if>
-            <if test='editMode == "viewer"'>
-              WHERE  				USER_MSTR.USER_ID = #{userId}
-              AND 				AUTH_VIEW != 'N'
-            </if>
-            )
-              UNION ALL
-            (SELECT 			REPORT_MSTR.REPORT_ID			AS ID,
-                          REPORT_MSTR.REPORT_NM			AS TEXT,
-                      REPORT_MSTR.FLD_ID 				AS UPPERID,
-                          REPORT_MSTR.REPORT_ORDINAL 		AS ORDINAL,
-                          REPORT_MSTR.REPORT_TYPE 		AS REPORT_TYPE,
-                          'REPORT'           				AS TYPE,
-                          REPORT_MSTR.REG_DT				AS REG_DT
-            FROM   				REPORT_MSTR
-            INNER JOIN 			PUB_FLD_MSTR 					ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
-            WHERE  				REPORT_MSTR.DEL_YN != 'Y'
-        <if test="reportTypes != null">
-            AND 				REPORT_MSTR.REPORT_TYPE IN
-            <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
-             #{type}
-            </foreach>
-        </if>
-        ) ) A
-        ORDER BY UPPERID, TYPE, ORDINAL
+      SELECT DISTINCT 
+          A.ID,
+          A.TEXT,
+          A.UPPERID,
+          A.ORDINAL,
+          A.REPORT_TYPE,
+          A.TYPE,
+          A.REG_DT,
+          UM_REG.USER_NM AS REG_USER_NM,
+          A.MOD_DT,
+          UM_MOD.USER_NM AS MOD_USER_NM,
+          A.REQUESTER,
+          A.REPORT_TAG,
+          A.REPORT_DESC
+      FROM (
+          (
+              SELECT DISTINCT  
+                  PUB_FLD_MSTR.FLD_ID AS ID,                             
+                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
+                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
+                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
+                  NULL AS REPORT_TYPE,                             
+                  'FOLDER' AS TYPE,                                                       
+                  NULL AS REG_DT,                             
+                  NULL AS REG_USER_NO,          
+                  NULL AS MOD_DT,                             
+                  NULL AS MOD_USER_NO,      
+                  NULL AS REQUESTER,                          
+                  NULL AS REPORT_TAG,                             
+                  NULL AS REPORT_DESC             
+              FROM               
+                  USER_AUTH_REPORT_MSTR             
+              INNER JOIN         
+                  USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                             
+              WHERE            
+                  USER_MSTR.USER_ID = #{userId}         
+                  AND AUTH_PUBLISH != 'N'        
+          )           
+          UNION ALL           
+          (
+              SELECT DISTINCT  
+                  PUB_FLD_MSTR.FLD_ID AS ID,                             
+                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
+                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
+                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
+                  NULL AS REPORT_TYPE,                      
+                  'FOLDER' AS TYPE,                                              
+                  NULL AS REG_DT,                             
+                  NULL AS REG_USER_NO,                             
+                  NULL AS MOD_DT,                             
+                  NULL AS MOD_USER_NO,  
+                  NULL AS REQUESTER,                                
+                  NULL AS REPORT_TAG,                             
+                  NULL AS REPORT_DESC             
+              FROM               
+                  GRP_AUTH_REPORT_MSTR             
+              INNER JOIN         
+                  USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                             
+              WHERE            
+                  USER_MSTR.USER_ID = #{userId}              
+                  AND AUTH_PUBLISH != 'N'                                    
+          )           
+          UNION ALL           
+          (
+              SELECT            
+                  REPORT_MSTR.REPORT_ID AS ID,                             
+                  REPORT_MSTR.REPORT_NM AS TEXT,                             
+                  REPORT_MSTR.FLD_ID AS UPPERID,                             
+                  REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,                             
+                  REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,                             
+                  'REPORT' AS TYPE,                             
+                  REPORT_MSTR.REG_DT AS REG_DT,                                                  
+                  REPORT_MSTR.REG_USER_NO AS REG_USER_NO,             
+                  REPORT_MSTR.MOD_DT AS MOD_DT,                             
+                  REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,      
+                  REPORT_MSTR.GRID_INFO AS REQUESTER,                          
+                  REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
+                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC             
+              FROM               
+                  REPORT_MSTR             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID             
+              WHERE              
+                  REPORT_MSTR.DEL_YN != 'Y'
+                  <if test="reportTypes != null">
+                    AND  REPORT_MSTR.REPORT_TYPE IN
+                    <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
+                        #{type}
+                    </foreach>
+                </if>                                                 
+          )
+      ) A
+      LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
+      LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
+      ORDER BY UPPERID, TYPE, ORDINAL
     </select>
 
     <select id="selectPrivateReportList" resultMap="ReportList">
-      SELECT *
-      FROM  (( SELECT DISTINCT USER_FLD_MSTR.FLD_ID       AS ID,
-                     USER_FLD_MSTR.FLD_NM        			AS TEXT,
-                     USER_FLD_MSTR.FLD_PARENT_ID 			AS UPPERID,
-                     USER_FLD_MSTR.FLD_ORDINAL   			AS ORDINAL,
-                     NULL 								AS REPORT_TYPE,
-                     'FOLDER'                   			AS TYPE,
-                   NULL						  			AS REG_DT
-              FROM   USER_FLD_MSTR
-                     INNER JOIN USER_MSTR
-                             ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
-              WHERE  USER_MSTR.USER_ID = #{userId}
-                )
-             UNION ALL
-             (SELECT REPORT_MSTR.REPORT_ID          		AS ID,
-                     REPORT_MSTR.REPORT_NM          		AS TEXT,
-                     REPORT_MSTR.FLD_ID 					AS UPPERID,
-                     REPORT_MSTR.REPORT_ORDINAL     		AS ORDINAL,
-                     REPORT_MSTR.REPORT_TYPE 				AS REPORT_TYPE,
-                     'REPORT'           					AS TYPE,
-                 REPORT_MSTR.REG_DT					AS REG_DT
-              FROM   REPORT_MSTR
-                     INNER JOIN USER_FLD_MSTR
-                             ON REPORT_MSTR.FLD_ID = USER_FLD_MSTR.FLD_ID
-              WHERE  				REPORT_MSTR.DEL_YN != 'Y'
-              <if test="reportTypes != null">
-                  AND 				REPORT_MSTR.REPORT_TYPE IN
-                  <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
-                  #{type}
-                  </foreach>
-              </if>
-              ) ) A
-      ORDER  BY UPPERID,
-                TYPE,
-                ORDINAL
+        SELECT 
+            A.ID,
+            A.TEXT,
+            A.UPPERID,
+            A.ORDINAL,
+            A.REPORT_TYPE,
+            A.TYPE,
+            A.REQUESTER,
+            A.REG_DT,
+            UM_REG.USER_NM AS REG_USER_NM,
+            A.MOD_DT,
+            UM_MOD.USER_NM AS MOD_USER_NM,
+            A.REPORT_TAG,
+            A.REPORT_DESC
+        FROM (
+            (
+                SELECT DISTINCT 
+                    USER_FLD_MSTR.FLD_ID AS ID,
+                    USER_FLD_MSTR.FLD_NM AS TEXT,
+                    USER_FLD_MSTR.FLD_PARENT_ID AS UPPERID,
+                    USER_FLD_MSTR.FLD_ORDINAL AS ORDINAL,
+                    NULL AS REPORT_TYPE,
+                    'FOLDER' AS TYPE,
+                    NULL AS REG_DT,
+                    NULL AS REQUESTER,
+                    NULL AS REG_USER_NO,
+                    NULL AS MOD_DT,
+                    NULL AS MOD_USER_NO,
+                    NULL AS REPORT_TAG,
+                    NULL AS REPORT_DESC
+                FROM   
+                    USER_FLD_MSTR
+                INNER JOIN 
+                    USER_MSTR ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
+                WHERE  
+                    USER_MSTR.USER_ID = #{userId}
+            )
+            UNION ALL
+            (
+                SELECT 
+                    REPORT_MSTR.REPORT_ID AS ID,
+                    REPORT_MSTR.REPORT_NM AS TEXT,
+                    REPORT_MSTR.FLD_ID AS UPPERID,
+                    REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,
+                    REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,
+                    'REPORT' AS TYPE,
+                    REPORT_MSTR.REG_DT AS REG_DT,
+                    REPORT_MSTR.GRID_INFO AS REQUESTER,
+                    REPORT_MSTR.REG_USER_NO AS REG_USER_NO,
+                    REPORT_MSTR.MOD_DT AS MOD_DT,
+                    REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,
+                    REPORT_MSTR.REPORT_TAG AS REPORT_TAG,
+                    TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC
+                FROM   
+                    REPORT_MSTR
+                INNER JOIN 
+                    USER_FLD_MSTR ON REPORT_MSTR.FLD_ID = USER_FLD_MSTR.FLD_ID
+                WHERE  
+                    REPORT_MSTR.DEL_YN != 'Y'
+                    <if test="reportTypes != null">
+                        AND REPORT_MSTR.REPORT_TYPE IN
+                        <foreach collection="reportTypes" item="type" open="(" close=")" separator=",">
+                            #{type}
+                        </foreach>
+                    </if>
+            )
+        ) A
+        LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO  
+        LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO  
+        ORDER BY UPPERID, TYPE, ORDINAL
     </select>
 
     <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
@@ -444,4 +522,8 @@
 				,#{dsId}
 			 )
     </insert>
+
+    <select id='selectReportName' resultType='string'>
+      SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = #{reportId}
+    </select>
 </mapper>

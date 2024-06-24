@@ -337,6 +337,12 @@ color: var(--gray600);
   background: var(--gray50);
 }
 
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-data-cell,
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-row-cell {
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
 td[role="columnheader"] {
   text-align: center !important;
 }
@@ -427,6 +433,10 @@ td[role="columnheader"] {
   border-radius: 8px;
 }
 
-.dx-treeview-node-container {
+.dx-treeview-node-container:hover {
   overflow: visible;
+}
+
+.dx-item.dx-treeview-item {
+  width: 100%;
 }

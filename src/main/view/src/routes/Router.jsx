@@ -14,6 +14,7 @@ import {
   generalConfigure as generalLoader,
   groupData as groupDataLoader,
   userFolderData as myPageFolderData,
+  userDesignerConfig,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
@@ -27,10 +28,37 @@ import LinkViewer from './LinkViewer';
 import MyPage from 'components/useInfo/organism/Mypage';
 import ReportFolderTab
   from 'components/useInfo/organism/myReportAndFolder/ReportFolderTab';
-import UserInfoManagement from 'components/useInfo/organism/UserInfoManagement';
+import UserInfoManagement
+  from 'components/useInfo/organism/myInformation/UserInfoManagement';
+import MyDesignerConfig
+  from 'components/useInfo/organism/myDesigner/MyDesignerConfig';
+import MyViewerConfig
+  from 'components/useInfo/organism/myViewer/MyViewerConfig';
+import MyFontConfig from 'components/useInfo/organism/myFont/MyFontConfig';
 
 export const contextPath = '/editds';
+const multipleLoader = async () => {
+  const generalConfigure = await generalLoader().then((result) => {
+    return result;
+  });
 
+  const myPageConfigure = await userDesignerConfig().then((result) => {
+    if (result == null) return result;
+
+    const object = result;
+    const json = JSON.parse(object.defaultItem);
+
+    object.defaultItem = json.item;
+    object.defaultLayout = {check: json.check, layout: json.layout};
+
+    return object;
+  });
+
+  return {
+    generalConfigure: generalConfigure.generalConfigure,
+    myPageConfigure: myPageConfigure
+  };
+};
 const router = createBrowserRouter([
   {
     path: contextPath,
@@ -49,7 +77,7 @@ const router = createBrowserRouter([
   { // 초기 화면
     path: contextPath + '',
     element: <Designer/>,
-    loader: generalLoader,
+    loader: multipleLoader,
     children: [
       {
         path: DesignerMode['DASHBOARD'].toLowerCase(),
@@ -68,7 +96,7 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/viewer',
     element: <Viewer/>,
-    loader: generalLoader
+    loader: multipleLoader
   },
   {
     path: contextPath + '/linkViewer',
@@ -117,6 +145,21 @@ const router = createBrowserRouter([
         path: 'myReport-folder',
         element: <ReportFolderTab/>,
         loader: myPageFolderData
+      },
+      {
+        path: 'myPage-viewerConfig',
+        element: <MyViewerConfig/>
+        // loader: 뷰어 설정
+      },
+      {
+        path: 'myPage-fontConfig',
+        element: <MyFontConfig/>
+        // loader: 폰트 설정
+      },
+      {
+        path: 'myPage-designerConfig',
+        element: <MyDesignerConfig/>,
+        loader: userDesignerConfig
       }
     ]
   }

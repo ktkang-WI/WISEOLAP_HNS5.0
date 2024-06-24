@@ -34,7 +34,7 @@ const generateMeta = (item) => {
       position: 'top', // 행 합계 위치
       expand: true // 행 그룹 확장(초기상태)
     },
-    dataPosition: 'row' // 측정값 위치
+    dataPosition: 'column' // 측정값 위치
   });
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', false);
@@ -115,7 +115,11 @@ const generateItem = (item, param, rootItem) => {
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
       expanded: !item.meta.positionOption.row.expand ?
-        true :item.meta.positionOption.row.expand
+        true :item.meta.positionOption.row.expand,
+      customizeText: (e) =>{
+        const cText = e?.valueText == 'null' ? '' : e?.valueText;
+        return cText;
+      }
     });
   }
 
@@ -149,6 +153,10 @@ const generateItem = (item, param, rootItem) => {
       sortOrder: field.sortOrder.toLowerCase(),
       expanded: !item.meta.positionOption.column.expand ?
           true :item.meta.positionOption.column.expand,
+      customizeText: (e) =>{
+        const cText = e?.valueText == 'null' ? '' : e?.valueText;
+        return cText;
+      },
       ...sortBy
     });
   }

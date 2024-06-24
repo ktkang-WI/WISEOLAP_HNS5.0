@@ -64,14 +64,9 @@ const useReportSave = () => {
     param.reportType = reportType;
     param.reportTag = dataSource.reportTag;
     param.reportDesc = dataSource.reportDesc;
-    const chartXml = selectRootItem(store.getState());
-    const newChartXml = _.cloneDeep(chartXml);
-    newChartXml.items.forEach((item) => delete item['mart']);
-    param.chartXml = JSON.stringify(newChartXml);
-    param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
-    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
-    param.paramXml = JSON.stringify(
-        selectCurrentInformationas(store.getState()));
+    param.requester = dataSource.requester || '';
+    param.reportSubTitle = dataSource.reportSubTitle;
+
     if (reportType === DesignerMode['EXCEL']) {
       param.reportXml = JSON.stringify(selectSpreadMeta(store.getState()));
     } else {
@@ -80,7 +75,17 @@ const useReportSave = () => {
         options: param
       });
     }
-    param.reportSubTitle = dataSource.reportSubTitle;
+
+    const chartXml = selectRootItem(store.getState());
+    const newChartXml = _.cloneDeep(chartXml);
+    newChartXml.items =
+      newChartXml.items.map((item) => _.omit(item, 'mart'));
+    param.chartXml = JSON.stringify(newChartXml);
+    param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
+    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
+    param.paramXml = JSON.stringify(
+        selectCurrentInformationas(store.getState()));
+
 
     return param;
   };
@@ -105,6 +110,7 @@ const useReportSave = () => {
       options.reportOrdinal = data.reportOrdinal;
       options.reportTag = data.reportTag;
       options.reportDesc = data.reportDesc;
+      options.requester = data.gridInfo;
       options.path = data.path;
       options.reportType = ConvertDesignerMode[data.reportType];
 
@@ -212,10 +218,11 @@ const useReportSave = () => {
     });
   };
 
-  const reload = (designerMode, adHocLayout) => {
+  const reload = (designerMode, adHocLayout, defaultItem) => {
     const param = {
       mode: designerMode,
-      adhocLayout: AdHocLayoutTypes[adHocLayout]
+      adhocLayout: AdHocLayoutTypes[adHocLayout],
+      defaultItem: defaultItem || 'chart'
     };
 
     dispatch(reportActions.initReport(designerMode));

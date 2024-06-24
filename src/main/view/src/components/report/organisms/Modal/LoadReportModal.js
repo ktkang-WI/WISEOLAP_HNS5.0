@@ -29,7 +29,7 @@ const LoadReportModal = ({...props}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    models.Report.getList('admin', reportType, 'designer').then(({data}) => {
+    models.Report.getList(reportType, 'designer').then(({data}) => {
       setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);
@@ -41,7 +41,7 @@ const LoadReportModal = ({...props}) => {
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
-    models.Report.getReportById('admin', selectedReport.id)
+    models.Report.getReportById(selectedReport.id)
         .then(({data}) => {
           try {
             loadReport(data);
@@ -49,7 +49,7 @@ const LoadReportModal = ({...props}) => {
           } catch {
             alert(localizedString.reportCorrupted);
           }
-        }).catch(() => {
+        }).catch((e) => {
           alert(localizedString.reportCorrupted);
         });
     models.Report.getLinkReportList(selectedReport.id)

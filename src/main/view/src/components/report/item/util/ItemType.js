@@ -20,7 +20,7 @@ export default {
   COLLAPSIBLE_TREE: 'collapsibleTree',
   RADIAL_TREE: 'radialTree',
   SUNBURST_CHART: 'sunburstChart',
-  ZOOMABLE_CICLE: 'zoomableCicle',
+  ZOOMABLE_ICICLE: 'zoomableIcicle',
   CICLE_PACKING: 'ciclePacking',
   SCATTER_PLOT: 'scatterPlot',
   COMBO_BOX: 'comboBox',

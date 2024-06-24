@@ -13,11 +13,11 @@ import meaGrpImg from
 import dimGrpImg from
   'assets/image/icon/dataSource/cube_dimension.png';
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
-import {createRoot} from 'react-dom/client';
 import DatasetType from 'components/dataset/utils/DatasetType';
 // import {useSelector} from 'react-redux';
 // import {selectEditMode} from 'redux/selector/ConfigSelector';
 // import {EditMode} from 'components/config/configType';
+import BubbleTooltip from '../../Common/Popover/BubbleTooltip';
 
 const theme = getTheme();
 
@@ -61,40 +61,6 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const SubTitle = styled.div`
-  display: none;
-  font-size: 0.75rem;
-  font-weight: 400;
-  position: absolute;
-  top: 30px;
-  left: 40%;
-  width: auto;
-  z-index: 99;
-  white-space: nowrap;
-  text-align: center;
-  margin: 0 auto;
-  transform: translateX(-50%);
-  background: ${theme.color.white};
-  border-radius: 2px;
-  border: 1px solid ${theme.color.primary};
-  padding: 3px 7px;
-  color: ${theme.color.primary};
-  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, .15);
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    transform: rotate(45deg);
-    background: #ffffff;
-    left: calc(50% - 2px);
-    top: -3px;
-    border-left: 1px solid ${theme.color.primary};
-    border-top: 1px solid ${theme.color.primary};
-  }
-`;
-
 const iconMapper = {
   'MEA': meaImg,
   'DIM': dimImg,
@@ -132,71 +98,65 @@ const DataSourceFoldableList = ({dataset}) => {
 
   const itemRender = (item, index, snapshot) => {
     const shouldRenderClone = item.uniqueName === snapshot.draggingFromThisWith;
-
-    if (shouldRenderClone) {
-      return (
-        <div className="dx-item-content dx-treeview-item-content">
-          <img width='16px' src={iconMapper[item.type]} className="dx-icon"/>
-          <span>{item.name}</span>
-        </div>
-      );
-    }
-    return (
-      <Draggable
-        draggableId={item.uniqueName}
-        index={index}
-      >
-        {(provided) => (
-          <div
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-            className="dx-item-content dx-treeview-item-content"
-          >
-            <img
-              style={{width: '16px', height: '16px', marginBottom: '1px'}}
-              src={iconMapper[item.type]}
-              className="dx-icon"/>
-            {/* 기존 포맷 유지*/}
-            <span className='ct-tooltip'>
-              {item.name}
-              {item.expression ?
-              <span className='ct-tooltiptext'>{item.expression}</span> : <></>}
-            </span>
-          </div>
-        )}
-      </Draggable>
-    );
-  };
-
-  const getSubTitle = (title) => {
-    return <SubTitle className='tooltip'>{title}</SubTitle>;
-  };
-
-  const activeTootip = (itemElement, description) => {
-    const subTitle = getSubTitle(description);
-    const container = document.createElement('div');
-    container.className = 'tooltipWrapper';
-    itemElement.appendChild(container);
-
-    const root = createRoot(container);
-    root.render(subTitle);
-  };
-
-  // TODO: 추후 itemRendered 로 변경
-  const onItemRendered = ({itemElement, itemData}) => {
     let description = '';
 
     if (dataset.datasetType === DatasetType.CUBE) {
-      description = itemData.descript ? itemData.description : '';
+      description = item.descript ? item.description : '';
     } else if (dataset.datasetType === DatasetType.DS_SQL) {
       const fieldDesc = dataset.fieldDescription || {};
-      description = fieldDesc[itemData.name];
+      description = fieldDesc[item.name];
     }
 
-    if (description) {
-      activeTootip(itemElement, description);
+    if (shouldRenderClone) {
+      return (
+        <>
+          <div className="dx-item-content dx-treeview-item-content">
+            <img width='16px' src={iconMapper[item.type]} className="dx-icon"/>
+            <span>{item.name}</span>
+          </div>
+        </>
+      );
     }
+    return (
+      <>
+        <Draggable
+          draggableId={item.uniqueName}
+          index={index}
+        >
+          {(provided) => (
+            <div
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+              className="dx-item-content dx-treeview-item-content"
+            >
+              <img
+                style={{width: '16px', height: '16px', marginBottom: '1px'}}
+                src={iconMapper[item.type]}
+                className="dx-icon"/>
+              {/* 기존 포맷 유지*/}
+              <span className='ct-tooltip'>
+                {item.name}
+                {item.expression ?
+                <span className='ct-tooltiptext'>
+                  {item.expression}
+                </span> : <></>}
+              </span>
+            </div>
+          )}
+        </Draggable>
+        {description && getDescription(description)}
+      </>
+    );
+  };
+
+  const getDescription = (title) => {
+    return <BubbleTooltip
+      top='35px'
+      className='tooltip'
+    >
+      {title}
+    </BubbleTooltip>;
   };
 
   // let data = [];
@@ -242,7 +202,6 @@ const DataSourceFoldableList = ({dataset}) => {
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
-              onItemRendered={onItemRendered}
             />
           </Wrapper>
         )

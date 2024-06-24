@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.config.dao.MyPageConfigDAO">
+  <resultMap id="MyDesignerDTO" type="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    <result column="USER_NO" property="userNo" javaType="int"/>
+    <result column="DEFAULT_DATASET_ID" property="defaultDatasetId" javaType="int"/>
+    <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="int"/>
+    <result column="DEFAULT_ITEM" property="defaultItem" javaType="String"/>
+    <result column="DEFAULT_PALETTE" property="defaultPalette" javaType="String"/>
+  </resultMap>
+
+  <!-- myPage 디자이너 설정 -->
+  <select id="selectDesignerConfig" resultMap="MyDesignerDTO" parameterType="int">
+    SELECT
+      USER_NO,
+      DEFAULT_DATASET_ID,
+      DEFAULT_REPORT_ID,
+      DEFAULT_ITEM,
+      DEFAULT_PALETTE
+        FROM WB_USER_CONFIG_MSTR
+        WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+  </select>
+
+  <select id="selectOnlyReportNm" parameterType="int" resultType="string">
+    SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = #{reportId, jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectOnlyDatasetNm" parameterType="int" resultType="string">
+    SELECT DATASET_NM FROM DATASET_MSTR WHERE DATASET_ID = #{datasetId, jdbcType=INTEGER}
+  </select>
+
+  <update id="updateDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    UPDATE
+      WB_USER_CONFIG_MSTR
+      SET
+          DEFAULT_DATASET_ID = #{defaultDatasetId, jdbcType=INTEGER},
+          DEFAULT_REPORT_ID = #{defaultReportId, jdbcType=INTEGER},
+          DEFAULT_ITEM = #{defaultItem, jdbcType=VARCHAR},
+          DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR}
+      WHERE USER_NO = #{userNo}
+  </update>
+  <insert id="insertDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    INSERT INTO 
+    WB_USER_CONFIG_MSTR (
+      USER_NO,
+      DEFAULT_REPORT_ID,
+      DEFAULT_ITEM,
+      DEFAULT_PALETTE,
+      FONT_CONFIG,
+      USER_IMAGE, 
+      DEFAULT_DATASET_ID,
+      DEFAULT_REPORT_NM,
+      DEFAULT_REPORT_TYPE,
+      DEFAULT_VIEWER_REPORT_ID,
+      DEFAULT_VIEWER_REPORT_NM,
+      DEFAULT_VIEWER_REPORT_TYPE
+    ) 
+    VALUES (
+      #{userNo, jdbcType=INTEGER},
+      #{defaultReportId, jdbcType=INTEGER},
+      #{defaultItem, jdbcType=VARCHAR},
+      #{defaultPalette, jdbcType=VARCHAR},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ) 
+  </insert>
+</mapper>

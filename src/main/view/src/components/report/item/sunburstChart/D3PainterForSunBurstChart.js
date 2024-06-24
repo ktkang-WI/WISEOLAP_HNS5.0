@@ -12,7 +12,8 @@ D3PainterForSunBurstChart.defaultOption = (option) => {
     cy: (option.height / 2),
     breadcrumbWidth: 75,
     breadcrumbHeight: 30,
-    radius: radius
+    radius: radius,
+    palette: option.palette
   };
 };
 
@@ -84,10 +85,6 @@ init.funcs.mousearc = () => {
       .innerRadius((d) => Math.sqrt(d.y0))
       .outerRadius(option.radius);
 };
-init.funcs.color = d3
-    .scaleOrdinal()
-    .domain(['home', 'product', 'search', 'account', 'other', 'end'])
-    .range(['#5d85cf', '#7c6561', '#da7847', '#6fb971', '#9e70cf', '#bbbbbb']);
 
 init.funcs.partition = (data) => {
   const option = D3PainterForSunBurstChart.self.option;
@@ -130,6 +127,11 @@ init.paint.drawing = (svg) => {
       .style('max-width', `${option.width}px`)
       .style('font', '12px sans-serif');
 
+  const color = d3
+      .scaleOrdinal()
+      .domain(['home', 'product', 'search', 'account', 'other', 'end'])
+      .range(option.palette);
+
   const path = svg
       .append('g')
       .selectAll('path')
@@ -139,7 +141,7 @@ init.paint.drawing = (svg) => {
           })
       )
       .join('path')
-      .attr('fill', (d) => init.funcs.color(d.data.name))
+      .attr('fill', (d) => color(d.data.name))
       .attr('d', init.funcs.arc());
 
   svg

@@ -1,13 +1,15 @@
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import D3Calendar from './D3Calendar';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import ItemManager from '../util/ItemManager';
+import {getBlendColor} from '../util/ColorManager';
 
 const CalendarChart = ({setItemExports, id, item}) => {
-  const mart = item ? item.mart : null;
+  const mart = item?.mart;
+  const meta = item?.meta;
   if (!mart.init) {
     return <></>;
   }
@@ -30,6 +32,11 @@ const CalendarChart = ({setItemExports, id, item}) => {
 
   const seriesNames = mart.data.info.seriesMeasureNames;
 
+  const palette = useMemo(() => getBlendColor({
+    color: meta?.palette?.colors,
+    item: item
+  }), [meta?.palette?.colors]);
+
   return (
     <Wrapper
       ref={ref}
@@ -39,6 +46,7 @@ const CalendarChart = ({setItemExports, id, item}) => {
         dataSource={dataSource}
         argumentField='arg'
         valueField={seriesNames[0].summaryName}
+        palette={palette}
       />
     </Wrapper>
   );
