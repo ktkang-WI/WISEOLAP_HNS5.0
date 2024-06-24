@@ -197,7 +197,7 @@ const useSpread = () => {
   };
 
   const createReportBlob = async () => {
-    await clearBindingSheet();
+    const workbook = getWorkbook();
     const blob = await new Promise((resolve, reject) => {
       workbook.save((b) => {
         resolve(b);
@@ -242,6 +242,7 @@ const useSpread = () => {
     });
   };
 
+<<<<<<< HEAD
   const hnsDrmUpload = async (selectedFile) => {
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -332,6 +333,9 @@ const useSpread = () => {
     }
   };
 
+=======
+  /*
+>>>>>>> origin/homenshopping
   const clearBindingSheet = () => {
     return new Promise((resolve) => {
       const workbook = getWorkbook();
@@ -362,6 +366,7 @@ const useSpread = () => {
       }
     });
   };
+  */
 
   return {
     getWorkbook,
