@@ -82,7 +82,6 @@ public class GroupDataService {
           xmlGenerator.createElement(dimXML);
           xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
           xmlGenerator.createElement(dimXML, "CUBE_ID", cubeDim.getCubeId());
-          xmlGenerator.createElement(dimXML, "CUBE_NM", cubeDim.getCubeNm());
           xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
         }
       }

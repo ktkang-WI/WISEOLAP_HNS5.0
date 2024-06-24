@@ -34,7 +34,7 @@ public class UserGroupDataService {
 
     // Auth_Dim 처리
     xmlParser.setParentElement("Auth_Dim");
-    List<Map<String,Object>> auth_Dim = xmlParser.getChildrenElement("DS_VIEW_ID","CUBE_ID","CUBE_NM","DIM_UNI_NM");  // add CUBE_ID, CUBE_NM
+    List<Map<String,Object>> auth_Dim = xmlParser.getChildrenElement("DS_VIEW_ID","CUBE_ID","DIM_UNI_NM");  // add CUBE_ID, CUBE_NM
     auth_Dim.sort(Comparator.comparing(m -> Integer.parseInt(m.get("DS_VIEW_ID").toString())));
 
     // 공통 DS_VIEW_ID 추출
@@ -66,8 +66,6 @@ public class UserGroupDataService {
                     .build();
                 cubeIds.add(cube);
                 cubeIterator.remove();
-            } else {
-                break;
             }
         }
 
@@ -77,19 +75,15 @@ public class UserGroupDataService {
             Map<String, Object> map = dimIterator.next();
             int getdsViewId = Integer.parseInt(map.get("DS_VIEW_ID").toString());
             int getcubeId = Integer.parseInt(map.get("CUBE_ID").toString());
-            String getCubeNm = map.get("CUBE_NM").toString();
             String getcubeDimNm = map.get("DIM_UNI_NM").toString();
             if (map.containsKey("DS_VIEW_ID") && map.get("DS_VIEW_ID").equals(dsViewId)) {
                 CubeDimDTO cubeDim = CubeDimDTO.builder()
                     .dsViewId(getdsViewId)
                     .cubeId(getcubeId)
-                    .cubeNm(getCubeNm)
                     .dimDimUniNm(getcubeDimNm)
                     .build();
                 cubeDims.add(cubeDim);
                 dimIterator.remove();
-            } else {
-                break;
             }
         }
 

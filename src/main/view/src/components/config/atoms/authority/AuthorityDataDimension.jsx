@@ -100,7 +100,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
         elementAttr={{
           class: 'authority-data-dimension'
         }}
-        keyExpr={['dsViewId', 'cubeId', 'cubeNm', 'dimDimUniNm']}
+        keyExpr={['dsViewId', 'cubeId', 'dimDimUniNm']}
         showBorders={true}
         height="90%"
         selectedRowKeys={selectedKeys}
