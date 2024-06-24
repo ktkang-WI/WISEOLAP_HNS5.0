@@ -86,7 +86,7 @@ public class FileUploadController {
     public void getUploadDataColumn(HttpServletRequest request, HttpServletResponse response) {
         
         response.setCharacterEncoding("utf-8");
-        PrintWriter out = null;        
+        PrintWriter out = null;
         
         try {
                 
