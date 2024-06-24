@@ -2,6 +2,9 @@ package com.wise.MarketingPlatForm.account.model.groups.data;
 
 import java.util.List;
 
+import com.wise.MarketingPlatForm.account.dto.CubeDTO;
+import com.wise.MarketingPlatForm.account.dto.CubeDimDTO;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,6 +12,6 @@ import lombok.Getter;
 @Builder
 public class DataModel {
   Integer dsViewId;
-  List<Integer> cubeId;
-  List<String> dimUniNm;
+  List<CubeDTO> cubeId;
+  List<CubeDimDTO> cubeDim;
 }

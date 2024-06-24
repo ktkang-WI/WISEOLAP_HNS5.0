@@ -23,6 +23,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
 
   useEffect(() => {
+    if (!dsViewId) return;
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
@@ -45,6 +46,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   }, [dependency]);
 
   useEffect(() => {
+    if (!dsViewId) return;
     if (!data?.next) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
@@ -60,7 +62,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
         const temp = {
           dsViewId: dsViewId,
           cubeId: [],
-          dimUniNm: []
+          cubeDim: []
         };
         object.datas.push(temp);
         setSelectedKeys([]);
@@ -71,6 +73,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   }, [dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
+    if (!dsViewId) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
     data.next = data.next.map((d) => {
@@ -100,7 +103,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
         }}
         showBorders={true}
         height="90%"
-        keyExpr="cubeId"
+        keyExpr={['dsViewId', 'cubeId']}
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
       >

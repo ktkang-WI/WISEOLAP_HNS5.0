@@ -23,6 +23,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
 
   useEffect(() => {
     const updateData = () => {
+      if (!dsViewId) return;
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
       const obj = getUserOrGroup(dataSetMode, data, nextId);
@@ -37,13 +38,14 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
       if (!dsViewId) setSelectedKeys([]);
       else {
         setSelectedKeys(obj?.datas.find((d) =>
-          d.dsViewId == dsViewId)?.dimUniNm ?? []);
+          d.dsViewId == dsViewId)?.cubeDim ?? []);
       }
     };
     updateData();
   }, [dependency]);
 
   useEffect(() => {
+    if (!dsViewId) return;
     if (!data?.next) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
@@ -51,7 +53,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
     if (!object) {
       const findedDsView = object.datas.find((d) => d.dsViewId == dsViewId);
       if (!findedDsView) setSelectedKeys([]);
-      else setSelectedKeys(findedDsView.dimUniNm);
+      else setSelectedKeys(findedDsView.cubeDim);
     } else {
       const data = object.datas.find((d) => d.dsViewId == dsViewId);
       if (!data) {
@@ -59,17 +61,18 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
         const temp = {
           dsViewId: dsViewId,
           cubeId: [],
-          dimUniNm: []
+          cubeDim: []
         };
         object.datas.push(temp);
         setSelectedKeys([]);
       } else {
-        setSelectedKeys(data?.dimUniNm ?? []);
+        setSelectedKeys(data?.cubeDim ?? []);
       }
     }
   }, [dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
+    if (!dsViewId) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
     data.next = data.next.map((d) => {
@@ -78,7 +81,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
           if (d2.dsViewId == dsViewId) {
             return {
               ...d2,
-              dimUniNm: selectedItems.selectedRowKeys
+              cubeDim: selectedItems.selectedRowKeys
             };
           }
           return d2;
@@ -97,6 +100,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
         elementAttr={{
           class: 'authority-data-dimension'
         }}
+        keyExpr={['dsViewId', 'cubeId', 'cubeNm', 'dimDimUniNm']}
         showBorders={true}
         height="90%"
         selectedRowKeys={selectedKeys}

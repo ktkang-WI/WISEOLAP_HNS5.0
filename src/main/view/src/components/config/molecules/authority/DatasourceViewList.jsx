@@ -1,7 +1,13 @@
 import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
 import React, {useContext, useEffect, useState} from 'react';
-import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
+import {
+  AuthorityContext,
+  getKeys,
+  getUserOrGroup,
+  getUserOrGroupOrigin,
+  mode,
+  path}
   from 'components/config/organisms/authority/Authority';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 
@@ -19,12 +25,12 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
-
   useEffect(() => {
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
       const datas = getUserOrGroup(dataSetMode, data, nextId);
+      const keys = getUserOrGroupOrigin(dataSetMode, data, nextId);
       if (!datas) {
         const newItem = {
           ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
@@ -33,14 +39,27 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         };
         data.next.push(newItem);
       }
-      const key = datas?.datas?.map((d) => d.dsViewId) ?? [];
-      if (key.length === 0) return;
-      setDataSource(dataSource.map((d) => {
-        return {
-          isAuth: key.includes(d.dsViewId),
-          ...d
-        };
-      }));
+      const filteredKey = keys?.datas?.filter((d) => {
+        const cubeId = d?.cubeId?.length ?? 0 != 0;
+        const cubeDim = d?.cubeDim?.length ?? 0 != 0;
+        return cubeId || cubeDim;
+      });
+      const key = filteredKey?.map((d) => d.dsViewId) ?? [];
+      if (key.length === 0) {
+        setDataSource(dataSource.map((d) => {
+          return {
+            ...d,
+            isAuth: false
+          };
+        }));
+      } else {
+        setDataSource(dataSource.map((d) => {
+          return {
+            ...d,
+            isAuth: key.includes(d.dsViewId)
+          };
+        }));
+      }
     };
     updateData();
   }, [dependency]);
@@ -50,7 +69,9 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       alert(localizedString.clickMe);
       setSelectedKeys([]);
     } else {
-      setDsViewId(selectedItems.selectedRowKeys[0].dsViewId);
+      const dsViewId = selectedItems.selectedRowKeys.length === 0 ?
+        [] : selectedItems.selectedRowKeys[0].dsViewId;
+      setDsViewId(dsViewId);
     }
   };
 

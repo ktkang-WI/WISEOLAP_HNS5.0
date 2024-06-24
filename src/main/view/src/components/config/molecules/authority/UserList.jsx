@@ -14,6 +14,7 @@ const UserList = ({onRowClick}) => {
   const [dataSource, setDataSource] = useState(getContext.state.user);
   const data = getContext.state.data;
   const [currentTab] = getContext.state.currentTab;
+  const [action] = getContext.state.action;
   // TODO: 권한별로 키유무 만들어야함.
   useEffect(() => {
     if (!data?.next) return;
@@ -24,7 +25,7 @@ const UserList = ({onRowClick}) => {
         ...d
       };
     }));
-  }, [currentTab]);
+  }, [currentTab, action]);
   const HandleClick = (e) => {
     onRowClick(e);
   };

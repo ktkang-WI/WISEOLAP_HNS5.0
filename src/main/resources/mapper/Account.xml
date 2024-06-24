@@ -597,6 +597,11 @@
       </foreach>
     </delete>
 
+    <delete id="deleteGroupDataAll">
+      DELETE FROM GRP_AUTH_DATA_MSTR_DEV
+              WHERE 1 = 1
+    </delete>
+
     <insert id="putGroupData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">

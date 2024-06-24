@@ -13,6 +13,8 @@ import DatasetAuthority from './datasetAuthority/DatasetAuthority';
 import DatasourceAuthority from './datasourceAuthority/DatasourceAuthority';
 import ReportAuthority from './reportAuthority/ReportAuthority';
 import {generateAxios, generateGetAxios} from './data/AuthorityData';
+import useModal from 'hooks/useModal';
+import _ from 'lodash';
 
 export const path = {
   'GROUP_DATA': '/account/group/data',
@@ -91,6 +93,19 @@ export const getUserGroupKeys = (currentTab, data) => {
     currentTab == path.USER_DATASET ||
     currentTab == path.GROUP_DATASET) {
     result = data.next.filter((d) => d.fldId.length > 0);
+  } else if (
+    currentTab == path.GROUP_DATA ||
+    currentTab == path.USER_DATA
+  ) {
+    result = data.next.filter((d) => {
+      const sizeIsOk = d.datas.length > 0;
+      const isOk = d.datas.some((cube) => {
+        const cubeId = cube?.cubeId?.length ?? 0 != 0;
+        const cubeDim = cube?.cubeDim?.length ?? 0 != 0;
+        return cubeId || cubeDim;
+      });
+      return sizeIsOk && isOk;
+    });
   } else {
     result = [];
   }
@@ -121,6 +136,15 @@ export const getUserOrGroup = (dataSetMode, data, nextId) => {
     }
   });
 };
+export const getUserOrGroupOrigin = (dataSetMode, data, nextId) => {
+  return data?.prev?.find((d) => {
+    if (dataSetMode === mode.GROUP) {
+      return d?.grpId == nextId;
+    } else if (dataSetMode === mode.USER) {
+      return d?.userNo == nextId;
+    }
+  });
+};
 
 export const getDataObjectOfUserOrGroup = (dataSetMode, comparisonKey) => {
   return {
@@ -143,7 +167,8 @@ const Authority = () => {
   } = useLoaderData();
   const [innerData, setInnerData] = useState();
   const [currentTab, setCurrentTab] = useState(null);
-  const [, setAction] = useState(false);
+  const [action, setAction] = useState(false);
+  const {alert} = useModal();
   const TabPanelItem = ({data}) => {
     return data.component;
   };
@@ -173,7 +198,12 @@ const Authority = () => {
 
   useEffect(() => {
     data[modeData.NEXT] = innerData;
+    data[modeData.PREV] = _.cloneDeep(innerData);
   }, [currentTab]);
+
+  useEffect(() => {
+    data[modeData.PREV] = _.cloneDeep(data[modeData.NEXT]);
+  }, [action]);
 
   const context = {
     state: {
@@ -186,13 +216,21 @@ const Authority = () => {
       folderDataSets: folderDataSets, // stationary
       dsView: dsView, // stationary
       folder: folder, // stationary
-      dsViewCube: dsViewCube
+      dsViewCube: dsViewCube,
+      action: [action]
     }
   };
 
   const onAction = async () => {
-    await generateAxios(currentTab, data.next);
-    setAction((prev) => !prev);
+    try {
+      const response = await generateAxios(currentTab, data.next);
+      if (response.data.data) {
+        alert('저장되었습니다.');
+      }
+      setAction((prev) => !prev);
+    } catch (error) {
+      setAction((prev) => !prev);
+    }
   };
 
   const bindData = async (e) => {
