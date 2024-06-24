@@ -254,7 +254,7 @@ const useSpread = () => {
 
       if (uploadResponse.status === 200) {
         // 복호화 API 호출 (TODO: 실제 복호화 API 호출 추가)
-        const responseData = await fetchData(selectedFile.name);
+        const responseData = await fetchData(uploadResponse.data);
 
         // 복호화 된 파일 불러오기
         await importHnsFile(responseData.fileName, responseData.filePath);
@@ -309,19 +309,23 @@ const useSpread = () => {
   // eslint-disable-next-line no-unused-vars
   const fetchData = async (fileName) => {
     try {
-      const url = `http://drmapi.hns.tv/drm/fs/v1/dec?fileName=${encodeURIComponent(fileName)}&edGb=D`;
+      const response = await models.File.callDrmApi({
+        fileName: `${fileName}`
+      });
 
-      const response = await fetch(url);
-
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Network response was not ok');
       }
 
-      const data = response.json();
+      const responseData = response.data.responseData;
 
       // TODO:여기서 받은 데이터를 처리
-      console.log(data);
-      return data.responseData;
+      console.log(responseData);
+      // return {
+      //   fileName: fileName,
+      //   filePath: '/rlt/20240620'
+      // };
+      return responseData;
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;

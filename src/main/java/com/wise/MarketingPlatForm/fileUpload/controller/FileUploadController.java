@@ -16,11 +16,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.reflect.TypeToken;
@@ -35,6 +38,8 @@ public class FileUploadController {
 	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 	@Autowired
 	FileUploadService fileUploadService;
+    @Autowired
+    private RestTemplate restTemplate;
 	
 	@PostMapping(value="/upload" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void fileUpload(
@@ -45,9 +50,9 @@ public class FileUploadController {
     }
 
     @PostMapping(value="/hnsDrmUpload")
-    public void hnsDrmUpload(
+    public String hnsDrmUpload(
         @RequestPart("file") MultipartFile file) throws Exception {
-        fileUploadService.hnsDrmUpload(file);
+        return fileUploadService.hnsDrmUpload(file);
     }
 	
 	@PostMapping("/delete")
@@ -129,5 +134,16 @@ public class FileUploadController {
             }.getType());
 
 		return fileUploadService.createUploadDataTable(userNo, dsId, appendTable, dataNm, uploadDataList, tableDeleteYN);
+    }
+
+    @GetMapping("/fetch-data")
+    public ResponseEntity<String> fetchData(@RequestParam("fileName") String fileName) {
+        // String url = "https://drmapi.hns.tv/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
+        String url = "http://10.2.3.180:443/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
+        logger.info("복호화 api 요청 url 은 " + url + " 입니다.");
+        logger.info(fileName);
+        // String url = "https://jsonplaceholder.typicode.com/todos/1";
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        return ResponseEntity.ok(response.getBody());
     }
 }

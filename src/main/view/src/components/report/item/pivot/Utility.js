@@ -34,7 +34,7 @@ const generateMeta = (item) => {
       position: 'top', // 행 합계 위치
       expand: true // 행 그룹 확장(초기상태)
     },
-    dataPosition: 'row' // 측정값 위치
+    dataPosition: 'column' // 측정값 위치
   });
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', false);

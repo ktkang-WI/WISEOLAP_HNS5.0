@@ -44,3 +44,9 @@ export const hnsDrmUpload = (param) => {
     }
   });
 };
+
+export const callDrmApi = (param) => {
+  return axios.get(path + '/fetch-data', {
+    params: param
+  });
+};

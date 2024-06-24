@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -99,8 +100,9 @@ public class FileUploadService {
         }
     }
 
-    public void hnsDrmUpload(MultipartFile file) throws Exception {
+    public String hnsDrmUpload(MultipartFile file) throws Exception {
         File sysFile = null;
+        String randomFileName = UUID.randomUUID().toString() + getFileExtension(file.getOriginalFilename());
         
         try (InputStream input = file.getInputStream()) {
             // 디렉토리 생성
@@ -115,7 +117,7 @@ public class FileUploadService {
             }
 
             // 업로드할 파일 객체 생성
-        	sysFile = WebFileUtils.getFile(folder, file.getOriginalFilename());
+        	sysFile = WebFileUtils.getFile(folder, randomFileName);
         	if(sysFile == null) {
                 new Exception("스프레드 파일 생성에 실패했습니다");
             }
@@ -123,12 +125,23 @@ public class FileUploadService {
             // 파일 복사
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             logger.info("파일이 성공적으로 업로드 되었습니다." + folder.getAbsolutePath());
+            logger.info("업로드한 파일 이름은 : " + randomFileName + "입니다.");
         } catch (IOException e){
             logger.error("HNSDRM Upload 오류 발생", e);
         } catch (Exception e) {
             logger.error("HNSDRM Upload 중 오류 발생", e);
             throw e; // 예외를 다시 던져서 호출자가 처리할 수 있게 합니다.
         }
+        
+        return randomFileName;
+    }
+
+    // 원본 파일 이름에서 확장자를 가져오는 헬퍼 메서드
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf('.') == -1) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf('.'));
     }
 
 	public void deleteFile(String fileName) throws Exception {
