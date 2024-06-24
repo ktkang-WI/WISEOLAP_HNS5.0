@@ -2,7 +2,7 @@ import {styled} from 'styled-components';
 import Input from '../atoms/Input';
 import {Link} from 'react-router-dom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-// import {CheckBox} from 'devextreme-react';
+import {CheckBox} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 
 const theme = getTheme();
@@ -46,13 +46,30 @@ const createInputForm = (contents, onSubmit) => {
 };
 
 const createCheckBox = (contents) => {
+  // TODO: 임시 기존 아이디 방식으로 값을 가져와 임시 코드 추후변경예정
+  const handleOnValueChanged = (e) => {
+    localStorage.setItem('rememberId', e.value);
+    if (e.value) {
+      const id = document.querySelector('#input-ID input').value;
+      localStorage.setItem('sessionId', id);
+    } else {
+      localStorage.setItem('sessionId', '');
+    }
+  };
+  const handleOnContentReady = (e) => {
+    localStorage.getItem('rememberId') === 'true' ?
+    e.component.option('value', true) : e.component.option('value', false);
+  };
   const type = contents.type;
   if (type === 'login') {
     return (
       <CheckBoxWrap>
-        {/* <CheckBoxSpanWrap>
-          <CheckBox text='아이디 저장'/>
-        </CheckBoxSpanWrap> */}
+        <CheckBoxSpanWrap>
+          <CheckBox
+            onContentReady={handleOnContentReady}
+            onValueChanged={handleOnValueChanged}
+            text='아이디 저장'/>
+        </CheckBoxSpanWrap>
       </CheckBoxWrap>
     );
   } else {

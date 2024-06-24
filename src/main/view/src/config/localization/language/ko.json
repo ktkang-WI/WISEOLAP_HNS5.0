@@ -710,5 +710,11 @@
   "resetAllConfirmMsg": "설정한 모든 항목이 초기화 됩니다. 진행 하시겠습니까?",
   "resetSuccess": "초기화 되었습니다. 적용 하시려면 저장 해주세요.",
   "resetFail": "초기화에 실패 했습니다.",
-  "favorit": "즐겨찾기"
+  "favorit": "즐겨찾기",
+  "topBottomForm": {
+    "topBottomType": "Top/Bottom 구분",
+    "count": "Top/Bottom 개수",
+    "percentage": "% 적용",
+    "others": "Top/Bottom 값 이외의 항목 기타로 표시"
+  }
 }

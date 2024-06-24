@@ -19,4 +19,5 @@ public class Dimension implements RootData {
     String category;
     String sortBy;
     String sortOrder;
+    TopBottom topBottom;
 }
