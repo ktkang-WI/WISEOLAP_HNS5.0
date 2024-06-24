@@ -196,7 +196,7 @@ const useSpread = () => {
   };
 
   const createReportBlob = async () => {
-    await clearBindingSheet();
+    const workbook = getWorkbook();
     const blob = await new Promise((resolve, reject) => {
       workbook.save((b) => {
         resolve(b);
@@ -241,6 +241,7 @@ const useSpread = () => {
     });
   };
 
+  /*
   const clearBindingSheet = () => {
     return new Promise((resolve) => {
       const workbook = getWorkbook();
@@ -271,6 +272,7 @@ const useSpread = () => {
       }
     });
   };
+  */
 
   return {
     getWorkbook,
