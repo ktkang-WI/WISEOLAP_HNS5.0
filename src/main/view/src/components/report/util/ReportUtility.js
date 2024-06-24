@@ -23,6 +23,15 @@ export const setIconReportList = (list) => {
   });
 };
 
+export const addReportType = (list, str) => {
+  return list.map((row) => {
+    return {
+      ...row,
+      type: str
+    };
+  });
+};
+
 export const nullDataCheck = (item) => {
   const excludedItems = [
     ItemType.TEXT_BOX,

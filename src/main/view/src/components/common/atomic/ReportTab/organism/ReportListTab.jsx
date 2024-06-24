@@ -51,7 +51,7 @@ const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
         title={item.type == 'REPORT' ? getReportTooltipMsg(item) : ''}
       >
         <img src={item.icon} className="dx-icon"/>
-        <span>{item.name}</span>
+        <span>{item.name || item.fldNm}</span>
       </div>
     );
   };
