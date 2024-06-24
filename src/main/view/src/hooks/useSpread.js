@@ -196,12 +196,12 @@ const useSpread = () => {
   };
 
   const createReportBlob = async () => {
-    const workbook = getWorkbook();
+    await clearBindingSheet();
     const blob = await new Promise((resolve, reject) => {
       workbook.save((b) => {
         resolve(b);
       }, (e) => {
-      }, {includeBindingSource: true});
+      }, {includeBindingSource: false});
     });
     return blob;
   };
@@ -238,6 +238,37 @@ const useSpread = () => {
       workbook.open(file, () => {
         resolve();
       }, () => {}, excelIOOpenOtions);
+    });
+  };
+
+  const clearBindingSheet = () => {
+    return new Promise((resolve) => {
+      const workbook = getWorkbook();
+      const bindingInfos = selectBindingInfos(store.getState());
+
+      if (bindingInfos) {
+        workbook.suspendPaint();
+        workbook.suspendCalcService();
+        workbook.suspendEvent();
+        Object.keys(bindingInfos).forEach((datasetId) => {
+          const bindingInfo = bindingInfos[datasetId];
+          console.log('시트이름: '+bindingInfo.sheetNm);
+          let bindedSheet = workbook
+              .getSheetFromName(bindingInfo.sheetNm);
+
+          if (bindedSheet == undefined) {
+            workbook.addSheet(0,
+                new sheets.Worksheet(bindingInfo.sheetNm));
+            bindedSheet = workbook
+                .getSheetFromName(bindingInfo.sheetNm);
+          }
+          bindedSheet.setDataSource([]);
+          // bindedSheet.clear();
+        });
+        workbook.resumeEvent();
+        workbook.resumeCalcService();
+        workbook.resumePaint();
+      }
     });
   };
 

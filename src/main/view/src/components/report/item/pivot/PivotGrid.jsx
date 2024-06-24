@@ -235,10 +235,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 if (item.children && item.children.length === 1 &&
                      (item.children[0]?.text == '' ||
                         item.children[0]?.text == 'null')) {
-                  dataSource.collapseHeaderItem('row', currentPath);
-                }
-                if (item.children) {
-                  collapseSingleChildItems(item.children, currentPath);
+                  pivotInstance.collapseHeaderItem('row', currentPath);
+                } else {
+                  if (item.children) {
+                    collapseSingleChildItems(item.children, currentPath);
+                  }
                 }
               });
             };
