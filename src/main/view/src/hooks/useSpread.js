@@ -242,7 +242,6 @@ const useSpread = () => {
     });
   };
 
-<<<<<<< HEAD
   const hnsDrmUpload = async (selectedFile) => {
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -333,9 +332,7 @@ const useSpread = () => {
     }
   };
 
-=======
   /*
->>>>>>> origin/homenshopping
   const clearBindingSheet = () => {
     return new Promise((resolve) => {
       const workbook = getWorkbook();
