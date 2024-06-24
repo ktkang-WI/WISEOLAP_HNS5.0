@@ -226,8 +226,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               });
             }
 
-            const dataSource = e.component.getDataSource();
-            const items = dataSource.getData().rows;
+            const items = pivotDataSource.getData().rows;
 
             const collapseSingleChildItems = (items, path) => {
               items.forEach((item) => {
@@ -235,7 +234,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 if (item.children && item.children.length === 1 &&
                      (item.children[0]?.text == '' ||
                         item.children[0]?.text == 'null')) {
-                  pivotInstance.collapseHeaderItem('row', currentPath);
+                  pivotDataSource.collapseHeaderItem('row', currentPath);
                 } else {
                   if (item.children) {
                     collapseSingleChildItems(item.children, currentPath);
