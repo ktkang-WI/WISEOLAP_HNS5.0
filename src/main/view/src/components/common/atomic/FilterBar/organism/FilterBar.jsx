@@ -7,6 +7,7 @@ import FilterBarWrapper from '../molecules/FilterBarWrapper';
 import ribbonDefaultElement from '../../Ribbon/organism/RibbonDefaultElement';
 import CommonButton from '../../Common/Button/CommonButton';
 import useReportSave from 'hooks/useReportSave';
+import SmallImageButton from '../../Common/Button/SmallImageButton';
 
 const theme = getTheme();
 
@@ -16,6 +17,11 @@ const Img = styled.img`
   ${(props) => props.rotate && css`
       transform: rotate(180deg);
   `}
+`;
+
+const Icon = styled.img`
+  width: 20px;
+  height: auto;
 `;
 
 const ButtonWrapper = styled.div`
@@ -52,7 +58,7 @@ const FilterBarBtn = ({width, children, isExpand, ...props}) => {
     font: ${theme.font.small};
 
     * + * {
-      margin-left: 5px;
+      margin-left: 3px;
     }
   `;
 
@@ -78,21 +84,34 @@ const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
     border-radius: 10px;
   `;
 
+  const getButton = (button, key) => {
+    if (!button.visible) {
+      return <div key={key} style={{minWidth: button.width}}/>;
+    }
+    if (button.type == 'expand') {
+      return <FilterBarBtn isExpand={isExpand}
+        key={key}
+        width={button.width}
+        onClick={button.onClick}>
+        <Icon src={button.value ? button.activeIcon : button.icon}/>
+        <span>{button.label}</span>
+        <Img src={expandImg} width={'6px'} rotate={button.value}/>
+      </FilterBarBtn>;
+    }
+    if (button.type == 'icon') {
+      return <SmallImageButton
+        src={button.icon}
+        onClick={button.onClick}
+      />;
+    }
+  };
+
   return (
     <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
       {buttons &&
         <ButtonWrapper>
           {
-            buttons.map((button, i) => (
-              <FilterBarBtn isExpand={isExpand}
-                key={i}
-                width={button.width}
-                onClick={button.onClick}>
-                <Img src={filterImg}/>
-                <span>{button.label}</span>
-                <Img src={expandImg} width={'6px'} rotate={button.value}/>
-              </FilterBarBtn>
-            ))
+            buttons.map((button, i) => getButton(button, i))
           }
         </ButtonWrapper>
       }
