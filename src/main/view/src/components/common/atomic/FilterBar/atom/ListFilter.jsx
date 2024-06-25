@@ -118,7 +118,7 @@ const ListFilter = ({
 
   return (
     <>
-      <div id={id + '_wrapper'}>
+      <div id={id+'_'+ index + '_wrapper'}>
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
@@ -144,7 +144,7 @@ const ListFilter = ({
         />
       </div>
       <Popover
-        target={'#' + id + '_wrapper'}
+        target={'#' + id +'_'+ index + '_wrapper'}
         showEvent={'click'}
         minWidth="200px"
         height="300px"

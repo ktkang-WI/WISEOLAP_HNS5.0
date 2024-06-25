@@ -2236,7 +2236,8 @@ public class QuerySettingEx {
 									|| oDr.getVALUES().equalsIgnoreCase("[_EMPTY_VALUE_]")
 									|| oDr.getVALUES().equalsIgnoreCase("[_ALL_VALUE_]")
 									|| oDr.getVALUES().equalsIgnoreCase("[[_ALL_VALUE_],[_ALL_VALUE_]]")
-									|| oDr.getVALUES().equalsIgnoreCase("[[_EMPTY_VALUE_],[_EMPTY_VALUE_]]")) {
+									|| oDr.getVALUES().equalsIgnoreCase("[[_EMPTY_VALUE_],[_EMPTY_VALUE_]]")
+									|| oDr.getVALUES().equalsIgnoreCase("[All],[All]")) {
 								sDataType = "NUMBER";
 
 								String sWhereClause = oDr.getWHERE_CLAUSE();
