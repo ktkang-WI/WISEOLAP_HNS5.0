@@ -8,11 +8,14 @@ import models from 'models';
 import store from 'redux/modules';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import useLinkReportSave from 'hooks/useLinkReportSave';
+import {currentDesignerExecution} from 'redux/selector/ExecuteSelector';
+import {useSelector} from 'react-redux';
 
 const SaveDefaultElement = () => {
   const {openModal, alert, success} = useModal();
   const {patchReport, generateParameter} = useReportSave();
   const {genLinkParam} = useLinkReportSave();
+  const isExecute = useSelector(currentDesignerExecution);
 
   const getElementByLable = (label) => {
     return saveElement.save.find((element) => element.label === label);
@@ -21,8 +24,12 @@ const SaveDefaultElement = () => {
   const saveElement = {
     save: [
       {
-        label: localizedString.saveReport, // 저장
+        label: localizedString.saveReport,
         onClick: (props) => {
+          if (!isExecute) {
+            alert(localizedString.saveValidationNonExecute);
+            return;
+          }
           const currentReport = selectCurrentReport(store.getState());
           const dataSource = _.cloneDeep(currentReport.options);
 
@@ -58,8 +65,12 @@ const SaveDefaultElement = () => {
         }
       },
       {
-        label: localizedString.saveAs, // 다른이름으로 저장
+        label: localizedString.saveAs,
         onClick: (props) => {
+          if (!isExecute) {
+            alert(localizedString.saveValidationNonExecute);
+            return;
+          }
           openModal(ReportSaveModal, props);
         }
       }

@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
-import {useRef} from 'react';
+import React, {useRef} from 'react';
 import {styled} from 'styled-components';
 import meaImg from 'assets/image/icon/dataSource/small_measure.png';
 import dimImg from 'assets/image/icon/dataSource/small_dimension.png';
@@ -14,9 +14,9 @@ import dimGrpImg from
   'assets/image/icon/dataSource/cube_dimension.png';
 import moreIcon from 'assets/image/icon/dataSource/other_menu.png';
 import DatasetType from 'components/dataset/utils/DatasetType';
-// import {useSelector} from 'react-redux';
-// import {selectEditMode} from 'redux/selector/ConfigSelector';
-// import {EditMode} from 'components/config/configType';
+import {useSelector} from 'react-redux';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 import BubbleTooltip from '../../Common/Popover/BubbleTooltip';
 
 const theme = getTheme();
@@ -70,7 +70,7 @@ const iconMapper = {
 };
 
 const DataSourceFoldableList = ({dataset}) => {
-  // const editMode = useSelector(selectEditMode);
+  const editMode = useSelector(selectEditMode);
   const ref = useRef();
 
   const getRenderItem = (items) => {
@@ -159,20 +159,24 @@ const DataSourceFoldableList = ({dataset}) => {
     </BubbleTooltip>;
   };
 
-  // let data = [];
-  // if (dataset) {
-  //   // 뷰어인 경우.
-  //   if (editMode == EditMode['VIEWER']) {
-  //     data = _.cloneDeep(
-  //         dataset.fields.filter(
-  //             (field) => field?.check != false
-  //         )
-  //     );
-  //   } else {
-  //     data = _.cloneDeep(dataset.fields);
-  //   }
-  // }
-  const data = dataset? _.cloneDeep(dataset.fields) : [];
+  let data = _.cloneDeep(dataset.fields);
+  // 뷰어인 경우.
+  if (editMode == EditMode['VIEWER']) {
+    const hideTreeElement = dataset.selectedFields;
+
+    if (hideTreeElement) {
+      const hideTreeElementUniNms = hideTreeElement.reduce((acc, e) => {
+        if (!e.check) {
+          acc.push(e.uniNm);
+        }
+        return acc;
+      }, []);
+
+      data = _.cloneDeep(dataset.fields.filter((field) =>
+        !hideTreeElementUniNms.includes(field.uniqueName)
+      ));
+    }
+  }
 
   if (data.length > 0 && dataset.datasetType != 'CUBE') {
     data[0].expanded = true;
@@ -211,5 +215,11 @@ const DataSourceFoldableList = ({dataset}) => {
     </Wrapper>
   );
 };
-
-export default DataSourceFoldableList;
+const compare = (prev, next) => {
+  let result = false;
+  if (prev.dataset.fields == next.dataset.fields) {
+    result = true;
+  }
+  return result;
+};
+export default React.memo(DataSourceFoldableList, compare);

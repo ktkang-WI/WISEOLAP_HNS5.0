@@ -24,12 +24,14 @@ import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
 import useQueryExecute from 'hooks/useQueryExecute';
 import {useSelector} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import FieldDescriptionModal
   from 'components/dataset/modal/FieldDescriptionModal';
 import viewerPosting from 'assets/image/icon/button/preview.png';
 import ViewerPostingDataModal
   from 'components/dataset/modal/ViewPostingData/ViewerPostingDataModal';
+import {getAppliedDataItem, getOnlyUniNm}
+  from 'components/dataset/modal/ViewPostingData/viewPostingUtility';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -63,6 +65,7 @@ const PanelTitleDefaultElement = () => {
 
   const viewerPostingFunc = () => {
     const dataset = selectCurrentDataset(store?.getState());
+    const rootItem = selectRootItem(store?.getState());
 
     if (dataset) {
       const fields = dataset.fields.filter((data) =>
@@ -71,10 +74,14 @@ const PanelTitleDefaultElement = () => {
 
       const selectRowKeys = dataset.selectedFields || [];
 
+      const appliedDataItem = getAppliedDataItem(rootItem);
+      const onlyUniNm = getOnlyUniNm(appliedDataItem, dataset.datasetId);
+
       openModal(ViewerPostingDataModal, {
         fields: fields,
         datasetId: dataset.datasetId,
-        selectRowKeys: selectRowKeys
+        selectRowKeys: selectRowKeys,
+        appliedDataItem: onlyUniNm || []
       });
     } else {
       alert('데이터 집합을 선택해 주세요.');

@@ -716,5 +716,9 @@
     "count": "Top/Bottom 개수",
     "percentage": "% 적용",
     "others": "Top/Bottom 값 이외의 항목 기타로 표시"
-  }
+  },
+  "saveValidationNonExecute": "내용이 변경 되었거나, 조회를 하지 않았습니다. 조회를 한 후 저장해 주세요.",
+  "showInViewerDataItems": "뷰어 데이터 항목 표시",
+  "uniqueName": "고유 명",
+  "types": "타입"
 }

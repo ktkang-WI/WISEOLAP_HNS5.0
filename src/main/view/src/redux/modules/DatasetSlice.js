@@ -110,14 +110,16 @@ const reducers = {
         (ds) => ds.datasetId == datasetId
     );
 
-    if (!state[reportId].datasets[datasetIndex].appliedFields) {
-      state[reportId].datasets[datasetIndex].appliedFields = [];
-    }
+    const selectedFieldsIdx =
+      state[reportId].datasets[datasetIndex].selectedFields.findIndex(
+          (field) => field.uniNm == uniqueName
+      );
 
     if (datasetIndex >= 0) {
-      if (!state[reportId].datasets[datasetIndex].appliedFields
-          .includes(uniqueName)) {
-        state[reportId].datasets[datasetIndex].appliedFields.push(uniqueName);
+      if (selectedFieldsIdx >= 0) {
+        state[reportId].datasets[datasetIndex]
+            .selectedFields[selectedFieldsIdx] =
+          {uniNm: uniqueName, check: true};
       }
     }
   },

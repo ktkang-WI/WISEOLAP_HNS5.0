@@ -16,7 +16,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode,
@@ -25,6 +25,7 @@ import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ItemType from 'components/report/item/util/ItemType';
 import {nullDataCheck} from 'components/report/util/ReportUtility';
+import ExecuteSlice from 'redux/modules/ExecuteSlice';
 
 
 const useQueryExecute = () => {
@@ -400,6 +401,10 @@ const useQueryExecute = () => {
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
     const editMode = selectEditMode(store.getState());
+    const {
+      updateDesinerExecutionState,
+      updateViewerExecutionState
+    } = ExecuteSlice.actions;
 
     if (datasets.length === 0) {
       let msg = localizedString.dataSourceNotSelectedMsg;
@@ -414,10 +419,20 @@ const useQueryExecute = () => {
 
     if (designerMode === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
+      if (EditMode['DESIGNER'] == editMode) {
+        dispatch(updateDesinerExecutionState(true));
+      } else {
+        dispatch(updateViewerExecutionState(true));
+      }
     }
 
     if (designerMode === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
+      if (EditMode['DESIGNER'] == editMode) {
+        dispatch(updateDesinerExecutionState(true));
+      } else {
+        dispatch(updateViewerExecutionState(true));
+      }
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
   };

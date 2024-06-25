@@ -25,6 +25,8 @@ import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 import useModal from './useModal';
 import {getNewDataField}
   from 'components/common/atomic/DataColumnTab/utils/utility';
+import {currentDesignerExecution} from 'redux/selector/ExecuteSelector';
+import ExecuteSlice from 'redux/modules/ExecuteSlice';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -32,7 +34,8 @@ import {getNewDataField}
 const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
   const {updateParameterInformation} = ParameterSlice.actions;
-  const {updateDataset} = DatasetSlice.actions;
+  const {updateDataset, datasetAppliedFields} = DatasetSlice.actions;
+  const {updateDesinerExecutionState} = ExecuteSlice.actions;
   const dispatch = useDispatch();
   const {alert} = useModal();
 
@@ -57,6 +60,7 @@ const useDrag = () => {
 
   const onDragEnd = (e) => {
     const selectedDataset = selectCurrentDataset(store.getState());
+    const isExecute = currentDesignerExecution(store.getState());
     const reportId = selectCurrentReportId(store.getState());
     const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
     const dataFieldOption =
@@ -217,17 +221,15 @@ const useDrag = () => {
         }
       } else {
         // dataSource에서 출발한 경우 새로운 데이터항목 객체 생성
-        // const fieldObject = {
-        //   reportId: reportId,
-        //   datasetId: datasetId,
-        //   uniqueName: targetId
-        // };
-
         if (source.droppableId == 'dataSource') {
           const sourceField = selectedDataset.fields.find((field) =>
             field.uniqueName == targetId
           );
-
+          const param = {
+            reportId: reportId,
+            datasetId: selectedDataset.datasetId,
+            uniqueName: sourceField.uniqueName
+          };
           const noDragItems = ['FLD', 'DIMGRP', 'MEAGRP'];
           if (noDragItems.includes(sourceField.type)) return;
 
@@ -241,8 +243,14 @@ const useDrag = () => {
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
-            // dispatch(datasetAppliedFields(fieldObject));
+            // 뷰어게시 기능으로 데이터항목에 올리기전 체크해제 후 해제한 항목을 다시 올린경우 처리.
+            if (selectedDataset.selectedFields) {
+              dispatch(datasetAppliedFields(param));
+            }
             onDragEndSeriesOption(tempField, reportId);
+            if (isExecute) {
+              dispatch(updateDesinerExecutionState(false));
+            }
           }
         } else if (source.droppableId == dest.droppableId) {
           const sourceField = dataField[source.droppableId]
