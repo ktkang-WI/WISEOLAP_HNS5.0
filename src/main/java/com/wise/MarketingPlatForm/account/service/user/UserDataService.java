@@ -89,6 +89,10 @@ public class UserDataService {
       XML = xmlGenerator.builder();
       String encodedXML = new String(base64.encode(XML.getBytes(StandardCharsets.UTF_8)));
 
+      if (datas.size() == 0) {
+        encodedXML = null;
+      }
+
       UserAuthDataMstrEntity userAuthDataMstrEntity = UserAuthDataMstrEntity.builder()
           .userNo(userNo)
           .dataXml(encodedXML)

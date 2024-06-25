@@ -39,9 +39,12 @@ public class UserFolderService {
     if (userFolderMstr == null) return false;
 
     boolean result = false;
-
-    result = accountDAO.deleteUserFolder(userFolderMstr);
-    result = accountDAO.putUserFolder(userFolderMstr);
+    if (userFolderMstr.size() == 0) {
+      result = accountDAO.deleteUserFolderAll();
+    } else {
+      result = accountDAO.deleteUserFolder(userFolderMstr);
+      result = accountDAO.putUserFolder(userFolderMstr);
+    }
 
     return result;
   };

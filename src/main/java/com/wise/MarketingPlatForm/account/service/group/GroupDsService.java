@@ -38,9 +38,12 @@ public class GroupDsService {
     if (groupAuthDsMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteGroupDs(groupAuthDsMstr);
-    result = accountDAO.putGroupDs(groupAuthDsMstr);
+    if (groupAuthDsMstr.size() == 0) {
+      result = accountDAO.deleteGroupDsAll();
+    } else {
+      result = accountDAO.deleteGroupDs(groupAuthDsMstr);
+      result = accountDAO.putGroupDs(groupAuthDsMstr);
+    }
 
     return result;
   };

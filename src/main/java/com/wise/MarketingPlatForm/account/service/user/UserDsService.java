@@ -39,9 +39,12 @@ public class UserDsService {
     if (userAuthDsMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteUserDs(userAuthDsMstr);
-    result = accountDAO.putUserDs(userAuthDsMstr);
+    if (userAuthDsMstr.size() == 0) {
+      result = accountDAO.deleteUserDsAll();
+    } else {
+      result = accountDAO.deleteUserDs(userAuthDsMstr);
+      result = accountDAO.putUserDs(userAuthDsMstr);
+    }
 
     return result;
   };

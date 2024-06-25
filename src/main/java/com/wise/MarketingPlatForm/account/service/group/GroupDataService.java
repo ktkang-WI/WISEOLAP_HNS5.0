@@ -69,7 +69,7 @@ public class GroupDataService {
       String XML = null;
       int grpId = groupDataPut.getGrpId();
       List<DataModel> datas = groupDataPut.getDatas();
-
+      
       for (DataModel dataModel : datas) {
         for (CubeDTO cube : dataModel.getCubeId()) {
           xmlGenerator.createElement(cubeXML);
@@ -89,6 +89,10 @@ public class GroupDataService {
       String encodedXML = new String(base64.encode(XML.getBytes(StandardCharsets.UTF_8)));
 
 
+      if (datas.size() == 0) {
+        encodedXML = null;
+      }
+      
       GroupAuthDataMstrEntity groupAuthDataMstrEntity = GroupAuthDataMstrEntity.builder()
           .grpId(grpId)
           .dataXml(encodedXML)

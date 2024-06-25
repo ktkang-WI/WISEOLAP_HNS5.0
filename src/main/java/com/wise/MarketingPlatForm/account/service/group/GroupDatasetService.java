@@ -37,9 +37,12 @@ public class GroupDatasetService {
     if (groupAuthDatasetMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteGroupDataset(groupAuthDatasetMstr);
-    result = accountDAO.putGroupDataset(groupAuthDatasetMstr);
+    if (groupAuthDatasetMstr.size() == 0) {
+      result = accountDAO.deleteGroupDatasetAll();
+    } else {
+      result = accountDAO.deleteGroupDataset(groupAuthDatasetMstr);
+      result = accountDAO.putGroupDataset(groupAuthDatasetMstr);
+    }
 
     return result;
   };

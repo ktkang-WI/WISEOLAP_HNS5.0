@@ -413,6 +413,9 @@
             #{item.grpId, jdbcType=INTEGER}
       </foreach>
     </delete>
+    <delete id="deleteGroupDsAll" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DS_MSTR_DEV WHERE 1 = 1
+    </delete>
 
     <insert id="putGroupDs" parameterType="java.util.List">
       INSERT ALL
@@ -436,6 +439,10 @@
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
       </foreach>
+    </delete>
+
+    <delete id="deleteUserDsAll" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DS_MSTR_DEV WHERE 1 = 1
     </delete>
 
     <insert id="putUserDs" parameterType="java.util.List">
@@ -462,6 +469,10 @@
       </foreach>
     </delete>
 
+    <delete id="deleteGroupDatasetAll" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_DATASET_MSTR_DEV WHERE 1 = 1
+    </delete>
+
     <insert id="putGroupDataset" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
@@ -486,6 +497,10 @@
       </foreach>
     </delete>
 
+    <delete id="deleteUserDatasetAll" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_DATASET_MSTR_DEV WHERE 1 = 1
+    </delete>
+
     <insert id="putUserDataset" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
@@ -508,6 +523,9 @@
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
       </foreach>
+    </delete>
+    <delete id="deleteGroupFolderAll" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_REPORT_MSTR_TEMP WHERE 1 = 1
     </delete>
 
     <insert id="putGroupFolder" parameterType="java.util.List">
@@ -540,6 +558,10 @@
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
       </foreach>
+    </delete>
+
+    <delete id="deleteUserFolderAll" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_REPORT_MSTR_TEMP WHERE 1 = 1
     </delete>
 
     <insert id="putUserFolder" parameterType="java.util.List">
@@ -582,15 +604,18 @@
     <insert id="putUserData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO USER_AUTH_DATA_MSTR_DEV(
+          <if test="item.dataXml != null and item.dataXml != ''">
+            INTO USER_AUTH_DATA_MSTR_DEV(
               USER_NO,
               DATA_XML
-          )
-          VALUES
-          (
-            #{item.userNo, jdbcType=INTEGER},
-            #{item.dataXml, jdbcType=NCLOB}
-          )
+            )
+            VALUES
+            (
+              #{item.userNo, jdbcType=INTEGER},
+              #{item.dataXml, jdbcType=NCLOB}
+            )
+        </foreach>
+        </if>
       </foreach>
       SELECT * FROM DUAL
     </insert>
@@ -611,15 +636,17 @@
     <insert id="putGroupData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_DATA_MSTR_DEV(
-              GRP_ID,
-              DATA_XML
-          )
-          VALUES
-          (
-            #{item.grpId, jdbcType=INTEGER},
-            #{item.dataXml, jdbcType=NCLOB}
-          )
+          <if test="item.dataXml != null and item.dataXml != ''">
+            INTO GRP_AUTH_DATA_MSTR_DEV(
+                GRP_ID,
+                DATA_XML
+            )
+            VALUES
+            (
+                #{item.grpId, jdbcType=INTEGER},
+                #{item.dataXml, jdbcType=NCLOB}
+            )
+        </if>
       </foreach>
       SELECT * FROM DUAL
     </insert>
