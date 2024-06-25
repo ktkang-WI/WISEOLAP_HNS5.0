@@ -82,9 +82,7 @@ const dataSource = [
 ];
 
 const getStringFy = (prevItem, nextItem, currentTab) => {
-  if (currentTab === path.USER_REPORT ||
-      currentTab == path.GROUP_REPORT ||
-      currentTab == path.USER_DATASET ||
+  if (currentTab == path.USER_DATASET ||
       currentTab == path.GROUP_DATASET) {
     return JSON.stringify(prevItem.fldId) !==
            JSON.stringify(nextItem.fldId);
@@ -99,6 +97,12 @@ const getStringFy = (prevItem, nextItem, currentTab) => {
   ) {
     return JSON.stringify(prevItem.datas) !==
            JSON.stringify(nextItem.datas);
+  } else if (
+    currentTab === path.USER_REPORT ||
+    currentTab == path.GROUP_REPORT
+  ) {
+    return JSON.stringify(prevItem.fldIds) !==
+           JSON.stringify(nextItem.fldIds);
   }
 };
 
