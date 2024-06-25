@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import CommonButton from '../../Common/Button/CommonButton';
 import Wrapper from '../../Common/Wrap/Wrapper';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {List} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
@@ -16,6 +16,11 @@ const ListFilterPopoverList = ({
   info,
   orgDataSource = []
 }) => {
+  useEffect(() => {
+    setDataSource(sortDataSource(selectionKeys, orgDataSource));
+    setSelection(selectionKeys);
+  }, [selectionKeys, orgDataSource]);
+
   const StyledList = styled(List)`
     .dx-list-item-content {
       font: ${theme.font.filterContent};
@@ -60,7 +65,7 @@ const ListFilterPopoverList = ({
   };
 
   const [dataSource, setDataSource] = useState(
-      () => sortDataSource(selectionKeys, orgDataSource));
+      sortDataSource(selectionKeys, orgDataSource));
   const [selection, setSelection] = useState(selectionKeys);
   const [searchValue, setSearchValue] = useState('');
 
@@ -91,6 +96,9 @@ const ListFilterPopoverList = ({
         searchEnabled={info.useSearch}
         searchMode='contains'
         searchExpr={'caption'}
+        searchEditorOptions={{
+          valueChangeEvent: 'change'
+        }}
         searchValue={searchValue}
       >
       </StyledList>
