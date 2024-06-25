@@ -3,6 +3,7 @@ import DataGrid, {Column, SearchPanel, Selection}
 import React, {useContext, useEffect, useState} from 'react';
 import {
   AuthorityContext,
+  getDataObjectOfUserOrGroup,
   getKeys,
   getUserOrGroup,
   getUserOrGroupOrigin,
@@ -20,6 +21,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
+  const [selectedKeys, setSelectedKeys] = useState();
   const [dataSource, setDataSource] = useState(getContext.state.dsView);
   const selected = getContext.state.selected;
   const data = getContext.state.data;
@@ -33,18 +35,17 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       const keys = getUserOrGroupOrigin(dataSetMode, data, nextId);
       if (!datas) {
         const newItem = {
-          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
-          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           datas: []
         };
         data.next.push(newItem);
       }
-      const filteredKey = keys?.datas?.filter((d) => {
-        const cubeId = d?.cubeId?.length ?? 0 != 0;
-        const cubeDim = d?.cubeDim?.length ?? 0 != 0;
-        return cubeId || cubeDim;
+      const filteredKey = keys?.datas?.filter((cube) => {
+        const cubeId = cube?.cubeId?.length ?? 0 != 0;
+        const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
+        return cubeId || dsViewDim;
       });
-      const key = filteredKey?.map((d) => d.dsViewId) ?? [];
+      const key = filteredKey?.map((cube) => cube.dsViewId) ?? [];
       if (key.length === 0) {
         setDataSource(dataSource.map((d) => {
           return {
@@ -61,17 +62,19 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         }));
       }
     };
+    setSelectedKeys([]);
     updateData();
   }, [dependency]);
 
   const handleSelectedKey = (selectedItems) => {
     if (!selected?.user?.next && !selected?.group?.next) {
       alert(localizedString.clickMe);
+      setDsViewId(0);
       setSelectedKeys([]);
     } else {
-      const dsViewId = selectedItems.selectedRowKeys.length === 0 ?
-        [] : selectedItems.selectedRowKeys[0].dsViewId;
+      const dsViewId = selectedItems.selectedRowKeys[0];
       setDsViewId(dsViewId);
+      setSelectedKeys([dsViewId]);
     }
   };
 
@@ -86,6 +89,8 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         elementAttr={{
           class: 'datasource-view-list'
         }}
+        keyExpr={'dsViewId'}
+        selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
       >
         <Selection mode="single" />

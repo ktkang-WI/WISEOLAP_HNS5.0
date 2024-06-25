@@ -9,28 +9,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
-import com.wise.MarketingPlatForm.dataset.model.DatasetDsDsviewCubeModel;
-import com.wise.MarketingPlatForm.dataset.service.ds.DataSetDsDsviewCubeService;
+import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
+import com.wise.MarketingPlatForm.dataset.service.ds.DataSetDsCubeService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "dataset-ds", description = "데이터원본을 관리합니다.")
+@Tag(name = "dataset-ds-cube", description = "주제영역을 관리합니다.")
 @RestController
-@RequestMapping("/dataset/ds/dsview-cube")
-public class DataSetDsDsviewCubeController {
-  
+@RequestMapping("/dataset/ds/cube")
+public class DataSetDsCubeController {
+
   @Autowired
-  private DataSetDsDsviewCubeService datasetDsDsviewCubeService;
-  
+  private DataSetDsCubeService dataSetDsCubeService;
+
   @GetMapping
   public ResponseEntity<RestAPIVO> getDs() throws Exception{
 
-    List<DatasetDsDsviewCubeModel> model =
-      datasetDsDsviewCubeService.getDatasetDsDsviewCube();
+    List<CubeMstrEntity> model = dataSetDsCubeService.getDatasetDsCube();
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 
     return RestAPIVO.okResponse(model);
   }
-
+  
 }

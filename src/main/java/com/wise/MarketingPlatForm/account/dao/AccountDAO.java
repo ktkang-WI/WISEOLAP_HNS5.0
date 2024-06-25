@@ -62,6 +62,7 @@ public interface AccountDAO {
   public boolean deleteGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
   public boolean putGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
   public boolean deleteGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
+  public boolean deleteUserDataAll();
   public boolean deleteGroupDataAll();
   public boolean putGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
 

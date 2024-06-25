@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.CubeDTO;
+import com.wise.MarketingPlatForm.account.dto.DsViewDimDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
-import com.wise.MarketingPlatForm.account.dto.user.UserDataPutDTO;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDataMstrEntity;
+import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
-import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DataDsviewCubeDimDTO;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.utils.XMLGenerator;
 
 
@@ -42,7 +40,7 @@ public class UserDataService {
     return userDataModel;
   }
 
-  public boolean putUserData(List<UserDataPutDTO> userDatasetPutDTO) throws Exception{
+  public boolean putUserData(List<UserDataModel> userDatasetPutDTO) throws Exception{
 
     List<UserAuthDataMstrEntity> userAuthDataMstr = generateUserAuthDataObject(userDatasetPutDTO);
 
@@ -50,40 +48,42 @@ public class UserDataService {
 
     boolean result = false;
   
-    result = accountDAO.deleteUserData(userAuthDataMstr);
-    result = accountDAO.putUserData(userAuthDataMstr);
+    if (userAuthDataMstr.size() == 0) {
+      result = accountDAO.deleteUserDataAll();
+    } else {
+      result = accountDAO.deleteUserData(userAuthDataMstr);
+      result = accountDAO.putUserData(userAuthDataMstr);
+    }
 
     return result;
   }
   
-  private List<UserAuthDataMstrEntity> generateUserAuthDataObject(List<UserDataPutDTO> userDatasetPutDTO) throws Exception{
+  private List<UserAuthDataMstrEntity> generateUserAuthDataObject(List<UserDataModel> userDatasetPutDTO) throws Exception{
     List<UserAuthDataMstrEntity> result = new ArrayList<>();
     String rootXML = "NewDataSet";
-    String memXML = "Auth_Mem";
+    // String memXML = "Auth_Mem";
     String cubeXML = "Auth_Cubes";
     String dimXML = "Auth_Dim";
 
-    for (UserDataPutDTO userDataPut : userDatasetPutDTO) {
+    for (UserDataModel userDataPut : userDatasetPutDTO) {
       XMLGenerator xmlGenerator = new XMLGenerator(rootXML);
       String XML = null;
       int userNo = userDataPut.getUserNo();
+      List<DataModel> datas = userDataPut.getDatas();
       
-      for (DatasetDsDsviewCubeDTO datasetDsDsviewCubeDTO : userDataPut.getDsView()) {
-        xmlGenerator.createElement(memXML);
-        xmlGenerator.createElement(memXML, "DS_VIEW_ID", datasetDsDsviewCubeDTO.getDsViewId());
-        xmlGenerator.createElement(memXML, "DIM_UNI_NM", "["+datasetDsDsviewCubeDTO.getDimUniNm()+"]");
-        xmlGenerator.createElement(memXML, "MEMBER_NM", ""); // TODO: 해당부분 기능 미구현 추후개발 OR 삭제 예정
-        xmlGenerator.createElement(memXML, "HIE_UNI_NM", ""); // TODO: 해당부분 기능 미구현 추후개발 OR 삭제 예정
+      for (DataModel dataModel : datas) {
+        for (CubeDTO cube : dataModel.getCubeId()) {
+          xmlGenerator.createElement(cubeXML);
+          xmlGenerator.createElement(cubeXML, "DS_VIEW_ID", cube.getDsViewId());
+          xmlGenerator.createElement(cubeXML, "CUBE_ID", cube.getCubeId());
+        }
       }
-      for (CubeMstrEntity cubeMstrEntity : userDataPut.getCube()) {
-        xmlGenerator.createElement(cubeXML);
-        xmlGenerator.createElement(cubeXML, "DS_VIEW_ID", cubeMstrEntity.getDsViewId());
-        xmlGenerator.createElement(cubeXML, "CUBE_ID", cubeMstrEntity.getCubeId());
-      }
-      for (DataDsviewCubeDimDTO dataDsviewCubeDimDTO : userDataPut.getCubeDim()) {
-        xmlGenerator.createElement(dimXML);
-        xmlGenerator.createElement(dimXML, "DS_VIEW_ID", dataDsviewCubeDimDTO.getDsViewId());
-        xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+dataDsviewCubeDimDTO.getDimUniNm()+"]");
+      for (DataModel dataModel : datas) {
+        for (DsViewDimDTO cubeDim : dataModel.getDsViewDim()) {
+          xmlGenerator.createElement(dimXML);
+          xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
+          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
+        }
       }
 
       XML = xmlGenerator.builder();
@@ -107,14 +107,8 @@ public class UserDataService {
     
     for (UserDataDTO userData : userDataDTO) {
 
-      UserGroupDTO user = UserGroupDTO.builder()
-        .userNo(userData.getUserNo())
-        .userId(userData.getUserId())
-        .userNm(userData.getUserNm())
-        .build();
-
       UserDataModel userDataModel = UserDataModel.builder()
-        .user(user)
+        .userNo(userData.getUserNo())
         .datas(UGDataService.dataXmlParsing(userData.getDataXml()))
         .build();
 

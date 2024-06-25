@@ -83,8 +83,8 @@ const FolderTreeView = ({mainKey, dependency}) => {
     if (!isUpdate) {
       const newAuthData = {
         ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
-        fldIds: dataSource.map((f) =>
-          returnItem((f.fldId === e.key ? newData : f)), false)
+        fldIds: dataSource.map((fld) =>
+          returnItem((fld.fldId === e.key ? newData : fld)), false)
       };
       data.next.push(newAuthData);
       return;
@@ -99,8 +99,8 @@ const FolderTreeView = ({mainKey, dependency}) => {
       }
       return {
         ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
-        fldIds: d.fldIds.map((f) =>
-          returnItem((f.fldId === e.key ? newData : f)), false)
+        fldIds: d.fldIds.map((fld) =>
+          returnItem((fld.fldId === e.key ? newData : fld)), false)
       };
     });
   };
@@ -132,6 +132,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
         <Column
           dataField="fldNm"
           caption={localizedString.folderName}
+          allowEditing={false}
         />
         <Column
           dataField="authView"

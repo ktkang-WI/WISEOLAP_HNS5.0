@@ -73,10 +73,10 @@ public class UserFolderService {
         UserAuthReportMstrEntity groupAuthReportMstrEntity = UserAuthReportMstrEntity.builder()
           .userNo(userNo)
           .fldId(configFolderDTO.getFldId())
-          .authDataItem(configFolderDTO.getAuthDataItem())
-          .authExport(configFolderDTO.getAuthExport())
-          .authPublish(configFolderDTO.getAuthPublish())
-          .authView(configFolderDTO.getAuthView())
+          .authDataItem(configFolderDTO.isAuthDataItem())
+          .authExport(configFolderDTO.isAuthExport())
+          .authPublish(configFolderDTO.isAuthPublish())
+          .authView(configFolderDTO.isAuthView())
           .build();
 
           result.add(groupAuthReportMstrEntity);
@@ -120,10 +120,10 @@ public class UserFolderService {
 
       FolderListModel folderListModel = FolderListModel.builder()
         .fldId(userData.getFldId())
-        .authView(userData.getAuthView())
-        .authDataItem(userData.getAuthDataItem())
-        .authExport(userData.getAuthExport())
-        .authPublish(userData.getAuthPublish())
+        .authView(userData.isAuthView())
+        .authDataItem(userData.isAuthDataItem())
+        .authExport(userData.isAuthExport())
+        .authPublish(userData.isAuthPublish())
         .build();
   
       folderListMode.add(folderListModel);

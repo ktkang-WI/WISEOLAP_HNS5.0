@@ -13,8 +13,14 @@ export const getDsView = () => {
   return res;
 };
 
+
 export const getDsViewCube = () => {
-  const res = axios.get('/dataset/ds/dsview-cube');
+  const res = axios.get('/dataset/ds/cube');
+  return res;
+};
+
+export const getDsViewDim = () => {
+  const res = axios.get('/dataset/ds/dim');
   return res;
 };
 

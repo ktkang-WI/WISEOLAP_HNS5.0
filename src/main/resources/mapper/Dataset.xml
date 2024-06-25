@@ -48,20 +48,16 @@
 	  <result column="IP" property="ip" javaType="String"/>
 	</resultMap>
 
-	<resultMap id="DatasetDsDsviewCubeDTO" type="com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO">
-	  <result column="DS_CUBE_ID" property="dsCubeId" javaType="int"/>
+	<resultMap id="DatasetDsCubeMstr" type="com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity">
 	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
-	  <result column="DS_ID" property="dsId" javaType="int"/>
 	  <result column="CUBE_ID" property="cubeId" javaType="int"/>
-	  <result column="DIM_UNI_NM" property="dimUniNm" javaType="String"/>
-	  <result column="DS_VIEW_NM" property="dsViewNm" javaType="String"/>
-	  <result column="DS_NM" property="dsNm" javaType="String"/>
-	  <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
-	  <result column="OWNER_NM" property="ownerNm" javaType="String"/>
-	  <result column="IP" property="ip" javaType="String"/>
-	  <result column="DB_NM" property="dbNm" javaType="String"/>
 	  <result column="CUBE_NM" property="cubeNm" javaType="String"/>
+	</resultMap>
+
+	<resultMap id="DatasetDsViewDimMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity">
+	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
 	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
+	  <result column="DIM_UNI_NM" property="dimDimUniNm" javaType="String"/>
 	</resultMap>
 
 	<resultMap id="UserUploadMstr" type="com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity">
@@ -171,56 +167,6 @@
           WHERE DS_ID = #{dsId, jdbcType=INTEGER}
 		</update>
 
-		<select id="selectDatasetDsviewCubeDs" resultMap="DatasetDsDsviewCubeDTO">
-			SELECT
-				ROWNUM AS DS_CUBE_ID,
-				DS.DS_VIEW_ID,
-				DS.DS_ID,
-				CUBE.CUBE_ID,
-				CUBE.DIM_UNI_NM,
-				DS.DS_VIEW_NM,
-				DS.DS_NM,
-				DS.DBMS_TYPE,
-				DS.OWNER_NM,
-				DS.IP,
-				DS.DB_NM,
-				CUBE.CUBE_NM,
-				CUBE.DIM_CAPTION
-				FROM 
-				(
-				SELECT
-						DS_VIEW_MSTR.DS_VIEW_ID,
-						DS_MSTR.DS_ID,
-						DS_VIEW_MSTR.DS_VIEW_NM,
-						DS_MSTR.DS_NM,
-						DS_MSTR.DBMS_TYPE,
-						DS_MSTR.OWNER_NM,
-						DS_MSTR.IP,
-						DS_MSTR.DB_NM
-						FROM DS_MSTR INNER JOIN DS_VIEW_MSTR
-								ON DS_MSTR.DS_ID = DS_VIEW_MSTR.DS_ID
-								ORDER BY 2 DESC
-				) DS
-				INNER JOIN
-				(
-				SELECT
-						CUBE_MSTR.DS_VIEW_ID,
-						CUBE_MSTR.CUBE_ID,
-						CUBE_MSTR.CUBE_NM,
-						CUBE_DIM_MSTR.DIM_CAPTION,
-						CUBE_DIM_MSTR.DIM_UNI_NM
-						FROM CUBE_MSTR INNER JOIN CUBE_DIM_MSTR
-								ON CUBE_MSTR.CUBE_ID = CUBE_DIM_MSTR.CUBE_ID
-								ORDER BY 2 DESC
-				) CUBE 
-				ON DS.DS_VIEW_ID = CUBE.DS_VIEW_ID
-				ORDER BY 
-				DS.DS_VIEW_ID,
-				DS.DS_ID,
-				CUBE.CUBE_ID
-		</select>
-
-
 		<select id="selectDatasetDsDsview" resultMap="DatasetDsDTO">
 			SELECT
 				DS_MSTR.DS_ID,
@@ -253,6 +199,21 @@
 						FROM DS_MSTR
 		</select>
 
+		<select id="selectDatasetDsCube" resultMap="DatasetDsCubeMstr">
+			SELECT
+				CUBE_MSTR.DS_VIEW_ID,
+				CUBE_MSTR.CUBE_ID,
+				CUBE_MSTR.CUBE_NM
+					FROM CUBE_MSTR
+		</select>
+
+		<select id="selectDatasetDsViewDim" resultMap="DatasetDsViewDimMstr">
+			SELECT 
+				DS_VIEW_DIM_MSTR.DS_VIEW_ID,
+				DS_VIEW_DIM_MSTR.DIM_CAPTION,
+				DS_VIEW_DIM_MSTR.DIM_UNI_NM
+					FROM DS_VIEW_DIM_MSTR
+		</select>
   	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
 	    SELECT
 	      DS_MSTR.DS_ID AS DS_ID,
@@ -266,9 +227,9 @@
 	      DS_DESC,
 	      WF_YN,
 	      USER_AREA_YN
-	    from GRP_AUTH_DS_MSTR
-	      INNER JOIN DS_MSTR ON DS_MSTR.DS_ID = GRP_AUTH_DS_MSTR.DS_ID
-	      INNER JOIN USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
+	    from GRP_AUTH_DS_MSTR_DEV
+	      INNER JOIN DS_MSTR ON DS_MSTR.DS_ID = GRP_AUTH_DS_MSTR_DEV.DS_ID
+	      INNER JOIN USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_DS_MSTR_DEV.GRP_ID
 	    WHERE USER_MSTR.USER_ID = #{userId}
 	    ORDER BY DS_NM
 	</select>
@@ -277,7 +238,7 @@
 	<select id="selectUserAuthDsViewList" parameterType="String" resultMap="DsView">
 		SELECT DISTINCT *
 		FROM DS_MSTR A
-		JOIN USER_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
+		JOIN USER_AUTH_DS_MSTR_DEV B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE USER_NO = (SELECT USER_NO FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>
@@ -285,7 +246,7 @@
   	<select id="selectGrpAuthDsViewList" parameterType="String" resultMap="DsView">
 		SELECT DISTINCT *
 		FROM DS_MSTR A
-		JOIN GRP_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
+		JOIN GRP_AUTH_DS_MSTR_DEV B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
 	</select>

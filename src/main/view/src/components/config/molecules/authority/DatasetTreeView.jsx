@@ -7,7 +7,13 @@ import TreeList, {
 
 import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -32,8 +38,7 @@ const DatasetTreeView = ({mainKey, dependency}) => {
       const fldId = getUserOrGroup(dataSetMode, data, nextId);
       if (!fldId) {
         const newItem = {
-          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
-          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           fldId: []
         };
         data.next.push(newItem);
@@ -48,11 +53,11 @@ const DatasetTreeView = ({mainKey, dependency}) => {
     const dataSetMode =
       currentTab === path.GROUP_DATASET ? mode.GROUP : mode.USER;
     const {nextId} = getKeys(dataSetMode, selected);
-    data.next = data.next.map((d) => {
-      if (nextId === (d?.grpId || d?.userNo)) {
-        d.fldId = [...new Set(selectedKeys)];
+    data.next = data.next.map((dataSetAuth) => {
+      if (nextId === (dataSetAuth?.grpId || dataSetAuth?.userNo)) {
+        dataSetAuth.fldId = [...new Set(selectedKeys)];
       }
-      return d;
+      return dataSetAuth;
     });
   }, [selectedKeys]);
 
@@ -95,6 +100,7 @@ const DatasetTreeView = ({mainKey, dependency}) => {
         <Column
           dataField="fldNm"
           caption={localizedString.folderName}
+          allowEditing={false}
         />
       </TreeList>
     </Wrapper>

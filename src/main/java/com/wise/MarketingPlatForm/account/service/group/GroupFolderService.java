@@ -74,16 +74,15 @@ public class GroupFolderService {
         GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
           .grpId(grpId)
           .fldId(configFolderDTO.getFldId())
-          .authDataItem(configFolderDTO.getAuthDataItem())
-          .authExport(configFolderDTO.getAuthExport())
-          .authPublish(configFolderDTO.getAuthPublish())
-          .authView(configFolderDTO.getAuthView())
+          .authDataItem(configFolderDTO.isAuthDataItem())
+          .authExport(configFolderDTO.isAuthExport())
+          .authPublish(configFolderDTO.isAuthPublish())
+          .authView(configFolderDTO.isAuthView())
           .build();
 
           result.add(groupAuthReportMstrEntity);
 
       }
-
     }
     return result;
   };
@@ -120,10 +119,10 @@ public class GroupFolderService {
 
       FolderListModel folderListModel = FolderListModel.builder()
         .fldId(groupData.getFldId())
-        .authView(groupData.getAuthView())
-        .authDataItem(groupData.getAuthDataItem())
-        .authExport(groupData.getAuthExport())
-        .authPublish(groupData.getAuthPublish())
+        .authView(groupData.isAuthView())
+        .authDataItem(groupData.isAuthDataItem())
+        .authExport(groupData.isAuthExport())
+        .authPublish(groupData.isAuthPublish())
         .build();
 
       folderListMode.add(folderListModel);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {path} from '../Authority';
+import {getDataObjectOfUserOrGroup, mode, path} from '../Authority';
 
 export const generateAxios = async (currentTab, data) => {
   if (
@@ -22,15 +22,18 @@ export const generateAxios = async (currentTab, data) => {
 };
 
 const generatePutDataAxios = async (currentTab, data) => {
+  const dataSetMode =
+    currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
   const filterDatas = data.filter((d) => d.datas.length > 0);
+  // TODO: 차원값 내부 [] <- 값으로 인하여 해당 함수 존재. 추후 [] 내부값이 필요없을 경우 삭제 필요
   const filteredData = filterDatas.map((d) => ({
-    grpId: d.grpId,
+    ...getDataObjectOfUserOrGroup(dataSetMode, (d.grpId || d.userNo)),
     datas: d.datas
         .filter((f) =>
-          (f?.cubeId?.length ?? 0) !== 0 || (f?.cubeDim?.length ?? 0) !== 0)
+          (f?.cubeId?.length ?? 0) !== 0 || (f?.dsViewDim?.length ?? 0) !== 0)
         .map((cube) => ({
           cubeId: cube?.cubeId,
-          cubeDim: cube?.cubeDim?.map((c) => {
+          dsViewDim: cube?.dsViewDim?.map((c) => {
             const match = c.dimDimUniNm.match(/\[(.*?)\]/);
             return {
               dsViewId: c.dsViewId,

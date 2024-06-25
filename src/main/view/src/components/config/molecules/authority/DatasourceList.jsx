@@ -4,7 +4,13 @@ import React, {useRef, useContext, useState, useEffect} from 'react';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -35,8 +41,7 @@ const DatasourceList = ({mainKey, dependency}) => {
       const dsIds = getUserOrGroup(dataSetMode, data, nextId);
       if (!dsIds) {
         const newItem = {
-          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
-          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           dsIds: []
         };
         data.next.push(newItem);
@@ -51,11 +56,11 @@ const DatasourceList = ({mainKey, dependency}) => {
     const dataSetMode =
       currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
     const {nextId} = getKeys(dataSetMode, selected);
-    data.next = data.next.map((d) => {
-      if (nextId === (d?.grpId || d?.userNo)) {
-        d.dsIds = [...new Set(selectedKeys)];
+    data.next = data.next.map((dsAuth) => {
+      if (nextId === (dsAuth?.grpId || dsAuth?.userNo)) {
+        dsAuth.dsIds = [...new Set(selectedKeys)];
       }
-      return d;
+      return dsAuth;
     });
   }, [selectedKeys]);
 

@@ -29,6 +29,7 @@ const DataAuthority = ({mainKey, ...props}) => {
       selected[mode.USER].next = e.data;
     }
     setDependency((prev) => !prev);
+    setDsViewId(0);
   };
 
   return (
@@ -70,7 +71,7 @@ const DataAuthority = ({mainKey, ...props}) => {
               setDependency={setDependency}/>
           </Wrapper>
           <Wrapper
-            size="2"
+            size="1"
           >
             <AuthorityDataDimension
               mainKey={mainKey}

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.CubeDTO;
-import com.wise.MarketingPlatForm.account.dto.CubeDimDTO;
+import com.wise.MarketingPlatForm.account.dto.DsViewDimDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
@@ -78,10 +78,9 @@ public class GroupDataService {
         }
       }
       for (DataModel dataModel : datas) {
-        for (CubeDimDTO cubeDim : dataModel.getCubeDim()) {
+        for (DsViewDimDTO cubeDim : dataModel.getDsViewDim()) {
           xmlGenerator.createElement(dimXML);
           xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
-          xmlGenerator.createElement(dimXML, "CUBE_ID", cubeDim.getCubeId());
           xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
         }
       }

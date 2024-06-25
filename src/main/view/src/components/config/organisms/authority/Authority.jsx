@@ -12,10 +12,11 @@ import DataAuthority from './dataAuthority/DataAuthority';
 import DatasetAuthority from './datasetAuthority/DatasetAuthority';
 import DatasourceAuthority from './datasourceAuthority/DatasourceAuthority';
 import ReportAuthority from './reportAuthority/ReportAuthority';
-import {generateAxios, generateGetAxios} from './data/AuthorityData';
+import {generateAxios, generateGetAxios} from './utils/AuthorityData';
 import useModal from 'hooks/useModal';
 import _ from 'lodash';
 
+export const AuthorityContext = createContext();
 export const path = {
   'GROUP_DATA': '/account/group/data',
   'GROUP_REPORT': '/account/group/folder',
@@ -82,27 +83,27 @@ const dataSource = [
 export const getUserGroupKeys = (currentTab, data) => {
   let result = null;
   if (currentTab == path.USER_REPORT || currentTab == path.GROUP_REPORT) {
-    result = data.next.filter((d) => {
+    result = data.prev.filter((d) => {
       return d.fldIds.some((f) => Object.values(f).includes(true));
     });
   } else if (
     currentTab == path.USER_DATASOURCE ||
     currentTab == path.GROUP_DATASOURCE) {
-    result = data.next.filter((d) => d.dsIds.length > 0);
+    result = data.prev.filter((d) => d.dsIds.length > 0);
   } else if (
     currentTab == path.USER_DATASET ||
     currentTab == path.GROUP_DATASET) {
-    result = data.next.filter((d) => d.fldId.length > 0);
+    result = data.prev.filter((d) => d.fldId.length > 0);
   } else if (
     currentTab == path.GROUP_DATA ||
     currentTab == path.USER_DATA
   ) {
-    result = data.next.filter((d) => {
+    result = data.prev.filter((d) => {
       const sizeIsOk = d.datas.length > 0;
       const isOk = d.datas.some((cube) => {
         const cubeId = cube?.cubeId?.length ?? 0 != 0;
-        const cubeDim = cube?.cubeDim?.length ?? 0 != 0;
-        return cubeId || cubeDim;
+        const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
+        return cubeId || dsViewDim;
       });
       return sizeIsOk && isOk;
     });
@@ -111,7 +112,6 @@ export const getUserGroupKeys = (currentTab, data) => {
   }
   return result.map((d) => (d.grpId || d.userNo));
 };
-export const AuthorityContext = createContext();
 export const getKeys = (condition, selected) => {
   let prevId;
   let nextId;
@@ -163,7 +163,8 @@ const Authority = () => {
     folderDataSets,
     dsView,
     folder,
-    dsViewCube
+    dsViewCube,
+    dsViewDim
   } = useLoaderData();
   const [innerData, setInnerData] = useState();
   const [currentTab, setCurrentTab] = useState(null);
@@ -217,6 +218,7 @@ const Authority = () => {
       dsView: dsView, // stationary
       folder: folder, // stationary
       dsViewCube: dsViewCube,
+      dsViewDim: dsViewDim,
       action: [action]
     }
   };
@@ -225,11 +227,11 @@ const Authority = () => {
     try {
       const response = await generateAxios(currentTab, data.next);
       if (response.data.data) {
-        alert('저장되었습니다.');
+        alert(localizedString.successSave);
       }
       setAction((prev) => !prev);
     } catch (error) {
-      setAction((prev) => !prev);
+      alert(localizedString.saveFail);
     }
   };
 

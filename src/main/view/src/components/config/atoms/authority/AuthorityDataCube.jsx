@@ -3,7 +3,13 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/common/Title';
 import React, {useContext, useEffect, useState} from 'react';
 import localizedString from 'config/localization';
-import {AuthorityContext, getKeys, getUserOrGroup, mode, path}
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
   from 'components/config/organisms/authority/Authority';
 
 const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
@@ -11,60 +17,59 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
-  const dataSource = [];
   const selected = getContext.state.selected;
   const dsViewCube = getContext.state.dsViewCube;
-  dsViewCube.forEach((d) => d.cube.forEach((c) => {
-    dataSource.push(c);
-  }));
+  const [dataSource, setDataSource] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
 
   useEffect(() => {
-    if (!dsViewId) return;
+    setDataSource(
+        dsViewCube
+            .filter((d) => d.dsViewId == dsViewId)
+    );
+  }, [dsViewId]);
+
+  useEffect(() => {
+    if (!dsViewId || !data?.next) return;
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      const obj = getUserOrGroup(dataSetMode, data, nextId);
-      if (!obj) {
+      if (!getUserOrGroup(dataSetMode, data, nextId)) {
         const newItem = {
-          ...(dataSetMode === mode.GROUP ? {grpId: nextId} : {}),
-          ...(dataSetMode === mode.USER ? {userNo: nextId} : {}),
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           datas: []
         };
         data.next.push(newItem);
       }
-      if (!dsViewId) setSelectedKeys([]);
-      else {
-        setSelectedKeys(obj?.datas.find((d) =>
-          d.dsViewId == dsViewId)?.cubeId ?? []);
-      }
     };
+    setDataSource([]);
+    setSelectedKeys([]);
     updateData();
   }, [dependency]);
 
   useEffect(() => {
-    if (!dsViewId) return;
-    if (!data?.next) return;
+    if (!dsViewId || !data?.next) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
-    const object = getUserOrGroup(dataSetMode, data, nextId);
-    if (!object) {
-      const findedDsView = object.datas.find((d) => d.dsViewId == dsViewId);
+    const userOrGroup = getUserOrGroup(dataSetMode, data, nextId);
+    if (!userOrGroup) {
+      const findedDsView =
+        userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
       if (!findedDsView) setSelectedKeys([]);
       else setSelectedKeys(findedDsView.cubeId);
     } else {
-      const data = object.datas.find((d) => d.dsViewId == dsViewId);
+      const data = userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
       if (!data) {
         // default create
         const temp = {
           dsViewId: dsViewId,
           cubeId: [],
-          cubeDim: []
+          dsViewDim: []
         };
-        object.datas.push(temp);
+        userOrGroup.datas.push(temp);
         setSelectedKeys([]);
       } else {
         setSelectedKeys(data?.cubeId ?? []);
@@ -73,23 +78,23 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   }, [dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
-    if (!dsViewId) return;
+    if (!dsViewId || !data?.next) return;
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
-    data.next = data.next.map((d) => {
-      if ((d?.grpId || d?.userNo) == nextId) {
-        d.datas = d.datas.map((d2) => {
-          if (d2.dsViewId == dsViewId) {
-            return {
-              ...d2,
-              cubeId: selectedItems.selectedRowKeys
-            };
-          }
-          return d2;
-        });
-      }
-      return d;
+
+    data.next = data.next.map((dataAuth) => {
+      const idMatch = (dataAuth?.grpId || dataAuth?.userNo) == nextId;
+      if (!idMatch) return dataAuth;
+
+      return {
+        ...dataAuth,
+        datas: dataAuth.datas.map((cubeAuth) =>
+          cubeAuth.dsViewId === dsViewId ?
+          {...cubeAuth, cubeId: selectedItems.selectedRowKeys} : cubeAuth
+        )
+      };
     });
+
     setSelectedKeys(selectedItems.selectedRowKeys);
   };
 
@@ -97,7 +102,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
     <Wrapper>
       <Title title={localizedString.addCUBE}></Title>
       <DataGrid
-        dataSource={dataSource.filter((d) => d.dsViewId == dsViewId)}
+        dataSource={dataSource}
         elementAttr={{
           class: 'authority-data-cube'
         }}

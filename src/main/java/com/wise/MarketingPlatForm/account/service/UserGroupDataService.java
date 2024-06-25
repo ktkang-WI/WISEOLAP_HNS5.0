@@ -12,7 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dto.CubeDTO;
-import com.wise.MarketingPlatForm.account.dto.CubeDimDTO;
+import com.wise.MarketingPlatForm.account.dto.DsViewDimDTO;
 import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
 import com.wise.MarketingPlatForm.utils.XMLParser;
 
@@ -34,7 +34,7 @@ public class UserGroupDataService {
 
     // Auth_Dim 처리
     xmlParser.setParentElement("Auth_Dim");
-    List<Map<String,Object>> auth_Dim = xmlParser.getChildrenElement("DS_VIEW_ID","CUBE_ID","DIM_UNI_NM");  // add CUBE_ID, CUBE_NM
+    List<Map<String,Object>> auth_Dim = xmlParser.getChildrenElement("DS_VIEW_ID","DIM_UNI_NM");  // add CUBE_ID, CUBE_NM
     auth_Dim.sort(Comparator.comparing(m -> Integer.parseInt(m.get("DS_VIEW_ID").toString())));
 
     // 공통 DS_VIEW_ID 추출
@@ -51,7 +51,7 @@ public class UserGroupDataService {
     // DataModel 생성
     for (String dsViewId : dsViewIds) {
         List<CubeDTO> cubeIds = new ArrayList<>();
-        List<CubeDimDTO> cubeDims = new ArrayList<>();
+        List<DsViewDimDTO> cubeDims = new ArrayList<>();
 
         // Auth_Cubes 처리
         Iterator<Map<String, Object>> cubeIterator = auth_Cubes.iterator();
@@ -74,12 +74,10 @@ public class UserGroupDataService {
         while (dimIterator.hasNext()) {
             Map<String, Object> map = dimIterator.next();
             int getdsViewId = Integer.parseInt(map.get("DS_VIEW_ID").toString());
-            int getcubeId = Integer.parseInt(map.get("CUBE_ID").toString());
             String getcubeDimNm = map.get("DIM_UNI_NM").toString();
             if (map.containsKey("DS_VIEW_ID") && map.get("DS_VIEW_ID").equals(dsViewId)) {
-                CubeDimDTO cubeDim = CubeDimDTO.builder()
+                DsViewDimDTO cubeDim = DsViewDimDTO.builder()
                     .dsViewId(getdsViewId)
-                    .cubeId(getcubeId)
                     .dimDimUniNm(getcubeDimNm)
                     .build();
                 cubeDims.add(cubeDim);
@@ -90,7 +88,7 @@ public class UserGroupDataService {
         DataModel dataModel = DataModel.builder()
                 .dsViewId(Integer.parseInt(dsViewId))
                 .cubeId(cubeIds)
-                .cubeDim(cubeDims)
+                .dsViewDim(cubeDims)
                 .build();
         result.add(dataModel);
     }
