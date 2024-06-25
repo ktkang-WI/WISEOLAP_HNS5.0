@@ -33,6 +33,7 @@ import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
+import com.wise.MarketingPlatForm.report.entity.ReportBosEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
@@ -118,6 +119,9 @@ public class ReportService {
     		options.put("reportDesc", entity.getReportDesc());
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
+
+            ReportBosEntity reportBos = ReportBosEntity.builder().build();
+            options.put("reportBos", reportBos);
     		
     		report.put("reportId", Integer.parseInt(reportId));
     		report.put("options", options);

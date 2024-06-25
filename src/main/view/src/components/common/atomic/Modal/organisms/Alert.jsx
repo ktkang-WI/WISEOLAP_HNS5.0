@@ -19,7 +19,7 @@ const AlertInnenr = styled.div`
   padding-bottom: 20px;
   text-align: center;
   word-break: keep-all;
-
+  white-space: pre-wrap;
   img {
     display: block;
     margin: 20px auto 15px auto;
