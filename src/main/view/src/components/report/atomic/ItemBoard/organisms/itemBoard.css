@@ -58,3 +58,15 @@ div.flexlayout__tab_button--selected {
   height: 100%;
   position: relative !important;
 }
+
+.flexlayout__tabset:has(.tab-selected)::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 4px solid var(--primary2);
+    pointer-events: none;
+    border-radius: 10px;
+}
