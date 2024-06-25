@@ -23,6 +23,15 @@ import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
 import {styled} from 'styled-components';
 import {useMemo, useState} from 'react';
 import localizedString from 'config/localization';
+import reportListIcon from 'assets/image/icon/button/report_list.png';
+import reportListActiveIcon
+  from 'assets/image/icon/button/report_list_active.png';
+import attributeListIcon from 'assets/image/icon/button/attribute_list.png';
+import attributeListActiveIcon
+  from 'assets/image/icon/button/attribute_list_active.png';
+import reloadImg from 'assets/image/icon/button/reset.png';
+import models from 'models';
+
 
 const theme = getTheme();
 
@@ -42,7 +51,10 @@ const ViewerContent = ({children}) => {
 
   const [reportListOpened, setReportListOpened] = useState(true);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
+  const [reportData, setReportData] = useState();
   const componentCache = useMemo(() => ({}), []);
+
+  const useAttributeList = report.options.reportType == 'AdHoc';
 
   const getComponent = (id) => {
     if (!componentCache[id]) {
@@ -56,21 +68,38 @@ const ViewerContent = ({children}) => {
 
   const buttons = [
     {
-      icon: '',
+      icon: reportListIcon,
+      activeIcon: reportListActiveIcon,
       label: localizedString.reportList,
-      width: '100px',
+      width: '85px',
+      type: 'expand',
+      visible: true,
       value: reportListOpened,
       onClick: () => {
         setReportListOpened(!reportListOpened);
       }
     },
     {
-      icon: '',
+      icon: attributeListIcon,
+      activeIcon: attributeListActiveIcon,
       label: localizedString.dataAttributeList,
+      visible: useAttributeList,
       width: '105px',
+      type: 'expand',
       value: dataColumnOpened,
       onClick: () => {
         setDataColumnOpened(!dataColumnOpened);
+      }
+    },
+    {
+      icon: reloadImg,
+      visible: true,
+      width: '20px',
+      type: 'icon',
+      onClick: () => {
+        models.Report.getList(null, 'viewer').then(({data}) => {
+          setReportData(data);
+        });
       }
     }
   ];
@@ -95,7 +124,7 @@ const ViewerContent = ({children}) => {
             index={0}
             opened={reportListOpened}
             margin={'0px 0px 10px 10px'}
-            component={ReportTabs}
+            render={() => <ReportTabs reportData={reportData}/>}
           >
             {/* TODO: 추후 권한 적용 */}
             <CustomDrawer
@@ -105,7 +134,7 @@ const ViewerContent = ({children}) => {
               margin={'0px'}
               opened={dataColumnOpened}
               component={ViewerDataAttributePanels}
-              visible={report.options.reportType == 'AdHoc'}
+              visible={useAttributeList}
             >
               <Wrapper>
                 <ReportContentWrapper>
