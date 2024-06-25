@@ -2,12 +2,13 @@ import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
+import icoEdit from 'assets/image/icon/auth/ico_edit.png';
 import React, {useContext, useEffect, useState} from 'react';
-import {AuthorityContext, getUserGroupKeys}
+import {AuthorityContext, getFindDifferentIds, getUserGroupKeys}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
 
-const UserList = ({onRowClick}) => {
+const UserList = ({onRowClick, dependency}) => {
   const getContext = useContext(AuthorityContext);
 
   // state
@@ -18,14 +19,23 @@ const UserList = ({onRowClick}) => {
   // TODO: 권한별로 키유무 만들어야함.
   useEffect(() => {
     if (!data?.next) return;
-    const key = getUserGroupKeys(currentTab, data);
+    const key =
+      getUserGroupKeys(currentTab, data).map((d) => (d.userNo));
+    const editsKey = getFindDifferentIds(currentTab, data);
     setDataSource(dataSource.map((d) => {
+      let isAuth = 'none';
+      if (key.includes(d.userNo)) {
+        isAuth = 'visible';
+      }
+      if (editsKey.includes(d.userNo)) {
+        isAuth = 'edit';
+      }
       return {
-        isAuth: key.includes(d.userNo),
-        ...d
+        ...d,
+        isAuth: isAuth
       };
     }));
-  }, [currentTab, action]);
+  }, [currentTab, action, dependency]);
   const HandleClick = (e) => {
     onRowClick(e);
   };
@@ -49,8 +59,10 @@ const UserList = ({onRowClick}) => {
           format="currency"
           width="30px"
           cellRender={({value}) => {
-            if (value) {
+            if (value === 'visible') {
               return <img height={'15px'} src={passwordIcon}/>;
+            } else if (value === 'edit') {
+              return <img height={'15px'} src={icoEdit}/>;
             }
           }}
         />

@@ -37,11 +37,11 @@ const DataAuthority = ({mainKey, ...props}) => {
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATA &&
-          <GroupList onRowClick={handleRowClick}/>
+          <GroupList onRowClick={handleRowClick} dependency={dependency}/>
         }
         {
           currentTab === path.USER_DATA &&
-          <UserList onRowClick={handleRowClick}/>
+          <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
       <Wrapper display='flex' direction='column'>

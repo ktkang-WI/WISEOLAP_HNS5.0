@@ -31,11 +31,11 @@ const DatasetAuthority = ({mainKey, ...props}) => {
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATASET &&
-          <GroupList onRowClick={handleRowClick}/>
+          <GroupList onRowClick={handleRowClick} dependency={dependency}/>
         }
         {
           currentTab === path.USER_DATASET &&
-          <UserList onRowClick={handleRowClick}/>
+          <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>

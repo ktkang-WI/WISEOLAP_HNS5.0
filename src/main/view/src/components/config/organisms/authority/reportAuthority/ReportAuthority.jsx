@@ -31,11 +31,11 @@ const ReportAuthority = ({mainKey, ...props}) => {
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_REPORT &&
-          <GroupList onRowClick={handleRowClick}/>
+          <GroupList onRowClick={handleRowClick} dependency={dependency}/>
         }
         {
           currentTab === path.USER_REPORT &&
-          <UserList onRowClick={handleRowClick}/>
+          <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>

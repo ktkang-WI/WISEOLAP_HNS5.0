@@ -7,6 +7,7 @@ import {
   getKeys,
   getUserOrGroup,
   getUserOrGroupOrigin,
+  getUserOrGroupOriginNext,
   mode,
   path}
   from 'components/config/organisms/authority/Authority';
@@ -15,6 +16,71 @@ import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
+import icoEdit from 'assets/image/icon/auth/ico_edit.png';
+
+const getDsViewKey = (dataSetMode, data, nextId) => {
+  const prevKeys = getUserOrGroupOrigin(dataSetMode, data, nextId) || [];
+  const nextKeys = getUserOrGroupOriginNext(dataSetMode, data, nextId) || [];
+  const notNullPrevKey = prevKeys?.datas?.filter((cube) => {
+    const cubeId = cube?.cubeId?.length ?? 0 != 0;
+    const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
+    return cubeId || dsViewDim;
+  });
+  const notNullNextKey = nextKeys?.datas?.filter((cube) => {
+    const cubeId = cube?.cubeId?.length ?? 0 != 0;
+    const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
+    return cubeId || dsViewDim;
+  });
+  const prevKey = notNullPrevKey?.map((cube) => cube.dsViewId) ?? [];
+  const nextKey = notNullNextKey?.map((cube) => cube.dsViewId) ?? [];
+  const editKey = new Set();
+
+  nextKey?.forEach((id) => {
+    if (!prevKey.includes(id)) {
+      editKey.add(id);
+    }
+  });
+
+  notNullPrevKey?.forEach((prevItem) => {
+    const nextItem = notNullNextKey.find((item) =>
+      item.dsViewId === prevItem.dsViewId);
+    const prevStringify =
+    JSON.stringify(prevItem.cubeId) +
+    JSON.stringify(prevItem.dsViewDim);
+    const nextStringify =
+    JSON.stringify(nextItem.cubeId) +
+    JSON.stringify(nextItem.dsViewDim);
+    if (nextItem && prevStringify !== nextStringify) {
+      editKey.add(prevItem.dsViewId);
+    }
+  });
+  return {prevKey: prevKey, editKey: [...editKey]};
+};
+
+const setDsViewKey = (prevKey, editKey, dataSource, setDataSource) => {
+  if (prevKey.length === 0 && editKey.length === 0) {
+    setDataSource(dataSource.map((d) => {
+      return {
+        ...d,
+        isAuth: 'none'
+      };
+    }));
+  } else {
+    setDataSource(dataSource.map((d) => {
+      let isAuth = 'none';
+      if (prevKey.includes(d.dsViewId)) {
+        isAuth = 'visible';
+      }
+      if (editKey.includes(d.dsViewId)) {
+        isAuth = 'edit';
+      }
+      return {
+        ...d,
+        isAuth: isAuth
+      };
+    }));
+  }
+};
 
 const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   // context
@@ -27,12 +93,12 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
+
   useEffect(() => {
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
       const datas = getUserOrGroup(dataSetMode, data, nextId);
-      const keys = getUserOrGroupOrigin(dataSetMode, data, nextId);
       if (!datas) {
         const newItem = {
           ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
@@ -40,27 +106,8 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         };
         data.next.push(newItem);
       }
-      const filteredKey = keys?.datas?.filter((cube) => {
-        const cubeId = cube?.cubeId?.length ?? 0 != 0;
-        const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
-        return cubeId || dsViewDim;
-      });
-      const key = filteredKey?.map((cube) => cube.dsViewId) ?? [];
-      if (key.length === 0) {
-        setDataSource(dataSource.map((d) => {
-          return {
-            ...d,
-            isAuth: false
-          };
-        }));
-      } else {
-        setDataSource(dataSource.map((d) => {
-          return {
-            ...d,
-            isAuth: key.includes(d.dsViewId)
-          };
-        }));
-      }
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
+      setDsViewKey(prevKey, editKey, dataSource, setDataSource);
     };
     setSelectedKeys([]);
     updateData();
@@ -75,6 +122,11 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       const dsViewId = selectedItems.selectedRowKeys[0];
       setDsViewId(dsViewId);
       setSelectedKeys([dsViewId]);
+
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
+      setDsViewKey(prevKey, editKey, dataSource, setDataSource);
     }
   };
 
@@ -102,8 +154,10 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
           format="currency"
           width="30px"
           cellRender={({value}) => {
-            if (value) {
+            if (value === 'visible') {
               return <img height={'15px'} src={passwordIcon}/>;
+            } else if (value === 'edit') {
+              return <img height={'15px'} src={icoEdit}/>;
             }
           }}
         />

@@ -80,6 +80,83 @@ const dataSource = [
     component: <DatasourceAuthority mainKey={path.USER_DATASOURCE}/>
   }
 ];
+
+const getStringFy = (prevItem, nextItem, currentTab) => {
+  if (currentTab === path.USER_REPORT ||
+      currentTab == path.GROUP_REPORT ||
+      currentTab == path.USER_DATASET ||
+      currentTab == path.GROUP_DATASET) {
+    return JSON.stringify(prevItem.fldId) !==
+           JSON.stringify(nextItem.fldId);
+  } else if (
+    currentTab == path.USER_DATASOURCE ||
+    currentTab == path.GROUP_DATASOURCE) {
+    return JSON.stringify(prevItem.dsIds) !==
+           JSON.stringify(nextItem.dsIds);
+  } else if (
+    currentTab == path.GROUP_DATA ||
+    currentTab == path.USER_DATA
+  ) {
+    return JSON.stringify(prevItem.datas) !==
+           JSON.stringify(nextItem.datas);
+  }
+};
+
+export const getFindDifferentIds = (currentTab, data) => {
+  const result = new Set();
+  const prev = getUserGroupKeys(currentTab, data);
+  const next = getUserGroupNextKeys(currentTab, data);
+  const prevIds = prev.map((d) => (d.grpId || d.userNo));
+  const nextIds = next.map((d) => (d.grpId || d.userNo));
+
+  nextIds.forEach((id) => {
+    if (!prevIds.includes(id)) {
+      result.add(id);
+    }
+  });
+
+  prev.forEach((prevItem) => {
+    const nextItem = next.find((item) =>
+      (item.grpId || item.userNo) === (prevItem.grpId || prevItem.userNo));
+    const isOk = getStringFy(prevItem, nextItem, currentTab);
+    if (nextItem && isOk) {
+      result.add(prevItem.grpId);
+    }
+  });
+  return [...result];
+};
+export const getUserGroupNextKeys = (currentTab, data) => {
+  let result = null;
+  if (currentTab == path.USER_REPORT || currentTab == path.GROUP_REPORT) {
+    result = data.next.filter((d) => {
+      return d.fldIds.some((f) => Object.values(f).includes(true));
+    });
+  } else if (
+    currentTab == path.USER_DATASOURCE ||
+    currentTab == path.GROUP_DATASOURCE) {
+    result = data.next.filter((d) => d.dsIds.length > 0);
+  } else if (
+    currentTab == path.USER_DATASET ||
+    currentTab == path.GROUP_DATASET) {
+    result = data.next.filter((d) => d.fldId.length > 0);
+  } else if (
+    currentTab == path.GROUP_DATA ||
+    currentTab == path.USER_DATA
+  ) {
+    result = data.next.filter((d) => {
+      const sizeIsOk = d.datas.length > 0;
+      const isOk = d.datas.some((cube) => {
+        const cubeId = cube?.cubeId?.length ?? 0 != 0;
+        const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
+        return cubeId || dsViewDim;
+      });
+      return sizeIsOk && isOk;
+    });
+  } else {
+    result = [];
+  }
+  return result;
+};
 export const getUserGroupKeys = (currentTab, data) => {
   let result = null;
   if (currentTab == path.USER_REPORT || currentTab == path.GROUP_REPORT) {
@@ -110,7 +187,7 @@ export const getUserGroupKeys = (currentTab, data) => {
   } else {
     result = [];
   }
-  return result.map((d) => (d.grpId || d.userNo));
+  return result;
 };
 export const getKeys = (condition, selected) => {
   let prevId;
@@ -138,6 +215,15 @@ export const getUserOrGroup = (dataSetMode, data, nextId) => {
 };
 export const getUserOrGroupOrigin = (dataSetMode, data, nextId) => {
   return data?.prev?.find((d) => {
+    if (dataSetMode === mode.GROUP) {
+      return d?.grpId == nextId;
+    } else if (dataSetMode === mode.USER) {
+      return d?.userNo == nextId;
+    }
+  });
+};
+export const getUserOrGroupOriginNext = (dataSetMode, data, nextId) => {
+  return data?.next?.find((d) => {
     if (dataSetMode === mode.GROUP) {
       return d?.grpId == nextId;
     } else if (dataSetMode === mode.USER) {
