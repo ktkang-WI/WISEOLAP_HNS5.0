@@ -120,7 +120,7 @@ export const getFindDifferentIds = (currentTab, data) => {
       (item.grpId || item.userNo) === (prevItem.grpId || prevItem.userNo));
     const isOk = getStringFy(prevItem, nextItem, currentTab);
     if (nextItem && isOk) {
-      result.add(prevItem.grpId);
+      result.add((prevItem.grpId || prevItem.userNo));
     }
   });
   return [...result];
