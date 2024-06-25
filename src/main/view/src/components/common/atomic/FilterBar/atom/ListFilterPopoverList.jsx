@@ -75,7 +75,7 @@ const ListFilterPopoverList = ({
         selectionMode={selectionMode}
         showSelectionControls={true}
         selectAllText={allText}
-        selectAllMode={'page'}
+        selectAllMode={searchValue!=''? 'page': 'allPage'}
         selectedByClick={true}
         height='200px'
         displayExpr='caption'
