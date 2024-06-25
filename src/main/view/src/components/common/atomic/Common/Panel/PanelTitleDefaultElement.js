@@ -84,7 +84,7 @@ const PanelTitleDefaultElement = () => {
         appliedDataItem: onlyUniNm || []
       });
     } else {
-      alert('데이터 집합을 선택해 주세요.');
+      alert(localizedString.selectDataset);
       return;
     }
   };
@@ -94,7 +94,7 @@ const PanelTitleDefaultElement = () => {
       id: 'viewer_posting_data',
       onClick: viewerPostingFunc,
       src: viewerPosting,
-      label: '뷰어 데이터 항목 선택 표시 기능'
+      label: localizedString.viewerPosting
     },
     CustomField: {
       id: 'custom_field',
