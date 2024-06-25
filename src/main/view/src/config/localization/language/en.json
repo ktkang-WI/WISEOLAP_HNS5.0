@@ -534,5 +534,11 @@
     "endTime": "End Time",
     "ctrlId": "Control ID",
     "ctrnCaption": "Control Name"
+  },
+  "topBottomForm": {
+    "topBottomType": "Top/Bottom Distinction",
+    "count": "Top/Bottom Count",
+    "percentage": "Apply %",
+    "others": "Display other items besides Top/Bottom values as 'Others'"
   }
 }

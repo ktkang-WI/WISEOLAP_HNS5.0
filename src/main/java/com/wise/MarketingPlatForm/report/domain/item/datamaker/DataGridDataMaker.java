@@ -28,6 +28,7 @@ public class DataGridDataMaker implements ItemDataMaker {
         data = sanitizer
                 .dataFiltering(dataAggreagtion.getFilter())
                 .groupBy()
+                .topBottom()
                 .orderBy()
                 .columnFiltering()
                 .paging(pagingOption)

@@ -738,5 +738,11 @@
     "endTime": "종료 시간",
     "ctrlId": "컨트롤 ID",
     "ctrlCaption": "컨트롤 명"
+  },
+  "topBottomForm": {
+    "topBottomType": "Top/Bottom 구분",
+    "count": "Top/Bottom 개수",
+    "percentage": "% 적용",
+    "others": "Top/Bottom 값 이외의 항목 기타로 표시"
   }
 }
