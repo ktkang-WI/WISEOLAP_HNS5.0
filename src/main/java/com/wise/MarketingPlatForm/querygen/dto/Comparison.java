@@ -51,7 +51,7 @@ public enum Comparison {
 			return IsNull;
 		if(aComparisonType.trim().equalsIgnoreCase("NotIsNull"))
 			return Like;
-		if(aComparisonType.trim().equalsIgnoreCase("NotIn"))
+		if(aComparisonType.trim().equalsIgnoreCase("NotIn") || aComparisonType.trim().equalsIgnoreCase("NOT_IN"))
 			return NotIn;
 		if(aComparisonType.equalsIgnoreCase("Between") || aComparisonType.equalsIgnoreCase("BETWEEN_CAND") || aComparisonType.equalsIgnoreCase("BETWEEN_LIST") || aComparisonType.equalsIgnoreCase("BETWEEN_INPUT"))
 			return Between;
