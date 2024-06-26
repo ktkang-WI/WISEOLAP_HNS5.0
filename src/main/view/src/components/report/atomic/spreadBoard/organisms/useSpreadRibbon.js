@@ -67,12 +67,16 @@ const useSpreadRibbon = () => {
 
   const openReportLocal = (context) => {
     const currentReportId = selectCurrentReportId(store.getState());
-    // 기존 파일 불러오기
-    // sheets.Designer.getCommand('fileMenuPanel')
-    // .execute(context, 'button_import_excel', null);
-    // 홈앤쇼핑 커스터마이징 (DRM 파일 복호화 기능 추가)
-    const fileInput = document.getElementById('fileInput');
-    fileInput.click();
+
+    if (process.env.NODE_ENV == 'development') {
+      // 기존 파일 불러오기
+      sheets.Designer.getCommand('fileMenuPanel')
+          .execute(context, 'button_import_excel', null);
+    } else {
+      // 홈앤쇼핑 커스터마이징 (DRM 파일 복호화 기능 추가)
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
+    }
 
     resetWorkbookJSON({
       reportId: currentReportId,
