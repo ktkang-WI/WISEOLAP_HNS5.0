@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
@@ -12,6 +13,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
 import com.wise.MarketingPlatForm.report.type.ItemType;
+import com.wise.MarketingPlatForm.report.type.ReportType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +23,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DataAggregation {
+    UserDTO user;
     String userId;
+    String reportId;
+    ReportType reportType;
     List<Measure> measures;
     List<Measure> originalMeasures;
     List<Dimension> dimensions;
