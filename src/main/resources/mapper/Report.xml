@@ -20,6 +20,7 @@
     <result column="MOD_USER_NO" property="modUserNo" javaType="int"/>
     <result column="REG_USER_NM" property="regUserName" javaType="String"/>
     <result column="MOD_USER_NM" property="modUserName" javaType="String"/>
+    <result column="DATASET" property="dataset" javaType="String"/>
 	</resultMap>
 
   <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
@@ -74,6 +75,59 @@
             </if>
     </select>
   
+    <select id="publicReportList" resultMap="ReportList">
+      SELECT DISTINCT 
+      REPORT_MSTR.REPORT_ID AS ID,
+      REPORT_MSTR.FLD_ID AS UPPERID,
+      REPORT_MSTR.REPORT_NM AS NAME,
+      REPORT_MSTR.REPORT_TYPE AS TYPE,
+      TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET
+      FROM 
+          REPORT_MSTR
+      WHERE 
+          REPORT_MSTR.DEL_YN = 'N'
+      AND
+        REPORT_MSTR.FLD_TYPE = 'PUBLIC'
+          
+
+      UNION ALL
+
+      SELECT
+          PUB_FLD_MSTR.FLD_ID AS ID, 
+          PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,
+          PUB_FLD_MSTR.FLD_NM AS NAME,
+          TO_NCHAR('FOLDER') AS TYPE,
+          TO_CLOB('') AS DATASET
+      FROM 
+      PUB_FLD_MSTR
+    </select>
+
+    <select id="privateReportList" resultMap="ReportList">
+      SELECT DISTINCT 
+      REPORT_MSTR.REPORT_ID AS ID,
+      REPORT_MSTR.FLD_ID AS UPPERID,
+      REPORT_MSTR.REPORT_NM AS NAME,
+      REPORT_MSTR.REPORT_TYPE AS TYPE,
+      TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET
+      FROM 
+          REPORT_MSTR
+      WHERE 
+          REPORT_MSTR.DEL_YN = 'N'
+      AND
+        REPORT_MSTR.FLD_TYPE = 'PRIVATE'
+        
+      UNION ALL
+
+      SELECT
+          USER_FLD_MSTR.FLD_ID AS ID, 
+          USER_FLD_MSTR.FLD_PARENT_ID AS UPPERID,
+          USER_FLD_MSTR.FLD_NM AS NAME,
+          TO_NCHAR('FOLDER') AS TYPE,
+          TO_CLOB('') AS DATASET
+      FROM 
+        USER_FLD_MSTR
+    </select>
+
     <select id="selectPublicReportList" resultMap="ReportList">
       SELECT DISTINCT 
           A.ID,

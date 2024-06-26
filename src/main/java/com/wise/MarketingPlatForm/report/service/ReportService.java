@@ -299,6 +299,30 @@ public class ReportService {
         return result;
     }
 
+    public Map<String, List<ReportListDTO>> getReportListIncludeQuery() {
+        List<ReportListDTO> pubList = reportDAO.publicReportList();
+        List<ReportListDTO> priList = reportDAO.privateReportList();
+        Map<String, List<ReportListDTO>> result = new HashMap<>();
+        result.put("publicReport", pubList);
+        result.put("privateReport", priList);
+
+        for (ReportListDTO report : pubList) {
+            String dataset = report.getDataset();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try {
+                JSONObject json = new JSONObject(objectMapper.readValue(dataset, Map.class));
+                String query = json.get("query").toString();
+                System.out.println(query);
+                report.setDataset(query);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
     public String checkDuplicatedReport(ReportMstrEntity reportMstrEntity) {
         List<ReportMstrEntity> result = reportDAO.checkDuplicatedReport(reportMstrEntity);
         return result.size() > 0 ? "Y" : "N";
