@@ -258,16 +258,11 @@ const useSpread = () => {
 
         // 복호화 된 파일 불러오기
         await importHnsFile(responseData.fileName, responseData.filePath);
-
-        dispatch(loadingActions.endJob());
-      } else {
-        throw new Error(
-            `File upload failed with status: ${uploadResponse.status}`
-        );
       }
     } catch (error) {
       console.error('Error during hnsDrmUpload:', error);
       dispatch(loadingActions.endJob());
+      alert('파일을 불러오는데 실패했습니다. \n 관리자에게 문의하세요.');
     }
   };
 
