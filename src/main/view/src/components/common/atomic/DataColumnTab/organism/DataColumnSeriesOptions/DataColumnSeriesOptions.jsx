@@ -13,6 +13,9 @@ import {selectSeriesOption}
 import localizedString from 'config/localization';
 import styled from 'styled-components';
 import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
+import {selectCurrentItemType} from 'redux/selector/ItemSelector';
+import store from 'redux/modules';
+import ItemType from 'components/report/item/util/ItemType';
 
 export const DataColumnSeriesOptionsContext = createContext();
 

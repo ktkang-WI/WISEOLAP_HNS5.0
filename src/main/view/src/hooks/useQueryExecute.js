@@ -583,6 +583,7 @@ const useQueryExecute = () => {
   };
 
   const validateRequiredField = (item) => {
+    const reportType = item.type;
     let dataFieldOption;
     let dataField;
     const designerMode = selectCurrentDesignerMode(store.getState());

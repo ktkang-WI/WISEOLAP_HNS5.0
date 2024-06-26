@@ -17,8 +17,8 @@ import fullStackedSplineArea
   from 'assets/image/icon/item/full_stacked_spline_area.png';
 import bubble from 'assets/image/icon/item/bubble.png';
 import wordCloud from 'assets/image/icon/item/wordcloud.png';
-import rangeBar from 'assets/image/icon/item/wordcloud.png';
-import sankey from 'assets/image/icon/item/rangeBar.png';
+import rangeBar from 'assets/image/icon/item/rangeBar.png';
+import sankey from 'assets/image/icon/item/sankey.png';
 
 export const chartImages = {
   bar: bar,

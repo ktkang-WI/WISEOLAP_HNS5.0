@@ -1,7 +1,6 @@
-import React, {useEffect, useCallback, useRef} from 'react';
-import useQueryExecute from 'hooks/useQueryExecute';
+import React, {useEffect, useRef} from 'react';
 import {Chart} from 'devextreme-react';
-import {Tooltip, CommonSeriesSettings, Legend, Series, Label}
+import {Tooltip, CommonSeriesSettings, Legend, Series, Point, Label}
   from 'devextreme-react/chart';
 import {itemExportsObject}
   from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
@@ -10,6 +9,7 @@ import {
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import {
   directionFormat,
+  getSeriesGeneralOption,
   labelFormat,
   overlappingFormat
 } from '../chart/seriesOption/SeriesOption';
@@ -37,24 +37,17 @@ const RangeBar = ({item, id, setItemExports}) => {
         }
       });
 
-  if (!mart.init) {
-    return <></>;
-  }
   const dataFields = itemTools.getDataField();
   let seriesOptions = null;
   // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
+  const {
+    ignoreEmptyPoints,
+    pointerMarker} = getSeriesGeneralOption(seriesOptions);
   const overlapping = overlappingFormat(seriesOptions);
-  const rangeInfo = mart.data.info.range;
+  const rangeInfo = _.isEmpty(mart.data) ? {} : mart.data.info.range;
 
-  const getDataField = useCallback(() => {
-    return meta.dataField;
-  }, [mart.data]);
-
-  const interactiveOption = meta.interactiveOption;
-
-  let selectedItem = [];
-  const {filterItems, clearAllFilter} = useQueryExecute();
+  const interactiveOption = meta.interactiveOption || {};
 
   const itemExportObject =
   itemExportsObject(id, dxRef, 'RANGE_BAR', mart.data.data);
@@ -70,86 +63,10 @@ const RangeBar = ({item, id, setItemExports}) => {
     });
   }, [mart.data.data]);
 
-  // 마스터 필터 관련 useEffect
-  useEffect(() => {
-    dxRef.current.instance.clearSelection();
-  }, [mart.data]);
+  if (!mart.init) {
+    return <></>;
+  }
 
-  useEffect(() => {
-    dxRef.current.instance.clearSelection();
-    filterItems(item, {});
-  }, [
-    interactiveOption.targetDimension,
-    interactiveOption.mode,
-    interactiveOption.enabled]);
-
-  useEffect(() => {
-    dxRef.current.instance.clearSelection();
-    clearAllFilter(item);
-  }, [interactiveOption.crossDataSource]);
-
-  const getColor = () => {
-    let pickedColor = null;
-
-    if (meta.paletteType === 'colorEdit') {
-      const palette = meta.colorEdit;
-
-      pickedColor = palette;
-    } else {
-      pickedColor = meta.palette?.name;
-    }
-    return pickedColor;
-  };
-
-  /**
-   * selectedItem 기반으로 필터 정보를 반환합니다.
-   * @return {Array} filters
-   */
-  const getFilter = () => {
-    const dataField = getDataField();
-    const targetDiemnsion = interactiveOption.targetDimension;
-    const dim = dataField.dimension;
-    const dimGrp = dataField.dimensionGroup;
-    // 선택된 데이터 '차원명': Set 형태로 가공
-    const filters = selectedItem.reduce((acc, filter) => {
-      if (targetDiemnsion == 'dimension') {
-        filter.split('<br/>').reverse().forEach((v, i) => {
-          const name = dim[i].uniqueName;
-          if (v == '\u2800') {
-            v = null;
-          }
-
-          if (acc[name]) {
-            acc[name].add(v);
-          } else {
-            acc[name] = new Set([v]);
-          }
-        });
-      } else {
-        filter.split('-').forEach((v, i) => {
-          if (dimGrp.length <= i) return;
-          const name = dimGrp[i].uniqueName;
-          if (v == '\u2800') {
-            v = null;
-          }
-
-          if (acc[name]) {
-            acc[name].add(v);
-          } else {
-            acc[name] = new Set([v]);
-          }
-        });
-      }
-      return acc;
-    }, {});
-    // Set Array로 변환
-    for (const filter in filters) {
-      if (filters[filter]) {
-        filters[filter] = [...filters[filter]];
-      }
-    }
-    return filters;
-  };
 
   const customizeLabel = (formData, fieldId) => {
     const dataField =
@@ -175,51 +92,45 @@ const RangeBar = ({item, id, setItemExports}) => {
     if (!interactiveOption.enabled) return;
     // 대상 차원이 차원일 경우
     if (interactiveOption.targetDimension == 'dimension') {
-      // 단일 마스터 필터일 경우 초기화
-      if (interactiveOption.mode == 'single') {
-        selectedItem = [];
-        if (target.isSelected()) {
+      filterTools.setMasterFilterData(target.argument, () => {
+        if (interactiveOption.mode == 'single') {
+          if (target.isSelected()) {
+            component.clearSelection();
+            return;
+          }
           component.clearSelection();
-          filterItems(item, {});
-          return;
         }
-        component.clearSelection();
-      }
-      if (target.isSelected()) {
-        component.getAllSeries().forEach((series) => {
-          series.getPointsByArg(target.argument).forEach((point) => {
-            point.clearSelection();
+        if (target.isSelected()) {
+          component.getAllSeries().forEach((series) => {
+            series.getPointsByArg(target.argument).forEach((point) => {
+              point.clearSelection();
+            });
           });
-        });
-        selectedItem = selectedItem.filter((d) => d != target.argument);
-      } else {
-        component.getAllSeries().forEach((series) => {
-          series.getPointsByArg(target.argument).forEach((point) => {
-            point.select();
+        } else {
+          component.getAllSeries().forEach((series) => {
+            series.getPointsByArg(target.argument).forEach((point) => {
+              point.select();
+            });
           });
-        });
-        selectedItem.push(target.argument);
-      }
+        }
+      });
     } else {
       // 대상 차원이 차원 그룹일 경우
-      if (interactiveOption.mode == 'single') {
-        selectedItem = [];
-        if (target.series.isSelected()) {
+      filterTools.setMasterFilterData(target.series.name, () => {
+        if (interactiveOption.mode == 'single') {
+          if (target.series.isSelected()) {
+            component.clearSelection();
+            return;
+          }
           component.clearSelection();
-          filterItems(item, {});
-          return;
         }
-        component.clearSelection();
-      }
-      if (target.series.isSelected()) {
-        target.series.clearSelection();
-        selectedItem = selectedItem.filter((d) => d != target.series.name);
-      } else {
-        target.series.select();
-        selectedItem.push(target.series.name);
-      }
+        if (target.series.isSelected()) {
+          target.series.clearSelection();
+        } else {
+          target.series.select();
+        }
+      }, true);
     }
-    filterItems(item, getFilter());
   };
 
   return (
@@ -232,7 +143,7 @@ const RangeBar = ({item, id, setItemExports}) => {
       width="100%"
       height="100%"
       pointSelectionMode={'multiple'}
-      palette={getColor()}
+      palette={meta?.palette?.name}
       seriesSelectionMode={interactiveOption.mode}
     >
       <Legend
@@ -246,7 +157,10 @@ const RangeBar = ({item, id, setItemExports}) => {
         type="rangebar"
         argumentField='arg'
         minBarSize={2}
-      />
+        ignoreEmptyPoints={ignoreEmptyPoints}
+      >
+        <Point visible={pointerMarker} />
+      </CommonSeriesSettings>
       {meta.dataField.range1.map((range, index) => {
         const ragne1Name = rangeInfo[range.name];
         const range2Name = rangeInfo[meta.dataField.range2[index].name];

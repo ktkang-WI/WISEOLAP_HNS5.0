@@ -4,6 +4,8 @@ const DataFieldType = {
   MEASURE: 'measure',
   X: 'x',
   Y: 'y',
+  RANGE1: 'range1',
+  RANGE2: 'range2',
   START_DATE: 'start',
   END_DATE: 'end',
   DIMENSION: 'dimension',
@@ -12,9 +14,7 @@ const DataFieldType = {
   COLUMN: 'column',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
-  SORT_BY_ITEM: 'sortByItem',
-  RANGE1: 'range1',
-  RANGE2: 'range2'
+  SORT_BY_ITEM: 'sortByItem'
 };
 
 const dataFieldTypeOfItemTypeFunc = (type) => {

@@ -5,15 +5,16 @@ import Sankey, {Tooltip, Link, Node} from 'devextreme-react/sankey';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const SankeyChart = ({item}) => {
-  const mart = item ? item.mart : null;
-  const meta = item ? item.meta : null;
   const ref = useRef();
-  if (!mart.init) {
-    return <></>;
-  }
 
   const {filterTools} = useItemSetting(item);
   const {setMasterFilterData} = filterTools;
+
+  const mart = item ? item.mart : null;
+  const meta = item ? item.meta : null;
+  if (!mart.init) {
+    return <></>;
+  }
 
   const customizeLinkTooltip = (info) => {
     return {
