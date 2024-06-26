@@ -258,6 +258,7 @@ const useSpread = () => {
 
         // 복호화 된 파일 불러오기
         await importHnsFile(responseData.fileName, responseData.filePath);
+        dispatch(loadingActions.endJob());
       }
     } catch (error) {
       console.error('Error during hnsDrmUpload:', error);
