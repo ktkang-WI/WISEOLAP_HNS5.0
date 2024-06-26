@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.fileUpload.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,14 +91,17 @@ public class FileUploadService {
         try (InputStream input = file.getInputStream()) {
             File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
         	if(sysFile == null) {
-                new Exception("spread File create Error");
+                throw new Exception("spread File create Error");
             }
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             logger.info("파일이 성공적으로 저장되었습니다: " + sysFile.getAbsolutePath());
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             logger.error("파일 저장 중 오류가 발생했습니다.", e);
             throw e; 
-        }
+        } catch (IllegalArgumentException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            throw e; 
+        } 
     }
 
     public String hnsDrmUpload(MultipartFile file) throws Exception {
@@ -119,7 +123,7 @@ public class FileUploadService {
             // 업로드할 파일 객체 생성
         	sysFile = WebFileUtils.getFile(folder, randomFileName);
         	if(sysFile == null) {
-                new Exception("스프레드 파일 생성에 실패했습니다");
+                throw new Exception("스프레드 파일 생성에 실패했습니다");
             }
 
             // 파일 복사
