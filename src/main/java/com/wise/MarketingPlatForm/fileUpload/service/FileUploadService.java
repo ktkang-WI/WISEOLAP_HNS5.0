@@ -91,7 +91,7 @@ public class FileUploadService {
         try (InputStream input = file.getInputStream()) {
             File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
         	if(sysFile == null) {
-                throw new Exception("spread File create Error");
+                throw new FileNotFoundException("spread File Not Found Error");
             }
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             logger.info("파일이 성공적으로 저장되었습니다: " + sysFile.getAbsolutePath());
@@ -123,13 +123,15 @@ public class FileUploadService {
             // 업로드할 파일 객체 생성
         	sysFile = WebFileUtils.getFile(folder, randomFileName);
         	if(sysFile == null) {
-                throw new Exception("스프레드 파일 생성에 실패했습니다");
+                throw new FileNotFoundException("스프레드 파일 생성에 실패했습니다");
             }
 
             // 파일 복사
 			Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             logger.info("파일이 성공적으로 업로드 되었습니다." + folder.getAbsolutePath());
             logger.info("업로드한 파일 이름은 : " + randomFileName + "입니다.");
+        } catch (FileNotFoundException e) {
+            logger.error("File Not Found 오류 발생", e);
         } catch (IOException e){
             logger.error("HNSDRM Upload 오류 발생", e);
         } catch (Exception e) {
