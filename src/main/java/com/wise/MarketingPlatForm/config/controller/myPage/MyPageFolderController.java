@@ -16,6 +16,7 @@ import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageFolderReportService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -35,8 +36,7 @@ public class MyPageFolderController {
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getMypageFolderData(HttpServletRequest request) throws Exception {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
 
     int userNo = userDTO.getUserNo();
     String userNm = userDTO.getUserId();
@@ -90,8 +90,7 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "") int fldParentId,
     HttpServletRequest request
   ) {
-      HttpSession session = request.getSession();
-      UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+      UserDTO userDTO = SessionUtility.getSessionUser(request);
 
       int userNo = userDTO.getUserNo();
       MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()

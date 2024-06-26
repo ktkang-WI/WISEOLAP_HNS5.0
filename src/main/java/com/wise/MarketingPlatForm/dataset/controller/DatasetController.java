@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,9 +217,10 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
     }))
     @PostMapping(value = "/query-dataset-all-datas")
-    public MartResultDTO getQueryDatas(@RequestBody Map<String, String> datasource) {
+    public MartResultDTO getQueryDatas(HttpServletRequest request, @RequestBody Map<String, String> datasource) {
         String query = datasource.get("query");
         int dsId = Integer.parseInt(datasource.get("dsId"));
+        int reportId = Integer.parseInt(datasource.getOrDefault("reportId", "0"));
         String parameterStr = datasource.getOrDefault("parameter", "");
 
         Gson gson = new Gson();
@@ -226,7 +229,7 @@ public class DatasetController {
                 new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
                 }.getType());
                 
-        return datasetService.getQueryDatas(dsId, query, parameters);
+        return datasetService.getQueryDatas(request, reportId, dsId, query, parameters);
     }
 
     @Operation(summary = "get List Parameter Items", description = "리스트형 매개변수의 리스트 목록 및 defautlValue를 조회함.")

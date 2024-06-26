@@ -12,6 +12,7 @@ import * as UserGroupManagement
 import * as Authority from './config/authority/Authority';
 import * as File from './upload/File';
 import * as Login from './auth/Login';
+import * as Log from './config/log/Log';
 import * as ReportFolderManagement
   from './config/reportFolderManagement/ReportFolderManagement';
 
@@ -29,5 +30,6 @@ export default {
   Preferences,
   UserGroupManagement,
   Authority,
+  Log,
   ReportFolderManagement
 };

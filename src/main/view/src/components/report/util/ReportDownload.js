@@ -61,7 +61,7 @@ const exportComponentToWorksheet = async (
   }
 };
 
-export const handleDownload = async (items, parameters, dataSource) => {
+export const handleDownload = async (report, items, parameters, dataSource) => {
   const workbook = new Workbook();
   let worksheetCount = 0;
   const elements = items.map((item) => {
@@ -97,6 +97,9 @@ export const handleDownload = async (items, parameters, dataSource) => {
     const downloadData = new FormData();
     downloadData.append('file', blob);
     downloadData.append('fileName', dataSource.reportNm + '.xlsx');
+    downloadData.append('reportType', report?.options.reportType);
+    downloadData.append('reportNm', report?.options?.reportNm || 'New Report');
+    downloadData.append('reportId', report?.reportId || '1001');
     downloadReportExcelAll(downloadData);
   }
 };
