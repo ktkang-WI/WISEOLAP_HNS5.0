@@ -177,26 +177,49 @@ const useQueryExecute = () => {
       const param = generateAdHocParamter(cloneItem, datasets, parameters);
       const reportId = selectCurrentReportId(store.getState());
 
-      models.Item.getItemData(param).then((response) => {
-        if (response.status != 200) {
-          return;
-        }
-        const data = response.data;
+      const layout = cloneItem?.adHocOption?.layoutSetting;
 
-        chartItem.mart.init = true;
-        chartItem.mart.data = data;
+      const getAdhocChartItem = () => {
+        models.Item.getItemData(param).then((response) => {
+          if (response.status != 200) {
+            return;
+          }
+          const data = response.data;
 
-        if (nullDataCheck(chartItem)) {
-          alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
-        }
+          chartItem.mart.init = true;
+          chartItem.mart.data = data;
 
-        ItemManager.generateItem(chartItem, param, cloneItem);
-        dispatch(updateItem({reportId, item: chartItem}));
+          if (nullDataCheck(chartItem)) {
+            alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
+          }
 
+          ItemManager.generateItem(chartItem, param, cloneItem);
+          dispatch(updateItem({reportId, item: chartItem}));
+        });
+      };
+
+      const getAdhocPivotItem = () => {
         pivotItem.mart.init = true;
         ItemManager.generateItem(pivotItem, param, cloneItem);
         dispatch(updateItem({reportId, item: pivotItem}));
-      });
+      };
+
+      switch (layout) {
+        case 'chart_pivot':
+          getAdhocChartItem();
+          getAdhocPivotItem();
+          break;
+        case 'chart':
+          getAdhocChartItem();
+          break;
+        case 'pivot':
+          getAdhocPivotItem();
+          break;
+        default:
+          getAdhocChartItem();
+          getAdhocPivotItem();
+          break;
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);

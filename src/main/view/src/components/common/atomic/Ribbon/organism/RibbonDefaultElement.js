@@ -142,7 +142,8 @@ const RibbonDefaultElement = () => {
 
         adHocLayoutUpdate(reportId, e.value);
 
-        if (!_.isEmpty(chartData) || !_.isEmpty(pivotData)) {
+        if (_.isEmpty(chartData) && _.isEmpty(pivotData)) {
+        } else if (_.isEmpty(chartData) || _.isEmpty(pivotData)) {
           executeItems();
         }
       }}
