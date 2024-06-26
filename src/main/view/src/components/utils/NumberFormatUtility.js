@@ -36,10 +36,10 @@ export const getDefaultFormatRatio = () => {
 
 export const generateLabelSuffix = (formData) => {
   const labelSuffix = {
-    O: formData.suffixO,
-    K: formData.suffixK,
-    M: formData.suffixM,
-    B: formData.suffixB
+    O: formData?.suffixO,
+    K: formData?.suffixK,
+    M: formData?.suffixM,
+    B: formData?.suffixB
   };
   return labelSuffix;
 };

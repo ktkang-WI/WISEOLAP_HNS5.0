@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react';
 import models from 'models';
 import {setIconReportList} from 'components/report/util/ReportUtility';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
 import {DesignerMode} from 'components/config/configType';
@@ -24,8 +25,9 @@ const LoadReportModal = ({...props}) => {
   const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
-  const {loadReport, querySearch} = useReportSave();
+  const {loadReport, querySearch, reload} = useReportSave();
   const reportType = selectCurrentDesignerMode(store.getState());
+  const reportId = selectCurrentReportId(store.getState());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -67,6 +69,9 @@ const LoadReportModal = ({...props}) => {
   const onSubmit = () => {
     if (!_.isEmpty(selectedReport)) {
       if (selectedReport.type == 'REPORT') {
+        if (reportId != 0) {
+          reload(reportType);
+        }
         getReport();
       } else {
         openModal(Alert, {
