@@ -262,7 +262,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         pivotInstance.off('contentReady', handleContentReady);
       };
     }
-  }, []);
+  }, [item]);
 
   const usePage = meta.pagingOption.pagination.isOk;
 

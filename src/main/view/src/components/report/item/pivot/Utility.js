@@ -482,11 +482,11 @@ const generateItem = (item, param, rootItem) => {
 
                 if (matrixInfo.paging.limit != size ||
                   matrixInfo.paging.offset != offset) {
-                  return;
+                  clearInterval(matrixLoadWaitFunc);
                 }
               };
             } else if (matrixInfo?.paging?.limit != 0) {
-              return;
+              clearInterval(matrixLoadWaitFunc);
             }
 
             if (matrixInfo) {
