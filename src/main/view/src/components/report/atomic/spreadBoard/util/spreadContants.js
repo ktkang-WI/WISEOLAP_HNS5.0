@@ -1,3 +1,4 @@
+import DatasetType from 'components/dataset/utils/DatasetType';
 import localizedString from 'config/localization';
 
 export const excelFileType =
@@ -53,6 +54,13 @@ export const SpreadRibbonDefaultElement = {
           },
           {
             direction: 'vertical',
+            command: 'loadDataset',
+            type: 'dropdown',
+            children: Object.values(DatasetType)
+                .filter((t) => t != DatasetType.CUBE)
+          },
+          {
+            direction: 'vertical',
             commands: [
               'saveReport'
             ]
@@ -72,7 +80,7 @@ export const SpreadRibbonDefaultElement = {
           {
             direction: 'vertical',
             command: 'downloadReport',
-            children: ['downloadReportXLSX', 'downloadReportTXT'],
+            children: ['downloadReportXLSX'],
             type: 'dropdown'
           }
         ]
@@ -85,18 +93,6 @@ export const SpreadRibbonDefaultElement = {
             direction: 'vertical',
             commands: [
               'dataset'
-            ]
-          }
-        ]
-      }
-    },
-    {
-      commandGroup: {
-        children: [
-          {
-            direction: 'vertical',
-            commands: [
-              'print'
             ]
           }
         ]

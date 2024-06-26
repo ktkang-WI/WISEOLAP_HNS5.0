@@ -16,6 +16,7 @@ import {getTheme} from 'config/theme';
 import {useSelector} from 'react-redux';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 
 const DatasetDefaultElement = () => {
@@ -25,6 +26,7 @@ const DatasetDefaultElement = () => {
   const returnVal = {
     dataset: [
       {
+        id: DatasetType.CUBE,
         label: localizedString.addCUBE,
         imgSrc: '',
         visible: true,
@@ -33,6 +35,7 @@ const DatasetDefaultElement = () => {
         }
       },
       {
+        id: DatasetType.DS_SQL,
         label: localizedString.addDsSQL,
         imgSrc: '',
         visible: true,
@@ -47,6 +50,7 @@ const DatasetDefaultElement = () => {
         }
       },
       {
+        id: DatasetType.DS_SINGLE,
         label: localizedString.addDsSingle,
         imgSrc: '',
         visible: true,
@@ -74,6 +78,7 @@ const DatasetDefaultElement = () => {
         }
       },
       {
+        id: DatasetType.DS_UPLOAD,
         label: localizedString.addDsUpload,
         imgSrc: '',
         visible: true,
