@@ -16,57 +16,21 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useState} from 'react';
 import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
-
-import Choropleth from 'components/report/item/choropleth/Choropleth';
-import Chart from 'components/report/item/chart/Chart';
 import Item from '../atoms/Item';
-import PivotGrid from 'components/report/item/pivot/PivotGrid';
-import Card from 'components/report/item/card/Card';
-import DataGrid from 'components/report/item/grid/DataGrid';
-import TreeMap from 'components/report/item/treeMap/TreeMap';
 import {Popover} from 'devextreme-react';
 import {Type, exportToFile} from 'components/utils/DataExport';
-import Pie from 'components/report/item/pie/Pie';
 import ItemManager from 'components/report/item/util/ItemManager';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {DesignerMode} from 'components/config/configType';
-import LiquidFillGauge
-  from 'components/report/item/liquidFillGauge/LiquidFillGauge';
-import CalendarChart
-  from 'components/report/item/calendar/Calendar';
-import Timeline from 'components/report/item/timeline/Timeline';
-import Chord from 'components/report/item/chord/Chord';
-import ArcDiagram from 'components/report/item/arc/ArcDiagram';
-import WordCloud from 'components/report/item/wordCloud/WordCloud';
-import CoordinateLine
-  from 'components/report/item/coordinateLine/CoordinateLine';
-import CoordinateDot from 'components/report/item/coordinateDot/CoordinateDot';
+import {
+  selectCurrentDesignerMode,
+  selectEditMode
+} from 'redux/selector/ConfigSelector';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import _ from 'lodash';
-import HeatMap from 'components/report/item/heatMap/HeatMap';
-
-import CollapsibleTree
-  from 'components/report/item/collapsibleTree/CollapsibleTree';
-import RadialTree from 'components/report/item/radialTree/RadialTree';
-import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
-import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
-
-import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
-import TextBox from 'components/report/item/textBox/TextBox';
-import ItemType from 'components/report/item/util/ItemType';
-import ZoomableIcicle
-  from 'components/report/item/zoomableIcicle/ZoomableIcicle';
-import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
-import ComboBox from 'components/report/item/comboBox/ComboBox';
-import ListBox from 'components/report/item/listBox/ListBox';
-import TreeView from 'components/report/item/treeView/TreeView';
-import FunnelChart from 'components/report/item/funnelChart/FunnelChart';
-import StarChart from 'components/report/item/starChart/StarChart';
-import WaterFall from 'components/report/item/waterFall/WaterFall';
-import SchedulerComponent
-  from 'components/report/item/schedulerComponent/SchedulerComponent';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {itemComponents} from 'components/report/item/util/ItemMappers';
+import ItemType from 'components/report/item/util/ItemType';
 
 const theme = getTheme();
 
@@ -117,51 +81,23 @@ const ItemBoard = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
-  const selectedReportId = useSelector(selectCurrentReportId);
-  const layoutConfig = useSelector(selectFlexLayoutConfig);
+
   const {selectItem} = ItemSlice.actions;
   const {selectDataset} = DatasetSlice.actions;
+
+  const selectedReportId = useSelector(selectCurrentReportId);
+  const layoutConfig = useSelector(selectFlexLayoutConfig);
   const items = useSelector(selectCurrentItems);
   const rootItem = useSelector(selectRootItem);
   const selectedItemId = useSelector(selectSelectedItemId);
   const reportId = useSelector(selectCurrentReportId);
   const model = Model.fromJson(layoutConfig);
+  const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
-
-  const itemFactory = {
-    chart: Chart,
-    pivot: PivotGrid,
-    grid: DataGrid,
-    pie: Pie,
-    choropleth: Choropleth,
-    treeMap: TreeMap,
-    liquidFillGauge: LiquidFillGauge,
-    card: Card,
-    calendar: CalendarChart,
-    boxPlot: BoxPlot,
-    textBox: TextBox,
-    timeline: Timeline,
-    chord: Chord,
-    arc: ArcDiagram,
-    wordCloud: WordCloud,
-    coordinateLine: CoordinateLine,
-    coordinateDot: CoordinateDot,
-    heatMap: HeatMap,
-    collapsibleTree: CollapsibleTree,
-    radialTree: RadialTree,
-    sunburstChart: SunBurstChart,
-    zoomableIcicle: ZoomableIcicle,
-    ciclePacking: CiclePacking,
-    scatterPlot: ScatterPlot,
-    comboBox: ComboBox,
-    listBox: ListBox,
-    treeView: TreeView,
-    funnelChart: FunnelChart,
-    starChart: StarChart,
-    waterFall: WaterFall,
-    schedulerComponent: SchedulerComponent
-  };
+  const tabSelectedClass = editMode == EditMode.DESIGNER ?
+     'tab-selected' : '';
+  console.log(editMode);
 
   const itemExportsPicker = (id) => {
     return itemExports.find((item) => item.id == id);
@@ -229,13 +165,15 @@ const ItemBoard = () => {
   function factory(node) {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
-    const ItemComponent = itemFactory[item.type];
+    const ItemComponent = itemComponents[item.type];
     const adHocOption = rootItem.adHocOption;
+    const selected = selectedItemId == item?.id;
+    const selectedClassName = selected ? tabSelectedClass : '';
 
     if (item?.mart?.init && nullDataCheck(item)) {
       alert(`${item?.meta?.name}${localizedString.noneData}`);
 
-      return <Item>
+      return <Item className={selectedClassName}>
         <Wrapper style={{
           display: 'flex',
           alignItems: 'center',
@@ -248,9 +186,8 @@ const ItemBoard = () => {
       </Item>;
     }
 
-
     return (
-      <Item item={item}>
+      <Item item={item} className={selectedClassName}>
         <ItemComponent
           setItemExports={setItemExports}
           item={item}
@@ -269,14 +206,18 @@ const ItemBoard = () => {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
     const useCaption = item.meta.useCaption;
-
-    return <span style={
-      {
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis'
+    const selected = id == selectedItemId;
+    const selectedClassName = selected ? tabSelectedClass : '';
+    return <span
+      className={selectedClassName}
+      style={
+        {
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis'
+        }
       }
-    }>{useCaption ? item.meta.name : false}</span>;
+    >{useCaption ? item.meta.name : false}</span>;
   }
 
   function focusItem(itemId) {

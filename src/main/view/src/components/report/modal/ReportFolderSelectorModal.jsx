@@ -10,6 +10,7 @@ import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
+import {addReportType, setIconReportList} from '../util/ReportUtility';
 
 const theme = getTheme();
 
@@ -40,7 +41,18 @@ const ReportFolderSelectorModal = ({...props}) => {
       if (response.status != 200) {
         return;
       }
-      setItems(response.data);
+      const {publicFolder, privateFolder} = response.data;
+
+      const updatedPublicFolder = addReportType(publicFolder, 'FOLDER');
+      const updatedPrivateFolder = addReportType(privateFolder, 'FOLDER');
+
+      setIconReportList(updatedPublicFolder);
+      setIconReportList(updatedPrivateFolder);
+
+      setItems({
+        publicFolder: updatedPublicFolder,
+        privateFolder: updatedPrivateFolder
+      });
     });
   }, []);
 

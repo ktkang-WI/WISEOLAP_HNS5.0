@@ -38,7 +38,7 @@ const StyledTab = styled(CommonTab)`
   padding: 10px;
 `;
 
-const ReportTabs = () => {
+const ReportTabs = ({reportData}) => {
   const [reportList, setReportList] = useState();
   const {loadReport, querySearch} = useReportSave();
   const dispatch = useDispatch();
@@ -103,13 +103,25 @@ const ReportTabs = () => {
     />;
   };
 
+  const setDatas = (data) => {
+    setIconReportList(data.privateReport);
+    setIconReportList(data.publicReport);
+    setReportList(data);
+  };
+
   useEffect(() => {
+    if (reportData) return;
+
     models.Report.getList(null, 'viewer').then(({data}) => {
-      setIconReportList(data.privateReport);
-      setIconReportList(data.publicReport);
-      setReportList(data);
+      setDatas(data);
     });
   }, []);
+
+  useEffect(() => {
+    if (!reportData) return;
+
+    setDatas(reportData);
+  }, [reportData]);
 
   return (
     <Wrapper>
