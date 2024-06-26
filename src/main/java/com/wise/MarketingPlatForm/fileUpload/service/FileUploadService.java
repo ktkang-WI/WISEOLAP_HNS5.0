@@ -180,7 +180,6 @@ public class FileUploadService {
 
     // 복호화된 DRM 파일 불러오기
     public byte[] loadDecrytionFile(String fileName, String filePath) throws Exception {
-        // TODO: DRM 복호화 API 적용 후 DECRYTION_OUTPUT_FOLDER 로 변경
         File decryptionFolder = new File(DECRYTION_OUTPUT_FOLDER + filePath);
         logger.info("folderName: " + DECRYTION_OUTPUT_FOLDER + filePath);
 		File decryptionFile = WebFileUtils.getFile(decryptionFolder, fileName);

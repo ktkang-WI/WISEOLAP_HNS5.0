@@ -142,7 +142,7 @@ public class FileUploadController {
         // String url = "http://10.2.3.180:443/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
         logger.info("복호화 api 요청 url 은 " + url + " 입니다.");
         logger.info("파일 이름은  " + fileName);
-        // String url = "https://jsonplaceholder.typicode.com/todos/1";
+
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return ResponseEntity.ok(response.getBody());
     }
