@@ -317,9 +317,10 @@ public class ReportController {
     }
     
     @GetMapping(value = "/report-list/query")
-        public Map<String, List<ReportListDTO>> getReportListIncludeQuery(HttpServletRequest request) {
+        public ResponseEntity<Map<String, Object>> getReportListIncludeQuery(HttpServletRequest request) {
 
-        return reportService.getReportListIncludeQuery();
+        Map<String, Object> map =  reportService.getReportListIncludeQuery();
+        return ResponseEntity.ok().body(map);
     }
 
     @Operation(

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
@@ -46,9 +47,12 @@ import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ReportService {
+    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
     private final ReportDAO reportDAO;
     private final MartConfig martConfig;
@@ -299,28 +303,75 @@ public class ReportService {
         return result;
     }
 
-    public Map<String, List<ReportListDTO>> getReportListIncludeQuery() {
+    public Map<String, Object> getReportListIncludeQuery() {
         List<ReportListDTO> pubList = reportDAO.publicReportList();
         List<ReportListDTO> priList = reportDAO.privateReportList();
-        Map<String, List<ReportListDTO>> result = new HashMap<>();
-        result.put("publicReport", pubList);
-        result.put("privateReport", priList);
+        Map<String, Object> result = new HashMap<>();
 
-        for (ReportListDTO report : pubList) {
-            String dataset = report.getDataset();
+        try {
+            List<Map<String, Object>> newPubList = getReportDatasource(pubList);
+            List<Map<String, Object>> newPriList = getReportDatasource(priList);
 
-            ObjectMapper objectMapper = new ObjectMapper();
+            result.put("publicReport", newPubList);
+            result.put("privateReport", newPriList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        return result;
+    }
+
+    public List<Map<String, Object>> getReportDatasource (List<ReportListDTO> reportList) {
+        List<Map<String, Object>> datasourceList = new ArrayList<Map<String, Object>>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        for (ReportListDTO report : reportList) {
             try {
-                JSONObject json = new JSONObject(objectMapper.readValue(dataset, Map.class));
-                String query = json.get("query").toString();
-                System.out.println(query);
-                report.setDataset(query);
+                String dataset = report.getDataset();
+                if (dataset != null) {
+                    Map<String, Object> datasetMap = objectMapper.readValue(dataset, Map.class);
+                    List<Map<String, String>> datasetInfo = extractDatasetInfo(datasetMap);
+                    
+                    Map<String, Object> datasource = new HashMap<>();
+
+                    datasource.put("id", report.getId());
+                    datasource.put("upperId", report.getUpperId());
+                    datasource.put("name", report.getName());
+                    datasource.put("type", report.getType());
+                    datasource.put("datasetInfo", datasetInfo);
+
+                    datasourceList.add(datasource);
+                }
+            } catch (ClassCastException e) {
+                logger.error("datsets,List<Map<String, Object>> 로 cast 실패", e);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("datasetXml, datasets JSON parse 실패");
+                throw new RuntimeException("failed to parse datasets JSON", e);
             }
         }
-        return result;
+
+        return datasourceList;
+    }
+
+    private List<Map<String, String>> extractDatasetInfo(Map<String, Object> datasetMap) {
+        List<Map<String, String>> datasetInfo = new ArrayList<>();
+    
+        try {
+            if (datasetMap.containsKey("datasets")) {
+                List<Map<String, Object>> datasetArray = (List<Map<String, Object>>) datasetMap.get("datasets");
+                for (Map<String, Object> obj : datasetArray) {
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("datasetQuery", obj.getOrDefault("datasetQuery", "").toString());
+                    map.put("datasetNm", obj.getOrDefault("datasetNm", "").toString());
+
+                    datasetInfo.add(map);
+                }
+            }
+        } catch (ClassCastException e) {
+            throw new RuntimeException("invalid dataset format", e);
+        }
+    
+        return datasetInfo;
     }
 
     public String checkDuplicatedReport(ReportMstrEntity reportMstrEntity) {
