@@ -49,7 +49,7 @@ public class FileUploadController {
 		fileUploadService.saveFile(file, fileName);
     }
 
-    @PostMapping(value="/hnsDrmUpload")
+    @PostMapping(value="/hns-drmUpload")
     public String hnsDrmUpload(
         @RequestPart("file") MultipartFile file) throws Exception {
         return fileUploadService.hnsDrmUpload(file);

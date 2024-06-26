@@ -38,7 +38,7 @@ export const uploadUserData = (dsId, dataNm, uploadData,
 };
 
 export const hnsDrmUpload = (param) => {
-  return axios.post(path + '/hnsDrmUpload', param, {
+  return axios.post(path + '/hns-drmUpload', param, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
