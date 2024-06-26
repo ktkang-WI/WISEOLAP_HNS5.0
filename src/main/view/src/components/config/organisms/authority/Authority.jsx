@@ -84,25 +84,25 @@ const dataSource = [
 const getStringFy = (prevItem, nextItem, currentTab) => {
   if (currentTab == path.USER_DATASET ||
       currentTab == path.GROUP_DATASET) {
-    return JSON.stringify(prevItem.fldId) !==
-           JSON.stringify(nextItem.fldId);
+    return JSON.stringify(prevItem?.fldId) !==
+           JSON.stringify(nextItem?.fldId);
   } else if (
     currentTab == path.USER_DATASOURCE ||
     currentTab == path.GROUP_DATASOURCE) {
-    return JSON.stringify(prevItem.dsIds) !==
-           JSON.stringify(nextItem.dsIds);
+    return JSON.stringify(prevItem?.dsIds) !==
+           JSON.stringify(nextItem?.dsIds);
   } else if (
     currentTab == path.GROUP_DATA ||
     currentTab == path.USER_DATA
   ) {
-    return JSON.stringify(prevItem.datas) !==
-           JSON.stringify(nextItem.datas);
+    return JSON.stringify(prevItem?.datas) !==
+           JSON.stringify(nextItem?.datas);
   } else if (
     currentTab === path.USER_REPORT ||
     currentTab == path.GROUP_REPORT
   ) {
-    return JSON.stringify(prevItem.fldIds) !==
-           JSON.stringify(nextItem.fldIds);
+    return JSON.stringify(prevItem?.fldIds) !==
+           JSON.stringify(nextItem?.fldIds);
   }
 };
 
@@ -123,7 +123,7 @@ export const getFindDifferentIds = (currentTab, data) => {
     const nextItem = next.find((item) =>
       (item.grpId || item.userNo) === (prevItem.grpId || prevItem.userNo));
     const isOk = getStringFy(prevItem, nextItem, currentTab);
-    if (nextItem && isOk) {
+    if (isOk) {
       result.add((prevItem.grpId || prevItem.userNo));
     }
   });

@@ -27,7 +27,7 @@ const DatasetAuthority = ({mainKey, ...props}) => {
   };
 
   return (
-    <Wrapper display='flex' direction='row'>
+    <Wrapper display='flex' direction='row' height='80vh'>
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATASET &&

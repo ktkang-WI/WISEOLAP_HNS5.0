@@ -20,9 +20,14 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
   const dsViewDim = getContext.state.dsViewDim;
   const [dataSource, setDataSource] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);
   const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
+
+  useEffect(() => {
+    setPreviousSelectedKeys(selectedKeys);
+  }, [selectedKeys]);
 
   useEffect(() => {
     setDataSource(
@@ -93,6 +98,9 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
         )
       };
     });
+
+    if (JSON.stringify(selectedItems.selectedRowKeys) ===
+          JSON.stringify(previousSelectedKeys)) return;
     setSelectedKeys(selectedItems.selectedRowKeys);
   };
 

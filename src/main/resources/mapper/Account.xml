@@ -614,7 +614,6 @@
               #{item.userNo, jdbcType=INTEGER},
               #{item.dataXml, jdbcType=NCLOB}
             )
-        </foreach>
         </if>
       </foreach>
       SELECT * FROM DUAL

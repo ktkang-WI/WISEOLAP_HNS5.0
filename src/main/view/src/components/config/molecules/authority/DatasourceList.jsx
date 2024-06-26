@@ -1,6 +1,7 @@
 import DataGrid, {Column, HeaderFilter, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useRef, useContext, useState, useEffect} from 'react';
+import React,
+{useRef, useContext, useState, useEffect} from 'react';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
@@ -28,9 +29,14 @@ const DatasourceList = ({mainKey, dependency}) => {
   const selected = getContext.state.selected;
   const data = getContext.state.data;
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);
   const {alert} = useModal();
   const dataSetMode =
     currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
+
+  useEffect(() => {
+    setPreviousSelectedKeys(selectedKeys);
+  }, [selectedKeys]);
 
   // useState
   const ref = useRef();
@@ -69,6 +75,8 @@ const DatasourceList = ({mainKey, dependency}) => {
       alert(localizedString.clickMe);
       setSelectedKeys([]);
     } else {
+      if (JSON.stringify(selectedItems.selectedRowKeys) ===
+          JSON.stringify(previousSelectedKeys)) return;
       setSelectedKeys(selectedItems.selectedRowKeys);
     };
   };
@@ -81,6 +89,7 @@ const DatasourceList = ({mainKey, dependency}) => {
         elementAttr={{
           class: 'datasource-list'
         }}
+        height={'74vh'}
         dataSource={dataSource}
         showBorders={true}
         keyExpr="dsId"

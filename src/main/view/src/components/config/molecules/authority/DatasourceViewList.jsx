@@ -45,12 +45,12 @@ const getDsViewKey = (dataSetMode, data, nextId) => {
     const nextItem = notNullNextKey.find((item) =>
       item.dsViewId === prevItem.dsViewId);
     const prevStringify =
-    JSON.stringify(prevItem.cubeId) +
-    JSON.stringify(prevItem.dsViewDim);
+    JSON.stringify(prevItem?.cubeId) +
+    JSON.stringify(prevItem?.dsViewDim);
     const nextStringify =
-    JSON.stringify(nextItem.cubeId) +
-    JSON.stringify(nextItem.dsViewDim);
-    if (nextItem && prevStringify !== nextStringify) {
+    JSON.stringify(nextItem?.cubeId) +
+    JSON.stringify(nextItem?.dsViewDim);
+    if (prevStringify !== nextStringify) {
       editKey.add(prevItem.dsViewId);
     }
   });

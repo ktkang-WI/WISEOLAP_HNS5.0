@@ -33,7 +33,7 @@ const DataAuthority = ({mainKey, ...props}) => {
   };
 
   return (
-    <Wrapper display='flex' direction='row' overflow='hidden'>
+    <Wrapper display='flex' direction='row' height='80vh'>
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATA &&
