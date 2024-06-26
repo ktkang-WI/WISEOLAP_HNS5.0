@@ -138,10 +138,10 @@ public class FileUploadController {
 
     @GetMapping("/fetch-data")
     public ResponseEntity<String> fetchData(@RequestParam("fileName") String fileName) {
-        // String url = "https://drmapi.hns.tv/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
-        String url = "http://10.2.3.180:443/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
+        String url = "http://drmapi.hns.tv/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
+        // String url = "http://10.2.3.180:443/drm/fs/v1/dec?fileName=" + fileName + "&edGb=D";
         logger.info("복호화 api 요청 url 은 " + url + " 입니다.");
-        logger.info(fileName);
+        logger.info("파일 이름은  " + fileName);
         // String url = "https://jsonplaceholder.typicode.com/todos/1";
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return ResponseEntity.ok(response.getBody());
