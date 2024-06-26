@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
-import com.wise.MarketingPlatForm.dataset.service.ds.DataSetDsCubeService;
+import com.wise.MarketingPlatForm.dataset.service.CubeService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -20,12 +20,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DataSetDsCubeController {
 
   @Autowired
-  private DataSetDsCubeService dataSetDsCubeService;
+  private CubeService cubeService;
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getDs() throws Exception{
 
-    List<CubeMstrEntity> model = dataSetDsCubeService.getDatasetDsCube();
+    List<CubeMstrEntity> model = cubeService.getCubes();
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 

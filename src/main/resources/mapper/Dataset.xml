@@ -48,12 +48,6 @@
 	  <result column="IP" property="ip" javaType="String"/>
 	</resultMap>
 
-	<resultMap id="DatasetDsCubeMstr" type="com.wise.MarketingPlatForm.dataset.entity.CubeMstrEntity">
-	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
-	  <result column="CUBE_ID" property="cubeId" javaType="int"/>
-	  <result column="CUBE_NM" property="cubeNm" javaType="String"/>
-	</resultMap>
-
 	<resultMap id="DatasetDsViewDimMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity">
 	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
 	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
@@ -197,14 +191,6 @@
         DS_MSTR.HASH_YN,
         DS_MSTR.WF_YN
 						FROM DS_MSTR
-		</select>
-
-		<select id="selectDatasetDsCube" resultMap="DatasetDsCubeMstr">
-			SELECT
-				CUBE_MSTR.DS_VIEW_ID,
-				CUBE_MSTR.CUBE_ID,
-				CUBE_MSTR.CUBE_NM
-					FROM CUBE_MSTR
 		</select>
 
 		<select id="selectDatasetDsViewDim" resultMap="DatasetDsViewDimMstr">

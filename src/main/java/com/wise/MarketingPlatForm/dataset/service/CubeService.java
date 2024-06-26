@@ -33,6 +33,15 @@ public class CubeService {
         this.authService = authService;
     }
 
+    public List<CubeMstrEntity> getCubes() {
+
+        List<CubeMstrEntity> cubeMstrEntity = cubeDAO.selectDatasetDsCube();
+
+        if (cubeMstrEntity == null) return null;
+
+        return cubeMstrEntity;
+    };
+
     public List<CubeMstrDTO> getCubes(String dsViewId, String userId) {
         List<CubeMstrEntity> entities;
 

@@ -9,7 +9,5 @@ import lombok.Getter;
 @Builder
 public class DsViewDimDTO {
   Integer dsViewId;
-  Integer cubeId;
-  String cubeNm;
   String dimDimUniNm;
 }
