@@ -19,7 +19,7 @@ const NormalChartDefaultElement = () => {
   const label = localizedString.seriesOptions.label;
 
   const onClick = (chartType) => {
-    if (['pie', 'timeline'].includes(chartType)) {
+    if (['pie', 'timeline', 'rangeBar'].includes(chartType)) {
       insertFlexLayout(selectedReportId, chartType);
     } else {
       insertFlexLayout(selectedReportId, 'chart', chartType);
@@ -49,6 +49,12 @@ const NormalChartDefaultElement = () => {
           type: chartItemType.fullstackedbar,
           checked: false,
           src: chartImages[chartItemType.fullstackedbar]
+        },
+        {
+          title: label.chart.rangeBar,
+          type: chartItemType.rangeBar,
+          checked: false,
+          src: chartImages[chartItemType.rangeBar]
         }
       ]
     },

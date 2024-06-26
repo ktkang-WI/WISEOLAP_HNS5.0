@@ -593,6 +593,11 @@ const useQueryExecute = () => {
       dataFieldOption = item.adHocOption.dataFieldOption;
       dataField = item.adHocOption.dataField;
     }
+    if (ItemType.RANGE_BAR === reportType) {
+      if (dataField.range1.length != dataField.range2.length) {
+        throw new Error(localizedString.rangeBarlengthAlert);
+      }
+    }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     dataFieldOptionKeys.forEach((key) => {
       const isRequired = dataFieldOption[key].required;

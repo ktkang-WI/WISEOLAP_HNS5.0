@@ -12,7 +12,9 @@ const DataFieldType = {
   COLUMN: 'column',
   FIELD: 'field',
   SPARKLINE: 'sparkline',
-  SORT_BY_ITEM: 'sortByItem'
+  SORT_BY_ITEM: 'sortByItem',
+  RANGE1: 'range1',
+  RANGE2: 'range2'
 };
 
 const dataFieldTypeOfItemTypeFunc = (type) => {
@@ -63,6 +65,13 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
     {
       dataFieldFormat.push(DataFieldType.DIMENSION_GROUP);
       dataFieldFormat.push(DataFieldType.MEASURE);
+      dataFieldFormat.push(DataFieldType.DIMENSION);
+      break;
+    }
+    case ItemType.RANGE_BAR:
+    {
+      dataFieldFormat.push(DataFieldType.RANGE1);
+      dataFieldFormat.push(DataFieldType.RANGE2);
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;
     }
