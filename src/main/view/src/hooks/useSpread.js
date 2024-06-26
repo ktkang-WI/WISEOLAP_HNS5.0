@@ -315,12 +315,6 @@ const useSpread = () => {
 
       const responseData = response.data.responseData;
 
-      // TODO:여기서 받은 데이터를 처리
-      console.log(responseData);
-      // return {
-      //   fileName: fileName,
-      //   filePath: '/rlt/20240620'
-      // };
       return responseData;
     } catch (error) {
       console.error('Error fetching data:', error);
