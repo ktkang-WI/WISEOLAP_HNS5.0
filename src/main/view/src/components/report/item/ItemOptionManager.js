@@ -2,7 +2,7 @@ import localizedString from 'config/localization';
 import showColorLegend from 'assets/image/icon/button/show_color_legend.png';
 import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
-import pointLabel from 'assets/image/icon/button/point_labels.png';
+import animation from 'assets/image/icon/button/animation.png';
 import {Button} from 'devextreme-react';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -128,7 +128,7 @@ const ItemOptionManager = () => {
       ...commonPopoverButtonElement,
       'id': 'point_label',
       'label': localizedString.pointLabel,
-      'imgSrc': pointLabel,
+      'imgSrc': animation,
       'renderContent': () => {
         // 없음, 입방, 선형 radioType
         const type = ['none', 'linear', 'cubic'];

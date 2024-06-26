@@ -3,7 +3,7 @@ import useLayout from 'hooks/useLayout';
 import usePopover from 'hooks/usePopover';
 import {useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import pie from 'assets/image/icon/button/pieChart.png';
+import pie from 'assets/image/icon/item/pie.png';
 import timeline from 'assets/image/icon/item/timeline.png';
 import {chartImages} from 'components/report/item/util/chartImageImporter';
 import {chartItemType} from 'components/report/item/chart/chartItemType';
