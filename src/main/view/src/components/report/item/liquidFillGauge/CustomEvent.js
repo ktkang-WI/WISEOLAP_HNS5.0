@@ -5,7 +5,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useSelector} from 'react-redux';
 import localizedString from 'config/localization';
 import imgNotaionFormat
-  from 'assets/image/icon/button/ico_pointLabels.png';
+  from 'assets/image/icon/button/add_chart.png';
 import imgContentArray
   from 'assets/image/icon/button/ico_Vlines.png';
 import useModal from 'hooks/useModal';

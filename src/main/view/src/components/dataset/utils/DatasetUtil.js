@@ -7,7 +7,7 @@ export const makeFieldIcon = (fields) => {
   fields = fields.reduce((returnArr, field) => {
     if (field.uniqueName != 0) {
       returnArr.push({
-        parentId: field?.parentId ? field.parentId : null,
+        parentId: field?.parentId || '0',
         uniqueName: field.uniqueName || field.ID,
         name: field.columnName,
         type: field.columnTypeName === 'decimal' ? 'MEA' : 'DIM',
