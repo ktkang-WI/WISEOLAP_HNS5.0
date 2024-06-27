@@ -16,6 +16,7 @@ import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
+import com.wise.MarketingPlatForm.dataset.type.DataSetType;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
@@ -359,11 +360,27 @@ public class ReportService {
         try {
             if (datasetMap.containsKey("datasets")) {
                 List<Map<String, Object>> datasetArray = (List<Map<String, Object>>) datasetMap.get("datasets");
+                List<String> uniqueNameList = new ArrayList<String>();
+
                 for (Map<String, Object> obj : datasetArray) {
                     Map<String, String> map = new HashMap<String, String>();
+                    String datasetType = obj.getOrDefault("datasetType", "").toString();
+
+                    // 쿼리 직접 입력, 단일테이블 데이터 집합 일 경우
                     map.put("datasetQuery", obj.getOrDefault("datasetQuery", "").toString());
                     map.put("datasetNm", obj.getOrDefault("datasetNm", "").toString());
+                    map.put("datasetType", datasetType);
 
+                    // 주제영역 데이터 집합 일 경우             
+                    if (datasetType.equals(DataSetType.CUBE.toString())) {
+                        List<Map<String, Object>> fieldsArray = (List<Map<String, Object>>) obj.get("fields");
+
+                        for (Map<String, Object> field : fieldsArray) {
+                            uniqueNameList.add(field.getOrDefault("uniqueName", "").toString());
+                        }
+                        map.put("datasetQuery", uniqueNameList.toString());    
+                    }
+                    
                     datasetInfo.add(map);
                 }
             }
