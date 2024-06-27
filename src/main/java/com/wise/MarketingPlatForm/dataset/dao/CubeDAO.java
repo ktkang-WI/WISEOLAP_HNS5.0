@@ -29,4 +29,6 @@ public interface CubeDAO {
   public CubeTableColumn selectCubeColumnInfomationList(Map<String, String> param);
 
   public List<CubeActMstrEntity> selectDetailedData(String cubeId);
+
+  public List<CubeMstrEntity> selectDatasetDsCube();
 }

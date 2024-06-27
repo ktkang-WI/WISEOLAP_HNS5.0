@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
-import com.wise.MarketingPlatForm.account.dto.user.UserFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
 import com.wise.MarketingPlatForm.account.service.user.UserFolderService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -33,7 +30,7 @@ public class UserFolderController {
   @Autowired
   private UserFolderService userFolderService;
 
-  private Type userFolderPatchType = new TypeToken<ArrayList<UserFolderPatchDTO>>() {}.getType();
+  private Type userFolderModelType = new TypeToken<ArrayList<UserFolderModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -58,9 +55,9 @@ public class UserFolderController {
       return RestAPIVO.badRequest(false);
     }
 
-    List<UserFolderPatchDTO> userFolderPatchDTO = gson.fromJson(userFolderPatchData, userFolderPatchType);
+    List<UserFolderModel> userFolderModel = gson.fromJson(userFolderPatchData, userFolderModelType);
 
-    boolean result = userFolderService.patchUserFolder(userFolderPatchDTO);
+    boolean result = userFolderService.patchUserFolder(userFolderModel);
 
     return RestAPIVO.okResponse(result);
   }

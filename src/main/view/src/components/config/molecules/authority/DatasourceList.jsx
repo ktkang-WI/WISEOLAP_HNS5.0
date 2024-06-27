@@ -1,77 +1,89 @@
-import DataGrid, {Column, SearchPanel, Selection}
+import DataGrid, {Column, HeaderFilter, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
-import React, {useCallback, useRef,
-  useContext, useEffect, useState} from 'react';
-import models from 'models';
+import React,
+{useRef, useContext, useState, useEffect} from 'react';
 
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext}
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
 
-const DatasourceList = ({row}) => {
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
+
+export const getDatasourceList = (data, keys) => {
+  return data?.filter((d) => keys.includes(d.dsId));
+};
+
+const DatasourceList = ({mainKey, dependency}) => {
   // context
-  const authorityContext = useContext(AuthorityContext);
-  // state
-  const [ds, setDs] = useState([]);
-  const [data] = authorityContext.state.data;
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const dataSource = getContext.state.dataSourceData;
+  const selected = getContext.state.selected;
+  const data = getContext.state.data;
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);
+  const {alert} = useModal();
+  const dataSetMode =
+    currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
 
+  useEffect(() => {
+    setPreviousSelectedKeys(selectedKeys);
+  }, [selectedKeys]);
+
+  // useState
   const ref = useRef();
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const getDsIdList = () => {
-    let dsIdList = [];
-    const groups = data.filter((d) => d.group);
-    const users = data.filter((d) => d.user);
-
-    if (groups.length > 0) {
-      const dsList = groups.find((g) => g.group.grpId === row?.grpId)
-          ?.ds;
-      dsIdList = dsList?.map((ds) => ds.dsId);
-    }
-
-    if (users.length > 0) {
-      const dsList = users.find((u) => u.user.userNo === row?.userNo)
-          ?.ds;
-      dsIdList = dsList?.map((ds) => ds.dsId);
-    }
-
-    return dsIdList ? dsIdList : [];
-  };
-
   useEffect(() => {
-    models.Authority.getDs()
-        .then((response) => {
-          const newDs = response.data.data.reduce((acc, v) => {
-            const dsIdList = acc.map((row) => row.dsId);
-            if (!dsIdList.includes(v.dsId)) {
-              acc.push(v);
-            }
-            return acc;
-          }, []);
-          setDs(newDs);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      const dsIds = getUserOrGroup(dataSetMode, data, nextId);
+      if (!dsIds) {
+        data.next.push({
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+          dsIds: []
         });
-  }, []);
+      }
+      setSelectedKeys(dsIds?.dsIds ?? []);
+    };
+    updateData();
+  }, [dependency]);
 
   useEffect(() => {
-    const dsIdList = getDsIdList();
-    setSelectedRowKeys(dsIdList);
-  }, [row]);
+    if (!data?.next) return;
+    const dataSetMode =
+      currentTab === path.GROUP_DATASOURCE ? mode.GROUP : mode.USER;
+    const {nextId} = getKeys(dataSetMode, selected);
+    data.next = data.next.map((dsAuth) => {
+      if (nextId === (dsAuth?.grpId || dsAuth?.userNo)) {
+        dsAuth.dsIds = [...new Set(selectedKeys)];
+      }
+      return dsAuth;
+    });
+  }, [selectedKeys]);
 
-  const onSelectionChanged = useCallback(
-      ({selectedRowKeys: changedRowKeys}) => {
-        setSelectedRowKeys(changedRowKeys);
-      },
-      [row],
-  );
-
-  const handleRowClick = ({data}) => {
-    // setDsView(data);
+  const handleSelectedKey = (selectedItems) => {
+    if (!selected?.user?.next && !selected?.group?.next) {
+      alert(localizedString.clickMe);
+      setSelectedKeys([]);
+    } else {
+      if (
+        JSON.stringify(selectedItems.selectedRowKeys) ===
+        JSON.stringify(previousSelectedKeys)
+      ) return;
+      setSelectedKeys(selectedItems.selectedRowKeys);
+    };
   };
 
   return (
@@ -82,14 +94,14 @@ const DatasourceList = ({row}) => {
         elementAttr={{
           class: 'datasource-list'
         }}
-        dataSource={ds}
+        height={theme.size.middleModalHeight}
+        dataSource={dataSource}
         showBorders={true}
-        onRowClick={handleRowClick}
-        height={'90%'}
         keyExpr="dsId"
-        selectedRowKeys={selectedRowKeys}
-        onSelectionChanged={onSelectionChanged}
+        selectedRowKeys={selectedKeys}
+        onSelectionChanged={handleSelectedKey}
       >
+        <HeaderFilter visible={false} />
         <Selection
           mode="multiple"
           showCheckBoxesMode={'always'}

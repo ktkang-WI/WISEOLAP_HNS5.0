@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.dataset.dto.ds;
+package com.wise.MarketingPlatForm.dataset.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,13 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataDsviewCubeDimDTO {
+public class CubeDimMstrModel {
+  int cubeId;
   int dsViewId;
+  String cubeNm;
   String dimUniNm;
+  String dimCaption;
+  String dimIsVisible;
+  String dimDimUniNm;
+  int dimOrdinal;
 }

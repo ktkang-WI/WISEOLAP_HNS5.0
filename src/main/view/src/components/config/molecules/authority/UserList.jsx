@@ -1,86 +1,55 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
-import models from 'models';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
-import React, {useContext, useRef,
-  useEffect, useState} from 'react';
-import {AuthorityContext}
+import icoEdit from 'assets/image/icon/auth/ico_edit.png';
+import React, {useContext, useEffect, useState} from 'react';
+import {AuthorityContext, getFindDifferentIds, getUserGroupKeys}
   from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
-import {User} from 'models/config/userGroupManagement/UserGroupManagement';
 
-const UserList = ({setRow}) => {
-  // context
-  const authoritycontext = useContext(AuthorityContext);
+const UserList = ({onRowClick, dependency}) => {
+  const getContext = useContext(AuthorityContext);
 
   // state
-  const [users, setUsers] = useState([]);
-  const [data] = authoritycontext.state.data;
-
-  const ref = useRef();
-
-  const getReportUsers = (dataUsers) => {
-    return dataUsers.filter((row) => {
-      const reportAuthCheck = row.folderList
-          .find((folder) => folder.auth.authView === 'Y' ||
-            folder.auth.authPublish === 'Y' ||
-            folder.auth.authDataItem === 'Y' ||
-            folder.auth.authExport === 'Y');
-      return reportAuthCheck;
-    });
-  };
-
+  const [dataSource, setDataSource] = useState(getContext.state.user);
+  const data = getContext.state.data;
+  const [currentTab] = getContext.state.currentTab;
+  const [action] = getContext.state.action;
+  // TODO: 권한별로 키유무 만들어야함.
   useEffect(() => {
-    if (data[0]?.user) {
-      let dataUsers = data.filter((row) => row.user);
-      if (data[0].folderList) {
-        dataUsers = getReportUsers(dataUsers);
+    if (!data?.next) return;
+    const key =
+      getUserGroupKeys(currentTab, data).map((d) => (d.userNo));
+    const editsKey = getFindDifferentIds(currentTab, data);
+    setDataSource(dataSource.map((d) => {
+      let isAuth = 'none';
+      if (key.includes(d.userNo)) {
+        isAuth = 'visible';
       }
-      models.Authority.getUsers()
-          .then((response) => {
-            const authUserNoList = dataUsers
-                .filter((row) => {
-                  if (row.dsViews) {
-                    if (row.dsViews?.dsViewId.length > 0) {
-                      return row;
-                    }
-                  } else {
-                    return row;
-                  }
-                })
-                .map((row) => row.user.userNo);
-            const users = response.data.data;
-            const newUsers = users.map((user) => {
-              const newUser = new User(user);
-              newUser.isAuth = authUserNoList.includes(user.userNo) ?
-              true : false;
-              return newUser;
-            });
-            setUsers(newUsers);
-          })
-          .catch(() => {
-            throw new Error('Data Loading Error');
-          });
-    }
-  }, [data]);
-
-  const handleRowClick = ({data}) => {
-    setRow(data);
+      if (editsKey.includes(d.userNo)) {
+        isAuth = 'edit';
+      }
+      return {
+        ...d,
+        isAuth: isAuth
+      };
+    }));
+  }, [currentTab, action, dependency]);
+  const HandleClick = (e) => {
+    onRowClick(e);
   };
-
   return (
     <Wrapper>
       <Title title={localizedString.userList}></Title>
       <DataGrid
-        ref={ref}
         elementAttr={{
           class: 'user-list'
         }}
         height={'90%'}
-        dataSource={users}
+        dataSource={dataSource}
         showBorders={true}
-        onRowClick={handleRowClick}
+        onRowClick={HandleClick}
       >
         <Selection mode="single" />
         <Column
@@ -90,8 +59,10 @@ const UserList = ({setRow}) => {
           format="currency"
           width="30px"
           cellRender={({value}) => {
-            if (value) {
+            if (value === 'visible') {
               return <img height={'15px'} src={passwordIcon}/>;
+            } else if (value === 'edit') {
+              return <img height={'15px'} src={icoEdit}/>;
             }
           }}
         />

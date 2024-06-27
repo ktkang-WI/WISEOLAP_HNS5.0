@@ -16,8 +16,8 @@ public class GroupFolderDTO {
   int fldLvl;
   int fldParentId;
   int fldOrdinal;
-  String authView;
-  String authPublish;
-  String authDataItem;
-  String authExport;
+  boolean authView;
+  boolean authPublish;
+  boolean authDataItem;
+  boolean authExport;
 }

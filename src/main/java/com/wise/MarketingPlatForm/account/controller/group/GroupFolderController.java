@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 import com.wise.MarketingPlatForm.account.service.group.GroupFolderService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -31,7 +30,7 @@ public class GroupFolderController {
   @Autowired
   private GroupFolderService groupFolderService;
 
-  private Type groupFolderPatchType = new TypeToken<ArrayList<GroupFolderPatchDTO>>() {}.getType();
+  private Type groupFolderModelType = new TypeToken<ArrayList<GroupFolderModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -56,9 +55,9 @@ public class GroupFolderController {
       return RestAPIVO.badRequest(false);
     }
 
-    List<GroupFolderPatchDTO> groupFolderPatchDTO = gson.fromJson(groupFolderPatchData, groupFolderPatchType);
+    List<GroupFolderModel> groupFolderModel = gson.fromJson(groupFolderPatchData, groupFolderModelType);
 
-    boolean result = groupFolderService.patchGroupFolder(groupFolderPatchDTO);
+    boolean result = groupFolderService.patchGroupFolder(groupFolderModel);
 
     return RestAPIVO.okResponse(result);
   }

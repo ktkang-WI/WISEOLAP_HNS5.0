@@ -1,7 +1,6 @@
 package com.wise.MarketingPlatForm.account.model.groups.data;
 
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.account.model.common.DataSetXmlModel;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +8,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GroupDataModel {
-  UserGroupDTO group;
-  DataSetXmlModel dsViews;
+  Integer grpId;
+  List<DataModel> datas;
 }

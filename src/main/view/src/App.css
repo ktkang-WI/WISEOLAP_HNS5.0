@@ -112,6 +112,10 @@ img {
   overflow: visible !important;
 }
 
+.dx-form-group {
+  padding: 20px 0 20px 0
+}
+
 .szh-menu__item {
   content: '>';
   width: 80px;

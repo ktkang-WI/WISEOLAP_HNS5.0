@@ -11,12 +11,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CubeDimMstrEntity {
-  int cubeId;
+public class DsViewDimEntity {
   int dsViewId;
-  String dimUniNm;
   String dimCaption;
-  String dimIsVisible;
   String dimDimUniNm;
-  int dimOrdinal;
 }
