@@ -80,9 +80,9 @@
                             NULL 							AS REPORT_TYPE,
                             'FOLDER'                   		AS TYPE,
                             NULL						  	AS REG_DT
-              FROM   				USER_AUTH_REPORT_MSTR_TEMP
-            INNER JOIN 			USER_MSTR 						ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR_TEMP.USER_NO
-            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR_TEMP.FLD_ID
+              FROM   				USER_AUTH_REPORT_MSTR
+            INNER JOIN 			USER_MSTR 						ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
+            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID
             <if test='editMode == "designer"'>
               WHERE  				USER_MSTR.USER_ID = #{userId}
               AND 				AUTH_PUBLISH != 0
@@ -100,9 +100,9 @@
                             NULL 							AS REPORT_TYPE,
                             'FOLDER'                  	 	AS TYPE,
                             NULL						  	AS REG_DT
-            FROM   				GRP_AUTH_REPORT_MSTR_TEMP
-            INNER JOIN 			USER_MSTR 						ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR_TEMP.GRP_ID
-            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR_TEMP.FLD_ID
+            FROM   				GRP_AUTH_REPORT_MSTR
+            INNER JOIN 			USER_MSTR 						ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+            INNER JOIN 			PUB_FLD_MSTR 					ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
             <if test='editMode == "designer"'>
               WHERE  				USER_MSTR.USER_ID = #{userId}
               AND 				AUTH_PUBLISH != 0
@@ -176,9 +176,9 @@
 					FLD_NM 						AS fldNm,
 					FLD_PARENT_ID 				AS fldParentId,
 					FLD_ORDINAL 				AS fldOrdinal
-		FROM  		GRP_AUTH_REPORT_MSTR_TEMP
-					INNER JOIN USER_MSTR 		ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR_TEMP.GRP_ID
-					INNER JOIN PUB_FLD_MSTR 	ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR_TEMP.FLD_ID
+		FROM  		GRP_AUTH_REPORT_MSTR
+					INNER JOIN USER_MSTR 		ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
+					INNER JOIN PUB_FLD_MSTR 	ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
 		WHERE 		USER_MSTR.USER_ID = #{userId}
 					AND USER_MSTR.DEL_YN = 'N'
         			AND AUTH_PUBLISH != 0

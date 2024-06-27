@@ -37,11 +37,11 @@
   </select>
 
   <select id="selectGrpAuthData" resultMap="AuthData">
-    SELECT * FROM GRP_AUTH_DATA_MSTR_DEV WHERE GRP_ID = #{grpId}
+    SELECT * FROM GRP_AUTH_DATA_MSTR WHERE GRP_ID = #{grpId}
   </select>
 
   <select id="selectUserAuthData" resultMap="AuthData">
-    SELECT * FROM USER_AUTH_DATA_MSTR_DEV WHERE USER_NO = #{userNo}
+    SELECT * FROM USER_AUTH_DATA_MSTR WHERE USER_NO = #{userNo}
   </select>
 
 <!-- Query End -->

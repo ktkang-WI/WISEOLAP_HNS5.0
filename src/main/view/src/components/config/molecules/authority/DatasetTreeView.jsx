@@ -82,7 +82,7 @@ const DatasetTreeView = ({mainKey, dependency}) => {
         parentIdExpr="parentFldId"
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
-        height={'100%'}
+        height={'90%'}
       >
         <Editing
           mode="cell"

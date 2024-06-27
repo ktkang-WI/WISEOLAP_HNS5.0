@@ -177,9 +177,9 @@
           USER_MSTR.USER_NO,
           USER_MSTR.USER_ID,
           USER_MSTR.USER_NM,
-          USER_AUTH_DATA_MSTR_DEV.DATA_XML
-          FROM USER_MSTR INNER JOIN USER_AUTH_DATA_MSTR_DEV
-              ON USER_MSTR.USER_NO = USER_AUTH_DATA_MSTR_DEV.USER_NO
+          USER_AUTH_DATA_MSTR.DATA_XML
+          FROM USER_MSTR INNER JOIN USER_AUTH_DATA_MSTR
+              ON USER_MSTR.USER_NO = USER_AUTH_DATA_MSTR.USER_NO
     </select>
 
     <select id="selectGroupData" resultMap="GroupDataDTO">
@@ -187,9 +187,9 @@
           GRP_MSTR.GRP_ID,
           GRP_MSTR.GRP_NM,
           GRP_MSTR.GRP_DESC,
-          GRP_AUTH_DATA_MSTR_DEV.DATA_XML
-          FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR_DEV
-          ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR_DEV.GRP_ID
+          GRP_AUTH_DATA_MSTR.DATA_XML
+          FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR
+          ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR.GRP_ID
     </select>
 
     <select id="selectGroupFolder" resultMap="GroupFolderDTO">
@@ -207,9 +207,9 @@
           AUTH_DATAITEM,
           AUTH_EXPORT
       FROM
-          GRP_AUTH_REPORT_MSTR_TEMP
-          INNER JOIN PUB_FLD_MSTR ON GRP_AUTH_REPORT_MSTR_TEMP.FLD_ID = PUB_FLD_MSTR.FLD_ID
-          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR_TEMP.GRP_ID
+          GRP_AUTH_REPORT_MSTR
+          INNER JOIN PUB_FLD_MSTR ON GRP_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
+          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
       ORDER BY
           GRP_MSTR.GRP_ID,
           PUB_FLD_MSTR.FLD_ID,
@@ -227,14 +227,14 @@
           PUB_FLD_MSTR.FLD_LVL,
           PUB_FLD_MSTR.FLD_PARENT_ID,
           PUB_FLD_MSTR.FLD_ORDINAL,
-          USER_AUTH_REPORT_MSTR_TEMP.AUTH_VIEW,
-          USER_AUTH_REPORT_MSTR_TEMP.AUTH_PUBLISH,
-          USER_AUTH_REPORT_MSTR_TEMP.AUTH_DATAITEM,
-          USER_AUTH_REPORT_MSTR_TEMP.AUTH_EXPORT
+          USER_AUTH_REPORT_MSTR.AUTH_VIEW,
+          USER_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+          USER_AUTH_REPORT_MSTR.AUTH_DATAITEM,
+          USER_AUTH_REPORT_MSTR.AUTH_EXPORT
           FROM USER_MSTR
               INNER JOIN GRP_MSTR ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
-              INNER JOIN USER_AUTH_REPORT_MSTR_TEMP ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR_TEMP.USER_NO
-              INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR_TEMP.FLD_ID = PUB_FLD_MSTR.FLD_ID
+              INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
+              INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
               ORDER BY
                   USER_MSTR.USER_NO,
                   PUB_FLD_MSTR.FLD_ID,
@@ -254,9 +254,9 @@
           DS_MSTR.OWNER_NM,
           DS_MSTR.IP,
           DS_MSTR.DB_NM
-          FROM GRP_AUTH_DS_MSTR_DEV
-          INNER JOIN DS_MSTR ON GRP_AUTH_DS_MSTR_DEV.DS_ID = DS_MSTR.DS_ID
-          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_DS_MSTR_DEV.GRP_ID
+          FROM GRP_AUTH_DS_MSTR
+          INNER JOIN DS_MSTR ON GRP_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
+          INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = GRP_AUTH_DS_MSTR.GRP_ID
           ORDER BY
               GRP_MSTR.GRP_ID,
               DS_MSTR.DS_ID
@@ -272,9 +272,9 @@
         DS_MSTR.OWNER_NM,
         DS_MSTR.IP,
         DS_MSTR.DB_NM
-        FROM USER_AUTH_DS_MSTR_DEV
-        INNER JOIN DS_MSTR ON USER_AUTH_DS_MSTR_DEV.DS_ID = DS_MSTR.DS_ID
-        INNER JOIN USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_DS_MSTR_DEV.USER_NO
+        FROM USER_AUTH_DS_MSTR
+        INNER JOIN DS_MSTR ON USER_AUTH_DS_MSTR.DS_ID = DS_MSTR.DS_ID
+        INNER JOIN USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_DS_MSTR.USER_NO
         ORDER BY
             USER_MSTR.USER_NO,
             DS_MSTR.DS_ID
@@ -289,10 +289,10 @@
         DATASET_FLD_MSTR.FLD_ID,
         DATASET_FLD_MSTR.FLD_NM,
         DATASET_FLD_MSTR.PARENT_FLD_ID
-        FROM USER_AUTH_DATASET_MSTR_DEV
-          INNER JOIN USER_MSTR ON USER_AUTH_DATASET_MSTR_DEV.USER_NO = USER_MSTR.USER_NO
+        FROM USER_AUTH_DATASET_MSTR
+          INNER JOIN USER_MSTR ON USER_AUTH_DATASET_MSTR.USER_NO = USER_MSTR.USER_NO
           INNER JOIN GRP_MSTR ON GRP_MSTR.GRP_ID = USER_MSTR.GRP_ID
-          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = USER_AUTH_DATASET_MSTR_DEV.FLD_ID
+          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = USER_AUTH_DATASET_MSTR.FLD_ID
           ORDER BY
             USER_MSTR.USER_NO,
             DATASET_FLD_MSTR.FLD_ID
@@ -305,9 +305,9 @@
         DATASET_FLD_MSTR.FLD_ID,
         DATASET_FLD_MSTR.FLD_NM,
         DATASET_FLD_MSTR.PARENT_FLD_ID
-        FROM GRP_AUTH_DATASET_MSTR_DEV
-          INNER JOIN GRP_MSTR ON GRP_AUTH_DATASET_MSTR_DEV.GRP_ID = GRP_MSTR.GRP_ID
-          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = GRP_AUTH_DATASET_MSTR_DEV.FLD_ID
+        FROM GRP_AUTH_DATASET_MSTR
+          INNER JOIN GRP_MSTR ON GRP_AUTH_DATASET_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+          INNER JOIN DATASET_FLD_MSTR ON DATASET_FLD_MSTR.FLD_ID = GRP_AUTH_DATASET_MSTR.FLD_ID
           ORDER BY
             GRP_MSTR.GRP_ID,
             DATASET_FLD_MSTR.FLD_ID
@@ -407,20 +407,20 @@
     </update>
 
     <delete id="deleteGroupDs" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DS_MSTR_DEV
+      DELETE FROM GRP_AUTH_DS_MSTR
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
       </foreach>
     </delete>
     <delete id="deleteGroupDsAll" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DS_MSTR_DEV WHERE 1 = 1
+      DELETE FROM GRP_AUTH_DS_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putGroupDs" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_DS_MSTR_DEV(
+          INTO GRP_AUTH_DS_MSTR(
               GRP_ID,
               DS_ID
           )
@@ -434,7 +434,7 @@
     </insert>
 
     <delete id="deleteUserDs" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_DS_MSTR_DEV
+      DELETE FROM USER_AUTH_DS_MSTR
               WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
@@ -442,13 +442,13 @@
     </delete>
 
     <delete id="deleteUserDsAll" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_DS_MSTR_DEV WHERE 1 = 1
+      DELETE FROM USER_AUTH_DS_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putUserDs" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO USER_AUTH_DS_MSTR_DEV(
+          INTO USER_AUTH_DS_MSTR(
               USER_NO,
               DS_ID
           )
@@ -462,7 +462,7 @@
     </insert>
 
     <delete id="deleteGroupDataset" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DATASET_MSTR_DEV
+      DELETE FROM GRP_AUTH_DATASET_MSTR
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
@@ -470,13 +470,13 @@
     </delete>
 
     <delete id="deleteGroupDatasetAll" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DATASET_MSTR_DEV WHERE 1 = 1
+      DELETE FROM GRP_AUTH_DATASET_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putGroupDataset" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_DATASET_MSTR_DEV(
+          INTO GRP_AUTH_DATASET_MSTR(
               GRP_ID,
               FLD_ID
           )
@@ -490,7 +490,7 @@
     </insert>
 
     <delete id="deleteUserDataset" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_DATASET_MSTR_DEV
+      DELETE FROM USER_AUTH_DATASET_MSTR
               WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
@@ -498,13 +498,13 @@
     </delete>
 
     <delete id="deleteUserDatasetAll" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_DATASET_MSTR_DEV WHERE 1 = 1
+      DELETE FROM USER_AUTH_DATASET_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putUserDataset" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO USER_AUTH_DATASET_MSTR_DEV(
+          INTO USER_AUTH_DATASET_MSTR(
               USER_NO,
               FLD_ID
           )
@@ -518,20 +518,20 @@
     </insert>
 
     <delete id="deleteGroupFolder" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_REPORT_MSTR_TEMP
+      DELETE FROM GRP_AUTH_REPORT_MSTR
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
       </foreach>
     </delete>
     <delete id="deleteGroupFolderAll" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_REPORT_MSTR_TEMP WHERE 1 = 1
+      DELETE FROM GRP_AUTH_REPORT_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putGroupFolder" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO GRP_AUTH_REPORT_MSTR_TEMP(
+          INTO GRP_AUTH_REPORT_MSTR(
               GRP_ID,
               FLD_ID,
               AUTH_VIEW,
@@ -553,7 +553,7 @@
     </insert>
 
     <delete id="deleteUserFolder" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_REPORT_MSTR_TEMP
+      DELETE FROM USER_AUTH_REPORT_MSTR
               WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
@@ -561,13 +561,13 @@
     </delete>
 
     <delete id="deleteUserFolderAll" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_REPORT_MSTR_TEMP WHERE 1 = 1
+      DELETE FROM USER_AUTH_REPORT_MSTR WHERE 1 = 1
     </delete>
 
     <insert id="putUserFolder" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          INTO USER_AUTH_REPORT_MSTR_TEMP(
+          INTO USER_AUTH_REPORT_MSTR(
               USER_NO,
               FLD_ID,
               AUTH_VIEW,
@@ -589,7 +589,7 @@
     </insert>
 
     <delete id="deleteUserData" parameterType="java.util.List">
-      DELETE FROM USER_AUTH_DATA_MSTR_DEV
+      DELETE FROM USER_AUTH_DATA_MSTR
               WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.userNo, jdbcType=INTEGER}
@@ -597,7 +597,7 @@
     </delete>
 
     <delete id="deleteUserDataAll">
-      DELETE FROM USER_AUTH_DATA_MSTR_DEV
+      DELETE FROM USER_AUTH_DATA_MSTR
               WHERE 1 = 1
     </delete>
 
@@ -605,7 +605,7 @@
       INSERT ALL
       <foreach collection="list" item="item" index="index">
           <if test="item.dataXml != null and item.dataXml != ''">
-            INTO USER_AUTH_DATA_MSTR_DEV(
+            INTO USER_AUTH_DATA_MSTR(
               USER_NO,
               DATA_XML
             )
@@ -620,7 +620,7 @@
     </insert>
 
     <delete id="deleteGroupData" parameterType="java.util.List">
-      DELETE FROM GRP_AUTH_DATA_MSTR_DEV
+      DELETE FROM GRP_AUTH_DATA_MSTR
               WHERE GRP_ID IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.grpId, jdbcType=INTEGER}
@@ -628,7 +628,7 @@
     </delete>
 
     <delete id="deleteGroupDataAll">
-      DELETE FROM GRP_AUTH_DATA_MSTR_DEV
+      DELETE FROM GRP_AUTH_DATA_MSTR
               WHERE 1 = 1
     </delete>
 
@@ -636,7 +636,7 @@
       INSERT ALL
       <foreach collection="list" item="item" index="index">
           <if test="item.dataXml != null and item.dataXml != ''">
-            INTO GRP_AUTH_DATA_MSTR_DEV(
+            INTO GRP_AUTH_DATA_MSTR(
                 GRP_ID,
                 DATA_XML
             )

@@ -115,7 +115,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         id="folderTreeView"
-        height={'100%'}
+        height={'90%'}
         onRowUpdating={onRowUpdating}
       >
         <Editing

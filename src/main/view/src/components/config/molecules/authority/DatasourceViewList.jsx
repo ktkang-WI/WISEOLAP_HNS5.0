@@ -137,7 +137,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
-        height={'100%'}
+        height={'90%'}
         elementAttr={{
           class: 'datasource-view-list'
         }}
