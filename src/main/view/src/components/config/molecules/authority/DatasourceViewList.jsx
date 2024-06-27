@@ -17,6 +17,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
 import icoEdit from 'assets/image/icon/auth/ico_edit.png';
+import useModal from 'hooks/useModal';
 
 const getDsViewKey = (dataSetMode, data, nextId) => {
   const prevKeys = getUserOrGroupOrigin(dataSetMode, data, nextId) || [];
@@ -93,6 +94,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
+  const {alert} = useModal();
 
   useEffect(() => {
     const updateData = () => {
