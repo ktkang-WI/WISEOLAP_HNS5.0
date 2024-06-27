@@ -5,7 +5,7 @@ import {
   selectCurrentItems,
   selectRootItem
 } from 'redux/selector/ItemSelector';
-import {selectCurrentReportId}
+import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
@@ -50,8 +50,10 @@ const useQueryExecute = () => {
       ItemType.TEXT_BOX,
       ItemType.SCHEDULER_COMPONENT
     ].includes(item.type)) return;
-    // TODO: 로그인 추가 후 유저 아이디 수정
-    param.userId = 'admin';
+    const report = selectCurrentReport(store.getState()) || {};
+
+    param.reportId = report.reportId;
+    param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
 
@@ -120,8 +122,10 @@ const useQueryExecute = () => {
   const generateAdHocParamter = (rootItem, datasets, parameters) => {
     const param = {};
 
-    // TODO: 로그인 추가 후 유저 아이디 수정
-    param.userId = 'admin';
+    const report = selectCurrentReport(store.getState()) || {};
+
+    param.reportId = report.reportId;
+    param.reportType = report.options?.reportType;
     param.itemType = ItemType.CHART;
     param.dataset = {};
 
@@ -279,6 +283,7 @@ const useQueryExecute = () => {
     const state = store.getState();
     const datasets = selectCurrentDatasets(state);
     const currentReportId = selectCurrentReportId(state);
+    const reportId = selectCurrentReportId(state);
 
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg);
@@ -298,7 +303,7 @@ const useQueryExecute = () => {
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       return new Promise((resolve, reject) => {
-        models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
+        models.DBInfo.getAllDatasetDatas(reportId, dsId, query, parameters)
             .then((res) => {
               resolve({datasetId: dataset.datasetId, data: res.data});
             })
@@ -621,6 +626,7 @@ const useQueryExecute = () => {
   };
 
   const validateRequiredField = (item) => {
+    const reportType = item.type;
     let dataFieldOption;
     let dataField;
     const designerMode = selectCurrentDesignerMode(store.getState());
@@ -630,6 +636,11 @@ const useQueryExecute = () => {
     } else if (designerMode === DesignerMode['AD_HOC']) {
       dataFieldOption = item.adHocOption.dataFieldOption;
       dataField = item.adHocOption.dataField;
+    }
+    if (ItemType.RANGE_BAR === reportType) {
+      if (dataField.range1.length != dataField.range2.length) {
+        throw new Error(localizedString.rangeBarlengthAlert);
+      }
     }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     dataFieldOptionKeys.forEach((key) => {

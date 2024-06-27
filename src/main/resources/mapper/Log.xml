@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.log.dao.LogDAO">
+  <!-- Mapper -->
+  <resultMap id="LoginLogDTO" type="com.wise.MarketingPlatForm.log.vo.LoginLogDTO">
+    <result column="EVENT_DT" property="eventDt" javaType="String"/>
+    <result column="EVENT_TIME" property="eventTime" javaType="String"/>
+    <result column="LOG_TYPE" property="logType" javaType="String"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="USER_NO" property="userNo" javaType="int"/>
+    <result column="GRP_ID" property="groupId" javaType="int"/>
+    <result column="GRP_NM" property="groupNm" javaType="String"/>
+    <result column="ACCESS_IP" property="accessIp" javaType="String"/>
+    <result column="ACCESS_GUID" property="accessGuid" javaType="String"/>
+    <result column="MOD_USER_NO" property="modUserNo" javaType="int"/>
+    <result column="MOD_DT" property="modDt" javaType="String"/>
+  </resultMap>
+
+  <resultMap id="ReportLogDTO" type="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+    <result column="STATUS_CD" property="statusCd" javaType="String"/>
+    <result column="LOG_SEQ" property="logSeq" javaType="String"/>
+    <result column="REPORT_ID" property="reportId" javaType="int"/>
+    <result column="REPORT_NM" property="reportNm" javaType="String"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+    <result column="ST_DT" property="startDt" javaType="String"/>
+    <result column="ED_DT" property="endDt" javaType="String"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
+    <result column="ACCESS_IP" property="accessIp" javaType="String"/>
+  </resultMap>
+
+  <resultMap id="ExportLogDTO" type="com.wise.MarketingPlatForm.log.vo.ExportLogDTO">
+    <result column="EVENT_DT" property="eventDt" javaType="String"/>
+    <result column="EVENT_TIME" property="eventTime" javaType="String"/>
+    <result column="REPORT_NM" property="reportNm" javaType="String"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
+    <result column="ACCESS_IP" property="accessIp" javaType="String"/>
+    <result column="CTRL_ID" property="ctrlId" javaType="String"/>
+    <result column="CTRL_CAPTION" property="ctrlCaption" javaType="String"/>
+  </resultMap>
+
+  <resultMap id="QueryLogDTO" type="com.wise.MarketingPlatForm.log.vo.QueryLogDTO">
+    <result column="EVENT_DT" property="eventDt" javaType="String"/>
+    <result column="EVENT_TIME" property="eventTime" javaType="String"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
+    <result column="ACCESS_IP" property="accessIp" javaType="String"/>
+    <result column="DS_NM" property="dsNm" javaType="String"/>
+    <result column="DB_NM" property="dbNm" javaType="String"/>
+    <result column="IP" property="dbIp" javaType="String"/>
+    <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
+    <result column="RUN_TIME" property="runTime" javaType="String"/>
+    <result column="RUN_QUERY_BASE64" property="runQuery" javaType="String"/>
+  </resultMap>
+
+  <!-- Query -->
+  <!-- TODO: 추후 dataSourceId 적용 시 주석 해제. 현재는 미작동으로 Oracle만 활성화 -->
+  <select id="selectLoginLog" parameterType="com.wise.MarketingPlatForm.log.vo.LogParamVO" resultMap="LoginLogDTO">
+		<!-- <if test="_databaseId == 'sqlserver'">
+			SELECT 	A.EVENT_DT AS EVENT_DT,
+					SUBSTRING(CONVERT(VARCHAR, A.EVENT_DT, 108), 1, 8) AS EVENT_TIME,
+					A.LOG_TYPE,
+					A.USER_ID,
+					A.USER_NM,
+					A.USER_NO,
+					A.GRP_ID,
+					C.GRP_NM,
+					A.ACCESS_IP,
+					A.ACCESS_GUID,
+					A.MOD_USER_NO,
+					A.MOD_DT,
+					B.USER_ID AS MOD_USER_ID
+			FROM 	LOG_LOGINOUT A
+					LEFT OUTER JOIN USER_MSTR B ON A.MOD_USER_NO = B.USER_NO
+					LEFT OUTER JOIN GRP_MSTR C ON A.GRP_ID = C.GRP_ID
+			WHERE 	CONVERT(VARCHAR, EVENT_DT, 112) between (#{startDt}) and (#{endDt})
+		</if>
+		<if test="_databaseId == 'Oracle'"> -->
+			SELECT A.EVENT_DT AS EVENT_DT,
+			SUBSTR(TO_CHAR(A.EVENT_DT, 'HH24:MI:SS'), 1, 8) AS EVENT_TIME,
+			A.LOG_TYPE,
+			A.USER_ID,
+			A.USER_NM,
+			A.USER_NO,
+			A.GRP_ID,
+			C.GRP_NM,
+			A.ACCESS_IP,
+			A.ACCESS_GUID,
+			A.MOD_USER_NO,
+			A.MOD_DT,
+			B.USER_ID AS MOD_USER_ID
+			FROM LOG_LOGINOUT A
+			LEFT OUTER JOIN USER_MSTR B ON A.MOD_USER_NO = B.USER_NO
+			LEFT OUTER JOIN GRP_MSTR C ON A.GRP_ID = C.GRP_ID
+			WHERE TO_CHAR(EVENT_DT, 'YYYYMMDD') between (#{startDt}) and (#{endDt})
+		<!-- </if>
+		<if test="_databaseId == 'db2'">
+			SELECT A.EVENT_DT AS EVENT_DT,
+			SUBSTR(VARCHAR_FORMAT(A.EVENT_DT, 'HH24:MI:SS'), 1, 8) AS EVENT_TIME,
+			A.LOG_TYPE,
+			A.USER_ID,
+			A.USER_NM,
+			A.USER_NO,
+			A.GRP_ID,
+			C.GRP_NM,
+			A.ACCESS_IP,
+			A.ACCESS_GUID,
+			A.MOD_USER_NO,
+			A.MOD_DT,
+			B.USER_ID AS MOD_USER_ID
+			FROM LOG_LOGINOUT A
+			LEFT OUTER JOIN USER_MSTR AS B ON A.MOD_USER_NO = B.USER_NO
+			LEFT OUTER JOIN GRP_MSTR AS C ON A.GRP_ID = C.GRP_ID
+			WHERE ( VARCHAR_FORMAT(EVENT_DT, 'YYYYMMDD')) BETWEEN  (#{startDt}) and (#{endDt})
+		</if>
+		<if test="_databaseId == 'Tibero'">
+			SELECT A.EVENT_DT AS EVENT_DT,
+			SUBSTR(TO_CHAR(A.EVENT_DT, 'HH24:MI:SS'), 1, 8) AS EVENT_TIME,
+			A.LOG_TYPE,
+			A.USER_ID,
+			A.USER_NM,
+			A.USER_NO,
+			A.GRP_ID,
+			C.GRP_NM,
+			A.ACCESS_IP,
+			A.ACCESS_GUID,
+			A.MOD_USER_NO,
+			A.MOD_DT,
+			B.USER_ID AS MOD_USER_ID
+			FROM LOG_LOGINOUT A
+			LEFT OUTER JOIN USER_MSTR B ON A.MOD_USER_NO = B.USER_NO
+			LEFT OUTER JOIN GRP_MSTR C ON A.GRP_ID = C.GRP_ID
+			WHERE TO_CHAR(EVENT_DT, 'YYYYMMDD') between (#{startDt}) and (#{endDt})
+		</if>
+		<if test="_databaseId == 'Maria'">
+			SELECT 	A.EVENT_DT AS EVENT_DT,
+					SUBSTR(DATE_FORMAT(A.EVENT_DT, '%H:%i:%s'), 1, 8) AS EVENT_TIME,
+					A.LOG_TYPE,
+					A.USER_ID,
+					A.USER_NM,
+					A.USER_NO,
+					A.GRP_ID,
+					C.GRP_NM,
+					A.ACCESS_IP,
+					A.ACCESS_GUID,
+					A.MOD_USER_NO,
+					A.MOD_DT,
+					B.USER_ID AS MOD_USER_ID
+			FROM 	LOG_LOGINOUT A
+					LEFT OUTER JOIN USER_MSTR B ON A.MOD_USER_NO = B.USER_NO
+					LEFT OUTER JOIN GRP_MSTR C ON A.GRP_ID = C.GRP_ID
+			WHERE 	DATE_FORMAT(EVENT_DT, '%Y%m%d') between (#{startDt}) and (#{endDt})
+		</if> -->
+	</select>
+	<select id="selectReportLog"
+		parameterType="com.wise.MarketingPlatForm.log.vo.LogParamVO"
+		resultMap="ReportLogDTO">
+		<!-- <if test="_databaseId == 'sqlserver'">
+			SELECT 	A.STATUS_CD 	AS STATUS_CD,
+					A.LOG_SEQ 		AS LOG_SEQ,
+					A.REPORT_ID		AS REPORT_ID,
+					A.REPORT_NM		AS REPORT_NM,
+					A.REPORT_TYPE	AS REPORT_TYPE,
+					A.ST_DT			AS ST_DT,
+					A.ED_DT			AS ED_DT,
+					A.USER_ID		AS USER_ID,
+					A.USER_NM		AS USER_NM,
+					B.GRP_NM 		AS GRP_NM,
+					A.ACCESS_IP		AS ACCESS_IP
+			FROM 	LOG_REPORT_USE2 A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+			WHERE 	1=1
+					AND ( CONVERT(VARCHAR, ST_DT, 112)) between (#{startDt}) and (#{endDt})
+		</if> -->
+		<!-- <if test="_databaseId == 'Oracle'"> -->
+			SELECT 	A.STATUS_CD 	AS STATUS_CD,
+					A.LOG_SEQ 		AS LOG_SEQ,
+					A.REPORT_ID		AS REPORT_ID,
+					A.REPORT_NM		AS REPORT_NM,
+					A.REPORT_TYPE	AS REPORT_TYPE,
+					A.ST_DT			AS ST_DT,
+					A.ED_DT			AS ED_DT,
+					A.USER_ID		AS USER_ID,
+					A.USER_NM		AS USER_NM,
+					B.GRP_NM 		AS GRP_NM,
+					A.ACCESS_IP		AS ACCESS_IP
+			FROM 	LOG_REPORT_USE2 A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+			WHERE 	1=1
+					AND ( TO_CHAR(ST_DT, 'YYYYMMDD')) between (#{startDt}) and (#{endDt})
+		<!-- </if>
+		<if test="_databaseId == 'db2'">
+			SELECT 	A.STATUS_CD 	AS STATUS_CD,
+					A.LOG_SEQ 		AS LOG_SEQ,
+					A.REPORT_ID		AS REPORT_ID,
+					A.REPORT_NM		AS REPORT_NM,
+					A.REPORT_TYPE	AS REPORT_TYPE,
+					A.ST_DT			AS ST_DT,
+					A.ED_DT			AS ED_DT,
+					A.USER_ID		AS USER_ID,
+					A.USER_NM		AS USER_NM,
+					B.GRP_NM	 	AS GRP_NM,
+					A.ACCESS_IP		AS ACCESS_IP
+			FROM 	LOG_REPORT_USE2 A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+			WHERE 	1=1
+					AND ( VARCHAR_FORMAT(ST_DT, 'YYYYMMDD')) between (#{startDt}) and (#{endDt})
+		</if>
+		<if test="_databaseId == 'Tibero'">
+			SELECT 	A.STATUS_CD 	AS STATUS_CD,
+					A.LOG_SEQ 		AS LOG_SEQ,
+					A.REPORT_ID		AS REPORT_ID,
+					A.REPORT_NM		AS REPORT_NM,
+					A.REPORT_TYPE	AS REPORT_TYPE,
+					A.ST_DT			AS ST_DT,
+					A.ED_DT			AS ED_DT,
+					A.USER_ID		AS USER_ID,
+					A.USER_NM		AS USER_NM,
+					B.GRP_NM	 	AS GRP_NM,
+					A.ACCESS_IP		AS ACCESS_IP
+			FROM 	LOG_REPORT_USE2 A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+			WHERE 	1=1
+					AND ( TO_CHAR(ST_DT, 'YYYYMMDD')) between (#{startDt}) and (#{endDt})
+		</if>
+		<if test="_databaseId == 'Maria'">
+			SELECT 	A.STATUS_CD 	AS STATUS_CD,
+					A.LOG_SEQ 		AS LOG_SEQ,
+					A.REPORT_ID		AS REPORT_ID,
+					A.REPORT_NM		AS REPORT_NM,
+					A.REPORT_TYPE	AS REPORT_TYPE,
+					A.ST_DT			AS ST_DT,
+					A.ED_DT			AS ED_DT,
+					A.USER_ID		AS USER_ID,
+					A.USER_NM		AS USER_NM,
+					B.GRP_NM	 	AS GRP_NM,
+					A.ACCESS_IP		AS ACCESS_IP
+			FROM 	LOG_REPORT_USE2 A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+			WHERE 	1=1
+					AND ( DATE_FORMAT(ST_DT, '%Y%m%d')) between (#{startDt}) and (#{endDt})
+		</if> -->
+	</select>
+	<select id="selectExportLog" parameterType="com.wise.MarketingPlatForm.log.vo.LogParamVO" resultMap="ExportLogDTO">
+		<!-- <if test="_databaseId == 'sqlserver'">
+			SELECT	CONVERT(VARCHAR(10), A.EVENT_DT, 126) AS EVENT_DT,
+					CONVERT(VARCHAR(8), A.EVENT_DT, 108) AS EVENT_TIME,
+					A.REPORT_NM AS REPORT_NM,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					A.CTRL_ID AS CTRL_ID,
+					A.CTRL_CAPTION AS CTRL_CAPTION
+			FROM	LOG_EXPORT_USE A
+					LEFT OUTER JOIN GRP_MSTR B
+					ON A.GRP_ID = B.GRP_ID
+			WHERE	1=1
+					AND REPORT_NM != ''
+					AND CONVERT(VARCHAR, A.EVENT_DT, 112) BETWEEN #{startDt} AND #{endDt}
+		</if> -->
+		<!-- <if test="_databaseId == 'Oracle'"> -->
+			SELECT	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					TO_CHAR(A.EVENT_DT, 'HH24:MI:SS') AS EVENT_TIME,
+					A.REPORT_NM AS REPORT_NM,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					A.CTRL_ID AS CTRL_ID,
+					A.CTRL_CAPTION AS CTRL_CAPTION
+			FROM	LOG_EXPORT_USE A
+					LEFT OUTER JOIN GRP_MSTR B
+					ON A.GRP_ID = B.GRP_ID
+			WHERE	1=1
+					AND REPORT_NM IS NOT NULL
+					AND TO_CHAR(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		<!-- </if>
+		<if test="_databaseId == 'db2'">
+			SELECT	VARCHAR_FORMAT(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					VARCHAR_FORMAT(A.EVENT_DT, 'HH24:MI:SS') AS EVENT_TIME,
+					A.REPORT_NM AS REPORT_NM,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					A.CTRL_ID AS CTRL_ID,
+					A.CTRL_CAPTION AS CTRL_CAPTION
+			FROM	LOG_EXPORT_USE A
+					LEFT OUTER JOIN GRP_MSTR B
+					ON A.GRP_ID = B.GRP_ID
+			WHERE	1=1
+					AND REPORT_NM != ''
+					AND VARCHAR_FORMAT(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="_databaseId == 'Tibero'">
+			SELECT	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					TO_CHAR(A.EVENT_DT, 'HH24:MI:SS') AS EVENT_TIME,
+					A.REPORT_NM AS REPORT_NM,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					A.CTRL_ID AS CTRL_ID,
+					A.CTRL_CAPTION AS CTRL_CAPTION
+			FROM	LOG_EXPORT_USE A
+					LEFT OUTER JOIN GRP_MSTR B
+					ON A.GRP_ID = B.GRP_ID
+			WHERE	1=1
+					AND REPORT_NM IS NOT NULL
+					AND TO_CHAR(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="_databaseId == 'Maria'">
+			SELECT	DATE_FORMAT(A.EVENT_DT, '%Y-%m-%d') AS EVENT_DT,
+					DATE_FORMAT(A.EVENT_DT, '%H:%i:%s') AS EVENT_TIME,
+					A.REPORT_NM AS REPORT_NM,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					A.CTRL_ID AS CTRL_ID,
+					A.CTRL_CAPTION AS CTRL_CAPTION
+			FROM	LOG_EXPORT_USE A
+					LEFT OUTER JOIN GRP_MSTR B
+					ON A.GRP_ID = B.GRP_ID
+			WHERE	1=1
+					AND REPORT_NM IS NOT NULL
+					AND DATE_FORMAT(A.EVENT_DT, '%Y%m%d') BETWEEN #{startDt} AND #{endDt}
+		</if> -->
+	</select>
+	<select id="selectQueryLog" parameterType="com.wise.MarketingPlatForm.log.vo.LogParamVO" resultMap="QueryLogDTO">
+		<!-- <if test="_databaseId == 'sqlserver'">
+			SELECT	CONVERT(VARCHAR(10), A.EVENT_DT, 126) AS EVENT_DT,
+					CONVERT(VARCHAR(8), A.EVENT_DT, 108) AS EVENT_TIME,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					C.DS_NM AS DS_NM,
+					C.DB_NM AS DB_NM,
+					C.IP AS DB_IP,
+					C.DBMS_TYPE AS DBMS_TYPE,
+					A.RUN_TIME AS RUN_TIME,
+					A.RUN_QUERY AS RUN_QUERY_BASE64
+			FROM	LOG_EXEC_QUERY A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+			WHERE	1=1
+					AND CONVERT(VARCHAR, A.EVENT_DT, 112) BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="_databaseId == 'Oracle'"> -->
+			SELECT	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					TO_CHAR(A.EVENT_DT, 'HH24:MI:SS') AS EVENT_TIME,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					C.DS_NM AS DS_NM,
+					C.DB_NM AS DB_NM,
+					C.IP AS DB_IP,
+					C.DBMS_TYPE AS DBMS_TYPE,
+					A.RUN_TIME AS RUN_TIME,
+					A.RUN_QUERY AS RUN_QUERY_BASE64
+			FROM	LOG_EXEC_QUERY A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+			WHERE	1=1
+					AND TO_CHAR(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		<!-- </if>
+		<if test="_databaseId == 'db2'">
+			SELECT	VARCHAR_FORMAT(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					VARCHAR_FORMAT(A.EVENT_DT, 'HH24:MI:SS') AS EVENT_TIME,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					C.DS_NM AS DS_NM,
+					C.DB_NM AS DB_NM,
+					C.IP AS DB_IP,
+					C.DBMS_TYPE AS DBMS_TYPE,
+					A.RUN_TIME AS RUN_TIME,
+					A.RUN_QUERY AS RUN_QUERY_BASE64
+			FROM	LOG_EXEC_QUERY A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+			WHERE	1=1
+					AND VARCHAR_FORMAT(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="_databaseId == 'Tibero'">
+			SELECT	TO_CHAR(A.EVENT_DT, 'YYYY-MM-DD') AS EVENT_DT,
+					TO_CHAR(A.EVENT_DT, 'HH24:mm:ss') AS EVENT_TIME,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					C.DS_NM AS DS_NM,
+					C.DB_NM AS DB_NM,
+					C.IP AS DB_IP,
+					C.DBMS_TYPE AS DBMS_TYPE,
+					A.RUN_TIME AS RUN_TIME,
+					A.RUN_QUERY AS RUN_QUERY_BASE64
+			FROM	LOG_EXEC_QUERY A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+			WHERE	1=1
+					AND TO_CHAR(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="_databaseId == 'Maria'">
+			SELECT	DATE_FORMAT(A.EVENT_DT, '%Y-%m-%d') AS EVENT_DT,
+					DATE_FORMAT(A.EVENT_DT, '%H:%i:%s') AS EVENT_TIME,
+					A.REPORT_TYPE AS REPORT_TYPE,
+					A.USER_ID AS USER_ID,
+					A.USER_NM AS USER_NM,
+					B.GRP_NM AS GRP_NM,
+					A.ACCESS_IP AS ACCESS_IP,
+					C.DS_NM AS DS_NM,
+					C.DB_NM AS DB_NM,
+					C.IP AS DB_IP,
+					C.DBMS_TYPE AS DBMS_TYPE,
+					A.RUN_TIME AS RUN_TIME,
+					A.RUN_QUERY AS RUN_QUERY_BASE64
+			FROM	LOG_EXEC_QUERY A
+					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
+					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+			WHERE	1=1
+					AND DATE_FORMAT(A.EVENT_DT, '%Y%m%d') BETWEEN #{startDt} AND #{endDt}
+		</if> -->
+	</select>
+
+  <select id="insertLoginLog" parameterType="com.wise.MarketingPlatForm.log.vo.LoginLogDTO">
+		INSERT INTO LOG_LOGINOUT
+		VALUES (
+			#{eventStamp},
+			#{logType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{groupId},
+			null,
+			#{accessIp},
+			null,
+			#{modUserNo},
+			#{modStamp},
+			'WB'
+		)
+	</select>
+
+  <insert id="insertQueryLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+		INSERT INTO LOG_EXEC_QUERY
+		(
+			EVENT_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			ACCESS_GUID,
+			RUN_QUERY,
+			DS_ID,
+			RUN_TIME,
+			PROG_TYPE
+		)
+		VALUES
+		(
+			#{eventStamp},
+			#{reportId},
+			null,
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			null,
+			#{runQuery},
+			#{dsId},
+			#{runTime},
+			'WB'
+		)
+	</insert>
+	<insert id="insertExportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ExportLogDTO">
+		INSERT INTO LOG_EXPORT_USE
+		(
+			EVENT_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			ACCESS_GUID,
+			PROG_TYPE,
+			CTRL_ID,
+			CTRL_CAPTION
+		)
+		VALUES
+		(
+			#{eventStamp},
+			#{reportId},
+			#{reportNm},
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			null,
+			'WB',
+			#{ctrlId},
+			#{ctrlCaption}
+		)
+	</insert>
+  <insert id="insertReportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+		INSERT INTO LOG_REPORT_USE2
+		(
+			LOG_SEQ,
+			ST_DT,
+			ED_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			STATUS_CD,
+			PROG_TYPE
+		)
+		VALUES
+		(
+			#{logSeq},
+			#{startStamp},
+			#{endStamp},
+			#{reportId},
+			#{reportNm},
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			#{statusCd},
+			'WB'
+		)
+	</insert>
+
+
+</mapper>

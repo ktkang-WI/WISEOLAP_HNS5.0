@@ -13,6 +13,8 @@ import addGrid from 'assets/image/icon/button/basic_grid.png';
 import querySearchIcon from 'assets/image/icon/report/query_search.png';
 import adHocLayoutSetting
   from 'assets/image/icon/button/adHocLayoutSetting.png';
+import addVisualChart
+  from 'assets/image/icon/button/visual_chart.png';
 import captionView from 'assets/image/icon/button/caption_view.png';
 import nameEdit from 'assets/image/icon/button/name_edit.png';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
@@ -338,7 +340,7 @@ const RibbonDefaultElement = () => {
       ...commonRibbonBtnElement,
       'id': 'add_custom_chart',
       'label': localizedString.addCustomChart,
-      'imgSrc': addChart,
+      'imgSrc': addVisualChart,
       'usePopover': true,
       'useArrowButton': true,
       'onClick': (ref) => {

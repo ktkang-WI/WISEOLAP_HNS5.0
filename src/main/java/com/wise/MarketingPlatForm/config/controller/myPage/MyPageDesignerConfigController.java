@@ -9,6 +9,7 @@ import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -34,8 +35,7 @@ public class MyPageDesignerConfigController {
   
   @GetMapping
   public ResponseEntity<RestAPIVO> getDesignerConfig(HttpServletRequest request) throws Exception {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
 
     int userNo = userDTO.getUserNo();
 
@@ -52,8 +52,7 @@ public class MyPageDesignerConfigController {
     @RequestParam(required = false, defaultValue = "") String defaultItem,
     @RequestParam(required = false, defaultValue = "") String defaultPalette
   ) {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
 
     int userNo = userDTO.getUserNo();
     
@@ -70,8 +69,7 @@ public class MyPageDesignerConfigController {
   // 전체 항목 리셋
   @PostMapping("/reset")
   public boolean reset(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
 
     int userNo = userDTO.getUserNo();
     MyDesignerDTO myDesignerDTO = MyDesignerDTO.builder()

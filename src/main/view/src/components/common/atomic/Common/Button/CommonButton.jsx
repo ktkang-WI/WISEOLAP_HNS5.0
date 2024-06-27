@@ -65,7 +65,6 @@ const CommonButton = ({
       border: 'none',
       font: theme.font.button,
       margin: '2px',
-      // minWidth: '60px',
       borderRadius: '8px'
     },
     'secondary': {
@@ -76,7 +75,6 @@ const CommonButton = ({
       border: 'solid 1px ' + theme.color.gray300,
       font: theme.font.button,
       margin: '2px',
-      // minWidth: '60px',
       borderRadius: '8px'
     },
     'whiteRound': {
@@ -92,6 +90,22 @@ const CommonButton = ({
       background: theme.color.white,
       color: theme.color.gray500,
       font: theme.font.smallButton
+    },
+    'selectable': {
+      background: theme.color.white,
+      hoverBackground: '#F2F2F2',
+      color: theme.color.gray600,
+      font: theme.font.smallButton,
+      border: 'solid 1px ' + theme.color.gray200,
+      borderRadius: '4px'
+    },
+    'selected': {
+      background: '#F6FAFF',
+      hoverBackground: '#eaf4fa',
+      color: theme.color.gray600,
+      font: theme.font.smallButton,
+      border: 'solid 1px #BCD1F0',
+      borderRadius: '4px'
     }
   };
 
