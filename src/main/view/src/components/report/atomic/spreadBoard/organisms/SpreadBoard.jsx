@@ -46,7 +46,8 @@ const SpreadBoard = () => {
   const {
     sheetChangedListener,
     sheetNameChangedListener,
-    bindData
+    bindData,
+    hnsDrmUpload
   } = useSpread();
   const config = useSpreadRibbon();
   const currentReportId = useSelector(selectCurrentReportId);
@@ -67,6 +68,18 @@ const SpreadBoard = () => {
     const workbookJSON = getWorkbookJSON(currentReportId);
     spreaRef.current.designer.getWorkbook().fromJSON(workbookJSON);
   }, [currentReportId]);
+
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      try {
+        hnsDrmUpload(selectedFile);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
 
   return (
     <StyledWrapper className='section board'>
@@ -90,6 +103,13 @@ const SpreadBoard = () => {
         }}
       >
       </Designer>
+      <input
+        type='file'
+        id='fileInput'
+        accept='.xlsx, xls'
+        style={{display: 'none'}}
+        onChange={handleFileChange}
+      />
     </StyledWrapper>
   );
 };

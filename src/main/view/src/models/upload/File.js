@@ -20,6 +20,11 @@ export const importFile = (param) => {
   });
 };
 
+export const loadDecryptionFile = (param) => {
+  return axios.post(path + '/loadDecryptionFile', param, {
+    responseType: 'arraybuffer'
+  });
+};
 
 export const uploadUserData = (dsId, dataNm, uploadData,
     appendTable, tableDeleteYN) => {
@@ -29,5 +34,19 @@ export const uploadUserData = (dsId, dataNm, uploadData,
     uploadData: JSON.stringify(uploadData),
     appendTable: appendTable,
     tableDeleteYN: tableDeleteYN
+  });
+};
+
+export const hnsDrmUpload = (param) => {
+  return axios.post(path + '/hns-drmUpload', param, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
+export const callDrmApi = (param) => {
+  return axios.get(path + '/fetch-data', {
+    params: param
   });
 };

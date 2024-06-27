@@ -22,6 +22,7 @@ import {EditMode} from 'components/config/configType';
 import store from 'redux/modules';
 import useModal from './useModal';
 import localizedString from 'config/localization';
+import models from 'models';
 
 const fileCache = new Map();
 
@@ -241,6 +242,86 @@ const useSpread = () => {
     });
   };
 
+  const hnsDrmUpload = async (selectedFile) => {
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      dispatch(loadingActions.startJob());
+
+      // 파일 업로드
+      const uploadResponse = await models.File.hnsDrmUpload(formData);
+
+      if (uploadResponse.status === 200) {
+        // 복호화 API 호출
+        const responseData = await fetchData(uploadResponse.data);
+
+        // 복호화 된 파일 불러오기
+        await importHnsFile(responseData.fileName, responseData.filePath);
+        dispatch(loadingActions.endJob());
+      }
+    } catch (error) {
+      console.error('Error during hnsDrmUpload:', error);
+      dispatch(loadingActions.endJob());
+      alert('파일을 불러오는데 실패했습니다. \n 관리자에게 문의하세요.');
+    }
+  };
+
+  const importHnsFile = async (fileName, filePath) => {
+    try {
+      const workbook = getWorkbook();
+
+      const response = await models.File.loadDecryptionFile({
+        fileName: `${fileName}`,
+        filePath: `${filePath}`
+      });
+
+      if (response.status === 200) {
+        const blob = new Blob([response.data],
+            // eslint-disable-next-line max-len
+            {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+        return new Promise((resolve, reject) => {
+          workbook.import(
+              blob,
+              () => {
+                resolve();
+              },
+              (error) => {
+                reject(error);
+              },
+              excelIOOpenOtions
+          );
+        });
+      } else {
+        throw new Error(`Failed to load file: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error importing file:', error);
+      throw error;
+    }
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const fetchData = async (fileName) => {
+    try {
+      const response = await models.File.callDrmApi({
+        fileName: `${fileName}`
+      });
+
+      if (response.status !== 200) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = response.data.responseData;
+
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  };
+
   /*
   const clearBindingSheet = () => {
     return new Promise((resolve) => {
@@ -280,7 +361,8 @@ const useSpread = () => {
     sheetChangedListener,
     sheetNameChangedListener,
     createReportBlob,
-    setExcelFile
+    setExcelFile,
+    hnsDrmUpload
   };
 };
 
