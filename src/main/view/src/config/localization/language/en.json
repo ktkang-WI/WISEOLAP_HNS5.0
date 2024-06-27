@@ -512,5 +512,11 @@
     "count": "Top/Bottom Count",
     "percentage": "Apply %",
     "others": "Display other items besides Top/Bottom values as 'Others'"
-  }
+  },
+  "saveValidationNonExecute": "The content has changed or has not been viewed. Please save after viewing.",
+  "showInViewerDataItems": "Show viewer data items",
+  "uniqueName": "Unique Name",
+  "types": "Type",
+  "viewerPosting": "Viewer data item selection display function.",
+  "selectDataset": "Please select a data set."
 }

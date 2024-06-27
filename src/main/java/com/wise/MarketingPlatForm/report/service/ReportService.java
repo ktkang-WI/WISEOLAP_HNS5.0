@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,12 +86,12 @@ public class ReportService {
     			if (dataset.get("datasets") != null) {
     				JSONArray datasetArray = dataset.getJSONArray("datasets");
     				for (int i= 0; i < datasetArray.length(); i++) {
-    					JSONObject obj = datasetArray.getJSONObject(i);
-    					if (obj.has("cubeId")) {
-    						CubeInfoDTO cubeInfo = cubeService.getCube(obj.get("cubeId").toString(), userId);
-    						obj.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
-    						obj.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
-    					}
+    					JSONObject datset = datasetArray.getJSONObject(i);
+    					if (datset.has("cubeId")) {
+                            CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
+    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
+    						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+    					
     				}
     			}
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
@@ -125,7 +126,8 @@ public class ReportService {
     		reports.add(report);
     		
     		returnMap.put("reports", reports);
-    	} catch (Exception e) {
+    	} 
+    }   catch (Exception e) {
     		returnMap.put("error", "error");
     	}
     	return returnMap;
