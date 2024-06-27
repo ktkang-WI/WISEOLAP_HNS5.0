@@ -38,14 +38,16 @@ public class MyPageDesignerConfigService {
     } catch (Exception e) {
       logger.error("MyPageDesignerConfigService Error", e);
     } finally {
-      model = MyDesignerDTO.builder()
-      .userNo(userNo)
-      .defaultDatasetId(null)
-      .defaultReportId(null)
-      .defaultItem("{\"item\":\"chart\",\"check\":false,\"layout\":\"CTGB\"}")
-      .defaultPalette("")
-      .defaultLayout("")
-      .build();
+      if (model == null) {
+        model = MyDesignerDTO.builder()
+          .userNo(userNo)
+          .defaultDatasetId(null)
+          .defaultReportId(null)
+          .defaultItem("{\"item\":\"chart\",\"check\":false,\"layout\":\"CTGB\"}")
+          .defaultPalette("")
+          .defaultLayout("")
+          .build();
+      }
     }
   
     return model;
