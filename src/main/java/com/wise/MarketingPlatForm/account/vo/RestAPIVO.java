@@ -38,6 +38,14 @@ public class RestAPIVO {
     return new ResponseEntity<>(restAPIVO, HttpStatus.CONFLICT);
   }
 
+  private static ResponseEntity<RestAPIVO> unauthorizedResponseFormat(Object data, String txt) {
+    RestAPIVO restAPIVO = RestAPIVO.builder()
+    .info(txt)
+    .data(data)
+    .build();
+    return new ResponseEntity<>(restAPIVO, HttpStatus.UNAUTHORIZED);
+  }
+
   public static ResponseEntity<RestAPIVO> badRequest(Object data){
     return badRequestFormat(data ,"Invalid request parameters.");
   }
@@ -60,6 +68,14 @@ public class RestAPIVO {
 
   public static ResponseEntity<RestAPIVO> conflictResponse(Object data, String txt){
     return conflictResponseFormat(data, txt);
+  }
+
+  public static ResponseEntity<RestAPIVO> unauthorizedResponse(Object data){
+    return unauthorizedResponse(data, "401");
+  }
+
+  public static ResponseEntity<RestAPIVO> unauthorizedResponse(Object data, String txt){
+    return unauthorizedResponse(data, txt);
   }
 
 }

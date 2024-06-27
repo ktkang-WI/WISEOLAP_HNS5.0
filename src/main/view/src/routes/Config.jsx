@@ -7,6 +7,7 @@ import {Outlet} from 'react-router-dom';
 
 const theme = getTheme();
 
+// Config 는 임시용 입니다.
 const Config = () => {
   const left = ['Logo'];
   return (
@@ -32,11 +33,20 @@ const Config = () => {
         <Wrapper
           size={`0 0 ${theme.size.snbWidth}`}>
           <SideNavigationBar
-            content={['ConfigurationSetting', 'UserGroupManagement',
-              'Authority', 'ReportFolderManagement', 'DataSourceAddition']}
+            content={[
+              'ConfigurationSetting',
+              'UserGroupManagement',
+              'Authority',
+              'ReportFolderManagement',
+              'DataSourceAddition',
+              'Log']}
           />
         </Wrapper>
-        <Wrapper>
+        <Wrapper
+          className='section'
+          width={'calc(100% - ' + theme.size.snbWidth + ' - 20px)'}
+          height={'calc(100% - 20px)'}
+        >
           <Outlet/>
         </Wrapper>
       </Wrapper>

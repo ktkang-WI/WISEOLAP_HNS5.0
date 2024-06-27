@@ -24,7 +24,6 @@ import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
 import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
-import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 import ComboBox from 'components/report/item/comboBox/ComboBox';
 import ListBox from 'components/report/item/listBox/ListBox';
@@ -35,6 +34,7 @@ import WaterFall from 'components/report/item/waterFall/WaterFall';
 import SchedulerComponent
   from 'components/report/item/schedulerComponent/SchedulerComponent';
 import ItemType from 'components/report/item/util/ItemType';
+import ZoomableIcicle from '../zoomableIcicle/ZoomableIcicle';
 
 // TODO: 추후 아이템 타입 자동 감지하여 추가하게 수정
 export const itemComponents = {
@@ -59,7 +59,7 @@ export const itemComponents = {
   [ItemType.COLLAPSIBLE_TREE]: CollapsibleTree,
   [ItemType.RADIAL_TREE]: RadialTree,
   [ItemType.SUNBURST_CHART]: SunBurstChart,
-  [ItemType.ZOOMABLE_CICLE]: ZoomableCicle,
+  [ItemType.ZOOMABLE_ICICLE]: ZoomableIcicle,
   [ItemType.CICLE_PACKING]: CiclePacking,
   [ItemType.SCATTER_PLOT]: ScatterPlot,
   [ItemType.COMBO_BOX]: ComboBox,
@@ -94,7 +94,7 @@ export const defaultItemNames = {
   [ItemType.COLLAPSIBLE_TREE]: '신경망 트리',
   [ItemType.RADIAL_TREE]: '방사형신경망',
   [ItemType.SUNBURST_CHART]: '선버스트',
-  [ItemType.ZOOMABLE_CICLE]: '계층형 네모차트',
+  [ItemType.ZOOMABLE_ICICLE]: '계층형 네모차트',
   [ItemType.CICLE_PACKING]: '버블팩',
   [ItemType.SCATTER_PLOT]: '산점도',
   [ItemType.COMBO_BOX]: '콤보상자',

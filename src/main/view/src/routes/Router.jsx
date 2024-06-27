@@ -36,6 +36,7 @@ import MyDesignerConfig
 import MyViewerConfig
   from 'components/useInfo/organism/myViewer/MyViewerConfig';
 import MyFontConfig from 'components/useInfo/organism/myFont/MyFontConfig';
+import Log from 'components/config/organisms/log/Log';
 
 export const contextPath = '/editds';
 const multipleLoader = async () => {
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: 'add-datasource',
         element: <DataSourceAddition/>
+      },
+      {
+        path: 'log',
+        element: <Log/>
       }
     ]
   },

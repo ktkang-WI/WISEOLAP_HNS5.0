@@ -338,7 +338,7 @@ const Authority = () => {
   return (
     <AuthorityContext.Provider
       value={context}>
-      <Wrapper display='flex' direction='column'>
+      <Wrapper display='flex' direction='row'>
         <Header>
           <NavBar>
             {navBarItems({

@@ -1,16 +1,21 @@
 package com.wise.MarketingPlatForm.report.service;
 
+import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.service.CubeService;
@@ -18,6 +23,11 @@ import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.global.config.MartConfig;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.global.util.Timer;
+import com.wise.MarketingPlatForm.log.service.LogService;
+import com.wise.MarketingPlatForm.log.vo.QueryLogDTO;
+import com.wise.MarketingPlatForm.log.vo.ReportLogDTO;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
@@ -55,25 +65,50 @@ public class ReportService {
     private final MartDAO martDAO;
     private final DatasetService datasetService;
     private final CubeService cubeService;
+    private final LogService logService;
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
-    ReportService(ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO, DatasetService datasetService, CubeService cubeService) {
+    ReportService(
+        ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO,
+        DatasetService datasetService, CubeService cubeService, LogService logService) {
         this.reportDAO = reportDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.datasetService = datasetService;
         this.cubeService = cubeService;
+        this.logService = logService;
     }
 
-    public Map<String, Object> getReport(String reportId, String userId) {
+    public Map<String, Object> getReport(HttpServletRequest request, String reportId) {
     	Map<String, Object> returnMap = new HashMap<>();
+        Timer timer = new Timer();
+        
+        UserDTO user = SessionUtility.getSessionUser(request);
+        String userId = user.getUserId();
+
+        ReportLogDTO logDto = ReportLogDTO.builder()
+                .logSeq(String.valueOf(new Timestamp(timer.getStartTime())))
+                .reportId(Integer.parseInt(reportId))
+                .userId(user.getUserId())
+                .userNo(user.getUserNo())
+                .userNm(user.getUserNm())
+                .grpId(user.getGrpId())
+                .accessIp(request.getRemoteAddr())
+                .statusCd("50")
+                .build();
     	try {
     		Gson gson = new Gson();
     		ObjectMapper objectMapper = new ObjectMapper();
     		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-    		ReportMstrEntity entity = reportDAO.selectReport(reportId);
+            
+            timer.start();
+            ReportMstrEntity entity = reportDAO.selectReport(reportId);
+            
+            logDto.setReportNm(entity.getReportNm());
+            logDto.setReportType(entity.getReportType());
+
     		ReportMstrDTO dto = ReportMstrEntity.toDTO(entity);
     		if(!"newReport".equals(dto.getDatasetXml())) {
     			ReportXMLParser reportXmlParser = xmlParserFactory.getXmlParser(dto.getReportType());
@@ -125,12 +160,21 @@ public class ReportService {
     		
     		returnMap.put("reports", reports);
     	} catch (Exception e) {
+            logDto.setStatusCd("99");
     		returnMap.put("error", "error");
     	}
+                    
+        timer.end();
+
+        logDto.setStartStamp(new Timestamp(timer.getStartTime()));
+        logDto.setEndStamp(new Timestamp(timer.getEndTime()));
+
+        logService.insertReportLog(logDto);
+
     	return returnMap;
     }
 
-    public ReportResult getItemData(DataAggregation dataAggreagtion) {
+    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggreagtion) {
         ReportResult result;
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
@@ -154,8 +198,30 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggreagtion, ownerNm);
 
+        Timer timer = new Timer();
+        timer.start();
         MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
         
+        timer.end();
+
+        UserDTO user = dataAggreagtion.getUser();
+
+        QueryLogDTO queryLogDTO = QueryLogDTO.builder()
+                .eventStamp(new Timestamp(timer.getStartTime()))
+                .reportId(Integer.parseInt(dataAggreagtion.getReportId()))
+                .userId(user.getUserId())
+                .reportType(dataAggreagtion.getReportType().toString())
+                .userNo(user.getUserNo())
+                .userNm(user.getUserNm())
+                .grpId(user.getGrpId())
+                .accessIp(request.getRemoteAddr())
+                .runQuery(query)
+                .dsId(dsMstrDTO.getDsId())
+                .runTime(timer.getInterval())
+                .build();
+
+        logService.insertQueryLog(queryLogDTO);
+
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
         ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
        

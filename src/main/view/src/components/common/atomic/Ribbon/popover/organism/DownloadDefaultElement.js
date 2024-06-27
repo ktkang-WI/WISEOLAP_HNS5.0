@@ -45,7 +45,8 @@ const DownloadDefaultElement = () => {
             onClick: () => {
               const newCurrentItem = filterdLayoutItem();
 
-              handleDownload(newCurrentItem, currentParameter, dataSource);
+              handleDownload(
+                  currentReport, newCurrentItem, currentParameter, dataSource);
             }
           },
           {

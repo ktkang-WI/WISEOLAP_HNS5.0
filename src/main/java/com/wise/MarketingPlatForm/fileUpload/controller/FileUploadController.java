@@ -24,6 +24,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 @RestController
 @RequestMapping("/upload")
@@ -60,7 +61,7 @@ public class FileUploadController {
     public void getUploadDataColumn(HttpServletRequest request, HttpServletResponse response) {
         
         response.setCharacterEncoding("utf-8");
-        PrintWriter out = null;        
+        PrintWriter out = null;
         
         try {
                 
@@ -98,8 +99,7 @@ public class FileUploadController {
 
         String tableDeleteYN = params.getOrDefault("tableDeleteYN", "");
 
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
 
         int userNo = userDTO.getUserNo();
 
