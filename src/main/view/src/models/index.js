@@ -15,6 +15,7 @@ import * as Login from './auth/Login';
 import * as Log from './config/log/Log';
 import * as ReportFolderManagement
   from './config/reportFolderManagement/ReportFolderManagement';
+import * as MyPageConfig from './config/myPage/MyPageConfig';
 
 export default {
   DataSource,
@@ -31,5 +32,6 @@ export default {
   UserGroupManagement,
   Authority,
   Log,
-  ReportFolderManagement
+  ReportFolderManagement,
+  MyPageConfig
 };

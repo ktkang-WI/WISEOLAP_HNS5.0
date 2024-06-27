@@ -14,6 +14,7 @@ import {
   authorityLoader,
   generalConfigure as generalLoader,
   userFolderData as myPageFolderData,
+  myPageUserInfoData,
   userDesignerConfig,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
@@ -144,8 +145,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'user-info',
-        element: <UserInfoManagement/>
-        // loader: 개인정보
+        element: <UserInfoManagement/>,
+        loader: myPageUserInfoData
       },
       {
         path: 'myReport-folder',

@@ -1,0 +1,69 @@
+import localizedString from 'config/localization';
+export const getServerValidations = (invalidStatus) => {
+  let message = '';
+  let result = false;
+
+  if (invalidStatus !== 'Success') {
+    message = validationMsgList[invalidStatus];
+    result = true;
+  } else {
+    message = validationMsgList['Success'];
+  }
+
+
+  return {result, message};
+};
+
+export const getFrontValidations = (formData) => {
+  let message = '';
+  let result = false;
+
+  if (formData === undefined) {
+    return true;
+  }
+
+  const checkPassword = formData.checkPassword;
+  const newPassword = formData.newPassword;
+
+  // 길이 제한
+  if (checkPassword?.length < 5 || newPassword?.length < 5) {
+    message = validationMsgList.lengthValidation;
+    result = true;
+  } else if (checkPassword?.length > 16 || newPassword?.length > 16) {
+    message = validationMsgList.lengthValidation;
+    result = true;
+  }
+
+  // 아무 입력 안함
+  if (Object.keys(formData).length !== 3) {
+    message = validationMsgList.allRequired;
+    result = true;
+  }
+
+  // 변경할 비밀번호 != 비밀번호 확인
+  if (checkPassword !== newPassword) {
+    message = validationMsgList.notMatchPw;
+    result = true;
+  }
+
+  // ?
+
+  return {result, message};
+};
+
+export const preventInputSpaceBar = (e) => {
+  if (e.event.key == ' ') {
+    e.event.originalEvent.returnValue = false;
+  }
+};
+
+const validationMsgList = {
+  ExceptionCheckCurrPw: localizedString.ExceptionCheckCurrPw,
+  ExceptionUpdate: localizedString.ExceptionUpdate,
+  Success: localizedString.successUpdate,
+  FailUpdate: localizedString.FailUpdatePw,
+  wrongCurrentPw: localizedString.wrongCurrentPw,
+  allRequired: localizedString.allRequired,
+  notMatchPw: localizedString.notMatchPw,
+  lengthValidation: localizedString.lengthValidation
+};

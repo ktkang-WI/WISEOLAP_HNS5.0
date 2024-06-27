@@ -762,5 +762,27 @@
     "others": "Top/Bottom 값 이외의 항목 기타로 표시"
   },
   "range": "범위",
-  "rangeBarlengthAlert": "레인지바 아이템의 경우 범위1과 범위2의 측정값의 개수가 같아야 합니다."
+  "rangeBarlengthAlert": "레인지바 아이템의 경우 범위1과 범위2의 측정값의 개수가 같아야 합니다.",
+  "myPage": "마이페이지",
+  "requiredUserNm": "사용자 명은 필수 입력 입니다.",
+  "userNmNoEmpty": "사용자 이름은 빈값일 수 없습니다.",
+  "userInfoUpdateSuccess": "변경사항을 저장했습니다.",
+  "saveExceptionMsg": "저장하지 못했습니다. 관리자에게 문의해 주세요.",
+  "updateException": "변경에 실패 했습니다. 관리자에게 문의해 주세요.",
+  "personalInfo": "개인정보",
+  "invalideEmailRule": "이메일 형식이 아닙니다.",
+  "email": "이메일",
+  "telNo": "전화번호",
+  "cellPhoneNo": "휴대폰 번호",
+  "confirmModifyPw": "비밀번호를 변경 하시겠습니까?",
+  "ExceptionCheckCurrPw": "현재 비밀번호를 가져오지 못했습니다. 관리자에게 문의해 주세요.",
+  "ExceptionUpdate": "비밀번호 변경 실패, 관리자에게 문의하세요.",
+  "FailUpdatePw": "비밀번호 변경에 실패 했습니다.",
+  "wrongCurrentPw": "현재 비밀번호가 일치 하지 않습니다.",
+  "allRequired": "모든 항목이 필수 입력입니다. 전부 입력해 주세요.",
+  "notMatchPw": "입력한 비밀번호와 비밀번호 확인이 다릅니다.",
+  "lengthValidation": "길이 제한에 맞지 않습니다.(6~15자 까지)",
+  "pwInconsistency": "비밀번호가 일치 하지 않습니다.",
+  "required": "필수 입력 입니다.",
+  "confirmResetMsg": "초기화 하시겠습니까?"
 }
