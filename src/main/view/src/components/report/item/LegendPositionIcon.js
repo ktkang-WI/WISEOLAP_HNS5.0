@@ -200,4 +200,5 @@ const LegendPositionIcon = [
     itemTextPosition: 'right'
   }
 ];
+
 export default LegendPositionIcon;

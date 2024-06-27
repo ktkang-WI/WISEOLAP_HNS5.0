@@ -3,7 +3,6 @@ import showColorLegend from 'assets/image/icon/button/show_color_legend.png';
 import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
 import animation from 'assets/image/icon/button/animation.png';
-import {Button} from 'devextreme-react';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -11,6 +10,8 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import _ from 'lodash';
 import legendPositionIcon from './LegendPositionIcon';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import styled from 'styled-components';
 
 const setMeta = (item, key, value) => {
   return {
@@ -25,48 +26,78 @@ const setMeta = (item, key, value) => {
 // itemOption 중 많이 사용되는 리본버튼.
 const ItemOptionManager = () => {
   const selectedItem = useSelector(selectCurrentItem);
-  const dispatch = useDispatch();
-  const {updateItem} = ItemSlice.actions;
   const reportId = useSelector(selectCurrentReportId);
+
+  const dispatch = useDispatch();
+
+  const {updateItem} = ItemSlice.actions;
+
   const getBtnAndImagePopover = (compact) => {
+    const legend = selectedItem?.meta?.legend || {};
+    const ButtonWrapper = styled.div`
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      img {
+        height: 24px;
+        width: 24px;
+      }
+
+      div {
+        margin-top: 10px !important;
+      }
+
+      div + div {
+        margin-left: 0px !important;
+      }
+    `;
     return <div>
-      <Button
-        width={200}
-        text='범례 표시'
-        type='normal'
-        stylingMode='outlined'
+      <CommonButton
+        width={'100%'}
+        type={legend.useLegend ? 'selected' : 'selectable'}
         onClick={() => {
-          const cloneSelectedItem = _.cloneDeep(selectedItem);
           const value = {
-            ...cloneSelectedItem.meta.legend,
-            useLegend: !cloneSelectedItem.meta.legend.useLegend
+            ...legend,
+            useLegend: !legend.useLegend
           };
-          const item = setMeta(cloneSelectedItem, 'legend', value);
+          const item = setMeta(selectedItem, 'legend', value);
 
           dispatch(updateItem({reportId, item}));
         }}
-      />
-      {legendPositionIcon.slice(compact ? 12 : 0, 30).map((icon, idx) => {
-        return <Button
-          key={idx}
-          icon={icon.src}
-          width={52}
-          height={50}
-          onClick={(e) => {
-            const cloneSelectedItem = _.cloneDeep(selectedItem);
-            const value = {
-              ...cloneSelectedItem.meta.legend,
-              position: icon.position,
-              horizontalAlignment: icon.horizontalAlignment,
-              verticalAlignment: icon.verticalAlignment,
-              itemTextPosition: icon.itemTextPosition
-            };
-            const item = setMeta(cloneSelectedItem, 'legend', value);
+      >
+        범례 표시
+      </CommonButton>
+      <ButtonWrapper>
+        {legendPositionIcon.slice(compact ? 12 : 0, 30).map((icon, idx) => {
+          const options = {
+            position: icon.position,
+            horizontalAlignment: icon.horizontalAlignment,
+            verticalAlignment: icon.verticalAlignment,
+            itemTextPosition: icon.itemTextPosition
+          };
 
-            dispatch(updateItem({reportId, item}));
-          }}
-        />;
-      })}
+          const selected = _.isEqual(legend, {...legend, ...options});
+          return <CommonButton
+            key={idx}
+            width={'48px'}
+            height={'48px'}
+            minWidth='48px'
+            type={selected ? 'selected' : 'selectable'}
+            onClick={(e) => {
+              const newLegend = {
+                ...selectedItem.meta.legend,
+                ...options
+              };
+              const item = setMeta(selectedItem, 'legend', newLegend);
+
+              dispatch(updateItem({reportId, item}));
+            }}
+          >
+            <img src={icon.src}/>
+          </CommonButton>;
+        })}
+      </ButtonWrapper>
     </div>;
   };
 
@@ -91,6 +122,7 @@ const ItemOptionManager = () => {
   const commonRibbonBtn = {
     'ShowColorLegend': { // 범례
       ...commonPopoverButtonElement,
+      'popoverWidth': '204px',
       'id': 'show_color_legend',
       'label': localizedString.showColorLegend,
       'imgSrc': showColorLegend,
