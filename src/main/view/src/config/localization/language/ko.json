@@ -75,6 +75,7 @@
         "bar": "막대",
         "stackedbar": "스택막대",
         "fullstackedbar": "풀스택막대",
+        "rangeBar": "레인지바",
         "scatter": "점",
         "line": "선",
         "stackedline": "스택선",
@@ -337,6 +338,7 @@
   "networkMagnify": "네트워크-확대",
   "networkChart": "네트워크 차트",
   "chordDiagram": "의존성 휠",
+  "sankey": "센키차트",
   "calendarView": "캘린더 뷰",
   "calendarView2": "캘린더2 뷰",
   "calendarView3": "캘린더3 뷰",
@@ -744,5 +746,7 @@
     "count": "Top/Bottom 개수",
     "percentage": "% 적용",
     "others": "Top/Bottom 값 이외의 항목 기타로 표시"
-  }
+  },
+  "range": "범위",
+  "rangeBarlengthAlert": "레인지바 아이템의 경우 범위1과 범위2의 측정값의 개수가 같아야 합니다."
 }

@@ -35,7 +35,9 @@ public enum ItemType {
     TREE_VIEW("treeView"),
     FUNNEL_CHART("funnelChart"),
     STAR_CHART("starChart"),
-    WATER_FALL("waterFall")
+    WATER_FALL("waterFall"),
+    RANGE_BAR("rangeBar"),
+    SANKEY("sankey")
     ;
     
     private final String symbol;

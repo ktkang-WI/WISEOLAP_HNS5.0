@@ -588,6 +588,7 @@ const useQueryExecute = () => {
   };
 
   const validateRequiredField = (item) => {
+    const reportType = item.type;
     let dataFieldOption;
     let dataField;
     const designerMode = selectCurrentDesignerMode(store.getState());
@@ -597,6 +598,11 @@ const useQueryExecute = () => {
     } else if (designerMode === DesignerMode['AD_HOC']) {
       dataFieldOption = item.adHocOption.dataFieldOption;
       dataField = item.adHocOption.dataField;
+    }
+    if (ItemType.RANGE_BAR === reportType) {
+      if (dataField.range1.length != dataField.range2.length) {
+        throw new Error(localizedString.rangeBarlengthAlert);
+      }
     }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     dataFieldOptionKeys.forEach((key) => {
