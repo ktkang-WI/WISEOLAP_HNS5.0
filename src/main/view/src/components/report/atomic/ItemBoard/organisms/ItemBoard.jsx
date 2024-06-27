@@ -27,8 +27,6 @@ import {
 } from 'redux/selector/ConfigSelector';
 import {DesignerMode, EditMode} from 'components/config/configType';
 import _ from 'lodash';
-import localizedString from 'config/localization';
-import useModal from 'hooks/useModal';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import models from 'models';
 import {itemComponents} from 'components/report/item/util/ItemMappers';
@@ -81,7 +79,6 @@ const Memo = styled.div`
 const ItemBoard = () => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
-  const {alert} = useModal();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
 
   const {selectItem} = ItemSlice.actions;
@@ -182,8 +179,6 @@ const ItemBoard = () => {
     const selectedClassName = selected ? tabSelectedClass : '';
 
     if (item?.mart?.init && nullDataCheck(item)) {
-      alert(`${item?.meta?.name}${localizedString.noneData}`);
-
       return <Item className={selectedClassName}>
         <Wrapper style={{
           display: 'flex',
