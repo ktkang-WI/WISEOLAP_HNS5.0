@@ -81,12 +81,11 @@ const FolderTreeView = ({mainKey, dependency}) => {
     const isUpdate = data.next.some((d) => (d?.grpId || d?.userNo) === nextId);
 
     if (!isUpdate) {
-      const newAuthData = {
+      data.next.push({
         ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
         fldIds: dataSource.map((fld) =>
           returnItem((fld.fldId === e.key ? newData : fld)), false)
-      };
-      data.next.push(newAuthData);
+      });
       return;
     }
 
@@ -116,7 +115,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         id="folderTreeView"
-        height={'90%'}
+        height={'100%'}
         onRowUpdating={onRowUpdating}
       >
         <Editing

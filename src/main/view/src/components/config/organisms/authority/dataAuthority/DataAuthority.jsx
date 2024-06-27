@@ -11,6 +11,10 @@ import AuthorityDataCube
 import AuthorityDataDimension
   from 'components/config/atoms/authority/AuthorityDataDimension';
 
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
+
 const DataAuthority = ({mainKey, ...props}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
@@ -33,7 +37,7 @@ const DataAuthority = ({mainKey, ...props}) => {
   };
 
   return (
-    <Wrapper display='flex' direction='row' height='80vh'>
+    <Wrapper display='flex' direction='row' height={theme.size.mlModalHeight}>
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATA &&

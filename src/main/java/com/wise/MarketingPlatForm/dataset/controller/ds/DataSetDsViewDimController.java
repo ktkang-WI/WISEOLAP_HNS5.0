@@ -22,7 +22,7 @@ public class DataSetDsViewDimController {
   private DataSetDsViewDimService dataSetDsViewDimService;
 
   @GetMapping
-  public ResponseEntity<RestAPIVO> getDs() throws Exception{
+  public ResponseEntity<RestAPIVO> getDsViewDim() throws Exception{
 
     List<DsViewDimEntity> model = dataSetDsViewDimService.getDatasetDsViewDim();
 

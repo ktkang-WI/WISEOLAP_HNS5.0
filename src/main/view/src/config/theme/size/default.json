@@ -22,5 +22,6 @@
     "middleModalWidth" : "50vw",
     "bigModalHeight" : "90%",
     "bigModalWidth" : "70%",
-    "bigConfigMaxWidth" : "1700px"
+    "bigConfigMaxWidth" : "1700px",
+    "mlModalHeight" : "80vh"
 }

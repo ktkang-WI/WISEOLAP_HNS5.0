@@ -37,11 +37,10 @@ const DatasetTreeView = ({mainKey, dependency}) => {
       if (!nextId) return;
       const fldId = getUserOrGroup(dataSetMode, data, nextId);
       if (!fldId) {
-        const newItem = {
+        data.next.push({
           ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           fldId: []
-        };
-        data.next.push(newItem);
+        });
       }
       setSelectedKeys(fldId?.fldId ?? []);
     };
@@ -83,7 +82,7 @@ const DatasetTreeView = ({mainKey, dependency}) => {
         parentIdExpr="parentFldId"
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
-        height={'90%'}
+        height={'100%'}
       >
         <Editing
           mode="cell"

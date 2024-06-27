@@ -100,11 +100,10 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       if (!nextId) return;
       const datas = getUserOrGroup(dataSetMode, data, nextId);
       if (!datas) {
-        const newItem = {
+        data.next.push({
           ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           datas: []
-        };
-        data.next.push(newItem);
+        });
       }
       const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
       setDsViewKey(prevKey, editKey, dataSource, setDataSource);
@@ -136,8 +135,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
-        width={'90%'}
-        height={'90%'}
+        height={'100%'}
         elementAttr={{
           class: 'datasource-view-list'
         }}

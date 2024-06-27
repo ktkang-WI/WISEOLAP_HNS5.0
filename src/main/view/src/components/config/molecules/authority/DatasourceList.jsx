@@ -16,6 +16,10 @@ import {
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
+
 export const getDatasourceList = (data, keys) => {
   return data?.filter((d) => keys.includes(d.dsId));
 };
@@ -46,11 +50,10 @@ const DatasourceList = ({mainKey, dependency}) => {
       if (!nextId) return;
       const dsIds = getUserOrGroup(dataSetMode, data, nextId);
       if (!dsIds) {
-        const newItem = {
+        data.next.push({
           ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
           dsIds: []
-        };
-        data.next.push(newItem);
+        });
       }
       setSelectedKeys(dsIds?.dsIds ?? []);
     };
@@ -75,8 +78,10 @@ const DatasourceList = ({mainKey, dependency}) => {
       alert(localizedString.clickMe);
       setSelectedKeys([]);
     } else {
-      if (JSON.stringify(selectedItems.selectedRowKeys) ===
-          JSON.stringify(previousSelectedKeys)) return;
+      if (
+        JSON.stringify(selectedItems.selectedRowKeys) ===
+        JSON.stringify(previousSelectedKeys)
+      ) return;
       setSelectedKeys(selectedItems.selectedRowKeys);
     };
   };
@@ -89,7 +94,7 @@ const DatasourceList = ({mainKey, dependency}) => {
         elementAttr={{
           class: 'datasource-list'
         }}
-        height={'74vh'}
+        height={theme.size.middleModalHeight}
         dataSource={dataSource}
         showBorders={true}
         keyExpr="dsId"

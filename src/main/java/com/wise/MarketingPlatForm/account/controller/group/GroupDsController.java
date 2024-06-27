@@ -60,7 +60,7 @@ public class GroupDsController {
 
     boolean result = groupDsService.putGroupDs(groupDsPutDTO);
 
-    if (!result) return RestAPIVO.conflictResponse(null);
+    if (!result) return RestAPIVO.conflictResponse(false);
 
     return RestAPIVO.okResponse(true);
   }

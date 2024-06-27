@@ -13,16 +13,15 @@ import {
   from 'components/config/organisms/authority/Authority';
 
 const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
-  // context
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
   const selected = getContext.state.selected;
   const dsViewCube = getContext.state.dsViewCube;
+  const data = getContext.state.data;
   const [dataSource, setDataSource] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);
-  const data = getContext.state.data;
   const dataSetMode =
   currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
 
@@ -42,13 +41,11 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      if (!getUserOrGroup(dataSetMode, data, nextId)) {
-        const newItem = {
-          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
-          datas: []
-        };
-        data.next.push(newItem);
-      }
+      if (getUserOrGroup(dataSetMode, data, nextId)) return;
+      data.next.push({
+        ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+        datas: []
+      });
     };
     setDataSource([]);
     setSelectedKeys([]);
@@ -60,26 +57,23 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
     const userOrGroup = getUserOrGroup(dataSetMode, data, nextId);
-    if (!userOrGroup) {
-      const findedDsView =
-        userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
-      if (!findedDsView) setSelectedKeys([]);
-      else setSelectedKeys(findedDsView.cubeId);
-    } else {
-      const data = userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
-      if (!data) {
-        // default create
-        const temp = {
-          dsViewId: dsViewId,
-          cubeId: [],
-          dsViewDim: []
-        };
-        userOrGroup.datas.push(temp);
-        setSelectedKeys([]);
-      } else {
-        setSelectedKeys(data?.cubeId ?? []);
-      }
+
+    if (!userOrGroup) return;
+
+    const findedDsView =
+      userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
+
+    if (findedDsView) {
+      setSelectedKeys(findedDsView.cubeId ?? []);
+      return;
     }
+
+    userOrGroup.datas.push({
+      dsViewId: dsViewId,
+      cubeId: [],
+      dsViewDim: []
+    });
+    setSelectedKeys([]);
   }, [dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
@@ -100,8 +94,10 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
       };
     });
 
-    if (JSON.stringify(selectedItems.selectedRowKeys) ===
-          JSON.stringify(previousSelectedKeys)) return;
+    if (
+      JSON.stringify(selectedItems.selectedRowKeys) ===
+      JSON.stringify(previousSelectedKeys)
+    ) return;
     setSelectedKeys(selectedItems.selectedRowKeys);
   };
 

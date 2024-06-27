@@ -30,7 +30,7 @@ public class GroupDataController {
   @Autowired
   GroupDataService groupDataService;
 
-  private Type grpDataPutType = new TypeToken<ArrayList<GroupDataModel>>() {}.getType();
+  private Type groupDataModelType = new TypeToken<ArrayList<GroupDataModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -54,9 +54,9 @@ public class GroupDataController {
     if (!body.containsKey(key)) {
       return RestAPIVO.badRequest(false);
     }
-    List<GroupDataModel> groupDataPutDTO = gson.fromJson(grpDataPutData, grpDataPutType);
+    List<GroupDataModel> groupDataModel = gson.fromJson(grpDataPutData, groupDataModelType);
 
-    boolean result = groupDataService.putGroupData(groupDataPutDTO);
+    boolean result = groupDataService.putGroupData(groupDataModel);
 
     return RestAPIVO.okResponse(result);
   }

@@ -23,7 +23,7 @@ public class DataSetDsCubeController {
   private CubeService cubeService;
 
   @GetMapping
-  public ResponseEntity<RestAPIVO> getDs() throws Exception{
+  public ResponseEntity<RestAPIVO> getCubeData() throws Exception{
 
     List<CubeMstrEntity> model = cubeService.getCubes();
 

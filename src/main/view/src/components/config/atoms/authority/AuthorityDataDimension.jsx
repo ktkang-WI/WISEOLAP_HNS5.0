@@ -41,13 +41,11 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
     const updateData = () => {
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      if (!getUserOrGroup(dataSetMode, data, nextId)) {
-        const newItem = {
-          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
-          datas: []
-        };
-        data.next.push(newItem);
-      }
+      if (getUserOrGroup(dataSetMode, data, nextId)) return;
+      data.next.push({
+        ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+        datas: []
+      });
     };
     setDataSource([]);
     setSelectedKeys([]);
@@ -59,26 +57,23 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
     const {nextId} = getKeys(dataSetMode, selected);
     if (!nextId) return;
     const userOrGroup = getUserOrGroup(dataSetMode, data, nextId);
-    if (!userOrGroup) {
-      const findedDsView =
+
+    if (!userOrGroup) return;
+
+    const findedDsView =
         userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
-      if (!findedDsView) setSelectedKeys([]);
-      else setSelectedKeys(findedDsView.dsViewDim);
-    } else {
-      const data = userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
-      if (!data) {
-        // default create
-        const temp = {
-          dsViewId: dsViewId,
-          cubeId: [],
-          dsViewDim: []
-        };
-        userOrGroup.datas.push(temp);
-        setSelectedKeys([]);
-      } else {
-        setSelectedKeys(data?.dsViewDim ?? []);
-      }
+
+    if (findedDsView) {
+      setSelectedKeys(findedDsView.dsViewDim ?? []);
+      return;
     }
+
+    userOrGroup.datas.push({
+      dsViewId: dsViewId,
+      cubeId: [],
+      dsViewDim: []
+    });
+    setSelectedKeys([]);
   }, [dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
@@ -99,8 +94,10 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
       };
     });
 
-    if (JSON.stringify(selectedItems.selectedRowKeys) ===
-          JSON.stringify(previousSelectedKeys)) return;
+    if (
+      JSON.stringify(selectedItems.selectedRowKeys) ===
+      JSON.stringify(previousSelectedKeys)
+    ) return;
     setSelectedKeys(selectedItems.selectedRowKeys);
   };
 

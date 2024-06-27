@@ -95,8 +95,14 @@ const getStringFy = (prevItem, nextItem, currentTab) => {
     currentTab == path.GROUP_DATA ||
     currentTab == path.USER_DATA
   ) {
-    return JSON.stringify(prevItem?.datas) !==
-           JSON.stringify(nextItem?.datas);
+    const prevItemDatas =
+      prevItem?.datas?.filter((d) =>
+        d.cubeId.length != 0 || d.dsViewDim.length != 0);
+    const nextItemDatas =
+      nextItem?.datas?.filter((d) =>
+        d.cubeId.length != 0 || d.dsViewDim.length != 0);
+    return JSON.stringify(prevItemDatas) !==
+           JSON.stringify(nextItemDatas);
   } else if (
     currentTab === path.USER_REPORT ||
     currentTab == path.GROUP_REPORT
@@ -338,7 +344,7 @@ const Authority = () => {
   return (
     <AuthorityContext.Provider
       value={context}>
-      <Wrapper display='flex' direction='row'>
+      <Wrapper display='flex' direction='column'>
         <Header>
           <NavBar>
             {navBarItems({
@@ -347,19 +353,17 @@ const Authority = () => {
             })}
           </NavBar>
         </Header>
-        <Wrapper>
-          <CommonTab
-            className='dx-theme-background-color'
-            width='100%'
-            height='100%'
-            dataSource={dataSource}
-            animationEnabled={false}
-            swipeEnabled={false}
-            itemComponent={TabPanelItem}
-            onTitleClick={bindData}
-          >
-          </CommonTab>
-        </Wrapper>
+        <CommonTab
+          className='dx-theme-background-color'
+          width='100%'
+          height='100%'
+          dataSource={dataSource}
+          animationEnabled={false}
+          swipeEnabled={false}
+          itemComponent={TabPanelItem}
+          onTitleClick={bindData}
+        >
+        </CommonTab>
       </Wrapper>
     </AuthorityContext.Provider>
   );

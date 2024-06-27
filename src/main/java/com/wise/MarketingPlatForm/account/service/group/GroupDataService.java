@@ -60,7 +60,7 @@ public class GroupDataService {
   private List<GroupAuthDataMstrEntity> generateGroupAuthDataObject(List<GroupDataModel> groupDatasetPutDTO) throws Exception{
     List<GroupAuthDataMstrEntity> result = new ArrayList<>();
     String rootXML = "NewDataSet";
-    // String memXML = "Auth_Mem";
+    // String memXML = "Auth_Mem"; TODO: Member 추후개발 예정
     String cubeXML = "Auth_Cubes";
     String dimXML = "Auth_Dim";
 

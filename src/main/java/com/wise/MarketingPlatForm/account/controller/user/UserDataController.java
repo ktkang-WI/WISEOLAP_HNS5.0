@@ -30,7 +30,7 @@ public class UserDataController{
   @Autowired
   UserDataService userDataService;
 
-  private Type userDataPutType = new TypeToken<ArrayList<UserDataModel>>() {}.getType();
+  private Type userDataModelType = new TypeToken<ArrayList<UserDataModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -54,9 +54,9 @@ public class UserDataController{
     if (!body.containsKey(key)) {
       return RestAPIVO.badRequest(false);
     }
-    List<UserDataModel> userDataPutDTO = gson.fromJson(userDataPutData, userDataPutType);
+    List<UserDataModel> userDataModel = gson.fromJson(userDataPutData, userDataModelType);
 
-    boolean result = userDataService.putUserData(userDataPutDTO);
+    boolean result = userDataService.putUserData(userDataModel);
 
     return RestAPIVO.okResponse(result);
   }

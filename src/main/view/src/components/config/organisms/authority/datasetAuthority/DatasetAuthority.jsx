@@ -6,6 +6,9 @@ import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
 import DatasetTreeView
   from 'components/config/molecules/authority/DatasetTreeView';
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const DatasetAuthority = ({mainKey, ...props}) => {
   const getContext = useContext(AuthorityContext);
@@ -27,7 +30,7 @@ const DatasetAuthority = ({mainKey, ...props}) => {
   };
 
   return (
-    <Wrapper display='flex' direction='row' height='80vh'>
+    <Wrapper display='flex' direction='row' height={theme.size.mlModalHeight}>
       <Wrapper padding='10px'>
         {
           currentTab === path.GROUP_DATASET &&
