@@ -1,4 +1,3 @@
-import Ribbon from 'components/common/atomic/Ribbon/organism/Ribbon';
 import SpreadContent from './SpreadContent';
 
 
@@ -6,7 +5,6 @@ import SpreadContent from './SpreadContent';
 const Spreadsheet = () => {
   return (
     <>
-      <Ribbon/>
       <SpreadContent />
     </>
   );
