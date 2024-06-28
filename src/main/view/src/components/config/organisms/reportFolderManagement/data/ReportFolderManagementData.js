@@ -1,7 +1,7 @@
 import localizedString from 'config/localization';
 import ReportManagement from '../reportManagement/ReportManagement';
 import FolderManagement from '../folderManagement/FolderManagement';
-import {getFolderReports, getFolders}
+import {getFolderReports, getFolders, getMypageFolderReport}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 
 export const Mode = {
@@ -28,7 +28,15 @@ export const managementData = [
     mode: Mode.FOLDER_MANAGEMENT,
     title: localizedString.folderManagement,
     component: FolderManagement,
-    data: getFolders,
+    data: async (myPageFlag) => {
+      if (myPageFlag) {
+        const folders = await getMypageFolderReport();
+        if (folders.status == 200) {
+          return folders;
+        }
+      }
+      return getFolders();
+    },
     save: (instance) => {
       return instance.createFolder();
     },

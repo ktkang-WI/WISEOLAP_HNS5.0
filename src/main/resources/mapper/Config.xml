@@ -175,8 +175,21 @@
       UPDATE USER_FLD_MSTR
           SET 
             <if test='name != ""'>
-              FLD_NM = #{name, jdbcType=VARCHAR}
+              FLD_NM = #{name, jdbcType=VARCHAR},
             </if>
+            <if test='fldParentId != 0'>
+              FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
+            </if>
+            <if test='ordinal != 0'>
+              FLD_ORDINAL = #{ordinal, jdbcType=INTEGER},
+            </if>
+            <if test='desc != ""'>
+              FLD_DESC = #{desc, jdbcType=VARCHAR},
+            </if>
+            <if test='fldLvl != 0'>
+              FLD_LVL = #{fldLvl, jdbcType=INTEGER},
+            </if>
+            FLD_ID = FLD_ID
           WHERE FLD_ID = #{id}
     </update>
 
