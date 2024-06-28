@@ -29,6 +29,7 @@ import {
 import DatasetType from 'components/dataset/utils/DatasetType';
 import elementFactory
   from 'components/common/atomic/Popover/molecules/ElementFactory';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
