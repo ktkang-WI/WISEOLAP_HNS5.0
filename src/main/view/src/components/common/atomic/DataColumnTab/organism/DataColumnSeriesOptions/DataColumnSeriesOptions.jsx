@@ -33,6 +33,11 @@ const TabPanelItem = ({children}) => {
 
 const DataColumnSeriesOptions = (
     {fieldId, onClose, parameterInfo, onSubmit}) => {
+  // selectors
+  const currentReportId = useSelector(selectCurrentReportId);
+  const seriesOptions = useSelector(selectSeriesOption);
+  const itemType = selectCurrentItemType(store.getState());
+
   // useState
   const [tabPanelItem, setTabPanelItem] =
    useState(
@@ -47,10 +52,6 @@ const DataColumnSeriesOptions = (
   const [type, setType] = useState('');
   const [general, setGeneral] = useState({});
   const [pointLabel, setPointLabel] = useState({});
-
-  const currentReportId = useSelector(selectCurrentReportId);
-  const seriesOptions = useSelector(selectSeriesOption);
-  const itemType = selectCurrentItemType(store.getState());
 
   useEffect(() => {
     effectSeriesOption();
