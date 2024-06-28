@@ -28,7 +28,7 @@ const SpreadContent = () => {
         <CustomDrawer index={0} component={DataSourceTab}>
           <Wrapper>
             <ReportContentWrapper>
-              <FilterBar/>
+              <FilterBar useSearchButton={true}/>
               <SpreadBoard/>
             </ReportContentWrapper>
           </Wrapper>
