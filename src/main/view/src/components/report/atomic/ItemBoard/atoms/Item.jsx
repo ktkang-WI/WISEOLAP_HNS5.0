@@ -16,6 +16,19 @@ const ItemWrapper = styled(Wrapper)`
   width: 100%;
   overflow: hidden;
   overflow-y: ${(props) => (props.overflowY ? props.overflowY : 'hidden')};
+
+  &.tab-selected::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    border: 2px solid var(--primary2);
+    pointer-events: none;
+    border-radius: 0px 0px 10px 10px;
+    border-top: 1px solid ${theme.color.gray100};
+  }
 `;
 
 const ItemContent = styled.div`
@@ -42,8 +55,9 @@ const Item = ({children, item, ...props}) => {
   return (
     <ItemWrapper
       ref={targetRef}
-      className={className}
-      overflowY={overflowY}>
+      className={className + (props.className || '')}
+      overflowY={overflowY}
+    >
       <ItemContent>{children}</ItemContent>
       {
         target && <ContextMenu

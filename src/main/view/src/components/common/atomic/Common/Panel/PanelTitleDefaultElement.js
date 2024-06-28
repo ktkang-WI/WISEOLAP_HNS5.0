@@ -24,9 +24,14 @@ import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
 import useQueryExecute from 'hooks/useQueryExecute';
 import {useSelector} from 'react-redux';
-import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import FieldDescriptionModal
   from 'components/dataset/modal/FieldDescriptionModal';
+import viewerPosting from 'assets/image/icon/button/preview.png';
+import ViewerPostingDataModal
+  from 'components/dataset/modal/ViewPostingData/ViewerPostingDataModal';
+import {getAppliedDataItem, getOnlyUniNm}
+  from 'components/dataset/modal/ViewPostingData/viewPostingUtility';
 
 const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
@@ -58,7 +63,39 @@ const PanelTitleDefaultElement = () => {
         {selectedDataSource: dataSource, orgDataset: dataset});
   };
 
+  const viewerPostingFunc = () => {
+    const dataset = selectCurrentDataset(store?.getState());
+    const rootItem = selectRootItem(store?.getState());
+
+    if (dataset) {
+      const fields = dataset.fields.filter((data) =>
+        data.type == 'MEA' || data.type == 'DIM'
+      );
+
+      const selectRowKeys = dataset.selectedFields || [];
+
+      const appliedDataItem = getAppliedDataItem(rootItem);
+      const onlyUniNm = getOnlyUniNm(appliedDataItem, dataset.datasetId);
+
+      openModal(ViewerPostingDataModal, {
+        fields: fields,
+        datasetId: dataset.datasetId,
+        selectRowKeys: selectRowKeys,
+        appliedDataItem: onlyUniNm || []
+      });
+    } else {
+      alert(localizedString.selectDataset);
+      return;
+    }
+  };
+
   return {
+    ViewerPostingData: {
+      id: 'viewer_posting_data',
+      onClick: viewerPostingFunc,
+      src: viewerPosting,
+      label: localizedString.viewerPosting
+    },
     CustomField: {
       id: 'custom_field',
       onClick: handleCustomData,

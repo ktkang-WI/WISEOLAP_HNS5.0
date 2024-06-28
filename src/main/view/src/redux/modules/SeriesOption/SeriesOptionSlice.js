@@ -31,10 +31,18 @@ const isThisAdhoc = (state, reportId) => {
 
 const getFieldIdFromMeasure = (state, reportId) => {
   const measures = getDataFieldType(state, reportId).measure;
+  const range1 = getDataFieldType(state, reportId).range1;
   const fieldIds = [];
-  measures.forEach((item) => {
-    fieldIds.push(item.fieldId);
-  });
+  if (measures != undefined) {
+    measures.forEach((item) => {
+      fieldIds.push(item.fieldId);
+    });
+  }
+  if (range1 != undefined) {
+    range1.forEach((item) => {
+      fieldIds.push(item.fieldId);
+    });
+  }
   return fieldIds;
 };
 

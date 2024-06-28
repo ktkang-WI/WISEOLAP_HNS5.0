@@ -20,9 +20,7 @@ const ListFilter = ({
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
-    if (keys.length === value.listItems.length) {
-      return allText;
-    }
+
     const keySet = new Set(keys);
     const captionArr = [];
     for (const item of value.listItems) {
@@ -34,6 +32,11 @@ const ListFilter = ({
         break;
       }
     }
+
+    if (captionArr.length === value.listItems.length) {
+      return allText;
+    }
+
     if (captionArr.length > 0) {
       return captionArr.join(', ');
     }
@@ -118,7 +121,7 @@ const ListFilter = ({
 
   return (
     <>
-      <div id={id + '_wrapper'}>
+      <div id={id+'_'+ index + '_wrapper'}>
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
@@ -128,23 +131,24 @@ const ListFilter = ({
           onValueChanged={(e) => {
             const dataSource = value?.listItems || [];
             const captions = e.value.split(',');
-            const tempSelectionKeys = [];
+            const tempSelectionKeys = new Set();
 
             for (let caption of captions) {
               caption = caption.trim();
               const item = dataSource.find((item) => item.caption == caption);
               if (item) {
-                tempSelectionKeys.push(item.name);
+                tempSelectionKeys.add(item.name);
               }
             }
 
-            confirm(tempSelectionKeys, dataSource);
+            const uniqueSelectionKeys = Array.from(tempSelectionKeys);
+            confirm(uniqueSelectionKeys, dataSource);
           }}
           {...props}
         />
       </div>
       <Popover
-        target={'#' + id + '_wrapper'}
+        target={'#' + id +'_'+ index + '_wrapper'}
         showEvent={'click'}
         minWidth="200px"
         height="300px"

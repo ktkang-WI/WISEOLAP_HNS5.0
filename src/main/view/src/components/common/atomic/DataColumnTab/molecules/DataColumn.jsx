@@ -165,7 +165,10 @@ const DataColumn = ({
   const buttonEventFunction = (e) => {
     if (data.category === 'field') {
       buttonEvent(data, openModal);
-    } else if (data.category === 'measure') {
+    } else if (
+      data.category === 'measure' ||
+      data.category === 'range1'
+    ) {
       const fieldId = data.fieldId;
       openModal(DataColumnSeriesOptions, {
         fieldId

@@ -20,7 +20,7 @@ import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
 import scatterPlotImg from 'assets/image/icon/item/scatter.png';
 import radialTreeImg from 'assets/image/icon/item/radial_tidy_tree.png';
 import bubblePackImg from 'assets/image/icon/item/bubble_pack.png';
-
+import sankey from 'assets/image/icon/item/sankey.png';
 import comboBoxImg from 'assets/image/icon/item/combo_box.png';
 import listBoxImg from 'assets/image/icon/item/list_box.png';
 // import treeViewImg from 'assets/image/icon/item/tree_view.png';
@@ -56,7 +56,8 @@ const CustomChartDefaulElement = () => {
     HEAT_MAP,
     SCATTER_PLOT,
     WORDCLOUD,
-    TEXT_BOX
+    TEXT_BOX,
+    SANKEY
   } = ItemType;
   const onClick = (type) => {
     onClickExecutor(type);
@@ -108,6 +109,12 @@ const CustomChartDefaulElement = () => {
     {
       title: localizedString.connectionVisualization,
       checkboxs: [
+        {
+          title: localizedString.sankey,
+          type: SANKEY,
+          checked: false,
+          src: sankey
+        },
         {
           title: localizedString.chordDiagram,
           type: CHORD_DIAGRAM,

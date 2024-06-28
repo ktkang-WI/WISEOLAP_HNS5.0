@@ -24,7 +24,6 @@ import ScatterPlot from 'components/report/item/scatterPlot/ScatterPlot';
 import SunBurstChart from 'components/report/item/sunburstChart/SunBurstChart';
 import BoxPlot from 'components/report/item/boxPlot/BoxPlot';
 import TextBox from 'components/report/item/textBox/TextBox';
-import ZoomableCicle from 'components/report/item/zoomableCicle/ZoomableCicle';
 import CiclePacking from 'components/report/item/ciclePacking/CiclePacking';
 import ComboBox from 'components/report/item/comboBox/ComboBox';
 import ListBox from 'components/report/item/listBox/ListBox';
@@ -35,10 +34,14 @@ import WaterFall from 'components/report/item/waterFall/WaterFall';
 import SchedulerComponent
   from 'components/report/item/schedulerComponent/SchedulerComponent';
 import ItemType from 'components/report/item/util/ItemType';
+import ZoomableIcicle from '../zoomableIcicle/ZoomableIcicle';
+import RangeBar from '../rangeBar/RangeBar';
+import Sankey from '../sankey/Sankey';
 
 // TODO: 추후 아이템 타입 자동 감지하여 추가하게 수정
 export const itemComponents = {
   [ItemType.CHART]: Chart,
+  [ItemType.RANGE_BAR]: RangeBar,
   [ItemType.PIVOT_GRID]: PivotGrid,
   [ItemType.DATA_GRID]: DataGrid,
   [ItemType.PIE_CHART]: Pie,
@@ -59,7 +62,7 @@ export const itemComponents = {
   [ItemType.COLLAPSIBLE_TREE]: CollapsibleTree,
   [ItemType.RADIAL_TREE]: RadialTree,
   [ItemType.SUNBURST_CHART]: SunBurstChart,
-  [ItemType.ZOOMABLE_CICLE]: ZoomableCicle,
+  [ItemType.ZOOMABLE_ICICLE]: ZoomableIcicle,
   [ItemType.CICLE_PACKING]: CiclePacking,
   [ItemType.SCATTER_PLOT]: ScatterPlot,
   [ItemType.COMBO_BOX]: ComboBox,
@@ -68,12 +71,14 @@ export const itemComponents = {
   [ItemType.FUNNEL_CHART]: FunnelChart,
   [ItemType.STAR_CHART]: StarChart,
   [ItemType.WATER_FALL]: WaterFall,
-  [ItemType.SCHEDULER_COMPONENT]: SchedulerComponent
+  [ItemType.SCHEDULER_COMPONENT]: SchedulerComponent,
+  [ItemType.SANKEY]: Sankey
 };
 
 // TODO: 추후 localization 적용 필요. 단순 리팩토링이라 옮기기만 함.
 export const defaultItemNames = {
   [ItemType.CHART]: '차트',
+  [ItemType.RANGE_BAR]: '레인지 바',
   [ItemType.PIVOT_GRID]: '피벗',
   [ItemType.DATA_GRID]: '그리드',
   [ItemType.PIE_CHART]: '파이',
@@ -94,7 +99,7 @@ export const defaultItemNames = {
   [ItemType.COLLAPSIBLE_TREE]: '신경망 트리',
   [ItemType.RADIAL_TREE]: '방사형신경망',
   [ItemType.SUNBURST_CHART]: '선버스트',
-  [ItemType.ZOOMABLE_CICLE]: '계층형 네모차트',
+  [ItemType.ZOOMABLE_ICICLE]: '계층형 네모차트',
   [ItemType.CICLE_PACKING]: '버블팩',
   [ItemType.SCATTER_PLOT]: '산점도',
   [ItemType.COMBO_BOX]: '콤보상자',
@@ -103,5 +108,6 @@ export const defaultItemNames = {
   [ItemType.FUNNEL_CHART]: '깔때기',
   [ItemType.STAR_CHART]: '스타차트',
   [ItemType.WATER_FALL]: '폭포수',
-  [ItemType.SCHEDULER_COMPONENT]: '스케줄러'
+  [ItemType.SCHEDULER_COMPONENT]: '스케줄러',
+  [ItemType.SANKEY]: '센키 차트'
 };

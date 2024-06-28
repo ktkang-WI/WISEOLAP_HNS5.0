@@ -13,6 +13,9 @@ import {selectSeriesOption}
 import localizedString from 'config/localization';
 import styled from 'styled-components';
 import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
+import {selectCurrentItemType} from 'redux/selector/ItemSelector';
+import store from 'redux/modules';
+import ItemType from 'components/report/item/util/ItemType';
 
 export const DataColumnSeriesOptionsContext = createContext();
 
@@ -31,7 +34,13 @@ const TabPanelItem = ({children}) => {
 const DataColumnSeriesOptions = (
     {fieldId, onClose, parameterInfo, onSubmit}) => {
   // useState
-  const [tabPanelItem, setTabPanelItem] = useState(dataSource[0].component);
+  const [tabPanelItem, setTabPanelItem] =
+   useState(
+    itemType === ItemType.RANGE_BAR ?
+      dataSource[2].component :
+      dataSource[0].component
+   );
+
   const dispatch = useDispatch();
 
   // TODO: Get Data from Redux
@@ -41,6 +50,7 @@ const DataColumnSeriesOptions = (
 
   const currentReportId = useSelector(selectCurrentReportId);
   const seriesOptions = useSelector(selectSeriesOption);
+  const itemType = selectCurrentItemType(store.getState());
 
   useEffect(() => {
     effectSeriesOption();
@@ -102,7 +112,8 @@ const DataColumnSeriesOptions = (
           className='dx-theme-background-color'
           width='100%'
           height='100%'
-          dataSource={dataSource}
+          dataSource={
+            itemType === ItemType.RANGE_BAR ? [dataSource[2]] : dataSource}
           animationEnabled={false}
           swipeEnabled={false}
           onTitleClick={(e) => {

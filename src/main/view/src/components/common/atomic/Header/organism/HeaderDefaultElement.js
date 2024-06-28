@@ -128,7 +128,7 @@ const HeaderDefaultElement = () => {
         // TODO: 추후 환경설정으로 새창 여부 분기처리 해야함
         // nav('viewer');
         window.open('viewer');
-        dispatch(setEditMode(EditMode.VIEWER));
+        // dispatch(setEditMode(EditMode.VIEWER));
       }
     },
     'ReportSearch': {

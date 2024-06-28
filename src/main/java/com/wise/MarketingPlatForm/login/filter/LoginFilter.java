@@ -20,6 +20,7 @@ import org.springframework.util.AntPathMatcher;
 
 import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 @Component
 @WebFilter("/*")
@@ -39,8 +40,7 @@ public class LoginFilter implements Filter{
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req; 
         HttpServletResponse response = (HttpServletResponse) res; 
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
 
         log.debug("Request URI == > " + request.getRequestURI());
         log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));

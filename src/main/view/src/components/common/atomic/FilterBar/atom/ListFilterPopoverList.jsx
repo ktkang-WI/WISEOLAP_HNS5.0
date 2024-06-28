@@ -45,7 +45,7 @@ const ListFilterPopoverList = ({
   const sortDataSource = (keys) => {
     const sortedDataSource = orgDataSource.reduce(
         (acc, item) => {
-          if (keys.includes(item.name)) {
+          if (keys?.includes(item.name)) {
             acc.selected.push(item);
           } else {
             acc.others.push(item);
@@ -75,7 +75,7 @@ const ListFilterPopoverList = ({
         selectionMode={selectionMode}
         showSelectionControls={true}
         selectAllText={allText}
-        selectAllMode={'page'}
+        selectAllMode={searchValue!=''? 'page': 'allPage'}
         selectedByClick={true}
         height='200px'
         displayExpr='caption'

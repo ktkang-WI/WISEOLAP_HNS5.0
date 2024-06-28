@@ -1,9 +1,8 @@
 import localizedString from 'config/localization';
-import pieStyle from '../../../../assets/image/icon/button/pieStyle.png';
-import tooltip from '../../../../assets/image/icon/button/tooltips.png';
-import dataLabelEdit from '../../../../assets/image/icon/button/dataLabels.png';
-import labelPosition
-  from '../../../../assets/image/icon/button/dataLabelsPosition.png';
+import pieStyle from 'assets/image/icon/button/style.png';
+import tooltip from 'assets/image/icon/button/tooltip.png';
+import dataLabelEdit from 'assets/image/icon/button/label.png';
+import labelPosition from 'assets/image/icon/button/label_location.png';
 import itemOptionManager from '../ItemOptionManager';
 import {RadioGroup} from 'devextreme-react';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
