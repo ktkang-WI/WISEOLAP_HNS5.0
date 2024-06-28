@@ -164,6 +164,15 @@ const SNBDefaultElement = () => {
       onClick: (e) => {
         nav('log');
       }
+    },
+    'SearchQuery': {
+      id: 'searchQuery',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '쿼리 검색',
+      onClick: (e) => {
+        nav('search-query');
+      }
     }
   };
 };

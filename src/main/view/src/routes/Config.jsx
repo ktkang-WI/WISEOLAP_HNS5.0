@@ -52,7 +52,9 @@ const Config = () => {
               'Authority',
               'ReportFolderManagement',
               'DataSourceAddition',
-              'Log']}
+              'Log',
+              'SearchQuery'
+            ]}
           />
         </Wrapper>
         <Wrapper

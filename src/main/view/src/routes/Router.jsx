@@ -36,6 +36,7 @@ import MyViewerConfig
   from 'components/useInfo/organism/myViewer/MyViewerConfig';
 import MyFontConfig from 'components/useInfo/organism/myFont/MyFontConfig';
 import Log from 'components/config/organisms/log/Log';
+import SearchQuery from 'components/config/organisms/searchQuery/SearchQuery';
 
 export const contextPath = '/editds';
 const multipleLoader = async () => {
@@ -134,6 +135,10 @@ const router = createBrowserRouter([
       {
         path: 'log',
         element: <Log/>
+      },
+      {
+        path: 'search-query',
+        element: <SearchQuery/>
       }
     ]
   },
