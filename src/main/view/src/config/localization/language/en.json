@@ -565,5 +565,7 @@
   "lengthValidation": "It does not meet the length limit (6 to 15 characters).",
   "pwInconsistency": "Passwords do not match.",
   "required": "Required input.",
-  "confirmResetMsg": "Do you want to reset?"
+  "confirmResetMsg": "Do you want to reset?",
+  "folderManager": "Folder Management",
+  "noSelectionFolderAlert": "Please select a folder and proceed."
 }

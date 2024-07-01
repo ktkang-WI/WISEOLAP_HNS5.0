@@ -120,12 +120,21 @@ public class MyPageFolderController {
   @PatchMapping("/edit-name")
   public boolean updateMyFolder(
     @RequestParam(required = true) int id,
-    @RequestParam(required = false, defaultValue = "") String name
+    @RequestParam(required = false, defaultValue = "") int fldParentId,
+    @RequestParam(required = false, defaultValue = "") int ordinal,
+    @RequestParam(required = false, defaultValue = "") int fldLvl,
+    @RequestParam(required = false, defaultValue = "") String name,
+    @RequestParam(required = false, defaultValue = "") String desc
   ) {
     MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()
         .id(id)    
+        .fldParentId(fldParentId)
+        .ordinal(ordinal)
+        .fldLvl(fldLvl)
         .name(name)
+        .desc(desc)
         .build();
+    
     return myPageFolderReportService.updateMyFolder(fldReprotDTO);
   }
 }

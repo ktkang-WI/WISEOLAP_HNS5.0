@@ -52,8 +52,12 @@ const multipleLoader = async () => {
     const json = JSON.parse(object.defaultItem);
 
     object.defaultItem = json.item;
-    object.defaultLayout = {check: json.check, layout: json.layout};
-
+    object.defaultLayout = {
+      check: json.check, layout: json.layout
+    };
+    object.defaultDisplay = {
+      displayCheck: json.displayCheck, initDisplay: json.initDisplay
+    };
     return object;
   });
 

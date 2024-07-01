@@ -784,5 +784,7 @@
   "lengthValidation": "길이 제한에 맞지 않습니다.(6~15자 까지)",
   "pwInconsistency": "비밀번호가 일치 하지 않습니다.",
   "required": "필수 입력 입니다.",
-  "confirmResetMsg": "초기화 하시겠습니까?"
+  "confirmResetMsg": "초기화 하시겠습니까?",
+  "folderManager": "폴더 관리",
+  "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요."
 }

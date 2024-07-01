@@ -31,13 +31,29 @@ const SignIn = () => {
 
   const getInitPageAndSetingFunc = (config, personalConfig) => {
     const configJson = configStringToJson(config.generalConfigure);
-    const initPage =
+    const defaultItem = personalConfig.defaultItem;
+
+    let myPageInit =
       configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
 
-    // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.
-    afterLoginInitSettingLayout(initPage, personalConfig);
+    if (defaultItem) {
+      try {
+        const jsonDefaultItem = JSON.parse(defaultItem);
 
-    return initPage;
+        if (jsonDefaultItem.displayCheck) {
+          if (jsonDefaultItem.initDisplay) {
+            myPageInit = jsonDefaultItem.initDisplay;
+          }
+        }
+      } catch (error) {
+        myPageInit = 'DashAny';
+      }
+    }
+
+    // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.
+    afterLoginInitSettingLayout(myPageInit, personalConfig);
+
+    return myPageInit;
   };
 
   return (
@@ -56,6 +72,7 @@ const SignIn = () => {
               if (res.status == 200) {
                 const personalConfig = res.data;
                 const config = await generalLoader();
+
                 const getInitPage =
                   getInitPageAndSetingFunc(config, personalConfig);
 
