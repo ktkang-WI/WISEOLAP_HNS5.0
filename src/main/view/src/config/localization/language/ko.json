@@ -273,6 +273,7 @@
   "MSOffice": "MSOffice",
   "hancom": "Hancom",
   "excelXlsx": "EXCEL(.xlsx)",
+  "excelMergeXlsx": "EXCEL-MG(.xlsx)",
   "excelXls": "EXCEL(.xls)",
   "word": "WORD(.doc)",
   "powerpoint": "POWERPOINT(.ppt)",

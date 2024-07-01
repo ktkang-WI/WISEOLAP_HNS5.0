@@ -258,7 +258,13 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         const newCurrentItem = filterdLayoutItem();
 
-        handleDownload(newCurrentItem, currentParameter, dataSource);
+        const option = {};
+        handleDownload(
+            currentReport,
+            newCurrentItem,
+            currentParameter,
+            dataSource,
+            option);
       }
     }
   };
