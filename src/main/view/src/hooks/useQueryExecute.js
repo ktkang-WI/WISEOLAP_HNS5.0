@@ -2,6 +2,7 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
+  selectCurrentAdHocOption,
   selectCurrentItems,
   selectRootItem
 } from 'redux/selector/ItemSelector';
@@ -50,14 +51,17 @@ const useQueryExecute = () => {
       ItemType.SCHEDULER_COMPONENT
     ].includes(item.type)) return;
     const report = selectCurrentReport(store.getState()) || {};
+    const adhocOption = selectCurrentAdHocOption(store.getState());
 
+    const dataField = adhocOption?.dataField ||
+      item?.meta?.dataField;
     param.reportId = report.reportId;
     param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
 
     const orgDataset = datasets.find(
-        (dataset) => item.meta.dataField.datasetId == dataset.datasetId
+        (dataset) => dataField.datasetId == dataset.datasetId
     );
 
     switch (orgDataset.datasetType) {
@@ -105,7 +109,7 @@ const useQueryExecute = () => {
     param.dataset = JSON.stringify(param.dataset);
     param.temporaryMeasures =
       JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
-    param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
+    param.sortByItem = JSON.stringify(dataField.sortByItem);
     ItemManager.generateParameter(item, param);
 
     return param;

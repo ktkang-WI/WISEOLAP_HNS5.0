@@ -24,6 +24,7 @@ const Item = styled.div`
   cursor: pointer;
   font: ${theme.font.common};
   border-radius: 6px;
+  box-sizing: border-box;
 
 
   &:hover {
