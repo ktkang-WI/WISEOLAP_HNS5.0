@@ -400,20 +400,29 @@ public class ReportService {
         for (ReportListDTO report : reportList) {
             try {
                 String dataset = report.getDataset();
+                Map<String, Object> datasource = new HashMap<>();
+
+                datasource.put("id", report.getId());
+                datasource.put("upperId", report.getUpperId());
+                datasource.put("name", report.getName());
+                datasource.put("reportType", report.getReportType());
+                if (report.getReportType() == null) {
+                    datasource.put("reportType", report.getType());
+                }
+
                 if (dataset != null) {
                     Map<String, Object> datasetMap = objectMapper.readValue(dataset, Map.class);
                     List<Map<String, String>> datasetInfo = extractDatasetInfo(datasetMap);
-                    
-                    Map<String, Object> datasource = new HashMap<>();
+                    String query = "";
+                    for (Map<String, String> map : datasetInfo) {
+                        query += map.get("datasetQuery");
+                    }
 
-                    datasource.put("id", report.getId());
-                    datasource.put("upperId", report.getUpperId());
-                    datasource.put("name", report.getName());
-                    datasource.put("type", report.getType());
                     datasource.put("datasetInfo", datasetInfo);
-
-                    datasourceList.add(datasource);
+                    datasource.put("query", query);
                 }
+
+                datasourceList.add(datasource);
             } catch (ClassCastException e) {
                 logger.error("datsets,List<Map<String, Object>> 로 cast 실패", e);
             } catch (Exception e) {

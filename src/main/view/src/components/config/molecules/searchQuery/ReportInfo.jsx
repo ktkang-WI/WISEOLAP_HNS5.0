@@ -1,8 +1,9 @@
 // eslint-disable-next-line max-len
 import Panel from 'components/config/organisms/userGroupManagement/common/Panel';
 import {Form} from 'devextreme-react';
-import {SimpleItem, Label} from 'devextreme-react/form';
-
+// eslint-disable-next-line max-len
+import {SimpleItem, Label, TabbedItem, Tab, TabPanelOptions} from 'devextreme-react/form';
+import localizedString from 'config/localization';
 import React from 'react';
 
 const ReportInfo = ({itemData}) => {
@@ -30,7 +31,7 @@ const ReportInfo = ({itemData}) => {
           <Label>{localizedString.reportName}</Label>
         </SimpleItem>
         <SimpleItem
-          dataField="type"
+          dataField="reportType"
           editorType="dxTextBox"
           editorOptions= {{
             disabled: true
@@ -38,6 +39,38 @@ const ReportInfo = ({itemData}) => {
         >
           <Label>{localizedString.reportType}</Label>
         </SimpleItem>
+        {itemData.datasetInfo && itemData.datasetInfo.length > 0 &&
+          <TabbedItem>
+            {itemData.datasetInfo.map((item, index) => {
+              return (
+                <Tab
+                  key={index}
+                  title={'데이터 집합' + (index+1)}
+                >
+                  <TabPanelOptions deferRendering={false} />
+                  <SimpleItem
+                    editorType='dxTextBox'
+                    editorOptions= {{
+                      disabled: true,
+                      value: item.datasetNm
+                    }}
+                  >
+                    <Label text={localizedString.datasetName}/>
+                  </SimpleItem>
+                  <SimpleItem
+                    editorType='dxTextBox'
+                    editorOptions= {{
+                      disabled: true,
+                      value: item.datasetType
+                    }}
+                  >
+                    <Label text={'데이터 집합 유형'}/>
+                  </SimpleItem>
+                </Tab>
+              );
+            })}
+          </TabbedItem>
+        }
       </Form>
     </Panel>
   );
