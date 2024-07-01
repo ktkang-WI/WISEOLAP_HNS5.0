@@ -50,12 +50,12 @@ const LoadingPanel = () => {
   const controllers = getContext.controllers;
 
   // 세션중지 PATH 입력 쿼리실행, 쿼리직접입력 테이블항목
-  const isThereQuerySession = sessionKey.some((session) => {
+  const isThereToDeleteSession = sessionKey.some((session) => {
     return Object.keys(controllers).includes(session);
   });
 
   const handleCancel = () => {
-    if (!isThereQuerySession) return;
+    if (!isThereToDeleteSession) return;
     if (!controllers) return;
 
     const deleteSessionIndex = [];
@@ -78,7 +78,7 @@ const LoadingPanel = () => {
     <Overlay zIndex={2000}>
       <ImgWrapper>
         <LoadingImg />
-        {isThereQuerySession ?
+        {isThereToDeleteSession ?
         <CancelButton onClick={handleCancel}>
           {localizedString.cancel}
         </CancelButton> : <></>}
