@@ -3,10 +3,10 @@ import {getTheme} from 'config/theme';
 import {Outlet} from 'react-router-dom';
 import styled from 'styled-components';
 import MyPageMenuButtons from '../molcule/MyPageMenuButtons';
-
+import localizedString from 'config/localization';
 const theme = getTheme();
 
-const tabNm = '마이페이지'; // localized
+const tabNm = localizedString.myPage;
 const myPageUIParam =
   {
     name: tabNm,
