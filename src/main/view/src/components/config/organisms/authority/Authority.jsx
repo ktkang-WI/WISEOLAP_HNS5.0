@@ -285,6 +285,7 @@ const Authority = () => {
     dsViewDim
   } = useLoaderData();
   const [innerData, setInnerData] = useState();
+  const [pageReload, setPageReload] = useState(false);
   const [currentTab, setCurrentTab] = useState(null);
   const [action, setAction] = useState(false);
   const {alert} = useModal();
@@ -315,10 +316,12 @@ const Authority = () => {
   useEffect(() => {
     data[modeData.NEXT] = innerData;
     data[modeData.PREV] = _.cloneDeep(innerData);
+    setPageReload((prev) => !prev);
   }, [currentTab]);
 
   useEffect(() => {
     data[modeData.PREV] = _.cloneDeep(data[modeData.NEXT]);
+    setPageReload((prev) => !prev);
   }, [action]);
 
   const context = {
@@ -326,6 +329,7 @@ const Authority = () => {
       selected: selected,
       data: data,
       currentTab: [currentTab, setCurrentTab],
+      pageReload: pageReload,
       user: userData, // stationary
       group: groupData, // stationary
       dataSourceData: dataSourceData, // stationary
