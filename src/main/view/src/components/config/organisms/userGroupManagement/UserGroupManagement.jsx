@@ -1,7 +1,5 @@
-import {createContext, useCallback, useRef, useState} from 'react';
-import styled from 'styled-components';
-import {Button} from 'devextreme-react';
-import {Mode, dataSource} from './data/UserGroupManagementData.js';
+import {createContext, useRef, useState} from 'react';
+import {Mode, tabItems} from './data/UserGroupManagementData.js';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper.jsx';
 import {useLoaderData} from 'react-router-dom';
 import {Group, User} from
@@ -11,39 +9,11 @@ import useModal from 'hooks/useModal.js';
 import UserPasswordModal from
   'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
 import {getHint} from 'components/config/utility/utility.js';
-import CommonTab from
-  'components/common/atomic/Common/Interactive/CommonTab.jsx';
-
-// import useModal from 'hooks/useModal.js';
-
-const NavBar = styled.div`
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
-`;
-
-const NavBarItem = styled.div`
-  width:100%;
-  height:100%;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  flex: 0 0 30px;
-  padding: 0px 3px;
-`;
-
-const Header = styled.div`
-  flex: 0 0 50px;
-  background-color:#e1e1e1;
-`;
-
-const Content = styled.div`
-  height:100%;
-  display:flex;
-  flex-direction: row;
-  flex: 0 0 1;
-`;
+import AddRibbonBtn
+  from 'components/common/atomic/Ribbon/atom/AddRibbonBtn.jsx';
+import ConfigHeader from 'components/config/atoms/common/ConfigHeader.jsx';
+import ConfigTabs from '../common/ConfigTabs.jsx';
+import {iconMapper} from '../common/ConfigUtility.js';
 
 export const UserGroupContext = createContext();
 
@@ -59,7 +29,7 @@ const UserGroupManagement = () => {
   const [userDetailInfo, setUserDetailInfo] = useState(new User({}));
   const [groupMemberUsers, setGroupMemberUsers] = useState();
   const [groupNotMemberUsers, setGroupNotMemberUsers] = useState(usersFormat);
-  const [mode, setMode] = useState(dataSource[0].mode);
+  const [mode, setMode] = useState(tabItems[0].value);
 
   // ref
   const userInfoRef = useRef();
@@ -92,12 +62,7 @@ const UserGroupManagement = () => {
     }
   };
 
-  const TabPanelItem = useCallback(({data}) => {
-    return data.component;
-  }, [groupsFormat, usersFormat]);
-
-  const handleBtnClick = ({component}) => {
-    const icon = component.option('icon');
+  const handleBtnClick = (icon) => {
     let instance = {};
 
     if (mode === Mode.USER) {
@@ -275,40 +240,33 @@ const UserGroupManagement = () => {
     }
   };
 
-  const handleTabPanelItem = ({itemData}) => {
-    const panelTitle = itemData.title;
-    dataSource.forEach((item) => {
-      if (item.title === panelTitle) {
-        setMode(item.mode);
-        return;
-      }
-    });
-  };
-
   const navBarItems = (mode) => {
     if (mode === Mode.USER) {
       return (
         btns.map((item, index) => (
-          <NavBarItem key={index}>
-            <Button
-              icon={item}
-              onClick={handleBtnClick}
-              hint={getHint(item)}
-            />
-          </NavBarItem>
+          <AddRibbonBtn
+            key={index}
+            item={{
+              'imgSrc': iconMapper[item],
+              'width': item == 'key' ? '70px' : undefined,
+              'onClick': () => handleBtnClick(item),
+              'label': getHint(item)
+            }}
+          />
         ))
       );
     } else if (mode === Mode.GROUP) {
       return (
         btns.filter((item) => item !== 'key')
             .map((item, index) => (
-              <NavBarItem icon={item} key={index}>
-                <Button
-                  icon={item}
-                  onClick={handleBtnClick}
-                  hint={getHint(item)}
-                />
-              </NavBarItem>
+              <AddRibbonBtn
+                key={index}
+                item={{
+                  'imgSrc': iconMapper[item],
+                  'onClick': () => handleBtnClick(item),
+                  'label': getHint(item)
+                }}
+              />
             ))
       );
     };
@@ -318,24 +276,15 @@ const UserGroupManagement = () => {
     <UserGroupContext.Provider
       value={context}>
       <Wrapper display='flex' direction='column'>
-        <Header>
-          <NavBar>
-            {navBarItems(mode)}
-          </NavBar>
-        </Header>
-        <Content>
-          <CommonTab
-            className='dx-theme-background-color'
-            width='100%'
-            height='100%'
-            dataSource={dataSource}
-            animationEnabled={false}
-            swipeEnabled={false}
-            itemComponent={TabPanelItem}
-            onTitleClick={handleTabPanelItem}
-          >
-          </CommonTab>
-        </Content>
+        <ConfigHeader>
+          {navBarItems(mode)}
+        </ConfigHeader>
+        <ConfigTabs
+          tabItems={tabItems}
+          onChangedValue={setMode}
+          page={mode}
+        >
+        </ConfigTabs>
       </Wrapper>
     </UserGroupContext.Provider>
   );

@@ -109,6 +109,9 @@
       "loginImage": "로그인 이미지",
       "logo": "아이콘 이미지",
       "wiDefaultPage": "초기화면"
+    },
+    "report": {
+      "adHocLayout": "비정형 레이아웃"
     }
   },
   "Treemap": "트리맵",

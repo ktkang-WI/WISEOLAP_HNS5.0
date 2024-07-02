@@ -13,9 +13,7 @@ export const duplicateValidation = (value, list) => {
 };
 
 export const getRefInstance = (component, classNm) => {
-  const element = Array.from(document.querySelectorAll('[role="tabpanel"]'))
-      .filter((row) => row.className.includes('dx-item-selected'))[0]
-      .getElementsByClassName(classNm);
+  const element = document.getElementsByClassName(classNm);
   return component.getInstance(element[0]);
 };
 

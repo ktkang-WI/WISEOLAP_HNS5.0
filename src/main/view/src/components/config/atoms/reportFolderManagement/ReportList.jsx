@@ -1,9 +1,8 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import TreeList, {
+import {
   Column,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-
 import React, {useCallback, useContext, useEffect} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
@@ -15,6 +14,7 @@ import excel from 'assets/image/icon/report/excel_file.png';
 import adhoc from 'assets/image/icon/report/adhoc.png';
 import {Report} from
   'models/config/reportFolderManagement/ReportFolderManagement';
+import StyledTreeList from './StyledTreeList';
 
 const ReportList = ({setRow}) => {
   // context
@@ -50,30 +50,35 @@ const ReportList = ({setRow}) => {
       img = excel;
     }
     return (
-      <span>
-        <img height={'17px'} src={img}/>
-        {row.data.name}
-      </span>
+      <>
+        <img
+          style={{marginTop: '1.5px', float: 'left'}}
+          height={'17px'} src={img}/>
+        <span style={{lineHeight: '17px', marginLeft: '5px'}}>
+          {row.data.name}
+        </span>
+      </>
     );
   }, [data]);
 
   return (
     <Wrapper>
       <Title title={localizedString.reportlist}></Title>
-      <TreeList
+      <StyledTreeList
+        showColumnHeaders={false}
         dataSource={data}
         keyExpr="key"
         parentIdExpr="parentId"
         elementAttr={{
           class: 'report-list'
         }}
-        height={'90%'}
+        height={'calc(100% - 40px)'}
         onRowClick={handleRowClick}
         handleSelectionChanged={handleSelectionChanged}
       >
         <SearchPanel
           visible={true}
-          width={250}
+          width={'250'}
         />
         <Selection mode="single" />
         <Column
@@ -81,7 +86,7 @@ const ReportList = ({setRow}) => {
           caption={localizedString.reportName}
           cellRender={cellRender}
         />
-      </TreeList>
+      </StyledTreeList>
     </Wrapper>
   );
 };

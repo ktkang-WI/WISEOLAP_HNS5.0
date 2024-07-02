@@ -111,6 +111,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
         elementAttr={{
           class: 'folder-tree-view'
         }}
+        showBorders={true}
         dataSource={dataSource}
         keyExpr="fldId"
         parentIdExpr="fldParentId"

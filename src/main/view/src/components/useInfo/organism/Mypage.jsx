@@ -9,11 +9,8 @@ const theme = getTheme();
 const tabNm = localizedString.myPage;
 const myPageUIParam =
   {
-    name: tabNm,
-    type: 'ReportTab',
-    width: 'auto',
-    id: 'myPage',
-    position: 'middle'
+    text: tabNm,
+    type: 'CustomTitle'
   };
 
 const StyledWrapper = styled.div`
@@ -72,7 +69,7 @@ const MyPage = () => {
       <Wrapper>
         <Header
           left={['Logo']}
-          middle={[{'myPage': myPageUIParam}]}
+          middle={[myPageUIParam]}
           right={[
             'ReportProperty',
             'UserInfo'

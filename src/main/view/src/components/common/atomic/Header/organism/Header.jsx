@@ -112,7 +112,7 @@ const Header = ({left, middle, right}) => {
             font={theme.font.reportTitleForDesigner}
             onClick={item.onClick}
           >
-            {item.id === 'myPage' ? item.name : report.options.reportNm}
+            {report.options.reportNm}
           </ReportTitleText>
         </HeaderPanel>
       );
@@ -188,6 +188,23 @@ const Header = ({left, middle, right}) => {
           </TextBox>
         </HeaderPanel>
       );
+    } else if (item.type === 'CustomTitle') {
+      return (
+        <HeaderPanel
+          width={item.width}
+          height={theme.size.headerHeight}
+          itemAlignment='flex-start'
+          key={item.id}
+          position={item.position}
+        >
+          <ReportTitleText
+            font={theme.font.reportTitleForDesigner}
+            onClick={item.onClick}
+          >
+            {item.text}
+          </ReportTitleText>
+        </HeaderPanel>
+      );
     } else {
       return <></>;
     }
@@ -204,9 +221,6 @@ const Header = ({left, middle, right}) => {
     }
 
     return itemArr.map((item, i) => {
-      if (item['myPage']) {
-        return getHeaderItem(item['myPage']);
-      }
       if (typeof item === 'string') {
         return getHeaderItem({
           ...headerDefaultItems[item],

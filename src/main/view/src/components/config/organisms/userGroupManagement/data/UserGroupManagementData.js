@@ -9,15 +9,15 @@ export const Mode = {
   GROUP: 'GROUP'
 };
 
-export const dataSource = [
+export const tabItems = [
   {
-    mode: Mode.USER,
-    title: localizedString.userManagement,
-    component: <UserManagement/>
+    value: Mode.USER,
+    text: localizedString.userManagement,
+    component: UserManagement
   },
   {
-    mode: Mode.GROUP,
-    title: localizedString.groupManagement,
-    component: <GroupManagement/>
+    value: Mode.GROUP,
+    text: localizedString.groupManagement,
+    component: GroupManagement
   }
 ];
