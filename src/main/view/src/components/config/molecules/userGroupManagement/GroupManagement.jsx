@@ -12,14 +12,14 @@ export const GroupManagementContext = createContext();
 const GroupManagement = () => {
   return (
     <Wrapper display='flex' direction='row'>
-      <Wrapper size="650px">
+      <Wrapper width='40%' style={{marginRight: '20px'}}>
         <GroupDataGrid />
       </Wrapper>
-      <Wrapper size="2" display='flex' direction='column'>
-        <Wrapper>
+      <Wrapper width='60%' direction='column'>
+        <Wrapper height='40%'>
           <GroupInfo />
         </Wrapper>
-        <Wrapper>
+        <Wrapper height='60%'>
           <GroupMember />
         </Wrapper>
       </Wrapper>

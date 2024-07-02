@@ -70,7 +70,7 @@ const GroupMember = () => {
       <Wrapper>
         <Panel title={localizedString.groupUser}>
           <DataGrid
-            height={263}
+            height={'100%'}
             dataSource={groupMemberUsers}
             showBorders={true}
             ref={groupMemberUserRef}
@@ -93,16 +93,28 @@ const GroupMember = () => {
           </DataGrid>
         </Panel>
       </Wrapper>
-      <Wrapper size='20px' display='flex'>
-        <Wrapper display='flex' direction='column' center='center'>
-          <Button onClick={moveUserToGroup} height={30}>&#8592;</Button>
-          <Button onClick={moveGroupToUser} height={30}>&#8594;</Button>
-        </Wrapper>
+      <Wrapper size='20px' display='flex' direction='column' center='center'>
+        <Button
+          style={{margin: '5px 10px'}}
+          onClick={moveUserToGroup}
+          width={30}
+          height={60}
+        >
+          &#x27E8;
+        </Button>
+        <Button
+          style={{margin: '5px 10px'}}
+          onClick={moveGroupToUser}
+          width={30}
+          height={60}
+        >
+          &#x27E9;
+        </Button>
       </Wrapper>
       <Wrapper>
         <Panel title={localizedString.userList}>
           <DataGrid
-            height={263}
+            height={'100%'}
             dataSource={groupNotMemberUsers}
             showBorders={true}
             ref={groupNotMemberUserRef}

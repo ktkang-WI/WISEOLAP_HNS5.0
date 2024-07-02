@@ -12,8 +12,8 @@ export const Mode = {
 export const managementData = [
   // 보고서
   {
-    mode: Mode.REPORT_MANAGEMENT,
-    title: localizedString.reportManagement,
+    value: Mode.REPORT_MANAGEMENT,
+    text: localizedString.reportManagement,
     component: ReportManagement,
     data: getFolderReports,
     update: (instance) => {
@@ -25,8 +25,8 @@ export const managementData = [
   },
   // 폴더
   {
-    mode: Mode.FOLDER_MANAGEMENT,
-    title: localizedString.folderManagement,
+    value: Mode.FOLDER_MANAGEMENT,
+    text: localizedString.folderManagement,
     component: FolderManagement,
     data: async (myPageFlag) => {
       if (myPageFlag) {

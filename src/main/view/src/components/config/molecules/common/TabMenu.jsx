@@ -62,7 +62,7 @@ const TabMenu = ({items = [], onChangedValue = () => {}}) => {
           key={item.value}
           onClick={() => {
             setSelection(item.value);
-            onChangedValue(item);
+            onChangedValue(item.value);
           }}
           className={selection == item.value && 'selected'}
         >
