@@ -5,47 +5,14 @@ import {getTheme} from 'config/theme';
 import DateFilter from 'components/config/molecules/log/DateFilter';
 import {useRef, useState} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import TabMenu from 'components/config/molecules/common/TabMenu';
-import LoginLog from 'components/config/molecules/log/contents/LoginLog';
-import ReportLog from 'components/config/molecules/log/contents/ReportLog';
-import DownloadLog from 'components/config/molecules/log/contents/DownloadLog';
-import QueryLog from 'components/config/molecules/log/contents/QueryLog';
-import models from 'models';
 import useModal from 'hooks/useModal';
 import localizedString from 'config/localization';
+import ConfigTabs from '../common/ConfigTabs';
+import {tabItems, searchingMapper} from './LogDataUtility';
 
 const theme = getTheme();
 
 const Log = () => {
-  const tabItems = [
-    {
-      'text': localizedString.log.loginLog,
-      'value': 'login_log',
-      'component': LoginLog
-    },
-    {
-      'text': localizedString.log.reportLog,
-      'value': 'report_log',
-      'component': ReportLog
-    },
-    {
-      'text': localizedString.log.exportLog,
-      'value': 'export_log',
-      'component': DownloadLog
-    },
-    {
-      'text': localizedString.log.queryLog,
-      'value': 'query_log',
-      'component': QueryLog
-    }
-  ];
-
-  const searchingMapper = {
-    'login_log': models.Log.getLoginLog,
-    'report_log': models.Log.getReportLog,
-    'export_log': models.Log.getDownloadLog,
-    'query_log': models.Log.getQueryLog
-  };
   const defaultPrevDate = new Date();
   defaultPrevDate.setMonth(defaultPrevDate.getMonth() - 1);
 
@@ -57,6 +24,12 @@ const Log = () => {
         acc[item.value] = [];
         return acc;
       }, {}));
+
+  tabItems.forEach((item) => {
+    item.props = {
+      dataSource: dataSources[item.value] || []
+    };
+  });
 
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -101,41 +74,12 @@ const Log = () => {
           </CommonButton>
         </div>
       </ConfigHeader>
-      <Wrapper
-        display='flex'
-        height='calc(100% - 60px)'
-        direction='row'
-        padding='10px 0px 0px 0px'
+      <ConfigTabs
+        tabItems={tabItems}
+        onChangedValue={setPage}
+        page={page}
       >
-        <TabMenu
-          items={tabItems}
-          onChangedValue={(value) => {
-            setPage(value);
-          }}
-        />
-        <Wrapper
-          className='section'
-          style={{
-            borderRadius: '10px',
-            border: 'solid 1px '+ theme.color.breakLine,
-            background: theme.color.panelColor,
-            overflow: 'hidden',
-            padding: '15px'
-          }}
-        >
-          {tabItems.map((item) => {
-            const Component = item.component;
-
-            return (<Component
-              key={item.value}
-              dataSource={dataSources[item.value]}
-              display={item.value === page? 'block' : 'none'}
-            >
-            </Component>
-            );
-          })}
-        </Wrapper>
-      </Wrapper>
+      </ConfigTabs>
     </Wrapper>
   );
 };

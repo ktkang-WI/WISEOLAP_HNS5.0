@@ -10,6 +10,7 @@ const ConfigHeader = styled.div`
   border: solid 1px ${theme.color.breakLine};
   background: ${theme.color.panelColor};
   box-sizing: border-box;
+  padding: 12px;
 `;
 
 export default ConfigHeader;

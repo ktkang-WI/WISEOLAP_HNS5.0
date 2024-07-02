@@ -38,8 +38,13 @@ const FolderInformation = ({row, setRow, myPageFlag}) => {
       <Form
         formData={row}
         ref={ref}
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
         elementAttr={{
-          class: 'folder-information'
+          class: 'folder-information dx-fieldset custom-scrollbar'
         }}
       >
         <SimpleItem

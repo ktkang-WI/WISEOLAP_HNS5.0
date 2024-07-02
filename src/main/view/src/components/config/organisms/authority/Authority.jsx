@@ -2,11 +2,6 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 import React,
 {createContext, useEffect, useMemo, useState} from 'react';
-import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
-import {
-  Header,
-  NavBar,
-  navBarItems} from '../userGroupManagement/common/NavBar';
 import {useLoaderData} from 'react-router-dom';
 import DataAuthority from './dataAuthority/DataAuthority';
 import DatasetAuthority from './datasetAuthority/DatasetAuthority';
@@ -15,6 +10,10 @@ import ReportAuthority from './reportAuthority/ReportAuthority';
 import {generateAxios, generateGetAxios} from './utils/AuthorityData';
 import useModal from 'hooks/useModal';
 import _ from 'lodash';
+import ConfigHeader from 'components/config/atoms/common/ConfigHeader';
+import AddRibbonBtn from 'components/common/atomic/Ribbon/atom/AddRibbonBtn';
+import ConfigTabs from '../common/ConfigTabs';
+import saveReport from 'assets/image/icon/button/save.png';
 
 export const AuthorityContext = createContext();
 export const path = {
@@ -38,46 +37,70 @@ export const modeData = {
   'NEXT': 'next'
 };
 
-const dataSource = [
+const tabItems = [
   {
-    path: path.GROUP_DATA,
-    title: localizedString.groupData,
-    component: <DataAuthority mainKey={path.GROUP_DATA}/>
+    value: path.GROUP_DATA,
+    text: localizedString.groupData,
+    props: {
+      mainKey: path.GROUP_DATA
+    },
+    component: DataAuthority
   },
   {
-    path: path.GROUP_REPORT,
-    title: localizedString.groupReport,
-    component: <ReportAuthority mainKey={path.GROUP_REPORT}/>
+    value: path.GROUP_REPORT,
+    text: localizedString.groupReport,
+    props: {
+      mainKey: path.GROUP_REPORT
+    },
+    component: ReportAuthority
   },
   {
-    path: path.GROUP_DATASET,
-    title: localizedString.groupDataset,
-    component: <DatasetAuthority mainKey={path.GROUP_DATASET}/>
+    value: path.GROUP_DATASET,
+    text: localizedString.groupDataset,
+    props: {
+      mainKey: path.GROUP_DATASET
+    },
+    component: DatasetAuthority
   },
   {
-    path: path.GROUP_DATASOURCE,
-    title: localizedString.groupDatasource,
-    component: <DatasourceAuthority mainKey={path.GROUP_DATASOURCE}/>
+    value: path.GROUP_DATASOURCE,
+    text: localizedString.groupDatasource,
+    props: {
+      mainKey: path.GROUP_DATASOURCE
+    },
+    component: DatasourceAuthority
   },
   {
-    path: path.USER_DATA,
-    title: localizedString.userData,
-    component: <DataAuthority mainKey={path.USER_DATA}/>
+    value: path.USER_DATA,
+    text: localizedString.userData,
+    props: {
+      mainKey: path.USER_DATA
+    },
+    component: DataAuthority
   },
   {
-    path: path.USER_REPORT,
-    title: localizedString.userReport,
-    component: <ReportAuthority mainKey={path.USER_REPORT}/>
+    value: path.USER_REPORT,
+    text: localizedString.userReport,
+    props: {
+      mainKey: path.USER_REPORT
+    },
+    component: ReportAuthority
   },
   {
-    path: path.USER_DATASET,
-    title: localizedString.userDataset,
-    component: <DatasetAuthority mainKey={path.USER_DATASET}/>
+    value: path.USER_DATASET,
+    text: localizedString.userDataset,
+    props: {
+      mainKey: path.USER_DATASET
+    },
+    component: DatasetAuthority
   },
   {
-    path: path.USER_DATASOURCE,
-    title: localizedString.userDatasource,
-    component: <DatasourceAuthority mainKey={path.USER_DATASOURCE}/>
+    value: path.USER_DATASOURCE,
+    text: localizedString.userDatasource,
+    props: {
+      mainKey: path.USER_DATASOURCE
+    },
+    component: DatasourceAuthority
   }
 ];
 
@@ -250,7 +273,6 @@ export const getDataObjectOfUserOrGroup = (dataSetMode, comparisonKey) => {
 };
 
 const Authority = () => {
-  const btns = ['save'];
   const {
     userData,
     groupData,
@@ -266,9 +288,6 @@ const Authority = () => {
   const [currentTab, setCurrentTab] = useState(null);
   const [action, setAction] = useState(false);
   const {alert} = useModal();
-  const TabPanelItem = ({data}) => {
-    return data.component;
-  };
 
   const selected = useMemo(() => ({
     [mode.GROUP]: {
@@ -331,11 +350,11 @@ const Authority = () => {
     }
   };
 
-  const bindData = async (e) => {
+  const bindData = async (path) => {
     try {
-      const response = await generateGetAxios(e?.itemData?.path);
+      const response = await generateGetAxios(path);
       setInnerData(response.data.data);
-      setCurrentTab(e?.itemData?.path);
+      setCurrentTab(path);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -345,25 +364,26 @@ const Authority = () => {
     <AuthorityContext.Provider
       value={context}>
       <Wrapper display='flex' direction='column'>
-        <Header>
-          <NavBar>
-            {navBarItems({
-              btns: btns,
-              onClick: onAction
-            })}
-          </NavBar>
-        </Header>
-        <CommonTab
-          className='dx-theme-background-color'
-          width='100%'
-          height='100%'
-          dataSource={dataSource}
-          animationEnabled={false}
-          swipeEnabled={false}
-          itemComponent={TabPanelItem}
-          onTitleClick={bindData}
-        >
-        </CommonTab>
+        <Wrapper display='flex' direction='column'>
+          <ConfigHeader style={{padding: '12px'}}>
+            <AddRibbonBtn
+              item={{
+                'label': localizedString.save,
+                'onClick': onAction,
+                'imgSrc': saveReport
+              }}
+            />
+          </ConfigHeader>
+          <ConfigTabs
+            tabItems={tabItems}
+            onChangedValue={(path) => {
+              if (path == currentTab) return;
+              bindData(path);
+            }}
+            page={currentTab}
+          >
+          </ConfigTabs>
+        </Wrapper>
       </Wrapper>
     </AuthorityContext.Provider>
   );

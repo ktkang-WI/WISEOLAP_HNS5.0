@@ -9,7 +9,7 @@ const theme = getTheme();
 
 // Config 는 임시용 입니다.
 const Config = () => {
-  const left = ['Logo'];
+  const left = ['Logo', 'Viewer'];
   return (
     <Wrapper
       display='flex' direction='column'
@@ -19,15 +19,12 @@ const Config = () => {
       >
         <Header
           left={left}
-          right={[
-            'Viewer',
-            'NewWindow',
-            'ReportProperty'
-          ]}
+          right={['UserInfo']}
         >
         </Header>
       </Wrapper>
       <Wrapper
+        height='calc(100% - 62px)'
         display='flex'
         direction='row'>
         <Wrapper

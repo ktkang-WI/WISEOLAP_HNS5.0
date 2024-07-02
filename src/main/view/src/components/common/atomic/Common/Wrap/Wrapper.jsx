@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   padding: ${(props) => props.padding ? props.padding : '0px'};
   ${(props) => props.margin ? 'margin: ' + props.margin + ';' : ''};
   overflow: ${(props) => props.overflow ? props.overflow : 'visible'};
+  box-sizing: border-box;
 `;
 
 export default Wrapper;
