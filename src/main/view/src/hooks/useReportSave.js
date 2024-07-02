@@ -262,8 +262,9 @@ const useReportSave = () => {
         designerLoadReport(data);
       }
 
-      if (reportBos.isModified) {
-        alert('code: ' + reportBos.code + '\n\n' + reportBos.msg);
+      if (reportBos.chkGb.length > 0) {
+        // eslint-disable-next-line max-len
+        alert('보고서의 데이터가 BOS 와 일치하지 않습니다.\n\n' + 'code: ' + reportBos.chkGb);
       }
     } catch (error) {
       new Error('Report load Error');

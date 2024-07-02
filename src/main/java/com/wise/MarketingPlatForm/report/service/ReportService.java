@@ -44,7 +44,7 @@ import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
-import com.wise.MarketingPlatForm.report.entity.ReportBosEntity;
+import com.wise.MarketingPlatForm.report.entity.DwReportChkEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
@@ -52,6 +52,7 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.EditMode;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
+import com.wise.MarketingPlatForm.report.vo.DwReportChkDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
@@ -156,8 +157,10 @@ public class ReportService {
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
 
-            ReportBosEntity reportBos = ReportBosEntity.builder().build();
-            options.put("reportBos", reportBos);
+            List<DwReportChkEntity>dwReportChkEntity = reportDAO.selectDwReportChk(reportId);
+            DwReportChkDTO dwReportChkDTO = new DwReportChkDTO().fromEntityList(dwReportChkEntity);
+            
+            options.put("reportBos", dwReportChkDTO);
     		
     		report.put("reportId", Integer.parseInt(reportId));
     		report.put("options", options);
