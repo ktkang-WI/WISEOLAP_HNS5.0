@@ -27,7 +27,7 @@ export const excelIOOpenOtions = {
   * 1: lazy : 활성 시트만 로드
   * 2: incremental : UI and UI event could be refreshed and responsive directly.
   */
-  openMode: 0
+  openMode: 1
 };
 
 export const SpreadRibbonDefaultElement = {
