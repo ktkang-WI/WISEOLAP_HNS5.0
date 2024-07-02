@@ -86,7 +86,7 @@ const DataSourceTab = () => {
     'DataSourceRemove'
   ];
 
-  if (editMode == EditMode['VIEWER']) {
+  if (editMode == EditMode['VIEWER'] || designerMode == DesignerMode['EXCEL']) {
     buttons.shift();
   }
 
