@@ -41,7 +41,7 @@ const LinkReportModal = ({
 
   useEffect(() => {
     const reportType = selectCurrentDesignerMode(store.getState());
-    models.Report.getList('admin', reportType, 'designer').then(({data}) => {
+    models.Report.getList(reportType, 'designer').then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
     });
