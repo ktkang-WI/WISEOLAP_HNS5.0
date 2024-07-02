@@ -86,11 +86,12 @@ const DataSourceTab = () => {
     'DataSourceRemove'
   ];
 
-  if (currentDataset?.datasetType == DatasetType.DS_SQL) {
-    buttons.unshift('FieldDescription');
-  }
   if (editMode == EditMode['VIEWER']) {
     buttons.shift();
+  }
+
+  if (currentDataset?.datasetType == DatasetType.DS_SQL) {
+    buttons.unshift('FieldDescription');
   }
 
   return (

@@ -10,6 +10,8 @@ import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import useLinkReportSave from 'hooks/useLinkReportSave';
 import {currentDesignerExecution} from 'redux/selector/ExecuteSelector';
 import {useSelector} from 'react-redux';
+import {DesignerMode} from 'components/config/configType';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const SaveDefaultElement = () => {
   const {openModal, alert, success} = useModal();
@@ -26,10 +28,13 @@ const SaveDefaultElement = () => {
       {
         label: localizedString.saveReport,
         onClick: (props) => {
-          if (!isExecute) {
+          const designerMode = selectCurrentDesignerMode(store?.getState());
+
+          if (!isExecute && !(designerMode == DesignerMode['EXCEL'])) {
             alert(localizedString.saveValidationNonExecute);
             return;
           }
+
           const currentReport = selectCurrentReport(store.getState());
           const dataSource = _.cloneDeep(currentReport.options);
 
