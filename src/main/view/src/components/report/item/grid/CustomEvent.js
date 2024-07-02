@@ -1,10 +1,11 @@
 import grandTotalImg from 'assets/image/icon/button/grand_total.png';
+import columnHeaderImg from 'assets/image/icon/button/column_header.png';
 import itemOptionManager from '../ItemOptionManager';
 import localizedString from 'config/localization';
 import inputTxt from 'assets/image/icon/button/inputTxt.png';
 import gridLine from 'assets/image/icon/button/ico_defaultStatus.png';
-import paging from 'assets/image/icon/button/ico_layout.png';
-import autoWidh from 'assets/image/icon/button/ico_rowTotalsPosition.png';
+import paging from 'assets/image/icon/button/paging_setting.png';
+import autoWidh from 'assets/image/icon/button/row_total_position.png';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem} from 'redux/selector/ItemSelector';
 import {CheckBox, RadioGroup} from 'devextreme-react';
@@ -138,7 +139,7 @@ const useCustomEvent = () => {
       ...commonPopoverButton,
       'id': 'input_columnHeader',
       'label': localizedString.columnHeader,
-      'imgSrc': grandTotalImg,
+      'imgSrc': columnHeaderImg,
       'renderContent': () => {
         return getRadioPopover('columnHeader',
             booleanToOnOff(selectedItem.meta.dataGridOption.columnHeader));

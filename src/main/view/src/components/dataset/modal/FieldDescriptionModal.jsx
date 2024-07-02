@@ -61,8 +61,8 @@ const FieldDescriptionModal = ({...props}) => {
         />
         <Column
           dataField='description'
-          cellRender={(e) => {
-            return fieldDesc[e.data.name];
+          calculateCellValue={(e) => {
+            return fieldDesc[e.name];
           }}
           caption={localizedString.description}
           allowEditing={true}

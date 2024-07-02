@@ -2,6 +2,7 @@ export const chartItemType = {
   bar: 'bar',
   stackedbar: 'stackedbar',
   fullstackedbar: 'fullstackedbar',
+  rangeBar: 'rangeBar',
   scatter: 'scatter',
   line: 'line',
   stackedline: 'stackedline',
@@ -15,5 +16,6 @@ export const chartItemType = {
   splinearea: 'splinearea',
   stackedsplinearea: 'stackedsplinearea',
   fullstackedsplinearea: 'fullstackedsplinearea',
-  bubble: 'bubble'
+  bubble: 'bubble',
+  sankey: 'sankey'
 };

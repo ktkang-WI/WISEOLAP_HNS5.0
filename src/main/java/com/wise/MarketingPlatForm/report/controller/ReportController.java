@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
@@ -128,7 +129,9 @@ public class ReportController {
         String parameterStr = param.getOrDefault("parameter", "[]");
         String ItemTypeStr = param.get("itemType");
         String gridAttributeStr = param.getOrDefault("gridAttribute", "{}");
-        String userId = param.get("userId");
+        UserDTO user = SessionUtility.getSessionUser(request);
+        String reportId = param.getOrDefault("reportId", "");
+        ReportType reportType = ReportType.fromString(param.getOrDefault("reportType", "AdHoc")).get();
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
@@ -187,7 +190,10 @@ public class ReportController {
                 .dimensions(dimensions)
                 .sortByItems(sortByItems)
                 .itemType(itemType)
-                .userId(userId)
+                .user(user)
+                .userId(user.getUserId())
+                .reportId(reportId)
+                .reportType(reportType)
                 .parameters(parameters)
                 .removeNullData(removeNullData)
                 .pagingOption(pagingOption)
@@ -196,7 +202,7 @@ public class ReportController {
                 .pivotOption(pivotOption)
                 .build();
 
-        return reportService.getItemData(dataAggreagtion);
+        return reportService.getItemData(request, dataAggreagtion);
     }
 
     @Operation(
@@ -214,14 +220,10 @@ public class ReportController {
 	    )
 	)
     @PostMapping(value = "/report")
-	public Map<String, Object> getReport(@RequestBody Map<String, String> param, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
-        
-        String userId = user.getUserId(); 
+	public Map<String, Object> getReport(HttpServletRequest request, @RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
 
-        return reportService.getReport(reportId, userId);
+        return reportService.getReport(request, reportId);
 	}
     
     @Operation(
@@ -303,10 +305,8 @@ public class ReportController {
 	)
 	@PostMapping(value = "/report-list")
         public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
-    	// 로그인 기능이 개발된 뒤에 필수 정보를 param.get()으로 변경 bjsong
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO)session.getAttribute("WI_SESSION_USER");
-        String userId = user.getUserId();
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = userDTO.getUserId();
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");
 
@@ -348,8 +348,7 @@ public class ReportController {
             HttpServletRequest request
     ) throws SQLException {
             Gson gson = new Gson();
-            HttpSession session = request.getSession();
-            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            UserDTO userDTO = SessionUtility.getSessionUser(request);
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
             
             // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
@@ -370,8 +369,7 @@ public class ReportController {
             HttpServletRequest request
     ) throws SQLException {
             Gson gson = new Gson();
-            HttpSession session = request.getSession();
-            UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+            UserDTO userDTO = SessionUtility.getSessionUser(request);
             ReportMstrDTO reportDTO = gson.fromJson(gson.toJson(param), ReportMstrDTO.class);
 
             // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
@@ -471,8 +469,7 @@ public class ReportController {
     // Endpoint to generate a one-time token
     @PostMapping("/generate-token")
     public Map<String, String> generateToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
         String userId = userDTO.getUserId();
         String reportId = requestBody.get("reportId");
         String reportType = requestBody.get("reportType");

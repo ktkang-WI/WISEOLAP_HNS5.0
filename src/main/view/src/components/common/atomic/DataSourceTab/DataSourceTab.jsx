@@ -11,8 +11,11 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import _ from 'lodash';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {useCallback} from 'react';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {DesignerMode} from 'components/config/configType';
+import {
+  selectCurrentDesignerMode,
+  selectEditMode
+} from 'redux/selector/ConfigSelector';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import DatasetType from 'components/dataset/utils/DatasetType';
 
 const theme = getTheme();
@@ -64,6 +67,7 @@ const DataSourceTab = () => {
   const currentDataset = useSelector(selectCurrentDataset);
   const selectedDataset = useSelector(selectCurrentDataset);
   const designerMode = useSelector(selectCurrentDesignerMode);
+  const editMode = useSelector(selectEditMode);
 
   const dispatch = useDispatch();
   const {selectDataset} = DatasetSlice.actions;
@@ -76,6 +80,7 @@ const DataSourceTab = () => {
   }, [selectedDataset]);
 
   const buttons = [
+    'ViewerPostingData',
     'CustomField',
     'DataSourceModify',
     'DataSourceRemove'
@@ -83,6 +88,9 @@ const DataSourceTab = () => {
 
   if (currentDataset?.datasetType == DatasetType.DS_SQL) {
     buttons.unshift('FieldDescription');
+  }
+  if (editMode == EditMode['VIEWER']) {
+    buttons.shift();
   }
 
   return (

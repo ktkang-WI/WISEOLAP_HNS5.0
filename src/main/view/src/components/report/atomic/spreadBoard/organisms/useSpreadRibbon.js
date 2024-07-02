@@ -10,10 +10,10 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import useSpread from 'hooks/useSpread';
 import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
-import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import useFile from 'hooks/useFile';
 import DatasetLinkerModal from '../modal/DataLinkerModal';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentDesignerMode}
+  from 'redux/selector/ConfigSelector';
 import {
   sheets,
   excelIO,
@@ -26,6 +26,10 @@ import {
   defaultWorkbookJSON,
   spreadDownlaodReportModel
 } from 'components/report/atomic/spreadBoard/util/spreadContants.js';
+import DatasetType from 'components/dataset/utils/DatasetType';
+import elementFactory
+  from 'components/common/atomic/Popover/molecules/ElementFactory';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
@@ -33,6 +37,7 @@ const useSpreadRibbon = () => {
   const {uploadFile, deleteFile} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
+  const datasetElement = elementFactory().dataset;
   const {
     createReportBlob
   } = useSpread();
@@ -66,8 +71,17 @@ const useSpreadRibbon = () => {
 
   const openReportLocal = (context) => {
     const currentReportId = selectCurrentReportId(store.getState());
-    sheets.Designer.getCommand('fileMenuPanel')
-        .execute(context, 'button_import_excel', null);
+
+    if (process.env.NODE_ENV == 'development') {
+      // 기존 파일 불러오기
+      sheets.Designer.getCommand('fileMenuPanel')
+          .execute(context, 'button_import_excel', null);
+    } else {
+      // 홈앤쇼핑 커스터마이징 (DRM 파일 복호화 기능 추가)
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
+    }
+
     resetWorkbookJSON({
       reportId: currentReportId,
       workbookJSON: context.getWorkbook().toJSON()
@@ -136,10 +150,6 @@ const useSpreadRibbon = () => {
     }
   };
 
-  const downloadReportTXT = () => {
-    alert('추후 개발 예정');
-  };
-
   const datasetBinder = () => {
     const datasets = selectCurrentDatasets(store.getState());
     if (datasets.length == 0) {
@@ -149,15 +159,15 @@ const useSpreadRibbon = () => {
     openModal(DatasetLinkerModal);
   };
 
-  const print = () => {
-    const workbook = designer.getWorkbook();
-    const activeSheet = workbook.getActiveSheet();
-    activeSheet.printInfo().margin(
-        {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
-    );
-    const index = workbook.getActiveSheetIndex();
-    workbook.print(index);
-  };
+  // const print = () => {
+  //   const workbook = designer.getWorkbook();
+  //   const activeSheet = workbook.getActiveSheet();
+  //   activeSheet.printInfo().margin(
+  //       {top: 10, bottom: 10, left: 10, right: 10, header: 10, footer: 10}
+  //   );
+  //   const index = workbook.getActiveSheetIndex();
+  //   workbook.print(index);
+  // };
 
   const addSpreadTemplate = (templateName, templateMethod) => {
     sheets.Designer.registerTemplate(templateName, templateMethod);
@@ -165,7 +175,23 @@ const useSpreadRibbon = () => {
 
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
+    console.log(datasetElement);
+    const datasetCommands = datasetElement.dataset.reduce(
+        (acc, {id, label, onClick}) => {
+          if (id == DatasetType.CUBE) return acc;
+
+          acc[id] = {
+            title: label,
+            text: label,
+            commandName: id,
+            execute: onClick
+          };
+
+          return acc;
+        }, {});
+
     return {
+      ...datasetCommands,
       newReport: {
         title: localizedString.newReport,
         text: localizedString.newReport,
@@ -197,6 +223,13 @@ const useSpreadRibbon = () => {
         execute: (context, propertyName, fontItalicChecked) => {
           openReport();
         }
+      },
+      loadDataset: {
+        title: localizedString.dataset,
+        text: localizedString.dataset,
+        iconClass: 'ribbon-button-load-dataset',
+        bigButton: 'true',
+        commandName: 'loadDataset'
       },
       saveReport: {
         title: localizedString.saveReport,
@@ -243,14 +276,6 @@ const useSpreadRibbon = () => {
           downloadReportXLSX();
         }
       },
-      downloadReportTXT: {
-        title: 'TXT',
-        text: 'TXT',
-        commandName: 'downloadReportTXT',
-        execute: (context, propertyName, fontItalicChecked) => {
-          downloadReportTXT();
-        }
-      },
       dataset: {
         title: localizedString.datasetBinding,
         text: localizedString.datasetBinding,
@@ -259,16 +284,6 @@ const useSpreadRibbon = () => {
         commandName: 'dataset',
         execute: (context, propertyName, fontItalicChecked) => {
           datasetBinder();
-        }
-      },
-      print: {
-        title: localizedString.print,
-        text: localizedString.print,
-        iconClass: 'ribbon-button-print',
-        bigButton: 'true',
-        commandName: 'print',
-        execute: (context, propertyName, fontItalicChecked) => {
-          print();
         }
       }
     };

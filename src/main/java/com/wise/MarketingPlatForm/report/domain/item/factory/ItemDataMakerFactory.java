@@ -20,6 +20,8 @@ import com.wise.MarketingPlatForm.report.domain.item.datamaker.ListBoxMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PieChartDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.PivotGridDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.RadialTreeMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.RangeBarMaker;
+import com.wise.MarketingPlatForm.report.domain.item.datamaker.SankeyDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.ScatterPlotMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.StarChartMaker;
 import com.wise.MarketingPlatForm.report.domain.item.datamaker.SunburstChartMaker;
@@ -118,6 +120,12 @@ public class ItemDataMakerFactory {
         }
         if (itemType == ItemType.WATER_FALL) {
             return new WaterFallMaker();
+        }
+        if (itemType == ItemType.RANGE_BAR) {
+            return new RangeBarMaker();
+        }
+        if (itemType == ItemType.SANKEY) {
+            return new SankeyDataMaker();
         }
 
         throw new IllegalArgumentException();

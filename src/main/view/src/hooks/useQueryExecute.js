@@ -2,10 +2,11 @@ import {
   selectCurrentDatasets
 } from 'redux/selector/DatasetSelector';
 import {
+  selectCurrentAdHocOption,
   selectCurrentItems,
   selectRootItem
 } from 'redux/selector/ItemSelector';
-import {selectCurrentReportId}
+import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
@@ -16,7 +17,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import models from 'models';
 import ItemManager from 'components/report/item/util/ItemManager';
-import {DesignerMode} from 'components/config/configType';
+import {DesignerMode, EditMode} from 'components/config/configType';
 import useModal from './useModal';
 import localizedString from 'config/localization';
 import {selectCurrentDesignerMode,
@@ -25,6 +26,7 @@ import {selectBindingInfos} from 'redux/selector/SpreadSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import ItemType from 'components/report/item/util/ItemType';
 import {nullDataCheck} from 'components/report/util/ReportUtility';
+import ExecuteSlice from 'redux/modules/ExecuteSlice';
 
 
 const useQueryExecute = () => {
@@ -49,13 +51,18 @@ const useQueryExecute = () => {
       ItemType.TEXT_BOX,
       ItemType.SCHEDULER_COMPONENT
     ].includes(item.type)) return;
-    // TODO: 로그인 추가 후 유저 아이디 수정
-    param.userId = 'admin';
+    const report = selectCurrentReport(store.getState()) || {};
+    const adhocOption = selectCurrentAdHocOption(store.getState());
+
+    const dataField = adhocOption?.dataField ||
+      item?.meta?.dataField;
+    param.reportId = report.reportId;
+    param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
 
     const orgDataset = datasets.find(
-        (dataset) => item.meta.dataField.datasetId == dataset.datasetId
+        (dataset) => dataField.datasetId == dataset.datasetId
     );
 
     switch (orgDataset.datasetType) {
@@ -103,7 +110,7 @@ const useQueryExecute = () => {
     param.dataset = JSON.stringify(param.dataset);
     param.temporaryMeasures =
       JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
-    param.sortByItem = JSON.stringify(item.meta.dataField.sortByItem);
+    param.sortByItem = JSON.stringify(dataField.sortByItem);
     ItemManager.generateParameter(item, param);
 
     return param;
@@ -119,8 +126,10 @@ const useQueryExecute = () => {
   const generateAdHocParamter = (rootItem, datasets, parameters) => {
     const param = {};
 
-    // TODO: 로그인 추가 후 유저 아이디 수정
-    param.userId = 'admin';
+    const report = selectCurrentReport(store.getState()) || {};
+
+    param.reportId = report.reportId;
+    param.reportType = report.options?.reportType;
     param.itemType = ItemType.CHART;
     param.dataset = {};
 
@@ -177,26 +186,49 @@ const useQueryExecute = () => {
       const param = generateAdHocParamter(cloneItem, datasets, parameters);
       const reportId = selectCurrentReportId(store.getState());
 
-      models.Item.getItemData(param).then((response) => {
-        if (response.status != 200) {
-          return;
-        }
-        const data = response.data;
+      const layout = cloneItem?.adHocOption?.layoutSetting;
 
-        chartItem.mart.init = true;
-        chartItem.mart.data = data;
+      const getAdhocChartItem = () => {
+        models.Item.getItemData(param).then((response) => {
+          if (response.status != 200) {
+            return;
+          }
+          const data = response.data;
 
-        if (nullDataCheck(chartItem)) {
-          alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
-        }
+          chartItem.mart.init = true;
+          chartItem.mart.data = data;
 
-        ItemManager.generateItem(chartItem, param, cloneItem);
-        dispatch(updateItem({reportId, item: chartItem}));
+          if (nullDataCheck(chartItem)) {
+            alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
+          }
 
+          ItemManager.generateItem(chartItem, param, cloneItem);
+          dispatch(updateItem({reportId, item: chartItem}));
+        });
+      };
+
+      const getAdhocPivotItem = () => {
         pivotItem.mart.init = true;
         ItemManager.generateItem(pivotItem, param, cloneItem);
         dispatch(updateItem({reportId, item: pivotItem}));
-      });
+      };
+
+      switch (layout) {
+        case 'chart_pivot':
+          getAdhocChartItem();
+          getAdhocPivotItem();
+          break;
+        case 'chart':
+          getAdhocChartItem();
+          break;
+        case 'pivot':
+          getAdhocPivotItem();
+          break;
+        default:
+          getAdhocChartItem();
+          getAdhocPivotItem();
+          break;
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -255,6 +287,7 @@ const useQueryExecute = () => {
     const state = store.getState();
     const datasets = selectCurrentDatasets(state);
     const currentReportId = selectCurrentReportId(state);
+    const reportId = selectCurrentReportId(state);
 
     if (_.isEmpty(datasets)) {
       alert(localizedString.dataSourceNotSelectedMsg);
@@ -274,7 +307,7 @@ const useQueryExecute = () => {
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       return new Promise((resolve, reject) => {
-        models.DBInfo.getAllDatasetDatas(dsId, query, parameters)
+        models.DBInfo.getAllDatasetDatas(reportId, dsId, query, parameters)
             .then((res) => {
               resolve({datasetId: dataset.datasetId, data: res.data});
             })
@@ -400,6 +433,10 @@ const useQueryExecute = () => {
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
     const editMode = selectEditMode(store.getState());
+    const {
+      updateDesinerExecutionState,
+      updateViewerExecutionState
+    } = ExecuteSlice.actions;
 
     if (datasets.length === 0) {
       let msg = localizedString.dataSourceNotSelectedMsg;
@@ -414,10 +451,20 @@ const useQueryExecute = () => {
 
     if (designerMode === DesignerMode['DASHBOARD']) {
       rootItem.items.map((item) => executeItem(item, datasets, parameters));
+      if (EditMode['DESIGNER'] == editMode) {
+        dispatch(updateDesinerExecutionState(true));
+      } else {
+        dispatch(updateViewerExecutionState(true));
+      }
     }
 
     if (designerMode === DesignerMode['AD_HOC']) {
       executeAdHocItem(rootItem, datasets, parameters);
+      if (EditMode['DESIGNER'] == editMode) {
+        dispatch(updateDesinerExecutionState(true));
+      } else {
+        dispatch(updateViewerExecutionState(true));
+      }
     }
     // items.forEach((item) => executeItem(item, datasets, parameters));
   };
@@ -583,6 +630,7 @@ const useQueryExecute = () => {
   };
 
   const validateRequiredField = (item) => {
+    const reportType = item.type;
     let dataFieldOption;
     let dataField;
     const designerMode = selectCurrentDesignerMode(store.getState());
@@ -592,6 +640,11 @@ const useQueryExecute = () => {
     } else if (designerMode === DesignerMode['AD_HOC']) {
       dataFieldOption = item.adHocOption.dataFieldOption;
       dataField = item.adHocOption.dataField;
+    }
+    if (ItemType.RANGE_BAR === reportType) {
+      if (dataField.range1.length != dataField.range2.length) {
+        throw new Error(localizedString.rangeBarlengthAlert);
+      }
     }
     const dataFieldOptionKeys = Object.keys(dataFieldOption);
     dataFieldOptionKeys.forEach((key) => {

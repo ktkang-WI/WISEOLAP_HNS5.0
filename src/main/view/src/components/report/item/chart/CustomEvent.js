@@ -3,6 +3,7 @@ import itemOptionManager from '../ItemOptionManager';
 import rotate from 'assets/image/icon/button/rotate.png';
 import xAxisSetting from 'assets/image/icon/button/x_axis_settings.png';
 import yAxisSetting from 'assets/image/icon/button/y_axis_settings.png';
+import extraAxisSetting from 'assets/image/icon/button/auxiliary_axis.png';
 import useModal from 'hooks/useModal';
 import ItemOptionModal from '../pie/itemOptionModal/ItemOptionModal';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -69,7 +70,7 @@ const useCustomEvent = () => {
       ...commonRibbonBtnElement,
       'id': 'extra_setting',
       'label': localizedString.extraAxisSetting,
-      'imgSrc': yAxisSetting,
+      'imgSrc': extraAxisSetting,
       'onClick': () => {
         openModal(ItemOptionModal,
             {

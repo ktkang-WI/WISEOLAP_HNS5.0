@@ -29,5 +29,7 @@ export default {
   FUNNEL_CHART: 'funnelChart',
   STAR_CHART: 'starChart',
   WATER_FALL: 'waterFall',
-  SCHEDULER_COMPONENT: 'schedulerComponent'
+  SCHEDULER_COMPONENT: 'schedulerComponent',
+  RANGE_BAR: 'rangeBar',
+  SANKEY: 'sankey'
 };

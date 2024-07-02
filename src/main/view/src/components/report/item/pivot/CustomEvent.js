@@ -6,9 +6,10 @@ import removeNullDataImg from 'assets/image/icon/button/remove_null_data.png';
 import rowTotalPosImg from 'assets/image/icon/button/row_total_position.png';
 import colTotalPosImg from 'assets/image/icon/button/column_total_position.png';
 import colRowSwitchImg from 'assets/image/icon/button/col_row_switch.png';
+import dataPositionImg from 'assets/image/icon/button/measurement_location.png';
 import showGridImg from 'assets/image/icon/button/show_grid.png';
-import filterImg from 'assets/image/icon/report/filter.png';
-import paging from 'assets/image/icon/button/ico_layout.png';
+import filterImg from 'assets/image/icon/button/show_filter.png';
+import paging from 'assets/image/icon/button/paging_setting.png';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -178,7 +179,7 @@ const useCustomEvent = () => {
       ...commonPopoverButtonElement,
       'id': 'data_position',
       'label': localizedString.dataPosition,
-      'imgSrc': colTotalPosImg,
+      'imgSrc': dataPositionImg,
       'renderContent': () => {
         return getRadioPopover('dataPosition',
             selectedItem.meta.positionOption.dataPosition);

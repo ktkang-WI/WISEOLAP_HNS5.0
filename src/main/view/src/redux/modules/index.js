@@ -13,6 +13,7 @@ import LinkSlice from './LinkSlice';
 import GC from '@grapecity/spread-sheets';
 import {sheets, workbookJSONs}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import ExecuteSlice from './ExecuteSlice';
 
 
 const metaReducer = combineReducers({
@@ -29,7 +30,8 @@ const metaReducer = combineReducers({
 const systemReducer = combineReducers({
   modal: ModalSlice.reducer,
   popover: PopoverSlice.reducer,
-  loading: LoadingSlice.reducer
+  loading: LoadingSlice.reducer,
+  execute: ExecuteSlice.reducer
 });
 
 const configure = {

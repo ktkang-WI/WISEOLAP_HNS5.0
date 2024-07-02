@@ -1,17 +1,20 @@
 import localizedString from 'config/localization';
-import dashboard from '../../../../../assets/image/icon/button/dashboard.png';
+import dashboard from 'assets/image/icon/button/dashboard.png';
 import dashboardActive
-  from '../../../../../assets/image/icon/button/dashboard_active.png';
-import adhoc from '../../../../../assets/image/icon/button/adhoc.png';
+  from 'assets/image/icon/button/dashboard_active.png';
+import adhoc from 'assets/image/icon/button/adhoc.png';
 import spreadsheet
-  from '../../../../../assets/image/icon/button/spreadsheet.png';
+  from 'assets/image/icon/button/spreadsheet.png';
 import spreadsheetActive
-  from '../../../../../assets/image/icon/button/spreadsheet_active.png';
+  from 'assets/image/icon/button/spreadsheet_active.png';
 import adhocActive
-  from '../../../../../assets/image/icon/button/adhoc_active.png';
-import preference from '../../../../../assets/image/icon/button/preference.png';
+  from 'assets/image/icon/button/adhoc_active.png';
+import preference from 'assets/image/icon/button/preference.png';
 import preferenceActive
-  from '../../../../../assets/image/icon/button/preference_active.png';
+  from 'assets/image/icon/button/preference_active.png';
+import log from 'assets/image/icon/button/log.png';
+import logActive
+  from 'assets/image/icon/button/log_active.png';
 import {useNavigate} from 'react-router';
 import {useDispatch} from 'react-redux';
 import {DesignerMode, EditMode} from 'components/config/configType';
@@ -151,6 +154,15 @@ const SNBDefaultElement = () => {
       label: localizedString.dataSourceAddition,
       onClick: (e) => {
         nav('add-datasource');
+      }
+    },
+    'Log': {
+      id: 'log',
+      imgSrc: log,
+      hoveredImgSrc: logActive,
+      label: localizedString.log.log,
+      onClick: (e) => {
+        nav('log');
       }
     }
   };

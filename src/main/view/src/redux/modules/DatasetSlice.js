@@ -100,6 +100,41 @@ const reducers = {
     const newId = actions.payload.reportId.newId;
     delete state[prevId];
     state[newId] = actions.payload.dataset;
+  },
+  datasetAppliedFields(state, actions) {
+    const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
+    const uniqueName = actions.payload.uniqueName;
+
+    const datasetIndex = state[reportId].datasets.findIndex(
+        (ds) => ds.datasetId == datasetId
+    );
+
+    const selectedFieldsIdx =
+      state[reportId].datasets[datasetIndex].selectedFields.findIndex(
+          (field) => field.uniNm == uniqueName
+      );
+
+    if (datasetIndex >= 0) {
+      if (selectedFieldsIdx >= 0) {
+        state[reportId].datasets[datasetIndex]
+            .selectedFields[selectedFieldsIdx] =
+          {uniNm: uniqueName, check: true};
+      }
+    }
+  },
+  viewerPostingUpdate(state, actions) {
+    const reportId = actions.payload.reportId;
+    const datasetId = actions.payload.datasetId;
+    const fields = actions.payload.fields;
+
+    const datasetIndex = state[reportId].datasets.findIndex(
+        (ds) => ds.datasetId == datasetId
+    );
+
+    if (datasetIndex >= 0) {
+      state[reportId].datasets[datasetIndex].selectedFields = fields;
+    }
   }
 };
 
