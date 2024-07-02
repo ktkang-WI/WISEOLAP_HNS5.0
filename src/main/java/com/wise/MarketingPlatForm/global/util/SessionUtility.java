@@ -11,15 +11,15 @@ public class SessionUtility {
     private final static String SESSION_KEY = "WI_SESSION_USER";
     private final static int SESSION_TIME = 3600;
     
+    private static UserDTO getSessionUser(HttpSession session) {
+        return (UserDTO)session.getAttribute(SESSION_KEY);
+    }
+
     public static UserDTO getSessionUser(HttpSessionEvent request) {
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute(SESSION_KEY);
-        return userDTO;
+        return getSessionUser(request.getSession());
     }
     public static UserDTO getSessionUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        UserDTO userDTO = (UserDTO)session.getAttribute(SESSION_KEY);
-        return userDTO;
+        return getSessionUser(request.getSession());
     }
 
     public static void setSessionUser(HttpServletRequest request, UserDTO userDTO) {
