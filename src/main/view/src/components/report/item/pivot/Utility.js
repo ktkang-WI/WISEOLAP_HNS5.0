@@ -442,7 +442,7 @@ const generateItem = (item, param, rootItem) => {
 
           if (usePaging && dataLength != matrixInfo.paging.total) {
             const tempItem = {
-              ...item,
+              ...curItem,
               mart: {
                 ...curItem.mart,
                 paging: {
@@ -455,7 +455,7 @@ const generateItem = (item, param, rootItem) => {
             store.dispatch(updateItem({reportId, item: tempItem}));
           } else if (!usePaging) {
             const tempItem = {
-              ...item,
+              ...curItem,
               mart: {
                 ...curItem.mart,
                 data: res.data

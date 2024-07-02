@@ -194,75 +194,58 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
-  useEffect(() => {
-    const handleContextMenu = (event) => {
-      if (editMode === EditMode.DESIGNER) {
-        event.preventDefault();
-      }
-    };
+  const handleContentReady = (e) => {
+    if (editMode === EditMode.DESIGNER) {
+      const pivotInstance = ref.current.instance.element();
+      if (pivotInstance) {
+        const queryCheck = ItemManager.getExcuteQueryInit(item);
+        if (queryCheck) {
+          dispatch(loadingAction.startJob());
 
-    const handleContentReady = (e) => {
-      if (editMode === EditMode.DESIGNER) {
-        const pivotInstance = ref.current.instance.element();
-        if (pivotInstance) {
-          pivotInstance.addEventListener('contextmenu', handleContextMenu);
-          const queryCheck = ItemManager.getExcuteQueryInit(item);
-          if (queryCheck) {
-            dispatch(loadingAction.startJob());
-
-            const pivotDataSource = e.component.getDataSource();
-            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
-            const pivotColumnFields =
-                pivotDataSource.getAreaFields('column', true);
-            if (!item.meta.positionOption.row.expand) {
-              pivotRowFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
-              });
-            }
-
-            if (!item.meta.positionOption.row.expand) {
-              pivotColumnFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
-              });
-            }
-
-            const items = pivotDataSource.getData().rows;
-
-            const collapseSingleChildItems = (items, path) => {
-              items.forEach((item) => {
-                const currentPath = path.concat(item.value);
-                if (item.children && item.children.length === 1 &&
-                     (item.children[0]?.text == '' ||
-                        item.children[0]?.text == 'null')) {
-                  pivotDataSource.collapseHeaderItem('row', currentPath);
-                } else {
-                  if (item.children) {
-                    collapseSingleChildItems(item.children, currentPath);
-                  }
-                }
-              });
-            };
-
-            collapseSingleChildItems(items, []);
-
-            ItemManager.setExcuteQueryInit(item, false);
-            dispatch(loadingAction.endJobForce());
+          const pivotDataSource = e.component.getDataSource();
+          const pivotRowFields = pivotDataSource.getAreaFields('row', true);
+          const pivotColumnFields =
+              pivotDataSource.getAreaFields('column', true);
+          if (!item.meta.positionOption.row.expand) {
+            pivotRowFields.forEach((field) => {
+              pivotDataSource.collapseAll(field.index);
+            });
           }
 
-          return () =>
-            pivotInstance.removeEventListener('contextmenu', handleContextMenu);
+          if (!item.meta.positionOption.row.expand) {
+            pivotColumnFields.forEach((field) => {
+              pivotDataSource.collapseAll(field.index);
+            });
+          }
+
+          const items = pivotDataSource.getData().rows;
+
+          const collapseSingleChildItems = (items, path) => {
+            items.forEach((item) => {
+              const currentPath = path.concat(item.value);
+              if (item.children && item.children.length === 1 &&
+                   (item.children[0]?.text == '' ||
+                      item.children[0]?.text == 'null')) {
+                pivotDataSource.collapseHeaderItem('row', currentPath);
+              } else {
+                if (item.children) {
+                  collapseSingleChildItems(item.children, currentPath);
+                }
+              }
+            });
+          };
+
+          collapseSingleChildItems(items, []);
+
+          ItemManager.setExcuteQueryInit(item, false);
+          dispatch(loadingAction.endJobForce());
         }
       }
-    };
-
-    const pivotInstance = ref.current.instance;
-    if (pivotInstance) {
-      pivotInstance.on('contentReady', handleContentReady);
-      return () => {
-        pivotInstance.off('contentReady', handleContentReady);
-      };
     }
-  }, [item]);
+  };
+
+  useEffect(() => {
+  }, []);
 
   const usePage = meta.pagingOption.pagination.isOk;
 
@@ -293,6 +276,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
+        onContentReady={handleContentReady}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{
             text: localizedString.reportDescription,
