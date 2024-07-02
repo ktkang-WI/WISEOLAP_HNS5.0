@@ -40,7 +40,7 @@ const DownloadDefaultElement = () => {
         visible: true,
         contents: [
           {
-            label: localizedString.excelXlsx,
+            label: localizedString.excelMergeXlsx,
             visible: true,
             onClick: () => {
               const newCurrentItem = filterdLayoutItem();
@@ -57,7 +57,7 @@ const DownloadDefaultElement = () => {
             }
           },
           {
-            label: localizedString.excelMergeXlsx,
+            label: localizedString.excelXlsx,
             visible: rootItem?.adHocOption ? true : false,
             onClick: () => {
               const newCurrentItem = filterdLayoutItem();
