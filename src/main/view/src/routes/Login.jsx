@@ -5,6 +5,11 @@ import wordLogo from '../assets/image/logo/logo_wiseitech.png';
 import PagingTransition from
   'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
+import {useEffect} from 'react';
+import models from 'models';
+import localizedString from 'config/localization';
+import {useLoginHook} from 'hooks/useLogin';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -102,7 +107,22 @@ const Footer = styled.div`
   font:${theme.font.small}
 `;
 
+
 const Login = () => {
+  const handleFetchData = useLoginHook();
+  const {confirm} = useModal();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await models?.Login?.loginBySession();
+      if (!res?.data) return;
+      confirm(localizedString.sessionLoginMsg, () => {
+        handleFetchData(res, localizedString.loginErrorBySession);
+      });
+    };
+    fetchData();
+  }, []);
+
   return (
     <Wrap>
       <BackgroundLogo src={bgLogo}/>

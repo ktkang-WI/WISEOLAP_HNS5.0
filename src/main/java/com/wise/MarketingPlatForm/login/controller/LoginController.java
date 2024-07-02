@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
@@ -127,4 +128,21 @@ public class LoginController {
 
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping("/login-by-session")
+    public ResponseEntity<Object> loginBySession(HttpServletRequest request) {
+
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) return ResponseEntity.ok().build();
+
+        int userNo = userDTO.getUserNo();
+        MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
+        
+        if (model == null) return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok().body(model);
+    }
+
 }

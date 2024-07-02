@@ -9,6 +9,10 @@ export const login = (id, password) => {
   });
 };
 
+export const loginBySession = () => {
+  return axios.post(path + '/login-by-session');
+};
+
 export const logout = () => {
   const res = axios.get(path + '/logout');
   return res;
