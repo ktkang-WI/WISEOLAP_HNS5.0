@@ -1,6 +1,8 @@
 
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import Panel from
+  'components/config/organisms/userGroupManagement/common/Panel';
 import MyPageReportForm from 'components/useInfo/molcule/MyPageReportForm';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
@@ -13,18 +15,22 @@ import React, {createContext, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import styled from 'styled-components';
+import removeImg from 'assets/image/icon/button/remove_white.png';
+import folderImg from 'assets/image/icon/report/folder_load.png';
+import dashImg from 'assets/image/icon/report/dash.png';
+import excelImg from 'assets/image/icon/report/excel_file.png';
+import adhocImg from 'assets/image/icon/report/adhoc.png';
+import {DesignerMode} from 'components/config/configType';
+
+const iconMapper = {
+  'FOLDER': folderImg,
+  [DesignerMode.DASHBOARD]: dashImg,
+  [DesignerMode.AD_HOC]: adhocImg,
+  [DesignerMode.EXCEL]: excelImg
+};
 
 const theme = getTheme();
 
-const Wrapper = styled.div`
-  padding-top: 10px;
-  background: ${theme.color.panelColor};
-  height: 100%;
-  width: 100%;
-  display: flex;
-  text-align: left;
-  box-sizing: border-box;
-`;
 const StyledTreeView = styled(TreeView)`
   color: ${theme.color.primaryFont};
   font: ${theme.font.dataSource};
@@ -41,8 +47,16 @@ const StyledTreeView = styled(TreeView)`
 
   .dx-scrollable-wrapper {
     border: 1px solid #D4D7DC;
+    border-radius: 6px;
   }
 `;
+
+const smallButton = {
+  height: '30px',
+  borderRadius: '4px',
+  font: theme.font.smallButton
+};
+
 export const Context = createContext();
 
 const UserReprotManagement = () => {
@@ -64,6 +78,7 @@ const UserReprotManagement = () => {
       setData(e.itemData);
     }
   };
+
   const onClickSave = (e) => {
     confirm(localizedString.changeReportNmConfirm, () => {
       const report = data;
@@ -77,6 +92,7 @@ const UserReprotManagement = () => {
       });
     });
   };
+
   const onClickRemove = (e) => {
     const reportId = data.id;
     if (reportId == '') {
@@ -93,59 +109,82 @@ const UserReprotManagement = () => {
       });
     }
   };
+
+  const itemRender = (item) => {
+    return (
+      <div className="dx-item-content dx-treeview-item-content">
+        <img width='16px' src={iconMapper[item.type]} className="dx-icon"/>
+        <span>{item.name}</span>
+      </div>
+    );
+  };
+
   return (
-    <>
-      <Wrapper>
-        <ModalPanel
-          title={localizedString.report}
-          height='calc(100% - 250px)'
-          width='35vw'
-          padding='10'
-        >
-          <div style={{ // styled
-            float: 'left',
-            position: 'relative', width: '33vw', height: '60vh'}}>
-            <StyledTreeView
-              height='50vh'
-              width='33vw'
-              items={treeViewData.folderReport}
-              dataStructure="plain"
-              displayExpr="name"
-              selectionMode='single'
-              parentIdExpr="fldParentId"
-              keyExpr="id"
-              noDataText={localizedString.noReports}
-              searchEnabled={true}
-              searchEditorOptions={{
-                placeholder: localizedString.search,
-                width: '300px'
-              }}
-              focusStateEnabled={true}
-              onItemClick={handleItemClick}
-            />
-            <div style={{display: 'flex', position: 'absolute', right: '30px'}}>
-              <CommonButton
-                width='100px'
-                onClick={onClickRemove}
-              >{localizedString.deleteReport}</CommonButton>
-            </div>
+    <Wrapper display='flex' direction='row'>
+      <Panel
+        title={localizedString.report}
+        height='100%'
+        width='50%'
+        padding='10'
+      >
+        <div style={{width: '100%', height: '50%', textAlign: 'left'}}>
+          <StyledTreeView
+            height='100%'
+            width='100%'
+            items={treeViewData.folderReport}
+            dataStructure="plain"
+            displayExpr="name"
+            selectionMode='single'
+            parentIdExpr="fldParentId"
+            keyExpr="id"
+            noDataText={localizedString.noReports}
+            searchEnabled={true}
+            searchEditorOptions={{
+              placeholder: localizedString.search,
+              width: '300px'
+            }}
+            itemRender={itemRender}
+            focusStateEnabled={true}
+            onItemClick={handleItemClick}
+          />
+          <div style={{
+            display: 'flex',
+            height: '50%',
+            padding: '10px 20px',
+            justifyContent: 'right'
+          }}>
+            <CommonButton
+              {...smallButton}
+              width='70px'
+              type='red'
+              onClick={onClickRemove}
+            >
+              <img height='20px' src={removeImg}/>
+              {localizedString.deleteReport}
+            </CommonButton>
           </div>
-        </ModalPanel>
-        <ModalPanel
-          title={localizedString.reportInformation}
-          height='calc(100% - 250px)'
-          width='55vw'
-          padding='10'
-        >
-          <Context.Provider value={context}>
-            <MyPageReportForm/>
-          </Context.Provider>
-          <CommonButton onClick={onClickSave}>
+        </div>
+      </Panel>
+      <Panel
+        title={localizedString.reportInformation}
+        height='100%'
+        width='50%'
+        padding='10'
+      >
+        <Context.Provider value={context}>
+          <MyPageReportForm/>
+        </Context.Provider>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '10px'
+        }}>
+          <CommonButton width={'300px'} onClick={onClickSave}>
             {localizedString.saveReport}
           </CommonButton>
-        </ModalPanel>
-      </Wrapper>
-    </>
+        </div>
+      </Panel>
+    </Wrapper>
   );
 };
 export default React.memo(UserReprotManagement);

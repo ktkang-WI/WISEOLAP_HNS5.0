@@ -1,39 +1,14 @@
 import MyPageDesignerElements from
   'components/useInfo/molcule/myPageDesignerMolecule/MyPageDesignerElements';
-import {getTheme} from 'config/theme';
 import {useLoaderData} from 'react-router-dom';
 import localizedString from 'config/localization';
 import {useState} from 'react';
-import styled from 'styled-components';
 import {updateDesignerConfig}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import useModal from 'hooks/useModal';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {designerConfigItems} from './MypageDesignerUtil';
-
-const theme = getTheme();
-
-const Content = styled.div`
-  height:100%;
-  width:100%;
-  display:flex;
-  flex-direction: row;
-  flex: 0 0 1;
-  margin: 10px;
-  border: 1px solid #D4D7DC;
-  border-radius: 10px;
-  box-sizing: border-box;
-`;
-
-const Wrapper = styled.div`
-  padding-top: 10px;
-  background: ${theme.color.panelColor};
-  height: 100%;
-  width: 100%;
-  display: inline-block;
-  text-align: left;
-  box-sizing: border-box;
-`;
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const seperateConfig = (designerConfig) => {
   if (designerConfig == null) {
@@ -100,30 +75,32 @@ const MyDesignerConfig = () => {
   };
 
   return (
-    <Content>
-      <Wrapper>
-        <MyPageDesignerElements
-          setConfig={setConfig}
-          data={config}
-          // 각 설정 항목
-          items={designerConfigItems}
-        />
-        <div style={{display: 'flex'}}>
-          <CommonButton
-            width='200px'
-            onClick={onClickSave}
-          >
-            {localizedString.saveReport}
-          </CommonButton>
-          <CommonButton
-            width='200px'
-            onClick={onClickAllReset}
-          >
-            {localizedString.resetFilter + '(ALL)'}
-          </CommonButton>
-        </div>
-      </Wrapper>
-    </Content>
+    <Wrapper className='custom-scrollbar' overflow='auto'>
+      <MyPageDesignerElements
+        setConfig={setConfig}
+        data={config}
+        // 각 설정 항목
+        items={designerConfigItems}
+      />
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '20px'
+      }}>
+        <CommonButton
+          width='100px'
+          onClick={onClickSave}
+        >
+          {localizedString.saveReport}
+        </CommonButton>
+        <CommonButton
+          width='100px'
+          onClick={onClickAllReset}
+        >
+          {localizedString.resetFilter + '(ALL)'}
+        </CommonButton>
+      </div>
+    </Wrapper>
   );
 };
 export default MyDesignerConfig;
