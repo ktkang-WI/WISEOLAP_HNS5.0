@@ -26,7 +26,7 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = ({title, width, height, onItemSelect, ...props}) => {
+const ReportListTab = ({title, width, onItemSelect, ...props}) => {
   const dxRef = useRef();
   let dblClick = 0;
 

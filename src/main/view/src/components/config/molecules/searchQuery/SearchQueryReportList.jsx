@@ -20,6 +20,7 @@ const SearchQueryReportList = ({reportList, setItemData}) => {
     return <ReportListTab
       items={reportList ? reportList[data.id] : []}
       width='100%'
+      height='auto'
       onItemClick={({itemData}) => {
         setItemData(itemData.type === 'FOLDER' ? {} : itemData);
       }}
