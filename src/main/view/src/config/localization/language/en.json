@@ -569,6 +569,8 @@
   "folderManager": "Folder Management",
   "noSelectionFolderAlert": "Please select a folder and proceed.",
   "loadData": "Load data",
-  "reportInfoChangeSuccess":"Saving report information was successful."
+  "reportInfoChangeSuccess":"Saving report information was successful.",
+  "failReportDelete": "Report deletion failed.",
+  "successReportDelete": "Report deletion was successful."
 
 }

@@ -109,6 +109,7 @@ const UserReprotManagement = () => {
 
   const onClickRemove = (e) => {
     const reportId = data.id;
+
     if (!reportId || reportId == '') {
       alert(localizedString.selectReportAndDeleteConfirm);
       return;
@@ -117,9 +118,17 @@ const UserReprotManagement = () => {
     confirm(localizedString.reportDeleteConfirm, () => {
       deleteReport({reportId: reportId}).then((response) => {
         if (response.status == 200) {
-          userFolderData().then((respose) => {
-            setTreeViewData(respose);
+          success(localizedString.successReportDelete);
+
+          userFolderData().then((res) => {
+            if (res) {
+              setTreeViewData(res);
+            } else {
+              alert(localizedString.failReportDelete);
+            }
           });
+        } else {
+          alert(localizedString.failReportDelete);
         }
       });
     });
