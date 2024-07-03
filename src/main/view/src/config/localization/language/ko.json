@@ -795,5 +795,6 @@
   "required": "필수 입력 입니다.",
   "confirmResetMsg": "초기화 하시겠습니까?",
   "folderManager": "폴더 관리",
-  "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요."
+  "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요.",
+  "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다."
 }

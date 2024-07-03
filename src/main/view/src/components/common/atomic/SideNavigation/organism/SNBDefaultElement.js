@@ -84,9 +84,10 @@ const SNBDefaultElement = () => {
 
     const loadReport = async () => {
       const isLoadReport = await getReport(myReportId);
-      await getLinkedReport();
+      const loadGetReport = await getLinkedReport();
+
       // TODO: 보고서 바로 조회 개발시 적용예정.
-      if (isLoadReport) {
+      if (isLoadReport && loadGetReport) {
         querySearch();
       }
     };

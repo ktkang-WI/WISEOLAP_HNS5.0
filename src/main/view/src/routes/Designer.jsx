@@ -46,6 +46,7 @@ const Designer = () => {
     };
 
     let isLoadReport = false;
+    let isLoadLinkReport = false;
 
     if (hasFavoritReport) {
       const myReportId = myPageConfigure.defaultReportId;
@@ -53,10 +54,10 @@ const Designer = () => {
 
       if (myReportType == designerMode) {
         isLoadReport = await getReport(myReportId, myReportType);
-        await getLinkedReport(myReportId);
+        isLoadLinkReport = await getLinkedReport(myReportId);
 
         // TODO: 환경설정 보고서 바로 조회 개발시 분기 예정.
-        if (isLoadReport) {
+        if (isLoadReport && isLoadLinkReport) {
           querySearch();
         } else {
           initState(isLoadReport);

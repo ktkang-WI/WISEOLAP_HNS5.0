@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import FavoritModal from '../../myPageModal/FavoritModal';
 import {
   LayoutApplyCheckBox,
-  // LayoutSelectBox,
   MyDesignerLabel,
   MyDesignerTitle,
   MyPageTextBox
@@ -37,12 +36,10 @@ const Content = styled.div`
 const MyPageDesignerElements = ({setConfig, data, items}) => {
   const {openModal, confirm} = useModal();
   const onClickReset = (id) => {
-    if (id.id) {
-      setConfig({...data, [id.id]: null, [id.requiredNm]: null});
-    } else {
-      setConfig({...data, [id]: null});
-    }
-    // eachItemReset(param);
+    setConfig({
+      ...data,
+      ...(id?.id ? {[id.id]: null, [id.requiredNm]: null} : {[id]: null})
+    });
   };
 
   const handleClick = (modalTitle, itemId) => {

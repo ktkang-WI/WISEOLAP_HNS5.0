@@ -20,7 +20,6 @@ export default function useReportLoad() {
         loadReport(data);
         return true;
       } catch (e) {
-        console.error(e);
         alert(localizedString.reportCorrupted);
         return false;
       }
@@ -33,18 +32,29 @@ export default function useReportLoad() {
   };
 
   const getLinkedReport = async (reportId) => {
-    await models.Report.getLinkReportList(reportId)
+    const res = await models.Report.getLinkReportList(reportId)
         .then((res) => {
-          const subLinkReports = res.data.subLinkReports;
-          const linkReports = res.data.linkReports;
-          console.log('subLinkReports', subLinkReports);
-          console.log('linkReports', linkReports);
-          if (subLinkReports.length > 0) {
-            dispatch(setSubLinkReport(subLinkReports[0]));
-          } else if (subLinkReports.length === 0) {
-            dispatch(setLinkReport(linkReports[0]));
-          }
+          try {
+            const subLinkReports = res.data.subLinkReports;
+            const linkReports = res.data.linkReports;
+            console.log('subLinkReports', subLinkReports);
+            console.log('linkReports', linkReports);
+            if (subLinkReports.length > 0) {
+              dispatch(setSubLinkReport(subLinkReports[0]));
+            } else if (subLinkReports.length === 0) {
+              dispatch(setLinkReport(linkReports[0]));
+            }
+            return true;
+          } catch (e) {
+            alert(localizedString.linkReportCorrupted);
+            return false;
+          };
+        }).catch(() => {
+          alert(localizedString.linkReportCorrupted);
+          return false;
         });
+
+    return res;
   };
   return {
     getReport,
