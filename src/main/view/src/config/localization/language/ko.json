@@ -762,5 +762,10 @@
     "others": "Top/Bottom 값 이외의 항목 기타로 표시"
   },
   "range": "범위",
-  "rangeBarlengthAlert": "레인지바 아이템의 경우 범위1과 범위2의 측정값의 개수가 같아야 합니다."
+  "rangeBarlengthAlert": "레인지바 아이템의 경우 범위1과 범위2의 측정값의 개수가 같아야 합니다.",
+  "eachItemResetConfirm": {
+    "defaultReportId": "기본 보고서를 초기화 하시겠습니까?",
+    "defaultItem": "기본 아이템을 초기화 하시겠습니까?",
+    "defaultPalette": "기본 색상을 초기화 하시겠습니까?"
+  }
 }

@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.config.service.myPage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -26,8 +27,9 @@ public class MyPageDesignerConfigService {
       model = myPageConfigDAO.selectDesignerConfig(userNo);
       if (model != null) {
         if (model.getDefaultReportId() != null) {
-          String reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
-          model.setDefaultReportNm(reportNm);
+          List<HashMap<String, String>> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
+          model.setDefaultReportNm(reportNm.get(0).get("REPORT_NM"));
+          model.setDefaultReportType(reportNm.get(0).get("REPORT_TYPE"));
         }
     
         if (model.getDefaultDatasetId() != null) {
@@ -38,14 +40,16 @@ public class MyPageDesignerConfigService {
     } catch (Exception e) {
       logger.error("MyPageDesignerConfigService Error", e);
     } finally {
-      model = MyDesignerDTO.builder()
-      .userNo(userNo)
-      .defaultDatasetId(null)
-      .defaultReportId(null)
-      .defaultItem("{\"item\":\"chart\",\"check\":false,\"layout\":\"CTGB\"}")
-      .defaultPalette("")
-      .defaultLayout("")
-      .build();
+      if (model == null) {
+        model = MyDesignerDTO.builder()
+        .userNo(userNo)
+        .defaultDatasetId(null)
+        .defaultReportId(null)
+        .defaultItem("{\"item\":\"chart\",\"check\":false,\"layout\":\"CTGB\"}")
+        .defaultPalette("")
+        .defaultLayout("")
+        .build();
+      }
     }
   
     return model;

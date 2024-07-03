@@ -543,5 +543,10 @@
     "others": "Display other items besides Top/Bottom values as 'Others'"
   },
   "range": "range",
-  "rangeBarlengthAlert": "For rangeBar items, the number of measurements in range 1 and range 2 must be the same."
+  "rangeBarlengthAlert": "For rangeBar items, the number of measurements in range 1 and range 2 must be the same.",
+  "eachItemResetConfirm": {
+    "defaultReportId": "Do you want to reset the default report?",
+    "defaultItem": "Do you want to reset default items?",
+    "defaultPalette": "Do you want to reset default colors?"
+  }
 }

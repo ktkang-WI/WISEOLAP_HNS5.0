@@ -1,7 +1,11 @@
+import {paletteCollection}
+  from 'components/common/atomic/Popover/organism/Palette';
 import {useDispatch} from 'react-redux';
+import store from 'redux/modules';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
+import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
 
 export default function useLayout() {
   const dispatch = useDispatch();
@@ -24,8 +28,12 @@ export default function useLayout() {
   };
 
   const insertFlexLayout = (reportId, component, chartType, options) => {
+    const myConfig = selectMyPageDesignerConfig(store?.getState());
     const param =
       {reportId: reportId, component: component};
+    const paletteIdx = paletteCollection.findIndex(
+        (palette) => palette.name == myConfig?.defaultPalette
+    );
 
     dispatch(layoutSlice.insertFlexLayout(param));
     dispatch(itemSlice.insertItem({
@@ -33,7 +41,8 @@ export default function useLayout() {
       item: {
         type: component, // type을 담고 있는 item 객체
         chartType: chartType,
-        options: options
+        options: options,
+        palette: paletteIdx > -1? paletteIdx : 0
       }
     }));
   };

@@ -29,6 +29,7 @@ import {
 } from 'redux/selector/ConfigSelector';
 import {clearSheets} from
   'components/report/atomic/spreadBoard/util/SpreadCore';
+import useReportLoad from 'hooks/useReportLoad';
 
 const SNBDefaultElement = () => {
   // actions
@@ -37,7 +38,8 @@ const SNBDefaultElement = () => {
   // hook
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const {reload} = useReportSave();
+  const {reload, querySearch} = useReportSave();
+  const {getReport, getLinkedReport} = useReportLoad();
   const {confirm} = useModal();
 
   // redux
@@ -56,17 +58,33 @@ const SNBDefaultElement = () => {
   };
 
   const changeNav = (designerMode) => {
-    let adHocLayout = configure.adHocLayout;
+    const myReportId = myPageConfigure.defaultReportId;
+    const myReportType = myPageConfigure.defaultReportType;
+    let adHocLayout = configure.adHocLayout || 'CTGB';
     const defaultItem = myPageConfigure?.defaultItem || 'chart';
 
-    if (myPageConfigure?.defaultLayout.check) {
+    if (myPageConfigure?.defaultLayout?.check) {
       adHocLayout = myPageConfigure.defaultLayout.layout || 'CTGB';
     }
 
     nav(designerMode.toLowerCase());
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
-    reload(designerMode, adHocLayout, defaultItem);
+
+    const loadReport = async () => {
+      const isLoadReport = await getReport(myReportId);
+      await getLinkedReport();
+      // TODO: 보고서 바로 조회 개발시 적용예정.
+      if (isLoadReport) {
+        querySearch();
+      }
+    };
+
+    if (myPageConfigure?.defaultReportId && myReportType == designerMode) {
+      loadReport();
+    } else {
+      reload(designerMode, adHocLayout, defaultItem);
+    }
   };
 
   return {

@@ -9,6 +9,8 @@ import {
   MyPageTextBox
 } from '../../atom/MyDesignerAtom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import refresh from 'assets/image/icon/button/refresh.png';
+import localizedString from 'config/localization';
 
 const SideMenuWrapper = styled.div`
   height: 100%;
@@ -33,7 +35,15 @@ const Content = styled.div`
 `;
 
 const MyPageDesignerElements = ({setConfig, data, items}) => {
-  const {openModal} = useModal();
+  const {openModal, confirm} = useModal();
+  const onClickReset = (id) => {
+    if (id.id) {
+      setConfig({...data, [id.id]: null, [id.requiredNm]: null});
+    } else {
+      setConfig({...data, [id]: null});
+    }
+    // eachItemReset(param);
+  };
 
   const handleClick = (modalTitle, itemId) => {
     openModal(FavoritModal, {
@@ -92,6 +102,16 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
       return (
         <>
           <MyDesignerTitle title={item.title}/>
+          {
+            item.type == 'favorit' &&
+            <img
+              src={refresh}
+              onClick={() => confirm(
+                  localizedString.eachItemResetConfirm[item.id.id || item.id],
+                  () => onClickReset(item.id)
+              )}
+            />
+          }
           <SideMenuWrapper>
             <ContentWrapper>
               <MyDesignerLabel label={item.label}/>
