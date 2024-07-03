@@ -73,6 +73,9 @@ const makeItem = (orgItem, countMap, palette) => {
     if (orgItem.type === 'chart') {
       item.meta.seriesType = seriesType;
     }
+
+    // 불필요하게 추가된 state 제거.
+    delete item.palette;
   }
 
   // mart 및 meta 값 세팅
