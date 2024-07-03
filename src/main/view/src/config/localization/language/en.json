@@ -567,5 +567,8 @@
   "required": "Required input.",
   "confirmResetMsg": "Do you want to reset?",
   "folderManager": "Folder Management",
-  "noSelectionFolderAlert": "Please select a folder and proceed."
+  "noSelectionFolderAlert": "Please select a folder and proceed.",
+  "loadData": "Load data",
+  "reportInfoChangeSuccess":"Saving report information was successful."
+
 }

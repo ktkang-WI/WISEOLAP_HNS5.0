@@ -63,7 +63,7 @@ const UserReprotManagement = () => {
   const reports = useLoaderData();
   const [treeViewData, setTreeViewData] = useState(reports);
   const [data, setData] = useState([]);
-  const {confirm} = useModal();
+  const {confirm, alert, success} = useModal();
 
   const context = {
     state: {
@@ -80,14 +80,28 @@ const UserReprotManagement = () => {
   };
 
   const onClickSave = (e) => {
+    const report = data;
+
+    if (!report['id'] || report['id'] == '') {
+      alert(localizedString.selectReportAlert);
+      return;
+    }
+
     confirm(localizedString.changeReportNmConfirm, () => {
-      const report = data;
       updateMyPageReport(report).then((response) => {
         if (response.status == 200) {
-          userFolderData().then((respose) => {
-            setTreeViewData(respose);
+          success(localizedString.reportInfoChangeSuccess);
+
+          userFolderData().then((res) => {
+            if (res) {
+              setTreeViewData(res);
+            } else {
+              alert(localizedString.saveFail);
+            }
           });
           setData({});
+        } else {
+          alert(localizedString.saveFail);
         }
       });
     });
@@ -95,19 +109,20 @@ const UserReprotManagement = () => {
 
   const onClickRemove = (e) => {
     const reportId = data.id;
-    if (reportId == '') {
+    if (!reportId || reportId == '') {
       alert(localizedString.selectReportAndDeleteConfirm);
-    } else {
-      confirm(localizedString.reportDeleteConfirm, () => {
-        deleteReport({reportId: reportId}).then((response) => {
-          if (response.status == 200) {
-            userFolderData().then((respose) => {
-              setTreeViewData(respose);
-            });
-          }
-        });
-      });
+      return;
     }
+
+    confirm(localizedString.reportDeleteConfirm, () => {
+      deleteReport({reportId: reportId}).then((response) => {
+        if (response.status == 200) {
+          userFolderData().then((respose) => {
+            setTreeViewData(respose);
+          });
+        }
+      });
+    });
   };
 
   const itemRender = (item) => {
