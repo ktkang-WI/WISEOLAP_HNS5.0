@@ -106,6 +106,16 @@ const CommonButton = ({
       font: theme.font.smallButton,
       border: 'solid 1px #BCD1F0',
       borderRadius: '4px'
+    },
+    'red': {
+      background: theme.color.red,
+      hoverBackground: theme.color.redHover,
+      activeBackground: theme.color.redHover,
+      color: theme.color.white,
+      border: 'none',
+      font: theme.font.smallButton,
+      margin: '2px',
+      borderRadius: '4px'
     }
   };
 
