@@ -37,6 +37,7 @@
     "gray600": "#2E3033",
     "white": "#ffffff",
     "red": "#DF0015",
+    "redHover": "#cf0013",
     "green": "#139F4B",
     "black": "#000000"
 }

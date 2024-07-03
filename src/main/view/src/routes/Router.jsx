@@ -144,7 +144,7 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: contextPath + '/myPage',
+    path: contextPath + '/my-page',
     element: <MyPage/>,
     children: [
       {
@@ -153,22 +153,22 @@ const router = createBrowserRouter([
         loader: myPageUserInfoData
       },
       {
-        path: 'myReport-folder',
+        path: 'report-folder',
         element: <ReportFolderTab/>,
         loader: myPageFolderData
       },
       {
-        path: 'myPage-viewerConfig',
+        path: 'viewer',
         element: <MyViewerConfig/>
         // loader: 뷰어 설정
       },
       {
-        path: 'myPage-fontConfig',
+        path: 'font',
         element: <MyFontConfig/>
         // loader: 폰트 설정
       },
       {
-        path: 'myPage-designerConfig',
+        path: 'designer',
         element: <MyDesignerConfig/>,
         loader: userDesignerConfig
       }

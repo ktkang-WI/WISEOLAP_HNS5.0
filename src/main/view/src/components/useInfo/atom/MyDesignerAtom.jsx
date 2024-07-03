@@ -1,4 +1,3 @@
-import HeaderPanel from 'components/common/atomic/Common/Panel/HeaderPanel';
 import styled from 'styled-components';
 import middleDot from '../../../assets/image/component/middleDot.png';
 import {CheckBox, SelectBox, TextBox} from 'devextreme-react';
@@ -17,14 +16,6 @@ const Img = styled.img`
   vertical-align: middle;
   padding: 0px 7px 2px 5px;
 `;
-
-export const MyDesignerTitle = ({title}) => {
-  return (
-    <HeaderPanel width='auto'>
-      {title}
-    </HeaderPanel>
-  );
-};
 
 export const MyDesignerLabel = ({label}) => {
   return (
