@@ -420,6 +420,7 @@
   "pieType": "파이",
   "doughnutType": "도넛",
   "reloadConfirmMsg": "저장하지 않은 작업내용이 사라질 수 있습니다. 새로 만드시겠습니까?",
+  "sessionLoginMsg": "세션에 저장된 로그인 정보를 활용하여 로그인하시겠습니까?",
   "initState": "초기 상태",
   "expandRowGroup": "행 그룹 확장",
   "expandColumnGroup": "열 그룹 확장",
@@ -790,5 +791,6 @@
   "required": "필수 입력 입니다.",
   "confirmResetMsg": "초기화 하시겠습니까?",
   "folderManager": "폴더 관리",
-  "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요."
+  "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요.",
+  "loginErrorBySession": "'세션의 의해 로그인이 시도되었으나 서버에 문제가 발생하였습니다.'"
 }
