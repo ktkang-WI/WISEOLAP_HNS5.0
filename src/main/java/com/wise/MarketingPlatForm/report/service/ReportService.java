@@ -440,7 +440,7 @@ public class ReportService {
         try {
             if (datasetMap.containsKey("datasets")) {
                 List<Map<String, Object>> datasetArray = (List<Map<String, Object>>) datasetMap.get("datasets");
-                List<String> uniqueNameList = new ArrayList<String>();
+                List<String> nameList = new ArrayList<String>();
 
                 for (Map<String, Object> obj : datasetArray) {
                     Map<String, String> map = new HashMap<String, String>();
@@ -456,9 +456,10 @@ public class ReportService {
                         List<Map<String, Object>> fieldsArray = (List<Map<String, Object>>) obj.get("fields");
 
                         for (Map<String, Object> field : fieldsArray) {
-                            uniqueNameList.add(field.getOrDefault("uniqueName", "").toString());
+                            nameList.add(field.getOrDefault("name", "").toString());
+                            nameList.add(field.getOrDefault("uniqueName", "").toString());
                         }
-                        map.put("datasetQuery", uniqueNameList.toString());    
+                        map.put("datasetQuery", nameList.toString());    
                     }
                     
                     datasetInfo.add(map);
