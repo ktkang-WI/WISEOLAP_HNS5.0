@@ -1,19 +1,7 @@
 import CommonTab
   from 'components/common/atomic/Common/Interactive/CommonTab';
 import {dataSource} from './MyPageDataSource';
-import styled from 'styled-components';
-
-const Content = styled.div`
-  height:100%;
-  width:100%;
-  display:flex;
-  flex-direction: row;
-  flex: 0 0 1;
-  margin: 10px;
-  border: 1px solid #D4D7DC;
-  border-radius: 10px;
-  box-sizing: border-box;
-`;
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const TabPanelItem = ({data}) => {
   return data.component;
@@ -21,18 +9,19 @@ const TabPanelItem = ({data}) => {
 
 const ReportFolderTab = () => {
   return (
-    <Content>
+    <Wrapper>
       <CommonTab
         className='dx-theme-background-color'
         width='100%'
         height='100%'
+        tabWidth={'200px'}
         dataSource={dataSource}
         animationEnabled={false}
         swipeEnabled={false}
         itemComponent={TabPanelItem}
       >
       </CommonTab>
-    </Content>
+    </Wrapper>
   );
 };
 export default ReportFolderTab;

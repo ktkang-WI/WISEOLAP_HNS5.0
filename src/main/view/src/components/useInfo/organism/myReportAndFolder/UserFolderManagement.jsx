@@ -1,5 +1,4 @@
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
-import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import {TreeView} from 'devextreme-react';
@@ -13,24 +12,21 @@ import FolderInformation
 import Panel
   from 'components/config/organisms/userGroupManagement/common/Panel';
 import {getRefInstance} from 'components/config/utility/utility';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import folderImg from 'assets/image/icon/report/folder_load.png';
+import modifyImg from 'assets/image/icon/button/modify.png';
+import removeImg from 'assets/image/icon/button/remove_white.png';
+import checkImg from 'assets/image/icon/button/check_white.png';
 
 const theme = getTheme();
 
-const Wrapper = styled.div`
-  padding-top: 10px;
-  background: ${theme.color.panelColor};
-  height: 100%;
-  width: 100%;
-  display: inline-flex;
-  text-align: left;
-  box-sizing: border-box;
-`;
 const StyledTreeView = styled(TreeView)`
   color: ${theme.color.primaryFont};
   font: ${theme.font.dataSource};
   padding: 20px;
   box-sizing: border-box;
   letter-spacing: -1px;
+
   .dx-treeview-toggle-item-visibility {
     color: ${theme.color.primaryFont};
   }
@@ -41,8 +37,15 @@ const StyledTreeView = styled(TreeView)`
 
   .dx-scrollable-wrapper {
     border: 1px solid #D4D7DC;
+    border-radius: 6px;
   }
 `;
+
+const smallButton = {
+  height: '30px',
+  borderRadius: '4px',
+  font: theme.font.smallButton
+};
 
 const UserFolderManagement = () => {
   const folders = useLoaderData();
@@ -100,64 +103,76 @@ const UserFolderManagement = () => {
     }
   };
 
-  return (
-    <>
-      <Wrapper>
-        <ModalPanel
-          height='calc(100% - 250px)'
-          width='50%'
-          padding='10px 10px 0px 20px'
-        >
-          <Panel title={localizedString.folderManager}>
-            <div style={{position: 'relative', width: '400px', height: '60vh'
-            }}>
-              <StyledTreeView
-                height='50vh'
-                width='35vw'
-                items={treeViewData.folder}
-                dataStructure="plain"
-                displayExpr="name"
-                selectionMode='single'
-                parentIdExpr="fldParentId"
-                keyExpr="id"
-                noDataText={localizedString.noReports}
-                searchEnabled={true}
-                searchEditorOptions={{
-                  placeholder: localizedString.search,
-                  width: '300px'
-                }}
-                selectByClick={false}
-                focusStateEnabled={true}
-                onItemClick={handleItemClick}
-              />
-            </div>
-          </Panel>
-        </ModalPanel>
-        <ModalPanel
-          height='calc(100% - 250px)'
-          width='50%'
-          padding='10px 10px 0px 20px'
-        >
-          <FolderInformation row={row} setRow={setRow} myPageFlag={'myPage'}/>
-        </ModalPanel>
-      </Wrapper>
-      <div>
-        <div style={{display: 'flex'}}>
-          <CommonButton
-            width='150px'
-            onClick={newUserFolder}
-          >{localizedString.newReport}</CommonButton>
-          <CommonButton
-            width='100px'
-            onClick={updateUserFolder}
-          >{localizedString.saveReport}</CommonButton>
-          <CommonButton
-            width='100px'
-            onClick={deleteUserFolder}
-          >{localizedString.deleteReport}</CommonButton>
-        </div>
+  const itemRender = (item) => {
+    return (
+      <div className="dx-item-content dx-treeview-item-content">
+        <img width='16px' src={folderImg} className="dx-icon"/>
+        <span>{item.name}</span>
       </div>
-    </>
+    );
+  };
+
+  return (
+    <Wrapper display='flex' direction='row'>
+      <Panel title={localizedString.folderManager}>
+        <div style={{width: '100%', height: '50%', textAlign: 'left'}}>
+          <StyledTreeView
+            height='100%'
+            width='100%'
+            items={treeViewData.folder}
+            dataStructure="plain"
+            displayExpr="name"
+            selectionMode='single'
+            parentIdExpr="fldParentId"
+            keyExpr="id"
+            noDataText={localizedString.noReports}
+            searchEnabled={true}
+            searchEditorOptions={{
+              placeholder: localizedString.search,
+              width: '300px'
+            }}
+            itemRender={itemRender}
+            selectByClick={false}
+            focusStateEnabled={true}
+            onItemClick={handleItemClick}
+          />
+        </div>
+        <div style={{
+          display: 'flex',
+          height: '50%',
+          padding: '10px 20px',
+          justifyContent: 'right'
+        }}>
+          <CommonButton
+            {...smallButton}
+            width='100px'
+            onClick={newUserFolder}
+          >
+            <img height='20px' src={checkImg}/>
+            {localizedString.newReport}
+          </CommonButton>
+          <CommonButton
+            {...smallButton}
+            width='70px'
+            type='secondary'
+            onClick={updateUserFolder}
+          >
+            <img height='20px' src={modifyImg}/>
+            {localizedString.saveReport}
+          </CommonButton>
+          <CommonButton
+            {...smallButton}
+            width='70px'
+            type='red'
+            onClick={deleteUserFolder}
+          >
+            <img height='20px' src={removeImg}/>
+            {localizedString.deleteReport}
+          </CommonButton>
+        </div>
+      </Panel>
+      <FolderInformation row={row} setRow={setRow} myPageFlag={'myPage'}/>
+    </Wrapper>
   );
 };
 

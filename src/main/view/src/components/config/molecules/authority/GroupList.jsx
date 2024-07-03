@@ -15,6 +15,7 @@ const GroupList = ({onRowClick, dependency}) => {
   const [dataSource, setDataSource] = useState(getContext.state.group);
   const data = getContext.state.data;
   const [currentTab] = getContext.state.currentTab;
+  const pageReload = getContext.state.pageReload;
   const [action] = getContext.state.action;
   // TODO: 권한별로 키유무 만들어야함.
   useEffect(() => {
@@ -35,7 +36,7 @@ const GroupList = ({onRowClick, dependency}) => {
         isAuth: isAuth
       };
     }));
-  }, [currentTab, action, dependency]);
+  }, [pageReload, action, dependency]);
   const HandleClick = (e) => {
     onRowClick(e);
   };
