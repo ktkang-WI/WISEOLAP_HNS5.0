@@ -5,6 +5,7 @@ import {Form} from 'devextreme-react';
 import {SimpleItem, Label, TabbedItem, Tab, TabPanelOptions} from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import React from 'react';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const ReportInfo = ({itemData}) => {
   return (
@@ -66,6 +67,18 @@ const ReportInfo = ({itemData}) => {
                   >
                     <Label text={'데이터 집합 유형'}/>
                   </SimpleItem>
+                  {item.datasetType !== DatasetType.CUBE &&
+                    <SimpleItem
+                      editorType='dxTextArea'
+                      editorOptions= {{
+                        value: item.datasetQuery,
+                        height: '200px',
+                        class: 'custom-scrollbar'
+                      }}
+                    >
+                      <Label text={'데이터 집합 쿼리'}/>
+                    </SimpleItem>
+                  }
                 </Tab>
               );
             })}
