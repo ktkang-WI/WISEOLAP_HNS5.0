@@ -1,8 +1,7 @@
-package com.wise.MarketingPlatForm.login.filter;
+package com.wise.MarketingPlatForm.login.listener;
 
 import java.sql.Timestamp;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -15,7 +14,7 @@ import com.wise.MarketingPlatForm.log.service.LogService;
 import com.wise.MarketingPlatForm.log.vo.LoginLogDTO;
 
 @Component
-public class LogginSessionFilter implements HttpSessionListener {
+public class LoginSessionListener implements HttpSessionListener {
 
     @Autowired
     LogService logService;

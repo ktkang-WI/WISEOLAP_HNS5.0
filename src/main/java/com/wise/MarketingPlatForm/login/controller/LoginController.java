@@ -128,21 +128,4 @@ public class LoginController {
 
         return ResponseEntity.ok().build();
     }
-
-
-    @PostMapping("/login-by-session")
-    public ResponseEntity<Object> loginBySession(HttpServletRequest request) {
-
-        UserDTO userDTO = SessionUtility.getSessionUser(request);
-
-        if (userDTO == null) return ResponseEntity.ok().build();
-
-        int userNo = userDTO.getUserNo();
-        MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
-        
-        if (model == null) return ResponseEntity.ok().build();
-
-        return ResponseEntity.ok().body(model);
-    }
-
 }
