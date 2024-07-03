@@ -6,7 +6,7 @@
   <resultMap id="MyDesignerDTO" type="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     <result column="USER_NO" property="userNo" javaType="int"/>
     <result column="DEFAULT_DATASET_ID" property="defaultDatasetId" javaType="int"/>
-    <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="int"/>
+    <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="Integer"/>
     <result column="DEFAULT_ITEM" property="defaultItem" javaType="String"/>
     <result column="DEFAULT_PALETTE" property="defaultPalette" javaType="String"/>
   </resultMap>
@@ -34,8 +34,11 @@
         WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
 
-  <select id="selectOnlyReportNm" parameterType="int" resultType="string">
-    SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = #{reportId, jdbcType=INTEGER}
+  <select id="selectOnlyReportNm" parameterType="int" resultType="hashmap">
+    SELECT
+      REPORT_NM,
+      REPORT_TYPE
+    FROM REPORT_MSTR WHERE REPORT_ID = #{reportId, jdbcType=INTEGER}
   </select>
   
   <select id="selectOnlyDatasetNm" parameterType="int" resultType="string">
@@ -52,6 +55,7 @@
           DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR}
       WHERE USER_NO = #{userNo}
   </update>
+
   <insert id="insertDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     INSERT INTO 
     WB_USER_CONFIG_MSTR (

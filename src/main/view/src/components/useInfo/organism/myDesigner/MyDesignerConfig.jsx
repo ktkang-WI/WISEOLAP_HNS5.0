@@ -40,6 +40,7 @@ const MyDesignerConfig = () => {
   const [config, setConfig] = useState(() => seperateConfig(designerConfig));
   const {success, alert, confirm} = useModal();
 
+  // 마이페이지 저장.
   const onClickSave = () => {
     const defaultItem = {
       item: config.defaultItem || '',

@@ -17,7 +17,7 @@ export const selectCurrentItem = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
     (reportId, item) =>
-      item[reportId].items.find((i) => i.id == item[reportId]?.selectedItemId)
+      item[reportId]?.items.find((i) => i.id == item[reportId]?.selectedItemId)
 );
 
 export const selectCurrentItems = createSelector(
