@@ -11,6 +11,17 @@
     <result column="DEFAULT_PALETTE" property="defaultPalette" javaType="String"/>
   </resultMap>
 
+  <resultMap id="UserDTO" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
+    <result column="USER_NO" property="userNo" javaType="int"/>
+    <result column="GRP_ID" property="grpId" javaType="int"/>
+    <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="E_MAIL1" property="email" javaType="String"/>
+    <result column="E_MAIL2" property="email2" javaType="String"/>
+    <result column="TEL_NO" property="telNo" javaType="String"/>
+    <result column="HP_NO" property="hpNo" javaType="String"/>
+  </resultMap>
+
   <!-- myPage 디자이너 설정 -->
   <select id="selectDesignerConfig" resultMap="MyDesignerDTO" parameterType="int">
     SELECT
@@ -76,4 +87,43 @@
       null
     ) 
   </insert>
+  <!-- user info -->
+  <select id="selectUserInfo" resultMap="UserDTO" parameterType="int">
+    SELECT
+      USER_NO,
+      GRP_ID,
+      USER_ID,
+      USER_NM,
+      E_MAIL1,
+      E_MAIL2,
+      TEL_NO,
+      HP_NO
+    FROM USER_MSTR
+    WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+  </select>
+  <select id='getPassword' resultType="String" parameterType="int">
+    SELECT
+      PASSWD
+    FROM USER_MSTR
+    WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+  </select>
+  <update id="updatePassword" parameterType="com.wise.MarketingPlatForm.auth.vo.UserDTO">
+    UPDATE
+      USER_MSTR
+      SET
+        PASSWD = #{password, jdbcType=VARCHAR}
+      WHERE USER_NO = #{userNo}
+  </update>
+  <update id="updateUserInfo" parameterType="com.wise.MarketingPlatForm.auth.vo.UserDTO">
+    UPDATE
+      USER_MSTR
+      SET
+        USER_ID = #{userId, jdbcType=VARCHAR},
+        USER_NM = #{userNm, jdbcType=VARCHAR},
+        E_MAIL1 = #{email, jdbcType=VARCHAR},
+        E_MAIL2 = #{email2, jdbcType=VARCHAR},
+        TEL_NO = #{telNo, jdbcType=VARCHAR},
+        HP_NO = #{hpNo, jdbcType=VARCHAR}
+      WHERE USER_NO = #{userNo}
+  </update>
 </mapper>

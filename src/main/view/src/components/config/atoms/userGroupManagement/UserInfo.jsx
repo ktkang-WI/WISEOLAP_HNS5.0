@@ -55,11 +55,18 @@ const UserInfo = () => {
   return (
     <Panel title={localizedString.userInfomation}>
       <Form
+        className='dx-fieldset custom-scrollbar'
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
         formData={userDetailInfo}
         ref={userInfoRef}
       >
         <EmptyItem
           dataField="userNo"
+          visible={false}
           editorOptions={{
             mode: 'number'
           }}

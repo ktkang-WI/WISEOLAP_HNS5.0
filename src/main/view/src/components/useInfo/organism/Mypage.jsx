@@ -3,17 +3,14 @@ import {getTheme} from 'config/theme';
 import {Outlet} from 'react-router-dom';
 import styled from 'styled-components';
 import MyPageMenuButtons from '../molcule/MyPageMenuButtons';
-
+import localizedString from 'config/localization';
 const theme = getTheme();
 
-const tabNm = '마이페이지'; // localized
+const tabNm = localizedString.myPage;
 const myPageUIParam =
   {
-    name: tabNm,
-    type: 'ReportTab',
-    width: 'auto',
-    id: 'myPage',
-    position: 'middle'
+    text: tabNm,
+    type: 'CustomTitle'
   };
 
 const StyledWrapper = styled.div`
@@ -72,7 +69,7 @@ const MyPage = () => {
       <Wrapper>
         <Header
           left={['Logo']}
-          middle={[{'myPage': myPageUIParam}]}
+          middle={[myPageUIParam]}
           right={[
             'ReportProperty',
             'UserInfo'

@@ -1,7 +1,7 @@
 import localizedString from 'config/localization';
 import ReportManagement from '../reportManagement/ReportManagement';
 import FolderManagement from '../folderManagement/FolderManagement';
-import {getFolderReports, getFolders}
+import {getFolderReports, getFolders, getMypageFolderReport}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 
 export const Mode = {
@@ -12,8 +12,8 @@ export const Mode = {
 export const managementData = [
   // 보고서
   {
-    mode: Mode.REPORT_MANAGEMENT,
-    title: localizedString.reportManagement,
+    value: Mode.REPORT_MANAGEMENT,
+    text: localizedString.reportManagement,
     component: ReportManagement,
     data: getFolderReports,
     update: (instance) => {
@@ -25,10 +25,18 @@ export const managementData = [
   },
   // 폴더
   {
-    mode: Mode.FOLDER_MANAGEMENT,
-    title: localizedString.folderManagement,
+    value: Mode.FOLDER_MANAGEMENT,
+    text: localizedString.folderManagement,
     component: FolderManagement,
-    data: getFolders,
+    data: async (myPageFlag) => {
+      if (myPageFlag) {
+        const folders = await getMypageFolderReport();
+        if (folders.status == 200) {
+          return folders;
+        }
+      }
+      return getFolders();
+    },
     save: (instance) => {
       return instance.createFolder();
     },

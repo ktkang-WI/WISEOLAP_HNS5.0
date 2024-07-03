@@ -8,7 +8,7 @@ import useModal from 'hooks/useModal';
 import FolderListModal from './modal/FolderListModal';
 import {useRef} from 'react';
 
-const FolderInformation = ({row, setRow}) => {
+const FolderInformation = ({row, setRow, myPageFlag}) => {
   const {openModal} = useModal();
   const ref = useRef();
 
@@ -25,7 +25,8 @@ const FolderInformation = ({row, setRow}) => {
         if (Object.keys(row).length > 0) {
           openModal(FolderListModal, {
             row: row,
-            setRow: setRow
+            setRow: setRow,
+            myPageFlag: myPageFlag
           });
         }
       }
@@ -37,12 +38,17 @@ const FolderInformation = ({row, setRow}) => {
       <Form
         formData={row}
         ref={ref}
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
         elementAttr={{
-          class: 'folder-information'
+          class: 'folder-information dx-fieldset custom-scrollbar'
         }}
       >
         <SimpleItem
-          dataField="fldId"
+          dataField={myPageFlag? 'id': 'fldId'}
           editorOptions= {{
             disabled: true,
             mode: 'number'
@@ -53,7 +59,7 @@ const FolderInformation = ({row, setRow}) => {
         {
           (!row.fldId || row.fldId === '') &&
           <SimpleItem
-            dataField="fldNm"
+            dataField={myPageFlag? 'name': 'fldNm'}
             editorType="dxTextBox"
           >
             <RequiredRule message={localizedString.valiedationFolderNm}/>
@@ -75,7 +81,7 @@ const FolderInformation = ({row, setRow}) => {
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
         <Item
-          dataField="fldOrdinal"
+          dataField={myPageFlag? 'ordinal': 'fldOrdinal'}
           editorType="dxTextBox"
         >
           <Label>{localizedString.order}</Label>

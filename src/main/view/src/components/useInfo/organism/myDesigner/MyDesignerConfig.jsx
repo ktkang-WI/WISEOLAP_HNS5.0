@@ -46,7 +46,12 @@ const seperateConfig = (designerConfig) => {
     try {
       const toJson = JSON.parse(designerConfig.defaultItem);
       object.defaultItem = toJson.item;
-      object.defaultLayout = {check: toJson.check, layout: toJson.layout};
+      object.defaultLayout = {
+        check: toJson.check, layout: toJson.layout
+      };
+      object.defaultDisplay = {
+        displayCheck: toJson.displayCheck, initDisplay: toJson.initDisplay
+      };
     } catch (e) {
       return object;
     }
@@ -65,7 +70,9 @@ const MyDesignerConfig = () => {
     const defaultItem = {
       item: config.defaultItem || '',
       check: config.defaultLayout?.check || false,
-      layout: config.defaultLayout?.layout || ''
+      layout: config.defaultLayout?.layout || '',
+      displayCheck: config.defaultDisplay?.displayCheck || false,
+      initDisplay: config.defaultDisplay?.initDisplay || ''
     };
 
     const saveConfig = {
@@ -74,6 +81,7 @@ const MyDesignerConfig = () => {
     };
 
     delete saveConfig.defaultLayout;
+    delete saveConfig.defaultDisplay;
 
     updateDesignerConfig(saveConfig).then((response) => {
       if (response.status == 200 && response.data != false) {

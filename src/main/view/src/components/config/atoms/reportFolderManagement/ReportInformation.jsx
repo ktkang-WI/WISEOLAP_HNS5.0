@@ -33,8 +33,13 @@ const ReportInformation = ({row, setRow}) => {
     <Panel title={localizedString.reportInformation}>
       <Form
         formData={row}
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
         elementAttr={{
-          class: 'report-information'
+          class: 'report-information dx-fieldset custom-scrollbar'
         }}
       >
         <SimpleItem

@@ -29,17 +29,20 @@ const addImageToWorksheet = async (workbook, worksheet, blob, startRow) => {
 };
 
 const exportComponentToWorksheet = async (
-    workbook, elementObj, worksheet, startRow) => {
+    workbook, elementObj, worksheet, startRow, option) => {
   switch (elementObj.type) {
     case 'pivot':
     case 'grid': {
       const instance = elementObj.type === 'pivot'?
         PivotGrid.getInstance(elementObj.element):
         DataGrid.getInstance(elementObj.element);
-      await (elementObj.type === 'pivot' ? exportPivotGrid : exportDataGrid)({
+      const isPivotGrid = elementObj.type === 'pivot';
+      await (isPivotGrid ? exportPivotGrid : exportDataGrid)({
         component: instance,
         worksheet: worksheet,
-        topLeftCell: {row: startRow + 1, column: 1}
+        topLeftCell: {row: startRow + 1, column: 1},
+        ...(isPivotGrid ? {mergeColumnFieldValues: option?.mergeColumn} : {}),
+        ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {})
       });
       break;
     }
@@ -61,7 +64,12 @@ const exportComponentToWorksheet = async (
   }
 };
 
-export const handleDownload = async (report, items, parameters, dataSource) => {
+export const handleDownload = async (
+    report,
+    items,
+    parameters,
+    dataSource,
+    option) => {
   const workbook = new Workbook();
   let worksheetCount = 0;
   const elements = items.map((item) => {
@@ -86,7 +94,8 @@ export const handleDownload = async (report, items, parameters, dataSource) => {
       });
       startRow += parameters.length;
     }
-    await exportComponentToWorksheet(workbook, elementObj, worksheet, startRow);
+    await exportComponentToWorksheet(
+        workbook, elementObj, worksheet, startRow, option);
     worksheetCount++;
   }
   if (worksheetCount > 0) {

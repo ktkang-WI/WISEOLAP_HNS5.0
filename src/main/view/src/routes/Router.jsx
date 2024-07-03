@@ -14,6 +14,7 @@ import {
   authorityLoader,
   generalConfigure as generalLoader,
   userFolderData as myPageFolderData,
+  myPageUserInfoData,
   userDesignerConfig,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
@@ -51,8 +52,12 @@ const multipleLoader = async () => {
     const json = JSON.parse(object.defaultItem);
 
     object.defaultItem = json.item;
-    object.defaultLayout = {check: json.check, layout: json.layout};
-
+    object.defaultLayout = {
+      check: json.check, layout: json.layout
+    };
+    object.defaultDisplay = {
+      displayCheck: json.displayCheck, initDisplay: json.initDisplay
+    };
     return object;
   });
 
@@ -144,8 +149,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'user-info',
-        element: <UserInfoManagement/>
-        // loader: 개인정보
+        element: <UserInfoManagement/>,
+        loader: myPageUserInfoData
       },
       {
         path: 'myReport-folder',

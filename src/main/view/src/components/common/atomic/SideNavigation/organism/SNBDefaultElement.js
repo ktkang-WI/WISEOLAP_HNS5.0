@@ -15,7 +15,17 @@ import preferenceActive
 import log from 'assets/image/icon/button/log.png';
 import logActive
   from 'assets/image/icon/button/log_active.png';
-import {useNavigate} from 'react-router';
+import userGroup from 'assets/image/icon/button/user_group.png';
+import userGroupActive from 'assets/image/icon/button/user_group_active.png';
+import reportFoler from 'assets/image/icon/button/report_folder.png';
+import reportFolderActive
+  from 'assets/image/icon/button/report_folder_active.png';
+import auth from 'assets/image/icon/button/auth.png';
+import authActive from 'assets/image/icon/button/auth_active.png';
+import addDataSource from 'assets/image/icon/button/add_data_source.png';
+import addDataSourceActive
+  from 'assets/image/icon/button/add_data_source_active.png';
+import {useNavigate, useLocation} from 'react-router';
 import {useDispatch} from 'react-redux';
 import {DesignerMode, EditMode} from 'components/config/configType';
 import ConfigSlice from 'redux/modules/ConfigSlice';
@@ -40,6 +50,7 @@ const SNBDefaultElement = () => {
   const nav = useNavigate();
   const {reload, querySearch} = useReportSave();
   const {getReport, getLinkedReport} = useReportLoad();
+  const location = useLocation();
   const {confirm} = useModal();
 
   // redux
@@ -133,43 +144,47 @@ const SNBDefaultElement = () => {
       imgSrc: preference,
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
+      active: location.pathname.includes('general'),
       onClick: (e) => {
         nav('general');
       }
     },
-    // TODO: 임시용 입니다.
     'UserGroupManagement': {
       id: 'userGroupManagement',
-      imgSrc: preference,
-      hoveredImgSrc: preferenceActive,
+      imgSrc: userGroup,
+      hoveredImgSrc: userGroupActive,
       label: localizedString.userGroupManagement,
+      active: location.pathname.includes('user-group'),
       onClick: (e) => {
         nav('user-group');
       }
     },
     'Authority': {
       id: 'authority',
-      imgSrc: preference,
-      hoveredImgSrc: preferenceActive,
+      imgSrc: auth,
+      hoveredImgSrc: authActive,
       label: localizedString.authority,
+      active: location.pathname.includes('auth'),
       onClick: (e) => {
         nav('auth');
       }
     },
     'ReportFolderManagement': {
       id: 'reportFolderManagement',
-      imgSrc: preference,
-      hoveredImgSrc: preferenceActive,
+      imgSrc: reportFoler,
+      hoveredImgSrc: reportFolderActive,
       label: localizedString.reportFolderManagement,
+      active: location.pathname.includes('report-folder'),
       onClick: (e) => {
         nav('report-folder');
       }
     },
     'DataSourceAddition': {
       id: 'dataSourceAddition',
-      imgSrc: preference,
-      hoveredImgSrc: preferenceActive,
+      imgSrc: addDataSource,
+      hoveredImgSrc: addDataSourceActive,
       label: localizedString.dataSourceAddition,
+      active: location.pathname.includes('add-datasource'),
       onClick: (e) => {
         nav('add-datasource');
       }
@@ -179,6 +194,7 @@ const SNBDefaultElement = () => {
       imgSrc: log,
       hoveredImgSrc: logActive,
       label: localizedString.log.log,
+      active: location.pathname.includes('log'),
       onClick: (e) => {
         nav('log');
       }

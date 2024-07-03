@@ -23,7 +23,7 @@ const UserDataGrid = () => {
   return (
     <Panel title={'사용자 (' + usersFormat.length + '명)'}>
       <DataGrid
-        height={600}
+        height={'100%'}
         dataSource={usersFormat}
         showBorders={true}
         onRowClick={({data}) =>

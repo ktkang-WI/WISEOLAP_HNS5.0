@@ -11,16 +11,25 @@ import useAxiosSetting from 'hooks/useAxiosSetting';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
+import {createContext} from 'react';
+
+export const AppContext = createContext();
 
 function App() {
   loadMessages(deMessages);
   locale(navigator.language);
-  useAxiosSetting();
+  const {controllers} = useAxiosSetting();
+  const context = {
+    controllers: controllers
+  };
 
   return (
     <div className='App'>
-      <RouterProvider router={router}/>
-      <LoadingPanel></LoadingPanel>
+      <AppContext.Provider
+        value={context}>
+        <RouterProvider router={router}/>
+        <LoadingPanel></LoadingPanel>
+      </AppContext.Provider>
     </div>
   );
 }

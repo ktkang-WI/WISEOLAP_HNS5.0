@@ -119,3 +119,16 @@ export async function userDesignerConfig() {
   });
   return data;
 }
+
+export async function myPageUserInfoData() {
+  const data =
+    await models.MyPageConfig.getUserInfomation().then((res) => {
+      if (res.status != 200) {
+        return res.error;
+      }
+
+      return res.data;
+    });
+
+  return data;
+}

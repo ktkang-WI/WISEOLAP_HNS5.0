@@ -33,12 +33,7 @@ export const deleteMyPageFolder = (param) => {
   return res;
 };
 
-export const updateMyPageFolder = (id, value) => {
-  const param = {
-    id: id,
-    name: value
-  };
-
+export const updateMyPageFolder = (param) => {
   const res =
     axios.patch(
         configPath + '/my-page-folder/edit-name', null, {params: param}
