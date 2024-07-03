@@ -239,6 +239,7 @@ const useReportSave = () => {
     try {
       const editMode = selectEditMode(store.getState());
       const designerMode = selectCurrentDesignerMode(store.getState());
+      const reportBos = data.reports[0].options.reportBos;
       // 공통 데이터 가공
       data.item.items.forEach((i) => {
         if (designerMode == DesignerMode['AD_HOC']) {
@@ -259,6 +260,11 @@ const useReportSave = () => {
         viewerLoadReport(data);
       } else {
         designerLoadReport(data);
+      }
+
+      if (reportBos.chkGb.length > 0) {
+        // eslint-disable-next-line max-len
+        alert(localizedString.checkDwReport + reportBos.chkGb);
       }
     } catch (error) {
       new Error('Report load Error');

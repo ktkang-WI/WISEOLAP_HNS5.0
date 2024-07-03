@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
+import com.wise.MarketingPlatForm.report.entity.DwReportChkEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
@@ -31,4 +32,5 @@ public interface ReportDAO {
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
     public void insertUserUpload(UserUploadMstrEntity userUploadTable);
     public String selectReportName(String reportId);
+    public List<DwReportChkEntity> selectDwReportChk(String reportId);
 }
