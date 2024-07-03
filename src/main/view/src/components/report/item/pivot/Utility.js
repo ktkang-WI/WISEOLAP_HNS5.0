@@ -12,7 +12,8 @@ import ItemType from '../util/ItemType';
 import store from 'redux/modules';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {selectCurrentItems} from 'redux/selector/ItemSelector';
+import {selectCurrentAdHocOption, selectCurrentItems}
+  from 'redux/selector/ItemSelector';
 
 const cache = new Map();
 
@@ -441,7 +442,7 @@ const generateItem = (item, param, rootItem) => {
 
           if (usePaging && dataLength != matrixInfo.paging.total) {
             const tempItem = {
-              ...item,
+              ...curItem,
               mart: {
                 ...curItem.mart,
                 paging: {
@@ -454,7 +455,7 @@ const generateItem = (item, param, rootItem) => {
             store.dispatch(updateItem({reportId, item: tempItem}));
           } else if (!usePaging) {
             const tempItem = {
-              ...item,
+              ...curItem,
               mart: {
                 ...curItem.mart,
                 data: res.data
@@ -554,7 +555,8 @@ const getDataFieldOptionChild = () => {
  * @param {JSON} rootItem 루트 아이템
  */
 const generateParameter = (item, param, rootItem) => {
-  const dataField = item.meta?.dataField || rootItem.adHocOption.dataField;
+  const adHocOption = selectCurrentAdHocOption(store.getState());
+  const dataField = item?.meta?.dataField || adHocOption?.dataField;
   param.dimension = dataField.row.concat(dataField.column);
   param.measure = dataField.measure;
   param.removeNullData = item.meta.removeNullData;

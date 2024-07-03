@@ -44,7 +44,7 @@ import Palette from '../../Popover/organism/Palette';
 import ColorEditModal from '../../Modal/organisms/ColorEditModal';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
 import {AdHocLayoutTypes} from 'components/config/configType';
-
+import {getPalette} from 'devextreme/viz/palette';
 
 const RibbonDefaultElement = () => {
   const {
@@ -78,7 +78,13 @@ const RibbonDefaultElement = () => {
   const data = localizedString.adHocLayoutOptions;
 
   const getPalettePopover = (item) => {
-    const palette = item?.meta?.palette;
+    const defaultPalette = {
+      name: 'Material',
+      caption: '기본값',
+      colors: getPalette('Material').simpleSet
+    };
+
+    const palette = item?.meta?.palette ?? defaultPalette;
     return <Palette
       onValueChanged={(e, changedPalette) => {
         if (!(changedPalette?.length !== 0)) {

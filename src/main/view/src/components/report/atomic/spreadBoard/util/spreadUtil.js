@@ -119,20 +119,27 @@ export const createBorderStyle = (useBorder) => {
 
 export const getJsonKey2ColInfos = (rowData) => {
   if (_.isEmpty(rowData)) return {colInfos: [], dataSourceHearder: []};
+
   const key = Object.keys(rowData[0]);
-  const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let disName = '';
-  const colInfos =[];
+  const colInfos = [];
   const dataSourceHearder = {};
 
-  key.map((value, index) => {
-    if (index < str.length ) {
-      disName = str.charAt(index);
-    } else if (index < (str.lengthx2)) {
-      disName = 'A' + str.charAt(index - 25);
-    } else {
-      disName = 'B' + str.charAt(index - 50);
+  const getColumnName = (index) => {
+    let columnName = '';
+    let dividend = index + 1;
+    let modulo;
+
+    while (dividend > 0) {
+      modulo = (dividend - 1) % 26;
+      columnName = String.fromCharCode(65 + modulo) + columnName;
+      dividend = Math.floor((dividend - modulo) / 26);
     }
+
+    return columnName;
+  };
+
+  key.map((value, index) => {
+    const disName = getColumnName(index);
     colInfos.push({name: key[index], displayName: disName});
     dataSourceHearder[key[index]] = key[index];
   });

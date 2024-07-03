@@ -7,8 +7,6 @@ import ReportListTab from
 import {useCallback, useEffect, useState} from 'react';
 import models from 'models';
 import {setIconReportList} from 'components/report/util/ReportUtility';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import store from 'redux/modules';
 import LinkReportList from '../molecules/LinkReportList';
 import LinkReportRibbon from '../molecules/LinkReportRibbon';
 import useModal from 'hooks/useModal';
@@ -40,8 +38,7 @@ const LinkReportModal = ({
   const {alert} = useModal();
 
   useEffect(() => {
-    const reportType = selectCurrentDesignerMode(store.getState());
-    models.Report.getList('admin', reportType, 'designer').then(({data}) => {
+    models.Report.getList(null, 'designer').then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
     });
