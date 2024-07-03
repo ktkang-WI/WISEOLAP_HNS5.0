@@ -9,9 +9,9 @@ const StyledTitle = styled.div`
     padding: 10px;
   `;
 
-const Title = ({title}) => {
+const Title = ({children, title}) => {
   return (
-    <StyledTitle>{title}</StyledTitle>
+    <StyledTitle>{title}{children}</StyledTitle>
   );
 };
 

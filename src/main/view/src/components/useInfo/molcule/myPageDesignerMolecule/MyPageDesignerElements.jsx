@@ -14,6 +14,12 @@ import Title from 'components/config/atoms/common/Title';
 
 const theme = getTheme();
 
+const StyledImg = styled.img`
+  src: ${(props) => props.src};
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
 const smallButton = {
   height: '30px',
   borderRadius: '4px',
@@ -49,6 +55,7 @@ const Content = styled.div`
 
 const MyPageDesignerElements = ({setConfig, data, items}) => {
   const {openModal, confirm} = useModal();
+
   const onClickReset = (id) => {
     setConfig({
       ...data,
@@ -114,17 +121,18 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
     items.map((item) => {
       return (
         <>
-          <Title title={item.title}/>
-          {
-            item.type == 'favorit' &&
-            <img
-              src={refresh}
-              onClick={() => confirm(
-                  localizedString.eachItemResetConfirm[item.id.id || item.id],
-                  () => onClickReset(item.id)
-              )}
-            />
-          }
+          <Title title={item.title}>
+            {
+              item.type == 'favorit' &&
+              <StyledImg
+                src={refresh}
+                onClick={() => confirm(
+                    localizedString.eachItemResetConfirm[item.id.id || item.id],
+                    () => onClickReset(item.id)
+                )}
+              />
+            }
+          </Title>
           <SideMenuWrapper>
             <ContentWrapper>
               <MyDesignerLabel label={item.label}/>
