@@ -70,6 +70,7 @@ const SpreadBoard = () => {
   }, [currentReportId]);
 
   const handleFileChange = async (event) => {
+    console.log('selection file');
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
@@ -79,6 +80,10 @@ const SpreadBoard = () => {
         console.error('Error uploading file:', error);
       }
     }
+  };
+
+  const handleFileInputClick = (event) => {
+    event.target.value = null;
   };
 
   return (
@@ -109,6 +114,7 @@ const SpreadBoard = () => {
         accept='.xlsx, xls'
         style={{display: 'none'}}
         onChange={handleFileChange}
+        onClick={handleFileInputClick}
       />
     </StyledWrapper>
   );
