@@ -755,5 +755,6 @@
   "uniqueName": "고유 명",
   "types": "타입",
   "viewerPosting": "뷰어 데이터 항목 선택 표시 기능",
-  "selectDataset": "데이터 집합을 선택해 주세요."
+  "selectDataset": "데이터 집합을 선택해 주세요.",
+  "checkDwReport": "보고서의 데이터가 BOS 와 일치하지 않습니다.\n\n code: "
 }
