@@ -127,7 +127,7 @@ const Palette = ({onValueChanged, ...props}) => {
 
   useEffect(() => {
     if (selectBoxRef.current) {
-      selectBoxRef.current.instance.option('value', props.palette.name);
+      selectBoxRef.current.instance.option('value', props.palette?.name);
     }
   }, [props.palette]);
 
@@ -150,7 +150,7 @@ const Palette = ({onValueChanged, ...props}) => {
       inputAttr={paletteLabel}
       displayExpr='caption'
       valueExpr='name'
-      defaultValue={palette.name}
+      defaultValue={palette?.name}
       onValueChanged={handlePaletteChange}
       onFocusIn={handleFocusIn}
       itemRender={renderPaletteItem}
