@@ -31,11 +31,17 @@ public class MyPageDesignerConfigService {
           model.setDefaultReportNm(reportNm.get(0).get("REPORT_NM"));
           model.setDefaultReportType(reportNm.get(0).get("REPORT_TYPE"));
         }
-    
-        if (model.getDefaultDatasetId() != null) {
-          String datasetNm = myPageConfigDAO.selectOnlyDatasetNm(model.getDefaultReportId().intValue());
-          model.setDefaultDatasetNm(datasetNm);
+        
+        if (model.getDefaultViewerReportId() != null) {
+          List<HashMap<String, String>> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
+          model.setDefaultViewerReportNm(reportNm.get(0).get("REPORT_NM"));
+          model.setReportType(reportNm.get(0).get("REPORT_TYPE"));
         }
+        // TODO : 기본 데이터집합은 사용안하지만 추후 추가될 가능성 있음.
+        // if (model.getDefaultDatasetId() != null) {
+        //   String datasetNm = myPageConfigDAO.selectOnlyDatasetNm(model.getDefaultReportId().intValue());
+        //   model.setDefaultDatasetNm(datasetNm);
+        // }
       }
     } catch (Exception e) {
       logger.error("MyPageDesignerConfigService Error", e);
@@ -49,6 +55,8 @@ public class MyPageDesignerConfigService {
         .defaultItem(defaultLayouts)
         .defaultPalette("")
         .defaultLayout("")
+        .defaultViewerReportId(null)
+        .defaultViewerReportNm("")
         .build();
       }
     }

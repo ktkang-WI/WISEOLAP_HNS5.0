@@ -4,10 +4,12 @@ export const MyDesignerContance = {
   DEFAULT_ITEM: 'defaultItem',
   DEFAULT_PALETTE: 'defaultPalette',
   DEFAULT_LAYOUT: 'defaultLayout',
-  DEFAULT_DISPLAY: 'defaultDisplay'
+  DEFAULT_DISPLAY: 'defaultDisplay',
+  DEFAULT_VIEWER_REPORT_ID: 'defaultViewerReportId'
 };
 
 export const designerConfigItems = [
+  // TODO: 기본데이터 집합은 사용 안할 예정이지만 추후 추가 될 가능성 있음.
   // {id: 'defaultDatasetId', title: '기본 데이터 집합', label: '즐겨찾기'},
   {id: {id: 'defaultReportId', requiredNm: 'defaultReportNm'},
     title: '기본 보고서', label: '즐겨찾기', type: 'favorit'},

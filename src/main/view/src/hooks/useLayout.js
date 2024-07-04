@@ -140,9 +140,12 @@ export default function useLayout() {
       const object = personalConfig;
       const stringToJson = JSON.parse(personalConfig.defaultItem);
 
-      object.defaultItem = stringToJson.item;
+      object.defaultItem = stringToJson?.item || '';
       object.defaultLayout =
-        {check: stringToJson.check, layout: stringToJson.layout};
+        {
+          check: stringToJson?.check || false,
+          layout: stringToJson?.layout || 'CTGB'
+        };
 
       dispatch(configSlice.setMyPageConfigure(object));
     }

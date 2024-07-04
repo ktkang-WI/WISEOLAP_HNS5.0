@@ -29,4 +29,6 @@ public interface MyPageConfigDAO {
   public String getPassword(int userNo);
   public boolean updatePassword(UserDTO userInfo);
   public boolean updateUserInfo(UserDTO user);
+  // my viewer config
+  public boolean saveMyViewerConfig(MyDesignerDTO myDesignerDTO);
 }

@@ -34,7 +34,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
   const {alert} = useModal();
 
   useEffect(() => {
-    props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+    (props.id == MyDesignerContance['DEFAULT_REPORT_ID'] ||
+      props.id == MyDesignerContance['DEFAULT_VIEWER_REPORT_ID']) &&
       models.Report.getList(null, 'designer').then(({data}) => {
         setIconReportList(data.privateReport);
         setIconReportList(data.publicReport);
@@ -66,7 +67,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
         <div>기본 데이터셋</div>
       } */}
 
-      {props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+      {(props.id == MyDesignerContance['DEFAULT_REPORT_ID'] ||
+      props.id == MyDesignerContance['DEFAULT_VIEWER_REPORT_ID']) &&
         <DesignerReportTabs
           reportList={reportList}
           onSelectionChanged={(e) => {
@@ -75,7 +77,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
             const val = {
               type: param.itemData.type,
               id: param.key,
-              name: param.text
+              name: param.text,
+              reportType: param.itemData.reportType
             };
 
             setValue(val);

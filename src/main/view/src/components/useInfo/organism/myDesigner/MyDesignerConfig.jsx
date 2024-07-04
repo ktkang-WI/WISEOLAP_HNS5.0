@@ -10,7 +10,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {designerConfigItems} from './MypageDesignerUtil';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-const seperateConfig = (designerConfig) => {
+export const seperateConfig = (designerConfig) => {
   if (designerConfig == null) {
     return {};
   }

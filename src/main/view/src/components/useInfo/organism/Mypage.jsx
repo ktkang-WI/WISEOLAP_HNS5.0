@@ -20,9 +20,9 @@ const menuButtons = [ // label localizedString
     text: '디자이너 설정',
     path: '/designer'
   },
-  // {value: 'myViewer_config',
-  //   text: '뷰어 설정',
-  //   path: '/viewer'},
+  {value: 'myViewer_config',
+    text: '뷰어 설정',
+    path: '/viewer'},
   // {value: 'myFont_config',
   //   text: '폰트 설정',
   //   path: '/font'},
@@ -59,8 +59,6 @@ const MyPage = () => {
               const item =
                   menuButtons.find(({value}) => key == value);
 
-              console.log(key);
-              console.log(item);
               nav('/editds/my-page' + item.path);
             }}
             items={menuButtons}

@@ -73,7 +73,8 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
         if (itemId.requiredNm) {
           setConfig({...data,
             [itemId.id]: value.id,
-            [itemId.requiredNm]: value.name
+            [itemId.requiredNm]: value.name,
+            reportType: value.reportType
           });
         } else {
           setConfig({...data, [itemId]: value});
