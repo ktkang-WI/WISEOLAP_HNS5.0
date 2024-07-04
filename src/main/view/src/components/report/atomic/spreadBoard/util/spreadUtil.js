@@ -126,13 +126,10 @@ export const getJsonKey2ColInfos = (rowData) => {
 
   const getColumnName = (index) => {
     let columnName = '';
-    let dividend = index + 1;
-    let modulo;
 
-    while (dividend > 0) {
-      modulo = (dividend - 1) % 26;
-      columnName = String.fromCharCode(65 + modulo) + columnName;
-      dividend = Math.floor((dividend - modulo) / 26);
+    while (index >= 0) {
+      columnName = String.fromCharCode((index % 26) + 65) + columnName;
+      index = Math.floor(index / 26) - 1;
     }
 
     return columnName;
