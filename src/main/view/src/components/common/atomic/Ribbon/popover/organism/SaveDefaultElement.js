@@ -72,10 +72,13 @@ const SaveDefaultElement = () => {
       {
         label: localizedString.saveAs,
         onClick: (props) => {
-          if (!isExecute) {
+          const designerMode = selectCurrentDesignerMode(store?.getState());
+
+          if (!isExecute && !(designerMode == DesignerMode['EXCEL'])) {
             alert(localizedString.saveValidationNonExecute);
             return;
           }
+
           openModal(ReportSaveModal, props);
         }
       }
