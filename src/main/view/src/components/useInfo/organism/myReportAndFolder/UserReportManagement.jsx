@@ -82,54 +82,49 @@ const UserReprotManagement = () => {
   const onClickSave = (e) => {
     const report = data;
 
-    if (!report['id'] || report['id'] == '') {
+    if (!report?.id || report.id === '') {
       alert(localizedString.selectReportAlert);
       return;
     }
 
     confirm(localizedString.changeReportNmConfirm, () => {
       updateMyPageReport(report).then((response) => {
-        if (response.status == 200) {
-          success(localizedString.reportInfoChangeSuccess);
+        if (!response.status == 200) return alert(localizedString.saveFail);
 
-          userFolderData().then((res) => {
-            if (res) {
-              setTreeViewData(res);
-            } else {
-              alert(localizedString.saveFail);
-            }
-          });
-          setData({});
-        } else {
-          alert(localizedString.saveFail);
-        }
+        success(localizedString.reportInfoChangeSuccess);
+
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.saveFail);
+
+          setTreeViewData(res);
+        });
+
+        setData({});
       });
     });
   };
 
   const onClickRemove = (e) => {
-    const reportId = data.id;
+    const reportId = data?.id;
 
-    if (!reportId || reportId == '') {
+    if (!reportId || reportId === '') {
       alert(localizedString.selectReportAndDeleteConfirm);
       return;
     }
 
     confirm(localizedString.reportDeleteConfirm, () => {
-      deleteReport({reportId: reportId}).then((response) => {
-        if (response.status == 200) {
-          success(localizedString.successReportDelete);
+      deleteReport({reportId: reportId}).then((res) => {
+        if (!res.status == 200) return alert(localizedString.failReportDelete);
 
-          userFolderData().then((res) => {
-            if (res) {
-              setTreeViewData(res);
-            } else {
-              alert(localizedString.failReportDelete);
-            }
-          });
-        } else {
-          alert(localizedString.failReportDelete);
-        }
+        success(localizedString.successReportDelete);
+
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.failReportDelete);
+
+          setTreeViewData(res);
+        });
+
+        setData({});
       });
     });
   };
