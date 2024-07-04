@@ -185,8 +185,6 @@ const generateItem = (item, param, rootItem) => {
     page: item.meta.pagingOption.pagination.index
   };
 
-  queryExcuteCheck = true;
-
   let matrixInfo;
 
   const dataSourceConfig = {
@@ -399,7 +397,7 @@ const generateItem = (item, param, rootItem) => {
               take: loadOptions.take,
               skip: loadOptions.skip,
               groupParams: loadOptions.group ||[],
-              filterParam: loadOptions.filter || {},
+              filterParam: {},
               totalSummaryParams: loadOptions.totalSummary || [],
               groupSummaryParams: loadOptions.groupSummary || [],
               udfGroupsParams: [],
@@ -428,7 +426,6 @@ const generateItem = (item, param, rootItem) => {
           } else {
             res = await getItemData(parameter);
           }
-
 
           matrixInfo = res.data.info;
 
@@ -461,7 +458,7 @@ const generateItem = (item, param, rootItem) => {
           const matrixLoadWaitFunc = setInterval(() => {
             const usePaging = curItem.meta.pagingOption.pagination.isOk;
 
-            if (usePaging) {
+            if (usePaging && matrixInfo) {
               const {page, size, dataLength} = curItem.mart.paging;
               let offset = 0;
 
@@ -478,7 +475,7 @@ const generateItem = (item, param, rootItem) => {
                   return;
                 }
               };
-            } else if (matrixInfo?.paging?.limit != 0) {
+            } else if (matrixInfo && matrixInfo?.paging?.limit != 0) {
               return;
             }
 
@@ -515,7 +512,6 @@ const getDataFieldOptionChild = () => {
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
     buttonIcon: chartSeriesButtonIcon,
     buttonEvent: function(e) {
-      console.log(e);
     }
   };
 
@@ -604,14 +600,6 @@ const getTabHeaderItems = () => {
   // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
   return ['ColRowSwitch', 'ShowGrid'];
 };
-let queryExcuteCheck = true;
-const getExcuteQueryInit = () => {
-  return queryExcuteCheck;
-};
-
-const setExcuteQueryInit = (checkValue) => {
-  queryExcuteCheck = checkValue;
-};
 
 export default {
   generateMeta,
@@ -620,7 +608,5 @@ export default {
   generateParameter,
   getRibbonItems,
   getAttributeItems,
-  getTabHeaderItems,
-  getExcuteQueryInit,
-  setExcuteQueryInit
+  getTabHeaderItems
 };

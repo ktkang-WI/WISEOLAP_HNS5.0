@@ -5,10 +5,11 @@ import {makeAdHocItem, makeAdHocOption, makeItem}
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
 
-const item = (defaultItem) => {
+const item = (defaultItem, palette) => {
   return makeItem({
     id: 'item1',
-    type: defaultItem || 'chart'
+    type: defaultItem || 'chart',
+    palette: palette
   });
 };
 
@@ -22,12 +23,12 @@ const adHocPivotItem = makeAdHocItem({
   type: 'pivot'
 });
 
-const dashboardInitialState = (defaultItem) => {
+const dashboardInitialState = (defaultItem, palette) => {
   return {
     0: {
       selectedItemId: 'item1',
       itemQuantity: 1,
-      items: [item(defaultItem)],
+      items: [item(defaultItem, palette)],
       chartCount: {[defaultItem]: 1}
     }
   };
@@ -69,10 +70,11 @@ const reducers = {
   initItems: (state, actions) => {
     const action = actions.payload;
     const mode = action.mode ? action.mode : action;
+    const palette = action.defaultPalette;
 
     if (mode === DesignerMode['DASHBOARD']) {
       const defaultItem = actions.payload.defaultItem;
-      return {...dashboardInitialState(defaultItem)};
+      return {...dashboardInitialState(defaultItem, palette)};
     } else if (mode === DesignerMode['AD_HOC']) {
       const layout = action.adhocLayout;
 
@@ -113,6 +115,7 @@ const reducers = {
     // 아아템 이름에 번호 생성.
     const countMap = state[reportId].chartCount;
     const itemType = actions.payload.item.type;
+    const palette = actions.payload.item.palette;
 
     countMap[itemType] = (countMap[itemType] || 0) + 1;
 
@@ -123,7 +126,7 @@ const reducers = {
 
     actions.payload.item.id = itemId;
 
-    const item = makeItem(actions.payload.item, countMap);
+    const item = makeItem(actions.payload.item, countMap, palette);
 
     state[reportId].items =
       state[reportId].items.concat(item);

@@ -2,14 +2,11 @@ package com.wise.MarketingPlatForm.config.dao;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
-import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Mapper
 public interface MyPageConfigDAO {
@@ -24,7 +21,7 @@ public interface MyPageConfigDAO {
   // My designer property
   public MyDesignerDTO selectDesignerConfig(int userNo);
   public boolean updateDesignerConfig(MyDesignerDTO myDesignerDTO);
-  public String selectOnlyReportNm(int reportId);
+  public List<HashMap<String, String>> selectOnlyReportNm(int reportId);
   public String selectOnlyDatasetNm(int datasetId);
   public boolean insertDesignerConfig(MyDesignerDTO myDesignerDTO);
   // My User info
