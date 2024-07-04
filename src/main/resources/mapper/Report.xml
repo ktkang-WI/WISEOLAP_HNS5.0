@@ -113,7 +113,12 @@
                   PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                             
               WHERE            
                   USER_MSTR.USER_ID = #{userId}         
-                  AND AUTH_PUBLISH != 'N'        
+                  <if test='editMode == "designer"'>
+                    AND AUTH_PUBLISH != 0
+                  </if>
+                  <if test='editMode == "viewer"'>
+                    AND AUTH_VIEW != 0
+                  </if>  
           )           
           UNION ALL           
           (
@@ -138,8 +143,13 @@
               INNER JOIN         
                   PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                             
               WHERE            
-                  USER_MSTR.USER_ID = #{userId}              
-                  AND AUTH_PUBLISH != 'N'                                    
+                  USER_MSTR.USER_ID = #{userId}                    
+                  <if test='editMode == "designer"'>
+                    AND AUTH_PUBLISH != 0
+                  </if>
+                  <if test='editMode == "viewer"'>
+                    AND AUTH_VIEW != 0
+                  </if>                                  
           )           
           UNION ALL           
           (
