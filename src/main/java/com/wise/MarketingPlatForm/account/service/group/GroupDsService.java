@@ -8,13 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsPutDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDsMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.ds.GroupDsModel;
-import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
 public class GroupDsService {
@@ -41,9 +38,12 @@ public class GroupDsService {
     if (groupAuthDsMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteGroupDs(groupAuthDsMstr);
-    result = accountDAO.putGroupDs(groupAuthDsMstr);
+    if (groupAuthDsMstr.size() == 0) {
+      result = accountDAO.deleteGroupDsAll();
+    } else {
+      result = accountDAO.deleteGroupDs(groupAuthDsMstr);
+      result = accountDAO.putGroupDs(groupAuthDsMstr);
+    }
 
     return result;
   };
@@ -83,13 +83,12 @@ public class GroupDsService {
     return result;
   }
 
-
   public List<GroupDsModel> generateGroupDsObject(List<GroupDsDTO> groupDsDTO) {
     
     List<GroupDsModel> result = new ArrayList<>();
-    List<DsMstrEntity> dsList = new ArrayList<>();
+    List<Integer> dsList = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    UserGroupDTO group = null;
+    Integer group = 0;
     GroupDsModel groupDsModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -102,33 +101,19 @@ public class GroupDsService {
 
       if (lastGroupIdNumber) {
         groupDsModel = GroupDsModel.builder()
-        .group(group)
-        .ds(dsList)
+        .grpId(group)
+        .dsIds(dsList)
         .build();
         result.add(groupDsModel);
         dsList = new ArrayList<>();
       }
 
       if (!isGroupContained) {
-        group = UserGroupDTO.builder()
-        .grpId(grpId)
-        .grpNm(groupDs.getGrpNm())
-        .grpDesc(groupDs.getGrpDesc())
-        .build();
+        group = grpId;
         groupkeys.add(grpId);
       }
 
-      DsMstrEntity ds = DsMstrEntity.builder()
-        .dsId(groupDs.getDsId())
-        .dsNm(groupDs.getDsNm())
-        .dbmsType(groupDs.getDbmsType())
-        .ownerNm(groupDs.getOwnerNm())
-        .ip(groupDs.getIp())
-        .dbNm(groupDs.getDbNm())
-        .build();
-
-
-      dsList.add(ds);
+      dsList.add(groupDs.getDsId());
 
       prevGroupId = grpId;
     }
@@ -137,8 +122,8 @@ public class GroupDsService {
 
     if (isThereToSave) {
       groupDsModel = GroupDsModel.builder()
-        .group(group)
-        .ds(dsList)
+        .grpId(group)
+        .dsIds(dsList)
         .build();
         result.add(groupDsModel);
     }

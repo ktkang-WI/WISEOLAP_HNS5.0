@@ -102,6 +102,7 @@ const Footer = styled.div`
   font:${theme.font.small}
 `;
 
+
 const Login = () => {
   return (
     <Wrap>

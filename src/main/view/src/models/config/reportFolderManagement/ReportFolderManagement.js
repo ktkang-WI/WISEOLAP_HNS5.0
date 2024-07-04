@@ -7,7 +7,10 @@ export const getFolderReports = () => {
   const res = axios.get(configPath + '/folder-report');
   return res;
 };
-
+export const getFolderPubs = () => {
+  const res = axios.get(configPath + '/folder-pub');
+  return res;
+};
 export const getFolders = () => {
   const res = axios.get(configPath + '/folder');
   return res;
@@ -30,12 +33,7 @@ export const deleteMyPageFolder = (param) => {
   return res;
 };
 
-export const updateMyPageFolder = (id, value) => {
-  const param = {
-    id: id,
-    name: value
-  };
-
+export const updateMyPageFolder = (param) => {
   const res =
     axios.patch(
         configPath + '/my-page-folder/edit-name', null, {params: param}

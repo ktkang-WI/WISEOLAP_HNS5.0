@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wise.MarketingPlatForm.account.dto.user.UserDataPutDTO;
 import com.wise.MarketingPlatForm.account.model.user.data.UserDataModel;
 import com.wise.MarketingPlatForm.account.service.user.UserDataService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -31,7 +30,7 @@ public class UserDataController{
   @Autowired
   UserDataService userDataService;
 
-  private Type userDataPutType = new TypeToken<ArrayList<UserDataPutDTO>>() {}.getType();
+  private Type userDataModelType = new TypeToken<ArrayList<UserDataModel>>() {}.getType();
   private Gson gson = new Gson();
 
   @GetMapping
@@ -55,9 +54,9 @@ public class UserDataController{
     if (!body.containsKey(key)) {
       return RestAPIVO.badRequest(false);
     }
-    List<UserDataPutDTO> userDataPutDTO = gson.fromJson(userDataPutData, userDataPutType);
+    List<UserDataModel> userDataModel = gson.fromJson(userDataPutData, userDataModelType);
 
-    boolean result = userDataService.putUserData(userDataPutDTO);
+    boolean result = userDataService.putUserData(userDataModel);
 
     return RestAPIVO.okResponse(result);
   }

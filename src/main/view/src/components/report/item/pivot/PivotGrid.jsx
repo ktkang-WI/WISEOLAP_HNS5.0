@@ -28,23 +28,17 @@ import {
   getDefaultFormat,
   getDefaultFormatRatio
 } from 'components/utils/NumberFormatUtility';
-import {selectEditMode}
-  from 'redux/selector/ConfigSelector';
-import {EditMode} from 'components/config/configType';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
-import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
 import useContextMenu from 'hooks/useContextMenu';
-import ItemManager from 'components/report/item/util/ItemManager';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
-  const editMode = selectEditMode(store.getState());
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataField = adHocOption ? adHocOption.dataField : meta.dataField;
@@ -66,7 +60,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
-  const loadingAction = LoadingSlice.actions;
+  let reRender = -1;
 
   const getFormats = useCallback(() => {
     const formats = dataField.measure.map((item) => item.format);
@@ -120,10 +114,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       ];
     });
   }, [mart.data.data]);
-
-  useEffect(() => {
-    ref.current.instance.getDataSource().reload();
-  }, [mart.paging]);
 
   // highlight 추가, 변경 시 repaint(컴포넌트를 다시 그려줌)
   useEffect(() => {
@@ -194,59 +184,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     visible: meta.showFilter
   };
 
-  const handleContentReady = (e) => {
-    if (editMode === EditMode.DESIGNER) {
-      const pivotInstance = ref.current.instance.element();
-      if (pivotInstance) {
-        const queryCheck = ItemManager.getExcuteQueryInit(item);
-        if (queryCheck) {
-          dispatch(loadingAction.startJob());
-
-          const pivotDataSource = e.component.getDataSource();
-          const pivotRowFields = pivotDataSource.getAreaFields('row', true);
-          const pivotColumnFields =
-              pivotDataSource.getAreaFields('column', true);
-          if (!item.meta.positionOption.row.expand) {
-            pivotRowFields.forEach((field) => {
-              pivotDataSource.collapseAll(field.index);
-            });
-          }
-
-          if (!item.meta.positionOption.row.expand) {
-            pivotColumnFields.forEach((field) => {
-              pivotDataSource.collapseAll(field.index);
-            });
-          }
-
-          const items = pivotDataSource.getData().rows;
-
-          const collapseSingleChildItems = (items, path) => {
-            items.forEach((item) => {
-              const currentPath = path.concat(item.value);
-              if (item.children && item.children.length === 1 &&
-                   (item.children[0]?.text == '' ||
-                      item.children[0]?.text == 'null')) {
-                pivotDataSource.collapseHeaderItem('row', currentPath);
-              } else {
-                if (item.children) {
-                  collapseSingleChildItems(item.children, currentPath);
-                }
-              }
-            });
-          };
-
-          collapseSingleChildItems(items, []);
-
-          ItemManager.setExcuteQueryInit(item, false);
-          dispatch(loadingAction.endJobForce());
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-  }, []);
-
   const usePage = meta.pagingOption.pagination.isOk;
 
   return (
@@ -276,7 +213,26 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
-        onContentReady={handleContentReady}
+        onContentReady={(e) => {
+          if (reRender != mart?.dataSourceConfig?.reRender) {
+            reRender = mart?.dataSourceConfig?.reRender;
+            const pivotDataSource = e.component.getDataSource();
+            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
+            const pivotColumnFields =
+                pivotDataSource.getAreaFields('column', true);
+            if (!item.meta.positionOption.row.expand) {
+              pivotRowFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+
+            if (!item.meta.positionOption.row.expand) {
+              pivotColumnFields.forEach((field) => {
+                pivotDataSource.collapseAll(field.index);
+              });
+            }
+          }
+        }}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{
             text: localizedString.reportDescription,
@@ -364,7 +320,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         }}
       >
         <FieldChooser enabled={false}> </FieldChooser>
-        <Scrolling mode='virtual' />
+        <Scrolling mode='standard' />
       </DevPivotGrid>
       {
         usePage &&
@@ -374,29 +330,16 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               ...item,
               mart: {
                 ...item.mart,
+                dataSourceConfig: {
+                  ...mart.dataSourceConfig,
+                  reRender: (mart.dataSourceConfig.reRender || 0) + 1
+                },
                 paging: {
                   ...(item.mart.paging || {}),
                   page: page
                 }
               }
             };
-
-            const pvDataSource = ref.current.instance.getDataSource();
-            const dsFields = pvDataSource.fields();
-
-            for (const field of dsFields) {
-              if (field.area == 'row') {
-                pvDataSource.expandAll(field.index);
-              }
-            }
-
-            for (const field of dsFields) {
-              if (field.area == 'column') {
-                pvDataSource.expandAll(field.index);
-              }
-            }
-
-            ItemManager.setExcuteQueryInit(item, true);
 
             dispatch(updateItem({reportId, item: tempItem}));
           }}
@@ -407,13 +350,19 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               size,
               dataLength
             };
+
             if (dataLength && (page - 1) * size > dataLength) {
               paging.page = Math.ceil(dataLength / size);
             }
+
             const tempItem = {
               ...item,
               mart: {
                 ...item.mart,
+                dataSourceConfig: {
+                  ...mart.dataSourceConfig,
+                  reRender: (mart.dataSourceConfig.reRender || 0) + 1
+                },
                 paging: {
                   ...paging,
                   size: size

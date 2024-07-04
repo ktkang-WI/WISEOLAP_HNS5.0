@@ -4,8 +4,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
@@ -26,8 +26,6 @@ public interface DatasetDAO {
 
   public List<DatasetDsDTO> selectDatasetDsDsview();
 
-  public List<DatasetDsDsviewCubeDTO> selectDatasetDsviewCubeDs();
-
   public List<DsViewTableEntity> selectDsViewTables(String dsViewId);
   
   public boolean deleteDs(DsMstrEntity dsMstrEntity);
@@ -37,5 +35,7 @@ public interface DatasetDAO {
   public boolean createDs(DsMstrEntity dsMstrEntity);
   
   public List<UserUploadMstrEntity> selectUserUploadTables(int dsId);
+
+  public List<DsViewDimEntity> selectDatasetDsViewDim();
 
 }

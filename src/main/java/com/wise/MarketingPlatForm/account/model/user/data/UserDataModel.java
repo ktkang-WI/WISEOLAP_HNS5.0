@@ -1,8 +1,9 @@
 package com.wise.MarketingPlatForm.account.model.user.data;
 
 
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
-import com.wise.MarketingPlatForm.account.model.common.DataSetXmlModel;
+import java.util.List;
+
+import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserDataModel {
-  UserGroupDTO user;
-  DataSetXmlModel dsViews;
+  Integer userNo;
+  List<DataModel> datas;
 }

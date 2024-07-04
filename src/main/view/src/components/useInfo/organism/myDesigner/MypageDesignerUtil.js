@@ -14,9 +14,9 @@ export const designerConfigItems = [
   {id: 'defaultItem', title: '기본 아이템', label: '즐겨찾기', type: 'favorit'},
   {id: 'defaultPalette', title: '기본 색상', label: '즐겨찾기', type: 'favorit'},
   {id: 'defaultLayout', title: '비정형 레이아웃 설정',
-    label: '비정형 레이아웃 설정', type: 'checkAndSelect'}
-  // {id: 'defaultDisplay', title: '초기화면 설정',
-  //   label: '초기화면 설정', type: 'checkAndSelect'}
+    label: '비정형 레이아웃 설정', type: 'checkAndSelect'},
+  {id: 'defaultDisplay', title: '초기화면 설정',
+    label: '초기화면 설정', type: 'checkAndSelect'}
 ];
 
 export const defaultItemList = () => {
@@ -67,9 +67,9 @@ export const layoutSelectList = (id) => {
 
   if (id == MyDesignerContance['DEFAULT_DISPLAY']) {
     return [
-      {id: 'dashAny', name: '대시보드'},
-      {id: 'adHoc', name: '비정형'},
-      {id: 'excel', name: '스프레드'}
+      {id: 'DashAny', name: '대시보드'},
+      {id: 'AdHoc', name: '비정형'},
+      {id: 'Excel', name: '스프레드'}
     ];
   }
 };

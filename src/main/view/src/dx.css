@@ -302,13 +302,13 @@ color: var(--gray600);
 }
 
 /* 표 */
-.dx-pivotgrid, .dx-datagrid {
+.dx-pivotgrid, .dx-datagrid, .dx-treelist {
   font-size: 13px;
   font-family: 'Noto Sans KR';
-  font-weight: bold;
+  font-weight: 500;
 }
 
-.dx-pivotgrid thead, .dx-datagrid-headers {
+.dx-pivotgrid thead, .dx-datagrid-headers, .dx-treelist-headers {
   background: var(--gray50);
   font-weight: 500;
 }
@@ -321,7 +321,7 @@ color: var(--gray600);
   border-bottom: initial;
 }
 
-.dx-pivotgrid .dx-pivotgrid-area td, .dx-datagrid td {
+.dx-treelist td, .dx-pivotgrid .dx-pivotgrid-area td, .dx-datagrid td {
   color: var(--gray600);
   border-color: var(--gray200) !important;
 }
@@ -381,7 +381,6 @@ td[role="columnheader"] {
   transform: translateY(-10px);
 }
 
-
 .dx-field-item-label-location-left {
   padding-right: 40px;
 }
@@ -395,6 +394,35 @@ td[role="columnheader"] {
   border: 1px solid var(--gray100);
   margin: 10px 0px;
   padding: 20px 20px;
+}
+
+.dx-field-group-wrapper .dx-form-group-content {
+  border-radius: 8px;
+  border: 1px solid var(--gray100);
+  margin: 10px 0px;
+  padding: 25px 20px;
+}
+
+.dx-field-group-wrapper .dx-form-group-with-caption,
+.dx-fieldset .dx-field-item-label-content {
+  text-align: left;
+}
+
+.dx-field-group-wrapper .dx-form-group-caption {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dx-field-group-wrapper .dx-form-group{
+  padding: 0px;
+}
+
+.dx-layout-manager .dx-field-item:not(.dx-first-row) {
+  margin: 5px 0px;
+}
+
+.dx-layout-manager .dx-field-item {
+  margin: 5px 0px;
 }
 
 .dx-treeview-toggle-item-visibility {
@@ -428,7 +456,7 @@ td[role="columnheader"] {
   background-color: var(--gray100);
 }
 
-.wise-modal .dx-treeview-with-search > .dx-scrollable {
+.wise-modal .dx-treeview-with-search > .dx-scrollable, .report-list.dx-treeview-with-search > .dx-scrollable {
   border: 1px solid var(--gray200);
   padding:5px;
   border-radius: 8px;

@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CubeDimMstrEntity {
   int cubeId;
+  int dsViewId;
   String dimUniNm;
   String dimCaption;
   String dimIsVisible;

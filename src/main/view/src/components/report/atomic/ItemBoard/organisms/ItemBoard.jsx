@@ -97,7 +97,6 @@ const ItemBoard = () => {
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
-  console.log(editMode);
 
   const itemExportsPicker = (id) => {
     return itemExports.find((item) => item.id == id);

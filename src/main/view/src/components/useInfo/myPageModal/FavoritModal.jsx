@@ -12,6 +12,8 @@ import {
   MyDesignerContance,
   defaultItemList
 } from '../organism/myDesigner/MypageDesignerUtil';
+import {paletteCollection}
+  from 'components/common/atomic/Popover/organism/Palette';
 
 const theme = getTheme();
 
@@ -101,7 +103,9 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
         <>
           <div>기본 색상</div>
           <SelectBox
-            items={['Matarial', 'Office']}
+            items={paletteCollection}
+            valueExpr='name'
+            displayExpr='caption'
             value={value}
             onValueChanged={(e) => {
               setValue(e.value);

@@ -13,6 +13,16 @@
       <result column="FLD_DESC" property="fldDesc" javaType="String"/>
     </resultMap>
 
+    <resultMap id="ConfigFolderPub" type="com.wise.MarketingPlatForm.config.model.folder.ConfigFolderPubModel">
+      <result column="FLD_ID" property="fldId" javaType="int"/>
+      <result column="FLD_NM" property="fldNm" javaType="String"/>
+      <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
+      <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
+      <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
+      <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
+    </resultMap>
+
     <resultMap id="ConfigFolderReportDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO">
       <result column="FLD_ID" property="fldId" javaType="int"/>
       <result column="FLD_NM" property="fldNm" javaType="String"/>
@@ -91,6 +101,19 @@
             ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
 		</select>
 
+    <select id="selectConfigPubFolder" resultMap="ConfigFolderPub">
+			SELECT
+        FLD_ID,
+        FLD_NM,
+        FLD_PARENT_ID,
+        'false' AS AUTH_VIEW,
+        'false' AS AUTH_PUBLISH,
+        'false' AS AUTH_DATAITEM,
+        'false' AS AUTH_EXPORT
+        FROM PUB_FLD_MSTR
+            ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
+		</select>
+
     <select id="selectMyPageFolderCount" resultType="int">
       SELECT COUNT(*) FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
     </select>
@@ -152,8 +175,21 @@
       UPDATE USER_FLD_MSTR
           SET 
             <if test='name != ""'>
-              FLD_NM = #{name, jdbcType=VARCHAR}
+              FLD_NM = #{name, jdbcType=VARCHAR},
             </if>
+            <if test='fldParentId != 0'>
+              FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
+            </if>
+            <if test='ordinal != 0'>
+              FLD_ORDINAL = #{ordinal, jdbcType=INTEGER},
+            </if>
+            <if test='desc != ""'>
+              FLD_DESC = #{desc, jdbcType=VARCHAR},
+            </if>
+            <if test='fldLvl != 0'>
+              FLD_LVL = #{fldLvl, jdbcType=INTEGER},
+            </if>
+            FLD_ID = FLD_ID
           WHERE FLD_ID = #{id}
     </update>
 

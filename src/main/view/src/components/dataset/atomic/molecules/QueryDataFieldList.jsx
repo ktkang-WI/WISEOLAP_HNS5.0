@@ -17,7 +17,7 @@ const QueryDataFieldList = ({dataSource}) => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error('Data Loading Error');
+          // throw new Error('Data Loading Error');
         });
   }, []);
 

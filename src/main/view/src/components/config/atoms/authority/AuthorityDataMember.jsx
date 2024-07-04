@@ -4,19 +4,14 @@ import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 
+// TODO: 현재 미개발
 const AuthorityDataMember = () => {
   const ref = useRef();
-  const groupsFormat = {};
-  const handleRowClick = () => {
-    return;
-  };
   return (
     <Wrapper>
       <Title title={localizedString.member}></Title>
       <DataGrid
-        dataSource={groupsFormat}
         showBorders={true}
-        onRowClick={handleRowClick}
         ref={ref}
         height="90%"
       >

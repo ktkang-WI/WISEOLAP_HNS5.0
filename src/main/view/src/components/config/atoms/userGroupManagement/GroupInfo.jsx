@@ -34,17 +34,21 @@ const GroupInfo = () => {
   return (
     <Panel title={localizedString.groupInfo}>
       <Form
+        className='dx-fieldset custom-scrollbar group-info'
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
         formData={groupDetailInfo}
         ref={groupInfoRef}
-        elementAttr={{
-          class: 'group-info'
-        }}
       >
         <EmptyItem
           dataField="grpId"
           editorOptions={{
             mode: 'number'
           }}
+          visible={false}
         >
         </EmptyItem>
         <SimpleItem

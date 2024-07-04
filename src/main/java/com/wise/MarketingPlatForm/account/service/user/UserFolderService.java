@@ -8,16 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
-import com.wise.MarketingPlatForm.account.dto.user.UserFolderPatchDTO;
-import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.user.folder.UserFolderModel;
-import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
-import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class UserFolderService {
@@ -38,51 +32,54 @@ public class UserFolderService {
 
 
   @Transactional
-  public boolean patchUserFolder(List<UserFolderPatchDTO> userFolderPatchDTO) {
+  public boolean patchUserFolder(List<UserFolderModel> userFolderPatchDTO) {
 
     List<UserAuthReportMstrEntity> userFolderMstr = generateUserFolderPatchObject(userFolderPatchDTO);
 
     if (userFolderMstr == null) return false;
 
     boolean result = false;
-
-    result = accountDAO.deleteUserFolder(userFolderMstr);
-    result = accountDAO.putUserFolder(userFolderMstr);
+    if (userFolderMstr.size() == 0) {
+      result = accountDAO.deleteUserFolderAll();
+    } else {
+      result = accountDAO.deleteUserFolder(userFolderMstr);
+      result = accountDAO.putUserFolder(userFolderMstr);
+    }
 
     return result;
   };
 
-  private List<UserAuthReportMstrEntity> generateUserFolderPatchObject(List<UserFolderPatchDTO> userFolderPatchDTO) {
+  private List<UserAuthReportMstrEntity> generateUserFolderPatchObject(List<UserFolderModel> userFolderPatchDTO) {
     List<UserAuthReportMstrEntity> result = new ArrayList<>();
 
-    for (UserFolderPatchDTO userFolder : userFolderPatchDTO) {
+    for (UserFolderModel userFolder : userFolderPatchDTO) {
       int userNo = userFolder.getUserNo();
-      List<ConfigFolderDTO> fldIds = userFolder.getFldIds();
+      List<FolderListModel> fldIds = userFolder.getFldIds();
       int fldsSize = fldIds.size();
   
       if (fldsSize == 0) {
         UserAuthReportMstrEntity userAuthDatasetMstrEntity = UserAuthReportMstrEntity.builder()
           .userNo(userNo)
           .fldId(0)
-          .authDataItem("N")
-          .authExport("N")
-          .authPublish("N")
-          .authView("N")
+          .authDataItem(false)
+          .authExport(false)
+          .authPublish(false)
+          .authView(false)
           .build();
           result.add(userAuthDatasetMstrEntity);
 
         continue;
       }
 
-      for (ConfigFolderDTO configFolderDTO : userFolder.getFldIds()) {
+      for (FolderListModel configFolderDTO : userFolder.getFldIds()) {
 
         UserAuthReportMstrEntity groupAuthReportMstrEntity = UserAuthReportMstrEntity.builder()
           .userNo(userNo)
           .fldId(configFolderDTO.getFldId())
-          .authDataItem(configFolderDTO.getAuthDataItem())
-          .authExport(configFolderDTO.getAuthExport())
-          .authPublish(configFolderDTO.getAuthPublish())
-          .authView(configFolderDTO.getAuthView())
+          .authDataItem(configFolderDTO.isAuthDataItem())
+          .authExport(configFolderDTO.isAuthExport())
+          .authPublish(configFolderDTO.isAuthPublish())
+          .authView(configFolderDTO.isAuthView())
           .build();
 
           result.add(groupAuthReportMstrEntity);
@@ -99,7 +96,7 @@ public class UserFolderService {
     List<UserFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserGroupDTO user = null;
+    int user = 0;
     UserFolderModel userFolderModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -112,42 +109,26 @@ public class UserFolderService {
 
       if (lastUserIdNumber) {
         userFolderModel = UserFolderModel.builder()
-          .user(user)
-          .folderList(folderListMode)
+          .userNo(user)
+          .fldIds(folderListMode)
           .build();
         result.add(userFolderModel);
         folderListMode = new ArrayList<>();
       }
 
       if (!isUserContained) {
-        user = UserGroupDTO.builder()
-          .userNo(userData.getUserNo())
-          .userId(userData.getUserId())
-          .grpNm(userData.getGrpNm())
-          .build();
-          userkeys.add(userNo);
+        user = userNo;
+        userkeys.add(userNo);
       }
 
-      FldMstrEntity pubFldMstrEntity = FldMstrEntity.builder()
-        .fldId(userData.getFldId())
-        .fldLvl(userData.getFldLvl())
-        .fldNm(userData.getFldNm())
-        .fldOrdinal(userData.getFldOrdinal())
-        .fldParentId(userData.getFldParentId())
-        .build();
-
-      AuthReportMstrEntity authReportMstrEntity = AuthReportMstrEntity.builder()
-        .authView(userData.getAuthView())
-        .authDataItem(userData.getAuthDataItem())
-        .authExport(userData.getAuthExport())
-        .authPublish(userData.getAuthPublish())
-        .build();
-
       FolderListModel folderListModel = FolderListModel.builder()
-        .folder(pubFldMstrEntity)
-        .auth(authReportMstrEntity)
+        .fldId(userData.getFldId())
+        .authView(userData.isAuthView())
+        .authDataItem(userData.isAuthDataItem())
+        .authExport(userData.isAuthExport())
+        .authPublish(userData.isAuthPublish())
         .build();
-
+  
       folderListMode.add(folderListModel);
 
       prevUserNo = userNo;
@@ -157,8 +138,8 @@ public class UserFolderService {
 
     if (isThereToSave) {
       userFolderModel = UserFolderModel.builder()
-        .user(user)
-        .folderList(folderListMode)
+        .userNo(user)
+        .fldIds(folderListMode)
         .build();
         result.add(userFolderModel);
     }

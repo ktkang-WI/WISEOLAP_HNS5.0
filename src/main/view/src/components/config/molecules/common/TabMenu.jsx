@@ -6,6 +6,7 @@ const theme = getTheme();
 
 const Background = styled.div`
   min-width: 250px;
+  width: 250px;
   height: 100%;
   border-radius: 10px;
   border: solid 1px ${theme.color.breakLine};
@@ -49,20 +50,31 @@ const Item = styled.div`
   }
 `;
 
-const TabMenu = ({items = [], onChangedValue = () => {}}) => {
-  const [selection, setSelection] = useState(items[0]?.value || 'null');
+const TabMenu = ({
+  defaultSelection,
+  items = [],
+  onChangedValue = () => {},
+  init = true,
+  ...props
+}) => {
+  const [selection, setSelection] = useState(
+      defaultSelection || items[0]?.value || 'null');
 
   // 리렌더링 시 자동으로 0번 탭 선택
-  onChangedValue(selection);
+  if (init) {
+    onChangedValue(selection);
+  }
 
   return (
-    <Background>
+    <Background
+      {...props}
+    >
       {items.map((item) =>
         <Item
           key={item.value}
           onClick={() => {
             setSelection(item.value);
-            onChangedValue(item);
+            onChangedValue(item.value);
           }}
           className={selection == item.value && 'selected'}
         >

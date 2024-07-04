@@ -23,22 +23,42 @@ const FormWrap = styled.div`
   height: 400px;
 `;
 
+export const getInitPageAndSetingFunc = (
+    config,
+    personalConfig,
+    configStringToJson,
+    afterLoginInitSettingLayout) => {
+  const configJson = configStringToJson(config.generalConfigure);
+  const defaultItem = personalConfig.defaultItem;
+
+  let myPageInit =
+    configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
+
+  if (defaultItem) {
+    try {
+      const jsonDefaultItem = JSON.parse(defaultItem);
+
+      if (jsonDefaultItem.displayCheck) {
+        if (jsonDefaultItem.initDisplay) {
+          myPageInit = jsonDefaultItem.initDisplay;
+        }
+      }
+    } catch (error) {
+      myPageInit = 'DashAny';
+    }
+  }
+
+  // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.
+  afterLoginInitSettingLayout(myPageInit, personalConfig);
+
+  return myPageInit;
+};
+
 const SignIn = () => {
   const nav = useNavigate();
   const {alert} = useModal();
   const {configStringToJson} = configureUtility();
   const {afterLoginInitSettingLayout} = useLayout();
-
-  const getInitPageAndSetingFunc = (config, personalConfig) => {
-    const configJson = configStringToJson(config.generalConfigure);
-    const initPage =
-      configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
-
-    // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.
-    afterLoginInitSettingLayout(initPage, personalConfig);
-
-    return initPage;
-  };
 
   return (
     <StyledSignIn>
@@ -56,8 +76,13 @@ const SignIn = () => {
               if (res.status == 200) {
                 const personalConfig = res.data;
                 const config = await generalLoader();
+
                 const getInitPage =
-                  getInitPageAndSetingFunc(config, personalConfig);
+                  getInitPageAndSetingFunc(
+                      config,
+                      personalConfig,
+                      configStringToJson,
+                      afterLoginInitSettingLayout);
 
                 // TODO: 추후 권한 적용
                 nav(getInitPage.toLowerCase());

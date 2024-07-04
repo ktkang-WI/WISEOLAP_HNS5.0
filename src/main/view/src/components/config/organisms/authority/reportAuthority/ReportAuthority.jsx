@@ -1,32 +1,50 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+
+import React, {useContext, useState} from 'react';
+import {AuthorityContext, mode, path} from '../Authority';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
-import {Mode} from '../data/AuthorityData';
 import FolderTreeView
   from 'components/config/molecules/authority/FolderTreeView';
-import React, {useState} from 'react';
 
-const ReportAuthority = ({data}) => {
-  const [row, setRow] = useState();
-  const auth = data;
+const ReportAuthority = ({mainKey, ...props}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+
+  const selected = getContext.state.selected;
+  const [dependency, setDependency] = useState(false);
+
+  const handleRowClick = (e) => {
+    if (currentTab === path.GROUP_REPORT) {
+      selected[mode.GROUP].prev = selected[mode.GROUP].next;
+      selected[mode.GROUP].next = e.data;
+    } else {
+      selected[mode.USER].prev = selected[mode.USER].next;
+      selected[mode.USER].next = e.data;
+    }
+    setDependency((prev) => !prev);
+  };
 
   return (
     <Wrapper display='flex' direction='row'>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_REPORT &&
-          <GroupList setRow={setRow}/>
+          currentTab === path.GROUP_REPORT &&
+          <GroupList onRowClick={handleRowClick} dependency={dependency}/>
         }
         {
-          auth.mode === Mode.USER_REPORT &&
-          <UserList setRow={setRow}/>
+          currentTab === path.USER_REPORT &&
+          <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
       <Wrapper padding='10px'>
         {
-          (auth.mode === Mode.GROUP_REPORT ||
-          auth.mode === Mode.USER_REPORT) &&
-          <FolderTreeView row={row}/>
+          (currentTab === path.GROUP_REPORT ||
+           currentTab === path.USER_REPORT) &&
+          <FolderTreeView
+            mainKey={mainKey}
+            dependency={dependency}/>
         }
       </Wrapper>
     </Wrapper>
@@ -34,3 +52,4 @@ const ReportAuthority = ({data}) => {
 };
 
 export default React.memo(ReportAuthority);
+

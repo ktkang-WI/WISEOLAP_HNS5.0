@@ -12,9 +12,10 @@ import {defaultItemNames} from 'components/report/item/util/ItemMappers';
  * 아이템의 meta값을 가지고 mart를 세팅
  * @param {*} orgItem 아이템 객체
  * @param {*} countMap 아이템 이름 카운트
+ * @param {*} palette 아이템 색상
  * @return {JSON} 생성된 아이템 객체
  */
-const makeItem = (orgItem, countMap) => {
+const makeItem = (orgItem, countMap, palette) => {
   let item = {};
 
   let initNum = 1;
@@ -40,6 +41,7 @@ const makeItem = (orgItem, countMap) => {
   delete orgItem.chartType;
   // meta 값 있는 경우 불러오기로 간주
   if (!orgItem.meta) {
+    const selectedPalette = orgItem?.palette || palette;
     // 기본 값 세팅
     item = {
       ...orgItem,
@@ -59,7 +61,7 @@ const makeItem = (orgItem, countMap) => {
         name: defaultItemNames[orgItem.type] + initNum,
         memo: '',
         paletteType: 'palette',
-        palette: paletteCollection[0],
+        palette: paletteCollection[selectedPalette || 0],
         colorEdit: [],
         useCaption: true,
         dataField: {
@@ -71,6 +73,9 @@ const makeItem = (orgItem, countMap) => {
     if (orgItem.type === 'chart') {
       item.meta.seriesType = seriesType;
     }
+
+    // 불필요하게 추가된 state 제거.
+    delete item.palette;
   }
 
   // mart 및 meta 값 세팅

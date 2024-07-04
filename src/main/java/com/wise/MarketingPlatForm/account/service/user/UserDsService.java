@@ -39,9 +39,12 @@ public class UserDsService {
     if (userAuthDsMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteUserDs(userAuthDsMstr);
-    result = accountDAO.putUserDs(userAuthDsMstr);
+    if (userAuthDsMstr.size() == 0) {
+      result = accountDAO.deleteUserDsAll();
+    } else {
+      result = accountDAO.deleteUserDs(userAuthDsMstr);
+      result = accountDAO.putUserDs(userAuthDsMstr);
+    }
 
     return result;
   };
@@ -84,9 +87,9 @@ public class UserDsService {
   public List<UserDsModel> generateUserDsObject(List<UserDsDTO> userDsDTO) {
     
     List<UserDsModel> result = new ArrayList<>();
-    List<DsMstrEntity> dsList = new ArrayList<>();
+    List<Integer> dsList = new ArrayList<>();
     List<Integer> userkeys = new ArrayList<>();
-    UserGroupDTO user = null;
+    Integer user = 0;
     UserDsModel userDsModel = null;
     int prevUserNo = 0;
     boolean isThereToSave = false;
@@ -99,33 +102,19 @@ public class UserDsService {
 
       if (lastUserIdNumber) {
         userDsModel = UserDsModel.builder()
-        .user(user)
-        .ds(dsList)
+        .userNo(user)
+        .dsIds(dsList)
         .build();
         result.add(userDsModel);
         dsList = new ArrayList<>();
       }
 
       if (!isUserContained) {
-        user = UserGroupDTO.builder()
-        .userNo(userDs.getUserNo())
-        .userId(userDs.getUserId())
-        .userDesc(userDs.getUserDesc())
-        .build();
+        user = userNo;
         userkeys.add(userNo);
       }
-
-      DsMstrEntity ds = DsMstrEntity.builder()
-        .dsId(userDs.getDsId())
-        .dsNm(userDs.getDsNm())
-        .dbmsType(userDs.getDbmsType())
-        .ownerNm(userDs.getOwnerNm())
-        .ip(userDs.getIp())
-        .dbNm(userDs.getDbNm())
-        .build();
-
-
-      dsList.add(ds);
+  
+      dsList.add(userDs.getDsId());
 
       prevUserNo = userNo;
     }
@@ -134,8 +123,8 @@ public class UserDsService {
 
     if (isThereToSave) {
       userDsModel = UserDsModel.builder()
-        .user(user)
-        .ds(dsList)
+        .userNo(user)
+        .dsIds(dsList)
         .build();
         result.add(userDsModel);
     }

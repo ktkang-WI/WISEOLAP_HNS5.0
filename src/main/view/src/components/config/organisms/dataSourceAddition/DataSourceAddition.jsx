@@ -1,8 +1,6 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-
+import {getTheme} from 'config/theme';
 import React, {createContext, useEffect, useRef, useState} from 'react';
-import {Button} from 'devextreme-react';
-import styled from 'styled-components';
 import models from 'models';
 import DataSourceAdditionContent from
   'components/config/molecules/dataSourceAddition/DataSourceAdditionContent';
@@ -10,6 +8,11 @@ import {DataSource} from 'models/dataset/DataSource';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {getHint} from 'components/config/utility/utility';
+import ConfigHeader from 'components/config/atoms/common/ConfigHeader';
+import AddRibbonBtn from 'components/common/atomic/Ribbon/atom/AddRibbonBtn';
+import {iconMapper} from '../common/ConfigUtility';
+
+const theme = getTheme();
 
 export const DataSourceAdditionContext = createContext();
 
@@ -63,36 +66,6 @@ const DataSourceAddition = () => {
   }, []);
 
   const btns = ['plus', 'save', 'remove'];
-
-  const Header = styled.div`
-  flex: 0 0 50px;
-  background-color:#e1e1e1;
-`;
-
-  const Content = styled.div`
-    width:100%;
-    height:100%;
-    display:flex;
-    flex-direction: row;
-    flex: 0 0 1;
-  `;
-
-  const NavBar = styled.div`
-    width:100%;
-    height:100%;
-    display:flex;
-    flex-direction: ${(props)=> props.direction ? props.direction : 'row'};
-  `;
-
-  const NavBarItem = styled.div`
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 30px;
-    padding: 0px 3px;
-  `;
 
   const handleBtnClick = ({component}) => {
     const icon = component.option('icon');
@@ -158,13 +131,15 @@ const DataSourceAddition = () => {
   const navBarItems = () => {
     return (
       btns.map((item, index) => (
-        <NavBarItem icon={item} key={index}>
-          <Button
-            icon={item}
-            onClick={handleBtnClick}
-            hint={getHint(item)}
-          />
-        </NavBarItem>
+        <AddRibbonBtn
+          key={index}
+          item={{
+            'imgSrc': iconMapper[item],
+            'width': '60px',
+            'onClick': () => handleBtnClick(item),
+            'label': getHint(item)
+          }}
+        />
       ))
     );
   };
@@ -173,14 +148,22 @@ const DataSourceAddition = () => {
     <DataSourceAdditionContext.Provider
       value={context}>
       <Wrapper display='flex' direction='column'>
-        <Header>
-          <NavBar>
-            {navBarItems()}
-          </NavBar>
-        </Header>
-        <Content>
+        <ConfigHeader>
+          {navBarItems()}
+        </ConfigHeader>
+        <Wrapper
+          style={{
+            borderRadius: '10px',
+            border: 'solid 1px ' + theme.color.breakLine,
+            background: theme.color.panelColor,
+            overflow: 'hidden',
+            padding: '15px',
+            marginLeft: '0px',
+            marginTop: '10px'
+          }}
+        >
           <DataSourceAdditionContent/>
-        </Content>
+        </Wrapper>
       </Wrapper>
     </DataSourceAdditionContext.Provider>
   );

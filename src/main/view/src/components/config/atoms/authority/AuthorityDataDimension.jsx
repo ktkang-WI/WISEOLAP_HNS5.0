@@ -1,75 +1,119 @@
 import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
 import Title from 'components/config/atoms/common/Title';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import React, {useCallback, useContext, useEffect, useState,
-  useRef} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import localizedString from 'config/localization';
-import {AuthorityContext} from
-  'components/config/organisms/authority/Authority';
-import {Mode} from 'components/config/organisms/authority/data/AuthorityData';
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
+  from 'components/config/organisms/authority/Authority';
 
-const AuthorityDataDimension = ({dsView, dsViewCube, row, auth}) => {
-  // context
-  const authorityContext = useContext(AuthorityContext);
-
-  // state
-  const [dimensionList, setDimensionList] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [data] = authorityContext.state.data;
-
-  const ref = useRef();
-
-  useEffect(() => {
-    const dsViewId = dsView.dsViewId;
-    let selectedDimensionList = [];
-
-    if (auth.mode === Mode.GROUP_DATA ) {
-      selectedDimensionList = data.find((d) => d.group?.grpId === row?.grpId)
-          ?.dsViews?.cubeDimNm[dsViewId];
-    }
-
-    if (auth.mode === Mode.USER_DATA ) {
-      selectedDimensionList = data.find((d) => d.user?.userNo === row?.userNo)
-          ?.dsViews?.cubeDimNm[dsViewId];
-    }
-
-    const dsViewCubeRow = dsViewCube
-        .find((row) => row.dsView.dsViewId === dsView.dsViewId);
-    const newDimensionList = dsViewCubeRow ? dsViewCubeRow.cubeDim : [];
-
-    setDimensionList(newDimensionList);
-    setSelectedRowKeys(selectedDimensionList);
-  }, [dsView, auth]);
+const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const selected = getContext.state.selected;
+  const dsViewDim = getContext.state.dsViewDim;
+  const [dataSource, setDataSource] = useState();
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);
+  const data = getContext.state.data;
+  const dataSetMode =
+  currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
 
   useEffect(() => {
-    setDimensionList([]);
-  }, [row, data]);
+    setPreviousSelectedKeys(selectedKeys);
+  }, [selectedKeys]);
 
-  const onSelectionChanged = useCallback(
-      ({selectedRowKeys: changedRowKeys}) => {
-        setSelectedRowKeys(changedRowKeys);
-      },
-      [],
-  );
+  useEffect(() => {
+    setDataSource(
+        dsViewDim
+            .filter((d) => d.dsViewId == dsViewId)
+    );
+  }, [dsViewId]);
 
-  const handleRowClick = () => {
-    return;
+  useEffect(() => {
+    if (!dsViewId || !data?.next) return;
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      if (getUserOrGroup(dataSetMode, data, nextId)) return;
+      data.next.push({
+        ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+        datas: []
+      });
+    };
+    setDataSource([]);
+    setSelectedKeys([]);
+    updateData();
+  }, [dependency]);
+
+  useEffect(() => {
+    if (!dsViewId || !data?.next) return;
+    const {nextId} = getKeys(dataSetMode, selected);
+    if (!nextId) return;
+    const userOrGroup = getUserOrGroup(dataSetMode, data, nextId);
+
+    if (!userOrGroup) return;
+
+    const findedDsView =
+        userOrGroup.datas.find((d) => d.dsViewId == dsViewId);
+
+    if (findedDsView) {
+      setSelectedKeys(findedDsView.dsViewDim ?? []);
+      return;
+    }
+
+    userOrGroup.datas.push({
+      dsViewId: dsViewId,
+      cubeId: [],
+      dsViewDim: []
+    });
+    setSelectedKeys([]);
+  }, [dsViewId]);
+
+  const handleSelectedKey = (selectedItems) => {
+    if (!dsViewId || !data?.next) return;
+    const {nextId} = getKeys(dataSetMode, selected);
+    if (!nextId) return;
+
+    data.next = data.next.map((dataAuth) => {
+      const idMatch = (dataAuth?.grpId || dataAuth?.userNo) == nextId;
+      if (!idMatch) return dataAuth;
+
+      return {
+        ...dataAuth,
+        datas: dataAuth.datas.map((cubeAuth) =>
+          cubeAuth.dsViewId === dsViewId ?
+          {...cubeAuth, dsViewDim: selectedItems.selectedRowKeys} : cubeAuth
+        )
+      };
+    });
+
+    if (
+      JSON.stringify(selectedItems.selectedRowKeys) ===
+      JSON.stringify(previousSelectedKeys)
+    ) return;
+    setSelectedKeys(selectedItems.selectedRowKeys);
   };
+
   return (
     <Wrapper>
       <Title title={localizedString.dimension}></Title>
       <DataGrid
-        ref={ref}
+        dataSource={dataSource}
         elementAttr={{
           class: 'authority-data-dimension'
         }}
-        dataSource={dimensionList}
+        keyExpr={['dsViewId', 'dimDimUniNm']}
         showBorders={true}
-        onRowClick={handleRowClick}
-        selectedRowKeys={selectedRowKeys}
-        onSelectionChanged={onSelectionChanged}
         height="90%"
-        keyExpr="dimDimUniNm"
+        selectedRowKeys={selectedKeys}
+        onSelectionChanged={handleSelectedKey}
       >
         <Selection
           mode="multiple"
@@ -79,7 +123,6 @@ const AuthorityDataDimension = ({dsView, dsViewCube, row, auth}) => {
           dataField="dimCaption"
           caption={localizedString.dimension}
           dataType="varchar"
-          format="currency"
         />
       </DataGrid>
     </Wrapper>

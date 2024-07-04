@@ -1,59 +1,61 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-import React, {useEffect, useState} from 'react';
-import {Mode} from '../data/AuthorityData';
+import React, {useContext, useState} from 'react';
+import {AuthorityContext, mode, path} from '../Authority';
 import GroupList from 'components/config/molecules/authority/GroupList';
 import UserList from 'components/config/molecules/authority/UserList';
 import DatasourceViewList
   from 'components/config/molecules/authority/DatasourceViewList';
+import AuthorityDataCube
+  from 'components/config/atoms/authority/AuthorityDataCube';
 import AuthorityDataDimension
   from 'components/config/atoms/authority/AuthorityDataDimension';
-import AuthorityDataMember from
-  'components/config/atoms/authority/AuthorityDataMember';
-import AuthorityDataCube from
-  'components/config/atoms/authority/AuthorityDataCube';
 
-import models from 'models';
+import {getTheme} from 'config/theme';
 
-const DataAuthority = ({data}) => {
-  const [row, setRow] = useState({});
-  const [dsView, setDsView] = useState({});
-  const [dsViewCube, setDsViewCube] = useState([]);
+const theme = getTheme();
 
-  const auth = data;
-  useEffect(() => {
-    if ((auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA)) {
-      models.Authority.getDsViewCube()
-          .then((response) => {
-            setDsViewCube(response.data.data);
-          });
+const DataAuthority = ({mainKey, ...props}) => {
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+
+  const selected = getContext.state.selected;
+  const [dependency, setDependency] = useState(false);
+  const [dsViewId, setDsViewId] = useState();
+
+  const handleRowClick = (e) => {
+    if (currentTab === path.GROUP_DATA) {
+      selected[mode.GROUP].prev = selected[mode.GROUP].next;
+      selected[mode.GROUP].next = e.data;
+    } else {
+      selected[mode.USER].prev = selected[mode.USER].next;
+      selected[mode.USER].next = e.data;
     }
-  }, [dsView]);
+    setDependency((prev) => !prev);
+    setDsViewId(0);
+  };
 
   return (
-    <Wrapper display='flex' direction='row'>
+    <Wrapper display='flex' direction='row' height={theme.size.mlModalHeight}>
       <Wrapper padding='10px'>
         {
-          auth.mode === Mode.GROUP_DATA &&
-          <GroupList
-            setRow={setRow}
-          />
+          currentTab === path.GROUP_DATA &&
+          <GroupList onRowClick={handleRowClick} dependency={dependency}/>
         }
         {
-          auth.mode === Mode.USER_DATA &&
-          <UserList
-            setRow={setRow}
-          />
+          currentTab === path.USER_DATA &&
+          <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
       <Wrapper display='flex' direction='column'>
         <Wrapper height="55%" padding='10px'>
           {
-            (auth.mode === Mode.GROUP_DATA || auth.mode === Mode.USER_DATA) &&
+            (currentTab === path.GROUP_DATA || currentTab === path.USER_DATA) &&
             <DatasourceViewList
-              row={row}
-              setDsView={setDsView}
-            />
+              mainKey={mainKey}
+              dependency={dependency}
+              setDsViewId={setDsViewId}/>
           }
         </Wrapper>
         <Wrapper
@@ -63,28 +65,22 @@ const DataAuthority = ({data}) => {
           direction='row'
           padding='10px'
         >
-          <Wrapper>
+          <Wrapper
+            size="1"
+          >
             <AuthorityDataCube
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-              auth={auth}
-            />
+              mainKey={mainKey}
+              dependency={dependency}
+              dsViewId={dsViewId}
+              setDependency={setDependency}/>
           </Wrapper>
-          <Wrapper>
+          <Wrapper
+            size="1"
+          >
             <AuthorityDataDimension
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-              auth={auth}
-            />
-          </Wrapper>
-          <Wrapper>
-            <AuthorityDataMember
-              dsView={dsView}
-              dsViewCube={dsViewCube}
-              row={row}
-            />
+              mainKey={mainKey}
+              dependency={dependency}
+              dsViewId={dsViewId}/>
           </Wrapper>
         </Wrapper>
       </Wrapper>
