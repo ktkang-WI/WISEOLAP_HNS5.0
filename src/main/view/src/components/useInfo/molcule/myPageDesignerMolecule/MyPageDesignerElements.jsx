@@ -3,21 +3,38 @@ import styled from 'styled-components';
 import FavoritModal from '../../myPageModal/FavoritModal';
 import {
   LayoutApplyCheckBox,
-  // LayoutSelectBox,
   MyDesignerLabel,
-  MyDesignerTitle,
   MyPageTextBox
 } from '../../atom/MyDesignerAtom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import refresh from 'assets/image/icon/button/refresh.png';
+import localizedString from 'config/localization';
+import {getTheme} from 'config/theme';
+import Title from 'components/config/atoms/common/Title';
+
+const theme = getTheme();
+
+const StyledImg = styled.img`
+  src: ${(props) => props.src};
+  cursor: pointer;
+  margin-left: 10px;
+`;
+
+const smallButton = {
+  height: '30px',
+  borderRadius: '4px',
+  font: theme.font.smallButton
+};
 
 const SideMenuWrapper = styled.div`
-  height: 100%;
+  height: auto;
   width: 100%;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #D4D7DC;
+  border: 1px solid var(--gray100);
   padding: 10px;
   box-sizing: border-box;
+  text-align: left;
 `;
 
 const ContentWrapper = styled.div`
@@ -28,12 +45,23 @@ const ContentWrapper = styled.div`
 const Content = styled.div`
   display: inline-flex;
   & > .favoritTextBox{
-    padding-right: 40px;
+    padding-right: 10px;
+  }
+
+  .dx-checkbox-text {
+    margin-right: 20px;
   }
 `;
 
 const MyPageDesignerElements = ({setConfig, data, items}) => {
-  const {openModal} = useModal();
+  const {openModal, confirm} = useModal();
+
+  const onClickReset = (id) => {
+    setConfig({
+      ...data,
+      ...(id?.id ? {[id.id]: null, [id.requiredNm]: null} : {[id]: null})
+    });
+  };
 
   const handleClick = (modalTitle, itemId) => {
     openModal(FavoritModal, {
@@ -64,8 +92,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
           <>
             <MyPageTextBox value={value}/>
             <CommonButton
+              {...smallButton}
               type='secondary'
-              width='100px'
+              width='auto'
+              padding='0px 10px'
               // itemId 객체인 경우 = Name도 필요한 경우
               onClick={() => handleClick(item.title, item.id)}
             >
@@ -91,7 +121,18 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
     items.map((item) => {
       return (
         <>
-          <MyDesignerTitle title={item.title}/>
+          <Title title={item.title}>
+            {
+              item.type == 'favorit' &&
+              <StyledImg
+                src={refresh}
+                onClick={() => confirm(
+                    localizedString.eachItemResetConfirm[item.id.id || item.id],
+                    () => onClickReset(item.id)
+                )}
+              />
+            }
+          </Title>
           <SideMenuWrapper>
             <ContentWrapper>
               <MyDesignerLabel label={item.label}/>

@@ -15,7 +15,7 @@ import {getRefInstance} from 'components/config/utility/utility';
 
 const theme = getTheme();
 
-const FolderListModal = ({...props}) => {
+const FolderListModal = ({myPageFlag, ...props}) => {
   const [dataSource, setDataSource] = useState([]);
   const [row, setRow] = useState({});
 
@@ -29,10 +29,11 @@ const FolderListModal = ({...props}) => {
       }, []);
     };
 
-    managementData[1].data()
+    managementData[1].data(myPageFlag)
         .then((response) => {
           if (response.data.data) {
             let newData = response.data.data;
+            if (myPageFlag) newData = response.data.data.folder;
             if (props.type === 'report') {
               const reportList = getRefInstance(TreeListInstance, 'report-list')
                   .option('dataSource');
@@ -70,8 +71,8 @@ const FolderListModal = ({...props}) => {
       };
     } else {
       newRow = {
-        fldParentId: row.fldId,
-        fldParentNm: row.fldNm
+        fldParentId: myPageFlag? row.id : row.fldId,
+        fldParentNm: myPageFlag? row.name : row.fldNm
       };
     }
     props.setRow({
@@ -91,7 +92,7 @@ const FolderListModal = ({...props}) => {
       <ModalPanel title={localizedString.folderList}>
         <TreeList
           dataSource={dataSource}
-          keyExpr="fldId"
+          keyExpr={myPageFlag? 'id' : 'fldId'}
           parentIdExpr="fldParentId"
           id="modalFolderList"
           height={'90%'}
@@ -99,13 +100,13 @@ const FolderListModal = ({...props}) => {
         >
           <Selection mode="single" />
           <Column
-            dataField="fldNm"
+            dataField={myPageFlag? 'name' : 'fldNm'}
             caption={localizedString.folderName}
             cellRender={({row}) => {
               return (
                 <span>
                   <img height={'17px'} src={folderImg}/>
-                  {row.data.fldNm}
+                  {myPageFlag? row.data.name : row.data.fldNm}
                 </span>
               );
             }}

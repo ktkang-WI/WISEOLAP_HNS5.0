@@ -40,13 +40,37 @@ const DownloadDefaultElement = () => {
         visible: true,
         contents: [
           {
-            label: localizedString.excelXlsx,
+            label: localizedString.excelMergeXlsx,
             visible: true,
             onClick: () => {
               const newCurrentItem = filterdLayoutItem();
-
+              const option = {
+                mergeColumn: true,
+                mergeRow: true
+              };
               handleDownload(
-                  currentReport, newCurrentItem, currentParameter, dataSource);
+                  currentReport,
+                  newCurrentItem,
+                  currentParameter,
+                  dataSource,
+                  option);
+            }
+          },
+          {
+            label: localizedString.excelXlsx,
+            visible: rootItem?.adHocOption ? true : false,
+            onClick: () => {
+              const newCurrentItem = filterdLayoutItem();
+              const option = {
+                mergeColumn: false,
+                mergeRow: false
+              };
+              handleDownload(
+                  currentReport,
+                  newCurrentItem,
+                  currentParameter,
+                  dataSource,
+                  option);
             }
           },
           {

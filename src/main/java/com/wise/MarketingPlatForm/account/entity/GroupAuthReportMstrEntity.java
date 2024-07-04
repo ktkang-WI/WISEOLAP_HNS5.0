@@ -14,8 +14,8 @@ import lombok.Setter;
 public class GroupAuthReportMstrEntity {
   int grpId;
   int fldId;
-  String authView;
-  String authPublish;
-  String authDataItem;
-  String authExport;
+  boolean authView;
+  boolean authPublish;
+  boolean authDataItem;
+  boolean authExport;
 }

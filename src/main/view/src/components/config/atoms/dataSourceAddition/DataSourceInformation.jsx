@@ -22,6 +22,14 @@ const DataSourceInformation = ({row}) => {
       <Form
         ref={dataInformationRef}
         formData={row}
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'100%'}
+        elementAttr={{
+          class: 'dx-fieldset custom-scrollbar'
+        }}
       >
         <SimpleItem
           dataField="dsNm"

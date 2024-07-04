@@ -1,4 +1,3 @@
-import HeaderPanel from 'components/common/atomic/Common/Panel/HeaderPanel';
 import styled from 'styled-components';
 import middleDot from '../../../assets/image/component/middleDot.png';
 import {CheckBox, SelectBox, TextBox} from 'devextreme-react';
@@ -17,14 +16,6 @@ const Img = styled.img`
   vertical-align: middle;
   padding: 0px 7px 2px 5px;
 `;
-
-export const MyDesignerTitle = ({title}) => {
-  return (
-    <HeaderPanel width='auto'>
-      {title}
-    </HeaderPanel>
-  );
-};
 
 export const MyDesignerLabel = ({label}) => {
   return (
@@ -47,6 +38,13 @@ export const MyPageTextBox = ({value}) => {
 };
 
 const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
+  let value = '';
+  if (id == 'defaultDisplay') {
+    value = data[id]?.initDisplay || 'DashAny';
+  }
+  if (id == 'defaultLayout') {
+    value = data[id]?.layout || 'CTGB';
+  }
   return (
     <SelectBox
       disabled= {!isCheck}
@@ -55,24 +53,40 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
       items={layoutSelectList(id)}
       displayExpr='name'
       valueExpr='id'
-      value={data[id]?.layout || 'CTGB'}
+      value={value}
       onSelectionChanged={(e) => {
+        let param = {
+          check: isCheck,
+          layout: e.selectedItem.id
+        };
+
+        if (id == 'defaultDisplay') {
+          param = {
+            displayCheck: isCheck,
+            initDisplay: e.selectedItem.id
+          };
+        }
+
         setConfig({
           ...data,
-          [id]: {
-            check: isCheck,
-            layout: e.selectedItem.id
-          }
+          [id]: {...param}
         });
       }}
     />
   );
 };
 
+const checkBoxValue = (id, data) => {
+  if (id == 'defaultLayout') {
+    return data?.defaultLayout?.check || false;
+  }
+  if (id == 'defaultDisplay') {
+    return data?.defaultDisplay?.displayCheck || false;
+  }
+};
+
 export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
-  const [isCheck, setIsCheck] = useState(
-    data.defaultLayout ? data.defaultLayout.check : false
-  );
+  const [isCheck, setIsCheck] = useState(() => checkBoxValue(id, data));
   return (
     <>
       <CheckBox

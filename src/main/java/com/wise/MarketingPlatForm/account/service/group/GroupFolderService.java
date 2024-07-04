@@ -8,16 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupFolderPatchDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
-import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.FolderListModel;
 import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
-import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
-import com.wise.MarketingPlatForm.config.entity.AuthReportMstrEntity;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class GroupFolderService {
@@ -37,37 +31,40 @@ public class GroupFolderService {
   };
 
   @Transactional
-  public boolean patchGroupFolder(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+  public boolean patchGroupFolder(List<GroupFolderModel> groupFolderPatchDTO) {
 
     List<GroupAuthReportMstrEntity> groupFolderMstr = generateGroupFolderPatchObject(groupFolderPatchDTO);
 
     if (groupFolderMstr == null) return false;
 
     boolean result = false;
-
-    result = accountDAO.deleteGroupFolder(groupFolderMstr);
-    result = accountDAO.putGroupFolder(groupFolderMstr);
+    if (groupFolderMstr.size() == 0) {
+      result = accountDAO.deleteGroupFolderAll();
+    } else {
+      result = accountDAO.deleteGroupFolder(groupFolderMstr);
+      result = accountDAO.putGroupFolder(groupFolderMstr);
+    }
 
     return result;
   };
 
 
-  private List<GroupAuthReportMstrEntity> generateGroupFolderPatchObject(List<GroupFolderPatchDTO> groupFolderPatchDTO) {
+  private List<GroupAuthReportMstrEntity> generateGroupFolderPatchObject(List<GroupFolderModel> groupFolderPatchDTO) {
     List<GroupAuthReportMstrEntity> result = new ArrayList<>();
 
-    for (GroupFolderPatchDTO groupFolder : groupFolderPatchDTO) {
+    for (GroupFolderModel groupFolder : groupFolderPatchDTO) {
       int grpId = groupFolder.getGrpId();
-      List<ConfigFolderDTO> fldIds = groupFolder.getFldIds();
+      List<FolderListModel> fldIds = groupFolder.getFldIds();
       int fldsSize = fldIds.size();
 
       if (fldsSize == 0) {
         GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
           .grpId(grpId)
           .fldId(0)
-          .authDataItem("N")
-          .authExport("N")
-          .authPublish("N")
-          .authView("N")
+          .authDataItem(false)
+          .authExport(false)
+          .authPublish(false)
+          .authView(false)
           .build();
 
           result.add(groupAuthReportMstrEntity);
@@ -75,21 +72,20 @@ public class GroupFolderService {
         continue;
       }
 
-      for (ConfigFolderDTO configFolderDTO : groupFolder.getFldIds()) {
+      for (FolderListModel configFolderDTO : groupFolder.getFldIds()) {
 
         GroupAuthReportMstrEntity groupAuthReportMstrEntity = GroupAuthReportMstrEntity.builder()
           .grpId(grpId)
           .fldId(configFolderDTO.getFldId())
-          .authDataItem(configFolderDTO.getAuthDataItem())
-          .authExport(configFolderDTO.getAuthExport())
-          .authPublish(configFolderDTO.getAuthPublish())
-          .authView(configFolderDTO.getAuthView())
+          .authDataItem(configFolderDTO.isAuthDataItem())
+          .authExport(configFolderDTO.isAuthExport())
+          .authPublish(configFolderDTO.isAuthPublish())
+          .authView(configFolderDTO.isAuthView())
           .build();
 
           result.add(groupAuthReportMstrEntity);
 
       }
-
     }
     return result;
   };
@@ -99,7 +95,7 @@ public class GroupFolderService {
     List<GroupFolderModel> result = new ArrayList<>();
     List<FolderListModel> folderListMode = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    UserGroupDTO group = null;
+    int group = 0;
     GroupFolderModel groupFolderModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -112,40 +108,24 @@ public class GroupFolderService {
 
       if (lastGroupIdNumber) {
         groupFolderModel = GroupFolderModel.builder()
-        .group(group)
-        .folderList(folderListMode)
+        .grpId(group)
+        .fldIds(folderListMode)
         .build();
         result.add(groupFolderModel);
         folderListMode = new ArrayList<>();
       }
 
       if (!isGroupContained) {
-        group = UserGroupDTO.builder()
-        .grpId(grpId)
-        .grpNm(groupData.getGrpNm())
-        .grpDesc(groupData.getGrpDesc())
-        .build();
+        group = grpId;
         groupkeys.add(grpId);
       }
 
-      FldMstrEntity pubFldMstrEntity = FldMstrEntity.builder()
-        .fldId(groupData.getFldId())
-        .fldLvl(groupData.getFldLvl())
-        .fldNm(groupData.getFldNm())
-        .fldOrdinal(groupData.getFldOrdinal())
-        .fldParentId(groupData.getFldParentId())
-        .build();
-
-      AuthReportMstrEntity authReportMstrEntity = AuthReportMstrEntity.builder()
-        .authView(groupData.getAuthView())
-        .authDataItem(groupData.getAuthDataItem())
-        .authExport(groupData.getAuthExport())
-        .authPublish(groupData.getAuthPublish())
-        .build();
-
       FolderListModel folderListModel = FolderListModel.builder()
-        .folder(pubFldMstrEntity)
-        .auth(authReportMstrEntity)
+        .fldId(groupData.getFldId())
+        .authView(groupData.isAuthView())
+        .authDataItem(groupData.isAuthDataItem())
+        .authExport(groupData.isAuthExport())
+        .authPublish(groupData.isAuthPublish())
         .build();
 
       folderListMode.add(folderListModel);
@@ -157,8 +137,8 @@ public class GroupFolderService {
 
     if (isThereToSave) {
       groupFolderModel = GroupFolderModel.builder()
-        .group(group)
-        .folderList(folderListMode)
+        .grpId(group)
+        .fldIds(folderListMode)
         .build();
         result.add(groupFolderModel);
     }

@@ -1,9 +1,8 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import TreeList, {
+import {
   Column,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
-
 import React, {useCallback, useContext, useEffect} from 'react';
 import Title from 'components/config/atoms/common/Title';
 import localizedString from 'config/localization';
@@ -12,6 +11,7 @@ import {ReportFolderContext} from
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import {Folder} from
   'models/config/reportFolderManagement/ReportFolderManagement';
+import StyledTreeList from './StyledTreeList';
 
 const FolderList = ({setRow}) => {
   // context
@@ -37,14 +37,15 @@ const FolderList = ({setRow}) => {
   return (
     <Wrapper>
       <Title title={localizedString.folderList}></Title>
-      <TreeList
+      <StyledTreeList
         dataSource={data}
         keyExpr="fldId"
         parentIdExpr="fldParentId"
         elementAttr={{
           class: 'folder-list'
         }}
-        height={'90%'}
+        height={'calc(100% - 40px)'}
+        showColumnHeaders={false}
         onRowClick={handleRowClick}
         onSelectionChanged={handleSelectionChanged}
       >
@@ -58,14 +59,18 @@ const FolderList = ({setRow}) => {
           caption={localizedString.folderName}
           cellRender={({row}) => {
             return (
-              <span>
-                <img height={'17px'} src={folderImg}/>
-                {row.data.fldNm}
-              </span>
+              <>
+                <img
+                  style={{marginTop: '1.5px', float: 'left'}}
+                  height={'17px'} src={folderImg}/>
+                <span style={{lineHeight: '17px', marginLeft: '5px'}}>
+                  {row.data.fldNm}
+                </span>
+              </>
             );
           }}
         />
-      </TreeList>
+      </StyledTreeList>
     </Wrapper>
   );
 };

@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.CubeDTO;
+import com.wise.MarketingPlatForm.account.dto.DsViewDimDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupDataPutDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
+import com.wise.MarketingPlatForm.account.model.groups.data.DataModel;
 import com.wise.MarketingPlatForm.account.model.groups.data.GroupDataModel;
 import com.wise.MarketingPlatForm.account.service.UserGroupDataService;
-import com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeMstrEntity;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DataDsviewCubeDimDTO;
-import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDsviewCubeDTO;
 import com.wise.MarketingPlatForm.utils.XMLGenerator;
 
 @Service
@@ -41,7 +39,7 @@ public class GroupDataService {
     return groupDataModel;
   }
 
-  public boolean putGroupData(List<GroupDataPutDTO> groupDatasetPutDTO) throws Exception{
+  public boolean putGroupData(List<GroupDataModel> groupDatasetPutDTO) throws Exception{
 
     List<GroupAuthDataMstrEntity> groupAuthDataMstr = generateGroupAuthDataObject(groupDatasetPutDTO);
 
@@ -49,46 +47,52 @@ public class GroupDataService {
 
     boolean result = false;
   
-    result = accountDAO.deleteGroupData(groupAuthDataMstr);
-    result = accountDAO.putGroupData(groupAuthDataMstr);
+    if (groupAuthDataMstr.size() == 0) {
+      result = accountDAO.deleteGroupDataAll();
+    } else {
+      result = accountDAO.deleteGroupData(groupAuthDataMstr);
+      result = accountDAO.putGroupData(groupAuthDataMstr);
+    }
 
     return result;
   }
 
-  private List<GroupAuthDataMstrEntity> generateGroupAuthDataObject(List<GroupDataPutDTO> groupDatasetPutDTO) throws Exception{
+  private List<GroupAuthDataMstrEntity> generateGroupAuthDataObject(List<GroupDataModel> groupDatasetPutDTO) throws Exception{
     List<GroupAuthDataMstrEntity> result = new ArrayList<>();
     String rootXML = "NewDataSet";
-    String memXML = "Auth_Mem";
+    // String memXML = "Auth_Mem"; TODO: Member 추후개발 예정
     String cubeXML = "Auth_Cubes";
     String dimXML = "Auth_Dim";
 
-    for (GroupDataPutDTO groupDataPut : groupDatasetPutDTO) {
+    for (GroupDataModel groupDataPut : groupDatasetPutDTO) {
       XMLGenerator xmlGenerator = new XMLGenerator(rootXML);
       String XML = null;
       int grpId = groupDataPut.getGrpId();
+      List<DataModel> datas = groupDataPut.getDatas();
       
-      for (DatasetDsDsviewCubeDTO datasetDsDsviewCubeDTO : groupDataPut.getDsView()) {
-        xmlGenerator.createElement(memXML);
-        xmlGenerator.createElement(memXML, "DS_VIEW_ID", datasetDsDsviewCubeDTO.getDsViewId());
-        xmlGenerator.createElement(memXML, "DIM_UNI_NM", "["+datasetDsDsviewCubeDTO.getDimUniNm()+"]");
-        xmlGenerator.createElement(memXML, "MEMBER_NM", ""); // TODO: 해당부분 기능 미구현 추후개발 OR 삭제 예정
-        xmlGenerator.createElement(memXML, "HIE_UNI_NM", ""); // TODO: 해당부분 기능 미구현 추후개발 OR 삭제 예정
+      for (DataModel dataModel : datas) {
+        for (CubeDTO cube : dataModel.getCubeId()) {
+          xmlGenerator.createElement(cubeXML);
+          xmlGenerator.createElement(cubeXML, "DS_VIEW_ID", cube.getDsViewId());
+          xmlGenerator.createElement(cubeXML, "CUBE_ID", cube.getCubeId());
+        }
       }
-      for (CubeMstrEntity cubeMstrEntity : groupDataPut.getCube()) {
-        xmlGenerator.createElement(cubeXML);
-        xmlGenerator.createElement(cubeXML, "DS_VIEW_ID", cubeMstrEntity.getDsViewId());
-        xmlGenerator.createElement(cubeXML, "CUBE_ID", cubeMstrEntity.getCubeId());
+      for (DataModel dataModel : datas) {
+        for (DsViewDimDTO cubeDim : dataModel.getDsViewDim()) {
+          xmlGenerator.createElement(dimXML);
+          xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
+          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
+        }
       }
-      for (DataDsviewCubeDimDTO dataDsviewCubeDimDTO : groupDataPut.getCubeDim()) {
-        xmlGenerator.createElement(dimXML);
-        xmlGenerator.createElement(dimXML, "DS_VIEW_ID", dataDsviewCubeDimDTO.getDsViewId());
-        xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+dataDsviewCubeDimDTO.getDimUniNm()+"]");
-      }
-
+      
       XML = xmlGenerator.builder();
       String encodedXML = new String(base64.encode(XML.getBytes(StandardCharsets.UTF_8)));
 
 
+      if (datas.size() == 0) {
+        encodedXML = null;
+      }
+      
       GroupAuthDataMstrEntity groupAuthDataMstrEntity = GroupAuthDataMstrEntity.builder()
           .grpId(grpId)
           .dataXml(encodedXML)
@@ -106,16 +110,10 @@ public class GroupDataService {
     List<GroupDataModel> result = new ArrayList<>();
     
     for (GroupDataDTO groupData : groupDataDTO) {
-
-      UserGroupDTO group = UserGroupDTO.builder()
+    
+      GroupDataModel groupDataModel = GroupDataModel.builder()
         .grpId(groupData.getGrpId())
-        .grpNm(groupData.getGrpNm())
-        .grpDesc(groupData.getGrpDesc())
-        .build();
-
-        GroupDataModel groupDataModel = GroupDataModel.builder()
-        .group(group)
-        .dsViews(UGDataService.dataXmlParsing(groupData.getDataXml()))
+        .datas(UGDataService.dataXmlParsing(groupData.getDataXml()))
         .build();
 
       result.add(groupDataModel);

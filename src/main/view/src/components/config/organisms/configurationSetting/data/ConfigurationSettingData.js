@@ -7,16 +7,15 @@ export const Mode = {
   'REPORT_CONFIGURE': 'REPORT_CONFIGURE'
 };
 
-export const dataSource = [
+export const tabItems = [
   {
-    mode: Mode['GENERATE_CONFIGURE'],
-    title: localizedString.generateConfigure,
-    component: <GeneralConfigure/>
+    value: Mode['GENERATE_CONFIGURE'],
+    text: localizedString.generateConfigure,
+    component: GeneralConfigure
   },
-  // TODO: 보고서 설정 추후 추가
   {
-    mode: Mode['REPORT_CONFIGURE'],
-    title: localizedString.reportConfigure,
-    component: <ReportConfigure/>
+    value: Mode['REPORT_CONFIGURE'],
+    text: localizedString.reportConfigure,
+    component: ReportConfigure
   }
 ];

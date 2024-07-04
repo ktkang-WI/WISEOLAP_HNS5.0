@@ -27,7 +27,7 @@ const dashboardInitialState = (defaultItem) => {
                   id: 'item1',
                   type: 'tab',
                   name: 'Chart 1',
-                  component: defaultItem
+                  component: defaultItem || 'chart'
                 }
               ]
             }
@@ -130,8 +130,9 @@ const reducers = {
 
     if (mode === DesignerMode['DASHBOARD']) {
       const defaultItem = actions.payload.defaultItem;
-      const test = dashboardInitialState(defaultItem);
-      return {...test};
+      const dashboardInit = dashboardInitialState(defaultItem);
+
+      return {...dashboardInit};
     }
 
     if (mode === DesignerMode['AD_HOC']) {

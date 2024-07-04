@@ -1,18 +1,17 @@
 import styled from 'styled-components';
 
 const StyledTitle = styled.div`
-    font-size: 1rem;
-    font-weight: 900;
+    font-size: 14px;
+    font-weight: 500;
     display: flex;
     justify-content: start;
     align-items: center;
     padding: 10px;
-    color:#577DF6;
   `;
 
-const Title = ({title}) => {
+const Title = ({children, title}) => {
   return (
-    <StyledTitle>{title}</StyledTitle>
+    <StyledTitle>{title}{children}</StyledTitle>
   );
 };
 

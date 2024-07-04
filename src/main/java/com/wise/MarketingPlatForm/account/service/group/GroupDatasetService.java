@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetPutDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.model.groups.dataset.GroupDatasetModel;
-import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 
 @Service
 public class GroupDatasetService {
@@ -39,9 +37,12 @@ public class GroupDatasetService {
     if (groupAuthDatasetMstr == null) return false;
 
     boolean result = false;
-  
-    result = accountDAO.deleteGroupDataset(groupAuthDatasetMstr);
-    result = accountDAO.putGroupDataset(groupAuthDatasetMstr);
+    if (groupAuthDatasetMstr.size() == 0) {
+      result = accountDAO.deleteGroupDatasetAll();
+    } else {
+      result = accountDAO.deleteGroupDataset(groupAuthDatasetMstr);
+      result = accountDAO.putGroupDataset(groupAuthDatasetMstr);
+    }
 
     return result;
   };
@@ -82,9 +83,9 @@ public class GroupDatasetService {
   private List<GroupDatasetModel> generateGroupDatasetObject(List<GroupDatasetDTO> groupDatasetDTO) {
 
     List<GroupDatasetModel> result = new ArrayList<>();
-    List<FldMstrEntity> datasetList = new ArrayList<>();
+    List<Integer> datasetList = new ArrayList<>();
     List<Integer> groupkeys = new ArrayList<>();
-    UserGroupDTO group = null;
+    Integer group = 0;
     GroupDatasetModel groupDatasetModel = null;
     int prevGroupId = 0;
     boolean isThereToSave = false;
@@ -97,30 +98,19 @@ public class GroupDatasetService {
 
       if (lastGroupIdNumber) {
         groupDatasetModel = GroupDatasetModel.builder()
-        .group(group)
-        .dataset(datasetList)
+        .grpId(group)
+        .fldId(datasetList)
         .build();
         result.add(groupDatasetModel);
         datasetList = new ArrayList<>();
       }
 
       if (!isGroupContained) {
-        group = UserGroupDTO.builder()
-        .grpId(groupDatasetData.getGrpId())
-        .grpNm(groupDatasetData.getGrpNm())
-        .grpDesc(groupDatasetData.getGrpDesc())
-        .build();
+        group = groupDatasetData.getGrpId();
         groupkeys.add(grpId);
       }
 
-      FldMstrEntity dataset = FldMstrEntity.builder()
-        .fldId(groupDatasetData.getFldId())
-        .fldNm(groupDatasetData.getFldNm())
-        .fldParentId(groupDatasetData.getParentFldId())
-        .build();
-
-
-      datasetList.add(dataset);
+      datasetList.add(groupDatasetData.getFldId());
 
       prevGroupId = grpId;
     }
@@ -129,8 +119,8 @@ public class GroupDatasetService {
 
     if (isThereToSave) {
       groupDatasetModel = GroupDatasetModel.builder()
-        .group(group)
-        .dataset(datasetList)
+        .grpId(group)
+        .fldId(datasetList)
         .build();
         result.add(groupDatasetModel);
     }

@@ -5,89 +5,83 @@ import TreeList, {
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 
-import models from 'models';
-import React, {useContext, useEffect, useState, useRef} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Title from 'components/config/atoms/common/Title';
-import {AuthorityContext} from
-  'components/config/organisms/authority/Authority';
+import {
+  AuthorityContext,
+  getDataObjectOfUserOrGroup,
+  getKeys,
+  getUserOrGroup,
+  mode,
+  path}
+  from 'components/config/organisms/authority/Authority';
 import localizedString from 'config/localization';
+import useModal from 'hooks/useModal';
 
-const DatasetTreeView = ({row}) => {
+const DatasetTreeView = ({mainKey, dependency}) => {
   // context
-  const authoritycontext = useContext(AuthorityContext);
-
-  // state
-  const [dataSets, setDataSet] = useState([]);
-  const [data] = authoritycontext.state.data;
-
-  const ref = useRef();
+  const getContext = useContext(AuthorityContext);
+  const [currentTab] = getContext.state.currentTab;
+  if (currentTab !== mainKey) return <></>;
+  const dataSource = getContext.state.folderDataSets;
+  const selected = getContext.state.selected;
+  const data = getContext.state.data;
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const {alert} = useModal();
+  const dataSetMode =
+    currentTab === path.GROUP_DATASET ? mode.GROUP : mode.USER;
 
   useEffect(() => {
-    models.Authority.getFolderDatasets()
-        .then((response) => {
-          const newDataSets = response.data.data.map((row) => {
-            return {
-              ...row,
-              isAuth: false
-            };
-          });
-
-          setDataSet(newDataSets);
-        })
-        .catch(() => {
-          throw new Error('Data Loading Error');
+    const updateData = () => {
+      const {nextId} = getKeys(dataSetMode, selected);
+      if (!nextId) return;
+      const fldId = getUserOrGroup(dataSetMode, data, nextId);
+      if (!fldId) {
+        data.next.push({
+          ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
+          fldId: []
         });
-  }, []);
+      }
+      setSelectedKeys(fldId?.fldId ?? []);
+    };
+    updateData();
+  }, [dependency]);
 
   useEffect(() => {
-    const updateFolders = (fldIdList) => {
-      const newDataSets = dataSets.map((f) => {
-        if (fldIdList?.includes(f.fldId)) {
-          return {
-            ...f,
-            isAuth: true
-          };
-        }
-        return {
-          ...f,
-          isAuth: false
-        };
-      });
+    if (!data?.next) return;
+    const dataSetMode =
+      currentTab === path.GROUP_DATASET ? mode.GROUP : mode.USER;
+    const {nextId} = getKeys(dataSetMode, selected);
+    data.next = data.next.map((dataSetAuth) => {
+      if (nextId === (dataSetAuth?.grpId || dataSetAuth?.userNo)) {
+        dataSetAuth.fldId = [...new Set(selectedKeys)];
+      }
+      return dataSetAuth;
+    });
+  }, [selectedKeys]);
 
-      setDataSet(newDataSets);
+  const handleSelectedKey = (selectedItems) => {
+    if (!selected?.user?.next && !selected?.group?.next) {
+      alert(localizedString.clickMe);
+      setSelectedKeys([]);
+    } else {
+      setSelectedKeys(selectedItems.selectedRowKeys);
     };
-
-    if (row) {
-      const groups = data.filter((d) => d.group);
-      const users = data.filter((d) => d.user);
-      let fldIdList = [];
-
-      if (groups.length > 0) {
-        const group = data.find((d) => d.group?.grpId === row.grpId);
-        fldIdList = group?.dataset;
-      }
-
-      if (users.length > 0) {
-        const user = data.find((d) => d.user?.userNo === row.userNo);
-        fldIdList = user?.dataset;
-      }
-      fldIdList = fldIdList?.map((row) => row.fldId);
-      updateFolders(fldIdList);
-    }
-  }, [row]);
+  };
 
   return (
     <Wrapper>
       <Title title={localizedString.datasetFolderList}></Title>
       <TreeList
-        ref={ref}
         elementAttr={{
           class: 'dataset-tree-view'
         }}
-        dataSource={dataSets}
+        dataSource={dataSource}
+        showBorders={true}
         keyExpr="fldId"
-        parentIdExpr="fldParentId"
-        id="folderTreeView"
+        parentIdExpr="parentFldId"
+        selectedRowKeys={selectedKeys}
+        onSelectionChanged={handleSelectedKey}
         height={'90%'}
       >
         <Editing
@@ -98,17 +92,14 @@ const DatasetTreeView = ({row}) => {
           visible={true}
           width={250}
         />
-        <Selection mode="none" />
-
-        <Column
-          width="50px"
-          dataField="isAuth"
-          dataType='boolean'
-          caption=""
+        <Selection
+          mode="multiple"
+          showCheckBoxesMode={'always'}
         />
         <Column
           dataField="fldNm"
           caption={localizedString.folderName}
+          allowEditing={false}
         />
       </TreeList>
     </Wrapper>

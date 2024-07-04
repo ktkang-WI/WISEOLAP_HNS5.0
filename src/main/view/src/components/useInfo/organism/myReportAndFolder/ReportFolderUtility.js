@@ -1,7 +1,5 @@
 import InputTxtAndCheckBox
   from 'components/common/atomic/Modal/organisms/InputTxtAndCheckBox';
-import SimpleInputModal
-  from 'components/common/atomic/Modal/organisms/SimpleInputModal';
 import useModal from 'hooks/useModal';
 import {createMyPageFolder, deleteMyPageFolder, updateMyPageFolder}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
@@ -20,6 +18,7 @@ const ReportFolderUtility = () => {
     });
   };
 
+  // 유효성 모음.
   const checkValidation = {
     nameDuple: (value, treeViewData) => {
       const check = treeViewData.findIndex((data) => value == data.name);
@@ -35,6 +34,9 @@ const ReportFolderUtility = () => {
         alert(localizedString.noSelectionAlert);
       }
       return !Object.keys(itemData).length ? false : true;
+    },
+    noSelectedFolderInfo: () => {
+      alert(localizedString.noSelectionFolderAlert);
     }
   };
 
@@ -104,28 +106,18 @@ const ReportFolderUtility = () => {
     });
   };
 
-  const updateUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
+  const updateUserFolderUtil = (itemData, setRow, setTreeViewData) => {
     confirm(localizedString.changeFolderNmConfirm, () => {
-      openModal(SimpleInputModal, {
-        modalTitle: localizedString.changeFolderNm,
-        defaultValue: itemData.name,
-        onSubmit: (value) => {
-          let isOk= checkValidation.emptyName(value);
-          isOk = checkValidation.nameDuple(value, treeViewData);
-
-          if (!isOk) return false;
-
-          updateMyPageFolder(itemData.id, value).then((respose) => {
-            if (respose.status == 200) {
-              itemData = {};
-              // 변경 사항 적용 위해 통신하여 데이터 불러옴
-              afterCrudLoadData(setTreeViewData);
-            }
-          }).catch();
+      updateMyPageFolder(itemData).then((respose) => {
+        if (respose.status == 200) {
+          // 변경 사항 적용 위해 통신하여 데이터 불러옴
+          afterCrudLoadData(setTreeViewData);
+          setRow({});
         }
-      });
+      }).catch();
     });
   };
+
   return {
     newUserFolderUtil,
     deleteUserFolderUtil,

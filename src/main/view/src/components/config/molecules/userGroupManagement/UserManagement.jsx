@@ -11,10 +11,10 @@ const UserManagement = () => {
 
   return (
     <Wrapper display='flex' direction='row'>
-      <Wrapper size="650px">
+      <Wrapper width='40%' style={{marginRight: '20px'}}>
         <UserDataGrid setRow={setRow}/>
       </Wrapper>
-      <Wrapper size="2">
+      <Wrapper width='60%' overflow='hidden'>
         <UserInfo row={row}/>
       </Wrapper>
     </Wrapper>

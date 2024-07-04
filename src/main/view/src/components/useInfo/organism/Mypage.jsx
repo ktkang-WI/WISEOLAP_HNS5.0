@@ -1,95 +1,83 @@
 import Header from 'components/common/atomic/Header/organism/Header';
+import {Outlet, useLocation, useNavigate} from 'react-router-dom';
+import localizedString from 'config/localization';
+import TabMenu from 'components/config/molecules/common/TabMenu';
 import {getTheme} from 'config/theme';
-import {Outlet} from 'react-router-dom';
-import styled from 'styled-components';
-import MyPageMenuButtons from '../molcule/MyPageMenuButtons';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const theme = getTheme();
-
-const tabNm = '마이페이지'; // localized
+const tabNm = localizedString.myPage;
 const myPageUIParam =
   {
-    name: tabNm,
-    type: 'ReportTab',
-    width: 'auto',
-    id: 'myPage',
-    position: 'middle'
+    text: tabNm,
+    type: 'CustomTitle'
   };
 
-const StyledWrapper = styled.div`
-  height: calc(100% - ${theme.size.headerHeight});
-  width: 240px;
-  flex: 1;
-  display: flex;
-  float: left;
-  min-height: 0px;
-  margin-bottom: 0px;
-  box-sizing: border-box;
-  margin: 10px;
-  background: #ffffff;
-`;
-const SideMenuWrapper = styled.div`
-  height: 100%;
-  width: inherit;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #D4D7DC;
-  padding: 10px;
-  box-sizing: border-box;
-`;
-
-const ButtonWrap = styled.div`
-  border: 1px solid #D4D7DC;
-  padding: 10px;
-  box-sizing: border-box;
-`;
-
-const Wrapper = styled.div`
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-`;
-
 const menuButtons = [ // label localizedString
-  {id: 'user_info', label: '개인정보 관리', path: '/user-info'},
+  {value: 'user_info', text: '개인정보', path: '/user-info'},
   {
-    id: 'myDesigner_config',
-    label: '디자이너 설정',
-    path: '/myPage-designerConfig'
+    value: 'myDesigner_config',
+    text: '디자이너 설정',
+    path: '/designer'
   },
-  {id: 'myViewer_config',
-    label: '뷰어 설정',
-    path: '/myPage-viewerConfig'},
-  {id: 'myFont_config',
-    label: '폰트 설정',
-    path: '/myPage-fontConfig'},
-  {id: 'myReport_folder', label: '개인 보고서 및 폴더 관리', path: '/myReport-folder'}
+  // {value: 'myViewer_config',
+  //   text: '뷰어 설정',
+  //   path: '/viewer'},
+  // {value: 'myFont_config',
+  //   text: '폰트 설정',
+  //   path: '/font'},
+  {value: 'myReport_folder', text: '개인 보고서 및 폴더 관리', path: '/report-folder'}
 ];
 
 const MyPage = () => {
+  const location = useLocation();
+  const nav = useNavigate();
+  const defaultSelection =
+    menuButtons.find(({path}) => location.pathname.includes(path));
   return (
     <>
-      <Wrapper>
+      <Wrapper display='flex' direction='column'>
         <Header
           left={['Logo']}
-          middle={[{'myPage': myPageUIParam}]}
+          middle={[myPageUIParam]}
           right={[
             'ReportProperty',
             'UserInfo'
           ]}
         >
         </Header>
-        <StyledWrapper>
-          <SideMenuWrapper>
-            {/* 메뉴 버튼 */}
-            <ButtonWrap>
-              <MyPageMenuButtons btns={menuButtons}/>
-            </ButtonWrap>
-          </SideMenuWrapper>
-        </StyledWrapper>
-        <div style={{display: 'flex'}}>
-          <Outlet/>
-        </div>
+        <Wrapper
+          display={'flex'}
+          height={`calc(100% - ${theme.size.headerHeight} - 20px)`}
+          direction={'row'}
+        >
+          <TabMenu
+            style={{marginTop: '10px', marginLeft: '10px'}}
+            defaultSelection={defaultSelection.value}
+            init={false}
+            onChangedValue={(key) => {
+              const item =
+                  menuButtons.find(({value}) => key == value);
+
+              console.log(key);
+              console.log(item);
+              nav('/editds/my-page' + item.path);
+            }}
+            items={menuButtons}
+          />
+          <Wrapper
+            className='section'
+            style={{
+              borderRadius: '10px',
+              border: 'solid 1px ' + theme.color.breakLine,
+              background: theme.color.panelColor,
+              overflow: 'hidden',
+              padding: '15px'
+            }}
+          >
+            <Outlet/>
+          </Wrapper>
+        </Wrapper>
       </Wrapper>
     </>
   );

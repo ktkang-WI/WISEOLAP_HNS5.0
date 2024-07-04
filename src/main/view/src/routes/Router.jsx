@@ -11,14 +11,16 @@ import Spreadsheet from 'components/designer/Spreadsheet';
 import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import {
+  authorityLoader,
   generalConfigure as generalLoader,
-  groupData as groupDataLoader,
   userFolderData as myPageFolderData,
+  myPageUserInfoData,
   userDesignerConfig,
   userGroupManagement as userGroupLoader} from './loader/LoaderConfig';
 import ConfigurationSetting
   from 'components/config/organisms/configurationSetting/ConfigurationSetting';
-import Authority from 'components/config/organisms/authority/Authority';
+import Authority
+  from 'components/config/organisms/authority/Authority';
 import {DesignerMode} from 'components/config/configType';
 import ReportFolderManagement from
   'components/config/organisms/reportFolderManagement/ReportFolderManagement';
@@ -51,8 +53,12 @@ const multipleLoader = async () => {
     const json = JSON.parse(object.defaultItem);
 
     object.defaultItem = json.item;
-    object.defaultLayout = {check: json.check, layout: json.layout};
-
+    object.defaultLayout = {
+      check: json.check, layout: json.layout
+    };
+    object.defaultDisplay = {
+      displayCheck: json.displayCheck, initDisplay: json.initDisplay
+    };
     return object;
   });
 
@@ -122,7 +128,7 @@ const router = createBrowserRouter([
       {
         path: 'auth',
         element: <Authority/>,
-        loader: groupDataLoader
+        loader: authorityLoader
       },
       {
         path: 'report-folder',
@@ -143,31 +149,31 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: contextPath + '/myPage',
+    path: contextPath + '/my-page',
     element: <MyPage/>,
     children: [
       {
         path: 'user-info',
-        element: <UserInfoManagement/>
-        // loader: 개인정보
+        element: <UserInfoManagement/>,
+        loader: myPageUserInfoData
       },
       {
-        path: 'myReport-folder',
+        path: 'report-folder',
         element: <ReportFolderTab/>,
         loader: myPageFolderData
       },
       {
-        path: 'myPage-viewerConfig',
+        path: 'viewer',
         element: <MyViewerConfig/>
         // loader: 뷰어 설정
       },
       {
-        path: 'myPage-fontConfig',
+        path: 'font',
         element: <MyFontConfig/>
         // loader: 폰트 설정
       },
       {
-        path: 'myPage-designerConfig',
+        path: 'designer',
         element: <MyDesignerConfig/>,
         loader: userDesignerConfig
       }

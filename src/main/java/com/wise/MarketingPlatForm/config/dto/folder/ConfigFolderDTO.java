@@ -19,8 +19,8 @@ public class ConfigFolderDTO {
   int fldLvl;
   int fldParentId;
   int fldOridinal;
-  String authView;
-  String authPublish;
-  String authDataItem;
-  String authExport;
+  boolean authView;
+  boolean authPublish;
+  boolean authDataItem;
+  boolean authExport;
 }

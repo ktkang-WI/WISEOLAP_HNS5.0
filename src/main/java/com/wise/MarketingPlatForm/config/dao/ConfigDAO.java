@@ -12,6 +12,7 @@ import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
 import com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.config.entity.WbConfigMstrEntity;
+import com.wise.MarketingPlatForm.config.model.folder.ConfigFolderPubModel;
 
 @Mapper
 public interface ConfigDAO {
@@ -21,12 +22,13 @@ public interface ConfigDAO {
   public List<ConfigFolderDTO> selectConfigFolderGroup();
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
   public List<FldMstrEntity> selectConfigFolder();
-  public ArrayList<MyPageFolderReportDTO> selectMyPageFolderReport(int userNo, String userNm);
+  public List<ConfigFolderPubModel> selectConfigPubFolder();
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
   public boolean createConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean updateConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean deleteConfigFolder(FldMstrEntity fldMstrEntity);
   // myPage 이동 에정
+  public ArrayList<MyPageFolderReportDTO> selectMyPageFolderReport(int userNo, String userNm);
   public boolean updateMyReprot(MyPageFolderReportDTO myPageFolderReportDTO);
   public boolean createMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   public boolean deleteMyFolder(List<Integer> data);

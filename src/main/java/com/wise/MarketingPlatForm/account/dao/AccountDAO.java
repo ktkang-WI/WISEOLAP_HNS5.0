@@ -27,15 +27,9 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 @Mapper
 public interface AccountDAO {
   public List<UserMstrEntity> selectUserMstr();
-  public List<GroupMstrEntity> selectGroupMstr();
-  public List<UserGroupDTO> selectListGroupData();
   public List<UserDataDTO> selectUserData();
   public List<UserFolderDTO> selectUserFolder();
-  public List<GroupDataDTO> selectGroupData();
-  public List<GroupFolderDTO> selectGroupFolder();
-  public List<GroupDsDTO> selectGroupDs();
   public List<UserDsDTO> selectUserDs();
-  public List<GroupDatasetDTO> selectGroupDataset();
   public List<UserDatasetDTO> selectUserDataset();
   public boolean createUser(UserMstrEntity userMstr);
   public boolean updateUser(UserMstrEntity userMstr);
@@ -51,7 +45,16 @@ public interface AccountDAO {
   public boolean putUserFolder(List<UserAuthReportMstrEntity> userFolderMstr);
   public boolean deleteUserData(List<UserAuthDataMstrEntity> userDataMstr);
   public boolean putUserData(List<UserAuthDataMstrEntity> userDataMstr);
+  public boolean deleteUserDatasetAll();
+  public boolean deleteUserDsAll();
+  public boolean deleteUserFolderAll();
 
+  public List<GroupMstrEntity> selectGroupMstr();
+  public List<UserGroupDTO> selectListGroupData();
+  public List<GroupDataDTO> selectGroupData();
+  public List<GroupFolderDTO> selectGroupFolder();
+  public List<GroupDsDTO> selectGroupDs();
+  public List<GroupDatasetDTO> selectGroupDataset();
   public boolean createGroup(GroupMstrEntity groupMstr);
   public boolean updateGroup(GroupMstrEntity groupMstr);
   public boolean deleteGroup(GroupMstrEntity groupMstr);
@@ -62,6 +65,12 @@ public interface AccountDAO {
   public boolean deleteGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
   public boolean putGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
   public boolean deleteGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
+  public boolean deleteUserDataAll();
+  public boolean deleteGroupDataAll();
   public boolean putGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
+  public boolean deleteGroupDsAll();
+  public boolean deleteGroupFolderAll();
+  public boolean deleteGroupDatasetAll();
+
 
 }

@@ -33,7 +33,7 @@ const GroupDataGrid = () => {
   return (
     <Panel title={'그룹 (' + groupsFormat.length + '개)'}>
       <DataGrid
-        height={600}
+        height='100%'
         dataSource={groupsFormat}
         showBorders={true}
         onRowClick={handleRowClick}
