@@ -226,10 +226,28 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               });
             }
 
-            if (!item.meta.positionOption.row.expand) {
+            if (!item.meta.positionOption.column.expand) {
               pivotColumnFields.forEach((field) => {
                 pivotDataSource.collapseAll(field.index);
               });
+            }
+            if (dataset?.cubeId == 6184) {
+              const items = pivotDataSource.getData().rows;
+              const collapseSingleChildItems = (items, path) => {
+                items.forEach((item) => {
+                  const currentPath = path.concat(item.value);
+                  if (item.children && item.children.length === 1 &&
+                      (item.children[0]?.text == '' ||
+                          item.children[0]?.text == 'null')) {
+                    pivotDataSource.collapseHeaderItem('row', currentPath);
+                  } else {
+                    if (item.children) {
+                      collapseSingleChildItems(item.children, currentPath);
+                    }
+                  }
+                });
+              };
+              collapseSingleChildItems(items, []);
             }
           }
         }}

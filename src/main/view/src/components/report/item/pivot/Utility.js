@@ -118,6 +118,8 @@ const generateItem = (item, param, rootItem) => {
       expanded: !item.meta.positionOption.row.expand ?
         true :item.meta.positionOption.row.expand,
       customizeText: (e) =>{
+        // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
+        // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
       }
@@ -155,6 +157,8 @@ const generateItem = (item, param, rootItem) => {
       expanded: !item.meta.positionOption.column.expand ?
           true :item.meta.positionOption.column.expand,
       customizeText: (e) =>{
+        // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
+        // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
       },
