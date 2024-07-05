@@ -9,7 +9,7 @@ import models from 'models';
 import React, {useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import {
-  MyDesignerContance,
+  MyDesignerConstance,
   defaultItemList
 } from '../organism/myDesigner/MypageDesignerUtil';
 import {paletteCollection}
@@ -34,7 +34,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
   const {alert} = useModal();
 
   useEffect(() => {
-    props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+    (props.id == MyDesignerConstance['DEFAULT_REPORT_ID'] ||
+      props.id == MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']) &&
       models.Report.getList(null, 'designer').then(({data}) => {
         setIconReportList(data.privateReport);
         setIconReportList(data.publicReport);
@@ -47,13 +48,24 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
     //   });
   }, []);
 
+  const makeParameter = (param) => {
+    const value = {
+      type: param.itemData.type,
+      id: param.key,
+      name: param.text,
+      reportType: param.itemData.reportType
+    };
+
+    return value;
+  };
+
   return (
     <Modal
       modalTitle={props.title}
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
       onSubmit={() => {
-        if (value.type && value.type == 'FOLDER') {
+        if (value?.type && value?.type == 'FOLDER') {
           alert(localizedString.selectReportAlert);
           return;
         }
@@ -62,28 +74,27 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       }}
       {...props}
     >
+      {/* TODO : 추후 코드 변경 작업 예정. */}
+
       {/* {props.id == 'defaultDatasetId' &&
         <div>기본 데이터셋</div>
       } */}
 
-      {props.id == MyDesignerContance['DEFAULT_REPORT_ID'] &&
+      {(props.id == MyDesignerConstance['DEFAULT_REPORT_ID'] ||
+      props.id == MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']) &&
         <DesignerReportTabs
           reportList={reportList}
           onSelectionChanged={(e) => {
             const param = e.component.getSelectedNodes()[0];
 
-            const val = {
-              type: param.itemData.type,
-              id: param.key,
-              name: param.text
-            };
+            if (!param) return;
 
-            setValue(val);
+            setValue(makeParameter(param));
           }}
           onSubmit={onSubmit}
         />}
 
-      {props.id == MyDesignerContance['DEFAULT_ITEM'] &&
+      {props.id == MyDesignerConstance['DEFAULT_ITEM'] &&
         <>
           <div>기본 아이템</div>
           <SelectBox
@@ -99,7 +110,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       }
 
       {
-        props.id == MyDesignerContance['DEFAULT_PALETTE'] &&
+        props.id == MyDesignerConstance['DEFAULT_PALETTE'] &&
         <>
           <div>기본 색상</div>
           <SelectBox

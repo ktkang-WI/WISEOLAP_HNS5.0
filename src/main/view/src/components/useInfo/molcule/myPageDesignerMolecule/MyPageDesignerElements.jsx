@@ -69,11 +69,13 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
       data: data,
       title: modalTitle,
       onSubmit: (value) => {
+        if (!itemId || !value) return;
         // 기본보고서 처럼 이름이 필요한경우.
         if (itemId.requiredNm) {
           setConfig({...data,
             [itemId.id]: value.id,
-            [itemId.requiredNm]: value.name
+            [itemId.requiredNm]: value.name,
+            reportType: value.reportType
           });
         } else {
           setConfig({...data, [itemId]: value});
