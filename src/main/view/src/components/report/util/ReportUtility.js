@@ -7,7 +7,7 @@ import ItemType from '../item/util/ItemType';
 
 export const setIconReportList = (list) => {
   list.map((report) => {
-    if (report.type == 'FOLDER') {
+    if (report.reportType == 'FOLDER') {
       report.icon = folder;
       return;
     }

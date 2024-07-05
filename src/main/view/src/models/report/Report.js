@@ -35,6 +35,15 @@ export const getOnlyReportName = async (reportId) => {
 };
 
 /**
+ * 보고서 쿼리 목록 조회
+ */
+export const getListIncludeQuery = async () => {
+  const res = await axios.get(path + '/report-list/query');
+
+  return res;
+};
+
+/**
  * 보고서 목록 조회
  *
  * @param {string} reportType

@@ -473,3 +473,59 @@ td[role="columnheader"] {
 .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused) > tr > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > td, .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover > tr > td {
   background-color: #EEF5FF;
 }
+
+.form-tab .dx-tab span{
+  font: 500 normal 14px "Noto Sans KR";
+}
+
+.form-tab .dx-tab.dx-tab-selected {
+  border-bottom: 3px solid #005196;
+  span {
+    color: #005196;
+  }
+}
+
+.form-tab .dx-tab.dx-tab-selected > div {
+  top: -3px;
+}
+
+.form-tab .dx-tab {
+  background: none;
+  border-bottom: 1px solid #D4D7DC;
+  box-sizing: border-box;
+  span {
+    color: #7d8291;
+  }
+}
+
+.form-tab .dx-tabs {
+  background: none;
+  box-shadow: none !important;
+}
+
+.form-tab .dx-tab > div {
+  position: relative;
+  top: -4px;
+}
+
+.form-tab .dx-tabs-wrapper {
+  height: calc(42px - 10px);
+}
+
+.form-tab .dx-tabpanel-tabs .dx-tab.dx-tab-selected {
+  box-shadow: none !important;
+}
+
+.form-tab .dx-tabpanel-tabs .dx-tab {
+  width: auto;
+  padding: 0px 20px;
+  box-shadow: none !important;
+}
+
+.form-tab .dx-multiview-wrapper {
+  border: none !important;
+}
+
+.form-tab .dx-tabpanel {
+  margin-top: 15px;
+}
