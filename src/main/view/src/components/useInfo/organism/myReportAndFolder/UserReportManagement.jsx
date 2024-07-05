@@ -63,7 +63,7 @@ const UserReprotManagement = () => {
   const reports = useLoaderData();
   const [treeViewData, setTreeViewData] = useState(reports);
   const [data, setData] = useState([]);
-  const {confirm} = useModal();
+  const {confirm, alert, success} = useModal();
 
   const context = {
     state: {
@@ -80,34 +80,53 @@ const UserReprotManagement = () => {
   };
 
   const onClickSave = (e) => {
+    const report = data;
+
+    if (!report?.id || report.id === '') {
+      alert(localizedString.selectReportAlert);
+      return;
+    }
+
     confirm(localizedString.changeReportNmConfirm, () => {
-      const report = data;
       updateMyPageReport(report).then((response) => {
-        if (response.status == 200) {
-          userFolderData().then((respose) => {
-            setTreeViewData(respose);
-          });
-          setData({});
-        }
+        if (!response.status == 200) return alert(localizedString.saveFail);
+
+        success(localizedString.reportInfoChangeSuccess);
+
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.saveFail);
+
+          setTreeViewData(res);
+        });
+
+        setData({});
       });
     });
   };
 
   const onClickRemove = (e) => {
-    const reportId = data.id;
-    if (reportId == '') {
+    const reportId = data?.id;
+
+    if (!reportId || reportId === '') {
       alert(localizedString.selectReportAndDeleteConfirm);
-    } else {
-      confirm(localizedString.reportDeleteConfirm, () => {
-        deleteReport({reportId: reportId}).then((response) => {
-          if (response.status == 200) {
-            userFolderData().then((respose) => {
-              setTreeViewData(respose);
-            });
-          }
-        });
-      });
+      return;
     }
+
+    confirm(localizedString.reportDeleteConfirm, () => {
+      deleteReport({reportId: reportId}).then((res) => {
+        if (!res.status == 200) return alert(localizedString.failReportDelete);
+
+        success(localizedString.successReportDelete);
+
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.failReportDelete);
+
+          setTreeViewData(res);
+        });
+
+        setData({});
+      });
+    });
   };
 
   const itemRender = (item) => {

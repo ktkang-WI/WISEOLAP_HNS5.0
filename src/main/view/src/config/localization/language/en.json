@@ -574,5 +574,9 @@
   "folderManager": "Folder Management",
   "noSelectionFolderAlert": "Please select a folder and proceed.",
   "linkReportCorrupted": "Failed to retrieve connection report.",
-  "defaultReport": "기본 보고서"
+  "defaultReport": "기본 보고서",
+  "loadData": "Load data",
+  "reportInfoChangeSuccess":"Saving report information was successful.",
+  "failReportDelete": "Report deletion failed.",
+  "successReportDelete": "Report deletion was successful."
 }
