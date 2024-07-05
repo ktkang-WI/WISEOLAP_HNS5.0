@@ -17,8 +17,8 @@ const ListFilterPopoverList = ({
   orgDataSource = []
 }) => {
   useEffect(() => {
-    setDataSource(sortDataSource(selectionKeys, orgDataSource));
     setSelection(selectionKeys);
+    setDataSource(sortDataSource(selectionKeys, orgDataSource));
   }, [selectionKeys, orgDataSource]);
 
   const StyledList = styled(List)`
@@ -83,15 +83,13 @@ const ListFilterPopoverList = ({
         ref={listRef}
         onOptionChanged={(e) => {
           if (e.name === 'searchValue') {
+            const sKeys = e.component.option('selectedItemKeys');
+            setSelection(sKeys);
             setSearchValue(e.value);
+            setDataSource(sortDataSource(sKeys));
           }
         }}
-        onSelectionChanged={(e) => {
-          const sKeys = e.component.option('selectedItemKeys');
-          setDataSource(sortDataSource(sKeys));
-          setSelection(sKeys);
-        }}
-        selectedItemKeys={selection}
+        defaultSelectedItemKeys={selection}
         dataSource={dataSource}
         searchEnabled={info.useSearch}
         searchMode='contains'
