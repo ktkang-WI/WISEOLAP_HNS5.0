@@ -388,8 +388,8 @@ public class ReportService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            List<Map<String, Object>> newPubList = getReportDatasource(pubList);
-            List<Map<String, Object>> newPriList = getReportDatasource(priList);
+            List<Map<String, Object>> newPubList = getReportDataSource(pubList);
+            List<Map<String, Object>> newPriList = getReportDataSource(priList);
 
             result.put("publicReport", newPubList);
             result.put("privateReport", newPriList);
@@ -400,7 +400,7 @@ public class ReportService {
         return result;
     }
 
-    public List<Map<String, Object>> getReportDatasource (List<ReportListDTO> reportList) {
+    public List<Map<String, Object>> getReportDataSource (List<ReportListDTO> reportList) {
         List<Map<String, Object>> datasourceList = new ArrayList<Map<String, Object>>();
         ObjectMapper objectMapper = new ObjectMapper();
 
