@@ -7,6 +7,7 @@ import localizedString from 'config/localization';
 import React from 'react';
 import DatasetType from 'components/dataset/utils/DatasetType';
 
+// TODO: tab 포함 form이 추가 될 시, 재사용 할 수 있도록 configureFormCreator 에 generate 함수 생성
 const ReportInfo = ({itemData}) => {
   return (
     <Panel title={localizedString.reportInformation}>
