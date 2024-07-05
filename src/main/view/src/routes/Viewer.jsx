@@ -31,7 +31,7 @@ const Viewer = () => {
   };
 
   useEffect(() => {
-    const hasFavoritReport = myPageConfigure?.defaultViewerReportId || false;
+    const hasFavoritReport = myPageConfigure?.defaultViewerReportId;
 
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);

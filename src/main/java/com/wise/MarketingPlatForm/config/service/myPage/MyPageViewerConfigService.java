@@ -12,12 +12,11 @@ public class MyPageViewerConfigService {
   MyPageConfigDAO myPageConfigDAO;
 
   public boolean updataMyViewerConfig(MyDesignerDTO myDesignerDTO) {
-    boolean result = false;
+    boolean result = myPageConfigDAO.updataMyViewerConfig(myDesignerDTO);
     
-    result = myPageConfigDAO.saveMyViewerConfig(myDesignerDTO);
-    
+    // db에 테이블이 없는 경우 update 불가 -> insert 실행.
     if (!result) {
-      result = myPageConfigDAO.insertDesignerConfig(myDesignerDTO);
+      result = myPageConfigDAO.insertWbUserConfig(myDesignerDTO);
     }
     
     return result;

@@ -14,9 +14,13 @@ const MyViewerConfig = () => {
   const {alert, success, confirm} = useModal();
   const [config, setConfig] = useState(() => seperateConfig(designerConfig));
 
-  const test = [
-    {id: {id: 'defaultViewerReportId', requiredNm: 'defaultViewerReportNm'},
-      title: '기본 보고서', label: '즐겨찾기', type: 'favorit'}
+  const defaultReport = [
+    {
+      id: {id: 'defaultViewerReportId', requiredNm: 'defaultViewerReportNm'},
+      title: localizedString.defaultReport,
+      label: localizedString.favorit,
+      type: 'favorit'
+    }
   ];
 
   const onClickSave = () => {
@@ -27,16 +31,15 @@ const MyViewerConfig = () => {
     };
 
     const result = updateViewerConfig(param).then((res) => {
-      if (res.status == 200) return true;
-      else return false;
+      return res.status == 200;
     }).catch(() => {
       return false;
     });
 
     if (result) {
-      success('저장에 성공 했습니다.');
+      success(localizedString.successSave);
     } else {
-      alert('저장에 실패 했습니다.');
+      alert(localizedString.saveFail);
     }
   };
 
@@ -52,7 +55,7 @@ const MyViewerConfig = () => {
       <MyPageDesignerElements
         setConfig={setConfig}
         data={config}
-        items={test}
+        items={defaultReport}
       />
       <div style={{
         display: 'flex',

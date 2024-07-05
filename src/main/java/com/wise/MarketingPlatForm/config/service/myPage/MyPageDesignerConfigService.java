@@ -27,15 +27,15 @@ public class MyPageDesignerConfigService {
       model = myPageConfigDAO.selectDesignerConfig(userNo);
       if (model != null) {
         if (model.getDefaultReportId() != null) {
-          List<HashMap<String, String>> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
-          model.setDefaultReportNm(reportNm.get(0).get("REPORT_NM"));
-          model.setDefaultReportType(reportNm.get(0).get("REPORT_TYPE"));
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
+          model.setDefaultReportNm(reportNm.get("reportNm"));
+          model.setDefaultReportType(reportNm.get("reportType"));
         }
         
         if (model.getDefaultViewerReportId() != null) {
-          List<HashMap<String, String>> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
-          model.setDefaultViewerReportNm(reportNm.get(0).get("REPORT_NM"));
-          model.setReportType(reportNm.get(0).get("REPORT_TYPE"));
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
+          model.setDefaultViewerReportNm(reportNm.get("reportNm"));
+          model.setReportType(reportNm.get("reportType"));
         }
         // TODO : 기본 데이터집합은 사용안하지만 추후 추가될 가능성 있음.
         // if (model.getDefaultDatasetId() != null) {
@@ -65,11 +65,11 @@ public class MyPageDesignerConfigService {
   }
 
   public boolean saveDesignerConfig(MyDesignerDTO myDesignerDTO) {
-    boolean result = false;
-    
-    result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
+     boolean result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
+
+     // db에 테이블이 없는 경우 update 불가 -> insert 실행.
     if (!result) {
-      result = myPageConfigDAO.insertDesignerConfig(myDesignerDTO);
+      result = myPageConfigDAO.insertWbUserConfig(myDesignerDTO);
     }
 
     return result;

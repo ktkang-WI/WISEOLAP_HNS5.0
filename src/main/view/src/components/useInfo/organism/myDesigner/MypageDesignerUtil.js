@@ -1,4 +1,4 @@
-export const MyDesignerContance = {
+export const MyDesignerConstance = {
   // DEFAULT_DATASET_ID: 'defaultDatasetId',
   DEFAULT_REPORT_ID: 'defaultReportId',
   DEFAULT_ITEM: 'defaultItem',
@@ -59,7 +59,7 @@ export const defaultItemList = () => {
 };
 // myDesignerFolder로 이동.
 export const layoutSelectList = (id) => {
-  if (id == MyDesignerContance['DEFAULT_LAYOUT']) {
+  if (id == MyDesignerConstance['DEFAULT_LAYOUT']) {
     return [
       {id: 'C', name: '차트만 보기'},
       {id: 'G', name: '그리드만 보기'},
@@ -67,7 +67,7 @@ export const layoutSelectList = (id) => {
     ];
   }
 
-  if (id == MyDesignerContance['DEFAULT_DISPLAY']) {
+  if (id == MyDesignerConstance['DEFAULT_DISPLAY']) {
     return [
       {id: 'DashAny', name: '대시보드'},
       {id: 'AdHoc', name: '비정형'},

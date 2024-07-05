@@ -25,6 +25,11 @@
     <result column="HP_NO" property="hpNo" javaType="String"/>
   </resultMap>
 
+  <resultMap id="reportElement" type="hashmap">
+    <result column="REPORT_NM" property="reportNm" javaType="String"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+  </resultMap>
+
   <!-- myPage 디자이너 설정 -->
   <select id="selectDesignerConfig" resultMap="MyDesignerDTO" parameterType="int">
     SELECT
@@ -40,7 +45,7 @@
         WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
 
-  <select id="selectOnlyReportNm" parameterType="int" resultType="hashmap">
+  <select id="selectOnlyReportNm" parameterType="int" resultType="hashmap" resultMap="reportElement">
     SELECT
       REPORT_NM,
       REPORT_TYPE
@@ -62,7 +67,7 @@
       WHERE USER_NO = #{userNo}
   </update>
 
-  <update id="saveMyViewerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+  <update id="updataMyViewerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     UPDATE
       WB_USER_CONFIG_MSTR
       SET
@@ -72,7 +77,7 @@
       WHERE USER_NO = #{userNo}
   </update>
 
-  <insert id="insertDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+  <insert id="insertWbUserConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     INSERT INTO 
     WB_USER_CONFIG_MSTR (
       USER_NO,

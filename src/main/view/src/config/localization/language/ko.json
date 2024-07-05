@@ -798,5 +798,6 @@
   "folderManager": "폴더 관리",
   "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요.",
   "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다.",
-  "loginErrorBySession": "'세션의 의해 로그인이 시도되었으나 서버에 문제가 발생하였습니다.'"
+  "loginErrorBySession": "'세션의 의해 로그인이 시도되었으나 서버에 문제가 발생하였습니다.'",
+  "defaultReport": "기본 보고서"
 }
