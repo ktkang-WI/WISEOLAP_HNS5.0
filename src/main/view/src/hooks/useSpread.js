@@ -33,10 +33,10 @@ const useSpread = () => {
   const loadingActions = LoadingSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
+  const editMode = useSelector(selectEditMode);
   const {importFile} = useFile();
 
   const getWorkbook = () => {
-    const editMode = selectEditMode(store.getState());
     if (editMode === EditMode['DESIGNER']) {
       return designerRef.current.designer.getWorkbook();
     } else if (editMode === EditMode['VIEWER']) {
@@ -208,7 +208,7 @@ const useSpread = () => {
   };
 
   const setExcelFile = async (reportId) => {
-    if (fileCache.has(reportId)) {
+    if (fileCache.has(reportId) && editMode === EditMode['VIEWER']) {
       await excelIoOpen(reportId, fileCache.get(reportId))
           .then(() => dispatch(loadingActions.endJob()));
     } else {
