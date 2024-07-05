@@ -420,10 +420,12 @@ public class ReportService {
                 if (dataset != null) {
                     Map<String, Object> datasetMap = objectMapper.readValue(dataset, Map.class);
                     List<Map<String, String>> datasetInfo = extractDatasetInfo(datasetMap);
-                    String query = "";
+                    StringBuilder queryBuilder = new StringBuilder();
                     for (Map<String, String> map : datasetInfo) {
-                        query += map.get("datasetQuery");
+                        queryBuilder.append(map.get("datasetQuery"));
                     }
+                    
+                    String query = queryBuilder.toString();
 
                     datasource.put("datasetInfo", datasetInfo);
                     datasource.put("query", query);
