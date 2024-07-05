@@ -7,6 +7,22 @@ import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
 
 const theme = getTheme();
+
+const StyledList = styled(List)`
+  .dx-list-item-content {
+    font: ${theme.font.filterContent};
+  }
+`;
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  justify-content: center;
+`;
+
 const ListFilterPopoverList = ({
   confirm,
   cancel,
@@ -16,32 +32,20 @@ const ListFilterPopoverList = ({
   info,
   orgDataSource = []
 }) => {
+  // useEffect
   useEffect(() => {
-    setSelection(selectionKeys);
-    setDataSource(sortDataSource(selectionKeys, orgDataSource));
+    updateProps(selectionKeys);
   }, [selectionKeys, orgDataSource]);
 
-  const StyledList = styled(List)`
-    .dx-list-item-content {
-      font: ${theme.font.filterContent};
-    }
-  `;
-
-  const Footer = styled.div`
-    display: flex;
-    flex-direction: row;
-    height: 50px;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    justify-content: center;
-  `;
-
+  // local
   let selectionMode = info.multiSelect ? 'multiple' : 'single';
+  const {useAll} = info;
 
-  if (selectionMode == 'multiple' && info.useAll) {
+  if (selectionMode === 'multiple' && useAll) {
     selectionMode = 'all';
   }
 
+  // method
   const sortDataSource = (keys) => {
     const sortedDataSource = orgDataSource.reduce(
         (acc, item) => {
@@ -54,7 +58,7 @@ const ListFilterPopoverList = ({
         }, {selected: [], others: []});
     const result = [...sortedDataSource.selected, ...sortedDataSource.others];
 
-    if (selectionMode == 'single' && info.useAll) {
+    if (selectionMode === 'single' && useAll) {
       result.unshift({
         name: '[All]',
         caption: allText
@@ -64,8 +68,21 @@ const ListFilterPopoverList = ({
     return result;
   };
 
-  const [dataSource, setDataSource] = useState(
-      sortDataSource(selectionKeys, orgDataSource));
+  const updateProps = (sKeys) => {
+    setSelection(sKeys);
+    setDataSource(sortDataSource(sKeys));
+  };
+
+  const onOptionChanged = (e) => {
+    if (e.name !== 'searchValue') return;
+
+    const sKeys = e.component.option('selectedItemKeys');
+    setSearchValue(e.value);
+    updateProps(sKeys);
+  };
+
+  // state
+  const [dataSource, setDataSource] = useState(sortDataSource(selectionKeys));
   const [selection, setSelection] = useState(selectionKeys);
   const [searchValue, setSearchValue] = useState('');
 
@@ -81,14 +98,7 @@ const ListFilterPopoverList = ({
         displayExpr='caption'
         keyExpr='name'
         ref={listRef}
-        onOptionChanged={(e) => {
-          if (e.name === 'searchValue') {
-            const sKeys = e.component.option('selectedItemKeys');
-            setSelection(sKeys);
-            setSearchValue(e.value);
-            setDataSource(sortDataSource(sKeys));
-          }
-        }}
+        onOptionChanged={onOptionChanged}
         defaultSelectedItemKeys={selection}
         dataSource={dataSource}
         searchEnabled={info.useSearch}
