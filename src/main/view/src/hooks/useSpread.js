@@ -112,7 +112,7 @@ const useSpread = () => {
           bindedSheet.autoGenerateColumns = true;
           const ds = getJsonKey2ColInfos(rowData);
           rowData.forEach((row) => convertDates(row));
-          if (ds.dataSourceHearder && ds.dataSourceHearder.length > 0) {
+          if (ds.dataSourceHearder && rowData.length > 0) {
             const newRowData = [ds.dataSourceHearder, ...rowData];
             // bindedSheet.setArray(0, 0, newRowData);
             bindedSheet.setDataSource(newRowData);
