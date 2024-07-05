@@ -28,7 +28,7 @@ public class MyPageViewerConfigController {
   @PostMapping("/save")
   public boolean saveMyViewerConfig(
     HttpServletRequest request,
-    @RequestParam(required = false, defaultValue = "") Integer defaultViewerReportId,
+    @RequestParam(required = false, defaultValue = "0") Integer defaultViewerReportId,
     @RequestParam(required = false, defaultValue = "") String defaultViewerReportNm,
     @RequestParam(required = false, defaultValue = "") String reportType
   ) {

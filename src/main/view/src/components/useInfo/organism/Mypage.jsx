@@ -59,6 +59,8 @@ const MyPage = () => {
               const item =
                   menuButtons.find(({value}) => key == value);
 
+              if (!item) return;
+
               nav('/editds/my-page' + item.path);
             }}
             items={menuButtons}

@@ -40,8 +40,8 @@ public class MyPageDesignerConfigController {
   @PostMapping  
   public boolean updateDesignerConfig(
     HttpServletRequest request,
-    @RequestParam(required = false, defaultValue = "") Integer defaultDatasetId,
-    @RequestParam(required = false, defaultValue = "") Integer defaultReportId,
+    @RequestParam(required = false, defaultValue = "0") Integer defaultDatasetId,
+    @RequestParam(required = false, defaultValue = "0") Integer defaultReportId,
     @RequestParam(required = false, defaultValue = "") String defaultItem,
     @RequestParam(required = false, defaultValue = "") String defaultPalette
   ) {
