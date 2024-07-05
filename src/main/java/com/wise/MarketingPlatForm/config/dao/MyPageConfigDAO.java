@@ -18,6 +18,8 @@ public interface MyPageConfigDAO {
   // public boolean updateMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   // public List<FldMstrEntity> selectMyPageFolder(int userNo);
   // public int selectMyPageFolderCount(int userNo);
+  // 테이블 데이터 존재 여부 검사 목적.
+  public boolean checkExistData(MyDesignerDTO myDesignerDTO);
   // My designer property
   public MyDesignerDTO selectDesignerConfig(int userNo);
   public boolean updateDesignerConfig(MyDesignerDTO myDesignerDTO);

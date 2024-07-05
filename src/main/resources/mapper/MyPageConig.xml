@@ -30,6 +30,19 @@
     <result column="REPORT_TYPE" property="reportType" javaType="String"/>
   </resultMap>
 
+  <!-- WB_USER_CONFIG_MSRT에 테이블 존재여부 -->
+  <select id="checkExistData" resultType="boolean" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    SELECT
+      USER_NO
+    FROM USER_MSTR a
+    WHERE a.USER_NO = #{userNo, jdbcType=INTEGER}
+    AND EXISTS(
+      SELECT 1
+      FROM WB_USER_CONFIG_MSTR b
+      WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    )
+  </select>
+
   <!-- myPage 디자이너 설정 -->
   <select id="selectDesignerConfig" resultMap="MyDesignerDTO" parameterType="int">
     SELECT
