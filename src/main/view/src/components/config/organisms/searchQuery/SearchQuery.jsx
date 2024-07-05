@@ -9,6 +9,9 @@ import models from 'models';
 import {useEffect, useState} from 'react';
 import React from 'react';
 
+import {getTheme} from 'config/theme';
+
+const theme = getTheme();
 
 const SearchQuery = () => {
   const [reportList, setReportList] = useState([]);
@@ -23,14 +26,28 @@ const SearchQuery = () => {
   }, []);
 
   return (
-    <Wrapper display={'flex'}>
-      <Wrapper width={'50%'}>
+    <Wrapper
+      display={'flex'}
+      style={{
+        borderRadius: '10px',
+        border: 'solid 1px ' + theme.color.breakLine,
+        background: theme.color.panelColor,
+        overflow: 'hidden',
+        padding: '15px'
+      }}
+    >
+      <Wrapper
+        width={'50%'}
+      >
         <SearchQueryReportList
           reportList={reportList}
           setItemData={setItemData}
         />
       </Wrapper>
-      <Wrapper width={'50%'}>
+      <Wrapper
+        padding='10px'
+        width={'50%'}
+      >
         <ReportInfo
           itemData={itemData}
         />

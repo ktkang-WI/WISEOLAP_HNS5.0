@@ -1,8 +1,11 @@
+// eslint-disable-next-line max-len
+import Panel from 'components/config/organisms/userGroupManagement/common/Panel';
 import CommonTab from 'components/common/atomic/Common/Interactive/CommonTab';
 import localizedString from 'config/localization';
 // eslint-disable-next-line max-len
 import ReportListTab from 'components/common/atomic/ReportTab/organism/ReportListTab';
 import React from 'react';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const ReportTabSource = [
   {
@@ -29,11 +32,17 @@ const SearchQueryReportList = ({reportList, setItemData}) => {
   };
 
   return (
-    <CommonTab
-      dataSource={ReportTabSource}
-      itemComponent={getTabContent}
-      width='100%'
-    />
+    <Panel title={localizedString.reportList}>
+      <Wrapper
+        padding='10px'
+      >
+        <CommonTab
+          dataSource={ReportTabSource}
+          itemComponent={getTabContent}
+          width='100%'
+        />
+      </Wrapper>
+    </Panel>
   );
 };
 

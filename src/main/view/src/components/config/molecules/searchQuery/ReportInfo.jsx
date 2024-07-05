@@ -12,6 +12,14 @@ const ReportInfo = ({itemData}) => {
     <Panel title={localizedString.reportInformation}>
       <Form
         formData={itemData}
+        style={{
+          marginTop: '0px',
+          overflow: 'auto'
+        }}
+        height={'calc(100% - 10px)'}
+        elementAttr={{
+          class: 'dx-fieldset custom-scrollbar form-tab'
+        }}
       >
         <SimpleItem
           dataField="id"
@@ -48,7 +56,9 @@ const ReportInfo = ({itemData}) => {
                   key={index}
                   title={'데이터 집합' + (index+1)}
                 >
-                  <TabPanelOptions deferRendering={false} />
+                  <TabPanelOptions
+                    deferRendering={false}
+                  />
                   <SimpleItem
                     editorType='dxTextBox'
                     editorOptions= {{
@@ -72,8 +82,8 @@ const ReportInfo = ({itemData}) => {
                       editorType='dxTextArea'
                       editorOptions= {{
                         value: item.datasetQuery,
-                        height: '200px',
-                        class: 'custom-scrollbar'
+                        class: 'custom-scrollbar',
+                        height: '300px'
                       }}
                     >
                       <Label text={'데이터 집합 쿼리'}/>
