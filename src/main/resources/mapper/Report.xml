@@ -75,6 +75,7 @@
             </if>
     </select>
   
+    <!-- TODO : Query refactoring 필요 -->
     <select id="publicReportList" resultMap="ReportList">
       SELECT
           A.ID,
