@@ -54,7 +54,7 @@ const ReportInfo = ({itemData}) => {
               return (
                 <Tab
                   key={index}
-                  title={'데이터 집합' + (index+1)}
+                  title={item.datasetNm}
                 >
                   <TabPanelOptions
                     deferRendering={false}
