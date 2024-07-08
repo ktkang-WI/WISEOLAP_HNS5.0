@@ -114,10 +114,7 @@
               INNER JOIN         
                   USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
               INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                             
-              WHERE            
-                  USER_MSTR.USER_ID = 'admin'         
-                  AND AUTH_PUBLISH != 'N'        
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                                
           )           
           UNION ALL           
           (
@@ -141,10 +138,7 @@
               INNER JOIN         
                   USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
               INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                             
-              WHERE            
-                  USER_MSTR.USER_ID = 'admin'              
-                  AND AUTH_PUBLISH != 'N'                                    
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                                                              
           )           
           UNION ALL           
           (
@@ -214,10 +208,7 @@
               INNER JOIN         
                   USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
               INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                             
-              WHERE            
-                  USER_MSTR.USER_ID = 'admin'         
-                  AND AUTH_PUBLISH != 'N'        
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                                  
           )           
           UNION ALL           
           (
@@ -241,10 +232,7 @@
               INNER JOIN         
                   USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
               INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                             
-              WHERE            
-                  USER_MSTR.USER_ID = 'admin'              
-                  AND AUTH_PUBLISH != 'N'                                    
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                                                                
           )           
           UNION ALL           
           (
