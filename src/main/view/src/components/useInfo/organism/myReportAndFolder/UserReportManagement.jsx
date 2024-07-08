@@ -21,6 +21,7 @@ import dashImg from 'assets/image/icon/report/dash.png';
 import excelImg from 'assets/image/icon/report/excel_file.png';
 import adhocImg from 'assets/image/icon/report/adhoc.png';
 import {DesignerMode} from 'components/config/configType';
+import reportFolderUtility from './ReportFolderUtility';
 
 const iconMapper = {
   'FOLDER': folderImg,
@@ -65,6 +66,7 @@ const UserReprotManagement = () => {
   const [treeViewData, setTreeViewData] = useState(reports);
   const [data, setData] = useState([]);
   const {confirm, alert, success} = useModal();
+  const {checkValidation} = reportFolderUtility();
 
   const context = {
     state: {
@@ -97,12 +99,16 @@ const UserReprotManagement = () => {
   };
 
   const onClickSave = (e) => {
-    const report = data;
+    const report = ref.current?.instance?.option('formData');
 
     if (!report?.id || report.id === '') {
       alert(localizedString.selectReportAlert);
       return;
     }
+
+    if (!checkValidation.nameDuple(
+        report.name, treeViewData.folderReport
+    )) return;
 
     confirm(localizedString.changeReportNmConfirm, () => {
       updateMyPageReport(report).then((response) => {
@@ -122,7 +128,7 @@ const UserReprotManagement = () => {
   };
 
   const onClickRemove = (e) => {
-    const reportId = data?.id;
+    const reportId = ref.current?.instance?.option('formData')?.id;
 
     if (!reportId || reportId === '') {
       alert(localizedString.selectReportAndDeleteConfirm);
