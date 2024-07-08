@@ -57,12 +57,12 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "") String createdBy,
     @RequestParam(required = false, defaultValue = "") String createdDate,
     @RequestParam(required = false, defaultValue = "") String tag,
-    @RequestParam(required = false, defaultValue = "") int ordinal,
+    @RequestParam(required = false, defaultValue = "0") int ordinal,
     @RequestParam(required = false, defaultValue = "") String desc,
     @RequestParam(required = false, defaultValue = "") String query,
     @RequestParam(required = false, defaultValue = "") String prompt
   ) {
-    String strPrompt = (prompt == null || prompt.equals("N")) ? "N" : "Y";
+    String strPrompt = (prompt == null || prompt.equals("false")) ? "N" : "Y";
     MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()
       .id(id)
       .name(name)
@@ -76,7 +76,6 @@ public class MyPageFolderController {
       .query(query)
       .ordinal(ordinal)
       .build();
-    // service에 update.
 
     return myPageFolderReportService.updateMyReport(fldReprotDTO);
   }

@@ -11,7 +11,7 @@ import useModal from 'hooks/useModal';
 import {updateMyPageReport}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {deleteReport} from 'models/report/Report';
-import React, {createContext, useState} from 'react';
+import React, {createContext, useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import styled from 'styled-components';
@@ -61,34 +61,61 @@ export const Context = createContext();
 
 const UserReprotManagement = () => {
   const reports = useLoaderData();
+  const ref = useRef();
   const [treeViewData, setTreeViewData] = useState(reports);
-  const [data, setData] = useState([]);
-  const {confirm} = useModal();
+  const [data, setData] = useState({});
+  const {confirm, alert, success} = useModal();
 
   const context = {
     state: {
-      report: [data, setData]
+      report: [data, setData],
+      ref: ref
     }
   };
 
   const handleItemClick = (e) => {
     if (e.itemData.type == 'FOLDER') {
-      setData({});
+      ref.current?.instance?.option('formData', {});
     } else {
-      setData(e.itemData);
+      if (ref.current) {
+        const formData = ref.current.instance.option().formData;
+        formData.prompt= e.itemData?.prompt === 'Y' ? true : false;
+        formData.id= e.itemData?.id || 0;
+        formData.name= e.itemData?.name || '';
+        formData.createdBy= e.itemData?.createdBy || '';
+        formData.createdDate= e.itemData?.createdDate || '';
+        formData.ordinal= e.itemData?.ordinal || 0;
+        formData.query = e.itemData?.query || '';
+        formData.subtitle = e.itemData?.subtitle || '';
+        formData.tag = e.itemData?.tag || '';
+        formData.type = e.itemData?.type || '';
+        formData.desc = e.itemData?.desc || '';
+
+        ref.current.instance.repaint();
+      }
     }
   };
 
   const onClickSave = (e) => {
     confirm(localizedString.changeReportNmConfirm, () => {
-      const report = data;
+      const report = ref.current?.instance?.option('formData');
+
+      if (!report || !report.id) {
+        return alert(localizedString.selectReportAlert);
+      }
+
       updateMyPageReport(report).then((response) => {
-        if (response.status == 200) {
-          userFolderData().then((respose) => {
-            setTreeViewData(respose);
-          });
-          setData({});
+        if (response.status !== 200) {
+          return alert(localizedString.saveFail);
         }
+
+        success(localizedString.successSave);
+
+        userFolderData().then((respose) => {
+          setTreeViewData(respose);
+        });
+
+        setData({});
       });
     });
   };
@@ -100,11 +127,17 @@ const UserReprotManagement = () => {
     } else {
       confirm(localizedString.reportDeleteConfirm, () => {
         deleteReport({reportId: reportId}).then((response) => {
-          if (response.status == 200) {
-            userFolderData().then((respose) => {
-              setTreeViewData(respose);
-            });
+          if (response.status !== 200) {
+            return alert(localizedString.removeFail);
           }
+
+          success(localizedString.successRemove);
+
+          userFolderData().then((respose) => {
+            setTreeViewData(respose);
+          });
+
+          setData({});
         });
       });
     }

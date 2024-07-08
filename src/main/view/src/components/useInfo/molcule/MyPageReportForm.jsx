@@ -1,16 +1,18 @@
 import {Form} from 'devextreme-react';
 import {Item} from 'devextreme-react/form';
-import {useContext} from 'react';
+import React, {useContext} from 'react';
 import {Context} from '../organism/myReportAndFolder/UserReportManagement';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
 const MyPageReportForm = () => {
   const context = useContext(Context);
   const [report] = context.state.report;
+  const ref = context.state.ref;
 
   return (
     <Wrapper height='calc(100% - 70px)' display='flex' direction='row'>
       <Form
+        ref={ref}
         formData={report}
         style={{
           marginTop: '0px',
@@ -26,7 +28,6 @@ const MyPageReportForm = () => {
           editorType='dxCheckBox'
           dataField='prompt'
           editorOptions={{
-            value: (report.prompt || report.prompt == 'Y') ? true : false,
             text: '데이터 불러오기'
           }}/>
         <Item
@@ -45,7 +46,6 @@ const MyPageReportForm = () => {
         <Item editorType='dxSelectBox'
           dataField='type'
           editorOptions={{
-            value: report.type
           }}/>
         <Item
           dataField='createdBy'
@@ -78,4 +78,4 @@ const MyPageReportForm = () => {
     </Wrapper>
   );
 };
-export default MyPageReportForm;
+export default React.forwardRef(MyPageReportForm);
