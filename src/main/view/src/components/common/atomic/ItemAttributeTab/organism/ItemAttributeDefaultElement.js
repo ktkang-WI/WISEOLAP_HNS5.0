@@ -13,8 +13,8 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
-import topBottomImg
-  from 'assets/image/icon/adhoc/topBottom.png';
+// import topBottomImg
+//   from 'assets/image/icon/adhoc/topBottom.png';
 import deltaValueImg
   from 'assets/image/icon/adhoc/deltaValue.png';
 import dataHighlightImg
@@ -25,7 +25,7 @@ import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
-import TopBottomModal from '../modal/TopBottomModal';
+// import TopBottomModal from '../modal/TopBottomModal';
 import DataHighlightModal
   from 'components/report/item/pivot/modal/organism/DataHighLightModal';
 import GridAttributeModal
@@ -222,32 +222,34 @@ const ItemAttributeDefaultElement = () => {
             openModal(DataHighlightModal);
           }
         },
-        {
-          id: 'topBottom',
-          label: localizedString.topBottom,
-          icon: topBottomImg,
-          active: option.topBottom == 'topBottom',
-          width: '50%',
-          onClick: () => {
-            const dataField = rootItem.adHocOption.dataField;
-            if (dataField.measure.length === 0) {
-              return;
-            }
+        // {
+        //   id: 'topBottom',
+        //   label: localizedString.topBottom,
+        //   icon: topBottomImg,
+        //   active: option.topBottom == 'topBottom',
+        //   width: '50%',
+        //   onClick: () => {
+        //     const dataField = rootItem.adHocOption.dataField;
+        //     if (dataField.measure.length === 0) {
+        //       return;
+        //     }
 
-            if (dataField.row.length === 0 && dataField.column.length === 0) {
-              return;
-            }
+        // eslint-disable-next-line max-len
+        //     if (dataField.row.length === 0 && dataField.column.length === 0) {
+        //       return;
+        //     }
 
-            openModal(TopBottomModal, {
-              topBottomInfo: rootItem.adHocOption.topBottomInfo
-            });
-          }
-        },
+        //     openModal(TopBottomModal, {
+        //       topBottomInfo: rootItem.adHocOption.topBottomInfo
+        //     });
+        //   }
+        // },
         {
           id: 'gridAttribute',
           label: localizedString.gridAttribute,
           icon: dimensionGroupImg,
           active: option?.gridAttribute == 'gridAttribute',
+          width: '50%',
           onClick: () => {
             // TODO: Get Grid Attribute List
             const gridAttribute = rootItem?.adHocOption?.gridAttribute;
@@ -264,6 +266,7 @@ const ItemAttributeDefaultElement = () => {
           label: '변동 측정값',
           active: option?.deltaValue == 'deltaValue',
           icon: deltaValueImg,
+          width: '50%',
           onClick: () => {
             const pivotMartInit = focusedItem.mart.init;
 

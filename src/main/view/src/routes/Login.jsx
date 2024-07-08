@@ -1,7 +1,7 @@
 import {styled} from 'styled-components';
 import LoginLogo from '../assets/image/logo/login_image.png';
-import bgLogo from '../assets/image/logo/logo_wi_bg.png';
-import wordLogo from '../assets/image/logo/logo_wiseitech.png';
+// import bgLogo from '../assets/image/logo/logo_wi_bg.png';
+// import wordLogo from '../assets/image/logo/logo_wiseitech.png';
 import PagingTransition from
   'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
@@ -13,21 +13,21 @@ const Wrap = styled.div`
   height: 100%;
 `;
 
-const BackgroundLogo = styled.img`
-  width: 40vw;
-  height: auto;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-`;
+// const BackgroundLogo = styled.img`
+//   width: 40vw;
+//   height: auto;
+//   position: absolute;
+//   right: 0;
+//   bottom: 0;
+// `;
 
-const WordLogo = styled.img`
-  height: auto;
-  width: 182px;
-  position: absolute;
-  left: 140px;
-  top: 80px;
-`;
+// const WordLogo = styled.img`
+//   height: auto;
+//   width: 182px;
+//   position: absolute;
+//   left: 140px;
+//   top: 80px;
+// `;
 
 const Container = styled.div`
   top: 50%;
@@ -106,8 +106,8 @@ const Footer = styled.div`
 const Login = () => {
   return (
     <Wrap>
-      <BackgroundLogo src={bgLogo}/>
-      <WordLogo src={wordLogo}/>
+      {/* <BackgroundLogo src={bgLogo}/> */}
+      {/* <WordLogo src={wordLogo}/> */}
       <Container className="containerWrap" id="container">
         <InnerWrap className='innerWrap'>
           <PagingTransition/>

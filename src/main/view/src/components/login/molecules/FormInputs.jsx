@@ -113,6 +113,8 @@ const FormInputs = ({contents, onSubmit}) => {
             borderRadius='8px'
             height='48px'
             onClick={onSubmit}
+            background={'#FE0000'}
+            hoverBackground={'#EE0000'}
           >
             {btnText.linkBtn ? btnText.linkBtn : btnText}
           </CommonButton>

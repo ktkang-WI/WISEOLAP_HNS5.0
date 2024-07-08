@@ -85,7 +85,7 @@ const HeaderDefaultElement = () => {
       'id': 'logo',
       'type': 'Logo',
       'height': 'auto',
-      'width': '220px',
+      'width': '130px',
       'cursor': 'pointer',
       'onClick': (e) => {
         const href =

@@ -3,7 +3,8 @@ import React from 'react';
 import logo from 'assets/image/logo/logo_wi_word2.png';
 
 const StyeldImage = styled.img`
-  width: 180px;
+  height: 45px;
+  width: auto;
   display: block;
 `;
 
