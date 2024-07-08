@@ -67,6 +67,8 @@ const UserReprotManagement = () => {
   const [data, setData] = useState([]);
   const {confirm, alert, success} = useModal();
   const {checkValidation} = reportFolderUtility();
+  let prevName = null;
+
 
   const context = {
     state: {
@@ -77,9 +79,11 @@ const UserReprotManagement = () => {
 
   const handleItemClick = (e) => {
     if (e.itemData.type == 'FOLDER') {
+      prevName = null;
       ref.current?.instance?.option('formData', {});
     } else {
       if (ref.current) {
+        prevName = e.itemData?.name;
         const formData = ref.current.instance.option().formData;
         formData.prompt= e.itemData?.prompt === 'Y' ? true : false;
         formData.id= e.itemData?.id || 0;
@@ -105,10 +109,13 @@ const UserReprotManagement = () => {
       alert(localizedString.selectReportAlert);
       return;
     }
-
-    if (!checkValidation.nameDuple(
-        report.name, treeViewData.folderReport
-    )) return;
+    // 변경전 name, 이름 변경 후 검사, 변경 전, 변경 후가 같은 경우는 제외.
+    if (prevName && prevName !== report?.name) {
+      // 변경전과 변경 후 다를 경우 중복검사.
+      if (!checkValidation.nameDuple(
+          report.name, treeViewData.folderReport
+      )) return;
+    }
 
     confirm(localizedString.changeReportNmConfirm, () => {
       updateMyPageReport(report).then((response) => {
