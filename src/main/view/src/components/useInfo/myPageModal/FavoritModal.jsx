@@ -70,10 +70,10 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
           alert(localizedString.selectReportAlert);
           return;
         }
+
         if (report != '') {
           onSubmit(report);
         }
-        // onSubmit(value);
       }}
       {...props}
     >
@@ -87,6 +87,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       props.id == MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']) &&
         <DesignerReportTabs
           reportList={reportList}
+          onClose={() => props.onClose()}
           onSelectionChanged={(e) => {
             const param = e.component.getSelectedNodes()[0];
 
