@@ -6,9 +6,12 @@
   <resultMap id="MyDesignerDTO" type="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     <result column="USER_NO" property="userNo" javaType="int"/>
     <result column="DEFAULT_DATASET_ID" property="defaultDatasetId" javaType="int"/>
-    <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="int"/>
+    <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="Integer"/>
     <result column="DEFAULT_ITEM" property="defaultItem" javaType="String"/>
     <result column="DEFAULT_PALETTE" property="defaultPalette" javaType="String"/>
+    <result column="DEFAULT_VIEWER_REPORT_ID" property="defaultViewerReportId" javaType="int"/>
+    <result column="DEFAULT_VIEWER_REPORT_NM" property="defaultViewerReportNm" javaType="String"/>
+    <result column="DEFAULT_VIEWER_REPORT_TYPE" property="reportType" javaType="String"/>
   </resultMap>
 
   <resultMap id="UserDTO" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
@@ -22,6 +25,24 @@
     <result column="HP_NO" property="hpNo" javaType="String"/>
   </resultMap>
 
+  <resultMap id="reportElement" type="hashmap">
+    <result column="REPORT_NM" property="reportNm" javaType="String"/>
+    <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+  </resultMap>
+
+  <!-- WB_USER_CONFIG_MSRT에 테이블 존재여부 -->
+  <select id="checkExistData" resultType="boolean" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    SELECT
+      USER_NO
+    FROM USER_MSTR a
+    WHERE a.USER_NO = #{userNo, jdbcType=INTEGER}
+    AND EXISTS(
+      SELECT 1
+      FROM WB_USER_CONFIG_MSTR b
+      WHERE USER_NO = #{userNo, jdbcType=INTEGER}
+    )
+  </select>
+
   <!-- myPage 디자이너 설정 -->
   <select id="selectDesignerConfig" resultMap="MyDesignerDTO" parameterType="int">
     SELECT
@@ -29,13 +50,19 @@
       DEFAULT_DATASET_ID,
       DEFAULT_REPORT_ID,
       DEFAULT_ITEM,
-      DEFAULT_PALETTE
+      DEFAULT_PALETTE,
+      DEFAULT_VIEWER_REPORT_ID,
+      DEFAULT_VIEWER_REPORT_NM,
+      DEFAULT_VIEWER_REPORT_TYPE
         FROM WB_USER_CONFIG_MSTR
         WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
 
-  <select id="selectOnlyReportNm" parameterType="int" resultType="string">
-    SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = #{reportId, jdbcType=INTEGER}
+  <select id="selectOnlyReportNm" parameterType="int" resultType="hashmap" resultMap="reportElement">
+    SELECT
+      REPORT_NM,
+      REPORT_TYPE
+    FROM REPORT_MSTR WHERE REPORT_ID = #{reportId, jdbcType=INTEGER}
   </select>
   
   <select id="selectOnlyDatasetNm" parameterType="int" resultType="string">
@@ -52,7 +79,18 @@
           DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR}
       WHERE USER_NO = #{userNo}
   </update>
-  <insert id="insertDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+
+  <update id="updataMyViewerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
+    UPDATE
+      WB_USER_CONFIG_MSTR
+      SET
+          DEFAULT_VIEWER_REPORT_ID = #{defaultViewerReportId, jdbcType=INTEGER},
+          DEFAULT_VIEWER_REPORT_NM = #{defaultViewerReportNm, jdbcType=VARCHAR},
+          DEFAULT_VIEWER_REPORT_TYPE = #{reportType, jdbcType=VARCHAR}
+      WHERE USER_NO = #{userNo}
+  </update>
+
+  <insert id="insertWbUserConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     INSERT INTO 
     WB_USER_CONFIG_MSTR (
       USER_NO,
@@ -78,9 +116,9 @@
       null,
       null,
       null,
-      null,
-      null,
-      null
+      #{defaultViewerReportId, jdbcType=INTEGER},
+      #{defaultViewerReportNm, jdbcType=VARCHAR},
+      #{reportType, jdbcType=VARCHAR}
     ) 
   </insert>
   <!-- user info -->

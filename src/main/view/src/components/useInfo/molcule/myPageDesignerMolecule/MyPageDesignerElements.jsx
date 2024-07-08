@@ -7,10 +7,18 @@ import {
   MyPageTextBox
 } from '../../atom/MyDesignerAtom';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+import refresh from 'assets/image/icon/button/refresh.png';
+import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import Title from 'components/config/atoms/common/Title';
 
 const theme = getTheme();
+
+const StyledImg = styled.img`
+  src: ${(props) => props.src};
+  cursor: pointer;
+  margin-left: 10px;
+`;
 
 const smallButton = {
   height: '30px',
@@ -46,7 +54,14 @@ const Content = styled.div`
 `;
 
 const MyPageDesignerElements = ({setConfig, data, items}) => {
-  const {openModal} = useModal();
+  const {openModal, confirm} = useModal();
+
+  const onClickReset = (id) => {
+    setConfig({
+      ...data,
+      ...(id?.id ? {[id.id]: null, [id.requiredNm]: null} : {[id]: null})
+    });
+  };
 
   const handleClick = (modalTitle, itemId) => {
     openModal(FavoritModal, {
@@ -54,11 +69,13 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
       data: data,
       title: modalTitle,
       onSubmit: (value) => {
+        if (!itemId || !value) return;
         // 기본보고서 처럼 이름이 필요한경우.
         if (itemId.requiredNm) {
           setConfig({...data,
             [itemId.id]: value.id,
-            [itemId.requiredNm]: value.name
+            [itemId.requiredNm]: value.name,
+            reportType: value.reportType
           });
         } else {
           setConfig({...data, [itemId]: value});
@@ -106,7 +123,18 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
     items.map((item) => {
       return (
         <>
-          <Title title={item.title}/>
+          <Title title={item.title}>
+            {
+              item.type == 'favorit' &&
+              <StyledImg
+                src={refresh}
+                onClick={() => confirm(
+                    localizedString.eachItemResetConfirm[item.id.id || item.id],
+                    () => onClickReset(item.id)
+                )}
+              />
+            }
+          </Title>
           <SideMenuWrapper>
             <ContentWrapper>
               <MyDesignerLabel label={item.label}/>

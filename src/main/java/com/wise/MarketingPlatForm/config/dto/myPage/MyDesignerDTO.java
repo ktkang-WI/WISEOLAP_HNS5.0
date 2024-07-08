@@ -1,7 +1,5 @@
 package com.wise.MarketingPlatForm.config.dto.myPage;
 
-import org.springframework.data.relational.core.mapping.Column;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,9 +15,13 @@ public class MyDesignerDTO {
   int userNo;
   Integer defaultDatasetId;
   Integer defaultReportId;
+  Integer defaultViewerReportId;
   String defaultItem;
   String defaultLayout;
   String defaultPalette;
   String defaultDatasetNm;
   String defaultReportNm;
+  String defaultReportType;
+  String defaultViewerReportNm;
+  String reportType;
 }

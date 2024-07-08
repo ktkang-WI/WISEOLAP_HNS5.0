@@ -1,11 +1,14 @@
 import {createBrowserHistory} from '@remix-run/router';
 import Header from 'components/common/atomic/Header/organism/Header';
+import {paletteCollection}
+  from 'components/common/atomic/Popover/organism/Palette';
 import SideNavigationBar
   from 'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {AdHocLayoutTypes, DesignerMode} from 'components/config/configType';
 import configureUtility
   from 'components/config/organisms/configurationSetting/ConfigureUtility';
 import useConfig from 'hooks/useConfig';
+import useReportLoad from 'hooks/useReportLoad';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
@@ -19,48 +22,78 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 const Designer = () => {
   // hooks
   const dispatch = useDispatch();
-  const {reload} = useReportSave();
+  const {reload, querySearch} = useReportSave();
   const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
-  // saveConfiguration(generalConfigure, myPageConfigure);
+  const {getReport, getLinkedReport} = useReportLoad();
+
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
+
   // actions
   const {setDesignerMode, reloadDisplaySetting} = ConfigSlice.actions;
   const history = createBrowserHistory();
+
   // function js
   const {configStringToJson} = configureUtility();
 
-  // 브라우저 새로고침 문제.
-  useEffect(() => {
-    // 아이템, 레이아웃
-    const configJson = configStringToJson(generalConfigure);
-    const initPage =
-      configJson.menuConfig.Menu.WI_DEFAULT_PAGE;
-
-    if (designerMode == DesignerMode['AD_HOC']) {
-      let layout = AdHocLayoutTypes[generalConfigure.adHocLayout];
-
-      if (myPageConfigure?.defaultLayout.check) {
-        layout = AdHocLayoutTypes[myPageConfigure.defaultLayout.layout];
+  const getFavoritReport = async (hasFavoritReport, param) => {
+    const initState = (isLoadReport) => {
+      if (hasFavoritReport == false || !isLoadReport) {
+        dispatch(LayoutSlice.actions.initLayout(param));
+        dispatch(ItemSlice.actions.initItems(param));
       }
+    };
 
-      const param = {
-        mode: designerMode,
-        adhocLayout: layout
-      };
+    let isLoadReport = false;
+    let isLoadLinkReport = false;
 
-      dispatch(LayoutSlice.actions.initLayout(param));
-      dispatch(ItemSlice.actions.initItems(param));
+    if (hasFavoritReport) {
+      const myReportId = myPageConfigure.defaultReportId;
+      const myReportType = myPageConfigure.defaultReportType;
+
+      if (myReportType == designerMode) {
+        isLoadReport = await getReport(myReportId, myReportType);
+        isLoadLinkReport = await getLinkedReport(myReportId);
+
+        // TODO: 환경설정 보고서 바로 조회 개발시 분기 예정.
+        if (isLoadReport && isLoadLinkReport) {
+          querySearch();
+        } else {
+          initState(isLoadReport);
+        }
+      }
     }
 
-    if (designerMode == DesignerMode['DASHBOARD']) {
-      const param = {
-        mode: designerMode,
-        defaultItem: myPageConfigure?.defaultItem || 'chart'
-      };
-      dispatch(LayoutSlice.actions.initLayout(param));
-      dispatch(ItemSlice.actions.initItems(param));
+    initState(isLoadReport);
+  };
+
+  // 브라우저 새로고침 문제.
+  useEffect(() => {
+    const configJson = configStringToJson(generalConfigure);
+    const initPage = configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
+    const hasFavoritReport = myPageConfigure?.defaultReportId;
+    const param = {mode: designerMode};
+    const paletteNo = paletteCollection.findIndex(
+        (color) => color.name == myPageConfigure?.defaultPalette
+    );
+
+    if (designerMode == DesignerMode['AD_HOC']) {
+      const check = myPageConfigure?.defaultLayout?.check;
+      const myOrGeneralConf = check?
+        myPageConfigure?.defaultLayout?.layout : generalConfigure?.adHocLayout;
+      const layout = AdHocLayoutTypes[myOrGeneralConf];
+
+      param.adhocLayout = layout || 'CTGB';
+
+      getFavoritReport(hasFavoritReport, param);
+    } else if (designerMode == DesignerMode['DASHBOARD']) {
+      param.defaultItem = myPageConfigure?.defaultItem || 'chart';
+      param.defaultPalette = paletteNo > -1? paletteNo : 0;
+
+      getFavoritReport(hasFavoritReport, param);
+    } else {
+      getFavoritReport(hasFavoritReport, param);
     }
 
     dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));

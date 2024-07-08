@@ -63,7 +63,7 @@ const UserReprotManagement = () => {
   const reports = useLoaderData();
   const ref = useRef();
   const [treeViewData, setTreeViewData] = useState(reports);
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const {confirm, alert, success} = useModal();
 
   const context = {
@@ -97,22 +97,23 @@ const UserReprotManagement = () => {
   };
 
   const onClickSave = (e) => {
+    const report = data;
+
+    if (!report?.id || report.id === '') {
+      alert(localizedString.selectReportAlert);
+      return;
+    }
+
     confirm(localizedString.changeReportNmConfirm, () => {
-      const report = ref.current?.instance?.option('formData');
-
-      if (!report || !report.id) {
-        return alert(localizedString.selectReportAlert);
-      }
-
       updateMyPageReport(report).then((response) => {
-        if (response.status !== 200) {
-          return alert(localizedString.saveFail);
-        }
+        if (!response.status == 200) return alert(localizedString.saveFail);
 
-        success(localizedString.successSave);
+        success(localizedString.reportInfoChangeSuccess);
 
-        userFolderData().then((respose) => {
-          setTreeViewData(respose);
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.saveFail);
+
+          setTreeViewData(res);
         });
 
         setData({});
@@ -121,26 +122,28 @@ const UserReprotManagement = () => {
   };
 
   const onClickRemove = (e) => {
-    const reportId = data.id;
-    if (reportId == '') {
+    const reportId = data?.id;
+
+    if (!reportId || reportId === '') {
       alert(localizedString.selectReportAndDeleteConfirm);
-    } else {
-      confirm(localizedString.reportDeleteConfirm, () => {
-        deleteReport({reportId: reportId}).then((response) => {
-          if (response.status !== 200) {
-            return alert(localizedString.removeFail);
-          }
-
-          success(localizedString.successRemove);
-
-          userFolderData().then((respose) => {
-            setTreeViewData(respose);
-          });
-
-          setData({});
-        });
-      });
+      return;
     }
+
+    confirm(localizedString.reportDeleteConfirm, () => {
+      deleteReport({reportId: reportId}).then((res) => {
+        if (!res.status == 200) return alert(localizedString.failReportDelete);
+
+        success(localizedString.successReportDelete);
+
+        userFolderData().then((res) => {
+          if (!res) return alert(localizedString.failReportDelete);
+
+          setTreeViewData(res);
+        });
+
+        setData({});
+      });
+    });
   };
 
   const itemRender = (item) => {

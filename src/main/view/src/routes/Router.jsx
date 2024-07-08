@@ -51,13 +51,16 @@ const multipleLoader = async () => {
     const object = result;
     const json = JSON.parse(object.defaultItem);
 
-    object.defaultItem = json.item;
+    object.defaultItem = json?.item || '';
     object.defaultLayout = {
-      check: json.check, layout: json.layout
+      check: json?.check || false,
+      layout: json?.layout || 'CTGB'
     };
     object.defaultDisplay = {
-      displayCheck: json.displayCheck, initDisplay: json.initDisplay
+      displayCheck: json?.displayCheck || false,
+      initDisplay: json?.initDisplay || 'DashAny'
     };
+
     return object;
   });
 
@@ -159,8 +162,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'viewer',
-        element: <MyViewerConfig/>
-        // loader: 뷰어 설정
+        element: <MyViewerConfig/>,
+        loader: userDesignerConfig
       },
       {
         path: 'font',

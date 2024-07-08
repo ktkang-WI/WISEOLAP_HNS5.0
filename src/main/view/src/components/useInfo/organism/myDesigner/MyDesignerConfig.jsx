@@ -10,7 +10,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {designerConfigItems} from './MypageDesignerUtil';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 
-const seperateConfig = (designerConfig) => {
+export const seperateConfig = (designerConfig) => {
   if (designerConfig == null) {
     return {};
   }
@@ -40,6 +40,7 @@ const MyDesignerConfig = () => {
   const [config, setConfig] = useState(() => seperateConfig(designerConfig));
   const {success, alert, confirm} = useModal();
 
+  // 마이페이지 저장.
   const onClickSave = () => {
     const defaultItem = {
       item: config.defaultItem || '',

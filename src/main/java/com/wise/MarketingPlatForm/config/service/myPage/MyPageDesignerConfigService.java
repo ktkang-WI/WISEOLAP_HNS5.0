@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.config.service.myPage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -26,14 +27,21 @@ public class MyPageDesignerConfigService {
       model = myPageConfigDAO.selectDesignerConfig(userNo);
       if (model != null) {
         if (model.getDefaultReportId() != null) {
-          String reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
-          model.setDefaultReportNm(reportNm);
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
+          model.setDefaultReportNm(reportNm.get("reportNm"));
+          model.setDefaultReportType(reportNm.get("reportType"));
         }
-    
-        if (model.getDefaultDatasetId() != null) {
-          String datasetNm = myPageConfigDAO.selectOnlyDatasetNm(model.getDefaultReportId().intValue());
-          model.setDefaultDatasetNm(datasetNm);
+        
+        if (model.getDefaultViewerReportId() != null) {
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
+          model.setDefaultViewerReportNm(reportNm.get("reportNm"));
+          model.setReportType(reportNm.get("reportType"));
         }
+        // TODO : 기본 데이터집합은 사용안하지만 추후 추가될 가능성 있음.
+        // if (model.getDefaultDatasetId() != null) {
+        //   String datasetNm = myPageConfigDAO.selectOnlyDatasetNm(model.getDefaultReportId().intValue());
+        //   model.setDefaultDatasetNm(datasetNm);
+        // }
       }
     } catch (Exception e) {
       logger.error("MyPageDesignerConfigService Error", e);
@@ -47,6 +55,8 @@ public class MyPageDesignerConfigService {
         .defaultItem(defaultLayouts)
         .defaultPalette("")
         .defaultLayout("")
+        .defaultViewerReportId(null)
+        .defaultViewerReportNm("")
         .build();
       }
     }
@@ -55,19 +65,22 @@ public class MyPageDesignerConfigService {
   }
 
   public boolean saveDesignerConfig(MyDesignerDTO myDesignerDTO) {
-    boolean result = false;
-    
-    result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
+    // 테이블에 userNo가 있어도 false 반환 하는 경우가 있다고 하여, 먼저 테이블의 존재 여부를 조회
+    boolean result = myPageConfigDAO.checkExistData(myDesignerDTO);
+
+    // 테이블에 존재 하지 않으면 insert, 존재 한다면 update
     if (!result) {
-      result = myPageConfigDAO.insertDesignerConfig(myDesignerDTO);
+      result = myPageConfigDAO.insertWbUserConfig(myDesignerDTO);
+    } else {
+      result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
     }
 
     return result;
   };
 
   public boolean resetDesigner(MyDesignerDTO myDesignerDTO) {
-    boolean result = false;
-    result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
+    boolean result = myPageConfigDAO.updateDesignerConfig(myDesignerDTO);
+    
     return result;
   }
 }

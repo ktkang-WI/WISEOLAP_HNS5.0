@@ -12,5 +12,5 @@ export const selectRootLayout = createSelector(
 export const selectFlexLayoutConfig = createSelector(
     selectCurrentReportId,
     (state) => state.meta.layout,
-    (reportId, layout) => layout[reportId].layoutConfig
+    (reportId, layout) => layout[reportId]?.layoutConfig
 );

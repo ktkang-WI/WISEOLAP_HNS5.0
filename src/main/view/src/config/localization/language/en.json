@@ -544,6 +544,11 @@
   },
   "range": "range",
   "rangeBarlengthAlert": "For rangeBar items, the number of measurements in range 1 and range 2 must be the same.",
+  "eachItemResetConfirm": {
+    "defaultReportId": "Do you want to reset the default report?",
+    "defaultItem": "Do you want to reset default items?",
+    "defaultPalette": "Do you want to reset default colors?"
+  },
   "myPage": "My Page",
   "requiredUserNm": "User name is required.",
   "userNmNoEmpty": "The username cannot be empty.",
@@ -568,5 +573,11 @@
   "confirmResetMsg": "Do you want to reset?",
   "folderManager": "Folder Management",
   "noSelectionFolderAlert": "Please select a folder and proceed.",
-  "removeFail": "Deletion failed."
+  "removeFail": "Deletion failed.",
+  "linkReportCorrupted": "Failed to retrieve connection report.",
+  "defaultReport": "Default Report",
+  "loadData": "Load data",
+  "reportInfoChangeSuccess":"Saving report information was successful.",
+  "failReportDelete": "Report deletion failed.",
+  "successReportDelete": "Report deletion was successful."
 }
