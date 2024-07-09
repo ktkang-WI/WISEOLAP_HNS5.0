@@ -573,6 +573,7 @@
   "confirmResetMsg": "Do you want to reset?",
   "folderManager": "Folder Management",
   "noSelectionFolderAlert": "Please select a folder and proceed.",
+  "removeFail": "Deletion failed.",
   "linkReportCorrupted": "Failed to retrieve connection report.",
   "defaultReport": "Default Report",
   "loadData": "Load data",

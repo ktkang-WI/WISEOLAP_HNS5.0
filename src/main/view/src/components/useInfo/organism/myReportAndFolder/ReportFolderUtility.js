@@ -7,7 +7,7 @@ import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
 
 const ReportFolderUtility = () => {
-  const {alert, confirm, openModal} = useModal();
+  const {alert, confirm, openModal, success} = useModal();
 
   const afterCrudLoadData = (setTreeViewData) => {
     // 변경 사항 적용 위해 통신하여 데이터 불러옴
@@ -110,6 +110,7 @@ const ReportFolderUtility = () => {
     confirm(localizedString.changeFolderNmConfirm, () => {
       updateMyPageFolder(itemData).then((respose) => {
         if (respose.status == 200) {
+          success(localizedString.successSave);
           // 변경 사항 적용 위해 통신하여 데이터 불러옴
           afterCrudLoadData(setTreeViewData);
           setRow({});
