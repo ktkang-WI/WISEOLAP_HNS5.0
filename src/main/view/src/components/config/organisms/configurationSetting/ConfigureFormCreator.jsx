@@ -58,14 +58,43 @@ const createSelectBoxItem = (dataField, labelText, icon, editorOptions) => (
       render={labelTemplate('description')} />
   </Item>
 );
+const createCheckBoxItem = (dataField, labelText, icon, editorOptions) => (
+  <Item
+    editorType='dxCheckBox'
+    editorOptions={{
+      value: false,
+      ...editorOptions
+    }}
+  >
+    <Label
+      text={labelText}
+      alignment='start'
+      render={labelTemplate('description')} />
+  </Item>
+);
+const createButtonItem = (dataField, labelText, icon, editorOptions) => (
+  <Item>
+    <Button
+      onClick={editorOptions?.onClick}
+    >
+      {editorOptions?.buttonLabel}
+    </Button>
+    <Label
+      text={labelText}
+      alignment='start'
+      render={labelTemplate('description')} />
+  </Item>
+);
 
 export const formCreator = {
   'TextBox': createTextBoxItem,
   'Upload': createFormUploadItem,
-  'SelectBox': createSelectBoxItem
+  'SelectBox': createSelectBoxItem,
+  'CheckBox': createCheckBoxItem,
+  'Button': createButtonItem
 };
 
-export const generateItems = (items, page) => {
+export const generateItems = (items, page, options = {}) => {
   return items.map((item, i) => {
     const children = item.items;
     return (

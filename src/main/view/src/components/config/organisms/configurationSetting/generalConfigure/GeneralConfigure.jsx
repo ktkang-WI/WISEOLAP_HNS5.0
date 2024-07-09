@@ -51,20 +51,6 @@ const GeneralConfigure = () => {
       ]
     },
     {
-      'title': '이미지 설정',
-      'colCount': 2,
-      'items': [
-        {
-          'dataField': 'loginImage',
-          'type': 'Upload'
-        },
-        {
-          'dataField': 'logo',
-          'type': 'Upload'
-        }
-      ]
-    },
-    {
       'title': '초기화면',
       'items': [
         {

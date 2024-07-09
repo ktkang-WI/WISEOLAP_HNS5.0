@@ -28,6 +28,63 @@ const ReportConfigure = () => {
           }
         }
       ]
+    },
+    {
+      'title': '보고서 설정',
+      'items': [
+        {
+          'dataField': 'instantReportRetrieval',
+          'type': 'CheckBox'
+        }
+      ]
+    },
+    {
+      'title': '차트 기본색상 설정',
+      'items': [
+        {
+          'dataField': 'chartDefaultColor',
+          'type': 'SelectBox',
+          'editorOptions': {
+            items: localizedString.config.report.initPalette,
+            displayExpr: 'caption',
+            valueExpr: 'name',
+            value: 'default',
+            onValueChanged: (e) => {
+              console.log(e);
+            }
+          }
+        }
+      ]
+    },
+    {
+      'title': '보고서 레이아웃 설정',
+      'items': [
+        {
+          'dataField': 'reportLayoutSetting',
+          'type': 'Button',
+          'editorOptions': {
+            'buttonLabel': '설정하기'
+          }
+        }
+      ]
+    },
+    {
+      'title': 'Spread Sheet 설정',
+      'colCount': 2,
+      'items': [
+        {
+          'dataField': 'print',
+          'type': 'CheckBox'
+        },
+        {
+          'dataField': 'sheet',
+          'type': 'CheckBox'
+        },
+        {
+          'dataField': 'table',
+          'type': 'CheckBox'
+        }
+      ]
     }
   ];
 
@@ -39,6 +96,7 @@ const ReportConfigure = () => {
     >
       <Form
         formData={general}
+        colCount={2}
       >
         {generateItems(items, 'report')}
       </Form>
