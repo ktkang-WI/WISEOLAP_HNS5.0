@@ -215,7 +215,6 @@ const DataSourceFoldableList = ({dataset}) => {
               parentIdExpr="parentId"
               keyExpr="uniqueName"
               searchEnabled={true}
-              visibleExpr="hello"
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
