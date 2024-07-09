@@ -3,6 +3,10 @@ import fieldDescriptionImg
   from 'assets/image/icon/button/field_description.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove.png';
+import showHiddenFieldsImg
+  from 'assets/image/icon/button/show_visible_field.png';
+import showHiddenFieldsDisabledImg
+  from 'assets/image/icon/button/show_visible_field_disabled.png';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import store from 'redux/modules';
@@ -27,7 +31,7 @@ import {useSelector} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import FieldDescriptionModal
   from 'components/dataset/modal/FieldDescriptionModal';
-import viewerPosting from 'assets/image/icon/button/preview.png';
+import viewerPostingImg from 'assets/image/icon/button/preview.png';
 import ViewerPostingDataModal
   from 'components/dataset/modal/ViewPostingData/ViewerPostingDataModal';
 import {getAppliedDataItem, getOnlyUniNm}
@@ -37,12 +41,14 @@ const PanelTitleDefaultElement = () => {
   const {openModal, alert, confirm} = useModal();
   const {executeParameterDefaultValueQuery} = useQueryExecute();
   const dispatch = useDispatch();
-  const {deleteDataset} = DatasetSlice.actions;
+  const {deleteDataset, updateDataset} = DatasetSlice.actions;
   const {deleteParameterByDatasetId,
     updateParameterInformation
   } = ParameterSlice.actions;
   const {initItemByDatasetId} = ItemSlice.actions;
   const selectedCurrentItem = useSelector(selectCurrentItem);
+  const selectedDataset = useSelector(selectCurrentDataset);
+  const reportId = useSelector(selectCurrentReportId);
 
   const handleCustomData = async () => {
     const dataset = selectCurrentDataset(store?.getState());
@@ -93,8 +99,24 @@ const PanelTitleDefaultElement = () => {
     ViewerPostingData: {
       id: 'viewer_posting_data',
       onClick: viewerPostingFunc,
-      src: viewerPosting,
+      src: viewerPostingImg,
       label: localizedString.viewerPosting
+    },
+    ShowHiddenFields: {
+      id: 'show_hidden_fields',
+      onClick: () => {
+        if (_.isEmpty(selectedDataset)) return;
+        dispatch(updateDataset({
+          reportId,
+          dataset: {
+            ...selectedDataset,
+            showHiddenFields: !selectedDataset.showHiddenFields
+          }
+        }));
+      },
+      src: selectedDataset?.showHiddenFields ?
+        showHiddenFieldsImg : showHiddenFieldsDisabledImg,
+      label: localizedString.showHiddenFields
     },
     CustomField: {
       id: 'custom_field',

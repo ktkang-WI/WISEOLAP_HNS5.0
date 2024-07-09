@@ -82,6 +82,7 @@ public class CubeService {
             fields.add(CubeFieldVO.builder()
                     .type(DataFieldType.MEA)
                     .order(entity.getOrder())
+                    .visible(entity.isVisible())
                     .uniqueName(entity.getUniqueName())
                     .logicalName(entity.getLogicalName())
                     .physicalName(entity.getPhysicalName())
@@ -96,6 +97,7 @@ public class CubeService {
             // 권한 있는 차원의 컬럼만 추가
             fields.add(CubeFieldVO.builder()
                     .type(DataFieldType.MEA)
+                    .visible(entity.isVisible())
                     .order(entity.getMeaOrder())
                     .name(entity.getCaptionName())
                     .parentId(entity.getTableName())
@@ -115,6 +117,7 @@ public class CubeService {
                 fields.add(CubeFieldVO.builder()
                         .type(DataFieldType.DIM)
                         .order(entity.getOrder())
+                        .visible(entity.isVisible())
                         .uniqueName(entity.getUniqueName())
                         .logicalName(entity.getLogicalName())
                         .physicalName(entity.getPhysicalName())
@@ -136,6 +139,7 @@ public class CubeService {
                         .parentId(entity.getTableName())
                         .dataType(entity.getDataType())
                         .orderBy(entity.getOrderBy())
+                        .visible(entity.isVisible())
                         .uniqueName(entity.getUniqueName())
                         .description(entity.getDescription())
                         .build());

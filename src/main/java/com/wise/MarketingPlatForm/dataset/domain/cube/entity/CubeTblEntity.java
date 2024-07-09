@@ -16,4 +16,5 @@ public class CubeTblEntity {
   String physicalName;
   String logicalName;
   int order;
+  boolean visible;
 }

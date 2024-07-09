@@ -810,5 +810,6 @@
   "reportInfoChangeSuccess":"보고서 정보 저장에 성공 했습니다.",
   "failReportDelete": "보고서 삭제에 실패 했습니다.",
   "successReportDelete": "보고서 삭제에 성공 했습니다.",
-  "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다."
+  "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다.",
+  "showHiddenFields": "숨긴 항목 보기"
 }
