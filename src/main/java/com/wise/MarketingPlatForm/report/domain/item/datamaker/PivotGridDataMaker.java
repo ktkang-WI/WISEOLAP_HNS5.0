@@ -66,14 +66,16 @@ public class PivotGridDataMaker implements ItemDataMaker {
         if(tempData != null) {
             data = tempData;
         }
-
         
         Map<String, Object> info = new HashMap<> ();
 
-        PivotOption pivotOption = dataAggreagtion.getPivotOption();
+        // TODO: 추후 PivotMatrix 옵션화
+        if (false) {
+            PivotOption pivotOption = dataAggreagtion.getPivotOption();
 
-        try (WdcTask task = WDC.getCurrentTask().startSubtask("pivotSummaryMatrix")) {
-            internalPivotSummaryMatrix(dataAggreagtion, pivotOption, data, info);
+            try (WdcTask task = WDC.getCurrentTask().startSubtask("pivotSummaryMatrix")) {
+                internalPivotSummaryMatrix(dataAggreagtion, pivotOption, data, info);
+            }
         }
 
         CommonResult result = new CommonResult(data, info);

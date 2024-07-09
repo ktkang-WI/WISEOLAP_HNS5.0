@@ -188,45 +188,47 @@ const useQueryExecute = () => {
 
       const layout = cloneItem?.adHocOption?.layoutSetting;
 
-      const getAdhocChartItem = () => {
+      const getAdhocItemData = (item) => {
+        param.itemType = item.type;
         models.Item.getItemData(param).then((response) => {
           if (response.status != 200) {
             return;
           }
           const data = response.data;
 
-          chartItem.mart.init = true;
-          chartItem.mart.data = data;
+          item.mart.init = true;
+          item.mart.data = data;
 
-          if (nullDataCheck(chartItem)) {
-            alert(`${chartItem?.meta?.name}${localizedString.noneData}`);
+          if (nullDataCheck(item)) {
+            alert(`${item?.meta?.name}${localizedString.noneData}`);
           }
 
-          ItemManager.generateItem(chartItem, param, cloneItem);
-          dispatch(updateItem({reportId, item: chartItem}));
+          ItemManager.generateItem(item, param, cloneItem);
+          dispatch(updateItem({reportId, item: item}));
         });
       };
 
-      const getAdhocPivotItem = () => {
-        pivotItem.mart.init = true;
-        ItemManager.generateItem(pivotItem, param, cloneItem);
-        dispatch(updateItem({reportId, item: pivotItem}));
-      };
+      // TODO: 추후 PivotMatrix 옵션화시 pivotItem 분기처리
+      // const getAdhocPivotItem = () => {
+      //   pivotItem.mart.init = true;
+      //   ItemManager.generateItem(pivotItem, param, cloneItem);
+      //   dispatch(updateItem({reportId, item: pivotItem}));
+      // };
 
       switch (layout) {
         case 'chart_pivot':
-          getAdhocChartItem();
-          getAdhocPivotItem();
+          getAdhocItemData(chartItem);
+          getAdhocItemData(pivotItem);
           break;
         case 'chart':
-          getAdhocChartItem();
+          getAdhocItemData(chartItem);
           break;
         case 'pivot':
-          getAdhocPivotItem();
+          getAdhocItemData(pivotItem);
           break;
         default:
-          getAdhocChartItem();
-          getAdhocPivotItem();
+          getAdhocItemData(chartItem);
+          getAdhocItemData(pivotItem);
           break;
       }
     } catch (error) {
@@ -251,8 +253,8 @@ const useQueryExecute = () => {
 
       const reportId = selectCurrentReportId(store.getState());
 
-      // TODO: 추후 PivotMatrix 적용할 때 해제
-      if (item.type == ItemType.PIVOT_GRID) {
+      // TODO: 추후 PivotMatrix 옵션화
+      if (false && item.type == ItemType.PIVOT_GRID) {
         tempItem.mart.init = true;
         ItemManager.generateItem(tempItem, param);
 
