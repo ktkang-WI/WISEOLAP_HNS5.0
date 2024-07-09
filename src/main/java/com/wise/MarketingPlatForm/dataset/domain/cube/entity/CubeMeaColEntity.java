@@ -22,4 +22,5 @@ public class CubeMeaColEntity {
   String format;
   int meaOrder;
   String description;
+  boolean visible;
 }

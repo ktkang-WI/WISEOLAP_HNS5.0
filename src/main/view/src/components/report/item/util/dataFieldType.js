@@ -42,7 +42,7 @@ const dataFieldTypeOfItemTypeFunc = (type) => {
       dataFieldFormat.push(DataFieldType.END_DATE);
       break;
     }
-    case ItemType.CHORD:
+    case ItemType.CHORD_DIAGRAM:
     case ItemType.ARC_DIAGRAM: {
       dataFieldFormat.push(DataFieldType.DIMENSION);
       break;

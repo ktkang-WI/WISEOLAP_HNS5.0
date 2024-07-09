@@ -64,7 +64,6 @@ const ContentWrapper = styled.div`
 const DataSourceTab = () => {
   const reportId = useSelector(selectCurrentReportId);
   const datasets = useSelector(selectCurrentDatasets);
-  const currentDataset = useSelector(selectCurrentDataset);
   const selectedDataset = useSelector(selectCurrentDataset);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const editMode = useSelector(selectEditMode);
@@ -90,8 +89,12 @@ const DataSourceTab = () => {
     buttons.shift();
   }
 
-  if (currentDataset?.datasetType == DatasetType.DS_SQL) {
+  if (selectedDataset?.datasetType == DatasetType.DS_SQL) {
     buttons.unshift('FieldDescription');
+  }
+
+  if (selectedDataset?.datasetType == DatasetType.CUBE) {
+    buttons.unshift('ShowHiddenFields');
   }
 
   return (

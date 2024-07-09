@@ -584,5 +584,6 @@
   "reportInfoChangeSuccess":"Saving report information was successful.",
   "failReportDelete": "Report deletion failed.",
   "successReportDelete": "Report deletion was successful.",
-  "linkReportCorrupted": "Failed to retrieve connection report."
+  "linkReportCorrupted": "Failed to retrieve connection report.",
+  "showHiddenFields": "Show hidden fields"
 }

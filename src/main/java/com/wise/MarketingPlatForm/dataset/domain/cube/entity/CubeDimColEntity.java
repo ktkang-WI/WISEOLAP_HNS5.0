@@ -19,6 +19,7 @@ public class CubeDimColEntity {
   String dataType;
   String orderBy;
   String captionName;
+  boolean visible;
   int order;
   String description;
 }
