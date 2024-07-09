@@ -49,7 +49,7 @@ public class MyPageFolderController {
   }
 
   @PatchMapping
-  public boolean updateMyReport(
+  public ResponseEntity<RestAPIVO> updateMyReport(
     @RequestParam(required = true) int id,
     @RequestParam(required = false, defaultValue = "") String name,
     @RequestParam(required = false, defaultValue = "") String subtitle,
@@ -60,9 +60,12 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "0") int ordinal,
     @RequestParam(required = false, defaultValue = "") String desc,
     @RequestParam(required = false, defaultValue = "") String query,
-    @RequestParam(required = false, defaultValue = "") String prompt
+    @RequestParam(required = false, defaultValue = "false") Boolean prompt
   ) {
-    String strPrompt = (prompt == null || prompt.equals("false")) ? "N" : "Y";
+    String strPrompt = prompt ? "Y" : "N";
+
+    if (prompt == null) strPrompt = "N";
+
     MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()
       .id(id)
       .name(name)
@@ -77,7 +80,11 @@ public class MyPageFolderController {
       .ordinal(ordinal)
       .build();
 
-    return myPageFolderReportService.updateMyReport(fldReprotDTO);
+    boolean result = myPageFolderReportService.updateMyReport(fldReprotDTO);
+    
+    if (!result) return RestAPIVO.conflictResponse(false);
+  
+    return RestAPIVO.okResponse(result);
   }
 
   @PostMapping
