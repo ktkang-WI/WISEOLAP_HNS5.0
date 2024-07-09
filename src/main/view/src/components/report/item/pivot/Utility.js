@@ -14,6 +14,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentAdHocOption, selectCurrentItems}
   from 'redux/selector/ItemSelector';
+import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 
 const cache = new Map();
 
@@ -84,12 +85,13 @@ const generateItem = (item, param, rootItem) => {
     return acc;
   }, {});
 
+  // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   for (const field of dataField.measure) {
     const dataFieldName = field.summaryType + '_' + field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     fields.push({
       caption: field.caption,
-      summaryType: 'SUM',
+      summaryType: 'sum',
       dataField: dataFieldName,
       area: 'data'
     });
@@ -100,7 +102,7 @@ const generateItem = (item, param, rootItem) => {
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
     fields.push({
       caption: field.caption,
-      summaryType: 'SUM',
+      summaryType: 'sum',
       dataField: dataFieldName,
       area: 'data',
       visible: false
@@ -181,6 +183,18 @@ const generateItem = (item, param, rootItem) => {
     };
 
     fields.push(field);
+  }
+
+  // TODO: 추후 PivotMatrix 옵션화
+  if (true) {
+    console.log(item.mart.data.data);
+    console.log(fields);
+    item.mart.dataSourceConfig = new PivotGridDataSource({
+      fields: fields,
+      store: item.mart.data.data
+    });
+
+    return;
   }
 
   const rowGroups = dataField.row
@@ -561,13 +575,16 @@ const generateParameter = (item, param, rootItem) => {
   param.measure = dataField.measure;
   param.removeNullData = item.meta.removeNullData;
 
-  param.sortInfo = param.dimension.map((dim) => {
-    return {
-      sortOrder: 'asc',
-      dataField: dim.name,
-      sortByField: dim.name
-    };
-  });
+  // TODO: 추후 PivotMatrix 옵션화
+  if (false) {
+    param.sortInfo = param.dimension.map((dim) => {
+      return {
+        sortOrder: 'asc',
+        dataField: dim.name,
+        sortByField: dim.name
+      };
+    });
+  }
 
   param.dimension = JSON.stringify(param.dimension);
   param.measure = JSON.stringify(param.measure);
@@ -592,7 +609,8 @@ const getRibbonItems = () => {
     'DataPosition',
     'RemoveNullData',
     'ShowFilter',
-    'Paging',
+    // TODO: 추후 PivotMatrix 옵션화
+    // 'Paging',
     'InputTxt'
   ];
 };
