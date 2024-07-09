@@ -64,7 +64,7 @@ const UserReprotManagement = () => {
   const reports = useLoaderData();
   const ref = useRef();
   const [treeViewData, setTreeViewData] = useState(reports);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const {confirm, alert, success} = useModal();
   const {checkValidation} = reportFolderUtility();
   let prevName = null;
@@ -119,7 +119,7 @@ const UserReprotManagement = () => {
 
     confirm(localizedString.changeReportNmConfirm, () => {
       updateMyPageReport(report).then((response) => {
-        if (!response.status == 200) return alert(localizedString.saveFail);
+        if (!(response.status == 200)) return alert(localizedString.saveFail);
 
         success(localizedString.reportInfoChangeSuccess);
 

@@ -32,7 +32,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
   const [value, setValue] = useState(selectBoxValue);
   const [reportList, setReportList] = useState();
   const {alert} = useModal();
-  let report = '';
+  let report = value;
 
   useEffect(() => {
     (props.id == MyDesignerConstance['DEFAULT_REPORT_ID'] ||
@@ -66,14 +66,14 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
       onSubmit={() => {
-        if (report?.type && report?.type == 'FOLDER') {
+        if (!report) return;
+
+        if (report.type == 'FOLDER') {
           alert(localizedString.selectReportAlert);
           return;
         }
 
-        if (report != '') {
-          onSubmit(report);
-        }
+        onSubmit(report);
       }}
       {...props}
     >
