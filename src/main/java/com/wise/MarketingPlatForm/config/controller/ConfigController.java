@@ -1,10 +1,5 @@
 package com.wise.MarketingPlatForm.config.controller;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -33,10 +33,10 @@ const spreadSheetSettingsCheckBox = [
 
 const ReportConfigure = () => {
   const getContext = useContext(ConfigureContext);
-  const [report] = getContext.state.report;
+  const report = getContext.state.report;
   const items = [
     {
-      'title': '비정형 보고서 설정',
+      'title': localizedString.config.report.adHocReportSetting,
       'items': [
         ...adHocSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -48,7 +48,7 @@ const ReportConfigure = () => {
       ]
     },
     {
-      'title': '보고서 설정',
+      'title': localizedString.config.report.reportSetting,
       // 'visible': false,
       'items': [
         ...reportSettingsCheckBox.map((field) => createCheckBoxItemProperties(
@@ -58,7 +58,7 @@ const ReportConfigure = () => {
       ]
     },
     {
-      'title': '차트 기본색상 설정',
+      'title': localizedString.config.report.chartBasicColorSetting,
       'items': [
         ...chartBasicColorSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -69,7 +69,7 @@ const ReportConfigure = () => {
       ]
     },
     {
-      'title': '보고서 레이아웃 설정',
+      'title': localizedString.config.report.reportLayout,
       'visible': false,
       'items': [
         {
@@ -82,7 +82,7 @@ const ReportConfigure = () => {
       ]
     },
     {
-      'title': 'Spread Sheet 설정',
+      'title': localizedString.config.report.spreadSheetSetting,
       'colCount': 2,
       // 'visible': false,
       'items': [
@@ -102,7 +102,6 @@ const ReportConfigure = () => {
       className='custom-scrollbar'
     >
       <Form
-        formData={report}
         colCount={2}
       >
         {generateItems(items, 'report')}

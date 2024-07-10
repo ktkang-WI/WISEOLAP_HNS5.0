@@ -16,28 +16,24 @@ export const ConfigureContext = createContext();
 const ConfigurationSetting = () => {
   const {alert} = useModal();
   const {generalConfigure} = useLoaderData();
-  const [general, setGeneral] = useState(generalConfigure?.general);
-  const [advanced, setAdvanced] = useState(generalConfigure?.advanced);
-  const [menu, setMenu] = useState(generalConfigure?.menu);
-  const [report, setReport] = useState(generalConfigure?.report);
+  const general = generalConfigure?.general;
+  const advanced = generalConfigure?.advanced;
+  const menu = generalConfigure?.menu;
+  const report = generalConfigure?.report;
   const [page, setPage] = useState(tabItems[0].value);
 
   const context = {
     state: {
-      general: [general, setGeneral],
-      advanced: [advanced, setAdvanced],
-      menu: [menu, setMenu],
-      report: [report, setReport]
+      general: general,
+      advanced: advanced,
+      menu: menu,
+      report: report
     }
   };
 
   const handleBtnClick = (e) => {
     // 일반 설정 menuConfig Json->string
-    generalConfigure.general = general;
-    generalConfigure.advanced = advanced;
-    generalConfigure.menu = menu;
-    generalConfigure.report = report;
-    updateGeneralConfig(generalConfigure)
+    updateGeneralConfig({general, advanced, menu, report})
         .then((res) => {
           if (res.status === 200) {
             alert(localizedString.successSave);

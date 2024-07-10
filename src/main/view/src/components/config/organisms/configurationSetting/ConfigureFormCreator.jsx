@@ -6,11 +6,23 @@ import localizedString from 'config/localization';
 
 const configLocalization = localizedString.config;
 
+const itemType = {
+  'TextBox': 'TextBox',
+  'Upload': 'Upload',
+  'SelectBox': 'SelectBox',
+  'CheckBox': 'CheckBox',
+  'Button': 'Button',
+  'NumberBox': 'NumberBox'
+};
 
-export const createNumberBoxItemProperties = (dataset, dataField, value) => ({
+const createItemDefaultProperties = (
+    dataset, dataField, value, type, items) => ({
   'dataField': dataField,
-  'type': 'NumberBox',
+  'type': type,
   'editorOptions': {
+    ...(itemType.SelectBox === type ? {items: items} : {}),
+    ...(itemType.SelectBox === type ? {displayExpr: 'caption'} : {}),
+    ...(itemType.SelectBox === type ? {valueExpr: 'name'} : {}),
     value: value,
     onValueChanged: (e) => {
       dataset[dataField] = e.value;
@@ -18,41 +30,19 @@ export const createNumberBoxItemProperties = (dataset, dataField, value) => ({
   }
 });
 
-export const createTextBoxItemProperties = (dataset, dataField, value) => ({
-  'dataField': dataField,
-  'type': 'TextBox',
-  'editorOptions': {
-    value: value,
-    onValueChanged: (e) => {
-      dataset[dataField] = e.value;
-    }
-  }
-});
+export const createNumberBoxItemProperties = (dataset, dataField, value) =>
+  createItemDefaultProperties(dataset, dataField, value, itemType.NumberBox);
 
-export const createCheckBoxItemProperties = (dataset, dataField, value) => ({
-  'dataField': dataField,
-  'type': 'CheckBox',
-  'editorOptions': {
-    value: value,
-    onValueChanged: (e) => {
-      dataset[dataField] = e.value;
-    }
-  }
-});
+export const createTextBoxItemProperties = (dataset, dataField, value) =>
+  createItemDefaultProperties(dataset, dataField, value, itemType.TextBox);
+
+export const createCheckBoxItemProperties = (dataset, dataField, value) =>
+  createItemDefaultProperties(dataset, dataField, value, itemType.CheckBox);
+
 export const createSelectBoxItemProperties = (
-    dataset, dataField, value, items) => ({
-  'dataField': dataField,
-  'type': 'SelectBox',
-  'editorOptions': {
-    items: items,
-    displayExpr: 'caption',
-    valueExpr: 'name',
-    value: value,
-    onValueChanged: (e) => {
-      dataset[dataField] = e.value;
-    }
-  }
-});
+    dataset, dataField, value, items) =>
+  createItemDefaultProperties(
+      dataset, dataField, value, itemType.SelectBox, items);
 
 
 const labelTemplate = (iconName) => {
@@ -150,12 +140,12 @@ const createButtonItem = (dataField, labelText, icon, editorOptions) => (
 );
 
 export const formCreator = {
-  'TextBox': createTextBoxItem,
-  'Upload': createFormUploadItem,
-  'SelectBox': createSelectBoxItem,
-  'CheckBox': createCheckBoxItem,
-  'Button': createButtonItem,
-  'NumberBox': createNumberBoxItem
+  [itemType.TextBox]: createTextBoxItem,
+  [itemType.Upload]: createFormUploadItem,
+  [itemType.SelectBox]: createSelectBoxItem,
+  [itemType.CheckBox]: createCheckBoxItem,
+  [itemType.Button]: createButtonItem,
+  [itemType.NumberBox]: createNumberBoxItem
 };
 
 export const generateItems = (items, page, options = {}) => {

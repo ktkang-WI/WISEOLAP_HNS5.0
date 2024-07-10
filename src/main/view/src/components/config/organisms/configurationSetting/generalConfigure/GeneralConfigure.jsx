@@ -30,12 +30,12 @@ const initLayoutSelectBox = [
 
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
-  const [general] = getContext.state.general;
+  const general = getContext.state.general;
   const ref = getContext.state.ref;
 
   const items = [
     {
-      'title': '라이센스 정보',
+      'title': localizedString.config.general.licenseInfo,
       'items': [
         ...licenseInformationTextBox.map((field) => createTextBoxItemProperties(
             general,
@@ -44,7 +44,7 @@ const GeneralConfigure = () => {
       ]
     },
     {
-      'title': '솔루션 제목',
+      'title': localizedString.config.general.solutionTitle,
       'items': [
         ...appTitleTextBox.map((field) => createTextBoxItemProperties(
             general,
@@ -53,7 +53,7 @@ const GeneralConfigure = () => {
       ]
     },
     {
-      'title': '초기화면',
+      'title': localizedString.config.general.wiDefaultPage,
       'items': [
         ...initLayoutSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -74,7 +74,6 @@ const GeneralConfigure = () => {
     >
       <Form
         ref={ref}
-        formData={general}
         showColonAfterLabel={true}>
         {
           generateItems(items, 'general')

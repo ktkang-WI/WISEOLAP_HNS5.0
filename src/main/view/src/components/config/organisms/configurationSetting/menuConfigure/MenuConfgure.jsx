@@ -6,6 +6,7 @@ import {
 } from '../ConfigureFormCreator';
 import {ConfigureContext} from '../ConfigurationSetting';
 import {useContext} from 'react';
+import localizedString from 'config/localization';
 
 const tabVisibleCheckBox = [
   'tabAdhoc',
@@ -66,11 +67,11 @@ const etcDownloadCheckBox = [
 
 const MenuConfgure = () => {
   const getContext = useContext(ConfigureContext);
-  const [menu] = getContext.state.menu;
+  const menu = getContext.state.menu;
   const ref = getContext.state.ref;
   const items = [
     {
-      'title': '탭 표시 여부',
+      'title': localizedString.config.menu.tabVisible,
       // 'visible': false,
       'items': [
         ...tabVisibleCheckBox.map((field) =>
@@ -82,7 +83,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '탭 팝업 설정',
+      'title': localizedString.config.menu.tabPopupSetting,
       // 'visible': false,
       'items': [
         ...tabPopUpSettingsCheckBox.map((field) =>
@@ -94,7 +95,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '탭 메뉴 권한',
+      'title': localizedString.config.menu.tabMenuAuth,
       // 'visible': false,
       'items': [
         ...tabAuthCheckBox.map((field) =>
@@ -106,7 +107,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '메인 탭 메뉴 설정',
+      'title': localizedString.config.menu.mainTabMenuSetting,
       'items': [
         ...mainTabCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -117,7 +118,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '데이터 집합 설정',
+      'title': localizedString.config.menu.datasetSetting,
       // 'visible': false,
       'items': [
         ...datasetSettingsCheckBox.map((field) =>
@@ -129,7 +130,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '다운로드 (Office)',
+      'title': localizedString.config.menu.downloadOffice,
       // 'visible': false,
       'items': [
         ...officeDownloadCheckBox.map((field) =>
@@ -141,7 +142,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '다운로드 (Hancom)',
+      'title': localizedString.config.menu.downloadHancom,
       // 'visible': false,
       'items': [
         ...hancomDownloadCheckBox.map((field) =>
@@ -153,7 +154,7 @@ const MenuConfgure = () => {
       ]
     },
     {
-      'title': '다운로드 (etc)',
+      'title': localizedString.config.menu.downloadEtc,
       // 'visible': false,
       'items': [
         ...etcDownloadCheckBox.map((field) =>
@@ -173,7 +174,6 @@ const MenuConfgure = () => {
     >
       <Form
         ref={ref}
-        formData={menu}
         showColonAfterLabel={true}
         colCount={2}>
         {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.wise.MarketingPlatForm.config.dto.config.GeneralDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO;

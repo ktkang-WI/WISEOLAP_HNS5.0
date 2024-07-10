@@ -53,11 +53,11 @@ const querySettingsCheckBox = [
 
 const AdvancedConfigure = () => {
   const getContext = useContext(ConfigureContext);
-  const [advanced] = getContext.state.advanced;
+  const advanced = getContext.state.advanced;
   const ref = getContext.state.ref;
   const items = [
     {
-      'title': '데이터 관리',
+      'title': localizedString.config.advanced.dataManagement,
       // 'visible': false,
       'items': [
         ...dataManegementNumberBox.map((field) => createNumberBoxItemProperties(
@@ -67,7 +67,7 @@ const AdvancedConfigure = () => {
       ]
     },
     {
-      'title': '사용자 설정',
+      'title': localizedString.config.advanced.userSetting,
       // 'visible': false,
       'items': [
         ...userSettingsNumberBox.map((field) => createNumberBoxItemProperties(
@@ -77,7 +77,7 @@ const AdvancedConfigure = () => {
       ]
     },
     {
-      'title': '대시보드 설정',
+      'title': localizedString.config.advanced.dashbarodSetting,
       'items': [
         ...dashboardSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -93,7 +93,7 @@ const AdvancedConfigure = () => {
       ]
     },
     {
-      'title': '뷰어 설정',
+      'title': localizedString.config.advanced.viewerSetting,
       // 'visible': false,
       'items': [
         ...viewerSettingsCheckBox.map((field) => createCheckBoxItemProperties(
@@ -103,7 +103,7 @@ const AdvancedConfigure = () => {
       ]
     },
     {
-      'title': '쿼리 관련 설정',
+      'title': localizedString.config.advanced.querySetting,
       // 'visible': false,
       'items': [
         ...querySettingsCheckBox.map((field) => createCheckBoxItemProperties(
@@ -121,7 +121,6 @@ const AdvancedConfigure = () => {
     >
       <Form
         ref={ref}
-        formData={advanced}
         showColonAfterLabel={true}
         colCount={2}>
         {

@@ -3,11 +3,6 @@ package com.wise.MarketingPlatForm.config.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.wise.MarketingPlatForm.config.dto.config.AdvancedDTO;
-import com.wise.MarketingPlatForm.config.dto.config.GeneralDTO;
-import com.wise.MarketingPlatForm.config.dto.config.MenuDTO;
-import com.wise.MarketingPlatForm.config.dto.config.ReportDTO;
 import com.wise.MarketingPlatForm.config.model.ConfigModel;
 import com.wise.MarketingPlatForm.config.utils.ConfigInitializer;
 

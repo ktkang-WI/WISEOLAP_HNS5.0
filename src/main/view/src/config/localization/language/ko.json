@@ -100,6 +100,8 @@
   },
   "config": {
     "general": {
+      "licenseInfo": "라이센스 정보",
+      "solutionTitle": "솔루션 제목",
       "licensesKey": "OLAP 라이선스 키",
       "spreadJsLicense": "SpreadJS 라이센스 키",
       "spreadJsDesignLicense": "SpreadJS 디자이너 키",
@@ -111,6 +113,11 @@
     },
     "report": {
       "adHocLayout": "초기 레이아웃",
+      "adHocReportSetting": "비정형 보고서 설정",
+      "reportSetting": "보고서 설정",
+      "chartBasicColorSetting": "차트 기본색상 설정",
+      "reportLayout": "보고서 레이아웃 설정",
+      "spreadSheetSetting": "Spread Sheet 설정",
       "instantReportRetrieval": "보고서 바로 조회",
       "chartDefaultColor": "기본 파레트",
       "reportLayoutSetting": "보고서 레이아웃",
@@ -137,6 +144,14 @@
       ]
     },
     "menu": {
+      "tabVisible": "탭 표시 여부",
+      "tabPopupSetting": "탭 팝업 설정",
+      "tabMenuAuth": "탭 메뉴 권한",
+      "mainTabMenuSetting": "메인 탭 메뉴 설정",
+      "datasetSetting": "데이터 집합 설정",
+      "downloadOffice": "다운로드 (Office)",
+      "downloadHancom": "다운로드 (Hancom)",
+      "downloadEtc": "다운로드 (etc)",
       "tabAdhoc": "비정형 보고서",
       "tabDashboard": "대시보드",
       "tabSpreadSheet": "스프레드시트",
@@ -174,6 +189,11 @@
       "FolderGroup": "폴더 그룹화"
     },
     "advanced": {
+      "dataManagement": "데이터 관리",
+      "userSetting": "사용자 설정",
+      "dashbarodSetting": "대시보드 설정",
+      "viewerSetting": "뷰어 설정",
+      "querySetting": "쿼리 관련 설정",
       "searchTimeOut": "검색 제한 시간(초)",
       "searchLimitSize": "검색 제한 크기(Row)",
       "concurrentTaskLimit": "동시 작업 제한 수",
