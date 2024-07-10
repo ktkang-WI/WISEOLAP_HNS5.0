@@ -579,5 +579,6 @@
   "loadData": "Load data",
   "reportInfoChangeSuccess":"Saving report information was successful.",
   "failReportDelete": "Report deletion failed.",
-  "successReportDelete": "Report deletion was successful."
+  "successReportDelete": "Report deletion was successful.",
+  "reportHistory": "Report History"
 }

@@ -10,6 +10,7 @@ import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
+import reportHistory from 'assets/image/icon/button/save_rename_header.png';
 import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
 
 const contextRoot =
@@ -34,6 +35,7 @@ import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
+import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
 // import styled from 'styled-components';
 
 
@@ -158,6 +160,17 @@ const HeaderDefaultElement = () => {
       'type': 'CommonButton',
       'onClick': (e) => {
         openModal(ViewQuery);
+      }
+    },
+    'ReportHistory': {
+      'id': 'report_history',
+      'label': localizedString.reportHistory,
+      'buttonType': 'onlyImageText',
+      'width': '120px',
+      'icon': reportHistory,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        openModal(ReportHistoryModal);
       }
     },
     'SaveAs': {

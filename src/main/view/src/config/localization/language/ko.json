@@ -804,5 +804,6 @@
   "loadData": "데이터 불러오기",
   "reportInfoChangeSuccess":"보고서 정보 저장에 성공 했습니다.",
   "failReportDelete": "보고서 삭제에 실패 했습니다.",
-  "successReportDelete": "보고서 삭제에 성공 했습니다."
+  "successReportDelete": "보고서 삭제에 성공 했습니다.",
+  "reportHistory": "보고서 형상 관리"
 }
