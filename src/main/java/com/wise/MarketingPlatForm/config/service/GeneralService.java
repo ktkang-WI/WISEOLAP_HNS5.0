@@ -1,51 +1,38 @@
 package com.wise.MarketingPlatForm.config.service;
 
-import java.sql.SQLException;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
-import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
-import com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity;
-import com.wise.MarketingPlatForm.config.entity.WbConfigMstrEntity;
+import com.wise.MarketingPlatForm.config.dto.config.AdvancedDTO;
+import com.wise.MarketingPlatForm.config.dto.config.GeneralDTO;
+import com.wise.MarketingPlatForm.config.dto.config.MenuDTO;
+import com.wise.MarketingPlatForm.config.dto.config.ReportDTO;
+import com.wise.MarketingPlatForm.config.model.ConfigModel;
+import com.wise.MarketingPlatForm.config.utils.ConfigInitializer;
 
 
 @Service
 public class GeneralService {
   
   @Autowired
-  private ConfigDAO configDAO;
+  JsonFileService jsonFileService;
 
-  public GeneralDTO getGeneralData() {
-    return configDAO.selectGeneralData();
+  @Value("${meta.config}")
+  private String jsonFilePath;
+
+  public ConfigModel getGeneralData() throws Exception {
+    ConfigModel configModel = jsonFileService.readJsonFromFile(ConfigModel.class, jsonFilePath);
+    return ConfigInitializer.getInstance().initConfigModel(configModel);
   };
 
-  @Transactional
-  public boolean updateConfig(GeneralDTO generalDTO) throws SQLException{
-
-    boolean result = false;
-
-    ConfigMstrEntity configMstrEntity = ConfigMstrEntity.builder()
-        .mainTitle(generalDTO.getMainTitle())
-        .licensesKey(generalDTO.getLicensesKey())
-        .webUrl(generalDTO.getWebUrl())
-        .adHocLayout(generalDTO.getAdHocLayout())
-        .build();
-
-    WbConfigMstrEntity wbConfigMstrEntity = WbConfigMstrEntity.builder()
-        .loginImage(generalDTO.getLoginImage())
-        .logo(generalDTO.getLogo())
-        .spreadJsLicense(generalDTO.getSpreadJsLicense())
-        .spreadJsDesignLicense(generalDTO.getSpreadJsDesignLicense())
-        .kakaoMapApiKey(generalDTO.getKakaoMapApiKey())
-        .menuConfig(generalDTO.getMenuConfig())
-        .build();
-
-        result = configDAO.updateConfig(configMstrEntity);
-        result = configDAO.updateWbConfig(wbConfigMstrEntity);
-    
-    return result;
+  public boolean updateConfig(ConfigModel configModel){
+    try {
+      jsonFileService.writeJsonToFile(configModel, jsonFilePath);
+      return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
   }
 }

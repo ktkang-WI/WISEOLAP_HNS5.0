@@ -26,13 +26,12 @@ const FormWrap = styled.div`
 export const getInitPageAndSetingFunc = (
     config,
     personalConfig,
-    configStringToJson,
     afterLoginInitSettingLayout) => {
-  const configJson = configStringToJson(config.generalConfigure);
+  const configJson = config.generalConfigure;
   const defaultItem = personalConfig.defaultItem;
 
   let myPageInit =
-    configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
+    configJson?.wiDefaultPage || 'DashAny';
 
   if (defaultItem) {
     try {

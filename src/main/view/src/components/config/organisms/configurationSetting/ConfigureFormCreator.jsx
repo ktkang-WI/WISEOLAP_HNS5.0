@@ -6,6 +6,55 @@ import localizedString from 'config/localization';
 
 const configLocalization = localizedString.config;
 
+
+export const createNumberBoxItemProperties = (dataset, dataField, value) => ({
+  'dataField': dataField,
+  'type': 'NumberBox',
+  'editorOptions': {
+    value: value,
+    onValueChanged: (e) => {
+      dataset[dataField] = e.value;
+    }
+  }
+});
+
+export const createTextBoxItemProperties = (dataset, dataField, value) => ({
+  'dataField': dataField,
+  'type': 'TextBox',
+  'editorOptions': {
+    value: value,
+    onValueChanged: (e) => {
+      dataset[dataField] = e.value;
+    }
+  }
+});
+
+export const createCheckBoxItemProperties = (dataset, dataField, value) => ({
+  'dataField': dataField,
+  'type': 'CheckBox',
+  'editorOptions': {
+    value: value,
+    onValueChanged: (e) => {
+      dataset[dataField] = e.value;
+    }
+  }
+});
+export const createSelectBoxItemProperties = (
+    dataset, dataField, value, items) => ({
+  'dataField': dataField,
+  'type': 'SelectBox',
+  'editorOptions': {
+    items: items,
+    displayExpr: 'caption',
+    valueExpr: 'name',
+    value: value,
+    onValueChanged: (e) => {
+      dataset[dataField] = e.value;
+    }
+  }
+});
+
+
 const labelTemplate = (iconName) => {
   return function template(data) {
     return (
@@ -20,6 +69,20 @@ const createTextBoxItem = (dataField, labelText, icon, editorOptions) => (
   <Item dataField={dataField} editorOptions={{
     disabled: false, ...editorOptions
   }}>
+    <Label
+      text={labelText}
+      alignment='start'
+      render={labelTemplate(icon)}
+    />
+  </Item>
+);
+
+const createNumberBoxItem = (dataField, labelText, icon, editorOptions) => (
+  <Item
+    editorType='dxNumberBox'
+    dataField={dataField} editorOptions={{
+      disabled: false, ...editorOptions
+    }}>
     <Label
       text={labelText}
       alignment='start'
@@ -91,12 +154,14 @@ export const formCreator = {
   'Upload': createFormUploadItem,
   'SelectBox': createSelectBoxItem,
   'CheckBox': createCheckBoxItem,
-  'Button': createButtonItem
+  'Button': createButtonItem,
+  'NumberBox': createNumberBoxItem
 };
 
 export const generateItems = (items, page, options = {}) => {
   return items.map((item, i) => {
     const children = item.items;
+    if (item?.visible === false) return;
     return (
       <GroupItem
         cssClass='dx-field-group-wrapper'
@@ -106,7 +171,8 @@ export const generateItems = (items, page, options = {}) => {
         form-group='dx-form-group'
       >
         {
-          children.map(({dataField, type, editorOptions}) => {
+          children.map(({dataField, type, visible, editorOptions}) => {
+            if (visible === false) return;
             return formCreator[type](
                 dataField,
                 configLocalization[page][dataField],

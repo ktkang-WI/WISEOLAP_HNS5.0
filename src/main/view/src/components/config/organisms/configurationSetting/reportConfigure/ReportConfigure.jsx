@@ -1,63 +1,76 @@
 import {Form} from 'devextreme-react';
 import localizedString from 'config/localization';
-import {ConfigureContext} from '../ConfigurationSetting';
-import {useContext} from 'react';
-import {AdHocLayoutTypes} from 'components/config/configType';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import {generateItems} from '../ConfigureFormCreator';
+import {
+  createCheckBoxItemProperties,
+  createSelectBoxItemProperties,
+  generateItems
+} from '../ConfigureFormCreator';
+import {useContext} from 'react';
+import {ConfigureContext} from '../ConfigurationSetting';
+
+const adHocSettingsSelectBox = [
+  {
+    'dataField': 'adHocLayout',
+    'items': localizedString.adHocLayoutOptions
+  }
+];
+const reportSettingsCheckBox = [
+  'instantReportRetrieval'
+];
+
+const chartBasicColorSettingsSelectBox = [
+  {
+    'dataField': 'chartDefaultColor',
+    'items': localizedString.config.report.initPalette
+  }
+];
+const spreadSheetSettingsCheckBox = [
+  'print',
+  'sheet',
+  'table'
+];
 
 const ReportConfigure = () => {
   const getContext = useContext(ConfigureContext);
-  const [general] = getContext.state.general;
-
+  const [report] = getContext.state.report;
   const items = [
     {
       'title': '비정형 보고서 설정',
       'items': [
-        {
-          'type': 'SelectBox',
-          'dataField': 'adHocLayout',
-          'editorOptions': {
-            items: localizedString.adHocLayoutOptions,
-            valueExpr: 'id',
-            displayExpr: 'text',
-            value: AdHocLayoutTypes[general.adHocLayout],
-            onValueChanged: (e) => {
-              general.adHocLayout = AdHocLayoutTypes[e.value];
-            }
-          }
-        }
+        ...adHocSettingsSelectBox.map((field) =>
+          createSelectBoxItemProperties(
+              report,
+              field.dataField,
+              report[field.dataField],
+              field.items),
+        )
       ]
     },
     {
       'title': '보고서 설정',
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'instantReportRetrieval',
-          'type': 'CheckBox'
-        }
+        ...reportSettingsCheckBox.map((field) => createCheckBoxItemProperties(
+            report,
+            field,
+            report[field]))
       ]
     },
     {
       'title': '차트 기본색상 설정',
       'items': [
-        {
-          'dataField': 'chartDefaultColor',
-          'type': 'SelectBox',
-          'editorOptions': {
-            items: localizedString.config.report.initPalette,
-            displayExpr: 'caption',
-            valueExpr: 'name',
-            value: 'default',
-            onValueChanged: (e) => {
-              console.log(e);
-            }
-          }
-        }
+        ...chartBasicColorSettingsSelectBox.map((field) =>
+          createSelectBoxItemProperties(
+              report,
+              field.dataField,
+              report[field.dataField],
+              field.items))
       ]
     },
     {
       'title': '보고서 레이아웃 설정',
+      'visible': false,
       'items': [
         {
           'dataField': 'reportLayoutSetting',
@@ -71,19 +84,13 @@ const ReportConfigure = () => {
     {
       'title': 'Spread Sheet 설정',
       'colCount': 2,
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'print',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'sheet',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'table',
-          'type': 'CheckBox'
-        }
+        ...spreadSheetSettingsCheckBox.map((field) =>
+          createCheckBoxItemProperties(
+              report,
+              field,
+              report[field]))
       ]
     }
   ];
@@ -95,7 +102,7 @@ const ReportConfigure = () => {
       className='custom-scrollbar'
     >
       <Form
-        formData={general}
+        formData={report}
         colCount={2}
       >
         {generateItems(items, 'report')}

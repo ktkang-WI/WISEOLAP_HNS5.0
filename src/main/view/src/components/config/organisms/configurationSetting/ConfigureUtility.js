@@ -3,6 +3,7 @@ const ConfigureUtility = () => {
   const configTypes = ['menuConfig', 'fontConfig', 'layoutConfig'];
   // 백단에서 받은 data -> JSON으로
   const configStringToJson = (configData) => {
+    /*
     configTypes.map((type) => {
       if (configData[type]) {
         configData = {
@@ -11,7 +12,7 @@ const ConfigureUtility = () => {
         };
       }
     });
-
+    */
     return configData;
   };
   // 프론트 -> 백단 -> string으로

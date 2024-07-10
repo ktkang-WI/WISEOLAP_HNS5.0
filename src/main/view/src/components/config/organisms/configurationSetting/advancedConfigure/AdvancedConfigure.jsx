@@ -1,123 +1,115 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Form from 'devextreme-react/form';
-import {generateItems} from '../ConfigureFormCreator';
+import {
+  createCheckBoxItemProperties,
+  createNumberBoxItemProperties,
+  createSelectBoxItemProperties,
+  createTextBoxItemProperties,
+  generateItems
+} from '../ConfigureFormCreator';
 import {ConfigureContext} from '../ConfigurationSetting';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
 
+const dataManegementNumberBox = [
+  'searchTimeOut',
+  'searchLimitSize',
+  'concurrentTaskLimit',
+  'serverExcelDownloadProcessingCount'
+];
+
+const dashboardSettingsSelectBox = [
+  {
+    'dataField': 'mainLayout',
+    'items': localizedString.config.advanced.initLayout
+  },
+  {
+    'dataField': 'reportAuth',
+    'items': localizedString.config.advanced.initReportAuth
+  }
+];
+const dashboardSettingsTextBox = [
+  'nullValue'
+];
+
+const userSettingsNumberBox = [
+  'unusedExpirationDate',
+  'concurrentConnectionLimit',
+  'passwordChangePeriod',
+  'accountLockoutOnLoginFailure'
+];
+
+const viewerSettingsCheckBox = [
+  'dashboardDataField',
+  'viewerUrlWithReport',
+  'viewerAutoDisplayConfig',
+  'designerShortcutEnabled'
+];
+
+const querySettingsCheckBox = [
+  'queryErrorLogVisible',
+  'queryCacheEnabled'
+];
+
 const AdvancedConfigure = () => {
   const getContext = useContext(ConfigureContext);
+  const [advanced] = getContext.state.advanced;
   const ref = getContext.state.ref;
   const items = [
     {
       'title': '데이터 관리',
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'searchTimeOut',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'searchLimitSize',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'concurrentTaskLimit',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'serverExcelDownloadProcessingCount',
-          'type': 'TextBox'
-        }
+        ...dataManegementNumberBox.map((field) => createNumberBoxItemProperties(
+            advanced,
+            field,
+            advanced[field]))
       ]
     },
     {
       'title': '사용자 설정',
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'unusedExpirationDate',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'concurrentConnectionLimit',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'passwordChangePeriod',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'accountLockoutOnLoginFailure',
-          'type': 'TextBox'
-        }
+        ...userSettingsNumberBox.map((field) => createNumberBoxItemProperties(
+            advanced,
+            field,
+            advanced[field]))
       ]
     },
     {
       'title': '대시보드 설정',
       'items': [
-        {
-          'dataField': 'mainLayout',
-          'type': 'SelectBox',
-          'editorOptions': {
-            items: localizedString.config.advanced.initLayout,
-            displayExpr: 'caption',
-            valueExpr: 'name',
-            value: 'barChart',
-            onValueChanged: (e) => {
-              console.log(e);
-            }
-          }
-        },
-        {
-          'dataField': 'reportAuth',
-          'type': 'SelectBox',
-          'editorOptions': {
-            items: localizedString.config.advanced.initReportAuth,
-            displayExpr: 'caption',
-            valueExpr: 'name',
-            value: 'folderAuth',
-            onValueChanged: (e) => {
-              console.log(e);
-            }
-          }
-        },
-        {
-          'dataField': 'nullValue',
-          'type': 'TextBox'
-        }
+        ...dashboardSettingsSelectBox.map((field) =>
+          createSelectBoxItemProperties(
+              advanced,
+              field.dataField,
+              advanced[field.dataField],
+              field.items),
+        ),
+        ...dashboardSettingsTextBox.map((field) => createTextBoxItemProperties(
+            advanced,
+            field,
+            advanced[field]))
       ]
     },
     {
       'title': '뷰어 설정',
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'dashboardDataField',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'viewerUrlWithReport',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'viewerAutoDisplayConfig',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'designerShortcutEnabled',
-          'type': 'CheckBox'
-        }
+        ...viewerSettingsCheckBox.map((field) => createCheckBoxItemProperties(
+            advanced,
+            field,
+            advanced[field]))
       ]
     },
     {
       'title': '쿼리 관련 설정',
+      // 'visible': false,
       'items': [
-        {
-          'dataField': 'queryErrorLogVisible',
-          'type': 'CheckBox'
-        },
-        {
-          'dataField': 'queryCacheEnabled',
-          'type': 'CheckBox'
-        }
+        ...querySettingsCheckBox.map((field) => createCheckBoxItemProperties(
+            advanced,
+            field,
+            advanced[field]))
       ]
     }
   ];
@@ -129,6 +121,7 @@ const AdvancedConfigure = () => {
     >
       <Form
         ref={ref}
+        formData={advanced}
         showColonAfterLabel={true}
         colCount={2}>
         {

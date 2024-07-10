@@ -3,7 +3,30 @@ import {useContext} from 'react';
 import Form from 'devextreme-react/form';
 import {ConfigureContext} from '../ConfigurationSetting';
 import localizedString from 'config/localization';
-import {generateItems} from '../ConfigureFormCreator';
+import {
+  createSelectBoxItemProperties,
+  createTextBoxItemProperties,
+  generateItems
+} from '../ConfigureFormCreator';
+
+
+const licenseInformationTextBox = [
+  'licensesKey',
+  'spreadJsLicense',
+  'spreadJsDesignLicense',
+  'kakaoMapApiKey'
+];
+
+const appTitleTextBox = [
+  'mainTitle'
+];
+
+const initLayoutSelectBox = [
+  {
+    'dataField': 'wiDefaultPage',
+    'items': localizedString.initPages
+  }
+];
 
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
@@ -14,58 +37,31 @@ const GeneralConfigure = () => {
     {
       'title': '라이센스 정보',
       'items': [
-        {
-          'dataField': 'licensesKey',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'spreadJsLicense',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'spreadJsDesignLicense',
-          'type': 'TextBox'
-        },
-        {
-          'dataField': 'kakaoMapApiKey',
-          'type': 'TextBox'
-        }
+        ...licenseInformationTextBox.map((field) => createTextBoxItemProperties(
+            general,
+            field,
+            general[field]))
       ]
     },
     {
       'title': '솔루션 제목',
       'items': [
-        {
-          'dataField': 'mainTitle',
-          'type': 'TextBox'
-        }
-      ]
-    },
-    {
-      'title': '기본 URL',
-      'items': [
-        {
-          'dataField': 'webUrl',
-          'type': 'TextBox'
-        }
+        ...appTitleTextBox.map((field) => createTextBoxItemProperties(
+            general,
+            field,
+            general[field]))
       ]
     },
     {
       'title': '초기화면',
       'items': [
-        {
-          'type': 'SelectBox',
-          'dataField': 'wiDefaultPage',
-          'editorOptions': {
-            items: localizedString.initPages,
-            displayExpr: 'caption',
-            valueExpr: 'name',
-            value: general.menuConfig.Menu.WI_DEFAULT_PAGE,
-            onValueChanged: (e) => {
-              general.menuConfig.Menu.WI_DEFAULT_PAGE = e.value;
-            }
-          }
-        }
+        ...initLayoutSelectBox.map((field) =>
+          createSelectBoxItemProperties(
+              general,
+              field.dataField,
+              general[field.dataField],
+              field.items),
+        )
       ]
     }
   ];

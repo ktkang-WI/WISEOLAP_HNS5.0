@@ -4,7 +4,6 @@ import {createContext, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import useModal from 'hooks/useModal.js';
 import {updateGeneralConfig} from 'models/config/preferences/Preferences.js';
-import configureUtility from './ConfigureUtility.js';
 import localizedString from 'config/localization';
 import ConfigHeader from 'components/config/atoms/common/ConfigHeader.jsx';
 import AddRibbonBtn
@@ -17,21 +16,28 @@ export const ConfigureContext = createContext();
 const ConfigurationSetting = () => {
   const {alert} = useModal();
   const {generalConfigure} = useLoaderData();
-  const {configStringToJson, configJosnToString} = configureUtility();
-  const jsonGeneral = configStringToJson(generalConfigure);
-  const [general, setGeneral] = useState(jsonGeneral);
+  const [general, setGeneral] = useState(generalConfigure?.general);
+  const [advanced, setAdvanced] = useState(generalConfigure?.advanced);
+  const [menu, setMenu] = useState(generalConfigure?.menu);
+  const [report, setReport] = useState(generalConfigure?.report);
   const [page, setPage] = useState(tabItems[0].value);
 
   const context = {
     state: {
-      general: [general, setGeneral]
+      general: [general, setGeneral],
+      advanced: [advanced, setAdvanced],
+      menu: [menu, setMenu],
+      report: [report, setReport]
     }
   };
 
   const handleBtnClick = (e) => {
     // 일반 설정 menuConfig Json->string
-    const param = configJosnToString(general);
-    updateGeneralConfig(param)
+    generalConfigure.general = general;
+    generalConfigure.advanced = advanced;
+    generalConfigure.menu = menu;
+    generalConfigure.report = report;
+    updateGeneralConfig(generalConfigure)
         .then((res) => {
           if (res.status === 200) {
             alert(localizedString.successSave);
