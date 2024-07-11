@@ -24,4 +24,5 @@ public class MyDesignerDTO {
   String defaultReportType;
   String defaultViewerReportNm;
   String reportType;
+  String userNm;
 }
