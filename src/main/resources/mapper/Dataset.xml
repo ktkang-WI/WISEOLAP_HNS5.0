@@ -46,6 +46,7 @@
 	  <result column="DBMS_TYPE" property="dbmsType" javaType="String"/>
 	  <result column="OWNER_NM" property="ownerNm" javaType="String"/>
 	  <result column="IP" property="ip" javaType="String"/>
+	  <result column="DB_NM" property="dbNm" javaType="String"/>
 	</resultMap>
 
 	<resultMap id="DatasetDsViewDimMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity">
@@ -169,7 +170,8 @@
 				DS_MSTR.DS_NM,
 				DS_MSTR.DBMS_TYPE,
 				DS_MSTR.OWNER_NM,
-				DS_MSTR.IP
+				DS_MSTR.IP,
+        DS_MSTR.DB_NM
 						FROM DS_MSTR INNER JOIN DS_VIEW_MSTR
 						ON DS_MSTR.DS_ID = DS_VIEW_MSTR.DS_ID
 		</select>

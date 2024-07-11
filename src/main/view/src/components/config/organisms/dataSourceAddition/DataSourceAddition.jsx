@@ -67,13 +67,12 @@ const DataSourceAddition = () => {
 
   const btns = ['plus', 'save', 'remove'];
 
-  const handleBtnClick = ({component}) => {
-    const icon = component.option('icon');
+  const handleBtnClick = (e) => {
     const dsInfoFormData = dataInformationRef.current._instance
         .option('formData');
     const instance = new DataSource(dsInfoFormData);
 
-    switch (icon) {
+    switch (e) {
       case 'plus':
         handlePlus();
         break;
