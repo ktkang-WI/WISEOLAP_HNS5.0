@@ -18,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReportMstrEntity {
     int reportId;
+    int reportSeq;
     String reportNm;
     int fldId;
     String fldType;

@@ -134,6 +134,7 @@ const Designer = () => {
           // 'ReportProperty'
           'ReportSearch',
           'ShowQuery',
+          'ReportHistory',
           'UserInfo'
         ]}
       >

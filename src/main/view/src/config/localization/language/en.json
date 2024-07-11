@@ -579,5 +579,13 @@
   "loadData": "Load data",
   "reportInfoChangeSuccess":"Saving report information was successful.",
   "failReportDelete": "Report deletion failed.",
-  "successReportDelete": "Report deletion was successful."
+  "successReportDelete": "Report deletion was successful.",
+  "reportHistory": {
+    "reportHistory": "Report History",
+    "index": "INDEX",
+    "savedDate": "SAVED DATE",
+    "user": "USER",
+    "restore": "RESTORE",
+    "warning": "Unsaved changes may be lost. Do you want to continue?"
+  }
 }

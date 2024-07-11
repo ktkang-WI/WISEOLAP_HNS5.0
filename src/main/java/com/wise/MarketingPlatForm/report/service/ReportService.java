@@ -128,7 +128,7 @@ public class ReportService {
         }
     }
 
-    public Map<String, Object> getReport(HttpServletRequest request, String reportId) {
+    public Map<String, Object> getReport(HttpServletRequest request, String reportId, String reportSeq) {
     	Map<String, Object> returnMap = new HashMap<>();
         Timer timer = new Timer();
         
@@ -151,7 +151,13 @@ public class ReportService {
     		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
             
             timer.start();
-            ReportMstrEntity entity = reportDAO.selectReport(reportId);
+            ReportMstrEntity entity;
+            if (reportSeq == null || reportSeq.equals("")) {
+                entity = reportDAO.selectReport(reportId);
+            } else {
+                entity = logService.selectReportHis(reportId, reportSeq);
+            }
+            
             
             logDto.setReportNm(entity.getReportNm());
             logDto.setReportType(entity.getReportType());
@@ -301,6 +307,7 @@ public class ReportService {
 
                 if (result) {
                     reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                    logService.insertReportHis(reportMstrDTO);
                     map.put("msg", "saveReportMsg");
                 } else {
                     map.put("msg", "faildSaveReportMsg");
@@ -348,6 +355,7 @@ public class ReportService {
 
             if (result) {
                 reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                logService.insertReportHis(reportMstrDTO);
                 map.put("msg", "saveReportMsg");
             } else {
                 map.put("msg", "faildSaveReportMsg");
