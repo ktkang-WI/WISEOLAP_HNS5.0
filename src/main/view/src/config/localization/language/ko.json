@@ -804,5 +804,13 @@
   "loadData": "데이터 불러오기",
   "reportInfoChangeSuccess":"보고서 정보 저장에 성공 했습니다.",
   "failReportDelete": "보고서 삭제에 실패 했습니다.",
-  "successReportDelete": "보고서 삭제에 성공 했습니다."
+  "successReportDelete": "보고서 삭제에 성공 했습니다.",
+  "reportHistory": {
+    "reportHistory": "보고서 형상 관리",
+    "index": "순번",
+    "savedDate": "저장 날짜",
+    "user": "사용자",
+    "restore": "복원",
+    "warning": "저장되지 않은 작업 내용이 손실될 수 있습니다. 계속하시겠습니까?"
+  }
 }

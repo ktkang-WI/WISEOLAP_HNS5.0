@@ -22,6 +22,8 @@ import com.wise.MarketingPlatForm.log.vo.ExportLogDTO;
 import com.wise.MarketingPlatForm.log.vo.LogParamVO;
 import com.wise.MarketingPlatForm.log.vo.LoginLogDTO;
 import com.wise.MarketingPlatForm.log.vo.QueryLogDTO;
+import com.wise.MarketingPlatForm.log.vo.ReportHisEntity;
+import com.wise.MarketingPlatForm.log.vo.ReportHisSummaryDTO;
 import com.wise.MarketingPlatForm.log.vo.ReportLogDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -141,6 +143,20 @@ public class LogContoller {
 
         LogParamVO logParamVO = new LogParamVO(startDt, endDt, userId);
         List<ExportLogDTO> result = logService.getExportLog(logParamVO);
+
+        return RestAPIVO.okResponse(result);
+    }
+
+    @Operation(summary = "get Report History", description = "보고서 저장 기록을 가져옵니다.")
+    @Parameters({
+            @Parameter(name = "reportId", description = "보고서 ID", example = "0", required = true),
+    })
+    @GetMapping(value = "/report-history")
+    public ResponseEntity<RestAPIVO> getReportHisList(
+        HttpServletRequest request,
+        @RequestParam(required = true) String reportId
+    ) {
+        List<ReportHisSummaryDTO> result = logService.getReportHistory(Integer.parseInt(reportId));
 
         return RestAPIVO.okResponse(result);
     }
