@@ -8,17 +8,11 @@ import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
-import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
 import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
 import useReportSave from 'hooks/useReportSave';
 import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
-import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
@@ -34,6 +28,7 @@ import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
+import {getFullUrl} from '../../Location/Location';
 // import styled from 'styled-components';
 
 
@@ -88,11 +83,7 @@ const HeaderDefaultElement = () => {
       'width': '220px',
       'cursor': 'pointer',
       'onClick': (e) => {
-        const href =
-          location.href.slice(
-              0,
-              location.href.indexOf(contextPath) + contextPath.length + 1
-          ) + initialDisplay.toLowerCase();
+        const href = `${getFullUrl()}/${initialDisplay.toLowerCase()}`;
         location.href = href;
       }
     },
@@ -114,7 +105,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.newWindow,
       'type': 'TextButton',
       'onClick': (e) => {
-        window.open('dashany');
+        window.open(`${getFullUrl()}/dashany`);
       }
     },
     'Viewer': {
@@ -127,7 +118,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         // TODO: 추후 환경설정으로 새창 여부 분기처리 해야함
         // nav('viewer');
-        window.open('viewer');
+        window.open(`${getFullUrl()}/viewer`);
         dispatch(setEditMode(EditMode.VIEWER));
       }
     },
@@ -234,8 +225,7 @@ const HeaderDefaultElement = () => {
           models.Report.generateToken(tokenSource).then((res) => {
             const token = res.data.token;
             const urlString =
-              `${document.location.origin}${contextRoot}` +
-              `/editds/linkViewer?token=${token}`;
+              `${getFullUrl()}/linkViewer?token=${token}`;
             const newWindow = window.open(urlString, '_blank');
             if (newWindow) {
               newWindow.focus();
