@@ -16,7 +16,10 @@ const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
 import useReportSave from 'hooks/useReportSave';
-import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
+import {
+  selectInitialDisplay,
+  selectUserName
+} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
 import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
@@ -43,9 +46,8 @@ const HeaderDefaultElement = () => {
   const {alert, openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
-  // TODO: 임시용
-  const test = '관리자';
 
+  const userNm = useSelector(selectUserName);
   const initialDisplay = useSelector(selectInitialDisplay);
   const rootItem = useSelector(selectRootItem);
   const currentItem = useSelector(selectCurrentItems);
@@ -181,7 +183,7 @@ const HeaderDefaultElement = () => {
       },
       'id': 'user_info_popover',
       'usePopover': true,
-      'label': test, // 임시 적용.
+      'label': userNm,
       'buttonType': 'onlyImageText',
       'type': 'CommonButton',
       'contentRender': (e) => {

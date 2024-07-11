@@ -32,7 +32,8 @@ public class MyPageDesignerConfigController {
 
     int userNo = userDTO.getUserNo();
 
-    MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo); 
+    MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
+    model.setUserNm(userDTO.getUserNm()); 
   
     return RestAPIVO.okResponse(model);
   } 
