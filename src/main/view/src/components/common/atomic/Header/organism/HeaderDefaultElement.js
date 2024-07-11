@@ -164,7 +164,7 @@ const HeaderDefaultElement = () => {
     },
     'ReportHistory': {
       'id': 'report_history',
-      'label': localizedString.reportHistory,
+      'label': localizedString.reportHistory.reportHistory,
       'buttonType': 'onlyImageText',
       'width': '120px',
       'icon': reportHistory,

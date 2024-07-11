@@ -1,8 +1,14 @@
 package com.wise.MarketingPlatForm.log.vo;
 
 import java.sql.Timestamp;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-public class ReportHistoryDTO {
+@Getter
+@Setter
+@Builder
+public class ReportHisEntity {
     int reportId;
     int reportSeq;
     String reportNm;
