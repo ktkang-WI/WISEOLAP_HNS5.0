@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.account.service.group;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,18 @@ public class GroupDataService {
 
     boolean result = false;
   
-    if (groupAuthDataMstr.size() == 0) {
-      result = accountDAO.deleteGroupDataAll();
-    } else {
-      result = accountDAO.deleteGroupData(groupAuthDataMstr);
-      result = accountDAO.putGroupData(groupAuthDataMstr);
-    }
+    if (groupAuthDataMstr.size() == 0) return accountDAO.deleteGroupDataAll();
+
+    result = accountDAO.deleteGroupData(groupAuthDataMstr);
+
+    groupAuthDataMstr = groupAuthDataMstr
+    .stream()
+    .filter(d -> d.getDataXml() != null)
+    .collect(Collectors.toList());
+
+    if (groupAuthDataMstr.size() == 0) return result;
+
+    result = accountDAO.putGroupData(groupAuthDataMstr);
 
     return result;
   }
