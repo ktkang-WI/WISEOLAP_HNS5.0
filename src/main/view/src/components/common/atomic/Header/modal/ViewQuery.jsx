@@ -49,8 +49,8 @@ const ViewQuery = ({...props}) => {
   return (
     <Modal
       modalTitle={localizedString.showQuery}
-      height={'calc(' + theme.size.bigModalHeightPx + ' -70px)'}
-      width={'calc(' + theme.size.bigModalWidthPx + ' - 150px)'}
+      height={theme.size.bigModalHeight}
+      width={theme.size.bigModalWidth}
       {...props}
       onSubmit={() => {
         return false;
