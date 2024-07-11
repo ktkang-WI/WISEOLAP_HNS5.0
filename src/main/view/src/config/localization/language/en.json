@@ -585,6 +585,7 @@
     "index": "INDEX",
     "savedDate": "SAVED DATE",
     "user": "USER",
-    "restore": "RESTORE"
+    "restore": "RESTORE",
+    "warning": "Unsaved changes may be lost. Do you want to continue?"
   }
 }

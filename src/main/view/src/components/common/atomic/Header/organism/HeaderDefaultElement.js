@@ -31,7 +31,8 @@ import {
 import {
   selectCurrentInformationas
 } from 'redux/selector/ParameterSelector';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentReport,
+  selectCurrentReportId} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
@@ -53,6 +54,7 @@ const HeaderDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
   const currentParameter = useSelector(selectCurrentInformationas);
   const currentReport = useSelector(selectCurrentReport);
+  const reportId = useSelector(selectCurrentReportId);
   const dataSource = _.cloneDeep(currentReport.options);
 
   // 보고서 검색 textBox Reference
@@ -170,7 +172,9 @@ const HeaderDefaultElement = () => {
       'icon': reportHistory,
       'type': 'CommonButton',
       'onClick': (e) => {
-        openModal(ReportHistoryModal);
+        if (reportId) {
+          openModal(ReportHistoryModal);
+        }
       }
     },
     'SaveAs': {

@@ -3,6 +3,7 @@ import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import DataGrid, {Column} from 'devextreme-react/data-grid';
+import useModal from 'hooks/useModal';
 import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import {useEffect, useState} from 'react';
@@ -13,6 +14,7 @@ const theme = getTheme();
 
 const ReportHistoryModal = ({onClose, ...props}) => {
   const {loadReport, querySearch} = useReportSave();
+  const {confirm} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const [dataSource, setDataSource] = useState([]);
   const lStr = localizedString.reportHistory;
@@ -31,21 +33,23 @@ const ReportHistoryModal = ({onClose, ...props}) => {
   }, []);
 
   const openReport = (data) => {
-    models.Report.getReportHistory(reportId, data.reportSeq)
-        .then(({data}) => {
-          try {
-            loadReport(data);
-            // TODO: 추후 보고서 바로 조회 적용시 수정
-            querySearch();
-            onClose();
-          } catch (e) {
+    confirm(lStr.warning, () => {
+      models.Report.getReportHistory(reportId, data.reportSeq)
+          .then(({data}) => {
+            try {
+              loadReport(data);
+              // TODO: 추후 보고서 바로 조회 적용시 수정
+              querySearch();
+              onClose();
+            } catch (e) {
+              console.error(e);
+              alert(localizedString.reportCorrupted);
+            }
+          }).catch((e) => {
             console.error(e);
             alert(localizedString.reportCorrupted);
-          }
-        }).catch((e) => {
-          console.error(e);
-          alert(localizedString.reportCorrupted);
-        });
+          });
+    });
   };
 
   return (
