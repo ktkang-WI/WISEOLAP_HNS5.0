@@ -18,15 +18,19 @@ public interface MyPageConfigDAO {
   // public boolean updateMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   // public List<FldMstrEntity> selectMyPageFolder(int userNo);
   // public int selectMyPageFolderCount(int userNo);
+  // 테이블 데이터 존재 여부 검사 목적.
+  public boolean checkExistData(MyDesignerDTO myDesignerDTO);
   // My designer property
   public MyDesignerDTO selectDesignerConfig(int userNo);
   public boolean updateDesignerConfig(MyDesignerDTO myDesignerDTO);
-  public List<HashMap<String, String>> selectOnlyReportNm(int reportId);
+  public HashMap<String, String> selectOnlyReportNm(int reportId);
   public String selectOnlyDatasetNm(int datasetId);
-  public boolean insertDesignerConfig(MyDesignerDTO myDesignerDTO);
+  public boolean insertWbUserConfig(MyDesignerDTO myDesignerDTO);
   // My User info
   public UserDTO selectUserInfo(int userNo);
   public String getPassword(int userNo);
   public boolean updatePassword(UserDTO userInfo);
   public boolean updateUserInfo(UserDTO user);
+  // my viewer config
+  public boolean updataMyViewerConfig(MyDesignerDTO myDesignerDTO);
 }

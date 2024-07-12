@@ -1,13 +1,15 @@
-export const MyDesignerContance = {
+export const MyDesignerConstance = {
   // DEFAULT_DATASET_ID: 'defaultDatasetId',
   DEFAULT_REPORT_ID: 'defaultReportId',
   DEFAULT_ITEM: 'defaultItem',
   DEFAULT_PALETTE: 'defaultPalette',
   DEFAULT_LAYOUT: 'defaultLayout',
-  DEFAULT_DISPLAY: 'defaultDisplay'
+  DEFAULT_DISPLAY: 'defaultDisplay',
+  DEFAULT_VIEWER_REPORT_ID: 'defaultViewerReportId'
 };
 
 export const designerConfigItems = [
+  // TODO: 기본데이터 집합은 사용 안할 예정이지만 추후 추가 될 가능성 있음.
   // {id: 'defaultDatasetId', title: '기본 데이터 집합', label: '즐겨찾기'},
   {id: {id: 'defaultReportId', requiredNm: 'defaultReportNm'},
     title: '기본 보고서', label: '즐겨찾기', type: 'favorit'},
@@ -57,7 +59,7 @@ export const defaultItemList = () => {
 };
 // myDesignerFolder로 이동.
 export const layoutSelectList = (id) => {
-  if (id == MyDesignerContance['DEFAULT_LAYOUT']) {
+  if (id == MyDesignerConstance['DEFAULT_LAYOUT']) {
     return [
       {id: 'C', name: '차트만 보기'},
       {id: 'G', name: '그리드만 보기'},
@@ -65,7 +67,7 @@ export const layoutSelectList = (id) => {
     ];
   }
 
-  if (id == MyDesignerContance['DEFAULT_DISPLAY']) {
+  if (id == MyDesignerConstance['DEFAULT_DISPLAY']) {
     return [
       {id: 'DashAny', name: '대시보드'},
       {id: 'AdHoc', name: '비정형'},

@@ -11,7 +11,7 @@ import useModal from 'hooks/useModal';
 import {updateMyPageReport}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {deleteReport} from 'models/report/Report';
-import React, {createContext, useState} from 'react';
+import React, {createContext, useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import styled from 'styled-components';
@@ -21,6 +21,7 @@ import dashImg from 'assets/image/icon/report/dash.png';
 import excelImg from 'assets/image/icon/report/excel_file.png';
 import adhocImg from 'assets/image/icon/report/adhoc.png';
 import {DesignerMode} from 'components/config/configType';
+import reportFolderUtility from './ReportFolderUtility';
 
 const iconMapper = {
   'FOLDER': folderImg,
@@ -61,35 +62,64 @@ export const Context = createContext();
 
 const UserReprotManagement = () => {
   const reports = useLoaderData();
+  const ref = useRef();
   const [treeViewData, setTreeViewData] = useState(reports);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const {confirm, alert, success} = useModal();
+  const {checkValidation} = reportFolderUtility();
+  let prevName = null;
+
 
   const context = {
     state: {
-      report: [data, setData]
+      report: [data, setData],
+      ref: ref
     }
   };
 
   const handleItemClick = (e) => {
     if (e.itemData.type == 'FOLDER') {
-      setData({});
+      prevName = null;
+      ref.current?.instance?.option('formData', {});
     } else {
-      setData(e.itemData);
+      if (ref.current) {
+        prevName = e.itemData?.name;
+        const formData = ref.current.instance.option().formData;
+        formData.prompt= e.itemData?.prompt === 'Y' ? true : false;
+        formData.id= e.itemData?.id || 0;
+        formData.name= e.itemData?.name || '';
+        formData.createdBy= e.itemData?.createdBy || '';
+        formData.createdDate= e.itemData?.createdDate || '';
+        formData.ordinal= e.itemData?.ordinal || 0;
+        formData.query = e.itemData?.query || '';
+        formData.subtitle = e.itemData?.subtitle || '';
+        formData.tag = e.itemData?.tag || '';
+        formData.type = e.itemData?.type || '';
+        formData.desc = e.itemData?.desc || '';
+
+        ref.current.instance.repaint();
+      }
     }
   };
 
   const onClickSave = (e) => {
-    const report = data;
+    const report = ref.current?.instance?.option('formData');
 
     if (!report?.id || report.id === '') {
       alert(localizedString.selectReportAlert);
       return;
     }
+    // 변경전 name, 이름 변경 후 검사, 변경 전, 변경 후가 같은 경우는 제외.
+    if (prevName && prevName !== report?.name) {
+      // 변경전과 변경 후 다를 경우 중복검사.
+      if (!checkValidation.nameDuple(
+          report.name, treeViewData.folderReport
+      )) return;
+    }
 
     confirm(localizedString.changeReportNmConfirm, () => {
       updateMyPageReport(report).then((response) => {
-        if (!response.status == 200) return alert(localizedString.saveFail);
+        if (!(response.status == 200)) return alert(localizedString.saveFail);
 
         success(localizedString.reportInfoChangeSuccess);
 
@@ -105,7 +135,7 @@ const UserReprotManagement = () => {
   };
 
   const onClickRemove = (e) => {
-    const reportId = data?.id;
+    const reportId = ref.current?.instance?.option('formData')?.id;
 
     if (!reportId || reportId === '') {
       alert(localizedString.selectReportAndDeleteConfirm);

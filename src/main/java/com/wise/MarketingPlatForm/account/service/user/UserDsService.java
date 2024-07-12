@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
-import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsPutDTO;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.model.user.ds.UserDsModel;
-import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 
 @Service
 public class UserDsService {

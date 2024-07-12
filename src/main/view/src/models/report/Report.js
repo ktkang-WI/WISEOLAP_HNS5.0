@@ -22,6 +22,25 @@ export const getReportById = async (reportId) => {
   });
   return res;
 };
+
+/**
+ * 보고서 조회
+ * @param {string} reportId
+ * @param {string} reportSeq
+ */
+export const getReportHistory = async (reportId, reportSeq) => {
+  const res = await axios.post(path + '/report', {
+    reportId,
+    reportSeq
+  });
+  Object.keys(res.data).forEach((key) => {
+    if (typeof res.data[key] === 'string') {
+      res.data[key] = JSON.parse(res.data[key]);
+    }
+  });
+  return res;
+};
+
 /**
  * 보고서 이름만 조회
  * @param {string} reportId

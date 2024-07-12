@@ -32,7 +32,8 @@ public class MyPageDesignerConfigController {
 
     int userNo = userDTO.getUserNo();
 
-    MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo); 
+    MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
+    model.setUserNm(userDTO.getUserNm()); 
   
     return RestAPIVO.okResponse(model);
   } 
@@ -40,8 +41,8 @@ public class MyPageDesignerConfigController {
   @PostMapping  
   public boolean updateDesignerConfig(
     HttpServletRequest request,
-    @RequestParam(required = false, defaultValue = "") Integer defaultDatasetId,
-    @RequestParam(required = false, defaultValue = "") Integer defaultReportId,
+    @RequestParam(required = false, defaultValue = "0") Integer defaultDatasetId,
+    @RequestParam(required = false, defaultValue = "0") Integer defaultReportId,
     @RequestParam(required = false, defaultValue = "") String defaultItem,
     @RequestParam(required = false, defaultValue = "") String defaultPalette
   ) {
@@ -56,7 +57,9 @@ public class MyPageDesignerConfigController {
       .defaultItem(defaultItem)
       .defaultPalette(defaultPalette)
       .build();
+    
     boolean result = myPageDesignerConfig.saveDesignerConfig(myDesignerDTO);
+    
     return result;
   };
   // 전체 항목 리셋
@@ -65,6 +68,7 @@ public class MyPageDesignerConfigController {
     UserDTO userDTO = SessionUtility.getSessionUser(request);
 
     int userNo = userDTO.getUserNo();
+    
     MyDesignerDTO myDesignerDTO = MyDesignerDTO.builder()
     .userNo(userNo)
     .defaultDatasetId(null)
@@ -72,7 +76,7 @@ public class MyPageDesignerConfigController {
     .defaultItem(null)
     .defaultPalette(null)
     .build();
-      return myPageDesignerConfig.resetDesigner(myDesignerDTO);
+
+    return myPageDesignerConfig.resetDesigner(myDesignerDTO);
   }
-  // 각 항목 리셋
 }

@@ -8,17 +8,15 @@ import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
-import {getConfig} from 'config/config';
 import showQuery from 'assets/image/icon/button/showQuery.png';
+import reportHistory from 'assets/image/icon/button/save_rename_header.png';
 import saveAsImg from 'assets/image/icon/button/save_rename_header.png';
-
-const contextRoot =
-  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
 import useReportSave from 'hooks/useReportSave';
-import {selectInitialDisplay} from 'redux/selector/ConfigSelector';
+import {
+  selectInitialDisplay,
+  selectUserName
+} from 'redux/selector/ConfigSelector';
 import {useSelector} from 'react-redux';
-import {contextPath} from 'routes/Router';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
@@ -30,10 +28,13 @@ import {
 import {
   selectCurrentInformationas
 } from 'redux/selector/ParameterSelector';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentReport,
+  selectCurrentReportId} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
 import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
+import {getFullUrl} from '../../Location/Location';
+import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
 // import styled from 'styled-components';
 
 
@@ -43,14 +44,14 @@ const HeaderDefaultElement = () => {
   const {alert, openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
-  // TODO: 임시용
-  const test = '관리자';
 
+  const userNm = useSelector(selectUserName);
   const initialDisplay = useSelector(selectInitialDisplay);
   const rootItem = useSelector(selectRootItem);
   const currentItem = useSelector(selectCurrentItems);
   const currentParameter = useSelector(selectCurrentInformationas);
   const currentReport = useSelector(selectCurrentReport);
+  const reportId = useSelector(selectCurrentReportId);
   const dataSource = _.cloneDeep(currentReport.options);
 
   // 보고서 검색 textBox Reference
@@ -88,11 +89,7 @@ const HeaderDefaultElement = () => {
       'width': '130px',
       'cursor': 'pointer',
       'onClick': (e) => {
-        const href =
-          location.href.slice(
-              0,
-              location.href.indexOf(contextPath) + contextPath.length + 1
-          ) + initialDisplay.toLowerCase();
+        const href = `${getFullUrl()}/${initialDisplay.toLowerCase()}`;
         location.href = href;
       }
     },
@@ -114,7 +111,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.newWindow,
       'type': 'TextButton',
       'onClick': (e) => {
-        window.open('dashany');
+        window.open(`${getFullUrl()}/dashany`);
       }
     },
     'Viewer': {
@@ -125,9 +122,7 @@ const HeaderDefaultElement = () => {
       'label': localizedString.openViewer,
       'type': 'CommonButton',
       'onClick': (e) => {
-        // TODO: 추후 환경설정으로 새창 여부 분기처리 해야함
-        // nav('viewer');
-        window.open('viewer');
+        window.open(`${getFullUrl()}/viewer`);
         // dispatch(setEditMode(EditMode.VIEWER));
       }
     },
@@ -160,6 +155,19 @@ const HeaderDefaultElement = () => {
         openModal(ViewQuery);
       }
     },
+    'ReportHistory': {
+      'id': 'report_history',
+      'label': localizedString.reportHistory.reportHistory,
+      'buttonType': 'onlyImageText',
+      'width': '120px',
+      'icon': reportHistory,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        if (reportId) {
+          openModal(ReportHistoryModal);
+        }
+      }
+    },
     'SaveAs': {
       'id': 'save_as',
       'label': localizedString.saveAs,
@@ -181,7 +189,7 @@ const HeaderDefaultElement = () => {
       },
       'id': 'user_info_popover',
       'usePopover': true,
-      'label': test, // 임시 적용.
+      'label': userNm,
       'buttonType': 'onlyImageText',
       'type': 'CommonButton',
       'contentRender': (e) => {
@@ -234,8 +242,7 @@ const HeaderDefaultElement = () => {
           models.Report.generateToken(tokenSource).then((res) => {
             const token = res.data.token;
             const urlString =
-              `${document.location.origin}${contextRoot}` +
-              `/editds/linkViewer?token=${token}`;
+              `${getFullUrl()}/linkViewer?token=${token}`;
             const newWindow = window.open(urlString, '_blank');
             if (newWindow) {
               newWindow.focus();

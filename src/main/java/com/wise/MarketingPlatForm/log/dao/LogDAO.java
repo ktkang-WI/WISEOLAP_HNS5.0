@@ -8,7 +8,10 @@ import com.wise.MarketingPlatForm.log.vo.ExportLogDTO;
 import com.wise.MarketingPlatForm.log.vo.LogParamVO;
 import com.wise.MarketingPlatForm.log.vo.LoginLogDTO;
 import com.wise.MarketingPlatForm.log.vo.QueryLogDTO;
+import com.wise.MarketingPlatForm.log.vo.ReportHisEntity;
+import com.wise.MarketingPlatForm.log.vo.ReportHisSummaryDTO;
 import com.wise.MarketingPlatForm.log.vo.ReportLogDTO;
+import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 
 @Mapper
 public interface LogDAO {
@@ -28,5 +31,13 @@ public interface LogDAO {
     void insertExportLog(ExportLogDTO logDto);
 
     void insertQueryLog(QueryLogDTO logDto);
+
+    void deleteReportHisByCount(ReportHisEntity entity);
+
+    void insertReportHis(ReportHisEntity entity);
+
+    List<ReportHisSummaryDTO> selectReportHisList(int reportId);
+
+    ReportMstrEntity selectReportHis(String reportId, String reportSeq);
 
 }

@@ -15,10 +15,14 @@ public class MyDesignerDTO {
   int userNo;
   Integer defaultDatasetId;
   Integer defaultReportId;
+  Integer defaultViewerReportId;
   String defaultItem;
   String defaultLayout;
   String defaultPalette;
   String defaultDatasetNm;
   String defaultReportNm;
   String defaultReportType;
+  String defaultViewerReportNm;
+  String reportType;
+  String userNm;
 }

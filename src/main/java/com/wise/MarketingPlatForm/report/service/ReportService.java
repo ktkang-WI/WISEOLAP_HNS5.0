@@ -5,16 +5,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
@@ -60,6 +67,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +96,47 @@ public class ReportService {
         this.cubeService = cubeService;
         this.logService = logService;
     }
+    /* TODO: 임시용 파일 추후 송봉조 주임 수정 예정 */
+    private void getCubeGenerator(JSONObject dataset, String userId)
+        throws JsonMappingException, JsonProcessingException, JSONException {
+        if (dataset.get("datasets") == null) return;
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final JSONArray datasetArray = dataset.getJSONArray("datasets");
+        final Gson gson = new Gson();
 
-    public Map<String, Object> getReport(HttpServletRequest request, String reportId) {
+        for (int i= 0; i < datasetArray.length(); i++) {
+            JSONObject datset = datasetArray.getJSONObject(i);
+            if (datset.has("cubeId")) {
+                CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
+                JsonNode prevNode = objectMapper.readTree(datset.get("fields").toString());
+                JsonNode nextNode = objectMapper.readTree(objectMapper.writeValueAsString(cubeInfo.getFields()));
+
+                Set<String> uniqueEntries = new HashSet<>();
+                ArrayNode uniqueArrayNode = objectMapper.createArrayNode();
+
+                for (JsonNode node : prevNode) {
+                    String jsonString = node.get("uniqueName").toString();
+                    if (uniqueEntries.add(jsonString)) {
+                        uniqueArrayNode.add(node);
+                    }
+                }
+
+                for (JsonNode node : nextNode) {
+                    
+                    String jsonString = node.get("uniqueName").toString();
+                    if (uniqueEntries.add(jsonString)) {
+                        uniqueArrayNode.add(node);
+                    }
+                };
+
+
+                datset.put("fields", new JSONArray(objectMapper.writeValueAsString(uniqueArrayNode)));
+                datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+            }
+        }
+    }
+
+    public Map<String, Object> getReport(HttpServletRequest request, String reportId, String reportSeq) {
     	Map<String, Object> returnMap = new HashMap<>();
         Timer timer = new Timer();
         
@@ -112,7 +159,13 @@ public class ReportService {
     		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
             
             timer.start();
-            ReportMstrEntity entity = reportDAO.selectReport(reportId);
+            ReportMstrEntity entity;
+            if (reportSeq == null || reportSeq.equals("")) {
+                entity = reportDAO.selectReport(reportId);
+            } else {
+                entity = logService.selectReportHis(reportId, reportSeq);
+            }
+            
             
             logDto.setReportNm(entity.getReportNm());
             logDto.setReportType(entity.getReportType());
@@ -124,18 +177,11 @@ public class ReportService {
     		} else {
     			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
     			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
+                
                 /* TODO: 송봉조 주임 삭제 요청 - 주제영역 불러오기 임시 해제 */
-    			if (dataset.get("datasets") != null) {
-    				JSONArray datasetArray = dataset.getJSONArray("datasets");
-    				for (int i= 0; i < datasetArray.length(); i++) {
-    					JSONObject datset = datasetArray.getJSONObject(i);
-    					if (datset.has("cubeId")) {
-                            CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
-    						datset.put("fields", new JSONArray(gson.toJson(cubeInfo.getFields())));
-    						datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
-    					
-    				}
-    			}
+
+                getCubeGenerator(dataset, userId);
+                
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
@@ -281,6 +327,7 @@ public class ReportService {
 
                 if (result) {
                     reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                    logService.insertReportHis(reportMstrDTO);
                     map.put("msg", "saveReportMsg");
                 } else {
                     map.put("msg", "faildSaveReportMsg");
@@ -329,6 +376,7 @@ public class ReportService {
 
             if (result) {
                 reportMstrDTO.setReportId(reportMstrEntity.getReportId());
+                logService.insertReportHis(reportMstrDTO);
                 map.put("msg", "saveReportMsg");
             } else {
                 map.put("msg", "faildSaveReportMsg");

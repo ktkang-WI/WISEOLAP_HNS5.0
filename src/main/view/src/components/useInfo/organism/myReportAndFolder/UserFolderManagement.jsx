@@ -3,7 +3,7 @@ import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import {TreeView} from 'devextreme-react';
 import Form from 'devextreme/ui/form';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import styled from 'styled-components';
 import reportFolderUtility from './ReportFolderUtility';
@@ -51,6 +51,7 @@ const UserFolderManagement = () => {
   const folders = useLoaderData();
   const [treeViewData, setTreeViewData] = useState(folders);
   const [row, setRow] = useState({});
+  const ref = useRef(null);
   const {
     newUserFolderUtil,
     deleteUserFolderUtil,
@@ -66,7 +67,19 @@ const UserFolderManagement = () => {
     );
     const parentNm = parentFld ? parentFld.name : null;
     const newItemData = {...itemData, fldParentNm: parentNm || '/root'};
-    setRow(newItemData);
+
+    if (ref.current) {
+      const formData = ref.current.instance.option().formData;
+      formData.id= newItemData?.id || 0;
+      formData.name= newItemData?.name || '';
+      formData.fldParentNm= newItemData?.fldParentNm || '';
+      formData.fldParentId= newItemData?.fldParentId || 0;
+      formData.ordinal= newItemData?.ordinal || 0;
+      formData.fldLvl = newItemData?.fldLvl || 0;
+      formData.desc = newItemData?.desc || '';
+
+      ref.current.instance.repaint();
+    }
   };
 
   const newUserFolder = () => {
@@ -171,7 +184,11 @@ const UserFolderManagement = () => {
           </CommonButton>
         </div>
       </Panel>
-      <FolderInformation row={row} setRow={setRow} myPageFlag={'myPage'}/>
+      <FolderInformation
+        row={row}
+        setRow={setRow}
+        myPageFlag={'myPage'}
+        ref={ref}/>
     </Wrapper>
   );
 };

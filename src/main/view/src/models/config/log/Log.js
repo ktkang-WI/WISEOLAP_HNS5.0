@@ -93,3 +93,16 @@ export const getQueryLog = (startDt, endDt, type) => {
   const res = axios.get(logPath + '/query', {params: param});
   return res;
 };
+
+/**
+ * @param {string} reportId
+ * @return {Promise}
+ */
+export const getReportHistory = (reportId) => {
+  const param = {
+    reportId
+  };
+
+  const res = axios.get(logPath + '/report-history', {params: param});
+  return res;
+};

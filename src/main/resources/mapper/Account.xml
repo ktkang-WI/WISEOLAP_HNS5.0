@@ -604,17 +604,15 @@
     <insert id="putUserData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          <if test="item.dataXml != null and item.dataXml != ''">
-            INTO USER_AUTH_DATA_MSTR(
-              USER_NO,
-              DATA_XML
-            )
-            VALUES
-            (
-              #{item.userNo, jdbcType=INTEGER},
-              #{item.dataXml, jdbcType=NCLOB}
-            )
-        </if>
+          INTO USER_AUTH_DATA_MSTR(
+            USER_NO,
+            DATA_XML
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.dataXml, jdbcType=NCLOB}
+          )
       </foreach>
       SELECT * FROM DUAL
     </insert>
@@ -635,7 +633,6 @@
     <insert id="putGroupData" parameterType="java.util.List">
       INSERT ALL
       <foreach collection="list" item="item" index="index">
-          <if test="item.dataXml != null and item.dataXml != ''">
             INTO GRP_AUTH_DATA_MSTR(
                 GRP_ID,
                 DATA_XML
@@ -645,7 +642,6 @@
                 #{item.grpId, jdbcType=INTEGER},
                 #{item.dataXml, jdbcType=NCLOB}
             )
-        </if>
       </foreach>
       SELECT * FROM DUAL
     </insert>

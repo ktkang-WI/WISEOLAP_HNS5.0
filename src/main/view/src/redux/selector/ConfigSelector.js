@@ -30,3 +30,8 @@ export const selectMyPageDesignerConfig = createSelector(
     (myPageConfigure) => myPageConfigure
 );
 
+export const selectUserName = createSelector(
+    (state) => state.meta.config.myPageConfigure,
+    (myPageConfigure) => myPageConfigure.userNm
+);
+

@@ -72,7 +72,7 @@ const Designer = () => {
   useEffect(() => {
     const configJson = configStringToJson(generalConfigure);
     const initPage = configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
-    const hasFavoritReport = myPageConfigure?.defaultReportId || false;
+    const hasFavoritReport = myPageConfigure?.defaultReportId;
     const param = {mode: designerMode};
     const paletteNo = paletteCollection.findIndex(
         (color) => color.name == myPageConfigure?.defaultPalette
@@ -134,6 +134,7 @@ const Designer = () => {
           // 'ReportProperty'
           'ReportSearch',
           'ShowQuery',
+          'ReportHistory',
           'UserInfo'
         ]}
       >

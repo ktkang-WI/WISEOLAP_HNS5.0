@@ -126,6 +126,14 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, [meta.dataHighlight]);
 
   const onCellPrepared = ({cell, area, cellElement}) => {
+    if (area == 'data' && cell.dataType && cell.value) {
+      const formats = getFormats();
+      const formData = formats[cell.dataIndex];
+      const labelSuffix = generateLabelSuffix(formData);
+      const formattedValue = formatNumber(cell.value, formData, labelSuffix);
+      cellElement.innerHTML = '<span>' + formattedValue + '</span>';
+    }
+
     if (highlight.length != 0) {
       // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
       for (let i = 0; i < highlight.length; i ++) {
@@ -140,14 +148,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           );
         }
       }
-    }
-
-    if (area == 'data' && cell.dataType && cell.value) {
-      const formats = getFormats();
-      const formData = formats[cell.dataIndex];
-      const labelSuffix = generateLabelSuffix(formData);
-      const formattedValue = formatNumber(cell.value, formData, labelSuffix);
-      cellElement.innerHTML = '<span>' + formattedValue + '</span>';
     }
   };
 
