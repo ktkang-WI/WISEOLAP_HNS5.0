@@ -96,33 +96,32 @@ public class ReportService {
         this.cubeService = cubeService;
         this.logService = logService;
     }
-    /* TODO: 임시용 파일 추후 송봉조 주임 수정 예정 */
-    private void getCubeGenerator(JSONObject dataset, String userId)
-        throws JsonMappingException, JsonProcessingException, JSONException {
-        if (dataset.get("datasets") == null) return;
+    
+    private void reloadCubeFields(JSONObject datasets, String userId) 
+    		throws JsonMappingException, JsonProcessingException, JSONException {
+        if (datasets.get("datasets") == null) return;
         final ObjectMapper objectMapper = new ObjectMapper();
-        final JSONArray datasetArray = dataset.getJSONArray("datasets");
+        final JSONArray datasetArray = datasets.getJSONArray("datasets");
         final Gson gson = new Gson();
 
         for (int i= 0; i < datasetArray.length(); i++) {
-            JSONObject datset = datasetArray.getJSONObject(i);
-            if (datset.has("cubeId")) {
-                CubeInfoDTO cubeInfo = cubeService.getCube(datset.get("cubeId").toString(), userId);
-                JsonNode prevNode = objectMapper.readTree(datset.get("fields").toString());
-                JsonNode nextNode = objectMapper.readTree(objectMapper.writeValueAsString(cubeInfo.getFields()));
-
+            JSONObject dataset = datasetArray.getJSONObject(i);
+            if (dataset.has("cubeId")) {
+                CubeInfoDTO cubeInfo = cubeService.getCube(dataset.get("cubeId").toString(), userId);
+                final JsonNode reportFieldNodes = objectMapper.readTree(dataset.get("fields").toString());
+                final JsonNode cubeFieldNodes = objectMapper.readTree(objectMapper.writeValueAsString(cubeInfo.getFields()));
+                
                 Set<String> uniqueEntries = new HashSet<>();
                 ArrayNode uniqueArrayNode = objectMapper.createArrayNode();
 
-                for (JsonNode node : prevNode) {
+                for (JsonNode node : reportFieldNodes) {
                     String jsonString = node.get("uniqueName").toString();
                     if (uniqueEntries.add(jsonString)) {
                         uniqueArrayNode.add(node);
                     }
                 }
 
-                for (JsonNode node : nextNode) {
-                    
+                for (JsonNode node : cubeFieldNodes) {
                     String jsonString = node.get("uniqueName").toString();
                     if (uniqueEntries.add(jsonString)) {
                         uniqueArrayNode.add(node);
@@ -130,11 +129,12 @@ public class ReportService {
                 };
 
 
-                datset.put("fields", new JSONArray(objectMapper.writeValueAsString(uniqueArrayNode)));
-                datset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
+                dataset.put("fields", new JSONArray(objectMapper.writeValueAsString(uniqueArrayNode)));
+                dataset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
             }
         }
     }
+    
 
     public Map<String, Object> getReport(HttpServletRequest request, String reportId, String reportSeq) {
     	Map<String, Object> returnMap = new HashMap<>();
@@ -176,12 +176,10 @@ public class ReportService {
     			returnMap = reportXmlParser.getReport(dto, userId);
     		} else {
     			JSONObject items = new JSONObject(objectMapper.readValue(entity.getChartXml(), Map.class));
-    			JSONObject dataset = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
+    			JSONObject datasets = new JSONObject(objectMapper.readValue(entity.getDatasetXml(), Map.class));
                 
-                /* TODO: 송봉조 주임 삭제 요청 - 주제영역 불러오기 임시 해제 */
-
-                getCubeGenerator(dataset, userId);
-
+    			reloadCubeFields(datasets, userId);
+                
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
@@ -189,7 +187,7 @@ public class ReportService {
     				returnMap.put("spread", spread.toString());
     			}
     			returnMap.put("item", items.toString());
-    			returnMap.put("dataset", dataset.toString());
+    			returnMap.put("dataset", datasets.toString());
     			returnMap.put("layout", layout.toString());
     			returnMap.put("informations", informations.toString());
     		}
