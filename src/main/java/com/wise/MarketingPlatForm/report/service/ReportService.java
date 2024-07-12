@@ -181,7 +181,7 @@ public class ReportService {
                 /* TODO: 송봉조 주임 삭제 요청 - 주제영역 불러오기 임시 해제 */
 
                 getCubeGenerator(dataset, userId);
-                
+
     			JSONObject layout = new JSONObject(entity.getLayoutXml());
     			JSONArray informations = new JSONArray(entity.getParamXml());
     			if(ReportType.EXCEL.toStrList().contains(entity.getReportType())) {
@@ -219,9 +219,6 @@ public class ReportService {
     		reports.add(report);
     		
     		returnMap.put("reports", reports);
-
-    	} 
-
     	} catch (Exception e) {
             logDto.setStatusCd("99");
 
