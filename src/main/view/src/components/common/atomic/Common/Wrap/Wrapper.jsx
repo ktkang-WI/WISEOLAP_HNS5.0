@@ -8,7 +8,8 @@ const Wrapper = styled.div`
   flex-direction: ${(props) => props.direction ? props.direction : 'row'};
   flex: ${(props) => props.size ? props.size : '0 0 1'};
   justify-content: ${(props) => props.center ? props.center : 'start'};
-  align-items: ${(props) => props.center ? props.center : 'start'};
+  align-items: ${(props) => props.alignItems ?
+    props.alignItems : props.center ? props.center : 'start'};
   padding: ${(props) => props.padding ? props.padding : '0px'};
   ${(props) => props.margin ? 'margin: ' + props.margin + ';' : ''};
   overflow: ${(props) => props.overflow ? props.overflow : 'visible'};

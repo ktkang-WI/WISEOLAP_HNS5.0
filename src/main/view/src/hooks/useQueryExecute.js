@@ -566,8 +566,7 @@ const useQueryExecute = () => {
     return res.data;
   };
 
-  const executeParameters = async () => {
-    const parameters = selectRootParameter(store.getState());
+  const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
 
     const setDefaultValue = (name, value) => {
@@ -583,6 +582,13 @@ const useQueryExecute = () => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
       dispatch(filterSearchComplete({reportId, id: name}));
     };
+
+    // eslint-disable-next-line max-len
+    initializeParameters(parameters || selectRootParameter(store.getState()), setDefaultValue, setValues);
+  };
+
+  // eslint-disable-next-line max-len
+  const initializeParameters = async (parameters, setDefaultValue, setValues) => {
     const promises = {};
     parameters.informations.forEach(async (param) => {
       try {
@@ -670,7 +676,8 @@ const useQueryExecute = () => {
     executeParameters,
     executeLinkageFilter,
     executeSpread,
-    executeParameterDefaultValueQuery
+    executeParameterDefaultValueQuery,
+    initializeParameters
   };
 };
 

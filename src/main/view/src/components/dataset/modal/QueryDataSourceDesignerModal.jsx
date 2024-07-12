@@ -3,7 +3,7 @@ import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import {styled} from 'styled-components';
@@ -259,6 +259,28 @@ const QueryDataSourceDesignerModal = ({
               setDataset({...dataset, datasetNm});
             }}
           />
+          <RowWrapper
+            height={'40px'}
+            width={'97%'}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+            borderRadius={'10px'}
+            border={'1px solid #D4D7DC'}
+            padding={'0px 5px'}
+            margin={'0px 5px'}
+          >
+            <DatasetName
+              name={dataset.datasetNm || ''}
+              onValueChanged={(datasetNm) => {
+                setDataset({...dataset, datasetNm});
+              }}
+            />
+            <ViewQuery
+              dsId={selectedDataSource.dsId}
+              paramInfo={paramInfo}
+              queryEditorRef={queryEditorRef}
+            />
+          </RowWrapper>
           <ModalPanel title={localizedString.query} height='100%' padding='10'>
             <QueryEditor
               editorRef={queryEditorRef}
@@ -286,4 +308,4 @@ const QueryDataSourceDesignerModal = ({
   );
 };
 
-export default QueryDataSourceDesignerModal;
+export default React.memo(QueryDataSourceDesignerModal);

@@ -16,6 +16,7 @@ const ListFilter = ({
   const [text, setText] = useState('');
   const popOverRef = useRef();
   const listRef = useRef();
+  const textBoxRef = useRef();
   const [dataType, setDataType] = useState('');
 
   const generateCaptionText = (keys) => {
@@ -77,7 +78,7 @@ const ListFilter = ({
     let selection;
     if (selectionKeys.length == 0 ||
         selectionKeys.length == dataSource.length ||
-        (info.useAll && !info.multiSelect &&
+        (!_dataSource && info.useAll && !info.multiSelect &&
         selectionKeys.length == dataSource.length - 1)) {
       selection = '[All]';
       setText(allText);
@@ -121,7 +122,7 @@ const ListFilter = ({
 
   return (
     <>
-      <div id={id+'_'+ index + '_wrapper'}>
+      <div ref={textBoxRef} id={id+'_'+ index + '_wrapper'}>
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
@@ -148,7 +149,7 @@ const ListFilter = ({
         />
       </div>
       <Popover
-        target={'#' + id +'_'+ index + '_wrapper'}
+        target={textBoxRef.current}
         showEvent={'click'}
         minWidth="200px"
         height="300px"

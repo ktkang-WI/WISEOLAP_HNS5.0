@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
+import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
@@ -206,6 +210,27 @@ public class DatasetController {
                 }.getType());
                 
         return datasetService.getQueryData(dsId, query, parameters);
+    }
+
+    @PostMapping(value = "/execute-query")
+    public ResponseEntity<Object> getExecuteQueryData(@RequestBody Map<String, String> param) {
+        Gson gson = new Gson();
+
+        int dsId = Integer.parseInt(param.get("dsId"));
+        String query = param.get("query");
+        String parameterStr = param.get("parameter");
+
+        List<com.wise.MarketingPlatForm.report.domain.data.data.Parameter> parameters = gson.fromJson(parameterStr,
+                new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
+                }.getType());
+
+        MartResultDTO martResultDTO = datasetService.getExecuteQueryData(dsId, query, parameters);
+
+        if (martResultDTO == null) {
+          return ResponseEntity.ok().build();
+        }
+            
+        return ResponseEntity.ok().body(martResultDTO);
     }
     
     @Operation(summary = "dataset Data", description = "dataset data 불러오기")

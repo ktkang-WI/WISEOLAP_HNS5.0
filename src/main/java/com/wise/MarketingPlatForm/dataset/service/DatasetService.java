@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
@@ -266,6 +267,29 @@ public class DatasetService {
 
         return tbl_Col;
     }
+
+    private MartResultDTO executeQuery(DsMstrDTO dsMstrDTO, String query, int limit) {
+        MartResultDTO resultDTO = new MartResultDTO();
+        String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), limit);
+
+        try {
+            resultDTO = martDAO.select(dsMstrDTO.getDsId(), newQuery);
+            List<MetaDTO> metaDTOs = resultDTO.getMetaData();
+
+            for (MetaDTO metaDTO : metaDTOs) {
+                if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
+                    metaDTO.setColumnTypeName("decimal");
+                }
+            }
+
+        } catch (Exception e) {
+            log.warn(e.toString());
+            List<Map<String, Object>> err = new ArrayList<>();
+            err.add(Collections.singletonMap("error", e.toString()));
+            resultDTO.setRowData(err);
+        }
+        return resultDTO;
+    }
     
     public MartResultDTO getQueryData(int dsId, String query, List<Parameter> parameters) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
@@ -275,7 +299,7 @@ public class DatasetService {
     }
     
     public MartResultDTO getQueryData(int dsId, String query) {
-    	 DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
 
          DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
                  .dsId(dsInfoEntity.getDsId())
@@ -293,29 +317,32 @@ public class DatasetService {
 
          martConfig.setMartDataSource(dsMstrDTO);
          
-         String newQuery = convertTopN(query, dsMstrDTO.getDbmsType().name(), 1);
-         MartResultDTO resultDTO = new MartResultDTO();
-
-         try {
-             resultDTO = martDAO.select(dsMstrDTO.getDsId(), newQuery);
-             List<MetaDTO> metaDTOs = resultDTO.getMetaData();
-
-             for (MetaDTO metaDTO : metaDTOs) {
-                 if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
-                     metaDTO.setColumnTypeName("decimal");
-                 }
-             }
-
-         } catch (Exception e) {
-             log.warn(e.toString());
-
-             List<Map<String, Object>> err = new ArrayList<Map<String, Object>>();
-             err.add(Collections.singletonMap("error", e.toString()));
-
-             resultDTO.setRowData(err);
-         }
-         return resultDTO;
+         return executeQuery(dsMstrDTO, query, 1);
     }
+    
+    public MartResultDTO getExecuteQueryData(int dsId, String query, List<Parameter> parameters) {
+        SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
+        DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
+        
+        query = queryGenerator.applyParameter(parameters, query);
+        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
+                 .dsId(dsInfoEntity.getDsId())
+                 .dsNm(dsInfoEntity.getDsNm())
+                 .ip(dsInfoEntity.getIp())
+                 .port(dsInfoEntity.getPort())
+                 .password(dsInfoEntity.getPassword())
+                 .dbNm(dsInfoEntity.getDbNm())
+                 .ownerNm(dsInfoEntity.getOwnerNm())
+                 .userId(dsInfoEntity.getUserId())
+                 .userAreaYn(dsInfoEntity.getUserAreaYn())
+                 .dsDesc(dsInfoEntity.getDsDesc())
+                 .dbmsType(DbmsType.fromString(dsInfoEntity.getDbmsType()).get())
+                 .build();
+        martConfig.setMartDataSource(dsMstrDTO);
+
+        return executeQuery(dsMstrDTO, query, 100);
+    }
+
     
     public MartResultDTO getQueryDatas(HttpServletRequest request, int reportId, int dsId, String query, List<Parameter> parameters) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();

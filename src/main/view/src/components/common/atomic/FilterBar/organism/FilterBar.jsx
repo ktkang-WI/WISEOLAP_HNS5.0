@@ -8,6 +8,7 @@ import ribbonDefaultElement from '../../Ribbon/organism/RibbonDefaultElement';
 import CommonButton from '../../Common/Button/CommonButton';
 import useReportSave from 'hooks/useReportSave';
 import SmallImageButton from '../../Common/Button/SmallImageButton';
+import FilterBarBtn from '../atom/FilterBarBtn';
 
 const theme = getTheme();
 
@@ -43,31 +44,6 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const FilterBarBtn = ({width, children, isExpand, ...props}) => {
-  const BtnWrapper = styled.div`
-    width: ${width || '40px'};
-    min-width: ${width || '40px'};
-    display: flex;
-    height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
-    flex-direction: row;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: flex-start;
-    cursor: pointer;
-    margin-right: 5px;
-    font: ${theme.font.small};
-
-    * + * {
-      margin-left: 3px;
-    }
-  `;
-
-  return (
-    <BtnWrapper {...props}>
-      {children}
-    </BtnWrapper>
-  );
-};
 
 const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
   const [isExpand, setIsExpand] = useState(!useExpandButton);

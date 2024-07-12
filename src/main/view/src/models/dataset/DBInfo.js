@@ -47,6 +47,16 @@ export const getDataByQueryMart = (dsId, query, parameters) => {
   });
 };
 
+export const getExecuteQueryData = (dsId, query, parameters) => {
+  const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
+
+  return axios.post(path + '/execute-query', {
+    dsId: parseInt(dsId),
+    query: query,
+    parameter: JSON.stringify(parameter)
+  });
+};
+
 /**
 * @param {*} reportId
 * @param {*} dsId
