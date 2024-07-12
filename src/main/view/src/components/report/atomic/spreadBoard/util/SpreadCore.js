@@ -18,9 +18,11 @@ GC.Spread.Common.CultureManager.culture('ko-kr');
  * @param {String} spreadJsLicense
  */
 export const setSpreadLicense = (spreadJsDesignLicense, spreadJsLicense) => {
-  GC.Spread.Sheets.LicenseKey = spreadJsLicense;
-  ExcelIO.LicenseKey = spreadJsLicense;
-  GC.Spread.Sheets.Designer.LicenseKey = spreadJsDesignLicense;
+  if (process.env.NODE_ENV != 'development') {
+    GC.Spread.Sheets.LicenseKey = spreadJsLicense;
+    ExcelIO.LicenseKey = spreadJsLicense;
+    GC.Spread.Sheets.Designer.LicenseKey = spreadJsDesignLicense;
+  }
 };
 
 // spread Core Objects

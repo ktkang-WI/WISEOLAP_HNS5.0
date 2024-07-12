@@ -26,6 +26,7 @@ const Designer = () => {
   const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
   const {getReport, getLinkedReport} = useReportLoad();
+  saveConfiguration(generalConfigure, myPageConfigure);
 
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
