@@ -78,10 +78,10 @@ public class LogService {
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
+            .gridInfo(reportMstrDTO.getGridInfo())
             .build();
 
-        // NOTE: 개수 제한 두고 싶을 때 활성화
-        // logDAO.deleteReportHisByCount(entity);
+        logDAO.deleteReportHisByCount(entity);
         logDAO.insertReportHis(entity);
     }
 
