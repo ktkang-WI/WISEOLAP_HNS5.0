@@ -11,10 +11,6 @@ const ReportTabSource = [
   {
     id: 'publicReport',
     title: localizedString.publicReport
-  },
-  {
-    id: 'privateReport',
-    title: localizedString.privateReport
   }
 ];
 

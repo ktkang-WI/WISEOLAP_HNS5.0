@@ -78,189 +78,54 @@
     <!-- TODO : Query refactoring 필요 -->
     <select id="publicReportList" resultMap="ReportList">
       SELECT
-          A.ID,
-          A.TEXT,
-          A.UPPERID,
-          A.ORDINAL,
-          A.REPORT_TYPE,
-          A.TYPE,
-          A.REG_DT,
-          UM_REG.USER_NM AS REG_USER_NM,
-          A.MOD_DT,
-          UM_MOD.USER_NM AS MOD_USER_NM,
-          A.REQUESTER,
-          A.REPORT_TAG,
-          A.REPORT_DESC,
-          A.DATASET
+      ID,
+      TEXT,
+      UPPERID,
+      ORDINAL,
+      REPORT_TYPE,
+      TYPE,
+      REG_DT,
+      MOD_DT,
+      REQUESTER,
+      REPORT_TAG,
+      DATASET
       FROM (
-          (
-              SELECT
-                  PUB_FLD_MSTR.FLD_ID AS ID,                             
-                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
-                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
-                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
-                  NULL AS REPORT_TYPE,                             
-                  'FOLDER' AS TYPE,                                                       
-                  NULL AS REG_DT,                             
-                  NULL AS REG_USER_NO,          
-                  NULL AS MOD_DT,                             
-                  NULL AS MOD_USER_NO,      
-                  NULL AS REQUESTER,                          
-                  NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC,
-                  TO_CLOB('') AS DATASET
-              FROM               
-                  USER_AUTH_REPORT_MSTR             
-              INNER JOIN         
-                  USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                                
-          )           
-          UNION ALL           
-          (
-              SELECT
-                  PUB_FLD_MSTR.FLD_ID AS ID,                             
-                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
-                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
-                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
-                  NULL AS REPORT_TYPE,                      
-                  'FOLDER' AS TYPE,                                              
-                  NULL AS REG_DT,                             
-                  NULL AS REG_USER_NO,                             
-                  NULL AS MOD_DT,                             
-                  NULL AS MOD_USER_NO,  
-                  NULL AS REQUESTER,                                
-                  NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC,
-                  TO_CLOB('') AS DATASET
-              FROM               
-                  GRP_AUTH_REPORT_MSTR             
-              INNER JOIN         
-                  USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                                                              
-          )           
-          UNION ALL           
-          (
-              SELECT            
-                  REPORT_MSTR.REPORT_ID AS ID,                             
-                  REPORT_MSTR.REPORT_NM AS TEXT,                             
-                  REPORT_MSTR.FLD_ID AS UPPERID,                             
-                  REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,                             
-                  REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,                             
-                  'REPORT' AS TYPE,                             
-                  REPORT_MSTR.REG_DT AS REG_DT,                                                  
-                  REPORT_MSTR.REG_USER_NO AS REG_USER_NO,             
-                  REPORT_MSTR.MOD_DT AS MOD_DT,                             
-                  REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,      
-                  REPORT_MSTR.GRID_INFO AS REQUESTER,                          
-                  REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
-                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
-                  TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET
-              FROM               
-                  REPORT_MSTR             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID             
-              WHERE              
-                  REPORT_MSTR.DEL_YN != 'Y'                                              
-          )
-      ) A
-      LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
-      LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
-      ORDER BY UPPERID, TYPE, ORDINAL
-    </select>
-
-    <select id="privateReportList" resultMap="ReportList">
       SELECT
-          A.ID,
-          A.TEXT,
-          A.UPPERID,
-          A.ORDINAL,
-          A.REPORT_TYPE,
-          A.TYPE,
-          A.REG_DT,
-          UM_REG.USER_NM AS REG_USER_NM,
-          A.MOD_DT,
-          UM_MOD.USER_NM AS MOD_USER_NM,
-          A.REQUESTER,
-          A.REPORT_TAG,
-          A.REPORT_DESC,
-          A.DATASET
-      FROM (
-          (
-              SELECT  
-                  PUB_FLD_MSTR.FLD_ID AS ID,                             
-                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
-                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
-                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
-                  NULL AS REPORT_TYPE,                             
-                  'FOLDER' AS TYPE,                                                       
-                  NULL AS REG_DT,                             
-                  NULL AS REG_USER_NO,          
-                  NULL AS MOD_DT,                             
-                  NULL AS MOD_USER_NO,      
-                  NULL AS REQUESTER,                          
-                  NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC,
-                  TO_CLOB('') AS DATASET 
-              FROM               
-                  USER_AUTH_REPORT_MSTR             
-              INNER JOIN         
-                  USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                                  
-          )           
-          UNION ALL           
-          (
-              SELECT  
-                  PUB_FLD_MSTR.FLD_ID AS ID,                             
-                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
-                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
-                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
-                  NULL AS REPORT_TYPE,                      
-                  'FOLDER' AS TYPE,                                              
-                  NULL AS REG_DT,                             
-                  NULL AS REG_USER_NO,                             
-                  NULL AS MOD_DT,                             
-                  NULL AS MOD_USER_NO,  
-                  NULL AS REQUESTER,                                
-                  NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC,
-                  TO_CLOB('') AS DATASET
-              FROM               
-                  GRP_AUTH_REPORT_MSTR             
-              INNER JOIN         
-                  USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                                                                
-          )           
-          UNION ALL           
-          (
-              SELECT            
-                  REPORT_MSTR.REPORT_ID AS ID,                             
-                  REPORT_MSTR.REPORT_NM AS TEXT,                             
-                  REPORT_MSTR.FLD_ID AS UPPERID,                             
-                  REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,                             
-                  REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,                             
-                  'REPORT' AS TYPE,                             
-                  REPORT_MSTR.REG_DT AS REG_DT,                                                  
-                  REPORT_MSTR.REG_USER_NO AS REG_USER_NO,             
-                  REPORT_MSTR.MOD_DT AS MOD_DT,                             
-                  REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,      
-                  REPORT_MSTR.GRID_INFO AS REQUESTER,                          
-                  REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
-                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
-                  TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET
-              FROM               
-                  REPORT_MSTR             
-              INNER JOIN         
-                  PUB_FLD_MSTR ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID             
-              WHERE              
-                  REPORT_MSTR.DEL_YN != 'Y'                                                
-          )
-      ) A
-      LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
-      LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
+            REPORT_MSTR.REPORT_ID AS ID,
+            REPORT_MSTR.REPORT_NM AS TEXT,
+            REPORT_MSTR.FLD_ID AS UPPERID,
+            REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,
+            REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,
+            'REPORT' AS TYPE,
+            REPORT_MSTR.REG_DT AS REG_DT,                     
+            REPORT_MSTR.MOD_DT AS MOD_DT,                                 
+            REPORT_MSTR.GRID_INFO AS REQUESTER,                          
+            REPORT_MSTR.REPORT_TAG AS REPORT_TAG,
+            TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET
+      FROM PUB_FLD_MSTR
+      INNER JOIN REPORT_MSTR
+      ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
+      INNER JOIN USER_MSTR 
+      ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
+      WHERE REPORT_MSTR.DEL_YN = 'N'
+      AND USER_MSTR.DEL_YN = 'N'
+
+      UNION ALL
+
+      SELECT
+            PUB_FLD_MSTR.FLD_ID AS ID,
+            PUB_FLD_MSTR.FLD_NM AS TEXT,
+            PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,
+            PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,
+            NULL AS REPORT_TYPE,
+            'FOLDER' AS TYPE,
+            NULL AS REG_DT,                                                       
+            NULL AS MOD_DT,                             
+            NULL AS REQUESTER,                               
+            NULL AS REPORT_TAG,
+            TO_CLOB('') AS DATASET
+      FROM PUB_FLD_MSTR
+      )
       ORDER BY UPPERID, TYPE, ORDINAL
     </select>
 

@@ -5,7 +5,6 @@ import {Form} from 'devextreme-react';
 import {SimpleItem, Label, TabbedItem, Tab, TabPanelOptions} from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import React from 'react';
-import DatasetType from 'components/dataset/utils/DatasetType';
 
 // TODO: tab 포함 form이 추가 될 시, 재사용 할 수 있도록 configureFormCreator 에 generate 함수 생성
 const ReportInfo = ({itemData}) => {
@@ -52,6 +51,7 @@ const ReportInfo = ({itemData}) => {
         {itemData.datasetInfo && itemData.datasetInfo.length > 0 &&
           <TabbedItem>
             {itemData.datasetInfo.map((item, index) => {
+              const dataFieldPrefix = `datasetInfo[${index}]`;
               return (
                 <Tab
                   key={index}
@@ -61,35 +61,37 @@ const ReportInfo = ({itemData}) => {
                     deferRendering={false}
                   />
                   <SimpleItem
+                    dataField={`${dataFieldPrefix}.datasetNm`}
                     editorType='dxTextBox'
                     editorOptions= {{
-                      disabled: true,
-                      value: item.datasetNm
+                      disabled: true
                     }}
                   >
                     <Label text={localizedString.datasetName}/>
                   </SimpleItem>
                   <SimpleItem
+                    dataField={`${dataFieldPrefix}.datasetType`}
                     editorType='dxTextBox'
                     editorOptions= {{
-                      disabled: true,
-                      value: item.datasetType
+                      disabled: true
                     }}
                   >
                     <Label text={'데이터 집합 유형'}/>
                   </SimpleItem>
-                  {item.datasetType !== DatasetType.CUBE &&
-                    <SimpleItem
-                      editorType='dxTextArea'
-                      editorOptions= {{
-                        value: item.datasetQuery,
-                        class: 'custom-scrollbar',
-                        height: '300px'
-                      }}
-                    >
-                      <Label text={'데이터 집합 쿼리'}/>
-                    </SimpleItem>
-                  }
+                  <SimpleItem
+                    dataField={`${dataFieldPrefix}.datasetQuery`}
+                    editorType='dxTextArea'
+                    editorOptions= {{
+                      class: 'custom-scrollbar',
+                      height: '300px'
+                    }}
+                  >
+                    {
+                      item.datasetType !== 'CUBE' ?
+                      <Label text={'데이터 집합 쿼리'}/> :
+                      <Label text={'데이터 집합 정보'}/>
+                    }
+                  </SimpleItem>
                 </Tab>
               );
             })}

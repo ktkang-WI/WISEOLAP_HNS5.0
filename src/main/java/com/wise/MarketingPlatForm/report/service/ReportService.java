@@ -429,15 +429,12 @@ public class ReportService {
 
     public Map<String, Object> getReportListIncludeQuery() {
         List<ReportListDTO> pubList = reportDAO.publicReportList();
-        List<ReportListDTO> priList = reportDAO.privateReportList();
         Map<String, Object> result = new HashMap<>();
 
         try {
             List<Map<String, Object>> newPubList = getReportDataSource(pubList);
-            List<Map<String, Object>> newPriList = getReportDataSource(priList);
 
             result.put("publicReport", newPubList);
-            result.put("privateReport", newPriList);
         } catch (Exception e) {
             e.printStackTrace();
         }

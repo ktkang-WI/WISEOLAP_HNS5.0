@@ -19,7 +19,6 @@ const SearchQuery = () => {
 
   useEffect(() => {
     models.Report.getListIncludeQuery().then(({data}) => {
-      setIconReportList(data.privateReport);
       setIconReportList(data.publicReport);
       setReportList(data);
     });
