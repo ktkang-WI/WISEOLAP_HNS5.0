@@ -17,7 +17,7 @@ const ItemWrapper = styled(Wrapper)`
   overflow: hidden;
   overflow-y: ${(props) => (props.overflowY ? props.overflowY : 'hidden')};
 
-  &.tab-selected::after {
+  &.tab-selected:not(.download)::after {
     content: "";
     position: absolute;
     top: -1px;

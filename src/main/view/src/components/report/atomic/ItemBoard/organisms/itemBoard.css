@@ -59,7 +59,7 @@ div.flexlayout__tab_button--selected {
   position: relative !important;
 }
 
-.flexlayout__tabset:has(.tab-selected)::after {
+.flexlayout__tabset:has(.tab-selected):not(.download)::after {
     content: "";
     position: absolute;
     top: -2px;
@@ -69,4 +69,8 @@ div.flexlayout__tab_button--selected {
     border: 4px solid var(--primary2);
     pointer-events: none;
     border-radius: 10px;
+}
+
+.flexlayout__tabset.download .flexlayout__tab_toolbar {
+  display: none !important;
 }

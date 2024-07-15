@@ -20,7 +20,7 @@ import {useSelector} from 'react-redux';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
-import {handleDownload} from 'components/report/util/ReportDownload';
+import {exportExcel} from 'components/report/util/ReportDownload';
 import {
   selectCurrentItems,
   selectRootItem
@@ -265,7 +265,7 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         const newCurrentItem = filterdLayoutItem();
 
-        handleDownload(
+        exportExcel(
             currentReport,
             newCurrentItem,
             currentParameter,

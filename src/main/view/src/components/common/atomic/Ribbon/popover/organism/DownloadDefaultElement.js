@@ -8,7 +8,13 @@ import {
   selectCurrentInformationas
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
-import {handleDownload} from 'components/report/util/ReportDownload';
+import {
+  exportDocx,
+  exportExcel,
+  exportImg,
+  exportPdf,
+  exportPptx
+} from 'components/report/util/ReportDownload';
 
 const DownloadDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
@@ -48,7 +54,7 @@ const DownloadDefaultElement = () => {
                 mergeColumn: true,
                 mergeRow: true
               };
-              handleDownload(
+              exportExcel(
                   currentReport,
                   newCurrentItem,
                   currentParameter,
@@ -65,7 +71,7 @@ const DownloadDefaultElement = () => {
                 mergeColumn: false,
                 mergeRow: false
               };
-              handleDownload(
+              exportExcel(
                   currentReport,
                   newCurrentItem,
                   currentParameter,
@@ -81,14 +87,38 @@ const DownloadDefaultElement = () => {
           },
           {
             label: localizedString.word,
-            visible: false,
+            visible: true,
             onClick: () => {
+              const newCurrentItem = filterdLayoutItem();
+              const option = {
+                mergeColumn: true,
+                mergeRow: true
+              };
+
+              exportDocx(
+                  currentReport,
+                  currentReport?.options?.reportNm || '새 보고서',
+                  newCurrentItem,
+                  currentParameter,
+                  option);
             }
           },
           {
             label: localizedString.powerpoint,
-            visible: false,
+            visible: true,
             onClick: () => {
+              const newCurrentItem = filterdLayoutItem();
+              const option = {
+                mergeColumn: true,
+                mergeRow: true
+              };
+
+              exportPptx(
+                  currentReport,
+                  currentReport?.options?.reportNm || '새 보고서',
+                  newCurrentItem,
+                  currentParameter,
+                  option);
             }
           }
         ]
@@ -119,17 +149,18 @@ const DownloadDefaultElement = () => {
       },
       {
         label: localizedString.etc,
-        visible: false,
+        visible: true,
         contents: [
           {
             label: localizedString.img,
             visible: true,
-            onClick: () => {
-            }
+            onClick: async () =>
+              exportImg(currentReport,
+                  currentReport?.options?.reportNm || '새 보고서')
           },
           {
             label: localizedString.html,
-            visible: true,
+            visible: false,
             onClick: () => {
             }
           },
@@ -137,6 +168,18 @@ const DownloadDefaultElement = () => {
             label: localizedString.pdf,
             visible: true,
             onClick: () => {
+              const newCurrentItem = filterdLayoutItem();
+              const option = {
+                mergeColumn: true,
+                mergeRow: true
+              };
+
+              exportPdf(
+                  currentReport,
+                  currentReport?.options?.reportNm || '새 보고서',
+                  newCurrentItem,
+                  currentParameter,
+                  option);
             }
           }
         ]
