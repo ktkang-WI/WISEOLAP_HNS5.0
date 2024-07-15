@@ -165,43 +165,36 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         <Column
           dataField="dsViewNm"
           caption={localizedString.dsViewName}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dsNm"
           caption={localizedString.dataSourceName}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbmsType"
           caption={localizedString.dbType}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ownerNm"
           caption={localizedString.owner}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="ip"
           caption={localizedString.dbAddress}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dbNm"
           caption={localizedString.dbName}
-          dataType="varchar"
           format="currency"
         />
         <Column
           dataField="dsViewId"
           caption={localizedString.dsViewId}
-          dataType="varchar"
           format="currency"
           visible={false}
         />

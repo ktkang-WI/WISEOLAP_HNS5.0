@@ -214,7 +214,9 @@ const DataSourceFoldableList = ({dataset}) => {
               dataStructure="plain"
               parentIdExpr="parentId"
               keyExpr="uniqueName"
+              displayExpr="name"
               searchEnabled={true}
+              searchMode={'contains'}
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
