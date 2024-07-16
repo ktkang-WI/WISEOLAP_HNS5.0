@@ -143,8 +143,8 @@ export const generateToken = (param) => {
  * @param {JSON} param
  * @return {JSON}
  */
-export const getFolderList = (param) => {
-  return axios.post(path + '/report-folder-list', param);
+export const getFolderList = () => {
+  return axios.post(path + '/report-folder-list');
 };
 
 /**

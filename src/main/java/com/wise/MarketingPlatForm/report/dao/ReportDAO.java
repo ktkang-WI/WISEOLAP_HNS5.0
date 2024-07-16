@@ -28,8 +28,8 @@ public interface ReportDAO {
     public ReportMstrEntity selectLinkReportParam(String reportId);
     public List<ReportLinkMstrEntity> selectLinkReportList(String reportId);
     public List<ReportLinkSubMstrEntity> selectSubLinkReportList(String reportId);
-    public List<FolderMasterVO> selectPublicReportFolderList(String userId);
-    public List<FolderMasterVO> selectPrivateReportFolderList(String userId);
+    public List<FolderMasterVO> selectPublicReportFolderList(int userNo);
+    public List<FolderMasterVO> selectPrivateReportFolderList(int userNo);
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
     public void insertUserUpload(UserUploadMstrEntity userUploadTable);
     public String selectReportName(String reportId);

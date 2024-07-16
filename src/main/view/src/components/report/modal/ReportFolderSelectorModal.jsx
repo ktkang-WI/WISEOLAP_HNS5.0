@@ -35,9 +35,7 @@ const ReportFolderSelectorModal = ({...props}) => {
 
   useEffect(() => {
     // TODO: 추후 접속중인 유저 ID로 변경
-    const param = {};
-    param.userId = 'admin';
-    getFolderList(param).then((response) => {
+    getFolderList().then((response) => {
       if (response.status != 200) {
         return;
       }

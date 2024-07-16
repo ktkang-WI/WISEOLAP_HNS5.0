@@ -314,7 +314,7 @@
         ORDER BY UPPERID, TYPE, ORDINAL
     </select>
 
-    <select id="selectPublicReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+    <select id="selectPublicReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
 					FLD_NM 						AS fldNm,
 					FLD_PARENT_ID 				AS fldParentId,
@@ -322,13 +322,13 @@
 		FROM  		GRP_AUTH_REPORT_MSTR
 					INNER JOIN USER_MSTR 		ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
 					INNER JOIN PUB_FLD_MSTR 	ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
-		WHERE 		USER_MSTR.USER_ID = #{userId}
+		WHERE 		USER_MSTR.USER_NO = #{userNo}
 					AND USER_MSTR.DEL_YN = 'N'
         			AND AUTH_PUBLISH != 0
 		ORDER BY 	fldParentId, fldOrdinal
     </select>
 
-    <select id="selectPrivateReportFolderList" parameterType="String" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+    <select id="selectPrivateReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
         SELECT FLD_ID AS fldId,
 		FLD_NM AS fldNm,
 		FLD_PARENT_ID AS fldParentId,
@@ -336,7 +336,7 @@
 		FROM USER_FLD_MSTR
 		INNER JOIN USER_MSTR
 		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
-		WHERE USER_MSTR.USER_ID = #{userId}
+		WHERE USER_MSTR.USER_NO = #{userNo}
     </select>
   
       <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">

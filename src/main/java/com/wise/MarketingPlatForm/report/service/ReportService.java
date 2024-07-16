@@ -576,11 +576,11 @@ public class ReportService {
         return result;
     }
 
-    public Map<String, List<FolderMasterVO>> getReportFolderList(String userId) {
+    public Map<String, List<FolderMasterVO>> getReportFolderList(int userNo) {
         Map<String, List<FolderMasterVO>> result = new HashMap<>();
 
-        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userId);
-        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userId);
+        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userNo);
+        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userNo);
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
 
