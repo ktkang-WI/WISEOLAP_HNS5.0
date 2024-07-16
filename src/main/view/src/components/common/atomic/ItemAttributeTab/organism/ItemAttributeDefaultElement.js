@@ -26,8 +26,8 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
 // import TopBottomModal from '../modal/TopBottomModal';
-import DataHighlightModal
-  from 'components/report/item/pivot/modal/organism/DataHighLightModal';
+// eslint-disable-next-line max-len
+import DataHighlightModal from 'components/report/item/pivot/modal/organism/datahighlight/DataHighLightModal';
 import GridAttributeModal
   from 'components/report/item/pivot/modal/organism/GridAttributeModal';
 import VariationValueModal

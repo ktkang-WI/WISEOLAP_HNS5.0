@@ -813,6 +813,11 @@
   "reportInfoChangeSuccess":"보고서 정보 저장에 성공 했습니다.",
   "failReportDelete": "보고서 삭제에 실패 했습니다.",
   "successReportDelete": "보고서 삭제에 성공 했습니다.",
+  "dataItemType": "구분",
+  "dataItemTypeList": [
+    {"name": "measure", "caption": "측정값"},
+    {"name": "dimension", "caption": "차원"}
+  ],
   "showHiddenFields": "숨긴 항목 보기",
   "reportHistory": {
     "reportHistory": "보고서 형상 관리",

@@ -587,6 +587,11 @@
   "reportInfoChangeSuccess":"Saving report information was successful.",
   "failReportDelete": "Report deletion failed.",
   "successReportDelete": "Report deletion was successful.",
+  "dataItemType": "division",
+  "dataItemTypeList": [
+    {"name": "measure", "caption": "measure"},
+    {"name": "dimension", "caption": "dimension"}
+  ],
   "showHiddenFields": "Show hidden fields",
   "reportHistory": {
     "reportHistory": "Report History",
