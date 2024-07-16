@@ -6,11 +6,10 @@ import Form, {
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import FolderListModal from './modal/FolderListModal';
-import {useRef} from 'react';
+import React from 'react';
 
-const FolderInformation = ({row, setRow, myPageFlag}) => {
+const FolderInformation = ({row, setRow, myPageFlag}, ref) => {
   const {openModal} = useModal();
-  const ref = useRef();
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -91,4 +90,4 @@ const FolderInformation = ({row, setRow, myPageFlag}) => {
   );
 };
 
-export default FolderInformation;
+export default React.forwardRef(FolderInformation);

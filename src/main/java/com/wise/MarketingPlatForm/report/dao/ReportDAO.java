@@ -20,7 +20,6 @@ public interface ReportDAO {
     public List<ReportListDTO> selectPublicReportList(String userId, List<String> reportTypes, String editMode);
     public List<ReportListDTO> publicReportList();
     public List<ReportListDTO> selectPrivateReportList(String userId, List<String> reportTypes, String editMode);
-    public List<ReportListDTO> privateReportList();
     public boolean updateReport(ReportMstrEntity reportMstrEntity);
     public boolean insertReport(ReportMstrEntity reportMstrEntity);
     public boolean updateConfigReport(ReportMstrEntity reportMstrEntity);

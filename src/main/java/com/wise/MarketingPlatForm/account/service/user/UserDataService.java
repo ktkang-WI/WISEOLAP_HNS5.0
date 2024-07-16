@@ -3,6 +3,8 @@ package com.wise.MarketingPlatForm.account.service.user;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +49,20 @@ public class UserDataService {
     if (userAuthDataMstr == null) return false;
 
     boolean result = false;
-  
-    if (userAuthDataMstr.size() == 0) {
-      result = accountDAO.deleteUserDataAll();
-    } else {
-      result = accountDAO.deleteUserData(userAuthDataMstr);
-      result = accountDAO.putUserData(userAuthDataMstr);
-    }
 
+    if (userAuthDataMstr.size() == 0) return accountDAO.deleteUserDataAll();
+
+    result = accountDAO.deleteUserData(userAuthDataMstr);
+
+    userAuthDataMstr = userAuthDataMstr
+    .stream()
+    .filter(d -> d.getDataXml() != null)
+    .collect(Collectors.toList());
+
+    if (userAuthDataMstr.size() == 0) return result;
+
+    result = accountDAO.putUserData(userAuthDataMstr);
+    
     return result;
   }
   

@@ -2,7 +2,6 @@ package com.wise.MarketingPlatForm.config.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;

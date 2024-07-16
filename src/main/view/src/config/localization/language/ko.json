@@ -806,14 +806,25 @@
   "folderManager": "폴더 관리",
   "noSelectionFolderAlert": "폴더를 선택후 진행해 주세요.",
   "loginErrorBySession": "'세션의 의해 로그인이 시도되었으나 서버에 문제가 발생하였습니다.'",
+  "removeFail": "삭제에 실패 했습니다.",
+  "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다.",
+  "defaultReport": "기본 보고서",
   "loadData": "데이터 불러오기",
   "reportInfoChangeSuccess":"보고서 정보 저장에 성공 했습니다.",
   "failReportDelete": "보고서 삭제에 실패 했습니다.",
   "successReportDelete": "보고서 삭제에 성공 했습니다.",
-  "linkReportCorrupted": "연결보고서를 가져오는데 실패 했습니다.",
   "dataItemType": "구분",
   "dataItemTypeList": [
     {"name": "measure", "caption": "측정값"},
     {"name": "dimension", "caption": "차원"}
-  ]
+  ],
+  "showHiddenFields": "숨긴 항목 보기",
+  "reportHistory": {
+    "reportHistory": "보고서 형상 관리",
+    "index": "순번",
+    "savedDate": "저장 날짜",
+    "user": "사용자",
+    "restore": "복원",
+    "warning": "저장되지 않은 작업 내용이 손실될 수 있습니다. 계속하시겠습니까?"
+  }
 }

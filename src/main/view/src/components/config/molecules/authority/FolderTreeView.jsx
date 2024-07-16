@@ -92,14 +92,17 @@ const FolderTreeView = ({mainKey, dependency}) => {
     data.next = data.next.map((d) => {
       if (nextId !== (d?.grpId || d?.userNo)) {
         return {
-          ...getDataObjectOfUserOrGroup(dataSetMode, (d.grpId || d.userNo)),
+          ...getDataObjectOfUserOrGroup(dataSetMode, (d?.grpId || d?.userNo)),
           fldIds: d.fldIds
         };
+      }
+      if (!d.fldIds.map((fldId) => fldId.fldId).includes(e.key)) {
+        d.fldIds.push(returnItem(newData));
       }
       return {
         ...getDataObjectOfUserOrGroup(dataSetMode, nextId),
         fldIds: d.fldIds.map((fld) =>
-          returnItem((fld.fldId === e.key ? newData : fld)), false)
+          returnItem((fld.fldId === e.key ? newData : fld)))
       };
     });
   };

@@ -223,8 +223,9 @@ public class ReportController {
     @PostMapping(value = "/report")
 	public Map<String, Object> getReport(HttpServletRequest request, @RequestBody Map<String, String> param) {
         String reportId = param.getOrDefault("reportId", "");
+        String reportSeq = param.getOrDefault("reportSeq", "");
 
-        return reportService.getReport(request, reportId);
+        return reportService.getReport(request, reportId, reportSeq);
 	}
     
     @Operation(

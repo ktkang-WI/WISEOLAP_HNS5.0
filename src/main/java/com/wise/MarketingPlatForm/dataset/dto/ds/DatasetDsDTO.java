@@ -15,4 +15,5 @@ public class DatasetDsDTO {
   String dbmsType;
   String ownerNm;
   String ip;
+  String dbNm;
 }

@@ -165,7 +165,15 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     showTotalsPrior = 'none';
   }
 
-  const fieldCount = mart.dataSourceConfig.fields.reduce((acc, f) => {
+  let pivotFields = [];
+  // TODO: 추후 PivotMatrix 옵션화
+  if (true) {
+    pivotFields = mart.dataSourceConfig.fields();
+  } else {
+    pivotFields = mart.dataSourceConfig.fields;
+  }
+
+  const fieldCount = pivotFields.reduce((acc, f) => {
     if (f.area == 'column') {
       acc.column++;
     }
@@ -338,7 +346,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         }}
       >
         <FieldChooser enabled={false}> </FieldChooser>
-        <Scrolling mode='standard' />
+        <Scrolling mode='virtual' />
       </DevPivotGrid>
       {
         usePage &&

@@ -6,7 +6,7 @@ import {selectJobQuantity} from 'redux/selector/LoadingSelector';
 import {useSelector} from 'react-redux';
 import {useContext} from 'react';
 import {AppContext} from 'App';
-import {sessionKey} from 'hooks/useAxiosSetting';
+import {abortController, requestPath} from 'hooks/useAxiosSetting';
 import localizedString from 'config/localization';
 
 const ImgWrapper = styled(Wrapper)`
@@ -50,7 +50,7 @@ const LoadingPanel = () => {
   const controllers = getContext.controllers;
 
   // 세션중지 PATH 입력 쿼리실행, 쿼리직접입력 테이블항목
-  const isThereToDeleteSession = sessionKey.some((session) => {
+  const isThereToDeleteSession = requestPath.some((session) => {
     return Object.keys(controllers).includes(session);
   });
 
@@ -60,15 +60,14 @@ const LoadingPanel = () => {
 
     const deleteSessionIndex = [];
 
-    sessionKey.forEach((session) => {
+    requestPath.forEach((session) => {
       const isToDeleteSession = Object.keys(controllers).includes(session);
       if (!isToDeleteSession) return;
       deleteSessionIndex.push(session);
     });
 
     deleteSessionIndex.forEach((session) => {
-      controllers[session].abort();
-      delete controllers[session];
+      abortController(controllers, session);
     });
   };
 

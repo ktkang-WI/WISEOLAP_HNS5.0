@@ -117,6 +117,7 @@ const DataSourceFoldableList = ({dataset}) => {
         </>
       );
     }
+
     return (
       <>
         <Draggable
@@ -160,6 +161,17 @@ const DataSourceFoldableList = ({dataset}) => {
   };
 
   let data = _.cloneDeep(dataset.fields);
+
+  if (dataset.showHiddenFields) {
+    data = data.map((field) => {
+      return {
+        ...field,
+        visible: undefined,
+        disabled: !field.visible
+      };
+    });
+  }
+
   // 뷰어인 경우.
   if (editMode == EditMode['VIEWER']) {
     const hideTreeElement = dataset.selectedFields;
@@ -202,7 +214,9 @@ const DataSourceFoldableList = ({dataset}) => {
               dataStructure="plain"
               parentIdExpr="parentId"
               keyExpr="uniqueName"
+              displayExpr="name"
               searchEnabled={true}
+              searchMode={'contains'}
               height={'calc(100% - 80px)'}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
@@ -216,10 +230,16 @@ const DataSourceFoldableList = ({dataset}) => {
   );
 };
 const compare = (prev, next) => {
-  let result = false;
-  if (prev.dataset.fields == next.dataset.fields) {
-    result = true;
+  if (!_.isEqual(prev.dataset.showHiddenFields,
+      next.dataset.showHiddenFields)) {
+    return false;
   }
-  return result;
+
+  if (_.isEqual(prev.dataset.fields, next.dataset.fields)) {
+    return true;
+  }
+
+  return false;
 };
+
 export default React.memo(DataSourceFoldableList, compare);

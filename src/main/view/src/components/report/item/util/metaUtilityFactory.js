@@ -1,3 +1,5 @@
+import {paletteCollection}
+  from 'components/common/atomic/Popover/organism/Palette';
 import ItemManager from './ItemManager';
 import {DataFieldType, dataFieldTypeOfItemTypeFunc} from './dataFieldType';
 // 추후 사용 예정.
@@ -99,6 +101,9 @@ const makeAdHocItemMeta = (orgItem) => {
   return {
     name: type[orgItem.type],
     memo: '',
+    paletteType: 'palette',
+    palette: paletteCollection[orgItem?.palette || 0],
+    colorEdit: [],
     useCaption: true,
     ...orgItem.meta
   };

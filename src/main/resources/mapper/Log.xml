@@ -62,6 +62,13 @@
     <result column="RUN_QUERY_BASE64" property="runQuery" javaType="String"/>
   </resultMap>
 
+  <resultMap id="ReportHisSummaryDTO" type="com.wise.MarketingPlatForm.log.vo.ReportHisSummaryDTO">
+    <result column="REPORT_SEQ" property="reportSeq" javaType="int"/>
+    <result column="USER_NM" property="userNm" javaType="String"/>
+    <result column="REPORT_NM" property="reportNm" javaType="String"/>
+    <result column="MOD_DT" property="modDt" javaType="String"/>
+  </resultMap>
+
   <!-- Query -->
   <!-- TODO: 추후 dataSourceId 적용 시 주석 해제. 현재는 미작동으로 Oracle만 활성화 -->
   <select id="selectLoginLog" parameterType="com.wise.MarketingPlatForm.log.vo.LogParamVO" resultMap="LoginLogDTO">
@@ -463,6 +470,53 @@
 		)
 	</select>
 
+  <select id="selectReportHisList" resultMap="ReportHisSummaryDTO">
+    SELECT
+    rmh.REPORT_SEQ, um.USER_NM, rmh.MOD_DT, rmh.REPORT_NM
+      FROM REPORT_MSTR_HIS rmh
+      LEFT OUTER JOIN USER_MSTR um ON rmh.MOD_USER_NO = um.USER_NO 
+      WHERE REPORT_ID = ${reportId}
+      ORDER BY MOD_DT ASC
+  </select>
+
+  <select id="selectReportHis" parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+    SELECT 	A.REPORT_ID as reportId
+				, A.REPORT_NM as reportNm
+				, A.FLD_ID as fldId
+				, A.FLD_TYPE as fldType
+				, A.REPORT_ORDINAL as reportOrdinal
+				, A.REPORT_TYPE as reportType
+				, A.REPORT_TAG as reportTag
+				, A.REPORT_DESC as reportDesc
+				, A.REPORT_LAYOUT as reportLayout
+				, A.GRID_INFO as gridInfo
+				, A.DATASRC_ID as dataSrcId
+				, A.DATASRC_TYPE as datasrcType
+				, A.DATASET_TYPE as datasetType
+				, A.REPORT_XML as reportXml
+				, A.CHART_XML as chartXml
+				, A.LAYOUT_XML as layoutXml
+				, A.DATASET_XML as datasetXml
+				, A.PARAM_XML as paramXml
+				, A.DATASET_QUERY as datasetQuery
+				, A.DEL_YN as delYn
+				, A.MOD_USER_NO as regUserNo
+				, B.USER_NM AS RegUserNm
+				, A.MOD_DT as regDt
+				, A.PROMPT_YN as promptYn
+				, A.REPORT_SUB_TITLE as reportSubTitle
+				, A.MOD_USER_NO as modUserNo
+				, B.USER_NM AS modUserNm
+				, A.MOD_DT as modDt
+				, B.USER_NM as userNm
+				, A.PRIVACY_YN as privacyYn
+            FROM REPORT_MSTR_HIS A
+				LEFT OUTER JOIN USER_MSTR B ON A.MOD_USER_NO = B.USER_NO
+        WHERE   1=1
+        AND A.REPORT_ID = #{reportId}
+        AND A.REPORT_SEQ = #{reportSeq}
+  </select>
+
   <insert id="insertQueryLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
 		INSERT INTO LOG_EXEC_QUERY
 		(
@@ -537,6 +591,7 @@
 			#{ctrlCaption}
 		)
 	</insert>
+
   <insert id="insertReportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
 		INSERT INTO LOG_REPORT_USE2
 		(
@@ -574,5 +629,69 @@
 		)
 	</insert>
 
+  <delete id="deleteReportHisByCount" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+    DELETE FROM REPORT_MSTR_HIS
+    WHERE REPORT_ID = #{reportId}
+    AND REPORT_SEQ IN (
+        SELECT REPORT_SEQ
+        FROM (
+            SELECT REPORT_SEQ
+            FROM REPORT_MSTR_HIS
+            WHERE REPORT_ID = #{reportId}
+            ORDER BY MOD_DT ASC
+        )
+        WHERE ROWNUM = 1
+    )
+    AND (SELECT COUNT(*) FROM REPORT_MSTR_HIS WHERE REPORT_ID = #{reportId}) >= 5
+  </delete>
+
+  <insert id = "insertReportHis" parameterType="com.wise.MarketingPlatForm.log.vo.ReportHisEntity">
+    <selectKey keyProperty="reportSeq" resultType="int" order="BEFORE">
+      SELECT NVL(MAX(REPORT_SEQ), 0) + 1 FROM REPORT_MSTR_HIS WHERE REPORT_ID = #{reportId}
+    </selectKey>
+
+		INSERT INTO REPORT_MSTR_HIS
+			(
+        REPORT_SEQ,
+				REPORT_ID,
+				REPORT_NM,
+				REPORT_SUB_TITLE,
+				FLD_ID,
+				FLD_TYPE,
+				REPORT_ORDINAL,
+				REPORT_TYPE,
+				REPORT_DESC,
+				PARAM_XML,
+        REPORT_TAG,
+        GRID_INFO,
+				CHART_XML,
+				LAYOUT_XML,
+				REPORT_XML,
+				DATASET_XML,
+        MOD_USER_NO,
+        MOD_DT
+			)
+		VALUES
+			(
+        #{reportSeq},
+				#{reportId},
+				#{reportNm},
+				#{reportSubTitle},
+				#{fldId},
+				#{fldType},
+				#{reportOrdinal},
+				#{reportType},
+				#{reportDesc},
+				#{paramXml},
+        #{reportTag},
+        #{gridInfo},
+				#{chartXml},
+				#{layoutXml},
+				#{reportXml},
+				#{datasetXml},
+        #{modUserNo},
+        SYSDATE
+			)
+	</insert>
 
 </mapper>

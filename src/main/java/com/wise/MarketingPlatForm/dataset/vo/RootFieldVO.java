@@ -11,5 +11,6 @@ public abstract class RootFieldVO {
 	String uniqueName;
 	String dataType;
 	String name;
+    boolean visible;
 	DataFieldType type;
 }

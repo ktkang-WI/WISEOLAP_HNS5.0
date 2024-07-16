@@ -1,3 +1,4 @@
+import {getFullUrl} from 'components/common/atomic/Location/Location';
 import models from 'models';
 
 export const getSubLinkDim = (item) => {
@@ -28,9 +29,6 @@ export const getSubLinkDim = (item) => {
 };
 
 export const connectLinkedReport = (info) => {
-  const contextRoot =
-    process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
   const reportId = info.linkReportId;
   const reportType = info.subLinkReportType || info.linkReportType;
 
@@ -43,8 +41,7 @@ export const connectLinkedReport = (info) => {
     models.Report.generateToken(tokenSource).then((res) => {
       const token = res.data.token;
       const urlString =
-        `${document.location.origin}${contextRoot}` +
-        `/editds/linkViewer?token=${token}`;
+        `${getFullUrl()}/linkViewer?token=${token}`;
       const newWindow = window.open(urlString, '_blank');
       if (newWindow) {
         newWindow.focus();

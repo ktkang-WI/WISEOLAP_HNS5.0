@@ -255,4 +255,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   );
 };
 
-export default React.memo(Chart, ItemManager.commonPropsComparator);
+export default React.memo(Chart, (prev, next) => {
+  if (!_.isEqual(prev.adHocOption, next.adHocOption)) {
+    return false;
+  }
+
+  return ItemManager.commonPropsComparator(prev, next);
+});
