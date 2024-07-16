@@ -14,15 +14,38 @@ import SingleTableDesignerModal
   from 'components/dataset/modal/SingleTableDesignerModal';
 import {getTheme} from 'config/theme';
 import {useSelector} from 'react-redux';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {
+  selectCurrentConfigure,
+  selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from 'components/config/configType';
 import DatasetType from 'components/dataset/utils/DatasetType';
 
+const datasetItemsInitialize = (menu, reportType, mode) => {
+  const datasetItems = [];
+  if (
+    menu?.cubeData &&
+    reportType !== mode
+  ) datasetItems.push(DatasetType.CUBE);
+  if (menu?.newDataSetFocusQuery) {
+    datasetItems.push(DatasetType.DS_SQL);
+  }
+  if (menu?.newDataSetFocusSingleTable) {
+    datasetItems.push(DatasetType.DS_SINGLE);
+  }
+  if (menu?.userDataUpload) {
+    datasetItems.push(DatasetType.DS_UPLOAD);
+  }
+  return datasetItems;
+};
 
 const DatasetDefaultElement = () => {
   const {openModal} = useModal();
   const theme = getTheme();
   const reportType = useSelector(selectCurrentDesignerMode);
+  const configure = useSelector(selectCurrentConfigure);
+  const datasetItems =
+    datasetItemsInitialize(configure.menu, reportType, DesignerMode['EXCEL']);
+
   const returnVal = {
     dataset: [
       {
@@ -115,9 +138,8 @@ const DatasetDefaultElement = () => {
     keys: ['dataset']
   };
 
-  if (reportType === DesignerMode['EXCEL']) {
-    delete returnVal.dataset[0];
-  }
+  returnVal.dataset =
+  returnVal.dataset.filter((dataset) => datasetItems.includes(dataset.id));
   return returnVal;
 };
 export default DatasetDefaultElement;

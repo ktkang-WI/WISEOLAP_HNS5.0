@@ -18,7 +18,6 @@ const adHocSettingsSelectBox = [
 const reportSettingsCheckBox = [
   'instantReportRetrieval'
 ];
-
 const chartBasicColorSettingsSelectBox = [
   {
     'dataField': 'chartDefaultColor',
@@ -37,6 +36,7 @@ const ReportConfigure = () => {
   const items = [
     {
       'title': localizedString.config.report.adHocReportSetting,
+      'visible': false,
       'items': [
         ...adHocSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -49,7 +49,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.reportSetting,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...reportSettingsCheckBox.map((field) => createCheckBoxItemProperties(
             report,
@@ -59,6 +59,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.chartBasicColorSetting,
+      'visible': false,
       'items': [
         ...chartBasicColorSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -83,8 +84,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.spreadSheetSetting,
-      'colCount': 2,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...spreadSheetSettingsCheckBox.map((field) =>
           createCheckBoxItemProperties(

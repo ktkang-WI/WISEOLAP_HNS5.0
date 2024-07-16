@@ -11,7 +11,7 @@ const useConfig = () => {
     dispatch(addConfigure(general));
     dispatch(setMyPageConfigure(myPageConfigure));
 
-    setMainTitle(general.mainTitle);
+    setMainTitle(general.general.mainTitle);
     setSpreadLicense(
         general.spreadJsDesignLicense,
         general.spreadJsLicense

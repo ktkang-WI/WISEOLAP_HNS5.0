@@ -10,7 +10,7 @@ import configureUtility
 import useConfig from 'hooks/useConfig';
 import useReportLoad from 'hooks/useReportLoad';
 import useReportSave from 'hooks/useReportSave';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {Outlet, useLoaderData} from 'react-router-dom';
@@ -26,7 +26,11 @@ const Designer = () => {
   const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
   const {getReport, getLinkedReport} = useReportLoad();
+
   saveConfiguration(generalConfigure, myPageConfigure);
+
+  const [tabItems, setTabItems] = useState();
+  const [mainTabItems, setMainTabItems] = useState();
 
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
@@ -69,10 +73,26 @@ const Designer = () => {
     initState(isLoadReport);
   };
 
+  // Tab item setting
+  useEffect(() => {
+    const menu = generalConfigure?.menu;
+    const mainTabItems = ['UserInfo'];
+    if (menu.searchReport) mainTabItems.unshift('ReportSearch');
+    if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
+    if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
+    const tabItems = [];
+    if (menu.tabAdhoc) tabItems.push('Dashboard');
+    if (menu.tabDashboard) tabItems.push('AdHoc');
+    if (menu.tabSpreadSheet) tabItems.push('Spreadsheet');
+    if (menu.tabPopUpConfig) tabItems.push('Preference');
+    setTabItems(tabItems);
+    setMainTabItems(mainTabItems);
+  }, []);
+
   // 브라우저 새로고침 문제.
   useEffect(() => {
     const configJson = configStringToJson(generalConfigure);
-    const initPage = configJson?.menuConfig?.Menu?.WI_DEFAULT_PAGE || 'DashAny';
+    const initPage = configJson?.general?.wiDefaultPage || 'DashAny';
     const hasFavoritReport = myPageConfigure?.defaultReportId;
     const param = {mode: designerMode};
     const paletteNo = paletteCollection.findIndex(
@@ -82,7 +102,8 @@ const Designer = () => {
     if (designerMode == DesignerMode['AD_HOC']) {
       const check = myPageConfigure?.defaultLayout?.check;
       const myOrGeneralConf = check?
-        myPageConfigure?.defaultLayout?.layout : generalConfigure?.adHocLayout;
+        myPageConfigure?.defaultLayout?.layout :
+        generalConfigure?.report?.adHocLayout;
       const layout = AdHocLayoutTypes[myOrGeneralConf];
 
       param.adhocLayout = layout || 'CTGB';
@@ -130,19 +151,14 @@ const Designer = () => {
       <Header
         left={['Logo', 'Viewer']}
         middle={['ReportTab']}
-        right={[
-          // 'NewWindow',
-          // 'ReportProperty'
-          'ReportSearch',
-          'ShowQuery',
-          'ReportHistory',
-          'UserInfo'
-        ]}
+        right={
+          mainTabItems
+        }
       >
       </Header>
       {/* ,  'Preference' */}
       <SideNavigationBar
-        content={['Dashboard', 'AdHoc', 'Spreadsheet', 'Preference']}
+        content={tabItems}
       />
       <Outlet/>
     </div>

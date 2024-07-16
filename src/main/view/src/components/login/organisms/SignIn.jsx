@@ -31,7 +31,7 @@ export const getInitPageAndSetingFunc = (
   const defaultItem = personalConfig.defaultItem;
 
   let myPageInit =
-    configJson?.wiDefaultPage || 'DashAny';
+  configJson?.general?.wiDefaultPage || 'DashAny';
 
   if (defaultItem) {
     try {

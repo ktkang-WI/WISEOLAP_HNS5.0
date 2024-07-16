@@ -12,17 +12,14 @@ const tabVisibleCheckBox = [
   'tabAdhoc',
   'tabDashboard',
   'tabSpreadSheet',
-  'tabDataset',
-  'tabConfig',
-  'tabDatasetViewer'
+  'tabConfig'
 ];
 
 const tabPopUpSettingsCheckBox = [
   'tabPopUpAdhoc',
   'tabPopUpDashboard',
   'tabPopUpSpreadSheet',
-  'tabPopUpConfig',
-  'tabPopUpDatasetViewer'
+  'tabPopUpConfig'
 ];
 
 const tabAuthCheckBox = [
@@ -30,17 +27,19 @@ const tabAuthCheckBox = [
 ];
 
 const mainTabCheckBox = [
-  'lookQuery'
+  'lookQuery',
+  'reportHistory',
+  'searchReport'
 ];
 
 const datasetSettingsCheckBox = [
   'cubeData',
-  'newDataSetFocusCube',
-  'newDataSetFocusCrossDomainJoin',
+  // 'newDataSetFocusCube', 주제영역 기준
+  // 'newDataSetFocusCrossDomainJoin', 이기종조인
   'newDataSetFocusQuery',
   'newDataSetFocusSingleTable',
-  'userDataUpload',
-  'originalDataset'
+  'userDataUpload'
+  // 'originalDataset' 기존 데이터 집합
 ];
 
 const officeDownloadCheckBox = [
@@ -72,7 +71,7 @@ const MenuConfgure = () => {
   const items = [
     {
       'title': localizedString.config.menu.tabVisible,
-      // 'visible': false,
+      'visible': true,
       'items': [
         ...tabVisibleCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -84,7 +83,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.tabPopupSetting,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...tabPopUpSettingsCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -96,7 +95,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.tabMenuAuth,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...tabAuthCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -108,6 +107,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.mainTabMenuSetting,
+      'visible': true,
       'items': [
         ...mainTabCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -119,7 +119,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.datasetSetting,
-      // 'visible': false,
+      'visible': true,
       'items': [
         ...datasetSettingsCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -131,7 +131,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.downloadOffice,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...officeDownloadCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -143,7 +143,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.downloadHancom,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...hancomDownloadCheckBox.map((field) =>
           createCheckBoxItemProperties(
@@ -155,7 +155,7 @@ const MenuConfgure = () => {
     },
     {
       'title': localizedString.config.menu.downloadEtc,
-      // 'visible': false,
+      'visible': false,
       'items': [
         ...etcDownloadCheckBox.map((field) =>
           createCheckBoxItemProperties(

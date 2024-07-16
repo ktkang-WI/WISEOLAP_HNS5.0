@@ -26,6 +26,8 @@ public class MenuDTO {
   boolean menuAuth;
   boolean cubeData;
   boolean lookQuery;
+  boolean reportHistory;
+  boolean searchReport;
   boolean newDataSetFocusCube;
   boolean newDataSetFocusDs;
   boolean newDataSetFocusCrossDomainJoin;
