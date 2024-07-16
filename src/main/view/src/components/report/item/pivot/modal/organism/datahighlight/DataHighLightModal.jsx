@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import localizedString from '../../../../../../../config/localization';
+import localizedString from 'config/localization';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {getTheme} from 'config/theme';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
@@ -7,7 +7,7 @@ import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import {Column, Selection, Button} from 'devextreme-react/data-grid';
 import styled from 'styled-components';
 import addHighLightIcon
-  from '../../../../../../../assets//image/icon/button/ico_zoom.png';
+  from 'assets/image/icon/button/ico_zoom.png';
 import {createContext, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem, selectCurrentItems, selectRootItem}
