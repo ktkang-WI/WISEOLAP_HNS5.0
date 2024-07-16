@@ -324,7 +324,6 @@ const ItemBoard = () => {
       if (type === 'pivot') isImg = false;
 
       renderValues.buttons.push(
-          !rootItem.adHocOption &&
           (memo ?
             <Memo>{memo}</Memo> : <></>),
           (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
