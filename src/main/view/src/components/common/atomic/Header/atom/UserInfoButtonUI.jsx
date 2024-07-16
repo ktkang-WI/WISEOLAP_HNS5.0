@@ -1,10 +1,9 @@
 import division from 'assets/image/icon/button/Rectangle_327.png';
-import localizedString from 'config/localization';
 import styled from 'styled-components';
 
 const Division = styled.img`
   src: ${(props) => props.src};
-  padding: 0 20px 0 10px;
+  padding: 0px 7px 2px 0px;
 `;
 
 const StyledSpan = styled.span`
@@ -20,7 +19,6 @@ const UserInfoButtonUI = ({name}) => {
   return (
     <>
       <Division src={division}/>
-      <StyledSpan>{localizedString.hello}!&ensp;&ensp;</StyledSpan>
       <StyledSpan
         textDecoration={'underline'}
         color='#005196'
