@@ -1,11 +1,12 @@
 import {Form, Template} from 'devextreme-react';
 import {Item, Label} from 'devextreme-react/form';
-import localizedString from '../../../../../../config/localization';
+import localizedString from '../../../../../../../config/localization';
 import React, {useContext, useState} from 'react';
-import EmojiArr from './EmojiArr';
+import EmojiArr from '../EmojiArr';
 import _ from 'lodash';
 import useModal from 'hooks/useModal';
-import {highlightFormContext} from '../organism/DataHighLightModal';
+import {highlightFormContext}
+  from '../../organism/datahighlight/DataHighLightModal';
 
 const DataHighlightForm = () => {
   // 선택한 아이콘 보여줌.
@@ -34,7 +35,9 @@ const DataHighlightForm = () => {
     highlightList,
     setHighlightList,
     setData,
-    ref
+    ref,
+    setPage,
+    page
   } = useContext(highlightFormContext);
 
   return (
@@ -89,6 +92,22 @@ const DataHighlightForm = () => {
       }}
     >
       <Item
+        name='type'
+        dataField='type'
+        editorType='dxSelectBox'
+        editorOptions={{
+          items: localizedString.dataItemTypeList,
+          value: page || 'measure',
+          valueExpr: 'name',
+          displayExpr: 'caption',
+          onValueChanged: (e) => {
+            setPage(e.value || 'measure');
+          },
+          disabled: formData.dataItem ?? false
+        }}>
+        <Label>{localizedString.dataItemType}</Label>
+      </Item>
+      <Item
         name='dataItem'
         dataField='dataItem'
         editorType='dxSelectBox'
@@ -139,7 +158,7 @@ const DataHighlightForm = () => {
         dataField='emojiList'
         editorType='dxSelectBox'
         editorOptions={{
-          dataSource: EmojiArr, // 이모지 모아둔 js파일.
+          dataSource: EmojiArr,
           displayExpr: 'id',
           valueExpr: 'id',
           dropDownButtonTemplate: 'conditionalIcon',

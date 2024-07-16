@@ -1,9 +1,24 @@
 import EmojiArr from './modal/molecules/EmojiArr';
+import loacalizedString from 'config/localization';
 
 // 합계, 총계, 셀 check에 대한 분기 처리 함수.
 export const isDataCell = (cell, area, highlight) => {
   const arr = [];
   const map = new Map();
+  if (highlight.type === 'dimension' && area == 'data') return false;
+
+  if (area == highlight.flag) {
+    if (highlight.type === 'dimension' && cell.type == 'D') {
+      return cell.text == cell.path[highlight.idx];
+    } else if (highlight.type === 'dimension' && highlight.applyTotal) {
+      if (cell.type == 'T') {
+        return (
+          cell.text == cell.path[highlight.idx] + ' ' + loacalizedString.all
+        );
+      }
+    }
+  };
+
   // 셀 선택 시
   if (highlight.applyCell) {
     map.set('applyCell', {'D': true});
@@ -111,10 +126,12 @@ export const getCssStyle = (highlight, cellElement, cell) => {
   const valueTo = highlight.valueTo;
   const cellValue = cell.value;
 
-  if (highlight.idx == cellIdx &&
+  if (highlight.idx == cellIdx && highlight.type == 'measure' &&
     checkCondition(condition, valueFrom, valueTo, cellValue)
   ) {
     applyEmoji();
+    return colorStyle;
+  } else {
     return colorStyle;
   }
 };

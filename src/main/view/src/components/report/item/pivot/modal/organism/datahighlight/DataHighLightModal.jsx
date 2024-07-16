@@ -1,5 +1,5 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import localizedString from '../../../../../../config/localization';
+import localizedString from '../../../../../../../config/localization';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import {getTheme} from 'config/theme';
 import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
@@ -7,7 +7,7 @@ import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import {Column, Selection, Button} from 'devextreme-react/data-grid';
 import styled from 'styled-components';
 import addHighLightIcon
-  from '../../../../../../assets/image/icon/button/ico_zoom.png';
+  from '../../../../../../../assets//image/icon/button/ico_zoom.png';
 import {createContext, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectCurrentItem, selectCurrentItems, selectRootItem}
@@ -16,11 +16,20 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import _ from 'lodash';
-import DataHighlightForm from '../molecules/DataHighlightForm';
+import DataHighlightForm from
+  '../../molecules/datahighlightForm/DataHighlightForm';
 import useModal from 'hooks/useModal';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {DesignerMode} from '../../../../../config/configType';
+import {DesignerMode} from '../../../../../../config/configType';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
+import DimensionHighlightForm
+  from '../../molecules/datahighlightForm/DimensionHighlightForm';
+import {
+  getIdxAndFlag,
+  getNames,
+  getValidation,
+  setMeta
+} from './DataHighlightUtil';
 
 const theme = getTheme();
 
@@ -60,15 +69,18 @@ const selectedReportTypeHighlight = (selectedItem, reportType) => {
 export const highlightFormContext = createContext(null);
 
 const DataHighlightModal = ({...props}) => {
+  const {updateItem} = ItemSlice.actions;
+
   const dispatch = useDispatch();
   const {alert, confirm} = useModal();
+
   const reportId = useSelector(selectCurrentReportId);
   const reportType = useSelector(selectCurrentDesignerMode);
   const rootItem = useSelector(selectRootItem);
+
   const selectedItem = reportType === DesignerMode['AD_HOC'] ?
       useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
-  const {updateItem} = ItemSlice.actions;
-  // meta에 데이터하이라트 목록을 가져옴. meta에 없으면 빈 배열을 반환.
+  const ref = useRef(null);
   const [highlightList, setHighlightList] =
     useState(
         [...selectedReportTypeHighlight(selectedItem, reportType)]
@@ -76,15 +88,18 @@ const DataHighlightModal = ({...props}) => {
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
   const [formData, setData] = useState(_.cloneDeep(init));
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
-  const ref = useRef(null);
   const [showField, setShowField] = useState(false);
-  // 데이터항목에 올라간 측정값의 name만 가져옴.
-  const measureNames = useMemo(() => {
-    if (reportType === DesignerMode['AD_HOC']) {
-      return rootItem.adHocOption.dataField.measure.map((mea) => mea.name);
-    } else if (reportType === DesignerMode['DASHBOARD']) {
-      return selectedItem.meta.dataField.measure.map((mea) => mea.name);
-    }
+  const [page, setPage] = useState('measure');
+
+  // index 값 가져올 떄 넣어서 가져오기.
+  const measureNames = useMemo(
+      () => getNames(reportType, rootItem, selectedItem).measures, []);
+
+  const dimNames = useMemo(() => {
+    const dimensions = getNames(reportType, rootItem, selectedItem).dimensions;
+    const onlyNames = dimensions.rows.concat(dimensions.cols);
+
+    return onlyNames;
   }, []);
 
   // 동일 필드명, 조건이면 정보 업데이트.
@@ -94,12 +109,14 @@ const DataHighlightModal = ({...props}) => {
     if (_.isEmpty(formData)) {
       return copyHighlight;
     }
-    // 선택한 측정값의 순서(인덱스)를 가져옴.
-    const idx = measureNames.findIndex((measure) =>
-      measure == formData.dataItem
-    );
+    // 선택한 측정값, 차원의 순서(인덱스)를 가져옴.
+    const idxAndFlag =
+      getIdxAndFlag(formData, reportType, rootItem, selectedItem);
 
-    const highlightData = {...formData, idx: idx};
+    const idx = idxAndFlag.idx;
+    const flag = idxAndFlag.flag;
+
+    const highlightData = {...formData, idx: idx, flag: flag};
     const findIdx = copyHighlight.findIndex(
         (data) => (data.dataItem === formData.dataItem &&
           data.condition === formData.condition &&
@@ -135,43 +152,23 @@ const DataHighlightModal = ({...props}) => {
     validation(formData, highlight);
   };
 
+  // 유효성 검사.
   const validation = (formData, highlight, flag) => {
-    // 유효성 검사.
-    let validation = true;
-    if (!formData.dataItem || !formData.condition || !formData.valueFrom) {
-      alert(localizedString.highlightInputEssentialValueMsg);
-      validation = false;
-    } else if (isNaN(Number(formData.valueFrom))) {
-      alert(localizedString.highlightOnlyNumberMsg);
-      validation = false;
-    } else {
-      if (formData.condition === 'Between' && formData.valueTo === undefined ||
-        formData.valueTo === '') {
-        alert(localizedString.highlightBetweenValueEssentialMsg);
-        validation = false;
-      } else if (Number(formData.valueFrom) > Number(formData.valueTo)) {
-        alert(localizedString.highlightBetweenValueCompareMsg);
-        validation = false;
-      } else {
-        // flag = 확인 버튼 클릭시 불필요하게 state setting 방지.
-        if (!flag) {
-          setHighlightList(highlight);
-          setData(_.cloneDeep(init));
-          setShowField(false);
-        }
-      }
-    }
-    return validation;
-  };
+    const alertMsg = getValidation(formData);
 
-  const setMeta = (item, key, value) => {
-    return {
-      ...item,
-      meta: {
-        ...item.meta,
-        [key]: value
-      }
-    };
+    if (alertMsg) {
+      alert(alertMsg);
+
+      return false;
+    }
+
+    if (!flag) {
+      setHighlightList(highlight);
+      setData(_.cloneDeep(init));
+      setShowField(false);
+    }
+
+    return true;
   };
 
   // 하이라이트 삭제 부분.
@@ -188,13 +185,18 @@ const DataHighlightModal = ({...props}) => {
     }
   };
 
+  const typeCaption = (e) => {
+    const type = e.value || 'measure';
+    return localizedString[type];
+  };
+
   return (
     <Modal
       onSubmit={() => {
         const popupName = 'dataHighlight';
         const formData = _.cloneDeep(ref.current.props.formData);
-        const isNullData =
-          formData.dataItem && formData.condition ? true : false;
+        const isNullData = formData.type === 'dimension'?
+          formData.dataItem: (formData.dataItem && formData.condition);
         let resultHighlightList = [];
         const newFormData = !isNullData ? [] : formData;
 
@@ -241,15 +243,20 @@ const DataHighlightModal = ({...props}) => {
             onCellClick={(e) => {
               // 추가된 하이라이트 목록을 클릭 할 때 동작. -> 하이라이트 정보에 내용 출력.
               const rowData = _.cloneDeep(e.row ?
-                {...e.row.data, status: 'update', rowIdx: e.rowIndex} :
+                {...e.row.data, status: 'update', rowIdx: e.rowIndex,
+                  type: (e.row?.data?.type || 'measure')} :
                 {applyCell: true, applyTotal: true, applyGrandTotal: true,
-                  status: 'new'});
+                  status: 'new', type: (e.row?.data?.type || 'measure')});
               rowData.condition === 'Between' && setShowField(true);
               rowData.condition !== 'Between' && setShowField(false);
+              const currPage = page;
+              setPage(currPage);
               setData(_.cloneDeep(rowData));
             }}
           >
             <Selection mode='single'/>
+            <Column caption={'구분'} dataField='type' cellRender={typeCaption}>
+            </Column>
             <Column caption={localizedString.fieldName} dataField='dataItem'/>
             <Column caption={localizedString.condition} dataField='condition'/>
             <Column
@@ -270,20 +277,27 @@ const DataHighlightModal = ({...props}) => {
           </CommonDataGrid>
         </ModalPanel>
         <ModalPanel
-          title={localizedString.dataHighlightInfo}
+          title={
+            localizedString[page || 'measure']+
+            ' ' + localizedString.dataHighlightInfo
+          }
           width='40%'
           padding='10'>
-          {/* 하이라이트 정보를 구성. dev의 <Form> 사용. */}
           <highlightFormContext.Provider value={{
             ref,
-            formData,
             setData,
-            measureNames,
             showField,
-            setShowField,
+            measureNames,
+            dimNames,
             highlightList,
-            setHighlightList}}>
-            <DataHighlightForm/>
+            setHighlightList,
+            setShowField,
+            formData,
+            setPage,
+            page
+          }}>
+            {(page == null || page == 'measure') ?
+              <DataHighlightForm /> : <DimensionHighlightForm />}
           </highlightFormContext.Provider>
         </ModalPanel>
       </StyledWrapper>
