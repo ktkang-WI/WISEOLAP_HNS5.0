@@ -108,7 +108,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
             });
           });
         }
-      });
+      }, true);
     } else {
       // 대상 차원이 차원 그룹일 경우
       filterTools.setMasterFilterData(target.series.name, () => {
@@ -124,7 +124,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         } else {
           target.series.select();
         }
-      }, true);
+      });
     }
   };
 
