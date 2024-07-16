@@ -26,10 +26,10 @@ const datasetItemsInitialize = (menu, reportType, mode) => {
     menu?.cubeData &&
     reportType !== mode
   ) datasetItems.push(DatasetType.CUBE);
-  if (menu?.newDataSetFocusQuery) {
+  if (menu?.newDatasetByQuery) {
     datasetItems.push(DatasetType.DS_SQL);
   }
-  if (menu?.newDataSetFocusSingleTable) {
+  if (menu?.newDatasetBySingleTable) {
     datasetItems.push(DatasetType.DS_SINGLE);
   }
   if (menu?.userDataUpload) {

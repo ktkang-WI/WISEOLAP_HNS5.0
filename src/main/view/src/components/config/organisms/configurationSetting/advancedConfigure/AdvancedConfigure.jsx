@@ -58,7 +58,7 @@ const AdvancedConfigure = () => {
   const items = [
     {
       'title': localizedString.config.advanced.dataManagement,
-      'visible': false,
+      'visible': true,
       'items': [
         ...dataManegementNumberBox.map((field) => createNumberBoxItemProperties(
             advanced,
@@ -68,7 +68,7 @@ const AdvancedConfigure = () => {
     },
     {
       'title': localizedString.config.advanced.userSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...userSettingsNumberBox.map((field) => createNumberBoxItemProperties(
             advanced,
@@ -78,7 +78,7 @@ const AdvancedConfigure = () => {
     },
     {
       'title': localizedString.config.advanced.dashbarodSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...dashboardSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -95,7 +95,7 @@ const AdvancedConfigure = () => {
     },
     {
       'title': localizedString.config.advanced.viewerSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...viewerSettingsCheckBox.map((field) => createCheckBoxItemProperties(
             advanced,
@@ -105,7 +105,7 @@ const AdvancedConfigure = () => {
     },
     {
       'title': localizedString.config.advanced.querySetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...querySettingsCheckBox.map((field) => createCheckBoxItemProperties(
             advanced,

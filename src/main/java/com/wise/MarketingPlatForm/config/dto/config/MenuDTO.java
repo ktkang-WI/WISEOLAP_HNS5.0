@@ -28,11 +28,11 @@ public class MenuDTO {
   boolean lookQuery;
   boolean reportHistory;
   boolean searchReport;
-  boolean newDataSetFocusCube;
-  boolean newDataSetFocusDs;
-  boolean newDataSetFocusCrossDomainJoin;
-  boolean newDataSetFocusQuery;
-  boolean newDataSetFocusSingleTable;
+  boolean newDatasetByCube;
+  boolean newDatasetByDs;
+  boolean newDatasetByCrossDomainJoin;
+  boolean newDatasetByQuery;
+  boolean newDatasetBySingleTable;
   boolean userDataUpload;
   boolean originalDataset;
   boolean officeVisible;

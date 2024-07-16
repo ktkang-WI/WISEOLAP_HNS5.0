@@ -16,18 +16,15 @@ export const ConfigureContext = createContext();
 const ConfigurationSetting = () => {
   const {alert} = useModal();
   const {generalConfigure} = useLoaderData();
-  const general = generalConfigure?.general;
-  const advanced = generalConfigure?.advanced;
-  const menu = generalConfigure?.menu;
-  const report = generalConfigure?.report;
+  const {general, advanced, menu, report} = generalConfigure || {};
   const [page, setPage] = useState(tabItems[0].value);
 
   const context = {
     state: {
-      general: general,
-      advanced: advanced,
-      menu: menu,
-      report: report
+      general,
+      advanced,
+      menu,
+      report
     }
   };
 

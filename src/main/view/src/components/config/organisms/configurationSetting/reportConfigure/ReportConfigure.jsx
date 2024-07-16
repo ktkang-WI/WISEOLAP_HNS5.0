@@ -36,7 +36,7 @@ const ReportConfigure = () => {
   const items = [
     {
       'title': localizedString.config.report.adHocReportSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...adHocSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -49,7 +49,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.reportSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...reportSettingsCheckBox.map((field) => createCheckBoxItemProperties(
             report,
@@ -59,7 +59,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.chartBasicColorSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...chartBasicColorSettingsSelectBox.map((field) =>
           createSelectBoxItemProperties(
@@ -71,7 +71,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.reportLayout,
-      'visible': false,
+      'visible': true,
       'items': [
         {
           'dataField': 'reportLayoutSetting',
@@ -84,7 +84,7 @@ const ReportConfigure = () => {
     },
     {
       'title': localizedString.config.report.spreadSheetSetting,
-      'visible': false,
+      'visible': true,
       'items': [
         ...spreadSheetSettingsCheckBox.map((field) =>
           createCheckBoxItemProperties(

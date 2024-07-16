@@ -34,10 +34,10 @@ const mainTabCheckBox = [
 
 const datasetSettingsCheckBox = [
   'cubeData',
-  // 'newDataSetFocusCube', 주제영역 기준
-  // 'newDataSetFocusCrossDomainJoin', 이기종조인
-  'newDataSetFocusQuery',
-  'newDataSetFocusSingleTable',
+  // 'newDatasetByCube', 주제영역 기준
+  // 'newDatasetByCrossDomainJoin', 이기종조인
+  'newDatasetByQuery',
+  'newDatasetBySingleTable',
   'userDataUpload'
   // 'originalDataset' 기존 데이터 집합
 ];
