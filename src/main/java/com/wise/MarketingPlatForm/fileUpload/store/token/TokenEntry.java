@@ -3,7 +3,9 @@ package com.wise.MarketingPlatForm.fileUpload.store.token;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class TokenEntry<T> {
     private T value;
     @Getter
