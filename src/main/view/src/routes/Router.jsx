@@ -40,6 +40,8 @@ import MyFontConfig from 'components/useInfo/organism/myFont/MyFontConfig';
 import Log from 'components/config/organisms/log/Log';
 import SearchQuery from 'components/config/organisms/searchQuery/SearchQuery';
 
+import {getUserNmLoader} from './loader/MyPageLoaderConfig';
+
 export const contextPath = '/editds';
 const multipleLoader = async () => {
   const generalConfigure = await generalLoader().then((result) => {
@@ -117,6 +119,7 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/config',
     element: <Config/>,
+    loader: getUserNmLoader,
     children: [
       {
         path: 'general',
@@ -154,6 +157,7 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/my-page',
     element: <MyPage/>,
+    loader: getUserNmLoader,
     children: [
       {
         path: 'user-info',

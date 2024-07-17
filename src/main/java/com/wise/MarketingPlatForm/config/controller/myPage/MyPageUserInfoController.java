@@ -24,6 +24,15 @@ public class MyPageUserInfoController {
   @Autowired
   MyPageUserInfoService myPageUserInfoService;
 
+  @GetMapping("/get-name")
+  public String getUserNm(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    String userNm = userDTO.getUserNm();
+
+    return userNm;
+  }
+
   @GetMapping("/user-info")
   public UserDTO userInfomation(HttpServletRequest request) {
     HttpSession session = request.getSession();

@@ -32,3 +32,9 @@ export const updateViewerConfig = (param) => {
 
   return res;
 };
+
+export const getUserNm = () => {
+  const res = axios.get(myPagePath + '/get-name');
+
+  return res;
+};

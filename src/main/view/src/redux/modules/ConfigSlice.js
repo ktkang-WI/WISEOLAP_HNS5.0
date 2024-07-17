@@ -50,6 +50,9 @@ const reducers = {
   },
   setMyPageConfigure(state, actions) {
     state.myPageConfigure = actions.payload;
+  },
+  setUserNm(state, actions) {
+    state.myPageConfigure.userNm = actions.payload;
   }
 };
 

@@ -1,9 +1,17 @@
 import Header from 'components/common/atomic/Header/organism/Header';
-import {Outlet, useLocation, useNavigate} from 'react-router-dom';
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
 import localizedString from 'config/localization';
 import TabMenu from 'components/config/molecules/common/TabMenu';
 import {getTheme} from 'config/theme';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {useDispatch} from 'react-redux';
+import ConfigSlice from 'redux/modules/ConfigSlice';
+import {useEffect} from 'react';
 
 const theme = getTheme();
 const tabNm = localizedString.myPage;
@@ -30,10 +38,18 @@ const menuButtons = [ // label localizedString
 ];
 
 const MyPage = () => {
+  const userNm = useLoaderData();
+  const dispatch = useDispatch();
+  const {setUserNm} = ConfigSlice.actions;
   const location = useLocation();
   const nav = useNavigate();
   const defaultSelection =
     menuButtons.find(({path}) => location.pathname.includes(path));
+
+  useEffect(() => {
+    dispatch(setUserNm(userNm));
+  }, []);
+
   return (
     <>
       <Wrapper display='flex' direction='column'>

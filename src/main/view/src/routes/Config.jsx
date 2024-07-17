@@ -3,13 +3,23 @@ import Header from 'components/common/atomic/Header/organism/Header';
 import SideNavigationBar from
   'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {getTheme} from 'config/theme';
-import {Outlet} from 'react-router-dom';
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {Outlet, useLoaderData} from 'react-router-dom';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const theme = getTheme();
 
 // Config 는 임시용 입니다.
 const Config = () => {
   const left = ['Logo', 'Viewer'];
+  const userNm = useLoaderData();
+  const dispatch = useDispatch();
+  const {setUserNm} = ConfigSlice.actions;
+
+  useEffect(() => {
+    dispatch(setUserNm(userNm));
+  }, []);
   return (
     <Wrapper
       display='flex' direction='column'
