@@ -8,13 +8,13 @@ const useConfig = () => {
   const {addConfigure, setMyPageConfigure} = ConfigSlice.actions;
 
   const saveConfiguration = (general, myPageConfigure) => {
-    dispatch(addConfigure(general));
+    dispatch(addConfigure(general.general));
     dispatch(setMyPageConfigure(myPageConfigure));
 
     setMainTitle(general.general.mainTitle);
     setSpreadLicense(
-        general.spreadJsDesignLicense,
-        general.spreadJsLicense
+        general.general.spreadJsDesignLicense,
+        general.general.spreadJsLicense
     );
   };
 
