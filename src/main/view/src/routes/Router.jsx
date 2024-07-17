@@ -112,7 +112,7 @@ const router = createBrowserRouter([
     loader: multipleLoader
   },
   {
-    path: contextPath + '/linkViewer',
+    path: contextPath + '/link-viewer',
     element: <LinkViewer/>,
     loader: generalLoader
   },

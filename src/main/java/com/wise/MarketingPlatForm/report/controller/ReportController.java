@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
@@ -48,6 +49,7 @@ import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
+import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 import com.wise.MarketingPlatForm.utils.Function;
 import com.wise.MarketingPlatForm.utils.ListDataUtility;
 import com.wise.MarketingPlatForm.utils.ListUtility;
@@ -67,12 +69,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/report")
 public class ReportController {
     private final ReportService reportService;
+
+    private final TokenStorage<ReportTokenDTO> tokenStorage;
     
     @Autowired
     private ListDataUtility<Measure> listDataUtility;
 
     ReportController(ReportService reportService) {
         this.reportService = reportService;
+        this.tokenStorage = new TokenStorage<>("report");
     }
 
     @Operation(summary = "item-data", description = "아이템의 데이터를 조회합니다.")
@@ -475,47 +480,40 @@ public class ReportController {
         return new ResponseEntity<>(aggregatedReportLinks, HttpStatus.OK);
     }
 
-    private Map<String, UserInfo> tokenStore = new HashMap<>();
-
     // Endpoint to generate a one-time token
     @PostMapping("/generate-token")
-    public Map<String, String> generateToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<String> generateToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
         String userId = userDTO.getUserId();
         String reportId = requestBody.get("reportId");
         String reportType = requestBody.get("reportType");
-        // Generate a random token
-        String token = UUID.randomUUID().toString();
-        // Associate the token with the reportId temporarily
-        tokenStore.put(token, new UserInfo(userId, reportId, reportType));
 
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return response;
+        String token = tokenStorage.saveToken(new ReportTokenDTO(Integer.parseInt(reportId), userId, reportType));
+
+        return new ResponseEntity(token, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/retrieve-link-report", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<Map<String, String>> retrieveReportId(
-        @RequestParam(value = "token", required = false) String token,
+    public ResponseEntity<Map<String, Object>> retrieveReportId(
+        @RequestParam(value = "token", required = true) String token,
         @RequestBody(required = false) Map<String, String> requestBody) {
         if (requestBody != null && requestBody.containsKey("token")) {
             token = requestBody.get("token");
-            System.out.println("token = " + token);
         }
-        if (token != null && tokenStore.containsKey(token)) {
-            System.out.println("Decoding token");
-            UserInfo userInfo = tokenStore.remove(token); // Ensure one-time use by removing the token
-            Map<String, String> response = new HashMap<>();
-            response.put("userId", userInfo.getUserId());
-            response.put("reportId", userInfo.getReportId());
-            response.put("reportType", userInfo.getReportType());
-            System.out.println("response = " + response);
+
+        ReportTokenDTO tokenDTO = tokenStorage.getValue(token);
+        if (tokenDTO != null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("userId", tokenDTO.getUserId());
+            response.put("reportId", tokenDTO.getReportId());
+            response.put("reportType", tokenDTO.getReportType());
+           
             return ResponseEntity.ok(response);
         } else {
             // Default response for invalid or missing token
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Invalid or missing token");
-            return ResponseEntity.badRequest().body(errorResponse);
+            return ResponseEntity.notFound().build();
         }
     }
     

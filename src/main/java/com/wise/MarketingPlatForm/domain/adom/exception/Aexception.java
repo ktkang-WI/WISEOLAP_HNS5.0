@@ -1,1 +1,0 @@
-package com.wise.MarketingPlatForm.domain.adom.exception;

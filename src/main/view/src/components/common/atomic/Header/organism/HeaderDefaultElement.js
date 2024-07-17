@@ -5,7 +5,6 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
-import models from 'models';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import showQuery from 'assets/image/icon/button/showQuery.png';
@@ -35,6 +34,7 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
+import {connectLinkedReport} from 'components/report/util/LinkedReportUtility';
 // import styled from 'styled-components';
 
 
@@ -234,21 +234,13 @@ const HeaderDefaultElement = () => {
           const firstLinkReport = linkReport[firstLinkReportKey];
           const linkReportId = firstLinkReport.linkReportId;
           const linkReportType = firstLinkReport.linkReportType;
-          const tokenSource = {
+
+          const param = {
             reportId: linkReportId,
             reportType: linkReportType
           };
-          models.Report.generateToken(tokenSource).then((res) => {
-            const token = res.data.token;
-            const urlString =
-              `${getFullUrl()}/linkViewer?token=${token}`;
-            const newWindow = window.open(urlString, '_blank');
-            if (newWindow) {
-              newWindow.focus();
-            }
-          }).catch((error) => {
-            console.error('Error sending link report:', error);
-          });
+
+          connectLinkedReport(param);
         } else {
           alert('연결 보고서가 존재하지 않습니다.');
         }

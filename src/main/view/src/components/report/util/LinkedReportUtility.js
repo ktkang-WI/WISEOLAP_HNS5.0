@@ -28,20 +28,13 @@ export const getSubLinkDim = (item) => {
   return subLinkDim;
 };
 
-export const connectLinkedReport = (info) => {
-  const reportId = info.linkReportId;
-  const reportType = info.subLinkReportType || info.linkReportType;
-
-  if (info) {
-    const tokenSource = {
-      reportId: reportId,
-      reportType: reportType
-    };
-
-    models.Report.generateToken(tokenSource).then((res) => {
-      const token = res.data.token;
+export const connectLinkedReport = (param) => {
+  if (param) {
+    models.Report.generateToken(param).then((res) => {
+      if (res.status != 200) return;
+      const token = res.data;
       const urlString =
-        `${getFullUrl()}/linkViewer?token=${token}`;
+        `${getFullUrl()}/link-viewer?token=${token}`;
       const newWindow = window.open(urlString, '_blank');
       if (newWindow) {
         newWindow.focus();

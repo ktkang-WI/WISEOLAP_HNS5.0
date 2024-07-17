@@ -75,10 +75,18 @@ const useContextMenu = (item) => {
     Object.values(linkedReport).forEach((info) => {
       if (info?.subYn === 'True' &&
            key == info?.subLinkReport[0]?.subLinkItemId) {
+        const reportId = info.linkReportId;
+        const reportType = info.subLinkReportType || info.linkReportType;
+
+        const param = {
+          reportId: reportId,
+          reportType: reportType
+        };
+
         subLinkedListItems.push({
           text: info.linkReportId,
           onItemClick: () => {
-            connectLinkedReport(info);
+            connectLinkedReport(param);
           }
         });
       }
