@@ -59,9 +59,9 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"userId\": \"admin\"}")
     }))
     @PostMapping(value = "/data-sources")
-    public List<DsMstrDTO> getDataSources(@RequestBody Map<String, String> param, HttpServletRequest request) {
+    public List<DsMstrDTO> getDataSources(HttpServletRequest request) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
 
         return datasetService.getDataSources(userId);
     }
