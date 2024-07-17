@@ -135,7 +135,7 @@ public class DatasetController {
     @PostMapping(value = "/ds-views")
     public List<DsViewDTO> getDsViews(HttpServletRequest request) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
 
         return datasetService.getDsViews(userId);
     }
@@ -153,7 +153,7 @@ public class DatasetController {
     public List<CubeMstrDTO> getCubes(@RequestBody Map<String, String> param, HttpServletRequest request) {
         String dsViewId = param.getOrDefault("dsViewId", "");
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
 
         return cubeService.getCubes(dsViewId, userId);
     }
@@ -171,7 +171,7 @@ public class DatasetController {
         String cubeId = param.getOrDefault("cubeId", "");
 
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
 
         return cubeService.getCube(cubeId, userId);
     }
@@ -343,7 +343,7 @@ public class DatasetController {
     public CubeTableColumn getCubeColumn(@RequestBody Map<String, String> param, HttpServletRequest request) {
         String cubeId = param.getOrDefault("cubeId", "");
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
         String uniqueName = param.getOrDefault("uniqueName", "");
 
         return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);

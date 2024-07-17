@@ -279,7 +279,7 @@ public class ReportController {
         String dsId = param.getOrDefault("dsId", "");
         String cubeId = param.getOrDefault("cubeId", "");
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = String.valueOf(userDTO.getUserId());
+        String userId = userDTO.getUserId();
         String actId = param.getOrDefault("actId", "");
         String parameterStr = param.getOrDefault("parameter", "[]");
 
