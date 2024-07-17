@@ -322,7 +322,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 const param = {
                   dsId: dataset.dsId,
                   cubeId: dataset.cubeId,
-                  userId: 'admin',
                   actId: act.actId,
                   parameter: JSON.stringify(rowColFilters)
                 };

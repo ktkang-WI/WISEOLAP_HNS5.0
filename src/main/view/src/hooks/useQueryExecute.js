@@ -92,7 +92,6 @@ const useQueryExecute = () => {
         if (filter[uniqueName]) {
           const cubeInfoParam = {
             cubeId: orgDataset.cubeId,
-            userId: 'admin', // 추후 userId 받아서
             uniqueName: uniqueName
           };
 

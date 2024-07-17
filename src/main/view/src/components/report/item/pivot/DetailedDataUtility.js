@@ -23,7 +23,6 @@ const getParameterInformation = (name, dataset, cubeColumnInfo, value) => {
 const getCubeColumnInfo = async (cubeId, uniqueName) => {
   const cubeInfoParam = {
     cubeId: cubeId,
-    userId: 'admin', // 추후 userId 받아서
     uniqueName: uniqueName
   };
 

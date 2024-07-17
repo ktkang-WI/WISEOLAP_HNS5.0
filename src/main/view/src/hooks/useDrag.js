@@ -84,7 +84,6 @@ const useDrag = () => {
       if (selectedDataset.datasetType == 'CUBE') {
         const param = {
           cubeId: selectedDataset.cubeId,
-          userId: 'admin', // 추후 userId 받아서
           uniqueName: sourceField.uniqueName
         };
         models.Cube.getCubeInfo(param)

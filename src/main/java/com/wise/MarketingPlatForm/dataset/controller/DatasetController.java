@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeMstrDTO;
 import com.wise.MarketingPlatForm.dataset.domain.parameter.vo.ListParameterDTO;
@@ -27,6 +28,7 @@ import com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewDTO;
 import com.wise.MarketingPlatForm.dataset.vo.UserUploadMstrDTO;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.dataset.vo.DsViewTableDTO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,8 +59,9 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"userId\": \"admin\"}")
     }))
     @PostMapping(value = "/data-sources")
-    public List<DsMstrDTO> getDataSources(@RequestBody Map<String, String> param) {
-        String userId = param.getOrDefault("userId", "");
+    public List<DsMstrDTO> getDataSources(@RequestBody Map<String, String> param, HttpServletRequest request) {
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
 
         return datasetService.getDataSources(userId);
     }
@@ -130,8 +133,9 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"userId\": \"admin\"}")
     }))
     @PostMapping(value = "/ds-views")
-    public List<DsViewDTO> getDsViews(@RequestBody Map<String, String> param) {
-        String userId = param.getOrDefault("userId", "");
+    public List<DsViewDTO> getDsViews(HttpServletRequest request) {
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
 
         return datasetService.getDsViews(userId);
     }
@@ -146,9 +150,10 @@ public class DatasetController {
     }))
 
     @PostMapping(value = "/cubes")
-    public List<CubeMstrDTO> getCubes(@RequestBody Map<String, String> param) {
+    public List<CubeMstrDTO> getCubes(@RequestBody Map<String, String> param, HttpServletRequest request) {
         String dsViewId = param.getOrDefault("dsViewId", "");
-        String userId = param.getOrDefault("userId", "");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
 
         return cubeService.getCubes(dsViewId, userId);
     }
@@ -162,9 +167,11 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"cubeId\": \"5181\", \"userId\": \"admin\"}")
     }))
     @PostMapping(value = "/cube")
-    public CubeInfoDTO getCube(@RequestBody Map<String, String> param) {
+    public CubeInfoDTO getCube(@RequestBody Map<String, String> param, HttpServletRequest request) {
         String cubeId = param.getOrDefault("cubeId", "");
-        String userId = param.getOrDefault("userId", "");
+
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
 
         return cubeService.getCube(cubeId, userId);
     }
@@ -333,9 +340,10 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"cubeId\": \"5181\", \"userId\": \"admin\", \"uniqueName\": \"[D_자동차].[자동차명]\"}")
     }))
     @PostMapping(value = "/cube-column")
-    public CubeTableColumn getCubeColumn(@RequestBody Map<String, String> param) {
+    public CubeTableColumn getCubeColumn(@RequestBody Map<String, String> param, HttpServletRequest request) {
         String cubeId = param.getOrDefault("cubeId", "");
-        String userId = param.getOrDefault("userId", "");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
         String uniqueName = param.getOrDefault("uniqueName", "");
 
         return cubeService.getCubeColumInformation(cubeId, userId, uniqueName);

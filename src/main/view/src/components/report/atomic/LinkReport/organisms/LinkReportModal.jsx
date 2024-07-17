@@ -38,7 +38,8 @@ const LinkReportModal = ({
   const {alert} = useModal();
 
   useEffect(() => {
-    models.Report.getList(null, 'designer').then(({data}) => {
+    const reportType = selectCurrentDesignerMode(store.getState());
+    models.Report.getList(reportType, 'designer').then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
     });

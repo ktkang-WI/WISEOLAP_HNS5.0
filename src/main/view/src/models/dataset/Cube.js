@@ -2,23 +2,15 @@ import axios from 'axios';
 
 const path = '/dataset';
 
-export const getAll = (userId) => {
-  return axios.post(path + '/cubes', {
-    userId: userId
-  });
-};
-
-export const getByCubeId = (userId, cubeId) => {
+export const getByCubeId = (cubeId) => {
   return axios.post(path + '/cube', {
-    cubeId: cubeId,
-    userId: userId
+    cubeId: cubeId
   });
 };
 
-export const getByDsViewId = (userId, dsViewId) => {
+export const getByDsViewId = (dsViewId) => {
   return axios.post(path + '/cubes', {
-    dsViewId: dsViewId,
-    userId: userId
+    dsViewId: dsViewId
   });
 };
 

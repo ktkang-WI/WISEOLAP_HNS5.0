@@ -4,7 +4,6 @@ const path = '/dataset';
 
 export const getByIdAndDsType = (userId, dsType) => {
   return axios.post(path + '/data-sources', {
-    userId: userId,
     dsType: dsType
   });
 };

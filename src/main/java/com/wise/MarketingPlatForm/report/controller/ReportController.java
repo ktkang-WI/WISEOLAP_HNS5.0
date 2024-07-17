@@ -273,12 +273,13 @@ public class ReportController {
 	)
 
     @PostMapping(value = "/detailed-data")
-    public MartResultDTO getDetailedData(@RequestBody Map<String, String> param) {
+    public MartResultDTO getDetailedData(@RequestBody Map<String, String> param, HttpServletRequest request) {
         Gson gson = new Gson();
 
         String dsId = param.getOrDefault("dsId", "");
         String cubeId = param.getOrDefault("cubeId", "");
-        String userId = param.getOrDefault("userId", "");
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = String.valueOf(userDTO.getUserId());
         String actId = param.getOrDefault("actId", "");
         String parameterStr = param.getOrDefault("parameter", "[]");
 

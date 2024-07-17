@@ -42,8 +42,6 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
   const [selectedDsView, setSelectedDsView] = useState({});
   const [selectedCube, setSelectedCube] = useState({});
   const selectedReportId = useSelector(selectCurrentReportId);
-  const userId = 'admin';
-
   const {alert} = useModal();
   const dispatch = useDispatch();
   const {updateDataset} = DatasetSlice.actions;
@@ -51,8 +49,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
   const datasetQuantity = useSelector(selectDatasetQuantity);
 
   useEffect(() => {
-    // TODO: 추후 접속중인 유저 ID로 변경
-    models.DSView.getByUserId(userId)
+    models.DSView.getByUserId()
         .then((data) => {
           setDsViewList(data.data);
         });
@@ -62,7 +59,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
     <Modal
       onSubmit={()=> {
         if (!_.isEmpty(selectedCube)) {
-          models.Cube.getByCubeId(userId, selectedCube.cubeId)
+          models.Cube.getByCubeId(selectedCube.cubeId)
               .then(({data}) => {
                 const datasets =
                     selectRootDataset(store.getState());
@@ -119,8 +116,7 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                 dataSource={dsViewList}
                 onSelectionChanged={(e) => {
                   if (e.selectedRowsData.length > 0) {
-                    models.Cube.getByDsViewId(userId,
-                        e.selectedRowsData[0].dsViewId)
+                    models.Cube.getByDsViewId(e.selectedRowsData[0].dsViewId)
                         .then(({data}) => {
                           setSelectedCubeList(data);
                           setSelectedDsView(e.selectedRowsData[0]);

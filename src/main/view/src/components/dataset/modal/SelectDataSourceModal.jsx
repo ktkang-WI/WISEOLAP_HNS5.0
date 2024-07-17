@@ -36,12 +36,12 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
   const [dataSourceType, setDataSourceType] = useState('ds');
 
   useEffect(() => {
-    models.DataSource.getByIdAndDsType('admin', DatasetType.DS_SQL)
+    models.DataSource.getByIdAndDsType(DatasetType.DS_SQL)
         .then(({data}) => {
           setDataSource(data);
         });
     if (isDsSingleTable) {
-      models.DSView.getByUserId('admin')
+      models.DSView.getByUserId()
           .then((data) => {
             setDsViewList(data.data);
           });

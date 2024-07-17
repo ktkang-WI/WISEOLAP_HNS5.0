@@ -235,7 +235,6 @@ const HeaderDefaultElement = () => {
           const linkReportId = firstLinkReport.linkReportId;
           const linkReportType = firstLinkReport.linkReportType;
           const tokenSource = {
-            userId: 'admin',
             reportId: linkReportId,
             reportType: linkReportType
           };
