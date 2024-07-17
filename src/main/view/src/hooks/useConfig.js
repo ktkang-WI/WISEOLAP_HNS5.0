@@ -7,14 +7,14 @@ const useConfig = () => {
   const dispatch = useDispatch();
   const {addConfigure, setMyPageConfigure} = ConfigSlice.actions;
 
-  const saveConfiguration = (general, myPageConfigure) => {
-    dispatch(addConfigure(general.general));
+  const saveConfiguration = (generalConfigure, myPageConfigure) => {
+    dispatch(addConfigure(generalConfigure));
     dispatch(setMyPageConfigure(myPageConfigure));
 
-    setMainTitle(general.general.mainTitle);
+    setMainTitle(generalConfigure.general.mainTitle);
     setSpreadLicense(
-        general.general.spreadJsDesignLicense,
-        general.general.spreadJsLicense
+        generalConfigure.general.spreadJsDesignLicense,
+        generalConfigure.general.spreadJsLicense
     );
   };
 

@@ -27,9 +27,9 @@ import {
   spreadDownlaodReportModel
 } from 'components/report/atomic/spreadBoard/util/spreadContants.js';
 import DatasetType from 'components/dataset/utils/DatasetType';
-import elementFactory
-  from 'components/common/atomic/Popover/molecules/ElementFactory';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import datasetDefaultElement
+  from 'components/common/atomic/Ribbon/popover/organism/DatasetDefaultElement';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
@@ -37,15 +37,13 @@ const useSpreadRibbon = () => {
   const {uploadFile, deleteFile} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
-  const datasetElement = elementFactory().dataset;
+  const {getDatasetElement} = datasetDefaultElement();
   const {
     createReportBlob
   } = useSpread();
 
   const setRibbonSetting = () => {
     const config = sheets.Designer.DefaultConfig;
-    // csutomtab 메뉴 생성
-    if (config.commandMap) return config;
     const newTab = SpreadRibbonDefaultElement;
 
     // 불필요 메뉴 삭제
@@ -175,8 +173,7 @@ const useSpreadRibbon = () => {
 
   // custom ribbon에 사용되는 메소드 정의 및 객체 반환.
   const ribbonCommandMap = () => {
-    console.log(datasetElement);
-    const datasetCommands = datasetElement.dataset.reduce(
+    const datasetCommands = getDatasetElement().dataset.reduce(
         (acc, {id, label, onClick}) => {
           if (id == DatasetType.CUBE) return acc;
 
@@ -289,7 +286,7 @@ const useSpreadRibbon = () => {
     };
   };
 
-  return setRibbonSetting();
+  return {setRibbonSetting};
 };
 
 export default useSpreadRibbon;

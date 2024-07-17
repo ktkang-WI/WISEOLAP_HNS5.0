@@ -15,6 +15,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
+import {selectCurrentConfigure} from 'redux/selector/ConfigSelector';
 
 const theme = getTheme();
 
@@ -49,9 +50,10 @@ const SpreadBoard = () => {
     bindData,
     hnsDrmUpload
   } = useSpread();
-  const config = useSpreadRibbon();
+  const {setRibbonSetting} = useSpreadRibbon();
   const currentReportId = useSelector(selectCurrentReportId);
   const spreadData = useSelector(selectCurrentSpreadData);
+  const config = useSelector(selectCurrentConfigure);
 
   useEffect(() => {
     setDesignerRef(spreaRef);
@@ -62,7 +64,6 @@ const SpreadBoard = () => {
       bindData(spreadData);
     }
   }, [spreadData]);
-
 
   useEffect(() => {
     const workbookJSON = getWorkbookJSON(currentReportId);
@@ -86,6 +87,12 @@ const SpreadBoard = () => {
     event.target.value = null;
   };
 
+  useEffect(() => {
+    if (spreaRef?.current?.designer) {
+      spreaRef.current.designer.setConfig(setRibbonSetting());
+    }
+  }, [config]);
+
   return (
     <StyledWrapper className='section board'>
       <Designer
@@ -93,7 +100,7 @@ const SpreadBoard = () => {
         ref={spreaRef}
         designerInitialized={(designer) => {
           if (designer) {
-            designer.setConfig(config);
+            designer.setConfig(setRibbonSetting());
             insertWorkbookJSON({
               reportId: currentReportId,
               workbookJSON: designer.getWorkbook().toJSON()

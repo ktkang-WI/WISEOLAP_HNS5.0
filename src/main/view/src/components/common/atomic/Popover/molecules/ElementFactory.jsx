@@ -14,13 +14,13 @@ const ElementFactory = () => {
   const customChartElement = customChartDefaulElement();
   const normalChartElement = normalChartDefaultElement();
   const downloadElement = downloadDefaultElement();
-  const datasetElement = datasetDefaultElement();
+  const {getDatasetElement} = datasetDefaultElement();
 
   return {
     'add_custom_chart': customChartElement,
     'add_default_chart': normalChartElement,
     'download_report': downloadElement,
-    'dataset': datasetElement,
+    'dataset': getDatasetElement(),
     'save_report': saveElement
   };
 
