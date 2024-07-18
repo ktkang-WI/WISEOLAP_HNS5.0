@@ -39,8 +39,14 @@ const ColumnWrapper = styled.div`
 const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100%;
-  width: 100%;
+  height: ${(props) => props.height || '100%'};
+  width: ${(props) => props.width || '100%'};
+  justify-content: ${(props) => props.justifyContent};
+  align-items:${(props) => props.alignItems};
+  border-radius: ${(props) => props.borderRadius};
+  border: ${(props) => props.border};
+  padding: ${(props) => props.padding};
+  margin: ${(props) => props.margin};
 `;
 
 const QueryDataSourceDesignerModal = ({
@@ -254,12 +260,6 @@ const QueryDataSourceDesignerModal = ({
           </ModalPanel>
         </ColumnWrapper>
         <ColumnWrapper>
-          <DatasetName
-            name={dataset.datasetNm || ''}
-            onValueChanged={(datasetNm) => {
-              setDataset({...dataset, datasetNm});
-            }}
-          />
           <RowWrapper
             height={'40px'}
             width={'97%'}
