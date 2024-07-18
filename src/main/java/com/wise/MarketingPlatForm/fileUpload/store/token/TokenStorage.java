@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+// NOTE: 추후 해당 파일 로직 DB로 전환 가능성 있음.
 public class TokenStorage<T> {
     private static final File FOLDER_PATH =  new File("UploadFiles/token");
     private final File file;
@@ -31,7 +32,6 @@ public class TokenStorage<T> {
             folder.mkdirs();
         }
     }
-
 
     private void loadTokens() {
         try {
