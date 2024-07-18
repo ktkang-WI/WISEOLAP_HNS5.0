@@ -22,7 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
-import com.wise.MarketingPlatForm.config.dto.GeneralDTO;
+
 import com.wise.MarketingPlatForm.config.service.GeneralService;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
