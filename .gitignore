@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### Upload ###
-UploadFiles/
+UploadFiles/*
+!UploadFiles/meta/
