@@ -1,5 +1,5 @@
 import {styled, css} from 'styled-components';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {getTheme} from 'config/theme';
 import filterImg from 'assets/image/icon/report/filter.png';
 import expandImg from 'assets/image/icon/button/expand.png';
@@ -122,4 +122,4 @@ const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
   );
 };
 
-export default FilterBar;
+export default React.memo(FilterBar);

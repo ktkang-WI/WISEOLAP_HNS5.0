@@ -9,7 +9,8 @@ import {useEffect, useRef} from 'react';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {useDispatch} from 'react-redux';
+import SpreadSlice from 'redux/modules/SpreadSlice';
 
 const theme = getTheme();
 
@@ -28,22 +29,28 @@ const StyledWrapper = styled(Wrapper)`
 
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
-  const currentReportId = useSelector(selectCurrentReportId);
+  const {setSpreadData} = SpreadSlice.actions;
   const {bindData, setExcelFile} = useSpread();
+  const dispatch = useDispatch();
 
   const workbookRef = useRef();
+  const file = useRef();
+  const prevData = useRef();
 
   useEffect(() => {
-    // 컴포넌트 생성될 때 1회만 파일 열기
+    if (file.current) return;
     const workbookJSON = getWorkbookJSON(reportId);
+    file.current = true;
     workbookRef.current.spread.fromJSON(workbookJSON);
     setExcelFile(reportId);
   }, []);
 
   useEffect(() => {
-    if (reportId != currentReportId) return;
-
-    bindData(spreadData, workbookRef.current.spread);
+    if (_.isEqual(prevData.current, spreadData) ||
+      spreadData === 0) return;
+    prevData.current = spreadData;
+    bindData(_.cloneDeep(spreadData), workbookRef.current.spread);
+    dispatch(setSpreadData({reportId, data: 0}));
   }, [spreadData]);
 
   return (
