@@ -31,8 +31,9 @@ const StyledWrapper = styled(Wrapper)`
 const VariationValueForm = ({formRef, formData, ...props}) => {
   const dataField = useSelector(selectCurrentDataField);
   const measures = dataField.measure || [];
-  const sortByItems = dataField.sortByItem || [];
-  const targets = [...measures, ...sortByItems];
+  // TODO: 추후 pivotMatrix 개선 후 적용
+  // const sortByItems = dataField.sortByItem || [];
+  const targets = measures;
 
   return (
     <StyledWrapper>

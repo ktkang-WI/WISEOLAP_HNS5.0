@@ -63,11 +63,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   let reRender = -1;
 
   const getFormats = useCallback(() => {
-    const formats = dataField.measure.map((item) => item.format);
-    formats.push(...dataField.sortByItem.map((item) => item.format));
+    const targets = dataField.measure.concat(dataField.sortByItem);
+    const formats = targets.map((item) => item.format);
 
     (adHocOption?.variationValues || []).forEach((v) => {
-      const target = dataField.measure.find((m) => m.fieldId == v.targetId);
+      const target = targets.find((m) => m.fieldId == v.targetId);
       if (v.type == 'absoluteVariation') {
         formats.push(target.format || getDefaultFormat());
       } else if (v.type.startsWith('Rank')) {

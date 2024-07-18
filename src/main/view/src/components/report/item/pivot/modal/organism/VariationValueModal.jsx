@@ -19,7 +19,6 @@ const theme = getTheme();
 
 const ID_STR = 'VARIATION_VALUE_';
 
-// TODO: localization 적용
 const VariationValueModal = ({...props}) => {
   const adhocOption = useSelector(selectCurrentAdHocOption);
   const dataFields = useSelector(selectCurrentDataField);
@@ -43,7 +42,7 @@ const VariationValueModal = ({...props}) => {
 
   const newBtn = {
     ...btnStyle,
-    text: '새로 만들기',
+    text: localizedString.new,
     onClick: () => {
       setSelectedItem({});
     }
@@ -51,7 +50,7 @@ const VariationValueModal = ({...props}) => {
 
   const saveBtn = {
     ...btnStyle,
-    text: '저장',
+    text: localizedString.save,
     onClick: () => {
       const res = formRef.current.instance.validate();
 
@@ -96,7 +95,10 @@ const VariationValueModal = ({...props}) => {
 
   const onFieldDataChanged = ({dataField, value}) => {
     if (dataField == 'targetId') {
-      const mea = dataFields.measure.find((mea) => mea.fieldId == value);
+      const mea = dataFields.measure
+          // TODO: 추후 pivotMatrix 개선 후 적용
+          // .concat(dataFields.sortByItem)
+          .find((mea) => mea.fieldId == value);
 
       setSelectedItem({
         ...selectedItem,
