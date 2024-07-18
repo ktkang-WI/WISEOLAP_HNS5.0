@@ -23,6 +23,7 @@ import ParamUtils from '../utils/ParamUtils';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetType from '../utils/DatasetType';
 import {makeFieldIcon} from '../utils/DatasetUtil';
+import ViewQuery from '../atomic/molecules/ViewQuery';
 
 const theme = getTheme();
 
