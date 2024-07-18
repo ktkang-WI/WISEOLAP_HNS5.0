@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageUserInfoService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,7 @@ public class MyPageUserInfoController {
 
   @GetMapping("/get-name")
   public String getUserNm(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
     String userNm = userDTO.getUserNm();
 
     return userNm;
@@ -35,8 +35,7 @@ public class MyPageUserInfoController {
 
   @GetMapping("/user-info")
   public UserDTO userInfomation(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
     int userNo = userDTO.getUserNo();
   
     UserDTO userInfo = myPageUserInfoService.getUserInfo(userNo);
@@ -51,8 +50,7 @@ public class MyPageUserInfoController {
     HttpServletRequest request
   ) {
     // session
-    HttpSession session = request.getSession();
-    UserDTO userDTO = (UserDTO)session.getAttribute("WI_SESSION_USER");
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
     int userNo = userDTO.getUserNo();
     // 로그인 비밀번호 맞는지 여부
     Map<String, String> result = myPageUserInfoService.checkCurrentPassword(userNo, currPassword);
