@@ -187,8 +187,6 @@ const generateItem = (item, param, rootItem) => {
 
   // TODO: 추후 PivotMatrix 옵션화
   if (true) {
-    console.log(item.mart.data.data);
-    console.log(fields);
     item.mart.dataSourceConfig = new PivotGridDataSource({
       fields: fields,
       store: item.mart.data.data

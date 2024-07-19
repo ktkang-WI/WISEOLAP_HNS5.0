@@ -25,6 +25,7 @@
     <result column="PHYSICALNAME" property="physicalName" javaType="String"/>
     <result column="LOGICALNAME" property="logicalName" javaType="String"/>
     <result column="ORDER" property="order" javaType="int"/>
+    <result column="visible" property="visible" javaType="boolean"/>
 	</resultMap>
 
   <resultMap id="CubeDimColumn" type="com.wise.MarketingPlatForm.dataset.domain.cube.entity.CubeDimColEntity">
@@ -36,6 +37,7 @@
     <result column="ORDERBY" property="orderBy" javaType="String"/>
     <result column="DATATYPE" property="dataType" javaType="String"/>
     <result column="ORDER" property="order" javaType="int"/>
+    <result column="visible" property="visible" javaType="boolean"/>
     <result column="CAPTIONNAME" property="captionName" javaType="String"/> 
 	</resultMap>
 
@@ -50,6 +52,7 @@
     <result column="ORDER" property="order" javaType="int"/>
     <result column="CAPTIONNAME" property="captionName" javaType="String"/> 
     <result column="format" property="format" javaType="String"/>
+    <result column="visible" property="visible" javaType="boolean"/>
     <result column="MEA_ORDER" property="meaOrder" javaType="int"/>
 	</resultMap>
 
