@@ -6,8 +6,6 @@ import {useNavigate} from 'react-router-dom';
 import useModal from 'hooks/useModal';
 import models from 'models';
 import {generalConfigure as generalLoader} from 'routes/loader/LoaderConfig';
-import configureUtility
-  from 'components/config/organisms/configurationSetting/ConfigureUtility';
 import useLayout from 'hooks/useLayout';
 
 const StyledSignIn = styled.div`
@@ -56,7 +54,6 @@ export const getInitPageAndSetingFunc = (
 const SignIn = () => {
   const nav = useNavigate();
   const {alert} = useModal();
-  const {configStringToJson} = configureUtility();
   const {afterLoginInitSettingLayout} = useLayout();
 
   return (
@@ -80,7 +77,6 @@ const SignIn = () => {
                   getInitPageAndSetingFunc(
                       config,
                       personalConfig,
-                      configStringToJson,
                       afterLoginInitSettingLayout);
 
                 // TODO: 추후 권한 적용
