@@ -113,21 +113,22 @@ public class ReportService {
                 
                 Set<String> uniqueEntries = new HashSet<>();
                 ArrayNode uniqueArrayNode = objectMapper.createArrayNode();
-
-                for (JsonNode node : reportFieldNodes) {
-                    String jsonString = node.get("uniqueName").toString();
-                    if (uniqueEntries.add(jsonString)) {
-                        uniqueArrayNode.add(node);
-                    }
-                }
-
+                
                 for (JsonNode node : cubeFieldNodes) {
-                    String jsonString = node.get("uniqueName").toString();
+                    String jsonString = node.get("uniqueName").asText();
                     if (uniqueEntries.add(jsonString)) {
                         uniqueArrayNode.add(node);
                     }
                 };
 
+                for (JsonNode node : reportFieldNodes) {
+                    String jsonString = node.get("uniqueName").asText();
+                    boolean isCustomData = node.has("isCustomData") ? node.get("isCustomData").asBoolean() : false;
+
+                    if ((jsonString.equals("987654321") || isCustomData) && uniqueEntries.add(jsonString)) {
+                        uniqueArrayNode.add(node);
+                    }
+                }
 
                 dataset.put("fields", new JSONArray(objectMapper.writeValueAsString(uniqueArrayNode)));
                 dataset.put("detailedData", new JSONArray(gson.toJson(cubeInfo.getDetailedData())));
@@ -218,6 +219,7 @@ public class ReportService {
     		
     		returnMap.put("reports", reports);
     	} catch (Exception e) {
+            e.printStackTrace();
             logDto.setStatusCd("99");
 
     		returnMap.put("error", "error");
