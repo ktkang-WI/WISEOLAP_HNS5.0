@@ -64,7 +64,7 @@ public class UserGroupService {
     return result;
   };
 
-  private GroupsModel generateGroupMemberUser(GroupMstrEntity groups, List<UserGroupDTO> users) {
+  private GroupsModel generateGroupMemberUser(GroupMstrEntity group, List<UserGroupDTO> users) {
     GroupMemberUserModel groupMemberUser = null;
     List<GroupMemberUserModel> grpMemberUser = new ArrayList<>();
     List<GroupMemberUserModel> grpNotMemberUser = new ArrayList<>();
@@ -81,7 +81,7 @@ public class UserGroupService {
       }
 
       // Group member Users
-      if(tempUserGroup.getGrpId() == groups.getGrpId()) {
+      if(tempUserGroup.getGrpId() == group.getGrpId()) {
         grpMemberUser.add(groupMemberUser);
       }
       // Not Group member Users
