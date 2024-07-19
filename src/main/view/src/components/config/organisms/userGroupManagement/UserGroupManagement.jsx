@@ -156,11 +156,6 @@ const UserGroupManagement = () => {
 
   const handleSaveGroup = (group) => {
     const saveGroup = () => {
-      if (groupMemberUsers.length === 0) {
-        alert(localizedString.validationGroupMemberUsers);
-        return;
-      }
-
       const action = group.grpId === 0 ? group.createGroup : group.updateGroup;
       const successMessage = group.grpId === 0 ?
       localizedString.successSave : localizedString.successUpdate;

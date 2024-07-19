@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.UsersGroupsModel;
 import com.wise.MarketingPlatForm.account.model.groups.GroupDetailInfoModel;
 import com.wise.MarketingPlatForm.account.model.groups.GroupMemberUserModel;
@@ -23,12 +24,11 @@ public class UserGroupService {
 
   public UsersGroupsModel getUserGroupData() {
 
-    List<UserGroupDTO> userGroupDTO = accountDAO.selectListGroupData();
-
-    if (userGroupDTO == null) return null;
-
-    List<UsersModel> usersFormat = generateUsersObject(userGroupDTO);
-    List<GroupsModel> groupsFormat = generateGroupsObject(userGroupDTO);
+    List<UserGroupDTO> userMstr = accountDAO.selectUserJoinGroup();
+    List<GroupMstrEntity> groupMstr = accountDAO.selectGroupMstr();
+    
+    List<UsersModel> usersFormat = generateUsersObject(userMstr);
+    List<GroupsModel> groupsFormat = generateGroupsObject(groupMstr, userMstr);
 
     UsersGroupsModel usersGroupsFormat = UsersGroupsModel.builder()
       .usersFormat(usersFormat)
@@ -42,18 +42,16 @@ public class UserGroupService {
     return usersGroupsFormat;
   };
 
-  private List<GroupsModel> generateGroupsObject(List<UserGroupDTO> userGroups) {
+  private List<GroupsModel> generateGroupsObject(List<GroupMstrEntity> groups, List<UserGroupDTO> users) {
     List<GroupsModel> result = new ArrayList<>();
-    List<Integer> groupkeys = new ArrayList<>();
 
-    for (UserGroupDTO userGroup : userGroups) {
-      if(groupkeys.contains(userGroup.getGrpId())) continue;
-      GroupsModel groupMemberUser = generateGroupMemberUser(userGroups, userGroup);
+    for (GroupMstrEntity group : groups) {
+      GroupsModel groupMemberUser = generateGroupMemberUser(group, users);
       GroupsModel groupsFormat = GroupsModel.builder()
-        .grpId(userGroup.getGrpId())
-        .grpNm(userGroup.getGrpNm())
-        .grpDesc(userGroup.getGrpDesc())
-        .grpDetailInfo(generateGroupDetailInfoObject(userGroup))
+        .grpId(group.getGrpId())
+        .grpNm(group.getGrpNm())
+        .grpDesc(group.getGrpDesc())
+        .grpDetailInfo(generateGroupDetailInfoObject(group))
         .grpMemberUser(groupMemberUser.getGrpMemberUser())
         .grpNotMemberUser(groupMemberUser.getGrpNotMemberUser())
         .build();
@@ -61,19 +59,17 @@ public class UserGroupService {
         throw new NullPointerException("groupFormat is null");
       }
       result.add(groupsFormat);
-      groupkeys.add(groupsFormat.getGrpId());
     }
 
     return result;
   };
 
-  private GroupsModel generateGroupMemberUser(List<UserGroupDTO> userGroups, UserGroupDTO userGroup) {
-    // GroupMemberUser result = new ArrayList<>();
+  private GroupsModel generateGroupMemberUser(GroupMstrEntity groups, List<UserGroupDTO> users) {
     GroupMemberUserModel groupMemberUser = null;
     List<GroupMemberUserModel> grpMemberUser = new ArrayList<>();
     List<GroupMemberUserModel> grpNotMemberUser = new ArrayList<>();
 
-    for(UserGroupDTO tempUserGroup:userGroups){
+    for(UserGroupDTO tempUserGroup : users){
       groupMemberUser = GroupMemberUserModel.builder()
       .userNo(tempUserGroup.getUserNo())
       .userId(tempUserGroup.getUserId())
@@ -85,7 +81,7 @@ public class UserGroupService {
       }
 
       // Group member Users
-      if(tempUserGroup.getGrpId() == userGroup.getGrpId()) {
+      if(tempUserGroup.getGrpId() == groups.getGrpId()) {
         grpMemberUser.add(groupMemberUser);
       }
       // Not Group member Users
@@ -108,12 +104,12 @@ public class UserGroupService {
 
 
 
-  private GroupDetailInfoModel generateGroupDetailInfoObject(UserGroupDTO userGroup) {
+  private GroupDetailInfoModel generateGroupDetailInfoObject(GroupMstrEntity group) {
       GroupDetailInfoModel groupDetailInfo = GroupDetailInfoModel.builder()
-          .grpId(userGroup.getGrpId())
-          .grpNm(userGroup.getGrpNm())
-          .grpDesc(userGroup.getGrpDesc())
-          .grpRunMode(userGroup.getGrpRunMode())
+          .grpId(group.getGrpId())
+          .grpNm(group.getGrpNm())
+          .grpDesc(group.getGrpDesc())
+          .grpRunMode(group.getGrpRunMode())
           .build();
 
       if (groupDetailInfo == null) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.service.user.UserService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -30,9 +31,20 @@ public class UserController {
   private UserService userService;
 
   @GetMapping
-  public ResponseEntity<RestAPIVO> getUser() throws Exception{
+  public ResponseEntity<RestAPIVO> getUser(
+    @RequestParam(required = false, defaultValue = "-1") int notGrpId,
+    @RequestParam(required = false, defaultValue = "-1") int grpId
+    ) throws Exception{
 
-    List<UserMstrEntity> model = userService.selectUserMstr();
+    if (notGrpId >= 0 && grpId >= 0) {
+      return RestAPIVO.badRequest("", "You can't send both parameters, notGrpId and grpId, at the same time.");
+    }
+    
+    UserSelectorDTO userSelector = UserSelectorDTO.builder()
+      .notGrpId(notGrpId)
+      .grpId(grpId)
+      .build();
+    List<UserMstrEntity> model = userService.selectUserMstr(userSelector);
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 

@@ -41,8 +41,8 @@ export const getGroupDs = () => {
 };
 
 // 사용자
-export const getUsers = () => {
-  const res = axios.get(accountPath + '/user');
+export const getUsers = (param) => {
+  const res = axios.get(accountPath + '/user', {params: param});
   return res;
 };
 

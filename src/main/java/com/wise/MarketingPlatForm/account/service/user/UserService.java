@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
 @Service
@@ -76,8 +77,8 @@ public class UserService {
     return accountDAO.deleteUser(userMstr);
   }
 
-  public List<UserMstrEntity> selectUserMstr() {
-    return accountDAO.selectUserMstr();
+  public List<UserMstrEntity> selectUserMstr(UserSelectorDTO userSelector) {
+    return accountDAO.selectUserMstr(userSelector);
   }
 
 }

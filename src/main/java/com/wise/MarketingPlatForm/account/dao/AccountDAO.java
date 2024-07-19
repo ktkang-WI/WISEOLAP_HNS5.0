@@ -13,6 +13,7 @@ import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDsMstrEntity;
@@ -26,7 +27,7 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
 @Mapper
 public interface AccountDAO {
-  public List<UserMstrEntity> selectUserMstr();
+  public List<UserMstrEntity> selectUserMstr(UserSelectorDTO userSelector);
   public List<UserDataDTO> selectUserData();
   public List<UserFolderDTO> selectUserFolder();
   public List<UserDsDTO> selectUserDs();
@@ -50,7 +51,7 @@ public interface AccountDAO {
   public boolean deleteUserFolderAll();
 
   public List<GroupMstrEntity> selectGroupMstr();
-  public List<UserGroupDTO> selectListGroupData();
+  public List<UserGroupDTO> selectUserJoinGroup();
   public List<GroupDataDTO> selectGroupData();
   public List<GroupFolderDTO> selectGroupFolder();
   public List<GroupDsDTO> selectGroupDs();

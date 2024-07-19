@@ -63,7 +63,7 @@ export async function authorityLoader() {
     await models.UserGroupManagement.getGroups().then((res) => getData(res));
   // USER_MSTR
   const userData =
-    await models.Authority.getUsers().then((res) => getData(res));
+    await models.Authority.getUsers({notGrpId: 0}).then((res) => getData(res));
   // DS_MSTR
   const dataSourceData =
     await models.Authority.getDs().then((res) => getData(res));

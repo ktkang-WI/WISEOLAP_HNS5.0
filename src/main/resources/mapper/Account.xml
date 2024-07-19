@@ -135,8 +135,7 @@
         FROM GRP_MSTR
         WHERE DEL_YN = 'N'
     </select>
-
-    <select id="selectUserMstr" resultMap="UserMstrEntity">
+    <select id="selectUserMstr" resultMap="UserMstrEntity" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO">
       SELECT
         USER_NO,
         USER_ID,
@@ -148,11 +147,16 @@
         USER_DESC
         FROM USER_MSTR
         WHERE DEL_YN = 'N'
-        AND GRP_ID != 0
+        <if test='notGrpId != -1'>
+          AND GRP_ID != #{notGrpId, jdbcType=INTEGER}
+        </if>
+        <if test='grpId != -1'>
+          AND GRP_ID == #{grpId, jdbcType=INTEGER}
+        </if>
     </select>
 
-    <select id="selectListGroupData" resultMap="UserGroupDTO">
-			SELECT
+    <select id="selectUserJoinGroup" resultMap="UserGroupDTO">
+      SELECT
         USER_MSTR.USER_NO,
         USER_MSTR.USER_ID,
         USER_MSTR.USER_NM,
@@ -165,13 +169,11 @@
         GRP_MSTR.GRP_NM,
         GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,
         GRP_MSTR.GRP_DESC
-        FROM USER_MSTR INNER JOIN GRP_MSTR
+        FROM USER_MSTR LEFT OUTER JOIN GRP_MSTR
             ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
             WHERE 1 = 1
             AND USER_MSTR.DEL_YN = 'N'
-            AND GRP_MSTR.DEL_YN = 'N'
-		</select>
-
+    </select>
     <select id="selectUserData" resultMap="UserDataDTO">
       SELECT
           USER_MSTR.USER_NO,
