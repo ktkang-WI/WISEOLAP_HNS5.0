@@ -27,9 +27,12 @@ public class ListDataUtility<T> {
         .forEach(fm -> mergedMeasures.add(fm));
     second
         .stream()
-        .filter(m -> first.stream().anyMatch(mm -> func.execute(m, mm)))
-        .forEach(fm -> mergedMeasures.add(fm));
-
+        .forEach((fm)-> {
+            boolean mathedValue = first.stream().noneMatch((mm) -> func.execute(fm, mm));
+            if(mathedValue) {
+              mergedMeasures.add(fm);
+            }
+        });
     return mergedMeasures;
   }
 }

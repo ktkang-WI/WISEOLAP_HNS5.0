@@ -11,7 +11,7 @@ const getCustomDatas = (field, sourceField) => {
   return field;
 };
 
-const measureOption = (tempField) => {
+const measureOption = (tempField, sourceField) => {
   return {
     format: {
       formatType: 'Number',
@@ -27,7 +27,8 @@ const measureOption = (tempField) => {
       precisionType: 'round',
       useDigitSeparator: true
     },
-    summaryType: tempField.fieldType == 'MEA' ? 'SUM' : 'MIN'
+    summaryType: tempField.fieldType == 'MEA' ? sourceField?.summaryType ?
+      sourceField?.summaryType.toUpperCase() :'SUM' : 'MIN'
   };
 };
 
@@ -87,7 +88,7 @@ export const getNewDataField = (
   if (!sourceField.fieldId ||
     (sourceField.fieldId && sourceField.type != tempField.type)) {
     if (tempField.type == 'MEA') {
-      tempField = {...tempField, ...measureOption(tempField)};
+      tempField = {...tempField, ...measureOption(tempField, sourceField)};
     } else {
       tempField = {...tempField, ...dimensionOption};
     }
