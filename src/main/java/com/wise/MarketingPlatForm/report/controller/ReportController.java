@@ -184,7 +184,7 @@ public class ReportController {
         }
 
         Function<Measure> func = (m1, m2) -> {
-            return !m1.getName().equals(m2.getName());
+            return m1.getName().equals(m2.getName());
         };
         List<Measure> mergeMeasures =
             listDataUtility.mergeList(measures, temporaryMeasures, func);

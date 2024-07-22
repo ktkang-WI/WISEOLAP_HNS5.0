@@ -167,11 +167,13 @@ const CustomDataModal = ({selectedDataSource, orgDataset, ...props}) =>{
       extractedMeasures.forEach((measure) => cleaningMeasure.add(measure));
     });
 
+    /*
     dataField.measure.forEach((measure) => {
       if ([...cleaningMeasure].includes(measure.name)) {
         cleaningMeasure.delete(measure.name);
       }
     });
+    */
 
     return measures.filter((measure) =>
       [...cleaningMeasure].includes(measure.name));

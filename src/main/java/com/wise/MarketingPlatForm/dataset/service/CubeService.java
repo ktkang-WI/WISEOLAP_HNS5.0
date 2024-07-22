@@ -104,6 +104,7 @@ public class CubeService {
                     .dataType(entity.getDataType())
                     .uniqueName(entity.getUniqueName())
                     .description(entity.getDescription())
+                    .summaryType(entity.getSummaryType())
                     .build());
         }
 
