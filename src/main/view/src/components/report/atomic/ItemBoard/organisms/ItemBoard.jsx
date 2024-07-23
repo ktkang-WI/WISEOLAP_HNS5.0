@@ -97,6 +97,39 @@ const ItemBoard = () => {
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
+  const ignoreDownloadExcept = [
+    'textBox',
+    'treeView',
+    'schedulerComponent',
+    'comboBox',
+    'listBox',
+    'coordinateDot',
+    'coordinateLine'
+  ];
+  // TODO: 임시용 변수 d3 이미지 다운로드 추가이후 삭제 예정.
+  const imgDownloadExcept = [
+    'card',
+    'liquidFillGauge',
+    'calendar',
+    'rangeBar',
+    'schedulerComponent',
+    'waterFall',
+    'comboBox',
+    'scatterPlot',
+    'ciclePacking',
+    'zoomableIcicle',
+    'sunburstChart',
+    'radialTree',
+    'collapsibleTree',
+    'heatMap',
+    'wordCloud',
+    'arc',
+    'chord',
+    'timeline',
+    'boxPlot',
+    'funnelChart',
+    'starChart'
+  ];
 
   const itemExportsPicker = (id) => {
     return itemExports.find((item) => item.id == id);
@@ -305,39 +338,6 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
-      const ignoreDownloadExcept = [
-        'textBox',
-        'treeView',
-        'schedulerComponent',
-        'comboBox',
-        'listBox',
-        'coordinateDot',
-        'coordinateLine'
-      ];
-      // TODO: 임시용 변수 d3 이미지 다운로드 가능하게.
-      const imgDownloadExcept = [
-        'card',
-        'liquidFillGauge',
-        'calendar',
-        'rangeBar',
-        'schedulerComponent',
-        'waterFall',
-        'comboBox',
-        'scatterPlot',
-        'ciclePacking',
-        'zoomableIcicle',
-        'sunburstChart',
-        'radialTree',
-        'collapsibleTree',
-        'heatMap',
-        'wordCloud',
-        'arc',
-        'chord',
-        'timeline',
-        'boxPlot',
-        'funnelChart',
-        'starChart'
-      ];
       const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
       const isItPossibleToDownload = ignoreDownloadExcept.includes(item.type);
       let isImg = true;
