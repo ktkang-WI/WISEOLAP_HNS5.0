@@ -353,9 +353,96 @@ const useReportSave = () => {
     dispatch(datasetActions.deleteReportDataset({reportId}));
   };
 
+  const querySearchException = (parameters) => {
+    try {
+      // 매개변수 필터링
+      // eslint-disable-next-line max-len
+      const paramInfos = parameters.informations.filter((param) => param.operation === 'BETWEEN');
+
+      if (paramInfos.length === 0) {
+        // eslint-disable-next-line max-len
+        throw new Error('보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.');
+      }
+
+      // 날짜 문자열을 Date 객체로 변환하는 함수
+      const parseDate = (dateString, isStart) => {
+        let year = 0;
+        let month = isStart ? 0 : 11;
+        // eslint-disable-next-line max-len
+        let day = isStart ? 1 : new Date(dateString.slice(0, 4), month + 1, 0).getDate();
+
+        if (dateString.includes('-')) {
+          // YYYY-MM-DD 형식인 경우
+          return new Date(dateString);
+        }
+
+        switch (dateString.length) {
+          case 8: // YYYYMMDD 형식
+            day = parseInt(dateString.slice(6, 8), 10);
+          case 6: // YYYYMM 형식
+            month = parseInt(dateString.slice(4, 6), 10) - 1;
+          case 4: // YYYY 형식
+            year = parseInt(dateString.slice(0, 4), 10);
+            break;
+          default:
+            // eslint-disable-next-line max-len
+            throw new Error('지원되지 않는 date format 입니다. \n date format 을 확인해 주세요.');
+        }
+        return new Date(year, month, day);
+      };
+
+      // 주어진 년도 (2년)의 최대 일수 계산
+      const calculateDaysInYears = (startYear, numberOfYears) => {
+        let days = 0;
+        for (let i = 0; i < numberOfYears; i++) {
+          const year = startYear + i;
+          // eslint-disable-next-line max-len
+          days += ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
+        }
+        return days;
+      };
+
+      // 각 매개변수에 대해 날짜 배열을 가져옴
+      paramInfos.forEach((paramInfo) => {
+        const dates = parameters.values[paramInfo.name].value;
+
+        const startDate = parseDate(dates[0], true);
+        const endDate = parseDate(dates[1]);
+
+        // startDate가 endDate보다 클 경우 예외 발생
+        if (startDate > endDate) {
+          throw new Error('시작 날짜가 종료 날짜보다 클 수 없습니다.');
+        }
+
+        // 두 날짜 간의 기간을 계산
+        const diffTime = endDate - startDate;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1;
+
+        // 주어진 년도 (2년)의 최대 일수 계산
+        // eslint-disable-next-line max-len
+        const maxDaysInTwoYears = calculateDaysInYears(startDate.getFullYear(), 2);
+
+        if (diffDays > maxDaysInTwoYears) {
+          throw new Error('설정된 조회기간이 사용자 조회기간(2년)을 초과했습니다.');
+        }
+      });
+    } catch (error) {
+      console.error('에러가 발생했습니다:', error.message);
+      alert(error.message);
+      return true;
+    }
+  };
+
   const querySearch = () => {
     let parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
+
+    if (designerMode === DesignerMode['AD_HOC']) {
+      if (querySearchException(parameters)) {
+        return;
+      };
+    }
+
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
         executeItems();
