@@ -326,6 +326,25 @@ const ItemBoard = () => {
 
     return action;
   }
+  const renderDownloadButtons = (item, isItPossibleToDownloadImg) => {
+    return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
+      if (type == Type.IMG && isItPossibleToDownloadImg) return <></>;
+      return (
+        <button
+          key={type}
+          onClick={() =>
+            exportFile(
+                tabNode._attributes.id,
+                type,
+                item.meta.name
+            )
+          }
+        >
+          {type.toLowerCase()}
+        </button>
+      );
+    });
+  };
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
@@ -370,32 +389,11 @@ const ItemBoard = () => {
                   target={'#'+tabNode._attributes.id+'btn'}
                   showEvent="click"
                 >
-                  {(
-                    <>
-                      {[Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
-                        if (
-                          type === Type.IMG &&
-                          isImg &&
-                          isItPossibleToDownloadImg) {
-                          return null;
-                        }
-                        return (
-                          <button
-                            key={type}
-                            onClick={() =>
-                              exportFile(
-                                  tabNode._attributes.id,
-                                  type,
-                                  item.meta.name
-                              )
-                            }
-                          >
-                            {type.toLowerCase()}
-                          </button>
-                        );
-                      })}
-                    </>
-                  )}
+                  <>
+                    {renderDownloadButtons(
+                        item,
+                        isImg && isItPossibleToDownloadImg)}
+                  </>
                 </Popover>
               </>
             }
