@@ -1,9 +1,7 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Chart} from 'devextreme-react';
 import {Tooltip, CommonSeriesSettings, Legend, Series, Point, Label}
   from 'devextreme-react/chart';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
@@ -18,6 +16,8 @@ import {
   formatNumber,
   generateLabelSuffix
 } from 'components/utils/NumberFormatUtility';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 
 const RangeBar = ({item, id, setItemExports}) => {
@@ -49,24 +49,16 @@ const RangeBar = ({item, id, setItemExports}) => {
 
   const interactiveOption = meta.interactiveOption || {};
 
-  const itemExportObject =
-  itemExportsObject(id, dxRef, 'RANGE_BAR', mart.data.data);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
-
   if (!mart.init) {
     return <></>;
   }
 
+  useItemExport({
+    id,
+    ref: dxRef,
+    type: ItemType.RANGE_BAR,
+    data: mart?.data?.data,
+    setItemExports});
 
   const customizeLabel = (formData, fieldId) => {
     const dataField =

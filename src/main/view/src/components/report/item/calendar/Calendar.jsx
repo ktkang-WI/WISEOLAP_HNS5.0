@@ -1,11 +1,11 @@
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 import D3Calendar from './D3Calendar';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import ItemManager from '../util/ItemManager';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const CalendarChart = ({setItemExports, id, item}) => {
   const mart = item?.mart;
@@ -16,19 +16,13 @@ const CalendarChart = ({setItemExports, id, item}) => {
   const dataSource = mart.data.data;
   const ref = useRef();
   const {width} = useSizeObserver(ref);
-  const itemExportObject =
-    itemExportsObject(id, ref, 'CALENDAR', mart.data.data);
 
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.CALENDAR,
+    data: mart?.data?.data,
+    setItemExports});
 
   const seriesNames = mart.data.info.seriesMeasureNames;
 

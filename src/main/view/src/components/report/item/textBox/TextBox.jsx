@@ -16,7 +16,6 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import * as koMessages from '../../../utils/ko.json';
 import {loadMessages} from 'devextreme/localization';
-
 const tabs = [
   {name: 'From This Device', value: ['file']},
   {name: 'From the Web', value: ['url']},

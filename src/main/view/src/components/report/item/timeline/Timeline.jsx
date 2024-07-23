@@ -5,8 +5,8 @@ import {Tooltip, CommonSeriesSettings, SeriesTemplate, Legend}
   from 'devextreme-react/chart';
 import useModal from 'hooks/useModal';
 import localizedString from 'config/localization';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 
 const Timeline = ({item, id, setItemExports}) => {
@@ -38,19 +38,19 @@ const Timeline = ({item, id, setItemExports}) => {
 
   const dxRef = useRef([]);
 
-  const itemExportObject =
-  itemExportsObject(id, dxRef, 'TIMELINE', mart.data.data);
+  useItemExport({
+    id,
+    ref: dxRef,
+    type: ItemType.TIMELINE,
+    data: mart?.data?.data,
+    setItemExports});
 
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.TIMELINE,
+    data: mart?.data?.data,
+    setItemExports});
 
   // 마스터 필터 관련 useEffect
   useEffect(() => {

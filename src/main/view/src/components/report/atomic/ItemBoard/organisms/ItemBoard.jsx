@@ -109,18 +109,7 @@ const ItemBoard = () => {
       isOk = false;
       return isOk;
     }
-    isOk = [
-      'CHART',
-      'GRID',
-      'PIE',
-      'PIVOT',
-      'CHOROPLETH',
-      'TREEMAP',
-      'CARD',
-      'CALENDAR',
-      'LIQUIDFILLGAUGE',
-      'TIMELINE'
-    ].includes(pickItem.type);
+    isOk = Object.values(ItemType).includes(pickItem.type);
 
     return isOk;
   };
@@ -316,9 +305,41 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
-      // TODO: 임시용 변수
-      const imgDownloadExcept = ['card', 'liquidFillGauge'];
+      const ignoreDownloadExcept = [
+        'textBox',
+        'treeView',
+        'schedulerComponent',
+        'comboBox',
+        'listBox',
+        'coordinateDot',
+        'coordinateLine'
+      ];
+      // TODO: 임시용 변수 d3 이미지 다운로드 가능하게.
+      const imgDownloadExcept = [
+        'card',
+        'liquidFillGauge',
+        'calendar',
+        'rangeBar',
+        'schedulerComponent',
+        'waterFall',
+        'comboBox',
+        'scatterPlot',
+        'ciclePacking',
+        'zoomableIcicle',
+        'sunburstChart',
+        'radialTree',
+        'collapsibleTree',
+        'heatMap',
+        'wordCloud',
+        'arc',
+        'chord',
+        'timeline',
+        'boxPlot',
+        'funnelChart',
+        'starChart'
+      ];
       const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
+      const isItPossibleToDownload = ignoreDownloadExcept.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -340,25 +361,43 @@ const ItemBoard = () => {
             key="download"
             title="Download"
           >
-            <DownloadImage id={tabNode._attributes.id+'btn'} src={download}/>
-            <Popover
-              target={'#'+tabNode._attributes.id+'btn'}
-              showEvent="click"
-            >
-              {isImg && !isItPossibleToDownloadImg ?
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
-              }}>img</button> : null}
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.CSV, item.meta.name);
-              }}>csv</button>
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.TXT, item.meta.name);
-              }}>txt</button>
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.XLSX, item.meta.name);
-              }}>xlsx</button>
-            </Popover>
+            {
+              !isItPossibleToDownload &&
+              <>
+                <DownloadImage
+                  id={tabNode._attributes.id+'btn'} src={download}/>
+                <Popover
+                  target={'#'+tabNode._attributes.id+'btn'}
+                  showEvent="click"
+                >
+                  {(
+                    <>
+                      {isImg && !isItPossibleToDownloadImg && (
+                        <button
+                          onClick={() =>
+                            exportFile(
+                                tabNode._attributes.id,
+                                Type.IMG,
+                                item.meta.name)}>
+                          img
+                        </button>
+                      )}
+                      {[Type.CSV, Type.TXT, Type.XLSX].map((type) => (
+                        <button
+                          key={type}
+                          onClick={() =>
+                            exportFile(
+                                tabNode._attributes.id,
+                                type,
+                                item.meta.name)}>
+                          {type.toLowerCase()}
+                        </button>
+                      ))}
+                    </>
+                  )}
+                </Popover>
+              </>
+            }
           </button>,
           ...buttons
       );

@@ -3,6 +3,8 @@ import D3ZoomableIcicle from './D3ZoomableIcicle';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import {useMemo, useRef} from 'react';
 import {getBlendColor} from '../util/ColorManager';
+import ItemType from '../util/ItemType';
+import useItemExport from 'hooks/useItemExport';
 
 const ZoomableIcicle = ({
   setItemExports,
@@ -20,6 +22,14 @@ const ZoomableIcicle = ({
     color: meta?.palette?.colors,
     item: item
   }), [meta?.palette?.colors]);
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.ZOOMABLE_ICICLE,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}

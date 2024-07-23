@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {getOptionValue}
   from '../util/modal/organism/notationFormat/NotationFormatModal';
 import LiquidFillGaugeChart from './LiquidFillGaugeChart';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useInteractiveEffect} from '../util/useInteractiveEffect';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const LiquidFillGauge = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -40,19 +40,12 @@ const LiquidFillGauge = ({setItemExports, id, item}) => {
       });
     }
   });
-  const itemExportObject =
-    itemExportsObject(id, ref, 'LIQUIDFILLGAUGE', mart.data.data);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.LIQUID_FILL_GAUGE,
+    data: mart?.data?.data,
+    setItemExports});
 
   const handleClick = (e, data) => {
     e.data = data.dimension;
