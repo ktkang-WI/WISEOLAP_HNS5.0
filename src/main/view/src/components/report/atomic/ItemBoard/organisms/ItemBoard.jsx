@@ -372,27 +372,28 @@ const ItemBoard = () => {
                 >
                   {(
                     <>
-                      {isImg && !isItPossibleToDownloadImg && (
-                        <button
-                          onClick={() =>
-                            exportFile(
-                                tabNode._attributes.id,
-                                Type.IMG,
-                                item.meta.name)}>
-                          img
-                        </button>
-                      )}
-                      {[Type.CSV, Type.TXT, Type.XLSX].map((type) => (
-                        <button
-                          key={type}
-                          onClick={() =>
-                            exportFile(
-                                tabNode._attributes.id,
-                                type,
-                                item.meta.name)}>
-                          {type.toLowerCase()}
-                        </button>
-                      ))}
+                      {[Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
+                        if (
+                          type === Type.IMG &&
+                          isImg &&
+                          isItPossibleToDownloadImg) {
+                          return null;
+                        }
+                        return (
+                          <button
+                            key={type}
+                            onClick={() =>
+                              exportFile(
+                                  tabNode._attributes.id,
+                                  type,
+                                  item.meta.name
+                              )
+                            }
+                          >
+                            {type.toLowerCase()}
+                          </button>
+                        );
+                      })}
                     </>
                   )}
                 </Popover>
