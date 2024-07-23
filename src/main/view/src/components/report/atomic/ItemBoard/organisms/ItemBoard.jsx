@@ -326,7 +326,7 @@ const ItemBoard = () => {
 
     return action;
   }
-  const renderDownloadButtons = (item, isItPossibleToDownloadImg) => {
+  const renderDownloadButtons = (id, item, isItPossibleToDownloadImg) => {
     return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
       if (type == Type.IMG && isItPossibleToDownloadImg) return <></>;
       return (
@@ -334,7 +334,7 @@ const ItemBoard = () => {
           key={type}
           onClick={() =>
             exportFile(
-                tabNode._attributes.id,
+                id,
                 type,
                 item.meta.name
             )
@@ -391,6 +391,7 @@ const ItemBoard = () => {
                 >
                   <>
                     {renderDownloadButtons(
+                        tabNode._attributes.id,
                         item,
                         isImg && isItPossibleToDownloadImg)}
                   </>

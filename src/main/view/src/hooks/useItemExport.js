@@ -9,11 +9,7 @@ const useItemExport = ({
   data,
   setItemExports
 }) => {
-  const exportData = data?.map((obj ) => {
-    const newObj = {...obj};
-    delete newObj.arg;
-    return newObj;
-  });
+  const exportData = (data || []).map(({arg, ...newObj}) => newObj);
   const itemExportObject = itemExportsObject(id, ref, type, exportData);
   useEffect(() => {
     setItemExports((prev) => {

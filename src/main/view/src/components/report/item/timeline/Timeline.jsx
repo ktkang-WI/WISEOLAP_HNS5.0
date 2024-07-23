@@ -40,13 +40,6 @@ const Timeline = ({item, id, setItemExports}) => {
 
   useItemExport({
     id,
-    ref: dxRef,
-    type: ItemType.TIMELINE,
-    data: mart?.data?.data,
-    setItemExports});
-
-  useItemExport({
-    id,
     ref,
     type: ItemType.TIMELINE,
     data: mart?.data?.data,
