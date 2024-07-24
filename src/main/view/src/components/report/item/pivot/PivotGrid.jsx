@@ -34,6 +34,7 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
 import useContextMenu from 'hooks/useContextMenu';
@@ -50,6 +51,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const ref = useRef();
   const {getContextMenuItems} = useContextMenu(item);
   const {updateItem} = ItemSlice.actions;
+  const loadingActions = LoadingSlice.actions;
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
   const {openModal} = useModal();
@@ -186,7 +188,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, {row: 0, column: 0});
 
   const fieldPanel = {
-    allowFieldDragging: false,
+    allowFieldDragging: true,
     showColumnFields: fieldCount.column > 0,
     showDataFields: false,
     showFilterFields: false,
@@ -242,6 +244,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               });
             }
             if (dataset?.cubeId == 6184) {
+              dispatch(loadingActions.startJob());
               const items = pivotDataSource.getData().rows;
               const collapseSingleChildItems = (items, path) => {
                 items.forEach((item) => {
@@ -258,6 +261,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 });
               };
               collapseSingleChildItems(items, []);
+              dispatch(loadingActions.endJobForce());
             }
           }
         }}
