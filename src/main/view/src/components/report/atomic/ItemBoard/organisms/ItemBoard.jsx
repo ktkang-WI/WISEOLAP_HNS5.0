@@ -97,7 +97,7 @@ const ItemBoard = () => {
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
-  const ignoreDownloadExcept = [
+  const ignoreDownload = [
     'textBox',
     'treeView',
     'schedulerComponent',
@@ -326,9 +326,9 @@ const ItemBoard = () => {
 
     return action;
   }
-  const renderDownloadButtons = (id, item, isItPossibleToDownloadImg) => {
+  const renderDownloadButtons = (id, item, isImgDownloadable) => {
     return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
-      if (type == Type.IMG && isItPossibleToDownloadImg) return <></>;
+      if (type == Type.IMG && isImgDownloadable) return <></>;
       return (
         <button
           key={type}
@@ -357,8 +357,8 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
-      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
-      const isItPossibleToDownload = ignoreDownloadExcept.includes(item.type);
+      const isImgDownloadable = imgDownloadExcept.includes(item.type);
+      const isDownload = ignoreDownload.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -381,7 +381,7 @@ const ItemBoard = () => {
             title="Download"
           >
             {
-              !isItPossibleToDownload &&
+              !isDownload &&
               <>
                 <DownloadImage
                   id={tabNode._attributes.id+'btn'} src={download}/>
@@ -393,7 +393,7 @@ const ItemBoard = () => {
                     {renderDownloadButtons(
                         tabNode._attributes.id,
                         item,
-                        isImg && isItPossibleToDownloadImg)}
+                        isImg && isImgDownloadable)}
                   </>
                 </Popover>
               </>
