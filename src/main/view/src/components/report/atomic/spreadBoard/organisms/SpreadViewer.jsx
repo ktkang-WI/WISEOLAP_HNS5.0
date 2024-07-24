@@ -56,17 +56,28 @@ const SpreadViewer = ({reportId}) => {
     if (_.isEqual(prevData.current, spreadData) ||
       spreadData === 0) return;
 
+    if (fileLoadingState.current == 2) {
+      bindSpreadData();
+      return;
+    }
+
     const waitLoadFile = setInterval(() => {
       if (fileLoadingState.current == 2) {
         clearInterval(waitLoadFile);
-        console.log('데이터 로드 시작');
-        prevData.current = spreadData;
-        bindData(_.cloneDeep(spreadData), workbookRef.current.spread);
-        dispatch(setSpreadData({reportId, data: 0}));
-        console.log('데이터 로드 완료');
+        bindSpreadData();
       }
     }, 500);
+
+    return () => clearInterval(waitLoadFile);
   }, [spreadData]);
+
+  const bindSpreadData = () => {
+    prevData.current = spreadData;
+    console.log('데이터 로드 시작');
+    bindData(_.cloneDeep(spreadData), workbookRef.current.spread);
+    dispatch(setSpreadData({reportId, data: 0}));
+    console.log('데이터 로드 완료');
+  };
 
   return (
     <StyledWrapper
