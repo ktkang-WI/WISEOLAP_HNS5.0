@@ -20,7 +20,19 @@ const SearchQueryReportList = ({reportList, setItemData}) => {
       items={reportList ? reportList[data.id] : []}
       width='100%'
       height='calc(100% - 10px)'
-      onItemClick={({itemData}) => {
+      selectByClick={true}
+      selectionMode='single'
+      onItemClick={() => {}}
+      onSelectionChanged={({component}) => {
+        const nodes = component.getSelectedNodes();
+
+        if (nodes.length == 0) {
+          setItemData({});
+          return;
+        }
+
+        const itemData = nodes[0].itemData;
+
         setItemData(itemData.type === 'FOLDER' ? {} : itemData);
       }}
       searchExpr={['query']}
