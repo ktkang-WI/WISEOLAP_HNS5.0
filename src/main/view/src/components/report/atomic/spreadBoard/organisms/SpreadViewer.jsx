@@ -34,23 +34,38 @@ const SpreadViewer = ({reportId}) => {
   const dispatch = useDispatch();
 
   const workbookRef = useRef();
-  const file = useRef();
+  // Spread 파일 로딩 상태 표시. 0: 미로딩, 1: 파일 로딩중, 2: 파일 로딩 완료
+  const fileLoadingState = useRef(0);
   const prevData = useRef();
 
-  useEffect(() => {
-    if (file.current) return;
+  useEffect(async () => {
+    if (fileLoadingState.current) return;
     const workbookJSON = getWorkbookJSON(reportId);
-    file.current = true;
+    fileLoadingState.current = 1;
+
+    const startTime = new Date();
+
+    console.log('파일 불러오기 시작');
     workbookRef.current.spread.fromJSON(workbookJSON);
-    setExcelFile(reportId);
+    await setExcelFile(reportId);
+    console.log('파일 불러오기 완료. 걸린 시간: ' + (new Date() - startTime) + 'ms');
+    fileLoadingState.current = 2;
   }, []);
 
   useEffect(() => {
     if (_.isEqual(prevData.current, spreadData) ||
       spreadData === 0) return;
-    prevData.current = spreadData;
-    bindData(_.cloneDeep(spreadData), workbookRef.current.spread);
-    dispatch(setSpreadData({reportId, data: 0}));
+
+    const waitLoadFile = setInterval(() => {
+      if (fileLoadingState.current == 2) {
+        clearInterval(waitLoadFile);
+        console.log('데이터 로드 시작');
+        prevData.current = spreadData;
+        bindData(_.cloneDeep(spreadData), workbookRef.current.spread);
+        dispatch(setSpreadData({reportId, data: 0}));
+        console.log('데이터 로드 완료');
+      }
+    }, 500);
   }, [spreadData]);
 
   return (
