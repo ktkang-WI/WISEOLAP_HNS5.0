@@ -17,6 +17,7 @@ const Content = styled.div`
   word-wrap: break-word;
   overflow-wrap: break-word;
   overflow-y: auto;
+  white-space: pre-line;
 `;
 
 
