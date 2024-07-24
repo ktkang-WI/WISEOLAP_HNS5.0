@@ -22,19 +22,21 @@ const myPageUIParam =
   };
 
 const menuButtons = [ // label localizedString
-  {value: 'user_info', text: '개인정보', path: '/user-info'},
+  {value: 'user_info', text: '개인정보', path: '/mypageuserinfo'},
   {
     value: 'myDesigner_config',
     text: '디자이너 설정',
-    path: '/designer'
+    path: '/mypagedesigner'
   },
   {value: 'myViewer_config',
     text: '뷰어 설정',
-    path: '/viewer'},
+    path: '/mypageviewer'},
   // {value: 'myFont_config',
   //   text: '폰트 설정',
   //   path: '/font'},
-  {value: 'myReport_folder', text: '개인 보고서 및 폴더 관리', path: '/report-folder'}
+  {value: 'myReport_folder',
+    text: '개인 보고서 및 폴더 관리',
+    path: '/mypagereportfolder'}
 ];
 
 const MyPage = () => {
@@ -77,7 +79,7 @@ const MyPage = () => {
 
               if (!item) return;
 
-              nav('/editds/my-page' + item.path);
+              nav('/editds' + item.path);
             }}
             items={menuButtons}
           />
