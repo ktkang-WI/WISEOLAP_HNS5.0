@@ -581,7 +581,6 @@
   "folderManager": "Folder Management",
   "noSelectionFolderAlert": "Please select a folder and proceed.",
   "removeFail": "Deletion failed.",
-  "linkReportCorrupted": "Failed to retrieve connection report.",
   "defaultReport": "Default Report",
   "loadData": "Load data",
   "reportInfoChangeSuccess":"Saving report information was successful.",
@@ -600,5 +599,10 @@
     "user": "USER",
     "restore": "RESTORE",
     "warning": "Unsaved changes may be lost. Do you want to continue?"
-  }
+  },
+  "reportTypeSelectBox": [
+    {"name": "DashAny", "caption": "Dashboard"},
+    {"name": "AdHoc", "caption": "Adhoc"},
+    {"name": "Excel", "caption": "Excel"}
+  ]
 }
