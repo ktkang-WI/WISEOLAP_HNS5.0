@@ -1,8 +1,8 @@
 import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {useInteractiveEffect} from '../util/useInteractiveEffect';
+import ItemType from '../util/ItemType';
+import useItemExport from 'hooks/useItemExport';
 
 
 const Card = ({setItemExports, id, item, node}) => {
@@ -36,19 +36,12 @@ const Card = ({setItemExports, id, item, node}) => {
     }
   });
 
-  const itemExportObject =
-    itemExportsObject(id, dxRef, 'CARD', mart.data.data);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref: dxRef,
+    type: ItemType.CARD,
+    data: mart?.data?.data,
+    setItemExports});
 
   const handleClick = (e, data) => {
     e.data = data.title;

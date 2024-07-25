@@ -95,12 +95,6 @@ export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
         value={Object.keys(data).length == 0 ? false : isCheck}
         onValueChanged={(e) => {
           setIsCheck(e.value);
-          setConfig({...data,
-            [id]: {
-              ...data.defaultLayout,
-              check: e.value
-            }
-          });
         }}
       />
       <LayoutSelectBox

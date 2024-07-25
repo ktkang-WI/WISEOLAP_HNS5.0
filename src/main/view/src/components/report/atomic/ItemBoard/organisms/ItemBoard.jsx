@@ -97,6 +97,39 @@ const ItemBoard = () => {
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
+  const ignoreDownload = [
+    'textBox',
+    'treeView',
+    'schedulerComponent',
+    'comboBox',
+    'listBox',
+    'coordinateDot',
+    'coordinateLine'
+  ];
+  // TODO: 임시용 변수 d3 이미지 다운로드 추가이후 삭제 예정.
+  const imgDownloadExcept = [
+    'card',
+    'liquidFillGauge',
+    'calendar',
+    'rangeBar',
+    'schedulerComponent',
+    'waterFall',
+    'comboBox',
+    'scatterPlot',
+    'ciclePacking',
+    'zoomableIcicle',
+    'sunburstChart',
+    'radialTree',
+    'collapsibleTree',
+    'heatMap',
+    'wordCloud',
+    'arc',
+    'chord',
+    'timeline',
+    'boxPlot',
+    'funnelChart',
+    'starChart'
+  ];
 
   const itemExportsPicker = (id) => {
     return itemExports.find((item) => item.id == id);
@@ -109,18 +142,7 @@ const ItemBoard = () => {
       isOk = false;
       return isOk;
     }
-    isOk = [
-      'CHART',
-      'GRID',
-      'PIE',
-      'PIVOT',
-      'CHOROPLETH',
-      'TREEMAP',
-      'CARD',
-      'CALENDAR',
-      'LIQUIDFILLGAUGE',
-      'TIMELINE'
-    ].includes(pickItem.type);
+    isOk = Object.values(ItemType).includes(pickItem.type);
 
     return isOk;
   };
@@ -304,6 +326,25 @@ const ItemBoard = () => {
 
     return action;
   }
+  const renderDownloadButtons = (id, item, isImgDownloadable) => {
+    return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
+      if (type == Type.IMG && isImgDownloadable) return <></>;
+      return (
+        <button
+          key={type}
+          onClick={() =>
+            exportFile(
+                id,
+                type,
+                item.meta.name
+            )
+          }
+        >
+          {type.toLowerCase()}
+        </button>
+      );
+    });
+  };
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
@@ -316,9 +357,8 @@ const ItemBoard = () => {
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
 
-      // TODO: 임시용 변수
-      const imgDownloadExcept = ['card', 'liquidFillGauge'];
-      const isItPossibleToDownloadImg = imgDownloadExcept.includes(item.type);
+      const isImgDownloadable = imgDownloadExcept.includes(item.type);
+      const isDownload = ignoreDownload.includes(item.type);
       let isImg = true;
       if (type === 'grid') isImg = false;
       if (type === 'pivot') isImg = false;
@@ -340,25 +380,24 @@ const ItemBoard = () => {
             key="download"
             title="Download"
           >
-            <DownloadImage id={tabNode._attributes.id+'btn'} src={download}/>
-            <Popover
-              target={'#'+tabNode._attributes.id+'btn'}
-              showEvent="click"
-            >
-              {isImg && !isItPossibleToDownloadImg ?
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.IMG, item.meta.name);
-              }}>img</button> : null}
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.CSV, item.meta.name);
-              }}>csv</button>
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.TXT, item.meta.name);
-              }}>txt</button>
-              <button onClick={() => {
-                exportFile(tabNode._attributes.id, Type.XLSX, item.meta.name);
-              }}>xlsx</button>
-            </Popover>
+            {
+              !isDownload &&
+              <>
+                <DownloadImage
+                  id={tabNode._attributes.id+'btn'} src={download}/>
+                <Popover
+                  target={'#'+tabNode._attributes.id+'btn'}
+                  showEvent="click"
+                >
+                  <>
+                    {renderDownloadButtons(
+                        tabNode._attributes.id,
+                        item,
+                        isImg && isImgDownloadable)}
+                  </>
+                </Popover>
+              </>
+            }
           </button>,
           ...buttons
       );

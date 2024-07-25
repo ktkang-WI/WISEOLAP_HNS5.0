@@ -1,10 +1,10 @@
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {useInteractiveEffect} from '../util/useInteractiveEffect';
 import ItemManager from 'components/report/item/util/ItemManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -29,19 +29,14 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       dxRef.current.instance.clearSelection();
     }
   });
-  const itemExportObject =
-    itemExportsObject(id, dxRef, 'TREEMAP', mart.data.data);
 
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref: dxRef,
+    type: ItemType.TREEMAP,
+    data: mart?.data?.data,
+    setItemExports});
+
   const seriesNames = mart.data.info.seriesMeasureNames;
   const treeMapOptions = {
     colorizer: {

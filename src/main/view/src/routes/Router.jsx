@@ -117,35 +117,35 @@ const router = createBrowserRouter([
     loader: generalLoader
   },
   {
-    path: contextPath + '/config',
+    path: contextPath + '',
     element: <Config/>,
     loader: getUserNmLoader,
     children: [
       {
-        path: 'general',
+        path: 'confgeneral',
         element: <ConfigurationSetting/>,
         loader: generalLoader
       },
       {
-        path: 'user-group',
+        path: 'confusergroup',
         element: <UserGroupManagement/>,
         loader: userGroupLoader
       },
       {
-        path: 'auth',
+        path: 'confauth',
         element: <Authority/>,
         loader: authorityLoader
       },
       {
-        path: 'report-folder',
+        path: 'confreportfolder',
         element: <ReportFolderManagement/>
       },
       {
-        path: 'add-datasource',
+        path: 'confdatasourceadd',
         element: <DataSourceAddition/>
       },
       {
-        path: 'log',
+        path: 'conflog',
         element: <Log/>
       },
       {
@@ -155,32 +155,32 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: contextPath + '/my-page',
+    path: contextPath + '',
     element: <MyPage/>,
     loader: getUserNmLoader,
     children: [
       {
-        path: 'user-info',
+        path: 'mypageuserinfo',
         element: <UserInfoManagement/>,
         loader: myPageUserInfoData
       },
       {
-        path: 'report-folder',
+        path: 'mypagereportfolder',
         element: <ReportFolderTab/>,
         loader: myPageFolderData
       },
       {
-        path: 'viewer',
+        path: 'mypageviewer',
         element: <MyViewerConfig/>,
         loader: userDesignerConfig
       },
       {
-        path: 'font',
+        path: 'mypagefont',
         element: <MyFontConfig/>
         // loader: 폰트 설정
       },
       {
-        path: 'designer',
+        path: 'mypagedesigner',
         element: <MyDesignerConfig/>,
         loader: userDesignerConfig
       }

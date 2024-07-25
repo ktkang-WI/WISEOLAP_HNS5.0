@@ -1,5 +1,3 @@
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import DevChart, {
   ArgumentAxis,
   CommonSeriesSettings,
@@ -27,11 +25,12 @@ import {generateLabelSuffix, formatNumber}
   from 'components/utils/NumberFormatUtility';
 import valueAxisCustomLabel from '../ValueAxisCustomLabel';
 import React, {
-  useRef,
-  useEffect
+  useRef
 } from 'react';
 import ItemManager from 'components/report/item/util/ItemManager';
 import useItemSetting from '../util/hook/useItemSetting';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dxRef = useRef();
@@ -62,19 +61,12 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
 
-  const itemExportObject =
-   itemExportsObject(id, dxRef, 'CHART', mart?.data?.data);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
+  useItemExport({
+    id,
+    ref: dxRef,
+    type: ItemType.CHART,
+    data: mart?.data?.data,
+    setItemExports});
 
   if (!mart.init) {
     return <></>;

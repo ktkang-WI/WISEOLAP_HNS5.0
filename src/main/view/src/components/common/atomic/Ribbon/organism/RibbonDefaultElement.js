@@ -155,8 +155,8 @@ const RibbonDefaultElement = () => {
           executeItems();
         }
       }}
-      valueExpr={'id'}
-      displayExpr={'text'}
+      valueExpr={'name'}
+      displayExpr={'caption'}
       value={rootItem?.adHocOption?.layoutSetting}
       items={data}/>;
   };

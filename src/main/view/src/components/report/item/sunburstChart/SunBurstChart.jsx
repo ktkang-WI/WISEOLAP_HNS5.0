@@ -3,6 +3,8 @@ import D3SunBurstChart from './D3SunBurstChart';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import {useMemo, useRef} from 'react';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const SunBurstChart = ({
   setItemExports,
@@ -20,6 +22,14 @@ const SunBurstChart = ({
     color: meta?.palette?.colors,
     item: item
   }), [meta?.palette?.colors]);
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.SUNBURST_CHART,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}

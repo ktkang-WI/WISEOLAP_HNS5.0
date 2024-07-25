@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
@@ -214,26 +213,6 @@ public class DatasetService {
         }
 
         return result;
-    }
-
-    public MartResultDTO martSelectList() {
-        DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
-                .dsId(2564)
-                .dsNm("[Oracle] WISEMART")
-                .ip("52.79.199.37")
-                .port("1539")
-                .dbNm("wise")
-                .ownerNm("WISEMART")
-                .password("wisemart")
-                .userId("wisemart")
-                .connector("SID")
-                .dsDesc("")
-                .dbmsType(DbmsType.ORACLE)
-                .build();
-
-        martConfig.setMartDataSource(dsMstrDTO);
-        String query = "SELECT * FROM BMT_F_버블차트";
-        return martDAO.select(dsMstrDTO.getDsId(), query);
     }
 
     public Map<String, MartResultDTO> getQueryDatasetTable(int dsId) {

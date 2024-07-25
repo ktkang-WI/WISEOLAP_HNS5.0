@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const myPagePath = '/mypage';
+import {getConfig} from 'config/config';
+
+const contextRoot =
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
+const myPagePath = document.location.origin + contextRoot + '/mypage';
 
 // 데이터셋
 export const getUserInfomation = () => {

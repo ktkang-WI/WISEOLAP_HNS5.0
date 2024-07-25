@@ -4,9 +4,11 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
 import ItemManager from '../util/ItemManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 
-const Chord = ({item}) => {
+const Chord = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   // const meta = item ? item.meta : null;
 
@@ -19,6 +21,13 @@ const Chord = ({item}) => {
   const {itemTools, filterTools} = useItemSetting(item);
   const {getPalette} = itemTools;
   const {setMasterFilterData, getSelectedItem} = filterTools;
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.CHORD_DIAGRAM,
+    data: mart?.data?.data,
+    setItemExports});
 
   return (
     <Wrapper ref={ref}>

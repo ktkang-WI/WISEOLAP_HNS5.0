@@ -55,6 +55,10 @@ const MyPageReportForm = () => {
         <Item editorType='dxSelectBox'
           dataField='type'
           editorOptions={{
+            items: localizedString.reportTypeSelectBox,
+            displayExpr: 'caption',
+            valueExpr: 'name',
+            disabled: true
           }}>
           <Label>{localizedString.reportType}</Label>
         </Item>

@@ -11,7 +11,7 @@ import {
 import useSizeObserver from '../util/hook/useSizeObserver';
 
 // TODO: 추후개발 예정
-const TreeView = ({setItemExports, id, item}) => {
+const TreeView = ({item}) => {
   const mart = item?.mart;
   if (!mart.init) {
     return <></>;
@@ -21,6 +21,7 @@ const TreeView = ({setItemExports, id, item}) => {
 
   const expandedKeys = [1, 2];
   const selectedKeys = [1, 29, 42];
+
   return (
     <Wrapper
       ref={ref}

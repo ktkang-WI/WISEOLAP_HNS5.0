@@ -3,6 +3,8 @@ import useSizeObserver from '../util/hook/useSizeObserver';
 import D3WordCloud from './D3WordCloud';
 import {useMemo, useRef} from 'react';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const WordCloud = ({
   setItemExports,
@@ -23,6 +25,13 @@ const WordCloud = ({
     color: meta?.palette?.colors,
     item: item
   }), [meta?.palette?.colors]);
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.WORDCLOUD,
+    data: mart?.data?.data,
+    setItemExports});
 
   return (
     <Wrapper

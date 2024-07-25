@@ -4,6 +4,8 @@ import D3HeatMap from './D3HeatMap';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const HeatMap = ({
   setItemExports,
@@ -21,6 +23,14 @@ const HeatMap = ({
     color: meta?.palette?.colors,
     item: item
   }), [meta?.palette?.colors]);
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.HEAT_MAP,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}
