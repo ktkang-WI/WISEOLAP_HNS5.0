@@ -441,7 +441,6 @@ const useReportSave = () => {
     const designerMode = selectCurrentDesignerMode(store.getState());
     const myPageConfigure = selectMyPageDesignerConfig(store.getState());
 
-    console.log(myPageConfigure);
     if (designerMode === DesignerMode['AD_HOC']) {
       if (querySearchException(parameters, myPageConfigure)) {
         return;
