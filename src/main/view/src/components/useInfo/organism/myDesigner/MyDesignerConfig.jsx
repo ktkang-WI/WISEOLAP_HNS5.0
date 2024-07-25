@@ -32,6 +32,10 @@ export const seperateConfig = (designerConfig) => {
     }
   }
 
+  if (object.maxReportQueryPeriod) {
+    object.maxReportQueryPeriod = JSON.parse(object.maxReportQueryPeriod);
+  }
+
   return object;
 };
 
@@ -52,7 +56,8 @@ const MyDesignerConfig = () => {
 
     const saveConfig = {
       ...config,
-      defaultItem: JSON.stringify(defaultItem).trim()
+      defaultItem: JSON.stringify(defaultItem).trim(),
+      maxReportQueryPeriod: JSON.stringify(config.maxReportQueryPeriod).trim()
     };
 
     delete saveConfig.defaultLayout;

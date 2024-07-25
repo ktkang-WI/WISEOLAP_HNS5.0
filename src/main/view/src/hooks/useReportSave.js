@@ -13,7 +13,7 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentInformationas,
   selectRootParameter} from 'redux/selector/ParameterSelector';
 import useModal from './useModal';
-import {selectCurrentDesignerMode, selectEditMode}
+import {selectCurrentDesignerMode, selectEditMode, selectMyPageDesignerConfig}
   from 'redux/selector/ConfigSelector';
 import SpreadSlice from 'redux/modules/SpreadSlice';
 import {selectSpreadMeta}
@@ -353,7 +353,7 @@ const useReportSave = () => {
     dispatch(datasetActions.deleteReportDataset({reportId}));
   };
 
-  const querySearchException = (parameters) => {
+  const querySearchException = (parameters, myPageConfigure) => {
     try {
       // 매개변수 필터링
       // eslint-disable-next-line max-len
@@ -419,16 +419,19 @@ const useReportSave = () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1;
 
         // 주어진 년도 (2년)의 최대 일수 계산
+        let period = 2;
+        if (myPageConfigure.maxReportQueryPeriod.check) {
+          period = myPageConfigure.maxReportQueryPeriod.period;
+        }
         // eslint-disable-next-line max-len
-        const maxDaysInTwoYears = calculateDaysInYears(startDate.getFullYear(), 2);
+        const maxDaysInTwoYears = calculateDaysInYears(startDate.getFullYear(), period);
 
         if (diffDays > maxDaysInTwoYears) {
-          throw new Error('설정된 조회기간이 사용자 조회기간(2년)을 초과했습니다.');
+          throw new Error('설정된 조회기간이 사용자 최대 조회 기간(' + period + '년)을 초과했습니다.');
         }
       });
     } catch (error) {
-      console.error('에러가 발생했습니다:', error.message);
-      alert(error.message);
+      alert('보고서를 조회 할 수 없습니다. \n 관리자에게 문의하세요.\n(' + error.message + ')');
       return true;
     }
   };
@@ -436,9 +439,11 @@ const useReportSave = () => {
   const querySearch = () => {
     let parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
+    const myPageConfigure = selectMyPageDesignerConfig(store.getState());
 
+    console.log(myPageConfigure);
     if (designerMode === DesignerMode['AD_HOC']) {
-      if (querySearchException(parameters)) {
+      if (querySearchException(parameters, myPageConfigure)) {
         return;
       };
     }
