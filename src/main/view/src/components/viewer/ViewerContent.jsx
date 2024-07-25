@@ -139,21 +139,43 @@ const ViewerContent = ({children}) => {
               <Wrapper>
                 <ReportContentWrapper>
                   <ReportContent>
-                    {reports.map((r) => {
-                      if (r.reportId == 0) return;
+                    {reports.reduce((acc, r) => {
+                      if (r.reportId == 0) return acc;
+
+                      if (r.options.reportType != 'Excel') {
+                        // ItemBoard 개수 하나로 유지하기 위해 Excel 아닌 경우엔 그냥 rendering
+                        if (r.reportId == report.reportId) {
+                          acc.push((
+                            <Wrapper
+                              key={r.reportId}
+                              style={{display: 'block'}}
+                            >
+                              {getComponent(r.reportId)}
+                            </Wrapper>
+                          ));
+                        }
+
+                        return acc;
+                      }
+
                       if (r.reportId == report.reportId) {
-                        return (
+                        acc.push((
                           <Wrapper key={r.reportId} style={{display: 'block'}}>
                             {getComponent(r.reportId)}
                           </Wrapper>
-                        );
+                        ));
+
+                        return acc;
                       }
-                      return (
+
+                      acc.push((
                         <Wrapper key={r.reportId} style={{display: 'none'}}>
                           {getComponent(r.reportId)}
                         </Wrapper>
-                      );
-                    })}
+                      ));
+
+                      return acc;
+                    }, [])}
                   </ReportContent>
                 </ReportContentWrapper>
               </Wrapper>
