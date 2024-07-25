@@ -92,23 +92,7 @@ const getRibbonItems = (type) => {
 const commonPropsComparator = (prev, next) => {
   let result = true;
 
-  const tempPrevMart = {
-    ...(prev?.item?.mart || {}),
-    data: {
-      ...(prev?.item?.mart?.data || {}),
-      query: null
-    }
-  };
-
-  const tempNextMart = {
-    ...(next?.item?.mart || {}),
-    data: {
-      ...(next?.item?.mart?.data || {}),
-      query: null
-    }
-  };
-
-  if (tempPrevMart != tempNextMart) {
+  if (next?.item?.mart != prev?.item?.mart) {
     result = false;
   } else if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
     result = false;
