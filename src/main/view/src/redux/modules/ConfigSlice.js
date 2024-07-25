@@ -51,7 +51,8 @@ const reducers = {
   setMyPageConfigure(state, actions) {
     if (typeof actions.payload.maxReportQueryPeriod === 'string') {
       // eslint-disable-next-line max-len
-      actions.payload.maxReportQueryPeriod = JSON.parse(actions.payload.maxReportQueryPeriod);
+      actions.payload.maxReportQueryPeriod =
+      JSON.parse(actions.payload.maxReportQueryPeriod);
     }
     state.myPageConfigure = actions.payload;
   },
