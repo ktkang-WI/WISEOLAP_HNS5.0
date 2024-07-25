@@ -39,7 +39,7 @@
     WHERE a.USER_NO = #{userNo, jdbcType=INTEGER}
     AND EXISTS(
       SELECT 1
-      FROM WB_USER_CONFIG_TEST_MSTR b
+      FROM WB_USER_CONFIG_MSTR b
       WHERE USER_NO = #{userNo, jdbcType=INTEGER}
     )
   </select>
@@ -56,7 +56,7 @@
       DEFAULT_VIEWER_REPORT_NM,
       DEFAULT_VIEWER_REPORT_TYPE,
       MAX_REPORT_QUERY_PERIOD
-        FROM WB_USER_CONFIG_TEST_MSTR
+        FROM WB_USER_CONFIG_MSTR
         WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
 
@@ -73,7 +73,7 @@
 
   <update id="updateDesignerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     UPDATE
-      WB_USER_CONFIG_TEST_MSTR
+      WB_USER_CONFIG_MSTR
       SET
           DEFAULT_DATASET_ID = #{defaultDatasetId, jdbcType=INTEGER},
           DEFAULT_REPORT_ID = #{defaultReportId, jdbcType=INTEGER},
@@ -85,7 +85,7 @@
 
   <update id="updataMyViewerConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     UPDATE
-      WB_USER_CONFIG_TEST_MSTR
+      WB_USER_CONFIG_MSTR
       SET
           DEFAULT_VIEWER_REPORT_ID = #{defaultViewerReportId, jdbcType=INTEGER},
           DEFAULT_VIEWER_REPORT_NM = #{defaultViewerReportNm, jdbcType=VARCHAR},
@@ -95,7 +95,7 @@
 
   <insert id="insertWbUserConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     INSERT INTO 
-    WB_USER_CONFIG_TEST_MSTR (
+    WB_USER_CONFIG_MSTR (
       USER_NO,
       DEFAULT_REPORT_ID,
       DEFAULT_ITEM,
