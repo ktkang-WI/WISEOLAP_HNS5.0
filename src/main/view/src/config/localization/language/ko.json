@@ -972,5 +972,6 @@
     {"name": "DashAny", "caption": "대시보드"},
     {"name": "AdHoc", "caption": "비정형"},
     {"name": "Excel", "caption": "스프레드"}
-  ]
+  ],
+  "requiredRowColumn": "데이터 항목 행(row)과 열(column)이 전부 필요한 항목입니다."
 }
