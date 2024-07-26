@@ -38,7 +38,7 @@ const SpreadViewer = ({reportId}) => {
   const fileLoadingState = useRef(0);
   const prevData = useRef();
 
-  useEffect(async () => {
+  useEffect(() => {
     if (fileLoadingState.current) return;
     const workbookJSON = getWorkbookJSON(reportId);
     fileLoadingState.current = 1;
@@ -47,9 +47,10 @@ const SpreadViewer = ({reportId}) => {
 
     console.log('파일 불러오기 시작');
     workbookRef.current.spread.fromJSON(workbookJSON);
-    await setExcelFile(reportId);
-    console.log('파일 불러오기 완료. 걸린 시간: ' + (new Date() - startTime) + 'ms');
-    fileLoadingState.current = 2;
+    setExcelFile(reportId).then(() => {
+      console.log('파일 불러오기 완료. 걸린 시간: ' + (new Date() - startTime) + 'ms');
+      fileLoadingState.current = 2;
+    });
   }, []);
 
   useEffect(() => {
