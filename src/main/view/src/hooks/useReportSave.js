@@ -406,6 +406,11 @@ const useReportSave = () => {
       paramInfos.forEach((paramInfo) => {
         const dates = parameters.values[paramInfo.name].value;
 
+        if (!Array.isArray(dates) || dates.length !== 2 ||
+        !dates[0]?.trim() || !dates[1]?.trim()) {
+          throw new Error(`날짜 배열 값이 유효하지 않습니다. 매개변수 이름: ${paramInfo.name}`);
+        }
+
         const startDate = parseDate(dates[0], true);
         const endDate = parseDate(dates[1]);
 
