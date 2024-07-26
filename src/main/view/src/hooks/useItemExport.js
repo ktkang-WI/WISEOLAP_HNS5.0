@@ -1,5 +1,5 @@
 import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+  from 'components/report/atomic/ItemDownload/ItemDownload';
 import {useEffect} from 'react';
 
 const useItemExport = ({

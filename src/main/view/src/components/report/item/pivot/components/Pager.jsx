@@ -3,18 +3,18 @@ const Pager = ({
   dataLength,
   page,
   pageSize,
-  onChagedPageSize = () => {},
-  onChagedPage = () => {}
+  onChangePageSize = () => {},
+  onChangePage = () => {}
 }) => {
   const {pageUsageOfPageCount} = pagingOption;
   const maxPage = Math.ceil(dataLength / pageSize);
 
   const changePageSize = (size) => {
-    onChagedPageSize(size);
+    onChangePageSize(size);
   };
 
   const chagePage = (pageNumber) => {
-    onChagedPage(pageNumber);
+    onChangePage(pageNumber);
   };
 
   const getPageSizes = () => {

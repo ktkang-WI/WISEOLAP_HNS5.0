@@ -11,7 +11,6 @@ import {useState} from 'react';
 import {getTheme} from 'config/theme';
 import Item from '../atoms/Item';
 import {Popover} from 'devextreme-react';
-import {Type, exportToFile} from 'components/utils/DataExport';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {
   selectCurrentDesignerMode,
@@ -20,10 +19,10 @@ import {
 import {DesignerMode, EditMode} from 'components/config/configType';
 import _ from 'lodash';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import models from 'models';
 import {itemComponents} from 'components/report/item/util/ItemMappers';
 import ItemType from 'components/report/item/util/ItemType';
 import localizedString from 'config/localization';
+import {ItemDownload} from '../../ItemDownload/ItemDownload';
 
 const theme = getTheme();
 
@@ -86,80 +85,9 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
-  const ignoreDownload = [
-    'textBox',
-    'treeView',
-    'schedulerComponent',
-    'comboBox',
-    'listBox',
-    'coordinateDot',
-    'coordinateLine'
-  ];
-  // TODO: 임시용 변수 d3 이미지 다운로드 추가이후 삭제 예정.
-  const imgDownloadExcept = [
-    'card',
-    'liquidFillGauge',
-    'calendar',
-    'rangeBar',
-    'schedulerComponent',
-    'waterFall',
-    'comboBox',
-    'scatterPlot',
-    'ciclePacking',
-    'zoomableIcicle',
-    'sunburstChart',
-    'radialTree',
-    'collapsibleTree',
-    'heatMap',
-    'wordCloud',
-    'arc',
-    'chord',
-    'timeline',
-    'boxPlot',
-    'funnelChart',
-    'starChart'
-  ];
-
-  const itemExportsPicker = (id) => {
-    return itemExports.find((item) => item.id == id);
-  };
-
-  // TODO: 임시 예외처리 차트용만 다운로드 구현 삭제예정
-  const exportExceptionHandle = (pickItem) => {
-    let isOk = false;
-    if (!pickItem) {
-      isOk = false;
-      return isOk;
-    }
-    isOk = Object.values(ItemType).includes(pickItem.type);
-
-    return isOk;
-  };
-
-  const exportFile = (e, type, name) => {
-    const pickItem = itemExportsPicker(e);
-    if (!exportExceptionHandle(pickItem)) {
-      console.error('아이템 및 데이터가 그려지지 않았습니다.');
-      return;
-    };
-    if (Type.CSV === type) {
-      exportToFile(name, pickItem.data, Type.CSV);
-    } else if (Type.TXT === type) {
-      exportToFile(name, pickItem.data, Type.TXT);
-    } else if (Type.XLSX === type) {
-      exportToFile(name, pickItem.data, Type.XLSX);
-    } else if (Type.IMG === type) {
-      exportToFile(name, pickItem, Type.IMG);
-    }
-
-    models.Log.insertDownloadLog(
-        reportId || '1001',
-        report?.options?.reportNm || 'New Report',
-        report?.options?.reportType,
-        e,
-        name
-    );
-  };
+  const itemDownload = new ItemDownload({reportId, report, itemExports});
+  const ignoreDownload = itemDownload.getIgnoreDownload();
+  const imgDownloadExcept = itemDownload.getImgDownloadExcept();
 
   const nullDataCheck = (item) => {
     const isOk =
@@ -315,25 +243,6 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
 
     return action;
   }
-  const renderDownloadButtons = (id, item, isImgDownloadable) => {
-    return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
-      if (type == Type.IMG && isImgDownloadable) return <></>;
-      return (
-        <button
-          key={type}
-          onClick={() =>
-            exportFile(
-                id,
-                type,
-                item.meta.name
-            )
-          }
-        >
-          {type.toLowerCase()}
-        </button>
-      );
-    });
-  };
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
@@ -381,7 +290,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
                   showEvent="click"
                 >
                   <>
-                    {renderDownloadButtons(
+                    {itemDownload.renderDownloadButtons(
                         tabNode._attributes.id,
                         item,
                         isImg && isImgDownloadable)}
@@ -428,16 +337,6 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       />
     </StyledBoard>
   );
-};
-
-// 아이템 별 저장아이템
-export const itemExportsObject = (id, itemRef, type, data) => {
-  return {
-    id: id,
-    ref: itemRef,
-    type: type,
-    data: data
-  };
 };
 
 export default ItemBoard;
