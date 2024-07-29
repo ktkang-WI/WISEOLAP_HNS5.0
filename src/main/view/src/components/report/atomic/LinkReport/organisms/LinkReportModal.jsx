@@ -11,7 +11,10 @@ import LinkReportList from '../molecules/LinkReportList';
 import LinkReportRibbon from '../molecules/LinkReportRibbon';
 import useModal from 'hooks/useModal';
 import LinkSlice from 'redux/modules/LinkSlice';
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  selectCurrentDesignerMode
+} from 'redux/selector/ConfigSelector';
 
 const StyledWrapper = styled(Wrapper)`
 width: 100%;
@@ -36,10 +39,10 @@ const LinkReportModal = ({
     setSelectedReport(selectedRowData);
   };
   const {alert} = useModal();
+  const designerMode = useSelector(selectCurrentDesignerMode);
 
   useEffect(() => {
-    const reportType = selectCurrentDesignerMode(store.getState());
-    models.Report.getList(reportType, 'designer').then(({data}) => {
+    models.Report.getList(designerMode, 'designer').then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
     });
