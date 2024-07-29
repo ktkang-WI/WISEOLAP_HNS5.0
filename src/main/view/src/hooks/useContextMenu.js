@@ -1,20 +1,24 @@
 import {useSelector} from 'react-redux';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import localizedString from 'config/localization';
-import {selectCurrentReport} from 'redux/selector/ReportSelector';
-import LinkReportModal
-  from 'components/report/atomic/LinkReport/organisms/LinkReportModal';
+// import {selectCurrentReport} from 'redux/selector/ReportSelector';
+// import LinkReportModal
+//   from 'components/report/atomic/LinkReport/organisms/LinkReportModal';
 import {EditMode} from 'components/config/configType';
-import {connectLinkedReport, getSubLinkDim}
+import {
+  // getSubLinkDim,
+  connectLinkedReport}
   from 'components/report/util/LinkedReportUtility';
 import useModal from './useModal';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import HyperlinkModal from 'components/report/modal/HyperlinkModal';
 
 const useContextMenu = (item) => {
-  const {openModal, alert} = useModal();
+  const {
+    // alert,
+    openModal} = useModal();
   const editmode = useSelector(selectEditMode);
-  const currentReport = useSelector(selectCurrentReport);
+  // const currentReport = useSelector(selectCurrentReport);
   const linkedReport = useSelector(selectLinkedReport);
 
   const getContextMenuItems = () => {
@@ -26,22 +30,22 @@ const useContextMenu = (item) => {
       }
     };
 
-    const subLinkedListModalItem = {
-      'text': localizedString.subLinkReportSetting,
-      'onItemClick': () => {
-        if (currentReport.reportId === 0) {
-          alert('보고서를 먼저 저장해주세요.');
-          return;
-        }
-        const subLinkDim = getSubLinkDim();
-        openModal(LinkReportModal,
-            {subYn: true, subLinkDim: subLinkDim});
-      }
-    };
+    // const subLinkedListModalItem = {
+    //   'text': localizedString.subLinkReportSetting,
+    //   'onItemClick': () => {
+    //     if (currentReport.reportId === 0) {
+    //       alert('보고서를 먼저 저장해주세요.');
+    //       return;
+    //     }
+    //     const subLinkDim = getSubLinkDim();
+    //     openModal(LinkReportModal,
+    //         {subYn: true, subLinkDim: subLinkDim});
+    //   }
+    // };
 
     if (editmode == EditMode.DESIGNER) {
       items.push(hyperlinkModalItem);
-      items.push(subLinkedListModalItem);
+      // items.push(subLinkedListModalItem);
     }
 
     items.push(...getHyperlinkItems());
