@@ -973,5 +973,6 @@
     {"name": "AdHoc", "caption": "비정형"},
     {"name": "Excel", "caption": "스프레드"}
   ],
-  "requiredRowColumn": "데이터 항목 행(row)과 열(column)이 전부 필요한 항목입니다."
+  "requiredRowColumn": "데이터 항목 행(row)과 열(column)이 전부 필요한 항목입니다.",
+  "viwerDownloadMsg": "보고서를 열고 다운로드를 진행해 주세요."
 }

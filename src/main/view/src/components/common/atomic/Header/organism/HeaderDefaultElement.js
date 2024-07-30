@@ -34,8 +34,12 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
+
 // import {connectLinkedReport} from
 // 'components/report/util/LinkedReportUtility';
+import useSpread from 'hooks/useSpread';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+
 // import styled from 'styled-components';
 
 const HeaderDefaultElement = () => {
@@ -46,6 +50,7 @@ const HeaderDefaultElement = () => {
     openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
+  const {getWorkbook} = useSpread();
 
   const userNm = useSelector(selectUserName);
   const initialDisplay = useSelector(selectInitialDisplay);
@@ -60,6 +65,12 @@ const HeaderDefaultElement = () => {
   const textBoxRef = useRef(null);
 
   const filterdLayoutItem = () => {
+    if (currentReport.options.reportType === 'Excel') {
+      const reportNm =
+        currentReport.options.reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
+      return {type: 'excel', name: reportNm};
+    };
+
     if (!rootItem.adHocOption) return currentItem;
 
     let items = currentItem.filter((item) =>
@@ -256,7 +267,26 @@ const HeaderDefaultElement = () => {
       'icon': openViewerImg,
       'type': 'CommonButton',
       'onClick': (e) => {
+        // viewer 다운로드 예외 처리(아무것도 없는 경우)
+        const editMode = selectEditMode(store.getState());
+
+        if (editMode === EditMode['VIEWER'] && currentReport.reportId === 0) {
+          alert(localizedString.viwerDownloadMsg);
+          return;
+        }
+
         const newCurrentItem = filterdLayoutItem();
+
+        if (newCurrentItem.type === 'excel') {
+          const spread = getWorkbook();
+
+          spread.export((blob) => {
+            saveAs(blob, newCurrentItem.name);
+          }, () => {
+            alert(localizedString.reportCorrupted);
+          }, {includeBindingSource: true, fileType: 0});
+          return;
+        }
 
         exportExcel(
             currentReport,

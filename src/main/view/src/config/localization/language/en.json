@@ -605,5 +605,6 @@
     {"name": "AdHoc", "caption": "Adhoc"},
     {"name": "Excel", "caption": "Excel"}
   ],
-  "requiredRowColumn": "All data items rows and columns are required."
+  "requiredRowColumn": "All data items rows and columns are required.",
+  "viwerDownloadMsg": "Please open the report and proceed with the download."
 }
