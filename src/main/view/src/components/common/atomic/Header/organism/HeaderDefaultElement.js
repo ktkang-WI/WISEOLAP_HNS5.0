@@ -34,13 +34,8 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
-
-// import {connectLinkedReport} from
-// 'components/report/util/LinkedReportUtility';
 import useSpread from 'hooks/useSpread';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
-
-// import styled from 'styled-components';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();

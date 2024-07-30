@@ -615,5 +615,6 @@
   "modify": "Modify",
   "containerName": "container name",
   "editContainerName": "Edit container name",
-  "minContainerMsg": "At least one container must be present."
+  "minContainerMsg": "At least one container must be present.",
+  "viwerDownloadMsg": "Please open the report and proceed with the download."
 }

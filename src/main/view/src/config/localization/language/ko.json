@@ -983,5 +983,6 @@
   "modify": "수정",
   "containerName": "컨테이너 명",
   "editContainerName": "컨테이너 이름 변경",
-  "minContainerMsg": "최소 하나 이상의 컨테이너가 존재해야 합니다."
+  "minContainerMsg": "최소 하나 이상의 컨테이너가 존재해야 합니다.",
+  "viwerDownloadMsg": "보고서를 열고 다운로드를 진행해 주세요."
 }
