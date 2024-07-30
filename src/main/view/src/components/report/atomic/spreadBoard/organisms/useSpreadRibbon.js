@@ -49,6 +49,7 @@ const useSpreadRibbon = () => {
 
     // 불필요 메뉴 삭제
     delete config.fileMenu;
+    config.ribbon = config.ribbon.filter(({id}) => id != 'fileMenu');
     config.ribbon.unshift(newTab);
 
     // customtab 메뉴 메소드 정의
