@@ -2,11 +2,31 @@ import {createSlice} from '@reduxjs/toolkit';
 import ConfigSlice from './ConfigSlice';
 import {DesignerMode} from 'components/config/configType';
 import adHocLayoutSetting from 'components/utils/AdhocLayoutSetting';
+import localizedString from 'config/localization';
+
+const getNewContainer = () => {
+  return {
+    global: {
+      tabEnableClose: false,
+      tabEnableRename: false,
+      tabSetEnableDrop: false
+    },
+    borders: [],
+    layout: {
+      type: 'row',
+      children: [
+      ]
+    }
+  };
+};
 
 const dashboardInitialState = (defaultItem) => {
   return {
     0: {
       layoutQuantity: 1,
+      tabQuantity: 1,
+      selectedTab: 0,
+      tabEnabled: false,
       layoutConfig: {
         global: {
           tabEnableClose: false,
@@ -153,15 +173,28 @@ const reducers = {
   },
   // delete 및 layout 배치 변경 등.
   updataFlexLayout(state, actions) {
-    const reportId = actions.payload.reportId;
-    const layout = actions.payload.layout;
+    const {reportId, layout} = actions.payload;
 
-    state[reportId].layoutConfig = layout;
+    if (Array.isArray(state[reportId].layoutConfig)) {
+      const selectedTab = state[reportId].selectedTab;
+      const title = state[reportId].layoutConfig[selectedTab].title;
+      state[reportId].layoutConfig[selectedTab] = {
+        title,
+        ...layout
+      };
+      return;
+    }
+
+    const title = state[reportId].layoutConfig.title ||
+      localizedString.tab + 1;
+    state[reportId].layoutConfig = {
+      title,
+      ...layout
+    };
   },
   // insertFlexLayout
   insertFlexLayout(state, actions) {
-    const reportId = actions.payload.reportId;
-    const component = actions.payload.component;
+    const {reportId, component} = actions.payload;
     state[reportId].layoutQuantity++;
 
     const child = {
@@ -171,15 +204,73 @@ const reducers = {
       component: component
     };
 
-    state[reportId].layoutConfig = {
-      ...state[reportId].layoutConfig,
-      layout: {
-        ...state[reportId].layoutConfig.layout,
-        children: state[reportId].layoutConfig.layout.children.concat(
-            {type: 'tabset', weight: 50, selected: 0, children: [{...child}]}
-        )
-      }
+    const tabset = {
+      type: 'tabset',
+      weight: 50,
+      selected: 0,
+      children: [{...child}]
     };
+
+    if (Array.isArray(state[reportId].layoutConfig)) {
+      state[reportId].layoutConfig[state[reportId].selectedTab]
+          .layout.children.push(tabset);
+      return;
+    }
+
+    state[reportId].layoutConfig.layout.children.push(tabset);
+  },
+  toggleTabEnabled(state, actions) {
+    const {reportId} = actions.payload;
+
+    state[reportId].tabEnabled = !state[reportId].tabEnabled;
+  },
+  selectTab(state, actions) {
+    const {reportId, tab} = actions.payload;
+    state[reportId].selectedTab = tab;
+  },
+  updateTabTitle(state, actions) {
+    const {reportId, tab, title} = actions.payload;
+    if (Array.isArray(state[reportId].layoutConfig)) {
+      state[reportId].layoutConfig[tab].title = title;
+      return;
+    }
+
+    state[reportId].layoutConfig.title = title;
+  },
+  insertContainerTab(state, actions) {
+    const {reportId} = actions.payload;
+
+    const container = getNewContainer();
+
+    if (!state[reportId].tabQuantity) {
+      state[reportId].tabQuantity = 1;
+    }
+
+    if (!Array.isArray(state[reportId].layoutConfig)) {
+      if (state[reportId].layoutConfig.title) {
+        state[reportId].tabQuantity++;
+      } else {
+        state[reportId].layoutConfig.title =
+          localizedString.tab + (state[reportId].tabQuantity++);
+      }
+
+      state[reportId].layoutConfig = [state[reportId].layoutConfig];
+    }
+
+    container.title = localizedString.tab + (state[reportId].tabQuantity++);
+
+    state[reportId].tabEnabled = true;
+    state[reportId].selectedTab = state[reportId].layoutConfig.length;
+    state[reportId].layoutConfig.push(container);
+  },
+  deleteContainerTab(state, actions) {
+    const {reportId, tab} = actions.payload;
+
+    if (tab == state[reportId].selectedTab) {
+      state[reportId].selectedTab = 0;
+    }
+
+    state[reportId].layoutConfig.splice(tab, 1);
   },
   changeLayoutReportId(state, actions) {
     const prevId = actions.payload.prevId;

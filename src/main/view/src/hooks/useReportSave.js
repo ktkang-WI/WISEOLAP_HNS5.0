@@ -289,7 +289,10 @@ const useReportSave = () => {
       }));
       dispatch(layoutActions.changeLayout({
         reportId: reportId,
-        layout: data.layout
+        layout: {
+          ...data.layout,
+          selectedTab: 0
+        }
       }));
       dispatch(itemActions.changeItem({
         reportId: reportId,
@@ -323,7 +326,10 @@ const useReportSave = () => {
       }));
       dispatch(layoutActions.setLayout({
         reportId: reportId,
-        layout: data.layout
+        layout: {
+          ...data.layout,
+          selectedTab: 0
+        }
       }));
       dispatch(itemActions.setItem({
         reportId: reportId,

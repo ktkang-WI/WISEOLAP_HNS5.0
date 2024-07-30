@@ -2,20 +2,12 @@ import {styled} from 'styled-components';
 import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  selectCurrentItems,
-  selectRootItem,
-  selectSelectedItemId
-} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
 import useLayout from 'hooks/useLayout';
-import {selectCurrentReport, selectCurrentReportId}
-  from 'redux/selector/ReportSelector';
 import {useState} from 'react';
-import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
 import Item from '../atoms/Item';
 import {Popover} from 'devextreme-react';
@@ -31,12 +23,13 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import models from 'models';
 import {itemComponents} from 'components/report/item/util/ItemMappers';
 import ItemType from 'components/report/item/util/ItemType';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
 const StyledBoard = styled.div`
   height: 100%;
-  width: calc(100% - 10px);
+  width: 100%;
   flex: 1;
   background: ${theme.color.background};
   display: flex;
@@ -76,21 +69,17 @@ const Memo = styled.div`
   text-wrap: nowrap;
 `;
 
-const ItemBoard = () => {
+const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
 
   const {selectItem} = ItemSlice.actions;
   const {selectDataset} = DatasetSlice.actions;
-
-  const selectedReportId = useSelector(selectCurrentReportId);
-  const layoutConfig = useSelector(selectFlexLayoutConfig);
-  const items = useSelector(selectCurrentItems);
-  const rootItem = useSelector(selectRootItem);
-  const selectedItemId = useSelector(selectSelectedItemId);
-  const reportId = useSelector(selectCurrentReportId);
-  const report = useSelector(selectCurrentReport);
+  const items = item?.items;
+  const rootItem = item;
+  const selectedItemId = item?.selectedItemId;
+  const reportId = report?.reportId;
   const model = Model.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
@@ -353,6 +342,9 @@ const ItemBoard = () => {
       const type = tabNode.getComponent();
       const id = tabNode.getId();
       const item = items.filter((item) => item.id === id)[0];
+
+      console.log(reportId, id, items, layoutConfig);
+
       const memo = item?.meta?.memo;
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));
@@ -366,19 +358,20 @@ const ItemBoard = () => {
       renderValues.buttons.push(
           (memo ?
             <Memo>{memo}</Memo> : <></>),
-          (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
-            key="delete"
-            title="Delete tabset"
-            onClick={(e) => {
-              // flexLayout 커스텀 삭제 버튼 기능.
-              model.doAction(Actions.deleteTab(id));
-            }}
-          >
-          &#128473;&#xFE0E;
-          </button>),
+          (editMode === EditMode.VIEWER ||
+            designerMode === DesignerMode.AD_HOC ? <></> :
+            <button
+              key="delete"
+              title={localizedString.remove}
+              onClick={(e) => {
+                model.doAction(Actions.deleteTab(id));
+              }}
+            >
+            &#128473;&#xFE0E;
+            </button>),
           <button
             key="download"
-            title="Download"
+            title={localizedString.downloadReport}
           >
             {
               !isDownload &&
@@ -413,7 +406,7 @@ const ItemBoard = () => {
     if (action.type == 'FlexLayout_DeleteTab') {
       // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
       deleteFlexLayout(
-          selectedReportId,
+          reportId,
           action.data.node,
           model.toJson()
       );
@@ -426,7 +419,7 @@ const ItemBoard = () => {
   }));
 
   return (
-    <StyledBoard className='section board'>
+    <StyledBoard {...props}>
       <Layout
         model={model}
         factory={factory}

@@ -8,12 +8,19 @@ export const selectRootReport = createSelector(
     (report) => report
 );
 
+
 /**
  * 보고서 목록 선택
  */
 export const selectReports = createSelector(
     (state) => state.meta.report.reports,
     (reports) => reports
+);
+
+export const selectReport = createSelector(
+    (state, reportId) => reportId,
+    selectReports,
+    (reportId, reports) => reports.find((report) => report.reportId == reportId)
 );
 
 /**

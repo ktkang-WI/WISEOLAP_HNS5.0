@@ -10,7 +10,6 @@ import {selectCurrentReport, selectCurrentReportId}
   from 'redux/selector/ReportSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import store from 'redux/modules';
-import _ from 'lodash';
 import {useDispatch} from 'react-redux';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
@@ -28,7 +27,7 @@ import ItemType from 'components/report/item/util/ItemType';
 import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
-
+import {selectRootLayout} from 'redux/selector/LayoutSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -459,10 +458,20 @@ const useQueryExecute = () => {
     dispatch(startJob('데이터를 조회 중입니다.'));
     try {
       if (designerMode === DesignerMode['DASHBOARD']) {
-        const promises = rootItem.items
-            .map((item) => executeItem(item, datasets, parameters));
+        const {layoutConfig, selectedTab} = selectRootLayout(store.getState());
+        const promises = rootItem.items.reduce((acc, item) => {
+          // 컨테이너 사용하는 보고서일 경우 현재 보고 있는 탭만 조회
+          if (Array.isArray(layoutConfig)) {
+            if (selectedTab !== item.tab &&
+              !(selectedTab === 0 && !item.tab)) {
+              return acc;
+            }
+          }
 
-        console.log(promises);
+          acc.push(executeItem(item, datasets, parameters));
+          return acc;
+        }, []);
+
         await Promise.all(promises);
 
         if (EditMode['DESIGNER'] == editMode) {
@@ -483,7 +492,6 @@ const useQueryExecute = () => {
     } catch (e) {
       console.error(e);
     } finally {
-      console.log('finally');
       dispatch(endJob('데이터를 조회 중입니다.'));
     }
   };

@@ -8,11 +8,8 @@ import ReportContentWrapper
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import ReportTabs from 'components/common/atomic/ReportTab/organism/ReportTabs';
 import {getTheme} from 'config/theme';
-// import ViewerFilterBar
-//   from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
 import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
-import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport,
   selectReports} from 'redux/selector/ReportSelector';
@@ -31,6 +28,8 @@ import attributeListActiveIcon
   from 'assets/image/icon/button/attribute_list_active.png';
 import reloadImg from 'assets/image/icon/button/reset.png';
 import models from 'models';
+import ItemBoards
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoards';
 
 
 const theme = getTheme();
@@ -60,7 +59,7 @@ const ViewerContent = ({children}) => {
     if (!componentCache[id]) {
       componentCache[id] = (report.options.reportType == 'Excel' ?
         <SpreadViewer key={id} reportId={id}/> :
-        <ItemBoard key={id} reportId={id}/>);
+        <ItemBoards key={id} reportId={id}/>);
     }
 
     return componentCache[id];

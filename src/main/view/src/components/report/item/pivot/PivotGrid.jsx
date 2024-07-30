@@ -49,12 +49,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const ref = useRef();
+  const {openModal} = useModal();
   const {getContextMenuItems} = useContextMenu(item);
   const {updateItem} = ItemSlice.actions;
   const loadingActions = LoadingSlice.actions;
   const itemExportObject =
    itemExportsObject(id, ref, 'PIVOT', mart.data.data);
-  const {openModal} = useModal();
   const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);

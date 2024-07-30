@@ -39,7 +39,8 @@ const Ribbon = () => {
         items={
           designerMode === DesignerMode['AD_HOC'] ?
           ['AdHocLayout'] : [
-            // 'AddContainer',
+            'AddContainer',
+            'TabHeaderEnabled',
             'AddChart',
             'AddPivotGrid',
             'AddGrid',

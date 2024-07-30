@@ -1,7 +1,6 @@
 import {useSelector} from 'react-redux';
 import {getWorkbookJSON, setWorkbookRef} from '../util/SpreadCore';
 import {SpreadSheets} from '@grapecity/spread-sheets-react';
-// import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
