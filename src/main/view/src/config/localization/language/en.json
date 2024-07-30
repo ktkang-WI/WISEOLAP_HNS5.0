@@ -554,7 +554,8 @@
   "eachItemResetConfirm": {
     "defaultReportId": "Do you want to reset the default report?",
     "defaultItem": "Do you want to reset default items?",
-    "defaultPalette": "Do you want to reset default colors?"
+    "defaultPalette": "Do you want to reset default colors?",
+    "defaultViewerReportId": "Would you like to reset the viewer default report?"
   },
   "myPage": "My Page",
   "requiredUserNm": "User name is required.",

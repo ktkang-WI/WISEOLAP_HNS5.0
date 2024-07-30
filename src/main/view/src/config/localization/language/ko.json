@@ -917,7 +917,8 @@
   "eachItemResetConfirm": {
     "defaultReportId": "기본 보고서를 초기화 하시겠습니까?",
     "defaultItem": "기본 아이템을 초기화 하시겠습니까?",
-    "defaultPalette": "기본 색상을 초기화 하시겠습니까?"
+    "defaultPalette": "기본 색상을 초기화 하시겠습니까?",
+    "defaultViewerReportId": "뷰어 기본 보고서를 초기화 하시겠습니까?"
   },
   "myPage": "마이페이지",
   "requiredUserNm": "사용자 명은 필수 입력 입니다.",
