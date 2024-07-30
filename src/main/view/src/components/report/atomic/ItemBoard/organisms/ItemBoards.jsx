@@ -27,23 +27,24 @@ const theme = getTheme();
 const CONTAINER_TAB_HEIGHT = theme.size.containerTabHeight || '35px';
 
 const TabTitleWrapper = styled.div`
-height: ${CONTAINER_TAB_HEIGHT};
-width: calc(100% - 10px);
-min-height: ${CONTAINER_TAB_HEIGHT};
-max-height: ${CONTAINER_TAB_HEIGHT};
-margin-bottom: 10px;
-display: flex;
+  height: ${CONTAINER_TAB_HEIGHT};
+  width: calc(100% - 10px);
+  min-height: ${CONTAINER_TAB_HEIGHT};
+  max-height: ${CONTAINER_TAB_HEIGHT};
+  margin-bottom: 10px;
+  display: flex;
+  text-wrap: nowrap;
 `;
 
 const StyledBoard = styled.div`
-height: 100%;
-width: calc(100% - 10px);
-flex: 1;
-background: ${theme.color.background};
-display: flex;
-flex-direction: column;
-min-height: 0px;
-margin-bottom: 0px;
+  height: 100%;
+  width: calc(100% - 10px);
+  flex: 1;
+  background: ${theme.color.background};
+  display: flex;
+  flex-direction: column;
+  min-height: 0px;
+  margin-bottom: 0px;
 `;
 
 const ItemBoards = ({reportId}) => {
@@ -101,7 +102,7 @@ const ItemBoards = ({reportId}) => {
   };
 
   return (
-    <StyledBoard className='section board'>
+    <StyledBoard className={'section board report' + id}>
       {tabEnabled &&
         <TabTitleWrapper>
           {
@@ -157,6 +158,7 @@ const ItemBoards = ({reportId}) => {
             <ItemBoard
               key={'board' + i + '_' + report.reportId}
               report={report}
+              className={'board-' + report.reportId + '-' + i}
               layoutConfig={config}
               item={item}
               style={{
