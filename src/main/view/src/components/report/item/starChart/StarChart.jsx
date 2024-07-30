@@ -35,6 +35,7 @@ const StarChart = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <PolarChart
         width={width}

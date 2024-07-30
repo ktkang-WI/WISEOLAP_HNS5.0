@@ -36,6 +36,7 @@ const WordCloud = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3WordCloud
         width={width}

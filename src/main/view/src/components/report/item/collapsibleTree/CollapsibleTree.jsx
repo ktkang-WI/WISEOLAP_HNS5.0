@@ -28,6 +28,7 @@ const CollapsibleTree = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3CollapsibleTree
         dataSource={JSON.parse(mart.data.info.jsonData)}

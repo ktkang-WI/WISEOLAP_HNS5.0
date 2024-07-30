@@ -28,6 +28,7 @@ const RadialTree = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3RadialTree
         dataSource={JSON.parse(mart.data.info.jsonData)}

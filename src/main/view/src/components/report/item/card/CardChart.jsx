@@ -44,6 +44,7 @@ const CardChart = ({
   return (
     <CardBoard
       ref={ref}
+      id={id}
       onClick={(e) => {
         e.ref = ref;
         return onClick(e, {

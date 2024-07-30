@@ -81,7 +81,7 @@ const SankeyChart = ({setItemExports, id, item}) => {
       ref={ref}
     >
       <Sankey
-        id='sankey'
+        id={id}
         dataSource={mart.data.data}
         dataStructure={'plain'}
         palette={meta.palette.name}

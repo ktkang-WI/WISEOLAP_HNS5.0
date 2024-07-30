@@ -25,7 +25,9 @@ const ScatterPlot = ({setItemExports, id, item}) => {
   const {height, width} = useSizeObserver(ref);
 
   return (
-    <Wrapper ref={ref}>
+    <Wrapper
+      ref={ref}
+      id={id}>
       <D3ScatterPlot
         dataSource={mart?.data}
         width={width}

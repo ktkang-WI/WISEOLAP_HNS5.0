@@ -208,6 +208,7 @@ const Timeline = ({item, id, setItemExports}) => {
       pointSelectionMode={'multiple'}
       palette={getColor()}
       seriesSelectionMode={interactiveOption.mode}
+      id={id}
     >
       <Legend
         visible={getDataField().dimensionGroup.length == 0 ?

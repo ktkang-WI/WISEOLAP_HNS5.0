@@ -111,6 +111,7 @@ const TextBox = ({setItemExports, id, item}) => {
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <div className="widget-container">
         <HtmlEditor

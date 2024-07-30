@@ -34,6 +34,7 @@ const CalendarChart = ({setItemExports, id, item}) => {
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3Calendar
         width={width}

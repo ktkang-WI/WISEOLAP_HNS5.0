@@ -36,6 +36,7 @@ const FunnelChart = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <Funnel
         width={width}

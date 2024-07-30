@@ -33,6 +33,7 @@ const ZoomableIcicle = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3ZoomableIcicle
         dataSource={JSON.parse(mart.data.info.jsonData)}

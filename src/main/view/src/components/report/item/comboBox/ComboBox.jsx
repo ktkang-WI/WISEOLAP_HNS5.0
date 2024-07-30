@@ -31,6 +31,7 @@ const ComboBox = ({setItemExports, id, item}) => {
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <SelectBox
         width={width}

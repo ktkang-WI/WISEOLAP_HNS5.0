@@ -33,6 +33,7 @@ const SunBurstChart = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3SunBurstChart
         dataSource={JSON.parse(mart.data.info.jsonData)}

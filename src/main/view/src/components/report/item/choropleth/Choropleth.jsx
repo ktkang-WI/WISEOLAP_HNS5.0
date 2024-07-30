@@ -115,6 +115,7 @@ const Choropleth = ({
       panningEnabled={false}
       zoomingEnabled={false}
       onClick={handleClick}
+      id={id}
     >
       <Legend
         horizontalAlignment='right'

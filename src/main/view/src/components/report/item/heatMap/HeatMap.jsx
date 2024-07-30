@@ -34,6 +34,7 @@ const HeatMap = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3HeatMap
         dataSource={mart.data.data}

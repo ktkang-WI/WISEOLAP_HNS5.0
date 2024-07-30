@@ -27,6 +27,7 @@ const CiclePacking = ({
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <D3CiclePacking
         dataSource={JSON.parse(mart.data.info.jsonData)}

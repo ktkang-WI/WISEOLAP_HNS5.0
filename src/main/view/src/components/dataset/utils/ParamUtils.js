@@ -82,9 +82,9 @@ const newSingleTableParamInformation = (name, dsId, dsType,
   return {
     ...newParamInformation(name, dsId, dsType, order),
     // newParamInformation 오버라이딩
-    caption: sourceField.uniqueName,
-    exceptionValue: 'A.' + sourceField.uniqueName,
-    uniqueName: sourceField.uniqueName,
+    caption: sourceField.COL_NM,
+    exceptionValue: 'A.' + sourceField.COL_NM,
+    uniqueName: sourceField.COL_NM,
     dataSource: sourceField.TBL_NM,
     itemCaption: sourceField.COL_NM, // 리스트에 보여줄 값
     itemKey: sourceField.COL_NM, // 조회할 때 실제로 쿼리에 들어가는 값

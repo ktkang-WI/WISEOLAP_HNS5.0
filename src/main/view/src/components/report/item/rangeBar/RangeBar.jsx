@@ -137,6 +137,7 @@ const RangeBar = ({item, id, setItemExports}) => {
       pointSelectionMode={'multiple'}
       palette={meta?.palette?.name}
       seriesSelectionMode={interactiveOption.mode}
+      id={id}
     >
       <Legend
         visible={meta.legend.useLegend}
