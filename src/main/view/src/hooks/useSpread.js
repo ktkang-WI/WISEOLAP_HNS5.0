@@ -110,11 +110,20 @@ const useSpread = () => {
           // bindedSheet.reset();
           bindedSheet.clear();
           bindedSheet.autoGenerateColumns = true;
-          const ds = getJsonKey2ColInfos(rowData);
+          // 임시 추가 : bindingInfo
+          const ds = getJsonKey2ColInfos(rowData, bindingInfo);
           rowData.forEach((row) => convertDates(row));
           if (ds.dataSourceHearder && rowData.length > 0) {
             const newRowData = [ds.dataSourceHearder, ...rowData];
             // bindedSheet.setArray(0, 0, newRowData);
+
+            // 임시 코드 TODO : 추후 환경설정 SpreadBinding 분기 개발 되면 삭제 예정
+            if (bindingInfo.rowIndex > 0) {
+              for (let i = 0; i < bindingInfo.rowIndex; i++) {
+                newRowData.unshift({});
+              }
+            }
+
             bindedSheet.setDataSource(newRowData);
             bindedSheet.bindColumns(ds.colInfos);
           }
