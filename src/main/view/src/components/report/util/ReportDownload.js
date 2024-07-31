@@ -186,7 +186,7 @@ const mergeExcelFiles = async (items, parameters, option) => {
   });
 
   const elements = _items.map((item) => {
-    const selector = '.report' + reportId + ' #' + item.id;
+    const selector = '#report' + reportId + ' #' + item.id;
 
     return {
       type: item.type,

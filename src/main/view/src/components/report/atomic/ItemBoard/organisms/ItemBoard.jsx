@@ -343,8 +343,6 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       const id = tabNode.getId();
       const item = items.filter((item) => item.id === id)[0];
 
-      console.log(reportId, id, items, layoutConfig);
-
       const memo = item?.meta?.memo;
       const buttons = ItemManager.getTabHeaderItems(type)
           .map((key) => getTabHeaderButtons(type, key, id));

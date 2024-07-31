@@ -13,7 +13,7 @@ const SimpleInputModal = ({
       width='400px'
       height='230px'
       onSubmit={() => {
-        onSubmit(value);
+        return onSubmit(value);
       }}
       {...props}
     >

@@ -33,6 +33,7 @@ const Left = styled.div`
   float: left;
   display: flex;
   flex-shrink: 0;
+  overflow: hidden;
 `;
 
 const Right = styled.div`
@@ -40,6 +41,7 @@ const Right = styled.div`
   height: 100%;
   text-align: right;
   float: right;
+  overflow: hidden;
 `;
 
 const Middle = styled.div`
@@ -47,6 +49,7 @@ const Middle = styled.div`
   float: left;
   text-align: center;
   left: 0px;
+  overflow: hidden;
 `;
 
 const Header = ({left, middle, right}) => {
