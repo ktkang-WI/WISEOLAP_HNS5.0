@@ -24,6 +24,7 @@ const DownloadDefaultElement = () => {
   const rootItem = useSelector(selectRootItem);
   const dataSource = _.cloneDeep(currentReport.options);
   const {alert} = useModal();
+  const defaultReportName = localizedString.defaultReportName;
 
   const checkExecuteQuery = () => {
     const item = rootItem.items;
@@ -153,7 +154,7 @@ const DownloadDefaultElement = () => {
 
               exportDocx(
                   currentReport,
-                  currentReport?.options?.reportNm || '새 보고서',
+                  currentReport?.options?.reportNm || defaultReportName,
                   newCurrentItem,
                   currentParameter,
                   option);
@@ -180,7 +181,7 @@ const DownloadDefaultElement = () => {
 
               exportPptx(
                   currentReport,
-                  currentReport?.options?.reportNm || '새 보고서',
+                  currentReport?.options?.reportNm || defaultReportName,
                   newCurrentItem,
                   currentParameter,
                   option);
@@ -230,7 +231,7 @@ const DownloadDefaultElement = () => {
               }
 
               exportImg(currentReport,
-                  currentReport?.options?.reportNm || '새 보고서');
+                  currentReport?.options?.reportNm || defaultReportName);
             }
           },
           {
@@ -260,7 +261,7 @@ const DownloadDefaultElement = () => {
 
               exportPdf(
                   currentReport,
-                  currentReport?.options?.reportNm || '새 보고서',
+                  currentReport?.options?.reportNm || defaultReportName,
                   newCurrentItem,
                   currentParameter,
                   option);

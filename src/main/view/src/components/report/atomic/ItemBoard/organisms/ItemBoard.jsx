@@ -75,10 +75,9 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
 
   const {selectItem} = ItemSlice.actions;
   const {selectDataset} = DatasetSlice.actions;
-  const items = item?.items;
+  const {items, selectedItemId} = item || {};
+  const {reportId} = report || {};
   const rootItem = item;
-  const selectedItemId = item?.selectedItemId;
-  const reportId = report?.reportId;
   const model = Model.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
@@ -247,61 +246,50 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
 
-    if (tabNode) {
-      const type = tabNode.getComponent();
-      const id = tabNode.getId();
-      const item = items.filter((item) => item.id === id)[0];
+    if (!tabNode) return;
 
-      const memo = item?.meta?.memo;
-      const buttons = ItemManager.getTabHeaderItems(type)
-          .map((key) => getTabHeaderButtons(type, key, id));
+    const type = tabNode.getComponent();
+    const id = tabNode.getId();
+    const item = items.find((item) => item.id === id);
+    const memo = item?.meta?.memo || null;
 
-      const isImgDownloadable = imgDownloadExcept.includes(item.type);
-      const isDownload = ignoreDownload.includes(item.type);
-      let isImg = true;
-      if (type === 'grid') isImg = false;
-      if (type === 'pivot') isImg = false;
+    const buttons = ItemManager.getTabHeaderItems(type)
+        .map((key) => getTabHeaderButtons(type, key, id));
 
-      renderValues.buttons.push(
-          (memo ?
-            <Memo>{memo}</Memo> : <></>),
-          (editMode === EditMode.VIEWER ||
-            designerMode === DesignerMode.AD_HOC ? <></> :
-            <button
-              key="delete"
-              title={localizedString.remove}
-              onClick={(e) => {
-                model.doAction(Actions.deleteTab(id));
-              }}
-            >
-            &#128473;&#xFE0E;
-            </button>),
-          <button
-            key="download"
-            title={localizedString.downloadReport}
-          >
-            {
-              !isDownload &&
-              <>
-                <DownloadImage
-                  id={tabNode._attributes.id+'btn'} src={download}/>
-                <Popover
-                  target={'#'+tabNode._attributes.id+'btn'}
-                  showEvent="click"
-                >
-                  <>
-                    {itemDownload.renderDownloadButtons(
-                        tabNode._attributes.id,
-                        item,
-                        isImg && isImgDownloadable)}
-                  </>
-                </Popover>
-              </>
-            }
-          </button>,
-          ...buttons
-      );
-    }
+    const showCloseButton = !(editMode === EditMode.VIEWER ||
+      designerMode === DesignerMode.AD_HOC);
+
+    const isDownloadable = !ignoreDownload.includes(item?.type);
+    const isImgDownloadable = imgDownloadExcept.includes(item?.type);
+    const isImg = !['grid', 'pivot'].includes(type);
+
+    const downloadButton = isDownloadable ? (
+      <button key="download" title={localizedString.downloadReport}>
+        <DownloadImage id={`${tabNode._attributes.id}btn`} src={download} />
+        <Popover target={`#${tabNode._attributes.id}btn`} showEvent="click">
+          {itemDownload.renderDownloadButtons(
+              tabNode._attributes.id, item, isImg && isImgDownloadable
+          )}
+        </Popover>
+      </button>
+    ) : null;
+
+    const closeButton = showCloseButton ? (
+      <button
+        key="delete"
+        title={localizedString.remove}
+        onClick={() => model.doAction(Actions.deleteTab(id))}
+      >
+        &#128473;&#xFE0E;
+      </button>
+    ) : null;
+
+    renderValues.buttons.push(
+        !rootItem.adHocOption && (memo ? <Memo>{memo}</Memo> : <></>),
+        closeButton,
+        downloadButton,
+        ...buttons
+    );
   }
 
   const onModelChange = (node, action) => {
