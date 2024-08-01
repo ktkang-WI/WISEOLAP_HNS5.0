@@ -75,7 +75,7 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
-        <Label>{localizedString.millions}</Label>
+        <Label>{localizedString.milions}</Label>
       </Item>
       <Item
         dataField='suffixB'
@@ -83,7 +83,7 @@ const TooltipForm = ({selectedItem}, ref) => {
         editorOptions={{
         }}
       >
-        <Label>{localizedString.billions}</Label>
+        <Label>{localizedString.bilions}</Label>
       </Item>
       <Item
         dataField='precision'
