@@ -18,7 +18,7 @@ const MyViewerConfig = () => {
     {
       id: {id: 'defaultViewerReportId', requiredNm: 'defaultViewerReportNm'},
       title: localizedString.defaultReport,
-      label: localizedString.favorit,
+      label: localizedString.defaultReport,
       type: 'favorit'
     }
   ];

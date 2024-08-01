@@ -12,9 +12,9 @@ export const designerConfigItems = [
   // TODO: 기본데이터 집합은 사용 안할 예정이지만 추후 추가 될 가능성 있음.
   // {id: 'defaultDatasetId', title: '기본 데이터 집합', label: '즐겨찾기'},
   {id: {id: 'defaultReportId', requiredNm: 'defaultReportNm'},
-    title: '기본 보고서', label: '즐겨찾기', type: 'favorit'},
-  {id: 'defaultItem', title: '기본 아이템', label: '즐겨찾기', type: 'favorit'},
-  {id: 'defaultPalette', title: '기본 색상', label: '즐겨찾기', type: 'favorit'},
+    title: '기본 보고서', label: '기본 보고서', type: 'favorit'},
+  {id: 'defaultItem', title: '기본 아이템', label: '기본 아이템', type: 'favorit'},
+  {id: 'defaultPalette', title: '기본 색상', label: '기본 색상', type: 'favorit'},
   {id: 'defaultLayout', title: '비정형 레이아웃 설정',
     label: '비정형 레이아웃 설정', type: 'checkAndSelect'},
   {id: 'defaultDisplay', title: '초기화면 설정',
