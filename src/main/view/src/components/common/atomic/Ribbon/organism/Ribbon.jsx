@@ -16,8 +16,9 @@ const StyledRibbon = styled.div`
   background: ${theme.color.panelColor};
   box-sizing: border-box;
   margin-left: calc(${theme.size.snbWidth} + 10px);
-  overflow: hidden;
+  overflow: visible;
   white-space: nowrap;
+  text-wrap: nowrap;
 `;
 
 const Ribbon = () => {
