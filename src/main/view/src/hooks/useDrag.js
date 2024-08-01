@@ -45,7 +45,7 @@ const useDrag = () => {
   };
 
   const onDragEndSeriesOption = (tempField, reportId) => {
-    if (tempField.fieldType !== 'DIM') {
+    if (tempField.type !== 'DIM') {
       // seriesOptions 초기화
       const tempSeriesOptionInit = getSeriesOptionInitFormat();
       tempSeriesOptionInit.reportId = reportId;

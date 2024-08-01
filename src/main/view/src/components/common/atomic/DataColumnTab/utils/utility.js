@@ -11,6 +11,18 @@ const getCustomDatas = (field, sourceField) => {
   return field;
 };
 
+const getSummaryType = (tempField, sourceField) => {
+  let summaryType = tempField.fieldType == 'MEA' ? sourceField?.summaryType ?
+    sourceField?.summaryType.toUpperCase() :'SUM' : 'MIN';
+
+  // 차원을 측정값 항목에 올린경우 summaryType은 카운트가 디폴트
+  if (tempField.fieldType == 'DIM' && tempField.type == 'MEA') {
+    summaryType = 'COUNT';
+  }
+
+  return summaryType;
+};
+
 const measureOption = (tempField, sourceField) => {
   return {
     format: {
@@ -27,8 +39,7 @@ const measureOption = (tempField, sourceField) => {
       precisionType: 'round',
       useDigitSeparator: true
     },
-    summaryType: tempField.fieldType == 'MEA' ? sourceField?.summaryType ?
-      sourceField?.summaryType.toUpperCase() :'SUM' : 'MIN'
+    summaryType: getSummaryType(tempField, sourceField)
   };
 };
 
