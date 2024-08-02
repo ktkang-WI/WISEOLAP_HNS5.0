@@ -11,7 +11,7 @@ public class TokenCleanupTask {
     private final TokenStorage<ReportTokenDTO> tokenStorage;
 
     public TokenCleanupTask() {
-        this.tokenStorage = new TokenStorage<>("report");
+        this.tokenStorage = new TokenStorage<>("report", ReportTokenDTO.class);
     }
 
     // 매월 1일 자정에 3개월 이상 접근하지 않은 토큰 삭제

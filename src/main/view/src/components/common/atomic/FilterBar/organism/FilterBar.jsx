@@ -84,7 +84,7 @@ const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
 
   return (
     <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
-      {buttons &&
+      {buttons && buttons.length > 0 &&
         <ButtonWrapper>
           {
             buttons.map((button, i) => getButton(button, i))

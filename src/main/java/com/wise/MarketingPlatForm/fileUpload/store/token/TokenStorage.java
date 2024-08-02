@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.fileUpload.store.token;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
@@ -16,11 +17,12 @@ import java.util.UUID;
 public class TokenStorage<T> {
     private static final File FOLDER_PATH =  new File("UploadFiles/token");
     private final File file;
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
     private Map<String, TokenEntry<T>> tokenMap;
+    private final Class<T> valueType;
 
-    public TokenStorage(String fileName) {
-        objectMapper = new ObjectMapper();
+    public TokenStorage(String fileName, Class<T> valueType) {
+        this.valueType = valueType;
         objectMapper.registerModule(new JavaTimeModule());
         this.file = new File(FOLDER_PATH, fileName + ".json");
         ensureFolderExists(FOLDER_PATH);
@@ -36,7 +38,15 @@ public class TokenStorage<T> {
     private void loadTokens() {
         try {
             if (file.exists()) {
-                tokenMap = objectMapper.readValue(file, new TypeReference<Map<String, TokenEntry<T>>>() {});
+                TypeFactory typeFactory = objectMapper.getTypeFactory();
+                tokenMap = objectMapper.readValue(
+                    file, 
+                    typeFactory.constructMapType(
+                        Map.class, 
+                        typeFactory.constructType(String.class), 
+                        typeFactory.constructParametricType(TokenEntry.class, valueType)
+                    )
+                );
             } else {
                 tokenMap = new HashMap<>();
                 if (file.createNewFile()) {
@@ -48,6 +58,7 @@ public class TokenStorage<T> {
             tokenMap = new HashMap<>();
         }
     }
+
 
     public String saveToken(T value) {
         String token = UUID.randomUUID().toString();

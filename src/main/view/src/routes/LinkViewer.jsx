@@ -1,3 +1,4 @@
+import Header from 'components/common/atomic/Header/organism/Header';
 import {DesignerMode, EditMode} from 'components/config/configType';
 import LinkViewerContent from 'components/linkViewer/LinkViewerContent';
 import useConfig from 'hooks/useConfig';
@@ -21,7 +22,15 @@ const LinkViewer = () => {
   }, []);
 
   return (
-    <LinkViewerContent/>
+    <div>
+      <Header
+        left={['Logo', 'LinkReport']}
+        middle={['ReportTab']}
+        right={['DownloadReport']}
+      >
+      </Header>
+      <LinkViewerContent/>
+    </div>
   );
 };
 export default LinkViewer;

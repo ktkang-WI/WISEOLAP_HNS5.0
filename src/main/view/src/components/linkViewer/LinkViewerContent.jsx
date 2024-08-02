@@ -11,7 +11,6 @@ import {getTheme} from 'config/theme';
 //   from 'components/common/atomic/FilterBar/organism/ViewerFilterBar';
 import ViewerDataAttributePanels
   from 'components/viewer/ViewerDataAttributePanels';
-import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import useDrag from 'hooks/useDrag';
@@ -26,6 +25,8 @@ import models from 'models';
 import useReportSave from 'hooks/useReportSave';
 import {useDispatch} from 'react-redux';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import ItemBoards
+  from 'components/report/atomic/ItemBoard/organisms/ItemBoards';
 
 const theme = getTheme();
 
@@ -46,7 +47,10 @@ const LinkViewerContent = ({children}) => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   const buttons = [
-    {
+  ];
+
+  if (false) {
+    buttons.push({
       icon: '',
       label: localizedString.dataAttributeList,
       width: '105px',
@@ -54,8 +58,8 @@ const LinkViewerContent = ({children}) => {
       onClick: () => {
         setDataColumnOpened(!dataColumnOpened);
       }
-    }
-  ];
+    });
+  }
 
   const enabled = report.options.reportType == 'AdHoc' && dataColumnOpened;
 
@@ -65,10 +69,8 @@ const LinkViewerContent = ({children}) => {
     if (token) {
       models.Report.retrieveLinkReport(token).then((response) => {
         const loadReportId = response.data.reportId;
-        const loadReportUserId = response.data.userId;
         const loadReportType = response.data.reportType;
         models.Report.getReportById(
-            loadReportUserId,
             loadReportId).then(({data}) => {
           dispatch(setDesignerMode(loadReportType));
           loadReport(data);
@@ -94,7 +96,7 @@ const LinkViewerContent = ({children}) => {
             useExpandButton={false}
             index={1}
             style={enabled ? {paddingLeft: '10px'} : {}}
-            margin={'0px'}
+            margin={'0px 0px 10px 10px'}
             opened={dataColumnOpened}
             component={ViewerDataAttributePanels}
             visible={report.options.reportType == 'AdHoc'}
@@ -105,7 +107,7 @@ const LinkViewerContent = ({children}) => {
                   {report && report.reportId != 0 &&
                     (report.options.reportType == 'Excel' ?
                       <SpreadViewer /> :
-                      <ItemBoard/>)
+                      <ItemBoards/>)
                   }
                 </ReportContent>
               </ReportContentWrapper>

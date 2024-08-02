@@ -15,6 +15,8 @@ import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
 import UserInfoButtonUI from '../atom/UserInfoButtonUI';
 import {TextBox} from 'devextreme-react';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -33,7 +35,6 @@ const Left = styled.div`
   float: left;
   display: flex;
   flex-shrink: 0;
-  overflow: hidden;
 `;
 
 const Right = styled.div`
@@ -55,6 +56,7 @@ const Middle = styled.div`
 const Header = ({left, middle, right}) => {
   const headerDefaultItems = headerDefaultElement();
   const report = useSelector(selectCurrentReport);
+  const editMode = useSelector(selectEditMode);
 
   const getHeaderItem = (item) => {
     const useInfoBtn =
@@ -115,7 +117,8 @@ const Header = ({left, middle, right}) => {
             font={theme.font.reportTitleForDesigner}
             onClick={item.onClick}
           >
-            {report.options.reportNm}
+            {editMode == EditMode.VIEWER && report.reportId == 0 ?
+              '' : report.options.reportNm}
           </ReportTitleText>
         </HeaderPanel>
       );
