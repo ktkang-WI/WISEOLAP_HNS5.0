@@ -46,7 +46,8 @@ public class MyPageDesignerConfigController {
     @RequestParam(required = false, defaultValue = "0") Integer adHocDefaultReportId,
     @RequestParam(required = false, defaultValue = "0") Integer excelDefaultReportId,
     @RequestParam(required = false, defaultValue = "") String defaultItem,
-    @RequestParam(required = false, defaultValue = "") String defaultPalette
+    @RequestParam(required = false, defaultValue = "") String defaultPalette,
+    @RequestParam(required = false, defaultValue = "") String maxReportQueryPeriod
   ) {
     UserDTO userDTO = SessionUtility.getSessionUser(request);
 
@@ -60,6 +61,7 @@ public class MyPageDesignerConfigController {
       .excelDefaultReportId(excelDefaultReportId)
       .defaultItem(defaultItem)
       .defaultPalette(defaultPalette)
+      .maxReportQueryPeriod(maxReportQueryPeriod)
       .build();
     
     boolean result = myPageDesignerConfig.saveDesignerConfig(myDesignerDTO);

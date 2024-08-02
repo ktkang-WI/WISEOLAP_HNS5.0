@@ -82,7 +82,7 @@ public class MyPageDesignerConfigService {
     Boolean result = myPageConfigDAO.checkExistData(myDesignerDTO);
     if (result == null) {
       result = false;
-    } 
+    }
     
     // 테이블에 존재 하지 않으면 insert, 존재 한다면 update
     if (!result.booleanValue()) {
