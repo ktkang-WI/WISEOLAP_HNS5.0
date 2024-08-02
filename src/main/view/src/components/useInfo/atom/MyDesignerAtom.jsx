@@ -39,11 +39,16 @@ export const MyPageTextBox = ({value}) => {
 
 const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
   let value = '';
+
   if (id == 'defaultDisplay') {
     value = data[id]?.initDisplay || 'DashAny';
   }
   if (id == 'defaultLayout') {
     value = data[id]?.layout || 'CTGB';
+  }
+
+  if (id === 'maxReportQueryPeriod') {
+    value = data[id]?.period || 2;
   }
   return (
     <SelectBox
@@ -53,6 +58,7 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
       items={layoutSelectList(id)}
       displayExpr='name'
       valueExpr='id'
+      placeholder={value}
       value={value}
       onSelectionChanged={(e) => {
         let param = {
@@ -67,6 +73,13 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
           };
         }
 
+        if (id == 'maxReportQueryPeriod') {
+          param = {
+            check: isCheck,
+            period: e.selectedItem.id
+          };
+        }
+
         setConfig({
           ...data,
           [id]: {...param}
@@ -77,12 +90,7 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
 };
 
 const checkBoxValue = (id, data) => {
-  if (id == 'defaultLayout') {
-    return data?.defaultLayout?.check || false;
-  }
-  if (id == 'defaultDisplay') {
-    return data?.defaultDisplay?.displayCheck || false;
-  }
+  return data[id]?.check || false;
 };
 
 export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
@@ -95,6 +103,13 @@ export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
         value={Object.keys(data).length == 0 ? false : isCheck}
         onValueChanged={(e) => {
           setIsCheck(e.value);
+          setConfig({
+            ...data,
+            [id]: {
+              ...data[id],
+              check: e.value
+            }
+          });
         }}
       />
       <LayoutSelectBox

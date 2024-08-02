@@ -18,7 +18,9 @@ export const designerConfigItems = [
   {id: 'defaultLayout', title: '비정형 레이아웃 설정',
     label: '비정형 레이아웃 설정', type: 'checkAndSelect'},
   {id: 'defaultDisplay', title: '초기화면 설정',
-    label: '초기화면 설정', type: 'checkAndSelect'}
+    label: '초기화면 설정', type: 'checkAndSelect'},
+  {id: 'maxReportQueryPeriod', title: '최대 조회 기간 설정',
+    label: '최대 조회 기간 설정', type: 'checkAndSelect'}
 ];
 
 export const defaultItemList = () => {
@@ -72,6 +74,16 @@ export const layoutSelectList = (id) => {
       {id: 'DashAny', name: '대시보드'},
       {id: 'AdHoc', name: '비정형'},
       {id: 'Excel', name: '스프레드'}
+    ];
+  }
+
+  if (id === 'maxReportQueryPeriod') {
+    return [
+      {id: 1, name: '1년'},
+      {id: 2, name: '2년'},
+      {id: 3, name: '3년'},
+      {id: 4, name: '4년'},
+      {id: 5, name: '5년'}
     ];
   }
 };

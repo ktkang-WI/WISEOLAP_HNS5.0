@@ -12,6 +12,7 @@
     <result column="DEFAULT_VIEWER_REPORT_ID" property="defaultViewerReportId" javaType="int"/>
     <result column="DEFAULT_VIEWER_REPORT_NM" property="defaultViewerReportNm" javaType="String"/>
     <result column="DEFAULT_VIEWER_REPORT_TYPE" property="reportType" javaType="String"/>
+    <result column="MAX_REPORT_QUERY_PERIOD" property="maxReportQueryPeriod" javaType="String"/>
   </resultMap>
 
   <resultMap id="UserDTO" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
@@ -53,7 +54,8 @@
       DEFAULT_PALETTE,
       DEFAULT_VIEWER_REPORT_ID,
       DEFAULT_VIEWER_REPORT_NM,
-      DEFAULT_VIEWER_REPORT_TYPE
+      DEFAULT_VIEWER_REPORT_TYPE,
+      MAX_REPORT_QUERY_PERIOD
         FROM WB_USER_CONFIG_MSTR
         WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
@@ -76,7 +78,8 @@
           DEFAULT_DATASET_ID = #{defaultDatasetId, jdbcType=INTEGER},
           DEFAULT_REPORT_ID = #{defaultReportId, jdbcType=INTEGER},
           DEFAULT_ITEM = #{defaultItem, jdbcType=VARCHAR},
-          DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR}
+          DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR},
+          MAX_REPORT_QUERY_PERIOD = #{maxReportQueryPeriod, jdbcType=VARCHAR}
       WHERE USER_NO = #{userNo}
   </update>
 
@@ -104,7 +107,8 @@
       DEFAULT_REPORT_TYPE,
       DEFAULT_VIEWER_REPORT_ID,
       DEFAULT_VIEWER_REPORT_NM,
-      DEFAULT_VIEWER_REPORT_TYPE
+      DEFAULT_VIEWER_REPORT_TYPE,
+      MAX_REPORT_QUERY_PERIOD
     ) 
     VALUES (
       #{userNo, jdbcType=INTEGER},
@@ -118,7 +122,8 @@
       null,
       #{defaultViewerReportId, jdbcType=INTEGER},
       #{defaultViewerReportNm, jdbcType=VARCHAR},
-      #{reportType, jdbcType=VARCHAR}
+      #{reportType, jdbcType=VARCHAR},
+      #{maxReportQueryPeriod, jdbcType=VARCHAR}
     ) 
   </insert>
   <!-- user info -->

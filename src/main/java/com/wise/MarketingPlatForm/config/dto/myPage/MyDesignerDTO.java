@@ -23,6 +23,8 @@ public class MyDesignerDTO {
   String defaultReportNm;
   String defaultReportType;
   String defaultViewerReportNm;
-  String reportType;
   String userNm;
+  String reportType;
+  @Builder.Default
+  String maxReportQueryPeriod = "{\"check\": false, \"period\": 2}";
 }

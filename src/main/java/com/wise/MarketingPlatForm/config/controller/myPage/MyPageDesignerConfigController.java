@@ -44,7 +44,8 @@ public class MyPageDesignerConfigController {
     @RequestParam(required = false, defaultValue = "0") Integer defaultDatasetId,
     @RequestParam(required = false, defaultValue = "0") Integer defaultReportId,
     @RequestParam(required = false, defaultValue = "") String defaultItem,
-    @RequestParam(required = false, defaultValue = "") String defaultPalette
+    @RequestParam(required = false, defaultValue = "") String defaultPalette,
+    @RequestParam(required = false, defaultValue = "") String maxReportQueryPeriod
   ) {
     UserDTO userDTO = SessionUtility.getSessionUser(request);
 
@@ -56,6 +57,7 @@ public class MyPageDesignerConfigController {
       .defaultReportId(defaultReportId)
       .defaultItem(defaultItem)
       .defaultPalette(defaultPalette)
+      .maxReportQueryPeriod(maxReportQueryPeriod)
       .build();
     
     boolean result = myPageDesignerConfig.saveDesignerConfig(myDesignerDTO);

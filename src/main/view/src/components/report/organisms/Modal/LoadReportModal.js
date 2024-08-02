@@ -44,9 +44,9 @@ const LoadReportModal = ({...props}) => {
       await setExcelFile(selectedReport.id);
     }
     models.Report.getReportById(selectedReport.id)
-        .then(({data}) => {
+        .then(async ({data}) => {
           try {
-            loadReport(data);
+            await loadReport(data);
             querySearch();
           } catch {
             alert(localizedString.reportCorrupted);
