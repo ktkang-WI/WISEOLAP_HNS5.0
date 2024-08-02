@@ -43,6 +43,8 @@ public class MyPageDesignerConfigController {
     HttpServletRequest request,
     @RequestParam(required = false, defaultValue = "0") Integer defaultDatasetId,
     @RequestParam(required = false, defaultValue = "0") Integer defaultReportId,
+    @RequestParam(required = false, defaultValue = "0") Integer adHocDefaultReportId,
+    @RequestParam(required = false, defaultValue = "0") Integer excelDefaultReportId,
     @RequestParam(required = false, defaultValue = "") String defaultItem,
     @RequestParam(required = false, defaultValue = "") String defaultPalette
   ) {
@@ -54,6 +56,8 @@ public class MyPageDesignerConfigController {
       .userNo(userNo)
       .defaultDatasetId(defaultDatasetId)
       .defaultReportId(defaultReportId)
+      .adHocDefaultReportId(adHocDefaultReportId)
+      .excelDefaultReportId(excelDefaultReportId)
       .defaultItem(defaultItem)
       .defaultPalette(defaultPalette)
       .build();

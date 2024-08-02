@@ -43,6 +43,11 @@ const Designer = () => {
   const {configStringToJson} = configureUtility();
 
   const getFavoritReport = async (hasFavoritReport, param) => {
+    const mapper = {
+      AdHoc: myPageConfigure?.adHocDefaultReportType,
+      DashAny: myPageConfigure?.defaultReportType,
+      Excel: myPageConfigure?.excelDefaultReportType
+    };
     const initState = (isLoadReport) => {
       if (hasFavoritReport == false || !isLoadReport) {
         dispatch(LayoutSlice.actions.initLayout(param));
@@ -54,12 +59,12 @@ const Designer = () => {
     let isLoadLinkReport = false;
 
     if (hasFavoritReport) {
-      const myReportId = myPageConfigure.defaultReportId;
-      const myReportType = myPageConfigure.defaultReportType;
+      // const myReportId = myPageConfigure.defaultReportId;
+      const myReportType = mapper[designerMode];
 
       if (myReportType == designerMode) {
-        isLoadReport = await getReport(myReportId, myReportType);
-        isLoadLinkReport = await getLinkedReport(myReportId);
+        isLoadReport = await getReport(hasFavoritReport, myReportType);
+        isLoadLinkReport = await getLinkedReport(hasFavoritReport);
 
         // TODO: 환경설정 보고서 바로 조회 개발시 분기 예정.
         if (isLoadReport && isLoadLinkReport) {
@@ -93,7 +98,12 @@ const Designer = () => {
   useEffect(() => {
     const configJson = configStringToJson(generalConfigure);
     const initPage = configJson?.general?.wiDefaultPage || 'DashAny';
-    const hasFavoritReport = myPageConfigure?.defaultReportId;
+    const hasFavoritReport = {
+      DashAny: myPageConfigure?.defaultReportId,
+      AdHoc: myPageConfigure?.adHocDefaultReportId,
+      Excel: myPageConfigure?.excelDefaultReportId
+    };
+
     const param = {mode: designerMode};
     const paletteNo = paletteCollection.findIndex(
         (color) => color.name == myPageConfigure?.defaultPalette
@@ -108,14 +118,14 @@ const Designer = () => {
 
       param.adhocLayout = layout || 'CTGB';
 
-      getFavoritReport(hasFavoritReport, param);
+      getFavoritReport(hasFavoritReport.AdHoc, param);
     } else if (designerMode == DesignerMode['DASHBOARD']) {
       param.defaultItem = myPageConfigure?.defaultItem || 'chart';
       param.defaultPalette = paletteNo > -1? paletteNo : 0;
 
-      getFavoritReport(hasFavoritReport, param);
+      getFavoritReport(hasFavoritReport.DashAny, param);
     } else {
-      getFavoritReport(hasFavoritReport, param);
+      getFavoritReport(hasFavoritReport.Excel, param);
     }
 
     dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));

@@ -4,10 +4,12 @@ import useReportSave from './useReportSave';
 import LinkSlice from 'redux/modules/LinkSlice';
 import localizedString from 'config/localization';
 import models from 'models';
+import useModal from './useModal';
 
 export default function useReportLoad() {
   const dispatch = useDispatch();
   const {loadReport} = useReportSave();
+  const {alert} = useModal();
   const {setDesignerMode} = ConfigSlice.actions;
   const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
 

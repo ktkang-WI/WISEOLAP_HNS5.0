@@ -69,8 +69,12 @@ const SNBDefaultElement = () => {
   };
 
   const changeNav = (designerMode) => {
-    const myReportId = myPageConfigure.defaultReportId;
-    const myReportType = myPageConfigure.defaultReportType;
+    const myReportId = {
+      DashAny: myPageConfigure?.defaultReportId,
+      AdHoc: myPageConfigure?.adHocDefaultReportId,
+      Excel: myPageConfigure?.excelDefaultReportId
+    };
+
     let adHocLayout = configure.adHocLayout || 'CTGB';
     const defaultItem = myPageConfigure?.defaultItem || 'chart';
 
@@ -82,8 +86,9 @@ const SNBDefaultElement = () => {
     dispatch(setDesignerMode(designerMode));
     dispatch(setEditMode(EditMode.DESIGNER));
 
+
     const loadReport = async () => {
-      const isLoadReport = await getReport(myReportId);
+      const isLoadReport = await getReport(myReportId[designerMode]);
       const loadGetReport = await getLinkedReport();
 
       // TODO: 보고서 바로 조회 개발시 적용예정.
@@ -92,7 +97,7 @@ const SNBDefaultElement = () => {
       }
     };
 
-    if (myPageConfigure?.defaultReportId && myReportType == designerMode) {
+    if (myReportId[designerMode]) {
       loadReport();
     } else {
       reload(designerMode, adHocLayout, defaultItem);

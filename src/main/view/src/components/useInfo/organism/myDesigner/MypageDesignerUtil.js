@@ -1,6 +1,8 @@
 export const MyDesignerConstance = {
   // DEFAULT_DATASET_ID: 'defaultDatasetId',
   DEFAULT_REPORT_ID: 'defaultReportId',
+  ADHOC_DEFAULT_REPORT_ID: 'adHocDefaultReportId',
+  EXCEL_DEFAULT_REPORT_ID: 'excelDefaultReportId',
   DEFAULT_ITEM: 'defaultItem',
   DEFAULT_PALETTE: 'defaultPalette',
   DEFAULT_LAYOUT: 'defaultLayout',
@@ -8,11 +10,21 @@ export const MyDesignerConstance = {
   DEFAULT_VIEWER_REPORT_ID: 'defaultViewerReportId'
 };
 
+export const favoritIdMapper = {
+  defaultReportId: 'DashAny',
+  adHocDefaultReportId: 'AdHoc',
+  excelDefaultReportId: 'Excel'
+};
+
 export const designerConfigItems = [
   // TODO: 기본데이터 집합은 사용 안할 예정이지만 추후 추가 될 가능성 있음.
   // {id: 'defaultDatasetId', title: '기본 데이터 집합', label: '즐겨찾기'},
   {id: {id: 'defaultReportId', requiredNm: 'defaultReportNm'},
-    title: '기본 보고서', label: '즐겨찾기', type: 'favorit'},
+    title: '대시보드 기본 보고서', label: '즐겨찾기', type: 'favorit'},
+  {id: {id: 'adHocDefaultReportId', requiredNm: 'adHocDefaultReportNm'},
+    title: '비정형 기본 보고서', label: '즐겨찾기', type: 'favorit'},
+  {id: {id: 'excelDefaultReportId', requiredNm: 'excelDefaultReportNm'},
+    title: '스프레드 기본 보고서', label: '즐겨찾기', type: 'favorit'},
   {id: 'defaultItem', title: '기본 아이템', label: '즐겨찾기', type: 'favorit'},
   {id: 'defaultPalette', title: '기본 색상', label: '즐겨찾기', type: 'favorit'},
   {id: 'defaultLayout', title: '비정형 레이아웃 설정',
@@ -23,15 +35,16 @@ export const designerConfigItems = [
 
 export const defaultItemList = () => {
   const type = [
-    {id: 'chart', name: '차트'},
-    {id: 'pie', name: '파이차트'},
-    {id: 'pivot', name: '피벗 그리드'},
-    {id: 'grid', name: '그리드'},
-    {id: 'boxPlot', name: '박스플롯'},
-    {id: 'choropleth', name: '코로프레스'}
-    // liquidFillGauge: '액체게이지',
-    // calendar: '달력',
-    // treeMap: '트리맵',
+    {name: 'chart', caption: '차트'},
+    {name: 'pie', caption: '파이차트'},
+    {name: 'pivot', caption: '피벗 그리드'},
+    {name: 'grid', caption: '그리드'},
+    {name: 'boxPlot', caption: '박스플롯'},
+    {name: 'choropleth', caption: '코로프레스'},
+    {name: 'liquidFillGauge', caption: '액체게이지'},
+    {name: 'calendar', caption: '달력'},
+    {name: 'treeMap', caption: '트리맵'}
+    // TODO : 추후 추가 예정
     // card: '카드',
     // textBox: '텍스트상자',
     // schedulerComponent: '스케줄러',
