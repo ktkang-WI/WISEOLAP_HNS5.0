@@ -136,7 +136,7 @@ const SNBDefaultElement = () => {
       hoveredImgSrc: preferenceActive,
       label: localizedString.preference,
       onClick: (e) => {
-        nav('config/general');
+        nav('confgeneral');
       }
     },
     // TODO: 임시용 입니다.
@@ -147,7 +147,7 @@ const SNBDefaultElement = () => {
       label: localizedString.preference,
       active: location.pathname.includes('general'),
       onClick: (e) => {
-        nav('general');
+        nav('confgeneral');
       }
     },
     'UserGroupManagement': {
@@ -155,9 +155,9 @@ const SNBDefaultElement = () => {
       imgSrc: userGroup,
       hoveredImgSrc: userGroupActive,
       label: localizedString.userGroupManagement,
-      active: location.pathname.includes('user-group'),
+      active: location.pathname.includes('usergroup'),
       onClick: (e) => {
-        nav('user-group');
+        nav('confusergroup');
       }
     },
     'Authority': {
@@ -167,7 +167,7 @@ const SNBDefaultElement = () => {
       label: localizedString.authority,
       active: location.pathname.includes('auth'),
       onClick: (e) => {
-        nav('auth');
+        nav('confauth');
       }
     },
     'ReportFolderManagement': {
@@ -175,9 +175,9 @@ const SNBDefaultElement = () => {
       imgSrc: reportFoler,
       hoveredImgSrc: reportFolderActive,
       label: localizedString.reportFolderManagement,
-      active: location.pathname.includes('report-folder'),
+      active: location.pathname.includes('reportfolder'),
       onClick: (e) => {
-        nav('report-folder');
+        nav('confreportfolder');
       }
     },
     'DataSourceAddition': {
@@ -185,9 +185,9 @@ const SNBDefaultElement = () => {
       imgSrc: addDataSource,
       hoveredImgSrc: addDataSourceActive,
       label: localizedString.dataSourceAddition,
-      active: location.pathname.includes('add-datasource'),
+      active: location.pathname.includes('datasource'),
       onClick: (e) => {
-        nav('add-datasource');
+        nav('confdatasourceadd');
       }
     },
     'Log': {
@@ -197,7 +197,7 @@ const SNBDefaultElement = () => {
       label: localizedString.log.log,
       active: location.pathname.includes('log'),
       onClick: (e) => {
-        nav('log');
+        nav('conflog');
       }
     },
     'SearchQuery': {

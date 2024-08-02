@@ -22,7 +22,7 @@ const MyPageMenuButtons = ({btns}) => {
             key={btn.id}
             {...commonProperties}
             onClick={() => {
-              nav('/editds/my-page' + btn.path);
+              nav('/editds' + btn.path);
             }}
           >
             {btn.label}

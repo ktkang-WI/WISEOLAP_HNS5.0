@@ -268,7 +268,9 @@ const ItemAttributeDefaultElement = () => {
           icon: deltaValueImg,
           width: '50%',
           onClick: () => {
-            const pivotMartInit = focusedItem.mart.init;
+            // 피벗그리드 데이터를 가져와야 변동 측정값 실행 되게.
+            // TODO : 홈앤쇼핑 브랜치와 같이 피벗만 보기시 차트 데이터는 안가져오게(피벗데이터만 가져옴).
+            const pivotMartInit = rootItem.items[1].mart.init;
 
             if (!pivotMartInit) {
               return;

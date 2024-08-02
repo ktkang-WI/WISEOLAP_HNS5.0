@@ -131,7 +131,7 @@ export const getCssStyle = (highlight, cellElement, cell) => {
   ) {
     applyEmoji();
     return colorStyle;
-  } else {
+  } else if (highlight.type == 'dimension') {
     return colorStyle;
   }
 };

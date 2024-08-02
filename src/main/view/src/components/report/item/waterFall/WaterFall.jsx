@@ -3,6 +3,8 @@ import useSizeObserver from '../util/hook/useSizeObserver';
 import {useMemo, useRef} from 'react';
 import D3WaterFall from './D3WaterFall';
 import {getBlendColor} from '../util/ColorManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const WaterFall = ({
   setItemExports,
@@ -22,6 +24,14 @@ const WaterFall = ({
     color: meta?.palette?.colors,
     item: item
   }), [meta?.palette?.colors]);
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.WATER_FALL,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}

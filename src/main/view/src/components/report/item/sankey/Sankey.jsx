@@ -3,8 +3,10 @@ import ItemManager from '../util/ItemManager';
 import useItemSetting from '../util/hook/useItemSetting';
 import Sankey, {Tooltip, Link, Node} from 'devextreme-react/sankey';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
-const SankeyChart = ({item}) => {
+const SankeyChart = ({setItemExports, id, item}) => {
   const ref = useRef();
 
   const {filterTools} = useItemSetting(item);
@@ -15,6 +17,13 @@ const SankeyChart = ({item}) => {
   if (!mart.init) {
     return <></>;
   }
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.SANKEY,
+    data: mart?.data?.data,
+    setItemExports});
 
   const customizeLinkTooltip = (info) => {
     return {
@@ -72,7 +81,7 @@ const SankeyChart = ({item}) => {
       ref={ref}
     >
       <Sankey
-        id='sankey'
+        id={id}
         dataSource={mart.data.data}
         dataStructure={'plain'}
         palette={meta.palette.name}

@@ -167,7 +167,7 @@ const DataSourceFoldableList = ({dataset}) => {
       return {
         ...field,
         visible: undefined,
-        disabled: !field.visible
+        disabled: typeof field.visible == 'boolean' ? !field.visible : false
       };
     });
   }

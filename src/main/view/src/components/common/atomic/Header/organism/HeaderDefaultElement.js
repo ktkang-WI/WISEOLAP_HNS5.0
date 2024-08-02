@@ -4,8 +4,8 @@ import openViewerImg from 'assets/image/icon/button/open_viewer.png';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
-import {selectLinkedReport} from 'redux/selector/LinkSelector';
-import store from 'redux/modules';
+// import {selectLinkedReport} from 'redux/selector/LinkSelector';
+// import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import showQuery from 'assets/image/icon/button/showQuery.png';
 import reportHistory from 'assets/image/icon/button/save_rename_header.png';
@@ -34,14 +34,16 @@ import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
 import {useRef} from 'react';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
-import {connectLinkedReport} from 'components/report/util/LinkedReportUtility';
+// import {connectLinkedReport} from
+// 'components/report/util/LinkedReportUtility';
 // import styled from 'styled-components';
-
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const {alert, openModal} = useModal();
+  const {
+    // alert,
+    openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
 
@@ -220,32 +222,32 @@ const HeaderDefaultElement = () => {
         reload(initialDisplay);
       }
     },
-    'LinkReport': {
-      'id': 'linkreport',
-      'label': localizedString.linkReport,
-      'buttonType': 'whiteRound',
-      'width': '115px',
-      'icon': openViewerImg,
-      'type': 'CommonButton',
-      'onClick': (e) => {
-        const linkReport = selectLinkedReport(store.getState());
-        if (linkReport&& Object.keys(linkReport).length > 0) {
-          const firstLinkReportKey = Object.keys(linkReport)[0];
-          const firstLinkReport = linkReport[firstLinkReportKey];
-          const linkReportId = firstLinkReport.linkReportId;
-          const linkReportType = firstLinkReport.linkReportType;
+    // 'LinkReport': {
+    //   'id': 'linkreport',
+    //   'label': localizedString.linkReport,
+    //   'buttonType': 'whiteRound',
+    //   'width': '115px',
+    //   'icon': openViewerImg,
+    //   'type': 'CommonButton',
+    //   'onClick': (e) => {
+    //     const linkReport = selectLinkedReport(store.getState());
+    //     if (linkReport&& Object.keys(linkReport).length > 0) {
+    //       const firstLinkReportKey = Object.keys(linkReport)[0];
+    //       const firstLinkReport = linkReport[firstLinkReportKey];
+    //       const linkReportId = firstLinkReport.linkReportId;
+    //       const linkReportType = firstLinkReport.linkReportType;
 
-          const param = {
-            reportId: linkReportId,
-            reportType: linkReportType
-          };
+    //       const param = {
+    //         reportId: linkReportId,
+    //         reportType: linkReportType
+    //       };
 
-          connectLinkedReport(param);
-        } else {
-          alert('연결 보고서가 존재하지 않습니다.');
-        }
-      }
-    },
+    //       connectLinkedReport(param);
+    //     } else {
+    //       alert('연결 보고서가 존재하지 않습니다.');
+    //     }
+    //   }
+    // },
     'DownloadReport': {
       'id': 'downLoadReport',
       'label': localizedString.downloadReport,

@@ -7,13 +7,13 @@ import DevDataGrid,
 {Column, LoadPanel, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {formatNumber, generateLabelSuffix} from
   'components/utils/NumberFormatUtility';
 import {getPagingOption} from './Utility';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useContextMenu from 'hooks/useContextMenu';
+import ItemType from '../util/ItemType';
+import useItemExport from 'hooks/useItemExport';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const {getContextMenuItems} = useContextMenu();
@@ -22,8 +22,14 @@ const DataGrid = ({setItemExports, id, item}) => {
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
-  const itemExportObject =
-    itemExportsObject(id, dataGridRef, 'GRID', mart.data.data);
+
+  useItemExport({
+    id,
+    ref: dataGridRef,
+    type: ItemType.DATA_GRID,
+    data: mart?.data?.data,
+    setItemExports});
+
   const dataGridConfig = {
     pagingOption: getPagingOption(config),
     dataSource: _.cloneDeep(mart.data),
@@ -109,17 +115,6 @@ const DataGrid = ({setItemExports, id, item}) => {
     }, config.paging.autoPaging.time * 1000);
     return () => clearInterval(id);
   }, [config.paging.autoPaging]);
-
-  useEffect(() => {
-    setItemExports((prev) => {
-      const itemExports =
-        prev.filter((item) => item.id !== itemExportObject.id);
-      return [
-        ...itemExports,
-        itemExportObject
-      ];
-    });
-  }, [mart.data.data]);
 
   useEffect(() => {
     handlePagingIndex();

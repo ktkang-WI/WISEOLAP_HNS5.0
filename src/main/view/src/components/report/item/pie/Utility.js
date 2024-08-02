@@ -105,7 +105,7 @@ const getRibbonItems = () => {
     'ShowColorLegend',
     'PieChartStyle',
     'Palette',
-    'ColorEdit',
+    // 'ColorEdit',
     'PointLabel',
     'InputTxt'
   ];

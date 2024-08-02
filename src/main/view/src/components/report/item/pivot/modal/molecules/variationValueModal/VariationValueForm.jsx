@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import {selectCurrentDataField} from 'redux/selector/ItemSelector';
 import variationValueType from './variationValueType.js';
 import localizedString from 'config/localization';
+import {useState} from 'react';
 
 const theme = getTheme();
 
@@ -28,12 +29,25 @@ const StyledWrapper = styled(Wrapper)`
   }
 `;
 
-const VariationValueForm = ({formRef, formData, ...props}) => {
+const VariationValueForm = ({formRef, formData, alertRef, ...props}) => {
   const dataField = useSelector(selectCurrentDataField);
   const measures = dataField.measure || [];
+  const [alert, setAlert] = useState('');
   // TODO: 추후 pivotMatrix 개선 후 적용
   // const sortByItems = dataField.sortByItem || [];
   const targets = measures;
+
+  const getValidation = (e) => {
+    const variationValueList = ['absoluteVariation', 'percentVariation'];
+
+    if (!e.selectedItem) return;
+
+    if (variationValueList.includes(e.selectedItem.value)) {
+      setAlert('*' + localizedString.requiredRowColumn);
+    } else {
+      setAlert('');
+    }
+  };
 
   return (
     <StyledWrapper>
@@ -68,15 +82,18 @@ const VariationValueForm = ({formRef, formData, ...props}) => {
           editorOptions={{
             items: variationValueType,
             displayExpr: 'caption',
-            valueExpr: 'value'
-          }
-          }
+            valueExpr: 'value',
+            onSelectionChanged: getValidation
+          }}
         >
           <Label>{localizedString.type}</Label>
         </Item>
       </Form>
       <p>
         {localizedString.variationValueWarning}
+      </p>
+      <p ref={alertRef} style={{color: 'red'}}>
+        {alert}
       </p>
     </StyledWrapper>
   );

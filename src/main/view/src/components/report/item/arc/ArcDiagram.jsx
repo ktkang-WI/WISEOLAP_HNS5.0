@@ -4,8 +4,10 @@ import D3ArcDiagram from './component/D3ArcDiagram';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
 import ItemManager from '../util/ItemManager';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
-const ArcDiagram = ({item}) => {
+const ArcDiagram = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
 
@@ -18,6 +20,13 @@ const ArcDiagram = ({item}) => {
   const {itemTools, filterTools} = useItemSetting(item);
   const {getDataField, getPalette} = itemTools;
   const {setMasterFilterData, getSelectedItem} = filterTools;
+
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.ARC_DIAGRAM,
+    data: mart?.data?.data,
+    setItemExports});
 
   return (
     <Wrapper ref={ref}>

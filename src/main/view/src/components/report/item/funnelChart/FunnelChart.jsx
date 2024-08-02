@@ -8,6 +8,8 @@ import {
   Label,
   Tooltip
 } from 'devextreme-react/funnel';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const FunnelChart = ({
   setItemExports,
@@ -24,9 +26,17 @@ const FunnelChart = ({
 
   const {height, width} = useSizeObserver(ref);
 
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.FUNNEL_CHART,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <Funnel
         width={width}

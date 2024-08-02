@@ -27,9 +27,11 @@ const ComboBox = ({setItemExports, id, item}) => {
     functions.setDataMasterFilter(selectedItemKey);
     functions.masterFilterReload(e);
   };
+
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <SelectBox
         width={width}

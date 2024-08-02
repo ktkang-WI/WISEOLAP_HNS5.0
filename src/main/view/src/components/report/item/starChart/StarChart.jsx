@@ -7,6 +7,8 @@ import {
   Series,
   Tooltip
 } from 'devextreme-react/polar-chart';
+import useItemExport from 'hooks/useItemExport';
+import ItemType from '../util/ItemType';
 
 const StarChart = ({
   setItemExports,
@@ -23,9 +25,17 @@ const StarChart = ({
 
   const {height, width} = useSizeObserver(ref);
 
+  useItemExport({
+    id,
+    ref,
+    type: ItemType.STAR_CHART,
+    data: mart?.data?.data,
+    setItemExports});
+
   return (
     <Wrapper
       ref={ref}
+      id={id}
     >
       <PolarChart
         width={width}

@@ -5,7 +5,7 @@ import React, {useRef} from 'react';
 import useSizeObserver from '../util/hook/useSizeObserver';
 import useItemSetting from '../util/hook/useItemSetting';
 
-const CoordinateChart = ({item, type}) => {
+const CoordinateChart = ({setItemExports, id, item, type}) => {
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
 

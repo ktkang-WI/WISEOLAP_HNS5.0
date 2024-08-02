@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -186,8 +187,28 @@ public class ReportController {
         Function<Measure> func = (m1, m2) -> {
             return m1.getName().equals(m2.getName());
         };
+
+        List<Measure> userDataMeasures = measures.stream()
+                .filter(measure -> measure.getExpression() != null)
+                .collect(Collectors.toList());
+
+        
+        List<Measure> usingMeasures = new ArrayList<>();
+        if (userDataMeasures.size() > 0) {
+            temporaryMeasures.stream()
+                .forEach((fm)-> {
+                    List<Measure> includeUserData = userDataMeasures.stream()
+                            .filter(tm -> tm.getExpression().indexOf(fm.getName()) > -1)
+                            .collect(Collectors.toList());
+
+                    if(includeUserData.size() > 0) {
+                        usingMeasures.add(fm);
+                    }
+                });
+        }
+
         List<Measure> mergeMeasures =
-            listDataUtility.mergeList(measures, temporaryMeasures, func);
+            listDataUtility.mergeList(measures, usingMeasures, func);
         
         DataAggregation dataAggreagtion = DataAggregation.builder()
                 .dataset(dataset)

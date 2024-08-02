@@ -102,7 +102,7 @@ const useCustomEvent = () => {
     'InputTxt': commonRibbonBtn['InputTxt'],
     'ShowColorLegend': commonRibbonBtn['ShowColorLegend'],
     'Palette': commonRibbonBtn['Palette'],
-    'ColorEdit': commonRibbonBtn['ColorEdit'],
+    // 'ColorEdit': commonRibbonBtn['ColorEdit'],
     'PointLabel': commonRibbonBtn['PointLabel']
   };
 

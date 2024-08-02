@@ -178,7 +178,8 @@ const generateItem = (item, param, rootItem) => {
       area: 'data',
       dataField: target.summaryType + '_' + target.name,
       caption: variationValue.name,
-      summaryType: 'SUM',
+      summaryType: 'sum',
+      dataType: 'number',
       summaryDisplayMode: variationValue.type
     };
 

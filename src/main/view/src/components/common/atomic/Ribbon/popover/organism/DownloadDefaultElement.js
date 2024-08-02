@@ -15,6 +15,7 @@ import {
   exportPdf,
   exportPptx
 } from 'components/report/util/ReportDownload';
+import useModal from 'hooks/useModal';
 
 const DownloadDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
@@ -22,6 +23,25 @@ const DownloadDefaultElement = () => {
   const currentReport = useSelector(selectCurrentReport);
   const rootItem = useSelector(selectRootItem);
   const dataSource = _.cloneDeep(currentReport.options);
+  const {alert} = useModal();
+
+  const checkExecuteQuery = () => {
+    const item = rootItem.items;
+
+    if (!item || item.length == 0) return false;
+
+    const isAdHoc = rootItem.adHocOption? true : false;
+    const itemInits = item.filter((i) => !i.mart.init);
+
+    let isExecute = false;
+    isExecute = itemInits.length !== 0 ? false : true;
+
+    if (isAdHoc) {
+      isExecute = itemInits.length === 2 ? false : true;
+    };
+
+    return isExecute;
+  };
 
   // 비정형인 경우 레이아웃 설정에 따라 다운로드 되는 아이템이 달라야 함.
   // (ex. 그리드만 보기 -> 전체 다운로드 -> 그리드만 다운로드)
@@ -49,6 +69,11 @@ const DownloadDefaultElement = () => {
             label: localizedString.excelMergeXlsx,
             visible: true,
             onClick: () => {
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: true,
@@ -66,6 +91,11 @@ const DownloadDefaultElement = () => {
             label: localizedString.excelXlsx,
             visible: rootItem?.adHocOption ? true : false,
             onClick: () => {
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: false,
@@ -89,6 +119,11 @@ const DownloadDefaultElement = () => {
             label: localizedString.word,
             visible: true,
             onClick: () => {
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: true,
@@ -107,6 +142,11 @@ const DownloadDefaultElement = () => {
             label: localizedString.powerpoint,
             visible: true,
             onClick: () => {
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: true,
@@ -154,9 +194,15 @@ const DownloadDefaultElement = () => {
           {
             label: localizedString.img,
             visible: true,
-            onClick: async () =>
+            onClick: async () =>{
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               exportImg(currentReport,
-                  currentReport?.options?.reportNm || '새 보고서')
+                  currentReport?.options?.reportNm || '새 보고서');
+            }
           },
           {
             label: localizedString.html,
@@ -168,6 +214,11 @@ const DownloadDefaultElement = () => {
             label: localizedString.pdf,
             visible: true,
             onClick: () => {
+              if (!checkExecuteQuery()) {
+                alert('조회 후 다운로드를 진행해 주세요.');
+                return;
+              }
+
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: true,

@@ -30,6 +30,7 @@ const VariationValueModal = ({...props}) => {
 
   const formRef = useRef();
   const gridRef = useRef();
+  const alertRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -45,6 +46,7 @@ const VariationValueModal = ({...props}) => {
     text: localizedString.new,
     onClick: () => {
       setSelectedItem({});
+      alertRef.current.textContent = '';
     }
   };
 
@@ -53,7 +55,7 @@ const VariationValueModal = ({...props}) => {
     text: localizedString.save,
     onClick: () => {
       const res = formRef.current.instance.validate();
-
+      alertRef.current.textContent = '';
       if (!res.isValid) {
         return;
       }
@@ -162,6 +164,7 @@ const VariationValueModal = ({...props}) => {
             formData={selectedItem}
             onFieldDataChanged={onFieldDataChanged}
             formRef={formRef}
+            alertRef={alertRef}
           />
         </ModalPanel>
       </Wrapper>

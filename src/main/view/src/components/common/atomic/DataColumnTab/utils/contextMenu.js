@@ -88,6 +88,8 @@ export const getContextMenu = (itemType, data, sortItems = []) => {
   const fieldType = data.fieldType;
   const category = data.category;
 
+  if (category === 'sortByItem') return [rename];
+
   if (type == 'MEA') {
     if (fieldType == 'DIM') {
       obj = [...obj, ...dimensionSummaryType];

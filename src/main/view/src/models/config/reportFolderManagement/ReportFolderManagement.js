@@ -1,7 +1,13 @@
 import axios from 'axios';
 
-const configPath = '/config';
-const reportPath = '/report';
+import {getConfig} from 'config/config';
+
+const contextRoot =
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
+const configPath = document.location.origin + contextRoot + '/config';
+
+const reportPath = document.location.origin + contextRoot + '/report';
 
 export const getFolderReports = () => {
   const res = axios.get(configPath + '/folder-report');

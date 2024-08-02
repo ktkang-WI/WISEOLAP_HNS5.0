@@ -176,12 +176,6 @@ public class DatasetController {
         return cubeService.getCube(cubeId, userId);
     }
 
-    @Operation(summary = "mart connection sample code", description = "mart db연결 sample code")
-    @PostMapping(value = "/mart-sample")
-    public MartResultDTO martSelectList() {
-        return datasetService.martSelectList();
-    }
-
     @Operation(summary = "queryDataset tables", description = "쿼리 직접입력 데이터 항목 가져옴.")
     @Parameters({
             @Parameter(name = "dsId", description = "DS id", example = "2703"),

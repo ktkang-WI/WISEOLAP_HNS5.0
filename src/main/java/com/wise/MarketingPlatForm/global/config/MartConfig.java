@@ -4,7 +4,6 @@ import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
 import com.wise.MarketingPlatForm.mart.MartSqlSession;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-@Slf4j
 public class MartConfig {
 
     @Resource(name = "martTemplates")

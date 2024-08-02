@@ -59,11 +59,17 @@ const FolderTreeView = ({mainKey, dependency}) => {
       const cleaningDataSource = dataSource.map((d) => {
         const isThereFld =
         selectedFlds.find((selectedData) => selectedData.fldId === d.fldId);
-        if (!isThereFld) return d;
-        return {
-          ...d,
-          ...isThereFld
-        };
+        if (!isThereFld) {
+          return {
+            ...d,
+            ...returnItem(d, true)
+          };
+        } else {
+          return {
+            ...d,
+            ...isThereFld
+          };
+        }
       });
       setDataSource(cleaningDataSource);
     };

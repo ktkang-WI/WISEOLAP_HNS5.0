@@ -26,13 +26,13 @@ public class MyPageDesignerConfigService {
     try {
       model = myPageConfigDAO.selectDesignerConfig(userNo);
       if (model != null) {
-        if (model.getDefaultReportId() != null) {
+        if (model.getDefaultReportId() != null && model.getDefaultReportId().intValue() != 0) {
           HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultReportId().intValue());
           model.setDefaultReportNm(reportNm.get("reportNm"));
           model.setDefaultReportType(reportNm.get("reportType"));
         }
         
-        if (model.getDefaultViewerReportId() != null) {
+        if (model.getDefaultViewerReportId() != null && model.getDefaultViewerReportId().intValue() != 0) {
           HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
           model.setDefaultViewerReportNm(reportNm.get("reportNm"));
           model.setReportType(reportNm.get("reportType"));
@@ -66,11 +66,12 @@ public class MyPageDesignerConfigService {
 
   public boolean saveDesignerConfig(MyDesignerDTO myDesignerDTO) {
     // 테이블에 userNo가 있어도 false 반환 하는 경우가 있다고 하여, 먼저 테이블의 존재 여부를 조회
+    // null 반환 경우도 있어 null 일 경우도 false 반환
     Boolean result = myPageConfigDAO.checkExistData(myDesignerDTO);
     if (result == null) {
       result = false;
-    } 
-
+    }
+    
     // 테이블에 존재 하지 않으면 insert, 존재 한다면 update
     if (!result.booleanValue()) {
       result = myPageConfigDAO.insertWbUserConfig(myDesignerDTO);

@@ -61,7 +61,9 @@ const SchedulerComponent = ({setItemExports, id, item}) => {
     loadMessages(koMessages);
   }, []);
   return (
-    <Wrapper ref={ref}>
+    <Wrapper
+      ref={ref}
+      id={id}>
       <Scheduler
         width={width}
         height={height}
