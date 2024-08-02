@@ -22,7 +22,7 @@ const AuthorityDataMember = () => {
         <Column
           dataField="test"
           caption={localizedString.member}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
       </DataGrid>

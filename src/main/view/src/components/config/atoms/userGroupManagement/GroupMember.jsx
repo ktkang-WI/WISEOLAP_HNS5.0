@@ -87,7 +87,7 @@ const GroupMember = () => {
             <Column
               dataField="userNm"
               caption={localizedString.userName}
-              dataType="varchar"
+              dataType="string"
               format="currency"
             />
           </DataGrid>
@@ -130,7 +130,7 @@ const GroupMember = () => {
             <Column
               dataField="userNm"
               caption={localizedString.userName}
-              dataType="varchar"
+              dataType="string"
               format="currency"
             />
           </DataGrid>

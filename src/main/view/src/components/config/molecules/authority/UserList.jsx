@@ -56,7 +56,7 @@ const UserList = ({onRowClick, dependency}) => {
         <Column
           dataField="isAuth"
           caption=""
-          dataType="varchar"
+          dataType="string"
           format="currency"
           width="30px"
           cellRender={({value}) => {
@@ -70,19 +70,19 @@ const UserList = ({onRowClick, dependency}) => {
         <Column
           dataField="userId"
           caption={localizedString.userId}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="userNm"
           caption={localizedString.userName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="grpNm"
           caption={localizedString.groupName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
       </DataGrid>

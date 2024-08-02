@@ -147,11 +147,13 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         onSelectionChanged={handleSelectedKey}
       >
         <Selection mode="single" />
-        <SearchPanel visible={true} />
+        <SearchPanel
+          visible={true}
+        />
         <Column
           dataField="isAuth"
           caption=""
-          dataType="varchar"
+          dataType="string"
           format="currency"
           width="30px"
           cellRender={({value}) => {
@@ -165,36 +167,43 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         <Column
           dataField="dsViewNm"
           caption={localizedString.dsViewName}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dsNm"
           caption={localizedString.dataSourceName}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dbmsType"
           caption={localizedString.dbType}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="ownerNm"
           caption={localizedString.owner}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="ip"
           caption={localizedString.dbAddress}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dbNm"
           caption={localizedString.dbName}
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dsViewId"
           caption={localizedString.dsViewId}
+          dataType="string"
           format="currency"
           visible={false}
         />

@@ -38,13 +38,13 @@ const UserDataGrid = () => {
         <Column
           dataField="userNm"
           caption={localizedString.userName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="grpNm"
           caption={localizedString.groupName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
       </DataGrid>

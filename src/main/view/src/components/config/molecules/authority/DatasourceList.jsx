@@ -110,37 +110,37 @@ const DatasourceList = ({mainKey, dependency}) => {
         <Column
           dataField="dsNm"
           caption={localizedString.dataSourceName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dbmsType"
           caption={localizedString.dbType}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="ownerNm"
           caption={localizedString.owner}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="ip"
           caption={localizedString.dbAddress}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dbNm"
           caption={localizedString.dbName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="dsViewId"
           caption={localizedString.dsViewId}
-          dataType="varchar"
+          dataType="string"
           format="currency"
           visible={false}
         />

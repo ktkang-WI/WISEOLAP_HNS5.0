@@ -122,7 +122,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
         <Column
           dataField="cubeNm"
           caption={localizedString.addCUBE}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
       </DataGrid>

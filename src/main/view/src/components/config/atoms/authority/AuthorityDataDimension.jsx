@@ -122,7 +122,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
         <Column
           dataField="dimCaption"
           caption={localizedString.dimension}
-          dataType="varchar"
+          dataType="string"
         />
       </DataGrid>
     </Wrapper>

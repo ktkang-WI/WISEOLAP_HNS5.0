@@ -43,13 +43,13 @@ const GroupDataGrid = () => {
         <Column
           dataField="grpNm"
           caption={localizedString.groupName}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
         <Column
           dataField="grpDesc"
           caption={localizedString.description}
-          dataType="varchar"
+          dataType="string"
           format="currency"
         />
       </DataGrid>
