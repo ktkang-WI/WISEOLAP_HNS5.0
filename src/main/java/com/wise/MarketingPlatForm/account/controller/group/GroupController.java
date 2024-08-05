@@ -49,7 +49,6 @@ public class GroupController{
     return RestAPIVO.okResponse(model);
   }
 
-  @SuppressWarnings("null")
   @PostMapping
   public ResponseEntity<RestAPIVO> createData(
       @RequestParam(required = true) String grpNm,
