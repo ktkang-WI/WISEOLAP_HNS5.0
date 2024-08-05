@@ -31,6 +31,16 @@ public class MyPageDesignerConfigService {
           model.setDefaultReportNm(reportNm.get("reportNm"));
           model.setDefaultReportType(reportNm.get("reportType"));
         }
+        if (model.getAdHocDefaultReportId() != null && model.getAdHocDefaultReportId().intValue() != 0) {
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getAdHocDefaultReportId().intValue());
+          model.setAdHocDefaultReportNm(reportNm.get("reportNm"));
+          model.setAdHocDefaultReportType(reportNm.get("reportType"));
+        }
+        if (model.getExcelDefaultReportId() != null && model.getExcelDefaultReportId().intValue() != 0) {
+          HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getExcelDefaultReportId().intValue());
+          model.setExcelDefaultReportNm(reportNm.get("reportNm"));
+          model.setExcelDefaultReportType(reportNm.get("reportType"));
+        }
         
         if (model.getDefaultViewerReportId() != null && model.getDefaultViewerReportId().intValue() != 0) {
           HashMap<String, String> reportNm = myPageConfigDAO.selectOnlyReportNm(model.getDefaultViewerReportId().intValue());
@@ -52,6 +62,8 @@ public class MyPageDesignerConfigService {
         .userNo(userNo)
         .defaultDatasetId(null)
         .defaultReportId(null)
+        .adHocDefaultReportId(null)
+        .excelDefaultReportId(null)
         .defaultItem(defaultLayouts)
         .defaultPalette("")
         .defaultLayout("")

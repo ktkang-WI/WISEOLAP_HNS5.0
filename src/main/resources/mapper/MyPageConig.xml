@@ -7,6 +7,8 @@
     <result column="USER_NO" property="userNo" javaType="int"/>
     <result column="DEFAULT_DATASET_ID" property="defaultDatasetId" javaType="int"/>
     <result column="DEFAULT_REPORT_ID" property="defaultReportId" javaType="Integer"/>
+    <result column="ADHOC_DEFAULT_REPORT_ID" property="adHocDefaultReportId" javaType="Integer"/>
+    <result column="EXCEL_DEFAULT_REPORT_ID" property="excelDefaultReportId" javaType="Integer"/>
     <result column="DEFAULT_ITEM" property="defaultItem" javaType="String"/>
     <result column="DEFAULT_PALETTE" property="defaultPalette" javaType="String"/>
     <result column="DEFAULT_VIEWER_REPORT_ID" property="defaultViewerReportId" javaType="int"/>
@@ -50,6 +52,8 @@
       USER_NO,
       DEFAULT_DATASET_ID,
       DEFAULT_REPORT_ID,
+      ADHOC_DEFAULT_REPORT_ID,
+      EXCEL_DEFAULT_REPORT_ID,
       DEFAULT_ITEM,
       DEFAULT_PALETTE,
       DEFAULT_VIEWER_REPORT_ID,
@@ -77,6 +81,8 @@
       SET
           DEFAULT_DATASET_ID = #{defaultDatasetId, jdbcType=INTEGER},
           DEFAULT_REPORT_ID = #{defaultReportId, jdbcType=INTEGER},
+          ADHOC_DEFAULT_REPORT_ID = #{adHocDefaultReportId, jdbcType=INTEGER},
+          EXCEL_DEFAULT_REPORT_ID = #{excelDefaultReportId, jdbcType=INTEGER},
           DEFAULT_ITEM = #{defaultItem, jdbcType=VARCHAR},
           DEFAULT_PALETTE = #{defaultPalette, jdbcType=VARCHAR},
           MAX_REPORT_QUERY_PERIOD = #{maxReportQueryPeriod, jdbcType=VARCHAR}

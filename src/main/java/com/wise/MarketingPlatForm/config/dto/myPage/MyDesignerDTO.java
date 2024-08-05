@@ -13,18 +13,41 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MyDesignerDTO {
   int userNo;
-  Integer defaultDatasetId;
-  Integer defaultReportId;
-  Integer defaultViewerReportId;
+  @Builder.Default
+  Integer defaultDatasetId = 0;
+  @Builder.Default
+  Integer defaultReportId = 0;
+  @Builder.Default
+  Integer adHocDefaultReportId = 0;
+  @Builder.Default
+  Integer excelDefaultReportId = 0;
+  @Builder.Default
+  Integer defaultViewerReportId = 0;
+  // TODO: default 값 잠시 보류
   String defaultItem;
   String defaultLayout;
-  String defaultPalette;
-  String defaultDatasetNm;
-  String defaultReportNm;
-  String defaultReportType;
-  String defaultViewerReportNm;
-  String userNm;
-  String reportType;
+  @Builder.Default
+  String defaultPalette = "";
+  @Builder.Default
+  String defaultDatasetNm = "";
+  @Builder.Default
+  String defaultReportNm = "";
+  @Builder.Default
+  String adHocDefaultReportNm = "";
+  @Builder.Default
+  String excelDefaultReportNm = "";
+  @Builder.Default
+  String defaultReportType = "";
+  @Builder.Default
+  String adHocDefaultReportType = "";
+  @Builder.Default
+  String excelDefaultReportType = "";
+  @Builder.Default
+  String defaultViewerReportNm = "";
+  @Builder.Default
+  String reportType = "";
+  @Builder.Default
+  String userNm = "";
   @Builder.Default
   String maxReportQueryPeriod = "{\"check\": false, \"period\": 2}";
 }

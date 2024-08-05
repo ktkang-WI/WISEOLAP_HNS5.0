@@ -10,7 +10,8 @@ import React, {useEffect, useState} from 'react';
 import useModal from 'hooks/useModal';
 import {
   MyDesignerConstance,
-  defaultItemList
+  defaultItemList,
+  favoritIdMapper
 } from '../organism/myDesigner/MypageDesignerUtil';
 import {paletteCollection}
   from 'components/common/atomic/Popover/organism/Palette';
@@ -35,19 +36,71 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
   let report = value;
 
   useEffect(() => {
-    (props.id == MyDesignerConstance['DEFAULT_REPORT_ID'] ||
-      props.id == MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']) &&
-      models.Report.getList(null, 'designer').then(({data}) => {
-        setIconReportList(data.privateReport);
-        setIconReportList(data.publicReport);
-        setReportList(data);
-      });
-
-    // props.id == 'defaultDatasetId' &&
-    //   // 기본 데이터 집합 가져오기.
-    //   models.Report.getList('admin', null, 'designer').then(({data}) => {
-    //   });
+    switch (props.id) {
+      case MyDesignerConstance['DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['ADHOC_DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['EXCEL_DEFAULT_REPORT_ID']:
+        models.Report.getList(favoritIdMapper[props.id], 'designer').then(
+            ({data}) => {
+              setIconReportList(data.privateReport);
+              setIconReportList(data.publicReport);
+              setReportList(data);
+            }
+        );
+      default: break;
+    }
+    // TODO: 요청 있을 시 기본 데이터집합 추가 예정.
   }, []);
+  const getProperties = () => {
+    const property = {name: '기본 색상', items: paletteCollection};
+
+    if (props.id == MyDesignerConstance['DEFAULT_ITEM']) {
+      property.name = '기본 아이템';
+      property.items = defaultItemList();
+    }
+
+    return property;
+  };
+
+  const selectModalContents = () => {
+    switch (props.id) {
+      case MyDesignerConstance['DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['ADHOC_DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['EXCEL_DEFAULT_REPORT_ID']:
+        return (
+          <DesignerReportTabs reportList={reportList}
+            onClose={() => props.onClose()}
+            onSelectionChanged={(e) => {
+              const param = e.component.getSelectedNodes()[0];
+
+              if (!param) return;
+
+              report = makeParameter(param);
+            }}
+            onSubmit={onSubmit}/>
+        );
+      case MyDesignerConstance['DEFAULT_PALETTE']:
+      case MyDesignerConstance['DEFAULT_ITEM']:
+        const selectBoxProperties = getProperties();
+
+        return (
+          <>
+            <div>{selectBoxProperties.title}</div>
+            <SelectBox
+              items={selectBoxProperties.items}
+              valueExpr='name'
+              displayExpr='caption'
+              value={value}
+              onValueChanged={(e) => {
+                setValue(e.value);
+              }}
+            />
+          </>
+        );
+      default:
+        break;
+    }
+  };
 
   const makeParameter = (param) => {
     const value = {
@@ -77,57 +130,11 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       }}
       {...props}
     >
-      {/* TODO : 추후 코드 변경 작업 예정. */}
-
       {/* {props.id == 'defaultDatasetId' &&
         <div>기본 데이터셋</div>
       } */}
 
-      {(props.id == MyDesignerConstance['DEFAULT_REPORT_ID'] ||
-      props.id == MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']) &&
-        <DesignerReportTabs
-          reportList={reportList}
-          onClose={() => props.onClose()}
-          onSelectionChanged={(e) => {
-            const param = e.component.getSelectedNodes()[0];
-
-            if (!param) return;
-
-            report = makeParameter(param);
-          }}
-          onSubmit={onSubmit}
-        />}
-
-      {props.id == MyDesignerConstance['DEFAULT_ITEM'] &&
-        <>
-          <div>기본 아이템</div>
-          <SelectBox
-            items={defaultItemList()}
-            valueExpr='id'
-            displayExpr='name'
-            value={value}
-            onValueChanged={(e) => {
-              setValue(e.value);
-            }}
-          />
-        </>
-      }
-
-      {
-        props.id == MyDesignerConstance['DEFAULT_PALETTE'] &&
-        <>
-          <div>기본 색상</div>
-          <SelectBox
-            items={paletteCollection}
-            valueExpr='name'
-            displayExpr='caption'
-            value={value}
-            onValueChanged={(e) => {
-              setValue(e.value);
-            }}
-          />
-        </>
-      }
+      {selectModalContents()}
     </Modal>
   );
 };
