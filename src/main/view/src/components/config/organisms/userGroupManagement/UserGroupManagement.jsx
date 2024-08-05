@@ -18,7 +18,7 @@ import {iconMapper} from '../common/ConfigUtility.js';
 export const UserGroupContext = createContext();
 
 const UserGroupManagement = () => {
-  const {alert, openModal} = useModal();
+  const {alert, openModal, confirm} = useModal();
 
   const {userGroupManagement} = useLoaderData();
   const [groupsFormat, setGroupsFormat] =
@@ -213,17 +213,19 @@ const UserGroupManagement = () => {
   };
 
   const handleRemove = ({instance}) => {
-    if (mode === Mode.USER) {
-      if (instance.userNo !== 0) {
-        handleRemoveInstance(instance, instance.deleteUser);
-      };
-    }
+    confirm(localizedString.deleteConfirm, () => {
+      if (mode === Mode.USER) {
+        if (instance.userNo !== 0) {
+          handleRemoveInstance(instance, instance.deleteUser);
+        };
+      }
 
-    if (mode === Mode.GROUP) {
-      if (instance.grpId !== 0) {
-        handleRemoveInstance(instance, instance.deleteGroup);
-      };
-    }
+      if (mode === Mode.GROUP) {
+        if (instance.grpId !== 0) {
+          handleRemoveInstance(instance, instance.deleteGroup);
+        };
+      }
+    });
   };
 
   const handleKey = ({instance}) => {
