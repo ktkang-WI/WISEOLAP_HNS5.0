@@ -117,10 +117,18 @@ export const createBorderStyle = (useBorder) => {
   return tableStyle;
 };
 
-export const getJsonKey2ColInfos = (rowData) => {
+export const getJsonKey2ColInfos = (rowData, bindingInfo) => {
   if (_.isEmpty(rowData)) return {colInfos: [], dataSourceHearder: []};
 
   const key = Object.keys(rowData[0]);
+
+  // 임시 코드 TODO : 추후 환경설정 SpreadBinding 분기 개발 되면 삭제 예정
+  if (bindingInfo.columnIndex > 0) {
+    for (let i = 0; i < bindingInfo.columnIndex; i++) {
+      key.unshift('');
+    }
+  }
+
   const colInfos = [];
   const dataSourceHearder = {};
 
