@@ -210,7 +210,7 @@ public class ReportController {
         List<Measure> mergeMeasures =
             listDataUtility.mergeList(measures, usingMeasures, func);
         
-        DataAggregation dataAggreagtion = DataAggregation.builder()
+        DataAggregation dataAggregation = DataAggregation.builder()
                 .dataset(dataset)
                 .measures(mergeMeasures)
                 .originalMeasures(measures)
@@ -229,7 +229,7 @@ public class ReportController {
                 .pivotOption(pivotOption)
                 .build();
 
-        return reportService.getItemData(request, dataAggreagtion);
+        return reportService.getItemData(request, dataAggregation);
     }
 
     @Operation(

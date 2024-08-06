@@ -5,85 +5,83 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
-import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
-public class LiquidFillGaugeDataMakter implements ItemDataMaker  {
-  @Override
-  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-    List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-    List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-    List<Dimension> dimensions = dataAggreagtion.getDimensions();
-    List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-    TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
-      null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
-    
-      DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+public class LiquidFillGaugeDataMakter implements ItemDataMaker {
+    @Override
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-      List<Measure> allMeasure = new ArrayList<>();
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
 
-      allMeasure.addAll(measures);
-      allMeasure.addAll(sortByItems);
+        List<Measure> allMeasure = new ArrayList<>();
 
-      // 데이터 기본 가공
-      data = sanitizer
-              .dataFiltering(dataAggreagtion.getFilter())
-              .groupBy()
-              .replaceNullData()
-              .topBottom(topBottomInfo)
-              .orderBy()
-              .columnFiltering()
-              .getData();
+        allMeasure.addAll(measures);
+        allMeasure.addAll(sortByItems);
 
-      DataPickUpMake customData = new DataPickUpMake(data);
-      List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
-      if(tempData != null) {
-          data = tempData;
-      }
+        // 데이터 기본 가공
+        data = sanitizer
+                .dataFiltering(dataAggregation.getFilter())
+                .groupBy()
+                .replaceNullData()
+                .topBottom()
+                .orderBy()
+                .columnFiltering()
+                .getData();
 
-      // 차트 데이터 가공
-      List<String> dimNames = new ArrayList<>();
-      List<Measure> seriesMeasureNames = new ArrayList<>();
-      Map<String, Object> info = new HashMap<>();
-      for (Dimension dim : dimensions) {
-        dimNames.add(dim.getName());
-      }
-      for (Map<String, Object> row : data) {
-          if (dimNames.size() == 0) {
-              row.put("arg", "Grand Total");
-          }
+        DataPickUpMake customData = new DataPickUpMake(data);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
+        if (tempData != null) {
+            data = tempData;
+        }
 
-          if (dimNames.size() == 1) {
-              row.put("arg", row.get(dimNames.get(0)));
-          }
+        // 차트 데이터 가공
+        List<String> dimNames = new ArrayList<>();
+        List<Measure> seriesMeasureNames = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
+        for (Dimension dim : dimensions) {
+            dimNames.add(dim.getName());
+        }
+        for (Map<String, Object> row : data) {
+            if (dimNames.size() == 0) {
+                row.put("arg", "Grand Total");
+            }
 
-          if (dimNames.size() >= 2) {
-              List<String> args = new ArrayList<>();
-              for (String name : dimNames) {
-                  args.add(String.valueOf(row.get(name)));
-              }
-              Collections.reverse(args);
-              row.put("arg", String.join("<br/>", args));
-          }
-      }
+            if (dimNames.size() == 1) {
+                row.put("arg", row.get(dimNames.get(0)));
+            }
 
-      for (Measure measure : measures) {
-        seriesMeasureNames.add(measure);
-      }
+            if (dimNames.size() >= 2) {
+                List<String> args = new ArrayList<>();
+                for (String name : dimNames) {
+                    args.add(String.valueOf(row.get(name)));
+                }
+                Collections.reverse(args);
+                row.put("arg", String.join("<br/>", args));
+            }
+        }
 
-      info.put("seriesMeasureNames", seriesMeasureNames);
-      CommonResult result = new CommonResult(data, info);
+        for (Measure measure : measures) {
+            seriesMeasureNames.add(measure);
+        }
 
-    return result;
-  }
-  
+        info.put("seriesMeasureNames", seriesMeasureNames);
+        CommonResult result = new CommonResult(data, info);
+
+        return result;
+    }
+
 }

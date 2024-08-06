@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -22,15 +23,14 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
 public class HeatMapMaker implements ItemDataMaker {
   @Override
-  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> datas) {
-    final List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-    final List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-    final List<Dimension> dimensions = dataAggreagtion.getDimensions();
-    final List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-    final TopBottomInfo topBottomInfo = Objects.isNull(dataAggreagtion.getAdHocOption()) ? 
-        null : dataAggreagtion.getAdHocOption().getTopBottomInfo();
-    
-    final DataSanitizer sanitizer = new DataSanitizer(datas, temporaryMeasures, dimensions, sortByItems);
+  public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> datas) {
+    final List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+    final List<Measure> measures = dataAggregation.getOriginalMeasures();
+    final List<Dimension> dimensions = dataAggregation.getDimensions();
+    final List<Measure> sortByItems = dataAggregation.getSortByItems();
+    boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
+
+    DataSanitizer sanitizer = new DataSanitizer(datas, temporaryMeasures, dimensions, sortByItems, isCube);
 
     final List<Measure> allMeasure = new ArrayList<>();
 
@@ -39,10 +39,10 @@ public class HeatMapMaker implements ItemDataMaker {
 
     // 데이터 기본 가공
     datas = sanitizer
-            .dataFiltering(dataAggreagtion.getFilter())
+            .dataFiltering(dataAggregation.getFilter())
             .groupBy()
             .replaceNullData()
-            .topBottom(topBottomInfo)
+            .topBottom()
             .orderBy()
             .columnFiltering()
             .getData();

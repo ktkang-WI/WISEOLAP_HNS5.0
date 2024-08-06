@@ -11,14 +11,14 @@ import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 public class SqlQueryGenerator implements QueryGenerator {
 
     @Override
-    public String getQuery(DataAggregation dataAggreagtion) {
-        return getQuery(dataAggreagtion, "");
+    public String getQuery(DataAggregation dataAggregation) {
+        return getQuery(dataAggregation, "");
     }
 
     @Override
-    public String getQuery(DataAggregation dataAggreagtion, String ownerNm) {
-        String query = dataAggreagtion.getDataset().getQuery();
-        query = applyParameter(dataAggreagtion.getParameters(), query);
+    public String getQuery(DataAggregation dataAggregation, String ownerNm) {
+        String query = dataAggregation.getDataset().getQuery();
+        query = applyParameter(dataAggregation.getParameters(), query);
 
         return query;
     }

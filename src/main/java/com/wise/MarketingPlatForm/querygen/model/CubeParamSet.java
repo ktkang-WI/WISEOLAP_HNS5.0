@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CubeParamSet {
-    private DataAggregation dataAggreagtion;
+    private DataAggregation dataAggregation;
     private List<String> columnList;
     private List<String> measureList;
     private List<String> dataAuthUniqueNmList;
@@ -26,8 +26,8 @@ public class CubeParamSet {
 
     private List<CubeTableColumn> columnInfoList;
 
-    public CubeParamSet(DataAggregation dataAggreagtion){
-        this.dataAggreagtion = dataAggreagtion ;
+    public CubeParamSet(DataAggregation dataAggregation){
+        this.dataAggregation = dataAggregation ;
         this.columnList = new ArrayList<String>();
         this.measureList = new ArrayList<String>();
         this.dataAuthUniqueNmList = new ArrayList<String>();

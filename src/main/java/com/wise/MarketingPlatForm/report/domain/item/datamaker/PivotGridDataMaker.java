@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.global.context.BeanContext;
 import com.wise.MarketingPlatForm.global.diagnos.WDC;
 import com.wise.MarketingPlatForm.global.diagnos.WdcTask;
@@ -18,7 +19,6 @@ import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
-import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.model.Paging;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.param.PagingParam;
@@ -32,30 +32,29 @@ public class PivotGridDataMaker implements ItemDataMaker {
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     @Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-        TopBottomInfo topBottomInfo = dataAggreagtion.getAdHocOption().getTopBottomInfo();
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
 
         List<Measure> allMeasure = new ArrayList<>();
 
         allMeasure.addAll(measures);
         allMeasure.addAll(sortByItems);
-        
+
         // 데이터 기본 가공
         sanitizer
-            .dataFiltering(dataAggreagtion.getFilter())
-            .groupBy()
-            .topBottom()
-            .orderBy()
-            .columnFiltering(true);
+                .dataFiltering(dataAggregation.getFilter())
+                .groupBy()
+                .topBottom()
+                .orderBy()
+                .columnFiltering(true);
 
-
-        if (dataAggreagtion.isRemoveNullData()) {
+        if (dataAggregation.isRemoveNullData()) {
             sanitizer.removeNullData();
         }
 
@@ -63,18 +62,18 @@ public class PivotGridDataMaker implements ItemDataMaker {
 
         DataPickUpMake customData = new DataPickUpMake(data);
         List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
-        if(tempData != null) {
+        if (tempData != null) {
             data = tempData;
         }
-        
-        Map<String, Object> info = new HashMap<> ();
+
+        Map<String, Object> info = new HashMap<>();
 
         // TODO: 추후 PivotMatrix 옵션화
         if (false) {
-            PivotOption pivotOption = dataAggreagtion.getPivotOption();
+            PivotOption pivotOption = dataAggregation.getPivotOption();
 
             try (WdcTask task = WDC.getCurrentTask().startSubtask("pivotSummaryMatrix")) {
-                internalPivotSummaryMatrix(dataAggreagtion, pivotOption, data, info);
+                internalPivotSummaryMatrix(dataAggregation, pivotOption, data, info);
             }
         }
 
@@ -83,7 +82,8 @@ public class PivotGridDataMaker implements ItemDataMaker {
         return result;
     }
 
-    private void internalPivotSummaryMatrix(DataAggregation dataAggregation, PivotOption opt, List<Map<String, Object>> data, Map<String, Object> map) {
+    private void internalPivotSummaryMatrix(DataAggregation dataAggregation, PivotOption opt,
+            List<Map<String, Object>> data, Map<String, Object> map) {
         final SummaryMatrixProvider summaryMatrixProvider = BeanContext.getBean(SummaryMatrixProvider.class);
         final PagingParam pagingParam = opt.getPagingParam();
         final String showRowGrandTotals = opt.getShowRowGrandTotals();
@@ -105,13 +105,14 @@ public class PivotGridDataMaker implements ItemDataMaker {
             if (pagingParam.getLimit() == 0) {
                 pagedMatrix = matrix;
             } else {
-                pagedMatrix = SummaryMatrixFactory.slicePageSummaryMatrix(matrix, paging, showRowGrandTotals, showRowTotals).get();
+                pagedMatrix = SummaryMatrixFactory
+                        .slicePageSummaryMatrix(matrix, paging, showRowGrandTotals, showRowTotals).get();
             }
-            
+
             pagedMatrix.setAttributes(matrix.getAttributes());
 
-            Map<String, Object> metaMap = new HashMap<> ();
-            Map<String, Object> matrixMap = new HashMap<> ();
+            Map<String, Object> metaMap = new HashMap<>();
+            Map<String, Object> matrixMap = new HashMap<>();
 
             metaMap.put("rowGroupParams", pagedMatrix.getRowSummaryDimension());
             metaMap.put("colGroupParams", pagedMatrix.getColGroupParams());

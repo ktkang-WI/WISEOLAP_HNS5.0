@@ -28,7 +28,7 @@ public class QueryGenAggregator {
 
     public QueryGenAggregation createQueryGenAggregation(CubeParamSet cubeParamSet){
         QueryGenAggregation queryGenAggregation = new QueryGenAggregation();
-        DataAggregation dataAggregation= cubeParamSet.getDataAggreagtion();
+        DataAggregation dataAggregation= cubeParamSet.getDataAggregation();
 
         this.itemType = dataAggregation.getItemType().toString();
 
