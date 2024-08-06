@@ -16,8 +16,10 @@ const getSummaryType = (tempField, sourceField) => {
     sourceField?.summaryType.toUpperCase() :'SUM' : 'MIN';
 
   // 차원을 측정값 항목에 올린경우 summaryType은 카운트가 디폴트
-  if (tempField.fieldType == 'DIM' && tempField.type == 'MEA') {
-    summaryType = 'COUNT';
+  if (tempField.category !== 'sortByItem') {
+    if (tempField.fieldType == 'DIM' && tempField.type == 'MEA') {
+      summaryType = 'COUNT';
+    }
   }
 
   return summaryType;

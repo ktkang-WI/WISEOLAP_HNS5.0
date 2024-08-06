@@ -277,12 +277,14 @@ const useDrag = () => {
 
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
+            onDragEndSeriesOption(sourceField, reportId);
           }
         }
       }
     } else if (source.droppableId != 'dataSource') {
       // 데이터 항목을 끌어다 허공에 놓는 경우 삭제
       dataField[source.droppableId].splice(source.index, 1);
+      dataField['seriesOptions'].splice(source.index, 1);
       dispatch(setItemField({reportId, dataField}));
     }
   };
