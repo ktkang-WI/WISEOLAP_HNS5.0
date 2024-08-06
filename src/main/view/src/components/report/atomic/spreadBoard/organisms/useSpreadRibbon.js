@@ -30,7 +30,6 @@ import DatasetType from 'components/dataset/utils/DatasetType';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import datasetDefaultElement
   from 'components/common/atomic/Ribbon/popover/organism/DatasetDefaultElement';
-import {selectCurrentSpreadData} from 'redux/selector/SpreadSelector';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
@@ -116,13 +115,6 @@ const useSpreadRibbon = () => {
   };
 
   const downloadReportXLSX = () => {
-    const hasSpreadData = selectCurrentSpreadData(store.getState());
-
-    if (Object.keys(hasSpreadData).length === 0) {
-      alert('조회 후 다운로드를 진행해 주세요.');
-      return;
-    };
-
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
     const designer = designerRef.current.designer;
     reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
