@@ -13,7 +13,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 const theme = getTheme();
 
 const ReportHistoryModal = ({onClose, ...props}) => {
-  const {loadReport, querySearch} = useReportSave();
+  const {loadReport} = useReportSave();
   const {confirm} = useModal();
   const reportId = useSelector(selectCurrentReportId);
   const [dataSource, setDataSource] = useState([]);
@@ -39,7 +39,7 @@ const ReportHistoryModal = ({onClose, ...props}) => {
             try {
               loadReport(data);
               // TODO: 추후 보고서 바로 조회 적용시 수정
-              querySearch();
+              // querySearch();
               onClose();
             } catch (e) {
               console.error(e);

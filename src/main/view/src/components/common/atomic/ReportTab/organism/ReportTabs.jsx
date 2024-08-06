@@ -40,7 +40,7 @@ const StyledTab = styled(CommonTab)`
 
 const ReportTabs = ({reportData}) => {
   const [reportList, setReportList] = useState();
-  const {loadReport, querySearch} = useReportSave();
+  const {loadReport} = useReportSave();
   const dispatch = useDispatch();
   const {alert} = useModal();
 
@@ -77,7 +77,7 @@ const ReportTabs = ({reportData}) => {
                   try {
                     dispatch(setDesignerMode(selectedReport.reportType));
                     loadReport(data);
-                    querySearch();
+                    // querySearch();
                   } catch (e) {
                     console.error(e);
                     alert(localizedString.reportCorrupted);

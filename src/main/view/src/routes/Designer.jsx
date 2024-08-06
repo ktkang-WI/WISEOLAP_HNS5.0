@@ -22,7 +22,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 const Designer = () => {
   // hooks
   const dispatch = useDispatch();
-  const {reload, querySearch} = useReportSave();
+  const {reload} = useReportSave();
   const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
   const {getReport, getLinkedReport} = useReportLoad();
@@ -68,7 +68,7 @@ const Designer = () => {
 
         // TODO: 환경설정 보고서 바로 조회 개발시 분기 예정.
         if (isLoadReport && isLoadLinkReport) {
-          querySearch();
+          // querySearch();
         } else {
           initState(isLoadReport);
         }
