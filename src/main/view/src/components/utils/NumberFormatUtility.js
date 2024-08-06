@@ -51,7 +51,7 @@ export const formatNumber = (value, formData, labelSuffix) => {
       formData.unit,
       formData.precision,
       formData.useDigitSeparator,
-      undefined,
+      formData.prefix,
       labelSuffix,
       formData.suffixEnabled,
       formData.precisionType

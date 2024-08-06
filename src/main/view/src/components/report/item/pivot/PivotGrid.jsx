@@ -75,7 +75,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       } else if (v.type.startsWith('Rank')) {
         formats.push(getDefaultFormat());
       } else {
-        formats.push(getDefaultFormatRatio());
+        formats.push(Object.assign(getDefaultFormatRatio(),
+            {variationValueType: v.type}));
       }
     });
 
@@ -133,11 +134,24 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     if (area == 'data' && cell.dataType && cell.value) {
       const formats = getFormats();
       const formData = formats[cell.dataIndex];
+
       if (formData != undefined) {
         const labelSuffix = generateLabelSuffix(formData);
+        let spanStyle = '';
+
+        if (formData.variationValueType === 'percentVariation') {
+          formData.prefix = '+';
+          spanStyle = 'color: blue;';
+          if (cell.value < 0) {
+            cell.value = parseFloat(cell.value.toString().substring(1));
+            formData.prefix = '▽';
+            spanStyle = 'color: red;';
+          };
+        }
         const formattedValue =
           formatNumber(cell.value, formData, labelSuffix);
-        cellElement.innerHTML = '<span>' + formattedValue + '</span>';
+        cellElement.innerHTML =
+          `<span style="${spanStyle}">${formattedValue}</span>`;
       }
     }
 
