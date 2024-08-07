@@ -159,11 +159,24 @@ const useSpread = () => {
   };
 
 
-  const sheetChangedListener = (designer) => {
-    designer.getWorkbook().bind(sheets.Events.SheetChanged, changSheet);
+  const sheetChangedListener = (workbook) => {
+    workbook.bind(
+        sheets.Events.SheetChanged,
+        (e, args) => changSheet(e, args, workbook)
+    );
   };
 
-  const changSheet = (e, args) => {
+  const changSheet = (e, args, workbook) => {
+    const sheet = workbook.getSheetFromName(args.sheetName);
+    const pivotTableManager = sheet.pivotTables;
+    const pivotTables = pivotTableManager.all();
+
+    if (args.propertyName === 'isSelected') {
+      for (const pivotTable of pivotTables) {
+        pivotTable.updateSource();
+      }
+    }
+
     if (args.propertyName === 'deleteSheet') {
       deletedSheet(e, args);
     }
