@@ -242,15 +242,17 @@ const useDrag = () => {
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
+
             // 뷰어게시 기능으로 데이터항목에 올리기전 체크해제 후 해제한 항목을 다시 올린경우 처리.
             if (selectedDataset.selectedFields) {
               dispatch(datasetAppliedFields(param));
             }
-            onDragEndSeriesOption(tempField, reportId);
+            if (tempField.category !== 'sortByItem') {
+              onDragEndSeriesOption(tempField, reportId);
+            }
             if (isExecute) {
               dispatch(updateDesinerExecutionState(false));
             }
-          }
         } else if (source.droppableId == dest.droppableId) {
           const sourceField = dataField[source.droppableId]
               .splice(source.index, 1);
@@ -273,18 +275,44 @@ const useDrag = () => {
 
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
+          // 정렬 기준 항목에서 측정값으로 이동시 summaryType 기본값 설정
+          if (source.droppableId === 'sortByItem') {
+            sourceField['summaryType'] = 'COUNT';
+
+            if (sourceField.fieldType === 'MEA' && sourceField.type === 'MEA') {
+              sourceField['summaryType'] = 'SUM';
+            }
+          }
+          // 측정값에서 정렬 기준 항목으로 이동시 summaryType 기본값 설정
+          if (dest.droppableId === 'sortByItem') {
+            sourceField['summaryType'] = 'MIN';
+
+            if (sourceField.fieldType === 'MEA' && sourceField.type === 'MEA') {
+              sourceField['summaryType'] = 'SUM';
+            }
+          }
           dataField[dest.droppableId].splice(dest.index, 0, sourceField);
 
           if (checkFieldLimit()) {
+            // 측정값에서 차원 및 정렬기준항목으로 이동. -> 시리즈옵션에서 제거.
+            if (source.droppableId === 'measure') {
+              dataField['seriesOptions'].splice(source.index, 1);
+            }
             dispatch(setItemField({reportId, dataField}));
-            onDragEndSeriesOption(sourceField, reportId);
+            // 차원 및 정렬기준 항목에서 측정값으로 이동 -> 시리즈옵션에 추가.
+            if (dest.droppableId === 'measure') {
+              onDragEndSeriesOption(sourceField, reportId);
+            }
           }
         }
       }
     } else if (source.droppableId != 'dataSource') {
       // 데이터 항목을 끌어다 허공에 놓는 경우 삭제
       dataField[source.droppableId].splice(source.index, 1);
-      dataField['seriesOptions'].splice(source.index, 1);
+      // 측정값 항목에서 측정값을 허공에 놓는 경우 시리즈옵션도 제거.
+      if (dataField['seriesOptions'] && source.droppableId === 'measure') {
+        dataField['seriesOptions'].splice(source.index, 1);
+      }
       dispatch(setItemField({reportId, dataField}));
     }
   };
