@@ -82,7 +82,7 @@ public class ExpressionEngine {
            	ret = expr.evaluate(jexlContext);            
         }
         catch (Exception e) {
-            //log.warn("Error occurred while evaluating an expression: {}", expression, e.toString());
+            log.warn("Error occurred while evaluating an expression: {}", expression, e.toString());
         }
 
         return ret != null ? ret : defaultValue;
