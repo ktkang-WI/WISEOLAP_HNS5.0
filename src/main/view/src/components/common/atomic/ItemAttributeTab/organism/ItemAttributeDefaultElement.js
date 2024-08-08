@@ -13,8 +13,6 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
-// import topBottomImg
-//   from 'assets/image/icon/adhoc/topBottom.png';
 import deltaValueImg from 'assets/image/icon/adhoc/deltaValue.png';
 import dataHighlightImg from 'assets/image/icon/adhoc/dataHighlight.png';
 import gridAttributeImg from 'assets/image/icon/adhoc/gridAttribute.png';
