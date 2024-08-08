@@ -18,6 +18,8 @@ const Wrap = styled.div`
   li {
     padding: 0px 8px;
     height: 28px;
+    width: auto;
+    min-width: 75px;
     line-height: 28px;
     color: ${theme.color.gray500};
   }
@@ -26,7 +28,7 @@ const Wrap = styled.div`
     background-color: #3679DA;
     color: ${theme.color.white};
   }
-  `;
+`;
 
 const PointerWrap = styled.div`
   cursor: pointer;
@@ -47,11 +49,11 @@ const PointerWrap = styled.div`
     }
   }
 `;
+
 const Arrow = styled.img`
   padding-right: 10px;
   width: 10px;
   height: 10px;
-}
 `;
 
 // export 1 라벨아이콘만.
