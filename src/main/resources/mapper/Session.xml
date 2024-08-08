@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.global.session.dao.SessionDAO">
+<!-- Mapper -->
+
+	<resultMap id="User" type="com.wise.MarketingPlatForm.auth.entity.UserEntity">
+		<result column="USER_NO" property="userNo" javaType="int"/>
+        <result column="GRP_ID" property="grpId" javaType="int"/>
+        <result column="USER_ID" property="userId" javaType="String"/>
+        <result column="USER_NM" property="userNm" javaType="String"/>
+        <result column="PASSWD" property="password" javaType="String"/>
+        <result column="E_MAIL" property="email" javaType="String"/>
+        <result column="E_MAIL2" property="email2" javaType="String"/>
+        <result column="DEL_YN" property="delYn" javaType="String"/>
+        <result column="HP_NO" property="hpNo" javaType="String"/>
+        <result column="TEL_NO" property="telNo" javaType="String"/>
+        <result column="USER_REL_CD" property="userRelCd" javaType="String"/>
+        <result column="USER_DESC" property="userDesc" javaType="String"/>
+        <result column="RUN_MODE" property="runMode" javaType="String"/>
+        <result column="HASH_YN" property="hashYn" javaType="String"/>
+	</resultMap>
+
+<!-- Mapper End -->
+
+<!-- Query -->
+
+  <select id="saveSessionUser" parameterType="com.wise.MarketingPlatForm.global.session.entity.UserSessionEntity">
+    INSERT INTO USER_SESSION_MSTR
+			(
+                USER_ID
+                ,USER_NO
+                ,USER_SESSION_KEY
+                ,LOG_TYPE
+                ,ACCESS_IP
+                ,LAST_MSG_DT
+                ,MOD_USER_NO
+                ,MOD_DT
+			)
+		VALUES
+			(
+                #{userId}
+				,#{userNo}
+				,#{userSessionKey}
+				,#{logType}
+                ,#{accessIp}
+                ,SYSDATE
+                ,#{modUserNo}
+                ,SYSDATE
+			)
+  </select>
+
+  <select id="getSessionUser" resultMap="User">
+    SELECT USER_MSTR.* 
+    FROM USER_SESSION_MSTR
+    INNER JOIN USER_MSTR ON USER_SESSION_MSTR.USER_NO = USER_MSTR.USER_NO 
+    WHERE 1=1
+    USER_SESSION_MSTR.USER_SESSION_KEY  = #{sessionId} 
+    AND USER_MSTR.DEL_YN = 'N'
+    AND LAST_MSG_DT <![CDATA[>]]> SYSDATE - INTERVAL '1' HOUR
+  </select>
+
+  <delete id="deleteSessionUser" parameterType="String">
+        DELETE FROM USER_SESSION_MSTR
+                WHERE USER_SESSION_KEY = #{sessionId}
+  </delete>
+
+  <delete id="deleteSessionUserSchedule" >
+        DELETE FROM USER_SESSION_MSTR
+        WHERE 1=1 
+        AND MOD_DT <![CDATA[<]]> SYSDATE - INTERVAL '1' HOUR    
+  </delete>
+
+  <select id="updateSessionUser" parameterType="com.wise.MarketingPlatForm.global.session.entity.UserSessionEntity">
+    UPDATE USER_SESSION_MSTR
+    SET USER_ID=#{userId}, USER_NO=#{userNo}
+      , LOG_TYPE=#{logType}
+      , ACCESS_IP=#{accessIp}
+      , LAST_MSG_DT=SYSDATE
+      , MOD_USER_NO=#{modUserNo}
+      , MOD_DT=SYSDATE
+      
+    WHERE USER_SESSION_KEY=#{userSessionKey}
+  </select>
+
+<!-- Query End -->
+
+</mapper>
