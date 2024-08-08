@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
@@ -15,13 +17,14 @@ import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 
 public class TimelineDataMaker implements ItemDataMaker {
     @Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
 
         List<Measure> allMeasure = new ArrayList<>();
 
@@ -30,7 +33,7 @@ public class TimelineDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
+                .dataFiltering(dataAggregation.getFilter())
                 .replaceNullData()
                 .groupBy()
                 .orderBy()
@@ -39,17 +42,17 @@ public class TimelineDataMaker implements ItemDataMaker {
 
         DataPickUpMake customData = new DataPickUpMake(data);
         List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
-        if(tempData != null) {
+        if (tempData != null) {
             data = tempData;
         }
 
-        List<Map<String, Object>> timelineData = new ArrayList<> ();
+        List<Map<String, Object>> timelineData = new ArrayList<>();
 
         for (Map<String, Object> row : data) {
-            Map<String, Object> nRow = new HashMap<String, Object> ();
+            Map<String, Object> nRow = new HashMap<String, Object>();
 
-            List<String> args = new ArrayList<String> ();
-            List<String> groups = new ArrayList<String> ();
+            List<String> args = new ArrayList<String>();
+            List<String> groups = new ArrayList<String>();
 
             for (Dimension dimension : dimensions) {
                 String category = dimension.getCategory();

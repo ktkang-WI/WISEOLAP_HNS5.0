@@ -48,7 +48,7 @@ const SNBDefaultElement = () => {
   // hook
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const {reload, querySearch} = useReportSave();
+  const {reload} = useReportSave();
   const {getReport, getLinkedReport} = useReportLoad();
   const location = useLocation();
   const {confirm} = useModal();
@@ -93,7 +93,7 @@ const SNBDefaultElement = () => {
 
       // TODO: 보고서 바로 조회 개발시 적용예정.
       if (isLoadReport && loadGetReport) {
-        querySearch();
+        // querySearch();
       }
     };
 

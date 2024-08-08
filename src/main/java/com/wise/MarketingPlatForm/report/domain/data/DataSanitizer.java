@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
+import com.wise.MarketingPlatForm.report.type.SummaryType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public final class DataSanitizer {
     List<Dimension> dimensions;
     List<Measure> sortByItems;
     List<Measure> allMeasures;
+    boolean isCube;
 
     int orgDataLength;
     int grpDataLenth;
@@ -46,11 +48,12 @@ public final class DataSanitizer {
     }
 
     public DataSanitizer(List<Map<String, Object>> data, List<Measure> measures, List<Dimension> dimensions,
-            List<Measure> sortByItems) {
+            List<Measure> sortByItems, boolean isCube) {
         this.data = data;
         this.measures = measures;
         this.dimensions = dimensions;
         this.sortByItems = sortByItems;
+        this.isCube = isCube;
 
         allMeasures = new ArrayList<>();
         allMeasures.addAll(measures);
@@ -166,11 +169,17 @@ public final class DataSanitizer {
                                     Object value = row.get(name);
                                     measure.setSummaryName(measure.getSummaryType().toString() + "_" + name);
                                     
+                                    SummaryType summaryType = measure.getSummaryType();
+
+                                    if (isCube && (summaryType == SummaryType.COUNT || summaryType == SummaryType.COUNTDISTINCT)) {
+                                        summaryType = SummaryType.SUM;
+                                    }
+
                                     if (value == null) {
                                         acc.put(measure.getSummaryName(), null);
                                     } else {
                                         acc.put(measure.getSummaryName(),
-                                                new SummaryCalculator(measure.getSummaryType(), value));
+                                                new SummaryCalculator(summaryType, value));
                                     }
 
                                 }
@@ -178,6 +187,12 @@ public final class DataSanitizer {
                                 for (Measure measure : allMeasures) {
                                     String name = measure.getName();
                                     Object value = row.get(name);
+                                    SummaryType summaryType = measure.getSummaryType();
+
+                                    if (isCube && (summaryType == SummaryType.COUNT || summaryType == SummaryType.COUNTDISTINCT)) {
+                                        summaryType = SummaryType.SUM;
+                                    }
+                                    
                                     if (value != null) {
                                         if (acc.get(measure.getSummaryName()) != null) {
                                             SummaryCalculator sv = (SummaryCalculator) acc
@@ -185,7 +200,7 @@ public final class DataSanitizer {
                                             acc.put(measure.getSummaryName(), sv.calculateSummaryValue(value));
                                         } else {
                                             acc.put(measure.getSummaryName(),
-                                                    new SummaryCalculator(measure.getSummaryType(), value));
+                                                    new SummaryCalculator(summaryType, value));
                                         }
                                     }
                                 }

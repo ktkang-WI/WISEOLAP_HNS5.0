@@ -25,7 +25,7 @@ const LoadReportModal = ({...props}) => {
   const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
-  const {loadReport, querySearch, reload} = useReportSave();
+  const {loadReport, reload} = useReportSave();
   const reportType = selectCurrentDesignerMode(store.getState());
   const reportId = selectCurrentReportId(store.getState());
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const LoadReportModal = ({...props}) => {
         .then(async ({data}) => {
           try {
             await loadReport(data);
-            querySearch();
+            // querySearch();
           } catch {
             alert(localizedString.reportCorrupted);
           }

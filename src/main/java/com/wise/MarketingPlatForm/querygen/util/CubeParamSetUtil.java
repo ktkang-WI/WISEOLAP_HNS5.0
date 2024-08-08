@@ -73,7 +73,7 @@ public class CubeParamSetUtil {
     }
 
     public static void makeCubeDataFieldList(CubeParamSet cubeParamSet) {
-        DataAggregation dataAggregation= cubeParamSet.getDataAggreagtion();
+        DataAggregation dataAggregation= cubeParamSet.getDataAggregation();
 
         List<Dimension> dimensions = dataAggregation.getDimensions();
         List<Measure> measures = new ArrayList<> ();

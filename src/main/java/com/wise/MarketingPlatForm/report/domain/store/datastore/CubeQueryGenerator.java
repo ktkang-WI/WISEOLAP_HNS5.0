@@ -13,15 +13,15 @@ public class CubeQueryGenerator implements QueryGenerator {
     private QueryGenService queryGenService;
 
     @Override
-    public String getQuery(DataAggregation dataAggreagtion) {
-        return getQuery(dataAggreagtion, "");
+    public String getQuery(DataAggregation dataAggregation) {
+        return getQuery(dataAggregation, "");
     }
 
     @Override
-    public String getQuery(DataAggregation dataAggreagtion, String ownerNm) {
+    public String getQuery(DataAggregation dataAggregation, String ownerNm) {
         queryGenService = BeanContext.getBean(QueryGenService.class);
 
-        String query = queryGenService.createCubeParamSet(dataAggreagtion, ownerNm);
+        String query = queryGenService.createCubeParamSet(dataAggregation, ownerNm);
         return query;
     }
 

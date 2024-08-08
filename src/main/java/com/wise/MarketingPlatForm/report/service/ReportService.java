@@ -235,15 +235,15 @@ public class ReportService {
     	return returnMap;
     }
 
-    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggreagtion) {
+    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggregation) {
         ReportResult result;
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
-        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggreagtion.getDataset().getDsType());
+        QueryGenerator queryGenerator = queryGeneratorFactory.getDataStore(dataAggregation.getDataset().getDsType());
 
         // TODO: 주제 영역일 경우 다르게 처리 현재는 쿼리 직접 입력만.
         // 추후 쿼리 queryGenerator에 구현
-        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggreagtion.getDataset().getDsId());
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(dataAggregation.getDataset().getDsId());
 
         // TODO: 추후 DB 암호화 적용시 복호화 로직.
         // try {
@@ -257,7 +257,7 @@ public class ReportService {
 
         String ownerNm = dsMstrDTO.getOwnerNm();
 
-        String query = queryGenerator.getQuery(dataAggreagtion, ownerNm);
+        String query = queryGenerator.getQuery(dataAggregation, ownerNm);
 
         Timer timer = new Timer();
         timer.start();
@@ -265,13 +265,13 @@ public class ReportService {
         
         timer.end();
 
-        UserDTO user = dataAggreagtion.getUser();
+        UserDTO user = dataAggregation.getUser();
 
         QueryLogDTO queryLogDTO = QueryLogDTO.builder()
                 .eventStamp(new Timestamp(timer.getStartTime()))
-                .reportId(Integer.parseInt(dataAggreagtion.getReportId()))
+                .reportId(Integer.parseInt(dataAggregation.getReportId()))
                 .userId(user.getUserId())
-                .reportType(dataAggreagtion.getReportType().toString())
+                .reportType(dataAggregation.getReportType().toString())
                 .userNo(user.getUserNo())
                 .userNm(user.getUserNm())
                 .grpId(user.getGrpId())
@@ -284,9 +284,9 @@ public class ReportService {
         logService.insertQueryLog(queryLogDTO);
 
         ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggreagtion.getItemType());
+        ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggregation.getItemType());
        
-        result = itemDataMaker.make(dataAggreagtion, martResultDTO.getRowData());
+        result = itemDataMaker.make(dataAggregation, martResultDTO.getRowData());
         result.setQuery(query);
 
         return result;

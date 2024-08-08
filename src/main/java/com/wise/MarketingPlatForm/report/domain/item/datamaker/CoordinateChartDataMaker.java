@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -19,17 +20,17 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 public class CoordinateChartDataMaker implements ItemDataMaker {
   
   @Override
-  public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-    List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-    List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-    List<Dimension> dimensions = dataAggreagtion.getDimensions();
-    List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-    
-    DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+  public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+    List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+    List<Measure> measures = dataAggregation.getOriginalMeasures();
+    List<Dimension> dimensions = dataAggregation.getDimensions();
+    List<Measure> sortByItems = dataAggregation.getSortByItems();
+    boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
+    DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
     // 데이터 기본 가공
     data = sanitizer
-            .dataFiltering(dataAggreagtion.getFilter())
+            .dataFiltering(dataAggregation.getFilter())
             .temporaryColumnsAdd()
             .replaceNullData()
             .orderBy()

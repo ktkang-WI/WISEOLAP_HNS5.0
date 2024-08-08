@@ -39,13 +39,13 @@ public class QueryGenService {
     }
 
     @Transactional
-    public String createCubeParamSet(DataAggregation dataAggreagtion,String ownerNm) {
+    public String createCubeParamSet(DataAggregation dataAggregation,String ownerNm) {
         // 주제 영역 쿼리 생성을 위한 Param 사전 준비 작업
         QuerySettingEx sqlQenQuery = new QuerySettingEx();
         String cubeQueryString = null;
         try {
             //
-            CubeParamSet cubeParamSet = new CubeParamSet(dataAggreagtion);
+            CubeParamSet cubeParamSet = new CubeParamSet(dataAggregation);
 
             // 주제영역 관계 조회
             updateCubeRelation(cubeParamSet);
@@ -80,7 +80,7 @@ public class QueryGenService {
 
     @Transactional
     private void updateDsViewRelation(CubeParamSet cubeParamSet) {
-        DataAggregation dataAggregation = cubeParamSet.getDataAggreagtion();
+        DataAggregation dataAggregation = cubeParamSet.getDataAggregation();
         List<String> measureList = cubeParamSet.getMeasureList();
 
         Map<String, Object> viewRelParam = new HashMap<String, Object>();
@@ -94,7 +94,7 @@ public class QueryGenService {
 
     @Transactional
     private void updateColumnInfoList(CubeParamSet cubeParamSet) {
-        DataAggregation dataAggregation = cubeParamSet.getDataAggreagtion();
+        DataAggregation dataAggregation = cubeParamSet.getDataAggregation();
 
         List<String> columnList = cubeParamSet.getColumnList();
 
@@ -109,7 +109,7 @@ public class QueryGenService {
 
     @Transactional
     private void updateCubeRelation(CubeParamSet cubeParamSet) {
-        int cubeId = cubeParamSet.getDataAggreagtion().getDataset().getCubeId();
+        int cubeId = cubeParamSet.getDataAggregation().getDataset().getCubeId();
 
         List<Relation> cubeRelation = querygenDAO.selectCubeRelation(cubeId);
 
@@ -119,15 +119,15 @@ public class QueryGenService {
     @Transactional
     private void updateAuthData(CubeParamSet cubeParamSet) {
 
-        AuthDataDTO authData = authService.getAuthData(cubeParamSet.getDataAggreagtion().getUserId());
+        AuthDataDTO authData = authService.getAuthData(cubeParamSet.getDataAggregation().getUserId());
 
         List<AuthMemVO> authMembers = authData.getAuthMem();
 
         cubeParamSet.setAuthMembers(authMembers);
 
         List<Measure> measures = new ArrayList<> ();
-        measures.addAll(cubeParamSet.getDataAggreagtion().getMeasures());
-        measures.addAll(cubeParamSet.getDataAggreagtion().getSortByItems());
+        measures.addAll(cubeParamSet.getDataAggregation().getMeasures());
+        measures.addAll(cubeParamSet.getDataAggregation().getSortByItems());
         
         ArrayList<String> meaGrp = new ArrayList<String>();
         // 현재 사용중인 측정값 그룹

@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
@@ -14,12 +16,13 @@ import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 
 public class ChordDataMaker implements ItemDataMaker {
     @Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems, isCube);
 
         List<Measure> allMeasure = new ArrayList<>();
 
@@ -28,7 +31,7 @@ public class ChordDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
+                .dataFiltering(dataAggregation.getFilter())
                 .replaceNullData()
                 .groupBy()
                 .orderBy()

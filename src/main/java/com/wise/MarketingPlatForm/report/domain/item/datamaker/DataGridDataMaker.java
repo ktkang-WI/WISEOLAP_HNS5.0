@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -16,17 +17,18 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
 public class DataGridDataMaker implements ItemDataMaker {
     @Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
-        PagingOption pagingOption = dataAggreagtion.getPagingOption();
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        PagingOption pagingOption = dataAggregation.getPagingOption();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
 
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
+                .dataFiltering(dataAggregation.getFilter())
                 .groupBy()
                 .topBottom()
                 .orderBy()

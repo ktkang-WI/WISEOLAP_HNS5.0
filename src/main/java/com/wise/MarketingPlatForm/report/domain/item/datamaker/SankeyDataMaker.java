@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
@@ -15,13 +17,14 @@ import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 
 public class SankeyDataMaker implements ItemDataMaker {
-	@Override
-    public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+    @Override
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, measures, dimensions, sortByItems, isCube);
 
         List<Measure> allMeasure = new ArrayList<>();
 
@@ -30,15 +33,15 @@ public class SankeyDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
+                .dataFiltering(dataAggregation.getFilter())
                 .replaceNullData()
                 .groupBy()
                 .orderBy()
                 .columnFiltering()
                 .getData();
 
-        List<Map<String, Object>> nodes = new ArrayList<> ();
-        List<Map<String, Object>> links = new ArrayList<> ();
+        List<Map<String, Object>> nodes = new ArrayList<>();
+        List<Map<String, Object>> links = new ArrayList<>();
 
         for (int i = 0; i < dimensions.size(); i++) {
             String targetName = dimensions.get(i).getName();
@@ -46,7 +49,7 @@ public class SankeyDataMaker implements ItemDataMaker {
 
             for (Map<String, Object> row : data) {
                 names.add(row.get(targetName).toString());
-        
+
                 for (int j = i + 1; j < dimensions.size(); j++) {
                     String sourceName = dimensions.get(j).getName();
                     Map<String, Object> link = new HashMap<>();
@@ -67,12 +70,12 @@ public class SankeyDataMaker implements ItemDataMaker {
             }
         }
 
-        Map<String, Object> info = new HashMap<> ();
+        Map<String, Object> info = new HashMap<>();
 
         info.put("nodes", nodes);
 
         CommonResult result = new CommonResult(links, info);
 
         return result;
-	}
+    }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
@@ -19,14 +20,15 @@ import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
 public class PieChartDataMaker implements ItemDataMaker {
-	@Override
-	public ReportResult make(DataAggregation dataAggreagtion, List<Map<String, Object>> data) {
-        List<Measure> temporaryMeasures = dataAggreagtion.getMeasures();
-        List<Measure> measures = dataAggreagtion.getOriginalMeasures();
-        List<Dimension> dimensions = dataAggreagtion.getDimensions();
-        List<Measure> sortByItems = dataAggreagtion.getSortByItems();
+    @Override
+    public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
+        List<Measure> temporaryMeasures = dataAggregation.getMeasures();
+        List<Measure> measures = dataAggregation.getOriginalMeasures();
+        List<Dimension> dimensions = dataAggregation.getDimensions();
+        List<Measure> sortByItems = dataAggregation.getSortByItems();
+        boolean isCube = dataAggregation.getDataset().getDsType() == DsType.CUBE;
 
-        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems);
+        DataSanitizer sanitizer = new DataSanitizer(data, temporaryMeasures, dimensions, sortByItems, isCube);
 
         List<Measure> allMeasure = new ArrayList<>();
 
@@ -35,7 +37,7 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         // 데이터 기본 가공
         data = sanitizer
-                .dataFiltering(dataAggreagtion.getFilter())
+                .dataFiltering(dataAggregation.getFilter())
                 .groupBy()
                 .replaceNullData()
                 .topBottom()
@@ -45,7 +47,7 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         DataPickUpMake customData = new DataPickUpMake(data);
         List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
-        if(tempData != null) {
+        if (tempData != null) {
             data = tempData;
         }
 
@@ -104,8 +106,8 @@ public class PieChartDataMaker implements ItemDataMaker {
 
         if (dimGrpNames.size() == 0) {
             for (Measure measure : measures) {
-                Map<String,String> seriesMeasures = new HashMap<>();
-                String caption = measure.getCaption() != null ?  measure.getCaption():  measure.getName();
+                Map<String, String> seriesMeasures = new HashMap<>();
+                String caption = measure.getCaption() != null ? measure.getCaption() : measure.getName();
 
                 seriesMeasures.put("summaryName", measure.getSummaryName());
                 seriesMeasures.put("caption", caption);
@@ -114,15 +116,15 @@ public class PieChartDataMaker implements ItemDataMaker {
         } else {
             for (Measure measure : measures) {
                 Iterator<String> iter = dimensionGroupNames.iterator();
-                String caption = measure.getCaption() != null ?  measure.getCaption():  measure.getName();
-                
+                String caption = measure.getCaption() != null ? measure.getCaption() : measure.getName();
+
                 while (iter.hasNext()) {
                     String name = iter.next();
-                    Map<String,String> seriesMeasures = new HashMap<>();
+                    Map<String, String> seriesMeasures = new HashMap<>();
 
                     seriesMeasures.put("summaryName", name + "-" + measure.getSummaryName());
                     seriesMeasures.put("caption", name + "-" + caption);
-                    seriesMeasureNames .add(seriesMeasures);
+                    seriesMeasureNames.add(seriesMeasures);
                 }
             }
         }
@@ -132,5 +134,5 @@ public class PieChartDataMaker implements ItemDataMaker {
         CommonResult result = new CommonResult(data, info);
 
         return result;
-	}
+    }
 }
