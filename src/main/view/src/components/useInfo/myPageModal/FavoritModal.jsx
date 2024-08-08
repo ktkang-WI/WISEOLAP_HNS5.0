@@ -40,6 +40,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       case MyDesignerConstance['DEFAULT_REPORT_ID']:
       case MyDesignerConstance['ADHOC_DEFAULT_REPORT_ID']:
       case MyDesignerConstance['EXCEL_DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']:
         models.Report.getList(favoritIdMapper[props.id], 'designer').then(
             ({data}) => {
               setIconReportList(data.privateReport);
@@ -67,6 +68,7 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
       case MyDesignerConstance['DEFAULT_REPORT_ID']:
       case MyDesignerConstance['ADHOC_DEFAULT_REPORT_ID']:
       case MyDesignerConstance['EXCEL_DEFAULT_REPORT_ID']:
+      case MyDesignerConstance['DEFAULT_VIEWER_REPORT_ID']:
         return (
           <DesignerReportTabs reportList={reportList}
             onClose={() => props.onClose()}
