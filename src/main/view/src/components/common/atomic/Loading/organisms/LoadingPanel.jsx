@@ -2,7 +2,10 @@ import Overlay from '../../Common/Wrap/Overlay';
 import styled from 'styled-components';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import loadingImg from 'assets/image/component/loading.gif';
-import {selectJobQuantity} from 'redux/selector/LoadingSelector';
+import {
+  selectCurrentJobMessage,
+  selectJobQuantity
+} from 'redux/selector/LoadingSelector';
 import {useSelector} from 'react-redux';
 import {useContext} from 'react';
 import {AppContext} from 'App';
@@ -31,10 +34,18 @@ const LoadingImg = styled.div`
   background-image: url(${loadingImg});
   background-repeat: no-repeat;
   background-size: 100px 100px;
+  min-height: 100px;
+  min-width: 100px;
+`;
+
+const LoadingMsg = styled.div`
+  width: auto;
+  padding: 10px;
+  color: white;
+  text-wrap: nowrap;
 `;
 
 const CancelButton = styled.button`
-  margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -46,6 +57,7 @@ const CancelButton = styled.button`
 
 const LoadingPanel = () => {
   const jobQuantity = useSelector(selectJobQuantity);
+  const jobMsg = useSelector(selectCurrentJobMessage);
   const getContext = useContext(AppContext);
   const controllers = getContext.controllers;
 
@@ -77,6 +89,9 @@ const LoadingPanel = () => {
     <Overlay zIndex={2000}>
       <ImgWrapper>
         <LoadingImg />
+        <LoadingMsg>
+          {jobMsg}
+        </LoadingMsg>
         {isThereToDeleteSession ?
         <CancelButton onClick={handleCancel}>
           {localizedString.cancel}

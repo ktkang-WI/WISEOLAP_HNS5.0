@@ -16,6 +16,7 @@ import {DesignerMode} from 'components/config/configType';
 import useSpread from 'hooks/useSpread';
 import LinkSlice from 'redux/modules/LinkSlice';
 import {useDispatch} from 'react-redux';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 const theme = getTheme();
 
@@ -26,6 +27,7 @@ const LoadReportModal = ({...props}) => {
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
   const {loadReport, reload} = useReportSave();
+  const {startJob, endJob} = LoadingSlice.actions;
   const reportType = selectCurrentDesignerMode(store.getState());
   const reportId = selectCurrentReportId(store.getState());
   const dispatch = useDispatch();
@@ -43,6 +45,7 @@ const LoadReportModal = ({...props}) => {
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
+    dispatch(startJob('보고서 정보를 불러오고 있습니다.'));
     models.Report.getReportById(selectedReport.id)
         .then(async ({data}) => {
           try {
@@ -53,6 +56,8 @@ const LoadReportModal = ({...props}) => {
           }
         }).catch((e) => {
           alert(localizedString.reportCorrupted);
+        }).finally(() => {
+          dispatch(endJob('보고서 정보를 불러오고 있습니다.'));
         });
     models.Report.getLinkReportList(selectedReport.id)
         .then((res) => {
