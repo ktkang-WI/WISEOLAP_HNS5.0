@@ -55,16 +55,13 @@ const FolderInformation = ({row, setRow, myPageFlag}, ref) => {
         >
           <Label>{localizedString.folderId}</Label>
         </SimpleItem>
-        {
-          (!row.fldId || row.fldId === '') &&
-          <SimpleItem
-            dataField={myPageFlag? 'name': 'fldNm'}
-            editorType="dxTextBox"
-          >
-            <RequiredRule message={localizedString.valiedationFolderNm}/>
-            <Label>{localizedString.folderNm}</Label>
-          </SimpleItem>
-        }
+        <SimpleItem
+          dataField={myPageFlag? 'name': 'fldNm'}
+          editorType="dxTextBox"
+        >
+          <RequiredRule message={localizedString.valiedationFolderNm}/>
+          <Label>{localizedString.folderNm}</Label>
+        </SimpleItem>
         <SimpleItem
           dataField="fldParentNm"
           editorType="dxTextBox"
