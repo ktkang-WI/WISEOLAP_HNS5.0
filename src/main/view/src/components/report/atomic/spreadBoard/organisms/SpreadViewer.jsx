@@ -30,7 +30,7 @@ const StyledWrapper = styled(Wrapper)`
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
   const {setSpreadData} = SpreadSlice.actions;
-  const {bindData, setExcelFile} = useSpread();
+  const {bindData, setExcelFile, sheetChangedListener} = useSpread();
   const dispatch = useDispatch();
 
   const workbookRef = useRef();
@@ -86,8 +86,9 @@ const SpreadViewer = ({reportId}) => {
     >
       <SpreadSheets
         ref={workbookRef}
-        workbookInitialized={() => {
+        workbookInitialized={(spread) => {
           setWorkbookRef(workbookRef);
+          sheetChangedListener(spread);
         }}
       />
     </StyledWrapper>

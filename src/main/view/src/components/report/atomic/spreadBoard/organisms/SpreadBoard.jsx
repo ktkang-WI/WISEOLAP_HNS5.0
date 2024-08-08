@@ -105,7 +105,7 @@ const SpreadBoard = () => {
               reportId: currentReportId,
               workbookJSON: designer.getWorkbook().toJSON()
             });
-            sheetChangedListener(designer);
+            sheetChangedListener(designer.getWorkbook());
             sheetNameChangedListener(designer);
           }
         }}
