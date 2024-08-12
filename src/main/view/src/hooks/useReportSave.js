@@ -1,4 +1,4 @@
-import {selectRootDataset, selectCurrentDataset}
+import {selectRootDataset}
   from 'redux/selector/DatasetSelector';
 import {selectRootItem} from 'redux/selector/ItemSelector';
 import {selectCurrentReportId, selectReports}
@@ -446,11 +446,12 @@ const useReportSave = () => {
     let parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
     const myPageConfigure = selectMyPageDesignerConfig(store.getState());
-    const datasetType = selectCurrentDataset(store.getState()).datasetType;
+    const rootDataset = selectRootDataset(store.getState());
 
     // 비정형 주제영역일 때만 보고서 락
     if (designerMode === DesignerMode['AD_HOC'] &&
-      datasetType === DatasetType.CUBE) {
+      rootDataset.datasets.every((dataset) =>
+        dataset.datasetType !== DatasetType.CUBE)) {
       if (querySearchException(parameters, myPageConfigure)) {
         return;
       };
