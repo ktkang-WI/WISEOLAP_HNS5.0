@@ -30,8 +30,6 @@ import {
 import {selectCurrentReport,
   selectCurrentReportId} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
-import LoadReportModal from 'components/report/organisms/Modal/LoadReportModal';
-import {useRef} from 'react';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
 import useSpread from 'hooks/useSpread';
@@ -56,9 +54,6 @@ const HeaderDefaultElement = () => {
   const reportId = useSelector(selectCurrentReportId);
   const dataSource = _.cloneDeep(currentReport.options);
 
-  // 보고서 검색 textBox Reference
-  const textBoxRef = useRef(null);
-
   const filterdLayoutItem = () => {
     if (currentReport.options.reportType === 'Excel') {
       const reportNm =
@@ -77,16 +72,6 @@ const HeaderDefaultElement = () => {
     }
 
     return items;
-  };
-
-  const handleSearch = () => {
-    const searchValue = textBoxRef?.current?.instance?.option('value');
-    if (searchValue.length > 0) {
-      openModal(LoadReportModal, {
-        'searchValue': searchValue,
-        'searchEnabled': false
-      });
-    }
   };
 
   return {
@@ -136,9 +121,8 @@ const HeaderDefaultElement = () => {
     },
     'ReportSearch': {
       'id': 'report_search',
-      'ref': textBoxRef,
-      'type': 'TextBox',
-      'button': {
+      'type': 'DropdownBox',
+      'button': [{
         name: 'reportSearch',
         location: 'after',
         options: {
@@ -146,11 +130,9 @@ const HeaderDefaultElement = () => {
           stylingMode: 'text',
           icon: 'search',
           type: 'default',
-          disabled: false,
-          onClick: handleSearch
+          disabled: false
         }
-      },
-      'onEnterKey': handleSearch
+      }]
     },
     'ShowQuery': {
       'id': 'show_query',

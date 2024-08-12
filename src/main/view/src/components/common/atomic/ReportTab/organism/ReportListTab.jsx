@@ -64,9 +64,14 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         }, 300);
 
         if (dblClick > 1) {
-          if (!await props.onSubmit()) {
-            props.onClose();
-          };
+          if (!props.onClose) {
+            props.onSubmit(e.itemData);
+            props.dropdownBoxRef.current._instance.option('opened', false);
+          } else {
+            if (!await props.onSubmit()) {
+              props.onClose();
+            };
+          }
         } else {
           if (onItemSelect) onItemSelect(e.itemData);
         }

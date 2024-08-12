@@ -14,9 +14,11 @@ import {useSelector} from 'react-redux';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import CommonButton from '../../Common/Button/CommonButton';
 import UserInfoButtonUI from '../atom/UserInfoButtonUI';
-import {TextBox} from 'devextreme-react';
+
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
+
+import DropdownBoxReportSearch from '../atom/DropdownBoxReportSearch';
 
 const theme = getTheme();
 
@@ -174,24 +176,18 @@ const Header = ({left, middle, right}) => {
           </CommonButton>
         </HeaderPanel>
       );
-    } else if (item.type === 'TextBox') {
+    } else if (item.type === 'DropdownBox') {
       return (
         <HeaderPanel
           breakLine={item.index !== item.length - 1}
           key={item.id}
           width={'auto'}
           position={item.position}>
-          <TextBox
-            height={'32px'}
-            readOnly={false}
-            buttons={[item.button]}
-            ref={item.ref}
-            elementAttr={{
-              id: item.id
-            }}
-            onEnterKey={item.onEnterKey}
-          >
-          </TextBox>
+          <DropdownBoxReportSearch
+            report={report}
+            button={item.button}
+            id={item.id}
+          />
         </HeaderPanel>
       );
     } else if (item.type === 'CustomTitle') {

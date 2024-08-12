@@ -1,104 +1,23 @@
-import Alert from 'components/common/atomic/Modal/organisms/Alert';
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import DesignerReportTabs
   from 'components/common/atomic/ReportTab/organism/DesignerReportTabs';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
-import useModal from 'hooks/useModal';
-import {useEffect, useState} from 'react';
-import models from 'models';
-import {setIconReportList} from 'components/report/util/ReportUtility';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import store from 'redux/modules';
-import useReportSave from 'hooks/useReportSave';
-import {DesignerMode} from 'components/config/configType';
-import useSpread from 'hooks/useSpread';
-import LinkSlice from 'redux/modules/LinkSlice';
-import {useDispatch} from 'react-redux';
-import LoadingSlice from 'redux/modules/LoadingSlice';
+import useReportLoad from 'hooks/useReportLoad';
 
 const theme = getTheme();
 
 const LoadReportModal = ({...props}) => {
+  // hook
+  const {getReportList, handleSubmit} = useReportLoad();
+  const {reportList} = getReportList();
+
+  // local
   let selectedReport = {};
-
-  const {setExcelFile} = useSpread();
-  const [reportList, setReportList] = useState();
-  const {openModal, alert} = useModal();
-  const {loadReport, reload, querySearch} = useReportSave();
-  const {startJob, endJob} = LoadingSlice.actions;
-  const reportType = selectCurrentDesignerMode(store.getState());
-  const reportId = selectCurrentReportId(store.getState());
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    models.Report.getList(reportType, 'designer').then(({data}) => {
-      setIconReportList(data.privateReport);
-      setIconReportList(data.publicReport);
-      setReportList(data);
-    });
-  }, []);
-
-  const getReport = async () => {
-    const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
-    if (reportType === DesignerMode['EXCEL']) {
-      await setExcelFile(selectedReport.id);
-    }
-    dispatch(startJob('보고서 정보를 불러오고 있습니다.'));
-    models.Report.getReportById(selectedReport.id)
-        .then(async ({data}) => {
-          try {
-            await loadReport(data);
-            if (selectedReport.promptYn === 'Y') {
-              querySearch();
-            } else {
-              alert('보고서 조회가 필요합니다.');
-            }
-          } catch {
-            alert(localizedString.reportCorrupted);
-          }
-        }).catch((e) => {
-          alert(localizedString.reportCorrupted);
-        }).finally(() => {
-          dispatch(endJob('보고서 정보를 불러오고 있습니다.'));
-        });
-    models.Report.getLinkReportList(selectedReport.id)
-        .then((res) => {
-          const subLinkReports = res.data.subLinkReports;
-          const linkReports = res.data.linkReports;
-          if (subLinkReports.length > 0) {
-            dispatch(setSubLinkReport(subLinkReports[0]));
-          } else if (subLinkReports.length === 0) {
-            dispatch(setLinkReport(linkReports[0]));
-          }
-        });
-  };
-
-  const onSubmit = () => {
-    if (!_.isEmpty(selectedReport)) {
-      if (selectedReport.type == 'REPORT') {
-        if (reportId != 0) {
-          reload(reportType);
-        }
-        getReport();
-      } else {
-        openModal(Alert, {
-          message: '선택한 항목이 보고서가 아닙니다.'
-        });
-        return true;
-      }
-    } else {
-      openModal(Alert, {
-        message: '보고서를 선택하지 않았습니다.'
-      });
-      return true;
-    }
-  };
 
   return (
     <Modal
-      onSubmit={onSubmit}
+      onSubmit={() => handleSubmit(selectedReport)}
       modalTitle={localizedString.loadReport}
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
@@ -113,7 +32,7 @@ const LoadReportModal = ({...props}) => {
             selectedReport = nodes[0].itemData;
           }
         }}
-        onSubmit={onSubmit}
+        onSubmit={() => handleSubmit(selectedReport)}
         searchValue={props.searchValue}
         searchEnabled={props.searchEnabled}
         onClose={props.onClose}
