@@ -168,10 +168,10 @@ const useSpread = () => {
 
   const changSheet = (e, args, workbook) => {
     const sheet = workbook.getSheetFromName(args.sheetName);
-    const pivotTableManager = sheet.pivotTables;
-    const pivotTables = pivotTableManager.all();
 
-    if (args.propertyName === 'isSelected') {
+    if (args.propertyName === 'isSelected' && sheet) {
+      const pivotTableManager = sheet.pivotTables;
+      const pivotTables = pivotTableManager.all();
       for (const pivotTable of pivotTables) {
         pivotTable.updateSource();
       }
