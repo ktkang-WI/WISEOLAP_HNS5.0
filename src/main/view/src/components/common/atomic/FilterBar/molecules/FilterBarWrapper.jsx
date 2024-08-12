@@ -12,6 +12,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import _ from 'lodash';
 import useModal from 'hooks/useModal';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 const theme = getTheme();
 
@@ -31,15 +32,24 @@ const FilterBarWrapper = (props) => {
   const reportId = selectCurrentReportId(store.getState());
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
   const {setParameterValues, deleteParameter} = ParameterSlice.actions;
+  const {startJob, endJob} = LoadingSlice.actions;
   const {confirm} = useModal();
   const dispatch = useDispatch();
 
   // 매개변수 정보 수정되면 재조회
   useEffect(() => {
     if (parameters.filterSearchComplete.length == 0) {
+      dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
     }
   }, [parameters.informations, parameters.values]);
+
+  useEffect(() => {
+    if (parameters.filterSearchComplete.length ==
+      parameters.informations.length) {
+      dispatch(endJob('필터 데이터를 조회 중입니다.'));
+    }
+  }, [parameters.filterSearchComplete]);
 
   const onValueChanged = (id, value, index) => {
     const values =

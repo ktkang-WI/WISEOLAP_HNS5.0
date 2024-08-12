@@ -1,19 +1,40 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState = 0;
+const initialState = {
+  jobCount: 0,
+  messageQueue: []
+};
 
 const reducers = {
-  startJob(state) {
-    return state + 1;
+  startJob(state, actions) {
+    const msg = actions.payload;
+
+    if (msg) {
+      state.messageQueue.push(msg);
+    }
+
+    state.jobCount = state.jobCount + 1;
   },
   endJob(state, actions) {
-    if (state > 0) {
-      return state - 1;
+    const msg = actions.payload;
+
+    if (msg) {
+      const idx = state.messageQueue.indexOf(msg);
+      if (idx >= 0) {
+        state.messageQueue = state.messageQueue.filter((v) => msg != v);
+        state.jobCount = state.jobCount - 1;
+      }
+    } else {
+      if (state.jobCount > 0) {
+        state.jobCount = state.jobCount - 1;
+      }
     }
-    return 0;
   },
   endJobForce() {
-    return 0;
+    return {
+      jobCount: 0,
+      messageQueue: []
+    };
   }
 };
 

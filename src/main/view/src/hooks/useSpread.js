@@ -30,6 +30,7 @@ const useSpread = () => {
   const dispatch = useDispatch();
   const {alert} = useModal();
   const {setBindingInfo} = SpreadSlice.actions;
+  const {startJob, endJob} = LoadingSlice.actions;
   const loadingActions = LoadingSlice.actions;
   const bindingInfos = useSelector(selectBindingInfos);
   const reportId = useSelector(selectCurrentReportId);
@@ -73,89 +74,96 @@ const useSpread = () => {
   };
 
   const bindData = (spreadData, _workbook) => {
+    dispatch(startJob('시트에 데이터를 바인딩하는 중입니다.'));
     const bindingInfos = selectBindingInfos(store.getState());
     const workbook = _workbook || getWorkbook();
 
-    if (bindingInfos) {
-      workbook.suspendPaint();
-      workbook.suspendCalcService();
-      workbook.suspendEvent();
+    try {
+      if (bindingInfos) {
+        workbook.suspendPaint();
+        workbook.suspendCalcService();
+        workbook.suspendEvent();
 
-      Object.keys(spreadData).forEach((datasetId) => {
-        const bindingInfo = bindingInfos[datasetId];
-        const rowData = _.cloneDeep(spreadData[datasetId].rowData);
-        const metaData = spreadData[datasetId].metaData;
+        Object.keys(spreadData).forEach((datasetId) => {
+          const bindingInfo = bindingInfos[datasetId];
+          const rowData = _.cloneDeep(spreadData[datasetId].rowData);
+          const metaData = spreadData[datasetId].metaData;
 
-        if (rowData[0]?.error) {
-          alert(localizedString.invalidQuery);
-          return true;
-        }
-
-        const {columns} = generateColumns(metaData, sheets);
-        let bindedSheet = workbook
-            .getSheetFromName(bindingInfo.sheetNm);
-
-        if (bindedSheet == undefined) {
-          workbook.addSheet(0,
-              new sheets.Worksheet(bindingInfo.sheetNm));
-          bindedSheet = workbook
-              .getSheetFromName(bindingInfo.sheetNm);
-        }
-
-        const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
-        createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
-
-        // 추후 환경설정 SpreadBinding 값으로 분기처리
-        if (true) {
-          // bindedSheet.reset();
-          bindedSheet.clear();
-          bindedSheet.autoGenerateColumns = true;
-          // 임시 추가 : bindingInfo
-          const ds = getJsonKey2ColInfos(rowData, bindingInfo);
-          rowData.forEach((row) => convertDates(row));
-          if (ds.dataSourceHearder && rowData.length > 0) {
-            const newRowData = [ds.dataSourceHearder, ...rowData];
-            // bindedSheet.setArray(0, 0, newRowData);
-
-            // 임시 코드 TODO : 추후 환경설정 SpreadBinding 분기 개발 되면 삭제 예정
-            if (bindingInfo.rowIndex > 0) {
-              for (let i = 0; i < bindingInfo.rowIndex; i++) {
-                newRowData.unshift({});
-              }
-            }
-
-            bindedSheet.setDataSource(newRowData);
-            bindedSheet.bindColumns(ds.colInfos);
+          if (rowData[0]?.error) {
+            alert(localizedString.invalidQuery);
+            return true;
           }
-        } else {
-          deleteTables(bindedSheet);
 
-          const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
-              bindingInfo.rowIndex,
-              bindingInfo.columnIndex,
-              invoice.records.length+1,
-              columns.length,
-              createBorderStyle(bindingInfo.useBorder));
+          const {columns} = generateColumns(metaData, sheets);
+          let bindedSheet = workbook
+              .getSheetFromName(bindingInfo.sheetNm);
 
-          table.showHeader(bindingInfo.useHeader);
-          table.autoGenerateColumns(false);
-          table.bindColumns(columns);
-          table.bindingPath('records');
-          table.bandRows(false);
-          table.bandColumns(false);
-          bindedSheet.options.gridline.showHorizontalGridline = true;
-          bindedSheet.options.gridline.showVerticalGridline = true;
-          bindedSheet.invalidateLayout();
+          if (bindedSheet == undefined) {
+            workbook.addSheet(0,
+                new sheets.Worksheet(bindingInfo.sheetNm));
+            bindedSheet = workbook
+                .getSheetFromName(bindingInfo.sheetNm);
+          }
 
-          bindedSheet.setDataSource(dataSource);
-          table.filterButtonVisible(false);
-        }
-      });
+          const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
+          createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
 
-      workbook.resumeEvent();
-      workbook.resumeCalcService();
-      workbook.resumePaint();
+          // 추후 환경설정 SpreadBinding 값으로 분기처리
+          if (true) {
+            // bindedSheet.reset();
+            bindedSheet.clear();
+            bindedSheet.autoGenerateColumns = true;
+            // 임시 추가 : bindingInfo
+            const ds = getJsonKey2ColInfos(rowData, bindingInfo);
+            rowData.forEach((row) => convertDates(row));
+            if (ds.dataSourceHearder && rowData.length > 0) {
+              const newRowData = [ds.dataSourceHearder, ...rowData];
+              // bindedSheet.setArray(0, 0, newRowData);
+
+              // 임시 코드 TODO : 추후 환경설정 SpreadBinding 분기 개발 되면 삭제 예정
+              if (bindingInfo.rowIndex > 0) {
+                for (let i = 0; i < bindingInfo.rowIndex; i++) {
+                  newRowData.unshift({});
+                }
+              }
+
+              bindedSheet.setDataSource(newRowData);
+              bindedSheet.bindColumns(ds.colInfos);
+            }
+          } else {
+            deleteTables(bindedSheet);
+
+            const table = bindedSheet.tables.add('table'+ bindingInfo.sheetNm,
+                bindingInfo.rowIndex,
+                bindingInfo.columnIndex,
+                invoice.records.length+1,
+                columns.length,
+                createBorderStyle(bindingInfo.useBorder));
+
+            table.showHeader(bindingInfo.useHeader);
+            table.autoGenerateColumns(false);
+            table.bindColumns(columns);
+            table.bindingPath('records');
+            table.bandRows(false);
+            table.bandColumns(false);
+            bindedSheet.options.gridline.showHorizontalGridline = true;
+            bindedSheet.options.gridline.showVerticalGridline = true;
+            bindedSheet.invalidateLayout();
+
+            bindedSheet.setDataSource(dataSource);
+            table.filterButtonVisible(false);
+          }
+        });
+
+        workbook.resumeEvent();
+        workbook.resumeCalcService();
+        workbook.resumePaint();
+      }
+    } catch (e) {
+      console.error(e);
     }
+
+    dispatch(endJob('시트에 데이터를 바인딩하는 중입니다.'));
   };
 
 
@@ -230,27 +238,34 @@ const useSpread = () => {
   };
 
   const setExcelFile = async (reportId) => {
-    if (fileCache.has(reportId) && editMode === EditMode['VIEWER']) {
-      await excelIoOpen(reportId, fileCache.get(reportId))
-          .then(() => dispatch(loadingActions.endJob()));
-    } else {
-      const response = await importFile({fileName: reportId + '.sjs'});
-      let data;
-      if (response.status !== 200) {
-        data = defaultWorkbookJSON;
-        insertWorkbookJSON({
-          reportId: reportId,
-          workbookJSON: defaultWorkbookJSON
-        });
-      } else {
-        data = response.data;
-        const blob = new Blob(
-            [data]
-        );
-        fileCache.set(reportId, blob);
-        await excelIoOpen(reportId, blob)
+    dispatch(startJob('엑셀 파일을 불러오는 중입니다.'));
+    try {
+      if (fileCache.has(reportId) && editMode === EditMode['VIEWER']) {
+        await excelIoOpen(reportId, fileCache.get(reportId))
             .then(() => dispatch(loadingActions.endJob()));
+      } else {
+        const response = await importFile({fileName: reportId + '.sjs'});
+        let data;
+        if (response.status !== 200) {
+          data = defaultWorkbookJSON;
+          insertWorkbookJSON({
+            reportId: reportId,
+            workbookJSON: defaultWorkbookJSON
+          });
+        } else {
+          data = response.data;
+          const blob = new Blob(
+              [data]
+          );
+          fileCache.set(reportId, blob);
+          await excelIoOpen(reportId, blob)
+              .then(() => dispatch(loadingActions.endJob()));
+        }
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      dispatch(endJob('엑셀 파일을 불러오는 중입니다.'));
     }
   };
 

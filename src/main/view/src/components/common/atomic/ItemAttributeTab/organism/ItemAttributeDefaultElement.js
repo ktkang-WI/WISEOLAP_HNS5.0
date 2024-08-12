@@ -15,10 +15,9 @@ import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
 // import topBottomImg
 //   from 'assets/image/icon/adhoc/topBottom.png';
-import deltaValueImg
-  from 'assets/image/icon/adhoc/deltaValue.png';
-import dataHighlightImg
-  from '../../../../../assets/image/icon/adhoc/dataHighlight.png';
+import deltaValueImg from 'assets/image/icon/adhoc/deltaValue.png';
+import dataHighlightImg from 'assets/image/icon/adhoc/dataHighlight.png';
+import gridAttributeImg from 'assets/image/icon/adhoc/gridAttribute.png';
 import useModal from 'hooks/useModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
@@ -247,7 +246,7 @@ const ItemAttributeDefaultElement = () => {
         {
           id: 'gridAttribute',
           label: localizedString.gridAttribute,
-          icon: dimensionGroupImg,
+          icon: gridAttributeImg,
           active: option?.gridAttribute == 'gridAttribute',
           width: '50%',
           onClick: () => {
