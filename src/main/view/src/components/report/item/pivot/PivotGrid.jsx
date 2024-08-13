@@ -20,8 +20,6 @@ import store from 'redux/modules';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import models from 'models';
 import localizedString from 'config/localization';
-import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
 import {
   generateLabelSuffix,
   formatNumber,
@@ -38,6 +36,8 @@ import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
 import useContextMenu from 'hooks/useContextMenu';
+import {itemExportsObject} from
+  'components/report/atomic/ItemDownload/ItemDownload';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
