@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 // import {selectLinkedReport} from 'redux/selector/LinkSelector';
-// import store from 'redux/modules';
+import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import showQuery from 'assets/image/icon/button/showQuery.png';
 import reportHistory from 'assets/image/icon/button/save_rename_header.png';

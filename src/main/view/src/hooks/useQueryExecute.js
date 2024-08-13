@@ -27,6 +27,7 @@ import SpreadSlice from 'redux/modules/SpreadSlice';
 import ItemType from 'components/report/item/util/ItemType';
 import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 
 const useQueryExecute = () => {
@@ -34,6 +35,7 @@ const useQueryExecute = () => {
   const {setSpreadData} = SpreadSlice.actions;
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
+  const {startJob, endJob} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -259,24 +261,24 @@ const useQueryExecute = () => {
 
         dispatch(updateItem({reportId, item: tempItem}));
       } else {
-        models.Item.getItemData(param).then((response) => {
-          if (response.status != 200) {
-            return;
-          }
-          const data = response.data;
+        const response = await models.Item.getItemData(param);
 
-          tempItem.mart.init = true;
-          tempItem.mart.data = data;
-          tempItem.mart.currentFilter = filter || {};
+        if (response.status != 200) {
+          return;
+        }
+        const data = response.data;
 
-          if (nullDataCheck(tempItem)) {
-            alert(`${item.meta.name}${localizedString.noneData}`);
-          }
+        tempItem.mart.init = true;
+        tempItem.mart.data = data;
+        tempItem.mart.currentFilter = filter || {};
 
-          ItemManager.generateItem(tempItem, param);
+        if (nullDataCheck(tempItem)) {
+          alert(`${item.meta.name}${localizedString.noneData}`);
+        }
 
-          dispatch(updateItem({reportId, item: tempItem}));
-        });
+        ItemManager.generateItem(tempItem, param);
+
+        dispatch(updateItem({reportId, item: tempItem}));
       }
     } catch (error) {
       console.error(error);
@@ -285,6 +287,7 @@ const useQueryExecute = () => {
   };
 
   const executeSpread = async () => {
+    dispatch(startJob('데이터를 조회 중입니다.'));
     const state = store.getState();
     const datasets = selectCurrentDatasets(state);
     const currentReportId = selectCurrentReportId(state);
@@ -330,6 +333,8 @@ const useQueryExecute = () => {
         })
         .catch((res) => {
           console.log(res);
+        }).finally(() => {
+          dispatch(endJob('데이터를 조회 중입니다.'));
         });
   };
 
@@ -428,12 +433,13 @@ const useQueryExecute = () => {
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    */
-  const executeItems = () => {
+  const executeItems = async () => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
     const designerMode = selectCurrentDesignerMode(store.getState());
     const editMode = selectEditMode(store.getState());
+
     const {
       updateDesinerExecutionState,
       updateViewerExecutionState
@@ -450,24 +456,36 @@ const useQueryExecute = () => {
       return;
     };
 
-    if (designerMode === DesignerMode['DASHBOARD']) {
-      rootItem.items.map((item) => executeItem(item, datasets, parameters));
-      if (EditMode['DESIGNER'] == editMode) {
-        dispatch(updateDesinerExecutionState(true));
-      } else {
-        dispatch(updateViewerExecutionState(true));
-      }
-    }
+    dispatch(startJob('데이터를 조회 중입니다.'));
+    try {
+      if (designerMode === DesignerMode['DASHBOARD']) {
+        const promises = rootItem.items
+            .map((item) => executeItem(item, datasets, parameters));
 
-    if (designerMode === DesignerMode['AD_HOC']) {
-      executeAdHocItem(rootItem, datasets, parameters);
-      if (EditMode['DESIGNER'] == editMode) {
-        dispatch(updateDesinerExecutionState(true));
-      } else {
-        dispatch(updateViewerExecutionState(true));
+        console.log(promises);
+        await Promise.all(promises);
+
+        if (EditMode['DESIGNER'] == editMode) {
+          dispatch(updateDesinerExecutionState(true));
+        } else {
+          dispatch(updateViewerExecutionState(true));
+        }
       }
+
+      if (designerMode === DesignerMode['AD_HOC']) {
+        await executeAdHocItem(rootItem, datasets, parameters);
+        if (EditMode['DESIGNER'] == editMode) {
+          dispatch(updateDesinerExecutionState(true));
+        } else {
+          dispatch(updateViewerExecutionState(true));
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.log('finally');
+      dispatch(endJob('데이터를 조회 중입니다.'));
     }
-    // items.forEach((item) => executeItem(item, datasets, parameters));
   };
 
   /**
