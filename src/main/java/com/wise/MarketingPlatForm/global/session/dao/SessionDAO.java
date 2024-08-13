@@ -16,4 +16,6 @@ public interface SessionDAO {
     public void deleteSessionUserSchedule();
 
     public void updateSessionUser(UserSessionEntity userSession);
+
+    public UserEntity getSessionUserAll(String sessionId);
 } 

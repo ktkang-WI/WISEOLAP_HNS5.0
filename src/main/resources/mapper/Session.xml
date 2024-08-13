@@ -61,6 +61,15 @@
     AND LAST_MSG_DT <![CDATA[>]]> SYSDATE - INTERVAL '1' HOUR
   </select>
 
+  <select id="getSessionUserAll" resultMap="User">
+    SELECT USER_MSTR.* 
+    FROM USER_SESSION_MSTR
+    INNER JOIN USER_MSTR ON USER_SESSION_MSTR.USER_NO = USER_MSTR.USER_NO 
+    WHERE 1=1
+    AND USER_SESSION_MSTR.USER_SESSION_KEY  = #{sessionId} 
+    AND USER_MSTR.DEL_YN = 'N'
+  </select>
+
   <delete id="deleteSessionUser" parameterType="String">
         DELETE FROM USER_SESSION_MSTR
                 WHERE USER_SESSION_KEY = #{sessionId}

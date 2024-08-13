@@ -40,6 +40,7 @@ public class SessionUtility {
     private final static int SESSION_TIME = 3600;
 
     private static UserDTO getSessionUser(HttpSession session) {
+        System.out.println(session.getAttribute(SESSION_KEY));
         return (UserDTO)session.getAttribute(SESSION_KEY);
     }
     
@@ -105,7 +106,7 @@ public class SessionUtility {
         // String sessionId = UUID.randomUUID().toString();
         String sessionId = generateSHA256Hash(request.getRemoteAddr() + SESSION_KEY);
 
-        UserEntity entity = sessionDAO.getSessionUser(sessionId);
+        UserEntity entity = sessionDAO.getSessionUserAll(sessionId);
 
         session.setAttribute(SESSION_KEY, sessionId);
 
