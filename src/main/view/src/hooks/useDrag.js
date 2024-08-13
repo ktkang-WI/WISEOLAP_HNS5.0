@@ -253,6 +253,8 @@ const useDrag = () => {
             if (isExecute) {
               dispatch(updateDesinerExecutionState(false));
             }
+            // 측정값을 정렬기준 항목에 추가하는 경우 불필요하게 시리즈 옵션도 추가되어 방지.
+          }
         } else if (source.droppableId == dest.droppableId) {
           const sourceField = dataField[source.droppableId]
               .splice(source.index, 1);
