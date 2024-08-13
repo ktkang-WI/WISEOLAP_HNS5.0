@@ -285,7 +285,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     ) : null;
 
     renderValues.buttons.push(
-        !rootItem.adHocOption && (memo ? <Memo>{memo}</Memo> : <></>),
+        (memo ? <Memo>{memo}</Memo> : <></>),
         closeButton,
         downloadButton,
         ...buttons
