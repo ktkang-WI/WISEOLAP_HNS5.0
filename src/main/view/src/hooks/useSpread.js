@@ -166,6 +166,12 @@ const useSpread = () => {
     dispatch(endJob('시트에 데이터를 바인딩하는 중입니다.'));
   };
 
+  const initSpreadBar = (workbook, reportId) => {
+    // init Status Bar
+    // eslint-disable-next-line max-len
+    const statusBar = new sheets.StatusBar.StatusBar(document.getElementById('statusBar' + reportId));
+    statusBar.bind(workbook);
+  };
 
   const sheetChangedListener = (workbook) => {
     workbook.bind(
@@ -396,6 +402,7 @@ const useSpread = () => {
     getWorkbook,
     bindData,
     sheetChangedListener,
+    initSpreadBar,
     sheetNameChangedListener,
     createReportBlob,
     setExcelFile,
