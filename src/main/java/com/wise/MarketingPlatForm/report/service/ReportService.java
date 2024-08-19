@@ -314,6 +314,7 @@ public class ReportService {
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
+            .datasetQuery(reportMstrDTO.getDatasetQuery())
             .build();
 
         String duplicationStatus = checkDuplicatedReport(reportMstrEntity);
@@ -366,6 +367,7 @@ public class ReportService {
             .layoutXml(reportMstrDTO.getLayoutXml())
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
+            .datasetQuery(reportMstrDTO.getDatasetQuery())
             .build();
 
         try {

@@ -441,6 +441,7 @@
 				LAYOUT_XML,
 				REPORT_XML,
 				DATASET_XML,
+        DATASET_QUERY,
         REG_DT
 			)
 		VALUES
@@ -461,6 +462,7 @@
 				#{layoutXml},
 				#{reportXml},
 				#{datasetXml},
+        #{datasetQuery},
         SYSDATE
 			)
 	</insert>
@@ -483,6 +485,7 @@
 			REPORT_XML = #{reportXml},
 			CHART_XML = #{chartXml},
 			LAYOUT_XML = #{layoutXml},
+      DATASET_QUERY = #{datasetQuery},
       MOD_DT = SYSDATE
 		WHERE REPORT_ID = #{reportId}
 	</update>
