@@ -8,14 +8,17 @@ import useReportSave from 'hooks/useReportSave';
 import models from 'models';
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
+import {EditMode} from 'components/config/configType';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
 const ReportHistoryModal = ({onClose, ...props}) => {
-  const {loadReport} = useReportSave();
+  const {loadReport, querySearch} = useReportSave();
   const {confirm} = useModal();
   const reportId = useSelector(selectCurrentReportId);
+  const editMode = useSelector(selectEditMode);
   const [dataSource, setDataSource] = useState([]);
   const lStr = localizedString.reportHistory;
 
@@ -39,7 +42,9 @@ const ReportHistoryModal = ({onClose, ...props}) => {
             try {
               loadReport(data);
               // TODO: 추후 보고서 바로 조회 적용시 수정
-              // querySearch();
+              if (editMode == EditMode.VIEWER) {
+                querySearch();
+              }
               onClose();
             } catch (e) {
               console.error(e);

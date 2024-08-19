@@ -39,6 +39,7 @@ import {
 } from 'redux/selector/ConfigSelector';
 import {clearSheets} from
   'components/report/atomic/spreadBoard/util/SpreadCore';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
 import useReportLoad from 'hooks/useReportLoad';
 
 const SNBDefaultElement = () => {
@@ -48,7 +49,7 @@ const SNBDefaultElement = () => {
   // hook
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const {reload} = useReportSave();
+  const {reload, querySearch} = useReportSave();
   const {getReport, getLinkedReport} = useReportLoad();
   const location = useLocation();
   const {confirm} = useModal();
@@ -57,6 +58,7 @@ const SNBDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const configure = useSelector(selectCurrentConfigure);
   const myPageConfigure = useSelector(selectMyPageDesignerConfig);
+  const editMode = useSelector(selectEditMode);
 
   // local
   const onClick = (designerMode, executeFn) => {
@@ -92,8 +94,8 @@ const SNBDefaultElement = () => {
       const loadGetReport = await getLinkedReport();
 
       // TODO: 보고서 바로 조회 개발시 적용예정.
-      if (isLoadReport && loadGetReport) {
-        // querySearch();
+      if (isLoadReport && loadGetReport && editMode == EditMode.VIEWER) {
+        querySearch();
       }
     };
 
