@@ -86,7 +86,6 @@ const UserReprotManagement = () => {
       >
         <MyPageReportForm
           data={data}
-          setPrevName={setPrevName}
           ref={ref}
         />
         <div style={{
