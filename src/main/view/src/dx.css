@@ -529,3 +529,7 @@ td[role="columnheader"] {
 .form-tab .dx-tabpanel {
   margin-top: 15px;
 }
+
+.dx-context-menu .dx-menu-item-popout::before {
+  content: '';
+}

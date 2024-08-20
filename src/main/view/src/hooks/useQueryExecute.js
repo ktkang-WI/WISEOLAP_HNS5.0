@@ -293,6 +293,7 @@ const useQueryExecute = () => {
     const reportId = selectCurrentReportId(state);
 
     if (_.isEmpty(datasets)) {
+      dispatch(endJob('데이터를 조회 중입니다.'));
       alert(localizedString.dataSourceNotSelectedMsg);
       return;
     }
@@ -304,6 +305,7 @@ const useQueryExecute = () => {
     const promises = datasets.map((dataset) => {
       if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
       !bindingInfos[dataset.datasetId].useBinding) {
+        dispatch(endJob('데이터를 조회 중입니다.'));
         alert(localizedString.spreadBindingInfoNot);
         return;
       }

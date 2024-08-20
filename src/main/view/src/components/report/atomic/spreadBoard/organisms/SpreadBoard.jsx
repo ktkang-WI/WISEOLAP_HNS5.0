@@ -121,6 +121,13 @@ const SpreadBoard = () => {
         designerInitialized={(designer) => {
           if (designer) {
             designer.setConfig(setRibbonSetting());
+            designer.getWorkbook().options.allowCopyPasteExcelStyle = false;
+            designer.getWorkbook().options.allowExtendPasteRange = true;
+            designer.getWorkbook().options.incrementalCalculation = true;
+            designer.getWorkbook().options.iterativeCalculation = true;
+            designer.getWorkbook()
+                .options.iterativeCalculationMaximumIterations = 100;
+
             insertWorkbookJSON({
               reportId: currentReportId,
               workbookJSON: designer.getWorkbook().toJSON()

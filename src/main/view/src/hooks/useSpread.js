@@ -108,7 +108,7 @@ const useSpread = () => {
           const {invoice, dataSource} = dataSourceMaker(rowData, sheets);
           createColumnsAndRows(columns, invoice, bindedSheet, bindingInfo);
 
-          // 추후 환경설정 SpreadBinding 값으로 분기처리
+          // TODO 추후 환경설정 SpreadBinding 값으로 분기처리
           if (true) {
             // bindedSheet.reset();
             bindedSheet.clear();
@@ -127,8 +127,11 @@ const useSpread = () => {
                 }
               }
 
-              bindedSheet.setDataSource(newRowData);
+              bindedSheet.setDataSource(newRowData, false);
               bindedSheet.bindColumns(ds.colInfos);
+            } else {
+              bindedSheet.clear(1, 0, bindedSheet.getRowCount(),
+                  bindedSheet.getColumnCount(), 3, 1);
             }
           } else {
             deleteTables(bindedSheet);

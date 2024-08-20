@@ -162,7 +162,7 @@ const seriesOptionsSynchronization = (
       generateGeneralOption(
           item.general.auxiliaryAxis,
           tempPointGeneralOption.general.ignoreEmptyPoints,
-          tempPointGeneralOption.general.pointerMarker,
+          item.general.pointerMarker,
           tempPointGeneralOption.general.reverseView);
   });
 };

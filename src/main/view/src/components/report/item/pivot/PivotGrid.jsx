@@ -286,7 +286,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           const contextMenu = [{
             text: localizedString.reportDescription,
             onItemClick: () => {
-              openModal(ReportDescriptionModal);
+              openModal(ReportDescriptionModal, {dataField});
             }
           }];
           if (!e.cell || e.cell.columnType === undefined ||

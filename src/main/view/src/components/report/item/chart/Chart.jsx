@@ -5,7 +5,7 @@ import DevChart, {
   Grid,
   Legend,
   Tooltip,
-  Point,
+  // Point,
   Series,
   ValueAxis
 } from 'devextreme-react/chart';
@@ -54,7 +54,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const {
     auxiliaryAxis,
     ignoreEmptyPoints,
-    pointerMarker,
+    // pointerMarker,
     reverseView} = getSeriesGeneralOption(seriesOptions);
   const overlapping = overlappingFormat(seriesOptions);
 
@@ -163,7 +163,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         <CommonSeriesSettings
           ignoreEmptyPoints={ignoreEmptyPoints}
         >
-          <Point visible={pointerMarker} />
+          {/* <Point visible={pointerMarker} /> */}
         </CommonSeriesSettings>
         <CommonAxisSettings aggregatedPointsPosition="crossTicks" />
         <ArgumentAxis
@@ -222,8 +222,12 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         ></Tooltip>
         {
           seriesNames.map(
-              (valueField, i) =>
-                <Series
+              (valueField, i) => {
+                const option =seriesOptions.find(
+                    (series) => series.fieldId == valueField.fieldId
+                );
+
+                return <Series
                   axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
                   key={valueField.summaryName+'-'+i}
                   valueField={valueField.summaryName}
@@ -238,8 +242,10 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                     getSeriesOptionType(valueField.fieldId, seriesOptions) ===
                     'bubble' ? valueField.summaryName: null
                   }
+                  point={{visible: option?.general?.pointerMarker}}
                 >
-                </Series>
+                </Series>;
+              }
           )
         }
       </DevChart>

@@ -10,6 +10,8 @@ import models from 'models';
 import {setIconReportList} from 'components/report/util/ReportUtility';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {EditMode} from 'components/config/configType';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
 import {DesignerMode} from 'components/config/configType';
@@ -17,6 +19,7 @@ import useSpread from 'hooks/useSpread';
 import LinkSlice from 'redux/modules/LinkSlice';
 import {useDispatch} from 'react-redux';
 import LoadingSlice from 'redux/modules/LoadingSlice';
+import {useSelector} from 'react-redux';
 
 const theme = getTheme();
 
@@ -26,10 +29,11 @@ const LoadReportModal = ({...props}) => {
   const {setExcelFile} = useSpread();
   const [reportList, setReportList] = useState();
   const {openModal, alert} = useModal();
-  const {loadReport, reload} = useReportSave();
+  const {loadReport, reload, querySearch} = useReportSave();
   const {startJob, endJob} = LoadingSlice.actions;
   const reportType = selectCurrentDesignerMode(store.getState());
   const reportId = selectCurrentReportId(store.getState());
+  const editMode = useSelector(selectEditMode);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,7 +54,9 @@ const LoadReportModal = ({...props}) => {
         .then(async ({data}) => {
           try {
             await loadReport(data);
-            // querySearch();
+            if (editMode == EditMode.VIEWER) {
+              querySearch();
+            }
           } catch {
             alert(localizedString.reportCorrupted);
           }

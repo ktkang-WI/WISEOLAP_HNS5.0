@@ -151,11 +151,11 @@ const ListFilter = ({
       <Popover
         target={textBoxRef.current}
         showEvent={'click'}
-        minWidth="200px"
-        height="300px"
+        minWidth="250px"
+        height="700px"
         ref={popOverRef}
         width={width}
-        maxWidth={width || '200px'}
+        maxWidth={width || '250px'}
         hideOnOutsideClick
         contentRender={renderContent}
       >
