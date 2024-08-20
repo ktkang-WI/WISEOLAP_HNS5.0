@@ -86,7 +86,15 @@ const DataSourceTab = () => {
   ];
 
   if (editMode == EditMode['VIEWER'] || designerMode == DesignerMode['EXCEL']) {
-    buttons.shift();
+    // buttons 배열 맨 처음에 값이 추가 될 가능성이 있어 shift() 함수로 제거는 위험.
+    const unnecessaryBtns = ['ViewerPostingData', 'CustomField'];
+
+    for (let i = 0; i < buttons.length; i++) {
+      if (unnecessaryBtns.includes(buttons[i])) {
+        buttons.splice(i, 1);
+        i--;
+      }
+    }
   }
 
   if (selectedDataset?.datasetType == DatasetType.DS_SQL) {
