@@ -93,6 +93,12 @@ const SpreadViewer = ({reportId}) => {
       <SpreadSheets
         ref={workbookRef}
         workbookInitialized={(spread) => {
+          spread.options.allowCopyPasteExcelStyle = false;
+          spread.options.allowExtendPasteRange = true;
+          spread.options.incrementalCalculation = true;
+          spread.options.iterativeCalculation = true;
+          spread.options.iterativeCalculationMaximumIterations = 100;
+
           setWorkbookRef(workbookRef);
           sheetChangedListener(spread);
           initSpreadBar(spread, reportId);

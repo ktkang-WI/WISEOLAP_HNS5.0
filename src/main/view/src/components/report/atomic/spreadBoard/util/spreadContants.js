@@ -28,7 +28,11 @@ export const excelIOOpenOtions = {
   * 2: incremental : UI and UI event could be refreshed and responsive directly.
   */
   openMode: 2,
-  incrementalCalculation: true
+  fullRecalc: true,
+  dynamicReferences: false,
+  incrementalCalculation: true,
+  iterativeCalculation: true,
+  iterativeCalculationMaximumIterations: 100
 };
 
 export const SpreadRibbonDefaultElement = {
