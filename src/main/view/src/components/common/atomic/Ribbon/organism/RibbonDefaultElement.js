@@ -7,6 +7,8 @@ import deleteReport from 'assets/image/icon/button/crud_remove.png';
 import downloadReport from 'assets/image/icon/button/download_new.png';
 // import connectReport from 'assets/image/icon/button/connect_report_add.png';
 import addContainer from 'assets/image/icon/button/insert_container.png';
+import containerTabHeader
+  from 'assets/image/icon/button/container_tab_header.png';
 import addChart from 'assets/image/icon/button/add_chart.png';
 import addPivotGrid from 'assets/image/icon/button/pivot_grid.png';
 import addGrid from 'assets/image/icon/button/basic_grid.png';
@@ -45,6 +47,8 @@ import ColorEditModal from '../../Modal/organisms/ColorEditModal';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
 import {AdHocLayoutTypes} from 'components/config/configType';
 import {getPalette} from 'devextreme/viz/palette';
+import LayoutSlice from 'redux/modules/LayoutSlice';
+import {useDispatch} from 'react-redux';
 
 const RibbonDefaultElement = () => {
   const {
@@ -63,10 +67,12 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const mypageConfig = useSelector(selectMyPageDesignerConfig);
+  const dispatch = useDispatch();
   const {querySearch} = useReportSave();
   const {executeItems} = useQueryExecute();
   const {openModal, confirm, alert} = useModal();
   const {removeReport, reload} = useReportSave();
+  const {toggleTabEnabled, insertContainerTab} = LayoutSlice.actions;
 
   // 팝오버가 아닌 일반 리본 버튼 요소, useArrowButton: false가 기본.
   const {
@@ -301,7 +307,16 @@ const RibbonDefaultElement = () => {
       'label': localizedString.addContainer,
       'imgSrc': addContainer,
       'onClick': (e) => {
-        console.log(e);
+        dispatch(insertContainerTab({reportId}));
+      }
+    },
+    'TabHeaderEnabled': {
+      ...commonRibbonBtnElement,
+      'id': 'tab_header_enabled',
+      'label': localizedString.tabHeaderEnabled,
+      'imgSrc': containerTabHeader,
+      'onClick': (e) => {
+        dispatch(toggleTabEnabled({reportId}));
       }
     },
     'AddChart': {

@@ -9,7 +9,8 @@ import ReportContentWrapper
   from 'components/common/atomic/Common/Wrap/ReportContentWrapper';
 import FilterBar from 'components/common/atomic/FilterBar/organism/FilterBar';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import ItemBoard from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+import ItemBoards from
+  'components/report/atomic/ItemBoard/organisms/ItemBoards';
 import {getTheme} from 'config/theme';
 import useDrag from 'hooks/useDrag';
 
@@ -29,7 +30,7 @@ const DesignerContent = () => {
             <Wrapper>
               <ReportContentWrapper>
                 <FilterBar/>
-                <ItemBoard/>
+                <ItemBoards/>
               </ReportContentWrapper>
             </Wrapper>
           </CustomDrawer>

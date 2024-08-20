@@ -15,10 +15,22 @@ const getDimensionOption = (fieldOption) => {
 
 // meta.dataField.measure 설정
 const getMeasureOption = (fieldOption) => {
-  return {
+  const measureOption = {
     format: {},
-    summaryType: fieldOption.fieldType == 'MEA' ? 'SUM' : 'MIN'
+    summaryType: fieldOption.fieldType == 'MEA' ? fieldOption?.summaryType ?
+      fieldOption?.summaryType :'SUM' : 'MIN'
   };
+
+  if (fieldOption.fieldType === 'DIM' && fieldOption.type === 'MEA') {
+    measureOption.summaryType =
+      measureOption.summaryType === 'MIN' ? 'COUNT' : measureOption.summaryType;
+
+    if (fieldOption.summaryType) {
+      measureOption.summaryType = fieldOption.summaryType;
+    }
+  }
+
+  return measureOption;
 };
 
 // meta.dataField.field 설정

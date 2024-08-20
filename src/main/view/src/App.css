@@ -102,10 +102,12 @@ img {
 
 .dx-drawer:not(.dx-drawer-opened) .board:first-child {
   margin-left: 0px;
+  width: 100%;
 }
 
 .dx-drawer.dx-drawer-opened div:not(.dx-state-invisible) .board:first-child {
   margin-left: 10px !important;
+  width: calc(100% - 10px);
 }
 
 .dx-drawer-content {

@@ -6,6 +6,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
+import {selectRootLayout} from 'redux/selector/LayoutSelector';
 
 export default function useLayout() {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ export default function useLayout() {
     const paletteIdx = paletteCollection.findIndex(
         (palette) => palette.name == myConfig?.defaultPalette
     );
+    const selectedTab = selectRootLayout(store?.getState())?.selectedTab || 0;
 
     dispatch(layoutSlice.insertFlexLayout(param));
     dispatch(itemSlice.insertItem({
@@ -42,6 +44,7 @@ export default function useLayout() {
         type: component, // type을 담고 있는 item 객체
         chartType: chartType,
         options: options,
+        tab: selectedTab,
         palette: paletteIdx > -1? paletteIdx : 0
       }
     }));

@@ -607,5 +607,16 @@
     {"name": "Excel", "caption": "Excel"}
   ],
   "requiredRowColumn": "All data items rows and columns are required.",
-  "viwerDownloadMsg": "Please open the report and proceed with the download."
+  "viwerDownloadMsg": "Please open the report and proceed with the download.",
+  "tab": "Tab",
+  "tabHeaderEnabled": "Container Header Enabled",
+  "remove": "Remove",
+  "close": "Close",
+  "modify": "Modify",
+  "containerName": "container name",
+  "editContainerName": "Edit container name",
+  "minContainerMsg": "At least one container must be present.",
+  "viwerDownloadMsg": "Please open the report and proceed with the download.",
+  "downloadNeedViewItemsMsg": "You can download it after viewing all items.",
+  "requiredRowColumn": "All data items rows and columns are required."
 }

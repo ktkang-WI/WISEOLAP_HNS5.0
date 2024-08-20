@@ -35,6 +35,29 @@ const measureSummaryType = [
   }
 ];
 
+const sortByItemSummaryType = [
+  {
+    'text': localizedString.min,
+    'value': 'MIN',
+    'type': 'SummaryType'
+  },
+  {
+    'text': localizedString.max,
+    'value': 'MAX',
+    'type': 'SummaryType'
+  },
+  {
+    'text': localizedString.count,
+    'value': 'COUNT',
+    'type': 'SummaryType'
+  },
+  {
+    'text': localizedString.distinctCount,
+    'value': 'COUNTDISTINCT',
+    'type': 'SummaryType'
+  }
+];
+
 const dimensionSummaryType = [
   {
     'text': localizedString.count,
@@ -88,7 +111,16 @@ export const getContextMenu = (itemType, data, sortItems = []) => {
   const fieldType = data.fieldType;
   const category = data.category;
 
-  if (category === 'sortByItem') return [rename];
+
+  if (category === 'sortByItem') {
+    if (type === 'MEA' && fieldType === 'MEA') {
+      return [...measureSummaryType, rename];
+    } else {
+      return [...sortByItemSummaryType, rename];
+    }
+  };
+
+  if (data?.expression) return [format];
 
   if (type == 'MEA') {
     if (fieldType == 'DIM') {

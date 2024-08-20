@@ -2,24 +2,15 @@ import {styled} from 'styled-components';
 import {Layout, Model, Actions} from 'flexlayout-react';
 import 'flexlayout-react/style/light.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  selectCurrentItems,
-  selectRootItem,
-  selectSelectedItemId
-} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
 import useLayout from 'hooks/useLayout';
-import {selectCurrentReport, selectCurrentReportId}
-  from 'redux/selector/ReportSelector';
 import {useState} from 'react';
-import {selectFlexLayoutConfig} from 'redux/selector/LayoutSelector';
 import {getTheme} from 'config/theme';
 import Item from '../atoms/Item';
 import {Popover} from 'devextreme-react';
-import {Type, exportToFile} from 'components/utils/DataExport';
 import ItemManager from 'components/report/item/util/ItemManager';
 import {
   selectCurrentDesignerMode,
@@ -28,15 +19,16 @@ import {
 import {DesignerMode, EditMode} from 'components/config/configType';
 import _ from 'lodash';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import models from 'models';
 import {itemComponents} from 'components/report/item/util/ItemMappers';
 import ItemType from 'components/report/item/util/ItemType';
+import localizedString from 'config/localization';
+import {ItemDownload} from '../../ItemDownload/ItemDownload';
 
 const theme = getTheme();
 
 const StyledBoard = styled.div`
   height: 100%;
-  width: calc(100% - 10px);
+  width: 100%;
   flex: 1;
   background: ${theme.color.background};
   display: flex;
@@ -76,101 +68,25 @@ const Memo = styled.div`
   text-wrap: nowrap;
 `;
 
-const ItemBoard = () => {
+const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const {deleteFlexLayout, updateLayoutShape} = useLayout();
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
 
   const {selectItem} = ItemSlice.actions;
   const {selectDataset} = DatasetSlice.actions;
-
-  const selectedReportId = useSelector(selectCurrentReportId);
-  const layoutConfig = useSelector(selectFlexLayoutConfig);
-  const items = useSelector(selectCurrentItems);
-  const rootItem = useSelector(selectRootItem);
-  const selectedItemId = useSelector(selectSelectedItemId);
-  const reportId = useSelector(selectCurrentReportId);
-  const report = useSelector(selectCurrentReport);
+  const {items, selectedItemId} = item || {};
+  const {reportId} = report || {};
+  const rootItem = item;
   const model = Model.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
   const tabSelectedClass = editMode == EditMode.DESIGNER ?
      'tab-selected' : '';
-  const ignoreDownload = [
-    'textBox',
-    'treeView',
-    'schedulerComponent',
-    'comboBox',
-    'listBox',
-    'coordinateDot',
-    'coordinateLine'
-  ];
-  // TODO: 임시용 변수 d3 이미지 다운로드 추가이후 삭제 예정.
-  const imgDownloadExcept = [
-    'card',
-    'liquidFillGauge',
-    'calendar',
-    'rangeBar',
-    'schedulerComponent',
-    'waterFall',
-    'comboBox',
-    'scatterPlot',
-    'ciclePacking',
-    'zoomableIcicle',
-    'sunburstChart',
-    'radialTree',
-    'collapsibleTree',
-    'heatMap',
-    'wordCloud',
-    'arc',
-    'chord',
-    'timeline',
-    'boxPlot',
-    'funnelChart',
-    'starChart'
-  ];
-
-  const itemExportsPicker = (id) => {
-    return itemExports.find((item) => item.id == id);
-  };
-
-  // TODO: 임시 예외처리 차트용만 다운로드 구현 삭제예정
-  const exportExceptionHandle = (pickItem) => {
-    let isOk = false;
-    if (!pickItem) {
-      isOk = false;
-      return isOk;
-    }
-    isOk = Object.values(ItemType).includes(pickItem.type);
-
-    return isOk;
-  };
-
-  const exportFile = (e, type, name) => {
-    const pickItem = itemExportsPicker(e);
-    if (!exportExceptionHandle(pickItem)) {
-      console.error('아이템 및 데이터가 그려지지 않았습니다.');
-      return;
-    };
-    if (Type.CSV === type) {
-      exportToFile(name, pickItem.data, Type.CSV);
-    } else if (Type.TXT === type) {
-      exportToFile(name, pickItem.data, Type.TXT);
-    } else if (Type.XLSX === type) {
-      exportToFile(name, pickItem.data, Type.XLSX);
-    } else if (Type.IMG === type) {
-      exportToFile(name, pickItem, Type.IMG);
-    }
-
-    models.Log.insertDownloadLog(
-        reportId || '1001',
-        report?.options?.reportNm || 'New Report',
-        report?.options?.reportType,
-        e,
-        name
-    );
-  };
+  const itemDownload = new ItemDownload({reportId, report, itemExports});
+  const ignoreDownload = itemDownload.getIgnoreDownload();
+  const imgDownloadExcept = itemDownload.getImgDownloadExcept();
 
   const nullDataCheck = (item) => {
     const isOk =
@@ -326,82 +242,54 @@ const ItemBoard = () => {
 
     return action;
   }
-  const renderDownloadButtons = (id, item, isImgDownloadable) => {
-    return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
-      if (type == Type.IMG && isImgDownloadable) return <></>;
-      return (
-        <button
-          key={type}
-          onClick={() =>
-            exportFile(
-                id,
-                type,
-                item.meta.name
-            )
-          }
-        >
-          {type.toLowerCase()}
-        </button>
-      );
-    });
-  };
 
   function onRenderTabSet(tabSetNode, renderValues) {
     const tabNode = tabSetNode.getSelectedNode();
 
-    if (tabNode) {
-      const type = tabNode.getComponent();
-      const id = tabNode.getId();
-      const item = items.filter((item) => item.id === id)[0];
-      const memo = item?.meta?.memo;
-      const buttons = ItemManager.getTabHeaderItems(type)
-          .map((key) => getTabHeaderButtons(type, key, id));
+    if (!tabNode) return;
 
-      const isImgDownloadable = imgDownloadExcept.includes(item.type);
-      const isDownload = ignoreDownload.includes(item.type);
-      let isImg = true;
-      if (type === 'grid') isImg = false;
-      if (type === 'pivot') isImg = false;
+    const type = tabNode.getComponent();
+    const id = tabNode.getId();
+    const item = items.find((item) => item.id === id);
+    const memo = item?.meta?.memo || null;
 
-      renderValues.buttons.push(
-          (memo ?
-            <Memo>{memo}</Memo> : <></>),
-          (designerMode === DesignerMode['AD_HOC'] ? <></> : <button
-            key="delete"
-            title="Delete tabset"
-            onClick={(e) => {
-              // flexLayout 커스텀 삭제 버튼 기능.
-              model.doAction(Actions.deleteTab(id));
-            }}
-          >
-          &#128473;&#xFE0E;
-          </button>),
-          <button
-            key="download"
-            title="Download"
-          >
-            {
-              !isDownload &&
-              <>
-                <DownloadImage
-                  id={tabNode._attributes.id+'btn'} src={download}/>
-                <Popover
-                  target={'#'+tabNode._attributes.id+'btn'}
-                  showEvent="click"
-                >
-                  <>
-                    {renderDownloadButtons(
-                        tabNode._attributes.id,
-                        item,
-                        isImg && isImgDownloadable)}
-                  </>
-                </Popover>
-              </>
-            }
-          </button>,
-          ...buttons
-      );
-    }
+    const buttons = ItemManager.getTabHeaderItems(type)
+        .map((key) => getTabHeaderButtons(type, key, id));
+
+    const showCloseButton = !(editMode === EditMode.VIEWER ||
+      designerMode === DesignerMode.AD_HOC);
+
+    const isDownloadable = !ignoreDownload.includes(item?.type);
+    const isImgDownloadable = imgDownloadExcept.includes(item?.type);
+    const isImg = !['grid', 'pivot'].includes(type);
+
+    const downloadButton = isDownloadable ? (
+      <button key="download" title={localizedString.downloadReport}>
+        <DownloadImage id={`${tabNode._attributes.id}btn`} src={download} />
+        <Popover target={`#${tabNode._attributes.id}btn`} showEvent="click">
+          {itemDownload.renderDownloadButtons(
+              tabNode._attributes.id, item, isImg && isImgDownloadable
+          )}
+        </Popover>
+      </button>
+    ) : null;
+
+    const closeButton = showCloseButton ? (
+      <button
+        key="delete"
+        title={localizedString.remove}
+        onClick={() => model.doAction(Actions.deleteTab(id))}
+      >
+        &#128473;&#xFE0E;
+      </button>
+    ) : null;
+
+    renderValues.buttons.push(
+        (memo ? <Memo>{memo}</Memo> : <></>),
+        closeButton,
+        downloadButton,
+        ...buttons
+    );
   }
 
   const onModelChange = (node, action) => {
@@ -413,7 +301,7 @@ const ItemBoard = () => {
     if (action.type == 'FlexLayout_DeleteTab') {
       // tabEnableClose: true-> layout타이틀 옆 삭제 버튼으로 삭제할 때. 현재 버튼은 숨김 처리함.
       deleteFlexLayout(
-          selectedReportId,
+          reportId,
           action.data.node,
           model.toJson()
       );
@@ -426,7 +314,7 @@ const ItemBoard = () => {
   }));
 
   return (
-    <StyledBoard className='section board'>
+    <StyledBoard {...props}>
       <Layout
         model={model}
         factory={factory}
@@ -437,16 +325,6 @@ const ItemBoard = () => {
       />
     </StyledBoard>
   );
-};
-
-// 아이템 별 저장아이템
-export const itemExportsObject = (id, itemRef, type, data) => {
-  return {
-    id: id,
-    ref: itemRef,
-    type: type,
-    data: data
-  };
 };
 
 export default ItemBoard;

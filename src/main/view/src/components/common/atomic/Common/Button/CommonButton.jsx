@@ -122,6 +122,7 @@ const CommonButton = ({
 
   return (
     <Button
+      {...(themeType[type]? themeType[type] : themeType['primary'])}
       width={width}
       height={height}
       minWidth={minWidth}
@@ -129,7 +130,6 @@ const CommonButton = ({
       margin={margin}
       justify={justify}
       padding={padding}
-      {...(themeType[type]? themeType[type] : themeType['primary'])}
       {...props}
     >
       <span>{children}</span>

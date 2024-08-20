@@ -67,3 +67,9 @@ export const selectCurrentDataFieldOption = createSelector(
       return selectedItem ? selectedItem.mart.dataFieldOption : [];
     }
 );
+
+export const selectReportItem = createSelector(
+    (state, reportId) => reportId,
+    (state) => state.meta.item,
+    (reportId, item) => item[reportId]
+);

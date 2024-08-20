@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
+import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
@@ -70,15 +71,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/report")
 public class ReportController {
     private final ReportService reportService;
+    private final AuthService authService;
 
     private final TokenStorage<ReportTokenDTO> tokenStorage;
     
     @Autowired
     private ListDataUtility<Measure> listDataUtility;
 
-    ReportController(ReportService reportService) {
+    ReportController(ReportService reportService, AuthService authService) {
         this.reportService = reportService;
-        this.tokenStorage = new TokenStorage<>("report");
+        this.authService = authService;
+        this.tokenStorage = new TokenStorage<>("report", ReportTokenDTO.class);
     }
 
     @Operation(summary = "item-data", description = "아이템의 데이터를 조회합니다.")
@@ -514,20 +517,22 @@ public class ReportController {
         return new ResponseEntity(token, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/retrieve-link-report", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/retrieve-link-report", method = {RequestMethod.POST})
     public ResponseEntity<Map<String, Object>> retrieveReportId(
-        @RequestParam(value = "token", required = true) String token,
-        @RequestBody(required = false) Map<String, String> requestBody) {
-        if (requestBody != null && requestBody.containsKey("token")) {
-            token = requestBody.get("token");
-        }
+        HttpServletRequest request,
+        @RequestBody Map<String, String> requestBody) {
+
+        String token = requestBody.get("token");
 
         ReportTokenDTO tokenDTO = tokenStorage.getValue(token);
         if (tokenDTO != null) {
             Map<String, Object> response = new HashMap<>();
-            response.put("userId", tokenDTO.getUserId());
             response.put("reportId", tokenDTO.getReportId());
             response.put("reportType", tokenDTO.getReportType());
+
+            UserDTO userDTO = authService.getUserById(tokenDTO.getUserId());
+
+            SessionUtility.setSessionUser(request, userDTO);
            
             return ResponseEntity.ok(response);
         } else {

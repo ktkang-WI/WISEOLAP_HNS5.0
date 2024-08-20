@@ -58,26 +58,29 @@ public class GroupController{
       @RequestBody Map<String, Object> body
   ) throws SQLException{
 
-    String grpMemberUserData = body.get(key).toString();
+    String grpMemberUserData = null;
 
-    if (!body.containsKey(key)) {
-        return RestAPIVO.badRequest(false);
+    if (body.size() > 0) {
+      grpMemberUserData = body.get(key).toString();
     }
 
-    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData, grpMemberUserType);
+    if (body.size() > 0 && !body.containsKey(key)) {
+        return RestAPIVO.badRequest(false);
+    }
     
-    GroupDTO groupDTO = GroupDTO.builder()
+    List<GroupMemberUserModel> groupmemberUser = gson.fromJson(grpMemberUserData, grpMemberUserType);
+      GroupDTO groupDTO = GroupDTO.builder()
       .grpNm(grpNm)
       .grpDesc(grpDesc)
       .grpRunMode(grpRunMode)
       .grpMemberUser(groupmemberUser)
       .build();
 
-    boolean result = groupService.createGroup(groupDTO);
+      boolean result = groupService.createGroup(groupDTO);
 
-    if (!result) return RestAPIVO.conflictResponse(false);
+      if (!result) return RestAPIVO.conflictResponse(false);
 
-    return RestAPIVO.okResponse(true);
+      return RestAPIVO.okResponse(true);
   }
 
   @PatchMapping

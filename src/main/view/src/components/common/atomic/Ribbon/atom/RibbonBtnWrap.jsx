@@ -22,13 +22,13 @@ const Wrap = styled.div`
   }
 
   &:nth-child(2) {
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1050px) {
       display: none;
     }
   }
 
   &:nth-child(3) {
-    @media screen and (max-width: 1280px) {
+    @media screen and (max-width: 1480px) {
       display: none;
     }
   }

@@ -9,7 +9,7 @@ import {
 import customizeOption from './customizingPie/CustomizeOption';
 import React, {useEffect, useRef} from 'react';
 import {itemExportsObject}
-  from 'components/report/atomic/ItemBoard/organisms/ItemBoard';
+  from 'components/report/atomic/ItemDownload/ItemDownload';
 
 const Pie = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;

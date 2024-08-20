@@ -143,7 +143,7 @@ export class Group {
   }
 
   setGrpMemberUsers(grpMemberUsers) {
-    this.grpMemberUsers = grpMemberUsers.map((row) => {
+    this.grpMemberUsers = grpMemberUsers?.map((row) => {
       return {
         userNo: row.userNo
       };

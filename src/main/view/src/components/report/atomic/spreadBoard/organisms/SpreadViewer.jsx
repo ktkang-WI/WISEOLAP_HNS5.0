@@ -1,7 +1,6 @@
 import {useSelector} from 'react-redux';
 import {getWorkbookJSON, setWorkbookRef} from '../util/SpreadCore';
 import {SpreadSheets} from '@grapecity/spread-sheets-react';
-// import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
@@ -15,22 +14,29 @@ import SpreadSlice from 'redux/modules/SpreadSlice';
 const theme = getTheme();
 
 const StyledWrapper = styled(Wrapper)`
-  height: 100%;
+  height: calc(100% - 25px);
   width: calc(100% - 10px);
   flex: 1;
   background: #f5f6fa;
-  display: flex;
   min-height: 0px;
   border: 1px solid ${theme.color.gray200};
   border-radius: 10px;
-  overflow: hidden !important;
   text-align: left;
+`;
+
+const StatusBar = styled('div')`
+  bottom: 0;
+  height: 25px;
+  width: 100%;
+  position: relative;
+  float: left;
 `;
 
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
   const {setSpreadData} = SpreadSlice.actions;
-  const {bindData, setExcelFile, sheetChangedListener} = useSpread();
+  const {bindData, setExcelFile, sheetChangedListener, initSpreadBar} =
+  useSpread();
   const dispatch = useDispatch();
 
   const workbookRef = useRef();
@@ -89,7 +95,11 @@ const SpreadViewer = ({reportId}) => {
         workbookInitialized={(spread) => {
           setWorkbookRef(workbookRef);
           sheetChangedListener(spread);
+          initSpreadBar(spread, reportId);
         }}
+      />
+      <StatusBar
+        id={'statusBar' + reportId}
       />
     </StyledWrapper>
   );

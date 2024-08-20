@@ -292,6 +292,12 @@ const reducers = {
     const newId = actions.payload.reportId.newId;
     delete state[prevId];
     state[newId] = actions.payload.item;
+  },
+  deleteContainerItem(state, actions) {
+    const {reportId, tab} = actions.payload;
+
+    state[reportId].items =
+      state[reportId].items.filter((item) => item.tab != tab);
   }
 };
 

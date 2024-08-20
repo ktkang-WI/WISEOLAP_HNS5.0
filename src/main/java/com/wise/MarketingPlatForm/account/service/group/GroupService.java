@@ -41,6 +41,10 @@ public class GroupService {
 
       grpId = groupMstrEntity.getGrpId();
 
+      if (
+        groupDTO.getGrpMemberUser() == null ||
+        groupDTO.getGrpMemberUser().isEmpty()) return result;
+
       for (GroupMemberUserModel groupMemberUser : groupDTO.getGrpMemberUser())
       {
         UserMstrEntity userMstrEntity = UserMstrEntity.builder()
@@ -99,7 +103,8 @@ public class GroupService {
         .build();
 
       result = accountDAO.deleteGroup(groupMstrEntity);
-      result = accountDAO.updateUserDefaultGroup(groupMstrEntity);
+
+      accountDAO.updateUserDefaultGroup(groupMstrEntity);
 
       return result;
   };
