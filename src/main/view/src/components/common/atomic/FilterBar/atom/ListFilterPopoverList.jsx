@@ -94,7 +94,7 @@ const ListFilterPopoverList = ({
         selectAllText={allText}
         selectAllMode={searchValue!=''? 'page': 'allPage'}
         selectedByClick={true}
-        height='200px'
+        height='600px'
         displayExpr='caption'
         keyExpr='name'
         ref={listRef}
@@ -111,10 +111,16 @@ const ListFilterPopoverList = ({
       >
       </StyledList>
       <Footer>
-        <CommonButton type='primary' maxWidth='120px' onClick={() => confirm()}>
+        <CommonButton type='primary' maxWidth='120px' onClick={() => {
+          setSearchValue('');
+          confirm();
+        }}>
           {localizedString.confirm}
         </CommonButton>
-        <CommonButton type='secondary' maxWidth='120px' onClick={cancel}>
+        <CommonButton type='secondary' maxWidth='120px' onClick={() => {
+          setSearchValue('');
+          cancel();
+        }}>
           {localizedString.cancel}
         </CommonButton>
       </Footer>
