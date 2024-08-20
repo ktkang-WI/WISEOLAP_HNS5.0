@@ -48,8 +48,13 @@ const DatasetLinkerModal = ({...props}) => {
       const useBorder = dataMaker(datasetId, 'useBorder');
       const useBinding = dataMaker(datasetId, 'useBinding');
       const position = positionConverterAsString(
+          // TODO 추후 바인딩 환경설정 추가 시 옵션으로 변경
+          /*
           bindingInfos[datasetId]?.columnIndex,
           bindingInfos[datasetId]?.rowIndex
+          */
+          0,
+          0
       );
       return {
         datasetId: datasetId,
@@ -146,8 +151,12 @@ const DatasetLinkerModal = ({...props}) => {
         <Column
           dataField='position'
           caption={localizedString.bindingPosition}
+          // TODO 추후 바인딩 환경설정 추가 시 옵션으로 변경
+          /*
           setCellValue={(newData, value, currentRowData) =>
             updateDataSources(value, currentRowData, 'position')}
+          */
+          allowEditing={false}
         />
         <Column
           dataField='useHeader'
