@@ -455,9 +455,10 @@ const useReportSave = () => {
     const rootDataset = selectRootDataset(store.getState());
 
     // 비정형 주제영역일 때만 보고서 락
-    if (designerMode === DesignerMode['AD_HOC'] &&
+    if (process.env.NODE_ENV != 'development' &&
+      designerMode === DesignerMode['AD_HOC'] &&
       rootDataset.datasets.every((dataset) =>
-        dataset.datasetType !== DatasetType.CUBE)) {
+        dataset.datasetType === DatasetType.CUBE)) {
       if (querySearchException(parameters, myPageConfigure)) {
         return;
       };
