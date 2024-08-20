@@ -1,11 +1,12 @@
 package com.wise.MarketingPlatForm.auth.type;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum RunMode {
+public enum RunMode implements Serializable{
     ADMIN("ADMIN"), VIEW("VIEW");
 
     private final String symbol;
