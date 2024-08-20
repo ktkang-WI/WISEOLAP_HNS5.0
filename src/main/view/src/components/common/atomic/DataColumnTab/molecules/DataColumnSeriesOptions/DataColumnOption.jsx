@@ -1,6 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import {LabelCheckBox} from './Common/LabelCheckBox';
 import {LabelPanel} from './Common/LabelPanel';
+import localizedString from 'config/localization';
 import {generalOptionsData}
   from '../../organism/DataColumnSeriesOptions/metaData/SeriesOptionData';
 import {DataColumnSeriesOptionsContext}
@@ -39,15 +40,23 @@ const DataColumnOption = () => {
   };
 
   return (
-    <LabelPanel>
-      {generalOptions.map((item, index) =>
-        <LabelCheckBox
-          onValueChanged={(e) => handleCheckBoxValueChanged(item.id)}
-          key={index}
-          label={item.label}
-          checked={generalFormat[item.name]}
-        />)}
-    </LabelPanel>
+    <>
+      <LabelPanel>
+        {generalOptions.map((item, index) =>
+          <LabelCheckBox
+            onValueChanged={(e) => handleCheckBoxValueChanged(item.id)}
+            key={index}
+            label={item.label}
+            checked={generalFormat[item.name]}
+          />)}
+      </LabelPanel>
+      <div style={{float: 'right', color: 'red'}}>
+        {localizedString.pointMakerExplain}
+      </div>
+      <div style={{float: 'right', color: 'red'}}>
+        {localizedString.pointMakerExplain2}
+      </div>
+    </>
   );
 };
 
