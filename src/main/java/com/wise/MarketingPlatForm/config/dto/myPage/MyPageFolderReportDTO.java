@@ -30,4 +30,5 @@ public class MyPageFolderReportDTO {
   String prompt;
   String createdBy;
   List<Integer> ids;
+  String datasetXml;
 }
