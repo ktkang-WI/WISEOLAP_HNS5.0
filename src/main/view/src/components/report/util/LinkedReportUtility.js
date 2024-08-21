@@ -34,7 +34,7 @@ export const connectLinkedReport = (param) => {
       if (res.status != 200) return;
       const token = res.data;
       const urlString =
-        `${getFullUrl()}/link-viewer?token=${token}`;
+        `${getFullUrl()}/linkviewer?token=${token}`;
       const newWindow = window.open(urlString, '_blank');
       if (newWindow) {
         newWindow.focus();
