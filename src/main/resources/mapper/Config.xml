@@ -74,6 +74,7 @@
       <result column="CREATED_DATE" property="createdDate" javaType="String"/>
       <result column="PROMPT" property="prompt" javaType="String"/>
       <result column="CREATED_BY" property="createdBy" javaType="String"/>
+      <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
 
     <select id="selectConfigFolder" resultMap="FldMstr">
@@ -119,7 +120,8 @@
         REPORTANDFOLDER.QUERY,
         REPORTANDFOLDER.CREATED_DATE,
 	      REPORTANDFOLDER.PROMPT,
-        REPORTANDFOLDER.CREATED_BY
+        REPORTANDFOLDER.CREATED_BY,
+        REPORTANDFOLDER.DATASET_XML
           FROM
           (
           SELECT 
@@ -135,7 +137,8 @@
             NULL AS QUERY,
             NULL AS PROMPT,
 						NULL AS CREATED_DATE,
-            #{userNm} AS CREATED_BY
+            #{userNm} AS CREATED_BY,
+            NULL AS DATASET_XML
               FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
           UNION ALL
           SELECT 
@@ -151,7 +154,8 @@
             DATASET_QUERY AS QUERY,
             PROMPT_YN AS PROMPT,
 	          REG_DT AS CREATED_DATE,
-            #{userNm} AS CREATED_BY
+            #{userNm} AS CREATED_BY,
+            DATASET_XML AS DATASET_XML
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'

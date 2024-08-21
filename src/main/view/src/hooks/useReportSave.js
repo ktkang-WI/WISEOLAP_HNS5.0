@@ -55,7 +55,9 @@ const useReportSave = () => {
    */
   const generateParameter = (dataSource) => {
     const reportType = selectCurrentDesignerMode(store.getState());
+    const rootDataset = selectRootDataset(store.getState());
     const param = {};
+    const cubeQueries = {};
     param.reportId = dataSource.reportId;
     param.reportNm = dataSource.reportNm;
     param.fldId = dataSource.fldId;
@@ -79,14 +81,41 @@ const useReportSave = () => {
 
     const chartXml = selectRootItem(store.getState());
     const newChartXml = _.cloneDeep(chartXml);
+
+    const getDatasetId = (item) => {
+      let id = item.meta.dataField?.datasetId;
+      if (reportType === DesignerMode['AD_HOC']) {
+        id = chartXml.adHocOption.dataField?.datasetId;
+      };
+      return id;
+    };
+
     newChartXml.items =
-      newChartXml.items.map((item) => _.omit(item, 'mart'));
-    param.chartXml = JSON.stringify(newChartXml);
+      newChartXml.items.map((item) => {
+        // TODO: 현재 한 보고서 안에서 주제영역, 쿼리집적입력, 단일테이블 등 혼재되어 사용이 가능.
+        // TODO 부분이 해결이 된다면 변경할 코드
+        const datasetId = getDatasetId(item);
+        const isCube = rootDataset.datasets.find((dataset) =>
+          dataset.datasetId == datasetId && dataset.datasetType == 'CUBE'
+        );
+        if (isCube) {
+          if (!cubeQueries[isCube.datasetId]) {
+            cubeQueries[isCube.datasetId] = [];
+          }
+          cubeQueries[isCube.datasetId].push(item.type);
+          cubeQueries[item.type] = item.mart.data.query;
+        }
+
+        return _.omit(item, 'mart');
+      });
+
+    param.datasetXml = JSON.stringify(rootDataset);
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
-    param.datasetXml = JSON.stringify(selectRootDataset(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
-
+    param.chartXml = JSON.stringify(newChartXml);
+    // datasetQeury에 저장.(주제영역인 경우.)
+    param.datasetQuery = JSON.stringify(cubeQueries);
 
     return param;
   };
@@ -455,9 +484,10 @@ const useReportSave = () => {
     const rootDataset = selectRootDataset(store.getState());
 
     // 비정형 주제영역일 때만 보고서 락
-    if (designerMode === DesignerMode['AD_HOC'] &&
+    if (process.env.NODE_ENV != 'development' &&
+      designerMode === DesignerMode['AD_HOC'] &&
       rootDataset.datasets.every((dataset) =>
-        dataset.datasetType !== DatasetType.CUBE)) {
+        dataset.datasetType === DatasetType.CUBE)) {
       if (querySearchException(parameters, myPageConfigure)) {
         return;
       };

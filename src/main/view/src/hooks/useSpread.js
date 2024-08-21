@@ -161,12 +161,26 @@ const useSpread = () => {
         workbook.resumeEvent();
         workbook.resumeCalcService();
         workbook.resumePaint();
+
+        refreshPivotTable(workbook);
       }
     } catch (e) {
       console.error(e);
     }
 
     dispatch(endJob('시트에 데이터를 바인딩하는 중입니다.'));
+  };
+
+  const refreshPivotTable = (workbook) => {
+    const sheetLength = workbook.getSheetCount();
+    for (let i = 1; i <= sheetLength; i++) {
+      const sheet = workbook.getSheet(i);
+      const pivotTableManager = sheet.pivotTables;
+      const pivotTables = pivotTableManager.all();
+      for (const pivotTable of pivotTables) {
+        pivotTable.updateSource();
+      }
+    }
   };
 
   const initSpreadBar = (workbook, reportId) => {
@@ -184,16 +198,6 @@ const useSpread = () => {
   };
 
   const changSheet = (e, args, workbook) => {
-    const sheet = workbook.getSheetFromName(args.sheetName);
-
-    if (args.propertyName === 'isSelected' && sheet) {
-      const pivotTableManager = sheet.pivotTables;
-      const pivotTables = pivotTableManager.all();
-      for (const pivotTable of pivotTables) {
-        pivotTable.updateSource();
-      }
-    }
-
     if (args.propertyName === 'deleteSheet') {
       deletedSheet(e, args);
     }
