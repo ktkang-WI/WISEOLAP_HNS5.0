@@ -204,10 +204,10 @@ const DataColumn = ({
           <Arrow src={arrowImg} direction={sortOrder}/>
         }
         <EllipsisSpan>{children}</EllipsisSpan>
-        {!data?.expression && showContextMenu &&
+        {showContextMenu &&
           <OtherMenuButton id={otherMenuId} src={otherMenuImg}/>
         }
-        {!data?.expression && showContextMenu &&
+        {showContextMenu &&
           <ContextMenu
             className='other-menu'
             dataSource={getContextMenu(itemType, data, sortItems)}
