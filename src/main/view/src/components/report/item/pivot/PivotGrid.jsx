@@ -54,7 +54,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const {updateItem} = ItemSlice.actions;
   const loadingActions = LoadingSlice.actions;
   const itemExportObject =
-   itemExportsObject(id, ref, 'PIVOT', mart.data.data);
+   itemExportsObject(id, ref, 'pivot', mart.data.data);
   const dispatch = useDispatch();
 
   const datasets = useSelector(selectCurrentDatasets);
