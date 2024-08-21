@@ -164,10 +164,17 @@ const DataSourceFoldableList = ({dataset}) => {
 
   if (dataset.showHiddenFields) {
     data = data.map((field) => {
+      if (field.parentId) {
+        return {
+          ...field,
+          visible: undefined,
+          disabled: typeof field.visible == 'boolean' ? !field.visible : false
+        };
+      }
+
       return {
         ...field,
-        visible: undefined,
-        disabled: typeof field.visible == 'boolean' ? !field.visible : false
+        visible: true
       };
     });
   }
@@ -218,6 +225,14 @@ const DataSourceFoldableList = ({dataset}) => {
               searchEnabled={true}
               searchMode={'contains'}
               height={'calc(100% - 80px)'}
+              onItemClick={(e) => {
+                if (e.itemData.disabled) {
+                  const instance = e.component;
+                  const node = instance.getNodeByItem(e.itemData);
+
+                  instance.expandItem(node.key);
+                }
+              }}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
             />

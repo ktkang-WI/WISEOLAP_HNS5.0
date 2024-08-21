@@ -15,4 +15,5 @@ public class DsViewDimEntity {
   int dsViewId;
   String dimCaption;
   String dimDimUniNm;
+  String tblNm;
 }

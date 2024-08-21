@@ -10,4 +10,5 @@ import lombok.Getter;
 public class DsViewDimDTO {
   Integer dsViewId;
   String dimDimUniNm;
+  String hieUniNm;
 }

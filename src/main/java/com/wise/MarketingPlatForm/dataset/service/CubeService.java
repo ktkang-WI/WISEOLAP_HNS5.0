@@ -2,8 +2,10 @@ package com.wise.MarketingPlatForm.dataset.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,8 @@ public class CubeService {
 
         List<CubeMstrEntity> cubeMstrEntity = cubeDAO.selectDatasetDsCube();
 
-        if (cubeMstrEntity == null) return null;
+        if (cubeMstrEntity == null)
+            return null;
 
         return cubeMstrEntity;
     };
@@ -79,6 +82,7 @@ public class CubeService {
         // 측정값 그룹 불러오기
         List<CubeTblEntity> cubeMeaTblEntities = cubeDAO.selectCubeMeaTables(cubeId);
         for (CubeTblEntity entity : cubeMeaTblEntities) {
+            if (!entity.isVisible()) continue;
             fields.add(CubeFieldVO.builder()
                     .type(DataFieldType.MEA)
                     .order(entity.getOrder())
@@ -94,6 +98,7 @@ public class CubeService {
         List<CubeMeaColEntity> cubeMeaColEntities = cubeDAO.selectCubeMeaColumns(cubeId);
 
         for (CubeMeaColEntity entity : cubeMeaColEntities) {
+            if (!entity.isVisible()) continue;
             // 권한 있는 차원의 컬럼만 추가
             fields.add(CubeFieldVO.builder()
                     .type(DataFieldType.MEA)
@@ -108,31 +113,16 @@ public class CubeService {
                     .build());
         }
 
-        // 차원 그룹 불러오기 - 권한 적용
-        List<CubeTblEntity> cubeDimTblEntities = cubeDAO.selectCubeDimTables(cubeId);
-        List<String> authDimNames = new ArrayList<>();
-
-        for (CubeTblEntity entity : cubeDimTblEntities) {
-            if (auth.hasAuthDim(entity.getDsViewId(), entity.getPhysicalName())) {
-                authDimNames.add(entity.getPhysicalName());
-                fields.add(CubeFieldVO.builder()
-                        .type(DataFieldType.DIM)
-                        .order(entity.getOrder())
-                        .visible(entity.isVisible())
-                        .uniqueName(entity.getUniqueName())
-                        .logicalName(entity.getLogicalName())
-                        .physicalName(entity.getPhysicalName())
-                        .name(entity.getLogicalName())
-                        .build());
-            }
-        }
-
-        // 차원 컬럼 불러오기
+        // 차원 컬럼 불러오기 - 권한 적용
         List<CubeDimColEntity> cubeDimColEntities = cubeDAO.selectCubeDimColumns(cubeId);
+        List<CubeTblEntity> cubeDimTblEntities = cubeDAO.selectCubeDimTables(cubeId);
+        Set<String> authDimNames = new HashSet<>();
 
         for (CubeDimColEntity entity : cubeDimColEntities) {
+            if (!entity.isVisible()) continue;
             // 권한 있는 차원의 컬럼만 추가
-            if (authDimNames.contains(entity.getTableName())) {
+            if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())) {
+                authDimNames.add(entity.getTableName());
                 fields.add(CubeFieldVO.builder()
                         .type(DataFieldType.DIM)
                         .order(entity.getOrder())
@@ -144,6 +134,43 @@ public class CubeService {
                         .uniqueName(entity.getUniqueName())
                         .description(entity.getDescription())
                         .build());
+            } else {
+                fields.add(CubeFieldVO.builder()
+                        .type(DataFieldType.DIM)
+                        .order(entity.getOrder())
+                        .name(entity.getCaptionName())
+                        .parentId(entity.getTableName())
+                        .dataType(entity.getDataType())
+                        .orderBy(entity.getOrderBy())
+                        .visible(false)
+                        .uniqueName(entity.getUniqueName())
+                        .description(entity.getDescription())
+                        .build());
+            }
+        }
+
+        for (CubeTblEntity entity : cubeDimTblEntities) {
+            if (!entity.isVisible()) continue;
+            if (authDimNames.contains(entity.getPhysicalName())) {
+                fields.add(CubeFieldVO.builder()
+                .type(DataFieldType.DIM)
+                .order(entity.getOrder())
+                .visible(entity.isVisible())
+                .uniqueName(entity.getUniqueName())
+                .logicalName(entity.getLogicalName())
+                .physicalName(entity.getPhysicalName())
+                .name(entity.getLogicalName())
+                .build());
+            } else {
+                fields.add(CubeFieldVO.builder()
+                .type(DataFieldType.DIM)
+                .order(entity.getOrder())
+                .visible(false)
+                .uniqueName(entity.getUniqueName())
+                .logicalName(entity.getLogicalName())
+                .physicalName(entity.getPhysicalName())
+                .name(entity.getLogicalName())
+                .build());
             }
         }
 
@@ -164,7 +191,7 @@ public class CubeService {
 
         return cubeInfo;
     }
-    
+
     public List<RootFieldVO> getCubeFields() {
         return null;
     }

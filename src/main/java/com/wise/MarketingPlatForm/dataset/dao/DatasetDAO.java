@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.dataset.dto.ds.DatasetDsDTO;
 import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewColEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
@@ -38,4 +39,5 @@ public interface DatasetDAO {
 
   public List<DsViewDimEntity> selectDatasetDsViewDim();
 
+  public List<DsViewColEntity> selectDatasetDsViewCol(int dsViewId);
 }

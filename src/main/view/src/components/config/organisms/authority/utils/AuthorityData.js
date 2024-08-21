@@ -34,11 +34,13 @@ const generatePutDataAxios = async (currentTab, data) => {
         .map((cube) => ({
           cubeId: cube?.cubeId,
           dsViewDim: cube?.dsViewDim?.map((c) => {
-            const match = c.dimDimUniNm.match(/\[(.*?)\]/);
+            const match = (c.hieUniNm || c.dimDimUniNm)
+                .match(/\[(.*?)\].\[(.*?)\]/);
             return {
               dsViewId: c.dsViewId,
               cubeId: c.cubeId,
-              dimDimUniNm: match ? match[1] : ''
+              dimDimUniNm: match[1],
+              hieUniNm: match[2]
             };
           })
         }))
