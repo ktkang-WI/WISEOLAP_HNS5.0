@@ -8,7 +8,7 @@ import {getWorkbookJSON,
 }
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useSelector} from 'react-redux';
-import {selectCurrentSpreadData}
+import {selectBindingInfos, selectCurrentSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
@@ -16,6 +16,8 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import {selectCurrentConfigure} from 'redux/selector/ConfigSelector';
+import useModal from 'hooks/useModal';
+import localizedString from 'config/localization';
 
 const theme = getTheme();
 
@@ -50,17 +52,35 @@ const SpreadBoard = () => {
     bindData,
     hnsDrmUpload
   } = useSpread();
+  const {alert} = useModal();
   const {setRibbonSetting} = useSpreadRibbon();
   const currentReportId = useSelector(selectCurrentReportId);
   const spreadData = useSelector(selectCurrentSpreadData);
   const config = useSelector(selectCurrentConfigure);
+  const bindingInfos = useSelector(selectBindingInfos);
+
+  const checkValidate = (datasets) =>{
+    const noDataDatasetNms = [];
+    datasets.map((dataset) => {
+      if (spreadData[dataset].rowData.length == 0) {
+        noDataDatasetNms.push(bindingInfos[dataset].datasetNm);
+      }
+    });
+    return noDataDatasetNms.toString();
+  };
 
   useEffect(() => {
     setDesignerRef(spreaRef);
   }, []);
 
+
   useEffect(() => {
-    if (Object.keys(spreadData).length > 0) {
+    const datasets = Object.keys(spreadData);
+    if (datasets.length > 0) {
+      if (checkValidate(datasets) !== '') {
+        alert(localizedString.spreadNoData + checkValidate(datasets) + ')');
+      }
+
       bindData(spreadData);
     }
   }, [spreadData]);
