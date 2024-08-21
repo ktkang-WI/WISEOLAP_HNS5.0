@@ -60,15 +60,6 @@ const DownloadDefaultElement = () => {
     return items;
   };
 
-  const checkItemInit = () => {
-    const res = currentItem.every(({mart}) => mart.init);
-    if (!res) {
-      alert(localizedString.downloadNeedViewItemsMsg);
-    }
-
-    return res;
-  };
-
   return {
     download: [
       {
@@ -81,10 +72,6 @@ const DownloadDefaultElement = () => {
             onClick: () => {
               if (!checkExecuteQuery()) {
                 alert('조회 후 다운로드를 진행해 주세요.');
-                return;
-              }
-
-              if (!checkItemInit()) {
                 return;
               }
 
@@ -107,10 +94,6 @@ const DownloadDefaultElement = () => {
             onClick: () => {
               if (!checkExecuteQuery()) {
                 alert('조회 후 다운로드를 진행해 주세요.');
-                return;
-              }
-
-              if (!checkItemInit()) {
                 return;
               }
 
@@ -142,10 +125,6 @@ const DownloadDefaultElement = () => {
                 return;
               }
 
-              if (!checkItemInit()) {
-                return;
-              }
-
               const newCurrentItem = filterdLayoutItem();
               const option = {
                 mergeColumn: true,
@@ -166,10 +145,6 @@ const DownloadDefaultElement = () => {
             onClick: () => {
               if (!checkExecuteQuery()) {
                 alert('조회 후 다운로드를 진행해 주세요.');
-                return;
-              }
-
-              if (!checkItemInit()) {
                 return;
               }
 
@@ -226,10 +201,6 @@ const DownloadDefaultElement = () => {
                 return;
               }
 
-              if (!checkItemInit()) {
-                return;
-              }
-
               exportImg(currentReport,
                   currentReport?.options?.reportNm || defaultReportName);
             }
@@ -246,10 +217,6 @@ const DownloadDefaultElement = () => {
             onClick: () => {
               if (!checkExecuteQuery()) {
                 alert('조회 후 다운로드를 진행해 주세요.');
-                return;
-              }
-
-              if (!checkItemInit()) {
                 return;
               }
 

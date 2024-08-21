@@ -11,6 +11,8 @@ export class ItemDownload {
     reportId
   }) {
     this.imgDownloadExcept = [
+      'pivot',
+      'grid',
       'card',
       'liquidFillGauge',
       'calendar',
@@ -100,7 +102,7 @@ export class ItemDownload {
 
   #exportExceptionHandle = (pickItem) => {
     let isOk = false;
-    if (!pickItem) {
+    if (!pickItem || pickItem.data.length == 0) {
       isOk = false;
       return isOk;
     }

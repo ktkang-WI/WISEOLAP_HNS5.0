@@ -261,7 +261,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
 
     const isDownloadable = !ignoreDownload.includes(item?.type);
     const isImgDownloadable = imgDownloadExcept.includes(item?.type);
-    const isImg = !['grid', 'pivot'].includes(type);
+    const isImg = ['grid', 'pivot'].includes(type);
 
     const downloadButton = isDownloadable ? (
       <button key="download" title={localizedString.downloadReport}>
