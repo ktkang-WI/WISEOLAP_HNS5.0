@@ -42,10 +42,10 @@
       "dxList-pulledDownText": "Release to refresh...",
       "dxList-refreshingText": "Refreshing...",
       "dxList-pageLoadingText": "Loading...",
-      "dxList-nextButtonText": "More",
+      "dxList-nextButtonText": "더보기",
       "dxList-selectAll": "Select All",
       "dxListEditDecorator-delete": "Delete",
-      "dxListEditDecorator-more": "More",
+      "dxListEditDecorator-more": "더보기",
 
       "dxScrollView-pullingDownText": "Pull down to refresh...",
       "dxScrollView-pulledDownText": "Release to refresh...",
