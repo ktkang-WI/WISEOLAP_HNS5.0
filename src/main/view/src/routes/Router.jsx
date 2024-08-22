@@ -114,7 +114,7 @@ const router = createBrowserRouter([
   {
     path: contextPath + '/linkviewer',
     element: <LinkViewer/>,
-    loader: generalLoader
+    loader: multipleLoader
   },
   {
     path: contextPath + '',

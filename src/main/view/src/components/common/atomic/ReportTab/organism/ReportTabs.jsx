@@ -16,6 +16,7 @@ import {useSelector} from 'react-redux';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectReports} from 'redux/selector/ReportSelector';
 import useModal from 'hooks/useModal';
+import {connectLinkedReport} from 'components/report/util/LinkedReportUtility';
 
 const theme = getTheme();
 
@@ -70,6 +71,15 @@ const ReportTabs = ({reportData}) => {
                 alert(localizedString.duplicatedReportMsg);
                 return;
               }
+            }
+
+            if (editMode == EditMode.VIEWER &&
+              selectedReport.reportType == 'Excel') {
+              connectLinkedReport({
+                reportId: selectedReport.id,
+                reportType: selectedReport.reportType
+              });
+              return;
             }
 
             models.Report.getReportById(selectedReport.id)
