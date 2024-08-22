@@ -47,7 +47,7 @@ public class LoginFilter implements Filter{
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
             "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**",
-            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/likviewer**"
+            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**"
         };
 
         boolean useFilter = true;
