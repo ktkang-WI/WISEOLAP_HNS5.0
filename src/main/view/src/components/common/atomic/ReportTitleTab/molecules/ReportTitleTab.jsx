@@ -3,6 +3,8 @@ import ReportTitlePanel from '../../Common/Panel/ReportTitlePanel';
 import ReportTitleText from '../atom/ReportTitleText';
 import closeImg from 'assets/image/icon/button/close.png';
 import closeImg2 from 'assets/image/icon/button/close_disable.png';
+import {useSelector} from 'react-redux';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
 
 
 const DeleteButton = styled.div`
@@ -21,10 +23,15 @@ const DeleteButton = styled.div`
 const ReportTitleTab = ({
   children, height, onClick, onDelete, selected, title
 }) => {
+  const editMode = useSelector(selectEditMode);
   return (
     <ReportTitlePanel selected={selected} height={height} title={title}>
       <div style={{width: 'inherit', overflow: 'hidden'}}>
-        <ReportTitleText selected={selected} onClick={onClick}>
+        <ReportTitleText
+          selected={selected}
+          onClick={onClick}
+          editMode={editMode}
+        >
           {children}
         </ReportTitleText>
       </div>
