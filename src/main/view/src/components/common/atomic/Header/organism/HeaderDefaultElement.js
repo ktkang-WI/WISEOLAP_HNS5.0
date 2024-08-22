@@ -112,7 +112,7 @@ const HeaderDefaultElement = () => {
     'ReportTabs': {
       'id': 'report_tabs',
       'type': 'ReportTabs',
-      'width': 'calc(100% - 130px)'
+      'width': 'calc(100vw - 130px)'
     },
     'NewWindow': {
       'id': 'new_window',

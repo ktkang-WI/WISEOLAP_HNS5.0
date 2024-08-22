@@ -60,6 +60,14 @@ const ReportTabs = ({reportData}) => {
         }, 300);
 
         if (dblClick > 1) {
+          if (editMode === EditMode['VIEWER']) {
+            // 뷰어 보고서 갯수 제한(5개 까지)
+            if (reports.length >= 6) {
+              alert(localizedString.viewerReportLimit);
+              return;
+            }
+          }
+
           const selectedReport = e.itemData;
           if (selectedReport && selectedReport.type == 'REPORT') {
             if (editMode == EditMode.VIEWER) {

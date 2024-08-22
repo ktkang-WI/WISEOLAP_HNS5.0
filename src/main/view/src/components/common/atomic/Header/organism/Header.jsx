@@ -101,7 +101,7 @@ const Header = ({left, middle, right}) => {
           cursor={item.cursor}
           onClick={item.onClick}
         >
-          <HeaderLogoImage height={item.height}/>
+          <HeaderLogoImage id={item.id} height={item.height}/>
         </HeaderPanel>
       );
     } else if (item.type === 'ReportTab') {

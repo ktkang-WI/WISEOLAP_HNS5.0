@@ -9,9 +9,9 @@ const StyeldImage = styled.img`
 `;
 
 // TODO: 추후 환경설정에서 이미지 경로 불러와야 함.
-const HeaderLogoImage = () => {
+const HeaderLogoImage = ({id}) => {
   return (
-    <StyeldImage src={logo}/>
+    <StyeldImage id={id} src={logo}/>
   );
 };
 

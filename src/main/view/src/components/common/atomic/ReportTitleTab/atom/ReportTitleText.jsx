@@ -12,6 +12,8 @@ const ReportTitleText = styled.div`
   cursor: pointer;
   text-wrap: nowrap;
   user-select: text;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 export default ReportTitleText;

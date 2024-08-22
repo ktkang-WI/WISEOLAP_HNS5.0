@@ -19,18 +19,22 @@ const DeleteButton = styled.div`
 `;
 
 const ReportTitleTab = ({
-  children, height, onClick, onDelete, selected
+  children, height, onClick, onDelete, selected, title
 }) => {
   return (
-    <ReportTitlePanel selected={selected} height={height}>
-      <ReportTitleText selected={selected} onClick={onClick}>
-        {children}
-      </ReportTitleText>
+    <ReportTitlePanel selected={selected} height={height} title={title}>
+      <div style={{width: 'inherit', overflow: 'hidden'}}>
+        <ReportTitleText selected={selected} onClick={onClick}>
+          {children}
+        </ReportTitleText>
+      </div>
       {
         onDelete &&
-        <DeleteButton onClick={onDelete}>
-          <img src={selected ? closeImg : closeImg2}/>
-        </DeleteButton>
+        <div>
+          <DeleteButton onClick={onDelete}>
+            <img src={selected ? closeImg : closeImg2}/>
+          </DeleteButton>
+        </div>
       }
     </ReportTitlePanel>
   );
