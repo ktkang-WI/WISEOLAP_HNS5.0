@@ -40,7 +40,6 @@ public class SessionUtility {
     private final static int SESSION_TIME = 3600;
 
     private static UserDTO getSessionUser(HttpSession session) {
-        System.out.println(session.getAttribute(SESSION_KEY));
         return (UserDTO)session.getAttribute(SESSION_KEY);
     }
     

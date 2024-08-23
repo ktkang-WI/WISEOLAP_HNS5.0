@@ -617,8 +617,8 @@
   "editContainerName": "Edit container name",
   "minContainerMsg": "At least one container must be present.",
   "downloadNeedViewItemsMsg": "You can download it after viewing all items.",
-  "requiredRowColumn": "All data items rows and columns are required.",
   "spreadNoData": "There is no data. (Dataset with no data: ",
   "pointMakerExplain": "* Point marker display is applied to point/line series and area series (excluding bubbles).",
-  "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements."
+  "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements.",
+  "viewerReportLimit": "You can view up to 5 viewer reports."
 }

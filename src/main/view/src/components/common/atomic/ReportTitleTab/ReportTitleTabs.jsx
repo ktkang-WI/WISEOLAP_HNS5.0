@@ -10,21 +10,25 @@ import useReportSave from 'hooks/useReportSave';
 import {EditMode} from 'components/config/configType';
 import {deleteWorkbookJSON}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import {useEffect, useState} from 'react';
 
 const Wrapper = styled.div`
-  width: calc(100vw - 500px);
+  width: calc(100vw - ${(props) => props.width}px);
   height: 54px;
   display: flex;
   min-width: 200px;
   // position: absolute;
   top: 8px;
   left: 350px;
+  flex-wrap: nowrap; /* 줄넘김을 하지 않도록 설정 */
+  box-sizing: border-box;
 `;
 
 // TODO: 추후 데이터 연동시 수정 예정
 const ReportTitleTabs = () => {
   const dispatch = useDispatch();
   const {closeReport} = useReportSave();
+  const [distance, setDistance] = useState(0);
 
   let reports = useSelector(selectReports);
   const selectedReportId = useSelector(selectCurrentReportId);
@@ -46,10 +50,27 @@ const ReportTitleTabs = () => {
     }
   };
 
+  useEffect(() => {
+    let widthSum = 0;
+    const leftRight =
+      ['designer', 'downLoadReport', 'user_info_popover', 'save_as'];
+
+    leftRight.map((id) => {
+      const element = document.getElementById(id);
+      const rect = element.getBoundingClientRect();
+      widthSum += rect.width;
+    });
+    // 로고 길이 까지
+    setDistance(widthSum + 110);
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper
+      width={distance}
+    >
       {reports.map((report) =>
         <ReportTitleTab
+          title={report.options.reportNm}
           key={report.reportId}
           onClick={() => onClick(report)}
           onDelete={
