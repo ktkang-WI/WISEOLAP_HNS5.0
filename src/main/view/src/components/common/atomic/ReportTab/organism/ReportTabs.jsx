@@ -73,10 +73,10 @@ const ReportTabs = ({reportData}) => {
             }
 
             models.Report.getReportById(selectedReport.id)
-                .then(({data}) => {
+                .then(async ({data}) => {
                   try {
                     dispatch(setDesignerMode(selectedReport.reportType));
-                    loadReport(data);
+                    await loadReport(data);
                     if (editMode == EditMode.VIEWER) {
                       querySearch();
                     }
