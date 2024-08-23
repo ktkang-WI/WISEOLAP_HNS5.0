@@ -88,7 +88,7 @@ public class GroupDataService {
         for (DsViewDimDTO cubeDim : dataModel.getDsViewDim()) {
           xmlGenerator.createElement(dimXML);
           xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
-          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
+          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"].[" + cubeDim.getHieUniNm() + "]");
         }
       }
       

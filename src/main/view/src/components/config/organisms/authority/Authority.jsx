@@ -350,6 +350,7 @@ const Authority = () => {
       }
       setAction((prev) => !prev);
     } catch (error) {
+      console.error(error);
       alert(localizedString.saveFail);
     }
   };

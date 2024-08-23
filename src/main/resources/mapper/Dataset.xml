@@ -53,6 +53,15 @@
 	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
 	  <result column="DIM_CAPTION" property="dimCaption" javaType="String"/>
 	  <result column="DIM_UNI_NM" property="dimDimUniNm" javaType="String"/>
+    <result column="TBL_NM" property="tblNm" javaType="String"/>
+	</resultMap>
+
+  <resultMap id="DatasetDsViewColMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsViewColEntity">
+	  <result column="DS_VIEW_ID" property="dsViewId" javaType="int"/>
+	  <result column="DIM_UNI_NM" property="dimUniNm" javaType="String"/>
+	  <result column="HIE_UNI_NM" property="hieUniNm" javaType="String"/>
+    <result column="HIE_CAPTION" property="hieCaption" javaType="String"/>
+    <result column="PARENT_ID" property="parentId" javaType="String"/>
 	</resultMap>
 
 	<resultMap id="UserUploadMstr" type="com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity">
@@ -199,8 +208,19 @@
 			SELECT 
 				DS_VIEW_DIM_MSTR.DS_VIEW_ID,
 				DS_VIEW_DIM_MSTR.DIM_CAPTION,
-				DS_VIEW_DIM_MSTR.DIM_UNI_NM
+				DS_VIEW_DIM_MSTR.DIM_UNI_NM,
+        DS_VIEW_DIM_MSTR.TBL_NM
 					FROM DS_VIEW_DIM_MSTR
+		</select>
+
+    <select id="selectDatasetDsViewCol" parameterType="int" resultMap="DatasetDsViewColMstr">
+			SELECT
+        DS_VIEW_ID,
+        DIM_UNI_NM,
+        HIE_UNI_NM,
+        HIE_CAPTION
+      FROM DS_VIEW_HIE_MSTR
+      WHERE DS_VIEW_ID = #{dsViewId}
 		</select>
   	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
 	    SELECT

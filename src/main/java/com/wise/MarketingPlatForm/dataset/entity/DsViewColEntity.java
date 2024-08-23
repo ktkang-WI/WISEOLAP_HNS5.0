@@ -1,4 +1,4 @@
-package com.wise.MarketingPlatForm.auth.entity;
+package com.wise.MarketingPlatForm.dataset.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthDataEntity {
-    int grpId;
-    String userId;
-    int userNo;
-    String dataXmlBase64;
+public class DsViewColEntity {
+  int dsViewId;
+  String dimUniNm;
+  String hieUniNm;
+  String hieCaption;
+  String parentId;
 }

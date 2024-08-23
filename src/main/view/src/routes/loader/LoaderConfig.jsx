@@ -83,6 +83,7 @@ export async function authorityLoader() {
   // DS_VIEW_DIM_MSTR
   const dsViewDim =
     await models.Authority.getDsViewDim().then((res) => getData(res));
+
   return {
     userData,
     groupData,

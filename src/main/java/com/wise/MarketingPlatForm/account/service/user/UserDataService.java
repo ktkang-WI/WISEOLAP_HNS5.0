@@ -3,7 +3,6 @@ package com.wise.MarketingPlatForm.account.service.user;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
@@ -38,7 +37,7 @@ public class UserDataService {
     List<UserDataDTO> userGroupDTO = accountDAO.selectUserData();
 
     List<UserDataModel> userDataModel = generateUserDataObject(userGroupDTO);
-
+                                                                                                                                                                                                                                                                                                                                                              
     return userDataModel;
   }
 
@@ -90,7 +89,7 @@ public class UserDataService {
         for (DsViewDimDTO cubeDim : dataModel.getDsViewDim()) {
           xmlGenerator.createElement(dimXML);
           xmlGenerator.createElement(dimXML, "DS_VIEW_ID", cubeDim.getDsViewId());
-          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"]");
+          xmlGenerator.createElement(dimXML, "DIM_UNI_NM", "["+cubeDim.getDimDimUniNm()+"].[" + cubeDim.getHieUniNm() + "]");
         }
       }
 

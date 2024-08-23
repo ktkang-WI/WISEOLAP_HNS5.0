@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.wise.MarketingPlatForm.dataset.type.DsType;
@@ -15,7 +14,6 @@ import com.wise.MarketingPlatForm.report.domain.data.DataSanitizer;
 import com.wise.MarketingPlatForm.report.domain.data.custom.DataPickUpMake;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
-import com.wise.MarketingPlatForm.report.domain.data.data.TopBottomInfo;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
