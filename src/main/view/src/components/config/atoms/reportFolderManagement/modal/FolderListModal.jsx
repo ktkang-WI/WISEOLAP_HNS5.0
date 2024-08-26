@@ -67,7 +67,8 @@ const FolderListModal = ({myPageFlag, ...props}) => {
     if (props.type === 'report') {
       newRow = {
         fldId: row.fldId,
-        fldNm: row.fldNm
+        fldNm: row.fldNm,
+        fldParentNm: row.fldNm
       };
     } else {
       newRow = {
