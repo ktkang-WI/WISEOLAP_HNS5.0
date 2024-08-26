@@ -24,9 +24,8 @@ export const generateAxios = async (currentTab, data) => {
 const generatePutDataAxios = async (currentTab, data) => {
   const dataSetMode =
     currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
-  const filterDatas = data.filter((d) => d.datas.length > 0);
   // TODO: 차원값 내부 [] <- 값으로 인하여 해당 함수 존재. 추후 [] 내부값이 필요없을 경우 삭제 필요
-  const filteredData = filterDatas.map((d) => ({
+  const filteredData = data.map((d) => ({
     ...getDataObjectOfUserOrGroup(dataSetMode, (d.grpId || d.userNo)),
     datas: d.datas
         .filter((f) =>
@@ -53,17 +52,15 @@ const generatePutDataAxios = async (currentTab, data) => {
 };
 
 const generatePutDsAxios = async (currentTab, data) => {
-  const filteredData = data.filter((item) => item.dsIds.length > 0);
   const res = axios.put(currentTab, {
-    data: filteredData
+    data
   });
   return res;
 };
 
 const generatePutDataSetAxios = async (currentTab, data) => {
-  const filteredData = data.filter((item) => item.fldId.length > 0);
   const res = axios.put(currentTab, {
-    data: filteredData
+    data: data
   });
   return res;
 };
