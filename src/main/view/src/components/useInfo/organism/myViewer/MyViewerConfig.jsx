@@ -17,8 +17,9 @@ const MyViewerConfig = () => {
   const defaultReport = [
     {
       id: {id: 'defaultViewerReportId', requiredNm: 'defaultViewerReportNm'},
-      title: localizedString.defaultReport,
+      title: '뷰어',
       label: localizedString.defaultReport,
+      btnLabel: '설정',
       type: 'favorit'
     }
   ];

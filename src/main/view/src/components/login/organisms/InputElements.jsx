@@ -98,7 +98,6 @@ const InputElements = () => {
             localStorage.setItem('sessionId', e.event.target.value);
           }
         }
-        console.log(e);
       },
       onKeyDown: (e) => {
         if (e.event.key == ' ') {

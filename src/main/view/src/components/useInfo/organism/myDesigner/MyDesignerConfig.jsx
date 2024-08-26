@@ -55,10 +55,18 @@ const MyDesignerConfig = () => {
       initDisplay: config.defaultDisplay?.initDisplay || ''
     };
 
+    const defaultMaxReportQueryPeriod = {
+      check: false,
+      period: 2
+    };
+
     const saveConfig = {
       ...config,
       defaultItem: JSON.stringify(defaultItem).trim(),
-      maxReportQueryPeriod: JSON.stringify(config.maxReportQueryPeriod).trim()
+      maxReportQueryPeriod:
+        JSON.stringify(
+            config.maxReportQueryPeriod || defaultMaxReportQueryPeriod
+        ).trim()
     };
 
     delete saveConfig.defaultLayout;

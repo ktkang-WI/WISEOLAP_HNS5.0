@@ -101,7 +101,7 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
               // itemId 객체인 경우 = Name도 필요한 경우
               onClick={() => handleClick(item.title, item.id)}
             >
-              {item.label}
+              {item.btnLabel}
             </CommonButton>
           </>
         );
