@@ -86,11 +86,12 @@ export class Report {
   reportTag = '';
   reportDesc = '';
   fldParentNm = '';
+  promptYn = true;
 
   constructor({reportId = 0, reportNm = '', reportSubTitle = '', fldId = 0,
     fldLvl = 0, fldNm = '', fldParentId = 0, fldType = 'PUBLIC',
     reportOrdinal = 0, reportType ='', reportTag = '',
-    reportDesc = '', fldParentNm = ''}) {
+    reportDesc = '', fldParentNm = '', promptYn = true}) {
     this.reportId = reportId;
     this.reportNm = reportNm;
     this.reportSubTitle = reportSubTitle;
@@ -104,6 +105,7 @@ export class Report {
     this.reportTag = reportTag;
     this.reportDesc = reportDesc;
     this.fldParentNm = fldParentNm;
+    this.promptYn = promptYn;
   }
 
   updateReport = () => {
@@ -116,7 +118,8 @@ export class Report {
       reportOrdinal: this.reportOrdinal,
       reportType: this.reportType,
       reportTag: this.reportTag,
-      reportDesc: this.reportDesc
+      reportDesc: this.reportDesc,
+      promptYn: this.promptYn
     };
     const res = axios.patch(reportPath + '/update', null, {params: report});
     return res;

@@ -30,4 +30,6 @@ public class ReportListDTO {
     String reportTag;
     String reportDesc;
     String dataset;
+    @Builder.Default
+    String promptYn = "Y";
 }

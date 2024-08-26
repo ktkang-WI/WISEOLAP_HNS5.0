@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.config.controller.folder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO;
+import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportModel;
 import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderReportService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +27,30 @@ public class ConfigFolderReportController {
   @GetMapping
   public ResponseEntity<RestAPIVO> getConfigFolderReportData() throws Exception {
 
-    List<ConfigFolderReportDTO> model = configFolderReportService.getConfigFolderReportData();
+    List<ConfigFolderReportDTO> configFolderReportDtoList = configFolderReportService.getConfigFolderReportData();
+    List<ConfigFolderReportModel> model = new ArrayList<ConfigFolderReportModel>();
+
+    for (ConfigFolderReportDTO configFolderReportDTO : configFolderReportDtoList) {
+      ConfigFolderReportModel configFolderReportModel = ConfigFolderReportModel.builder()
+      .fldId(configFolderReportDTO.getFldId())
+      .fldNm(configFolderReportDTO.getFldNm())
+      .fldLvl(configFolderReportDTO.getFldLvl())
+      .fldParentId(configFolderReportDTO.getFldParentId())
+      .fldOrdinal(configFolderReportDTO.getFldOrdinal())
+      .reportId(configFolderReportDTO.getReportId())
+      .reportNm(configFolderReportDTO.getReportNm())
+      .reportSubTitle(configFolderReportDTO.getReportSubTitle())
+      .userId(configFolderReportDTO.getUserId())
+      .regDt(configFolderReportDTO.getRegDt())
+      .reportTag(configFolderReportDTO.getReportTag())
+      .reportOrdinal(configFolderReportDTO.getReportOrdinal())
+      .reportDesc(configFolderReportDTO.getReportDesc())
+      .reportType(configFolderReportDTO.getReportType())
+      .promptYn(configFolderReportDTO.getPromptYn().equals("Y") ? true : false)
+      .build();
+
+      model.add(configFolderReportModel);
+    }
 
     if (model == null) return RestAPIVO.conflictResponse(null);
 

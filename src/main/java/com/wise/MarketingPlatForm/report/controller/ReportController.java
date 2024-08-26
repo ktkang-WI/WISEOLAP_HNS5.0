@@ -433,7 +433,8 @@ public class ReportController {
       @RequestParam(required = false, defaultValue = "") int reportOrdinal,
       @RequestParam(required = false, defaultValue = "") String reportType,
       @RequestParam(required = false, defaultValue = "") String reportTag,
-      @RequestParam(required = false, defaultValue = "") String reportDesc
+      @RequestParam(required = false, defaultValue = "") String reportDesc,
+      @RequestParam(required = false, defaultValue = "Y") boolean promptYn
     ) throws Exception {
     
       ReportMstrEntity reportMstr = ReportMstrEntity.builder()
@@ -446,6 +447,7 @@ public class ReportController {
           .reportType(reportType)
           .reportDesc(reportDesc)
           .reportTag(reportTag)
+          .promptYn(promptYn ? "Y" : "N")
           .build();
     
       boolean result = reportService.patchConfigReport(reportMstr);

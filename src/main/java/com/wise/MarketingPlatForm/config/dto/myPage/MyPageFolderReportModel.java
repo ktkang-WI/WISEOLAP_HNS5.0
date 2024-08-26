@@ -1,7 +1,6 @@
 package com.wise.MarketingPlatForm.config.dto.myPage;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyPageFolderReportDTO {
+public class MyPageFolderReportModel {
   int userNo;
   int id;
   String name;
@@ -27,8 +26,7 @@ public class MyPageFolderReportDTO {
   String desc;
   String query;
   String createdDate;
-  @Builder.Default
-  String prompt = "Y";
+  boolean prompt;
   String createdBy;
   List<Integer> ids;
   String datasetXml;

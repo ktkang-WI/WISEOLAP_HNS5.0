@@ -437,6 +437,9 @@ const RibbonDefaultElement = () => {
       'id': 'query_search',
       'label': localizedString.querySearch,
       'type': 'CommonButton',
+      'themeType': (currentReport.options.promptYn === 'Y') &&
+      (!rootItem.items[0].mart.data.data) ?
+        'red' : 'secondary',
       'icon': querySearchIcon,
       'width': '83px',
       'height': '30px',
