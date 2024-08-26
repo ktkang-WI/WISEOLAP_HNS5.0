@@ -49,8 +49,6 @@ const LoadReportModal = ({...props}) => {
     models.Report.getReportById(selectedReport.id)
         .then(async ({data}) => {
           try {
-            console.log(selectedReport);
-            console.log(data);
             await loadReport(data);
             if (selectedReport.promptYn === 'N') {
               querySearch();
