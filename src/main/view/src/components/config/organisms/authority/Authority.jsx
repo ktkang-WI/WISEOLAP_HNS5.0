@@ -4,7 +4,6 @@ import React,
 {createContext, useEffect, useMemo, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import DataAuthority from './dataAuthority/DataAuthority';
-import DatasetAuthority from './datasetAuthority/DatasetAuthority';
 import DatasourceAuthority from './datasourceAuthority/DatasourceAuthority';
 import ReportAuthority from './reportAuthority/ReportAuthority';
 import {generateAxios, generateGetAxios} from './utils/AuthorityData';
@@ -55,14 +54,6 @@ const tabItems = [
     component: ReportAuthority
   },
   {
-    value: path.GROUP_DATASET,
-    text: localizedString.groupDataset,
-    props: {
-      mainKey: path.GROUP_DATASET
-    },
-    component: DatasetAuthority
-  },
-  {
     value: path.GROUP_DATASOURCE,
     text: localizedString.groupDatasource,
     props: {
@@ -85,14 +76,6 @@ const tabItems = [
       mainKey: path.USER_REPORT
     },
     component: ReportAuthority
-  },
-  {
-    value: path.USER_DATASET,
-    text: localizedString.userDataset,
-    props: {
-      mainKey: path.USER_DATASET
-    },
-    component: DatasetAuthority
   },
   {
     value: path.USER_DATASOURCE,
