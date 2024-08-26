@@ -51,6 +51,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   let seriesOptions = null;
   // TODO:  임시용 코드
   if (dataFields.seriesOptions) seriesOptions = dataFields.seriesOptions;
+
   const {
     auxiliaryAxis,
     ignoreEmptyPoints,
@@ -74,6 +75,18 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   const seriesNames = mart.data.info.seriesMeasureNames;
   const interactiveOption = meta.interactiveOption || {};
+  const measures = dataFields.measure;
+  const seriesMeasurse = mart.data.info.seriesMeasureNames;
+  const visibleMeasureIds = Array.from(
+      new Set(seriesMeasurse.map(({fieldId}) => fieldId)));
+
+  const formats = measures.reduce((acc, mea) => {
+    if (visibleMeasureIds.includes(mea.fieldId)) {
+      acc.push(mea.format);
+    }
+
+    return acc;
+  }, []);
 
   const onPointClick = ({target, component}) => {
     if (!interactiveOption.enabled) return;
@@ -150,7 +163,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         dataSource={mart.data.data}
         width="100%"
         height="100%"
-        customizeLabel={(o) => customizeLabel(o, mart.formats)}
+        customizeLabel={(o) => customizeLabel(o, formats)}
         resolveLabelOverlapping={overlapping}
         palette={meta?.palette?.name} // Dev Default blend
         id={id}
@@ -217,24 +230,25 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           enabled={true}
           location='edge'
           customizeTooltip={
-            (info) => customizeTooltip(info, false, mart.formats)
+            (info) => customizeTooltip(info, false, formats)
           }
         ></Tooltip>
         {
           seriesNames.map(
               (valueField, i) => {
-                const option =seriesOptions.find(
+                const option = seriesOptions.find(
                     (series) => series.fieldId == valueField.fieldId
                 );
 
                 return <Series
                   axis={getAuxiliaryAxis(valueField.fieldId, seriesOptions)}
-                  key={valueField.summaryName+'-'+i}
+                  key={valueField.summaryName + '-' + i}
                   valueField={valueField.summaryName}
                   argumentField='arg'
                   tag={{
                     fieldId: valueField.fieldId,
-                    math: Math.floor(i / mart.seriesLength)
+                    math: visibleMeasureIds.findIndex(
+                        (id) => id == valueField.fieldId)
                   }}
                   name={valueField.caption || '\u2800'}
                   type={getSeriesOptionType(valueField.fieldId, seriesOptions)}
