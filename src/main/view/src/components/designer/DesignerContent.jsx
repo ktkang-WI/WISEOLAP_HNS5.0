@@ -13,11 +13,14 @@ import ItemBoards from
   'components/report/atomic/ItemBoard/organisms/ItemBoards';
 import {getTheme} from 'config/theme';
 import useDrag from 'hooks/useDrag';
+import {useState} from 'react';
 
 const theme = getTheme();
 
 const DesignerContent = () => {
   const {onDragEnd, onDragStart} = useDrag();
+  const [fullscreen, setFullscreen] = useState(false);
+
   return (
     <Content
       snbWidth={theme.size.snbWidth}
@@ -27,9 +30,14 @@ const DesignerContent = () => {
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
           <CustomDrawer index={1} component={AttributeTabs} margin={'0px'}>
-            <Wrapper>
+            <Wrapper className={fullscreen ? 'full-screen' : ''}>
               <ReportContentWrapper>
-                <FilterBar/>
+                <FilterBar
+                  fullscreen={fullscreen}
+                  useSearchButton={fullscreen}
+                  useFullscreenButton={true}
+                  handleFullscreen={() => setFullscreen(!fullscreen)}
+                />
                 <ItemBoards/>
               </ReportContentWrapper>
             </Wrapper>

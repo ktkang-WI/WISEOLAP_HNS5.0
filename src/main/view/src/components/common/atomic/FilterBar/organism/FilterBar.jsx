@@ -2,6 +2,8 @@ import {styled, css} from 'styled-components';
 import React, {useState} from 'react';
 import {getTheme} from 'config/theme';
 import filterImg from 'assets/image/icon/report/filter.png';
+import fullscreenImg from 'assets/image/icon/button/fullscreen.png';
+import smallscreenImg from 'assets/image/icon/button/smallscreen.png';
 import expandImg from 'assets/image/icon/button/expand.png';
 import FilterBarWrapper from '../molecules/FilterBarWrapper';
 import ribbonDefaultElement from '../../Ribbon/organism/RibbonDefaultElement';
@@ -45,7 +47,14 @@ const ButtonWrapper = styled.div`
 `;
 
 
-const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
+const FilterBar = ({
+  buttons,
+  useExpandButton=true,
+  useSearchButton=false,
+  useFullscreenButton=false,
+  fullscreen = false,
+  handleFullscreen = () => {}
+}) => {
   const [isExpand, setIsExpand] = useState(!useExpandButton);
   const queryButton = ribbonDefaultElement()['QuerySearch'];
   const {querySearch} = useReportSave();
@@ -91,8 +100,18 @@ const FilterBar = ({buttons, useExpandButton=true, useSearchButton=false}) => {
           }
         </ButtonWrapper>
       }
+      {useFullscreenButton &&
+        <FilterBarBtn
+          title={fullscreen ? '작게 보기' : '전체 화면'}
+          isExpand={isExpand}
+          width={'20px'}
+          onClick={handleFullscreen}>
+          <Img src={fullscreen ? smallscreenImg : fullscreenImg}/>
+        </FilterBarBtn>
+      }
       {useExpandButton &&
         <FilterBarBtn isExpand={isExpand}
+          title={'필터 펼치기'}
           onClick={() => setIsExpand(!isExpand)}>
           <Img src={filterImg}/>
         </FilterBarBtn>

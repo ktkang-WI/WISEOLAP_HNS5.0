@@ -6,8 +6,8 @@ const theme = getTheme();
 // eslint-disable-next-line max-len
 const FilterBarBtn = ({width, children, isExpand, justifyContent, ...props}) => {
   const BtnWrapper = styled.div`
-    width: ${width || '40px'};
-    min-width: ${width || '40px'};
+    width: ${width || '30px'};
+    min-width: ${width || '30px'};
     display: flex;
     height: ${isExpand ? 'auto' : theme.size.filterBarHeight};
     flex-direction: row;
