@@ -66,7 +66,34 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
 
   const getFormats = useCallback(() => {
     const targets = dataField.measure.concat(dataField.sortByItem);
-    const formats = targets.map((item) => item.format);
+
+    let formats;
+    if (adHocOption?.gridAttribute) {
+      const visibledMeasure = new Set();
+
+      for (const key in adHocOption.gridAttribute) {
+        if (adHocOption.gridAttribute[key].gridVisibility) {
+          visibledMeasure.add(key);
+        }
+      }
+
+      formats = targets.reduce((acc, item) => {
+        let key = '';
+        if (item.summaryType) {
+          key = item.summaryType + '_' + item.name;
+        } else {
+          key = item.name;
+        }
+
+        if (visibledMeasure.has(key)) {
+          acc.push(item.format);
+        }
+
+        return acc;
+      }, []);
+    } else {
+      formats = targets.map((item) => item.format);
+    }
 
     (adHocOption?.variationValues || []).forEach((v) => {
       const target = targets.find((m) => m.fieldId == v.targetId);
@@ -79,6 +106,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
             {variationValueType: v.type}));
       }
     });
+
+    console.log(formats);
 
     return formats;
   }, [mart]);
@@ -131,6 +160,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, [meta.dataHighlight]);
 
   const onCellPrepared = ({cell, area, cellElement}) => {
+    console.log(cell.dataIndex);
     if (area == 'data' && cell.dataType && cell.value) {
       const formats = getFormats();
       const formData = formats[cell.dataIndex];

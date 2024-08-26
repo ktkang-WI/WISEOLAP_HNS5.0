@@ -198,6 +198,7 @@ const useQueryExecute = () => {
 
           item.mart.init = true;
           item.mart.data = data;
+          item.mart.toggle = ((item.mart.toggle || 0) + 1) % 10;
 
           if (nullDataCheck(item)) {
             alert(`${item?.meta?.name}${localizedString.noneData}`);

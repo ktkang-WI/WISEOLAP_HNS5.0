@@ -76,7 +76,6 @@ const generateItem = (item, param, rootItem) => {
   const measures = dataField.measure;
   const meaLength = measures.length;
   item.mart.seriesLength = data.info.seriesMeasureNames.length / meaLength;
-  item.mart.formats = measures.map((mea) => mea.format);
 };
 
 /**
