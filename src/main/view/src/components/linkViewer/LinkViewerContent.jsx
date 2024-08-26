@@ -106,8 +106,8 @@ const LinkViewerContent = ({children}) => {
                 <ReportContent>
                   {report && report.reportId != 0 &&
                     (report.options.reportType == 'Excel' ?
-                      <SpreadViewer /> :
-                      <ItemBoards/>)
+                      <SpreadViewer reportId={report.reportId} /> :
+                      <ItemBoards reportId={report.reportId}/>)
                   }
                 </ReportContent>
               </ReportContentWrapper>

@@ -14,14 +14,20 @@ import SpreadSlice from 'redux/modules/SpreadSlice';
 const theme = getTheme();
 
 const StyledWrapper = styled(Wrapper)`
-  height: calc(100% - 25px);
+  height: 100%;
   width: calc(100% - 10px);
   flex: 1;
   background: #f5f6fa;
   min-height: 0px;
+  overflow: hidden;
   border: 1px solid ${theme.color.gray200};
   border-radius: 10px;
   text-align: left;
+`;
+
+const SpreadWrapper = styled.div`
+  height: calc(100% - 25px);
+  width: 100%;
 `;
 
 const StatusBar = styled('div')`
@@ -90,20 +96,25 @@ const SpreadViewer = ({reportId}) => {
     <StyledWrapper
       className='section board'
     >
-      <SpreadSheets
-        ref={workbookRef}
-        workbookInitialized={(spread) => {
-          spread.options.allowCopyPasteExcelStyle = false;
-          spread.options.allowExtendPasteRange = true;
-          spread.options.incrementalCalculation = true;
-          spread.options.iterativeCalculation = true;
-          spread.options.iterativeCalculationMaximumIterations = 100;
+      <SpreadWrapper>
+        <SpreadSheets
+          style={{
+            height: 'calc(100% - 25px)'
+          }}
+          ref={workbookRef}
+          workbookInitialized={(spread) => {
+            spread.options.allowCopyPasteExcelStyle = false;
+            spread.options.allowExtendPasteRange = true;
+            spread.options.incrementalCalculation = true;
+            spread.options.iterativeCalculation = true;
+            spread.options.iterativeCalculationMaximumIterations = 100;
 
-          setWorkbookRef(workbookRef);
-          sheetChangedListener(spread);
-          initSpreadBar(spread, reportId);
-        }}
-      />
+            setWorkbookRef(workbookRef);
+            sheetChangedListener(spread);
+            initSpreadBar(spread, reportId);
+          }}
+        />
+      </SpreadWrapper>
       <StatusBar
         id={'statusBar' + reportId}
       />
