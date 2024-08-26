@@ -620,5 +620,6 @@
   "requiredRowColumn": "All data items rows and columns are required.",
   "spreadNoData": "There is no data. (Dataset with no data: ",
   "pointMakerExplain": "* Point marker display is applied to point/line series and area series (excluding bubbles).",
-  "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements."
+  "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements.",
+  "preventinstantReportRetrieval": "Prevent instant Report Retrieval"
 }

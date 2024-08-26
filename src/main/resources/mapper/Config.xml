@@ -38,6 +38,7 @@
       <result column="REPORT_ORDINAL" property="reportOrdinal" javaType="String"/>
       <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
       <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+      <result column="PROMPT_YN" property="promptYn" javaType="String"/>
     </resultMap>
 
     <resultMap id="ConfigFolderDatasetDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO">
@@ -257,7 +258,8 @@
         REPORT_MSTR.REPORT_TAG,
         REPORT_MSTR.REPORT_ORDINAL,
         REPORT_MSTR.REPORT_DESC,
-        REPORT_MSTR.REPORT_TYPE
+        REPORT_MSTR.REPORT_TYPE,
+        REPORT_MSTR.PROMPT_YN 
         FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
             ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
                           INNER JOIN USER_MSTR 

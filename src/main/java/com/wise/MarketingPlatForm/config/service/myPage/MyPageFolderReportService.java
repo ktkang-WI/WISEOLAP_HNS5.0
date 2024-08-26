@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
+import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportModel;
 
 @Service
 public class MyPageFolderReportService {
@@ -22,10 +23,34 @@ public class MyPageFolderReportService {
     int fldCount = configDAO.selectMyPageFolderCount(userNo);
     // 개인 폴더 및 개인 보고서 전체 조회
     ArrayList<MyPageFolderReportDTO> myPageFolderReportDTO = configDAO.selectMyPageFolderReport(userNo, userNm);
+    ArrayList<MyPageFolderReportModel> reportListModelList = new ArrayList<MyPageFolderReportModel>();
+
+    for (MyPageFolderReportDTO mypageFolder : myPageFolderReportDTO) {
+      MyPageFolderReportModel myPageFolderReportModel = MyPageFolderReportModel.builder()
+        .userNo(mypageFolder.getUserNo())
+        .id(mypageFolder.getId())
+        .name(mypageFolder.getName())
+        .fldLvl(mypageFolder.getFldLvl())
+        .ordinal(mypageFolder.getOrdinal())
+        .fldParentId(mypageFolder.getFldParentId())
+        .type(mypageFolder.getType())
+        .subtitle(mypageFolder.getSubtitle())
+        .tag(mypageFolder.getTag())
+        .desc(mypageFolder.getDesc())
+        .query(mypageFolder.getQuery())
+        .createdDate(mypageFolder.getCreatedDate())
+        .prompt(mypageFolder.getPrompt().equals("Y") ? true : false )
+        .createdBy(mypageFolder.getCreatedBy())
+        .ids(mypageFolder.getIds())
+        .datasetXml(mypageFolder.getDatasetXml())
+        .build();
+
+        reportListModelList.add(myPageFolderReportModel);
+    }
+        
     // 개인보고서 조회 (보고서 정보에 사용.)
     result.put("folder", myPageFolderReportDTO.subList(0, fldCount));
-    result.put("folderReport", myPageFolderReportDTO);
-
+    result.put("folderReport", reportListModelList);
 
     return result;
   }

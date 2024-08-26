@@ -16,6 +16,7 @@
     <result column="MOD_DT" property="modDt" javaType="java.sql.Timestamp"/>
     <result column="REPORT_TAG" property="reportTag" javaType="String"/>
     <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
+    <result column="PROMPT_YN" property="promptYn" javaType="String"/>
     <result column="REG_USER_NO" property="regUserNo" javaType="int"/>
     <result column="MOD_USER_NO" property="modUserNo" javaType="int"/>
     <result column="REG_USER_NM" property="regUserName" javaType="String"/>
@@ -143,7 +144,8 @@
           UM_MOD.USER_NM AS MOD_USER_NM,
           A.REQUESTER,
           A.REPORT_TAG,
-          A.REPORT_DESC
+          A.REPORT_DESC,
+          A.PROMPT_YN
       FROM (
           (
               SELECT DISTINCT  
@@ -159,7 +161,8 @@
                   NULL AS MOD_USER_NO,      
                   NULL AS REQUESTER,                          
                   NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC             
+                  NULL AS REPORT_DESC,
+                  NULL AS PROMPT_YN             
               FROM               
                   USER_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -190,7 +193,8 @@
                   NULL AS MOD_USER_NO,  
                   NULL AS REQUESTER,                                
                   NULL AS REPORT_TAG,                             
-                  NULL AS REPORT_DESC             
+                  NULL AS REPORT_DESC,
+                  NULL AS PROMPT_YN             
               FROM               
                   GRP_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -221,7 +225,8 @@
                   REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,      
                   REPORT_MSTR.GRID_INFO AS REQUESTER,                          
                   REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
-                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC             
+                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
+                  REPORT_MSTR.PROMPT_YN             
               FROM               
                   REPORT_MSTR             
               INNER JOIN         
@@ -255,7 +260,8 @@
             A.MOD_DT,
             UM_MOD.USER_NM AS MOD_USER_NM,
             A.REPORT_TAG,
-            A.REPORT_DESC
+            A.REPORT_DESC,
+            A.PROMPT_YN
         FROM (
             (
                 SELECT DISTINCT 
@@ -271,7 +277,8 @@
                     NULL AS MOD_DT,
                     NULL AS MOD_USER_NO,
                     NULL AS REPORT_TAG,
-                    NULL AS REPORT_DESC
+                    NULL AS REPORT_DESC,
+                    NULL AS PROMPT_YN
                 FROM   
                     USER_FLD_MSTR
                 INNER JOIN 
@@ -294,7 +301,8 @@
                     REPORT_MSTR.MOD_DT AS MOD_DT,
                     REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,
                     REPORT_MSTR.REPORT_TAG AS REPORT_TAG,
-                    TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC
+                    TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
+                    REPORT_MSTR.PROMPT_YN
                 FROM   
                     REPORT_MSTR
                 INNER JOIN 
@@ -500,7 +508,8 @@
 			REPORT_ORDINAL = #{reportOrdinal},
 			REPORT_TYPE = #{reportType},
 			REPORT_DESC = #{reportDesc},
-      REPORT_TAG = #{reportTag}
+      REPORT_TAG = #{reportTag},
+      PROMPT_YN = #{promptYn}
 		WHERE REPORT_ID = #{reportId}
 	</update>
 

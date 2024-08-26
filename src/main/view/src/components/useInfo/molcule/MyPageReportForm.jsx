@@ -102,14 +102,6 @@ const MyPageReportForm = ({data}, ref) => {
         }}
       >
         <Item
-          editorType='dxCheckBox'
-          dataField='prompt'
-          editorOptions={{
-            text: localizedString.loadData
-          }}>
-          <Label>{localizedString.loadData}</Label>
-        </Item>
-        <Item
           dataField='id'
           editorOptions={{
             readOnly: true
@@ -169,6 +161,12 @@ const MyPageReportForm = ({data}, ref) => {
           editorOptions={{
           }}>
           <Label>{localizedString.description}</Label>
+        </Item>
+        <Item editorType='dxCheckBox'
+          dataField='prompt'
+          editorOptions={{
+          }}>
+          <Label>{localizedString.preventinstantReportRetrieval}</Label>
         </Item>
         <TabbedItem>
           {getDatasetInfo()}

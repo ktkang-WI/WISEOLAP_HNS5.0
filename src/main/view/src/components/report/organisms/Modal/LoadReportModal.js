@@ -10,8 +10,6 @@ import models from 'models';
 import {setIconReportList} from 'components/report/util/ReportUtility';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
-import {EditMode} from 'components/config/configType';
-import {selectEditMode} from 'redux/selector/ConfigSelector';
 import store from 'redux/modules';
 import useReportSave from 'hooks/useReportSave';
 import {DesignerMode} from 'components/config/configType';
@@ -19,7 +17,6 @@ import useSpread from 'hooks/useSpread';
 import LinkSlice from 'redux/modules/LinkSlice';
 import {useDispatch} from 'react-redux';
 import LoadingSlice from 'redux/modules/LoadingSlice';
-import {useSelector} from 'react-redux';
 
 const theme = getTheme();
 
@@ -33,7 +30,6 @@ const LoadReportModal = ({...props}) => {
   const {startJob, endJob} = LoadingSlice.actions;
   const reportType = selectCurrentDesignerMode(store.getState());
   const reportId = selectCurrentReportId(store.getState());
-  const editMode = useSelector(selectEditMode);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,8 +49,10 @@ const LoadReportModal = ({...props}) => {
     models.Report.getReportById(selectedReport.id)
         .then(async ({data}) => {
           try {
+            console.log(selectedReport);
+            console.log(data);
             await loadReport(data);
-            if (editMode == EditMode.VIEWER) {
+            if (selectedReport.promptYn === 'N') {
               querySearch();
             }
           } catch {

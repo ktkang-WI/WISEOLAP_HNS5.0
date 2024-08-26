@@ -1,5 +1,4 @@
 package com.wise.MarketingPlatForm.config.dto.folder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfigFolderReportDTO {
+public class ConfigFolderReportModel {
   int fldId;
   String fldNm;
   int fldLvl;
@@ -26,6 +25,5 @@ public class ConfigFolderReportDTO {
   String reportOrdinal;
   String reportDesc;
   String reportType;
-  @Builder.Default
-  String promptYn = "Y";
+  boolean promptYn;
 }

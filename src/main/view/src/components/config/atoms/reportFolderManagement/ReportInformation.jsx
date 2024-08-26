@@ -115,6 +115,12 @@ const ReportInformation = ({row, setRow}) => {
         >
           <Label>{localizedString.description}</Label>
         </SimpleItem>
+        <SimpleItem
+          dataField="promptYn"
+          editorType="dxCheckBox"
+        >
+          <Label>{localizedString.preventinstantReportRetrieval}</Label>
+        </SimpleItem>
       </Form>
     </Panel>
   );
