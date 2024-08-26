@@ -12,7 +12,8 @@ const Wrapper = styled.div `
   border: 1px solid ${theme.color.gray200};
   padding: 0px 20px;
   box-sizing: border-box;
-
+// flex: 1 1 auto; /* 자식 요소들이 컨테이너의 가용 공간을 채우도록 크기 조정 */
+    min-width: 0; /* 필요할 경우 자식 요소의 크기를 줄이도록 설정 */
   &.selected {
     border-bottom: none;
     background: ${theme.color.background};
@@ -30,9 +31,9 @@ const TitlePanel = styled.div`
 `;
 
 
-const ReportTitlePanel = ({height='52px', children, selected}) => {
+const ReportTitlePanel = ({height='52px', children, selected, title}) => {
   return (
-    <Wrapper className={selected? 'selected' : ''}>
+    <Wrapper className={selected? 'selected' : ''} title={title}>
       <TitlePanel height={height}>
         {children}
       </TitlePanel>

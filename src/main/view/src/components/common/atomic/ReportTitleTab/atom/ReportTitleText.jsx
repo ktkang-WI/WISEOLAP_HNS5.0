@@ -1,5 +1,6 @@
+import {EditMode} from 'components/config/configType';
 import {getTheme} from '../../../../../config/theme';
-import {styled} from 'styled-components';
+import {css, styled} from 'styled-components';
 
 const theme = getTheme();
 
@@ -12,6 +13,12 @@ const ReportTitleText = styled.div`
   cursor: pointer;
   text-wrap: nowrap;
   user-select: text;
+  ${(props) => props.editMode === EditMode['VIEWER'] &&
+    css`
+      text-overflow: ellipsis;
+      overflow: hidden;
+    `
+}
 `;
 
 export default ReportTitleText;

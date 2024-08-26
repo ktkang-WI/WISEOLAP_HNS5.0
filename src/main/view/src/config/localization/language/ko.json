@@ -986,9 +986,9 @@
   "minContainerMsg": "최소 하나 이상의 컨테이너가 존재해야 합니다.",
   "downloadNeedViewItemsMsg": "모든 아이템을 조회한 후 다운로드할 수 있습니다.",
   "blankContainerNameMsg": "컨테이너 명은 비워둘 수 없습니다.",
-  "requiredRowColumn": "데이터 항목 행(row)과 열(column)이 전부 필요한 항목입니다.",
   "spreadNoData": "데이터가 없습니다. (데이터가 없는 데이터집합: ",
   "pointMakerExplain": "* 포인트 마커 표시 적용은 점/선 계열, 영역 계열(버블 제외)에서 적용이 됩니다.",
   "pointMakerExplain2": "* 빈 포인트 무시, 역순으로 보기는 다른 측정값과 동일하게 변경, 적용됩니다.",
-  "preventinstantReportRetrieval": "보고서 바로 조회 막기"
+  "preventinstantReportRetrieval": "보고서 바로 조회 막기",
+  "viewerReportLimit": "뷰어 보고서는 5개까지 조회 가능합니다."
 }

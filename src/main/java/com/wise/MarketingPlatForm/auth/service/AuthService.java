@@ -24,10 +24,16 @@ import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 
 @Service
 public class AuthService {
+    final String defaultXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" +
+                "<NewDataSet></NewDataSet>";
     AuthDAO authDAO;
 
     AuthService(AuthDAO authDAO) {
         this.authDAO = authDAO;
+    }
+
+    private boolean isEmptyString(String str) {
+        return str == null || str.isEmpty();
     }
 
     public AuthDataDTO getAuthData(String userId) {
@@ -35,8 +41,12 @@ public class AuthService {
 
         AuthDataEntity authDataEntity = authDAO.selectGrpAuthData(user.getGrpId());
 
-        if (authDataEntity.getDataXmlBase64().isEmpty()) {
+        if (authDataEntity == null || isEmptyString(authDataEntity.getDataXmlBase64())) {
             authDataEntity = authDAO.selectUserAuthData(user.getUserNo());
+
+            if (authDataEntity == null || isEmptyString(authDataEntity.getDataXmlBase64())) {
+                authDataEntity = new AuthDataEntity(user.getGrpId(), userId, user.getUserNo(), Base64.getEncoder().encodeToString(defaultXml.getBytes()));
+            }
         }
 
         byte[] decodedBytes = Base64.getDecoder().decode(
