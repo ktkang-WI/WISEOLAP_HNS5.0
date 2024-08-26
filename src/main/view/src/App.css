@@ -250,7 +250,7 @@ img {
   height: 100vh;
   padding: 10px 0px !important;
   background-color: #F6F8FC;
-  z-index: 9999; /* Ensure it appears above other content */
+  z-index: 30; /* Ensure it appears above other content */
   display: flex;
   justify-content: center;
   align-items: center;
