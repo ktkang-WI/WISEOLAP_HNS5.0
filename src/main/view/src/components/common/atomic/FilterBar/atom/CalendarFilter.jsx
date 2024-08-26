@@ -63,10 +63,9 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
     }
   };
 
-  const getBoundaryValue = () => {
-    const maxPeriod = info.calendarMaxValue * (index == 0 ? -1 : 1);
-    const date = ParamUtils.
-        parseDateFromString(value.value[Math.abs(index - 1)], keyFormat);
+  const getBoundaryValue = (value) => {
+    const maxPeriod = info.calendarMaxValue * (index == 0 ? 1 : -1);
+    const date = value;
 
     if (unit === 'YEAR') {
       date.setFullYear(date.getFullYear() + maxPeriod);
@@ -110,11 +109,15 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
                       .replace('TYPE', localizedString[unit.toLowerCase()]);
 
                   alert(maximumPeriodMsg);
-                  dateValue = ParamUtils
-                      .parseDateFromString(value.value[index], keyFormat);
+
+                  onValueChanged(info.name, str, index);
 
                   str = ParamUtils
-                      .parseStringFromDate(getBoundaryValue(), keyFormat);
+                      .parseStringFromDate(
+                          getBoundaryValue(e.value), keyFormat);
+
+                  onValueChanged(info.name, str, (index + 1) % 2);
+                  return;
                 }
               }
             }
