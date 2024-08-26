@@ -48,7 +48,9 @@ const useContextMenu = (item) => {
       // items.push(subLinkedListModalItem);
     }
 
-    items.push(getHyperlinkItems());
+    if (item?.meta?.hyperlinks) {
+      items.push(getHyperlinkItems());
+    }
     items.push(...getSubLinkedListItems());
 
     return items;
@@ -71,7 +73,8 @@ const useContextMenu = (item) => {
 
     return {
       text: localizedString.hyperlink,
-      items: hyperlinkItems
+      items: hyperlinkItems,
+      onItemClick: () => {}
     };
   };
 
