@@ -310,6 +310,7 @@ public class ReportService {
             .reportTag(reportMstrDTO.getReportTag())
             .paramXml(reportMstrDTO.getParamXml())
             .gridInfo(reportMstrDTO.getGridInfo())
+            .promptYn(reportMstrDTO.getPromptYn())
             .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())

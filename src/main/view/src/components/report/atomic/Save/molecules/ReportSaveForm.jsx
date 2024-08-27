@@ -24,6 +24,7 @@ const StyledForm = styled(Form)`
 const ReportSaveForm = ({dataSource, createDataSource, formRef,
   ...props}) => {
   const {openModal} = useModal();
+  dataSource.promptYn = dataSource.promptYn === 'Y' ? true: false;
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -132,6 +133,14 @@ const ReportSaveForm = ({dataSource, createDataSource, formRef,
       >
         <Label>
           {localizedString.requester}
+        </Label>
+      </Item>
+      <Item
+        editorType='dxCheckBox'
+        dataField='promptYn'
+      >
+        <Label>
+          {localizedString.checkingInitReportRetrieval}
         </Label>
       </Item>
       <Item

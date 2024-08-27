@@ -69,6 +69,8 @@ const useReportSave = () => {
     param.reportDesc = dataSource.reportDesc;
     param.requester = dataSource.requester || '';
     param.reportSubTitle = dataSource.reportSubTitle;
+    // 홈앤쇼핑 초기 보고서 조회 여부 추가
+    param.promptYn = dataSource.promptYn ? 'Y' : 'N';
 
     if (reportType === DesignerMode['EXCEL']) {
       param.reportXml = JSON.stringify(selectSpreadMeta(store.getState()));

@@ -392,6 +392,8 @@ public class ReportController {
             
             // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
             reportDTO.setGridInfo(param.getOrDefault("requester", ""));
+            // 홈앤쇼핑 자동 조회 여부 추가. PROMPT_YN 컬럼 활용
+            reportDTO.setPromptYn(param.getOrDefault("promptYn", "N"));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -513,8 +515,9 @@ public class ReportController {
         String userId = userDTO.getUserId();
         String reportId = requestBody.get("reportId");
         String reportType = requestBody.get("reportType");
+        String promptYn = requestBody.get("promptYn");
 
-        String token = tokenStorage.saveToken(new ReportTokenDTO(Integer.parseInt(reportId), userId, reportType));
+        String token = tokenStorage.saveToken(new ReportTokenDTO(Integer.parseInt(reportId), userId, reportType, promptYn));
 
         return new ResponseEntity(token, HttpStatus.OK);
     }
@@ -531,6 +534,7 @@ public class ReportController {
             Map<String, Object> response = new HashMap<>();
             response.put("reportId", tokenDTO.getReportId());
             response.put("reportType", tokenDTO.getReportType());
+            response.put("promptYn", tokenDTO.getPromptYn());
 
             UserDTO userDTO = authService.getUserById(tokenDTO.getUserId());
 

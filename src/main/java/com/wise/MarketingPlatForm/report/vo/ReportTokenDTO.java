@@ -13,4 +13,5 @@ public class ReportTokenDTO {
     int reportId;
     String userId;
     String reportType;
+    String promptYn;
 }

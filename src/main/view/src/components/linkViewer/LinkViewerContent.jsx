@@ -27,6 +27,7 @@ import {useDispatch} from 'react-redux';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemBoards
   from 'components/report/atomic/ItemBoard/organisms/ItemBoards';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -43,7 +44,8 @@ const LinkViewerContent = ({children}) => {
   const {onDragEnd, onDragStart} = useDrag();
   const report = useSelector(selectCurrentReport);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
-  const {loadReport} = useReportSave();
+  const {loadReport, querySearch} = useReportSave();
+  const {alert} = useModal();
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   const buttons = [
@@ -70,10 +72,16 @@ const LinkViewerContent = ({children}) => {
       models.Report.retrieveLinkReport(token).then((response) => {
         const loadReportId = response.data.reportId;
         const loadReportType = response.data.reportType;
+
         models.Report.getReportById(
             loadReportId).then(({data}) => {
           dispatch(setDesignerMode(loadReportType));
           loadReport(data);
+          if (response.data.promptYn === 'Y') {
+            querySearch();
+          } else {
+            alert('보고서 조회가 필요합니다.');
+          }
         });
       });
     }

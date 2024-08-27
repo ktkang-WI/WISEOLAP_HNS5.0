@@ -85,8 +85,10 @@ const ReportTabs = ({reportData}) => {
               selectedReport.reportType == 'Excel') {
               connectLinkedReport({
                 reportId: selectedReport.id,
-                reportType: selectedReport.reportType
+                reportType: selectedReport.reportType,
+                promptYn: selectedReport.promptYn
               });
+
               return;
             }
 
