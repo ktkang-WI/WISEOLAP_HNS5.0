@@ -119,7 +119,7 @@ const ReportInformation = ({row, setRow}) => {
           dataField="promptYn"
           editorType="dxCheckBox"
         >
-          <Label>{localizedString.preventinstantReportRetrieval}</Label>
+          <Label>{localizedString.checkingInitReportRetrieval}</Label>
         </SimpleItem>
       </Form>
     </Panel>

@@ -50,7 +50,7 @@ const LoadReportModal = ({...props}) => {
         .then(async ({data}) => {
           try {
             await loadReport(data);
-            if (selectedReport.promptYn === 'N') {
+            if (selectedReport.promptYn === 'Y') {
               querySearch();
             }
           } catch {

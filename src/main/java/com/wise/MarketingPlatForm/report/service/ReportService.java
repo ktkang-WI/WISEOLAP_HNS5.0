@@ -206,7 +206,7 @@ public class ReportService {
     		options.put("reportDesc", entity.getReportDesc());
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
-            options.put("promptYn", entity.getPromptYn() == null ? "Y" : entity.getPromptYn());
+            options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
 
             List<DwReportChkEntity>dwReportChkEntity = reportDAO.selectDwReportChk(reportId);
             DwReportChkDTO dwReportChkDTO = new DwReportChkDTO().fromEntityList(dwReportChkEntity);

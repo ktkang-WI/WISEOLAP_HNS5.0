@@ -166,7 +166,7 @@ const MyPageReportForm = ({data}, ref) => {
           dataField='prompt'
           editorOptions={{
           }}>
-          <Label>{localizedString.preventinstantReportRetrieval}</Label>
+          <Label>{localizedString.checkingInitReportRetrieval}</Label>
         </Item>
         <TabbedItem>
           {getDatasetInfo()}

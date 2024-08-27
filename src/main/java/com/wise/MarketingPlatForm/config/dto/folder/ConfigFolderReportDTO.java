@@ -27,5 +27,5 @@ public class ConfigFolderReportDTO {
   String reportDesc;
   String reportType;
   @Builder.Default
-  String promptYn = "Y";
+  String promptYn = "N";
 }

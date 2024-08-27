@@ -434,7 +434,7 @@ public class ReportController {
       @RequestParam(required = false, defaultValue = "") String reportType,
       @RequestParam(required = false, defaultValue = "") String reportTag,
       @RequestParam(required = false, defaultValue = "") String reportDesc,
-      @RequestParam(required = false, defaultValue = "Y") boolean promptYn
+      @RequestParam(required = false, defaultValue = "N") boolean promptYn
     ) throws Exception {
     
       ReportMstrEntity reportMstr = ReportMstrEntity.builder()

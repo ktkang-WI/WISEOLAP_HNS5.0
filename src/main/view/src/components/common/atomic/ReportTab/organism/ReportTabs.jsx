@@ -95,7 +95,7 @@ const ReportTabs = ({reportData}) => {
                   try {
                     dispatch(setDesignerMode(selectedReport.reportType));
                     await loadReport(data);
-                    if (selectedReport.promptYn === 'N') {
+                    if (selectedReport.promptYn === 'Y') {
                       querySearch();
                     }
                   } catch (e) {

@@ -86,12 +86,12 @@ export class Report {
   reportTag = '';
   reportDesc = '';
   fldParentNm = '';
-  promptYn = true;
+  promptYn = false;
 
   constructor({reportId = 0, reportNm = '', reportSubTitle = '', fldId = 0,
     fldLvl = 0, fldNm = '', fldParentId = 0, fldType = 'PUBLIC',
     reportOrdinal = 0, reportType ='', reportTag = '',
-    reportDesc = '', fldParentNm = '', promptYn = true}) {
+    reportDesc = '', fldParentNm = '', promptYn = false}) {
     this.reportId = reportId;
     this.reportNm = reportNm;
     this.reportSubTitle = reportSubTitle;
