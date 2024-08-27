@@ -12,7 +12,7 @@ const selectCurrentItemsFunction = (designerMode) => {
 const setDataSource = (designerMode, currentItems) => {
   const itemNames = [];
   if (designerMode === 'Excel') {
-    const datasets = Object.keys(currentItems.mart.spreadData);
+    const datasets = Object.keys(currentItems.meta.bindingInfos);
     const spreadBindInfo = currentItems.meta.bindingInfos;
 
     datasets.forEach((data) => {
@@ -24,7 +24,7 @@ const setDataSource = (designerMode, currentItems) => {
   } else {
     currentItems.forEach((item) => {
       // 조회 안된 아이템 제외.
-      if (item.mart.data.data) {
+      if (item) {
         itemNames.push(item.meta.name);
       }
     });
@@ -46,6 +46,8 @@ const setQuery = (designerMode, currentItems, name) => {
     const query = currentItems.mart['spreadData'][data]?.query;
     return query;
   } else {
+    if (!currentItems[0]) return '';
+
     let selectItemQuery = currentItems[0].mart.data.query;
     // 비정형 피벗그리드만 보기 후 쿼리보기
     if (designerMode === 'AdHoc' && !selectItemQuery) {

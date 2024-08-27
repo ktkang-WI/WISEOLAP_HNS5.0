@@ -248,6 +248,7 @@ public class DatasetController {
         int dsId = Integer.parseInt(datasource.get("dsId"));
         int reportId = Integer.parseInt(datasource.getOrDefault("reportId", "0"));
         String parameterStr = datasource.getOrDefault("parameter", "");
+        String flag = datasource.getOrDefault("flag", "");
 
         Gson gson = new Gson();
 
@@ -255,7 +256,7 @@ public class DatasetController {
                 new TypeToken<ArrayList<com.wise.MarketingPlatForm.report.domain.data.data.Parameter>>() {
                 }.getType());
                 
-        return datasetService.getQueryDatas(request, reportId, dsId, query, parameters);
+        return datasetService.getQueryDatas(request, reportId, dsId, query, parameters, flag);
     }
 
     @Operation(summary = "get List Parameter Items", description = "리스트형 매개변수의 리스트 목록 및 defautlValue를 조회함.")

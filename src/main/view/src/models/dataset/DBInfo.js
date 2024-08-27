@@ -62,16 +62,18 @@ export const getExecuteQueryData = (dsId, query, parameters) => {
 * @param {*} dsId
 * @param {*} query
 * @param {*} parameters
+* @param {*} flag
 * @return {axios}
 */
-export const getAllDatasetDatas = (reportId, dsId, query, parameters) => {
+export const getAllDatasetDatas = (reportId, dsId, query, parameters, flag) => {
   const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
 
   return axios.post(path + '/query-dataset-all-datas', {
     reportId,
     dsId: parseInt(dsId),
     query: query,
-    parameter: JSON.stringify(parameter)
+    parameter: JSON.stringify(parameter),
+    flag: flag
   });
 };
 

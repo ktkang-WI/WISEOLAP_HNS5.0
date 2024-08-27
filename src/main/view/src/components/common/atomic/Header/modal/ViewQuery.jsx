@@ -4,7 +4,7 @@ import {getTheme} from 'config/theme';
 import Modal from '../../Modal/organisms/Modal';
 import {SelectBox} from 'devextreme-react';
 import styled from 'styled-components';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {
@@ -13,6 +13,8 @@ import {
   setQuery
 } from './ViewQueryUtility';
 import ModalPanelTitle from '../../Modal/atoms/ModalPanelTitle';
+import useQueryExecute from 'hooks/useQueryExecute';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -43,13 +45,23 @@ const mode = (functionNm, designerMode, currentItems, name) => {
 
 const ViewQuery = ({...props}) => {
   const designerMode = useSelector(selectCurrentDesignerMode);
+  // const {querySearch} = useReportSave();
+  const {executeItems, executeSpread} = useQueryExecute();
+  const [refresh, setRefresh] = useState(1);
   const currentItems = mode('currentItems', designerMode);
-  const editorRef = useRef(null);
   const [defaultValue, setDefaultValue] = useState(
       () => mode('setDataSource', designerMode, currentItems)[0]);
   const [query, setQuery] = useState(
       () => mode('setQuery', designerMode, currentItems)
   );
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (!query) {
+      setQuery(() => mode('setQuery', designerMode, currentItems));
+    }
+  }, [refresh]);
+
   return (
     <Modal
       modalTitle={localizedString.showQuery}
@@ -66,10 +78,12 @@ const ViewQuery = ({...props}) => {
         </ModalPanelTitle>
         {designerMode !== 'AdHoc' && <SelectBox
           width={'200px'}
-          dataSource={mode('setDataSource', designerMode, currentItems)}
+          items={mode('setDataSource', designerMode, currentItems)}
           defaultValue={defaultValue}
+          // value={defaultValue}
           onValueChange={(e) => {
-            setQuery(() => mode('setQuery', designerMode, currentItems, e));
+            setQuery(() =>
+              mode('setQuery', designerMode, currentItems, e));
             setDefaultValue([e]);
           }}
         />}
@@ -84,6 +98,15 @@ const ViewQuery = ({...props}) => {
           width='100%'
           height='100%'
           value={query}
+          onLoad={async () => {
+            if (DesignerMode['EXCEL'] !== designerMode) {
+              await executeItems('showQuery');
+            } else {
+              await executeSpread('showQuery');
+            }
+
+            setRefresh((refresh) => refresh * -1);
+          }}
         >
         </AceEditor>
       </StyledDiv>

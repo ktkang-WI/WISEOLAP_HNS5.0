@@ -44,9 +44,11 @@ const useQueryExecute = () => {
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    * @param {JSON} filter 아이템에 적용할 필터
+   * @param {JSON} flag 쿼리보기로 사용 여부
    * @return {JSON} parameter
    */
-  const generateParameter = async (item, datasets, parameters, filter={}) => {
+  const generateParameter = async (
+      item, datasets, parameters, filter={}, flag) => {
     const param = {};
     if ([
       ItemType.TEXT_BOX,
@@ -61,6 +63,9 @@ const useQueryExecute = () => {
     param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
+    if (flag) {
+      param.flag = flag;
+    }
 
     const orgDataset = datasets.find(
         (dataset) => dataField.datasetId == dataset.datasetId
@@ -121,9 +126,10 @@ const useQueryExecute = () => {
    * @param {JSON} rootItem State(item) (itemState 최상단)
    * @param {JSON} datasets 조회할 비정형 보고서의 datasets
    * @param {JSON} parameters 조회할 비정형 보고서의 parameters
+   * @param {JSON} flag 쿼리보기 여부
    * @return {JSON} parameter
    */
-  const generateAdHocParamter = (rootItem, datasets, parameters) => {
+  const generateAdHocParamter = (rootItem, datasets, parameters, flag) => {
     const param = {};
 
     const report = selectCurrentReport(store.getState()) || {};
@@ -132,6 +138,9 @@ const useQueryExecute = () => {
     param.reportType = report.options?.reportType;
     param.itemType = ItemType.CHART;
     param.dataset = {};
+    if (flag) {
+      param.flag = 'showQuery';
+    }
 
     // dataset
     const orgDataset = datasets.find(
@@ -177,33 +186,38 @@ const useQueryExecute = () => {
    */
   // NOTE: 해당 함수는 비정형 데이터에서 차트 메이커에 접근하여 데이터를 가져온다.
   // NOTE: 유저 데이터 요청 -> 차트데이터 -> 피벗그리드 -> 데이터 요청 -> 피벗그리드
-  const executeAdHocItem = (rootItem, datasets, parameters) => {
+  const executeAdHocItem = async (rootItem, datasets, parameters, flag) => {
     try {
       validateRequiredField(rootItem);
       const cloneItem = _.cloneDeep(rootItem);
       const chartItem = cloneItem.items[0];
       const pivotItem = cloneItem.items[1];
-      const param = generateAdHocParamter(cloneItem, datasets, parameters);
+      const param =
+        generateAdHocParamter(cloneItem, datasets, parameters, flag);
       const reportId = selectCurrentReportId(store.getState());
 
       const layout = cloneItem?.adHocOption?.layoutSetting;
 
-      const getAdhocItemData = (item) => {
+      const getAdhocItemData = async (item) => {
         param.itemType = item.type;
-        models.Item.getItemData(param).then((response) => {
+        await models.Item.getItemData(param).then((response) => {
           if (response.status != 200) {
             return;
           }
           const data = response.data;
 
           item.mart.init = true;
+          if (data.info['type'] === 'showQuery') {
+            item.mart.init = false;
+          }
           item.mart.data = data;
 
           if (nullDataCheck(item)) {
             alert(`${item?.meta?.name}${localizedString.noneData}`);
           }
-
-          ItemManager.generateItem(item, param, cloneItem);
+          if (data.info['type'] !== 'showQuery') {
+            ItemManager.generateItem(item, param, cloneItem);
+          }
           dispatch(updateItem({reportId, item: item}));
         });
       };
@@ -217,18 +231,18 @@ const useQueryExecute = () => {
 
       switch (layout) {
         case 'chart_pivot':
-          getAdhocItemData(chartItem);
-          getAdhocItemData(pivotItem);
+          await getAdhocItemData(chartItem);
+          await getAdhocItemData(pivotItem);
           break;
         case 'chart':
-          getAdhocItemData(chartItem);
+          await getAdhocItemData(chartItem);
           break;
         case 'pivot':
-          getAdhocItemData(pivotItem);
+          await getAdhocItemData(pivotItem);
           break;
         default:
-          getAdhocItemData(chartItem);
-          getAdhocItemData(pivotItem);
+          await getAdhocItemData(chartItem);
+          await getAdhocItemData(pivotItem);
           break;
       }
     } catch (error) {
@@ -243,13 +257,14 @@ const useQueryExecute = () => {
    * @param {JSON} datasets 조회할 아이템이 속한 보고서의 datasets
    * @param {JSON} parameters 조회할 아이템이 속한 보고서의 parameters
    * @param {JSON} filter 아이템에 적용할 필터
+   * @param {JSON} flag 쿼리보기로 사용 여부
    */
-  const executeItem = async (item, datasets, parameters, filter) => {
+  const executeItem = async (item, datasets, parameters, filter, flag) => {
     try {
       validateRequiredField(item);
       const tempItem = _.cloneDeep(item);
       const param =
-          await generateParameter(tempItem, datasets, parameters, filter);
+          await generateParameter(tempItem, datasets, parameters, filter, flag);
 
       const reportId = selectCurrentReportId(store.getState());
 
@@ -268,6 +283,9 @@ const useQueryExecute = () => {
         const data = response.data;
 
         tempItem.mart.init = true;
+        if (data.info['type'] === 'showQuery') {
+          tempItem.mart.init = false;
+        }
         tempItem.mart.data = data;
         tempItem.mart.currentFilter = filter || {};
 
@@ -275,7 +293,9 @@ const useQueryExecute = () => {
           alert(`${item.meta.name}${localizedString.noneData}`);
         }
 
-        ItemManager.generateItem(tempItem, param);
+        if (data.info['type'] !== 'showQuery') {
+          ItemManager.generateItem(tempItem, param);
+        }
 
         dispatch(updateItem({reportId, item: tempItem}));
       }
@@ -285,7 +305,7 @@ const useQueryExecute = () => {
     }
   };
 
-  const executeSpread = async () => {
+  const executeSpread = async (flag) => {
     dispatch(startJob('데이터를 조회 중입니다.'));
     const state = store.getState();
     const datasets = selectCurrentDatasets(state);
@@ -312,7 +332,9 @@ const useQueryExecute = () => {
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
       return new Promise((resolve, reject) => {
-        models.DBInfo.getAllDatasetDatas(reportId, dsId, query, parameters)
+        models.DBInfo.getAllDatasetDatas(
+            reportId, dsId, query, parameters, flag
+        )
             .then((res) => {
               resolve({datasetId: dataset.datasetId, data: res.data});
             })
@@ -322,7 +344,7 @@ const useQueryExecute = () => {
       });
     });
 
-    Promise.all(promises)
+    await Promise.all(promises)
         .then((res) => {
           res.forEach((v) => {
             datas[v.datasetId] = v.data;
@@ -433,8 +455,9 @@ const useQueryExecute = () => {
 
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
+   * @param {string} flag
    */
-  const executeItems = async () => {
+  const executeItems = async (flag) => {
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
@@ -461,6 +484,7 @@ const useQueryExecute = () => {
     try {
       if (designerMode === DesignerMode['DASHBOARD']) {
         const {layoutConfig, selectedTab} = selectRootLayout(store.getState());
+        // 쿼리보기로 하는 경우 한 아이템만 조회.
         const promises = rootItem.items.reduce((acc, item) => {
           // 컨테이너 사용하는 보고서일 경우 현재 보고 있는 탭만 조회
           if (Array.isArray(layoutConfig)) {
@@ -470,7 +494,7 @@ const useQueryExecute = () => {
             }
           }
 
-          acc.push(executeItem(item, datasets, parameters));
+          acc.push(executeItem(item, datasets, parameters, {}, flag));
           return acc;
         }, []);
 
@@ -484,7 +508,9 @@ const useQueryExecute = () => {
       }
 
       if (designerMode === DesignerMode['AD_HOC']) {
-        await executeAdHocItem(rootItem, datasets, parameters);
+        await Promise.resolve(
+            executeAdHocItem(rootItem, datasets, parameters, flag)
+        );
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
         } else {

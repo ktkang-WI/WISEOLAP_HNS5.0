@@ -145,7 +145,7 @@ public class ReportController {
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
-
+        String flag = param.getOrDefault("flag", "");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -232,7 +232,7 @@ public class ReportController {
                 .pivotOption(pivotOption)
                 .build();
 
-        return reportService.getItemData(request, dataAggregation);
+        return reportService.getItemData(request, dataAggregation, flag);
     }
 
     @Operation(
