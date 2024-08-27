@@ -271,6 +271,7 @@ const useQueryExecute = () => {
         tempItem.mart.init = true;
         tempItem.mart.data = data;
         tempItem.mart.currentFilter = filter || {};
+        tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
         if (nullDataCheck(tempItem)) {
           alert(`${item.meta.name}${localizedString.noneData}`);
