@@ -128,7 +128,7 @@ const FilterBar = ({
             width={queryButton.width}
             height={queryButton.height}
             onClick={querySearch}
-            type={queryButton.themeType || 'secondary'}
+            type={'secondary'}
             borderRadius='4px'
             font={theme.font.ribbonButton}
           >

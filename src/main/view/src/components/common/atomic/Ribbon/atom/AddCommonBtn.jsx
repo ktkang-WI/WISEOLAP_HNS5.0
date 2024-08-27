@@ -8,7 +8,7 @@ const AddCommonBtn = ({item}) => {
   return (
     <RibbonPanel key={item.id} position={item.position}>
       <CommonButton
-        type={item.themeType || 'secondary'}
+        type={'secondary'}
         label={item.label}
         title={item.label}
         width={item.width}
