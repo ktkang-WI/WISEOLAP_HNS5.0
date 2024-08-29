@@ -101,8 +101,7 @@ export const getCssStyle = (highlight, cellElement, cell) => {
   // 배경 및 글자색 적용.
   const colorStyle = {
     'background-color': highlight.backgroundColor,
-    'color': highlight.fontColor,
-    'white-space': 'normal'
+    'color': highlight.fontColor
   };
 
   const checkCondition = (condition, valueFrom, valueTo, cellValue) => {
@@ -130,7 +129,7 @@ export const getCssStyle = (highlight, cellElement, cell) => {
     checkCondition(condition, valueFrom, valueTo, cellValue)
   ) {
     applyEmoji();
-    return colorStyle;
+    return {...colorStyle, 'white-space': 'normal'};
   } else if (highlight.type == 'dimension') {
     return colorStyle;
   }
