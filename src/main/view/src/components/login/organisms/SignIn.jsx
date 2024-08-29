@@ -31,18 +31,29 @@ export const getInitPageAndSetingFunc = (
   let myPageInit =
   configJson?.general?.wiDefaultPage || 'DashAny';
 
-  if (defaultItem) {
-    try {
-      const jsonDefaultItem = JSON.parse(defaultItem);
+  // const runmode = personalConfig.runMode;
+  let runmode = personalConfig.grpRunMode;
 
-      if (jsonDefaultItem.displayCheck) {
-        if (jsonDefaultItem.initDisplay) {
-          myPageInit = jsonDefaultItem.initDisplay;
+  if (personalConfig.runMode != null) {
+    runmode = personalConfig.runMode;
+  }
+
+  if (runmode === 'ADMIN') {
+    if (defaultItem) {
+      try {
+        const jsonDefaultItem = JSON.parse(defaultItem);
+
+        if (jsonDefaultItem.displayCheck) {
+          if (jsonDefaultItem.initDisplay) {
+            myPageInit = jsonDefaultItem.initDisplay;
+          }
         }
+      } catch (error) {
+        myPageInit = 'DashAny';
       }
-    } catch (error) {
-      myPageInit = 'DashAny';
     }
+  } else {
+    myPageInit = 'Viewer';
   }
 
   // 로그인 후 state : initDisplay 변경 및 개인설정 셋팅.

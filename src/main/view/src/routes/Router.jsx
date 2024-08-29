@@ -67,9 +67,14 @@ const multipleLoader = async () => {
     return object;
   });
 
+  const useLoaderData = await getUserNmLoader().then((result) => {
+    return result;
+  });
+
   return {
     generalConfigure: generalConfigure.generalConfigure,
-    myPageConfigure: myPageConfigure
+    myPageConfigure: myPageConfigure,
+    userNm: useLoaderData
   };
 };
 const router = createBrowserRouter([
@@ -119,7 +124,7 @@ const router = createBrowserRouter([
   {
     path: contextPath + '',
     element: <Config/>,
-    loader: getUserNmLoader,
+    loader: multipleLoader,
     children: [
       {
         path: 'confgeneral',

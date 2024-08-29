@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.config.dto.myPage;
 
+import com.wise.MarketingPlatForm.auth.type.RunMode;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,4 +52,7 @@ public class MyDesignerDTO {
   String userNm = "";
   @Builder.Default
   String maxReportQueryPeriod = "{\"check\": false, \"period\": 2}";
+  RunMode runMode;
+  @Builder.Default
+  String grpRunMode = "";
 }

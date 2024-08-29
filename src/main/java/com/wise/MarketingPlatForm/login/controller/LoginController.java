@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.login.controller;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,10 +76,13 @@ public class LoginController {
             // 로그인 성공 직후 개인설정 가져오기.
             int userNo = userDTO.getUserNo();
             MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
-            
+
             if (model == null) {
                 return ResponseEntity.ok().build();
             }
+
+            model.setRunMode(userDTO.getRunMode());
+            model.setGrpRunMode(userDTO.getGrpRunMode());
             
             return ResponseEntity.ok().body(model);
         }

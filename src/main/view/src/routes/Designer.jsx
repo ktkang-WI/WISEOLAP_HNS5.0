@@ -13,7 +13,7 @@ import useReportSave from 'hooks/useReportSave';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
-import {Outlet, useLoaderData} from 'react-router-dom';
+import {Outlet, useLoaderData, useNavigate} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
@@ -26,6 +26,7 @@ const Designer = () => {
   const {generalConfigure, myPageConfigure} = useLoaderData();
   const {saveConfiguration} = useConfig();
   const {getReport, getLinkedReport} = useReportLoad();
+  const nav = useNavigate();
 
   saveConfiguration(generalConfigure, myPageConfigure);
 
@@ -80,6 +81,20 @@ const Designer = () => {
 
   // Tab item setting
   useEffect(() => {
+    if (window.location.pathname.indexOf('adhoc') > -1 ||
+        window.location.pathname.indexOf('dashany') > -1 ||
+        window.location.pathname.indexOf('excel') > -1 ||
+        (
+          window.location.pathname.indexOf('conf') > -1 &&
+          window.location.pathname.indexOf('my') <0
+        )
+    ) {
+      if (myPageConfigure?.runMode === 'VIEW') {
+        nav('viewer');
+      } else if (myPageConfigure?.runMode === 'VIEW') {
+        nav('viewer');
+      }
+    }
     const menu = generalConfigure?.menu;
     const mainTabItems = ['UserInfo'];
     if (menu.searchReport) mainTabItems.unshift('ReportSearch');

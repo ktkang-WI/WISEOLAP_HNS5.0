@@ -28,6 +28,13 @@
     <result column="DATA_XML" property="dataXmlBase64" javaType="String"/>
   </resultMap>
 
+  <resultMap id="GroupMstrEntity" type="com.wise.MarketingPlatForm.account.entity.GroupMstrEntity">
+    <result column="GRP_ID" property="grpId" javaType="int"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
+    <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+    <result column="RUN_MODE" property="grpRunMode" javaType="String"/>
+  </resultMap>
+
 <!-- Mapper End -->
 
 <!-- Query -->
@@ -35,6 +42,18 @@
   <select id="selectUserById" resultMap="User">
     SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
   </select>
+
+  <select id="selectGroupMstrById" resultMap="GroupMstrEntity">
+      SELECT
+        GRP_ID,
+        GRP_NM,
+        GRP_DESC,
+        RUN_MODE
+        FROM GRP_MSTR
+        WHERE 1=1
+        AND GRP_ID = #{grpId}
+        AND DEL_YN = 'N'
+    </select>
 
   <select id="selectGrpAuthData" resultMap="AuthData">
     SELECT * FROM GRP_AUTH_DATA_MSTR WHERE GRP_ID = #{grpId}

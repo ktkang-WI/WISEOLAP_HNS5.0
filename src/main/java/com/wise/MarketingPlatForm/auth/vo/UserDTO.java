@@ -31,6 +31,7 @@ public class UserDTO implements Serializable{
     String userRelCd;
     String userDesc;
     RunMode runMode;
+    String grpRunMode;
     int lockCnt;
     String hasYn;
 }
