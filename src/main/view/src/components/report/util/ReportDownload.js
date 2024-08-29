@@ -23,6 +23,7 @@ import {selectFlexLayoutConfig, selectRootLayout} from 'redux/selector/LayoutSel
 import store from 'redux/modules';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LoadingSlice from 'redux/modules/LoadingSlice';
+import {selectCurrentAdHocOption} from 'redux/selector/ItemSelector';
 
 
 const EXCEL_ROW_HEIGHT = 23.055;
@@ -178,6 +179,7 @@ const getExcelBlob = async (defaultFileName, downloadData) => {
 const mergeExcelFiles = async (items, parameters, option) => {
   const reportId = selectCurrentReportId(store.getState());
   const layout = selectFlexLayoutConfig(store.getState());
+  const adhocOption = selectCurrentAdHocOption(store.getState());
   const workbook = new Workbook();
   let worksheetCount = 0;
 
@@ -185,14 +187,15 @@ const mergeExcelFiles = async (items, parameters, option) => {
     return (a.tab || 0) - (b.tab || 0);
   });
 
-  const elements = _items.map((item) => {
+  const elements = _items.map((item, index) => {
     const selector = '#report' + reportId + ' #' + item.id;
 
     return {
       type: item.type,
       name: item.meta.name,
       selector: selector,
-      tab: item.tab || 0
+      tab: item.tab || 0,
+      index
     };
   });
 
@@ -238,6 +241,31 @@ const mergeExcelFiles = async (items, parameters, option) => {
       });
       startRow += parameters.length;
     }
+
+    const dataField = adhocOption?.dataField || _items[elementObj.index]?.meta?.dataField;
+    const dataFieldOption = adhocOption?.dataFieldOption || _items[elementObj.index]?.mart?.dataFieldOption;
+
+    const insertFieldData = (key) => {
+      if (dataField[key] == 0) return;
+
+      worksheet.getCell('A' + (startRow + 1)).value = dataFieldOption[key].label;
+      worksheet.getCell('B' + (startRow + 1)).value = dataField[key].map(({caption}) => caption).join(', ');
+
+      startRow++;
+    };
+
+    if (dataField.measure) {
+      insertFieldData('measure');
+    }
+
+    for (const key in dataFieldOption) {
+      if (dataField[key].length == 0 || ['sortByItem', 'measure'].includes(key)) {
+        continue;
+      }
+
+      insertFieldData(key);
+    }
+
     await exportComponentToWorksheet(
         workbook, elementObj, worksheet, startRow, option);
     worksheetCount++;

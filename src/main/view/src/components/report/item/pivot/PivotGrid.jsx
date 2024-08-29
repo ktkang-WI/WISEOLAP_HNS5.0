@@ -107,8 +107,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     });
 
-    console.log(formats);
-
     return formats;
   }, [mart]);
 
@@ -160,7 +158,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, [meta.dataHighlight]);
 
   const onCellPrepared = ({cell, area, cellElement}) => {
-    console.log(cell.dataIndex);
     if (area == 'data' && cell.dataType && cell.value) {
       const formats = getFormats();
       const formData = formats[cell.dataIndex];
