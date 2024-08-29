@@ -33,7 +33,8 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
     case 'yyyy-MM':
       zoomLevels = {
         zoomLevel: 'year',
-        maxZoomLevel: 'year'
+        maxZoomLevel: 'year',
+        minZoomLevel: 'decade'
       };
       unit = 'MONTH';
       break;
@@ -41,7 +42,8 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
     case 'yyyy-MM-dd':
       zoomLevels = {
         zoomLevel: 'month',
-        maxZoomLevel: 'month'
+        maxZoomLevel: 'month',
+        minZoomLevel: 'decade'
       };
       break;
   }
