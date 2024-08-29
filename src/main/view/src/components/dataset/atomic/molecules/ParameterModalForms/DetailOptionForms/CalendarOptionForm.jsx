@@ -71,7 +71,7 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
         }}
       >
         <Label>{localizedString.defaultParameter +
-          (isBetween ? ' TO' : '') + ' 기준'}</Label>
+          (isBetween ? ' FROM' : '') + ' 기준'}</Label>
       </Item>
       <Item
         editorType='dxNumberBox'
@@ -83,7 +83,7 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
           valueExpr: 'name'
         }}
       >
-        <Label>{'기본값' + (isBetween ? ' TO' : '') + ' 이동'}</Label>
+        <Label>{'기본값' + (isBetween ? ' FROM' : '') + ' 이동'}</Label>
       </Item>
       {
         isBetween &&
@@ -98,7 +98,7 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
           }}
         >
           <Label>{localizedString.defaultParameter +
-            (isBetween ? ' FROM' : '') + ' 기준'}</Label>
+            (isBetween ? ' TO' : '') + ' 기준'}</Label>
         </Item>
       }
       {
@@ -113,7 +113,7 @@ const CalendarOptionForm = ({param, onFieldDataChanged, ...props}) => {
             valueExpr: 'name'
           }}
         >
-          <Label>{'기본값' + (isBetween ? ' FROM' : '') + ' 이동'}</Label>
+          <Label>{'기본값' + (isBetween ? ' TO' : '') + ' 이동'}</Label>
         </Item>
       }
       <Item
