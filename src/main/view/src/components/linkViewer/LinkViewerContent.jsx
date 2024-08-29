@@ -64,6 +64,7 @@ const LinkViewerContent = ({children}) => {
   }
 
   const enabled = report.options.reportType == 'AdHoc' && dataColumnOpened;
+  document.title = report.options.reportNm;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
