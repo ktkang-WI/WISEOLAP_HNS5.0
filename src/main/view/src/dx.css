@@ -533,3 +533,12 @@ td[role="columnheader"] {
 .dx-context-menu .dx-menu-item-popout::before {
   content: '';
 }
+
+.dx-popup-content .dx-list-item-selected {
+  font-weight: bold;
+  background: var(--gray100);
+}
+
+.dx-popup-content .dx-list-item-selected .dx-list-item-content {
+  font-weight: bold;
+}
