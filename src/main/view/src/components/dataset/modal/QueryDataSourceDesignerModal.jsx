@@ -94,8 +94,20 @@ const QueryDataSourceDesignerModal = ({
   const generateParameter = {
     text: '생성',
     onClick: () => {
+      const excludedString = /[-\+!~`#$%^&*<>\{\}\:]/g;
       const query = queryEditorRef.current.editor.getValue();
       const paramNames = ParamUtils.getParameterNamesInQuery(query) || [];
+
+      for (const param of paramNames) {
+        const matchResult = param.match(excludedString);
+
+        if (matchResult) {
+          alert('매개변수 생성에 해당 특수문자('+ matchResult.toString() +')를 넣으실수 없습니다.\n' +
+            '\n사용 불가 특수문자 목록\n :-+!~`#$%^&*<>{}'
+          );
+          return;
+        }
+      }
 
       // 기존 데이터 필터링
       const newParamInfo = paramInfo.filter((info) => {

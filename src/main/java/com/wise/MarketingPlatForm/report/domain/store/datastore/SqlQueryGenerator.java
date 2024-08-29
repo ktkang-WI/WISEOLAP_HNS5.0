@@ -68,7 +68,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                 }
             }
 
-            query = query.replaceAll(param.getName(), result);
+            query = query.replaceAll(param.getName() + "\\b", result);
         }
 
         return query;
