@@ -5,7 +5,7 @@ import SideNavigationBar from
 import {getTheme} from 'config/theme';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {Outlet, useLoaderData} from 'react-router-dom';
+import {Outlet, useLoaderData, useNavigate} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const theme = getTheme();
@@ -13,11 +13,26 @@ const theme = getTheme();
 // Config 는 임시용 입니다.
 const Config = () => {
   const left = ['Logo', 'Viewer'];
-  const userNm = useLoaderData();
+  const {userNm, myPageConfigure} = useLoaderData();
   const dispatch = useDispatch();
   const {setUserNm} = ConfigSlice.actions;
+  const nav = useNavigate();
 
   useEffect(() => {
+    if (window.location.pathname.indexOf('adhoc') > -1 ||
+        window.location.pathname.indexOf('dashany') > -1 ||
+        window.location.pathname.indexOf('excel') > -1 ||
+        (
+          window.location.pathname.indexOf('conf') > -1 &&
+          window.location.pathname.indexOf('my') <0
+        )
+    ) {
+      if (myPageConfigure?.runMode === 'VIEW') {
+        nav('viewer');
+      } else if (myPageConfigure?.runMode === 'VIEW') {
+        nav('viewer');
+      }
+    }
     dispatch(setUserNm(userNm));
   }, []);
   return (

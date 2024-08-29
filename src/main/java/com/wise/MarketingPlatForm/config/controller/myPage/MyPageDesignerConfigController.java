@@ -34,6 +34,8 @@ public class MyPageDesignerConfigController {
 
     MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
     model.setUserNm(userDTO.getUserNm()); 
+    model.setRunMode(userDTO.getRunMode());
+    model.setGrpRunMode(userDTO.getGrpRunMode());
   
     return RestAPIVO.okResponse(model);
   } 

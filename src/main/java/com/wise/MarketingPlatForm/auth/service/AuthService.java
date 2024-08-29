@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.auth.dao.AuthDAO;
 import com.wise.MarketingPlatForm.auth.entity.AuthDataEntity;
 import com.wise.MarketingPlatForm.auth.entity.UserEntity;
@@ -180,5 +182,20 @@ public class AuthService {
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
                 .userNm(entity.getUserNm())
                 .build();
+    }
+
+    /**
+     * 비밀번호를 포함한 유저의 모든 정보를 반환합니다.
+     * 삭제된 유저의 정보를 조회할 시 NullPointerException이 발생합니다.
+     * 
+     * @param userId
+     * @return
+     */
+    public GroupMstrEntity getUserGroupById(int i) {
+        GroupMstrEntity entity = authDAO.selectGroupMstrById(i);
+
+        if (entity == null) return null;
+        // TODO: 추후 필요한 정보 있으면 추가
+        return entity;
     }
 }
