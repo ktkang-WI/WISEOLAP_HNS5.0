@@ -88,6 +88,11 @@ const useSpread = () => {
           const bindingInfo = bindingInfos[datasetId];
           const rowData = _.cloneDeep(spreadData[datasetId].rowData);
           const metaData = spreadData[datasetId].metaData;
+          const type = spreadData[datasetId].type;
+
+          if (type?.type === 'showQuery') {
+            return true;
+          }
 
           if (rowData[0]?.error) {
             alert(localizedString.invalidQuery);

@@ -7,6 +7,7 @@ const defaultBindInfo = {
   useBorder: false,
   useBind: false,
   sheetNm: '',
+  id: '',
   datasetNm: undefined
 };
 

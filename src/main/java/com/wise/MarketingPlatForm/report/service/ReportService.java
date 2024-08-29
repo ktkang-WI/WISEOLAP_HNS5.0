@@ -49,6 +49,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.domain.item.ItemDataMaker;
 import com.wise.MarketingPlatForm.report.domain.item.factory.ItemDataMakerFactory;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 import com.wise.MarketingPlatForm.report.domain.store.QueryGenerator;
 import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFactory;
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
@@ -236,7 +237,7 @@ public class ReportService {
     	return returnMap;
     }
 
-    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggregation) {
+    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggregation, String flag) {
         ReportResult result;
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
@@ -262,7 +263,10 @@ public class ReportService {
 
         Timer timer = new Timer();
         timer.start();
-        MartResultDTO martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+        MartResultDTO martResultDTO = null;
+        if ("".equals(flag)) {
+            martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+        }
         
         timer.end();
 
@@ -284,12 +288,22 @@ public class ReportService {
 
         logService.insertQueryLog(queryLogDTO);
 
-        ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
-        ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggregation.getItemType());
-       
-        result = itemDataMaker.make(dataAggregation, martResultDTO.getRowData());
+        if ("".equals(flag)) {
+            ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
+            ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggregation.getItemType());
+           
+            result = itemDataMaker.make(dataAggregation, martResultDTO.getRowData());
+        } else {
+            CommonResult blankData = new CommonResult();
+            Map<String, Object> map = new HashMap<>();
+            
+            map.put("type", "showQuery");
+            
+            blankData.setInfo(map);
+            result = blankData;
+        }
+        
         result.setQuery(query);
-
         return result;
     }
 

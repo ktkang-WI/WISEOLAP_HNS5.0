@@ -62,7 +62,7 @@ const SpreadBoard = () => {
   const checkValidate = (datasets) =>{
     const noDataDatasetNms = [];
     datasets.map((dataset) => {
-      if (spreadData[dataset].rowData.length == 0) {
+      if (spreadData[dataset]?.rowData?.length == 0) {
         noDataDatasetNms.push(bindingInfos[dataset].datasetNm);
       }
     });

@@ -323,7 +323,7 @@ public class DatasetService {
     }
 
     
-    public MartResultDTO getQueryDatas(HttpServletRequest request, int reportId, int dsId, String query, List<Parameter> parameters) {
+    public MartResultDTO getQueryDatas(HttpServletRequest request, int reportId, int dsId, String query, List<Parameter> parameters, String flag) {
         SqlQueryGenerator queryGenerator = new SqlQueryGenerator();
         query = queryGenerator.applyParameter(parameters, query);
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
@@ -351,16 +351,25 @@ public class DatasetService {
         timer.start();
 
         try {
-            resultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+            if ("".equals(flag)) {
+                resultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+            } else {
+                Map<String, Object> map = new HashMap<>();
+                map.put("type", "showQuery");
+                resultDTO.setType(map);
+                resultDTO.setQuery(query);
+            }
             resultDTO.setQuery(query);
-            List<MetaDTO> metaDTOs = resultDTO.getMetaData();
+            
+            if ("".equals(flag)) {
+                List<MetaDTO> metaDTOs = resultDTO.getMetaData();
 
-            for (MetaDTO metaDTO : metaDTOs) {
-                if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
-                    metaDTO.setColumnTypeName("decimal");
+                for (MetaDTO metaDTO : metaDTOs) {
+                    if (StringUtils.containsAny(metaDTO.getColumnTypeName(), "int", "NUMBER", "numeric")) {
+                        metaDTO.setColumnTypeName("decimal");
+                    }
                 }
             }
-
         } catch (Exception e) {
             log.warn(e.toString());
 
