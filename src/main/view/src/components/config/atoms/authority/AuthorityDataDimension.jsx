@@ -54,7 +54,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
               }
               return acc;
             }, []).concat(dsViewCol);
-
+        setSelectedKeys([]);
         setDataSource(source);
       }
     });
