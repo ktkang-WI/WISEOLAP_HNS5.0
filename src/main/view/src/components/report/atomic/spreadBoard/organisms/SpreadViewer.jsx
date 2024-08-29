@@ -1,6 +1,7 @@
 import {useSelector} from 'react-redux';
 import {getWorkbookJSON, setWorkbookRef} from '../util/SpreadCore';
-import {SpreadSheets} from '@grapecity/spread-sheets-react';
+// import {SpreadSheets} from '@grapecity/spread-sheets-react';
+import {Designer} from '@grapecity/spread-sheets-designer-react';
 import {selectSpreadData}
   from 'redux/selector/SpreadSelector';
 import useSpread from 'hooks/useSpread';
@@ -10,7 +11,7 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {useDispatch} from 'react-redux';
 import SpreadSlice from 'redux/modules/SpreadSlice';
-
+import useSpreadRibbon from './useSpreadRibbon';
 const theme = getTheme();
 
 const StyledWrapper = styled(Wrapper)`
@@ -25,11 +26,6 @@ const StyledWrapper = styled(Wrapper)`
   text-align: left;
 `;
 
-const SpreadWrapper = styled.div`
-  height: calc(100% - 25px);
-  width: 100%;
-`;
-
 const StatusBar = styled('div')`
   bottom: 0;
   height: 25px;
@@ -41,9 +37,10 @@ const StatusBar = styled('div')`
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
   const {setSpreadData} = SpreadSlice.actions;
-  const {bindData, setExcelFile, sheetChangedListener, initSpreadBar} =
+  const {bindData, setExcelFile, sheetChangedListener} =
   useSpread();
   const dispatch = useDispatch();
+  const {setRibbonRemoveFileMenu} = useSpreadRibbon();
 
   const workbookRef = useRef();
   // Spread 파일 로딩 상태 표시. 0: 미로딩, 1: 파일 로딩중, 2: 파일 로딩 완료
@@ -58,7 +55,7 @@ const SpreadViewer = ({reportId}) => {
     const startTime = new Date();
 
     console.log('파일 불러오기 시작');
-    workbookRef.current.spread.fromJSON(workbookJSON);
+    workbookRef.current.designer.getWorkbook().fromJSON(workbookJSON);
     setExcelFile(reportId).then(() => {
       console.log('파일 불러오기 완료. 걸린 시간: ' + (new Date() - startTime) + 'ms');
       fileLoadingState.current = 2;
@@ -96,25 +93,32 @@ const SpreadViewer = ({reportId}) => {
     <StyledWrapper
       className='section board'
     >
-      <SpreadWrapper>
-        <SpreadSheets
-          style={{
-            height: 'calc(100% - 25px)'
-          }}
-          ref={workbookRef}
-          workbookInitialized={(spread) => {
-            spread.options.allowCopyPasteExcelStyle = false;
-            spread.options.allowExtendPasteRange = true;
-            spread.options.incrementalCalculation = true;
-            spread.options.iterativeCalculation = true;
-            spread.options.iterativeCalculationMaximumIterations = 100;
+      <Designer
+        style={{
+          height: 'calc(100% - 25px)'
+        }}
+        className={'dx-drawer-shader'}
+        ref={workbookRef}
+        designerInitialized={(designer) => {
+          designer.setConfig(setRibbonRemoveFileMenu());
+          designer.getWorkbook().options.allowCopyPasteExcelStyle = false;
+          designer.getWorkbook().options.allowExtendPasteRange = true;
+          designer.getWorkbook().options.incrementalCalculation = true;
+          designer.getWorkbook().options.iterativeCalculation = true;
+          designer.getWorkbook()
+              .options.iterativeCalculationMaximumIterations = 100;
 
-            setWorkbookRef(workbookRef);
-            sheetChangedListener(spread);
-            initSpreadBar(spread, reportId);
-          }}
-        />
-      </SpreadWrapper>
+
+          setWorkbookRef(workbookRef);
+          sheetChangedListener(designer);
+          // initSpreadBar(designer, reportId);
+        }}
+        styleInfo={{
+          width: '100%',
+          height: '100%'
+        }}
+      >
+      </Designer>
       <StatusBar
         id={'statusBar' + reportId}
       />

@@ -41,7 +41,7 @@ const useSpread = () => {
     if (editMode === EditMode['DESIGNER']) {
       return designerRef.current.designer.getWorkbook();
     } else if (editMode === EditMode['VIEWER']) {
-      return workbookRef.current.spread;
+      return workbookRef.current.designer.getWorkbook();
     }
   };
 
@@ -77,7 +77,7 @@ const useSpread = () => {
     dispatch(startJob('시트에 데이터를 바인딩하는 중입니다.'));
     const bindingInfos = selectBindingInfos(store.getState());
     const workbook = _workbook || getWorkbook();
-
+    let bindDataCheck = false;
     try {
       if (bindingInfos) {
         workbook.suspendPaint();
@@ -122,6 +122,7 @@ const useSpread = () => {
             const ds = getJsonKey2ColInfos(rowData, bindingInfo);
             rowData.forEach((row) => convertDates(row));
             if (ds.dataSourceHearder && rowData.length > 0) {
+              bindDataCheck = true;
               const newRowData = [ds.dataSourceHearder, ...rowData];
               // bindedSheet.setArray(0, 0, newRowData);
 
@@ -166,8 +167,9 @@ const useSpread = () => {
         workbook.resumeEvent();
         workbook.resumeCalcService();
         workbook.resumePaint();
-
-        refreshPivotTable(workbook);
+        if (bindDataCheck) {
+          refreshPivotTable(workbook);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -178,7 +180,7 @@ const useSpread = () => {
 
   const refreshPivotTable = (workbook) => {
     const sheetLength = workbook.getSheetCount();
-    for (let i = 1; i <= sheetLength; i++) {
+    for (let i = 0; i < sheetLength; i++) {
       const sheet = workbook.getSheet(i);
       const pivotTableManager = sheet.pivotTables;
       const pivotTables = pivotTableManager.all();

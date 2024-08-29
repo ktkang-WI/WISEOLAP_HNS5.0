@@ -59,6 +59,13 @@ const useSpreadRibbon = () => {
     return config;
   };
 
+  const setRibbonRemoveFileMenu = () => {
+    const config = sheets.Designer.DefaultConfig;
+    // 불필요 메뉴 삭제
+    delete config.fileMenu;
+    return config;
+  };
+
   // spread ribbon menu 선언 부분
   const newReport = (context) => {
     const designerMode = selectCurrentDesignerMode(store.getState());
@@ -285,7 +292,7 @@ const useSpreadRibbon = () => {
     };
   };
 
-  return {setRibbonSetting};
+  return {setRibbonSetting, setRibbonRemoveFileMenu};
 };
 
 export default useSpreadRibbon;
