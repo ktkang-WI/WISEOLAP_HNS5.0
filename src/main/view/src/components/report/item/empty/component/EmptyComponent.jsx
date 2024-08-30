@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ItemContent = styled.h2`
+const ItemContent = styled.h3`
   width: 100%;
   height: 100%;
   margin: 0px;
