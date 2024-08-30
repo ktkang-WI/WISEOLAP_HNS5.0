@@ -98,7 +98,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     (adHocOption?.variationValues || []).forEach((v) => {
       const target = targets.find((m) => m.fieldId == v.targetId);
       if (v.type == 'absoluteVariation') {
-        formats.push(target.format || getDefaultFormat());
+        const format = target.format || getDefaultFormat();
+        formats.push(Object.assign(_.cloneDeep(format),
+            {variationValueType: v.type}));
       } else if (v.type.startsWith('Rank')) {
         formats.push(getDefaultFormat());
       } else {
@@ -166,12 +168,14 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         const labelSuffix = generateLabelSuffix(formData);
         let spanStyle = '';
 
-        if (formData.variationValueType === 'percentVariation') {
+        if (formData.variationValueType === 'percentVariation' ||
+          formData.variationValueType === 'absoluteVariation'
+        ) {
           formData.prefix = '+';
           spanStyle = 'color: blue;';
           if (cell.value < 0) {
             cell.value = parseFloat(cell.value.toString().substring(1));
-            formData.prefix = '▽';
+            formData.prefix = '△';
             spanStyle = 'color: red;';
           };
         }
