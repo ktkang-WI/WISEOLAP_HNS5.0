@@ -618,7 +618,8 @@
       SOURCE_DB as sourceDb,
       COMPARE_DB as compareDb,
       USER_NM as userNm,
-      INSERT_DATE as insertDate
+      INSERT_DATE as insertDate,
+      ERR_DESC as errDesc
       FROM DW_REPORT_CHK
       WHERE TO_CHAR(STD_DATE, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
       AND CHK_GB IN ('1', '2')
