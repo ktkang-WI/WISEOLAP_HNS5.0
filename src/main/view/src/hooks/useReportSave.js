@@ -295,8 +295,10 @@ const useReportSave = () => {
       }
 
       if (reportBos.chkGb.length > 0) {
+        const errDesc = reportBos.errDesc[reportBos.errDesc.length-1] ||
+          '관리자에게 문의하세요.';
         // eslint-disable-next-line max-len
-        alert(localizedString.checkDwReport + reportBos.chkGb);
+        alert(localizedString.checkDwReport + reportBos.chkGb + '\n' + errDesc);
       }
     } catch (error) {
       new Error('Report load Error');

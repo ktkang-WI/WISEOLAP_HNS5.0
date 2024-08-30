@@ -22,4 +22,5 @@ public class DwReportChkEntity {
     private String compareDb;
     private String userNm;
     private Date insertDate;
+    private String errDesc;
 }
