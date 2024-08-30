@@ -20,6 +20,8 @@ import {DesignerMode, EditMode} from 'components/config/configType';
 import _ from 'lodash';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {itemComponents} from 'components/report/item/util/ItemMappers';
+import EmptyComponent from
+  'components/report/item/empty/component/EmptyComponent';
 import ItemType from 'components/report/item/util/ItemType';
 import localizedString from 'config/localization';
 import {ItemDownload} from '../../ItemDownload/ItemDownload';
@@ -110,7 +112,8 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   function factory(node) {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
-    const ItemComponent = itemComponents[item.type];
+    const ItemComponent = item.mart.data.length === 0 ?
+      EmptyComponent : itemComponents[item.type];
     const adHocOption = rootItem.adHocOption;
     const selected = selectedItemId == item?.id;
     const selectedClassName = selected ? tabSelectedClass : '';
