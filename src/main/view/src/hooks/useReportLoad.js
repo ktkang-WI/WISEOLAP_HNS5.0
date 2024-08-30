@@ -69,8 +69,6 @@ export default function useReportLoad() {
             await loadReport(data);
             if (selectedReport.promptYn === 'Y') {
               querySearch();
-            } else {
-              alert('보고서 조회가 필요합니다.');
             }
           } catch {
             alert(localizedString.reportCorrupted);
