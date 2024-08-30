@@ -36,7 +36,6 @@ import {selectCurrentDesignerMode,
 import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
-import _ from 'lodash';
 import useQueryExecute from 'hooks/useQueryExecute';
 // import LinkReportModal from
 //   'components/report/atomic/LinkReport/organisms/LinkReportModal';
@@ -67,6 +66,7 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const mypageConfig = useSelector(selectMyPageDesignerConfig);
+
   const dispatch = useDispatch();
   const {querySearch} = useReportSave();
   const {executeItems} = useQueryExecute();
@@ -437,6 +437,8 @@ const RibbonDefaultElement = () => {
       'id': 'query_search',
       'label': localizedString.querySearch,
       'type': 'CommonButton',
+      'themeType': (currentReport.options.promptYn === 'N') ?
+        'red' : 'secondary',
       'icon': querySearchIcon,
       'width': '83px',
       'height': '30px',
