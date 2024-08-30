@@ -95,8 +95,10 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
             if (info.operation == 'BETWEEN') {
               if ((!isTo && str > value.value[1]) ||
                   (isTo && str < value.value[0])) {
-                str = value.value[Math.abs(index - 1)];
-                alert(localizedString.invalidPeriodMsg);
+                // Between 달력, FROM 일자를 TO 보다 뒤로 선택 예외처리를
+                // 조회 할 때, 하기 위해 주석 처리
+                // str = value.value[Math.abs(index - 1)];
+                // alert(localizedString.invalidPeriodMsg);
               } else if (info.calendarMaxValue > 0) {
                 const from = index == 0 ? e.value :
                   ParamUtils.parseDateFromString(value.value[0], keyFormat);
