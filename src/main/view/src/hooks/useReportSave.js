@@ -393,13 +393,14 @@ const useReportSave = () => {
     dispatch(datasetActions.deleteReportDataset({reportId}));
   };
 
-  const querySearchException = (parameters, myPageConfigure) => {
+  const querySearchException = (parameters, myPageConfigure, isAdhocCube) => {
     try {
       // 매개변수 필터링
       // eslint-disable-next-line max-len
       const paramInfos = parameters.informations.filter((param) => param.operation === 'BETWEEN');
 
-      if (paramInfos.length === 0) {
+      // 비정형 주제영역일 때만 BETWEEN 매개변수 반드시 필요
+      if (isAdhocCube && (paramInfos.length === 0)) {
         // eslint-disable-next-line max-len
         throw new Error('보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.');
       }
@@ -471,7 +472,7 @@ const useReportSave = () => {
         // eslint-disable-next-line max-len
         const maxDaysInTwoYears = calculateDaysInYears(startDate.getFullYear(), period);
 
-        if (diffDays > maxDaysInTwoYears) {
+        if (isAdhocCube && (diffDays > maxDaysInTwoYears)) {
           throw new Error('설정된 조회기간이 사용자 최대 조회 기간(' + period + '년)을 초과했습니다.');
         }
       });
@@ -486,16 +487,16 @@ const useReportSave = () => {
     const designerMode = selectCurrentDesignerMode(store.getState());
     const myPageConfigure = selectMyPageDesignerConfig(store.getState());
     const rootDataset = selectRootDataset(store.getState());
+    // 비정형 보고서 이고, 주제영역 데이터 집합만 있는지 여부
+    // true: 비정형보고서 AND 주제영역 데이터 집합만 존재
+    const isAdhocCube = process.env.NODE_ENV !== 'development' &&
+    designerMode === DesignerMode['AD_HOC'] &&
+    rootDataset.datasets.every((dataset) =>
+      dataset.datasetType === DatasetType.CUBE);
 
-    // 비정형 주제영역일 때만 보고서 락
-    if (process.env.NODE_ENV != 'development' &&
-      designerMode === DesignerMode['AD_HOC'] &&
-      rootDataset.datasets.every((dataset) =>
-        dataset.datasetType === DatasetType.CUBE)) {
-      if (querySearchException(parameters, myPageConfigure)) {
-        return;
-      };
-    }
+    if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
+      return;
+    };
 
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
