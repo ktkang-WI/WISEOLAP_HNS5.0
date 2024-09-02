@@ -961,8 +961,8 @@
     "reportHistory": "보고서 형상 관리",
     "index": "순번",
     "savedDate": "저장 날짜",
-    "user": "사용자",
-    "restore": "복원",
+    "user": "변경자",
+    "restore": "보기",
     "warning": "저장되지 않은 작업 내용이 손실될 수 있습니다. 계속하시겠습니까?"
   },
   "showQueryExecutor": "쿼리 실행 결과 보기",
