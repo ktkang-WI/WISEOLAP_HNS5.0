@@ -81,13 +81,12 @@ const ReportTabs = ({reportData}) => {
               }
             }
 
-            if (editMode == EditMode.VIEWER &&
-              selectedReport.reportType == 'Excel') {
+            if (editMode == EditMode.VIEWER) {
               connectLinkedReport({
                 reportId: selectedReport.id,
                 reportType: selectedReport.reportType,
                 promptYn: selectedReport.promptYn
-              });
+              }, reports.length == 1, true);
 
               return;
             }
