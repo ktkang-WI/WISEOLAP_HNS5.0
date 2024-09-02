@@ -237,7 +237,7 @@ public class ReportService {
     	return returnMap;
     }
 
-    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggregation, String flag) {
+    public ReportResult getItemData(HttpServletRequest request, DataAggregation dataAggregation, String flag, String hasData) {
         ReportResult result;
 
         QueryGeneratorFactory queryGeneratorFactory = new QueryGeneratorFactory();
@@ -264,7 +264,7 @@ public class ReportService {
         Timer timer = new Timer();
         timer.start();
         MartResultDTO martResultDTO = null;
-        if ("".equals(flag)) {
+        if (!("showQuery".equals(flag) && hasData.equals("no"))) {
             martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
         }
         
@@ -288,7 +288,7 @@ public class ReportService {
 
         logService.insertQueryLog(queryLogDTO);
 
-        if ("".equals(flag)) {
+        if (!("showQuery".equals(flag) && hasData.equals("no"))) {
             ItemDataMakerFactory itemDataMakerFactory = new ItemDataMakerFactory();
             ItemDataMaker itemDataMaker = itemDataMakerFactory.getItemDataMaker(dataAggregation.getItemType());
            
