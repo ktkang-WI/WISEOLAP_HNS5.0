@@ -186,6 +186,15 @@ const generateItem = (item, param, rootItem) => {
     fields.push(field);
   }
 
+  if (dataField.measure.length == 1) {
+    fields.push({
+      caption: 'WISETEMPVALUE',
+      datafield: 'WISETEMPVALUE',
+      visible: false,
+      area: 'data'
+    });
+  }
+
   // TODO: 추후 PivotMatrix 옵션화
   if (true) {
     item.mart.dataSourceConfig = new PivotGridDataSource({
