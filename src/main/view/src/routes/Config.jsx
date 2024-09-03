@@ -33,7 +33,11 @@ const Config = () => {
         nav('viewer');
       }
     }
-    dispatch(setUserNm(userNm));
+    if (userNm != null && userNm != '') {
+      dispatch(setUserNm(userNm));
+    } else {
+      nav('/editds');
+    }
   }, []);
   return (
     <Wrapper

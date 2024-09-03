@@ -28,7 +28,11 @@ const Designer = () => {
   const {getReport, getLinkedReport} = useReportLoad();
   const nav = useNavigate();
 
-  saveConfiguration(generalConfigure, myPageConfigure);
+  if (myPageConfigure != undefined) {
+    saveConfiguration(generalConfigure, myPageConfigure);
+  } else {
+    nav('/editds');
+  }
 
   const [tabItems, setTabItems] = useState();
   const [mainTabItems, setMainTabItems] = useState();
@@ -144,7 +148,11 @@ const Designer = () => {
     }
 
     dispatch(reloadDisplaySetting({init: initPage, currPage: designerMode}));
-    saveConfiguration(generalConfigure, myPageConfigure);
+    if (myPageConfigure != undefined) {
+      saveConfiguration(generalConfigure, myPageConfigure);
+    } else {
+      nav('/editds');
+    }
   }, []);
 
   useEffect(() => {

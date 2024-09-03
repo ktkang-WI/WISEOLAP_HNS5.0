@@ -45,7 +45,6 @@ const mode = (functionNm, designerMode, currentItems, name) => {
 
 const ViewQuery = ({...props}) => {
   const designerMode = useSelector(selectCurrentDesignerMode);
-  // const {querySearch} = useReportSave();
   const {executeItems, executeSpread} = useQueryExecute();
   const [refresh, setRefresh] = useState(1);
   const currentItems = mode('currentItems', designerMode);
@@ -61,6 +60,22 @@ const ViewQuery = ({...props}) => {
       setQuery(() => mode('setQuery', designerMode, currentItems));
     }
   }, [refresh]);
+
+  const getIsExecute = () => {
+    let isExecute = false;
+
+    if (DesignerMode['DASHBOARD'] === designerMode) {
+      isExecute = currentItems.every((item) => {
+        return item.mart.init;
+      });
+    } else if (DesignerMode['AD_HOC'] === designerMode) {
+      isExecute = currentItems.some((item) => {
+        return item.mart.init;
+      });
+    }
+
+    return isExecute;
+  };
 
   return (
     <Modal
@@ -80,7 +95,6 @@ const ViewQuery = ({...props}) => {
           width={'200px'}
           items={mode('setDataSource', designerMode, currentItems)}
           defaultValue={defaultValue}
-          // value={defaultValue}
           onValueChange={(e) => {
             setQuery(() =>
               mode('setQuery', designerMode, currentItems, e));
@@ -99,6 +113,9 @@ const ViewQuery = ({...props}) => {
           height='100%'
           value={query}
           onLoad={async () => {
+            // 조회가 된 경우 제외.
+            if (getIsExecute()) return;
+
             if (DesignerMode['EXCEL'] !== designerMode) {
               await executeItems('showQuery');
             } else {

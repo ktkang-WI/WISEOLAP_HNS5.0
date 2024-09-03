@@ -6,7 +6,7 @@ import useReportLoad from 'hooks/useReportLoad';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {useLoaderData} from 'react-router-dom';
+import {useLoaderData, useNavigate} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const Viewer = () => {
@@ -17,6 +17,7 @@ const Viewer = () => {
   const {saveConfiguration} = useConfig();
   const {getReport, getLinkedReport} = useReportLoad();
   const {querySearch} = useReportSave();
+  const nav = useNavigate();
 
   const getFavoritViewerReport = async () => {
     const myReportId = myPageConfigure.defaultViewerReportId;
@@ -35,9 +36,13 @@ const Viewer = () => {
 
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);
-    saveConfiguration(generalConfigure, myPageConfigure);
-    if (hasFavoritReport) {
-      getFavoritViewerReport();
+    if (myPageConfigure != undefined && myPageConfigure != '') {
+      saveConfiguration(generalConfigure, myPageConfigure);
+      if (hasFavoritReport) {
+        getFavoritViewerReport();
+      }
+    } else {
+      nav('/editds');
     }
   }, []);
 

@@ -63,9 +63,12 @@ const useQueryExecute = () => {
     param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
+
     if (flag) {
       param.flag = flag;
     }
+    const hasData = item.mart.init ? 'ok' : 'no';
+    param.hasData = hasData;
 
     const orgDataset = datasets.find(
         (dataset) => dataField.datasetId == dataset.datasetId
@@ -308,14 +311,17 @@ const useQueryExecute = () => {
   };
 
   const executeSpread = async (flag) => {
-    dispatch(startJob('데이터를 조회 중입니다.'));
+    let loadingMsg = '데이터를 조회 중입니다.';
+    if (flag) loadingMsg = '쿼리를 조회 중입니다.';
+
+    dispatch(startJob(loadingMsg));
     const state = store.getState();
     const datasets = selectCurrentDatasets(state);
     const currentReportId = selectCurrentReportId(state);
     const reportId = selectCurrentReportId(state);
 
     if (_.isEmpty(datasets)) {
-      dispatch(endJob('데이터를 조회 중입니다.'));
+      dispatch(endJob(loadingMsg));
       alert(localizedString.dataSourceNotSelectedMsg);
       return;
     }
@@ -323,28 +329,37 @@ const useQueryExecute = () => {
     const parameters = selectRootParameter(state);
     const bindingInfos = selectBindingInfos(state);
     const datas = {};
+    const promises = [];
 
-    const promises = datasets.map((dataset) => {
+    for (const dataset of datasets) {
+      let isBinding = true;
+
       if (_.isEmpty(bindingInfos[dataset.datasetId]) ||
       !bindingInfos[dataset.datasetId].useBinding) {
-        dispatch(endJob('데이터를 조회 중입니다.'));
-        alert(localizedString.spreadBindingInfoNot);
-        return;
+        dispatch(endJob(loadingMsg));
+        alert(localizedString.spreadBindingInfoNot + '\n' + dataset.datasetId);
+        isBinding = false;
       }
+
       const dsId = dataset.dataSrcId;
       const query = dataset.datasetQuery;
-      return new Promise((resolve, reject) => {
-        models.DBInfo.getAllDatasetDatas(
-            reportId, dsId, query, parameters, flag
-        )
-            .then((res) => {
-              resolve({datasetId: dataset.datasetId, data: res.data});
-            })
-            .catch((e) => {
-              reject(e);
-            });
-      });
-    });
+
+      if (isBinding) {
+        promises.push(new Promise((resolve, reject) => {
+          models.DBInfo.getAllDatasetDatas(
+              reportId, dsId, query, parameters, flag
+          )
+              .then((res) => {
+                resolve({datasetId: dataset.datasetId, data: res.data});
+              })
+              .catch((e) => {
+                reject(e);
+              });
+        }));
+      }
+    }
+
+    if (promises.length === 0) return;
 
     await Promise.all(promises)
         .then((res) => {
@@ -359,7 +374,7 @@ const useQueryExecute = () => {
         .catch((res) => {
           console.log(res);
         }).finally(() => {
-          dispatch(endJob('데이터를 조회 중입니다.'));
+          dispatch(endJob(loadingMsg));
         });
   };
 
@@ -460,6 +475,8 @@ const useQueryExecute = () => {
    * @param {string} flag
    */
   const executeItems = async (flag) => {
+    let loadingMsg = '데이터를 조회 중입니다.';
+    if (flag) loadingMsg = '쿼리를 조회 중입니다.';
     const rootItem = selectRootItem(store.getState());
     const datasets = selectCurrentDatasets(store.getState());
     const parameters = selectRootParameter(store.getState());
@@ -482,7 +499,7 @@ const useQueryExecute = () => {
       return;
     };
 
-    dispatch(startJob('데이터를 조회 중입니다.'));
+    dispatch(startJob(loadingMsg));
     try {
       if (designerMode === DesignerMode['DASHBOARD']) {
         const {layoutConfig, selectedTab} = selectRootLayout(store.getState());
@@ -522,7 +539,7 @@ const useQueryExecute = () => {
     } catch (e) {
       console.error(e);
     } finally {
-      dispatch(endJob('데이터를 조회 중입니다.'));
+      dispatch(endJob(loadingMsg));
     }
   };
 
@@ -714,8 +731,8 @@ const useQueryExecute = () => {
       const isRequired = dataFieldOption[key].required;
       const isEmpty = dataField[key].length === 0;
       if (isRequired && isEmpty) {
-        throw new Error(`${dataFieldOption[key].label}
-         ${localizedString.requiredFieldNotExist}`);
+        throw new Error(`${dataFieldOption[key].label}`+
+         `${localizedString.requiredFieldNotExist}`);
       }
     });
   };
