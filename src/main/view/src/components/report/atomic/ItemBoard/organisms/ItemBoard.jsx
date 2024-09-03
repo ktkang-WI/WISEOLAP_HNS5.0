@@ -112,7 +112,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   function factory(node) {
     const id = node.getId();
     const item = items.find((i) => id == i.id);
-    const ItemComponent = item.mart.data.length === 0 ?
+    const ItemComponent = (item.mart.data.length === 0 || !item.mart.data.data)?
       EmptyComponent : itemComponents[item.type];
     const adHocOption = rootItem.adHocOption;
     const selected = selectedItemId == item?.id;

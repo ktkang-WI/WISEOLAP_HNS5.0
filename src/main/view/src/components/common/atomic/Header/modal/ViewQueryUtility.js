@@ -1,3 +1,4 @@
+import {DesignerMode} from 'components/config/configType';
 import {useSelector} from 'react-redux';
 import {selectCurrentItems} from 'redux/selector/ItemSelector';
 import {selectSpread} from 'redux/selector/SpreadSelector';
@@ -50,7 +51,7 @@ const setQuery = (designerMode, currentItems, name) => {
 
     let selectItemQuery = currentItems[0].mart.data.query;
     // 비정형 피벗그리드만 보기 후 쿼리보기
-    if (designerMode === 'AdHoc' && !selectItemQuery) {
+    if (designerMode === DesignerMode['AD_HOC'] && !selectItemQuery) {
       selectItemQuery = currentItems[1].mart.data.query;
     }
 
@@ -59,7 +60,7 @@ const setQuery = (designerMode, currentItems, name) => {
         currentItems.find((item) => item.meta.name === name);
       selectItemQuery = selectItemQuery.mart.data.query;
     }
-    return selectItemQuery;
+    return selectItemQuery || '';
   }
 };
 
