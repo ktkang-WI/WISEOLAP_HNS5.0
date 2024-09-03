@@ -124,7 +124,9 @@ const exportComponentToWorksheet = async (
         worksheet: worksheet,
         topLeftCell: {row: startRow + 1, column: 1},
         ...(isPivotGrid ? {mergeColumnFieldValues: option?.mergeColumn} : {}),
-        ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {})
+        ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {}),
+        // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
+        ...(isPivotGrid ? {exportRowFieldHeaders: true} : {})
       });
       break;
     }
@@ -176,7 +178,7 @@ const getExcelBlob = async (defaultFileName, downloadData) => {
   };
 };
 
-const mergeExcelFiles = async (items, parameters, option) => {
+const mergeExcelFiles = async (items, parameters, parameterValues, option) => {
   const reportId = selectCurrentReportId(store.getState());
   const layout = selectFlexLayoutConfig(store.getState());
   const adhocOption = selectCurrentAdHocOption(store.getState());
@@ -233,13 +235,33 @@ const mergeExcelFiles = async (items, parameters, option) => {
     if (parameters) {
       worksheet.getCell('A1').value = '필터차원';
       worksheet.getCell('B1').value = '조건값';
-      parameters.forEach((info, index) => {
-        const defaultValue =
-        (info.defaultValue && info.defaultValue.length) ?
-        info.defaultValue.join('') : '';
-        worksheet.getRow(index + 2).values = [info.caption, defaultValue];
+      parameters.forEach((info) => {
+        // 240903 parameter.information의 defaultvalue대신 parameter의 value를 이용
+        // info.name의 매개변수명으로 value 추출
+        const paramValue = parameterValues[info.name]?.value || [];
+        if (paramValue.length) {
+          if (info.operation === 'BETWEEN' && info.paramType === 'CALENDAR') {
+            // 240903 비트윈 캘린더용 날짜필터 추가
+            const fromRow = worksheet.getRow(startRow);
+            fromRow.getCell(1).value = info.caption + '_FROM';
+            fromRow.getCell(2).value = paramValue[0] || '전체';
+            const toRow = worksheet.getRow(startRow+1);
+            toRow.getCell(1).value = info.caption + '_TO';
+            toRow.getCell(2).value = paramValue[1] || '전체';
+            startRow+=2;
+          } else {
+            const row = worksheet.getRow(startRow);
+            row.getCell(1).value = info.caption;
+            paramValue.forEach((val, i) => {
+              if (val === '' || val === '[All]') {
+                val = '전체';
+              }
+              row.getCell(i + 2).value = val;
+            });
+            startRow+=1;
+          }
+        }
       });
-      startRow += parameters.length;
     }
 
     const dataField = adhocOption?.dataField || _items[elementObj.index]?.meta?.dataField;
@@ -282,11 +304,12 @@ export const exportExcel = async (
     report,
     items,
     parameters,
+    parameterValues,
     dataSource,
     option) => {
   store.dispatch(startJob());
   try {
-    const workbook = await mergeExcelFiles(items, parameters, option);
+    const workbook = await mergeExcelFiles(items, parameters, parameterValues, option);
 
     if (workbook) {
       const blobType =

@@ -5,7 +5,8 @@ import {
   selectRootItem
 } from 'redux/selector/ItemSelector';
 import {
-  selectCurrentInformationas
+  selectCurrentInformationas,
+  selectCurrentValues
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {
@@ -20,6 +21,7 @@ import useModal from 'hooks/useModal';
 const DownloadDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
   const currentParameter = useSelector(selectCurrentInformationas);
+  const currentParameterValues = useSelector(selectCurrentValues);
   const currentReport = useSelector(selectCurrentReport);
   const rootItem = useSelector(selectRootItem);
   const dataSource = _.cloneDeep(currentReport.options);
@@ -84,6 +86,7 @@ const DownloadDefaultElement = () => {
                   currentReport,
                   newCurrentItem,
                   currentParameter,
+                  currentParameterValues,
                   dataSource,
                   option);
             }
@@ -106,6 +109,7 @@ const DownloadDefaultElement = () => {
                   currentReport,
                   newCurrentItem,
                   currentParameter,
+                  currentParameterValues,
                   dataSource,
                   option);
             }

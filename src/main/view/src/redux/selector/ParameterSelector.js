@@ -12,3 +12,9 @@ export const selectCurrentInformationas = createSelector(
     (state) => state.meta.parameter,
     (reportId, parameter) => parameter[reportId].informations
 );
+
+export const selectCurrentValues = createSelector(
+    selectCurrentReportId,
+    (state) => state.meta.parameter,
+    (reportId, parameter) => parameter[reportId].values
+);
