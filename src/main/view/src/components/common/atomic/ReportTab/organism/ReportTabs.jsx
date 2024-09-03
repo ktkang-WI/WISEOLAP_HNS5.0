@@ -125,9 +125,11 @@ const ReportTabs = ({reportData}) => {
   };
 
   const setDatas = (data) => {
-    setIconReportList(data.privateReport);
-    setIconReportList(data.publicReport);
-    setReportList(data);
+    if (data != undefined && data != '') {
+      setIconReportList(data.privateReport);
+      setIconReportList(data.publicReport);
+      setReportList(data);
+    }
   };
 
   useEffect(() => {

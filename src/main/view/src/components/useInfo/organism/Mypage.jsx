@@ -49,7 +49,11 @@ const MyPage = () => {
     menuButtons.find(({path}) => location.pathname.includes(path));
 
   useEffect(() => {
-    dispatch(setUserNm(userNm));
+    if (userNm != null && userNm != '') {
+      dispatch(setUserNm(userNm));
+    } else {
+      nav('/editds');
+    }
   }, []);
 
   return (

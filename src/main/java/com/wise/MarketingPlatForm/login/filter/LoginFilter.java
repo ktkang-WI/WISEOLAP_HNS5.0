@@ -81,7 +81,8 @@ public class LoginFilter implements Filter{
             }
         // 그 외 동작
         } else if (userDTO == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // response.sendRedirect("/");
+            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
             chain.doFilter(request, response);
         }
