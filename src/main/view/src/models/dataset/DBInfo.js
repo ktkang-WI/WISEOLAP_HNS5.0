@@ -25,9 +25,10 @@ export const dbColumns = (dsId, table, search) => {
   });
 };
 
-export const getTablesByMart = (dsId) => {
+export const getTablesByMart = (dsId, searchValue) => {
   return axios.post(path + '/query-dataset-tables', {
-    dsId: parseInt(dsId)
+    dsId: parseInt(dsId),
+    searchValue: searchValue
   });
 };
 

@@ -184,10 +184,11 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"dsId\": \"2703\"}")
     }))
     @PostMapping(value = "/query-dataset-tables")
-    public Map<String, MartResultDTO> getTables(@RequestBody Map<String, Integer> datasource) {
-        int dsId = datasource.get("dsId");
+    public Map<String, MartResultDTO> getTables(@RequestBody Map<String, String> datasource) {
+        int dsId = Integer.parseInt(datasource.get("dsId"));
+        String searchValue = datasource.get("searchValue");
 
-        return datasetService.getQueryDatasetTable(dsId);
+        return datasetService.getQueryDatasetTable(dsId, searchValue);
     }
 
     @Operation(summary = "queryDataset validate", description = "쿼리 유효성 검사 및 데이터 가져옴")

@@ -52,11 +52,15 @@ const FilterBarWrapper = (props) => {
     }
   }, [parameters.filterSearchComplete]);
 
-  const onValueChanged = (id, value, index) => {
+  const onValueChanged = (id, value, index, reValue) => {
     const values =
       _.cloneDeep(selectRootParameter(store.getState()).values[id]);
     if (!values) return;
+    if (!values?.value) return;
     values.value[index] = value;
+    if (reValue?.length) {
+      values.listItems = reValue;
+    }
     dispatch(setParameterValues({reportId, values: {[id]: values}}));
 
     for (const key in parameters.values) {

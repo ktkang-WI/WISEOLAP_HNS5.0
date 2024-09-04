@@ -18,13 +18,14 @@ const ListFilter = ({
   const listRef = useRef();
   const textBoxRef = useRef();
   const [dataType, setDataType] = useState('');
+  let listItems = value?.listItems || [];
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
 
     const keySet = new Set(keys);
     const captionArr = [];
-    for (const item of value.listItems) {
+    for (const item of listItems) {
       if (keySet.has(item.name)) {
         captionArr.push(item.caption);
         keySet.delete(item.name);
@@ -34,8 +35,10 @@ const ListFilter = ({
       }
     }
 
-    if (captionArr.length === value.listItems.length) {
-      return allText;
+    if (captionArr.length === listItems.length) {
+      if (!info.useAll && listItems.length > 1) {
+        return allText;
+      }
     }
 
     if (captionArr.length > 0) {
@@ -49,12 +52,15 @@ const ListFilter = ({
     let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
     if (!value || !value.value) {
       setText('');
-    } else if (!keys || keys == '[All]') {
+    // eslint-disable-next-line brace-style
+    }
+    /* else if (!keys || keys == '[All]') {
       if (info.multiSelect) {
         keys = value.listItems.map((item) => item.name);
       }
       setText(allText);
-    } else {
+    } */
+    else {
       if (dataType === 'number') {
         keys = keys.split(', ').map((key) => {
           return isNaN(Number(key)) ? key : Number(key);
@@ -75,13 +81,22 @@ const ListFilter = ({
     listRef.current.instance.option('selectedItemKeys');
     const dataSource = _dataSource ||
       listRef.current.instance.option('dataSource');
+    listItems = dataSource;
     let selection;
     if (selectionKeys.length == 0 ||
-        selectionKeys.length == dataSource.length ||
+        (selectionKeys.length == dataSource.length) ||
         (!_dataSource && info.useAll && !info.multiSelect &&
         selectionKeys.length == dataSource.length - 1)) {
-      selection = '[All]';
-      setText(allText);
+      if (info.defaultValueUseSql || info.useSearch) {
+        if (typeof selectionKeys[0] === 'number') {
+          setDataType(typeof selectionKeys[0]);
+        }
+        selection = selectionKeys.join(', ');
+        setText(generateCaptionText(selectionKeys));
+      } else {
+        selection = '[All]';
+        setText(allText);
+      }
     } else {
       if (typeof selectionKeys[0] === 'number') {
         setDataType(typeof selectionKeys[0]);
@@ -90,8 +105,21 @@ const ListFilter = ({
       setText(generateCaptionText(selectionKeys));
     }
 
-    onValueChanged(info.name, selection, index);
+    if (info.useSearch) {
+      let listDataSource = dataSource
+          .filter((item) => item.name !== '[All]');
+      if (_selectionKeys) {
+        listDataSource = listDataSource
+            .filter((item) => _selectionKeys.includes(item.name));
+      }
+
+      onValueChanged(info.name, selection, index, listDataSource);
+    } else {
+      onValueChanged(info.name, selection, index, []);
+    }
+
     setSelectionKeys(selectionKeys);
+
     popOverRef.current.instance.hide();
   };
 
@@ -114,7 +142,7 @@ const ListFilter = ({
         confirm={confirm}
         cancel={cancel}
         allText={allText}
-        orgDataSource={value?.listItems || []}
+        orgDataSource={listItems || []}
         selectionKeys={selectionKeys}
       />
     );
@@ -130,7 +158,7 @@ const ListFilter = ({
           value={text}
           width={width}
           onValueChanged={(e) => {
-            const dataSource = value?.listItems || [];
+            const dataSource = listItems || [];
             const captions = e.value.split(',');
             const tempSelectionKeys = new Set();
 

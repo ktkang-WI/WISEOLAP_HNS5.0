@@ -9,23 +9,35 @@
 	
 	<select id="selectQueryDataTbl" resultType="com.wise.MarketingPlatForm.mart.vo.MartResultDTO" parameterType="hashMap">
 		<if test='dbType.equalsIgnoreCase("ORACLE")'>
-			SELECT  
+			SELECT  DISTINCT
 				A.OBJECT_NAME TBL_NM,
 				A.OBJECT_NAME ID,
 				B.COMMENTS TBL_CAPTION,
+				CASE WHEN B.COMMENTS IS NOT NULL THEN B.COMMENTS 
+				ELSE A.OBJECT_NAME END  
+				AS DATA_CAPTION,
 				-1 AS PARENT_ID
-				FROM ALL_OBJECTS A, ALL_TAB_COMMENTS B 
+				FROM ALL_OBJECTS A, ALL_TAB_COMMENTS B, all_tab_columns C
 				WHERE A.OWNER = B.OWNER
+				AND A.OWNER = C.OWNER
+				AND A.OBJECT_NAME = C.TABLE_NAME
 				AND A.OBJECT_TYPE IN ('TABLE','VIEW')
 				AND A.OBJECT_NAME = B.TABLE_NAME
 				AND A.OWNER = '${owner}' 
-				AND ( UPPER(A.OBJECT_NAME) LIKE '%%' 
-				OR UPPER(B.COMMENTS) LIKE '%%' ) ORDER BY 1
+				AND (
+					( UPPER(A.OBJECT_NAME) LIKE '%${searchValue}%' OR UPPER(B.COMMENTS) LIKE '%${searchValue}%' )
+					OR 
+					( C.column_name LIKE '%${searchValue}%' )
+				)
+				ORDER BY 1
 		</if>
 		<if test='dbType.equalsIgnoreCase("MS_SQL")'>
 			SELECT
 				CAST(A.NAME AS NVARCHAR(200)) AS TBL_NM,
 			    CAST(B.VALUE AS NVARCHAR(200)) AS TBL_CAPTION,
+				CASE WHEN CAST(B.VALUE AS NVARCHAR(200)) IS NOT NULL THEN CAST(B.VALUE AS NVARCHAR(200))
+				ELSE CAST(A.NAME AS NVARCHAR(200)) END  
+				AS DATA_CAPTION,
 				CAST(A.NAME AS NVARCHAR(200)) AS ID,
 				-1 AS PARENT_ID
 				FROM SYSOBJECTS A
@@ -33,18 +45,23 @@
 				ON A.name = B.objname collate Latin1_General_CI_AI
 				LEFT JOIN SYS.schemas C ON A.uid = C.schema_id
 				WHERE A.xtype IN ('U', 'V') AND A.NAME NOT IN ('sysdiagrams')
-				AND (UPPER(CAST(A.NAME AS NVARCHAR(200))) LIKE '%%'
-				OR UPPER(CAST(B.VALUE AS NVARCHAR(200))) LIKE '%%')
+				AND (UPPER(CAST(A.NAME AS NVARCHAR(200))) LIKE '%${searchValue}%'
+				OR UPPER(CAST(B.VALUE AS NVARCHAR(200))) LIKE '%${searchValue}%')
 				AND C.name = 'dbo' ORDER BY 1
 		</if>
 		<if test='dbType.equalsIgnoreCase("DB2")'>
 			SELECT  TABNAME TBL_NM, 
 				TABNAME ID, 
 				COALESCE(REMARKS, TABNAME) TBL_CAPTION,
+				CASE WHEN COALESCE(REMARKS, TABNAME) IS NOT NULL THEN COALESCE(REMARKS, TABNAME) 
+				ELSE TABNAME END  
+				AS DATA_CAPTION,
 				-1 AS PARENT_ID
 			FROM    SYSCAT.TABLES
 			WHERE   TYPE IN ('T', 'V') AND OWNERTYPE = 'U'  
 			AND     TABSCHEMA = '${owner}'
+			AND ( TABNAME LIKE '%${searchValue}%'
+			OR COALESCE(REMARKS, TABNAME) LIKE '%${searchValue}%')
 		</if>
 	</select>
 	
@@ -55,6 +72,9 @@
 				  a.table_name as TBL_NM,
 				  a.column_name AS COL_NM,
 				  b.comments AS col_caption,
+				  CASE WHEN b.comments IS NOT NULL THEN b.comments
+				  ELSE a.column_name END  
+				  AS DATA_CAPTION,
 				  CONCAT(CONCAT('[', CONCAT(a.table_name, '].[')),CONCAT(a.column_name, ']')) AS ID
 				  ,data_type as DATA_TYPE
 				  ,CAST(data_length as VARCHAR(50)) as LENGTH
@@ -78,6 +98,8 @@
 				  and   a.owner = '${owner}'
 				  and   b.owner = '${owner}'
 				  and   d.owner = '${owner}'
+				  and (	a.column_name LIKE '%${searchValue}%'
+				  or 	b.comments LIKE '%${searchValue}%' )
           <if test='table != null'>
             and a.table_name = #{table}
           </if>
@@ -98,6 +120,9 @@
 		      	CAST(B.[colid] AS NVARCHAR(200))  AS 'COL_ID',
 		      	CAST(E.[indid] AS NVARCHAR(200))  AS 'PK_YN',
 		      	CAST(F.value AS NVARCHAR(200))  AS 'COL_CAPTION',
+				CASE WHEN CAST(F.value AS NVARCHAR(200)) IS NOT NULL THEN CAST(F.value AS NVARCHAR(200))
+				ELSE CAST(B.[name] AS NVARCHAR(200)) END  
+				AS DATA_CAPTION,
 		      	CAST(G.value AS NVARCHAR(200)) AS 'TBL_CAPTION',
 		      	CAST(A.[name] AS NVARCHAR(200)) AS PARENT_ID
 		      	FROM  SYSOBJECTS A INNER JOIN SYSCOLUMNS B ON A.id = B.id
@@ -115,6 +140,9 @@
 			SELECT A.TABNAME TBL_NM 
 			, B.COLNAME COL_NM
 			, NVL(B.REMARKS, B.COLNAME) COL_CAPTION 
+			, CASE WHEN NVL(B.REMARKS, B.COLNAME) IS NOT NULL THEN NVL(B.REMARKS, B.COLNAME)
+				ELSE B.COLNAME END  
+				AS DATA_CAPTION
 			,CONCAT(CONCAT('[', CONCAT(A.TABNAME, '].[')),CONCAT(B.COLNAME, ']')) AS ID
 			, B.TYPENAME DATA_TYPE 
 			, B.LENGTH LENGTH 
