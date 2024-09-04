@@ -101,7 +101,7 @@ const DataSourceFoldableList = ({dataset}) => {
     let description = '';
 
     if (dataset.datasetType === DatasetType.CUBE) {
-      description = item.descript ? item.description : '';
+      description = item.description || '';
     } else if (dataset.datasetType === DatasetType.DS_SQL) {
       const fieldDesc = dataset.fieldDescription || {};
       description = fieldDesc[item.name];
