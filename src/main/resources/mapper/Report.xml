@@ -315,6 +315,7 @@
                             #{type}
                         </foreach>
                     </if>
+                    AND REPORT_MSTR.FLD_TYPE = 'PRIVATE'
             )
         ) A
         LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO  
