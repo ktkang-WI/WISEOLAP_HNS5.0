@@ -11,4 +11,5 @@ import lombok.Getter;
 public class ListParameterResultVO {
     List<String> value;
     List<Map<String, Object>> listItems;
+    int listLength;
 }

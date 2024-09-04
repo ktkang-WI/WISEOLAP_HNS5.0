@@ -215,7 +215,7 @@ public class DatasetService {
         return result;
     }
 
-    public Map<String, MartResultDTO> getQueryDatasetTable(int dsId) {
+    public Map<String, MartResultDTO> getQueryDatasetTable(int dsId, String searchValue) {
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
         Map<String, MartResultDTO> tbl_Col = new HashMap<>();
         Map<String, String> param = new HashMap<>();
@@ -237,6 +237,7 @@ public class DatasetService {
         martConfig.setMartDataSource(dsMstrDTO);
         param.put("dbType", dsMstrDTO.getDbmsType().name());
         param.put("owner", dsMstrDTO.getOwnerNm());
+        param.put("searchValue", searchValue);
 
         MartResultDTO tableList = martDAO.selectQueryDataTbl(dsMstrDTO.getDsId(), param);
         MartResultDTO columnList = martDAO.selectQueryDataCol(dsMstrDTO.getDsId(), param);
@@ -442,14 +443,38 @@ public class DatasetService {
             String column = listParameterDTO.getItemKey() + ", " + listParameterDTO.getItemCaption() +
                     (!StringUtil.isBlank(listParameterDTO.getSortBy()) ? ", " + listParameterDTO.getSortBy() : "");
             query = "SELECT " + column +
-                    " FROM " + listParameterDTO.getDataSource() + " GROUP BY " + column;
+                    " FROM " + listParameterDTO.getDataSource();
+                    if(!"".equals(listParameterDTO.getSearchValue())) {
+                        if("STRING".equals(listParameterDTO.getDataType())) {
+                            query += " WHERE " + listParameterDTO.getItemKey() + " LIKE \'%"+ listParameterDTO.getSearchValue() +"%\'";
+                        } else if("NUMBER".equals(listParameterDTO.getDataType())){
+                            query += " WHERE " + listParameterDTO.getItemKey() + " LIKE %"+ listParameterDTO.getSearchValue() +"%";
+                        }
+                    }
+            query += " GROUP BY " + column;
         } else {
             query = listParameterDTO.getDataSource();
             query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);
         }
 
-        MartResultDTO result = martDAO.select(dsMstrDTO.getDsId(), query);
-        List<Map<String, Object>> listItems = ListParameterUtils.sanitize(result.getRowData(), listParameterDTO);
+        MartResultDTO result = new MartResultDTO();
+
+        if (listParameterDTO.isUseSearch()) {
+            if(!"".equals(listParameterDTO.getSearchValue())){
+                result = martDAO.select(dsMstrDTO.getDsId(), query);
+            }
+        } else {
+            result = martDAO.select(dsMstrDTO.getDsId(), query);
+        }
+        List<Map<String, Object>> listItems = listParameterDTO.isUseSearch() && "".equals(listParameterDTO.getSearchValue()) ?
+            new ArrayList<Map<String, Object>>() : ListParameterUtils.sanitize(result.getRowData(), listParameterDTO);
+
+        int listSize = listItems.size();
+        if (listParameterDTO.isUseSearch()) {
+            if ( listSize > 1000) {
+                listItems.subList(0, 1000);
+            }
+        }
 
         List<String> defaultValue = listParameterDTO.getDefaultValue();
 
@@ -467,7 +492,7 @@ public class DatasetService {
             defaultValue = getDefaultValues(listParameterDTO.getDsId(), listParameterDTO.getDefaultValue());
         }
 
-        return new ListParameterResultVO(defaultValue, listItems);
+        return new ListParameterResultVO(defaultValue, listItems, listSize);
     }
 
     public List<String> getDefaultValues(int dsId, List<String> queries) {

@@ -37,6 +37,8 @@ export const getListItems = (param, linkageValues) => {
     defaultValue: JSON.stringify(defaultValue),
     defaultValueUseSql: param.defaultValueUseSql,
     useAll: param.useAll,
-    multiSelect: param.multiSelect
+    multiSelect: param.multiSelect,
+    useSearch: param.useSearch,
+    searchValue: param.searchValue
   });
 };
