@@ -1,15 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  informations: {}
+  linkReport: {},
+  subLinkReport: {}
 };
 
 const reducers = {
   initLink: () => initialState,
   insertLink(state, action) {
     const {linkReportId, subYn, subLinkReport} = action.payload;
-    if (!state.informations[linkReportId]) {
-      state.informations[linkReportId] =
+    if (!state.linkReport[linkReportId]) {
+      state.linkReport[linkReportId] =
         {
           ...action.payload,
           subLinkReport: subYn === 'True' ?
@@ -21,19 +22,19 @@ const reducers = {
           Array.isArray(subLinkReport) ? subLinkReport : [subLinkReport];
         newSubLinks.forEach((newSubLink) => {
           const index =
-            state.informations[linkReportId].subLinkReport.findIndex(
+            state.linkReport[linkReportId].subLinkReport.findIndex(
                 (sub) => sub.subLinkItemId === newSubLink.subLinkItemId
             );
           if (index !== -1) {
-            state.informations[linkReportId].subLinkReport[index] = newSubLink;
+            state.linkReport[linkReportId].subLinkReport[index] = newSubLink;
           } else {
-            state.informations[linkReportId].subLinkReport.push(newSubLink);
+            state.linkReport[linkReportId].subLinkReport.push(newSubLink);
           }
         });
       } else {
-        state.informations[linkReportId] = {
+        state.linkReport[linkReportId] = {
           ...action.payload,
-          subLinkReport: state.informations[linkReportId].subLinkReport
+          subLinkReport: state.linkReport[linkReportId].subLinkReport
         };
       }
     }
@@ -41,53 +42,52 @@ const reducers = {
 
   updateLink(state, action) {
     const {linkReportId, subYn, subLinkReport} = action.payload;
-    if (subYn === 'True' && state.informations[linkReportId]) {
+    if (subYn === 'True' && state.linkReport[linkReportId]) {
       const newSubLinks =
         Array.isArray(subLinkReport) ? subLinkReport : [subLinkReport];
       newSubLinks.forEach((newSubLink) => {
         const index =
-          state.informations[linkReportId].subLinkReport.findIndex(
+          state.linkReport[linkReportId].subLinkReport.findIndex(
               (sub) => sub.subLinkItemId === newSubLink.subLinkItemId);
         if (index !== -1) {
-          state.informations[linkReportId].subLinkReport[index] = newSubLink;
+          state.linkReport[linkReportId].subLinkReport[index] = newSubLink;
         } else {
-          state.informations[linkReportId].subLinkReport.push(newSubLink);
+          state.linkReport[linkReportId].subLinkReport.push(newSubLink);
         }
       });
     } else {
-      state.informations[linkReportId] =
+      state.linkReport[linkReportId] =
         {
           ...action.payload,
-          subLinkReport: state.informations[linkReportId]?.subLinkReport || []
+          subLinkReport: state.linkReport[linkReportId]?.subLinkReport || []
         };
     }
   },
 
   deleteLink(state, action) {
     const {linkReportId, subYn, subLinkItemId} = action.payload;
-    if (subYn === 'True' && state.informations[linkReportId]) {
-      state.informations[linkReportId].subLinkReport =
-        state.informations[linkReportId].subLinkReport.filter(
+    if (subYn === 'True' && state.linkReport[linkReportId]) {
+      state.linkReport[linkReportId].subLinkReport =
+        state.linkReport[linkReportId].subLinkReport.filter(
             (sub) => sub.subLinkItemId !== subLinkItemId
         );
     } else {
-      delete state.informations[linkReportId];
+      delete state.linkReport[linkReportId];
     }
   },
 
   setLinkReport(state, action) {
-    if (!action.payload) return;
-    const {linkReportId} = action.payload;
-    if (state.informations[linkReportId]) {
-      state.informations[linkReportId] = action.payload;
-    } else {
-      state.informations[linkReportId] = action.payload;
+    if (!action.payload) {
+      state.linkReport = {};
+      return;
     }
+    const {linkReportId} = action.payload;
+    state.linkReport[linkReportId] = action.payload;
   },
 
   setSubLinkReport(state, action) {
     if (!action.payload) return;
-    state.informations = {};
+    state.linkReport = {};
     const {
       reportId,
       linkReportId,
@@ -124,14 +124,14 @@ const reducers = {
       subYn: 'True',
       subLinkReport: matchSubLinkInfo
     };
-    state.informations[linkReportId] = matchLinkInfo;
+    state.linkReport[linkReportId] = matchLinkInfo;
   }
 };
 
 const extraReducers = {};
 
 const LinkSlice = createSlice({
-  name: 'Link',
+  name: 'LinkInfo',
   initialState: initialState,
   reducers: reducers,
   extraReducers: extraReducers
