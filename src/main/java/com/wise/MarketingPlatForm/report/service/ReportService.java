@@ -512,10 +512,9 @@ public class ReportService {
         favoriteReportsList.add(favoriteFolder);
     
         // 즐겨찾기 보고서와 원래의 보고서를 합침
-        List<ReportListDTO> combinedReports = new ArrayList<>(favoriteReportsList);
-        combinedReports.addAll(reports);
+        favoriteReportsList.addAll(reports);
     
-        return combinedReports;
+        return favoriteReportsList;
     }
 
     public Map<String, Object> getReportListIncludeQuery() {
