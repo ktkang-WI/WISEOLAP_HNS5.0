@@ -13,6 +13,10 @@ public class MetaDTO {
 	String uniqueName;
 
 	public void setUniqueName(String tableName) {
-		this.uniqueName = "[" + tableName + "]." + "[" + this.columnName + "]";
+		if (tableName == null || tableName.isEmpty()) {
+			this.uniqueName = "[" + this.columnName + "]";
+		} else {
+				this.uniqueName = "[" + tableName + "]." + "[" + this.columnName + "]";
+		}
 	}
 }
