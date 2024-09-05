@@ -26,6 +26,7 @@ import favoriteEmptyImg from 'assets/image/icon/button/favorite-empty.png';
 import {addFavoriteReport, deleteFavoriteReport} from 'models/report/Report';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
+import useModal from 'hooks/useModal';
 const theme = getTheme();
 
 const StyledHeader = styled.div`
@@ -68,6 +69,7 @@ const Header = ({left, middle, right}) => {
 
   // hook
   const dispatch = useDispatch();
+  const {alert} = useModal();
 
   // slice
   const reportActions = ReportSlice.actions;
@@ -157,8 +159,12 @@ const Header = ({left, middle, right}) => {
                             uniqueId: uniqueId.match(/\d+/)[0]
                           }
                         }));
+                      } else {
+                        console.log(res);
+                        alert('즐겨찾기 삭제에 실패했습니다.\n 관리자에게 문의하세요.\n ');
                       }
                     } catch (e) {
+                      console.error(e);
                       alert('즐겨찾기 삭제에 실패했습니다.\n 관리자에게 문의하세요.');
                     }
                   });
@@ -174,8 +180,12 @@ const Header = ({left, middle, right}) => {
                             uniqueId: 'favorite' + report.reportId
                           }
                         }));
+                      } else {
+                        console.log(res);
+                        alert('즐겨찾기 추가에 실패했습니다.\n 관리자에게 문의하세요.\n ');
                       }
                     } catch (e) {
+                      console.error(e);
                       alert('즐겨찾기 추가에 실패했습니다.\n 관리자에게 문의하세요.');
                     }
                   });

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -76,7 +79,8 @@ public class ReportController {
     private final AuthService authService;
 
     private final TokenStorage<ReportTokenDTO> tokenStorage;
-    
+    private static final Logger logger = LoggerFactory.getLogger(RestController.class);
+
     @Autowired
     private ListDataUtility<Measure> listDataUtility;
 
@@ -560,9 +564,18 @@ public class ReportController {
             int reportId = Integer.parseInt(param.get("reportId"));
             String fldType = param.get("fldType");
             boolean added = reportService.addFavorite(user.getUserNo(), reportId, fldType);
-            return ResponseEntity.ok(added);
+
+            if (added) {
+                // 추가 성공 시 200 OK 반환
+                return ResponseEntity.ok(true);
+            } else {
+                // 추가 실패 시 400 Bad Request 또는 다른 상태 코드 반환
+                logger.error("Failed to add favorite for userNo: {} and reportId: {}", user.getUserNo(), reportId);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+            }
         } catch (Exception e) {
-            return ResponseEntity.ok(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 
@@ -585,9 +598,17 @@ public class ReportController {
             
             boolean removed = reportService.removeFavorite(user.getUserNo(), reportId);
     
-            return ResponseEntity.ok(removed);
+            if (removed) {
+                // 삭제 성공 시 200 OK 반환
+                return ResponseEntity.ok(true);
+            } else {
+                // 삭제 실패 시 400 Bad Request 또는 다른 상태 코드 반환
+                logger.error("Failed to remove favorite for userNo: {} and reportId: {}", user.getUserNo(), reportId);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+            }
         } catch (Exception e) {
-            return ResponseEntity.ok(false);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 }
