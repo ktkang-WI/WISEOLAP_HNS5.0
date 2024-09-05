@@ -130,7 +130,7 @@ const HeaderDefaultElement = () => {
           stylingMode: 'text',
           icon: 'search',
           type: 'default',
-          disabled: false
+          disabled: true
         }
       }]
     },

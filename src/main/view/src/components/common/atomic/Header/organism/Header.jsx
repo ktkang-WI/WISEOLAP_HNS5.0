@@ -19,7 +19,13 @@ import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 
 import DropdownBoxReportSearch from '../atom/DropdownBoxReportSearch';
+import SmallImageButton from '../../Common/Button/SmallImageButton';
 
+import favoriteImg from 'assets/image/icon/button/favorite.png';
+import favoriteEmptyImg from 'assets/image/icon/button/favorite-empty.png';
+import {addFavoriteReport, deleteFavoriteReport} from 'models/report/Report';
+import {useDispatch} from 'react-redux';
+import ReportSlice from 'redux/modules/ReportSlice';
 const theme = getTheme();
 
 const StyledHeader = styled.div`
@@ -59,6 +65,12 @@ const Header = ({left, middle, right}) => {
   const headerDefaultItems = headerDefaultElement();
   const report = useSelector(selectCurrentReport);
   const editMode = useSelector(selectEditMode);
+
+  // hook
+  const dispatch = useDispatch();
+
+  // slice
+  const reportActions = ReportSlice.actions;
 
   const getHeaderItem = (item) => {
     const useInfoBtn =
@@ -121,7 +133,59 @@ const Header = ({left, middle, right}) => {
           >
             {editMode == EditMode.VIEWER && report.reportId == 0 ?
               '' : report.options.reportNm}
+
           </ReportTitleText>
+          &nbsp;
+          {report.reportId !== 0 &&
+            <SmallImageButton
+              key={'favorite-button'}
+              title={'즐겨찾기'}
+              onClick={() => {
+                const uniqueId = report.options.uniqueId;
+                const param = {
+                  reportId: report.reportId
+                };
+
+                if (uniqueId?.includes('favorite')) {
+                  // 즐겨찾기 삭제
+                  deleteFavoriteReport(param).then((res) => {
+                    try {
+                      if (res.data) {
+                        dispatch(reportActions.updateReportOptions({
+                          reportId: report.reportId,
+                          options: {
+                            uniqueId: uniqueId.match(/\d+/)[0]
+                          }
+                        }));
+                      }
+                    } catch (e) {
+                      alert('즐겨찾기 삭제에 실패했습니다.\n 관리자에게 문의하세요.');
+                    }
+                  });
+                } else {
+                  // 즐겨찾기 추가
+                  param.fldType = report.options.fldType;
+                  addFavoriteReport(param).then((res) => {
+                    try {
+                      if (res.data) {
+                        dispatch(reportActions.updateReportOptions({
+                          reportId: report.reportId,
+                          options: {
+                            uniqueId: 'favorite' + report.reportId
+                          }
+                        }));
+                      }
+                    } catch (e) {
+                      alert('즐겨찾기 추가에 실패했습니다.\n 관리자에게 문의하세요.');
+                    }
+                  });
+                }
+              }}
+              src={report.options.uniqueId?.includes('favorite') ?
+                favoriteImg : favoriteEmptyImg
+              }
+            />
+          }
         </HeaderPanel>
       );
     } else if (item.type === 'ReportTabs') {

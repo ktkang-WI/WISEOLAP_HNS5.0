@@ -15,6 +15,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class ReportListDTO {
     int id;
+    String uniqueId;
     String name;
     int upperId;
     int ordinal;

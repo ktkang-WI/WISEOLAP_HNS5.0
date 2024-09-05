@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GridAttributeUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.EditMode;
@@ -339,13 +341,13 @@ public class ReportController {
 	@PostMapping(value = "/report-list")
         public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = userDTO.getUserId();
+
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");
 
         ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
         EditMode editMode = EditMode.fromString(editModeStr).orElse(null);
-        return reportService.getReportList(userId, reportType, editMode);
+        return reportService.getReportList(userDTO, reportType, editMode);
     }
     
     @GetMapping(value = "/report-list/query")
@@ -550,7 +552,44 @@ public class ReportController {
         }
     }
     
+    // 즐겨찾기 추가
+    @PostMapping("/favorites-add")
+    public ResponseEntity<Boolean> addFavorite(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        try {
+            UserDTO user = SessionUtility.getSessionUser(request);
+            int reportId = Integer.parseInt(param.get("reportId"));
+            String fldType = param.get("fldType");
+            boolean added = reportService.addFavorite(user.getUserNo(), reportId, fldType);
+            return ResponseEntity.ok(added);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 
+    // 즐겨찾기 목록 조회
+    @GetMapping("/favorites-list")
+    public List<ReportFavoritesEntity> getFavorites(@RequestParam int userNo) {
+        List<ReportFavoritesEntity> list = new ArrayList<ReportFavoritesEntity>();
+        
+        list = reportService.getFavoritesByUserNo(userNo);
+
+        return list;
+    }
+
+    // 즐겨찾기 삭제
+    @PostMapping("/favorites-remove")
+    public ResponseEntity<Boolean> removeFavorite(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        try {
+            UserDTO user = SessionUtility.getSessionUser(request);
+            int reportId = Integer.parseInt(param.get("reportId"));
+            
+            boolean removed = reportService.removeFavorite(user.getUserNo(), reportId);
+    
+            return ResponseEntity.ok(removed);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 }
 
 
