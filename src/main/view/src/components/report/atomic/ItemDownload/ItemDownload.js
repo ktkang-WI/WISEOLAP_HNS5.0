@@ -86,7 +86,7 @@ export class ItemDownload {
     } else if (Type.TXT === type) {
       exportToFile(name, pickItem.data, Type.TXT);
     } else if (Type.XLSX === type) {
-      exportToFile(name, pickItem.data, Type.XLSX);
+      exportToFile(name, pickItem.data, Type.XLSX, pickItem);
     } else if (Type.IMG === type) {
       exportToFile(name, pickItem, Type.IMG);
     }

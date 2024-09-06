@@ -139,11 +139,11 @@ const convertToFormat = (data, type) => {
   return result;
 };
 
-export const exportToFile = (name, data, type) => {
+export const exportToFile = (name, data, type, pickItem) => {
   if (Type.IMG === type) {
     exportImgFile(name, data, type);
   } else {
-    exportFile(name, convertToFormat(data, type), type);
+    exportFile(name, convertToFormat(data, type), type, pickItem);
   }
 };
 
@@ -177,15 +177,13 @@ const exportImgFile = (name, pickItem, type) => {
 };
 
 
-const exportFile = (name, data, type) => {
+const exportFile = (name, data, type, pickItem) => {
   const currentReport = selectCurrentReport(store.getState());
   const currentItem = selectCurrentItems(store.getState());
   const currentParameter = selectCurrentInformationas(store.getState());
   const currentParameterValues = selectCurrentValues(store.getState());
   const rootItem = selectRootItem(store.getState());
   const dataSource = _.cloneDeep(currentReport.options);
-  const currentItemType = currentItem
-      .find((item) => item.id === rootItem.selectedItemId).type;
 
   // 비정형인 경우 레이아웃 설정에 따라 다운로드 되는 아이템이 달라야 함.
   // (ex. 그리드만 보기 -> 전체 다운로드 -> 그리드만 다운로드)
@@ -203,9 +201,9 @@ const exportFile = (name, data, type) => {
     return items;
   };
 
-  if (currentItemType === 'pivot') {
+  if (pickItem.type === 'pivot') {
     const newCurrentItem = filterdLayoutItem()
-        .filter((item) => item.id === rootItem.selectedItemId);
+        .filter((item) => item.id === pickItem.id);
 
     const option = {
       mergeColumn: true,
