@@ -1,10 +1,18 @@
 import React,
 {
   useEffect,
-  createRef
+  createRef,
+  useRef
 } from 'react';
 import DevDataGrid,
-{Column, LoadPanel, Pager, Paging, Scrolling} from 'devextreme-react/data-grid';
+{
+  Column,
+  LoadPanel,
+  Pager,
+  Paging,
+  Scrolling,
+  Selection
+} from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
 import {formatNumber, generateLabelSuffix} from
@@ -14,6 +22,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useContextMenu from 'hooks/useContextMenu';
 import ItemType from '../util/ItemType';
 import useItemExport from 'hooks/useItemExport';
+import useItemSetting from '../util/hook/useItemSetting';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const {getContextMenuItems} = useContextMenu();
@@ -22,6 +31,29 @@ const DataGrid = ({setItemExports, id, item}) => {
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
+
+  const interactiveOption = meta.interactiveOption || {};
+
+  const clearRef = useRef(false);
+
+  const {filterTools} = useItemSetting(
+      item,
+      null,
+      [],
+      false,
+      {
+        selectedItemType: 'REF',
+        clearSelection: () => {
+          const selection =
+            dataGridRef?.current?.instance?.getSelectedRowsData();
+          if (selection && selection.length > 0) {
+            clearRef.current = true;
+          }
+
+          dataGridRef?.current?.instance?.clearSelection();
+        }
+      });
+
 
   useItemExport({
     id,
@@ -131,9 +163,30 @@ const DataGrid = ({setItemExports, id, item}) => {
     }
   };
 
+  const onSelectionChanged = (e) => {
+    if (clearRef.current) {
+      clearRef.current = false;
+      return;
+    }
+    const keys = e.currentDeselectedRowKeys
+        .concat(e.currentSelectedRowKeys).map((key) => {
+          const d = [];
+          dataGridConfig.dataSource.columns.map((col) => {
+            if (col.fieldType == 'DIM') {
+              d.push(key[col.name]);
+            }
+          });
+
+          return d.join(' - ');
+        });
+
+    filterTools.setMasterFilterData(keys);
+  };
+
   const onOptionChanged = (e) => {
     const options = dataGridConfig.pagingOption;
     const isPaging = config.paging.pagination.isOk;
+    console.log(e);
     const paging = (e.fullName === 'paging.pageIndex' && isPaging);
     const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
     if (paging) {
@@ -229,11 +282,17 @@ const DataGrid = ({setItemExports, id, item}) => {
       columnAutoWidth={config.autoGridWidth}
       showColumnHeaders={config.columnHeader}
       wordWrapEnabled={config.autoWrap}
+      onSelectionChanged={onSelectionChanged}
       onContextMenuPreparing={(e) => {
         const contextMenu = getContextMenuItems();
         e.items = contextMenu;
       }}
     >
+      <Selection
+        mode={(interactiveOption.enabled && interactiveOption.mode) || 'none'}
+        showCheckBoxesMode='none'
+        selectByClick={false}
+      />
       <LoadPanel enabled />
       <Paging
         enabled={config.paging.pagination.isOk}
