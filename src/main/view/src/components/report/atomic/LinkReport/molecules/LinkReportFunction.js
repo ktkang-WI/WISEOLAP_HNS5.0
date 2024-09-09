@@ -114,6 +114,11 @@ export const processLinkParamData = (
       }
     }
   }
+  fkNmOpts.unshift({
+    fkNm: 'None',
+    fkParam: 'None',
+    caption: 'None'
+  });
   setFkNmOptions(fkNmOpts);
   if (subYn) {
     if (subFkNmOpts && subFkNmOpts.length > 0) {
