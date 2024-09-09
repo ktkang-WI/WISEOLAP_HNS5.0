@@ -621,5 +621,9 @@
   "pointMakerExplain": "* Point marker display is applied to point/line series and area series (excluding bubbles).",
   "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements.",
   "checkingInitReportRetrieval": "Prevent instant Report Retrieval",
-  "viewerReportLimit": "You can view up to 5 viewer reports."
+  "viewerReportLimit": "You can view up to 5 viewer reports.",
+  "privateReportList": "Personal Report List",
+  "privateReportListNoDataTxt": "There are no personal folders/reports for that user.",
+  "execute": "execution",
+  "privateReportGetError": "Personal reports cannot be loaded. Please contact your administrator."
 }

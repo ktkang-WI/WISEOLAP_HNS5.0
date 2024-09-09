@@ -6,9 +6,37 @@ import Form, {
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import FolderListModal from './modal/FolderListModal';
+import {useRef} from 'react';
+import {getFullUrl} from 'components/common/atomic/Location/Location';
 
-const ReportInformation = ({row, setRow}) => {
+const ReportInformation = ({row, setRow, flag}) => {
+  const ref = useRef();
   const {openModal} = useModal();
+
+  const selectedReportExecute = () => {
+    const formData = ref.current.props;
+    const reportId = formData.formData.reportId;
+    const reportType = formData.formData.reportType;
+
+    if (formData.formData.length === 0) return;
+    if (reportId === 0) return;
+    if (!reportType) return;
+
+    const reportPosision = formData.formData.reportType.toLowerCase();
+
+    window.sessionStorage.setItem('flag', 'reportManagement');
+    window.sessionStorage.setItem('reportId', reportId);
+    window.sessionStorage.setItem('reportType', reportType);
+
+    const newWindow =
+      window.open(`${getFullUrl()}/${reportPosision}`, '_blank');
+
+    if (newWindow) {
+      newWindow.focus();
+    }
+
+    window.sessionStorage.clear();
+  };
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -30,8 +58,18 @@ const ReportInformation = ({row, setRow}) => {
   };
 
   return (
-    <Panel title={localizedString.reportInformation}>
+    <Panel
+      title={localizedString.reportInformation}
+      onClick={() => {
+        if (flag) {
+          selectedReportExecute();
+        }
+      }}
+      useBtn={true}
+      label={localizedString.execute}
+    >
       <Form
+        ref={ref}
         formData={row}
         style={{
           marginTop: '0px',
@@ -54,6 +92,9 @@ const ReportInformation = ({row, setRow}) => {
         <SimpleItem
           dataField="reportNm"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: flag ? true : false
+          }}
         >
           <RequiredRule message={localizedString.validationReportNm}/>
           <Label>{localizedString.reportName}</Label>
@@ -61,6 +102,9 @@ const ReportInformation = ({row, setRow}) => {
         <SimpleItem
           dataField="reportSubTitle"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: flag ? true : false
+          }}
         >
           <Label>{localizedString.reportSubName}</Label>
         </SimpleItem>
@@ -73,7 +117,7 @@ const ReportInformation = ({row, setRow}) => {
         >
           <Label>{localizedString.reportType}</Label>
         </SimpleItem>
-        <SimpleItem
+        {!flag && <SimpleItem
           dataField="fldParentNm"
           editorType="dxTextBox"
           readOnly={true}
@@ -87,8 +131,8 @@ const ReportInformation = ({row, setRow}) => {
         >
           <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
-        </SimpleItem>
-        <SimpleItem
+        </SimpleItem>}
+        {!flag && <SimpleItem
           dataField="regDt"
           editorType="dxTextBox"
           editorOptions= {{
@@ -96,31 +140,40 @@ const ReportInformation = ({row, setRow}) => {
           }}
         >
           <Label>{localizedString.registerDate}</Label>
-        </SimpleItem>
+        </SimpleItem>}
         <SimpleItem
           dataField="reportTag"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
         >
           <Label>{localizedString.annotation}</Label>
         </SimpleItem>
         <SimpleItem
           dataField="reportOrdinal"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: flag ? true : false
+          }}
         >
           <Label>{localizedString.order}</Label>
         </SimpleItem>
         <SimpleItem
           dataField="reportDesc"
           editorType="dxTextBox"
+          editorOptions= {{
+            disabled: flag ? true : false
+          }}
         >
           <Label>{localizedString.description}</Label>
         </SimpleItem>
-        <SimpleItem
+        {!flag && <SimpleItem
           dataField="promptYn"
           editorType="dxCheckBox"
         >
           <Label>{localizedString.checkingInitReportRetrieval}</Label>
-        </SimpleItem>
+        </SimpleItem>}
       </Form>
     </Panel>
   );

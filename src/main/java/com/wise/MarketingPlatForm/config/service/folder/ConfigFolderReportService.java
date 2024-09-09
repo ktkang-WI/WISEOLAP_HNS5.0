@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO;
 
@@ -18,6 +19,19 @@ public class ConfigFolderReportService {
   public List<ConfigFolderReportDTO> getConfigFolderReportData() {
 
     List<ConfigFolderReportDTO> configFolderDTO = configDao.selectConfigFolderReport();
+    
+    return configFolderDTO;
+  };
+
+  public List<ConfigFolderReportDTO> getConfigPrivateFolderReportData(int userNo) {
+
+    List<ConfigFolderReportDTO> configFolderDTO = configDao.selectConfigPrivateFolderReport(userNo);
+    
+    return configFolderDTO;
+  };
+  public List<UserDTO> getUserList() {
+
+    List<UserDTO> configFolderDTO = configDao.selectUserList();
     
     return configFolderDTO;
   };

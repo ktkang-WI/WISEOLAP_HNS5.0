@@ -133,6 +133,8 @@ export default function useReportLoad() {
     }).catch(() => {
       alert(localizedString.reportCorrupted);
       return false;
+    }).finally(() => {
+      window.sessionStorage.clear();
     });
 
     return res;
