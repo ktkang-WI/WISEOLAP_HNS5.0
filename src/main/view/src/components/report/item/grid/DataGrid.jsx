@@ -44,7 +44,12 @@ const DataGrid = ({setItemExports, id, item}) => {
       {
         selectedItemType: 'REF',
         clearSelection: () => {
-          clearRef.current = true;
+          const selection =
+            dataGridRef?.current?.instance?.getSelectedRowsData();
+          if (selection && selection.length > 0) {
+            clearRef.current = true;
+          }
+
           dataGridRef?.current?.instance?.clearSelection();
         }
       });

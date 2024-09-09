@@ -107,6 +107,10 @@ const ItemAttributeDefaultElement = () => {
       title: localizedString.interaction,
       items: masterFilters
     },
+    InteractionSingleMasterFilter: {
+      title: localizedString.interaction,
+      items: [masterFilters[0]]
+    },
     InteractionConfiguration: {
       title: localizedString.interactionConfiguration,
       items: [
