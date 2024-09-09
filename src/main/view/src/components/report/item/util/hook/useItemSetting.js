@@ -71,6 +71,13 @@ export default function useItemSetting(
   }, [item.meta, item.mart]);
 
   useEffect(() => {
+    if (getSelectedItem().length > 0) {
+      setSelectedItem([]);
+      clearSelection();
+    }
+  }, [item.mart.toggle]);
+
+  useEffect(() => {
     if (!filterCondition && item.mart.init) {
       clearSelection();
       setSelectedItem([]);
@@ -114,8 +121,14 @@ export default function useItemSetting(
 
     setSelectedItem(newSelectedItem);
 
+    let fields = getDataField()[targetDimension];
+
+    if (!fields) {
+      fields = getDataField().field.filter((field) => field.type == 'DIM');
+    }
+
     return makeFilterWithSplitter(
-        newSelectedItem, getDataField()[targetDimension], splitter, reverse);
+        newSelectedItem, fields, splitter, reverse);
   };
 
   const setMasterFilterDataForObject = (data) => {
@@ -161,17 +174,32 @@ export default function useItemSetting(
 
     let filters = {};
 
-    // 들어온 데이터 형태가 문자열인 경우
-    if (typeof data == 'string') {
-      if (func) {
-        func();
+    const getFilter = (filterData) => {
+      let filter;
+      if (typeof filterData == 'string') {
+        // 들어온 데이터 형태가 문자열인 경우
+        if (func) {
+          func();
+        }
+        filter = setMasterFilterDataForString(filterData, func, reverse);
+      } else if (typeof filterData == 'object') {
+        // 들어온 데이터의 형태가 {[key] : value}인 경우
+        filter = setMasterFilterDataForObject(filterData);
       }
-      filters = setMasterFilterDataForString(data, func, reverse);
-    } else if (typeof data == 'object') {
-      // 들어온 데이터의 형태가 {[key] : value}인 경우
-      filters = setMasterFilterDataForObject(data);
+
+      return filter;
+    };
+
+    if (Array.isArray(data)) {
+      // 들어온 데이터 형태가 배열인 경우
+      data.forEach((row) => {
+        filters = getFilter(row, func, reverse);
+      });
+    } else {
+      filters = getFilter(data);
     }
 
+    console.log(filters);
     filterItems(item, filters);
   };
 
