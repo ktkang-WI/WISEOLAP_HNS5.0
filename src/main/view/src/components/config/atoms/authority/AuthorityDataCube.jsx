@@ -17,7 +17,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
   const selected = getContext.state.selected;
-  const dsViewCube = getContext.state.dsViewCube;
+  const dsViewCube = getContext.state.dsViewCube || [];
   const data = getContext.state.data;
   const [dataSource, setDataSource] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);

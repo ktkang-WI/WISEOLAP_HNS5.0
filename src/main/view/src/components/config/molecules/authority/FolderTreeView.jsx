@@ -22,7 +22,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
-  const [dataSource, setDataSource] = useState(getContext.state.folder);
+  const [dataSource, setDataSource] = useState(getContext.state.folder || []);
   const selected = getContext.state.selected;
   const {alert} = useModal();
   const data = getContext.state.data;

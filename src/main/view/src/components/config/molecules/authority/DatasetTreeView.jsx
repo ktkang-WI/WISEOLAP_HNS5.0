@@ -23,7 +23,7 @@ const DatasetTreeView = ({mainKey, dependency}) => {
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
-  const dataSource = getContext.state.folderDataSets;
+  const dataSource = getContext.state.folderDataSets || [];
   const selected = getContext.state.selected;
   const data = getContext.state.data;
   const [selectedKeys, setSelectedKeys] = useState([]);

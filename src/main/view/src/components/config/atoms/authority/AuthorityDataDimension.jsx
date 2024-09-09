@@ -18,7 +18,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
   const selected = getContext.state.selected;
-  const dsViewDim = getContext.state.dsViewDim;
+  const dsViewDim = getContext.state.dsViewDim || [];
   const [dataSource, setDataSource] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [previousSelectedKeys, setPreviousSelectedKeys] = useState([]);

@@ -12,7 +12,7 @@ const UserList = ({onRowClick, dependency}) => {
   const getContext = useContext(AuthorityContext);
 
   // state
-  const [dataSource, setDataSource] = useState(getContext.state.user);
+  const [dataSource, setDataSource] = useState(getContext.state.user || []);
   const data = getContext.state.data;
   const [currentTab] = getContext.state.currentTab;
   const pageReload = getContext.state.pageReload;
