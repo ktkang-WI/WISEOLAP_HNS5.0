@@ -68,6 +68,20 @@ const reducers = {
     state.selectedReportId = actions.payload;
   },
   /*
+   * 보고서 options 수정
+   */
+  updateReportOptions(state, actions) {
+    const {reportId, options} = actions.payload;
+
+    const reportIndex = state.reports
+        .findIndex((report) => report.reportId === reportId);
+
+    state.reports[reportIndex].options = {
+      ...state.reports[reportIndex].options,
+      ...options
+    };
+  },
+  /*
    * 보고서 수정
    * param {JSON} actions.payload initialState 의 reports 의 하나의 객체
    */

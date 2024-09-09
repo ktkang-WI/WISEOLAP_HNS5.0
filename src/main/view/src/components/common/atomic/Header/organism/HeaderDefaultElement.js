@@ -25,7 +25,8 @@ import {
   selectRootItem
 } from 'redux/selector/ItemSelector';
 import {
-  selectCurrentInformationas
+  selectCurrentInformationas,
+  selectCurrentValues
 } from 'redux/selector/ParameterSelector';
 import {selectCurrentReport,
   selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -53,6 +54,7 @@ const HeaderDefaultElement = () => {
   const currentReport = useSelector(selectCurrentReport);
   const reportId = useSelector(selectCurrentReportId);
   const dataSource = _.cloneDeep(currentReport.options);
+  const currentParameterValues = useSelector(selectCurrentValues);
 
   const filterdLayoutItem = () => {
     if (currentReport.options.reportType === 'Excel') {
@@ -130,7 +132,7 @@ const HeaderDefaultElement = () => {
           stylingMode: 'text',
           icon: 'search',
           type: 'default',
-          disabled: false
+          disabled: true
         }
       }]
     },
@@ -264,12 +266,18 @@ const HeaderDefaultElement = () => {
           }, {includeBindingSource: true, fileType: 0});
           return;
         }
-
+        const option = {
+          mergeColumn: true,
+          mergeRow: true
+        };
         exportExcel(
             currentReport,
             newCurrentItem,
             currentParameter,
-            dataSource);
+            currentParameterValues,
+            dataSource,
+            option
+        );
       }
     }
   };

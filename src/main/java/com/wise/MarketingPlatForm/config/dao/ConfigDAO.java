@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO;
 import com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderReportDTO;
@@ -19,7 +20,9 @@ public interface ConfigDAO {
   public boolean updateWbConfig(WbConfigMstrEntity wbConfigMstr);
   public List<ConfigFolderDTO> selectConfigFolderGroup();
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
+  public List<UserDTO> selectUserList();
   public List<FldMstrEntity> selectConfigFolder();
+  public List<ConfigFolderReportDTO> selectConfigPrivateFolderReport(int userNo);
   public List<ConfigFolderPubModel> selectConfigPubFolder();
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
   public boolean createConfigFolder(FldMstrEntity fldMstrEntity);

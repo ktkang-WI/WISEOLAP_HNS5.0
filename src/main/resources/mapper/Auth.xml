@@ -35,6 +35,11 @@
     <result column="RUN_MODE" property="grpRunMode" javaType="String"/>
   </resultMap>
 
+  <resultMap id="AuthReport" type="com.wise.MarketingPlatForm.account.dto.AuthReportDTO">
+    <result column="FLD_ID" property="fldId" javaType="int"/>
+    <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+  </resultMap>
+
 <!-- Mapper End -->
 
 <!-- Query -->
@@ -61,6 +66,24 @@
 
   <select id="selectUserAuthData" resultMap="AuthData">
     SELECT * FROM USER_AUTH_DATA_MSTR WHERE USER_NO = #{userNo}
+  </select>
+
+  <select id="selectGrpAuthReport" resultMap="AuthReport">
+    SELECT 
+      FLD_ID
+      ,AUTH_PUBLISH 
+      FROM GRP_AUTH_REPORT_MSTR
+      WHERE GRP_ID = #{grpId}
+      AND FLD_ID = #{fldId}
+  </select>
+
+  <select id="selectUserAuthReport" resultMap="AuthReport">
+    SELECT 
+      FLD_ID
+      ,AUTH_PUBLISH 
+      FROM USER_AUTH_REPORT_MSTR
+      WHERE USER_NO = #{userNo}
+      AND FLD_ID = #{fldId}
   </select>
 
 <!-- Query End -->

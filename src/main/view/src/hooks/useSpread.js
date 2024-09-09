@@ -119,7 +119,7 @@ const useSpread = () => {
             bindedSheet.clear();
             bindedSheet.autoGenerateColumns = true;
             // 임시 추가 : bindingInfo
-            const ds = getJsonKey2ColInfos(rowData, bindingInfo);
+            const ds = getJsonKey2ColInfos(rowData, bindingInfo, bindedSheet);
             rowData.forEach((row) => convertDates(row));
             if (ds.dataSourceHearder && rowData.length > 0) {
               bindDataCheck = true;

@@ -6,6 +6,7 @@
   <!-- Mapper -->
   <resultMap id="ReportList" type="com.wise.MarketingPlatForm.report.vo.ReportListDTO">
 		<result column="ID" property="id" javaType="int"/>
+    <result column="ID" property="uniqueId" javaType="String"/>
     <result column="TEXT" property="name" javaType="String"/>
     <result column="UPPERID" property="upperId" javaType="int"/>
     <result column="ORDINAL" property="ordinal" javaType="int"/>
@@ -22,6 +23,7 @@
     <result column="REG_USER_NM" property="regUserName" javaType="String"/>
     <result column="MOD_USER_NM" property="modUserName" javaType="String"/>
     <result column="DATASET" property="dataset" javaType="String"/>
+    <result column="AUTH_PUBLISH" property="authPublish" javaType="int"/>
 	</resultMap>
 
   <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
@@ -145,7 +147,8 @@
           A.REQUESTER,
           A.REPORT_TAG,
           A.REPORT_DESC,
-          A.PROMPT_YN
+          A.PROMPT_YN,
+          A.AUTH_PUBLISH
       FROM (
           (
               SELECT DISTINCT  
@@ -162,7 +165,8 @@
                   NULL AS REQUESTER,                          
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN             
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
               FROM               
                   USER_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -172,7 +176,8 @@
               WHERE            
                   USER_MSTR.USER_ID = #{userId}         
                   <if test='editMode == "designer"'>
-                    AND AUTH_PUBLISH != 0
+                    <!-- AND AUTH_PUBLISH != 0 -->
+                    AND AUTH_VIEW != 0
                   </if>
                   <if test='editMode == "viewer"'>
                     AND AUTH_VIEW != 0
@@ -194,7 +199,8 @@
                   NULL AS REQUESTER,                                
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN             
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
               FROM               
                   GRP_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -204,7 +210,8 @@
               WHERE            
                   USER_MSTR.USER_ID = #{userId}                    
                   <if test='editMode == "designer"'>
-                    AND AUTH_PUBLISH != 0
+                    <!-- AND AUTH_PUBLISH != 0 -->
+                    AND AUTH_VIEW != 0
                   </if>
                   <if test='editMode == "viewer"'>
                     AND AUTH_VIEW != 0
@@ -226,7 +233,8 @@
                   REPORT_MSTR.GRID_INFO AS REQUESTER,                          
                   REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
                   TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
-                  REPORT_MSTR.PROMPT_YN             
+                  REPORT_MSTR.PROMPT_YN,
+                  NULL AS AUTH_PUBLISH             
               FROM               
                   REPORT_MSTR             
               INNER JOIN         
@@ -626,4 +634,26 @@
       AND CHK_GB IN ('1', '2')
       AND REPORT_ID = #{reportId}
     </select>
+
+    <!-- 즐겨찾기 추가 -->
+    <insert id="insertReportFavorite" parameterType="com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity">
+        INSERT INTO REPORT_FAVORITES (favorite_id, user_no, report_id, created_at, fld_type)
+        VALUES (REPORT_FAVORITES_FAVORITE_ID_SEQ.NEXTVAL, #{userNo}, #{reportId}, CURRENT_TIMESTAMP, #{fldType})
+    </insert>
+
+    <!-- 사용자별 즐겨찾기 목록 조회 -->
+    <select id="selectFavoritesByUserId" parameterType="int" resultType="com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity">
+        SELECT 
+        FAVORITE_ID as favoriteId,
+        USER_NO as userNo,
+        REPORT_ID as reportId,
+        CREATED_AT as createdAt,
+        FLD_TYPE as fldType
+        FROM REPORT_FAVORITES WHERE user_no = #{userNo}
+    </select>
+
+    <!-- 즐겨찾기 삭제 -->
+    <delete id="deleteFavorite" parameterType="com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity">
+        DELETE FROM REPORT_FAVORITES WHERE user_no = #{userNo} AND report_id = #{reportId}
+    </delete>
 </mapper>

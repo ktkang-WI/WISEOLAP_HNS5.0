@@ -1,7 +1,9 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import React, {createContext, useEffect, useState}
   from 'react';
-import {Mode, managementData} from './data/ReportFolderManagementData';
+import {Mode,
+  dataPrepro,
+  managementData} from './data/ReportFolderManagementData';
 import {Folder, Report} from
   'models/config/reportFolderManagement/ReportFolderManagement';
 import localizedString from 'config/localization';
@@ -41,61 +43,6 @@ const ReportFolderManagement = () => {
 
   const clearRef = (listRef) => {
     listRef.clearSelection();
-  };
-
-  const dataPrepro = ({data, mode}) => {
-    if (mode === Mode.REPORT_MANAGEMENT) {
-      return data.reduce((acc, v) => {
-        const folderIdList = acc.map((row) => row.fldId);
-
-        if (!folderIdList.includes(v.fldId)) {
-          const fldParentId = v.fldParentId === 0 ?
-          v.fldParentId : 'f_' + v.fldParentId;
-          acc.push({
-            fldId: v.fldId,
-            fldLvl: v.fldLvl,
-            fldNm: v.fldNm,
-            fldOrdinal: v.fldOrdinal,
-            parentId: fldParentId,
-            key: 'f_' + v.fldId,
-            name: v.fldNm,
-            type: 'folder'
-          });
-        }
-
-        acc.push({
-          ...v,
-          key: 'r_'+ v.reportId,
-          parentId: 'f_' + v.fldId,
-          name: v.reportNm,
-          fldParentNm: v.fldNm
-        });
-
-        return acc;
-      }, []);
-    }
-
-    if (mode === Mode.FOLDER_MANAGEMENT) {
-      const getParentFldNm = (fld) => {
-        const parentFld = data.find((d) => d.fldId === fld.fldParentId);
-        return parentFld ? parentFld.fldNm : null; // 부모 필드가 없을 경우 null 반환
-      };
-      return data.map((row) => {
-        let newRow = {};
-        if (row.fldParentId === 0) {
-          newRow = {
-            ...row,
-            fldParentNm: '/root'
-          };
-        } else {
-          newRow = {
-            ...row,
-            fldParentNm: getParentFldNm(row)
-          };
-        }
-        return new Folder(newRow);
-      });
-    }
   };
 
   const init = () => {
