@@ -48,6 +48,7 @@ import {AdHocLayoutTypes} from 'components/config/configType';
 import {getPalette} from 'devextreme/viz/palette';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {useDispatch} from 'react-redux';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
 
 const RibbonDefaultElement = () => {
   const {
@@ -66,6 +67,7 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const mypageConfig = useSelector(selectMyPageDesignerConfig);
+  const selectLinkedReportList = useSelector(selectLinkedReport);
 
   const dispatch = useDispatch();
   const {querySearch} = useReportSave();
@@ -287,7 +289,25 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
-        openModal(LinkReportModal, {subYn: false, subLinkDim: null});
+        if (selectLinkedReportList === null) {
+          openModal(
+              LinkReportModal,
+              {
+                subYn: false,
+                subLinkDim: null,
+                existLinkReports: null
+              }
+          );
+        } else {
+          openModal(
+              LinkReportModal,
+              {
+                subYn: false,
+                subLinkDim: null,
+                existLinkReports: selectLinkedReportList
+              }
+          );
+        }
       }
     },
     'AdHocLayout': {
