@@ -118,7 +118,6 @@ const exportComponentToWorksheet = async (
   switch (elementObj.type) {
     case 'pivot':
     case 'grid': {
-      console.log('dataField', dataField);
       const instance = elementObj.type === 'pivot'?
         PivotGrid.getInstance(elementObj.selector):
         DataGrid.getInstance(elementObj.selector);
