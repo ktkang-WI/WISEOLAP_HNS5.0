@@ -106,8 +106,13 @@ const LinkReportList = (
         onSelectionChanged={(selectionChangedEvent) => {
           const selectedRow = selectionChangedEvent.selectedRowsData[0];
           if (selectedRow) {
-            setSelectedRowData(selectedRow);
-            onSelectionChange(selectedRow);
+            const minRowData = {
+              id: selectedRow.id,
+              name: selectedRow.name,
+              reportType: selectedRow.reportType
+            };
+            setSelectedRowData(minRowData);
+            onSelectionChange(minRowData);
           }
         }}
       >
