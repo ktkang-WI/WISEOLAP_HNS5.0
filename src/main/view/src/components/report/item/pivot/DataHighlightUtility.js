@@ -85,6 +85,31 @@ export const isDataCell = (cell, area, highlight) => {
   }
 };
 
+// 홈앤쇼핑 커스터마이징
+// 변동측정값 서식 적용
+export const addStyleVariationValue = (formData, cell) => {
+  const colorStyle = {
+    // 배경색 추가 시 사용
+    // 'background-color': '',
+    'color': ''
+  };
+  const newFormData = formData;
+
+  if (newFormData.variationValueType === 'percentVariation' ||
+    newFormData.variationValueType === 'absoluteVariation'
+  ) {
+    newFormData.prefix = '+';
+    colorStyle.color = '#0000ff';
+    if (cell.value < 0) {
+      cell.value = parseFloat(cell.value.toString().substring(1));
+      newFormData.prefix = '△';
+      colorStyle.color = '#ff0000';
+    };
+  }
+
+  return {newFormData, colorStyle};
+};
+
 // 이모지 및 배경, 글자색 적용 함수.
 export const getCssStyle = (highlight, cellElement, cell) => {
   // 이모지 적용.
@@ -128,7 +153,9 @@ export const getCssStyle = (highlight, cellElement, cell) => {
   if (highlight.idx == cellIdx && highlight.type == 'measure' &&
     checkCondition(condition, valueFrom, valueTo, cellValue)
   ) {
-    applyEmoji();
+    if (cellElement) {
+      applyEmoji();
+    }
     return {...colorStyle, 'white-space': 'normal'};
   } else if (highlight.type == 'dimension') {
     return colorStyle;

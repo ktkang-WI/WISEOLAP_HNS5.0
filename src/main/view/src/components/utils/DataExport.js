@@ -1,6 +1,12 @@
 import * as XLSX from 'xlsx';
 import {exportWidgets} from 'devextreme/viz/export';
 import _ from 'lodash';
+import {exportExcel} from 'components/report/util/ReportDownload';
+import store from 'redux/modules';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
+import {selectCurrentItems, selectRootItem} from 'redux/selector/ItemSelector';
+import {selectCurrentInformationas, selectCurrentValues}
+  from 'redux/selector/ParameterSelector';
 
 const extractingKeys = (data) => {
   const keys = [];
@@ -133,11 +139,11 @@ const convertToFormat = (data, type) => {
   return result;
 };
 
-export const exportToFile = (name, data, type) => {
+export const exportToFile = (name, data, type, pickItem) => {
   if (Type.IMG === type) {
     exportImgFile(name, data, type);
   } else {
-    exportFile(name, convertToFormat(data, type), type);
+    exportFile(name, convertToFormat(data, type), type, pickItem);
   }
 };
 
@@ -170,22 +176,63 @@ const exportImgFile = (name, pickItem, type) => {
   });
 };
 
-const exportFile = (name, data, type) => {
-  let blob = null;
-  if (type === Type.CSV) {
-    blob = new Blob(['\uFEFF'+data], {type: 'text/csv;charset=utf-8,'});
-  } else if (type === Type.TXT) {
-    blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
-  } else if (type === Type.XLSX) {
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
-    blob = new Blob([s2ab(wbout)],
-        {type: 'application/octet-stream;charset=utf-8'});
+
+const exportFile = (name, data, type, pickItem) => {
+  const currentReport = selectCurrentReport(store.getState());
+  const currentItem = selectCurrentItems(store.getState());
+  const currentParameter = selectCurrentInformationas(store.getState());
+  const currentParameterValues = selectCurrentValues(store.getState());
+  const rootItem = selectRootItem(store.getState());
+  const dataSource = _.cloneDeep(currentReport.options);
+
+  // 비정형인 경우 레이아웃 설정에 따라 다운로드 되는 아이템이 달라야 함.
+  // (ex. 그리드만 보기 -> 전체 다운로드 -> 그리드만 다운로드)
+  const filterdLayoutItem = () => {
+    if (!rootItem.adHocOption) return currentItem;
+
+    let items = currentItem.filter((item) =>
+      item.type == rootItem.adHocOption.layoutSetting
+    );
+
+    if (items.length === 0) { // 차트 피벗 전부 보기인 경우.
+      items = currentItem;
+    }
+
+    return items;
   };
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = name+'.'+type;
-  link.click();
+
+  if (pickItem.type === 'pivot') {
+    const newCurrentItem = filterdLayoutItem()
+        .filter((item) => item.id === pickItem.id);
+
+    const option = {
+      mergeColumn: true,
+      mergeRow: true
+    };
+    exportExcel(
+        currentReport,
+        newCurrentItem,
+        currentParameter,
+        currentParameterValues,
+        dataSource,
+        option);
+  } else {
+    let blob = null;
+    if (type === Type.CSV) {
+      blob = new Blob(['\uFEFF'+data], {type: 'text/csv;charset=utf-8,'});
+    } else if (type === Type.TXT) {
+      blob = new Blob([data], {type: 'text/plain;charset=utf-8'});
+    } else if (type === Type.XLSX) {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'});
+      blob = new Blob([s2ab(wbout)],
+          {type: 'application/octet-stream;charset=utf-8'});
+    };
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = name+'.'+type;
+    link.click();
+  }
 };
