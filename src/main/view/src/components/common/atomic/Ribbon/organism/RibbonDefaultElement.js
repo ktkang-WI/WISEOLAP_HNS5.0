@@ -252,12 +252,20 @@ const RibbonDefaultElement = () => {
       'onClick': (props) => {
         const dataSource = _.cloneDeep(currentReport.options);
         const selectedReportId = selectCurrentReportId(store.getState());
+        const selectedReport = selectCurrentReport(store.getState());
+        const deleteButtonAuth = !selectedReport?.reportId ? true :
+          selectedReport?.options?.authPublish == '1' ? true : false;
         dataSource.reportId = selectedReportId;
 
         if (selectedReportId !== 0) {
-          confirm(localizedString.reportDeleteMsg, () => {
-            removeReport(dataSource, props);
-          });
+          if (deleteButtonAuth) {
+            confirm(localizedString.reportDeleteMsg, () => {
+              removeReport(dataSource, props);
+            });
+          } else {
+            confirm(localizedString.reportPermission, () => {
+            });
+          }
         } else {
           alert(localizedString.reportNotDeleteMsg);
         };

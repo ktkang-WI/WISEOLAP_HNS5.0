@@ -195,7 +195,7 @@
       "dxPager-ariaPageNumber": "Page number",
 
       "dxPivotGrid-grandTotal": "총계",
-      "dxPivotGrid-total": "{0} 전체",
+      "dxPivotGrid-total": "{0}",
       "dxPivotGrid-fieldChooserTitle": "Field Chooser",
       "dxPivotGrid-showFieldChooser": "Show Field Chooser",
       "dxPivotGrid-expandAll": "Expand All",
