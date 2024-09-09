@@ -8,7 +8,9 @@ export async function getUserNmLoader() {
       }
 
       return res.data;
+    }).catch((e) => {
+      console.log(e);
     });
 
-  return data;
+  return data || null;
 };

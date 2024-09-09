@@ -21,6 +21,8 @@ const SearchQuery = () => {
     models.Report.getListIncludeQuery().then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
+    }).catch((e) => {
+      console.log(e);
     });
   }, []);
 

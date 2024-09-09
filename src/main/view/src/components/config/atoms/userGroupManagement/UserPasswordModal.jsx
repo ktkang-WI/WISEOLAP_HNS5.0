@@ -44,8 +44,12 @@ const UserPasswordModal = ({...props}) => {
             alert(localizedString.completedPasswordChange);
             isClose = false;
           }
+        }).catch((e) => {
+          console.log(e);
         });
       }
+    }).catch((e) => {
+      console.log(e);
     });
     return isClose;
   };

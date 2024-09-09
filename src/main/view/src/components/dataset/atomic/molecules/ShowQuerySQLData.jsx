@@ -88,6 +88,8 @@ const ShowQuerySQLData = ({dsId, datasetQuery, paramInfo}) => {
                 onValueChanged(param.name, values.value[idx], idx);
               }
             }
+          }).catch((e) => {
+            console.log(e);
           });
         }
       }
@@ -144,7 +146,11 @@ const ShowQuerySQLData = ({dsId, datasetQuery, paramInfo}) => {
       workbook.xlsx.writeBuffer().then((buffer) => {
         // eslint-disable-next-line max-len
         saveAs(new Blob([buffer], {type: 'application/octet-stream'}), 'SQL_Data.xlsx');
+      }).catch((e) => {
+        console.log(e);
       });
+    }).catch((e) => {
+      console.log(e);
     });
   };
 

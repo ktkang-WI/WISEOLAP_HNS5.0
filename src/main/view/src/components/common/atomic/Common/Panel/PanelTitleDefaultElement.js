@@ -180,6 +180,8 @@ const PanelTitleDefaultElement = () => {
                   reportId: reportId,
                   informations: params
                 }));
+              }).catch((e) => {
+                console.log(e);
               });
             }});
         } else if (dataset.datasetType == DatasetType.DS_SINGLE) {

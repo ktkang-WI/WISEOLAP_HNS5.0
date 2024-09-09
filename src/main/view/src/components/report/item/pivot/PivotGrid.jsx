@@ -326,6 +326,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                       localizedString.detailedData + ' - ' + act.actNm,
                     data: res.data.rowData
                   });
+                }).catch((e) => {
+                  console.log(e);
                 });
               }
             }));

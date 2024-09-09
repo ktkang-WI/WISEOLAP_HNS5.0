@@ -37,6 +37,8 @@ const SelectUserUploadTableModal = ({
     models.DBInfo.dbUploadTables(dsId)
         .then(({data}) => {
           setTables(data);
+        }).catch((e) => {
+          console.log(e);
         });
   }, []);
 

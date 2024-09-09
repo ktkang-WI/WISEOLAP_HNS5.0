@@ -188,6 +188,8 @@ const SingleTableDesignerModal = ({
                   }
                 }));
                 onClose();
+              }).catch((e) => {
+                console.log(e);
               });
         }
         return true;

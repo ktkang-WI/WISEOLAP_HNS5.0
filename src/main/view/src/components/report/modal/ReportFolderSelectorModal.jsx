@@ -51,6 +51,8 @@ const ReportFolderSelectorModal = ({...props}) => {
         publicFolder: updatedPublicFolder,
         privateFolder: updatedPrivateFolder
       });
+    }).catch((e) => {
+      console.log(e);
     });
   }, []);
 

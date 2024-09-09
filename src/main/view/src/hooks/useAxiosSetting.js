@@ -6,18 +6,16 @@ import {getConfig} from 'config/config';
 const contextRoot =
 process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
 
-// 작업취소가 가능한 path
-const requestPathMode = {
-  'executeItem': '/report/item-data'
-};
-export const requestPath = [
-  '/report/item-data'
-];
+export let requestPath = [];
 
 export const abortController = (controllers, session) => {
-  controllers[session].forEach((controller) => {
+  controllers[session]?.forEach((controller) => {
     controller.abort();
   });
+
+  if (!controllers || !controllers[session]) return;
+
+  requestPath = requestPath.filter((path) => path !== session);
   delete controllers[session];
 };
 
@@ -26,17 +24,15 @@ export default function useAxiosSetting() {
   const dispatch = useDispatch();
   const actions = LoadingSlice.actions;
   const controllers = {};
+
   const createController = (requestKey) => {
-    const executeItem =
-      requestPath.find((path) => path === requestPathMode.executeItem);
-    if (
-      controllers?.lastRequestKey === executeItem &&
-      requestKey !== executeItem
-    ) {
-      abortController(controllers, executeItem);
-      controllers.lastRequestKey = null;
-    }
-    if (!requestPath.includes(requestKey)) return;
+    // 무한 로딩의 가능성이 있어서
+    // /dataset/param-list-items 처럼 여러번 호출 가능한 부분은 작업 취소시 전부 취소 해줘야함.
+    // TODO : 언급한데로 여러번 호출 가능성이 있는 path는 따로 추가 하여 조건에 추가 할 예정.
+    if (requestPath.includes(requestKey) &&
+    requestKey !== '/dataset/param-list-items') return;
+    requestPath.push(requestKey);
+
     const controller = new AbortController();
 
     controllers[requestKey] = [...controllers[requestKey] || [], controller];

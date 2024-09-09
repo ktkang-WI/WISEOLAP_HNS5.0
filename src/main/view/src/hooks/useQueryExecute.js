@@ -223,6 +223,8 @@ const useQueryExecute = () => {
             ItemManager.generateItem(item, param, cloneItem);
           }
           dispatch(updateItem({reportId, item: item}));
+        }).catch((e) => {
+          console.log(e);
         });
       };
 
@@ -559,6 +561,8 @@ const useQueryExecute = () => {
         if (requiredFilterLength == 0) {
           setListValues(param, linkageFilter).then((data) => {
             resolve(data);
+          }).catch((e) => {
+            console.log(e);
           });
           clearInterval(wait);
         }
@@ -675,12 +679,16 @@ const useQueryExecute = () => {
             if (data) {
               setValues(param.name, data);
             }
+          }).catch((e) => {
+            console.log(e);
           });
         } else {
           if (param.defaultValueUseSql && param.calendarDefaultType != 'NOW') {
             // defaultValue 쿼리일 경우 쿼리 실행
             executeParameterDefaultValueQuery(param).then((data) => {
               setValues(param.name, {value: data});
+            }).catch((e) => {
+              console.log(e);
             });
           } else if (param.calendarDefaultType == 'NOW') {
             // defaultValue calendarDefaultType 현재일 경우 계산

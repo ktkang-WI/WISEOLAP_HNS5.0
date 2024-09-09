@@ -89,7 +89,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
   const [selectedKeys, setSelectedKeys] = useState();
-  const [dataSource, setDataSource] = useState(getContext.state.dsView);
+  const [dataSource, setDataSource] = useState(getContext.state.dsView || []);
   const selected = getContext.state.selected;
   const pageReload = getContext.state.pageReload;
   const data = getContext.state.data;
