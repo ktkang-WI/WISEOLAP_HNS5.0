@@ -23,6 +23,7 @@
     <result column="REG_USER_NM" property="regUserName" javaType="String"/>
     <result column="MOD_USER_NM" property="modUserName" javaType="String"/>
     <result column="DATASET" property="dataset" javaType="String"/>
+    <result column="AUTH_PUBLISH" property="authPublish" javaType="int"/>
 	</resultMap>
 
   <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
@@ -146,7 +147,8 @@
           A.REQUESTER,
           A.REPORT_TAG,
           A.REPORT_DESC,
-          A.PROMPT_YN
+          A.PROMPT_YN,
+          A.AUTH_PUBLISH
       FROM (
           (
               SELECT DISTINCT  
@@ -163,7 +165,8 @@
                   NULL AS REQUESTER,                          
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN             
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
               FROM               
                   USER_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -173,7 +176,8 @@
               WHERE            
                   USER_MSTR.USER_ID = #{userId}         
                   <if test='editMode == "designer"'>
-                    AND AUTH_PUBLISH != 0
+                    <!-- AND AUTH_PUBLISH != 0 -->
+                    AND AUTH_VIEW != 0
                   </if>
                   <if test='editMode == "viewer"'>
                     AND AUTH_VIEW != 0
@@ -195,7 +199,8 @@
                   NULL AS REQUESTER,                                
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN             
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
               FROM               
                   GRP_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -205,7 +210,8 @@
               WHERE            
                   USER_MSTR.USER_ID = #{userId}                    
                   <if test='editMode == "designer"'>
-                    AND AUTH_PUBLISH != 0
+                    <!-- AND AUTH_PUBLISH != 0 -->
+                    AND AUTH_VIEW != 0
                   </if>
                   <if test='editMode == "viewer"'>
                     AND AUTH_VIEW != 0
@@ -227,7 +233,8 @@
                   REPORT_MSTR.GRID_INFO AS REQUESTER,                          
                   REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
                   TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
-                  REPORT_MSTR.PROMPT_YN             
+                  REPORT_MSTR.PROMPT_YN,
+                  NULL AS AUTH_PUBLISH             
               FROM               
                   REPORT_MSTR             
               INNER JOIN         

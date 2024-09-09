@@ -18,6 +18,9 @@ const SaveDefaultElement = () => {
   const {patchReport, generateParameter} = useReportSave();
   const {genLinkParam} = useLinkReportSave();
   const isExecute = useSelector(currentDesignerExecution);
+  const currentReport = selectCurrentReport(store.getState());
+  const saveButtonAuth = !currentReport?.reportId ? true :
+       currentReport?.options?.authPublish == '1' ? true : false;
 
   const getElementByLable = (label) => {
     return saveElement.save.find((element) => element.label === label);
@@ -27,15 +30,23 @@ const SaveDefaultElement = () => {
     save: [
       {
         label: localizedString.saveReport,
+        visible: saveButtonAuth,
         onClick: (props) => {
           const designerMode = selectCurrentDesignerMode(store?.getState());
+          const currentReport = selectCurrentReport(store.getState());
 
           if (!isExecute && !(designerMode == DesignerMode['EXCEL'])) {
             alert(localizedString.saveValidationNonExecute);
             return;
           }
+          const saveButtonAuth = !currentReport?.reportId ? true :
+              currentReport?.options?.authPublish == '1' ? true : false;
 
-          const currentReport = selectCurrentReport(store.getState());
+          if (!saveButtonAuth) {
+            alert(localizedString.reportPermission);
+            return;
+          }
+
           const dataSource = _.cloneDeep(currentReport.options);
 
           if (currentReport.reportId === 0) {

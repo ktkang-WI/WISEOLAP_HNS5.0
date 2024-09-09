@@ -25,6 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
+import com.wise.MarketingPlatForm.account.dto.AuthReportDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
+import com.wise.MarketingPlatForm.auth.dao.AuthDAO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
@@ -85,14 +90,16 @@ public class ReportService {
     private final DatasetService datasetService;
     private final CubeService cubeService;
     private final LogService logService;
+    private final AuthDAO authDAO;
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
     ReportService(
-        ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO,
+        ReportDAO reportDAO, AuthDAO authDAO,MartConfig martConfig, MartDAO martDAO,
         DatasetService datasetService, CubeService cubeService, LogService logService) {
         this.reportDAO = reportDAO;
+        this.authDAO = authDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.datasetService = datasetService;
@@ -169,7 +176,17 @@ public class ReportService {
             } else {
                 entity = logService.selectReportHis(reportId, reportSeq);
             }
-            
+
+            AuthReportDTO grpFolderAuth = authDAO.selectGrpAuthReport(entity.getFldId(), user.getGrpId());
+            AuthReportDTO userFolderAuth = authDAO.selectUserAuthReport(entity.getFldId(), user.getUserNo());
+
+            String authPublishValue = "".equals(userFolderAuth.getAuthPublish()) ? "0" : userFolderAuth.getAuthPublish();
+
+            if (!"".equals(grpFolderAuth.getAuthPublish())) {
+                if ("0".equals(authPublishValue) && "1".equals(grpFolderAuth.getAuthPublish())) {
+                    authPublishValue = grpFolderAuth.getAuthPublish();
+                }
+            }
             
             logDto.setReportNm(entity.getReportNm());
             logDto.setReportType(entity.getReportType());
@@ -210,6 +227,8 @@ public class ReportService {
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
             options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
+            options.put("authPublish", authPublishValue);
+
 
             // 보고서 즐겨찾기 여부 확인
             List<ReportFavoritesEntity> favoriteReports = getFavoritesByUserNo(user.getUserNo());

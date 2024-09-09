@@ -33,4 +33,6 @@ public class ReportListDTO {
     String dataset;
     @Builder.Default
     String promptYn = "N";
+    @Builder.Default
+    int authPublish = 0;
 }
