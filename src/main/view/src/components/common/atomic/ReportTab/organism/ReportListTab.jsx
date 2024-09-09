@@ -87,7 +87,7 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         dataStructure="plain"
         displayExpr="name"
         parentIdExpr="upperId"
-        keyExpr="id"
+        keyExpr="uniqueId"
         noDataText="조회된 보고서가 없습니다."
         searchEditorOptions={{
           placeholder: '검색'
@@ -97,7 +97,8 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         onItemClick={handleItemClick}
         searchEnabled={true}
         {...props}
-      />
+      >
+      </StyledTreeView>
     </Wrapper>
   );
 };
