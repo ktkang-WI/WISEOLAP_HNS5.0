@@ -56,6 +56,8 @@ const UserReprotManagement = () => {
         });
 
         setData({});
+      }).catch((e) => {
+        console.log(e);
       });
     });
   };
@@ -70,7 +72,7 @@ const UserReprotManagement = () => {
       >
         <div style={{width: '100%', height: '50%', textAlign: 'left'}}>
           <MyPageReportList
-            data={treeViewData.folderReport}
+            data={treeViewData?.folderReport || []}
             setData={setData}
             setTreeViewData={setTreeViewData}
             setPrevName={setPrevName}

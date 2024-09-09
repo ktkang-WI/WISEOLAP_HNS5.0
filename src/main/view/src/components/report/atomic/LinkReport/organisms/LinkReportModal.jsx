@@ -45,6 +45,8 @@ const LinkReportModal = ({
     models.Report.getList(designerMode, 'designer').then(({data}) => {
       setIconReportList(data.publicReport);
       setReportList(data);
+    }).catch((e) => {
+      console.log(e);
     });
   }, []);
 

@@ -247,6 +247,8 @@ const useReportSave = () => {
           prevDesigner: designer
         });
       }
+    }).catch((e) => {
+      console.log(e);
     });
   };
 

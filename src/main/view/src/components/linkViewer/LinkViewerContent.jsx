@@ -95,6 +95,8 @@ const LinkViewerContent = ({children}) => {
     onClick: () => {
       models.Report.getList(null, 'viewer').then(({data}) => {
         setReportData(data);
+      }).catch((e) => {
+        console.log(e);
       });
     }
   }
@@ -118,7 +120,11 @@ const LinkViewerContent = ({children}) => {
           if (response.data.promptYn === 'Y') {
             querySearch();
           }
+        }).catch((e) => {
+          console.log(e);
         });
+      }).catch((e) => {
+        console.log(e);
       });
     }
   }, []);

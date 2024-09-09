@@ -17,6 +17,8 @@ const SelectColumnModal = ({dsId, table, onSubmit, ...props}) => {
     models.DBInfo.dbColumns(dsId, table)
         .then(({data}) => {
           setColumns(data);
+        }).catch((e) => {
+          console.log(e);
         });
   }, []);
 

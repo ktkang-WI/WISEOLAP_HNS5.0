@@ -47,7 +47,9 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
               setIconReportList(data.publicReport);
               setReportList(data);
             }
-        );
+        ).catch((e) => {
+          console.log(e);
+        });
       default: break;
     }
     // TODO: 요청 있을 시 기본 데이터집합 추가 예정.

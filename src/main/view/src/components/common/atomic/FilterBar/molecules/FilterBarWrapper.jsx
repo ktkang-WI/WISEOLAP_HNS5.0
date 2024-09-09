@@ -79,6 +79,8 @@ const FilterBarWrapper = (props) => {
                 onValueChanged(param.name, values.value[idx], idx);
               }
             }
+          }).catch((e) => {
+            console.log(e);
           });
         }
       }

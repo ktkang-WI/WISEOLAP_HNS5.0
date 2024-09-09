@@ -60,11 +60,15 @@ const SaveDefaultElement = () => {
               if (props.createExcelFile) {
                 props.createExcelFile(reportId);
               }
+            }).catch((e) => {
+              console.log(e);
             });
 
             const linkReport = selectLinkedReport(store.getState());
             const linkParam = genLinkParam(linkReport);
             models.Report.insertLinkReport(linkParam.data).then((res) => {
+            }).catch((e) => {
+              console.log(e);
             });
           };
         }

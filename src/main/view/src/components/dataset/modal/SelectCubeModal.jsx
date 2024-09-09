@@ -52,6 +52,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
     models.DSView.getByUserId()
         .then((data) => {
           setDsViewList(data.data);
+        }).catch((e) => {
+          console.log(e);
         });
   }, []);
 
@@ -95,6 +97,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                     }
                   }));
                 }
+              }).catch((e) => {
+                console.log(e);
               });
         } else {
           alert('주제영역을 선택하지 않았습니다.');
@@ -120,6 +124,8 @@ const SelectCubeModal = ({onSubmit, ...props}) => {
                         .then(({data}) => {
                           setSelectedCubeList(data);
                           setSelectedDsView(e.selectedRowsData[0]);
+                        }).catch((e) => {
+                          console.log(e);
                         });
                   } else {
                     setSelectedCubeList([]);

@@ -7,6 +7,8 @@ export async function generalConfigure() {
       return res.error;
     }
     return res.data;
+  }).catch((e) => {
+    console.log(e);
   });
   return {generalConfigure};
 }
@@ -19,6 +21,8 @@ export async function userGroupManagement() {
     }
 
     return res.data.data;
+  }).catch((e) => {
+    console.log(e);
   });
   return {userGroupManagement};
 }
@@ -31,6 +35,8 @@ export async function groupData() {
     }
 
     return res.data.data;
+  }).catch((e) => {
+    console.log(e);
   });
   return groupData;
 }
@@ -43,6 +49,8 @@ export async function userData() {
     }
 
     return res.data.data;
+  }).catch((e) => {
+    console.log(e);
   });
   return data;
 }
@@ -57,32 +65,64 @@ export async function authorityLoader() {
   };
   // INIT DATA
   const groupAuthData =
-    await models.Authority.getGroupData().then((res) => getData(res));
+    await models.Authority.getGroupData().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // GROUP_MSTR
   const groupData =
-    await models.UserGroupManagement.getGroups().then((res) => getData(res));
+    await models.UserGroupManagement.getGroups().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // USER_MSTR
   const userData =
-    await models.Authority.getUsers({notGrpId: 0}).then((res) => getData(res));
+    await models.Authority.getUsers({notGrpId: 0}).then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // DS_MSTR
   const dataSourceData =
-    await models.Authority.getDs().then((res) => getData(res));
+    await models.Authority.getDs().then((res) => getData(res)).catch((e) => {
+      console.log(e);
+    });
   // FOLDER_DATASET
   const folderDataSets =
-    await models.Authority.getFolderDatasets().then((res) => getData(res));
+    await models.Authority.getFolderDatasets().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // DS_VIEW
   const dsView =
-    await models.Authority.getDsView().then((res) => getData(res));
+    await models.Authority.getDsView().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // FOLDER_LIST
   const folder =
     await models.ReportFolderManagement.getFolderPubs()
-        .then((res) => getData(res));
+        .then((res) => getData(res)).catch((e) => {
+          console.log(e);
+        });
   // CUBE_MSTR
   const dsViewCube =
-    await models.Authority.getDsViewCube().then((res) => getData(res));
+    await models.Authority.getDsViewCube().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   // DS_VIEW_DIM_MSTR
   const dsViewDim =
-    await models.Authority.getDsViewDim().then((res) => getData(res));
+    await models.Authority.getDsViewDim().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
 
   return {
     userData,
@@ -105,8 +145,10 @@ export async function userFolderData() {
     }
 
     return res.data.data;
+  }).catch((e) => {
+    console.log(e);
   });
-  return data;
+  return data || null;
 }
 
 export async function userDesignerConfig() {
@@ -117,8 +159,10 @@ export async function userDesignerConfig() {
     }
 
     return res.data.data;
+  }).catch((e) => {
+    console.log(e);
   });
-  return data;
+  return data || null;
 }
 
 export async function myPageUserInfoData() {
@@ -129,7 +173,9 @@ export async function myPageUserInfoData() {
       }
 
       return res.data;
+    }).catch((e) => {
+      console.log(e);
     });
 
-  return data;
+  return data || null;
 }

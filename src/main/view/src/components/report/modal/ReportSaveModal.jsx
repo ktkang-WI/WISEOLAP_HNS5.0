@@ -61,6 +61,8 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
         } else {
           return;
         }
+      }).catch((e) => {
+        console.log(e);
       });
       return !isOk;
     }

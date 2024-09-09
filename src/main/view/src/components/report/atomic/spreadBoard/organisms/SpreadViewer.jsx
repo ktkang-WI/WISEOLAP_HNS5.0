@@ -59,6 +59,8 @@ const SpreadViewer = ({reportId}) => {
     setExcelFile(reportId).then(() => {
       console.log('파일 불러오기 완료. 걸린 시간: ' + (new Date() - startTime) + 'ms');
       fileLoadingState.current = 2;
+    }).catch((e) => {
+      console.log(e);
     });
   }, []);
 
