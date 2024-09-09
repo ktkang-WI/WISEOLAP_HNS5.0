@@ -600,6 +600,11 @@ public class DatasetService {
                 } else {
                     selMea.setMEA_AGG(""); // AGG
                 }
+
+                if (StringUtils.containsAny((String) column.get("DATA_TYPE"), "int", "NUMBER", "numeric")) {
+                    selMea.setMEA_AGG("SUM"); // AGG
+                }
+                
                 selMea.setCOL_EXPRESS("");
                 aDtSelMea.add(selMea);
 
