@@ -9,7 +9,9 @@ import {
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {useDispatch} from 'react-redux';
 import LinkSlice from 'redux/modules/LinkSlice';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {
+  selectCurrentReport
+} from 'redux/selector/ReportSelector';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import {
@@ -93,8 +95,10 @@ const LinkParamInfo = ({
   const focusedItemId = useSelector(selectSelectedItemId);
   const focusedItemType = useSelector(selectCurrentItemType);
   const currentItemParam = useSelector(selectCurrentInformationas);
-  const currentReportId = useSelector(selectCurrentReportId);
+  const currentReport = useSelector(selectCurrentReport);
   const currentReportType = useSelector(selectCurrentDesignerMode);
+  const [clonedParamInfo, setClonedParamInfo] = useState([]);
+  const [clonedFkNmOptions, setClonedFkNmOptions] = useState([]);
 
   useEffect(() => {
     if (linkParamData &&
@@ -127,15 +131,21 @@ const LinkParamInfo = ({
         );
       }
     }
+    const deepClonedParamInfo = _.cloneDeep(paramInfo);
+    setClonedParamInfo(deepClonedParamInfo);
+    const deepClonedFkNmOptions = _.cloneDeep(fkNmOptions);
+    setClonedFkNmOptions(deepClonedFkNmOptions);
   }, [
     linkParamData,
     prevLinkParamData,
     setParamInfo,
     setLinkFkInfo,
     setFkNmOptions,
-    setSubLinkParamInfo
+    setSubLinkParamInfo,
+    paramInfo
   ]
   );
+  console.log('clonedParamInfo:', clonedParamInfo);
 
   const subLinkInfo = {
     reportId: 0,
@@ -166,8 +176,6 @@ const LinkParamInfo = ({
 
   const confirm = () => {
     const linkReportId = linkParamData.reports[0].reportId;
-    // selectCurrentReportId(store.getState());
-    // selectCurrentDesignerMode(store.getState());
     const dataPairs = paramInfo.map((info) => ({
       FK_COL_NM: info.fkParam,
       PK_COL_NM: info.pkParam
@@ -181,16 +189,18 @@ const LinkParamInfo = ({
       }));
     }
 
-    linkReportInfo.reportId = currentReportId;
+    linkReportInfo.reportId = currentReport.reportId;
+    linkReportInfo.reportNm = currentReport.options.reportNm;
     linkReportInfo.linkReportId = linkReportId;
+    linkReportInfo.linkReportNm = selectedRowData.name;
+    linkReportInfo.linkReportType = selectedRowData.reportType;
     linkReportInfo.linkXmlParam = linkXmlParam;
-    linkReportInfo.linkReportType = currentReportType;
+    linkReportInfo.reportType = currentReport.options.reportType;
     linkReportInfo.linkParamInfo = paramInfo;
     linkReportInfo.linkFkInfo = linkFkInfo;
-    linkReportInfo.linkReportNm = linkParamData.reports[0].reportNm;
     if (subYn) {
       linkReportInfo.subYn = 'True';
-      subLinkInfo.reportId = currentReportId;
+      subLinkInfo.reportId = currentReport.reportId;
       subLinkInfo.linkReportId = linkReportId;
       subLinkInfo.subLinkItemId = focusedItemType + focusedItemId;
       subLinkInfo.subLinkXmlParam = linkXmlParam;
@@ -206,6 +216,8 @@ const LinkParamInfo = ({
     }
     onClose();
   };
+  console.log('OUT paramInfo :', paramInfo);
+  console.log('OUT fkNmOptions :', fkNmOptions);
   return (
     <PopupWrapper>
       <StyledWrapper>
@@ -224,9 +236,9 @@ const LinkParamInfo = ({
             allowUpdating: true
           }}
           onRowUpdated={(e) => {
-            const newData = paramInfo.map((item) => {
+            const newData = clonedParamInfo.map((item) => {
               if (item.pkNm === e.key.pkNm) {
-                const selectedOption = fkNmOptions.find(
+                const selectedOption = clonedFkNmOptions.find(
                     (option) => option.fkNm === e.data.fkNm
                 );
                 return {
@@ -245,6 +257,7 @@ const LinkParamInfo = ({
           <Column
             dataField="pkNm"
             caption="원본 보고서 매개변수"
+            allowEditing={false}
           />
           <Column
             dataField="fkNm"
