@@ -154,3 +154,19 @@ export const getFolderList = () => {
 export const deleteReport = async (param) => {
   return await axios.patch(path + '/report-delete', param);
 };
+
+/**
+ * 즐겨찾기 보고서 추가 (
+ * @param {JSON} param
+ */
+export const addFavoriteReport = async (param) => {
+  return await axios.post(path + '/favorites-add', param);
+};
+
+/**
+ * 즐겨찾기 보고서 삭제 (delete)
+ * @param {JSON} param
+ */
+export const deleteFavoriteReport = async (param) => {
+  return await axios.post(path + '/favorites-remove', param);
+};

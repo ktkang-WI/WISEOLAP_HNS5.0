@@ -24,6 +24,9 @@ import store from 'redux/modules';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectCurrentAdHocOption} from 'redux/selector/ItemSelector';
+import {getExcelCellFormat, getFormats} from '../item/pivot/FormatUtility';
+import {formatNumber, generateLabelSuffix} from 'components/utils/NumberFormatUtility';
+import {isDataCell as highlightIsDataCell, getCssStyle, addStyleVariationValue} from '../item/pivot/DataHighlightUtility';
 
 
 const EXCEL_ROW_HEIGHT = 23.055;
@@ -111,7 +114,7 @@ const convertToBlob = async (element) => {
 };
 
 const exportComponentToWorksheet = async (
-    workbook, elementObj, worksheet, startRow, option) => {
+    workbook, elementObj, worksheet, startRow, option, dataField, adhocOption, highlight) => {
   switch (elementObj.type) {
     case 'pivot':
     case 'grid': {
@@ -126,7 +129,37 @@ const exportComponentToWorksheet = async (
         ...(isPivotGrid ? {mergeColumnFieldValues: option?.mergeColumn} : {}),
         ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {}),
         // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
-        ...(isPivotGrid ? {exportRowFieldHeaders: true} : {})
+        ...(isPivotGrid ? {exportRowFieldHeaders: true} : {}),
+        customizeCell: ({pivotCell, excelCell}) => {
+          if (pivotCell.area == 'data' && pivotCell.dataType && pivotCell.value) {
+            const formats = getFormats(dataField, adhocOption);
+            const formData = formats[pivotCell.dataIndex];
+            const {newFormData, colorStyle} = addStyleVariationValue(formData, pivotCell);
+
+            if (newFormData) {
+              const labelSuffix = generateLabelSuffix(newFormData);
+              const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
+              let backgroundColor = '';
+              let color = colorStyle.color.slice(1);
+
+              if (highlight.length != 0) {
+                for (let i=0; i<highlight.length; i++) {
+                  if (highlightIsDataCell(pivotCell, pivotCell.area, highlight[i])) {
+                    const cssStyle = getCssStyle(highlight[i], null, pivotCell);
+                    if (cssStyle) {
+                      cssStyle['background-color'] = cssStyle['background-color'].slice(1);
+                      cssStyle['color'] = cssStyle['color'].slice(1);
+                      ({'background-color': backgroundColor, 'color': color} = cssStyle);
+                      break;
+                    }
+                  }
+                }
+              }
+
+              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue}));
+            }
+          }
+        }
       });
       break;
     }
@@ -266,6 +299,7 @@ const mergeExcelFiles = async (items, parameters, parameterValues, option) => {
 
     const dataField = adhocOption?.dataField || _items[elementObj.index]?.meta?.dataField;
     const dataFieldOption = adhocOption?.dataFieldOption || _items[elementObj.index]?.mart?.dataFieldOption;
+    const highlight = _items[elementObj.index]?.meta.dataHighlight;
 
     const insertFieldData = (key) => {
       if (dataField[key] == 0) return;
@@ -289,7 +323,7 @@ const mergeExcelFiles = async (items, parameters, parameterValues, option) => {
     }
 
     await exportComponentToWorksheet(
-        workbook, elementObj, worksheet, startRow, option);
+        workbook, elementObj, worksheet, startRow, option, dataField, adhocOption, highlight);
     worksheetCount++;
   }
 

@@ -25,9 +25,8 @@ const DropdownBoxReportSearch = ({report, button, id}) => {
     return (
       <div className='custom-item'>
         <TextBox
-          elementAttr={{
-            id: 'reportSearchTextBox'
-          }}
+          width='90px'
+          placeholder='보고서 검색'
         />
       </div>
     );

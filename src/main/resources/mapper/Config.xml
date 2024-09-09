@@ -41,6 +41,13 @@
       <result column="PROMPT_YN" property="promptYn" javaType="String"/>
     </resultMap>
 
+    <resultMap id="userList" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+    </resultMap>
+
     <resultMap id="ConfigFolderDatasetDTO" type="com.wise.MarketingPlatForm.config.dto.folder.ConfigFolderDatasetDTO">
       <result column="FLD_ID" property="fldId" javaType="int"/>
       <result column="FLD_NM" property="fldNm" javaType="String"/>
@@ -78,6 +85,16 @@
       <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
 
+    <select id="selectUserList" resultMap="userList">
+			SELECT
+        USER_NO,
+        GRP_ID,
+        USER_ID,
+        USER_NM
+        FROM USER_MSTR
+          WHERE DEL_YN = 'N'
+            ORDER BY USER_ID ASC
+		</select>
     <select id="selectConfigFolder" resultMap="FldMstr">
 			SELECT
         FLD_ID,
@@ -265,6 +282,31 @@
                           INNER JOIN USER_MSTR 
             ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
             WHERE REPORT_MSTR.DEL_YN = 'N' AND USER_MSTR.DEL_YN = 'N'
+            ORDER BY 3 ASC, 5 ASC
+		</select>
+    <select id="selectConfigPrivateFolderReport" resultMap="ConfigFolderReportDTO">
+			SELECT
+        USER_FLD_MSTR.FLD_ID,
+        USER_FLD_MSTR.FLD_NM,
+        USER_FLD_MSTR.FLD_LVL,
+        USER_FLD_MSTR.FLD_PARENT_ID,
+        USER_FLD_MSTR.FLD_ORDINAL,
+        REPORT_MSTR.REPORT_ID,
+        REPORT_MSTR.REPORT_NM,
+        REPORT_MSTR.REPORT_SUB_TITLE,
+        USER_MSTR.USER_ID,
+        REPORT_MSTR.REG_DT,
+        REPORT_MSTR.REPORT_TAG,
+        REPORT_MSTR.REPORT_ORDINAL,
+        REPORT_MSTR.REPORT_DESC,
+        REPORT_MSTR.REPORT_TYPE,
+        REPORT_MSTR.PROMPT_YN 
+        FROM USER_FLD_MSTR INNER JOIN REPORT_MSTR
+            ON USER_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
+                          INNER JOIN USER_MSTR 
+            ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
+            WHERE REPORT_MSTR.DEL_YN = 'N' AND USER_MSTR.DEL_YN = 'N'
+            AND REPORT_MSTR.REG_USER_NO = #{userNo, jdbcType = INTEGER}
             ORDER BY 3 ASC, 5 ASC
 		</select>
     

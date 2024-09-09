@@ -244,6 +244,7 @@
   "editFieldName": "Edit Field Name",
   "reportNotDeleteMsg": "This report has not been saved.",
   "reportDeleteMsg": "Are you sure you want to delete the report?",
+  "reportPermission": "You don't have permission.",
   "sortByItem": "Sort By Item",
   "newSortByItem": "New Sort By Item",
   "dataHighlight": "Data Highlight",
@@ -297,9 +298,11 @@
   "groupReport": "groupReport",
   "groupDataset": "groupDataset",
   "groupDatasource": "groupDatasource",
+  "groupAppMenu": "groupApp",
   "userReport": "userReport",
   "userDataset": "userDataset",
   "userDatasource": "userDatasource",
+  "userAppMenu": "userApp",
   "round": "Round",
   "ceil": "Round Up",
   "floor": "Round Down",
@@ -621,5 +624,9 @@
   "pointMakerExplain": "* Point marker display is applied to point/line series and area series (excluding bubbles).",
   "pointMakerExplain2": "* Ignoring empty points, viewing in reverse order changes and applies the same as other measurements.",
   "checkingInitReportRetrieval": "Prevent instant Report Retrieval",
-  "viewerReportLimit": "You can view up to 5 viewer reports."
+  "viewerReportLimit": "You can view up to 5 viewer reports.",
+  "privateReportList": "Personal Report List",
+  "privateReportListNoDataTxt": "There are no personal folders/reports for that user.",
+  "execute": "execution",
+  "privateReportGetError": "Personal reports cannot be loaded. Please contact your administrator."
 }
