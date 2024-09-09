@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Division = styled.img`
   src: ${(props) => props.src};
-  padding: 0px 7px 2px 0px;
+  padding: 0px 7px 2px 10px;
 `;
 
 const StyledSpan = styled.span`

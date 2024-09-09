@@ -12,12 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
@@ -41,6 +45,7 @@ import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
 import com.wise.MarketingPlatForm.report.domain.item.pivot.util.GridAttributeUtils;
 import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
+import com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
 import com.wise.MarketingPlatForm.report.service.ReportService;
 import com.wise.MarketingPlatForm.report.type.EditMode;
@@ -74,7 +79,8 @@ public class ReportController {
     private final AuthService authService;
 
     private final TokenStorage<ReportTokenDTO> tokenStorage;
-    
+    private static final Logger logger = LoggerFactory.getLogger(RestController.class);
+
     @Autowired
     private ListDataUtility<Measure> listDataUtility;
 
@@ -339,13 +345,13 @@ public class ReportController {
 	@PostMapping(value = "/report-list")
         public Map<String, List<ReportListDTO>> getReportList(HttpServletRequest request, @RequestBody Map<String, String> param) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        String userId = userDTO.getUserId();
+
         String reportTypeStr = param.getOrDefault("reportType", "");
         String editModeStr = param.getOrDefault("editMode", "viewer");
 
         ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
         EditMode editMode = EditMode.fromString(editModeStr).orElse(null);
-        return reportService.getReportList(userId, reportType, editMode);
+        return reportService.getReportList(userDTO, reportType, editMode);
     }
     
     @GetMapping(value = "/report-list/query")
@@ -550,7 +556,61 @@ public class ReportController {
         }
     }
     
+    // 즐겨찾기 추가
+    @PostMapping("/favorites-add")
+    public ResponseEntity<Boolean> addFavorite(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        try {
+            UserDTO user = SessionUtility.getSessionUser(request);
+            int reportId = Integer.parseInt(param.get("reportId"));
+            String fldType = param.get("fldType");
+            boolean added = reportService.addFavorite(user.getUserNo(), reportId, fldType);
 
+            if (added) {
+                // 추가 성공 시 200 OK 반환
+                return ResponseEntity.ok(true);
+            } else {
+                // 추가 실패 시 400 Bad Request 또는 다른 상태 코드 반환
+                logger.error("Failed to add favorite for userNo: {} and reportId: {}", user.getUserNo(), reportId);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    // 즐겨찾기 목록 조회
+    @GetMapping("/favorites-list")
+    public List<ReportFavoritesEntity> getFavorites(@RequestParam int userNo) {
+        List<ReportFavoritesEntity> list = new ArrayList<ReportFavoritesEntity>();
+        
+        list = reportService.getFavoritesByUserNo(userNo);
+
+        return list;
+    }
+
+    // 즐겨찾기 삭제
+    @PostMapping("/favorites-remove")
+    public ResponseEntity<Boolean> removeFavorite(HttpServletRequest request, @RequestBody Map<String, String> param) {
+        try {
+            UserDTO user = SessionUtility.getSessionUser(request);
+            int reportId = Integer.parseInt(param.get("reportId"));
+            
+            boolean removed = reportService.removeFavorite(user.getUserNo(), reportId);
+    
+            if (removed) {
+                // 삭제 성공 시 200 OK 반환
+                return ResponseEntity.ok(true);
+            } else {
+                // 삭제 실패 시 400 Bad Request 또는 다른 상태 코드 반환
+                logger.error("Failed to remove favorite for userNo: {} and reportId: {}", user.getUserNo(), reportId);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
 }
 
 

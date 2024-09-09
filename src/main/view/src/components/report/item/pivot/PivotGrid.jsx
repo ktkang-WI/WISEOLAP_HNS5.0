@@ -5,10 +5,10 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo,
-  useCallback
+  useMemo
 } from 'react';
-import {isDataCell, getCssStyle} from './DataHighlightUtility';
+import {isDataCell, getCssStyle, addStyleVariationValue}
+  from './DataHighlightUtility';
 import useModal from 'hooks/useModal';
 import ShowDataModal
   from 'components/common/atomic/Modal/organisms/ShowDataModal';
@@ -22,9 +22,7 @@ import models from 'models';
 import localizedString from 'config/localization';
 import {
   generateLabelSuffix,
-  formatNumber,
-  getDefaultFormat,
-  getDefaultFormatRatio
+  formatNumber
 } from 'components/utils/NumberFormatUtility';
 import {selectCurrentReportId}
   from 'redux/selector/ReportSelector';
@@ -38,6 +36,7 @@ import ReportDescriptionModal
 import useContextMenu from 'hooks/useContextMenu';
 import {itemExportsObject} from
   'components/report/atomic/ItemDownload/ItemDownload';
+import {getFormats} from './FormatUtility';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -63,54 +62,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     ds.datasetId == dataField.datasetId);
   const detailedData = dataset?.detailedData || [];
   let reRender = -1;
-
-  const getFormats = useCallback(() => {
-    const targets = dataField.measure.concat(dataField.sortByItem);
-
-    let formats;
-    if (adHocOption?.gridAttribute) {
-      const visibledMeasure = new Set();
-
-      for (const key in adHocOption.gridAttribute) {
-        if (adHocOption.gridAttribute[key].gridVisibility) {
-          visibledMeasure.add(key);
-        }
-      }
-
-      formats = targets.reduce((acc, item) => {
-        let key = '';
-        if (item.summaryType) {
-          key = item.summaryType + '_' + item.name;
-        } else {
-          key = item.name;
-        }
-
-        if (visibledMeasure.has(key)) {
-          acc.push(item.format);
-        }
-
-        return acc;
-      }, []);
-    } else {
-      formats = targets.map((item) => item.format);
-    }
-
-    (adHocOption?.variationValues || []).forEach((v) => {
-      const target = targets.find((m) => m.fieldId == v.targetId);
-      if (v.type == 'absoluteVariation') {
-        const format = target.format || getDefaultFormat();
-        formats.push(Object.assign(_.cloneDeep(format),
-            {variationValueType: v.type}));
-      } else if (v.type.startsWith('Rank')) {
-        formats.push(getDefaultFormat());
-      } else {
-        formats.push(Object.assign(getDefaultFormatRatio(),
-            {variationValueType: v.type}));
-      }
-    });
-
-    return formats;
-  }, [mart]);
 
   useEffect(() => {
     const item = ref.current;
@@ -161,28 +112,18 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
 
   const onCellPrepared = ({cell, area, cellElement}) => {
     if (area == 'data' && cell.dataType && cell.value) {
-      const formats = getFormats();
+      const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
+      const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
-      if (formData != undefined) {
-        const labelSuffix = generateLabelSuffix(formData);
-        let spanStyle = '';
-
-        if (formData.variationValueType === 'percentVariation' ||
-          formData.variationValueType === 'absoluteVariation'
-        ) {
-          formData.prefix = '+';
-          spanStyle = 'color: blue;';
-          if (cell.value < 0) {
-            cell.value = parseFloat(cell.value.toString().substring(1));
-            formData.prefix = '△';
-            spanStyle = 'color: red;';
-          };
-        }
+      if (newFormData != undefined) {
+        const labelSuffix = generateLabelSuffix(newFormData);
         const formattedValue =
-          formatNumber(cell.value, formData, labelSuffix);
+          formatNumber(cell.value, newFormData, labelSuffix);
         cellElement.innerHTML =
-          `<span style="${spanStyle}">${formattedValue}</span>`;
+          `<span>${formattedValue}</span>`;
+
+        Object.assign(cellElement.style, colorStyle);
       }
     }
 

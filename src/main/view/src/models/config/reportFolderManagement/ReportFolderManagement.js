@@ -13,6 +13,14 @@ export const getFolderReports = () => {
   const res = axios.get(configPath + '/folder-report');
   return res;
 };
+export const getPrivateFolderReports = (param) => {
+  const res = axios.get(configPath + '/folder-report/private', {params: param});
+  return res;
+};
+export const getUserList = () => {
+  const res = axios.get(configPath + '/folder-report/userList');
+  return res;
+};
 export const getFolderPubs = () => {
   const res = axios.get(configPath + '/folder-pub');
   return res;

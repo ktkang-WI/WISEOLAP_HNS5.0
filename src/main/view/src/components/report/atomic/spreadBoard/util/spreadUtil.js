@@ -117,7 +117,7 @@ export const createBorderStyle = (useBorder) => {
   return tableStyle;
 };
 
-export const getJsonKey2ColInfos = (rowData, bindingInfo) => {
+export const getJsonKey2ColInfos = (rowData, bindingInfo, bindedSheet) => {
   if (_.isEmpty(rowData)) return {colInfos: [], dataSourceHearder: []};
 
   const key = Object.keys(rowData[0]);
@@ -129,7 +129,7 @@ export const getJsonKey2ColInfos = (rowData, bindingInfo) => {
     }
   }
 
-  const colInfos = [];
+  let colInfos = [];
   const dataSourceHearder = {};
 
   const getColumnName = (index) => {
@@ -148,6 +148,10 @@ export const getJsonKey2ColInfos = (rowData, bindingInfo) => {
     colInfos.push({name: key[index], displayName: disName});
     dataSourceHearder[key[index]] = key[index];
   });
+
+  // 시트 바인딩 열 너비 유지
+  colInfos = colInfos.map((col, i) =>
+    ({...col, size: bindedSheet.getColumnWidth(i)}));
 
   return {colInfos: colInfos, dataSourceHearder: dataSourceHearder};
 };

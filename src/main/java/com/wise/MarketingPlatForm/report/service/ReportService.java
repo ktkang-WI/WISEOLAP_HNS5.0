@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
+import com.wise.MarketingPlatForm.account.dto.AuthReportDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
+import com.wise.MarketingPlatForm.auth.dao.AuthDAO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO;
@@ -55,6 +61,7 @@ import com.wise.MarketingPlatForm.report.domain.store.factory.QueryGeneratorFact
 import com.wise.MarketingPlatForm.report.domain.xml.ReportXMLParser;
 import com.wise.MarketingPlatForm.report.domain.xml.factory.XMLParserFactory;
 import com.wise.MarketingPlatForm.report.entity.DwReportChkEntity;
+import com.wise.MarketingPlatForm.report.entity.ReportFavoritesEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity;
 import com.wise.MarketingPlatForm.report.entity.ReportMstrEntity;
@@ -83,14 +90,16 @@ public class ReportService {
     private final DatasetService datasetService;
     private final CubeService cubeService;
     private final LogService logService;
+    private final AuthDAO authDAO;
 
     @Autowired
     private XMLParserFactory xmlParserFactory;
 
     ReportService(
-        ReportDAO reportDAO, MartConfig martConfig, MartDAO martDAO,
+        ReportDAO reportDAO, AuthDAO authDAO,MartConfig martConfig, MartDAO martDAO,
         DatasetService datasetService, CubeService cubeService, LogService logService) {
         this.reportDAO = reportDAO;
+        this.authDAO = authDAO;
         this.martConfig = martConfig;
         this.martDAO = martDAO;
         this.datasetService = datasetService;
@@ -167,7 +176,36 @@ public class ReportService {
             } else {
                 entity = logService.selectReportHis(reportId, reportSeq);
             }
-            
+
+            String authPublishValue = "";
+            if ("PRIVATE".equals(entity.getFldType())) {
+                authPublishValue = "1";
+            } else {
+                AuthReportDTO grpFolderAuth = authDAO.selectGrpAuthReport(entity.getFldId(), user.getGrpId());
+                AuthReportDTO userFolderAuth = authDAO.selectUserAuthReport(entity.getFldId(), user.getUserNo());
+                
+                if (userFolderAuth == null) {
+                    userFolderAuth = AuthReportDTO.builder()
+                                        .fldId(0)
+                                        .authPublish("0")
+                                        .build();
+                }
+
+                if (grpFolderAuth == null) {
+                    grpFolderAuth = AuthReportDTO.builder()
+                                        .fldId(0)
+                                        .authPublish("0")
+                                        .build();
+                }
+
+                authPublishValue = "".equals(userFolderAuth.getAuthPublish()) ? "0" : userFolderAuth.getAuthPublish();
+
+                if (!"".equals(grpFolderAuth.getAuthPublish())) {
+                    if ("0".equals(authPublishValue) && "1".equals(grpFolderAuth.getAuthPublish())) {
+                        authPublishValue = grpFolderAuth.getAuthPublish();
+                    }
+                }
+            }
             
             logDto.setReportNm(entity.getReportNm());
             logDto.setReportType(entity.getReportType());
@@ -208,7 +246,21 @@ public class ReportService {
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
             options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
+            options.put("authPublish", authPublishValue);
 
+
+            // 보고서 즐겨찾기 여부 확인
+            List<ReportFavoritesEntity> favoriteReports = getFavoritesByUserNo(user.getUserNo());
+            List<Integer> reportIds = favoriteReports.stream()
+            .filter(favorite -> entity.getFldType().equals(favorite.getFldType()))
+            .map(ReportFavoritesEntity::getReportId)
+            .collect(Collectors.toList());
+            
+            if (reportIds.contains(entity.getReportId())) {
+                options.put("uniqueId", "favorite" + entity.getReportId());
+            }
+
+            //보고서 BOS 비교
             List<DwReportChkEntity>dwReportChkEntity = reportDAO.selectDwReportChk(reportId);
             DwReportChkDTO dwReportChkDTO = new DwReportChkDTO().fromEntityList(dwReportChkEntity);
             
@@ -434,15 +486,73 @@ public class ReportService {
         return map;
     }
 
-    public Map<String, List<ReportListDTO>> getReportList(String userId, ReportType reportType, EditMode editMode) {
-        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userId, reportType.toStrList(),
+    public Map<String, List<ReportListDTO>> getReportList(UserDTO userDTO, ReportType reportType, EditMode editMode) {
+        List<ReportListDTO> pubList = reportDAO.selectPublicReportList(userDTO.getUserId(), reportType.toStrList(),
                 editMode.toString());
-        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userId, reportType.toStrList(),
+        List<ReportListDTO> priList = reportDAO.selectPrivateReportList(userDTO.getUserId(), reportType.toStrList(),
                 editMode.toString());
+        List<ReportFavoritesEntity> favoriteReports = getFavoritesByUserNo(userDTO.getUserNo());
+            
+        // 즐겨찾기 폴더 및 보고서 추가 처리
+        List<ReportListDTO> combinedPublicReports = createFavoriteReports(pubList, favoriteReports, -100, "PUBLIC");
+        List<ReportListDTO> combinedPrivateReports = createFavoriteReports(priList, favoriteReports, -200, "PRIVATE");
+
+        // 결과 반환
         Map<String, List<ReportListDTO>> result = new HashMap<>();
-        result.put("publicReport", pubList);
-        result.put("privateReport", priList);
+        result.put("publicReport", combinedPublicReports);
+        result.put("privateReport", combinedPrivateReports);
+    
         return result;
+    }
+
+    private List<ReportListDTO> createFavoriteReports(List<ReportListDTO> reports, List<ReportFavoritesEntity> favoriteReports, int folderId,  String fldType) {
+        // 해당 fldType에 맞는 reportIds 필터링
+        List<Integer> reportIds = favoriteReports.stream()
+        .filter(favorite -> fldType.equals(favorite.getFldType()))
+        .map(ReportFavoritesEntity::getReportId)
+        .collect(Collectors.toList());
+
+        // 즐겨찾기 폴더 생성
+        ReportListDTO favoriteFolder = ReportListDTO.builder()
+                .uniqueId(String.valueOf(folderId))
+                .id(folderId)
+                .name("즐겨찾기")   
+                .type("FOLDER")
+                .upperId(0)
+                .build();
+    
+        // 즐겨찾기 보고서 필터링 및 변환
+        List<ReportListDTO> favoriteReportsList  = reports.stream()
+                .filter(report -> reportIds.contains(report.getId()))
+                .map(report -> ReportListDTO.builder()
+                        .id(report.getId())
+                        .uniqueId("favorite" + report.getId())
+                        .name(report.getName())
+                        .upperId(folderId)
+                        .ordinal(report.getOrdinal())
+                        .reportType(report.getReportType())
+                        .type(report.getType())
+                        .regDt(report.getRegDt())
+                        .requester(report.getRequester())
+                        .regUserNo(report.getRegUserNo())
+                        .regUserName(report.getRegUserName())
+                        .modDt(report.getModDt())
+                        .modUserNo(report.getModUserNo())
+                        .modUserName(report.getModUserName())
+                        .reportTag(report.getReportTag())
+                        .reportDesc(report.getReportDesc())
+                        .dataset(report.getDataset())
+                        .promptYn(report.getPromptYn())
+                        .build())
+                .collect(Collectors.toList());
+    
+        // 즐겨찾기 폴더를 리스트의 끝에 추가
+        favoriteReportsList.add(favoriteFolder);
+    
+        // 즐겨찾기 보고서와 원래의 보고서를 합침
+        favoriteReportsList.addAll(reports);
+    
+        return favoriteReportsList;
     }
 
     public Map<String, Object> getReportListIncludeQuery() {
@@ -651,4 +761,36 @@ public class ReportService {
         return reportDAO.selectReportName(reportId);
     }
 
+    public boolean addFavorite(int userNo, int reportId, String fldType) {
+        ReportFavoritesEntity favorite = new ReportFavoritesEntity();
+        favorite.setUserNo(userNo);
+        favorite.setReportId(reportId);
+        favorite.setFldType(fldType);
+
+        try {
+            int result = reportDAO.insertReportFavorite(favorite);
+            return result > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; 
+        }
+    }
+
+    public List<ReportFavoritesEntity> getFavoritesByUserNo(int userNo) {
+        return reportDAO.selectFavoritesByUserId(userNo);
+    }
+
+    public boolean removeFavorite(int userNo, int reportId) {
+        ReportFavoritesEntity favorite = new ReportFavoritesEntity();
+        favorite.setUserNo(userNo);
+        favorite.setReportId(reportId);
+        
+        try {
+            int result = reportDAO.deleteFavorite(favorite);
+            return result > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; 
+        }
+    }
 }

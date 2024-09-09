@@ -19,7 +19,10 @@ import DatasetSlice from 'redux/modules/DatasetSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {useDispatch} from 'react-redux';
-import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {
+  selectCurrentReportId,
+  selectCurrentReport
+} from 'redux/selector/ReportSelector';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import QueryDataSourceDesignerModal
   from 'components/dataset/modal/QueryDataSourceDesignerModal';
@@ -129,9 +132,18 @@ const PanelTitleDefaultElement = () => {
       onClick: async () => {
         const dataset = selectCurrentDataset(store.getState());
         const reportId = selectCurrentReportId(store.getState());
+        const currentReport = selectCurrentReport(store.getState());
+
+        const modifiyButtonAuth = !currentReport?.reportId ? true :
+        currentReport?.options?.authPublish == '1' ? true : false;
 
         if (!dataset) {
           alert(localizedString.datasetNotSelected);
+          return;
+        }
+
+        if (!modifiyButtonAuth) {
+          alert(localizedString.reportPermission);
           return;
         }
 

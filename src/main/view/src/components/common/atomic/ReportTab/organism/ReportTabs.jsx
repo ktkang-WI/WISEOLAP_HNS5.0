@@ -138,7 +138,7 @@ const ReportTabs = ({reportData}) => {
     models.Report.getList(null, 'viewer').then(({data}) => {
       setDatas(data);
     });
-  }, []);
+  }, [reports]);
 
   useEffect(() => {
     if (!reportData) return;

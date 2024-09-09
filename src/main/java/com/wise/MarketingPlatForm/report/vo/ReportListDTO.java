@@ -15,6 +15,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class ReportListDTO {
     int id;
+    String uniqueId;
     String name;
     int upperId;
     int ordinal;
@@ -32,4 +33,6 @@ public class ReportListDTO {
     String dataset;
     @Builder.Default
     String promptYn = "N";
+    @Builder.Default
+    int authPublish = 0;
 }
