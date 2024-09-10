@@ -1731,7 +1731,7 @@ public class QuerySettingEx {
 		Condition condition = new Condition();
 
 		for (Hierarchy oDr : oRows) {
-			if (!oTblColl.contains(oDr.getTBL_NM()))
+			if (!oTblColl.contains(owner + oDr.getTBL_NM()))
 				oTblColl.add(owner + oDr.getTBL_NM());
 		}
 
