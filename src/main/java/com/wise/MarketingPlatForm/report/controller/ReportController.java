@@ -491,14 +491,14 @@ public class ReportController {
         Type listType = new TypeToken<List<ReportLinkMstrDTO>>() {}.getType();
         List<ReportLinkMstrDTO> reportLinkDTO = gson.fromJson(gson.toJson(linkReports), listType);
         reportService.insertLinkReport(reportLinkDTO);
-        reportLinkDTO.forEach(subDto -> {
-            if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
-                List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
-                reportService.insertSubLinkReport(reportLinkSubDTO);
-            }
-        });
         return ResponseEntity.ok().body("Link reports successfully saved.");
     }
+        // reportLinkDTO.forEach(subDto -> {
+            // if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
+            //     List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
+            //     reportService.insertSubLinkReport(reportLinkSubDTO);
+            // }
+        // });
     
 
     @PostMapping(value = "/report-link-param")
