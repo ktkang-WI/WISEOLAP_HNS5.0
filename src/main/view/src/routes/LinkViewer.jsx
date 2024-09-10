@@ -16,6 +16,9 @@ const LinkViewer = () => {
   const {saveConfiguration} = useConfig();
   saveConfiguration(generalConfigure, myPageConfigure);
 
+  const params = new URLSearchParams(window.location.search);
+  const noHeader = params.get('no_header') || false;
+
   useEffect(() => {
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);
@@ -23,12 +26,13 @@ const LinkViewer = () => {
 
   return (
     <div>
-      <Header
-        left={['Logo', 'LinkReport']}
-        middle={['ReportTab']}
-        right={['DownloadReport']}
-      >
-      </Header>
+      {!noHeader &&
+        <Header
+          left={['Logo', 'LinkReport']}
+          middle={['ReportTab']}
+          right={['DownloadReport']}
+        />
+      }
       <LinkViewerContent/>
     </div>
   );
