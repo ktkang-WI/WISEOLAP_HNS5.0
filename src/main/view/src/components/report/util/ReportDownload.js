@@ -116,20 +116,17 @@ const convertToBlob = async (element) => {
 const exportComponentToWorksheet = async (
     workbook, elementObj, worksheet, startRow, option, dataField, adhocOption, highlight) => {
   switch (elementObj.type) {
-    case 'pivot':
-    case 'grid': {
-      const instance = elementObj.type === 'pivot'?
-        PivotGrid.getInstance(elementObj.selector):
-        DataGrid.getInstance(elementObj.selector);
-      const isPivotGrid = elementObj.type === 'pivot';
-      await (isPivotGrid ? exportPivotGrid : exportDataGrid)({
+    case 'pivot': {
+      const instance = PivotGrid.getInstance(elementObj.selector);
+
+      await exportPivotGrid({
         component: instance,
         worksheet: worksheet,
         topLeftCell: {row: startRow + 1, column: 1},
-        ...(isPivotGrid ? {mergeColumnFieldValues: option?.mergeColumn} : {}),
-        ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {}),
+        mergeColumnFieldValues: option?.mergeColumn,
+        mergeRowFieldValues: option?.mergeRow,
         // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
-        ...(isPivotGrid ? {exportRowFieldHeaders: true} : {}),
+        exportRowFieldHeaders: true,
         customizeCell: ({pivotCell, excelCell}) => {
           if (pivotCell.area == 'data' && pivotCell.dataType && pivotCell.value) {
             const formats = getFormats(dataField, adhocOption);
@@ -160,6 +157,15 @@ const exportComponentToWorksheet = async (
             }
           }
         }
+      });
+      break;
+    }
+    case 'grid': {
+      const instance = DataGrid.getInstance(elementObj.selector);
+      await exportDataGrid({
+        component: instance,
+        worksheet: worksheet,
+        topLeftCell: {row: startRow + 1, column: 1}
       });
       break;
     }
