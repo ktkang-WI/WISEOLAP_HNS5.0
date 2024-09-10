@@ -309,7 +309,7 @@ color: var(--gray600);
 }
 
 .dx-pivotgrid thead, .dx-datagrid-headers, .dx-treelist-headers {
-  background: var(--gray50);
+  /* background: var(--gray50); */
   font-weight: 500;
 }
 
@@ -326,12 +326,12 @@ color: var(--gray600);
   border-color: var(--gray200) !important;
 }
 
-.dx-pivotgrid .dx-grandtotal {
-  background: var(--gray50);
+.dx-pivotgrid .dx-pivotgrid-area-data .dx-grandtotal {
+  background: var(--white);
 }
 
-.dx-pivotgrid .dx-total {
-  background: var(--gray50);
+.dx-pivotgrid .dx-pivotgrid-area-data .dx-total {
+  background: var(--white);
 }
 
 .dx-pivotgrid .dx-pivotgrid-border .dx-area-description-cell {
@@ -342,6 +342,11 @@ color: var(--gray600);
 .dx-pivotgrid .dx-pivotgrid-border .dx-area-row-cell {
   border-bottom: 1px solid #ddd;
   text-align: left;
+}
+
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-column-cell,
+.dx-pivotgrid .dx-pivotgrid-border .dx-area-row-cell {
+  background: var(--gray50);
 }
 
 td[role="columnheader"] {
