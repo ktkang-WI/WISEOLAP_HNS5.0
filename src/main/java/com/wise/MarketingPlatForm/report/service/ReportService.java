@@ -580,6 +580,7 @@ public class ReportService {
                 Map<String, Object> datasource = new HashMap<>();
 
                 datasource.put("id", report.getId());
+                datasource.put("uniqueId", report.getUniqueId());
                 datasource.put("upperId", report.getUpperId());
                 datasource.put("name", report.getName());
                 datasource.put("reportType", report.getReportType());
