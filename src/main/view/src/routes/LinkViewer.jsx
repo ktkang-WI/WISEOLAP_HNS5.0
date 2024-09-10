@@ -26,7 +26,7 @@ const LinkViewer = () => {
       <Header
         left={['Logo', 'LinkReport']}
         middle={['ReportTab']}
-        right={['DownloadReport']}
+        right={['DownloadReport', 'SaveAs', 'UserInfo']}
       >
       </Header>
       <LinkViewerContent/>
