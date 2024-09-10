@@ -409,7 +409,11 @@ public final class DataSanitizer {
      */
     public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
         Map<String, String> dimensionMap = dimensions.stream()
-        .collect(Collectors.toMap(Dimension::getUniqueName, Dimension::getName));
+            .collect(Collectors.toMap(
+                Dimension::getUniqueName,
+                Dimension::getName,
+                (existingValue, newValue) -> newValue
+            ));
 
         // 필터가 존재하는 경우에만 필터링
         if (filter != null && filter.size() > 0) {
