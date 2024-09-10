@@ -49,3 +49,25 @@ export const connectLinkedReport = (param, closeWindow, showReportList) => {
     });
   }
 };
+
+export const openNewTab = (param, closeWindow, showReportList) => {
+  if (param) {
+    models.Report.generateToken(param).then((res) => {
+      if (res.status != 200) return;
+      const token = res.data;
+      const urlString =
+        `${getFullUrl()}/linkviewer?token=${token}` +
+        (showReportList ? '&srl=true' : '');
+      const newWindow = window.open(urlString, '_blank');
+      if (newWindow) {
+        newWindow.focus();
+
+        if (closeWindow) {
+          window.close();
+        }
+      }
+    }).catch((error) => {
+      console.error('Error sending link report:', error);
+    });
+  }
+};
