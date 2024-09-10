@@ -39,11 +39,15 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
     models.DataSource.getByIdAndDsType(DatasetType.DS_SQL)
         .then(({data}) => {
           setDataSource(data);
+        }).catch((e) => {
+          console.log(e);
         });
     if (isDsSingleTable) {
       models.DSView.getByUserId()
           .then((data) => {
             setDsViewList(data.data);
+          }).catch((e) => {
+            console.log(e);
           });
     }
   }, []);

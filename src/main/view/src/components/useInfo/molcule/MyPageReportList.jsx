@@ -105,9 +105,13 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
           if (!res) return alert(localizedString.failReportDelete);
 
           setTreeViewData(res);
+        }).catch((e) => {
+          console.log(e);
         });
 
         setData({});
+      }).catch((e) => {
+        console.log(e);
       });
     });
   };

@@ -32,6 +32,8 @@ const ReportHistoryModal = ({onClose, ...props}) => {
       }));
 
       setDataSource(newSource);
+    }).catch((e) => {
+      console.log(e);
     });
   }, []);
 

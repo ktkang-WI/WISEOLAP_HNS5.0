@@ -113,6 +113,8 @@ const useDrag = () => {
                 reportId: reportId,
                 informations: newParamInfo
               }));
+            }).catch((e) => {
+              console.log(e);
             });
       } else if (selectedDataset.datasetType == 'DS_SINGLE') {
         const newParam =

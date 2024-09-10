@@ -132,7 +132,7 @@ const UserFolderManagement = () => {
           <StyledTreeView
             height='100%'
             width='100%'
-            items={treeViewData.folder}
+            items={treeViewData?.folder || []}
             dataStructure="plain"
             displayExpr="name"
             selectionMode='single'

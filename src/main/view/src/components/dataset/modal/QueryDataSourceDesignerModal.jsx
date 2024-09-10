@@ -190,6 +190,7 @@ const QueryDataSourceDesignerModal = ({
 
           const response = await models.DBInfo.
               getDataByQueryMart(selectedDataSource.dsId, query, parameters);
+          if (response.message === 'canceled') return;
           if (!response.data.rowData[0]?.error) {
             let tempFields = response.data.metaData;
             tempFields = makeFieldIcon(tempFields);

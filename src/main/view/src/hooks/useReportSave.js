@@ -1,9 +1,9 @@
 import {selectRootDataset}
   from 'redux/selector/DatasetSelector';
 import {selectRootItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReportId, selectReports}
+import {selectCurrentReportId, selectReports, selectRootReport}
   from 'redux/selector/ReportSelector';
-import store, {getReportInitialState} from 'redux/modules';
+import store from 'redux/modules';
 import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
@@ -129,7 +129,9 @@ const useReportSave = () => {
    * @return {JSON} report 새로 추가되거나 업데이트 할 ReportSlice 의 state
    */
   const generateReport = (data) => {
-    const report = _.cloneDeep(getReportInitialState());
+    // const report = _.cloneDeep(getReportInitialState());
+    const rootReport = selectRootReport(store.getState());
+    const report = _.cloneDeep(rootReport);
 
     const generateOptions = () => {
       const options = report.reports[0].options;
@@ -247,6 +249,8 @@ const useReportSave = () => {
           prevDesigner: designer
         });
       }
+    }).catch((e) => {
+      console.log(e);
     });
   };
 

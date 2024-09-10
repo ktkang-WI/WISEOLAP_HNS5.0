@@ -37,8 +37,8 @@ const ConfigurationSetting = () => {
           };
         })
         .catch((e) => {
-          throw new Error('ConfigurationSetting Data Save Error :' + e);
           alert(localizedString.saveFail);
+          throw new Error('ConfigurationSetting Data Save Error :' + e);
         });
   };
 

@@ -14,11 +14,15 @@ const SelectTableModal = ({dsId, dsViewId, onSubmit, ...props}) => {
       models.DBInfo.dsViewdbTables(dsId, dsViewId)
           .then(({data}) => {
             setTables(data);
+          }).catch((e) => {
+            console.log(e);
           });
     } else {
       models.DBInfo.dbTables(dsId)
           .then(({data}) => {
             setTables(data);
+          }).catch((e) => {
+            console.log(e);
           });
     }
   }, []);
@@ -60,6 +64,8 @@ const SelectTableModal = ({dsId, dsViewId, onSubmit, ...props}) => {
                 return column;
               });
               onSubmit(selectedTable, data);
+            }).catch((e) => {
+              console.log(e);
             });
       }}
       modalTitle={localizedString.tableList}

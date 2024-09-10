@@ -153,7 +153,7 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
-    // 'InteractionNoDrillDown',
+    'InteractionSingleMasterFilter',
     'InteractionConfiguration'
   ];
 };

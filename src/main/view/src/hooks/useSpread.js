@@ -262,7 +262,9 @@ const useSpread = () => {
     try {
       if (fileCache.has(reportId) && editMode === EditMode['VIEWER']) {
         await excelIoOpen(reportId, fileCache.get(reportId))
-            .then(() => dispatch(loadingActions.endJob()));
+            .then(() => dispatch(loadingActions.endJob())).catch((e) => {
+              console.log(e);
+            });
       } else {
         const response = await importFile({fileName: reportId + '.sjs'});
         let data;
@@ -279,7 +281,9 @@ const useSpread = () => {
           );
           fileCache.set(reportId, blob);
           await excelIoOpen(reportId, blob)
-              .then(() => dispatch(loadingActions.endJob()));
+              .then(() => dispatch(loadingActions.endJob())).catch((e) => {
+                console.log(e);
+              });
         }
       }
     } catch (e) {

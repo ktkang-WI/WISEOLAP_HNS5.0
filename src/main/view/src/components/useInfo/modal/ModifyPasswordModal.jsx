@@ -38,6 +38,8 @@ const ModifyPasswordModal = ({...props}) => {
       } else {
         alert(localizedString.updateException);
       }
+    }).catch((e) => {
+      console.log(e);
     });
     return result;
   };

@@ -98,6 +98,8 @@ const ViewerContent = ({children}) => {
       onClick: () => {
         models.Report.getList(null, 'viewer').then(({data}) => {
           setReportData(data);
+        }).catch((e) => {
+          console.log(e);
         });
       }
     }

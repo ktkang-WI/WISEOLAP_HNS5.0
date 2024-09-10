@@ -51,6 +51,8 @@ const Log = () => {
           } else {
             alert(localizedString.log.failMsg);
           }
+        }).catch((e) => {
+          console.log(e);
         });
   };
 

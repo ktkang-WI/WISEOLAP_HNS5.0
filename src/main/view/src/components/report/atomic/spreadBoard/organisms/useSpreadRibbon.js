@@ -101,7 +101,9 @@ const useSpreadRibbon = () => {
         (blob) => uploadFile(
             blob,
             {fileName: reportId + '.sjs'}
-        ));
+        )).catch((e) => {
+      console.log(e);
+    });
   };
   const saveReport = () => {
     getElementByLable(localizedString.saveReport)

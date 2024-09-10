@@ -52,6 +52,8 @@ const ReportFolderManagement = () => {
           mode: management.value});
         setData(newData);
       }
+    }).catch((e) => {
+      console.log(e);
     });
   };
 
@@ -225,6 +227,8 @@ const ReportFolderManagement = () => {
         setPage(mode);
         setData(newData);
       }
+    }).catch((e) => {
+      console.log(e);
     });
   };
 

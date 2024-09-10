@@ -115,6 +115,8 @@ const UserUploadTableModal = ({
                       });
                       onSubmit(tableObject, data);
                       onClose();
+                    }).catch((e) => {
+                      console.log(e);
                     });
               }).catch(({data}) => {
                 console.log(data);

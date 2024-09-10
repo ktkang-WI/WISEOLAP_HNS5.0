@@ -57,6 +57,8 @@ const UserInfoManagement = () => {
         } else {
           alert(localizedString.saveExceptionMsg);
         }
+      }).catch((e) => {
+        console.log(e);
       });
     }
   };

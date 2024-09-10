@@ -78,6 +78,8 @@ const MyDesignerConfig = () => {
       } else {
         alert(localizedString.saveFail);
       }
+    }).catch((e) => {
+      console.log(e);
     });
   };
 

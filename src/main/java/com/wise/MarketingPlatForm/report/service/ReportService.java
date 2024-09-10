@@ -177,14 +177,33 @@ public class ReportService {
                 entity = logService.selectReportHis(reportId, reportSeq);
             }
 
-            AuthReportDTO grpFolderAuth = authDAO.selectGrpAuthReport(entity.getFldId(), user.getGrpId());
-            AuthReportDTO userFolderAuth = authDAO.selectUserAuthReport(entity.getFldId(), user.getUserNo());
+            String authPublishValue = "";
+            if ("PRIVATE".equals(entity.getFldType())) {
+                authPublishValue = "1";
+            } else {
+                AuthReportDTO grpFolderAuth = authDAO.selectGrpAuthReport(entity.getFldId(), user.getGrpId());
+                AuthReportDTO userFolderAuth = authDAO.selectUserAuthReport(entity.getFldId(), user.getUserNo());
+                
+                if (userFolderAuth == null) {
+                    userFolderAuth = AuthReportDTO.builder()
+                                        .fldId(0)
+                                        .authPublish("0")
+                                        .build();
+                }
 
-            String authPublishValue = "".equals(userFolderAuth.getAuthPublish()) ? "0" : userFolderAuth.getAuthPublish();
+                if (grpFolderAuth == null) {
+                    grpFolderAuth = AuthReportDTO.builder()
+                                        .fldId(0)
+                                        .authPublish("0")
+                                        .build();
+                }
 
-            if (!"".equals(grpFolderAuth.getAuthPublish())) {
-                if ("0".equals(authPublishValue) && "1".equals(grpFolderAuth.getAuthPublish())) {
-                    authPublishValue = grpFolderAuth.getAuthPublish();
+                authPublishValue = "".equals(userFolderAuth.getAuthPublish()) ? "0" : userFolderAuth.getAuthPublish();
+
+                if (!"".equals(grpFolderAuth.getAuthPublish())) {
+                    if ("0".equals(authPublishValue) && "1".equals(grpFolderAuth.getAuthPublish())) {
+                        authPublishValue = grpFolderAuth.getAuthPublish();
+                    }
                 }
             }
             
@@ -561,6 +580,7 @@ public class ReportService {
                 Map<String, Object> datasource = new HashMap<>();
 
                 datasource.put("id", report.getId());
+                datasource.put("uniqueId", report.getUniqueId());
                 datasource.put("upperId", report.getUpperId());
                 datasource.put("name", report.getName());
                 datasource.put("reportType", report.getReportType());

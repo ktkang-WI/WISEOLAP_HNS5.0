@@ -125,6 +125,8 @@ const ReportTabs = ({reportData}) => {
                   // dispatch(setSubLinkReport(subLinkReports[0]));
                   // } else if (subLinkReports.length === 0) {
                   // }
+                }).catch((e) => {
+                  console.log(e);
                 });
           }
         }
@@ -145,7 +147,7 @@ const ReportTabs = ({reportData}) => {
 
     models.Report.getList(null, 'viewer').then(({data}) => {
       setDatas(data);
-    });
+    }).catch((e) => console.log(e));
   }, [reports]);
 
   useEffect(() => {

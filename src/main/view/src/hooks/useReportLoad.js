@@ -47,6 +47,8 @@ export default function useReportLoad() {
         setIconReportList(data.privateReport);
         setIconReportList(data.publicReport);
         setReportList(data);
+      }).catch((e) => {
+        console.log(e);
       });
     };
 
@@ -99,6 +101,8 @@ export default function useReportLoad() {
             console.log('linkReports', linkReports);
             dispatch(setLinkReport(linkReports));
           }
+        }).catch((e) => {
+          console.log(e);
         });
     // const subLinkReports = res.data.subLinkReports;
     // if (subLinkReports.length > 0) {

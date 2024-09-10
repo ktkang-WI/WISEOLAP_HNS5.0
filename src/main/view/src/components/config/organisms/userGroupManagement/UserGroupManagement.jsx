@@ -22,10 +22,10 @@ const UserGroupManagement = () => {
 
   const {userGroupManagement} = useLoaderData();
   const [groupsFormat, setGroupsFormat] =
-  useState(userGroupManagement.groupsFormat);
+  useState(userGroupManagement?.groupsFormat || []);
   const [groupDetailInfo, setGroupDetailInfo] = useState();
   const [usersFormat, setUsersFormat] =
-  useState(userGroupManagement.usersFormat);
+  useState(userGroupManagement?.usersFormat || []);
   const [userDetailInfo, setUserDetailInfo] = useState(new User({}));
   const [groupMemberUsers, setGroupMemberUsers] = useState();
   const [groupNotMemberUsers, setGroupNotMemberUsers] = useState(usersFormat);

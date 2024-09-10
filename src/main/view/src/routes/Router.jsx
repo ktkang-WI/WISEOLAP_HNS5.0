@@ -46,6 +46,8 @@ export const contextPath = '/editds';
 const multipleLoader = async () => {
   const generalConfigure = await generalLoader().then((result) => {
     return result;
+  }).catch((e) => {
+    console.log(e);
   });
 
   const myPageConfigure = await userDesignerConfig().then((result) => {
@@ -65,10 +67,14 @@ const multipleLoader = async () => {
     };
 
     return object;
+  }).catch((e) => {
+    console.log(e);
   });
 
   const useLoaderData = await getUserNmLoader().then((result) => {
     return result;
+  }).catch((e) => {
+    console.log(e);
   });
 
   return {
