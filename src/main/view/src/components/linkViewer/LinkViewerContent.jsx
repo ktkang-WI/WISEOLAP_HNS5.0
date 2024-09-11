@@ -126,7 +126,6 @@ const LinkViewerContent = ({children}) => {
             }).catch((e) => {
               console.log(e);
             });
-
         models.Report.getLinkReportList(loadReportId)
             .then((res) => {
               if (res.data ? res.data === undefined : true) {
@@ -140,7 +139,6 @@ const LinkViewerContent = ({children}) => {
             });
       }).catch((e) => {
         console.log(e);
-
       });
     }
   }, []);
