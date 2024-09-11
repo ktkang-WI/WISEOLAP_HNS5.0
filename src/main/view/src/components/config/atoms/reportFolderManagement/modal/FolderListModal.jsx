@@ -29,7 +29,7 @@ const FolderListModal = ({myPageFlag, ...props}) => {
       }, []);
     };
 
-    managementData[1].data(myPageFlag)
+    managementData[2].data(myPageFlag)
         .then((response) => {
           if (response.data.data) {
             let newData = response.data.data;
