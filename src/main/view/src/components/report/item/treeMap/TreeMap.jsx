@@ -1,10 +1,10 @@
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useRef} from 'react';
-import {useInteractiveEffect} from '../util/useInteractiveEffect';
 import ItemManager from 'components/report/item/util/ItemManager';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
+import useItemSetting from '../util/hook/useItemSetting';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -13,22 +13,21 @@ const TreeMapChart = ({setItemExports, id, item}) => {
     return <></>;
   }
   const dxRef = useRef();
-  // 마스터 필터 START
-  // 마스터 필터 선언
-  const {
-    masterFilterOption,
-    functions
-  } = useInteractiveEffect({
-    item: item,
-    meta: meta,
-    selectionFunc: (event) => {
-      event?.forEach((e) => e?.node?.select(true));
-    },
-    removeSelectionFunc: (event) => {
-      if (!dxRef?.current) return;
-      dxRef.current.instance.clearSelection();
-    }
-  });
+
+  const interactiveOption = meta.interactiveOption || {};
+  const {filterTools, itemTools} = useItemSetting(
+      item,
+      null,
+      [],
+      false,
+      {
+        selectedItemType: 'REF',
+        clearSelection: () => {
+          dxRef?.current?.instance?.clearSelection();
+        }
+      });
+
+  const dataField = itemTools.getDataField();
 
   useItemExport({
     id,
@@ -54,10 +53,11 @@ const TreeMapChart = ({setItemExports, id, item}) => {
     };
   };
   const handleClick = (e) => {
-    e.data = e?.node?.data['arg'];
-    functions.setDataMasterFilter(e.data);
-    functions.masterFilterReload(e);
+    if (!interactiveOption.enabled || dataField.dimension.length == 0) return;
+    e.node.select(!e.node.isSelected());
+    filterTools.setMasterFilterData(e?.node?.data['arg'], () => {}, true);
   };
+
   return (
     <TreeMap
       ref={dxRef}
@@ -68,7 +68,7 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       dataSource={mart.data.data} // mart
       valueField={seriesNames[0].summaryName}
       labelField='arg'
-      selectionMode={masterFilterOption.interactiveOption.mode}
+      selectionMode={interactiveOption.enabled && interactiveOption.mode}
       onClick={handleClick}
     >
       <Tooltip
