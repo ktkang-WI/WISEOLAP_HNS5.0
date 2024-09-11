@@ -30,13 +30,13 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
-import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
 import useContextMenu from 'hooks/useContextMenu';
 import {itemExportsObject} from
   'components/report/atomic/ItemDownload/ItemDownload';
 import {getFormats} from './FormatUtility';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -110,6 +110,12 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     return meta.dataHighlight;
   }, [meta.dataHighlight]);
 
+  const isPivot = item.type === 'pivot';
+
+  if (isPivot) {
+    dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
+  }
+
   const onCellPrepared = ({cell, area, cellElement}) => {
     if (area == 'data' && cell.dataType && cell.value) {
       const formats = getFormats(dataField, adHocOption);
@@ -143,6 +149,33 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
   };
+
+  mart.dataSourceConfig.load().then((data) => {
+    if (dataset?.cubeId == 6184) {
+      const pivotDataSource = ref.current._instance.getDataSource();
+      const items = pivotDataSource.getData().rows;
+      const collapseSingleChildItems = (items, path) => {
+        items.forEach((item) => {
+          const currentPath = path.concat(item.value);
+          if (item.children && item.children.length === 1 &&
+              (item.children[0]?.text == '' ||
+                  item.children[0]?.text == 'null')) {
+            pivotDataSource.collapseHeaderItem('row', currentPath);
+          } else {
+            if (item.children) {
+              collapseSingleChildItems(item.children, currentPath);
+            }
+          }
+        });
+      };
+      collapseSingleChildItems(items, []);
+    }
+    dispatch(loadingActions.endJobForce());
+  },
+  (error) => {
+    console.log(error);
+    dispatch(loadingActions.endJobForce());
+  });
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -231,26 +264,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               pivotColumnFields.forEach((field) => {
                 pivotDataSource.collapseAll(field.index);
               });
-            }
-            if (dataset?.cubeId == 6184) {
-              dispatch(loadingActions.startJob());
-              const items = pivotDataSource.getData().rows;
-              const collapseSingleChildItems = (items, path) => {
-                items.forEach((item) => {
-                  const currentPath = path.concat(item.value);
-                  if (item.children && item.children.length === 1 &&
-                      (item.children[0]?.text == '' ||
-                          item.children[0]?.text == 'null')) {
-                    pivotDataSource.collapseHeaderItem('row', currentPath);
-                  } else {
-                    if (item.children) {
-                      collapseSingleChildItems(item.children, currentPath);
-                    }
-                  }
-                });
-              };
-              collapseSingleChildItems(items, []);
-              dispatch(loadingActions.endJobForce());
             }
           }
         }}
