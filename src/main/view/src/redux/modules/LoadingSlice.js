@@ -2,7 +2,9 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   jobCount: 0,
-  messageQueue: []
+  itemJobCount: 0,
+  messageQueue: [],
+  itemMessageQueue: []
 };
 
 const reducers = {
@@ -30,10 +32,21 @@ const reducers = {
       }
     }
   },
+  startJobItem(state, actions) {
+    const msg = actions.payload;
+
+    if (msg) {
+      state.itemMessageQueue.push(msg);
+    }
+
+    state.itemJobCount = state.itemJobCount + 1;
+  },
   endJobForce() {
     return {
       jobCount: 0,
-      messageQueue: []
+      itemJobCount: 0,
+      messageQueue: [],
+      itemMessageQueue: []
     };
   }
 };
