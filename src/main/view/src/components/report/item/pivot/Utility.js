@@ -15,6 +15,8 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import {selectCurrentAdHocOption, selectCurrentItems}
   from 'redux/selector/ItemSelector';
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
+import ExpressionEngine from
+  'components/utils/ExpressionEngine/ExpressionEngine';
 
 const cache = new Map();
 
@@ -73,7 +75,8 @@ const gridAttributeOptionCheck = (dataFieldName, gridAttribute) => {
  */
 const generateItem = (item, param, rootItem) => {
   const fields = [];
-  const dataField = item.meta.dataField || rootItem.adHocOption.dataField;
+  const dataField = _.cloneDeep(
+      item.meta.dataField || rootItem.adHocOption.dataField);
 
   const {updateItem} = ItemSlice.actions;
   const gridAttribute = rootItem?.adHocOption?.gridAttribute;
@@ -89,12 +92,29 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.measure) {
     const dataFieldName = field.summaryType + '_' + field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
-    fields.push({
+
+    const newField = {
       caption: field.caption,
       summaryType: 'sum',
       dataField: dataFieldName,
       area: 'data'
-    });
+    };
+
+    if (field.expression) {
+      const engine = new ExpressionEngine();
+
+      newField.summaryType = 'custom';
+      newField.calculateSummaryValue = (summaryCell) => {
+        const data = {};
+        dataField.measure.map((mea) => {
+          data[mea.name] = summaryCell.value(mea.name);
+        });
+
+        return engine.evaluate(data, field.expression, 0);
+      };
+    }
+
+    fields.push(newField);
   }
 
   for (const field of dataField.sortByItem) {
