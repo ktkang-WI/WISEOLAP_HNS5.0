@@ -2,12 +2,20 @@ import ExpressionFunctions from './ExpressionFunctions';
 import {create, all} from 'mathjs';
 
 const math = create(all);
-const functions = new ExpressionFunctions();
 
 const customFunctions = {
-  avg: (...args) => functions.avg(...args),
-  stdDev: (...args) => functions.stdDev(...args),
-  var: (...args) => functions.var(...args)
+  Avg: ExpressionFunctions.Avg,
+  Count: ExpressionFunctions.Count,
+  Max: ExpressionFunctions.Max,
+  Median: ExpressionFunctions.Median,
+  Min: ExpressionFunctions.Min,
+  Sum: ExpressionFunctions.Sum,
+  Var: ExpressionFunctions.Var,
+  StdDev: ExpressionFunctions.StdDev,
+  Iif: ExpressionFunctions.Iif,
+  IsNull: ExpressionFunctions.IsNull,
+  IsNullOrEmpty: ExpressionFunctions.IsNullOrEmpty,
+  ToBoolean: ExpressionFunctions.ToBoolean
 };
 
 math.import(customFunctions);
