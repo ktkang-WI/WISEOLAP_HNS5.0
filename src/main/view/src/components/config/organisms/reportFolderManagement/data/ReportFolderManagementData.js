@@ -84,14 +84,15 @@ export const dataPrepro = ({data, mode}) => {
           type: 'folder'
         });
       }
-
-      acc.push({
-        ...v,
-        key: 'r_'+ v.reportId,
-        parentId: 'f_' + v.fldId,
-        name: v.reportNm,
-        fldParentNm: v.fldNm
-      });
+      if (v.reportId) {
+        acc.push({
+          ...v,
+          key: 'r_'+ v.reportId,
+          parentId: 'f_' + v.fldId,
+          name: v.reportNm,
+          fldParentNm: v.fldNm
+        });
+      }
 
       return acc;
     }, []);
