@@ -26,7 +26,7 @@ export default function useReportLoad() {
   // actions
   const {setDesignerMode} = ConfigSlice.actions;
   const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
-  const {startJob, endJob} = LoadingSlice.actions;
+  const {startJob, endJob, endJobForce} = LoadingSlice.actions;
 
   const reportType = selectCurrentDesignerMode(store.getState());
   const reportId = selectCurrentReportId(store.getState());
@@ -99,6 +99,7 @@ export default function useReportLoad() {
           }
         }).catch((e) => {
           console.log(e);
+          dispatch(endJobForce());
         });
   };
 

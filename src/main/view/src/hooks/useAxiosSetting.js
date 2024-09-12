@@ -5,16 +5,19 @@ import {getConfig} from 'config/config';
 
 const contextRoot =
 process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-
+let isCancel = false;
 export let requestPath = [];
-
+const acceptDuple = [
+  '/dataset/param-list-items',
+  '/report/item-data'
+];
 export const abortController = (controllers, session) => {
   controllers[session]?.forEach((controller) => {
     controller.abort();
   });
 
   if (!controllers || !controllers[session]) return;
-
+  isCancel = true;
   requestPath = requestPath.filter((path) => path !== session);
   delete controllers[session];
 };
@@ -30,7 +33,7 @@ export default function useAxiosSetting() {
     // /dataset/param-list-items 처럼 여러번 호출 가능한 부분은 작업 취소시 전부 취소 해줘야함.
     // TODO : 언급한데로 여러번 호출 가능성이 있는 path는 따로 추가 하여 조건에 추가 할 예정.
     if (requestPath.includes(requestKey) &&
-    requestKey !== '/dataset/param-list-items') return;
+    !acceptDuple.includes(requestKey)) return;
     requestPath.push(requestKey);
 
     const controller = new AbortController();
@@ -70,6 +73,10 @@ export default function useAxiosSetting() {
   axios.interceptors.request.use((config) => {
     const requestKey = config.url;
     const controller = createController(requestKey);
+    if (requestKey === '/report/item-data' && isCancel) {
+      abortController(controllers, requestKey);
+      isCancel = false;
+    }
     if (!controller) return config;
     config.signal = controller.signal;
 
