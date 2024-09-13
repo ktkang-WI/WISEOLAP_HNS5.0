@@ -144,8 +144,8 @@ const exportComponentToWorksheet = async (
                   if (highlightIsDataCell(pivotCell, pivotCell.area, highlight[i])) {
                     const cssStyle = getCssStyle(highlight[i], null, pivotCell);
                     if (cssStyle) {
-                      cssStyle['background-color'] = cssStyle['background-color'].slice(1);
-                      cssStyle['color'] = cssStyle['color'].slice(1);
+                      cssStyle['background-color'] = cssStyle['background-color']?.slice(1);
+                      cssStyle['color'] = cssStyle['color']?.slice(1);
                       ({'background-color': backgroundColor, 'color': color} = cssStyle);
                       break;
                     }
