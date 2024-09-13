@@ -95,8 +95,8 @@ export const addStyleVariationValue = (formData, cell) => {
   };
   const newFormData = formData;
 
-  if (newFormData.variationValueType === 'percentVariation' ||
-    newFormData.variationValueType === 'absoluteVariation'
+  if (newFormData?.variationValueType === 'percentVariation' ||
+    newFormData?.variationValueType === 'absoluteVariation'
   ) {
     newFormData.prefix = '+';
     colorStyle.color = '#0000ff';
