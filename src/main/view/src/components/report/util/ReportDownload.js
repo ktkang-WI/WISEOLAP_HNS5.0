@@ -128,7 +128,7 @@ const exportComponentToWorksheet = async (
         // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
         exportRowFieldHeaders: true,
         customizeCell: ({pivotCell, excelCell}) => {
-          if (pivotCell.area == 'data' && pivotCell.dataType && pivotCell.value) {
+          if (pivotCell.area == 'data' && pivotCell.dataType) {
             const formats = getFormats(dataField, adhocOption);
             const formData = formats[pivotCell.dataIndex];
             const {newFormData, colorStyle} = addStyleVariationValue(formData, pivotCell);
@@ -136,8 +136,9 @@ const exportComponentToWorksheet = async (
             if (newFormData) {
               const labelSuffix = generateLabelSuffix(newFormData);
               const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
+
               let backgroundColor = '';
-              let color = colorStyle.color.slice(1);
+              let color = colorStyle?.color?.slice(1);
 
               if (highlight.length != 0) {
                 for (let i=0; i<highlight.length; i++) {
