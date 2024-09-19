@@ -80,7 +80,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const {items, selectedItemId} = item || {};
   const {reportId} = report || {};
   const rootItem = item;
-  const model = Model.fromJson(layoutConfig);
+  const model = Model?.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
