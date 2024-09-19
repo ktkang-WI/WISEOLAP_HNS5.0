@@ -133,6 +133,9 @@ const exportComponentToWorksheet = async (
             const formData = formats[pivotCell.dataIndex];
             const {newFormData, colorStyle} = addStyleVariationValue(formData, pivotCell);
 
+            console.log('pivotCell', pivotCell);
+            console.log('dataField', dataField);
+
             if (newFormData) {
               const labelSuffix = generateLabelSuffix(newFormData);
               const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
@@ -154,7 +157,7 @@ const exportComponentToWorksheet = async (
                 }
               }
 
-              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue}));
+              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue, formData}));
             }
           }
         }
