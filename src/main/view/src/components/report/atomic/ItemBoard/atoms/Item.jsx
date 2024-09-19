@@ -71,7 +71,7 @@ const Item = ({children, item, ...props}) => {
   });
   const jobQuantity = useSelector(selectJobQuantityItem);
   const jobMsg = useSelector(selectCurrentJobMessageItem);
-  const isPivot = item.type === 'pivot';
+  const isPivot = item?.type === 'pivot';
   const isLoading = item.mart?.dataSourceConfig?.isLoading();
 
   const targetRef = useRef();

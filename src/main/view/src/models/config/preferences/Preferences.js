@@ -8,7 +8,10 @@ const contextRoot =
 const configPath = document.location.origin + contextRoot + '/config/general';
 
 export const getGeneralConfig = async () => {
-  return await axios.get(configPath);
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+
+  return await axios.get(configPath + (token ? '?token=' + token : ''));
 };
 
 export const updateGeneralConfig = async (data) => {
