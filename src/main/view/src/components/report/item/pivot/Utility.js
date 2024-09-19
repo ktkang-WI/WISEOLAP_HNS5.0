@@ -100,14 +100,14 @@ const generateItem = (item, param, rootItem) => {
       area: 'data'
     };
 
-    if (field.expression) {
+    if (field.expression && field.summaryWayEach) {
       const engine = new ExpressionEngine();
 
       newField.summaryType = 'custom';
       newField.calculateSummaryValue = (summaryCell) => {
         const data = {};
         dataField.measure.map((mea) => {
-          data[mea.name] = summaryCell.value(mea.name);
+          data[mea.name] = summaryCell.value(mea.caption);
         });
 
         return engine.evaluate(data, field.expression, 0);
