@@ -5,7 +5,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -64,6 +65,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   let reRender = -1;
 
   useEffect(() => {
+    collapseRowHeader();
     const item = ref.current;
 
     if (!item) return;
@@ -78,7 +80,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       if (instance) {
         try {
           instance.updateDimensions();
-        } catch {}
+        } catch (e) {
+          console.log(e);
+        }
       }
     });
 
@@ -150,7 +154,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
   };
 
-  mart.dataSourceConfig.load().then((data) => {
+  const collapseRowHeader =
+  useCallback(() => mart.dataSourceConfig.load().then((data) => {
     if (dataset?.cubeId == 6184) {
       const pivotDataSource = ref.current._instance.getDataSource();
       const items = pivotDataSource.getData().rows;
@@ -158,8 +163,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         items.forEach((item) => {
           const currentPath = path.concat(item.value);
           if (item.children && item.children.length === 1 &&
-              (item.children[0]?.text == '' ||
-                  item.children[0]?.text == 'null')) {
+                (item.children[0]?.text == '' ||
+                    item.children[0]?.text == 'null')) {
             pivotDataSource.collapseHeaderItem('row', currentPath);
           } else {
             if (item.children) {
@@ -170,12 +175,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       };
       collapseSingleChildItems(items, []);
     }
-    dispatch(loadingActions.endJobForce());
   },
   (error) => {
     console.log(error);
     dispatch(loadingActions.endJobForce());
-  });
+  }), []);
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -262,6 +266,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
               });
             }
           }
+          dispatch(loadingActions.endJobForce());
         }}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{
