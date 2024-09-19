@@ -23,18 +23,53 @@ public class SqlQueryGenerator implements QueryGenerator {
         return query;
     }
 
+    String getValue(String value, String type, String format) {
+        if (type.equals("NUMBER")) {
+            return value;
+        }
+        if (type.equals("DATE")) {
+            if (format.length() == 0) {
+                switch (value.length()) {
+                    case 4:
+                        format = "YYYY";
+                        break;
+                    case 6:
+                        format = "YYYYMM";
+                        break;
+                    case 8:
+                        format = "YYYYMMDD";
+                        break;
+                    case 7:
+                        format = "YYYY-MM";
+                        break;
+                    case 10:
+                        format = "YYYY-MM-DD";
+                        break;
+                    default:
+                        format = "YYYYMMDD";
+                        break;
+                }
+            }
+
+            return "TO_DATE(\'" + value + "\', \'" + format.toUpperCase() + "\')";
+        }
+        return "\'" + value + "\'";
+    }
+
     @Override
     public String applyParameter(List<Parameter> parameters, String query) {
         for (Parameter param : parameters) {
             String operation = param.getOperation();
             String result = "";
             List<String> values = param.getValues();
+            String dataType = param.getDataType();
+            String format = param.getFormat();
             if ("EQUALS".equals(operation)) {
                 if (validateValue(values, 0)) {
-                    result = "\'" + param.getValues().get(0) + "\'";
+                    result = getValue(param.getValues().get(0), dataType, format);
                 } else {
                     result = param.getExceptionValue();
-                }
+                } 
 
             } else if ("IN".equals(operation) || "NOT_IN".equals(operation)) {
                 if (validateValue(values, 0)) {
@@ -43,9 +78,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                     StringBuilder sb = new StringBuilder();
 
                     for (String val : items) {
-                        sb.append("'");
-                        sb.append(val.trim()); // 값의 앞뒤 공백 제거
-                        sb.append("', ");
+                        getValue(val.trim(), dataType, format);
                     }
 
                     // 마지막 쉼표와 공백 제거
@@ -59,7 +92,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                 }
             } else if ("BETWEEN".equals(operation)) {
                 if (validateValue(values, 0)) {
-                    result = "\'" + param.getValues().get(0) + "\'";
+                    result = getValue(param.getValues().get(0), dataType, format);;
                 } else {
                     result = param.getExceptionValue();
                 }
@@ -67,7 +100,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                 result += " AND ";
 
                 if (validateValue(values, 1)) {
-                    result += "\'" + param.getValues().get(1) + "\'";
+                    result += getValue(param.getValues().get(1), dataType, format);
                 } else {
                     result += param.getExceptionValue();
                 }
