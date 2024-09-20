@@ -103,7 +103,8 @@ const generateItem = (item, param, rootItem) => {
       format: getPivotFormat(measureFormat)
     };
 
-    if (field.expression && field.summaryWayEach) {
+    if (field.expression &&
+      (typeof field.summaryWayEach == 'undefined' || field.summaryWayEach)) {
       const engine = new ExpressionEngine();
 
       newField.summaryType = 'custom';
