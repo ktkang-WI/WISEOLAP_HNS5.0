@@ -114,7 +114,8 @@ const DataColumn = ({
 
     const summaryType = data?.type == 'MEA' ? data.summaryType : '';
     const sortBy = data?.type == 'DIM' ? data.sortBy : '';
-    const summaryWay = data?.summaryWayEach ? 'SUMMARY_WAY' : '';
+    const summaryWay = data?.summaryWayEach ||
+      typeof data.summaryWayEach == 'undefined' ? 'SUMMARY_WAY' : '';
 
     const useCheckIcon = [summaryType, sortBy, summaryWay].includes(e.value);
 
@@ -134,8 +135,12 @@ const DataColumn = ({
         dataField: {...data, summaryType: e.itemData.value}}));
     },
     'SummaryWay': () => {
+      let summaryWayEach = data.summaryWayEach;
+      if (typeof summaryWayEach == 'undefined') {
+        summaryWayEach = true;
+      }
       dispatch(updateItemField({reportId,
-        dataField: {...data, summaryWayEach: !data.summaryWayEach}}));
+        dataField: {...data, summaryWayEach: !summaryWayEach}}));
     },
     'Rename': (e) => {
       openModal(SimpleInputModal, {
