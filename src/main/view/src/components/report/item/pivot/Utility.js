@@ -44,7 +44,7 @@ const generateMeta = (item) => {
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', false);
   setMeta(item, 'removeNullData', false);
-  setMeta(item, 'showFilter', false);
+  setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
   setMeta(item, 'dataHighlight', []);
   setMeta(item, 'pagingOption', {
