@@ -65,7 +65,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   let reRender = -1;
 
   useEffect(() => {
-    collapseRowHeader();
     const item = ref.current;
 
     if (!item) return;
@@ -94,6 +93,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, []);
 
   useEffect(() => {
+    collapseRowHeader();
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
