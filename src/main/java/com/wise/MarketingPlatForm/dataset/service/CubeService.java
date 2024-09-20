@@ -84,7 +84,7 @@ public class CubeService {
         for (CubeTblEntity entity : cubeMeaTblEntities) {
             if (!entity.isVisible()) continue;
             fields.add(CubeFieldVO.builder()
-                    .type(DataFieldType.MEA)
+                    .type(DataFieldType.MEAGRP)
                     .order(entity.getOrder())
                     .visible(entity.isVisible())
                     .uniqueName(entity.getUniqueName())
@@ -153,7 +153,7 @@ public class CubeService {
             if (!entity.isVisible()) continue;
             if (authDimNames.contains(entity.getPhysicalName())) {
                 fields.add(CubeFieldVO.builder()
-                .type(DataFieldType.DIM)
+                .type(DataFieldType.DIMGRP)
                 .order(entity.getOrder())
                 .visible(entity.isVisible())
                 .uniqueName(entity.getUniqueName())
@@ -163,7 +163,7 @@ public class CubeService {
                 .build());
             } else {
                 fields.add(CubeFieldVO.builder()
-                .type(DataFieldType.DIM)
+                .type(DataFieldType.DIMGRP)
                 .order(entity.getOrder())
                 .visible(false)
                 .uniqueName(entity.getUniqueName())
