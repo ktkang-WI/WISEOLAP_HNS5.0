@@ -23,7 +23,7 @@ const generateMeta = (item) => {
     axisStartToZero: true,
     useAxis: true,
     customText: false,
-    suffixEnabled: false,
+    suffixEnabled: true,
     suffix: {
       O: '',
       K: '천',
