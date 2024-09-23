@@ -288,7 +288,7 @@ const useReportSave = () => {
       data.dataset.datasets.forEach((dataset) => {
         if (dataset.datasetType === DatasetType['DS_SQL']) {
           dataset.fields = makeFieldIcon(
-              dataset.fields, dataset.datasetType);
+              dataset.fields, dataset.datasetNm);
         }
       });
 

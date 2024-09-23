@@ -193,7 +193,7 @@ const QueryDataSourceDesignerModal = ({
           if (response.message === 'canceled') return;
           if (!response.data.rowData[0]?.error) {
             let tempFields = response.data.metaData;
-            tempFields = makeFieldIcon(tempFields);
+            tempFields = makeFieldIcon(tempFields, dataset.datasetNm);
             if (dataset.customData) {
               tempFields = [...tempFields, ...dataset.customDatas.customData];
             }
