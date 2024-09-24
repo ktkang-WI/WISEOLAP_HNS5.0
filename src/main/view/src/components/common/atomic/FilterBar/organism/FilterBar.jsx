@@ -11,6 +11,7 @@ import CommonButton from '../../Common/Button/CommonButton';
 import useReportSave from 'hooks/useReportSave';
 import SmallImageButton from '../../Common/Button/SmallImageButton';
 import FilterBarBtn from '../atom/FilterBarBtn';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
@@ -59,10 +60,13 @@ const FilterBar = ({
   const queryButton = ribbonDefaultElement()['QuerySearch'];
   const {querySearch} = useReportSave();
 
+  const foldedFilterBarHeight = isPortal() ?
+    '80px' : theme.size.filterBarHeight;
+
   const Wrapper = styled.div`
     background: ${theme.color.white};
     height: ${isExpand ?
-      'auto' : 'calc(' + theme.size.filterBarHeight + ' + 2px)'};
+      'auto' : 'calc(' + foldedFilterBarHeight + ' + 2px)'};
     display: flex;
     box-sizing: border-box;
     border: 1px solid ${theme.color.gray200};

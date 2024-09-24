@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import localizedString from 'config/localization';
 import ListFilterPopoverList from './ListFilterPopoverList';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
@@ -11,6 +12,7 @@ const allText = localizedString.all;
 
 const ListFilter = ({
   info, value, isTo, onValueChanged, width, id, ...props}) => {
+  const filterHeight = isPortal() ? '45px' : theme.size.filterHeight;
   const index = isTo ? 1 : 0;
   const [selectionKeys, setSelectionKeys] = useState([]);
   const [text, setText] = useState('');
@@ -154,7 +156,7 @@ const ListFilter = ({
         <TextBox
           focusStateEnabled={false}
           hoverStateEnabled={false}
-          height={theme.size.filterHeight}
+          height={filterHeight}
           value={text}
           width={width}
           onValueChanged={(e) => {

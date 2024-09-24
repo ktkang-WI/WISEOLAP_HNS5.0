@@ -12,6 +12,7 @@ import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import
 '@grapecity/spread-sheets-designer/styles/gc.spread.sheets.designer.min.css';
 import {createContext} from 'react';
+import {isPortal} from 'components/utils/PortalUtility';
 
 export const AppContext = createContext();
 
@@ -23,8 +24,14 @@ function App() {
     controllers: controllers
   };
 
+  const style = {};
+
+  if (isPortal()) {
+    style.backgroundColor = 'white';
+  }
+
   return (
-    <div className='App'>
+    <div className='App' style={style}>
       <AppContext.Provider
         value={context}>
         <RouterProvider router={router}/>

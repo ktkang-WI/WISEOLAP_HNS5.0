@@ -109,7 +109,6 @@ const LinkViewerContent = ({children}) => {
   document.title = report.options.reportNm;
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
 
     const applyParameters = (reportId) => {

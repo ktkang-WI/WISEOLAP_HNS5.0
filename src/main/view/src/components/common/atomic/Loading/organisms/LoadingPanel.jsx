@@ -11,6 +11,7 @@ import {useContext} from 'react';
 import {AppContext} from 'App';
 import {abortController, requestPath} from 'hooks/useAxiosSetting';
 import localizedString from 'config/localization';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const ImgWrapper = styled(Wrapper)`
   display: flex;
@@ -85,11 +86,19 @@ const LoadingPanel = () => {
 
   if (jobQuantity === 0) return null;
 
+  const overlayStyle = {};
+  const textStyle = {};
+
+  if (isPortal()) {
+    overlayStyle.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+    textStyle.color = 'black';
+  }
+
   return (
-    <Overlay zIndex={2000}>
+    <Overlay style={overlayStyle} zIndex={2000} className='loading-panel'>
       <ImgWrapper>
         <LoadingImg />
-        <LoadingMsg>
+        <LoadingMsg style={textStyle}>
           {jobMsg}
         </LoadingMsg>
         {isThereToDeleteSession ?

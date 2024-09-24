@@ -25,6 +25,7 @@ import EmptyComponent from
 import ItemType from 'components/report/item/util/ItemType';
 import localizedString from 'config/localization';
 import {ItemDownload} from '../../ItemDownload/ItemDownload';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
@@ -315,6 +316,17 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     tabSetHeaderHeight: 40,
     tabSetTabStripHeight: 40
   }));
+
+  if (isPortal()) {
+    model.doAction(Actions.updateModelAttributes({
+      splitterSize: 30,
+      enableEdgeDock: false,
+      tabSetEnableDivide: false,
+      tabSetEnableDrag: false,
+      tabSetEnableDrop: false,
+      tabEnableDrag: false
+    }));
+  }
 
   return (
     <StyledBoard {...props}>
