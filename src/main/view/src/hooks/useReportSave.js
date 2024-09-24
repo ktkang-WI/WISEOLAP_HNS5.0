@@ -56,6 +56,27 @@ const useReportSave = () => {
   const generateParameter = (dataSource) => {
     const reportType = selectCurrentDesignerMode(store.getState());
     const rootDataset = selectRootDataset(store.getState());
+    const datasets = rootDataset.datasets;
+    const newDataFields = [];
+    for (let i = 0; i < datasets.length; i ++) {
+      const newField = [];
+      for (let j = 0; j < datasets[i].fields.length; j++) {
+        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
+          newField.push(datasets[i].fields[j]);
+        } else {
+          if (datasets[i].fields[j].type === 'MEAGRP' ||
+              datasets[i].fields[j].type === 'DIMGRP') {
+            continue;
+          }
+          const type =
+            datasets[i].fields[j].type === 'MEA'? 'MEAGRP' : 'DIMGRP';
+          newField.push({...datasets[i].fields[j], type: type});
+        }
+      }
+      newDataFields.push({...datasets[i], fields: newField});
+    }
+
+    const newRootDataset = {...rootDataset, datasets: newDataFields};
     const param = {};
     const cubeQueries = {};
     param.reportId = dataSource.reportId;
@@ -111,7 +132,7 @@ const useReportSave = () => {
         return _.omit(item, 'mart');
       });
 
-    param.datasetXml = JSON.stringify(rootDataset);
+    param.datasetXml = JSON.stringify(newRootDataset);
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
