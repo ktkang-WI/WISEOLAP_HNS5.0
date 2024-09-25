@@ -18,10 +18,26 @@ public class ConfigFolderReportService {
   ConfigDAO configDao;
 
   public List<ConfigFolderReportDTO> getConfigFolderReportData() {
-
-    List<ConfigFolderReportDTO> configFolderDTO = configDao.selectConfigFolderReport();
+    List<ConfigFolderReportDTO> configFolderDTO = configDao.selectConfigFolders();
+    // 보고서
+    List<ConfigFolderReportDTO> configReportDTO = configDao.selectConfigFolderReport();
+    List<ConfigFolderReportDTO> resultDTO = configReportDTO;
     
-    return configFolderDTO;
+    for (ConfigFolderReportDTO folderDto : configFolderDTO) {
+      boolean hasItem = false;
+      if (configReportDTO.size() == 0) resultDTO.add(folderDto);
+      for (ConfigFolderReportDTO reportDto : configReportDTO) {
+        if (folderDto.getFldId() == reportDto.getFldId()) {
+          hasItem = true;
+          break;
+        }
+      }
+      if (!hasItem) {
+        resultDTO.add(folderDto);
+      }
+    }
+
+    return resultDTO;
   };
 
   public List<ConfigFolderReportDTO> getConfigPrivateFolderReportData(int userNo) {
@@ -45,7 +61,7 @@ public class ConfigFolderReportService {
       }
     }
 
-    return configReportDTO;
+    return resultDTO;
   };
   public List<UserDTO> getUserList() {
 
