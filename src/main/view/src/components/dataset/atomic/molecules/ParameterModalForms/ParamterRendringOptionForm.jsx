@@ -15,13 +15,13 @@ const ParamterRendringOptionForm = ({dataSource, ...props}) => {
         <Label>{localizedString.order} </Label>
       </Item>
       <Item editorType='dxNumberBox' dataField='width'>
-        <Label>{localizedString.width}* </Label>
+        <Label>{localizedString.width} </Label>
       </Item>
       <Item editorType='dxCheckBox' dataField='useCaptionWidth'>
-        <Label>{localizedString.useCaptionWidth}* </Label>
+        <Label>{localizedString.useCaptionWidth} </Label>
       </Item>
       <Item editorType='dxNumberBox' dataField='captionWidth'>
-        <Label>{localizedString.captionWidth}* </Label>
+        <Label>{localizedString.captionWidth} </Label>
       </Item>
       <Item editorType='dxCheckBox' dataField='visible'>
         <Label>{localizedString.Visible}</Label>
