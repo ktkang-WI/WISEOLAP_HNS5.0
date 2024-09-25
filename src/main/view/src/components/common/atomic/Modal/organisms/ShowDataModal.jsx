@@ -6,12 +6,31 @@ import saveAs from 'file-saver';
 import Modal from './Modal';
 import {getTheme} from 'config/theme';
 import {Column} from 'devextreme-react/data-grid';
+import {
+  formatNumber,
+  generateLabelSuffix
+} from 'components/utils/NumberFormatUtility';
 
 const theme = getTheme();
 
 const ShowDataModal = ({
   onSubmit, modalTitle, data, columns=[], ...props
 }) => {
+  const cellRender = (e, col) => {
+    const value = e.data[col.name] ? e.data[col.name] : 0;
+    const displayValue = e.displayValue ? e.displayValue : 0;
+
+    if (col.type === 'MEA') {
+      const labelSuffix = generateLabelSuffix(col.format);
+      e.value = formatNumber(displayValue, col.format, labelSuffix);
+      return e.value;
+    }
+
+    if (value === 0) return '0';
+
+    return value;
+  };
+
   return (
     <Modal
       modalTitle={modalTitle}
@@ -55,6 +74,7 @@ const ShowDataModal = ({
             key={col.name}
             dataField={col.name}
             caption={col.caption}
+            cellRender={(e) => cellRender(e, col)}
           />;
         })}
       </DataGrid>
