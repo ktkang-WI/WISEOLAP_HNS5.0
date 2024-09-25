@@ -10,26 +10,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.auth.entity.UserEntity;
+import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.global.session.dao.SessionDAO;
 import com.wise.MarketingPlatForm.global.session.entity.UserSessionEntity;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class SessionUtility {
+    private static final Logger log= LoggerFactory.getLogger(SessionUtility.class);
 
     @Autowired
     private static SessionDAO sessionDAO;
+    private static AuthService authService;
 
     private static String sessionType;
 
     @Value("${session.type}")
     private String configSessionType;
 
-    public SessionUtility(SessionDAO sessionDAO) {
+    public SessionUtility(SessionDAO sessionDAO, AuthService authService) {
         SessionUtility.sessionDAO = sessionDAO;
+        SessionUtility.authService = authService;
     }
     @PostConstruct
     private void init() {
@@ -37,6 +43,7 @@ public class SessionUtility {
     }
     
     private final static String SESSION_KEY = "WI_SESSION_USER";
+    private final static String SSO_ID_KEY = "SSO_ID";
     private final static int SESSION_TIME = 60 * 60 * 2;
 
     private static UserDTO getSessionUser(HttpSession session) {
@@ -46,6 +53,17 @@ public class SessionUtility {
 
     public static UserDTO getSessionUser(HttpSessionEvent request) {
         return getSessionUser(request.getSession());
+    }
+    public static UserDTO getSessionSSO(HttpServletRequest request) {
+        String ssoId = (String)request.getSession().getAttribute(SSO_ID_KEY);
+        log.info("SessionUtility ");
+        log.info("=====SSO TEST===== SSO_ID : " + ssoId);
+
+        if (ssoId == null) {
+            return getSessionUser(request);
+        }
+        
+        return authService.getUserById(ssoId);
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
         if ("database".equalsIgnoreCase(sessionType)) {

@@ -39,7 +39,10 @@ public class LoginFilter implements Filter{
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req; 
         HttpServletResponse response = (HttpServletResponse) res; 
-        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        // UserDTO userDTO = SessionUtility.getSessionUser(request);
+        UserDTO userDTO = SessionUtility.getSessionSSO(request);
+
+        log.info("=====SSO TEST===== userDTO : " + userDTO);
 
         log.debug("Request URI == > " + request.getRequestURI());
         log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
@@ -47,7 +50,8 @@ public class LoginFilter implements Filter{
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
             "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**",
-            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**"
+            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**",
+            "/sso/inc/sessionView.jsp"
         };
 
         boolean useFilter = true;
@@ -83,6 +87,7 @@ public class LoginFilter implements Filter{
         } else if (userDTO == null) {
             // response.sendRedirect("/");
             // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("LoginFilter, userDTO is null");
         } else {
             chain.doFilter(request, response);
         }
