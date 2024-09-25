@@ -9,9 +9,9 @@ const configPath = document.location.origin + contextRoot + '/config/general';
 
 export const getGeneralConfig = async () => {
   const params = new URLSearchParams(window.location.search);
-  const token = params.get('token');
+  const token = params.get('userId');
 
-  return await axios.get(configPath + (token ? '?token=' + token : ''));
+  return await axios.get(configPath + (token ? '?userId=' + token : ''));
 };
 
 export const updateGeneralConfig = async (data) => {

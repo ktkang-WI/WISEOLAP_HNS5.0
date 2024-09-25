@@ -79,6 +79,14 @@ public class LoginFilter implements Filter{
             SessionUtility.setSessionUser(request, userDTO);
         }
 
+        String userId = request.getParameter("userId");
+
+        if (userId != null && !userId.isEmpty()) {
+            userDTO = authService.getUserById(userId);
+
+            SessionUtility.setSessionUser(request, userDTO);
+        }
+
         if (!useFilter) {
             chain.doFilter(request, response);
             return;

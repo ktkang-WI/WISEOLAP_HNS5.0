@@ -110,6 +110,7 @@ const LinkViewerContent = ({children}) => {
 
   useEffect(() => {
     const token = params.get('token');
+    const reportId = params.get('reportId');
 
     const applyParameters = (reportId) => {
       const paramFuncs = [];
@@ -157,6 +158,25 @@ const LinkViewerContent = ({children}) => {
           });
         }).catch((e) => {
           console.log(e);
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+      return;
+    }
+
+    if (reportId) {
+      const reportType = params.get('reportType');
+
+      models.Report.getReportById(
+          reportId).then(async ({data}) => {
+        dispatch(setDesignerMode(reportType));
+        await loadReport(data);
+
+        applyParameters(reportId).then(() => {
+          if (data.promptYn === 'Y') {
+            querySearch();
+          }
         });
       }).catch((e) => {
         console.log(e);

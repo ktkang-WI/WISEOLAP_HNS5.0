@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+
+  <title>홈앤쇼핑</title>
+</head>
+
+<body>
+  <div id="header">
+    <div class="header_wrap">
+      <a href="#n" id="logo"><img src="./img/logo.png" alt=""></a>
+      <ul id="header_menu">
+        <li>
+          <a href="#n" class="active">전사관리지표</a>
+          <a href="#n">주요보고서</a>
+          <a href="#n">상품</a>
+          <a href="#n">방송</a>
+          <a href="#n">주문</a>
+          <a href="#n">고객</a>
+          <a href="#n">물류</a>
+          <a href="#n">기타</a>
+          <a href="#n">OLAP</a>
+        </li>
+      </ul>
+      <button type="button" class="menu_btn">
+        <img src="./img/menu_ico.png" alt="">
+      </button>
+    </div>
+  </div>
+  <div class="contents">
+    <div class="round_box pay_box_wrap">
+      <ul>
+        <li>
+          <p>기준년월일</p>
+          <input type="text" name="" id="" value="2024.08.30" class="date" readonly>
+        </li>
+        <li>
+          <p>카테고리</p>
+          <select name="" id="" class="select">
+            <option value="">선택하세요</option>
+            <option value="테스트1">테스트1</option>
+            <option value="테스트2">테스트2</option>
+          </select>
+        </li>
+      </ul>
+      <div class="pay_box">
+        <div>
+          <p class="pay_title">매출액 <br> <span>(만원)</span></p>
+          <p class="pay">3,600</p>
+        </div>
+        <div>
+          <img src="./img/con_bg1.png" alt="">
+          <div class="percent_box">
+            <p>전년比 : <span class="red">98.6%</span></p>
+            <p>계획比 : <span class="blue">107.6%</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="pay_box">
+        <div>
+          <p class="pay_title">목표취급액 <br> <span>(만원)</span></p>
+          <p class="pay">3,600</p>
+        </div>
+        <div>
+          <img src="./img/con_bg2.png" alt="">
+          <div class="percent_box">
+            <p>전년比 : <span class="red">98.6%</span></p>
+            <p>계획比 : <span class="blue">107.6%</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="pay_box">
+        <div>
+          <p class="pay_title">목표공헌이익 <br> <span>(만원)</span></p>
+          <p class="pay">3,600</p>
+        </div>
+        <div>
+          <img src="./img/con_bg3.png" alt="">
+          <div class="percent_box">
+            <p>전년比 : <span class="red">98.6%</span></p>
+            <p>계획比 : <span class="blue">107.6%</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="pay_box">
+        <div>
+          <p class="pay_title">UV <br> <span>(명)</span></p>
+          <p class="pay">1,500</p>
+        </div>
+        <div>
+          <img src="./img/con_bg4.png" alt="">
+          <div class="percent_box">
+            <p>전년比 : <span class="red">103.7%</span></p>
+            <p>계획比 : <span class="blue">103.1%</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <iframe width="100%" height="1200px"
+      src="http://localhost:3000/editds/linkviewer?token=412a8ce2-7bfe-4f08-803a-28104507378d&no_header=true&portal=true">
+    </iframe>
+  </div>
+  <div class="blue_bg">
+    <div class="contents">
+      <div class="file_box">
+        <p>전사관리지표</p>
+        <ul>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico1.png" alt="">
+              <div class="txt">
+                <p>전사관리지표</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="file_box">
+        <p>주요4종 보고서</p>
+        <ul>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico2.png" alt="">
+              <div class="txt">
+                <p>전사일일실적보고</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico2.png" alt="">
+              <div class="txt">
+                <p>일일예상실적_방송_조직상품</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico2.png" alt="">
+              <div class="txt">
+                <p>MD 구분별 매출조회</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico2.png" alt="">
+              <div class="txt">
+                <p>쇼핑몰 실적 보고서</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="file_box">
+        <p>상품영역 보고서</p>
+        <ul>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 01</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 02</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 03</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 04</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 05</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <img src="./img/list_ico3.png" alt="">
+              <div class="txt">
+                <p>상품영역 보고서 06</p>
+                <p>최종수정일자 : 2024.09.30 . 주석 : ㅁㅁㅁ</p>
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      $(".date").datepicker({
+        dateFormat: "yy.mm.dd"
+      });
+
+      if ($(".select option:selected").val() == "") {
+        $(".select").css({ "color": "#999" });
+        $(".select option").not("option[value='']").css({ "color": "#000" });
+      }
+    });
+    $(".select").change(function () {
+      if ($(".select option:selected").val() != "") {
+        $(".select").css({ "color": "#000" });
+      } else {
+        $(".select").css({ "color": "#999" });
+      }
+    });
+    function clickTab(e, content, wrap) {
+      const btns = $(e).parent();
+      btns.find("button").removeClass("active");
+      $(e).addClass("active");
+      $(`.${wrap} .graph`).hide();
+      $(`.${wrap} #${content}`).show();
+    }
+  </script>
+</body>
+
+</html>
