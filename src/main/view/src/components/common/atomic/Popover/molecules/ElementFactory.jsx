@@ -8,15 +8,13 @@ import downloadDefaultElement
   from '../../Ribbon/popover/organism/DownloadDefaultElement';
 import datasetDefaultElement
   from '../../Ribbon/popover/organism/DatasetDefaultElement';
-import linkReportListDefaultElement
-  from '../../Ribbon/popover/organism/LinkReportListDefaultElement';
+
 
 const ElementFactory = () => {
   const {saveElement} = saveDefaultElement();
   const customChartElement = customChartDefaulElement();
   const normalChartElement = normalChartDefaultElement();
   const downloadElement = downloadDefaultElement();
-  const linkReportListElement = linkReportListDefaultElement();
   const {getDatasetElement} = datasetDefaultElement();
 
   return {
@@ -24,8 +22,7 @@ const ElementFactory = () => {
     'add_default_chart': normalChartElement,
     'download_report': downloadElement,
     'dataset': getDatasetElement(),
-    'save_report': saveElement,
-    'link_report_list': linkReportListElement
+    'save_report': saveElement
   };
 
   // if (id === 'add_custom_chart') {
