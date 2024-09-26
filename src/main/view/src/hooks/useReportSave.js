@@ -58,14 +58,21 @@ const useReportSave = () => {
     const rootDataset = selectRootDataset(store.getState());
     const datasets = rootDataset.datasets;
     const newDataFields = [];
+
     for (let i = 0; i < datasets.length; i ++) {
+      if (datasets[i].datasetType !== 'CUBE') {
+        newDataFields.push(datasets[i]);
+        continue;
+      }
       const newField = [];
       for (let j = 0; j < datasets[i].fields.length; j++) {
         if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
           newField.push(datasets[i].fields[j]);
         } else {
           if (datasets[i].fields[j].type === 'MEAGRP' ||
-              datasets[i].fields[j].type === 'DIMGRP') {
+                datasets[i].fields[j].type === 'DIMGRP' ||
+                datasets[i].fields[j].type === 'FLD') {
+            newField.push(datasets[i].fields[j]);
             continue;
           }
           const type =
@@ -76,7 +83,11 @@ const useReportSave = () => {
       newDataFields.push({...datasets[i], fields: newField});
     }
 
-    const newRootDataset = {...rootDataset, datasets: newDataFields};
+    const newRootDataset = {
+      ...rootDataset,
+      datasets: newDataFields
+    };
+
     const param = {};
     const cubeQueries = {};
     param.reportId = dataSource.reportId;
