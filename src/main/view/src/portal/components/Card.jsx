@@ -1,8 +1,11 @@
 const Card = ({title, amount, percentData, imgSrc}) => {
+  const piece = title.split('(');
+  const _title = piece[0];
+  const _unit = '(' + piece[1];
   return (
     <div className="pay_box">
       <div>
-        <p className="pay_title">{title} <br /><span>(만원)</span></p>
+        <p className="pay_title">{_title} <br /><span>{_unit}</span></p>
         <p className="pay">{amount}</p>
       </div>
       <div>

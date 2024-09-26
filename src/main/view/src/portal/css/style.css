@@ -296,3 +296,12 @@ body{
 .file_box:last-child{
     margin-bottom: 0;
 }
+
+.no-card {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  justify-content: center;
+  font-size: 18px;
+}

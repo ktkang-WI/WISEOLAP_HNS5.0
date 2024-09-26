@@ -13,6 +13,16 @@ import icon from './img/list_ico1.png';
 const App = () => {
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
+  const [cardData, setCardData] = useState([]);
+  const avFolders = new Set([2282, 2283, 2284, 2285, 2286, 2287, 2288, 2290]);
+
+  useEffect(() => {
+    models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
+      if (data.status == 200) {
+        setCardData(data.data);
+      }
+    });
+  }, [date]);
 
   useEffect(() => {
     models.Report.getList(null, 'viewer').then((data) => {
@@ -20,7 +30,7 @@ const App = () => {
         const {publicReport} = data.data;
 
         const folderMap = publicReport.reduce((acc, curr) => {
-          if (curr.type === 'FOLDER') {
+          if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
@@ -73,7 +83,7 @@ const App = () => {
   const getReports = (reports) => {
     return reports.map((report) => (
       <ReportBox
-        href={`http://localhost:3000/editds/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`https://olap.hns.tv:8080/editds/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -92,15 +102,15 @@ const App = () => {
           </a>
           <ul id='header_menu'>
             <li>
-              <a href='#n' className='active'>전사관리지표</a>
-              <a href='#fld-100'>주요보고서</a>
-              <a href='#n'>상품</a>
-              <a href='#n'>방송</a>
-              <a href='#n'>주문</a>
-              <a href='#n'>고객</a>
-              <a href='#n'>물류</a>
-              <a href='#n'>기타</a>
-              <a href='#n'>OLAP</a>
+              <a href='#fld-2290' className='active'>전사관리지표</a>
+              <a href='#fld-2282'>주요보고서</a>
+              <a href='#fld-2283'>상품</a>
+              <a href='#fld-2284'>방송</a>
+              <a href='#fld-2285'>주문</a>
+              <a href='#fld-2286'>고객</a>
+              <a href='#fld-2287'>물류</a>
+              <a href='#fld-2288'>기타</a>
+              <a href='https://olap.hns.tv:8080/editds'>OLAP</a>
             </li>
           </ul>
         </div>
@@ -118,35 +128,28 @@ const App = () => {
               />
             </li>
           </ul>
-          <Card
-            title='매출액'
-            amount='3,600'
-            percentData={{previous: '98.6%', plan: '107.6%'}}
-            imgSrc='./img/con_bg1.png'
-          />
-          <Card
-            title='목표취급액'
-            amount='3,600'
-            percentData={{previous: '98.6%', plan: '107.6%'}}
-            imgSrc='./img/con_bg2.png'
-          />
-          <Card
-            title='목표공헌이익'
-            amount='3,600'
-            percentData={{previous: '98.6%', plan: '107.6%'}}
-            imgSrc='./img/con_bg3.png'
-          />
-          <Card
-            title='UV'
-            amount='1,500'
-            percentData={{previous: '103.7%', plan: '103.1%'}}
-            imgSrc='./img/con_bg4.png'
-          />
+          {
+            cardData.map((d, i) => {
+              return (
+                <Card
+                  title={d['구분']}
+                  key={'card' + i}
+                  amount={d['금액']}
+                  percentData={{previous: d['전년비'], plan: d['계획비']}}
+                  imgSrc='./img/con_bg1.png'
+                />
+              );
+            })
+          }
+          {
+            cardData.length == 0 &&
+              <div className='no-card'> 조회된 데이터가 없습니다. </div>
+          }
         </div>
         <iframe
           width='100%'
           height='1200px'
-          src='http://localhost:3000/editds/linkviewer?token=412a8ce2-7bfe-4f08-803a-28104507378d&no_header=true&portal=true'
+          src={`http://olap.hns.tv:8080/editds/linkviewer?reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>
@@ -162,7 +165,12 @@ const App = () => {
                     </ul>
                   </div>);
               } else {
-                return null;
+                return (
+                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
+                    <p>{fld.name}</p>
+                    <div className='no-card'> 보고서가 없습니다 </div>
+                  </div>
+                );
               }
             }
             )
