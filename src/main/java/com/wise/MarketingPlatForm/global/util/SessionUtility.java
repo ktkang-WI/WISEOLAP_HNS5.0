@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.global.util;
 
+import java.util.Enumeration;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,9 +57,22 @@ public class SessionUtility {
         return getSessionUser(request.getSession());
     }
     public static UserDTO getSessionSSO(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        Enumeration em = session.getAttributeNames();
+
         String ssoId = (String)request.getSession().getAttribute(SSO_ID_KEY);
-        log.info("SessionUtility ");
+        
         log.info("=====SSO TEST===== SSO_ID : " + ssoId);
+
+        log.info("SessionUtility ");
+        log.info("=====SSO TEST=====");
+        while (em.hasMoreElements()) {
+            String skey = (String)em.nextElement();
+            
+            log.info("key: " + skey);
+            log.info("value: " + session.getAttribute(skey));
+        }
 
         if (ssoId == null) {
             return getSessionUser(request);
