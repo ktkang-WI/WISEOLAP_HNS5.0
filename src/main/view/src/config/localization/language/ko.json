@@ -307,6 +307,7 @@
   "ignoreMasterFilter": "마스터 필터 무시",
   "targetDimension": "대상 차원",
   "dimensionGroup": "차원 그룹",
+  "NoFunction": "함수 없음",
   "count": "카운트",
   "distinctCount": "고유 카운트",
   "sum": "합계",

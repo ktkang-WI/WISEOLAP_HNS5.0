@@ -1277,7 +1277,12 @@ public class QuerySettingEx {
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
 							oSelClauseColl.add(oRows.get(0).getMEA_AGG() + "(" + oColNm.replaceAll("\"", "") + ")"
 									+ " AS " + oColCaption);
-						} else {
+						} else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("NOFUNC")) {
+							String oTblNm = oRows.get(0).getMEA_TBL_NM();
+							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
+							oSelClauseColl.add(oTblNm + "." + oColNm + " AS " + oColCaption);
+							System.out.println("NOFUNC" + oSelClauseColl);
+					 	} else {
 							String oTblNm = oRows.get(0).getMEA_TBL_NM();
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
 							/* DOGFOOT ktkang 주제영역 집계함수 부분 에러 수정 시작 20200225 */
