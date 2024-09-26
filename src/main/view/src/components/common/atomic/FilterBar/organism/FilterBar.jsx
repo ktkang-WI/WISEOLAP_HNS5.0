@@ -54,6 +54,7 @@ const FilterBar = ({
   useSearchButton=false,
   useFullscreenButton=false,
   fullscreen = false,
+  visible = true,
   handleFullscreen = () => {}
 }) => {
   const [isExpand, setIsExpand] = useState(useExpandButton);
@@ -96,7 +97,10 @@ const FilterBar = ({
   };
 
   return (
-    <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
+    <Wrapper style={{
+      padding: '0px 5px',
+      display: visible ? 'flex' : 'none'
+    }} className='section wise-filter'>
       {buttons && buttons.filter((button) => button.visible).length > 0 &&
         <ButtonWrapper>
           {
