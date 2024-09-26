@@ -264,6 +264,11 @@ public class ReportController {
         return reportService.getReport(request, reportId, reportSeq);
 	}
     
+    @PostMapping(value = "/md-code")
+	public String getMdCode(HttpServletRequest request) {
+        return SessionUtility.getSessionUser(request).getMdCode();
+	}
+    
     @Operation(
 	    summary = "get only report name",
 	    description = "reportId로 보고서 이름만 불러옵니다.")

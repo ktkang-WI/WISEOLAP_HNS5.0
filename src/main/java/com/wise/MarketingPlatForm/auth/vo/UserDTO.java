@@ -34,4 +34,5 @@ public class UserDTO implements Serializable{
     String grpRunMode;
     int lockCnt;
     String hasYn;
+    String mdCode;
 }
