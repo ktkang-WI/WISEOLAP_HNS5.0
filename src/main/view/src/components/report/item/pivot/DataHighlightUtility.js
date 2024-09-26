@@ -1,5 +1,5 @@
 import EmojiArr from './modal/molecules/EmojiArr';
-import loacalizedString from 'config/localization';
+// import loacalizedString from 'config/localization';/
 
 // 합계, 총계, 셀 check에 대한 분기 처리 함수.
 export const isDataCell = (cell, area, highlight) => {
@@ -13,7 +13,7 @@ export const isDataCell = (cell, area, highlight) => {
     } else if (highlight.type === 'dimension' && highlight.applyTotal) {
       if (cell.type == 'T') {
         return (
-          cell.text == cell.path[highlight.idx] + ' ' + loacalizedString.all
+          cell.text == cell.path[highlight.idx]
         );
       }
     }
@@ -95,8 +95,8 @@ export const addStyleVariationValue = (formData, cell) => {
   };
   const newFormData = formData;
 
-  if (newFormData.variationValueType === 'percentVariation' ||
-    newFormData.variationValueType === 'absoluteVariation'
+  if (newFormData?.variationValueType === 'percentVariation' ||
+    newFormData?.variationValueType === 'absoluteVariation'
   ) {
     newFormData.prefix = '+';
     colorStyle.color = '#0000ff';

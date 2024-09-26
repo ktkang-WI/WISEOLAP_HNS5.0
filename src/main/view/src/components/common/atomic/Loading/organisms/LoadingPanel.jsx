@@ -28,7 +28,7 @@ const ImgWrapper = styled(Wrapper)`
   z-index: 99999999999;
 `;
 
-const LoadingImg = styled.div`
+export const LoadingImg = styled.div`
   width: 100%;
   height: 100%;
   background-image: url(${loadingImg});
@@ -38,7 +38,7 @@ const LoadingImg = styled.div`
   min-width: 100px;
 `;
 
-const LoadingMsg = styled.div`
+export const LoadingMsg = styled.div`
   width: auto;
   padding: 10px;
   color: white;

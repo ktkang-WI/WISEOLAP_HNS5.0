@@ -54,11 +54,11 @@ const ItemBoards = ({reportId}) => {
   const editMode = useSelector(selectEditMode);
   const dispatch = useDispatch();
   const {alert, openModal} = useModal();
-  const {tabEnabled} = layout;
-  const layoutConfig = Array.isArray(layout.layoutConfig) ?
-    layout.layoutConfig : [layout.layoutConfig];
+  const tabEnabled = layout?.tabEnabled;
+  const layoutConfig = Array.isArray(layout?.layoutConfig) ?
+      layout?.layoutConfig : layout?.layoutConfig ? [layout?.layoutConfig] : [];
 
-  const selectedTab = layout.selectedTab || 0;
+  const selectedTab = layout?.selectedTab || 0;
 
   const {selectTab, deleteContainerTab, updateTabTitle} = LayoutSlice.actions;
   const {deleteContainerItem} = ItemSlice.actions;

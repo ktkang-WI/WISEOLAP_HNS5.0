@@ -199,7 +199,6 @@ export default function useItemSetting(
       filters = getFilter(data);
     }
 
-    console.log(filters);
     filterItems(item, filters);
   };
 

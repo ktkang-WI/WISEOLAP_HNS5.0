@@ -8,6 +8,9 @@ import useModal from 'hooks/useModal';
 import models from 'models';
 import {contextPath} from 'routes/Router';
 import localizedString from 'config/localization';
+import store from 'redux/modules';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import useReportSave from 'hooks/useReportSave';
 
 const StyledDiv = styled.div`
   width: auto;
@@ -26,6 +29,8 @@ const UserInfoPopover = () => {
   const nav = useNavigate();
   const {confirm} = useModal();
   const defaultPath = contextPath + '/';
+  const {reload} = useReportSave();
+  const reportType = selectCurrentDesignerMode(store.getState());
 
   return (
     <StyledDiv>
@@ -39,6 +44,7 @@ const UserInfoPopover = () => {
             confirm(localizedString.confirmLogoutMsg, () => {
               models.Login.logout().then((response) => {
                 if (response.status == 200 ) {
+                  reload(reportType);
                   nav(defaultPath);
                 }
               }).catch(() => {

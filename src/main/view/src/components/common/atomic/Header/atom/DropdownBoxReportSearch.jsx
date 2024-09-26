@@ -27,6 +27,7 @@ const DropdownBoxReportSearch = ({report, button, id}) => {
         <TextBox
           width='90px'
           placeholder='보고서 검색'
+          disabled={true}
         />
       </div>
     );

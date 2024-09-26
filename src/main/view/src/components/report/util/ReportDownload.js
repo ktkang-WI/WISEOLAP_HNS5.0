@@ -116,22 +116,19 @@ const convertToBlob = async (element) => {
 const exportComponentToWorksheet = async (
     workbook, elementObj, worksheet, startRow, option, dataField, adhocOption, highlight) => {
   switch (elementObj.type) {
-    case 'pivot':
-    case 'grid': {
-      const instance = elementObj.type === 'pivot'?
-        PivotGrid.getInstance(elementObj.selector):
-        DataGrid.getInstance(elementObj.selector);
-      const isPivotGrid = elementObj.type === 'pivot';
-      await (isPivotGrid ? exportPivotGrid : exportDataGrid)({
+    case 'pivot': {
+      const instance = PivotGrid.getInstance(elementObj.selector);
+
+      await exportPivotGrid({
         component: instance,
         worksheet: worksheet,
         topLeftCell: {row: startRow + 1, column: 1},
-        ...(isPivotGrid ? {mergeColumnFieldValues: option?.mergeColumn} : {}),
-        ...(isPivotGrid ? {mergeRowFieldValues: option?.mergeRow} : {}),
+        mergeColumnFieldValues: option?.mergeColumn,
+        mergeRowFieldValues: option?.mergeRow,
         // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
-        ...(isPivotGrid ? {exportRowFieldHeaders: true} : {}),
+        exportRowFieldHeaders: true,
         customizeCell: ({pivotCell, excelCell}) => {
-          if (pivotCell.area == 'data' && pivotCell.dataType && pivotCell.value) {
+          if (pivotCell.area == 'data' && pivotCell.dataType) {
             const formats = getFormats(dataField, adhocOption);
             const formData = formats[pivotCell.dataIndex];
             const {newFormData, colorStyle} = addStyleVariationValue(formData, pivotCell);
@@ -139,16 +136,17 @@ const exportComponentToWorksheet = async (
             if (newFormData) {
               const labelSuffix = generateLabelSuffix(newFormData);
               const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
+
               let backgroundColor = '';
-              let color = colorStyle.color.slice(1);
+              let color = colorStyle?.color?.slice(1);
 
               if (highlight.length != 0) {
                 for (let i=0; i<highlight.length; i++) {
                   if (highlightIsDataCell(pivotCell, pivotCell.area, highlight[i])) {
                     const cssStyle = getCssStyle(highlight[i], null, pivotCell);
                     if (cssStyle) {
-                      cssStyle['background-color'] = cssStyle['background-color'].slice(1);
-                      cssStyle['color'] = cssStyle['color'].slice(1);
+                      cssStyle['background-color'] = cssStyle['background-color']?.slice(1);
+                      cssStyle['color'] = cssStyle['color']?.slice(1);
                       ({'background-color': backgroundColor, 'color': color} = cssStyle);
                       break;
                     }
@@ -156,10 +154,19 @@ const exportComponentToWorksheet = async (
                 }
               }
 
-              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue}));
+              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue, formData}));
             }
           }
         }
+      });
+      break;
+    }
+    case 'grid': {
+      const instance = DataGrid.getInstance(elementObj.selector);
+      await exportDataGrid({
+        component: instance,
+        worksheet: worksheet,
+        topLeftCell: {row: startRow + 1, column: 1}
       });
       break;
     }

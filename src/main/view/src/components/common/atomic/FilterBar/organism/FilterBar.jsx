@@ -55,7 +55,7 @@ const FilterBar = ({
   fullscreen = false,
   handleFullscreen = () => {}
 }) => {
-  const [isExpand, setIsExpand] = useState(!useExpandButton);
+  const [isExpand, setIsExpand] = useState(useExpandButton);
   const queryButton = ribbonDefaultElement()['QuerySearch'];
   const {querySearch} = useReportSave();
 

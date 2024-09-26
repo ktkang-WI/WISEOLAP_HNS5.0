@@ -173,6 +173,9 @@ const useSpread = () => {
       }
     } catch (e) {
       console.error(e);
+      workbook.resumeEvent();
+      workbook.resumeCalcService();
+      workbook.resumePaint();
     }
 
     dispatch(endJob('시트에 데이터를 바인딩하는 중입니다.'));

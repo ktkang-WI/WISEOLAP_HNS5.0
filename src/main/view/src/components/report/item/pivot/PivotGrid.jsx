@@ -5,7 +5,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -30,13 +31,13 @@ import Pager from './components/Pager';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {useDispatch} from 'react-redux';
 import ItemSlice from 'redux/modules/ItemSlice';
-import LoadingSlice from 'redux/modules/LoadingSlice';
 import ReportDescriptionModal
   from 'components/report/modal/ReportDescriptionModal';
 import useContextMenu from 'hooks/useContextMenu';
 import {itemExportsObject} from
   'components/report/atomic/ItemDownload/ItemDownload';
 import {getFormats} from './FormatUtility';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -78,7 +79,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       if (instance) {
         try {
           instance.updateDimensions();
-        } catch {}
+        } catch (e) {
+          console.log(e);
+        }
       }
     });
 
@@ -90,6 +93,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, []);
 
   useEffect(() => {
+    collapseRowHeader();
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -110,13 +114,19 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     return meta.dataHighlight;
   }, [meta.dataHighlight]);
 
+  const isPivot = item.type === 'pivot';
+
+  if (isPivot) {
+    dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
+  }
+
   const onCellPrepared = ({cell, area, cellElement}) => {
     if (area == 'data' && cell.dataType && cell.value) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
-      if (newFormData != undefined) {
+      if (newFormData) {
         const labelSuffix = generateLabelSuffix(newFormData);
         const formattedValue =
           formatNumber(cell.value, newFormData, labelSuffix);
@@ -143,6 +153,33 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
   };
+
+  const collapseRowHeader =
+  useCallback(() => mart.dataSourceConfig.load().then((data) => {
+    if (dataset?.cubeId == 6184) {
+      const pivotDataSource = ref.current._instance.getDataSource();
+      const items = pivotDataSource.getData().rows;
+      const collapseSingleChildItems = (items, path) => {
+        items.forEach((item) => {
+          const currentPath = path.concat(item.value);
+          if (item.children && item.children.length === 1 &&
+                (item.children[0]?.text == '' ||
+                    item.children[0]?.text == 'null')) {
+            pivotDataSource.collapseHeaderItem('row', currentPath);
+          } else {
+            if (item.children) {
+              collapseSingleChildItems(item.children, currentPath);
+            }
+          }
+        });
+      };
+      collapseSingleChildItems(items, []);
+    }
+  },
+  (error) => {
+    console.log(error);
+    dispatch(loadingActions.endJobForce());
+  }), []);
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -192,12 +229,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       <DevPivotGrid
         ref={ref}
         id={id}
-        width={meta.autoSize ? '0px' : '100%'}
+        width={meta.autoSize ? 'fit-content' : '100%'}
         height={usePage ? 'calc(100% - 50px)' : '100%'}
-        elementAttr={meta.autoSize && {
-          width: '0px',
-          style: 'overflow: visible'
-        }}
         showBorders={true}
         dataSource={mart.dataSourceConfig}
         showColumnTotals={meta.positionOption.column.totalVisible}
@@ -232,27 +265,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
                 pivotDataSource.collapseAll(field.index);
               });
             }
-            if (dataset?.cubeId == 6184) {
-              dispatch(loadingActions.startJob());
-              const items = pivotDataSource.getData().rows;
-              const collapseSingleChildItems = (items, path) => {
-                items.forEach((item) => {
-                  const currentPath = path.concat(item.value);
-                  if (item.children && item.children.length === 1 &&
-                      (item.children[0]?.text == '' ||
-                          item.children[0]?.text == 'null')) {
-                    pivotDataSource.collapseHeaderItem('row', currentPath);
-                  } else {
-                    if (item.children) {
-                      collapseSingleChildItems(item.children, currentPath);
-                    }
-                  }
-                });
-              };
-              collapseSingleChildItems(items, []);
-              dispatch(loadingActions.endJobForce());
-            }
           }
+          dispatch(loadingActions.endJobForce());
         }}
         onContextMenuPreparing={(e) => {
           const contextMenu = [{

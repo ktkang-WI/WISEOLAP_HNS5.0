@@ -38,17 +38,22 @@ public class SqlQueryGenerator implements QueryGenerator {
 
             } else if ("IN".equals(operation) || "NOT_IN".equals(operation)) {
                 if (validateValue(values, 0)) {
-                    String[] items = param.getValues().get(0).split(", ");
+                    // 입력 문자열을 가져와 쉼표와 공백을 기준으로 분리
+                    String[] items = param.getValues().get(0).split("\\s*,\\s*");
                     StringBuilder sb = new StringBuilder();
 
                     for (String val : items) {
-                        sb.append("\'");
-                        sb.append(val);
-                        sb.append("\', ");
+                        sb.append("'");
+                        sb.append(val.trim()); // 값의 앞뒤 공백 제거
+                        sb.append("', ");
+                    }
+
+                    // 마지막 쉼표와 공백 제거
+                    if (sb.length() > 0) {
+                        sb.setLength(sb.length() - 2);
                     }
 
                     result = sb.toString();
-                    result = result.substring(0, result.length() - 2);
                 } else {
                     result = param.getExceptionValue();
                 }

@@ -80,7 +80,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const {items, selectedItemId} = item || {};
   const {reportId} = report || {};
   const rootItem = item;
-  const model = Model.fromJson(layoutConfig);
+  const model = Model?.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
@@ -190,7 +190,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     // TabSet Focus 처리
     if (action.type == 'FlexLayout_SetActiveTabset') {
       const node = model.getNodeById(action.data.tabsetNode);
-      const itemId = node.getChildren()[0].getId();
+      const itemId = node.getChildren()[0]?.getId();
 
       model.doAction(Actions.setActiveTabset(action.data.tabsetNode));
       const modelJson = model.toJson();
