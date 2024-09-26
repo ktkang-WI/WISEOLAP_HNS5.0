@@ -90,12 +90,12 @@ public class PieChartDataMaker implements ItemDataMaker {
                     args.add(String.valueOf(row.get(name)));
                 }
 
-                String argStr = String.join("-", args);
+                String argStr = String.join(" - ", args);
                 dimensionGroupNames.add(argStr);
 
                 for (Measure measure : measures) {
                     StringBuilder sb = new StringBuilder(argStr);
-                    sb.append("-");
+                    sb.append(" - ");
                     sb.append(measure.getSummaryName());
 
                     row.put(sb.toString(), row.get(measure.getSummaryName()));

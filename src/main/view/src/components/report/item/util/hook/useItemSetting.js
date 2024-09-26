@@ -220,7 +220,9 @@ export default function useItemSetting(
       }
 
       splittedFilter.forEach((v, i) => {
-        const name = field[i].uniqueName;
+        const name = field[i]?.uniqueName;
+        if (!name) return acc;
+
         if (v == '\u2800') {
           v = null;
         }
