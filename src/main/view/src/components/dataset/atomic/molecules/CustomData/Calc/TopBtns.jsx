@@ -42,7 +42,8 @@ const TopBtns = () => {
 
   const inputValidation = (value) => {
     const dupplicatedNaming =
-      allFields.find((item) => item.uniqueName === value);
+      allFields.find((item) =>
+        item.uniqueName === value && item.type !== 'MEAFLD');
     if (dupplicatedNaming) return true;
     return false;
   };
