@@ -20,6 +20,7 @@
     <result column="USER_DESC" property="userDesc" javaType="String"/>
     <result column="RUN_MODE" property="runMode" javaType="String"/>
     <result column="HASH_YN" property="hashYn" javaType="String"/>
+    <result column="MD_CD" property="mdCode" javaType="String"/>
 	</resultMap>
 
   <resultMap id="AuthData" type="com.wise.MarketingPlatForm.auth.entity.AuthDataEntity">
@@ -45,7 +46,12 @@
 <!-- Query -->
 
   <select id="selectUserById" resultMap="User">
-    SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+    SELECT um.*, MD_CD
+    FROM dm_d_oprt_md_gp md
+    LEFT JOIN USER_MSTR um ON um.USER_ID = md.md_user_id
+    WHERE um.USER_ID = #{userId}
+      AND um.DEL_YN = 'N'
+    <!-- SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N' -->
   </select>
 
   <select id="selectGroupMstrById" resultMap="GroupMstrEntity">
