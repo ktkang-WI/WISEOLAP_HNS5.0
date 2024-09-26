@@ -68,7 +68,7 @@ public class TimelineDataMaker implements ItemDataMaker {
             }
 
             nRow.put("args", String.join("<br/>", args));
-            nRow.put("groups", String.join("-", groups));
+            nRow.put("groups", String.join(" - ", groups));
 
             timelineData.add(nRow);
         }
