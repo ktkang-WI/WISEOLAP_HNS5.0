@@ -9,8 +9,9 @@ import ReportBox from './components/ReportBox';
 import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
+import DrawerMenu from './components/Drawer';
 
-const App = () => {
+const Portal = () => {
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [cardData, setCardData] = useState([]);
@@ -113,6 +114,7 @@ const App = () => {
               <a href='http://10.2.3.51:18080/editds'>OLAP</a>
             </li>
           </ul>
+          <DrawerMenu data={reportList}/>
         </div>
       </div>
       <div className='contents'>
@@ -181,4 +183,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Portal;
