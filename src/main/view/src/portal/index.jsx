@@ -83,7 +83,7 @@ const App = () => {
   const getReports = (reports) => {
     return reports.map((report) => (
       <ReportBox
-        href={`https://olap.hns.tv:8080/editds/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -102,15 +102,15 @@ const App = () => {
           </a>
           <ul id='header_menu'>
             <li>
-              <a href='#fld-2290' className='active'>전사관리지표</a>
-              <a href='#fld-2282'>주요보고서</a>
-              <a href='#fld-2283'>상품</a>
-              <a href='#fld-2284'>방송</a>
-              <a href='#fld-2285'>주문</a>
-              <a href='#fld-2286'>고객</a>
-              <a href='#fld-2287'>물류</a>
-              <a href='#fld-2288'>기타</a>
-              <a href='https://olap.hns.tv:8080/editds'>OLAP</a>
+              <a href='#fld2290' className='active'>전사관리지표</a>
+              <a href='#fld2282'>주요보고서</a>
+              <a href='#fld2283'>상품</a>
+              <a href='#fld2284'>방송</a>
+              <a href='#fld2285'>주문</a>
+              <a href='#fld2286'>고객</a>
+              <a href='#fld2287'>물류</a>
+              <a href='#fld2288'>기타</a>
+              <a href='http://10.2.3.51:18080/editds'>OLAP</a>
             </li>
           </ul>
         </div>
@@ -149,7 +149,7 @@ const App = () => {
         <iframe
           width='100%'
           height='1200px'
-          src={`http://olap.hns.tv:8080/editds/linkviewer?reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          src={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>
