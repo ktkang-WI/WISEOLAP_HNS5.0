@@ -1267,9 +1267,11 @@ public class QuerySettingEx {
 								oSelClauseColl.add("Count" + "(Distinct " + sColExpress + ")" + " AS " + oColCaption);
 							else if (oRows.get(0).getMEA_AGG().equalsIgnoreCase(""))
 								oSelClauseColl.add("(" + sColExpress + ")" + " AS " + oColCaption);
-							else {
+							else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("NOFUNC")) 
+								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
+						  else {
 								oSelClauseColl.add(
-										oRows.get(0).getMEA_AGG() + "(" + sColExpress + ")" + " AS " + oColCaption);
+									oRows.get(0).getMEA_AGG() + "(" + sColExpress + ")" + " AS " + oColCaption);
 							}
 							// 20210122 AJKIM 계산된 컬럼 추가 DOGFOOT
 						} else if (oDr.getDATA_TYPE().equals("cal") || oDr.getDATA_TYPE().equals("grp")) {
@@ -1281,7 +1283,6 @@ public class QuerySettingEx {
 							String oTblNm = oRows.get(0).getMEA_TBL_NM();
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
 							oSelClauseColl.add(oTblNm + "." + oColNm + " AS " + oColCaption);
-							System.out.println("NOFUNC" + oSelClauseColl);
 					 	} else {
 							String oTblNm = oRows.get(0).getMEA_TBL_NM();
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
