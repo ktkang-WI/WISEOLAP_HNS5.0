@@ -178,6 +178,8 @@ const useReportSave = () => {
       options.reportDesc = data.reportDesc;
       options.requester = data.gridInfo;
       options.path = data.path;
+      options.promptYn = data.promptYn;
+      options.authPublish = '1';
       options.reportType = ConvertDesignerMode[data.reportType];
 
       return options;
