@@ -29,6 +29,9 @@ import GridAttributeModal
   from 'components/report/item/pivot/modal/organism/GridAttributeModal';
 import VariationValueModal
   from 'components/report/item/pivot/modal/organism/VariationValueModal';
+import DataFilterModal
+  from
+  'components/report/item/pivot/modal/organism/dataFiltering/DataFilterModal';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -278,6 +281,23 @@ const ItemAttributeDefaultElement = () => {
             }
 
             openModal(VariationValueModal);
+          }
+        },
+        {
+          id: 'dataFilter',
+          label: '데이터 필터링',
+          active: option?.dataFilter == 'dataFilter',
+          icon: dataHighlightImg,
+          width: '50%',
+          onClick: () => {
+            const chartMartInit = rootItem.items[0].mart.init;
+            const pivotMartInit = rootItem.items[1].mart.init;
+
+            if (!chartMartInit && !pivotMartInit) {
+              return;
+            }
+
+            openModal(DataFilterModal);
           }
         }
       ]
