@@ -181,6 +181,7 @@ public class AuthService {
                 .password(entity.getPassword())
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
                 .userNm(entity.getUserNm())
+                .mdCode(entity.getMdCode())
                 .build();
     }
 

@@ -178,6 +178,8 @@ const useReportSave = () => {
       options.reportDesc = data.reportDesc;
       options.requester = data.gridInfo;
       options.path = data.path;
+      options.promptYn = data.promptYn;
+      options.authPublish = '1';
       options.reportType = ConvertDesignerMode[data.reportType];
 
       return options;
@@ -532,10 +534,6 @@ const useReportSave = () => {
     rootDataset.datasets.every((dataset) =>
       dataset.datasetType === DatasetType.CUBE);
 
-    if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
-      return;
-    };
-
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
         executeItems();
@@ -546,6 +544,9 @@ const useReportSave = () => {
 
     if (parameters.informations.length <=
       parameters.filterSearchComplete.length) {
+      if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
+        return;
+      };
       execute();
     } else {
       let count = 0;

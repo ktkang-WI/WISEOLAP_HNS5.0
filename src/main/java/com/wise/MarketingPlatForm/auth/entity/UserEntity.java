@@ -27,4 +27,5 @@ public class UserEntity {
     String runMode;
     int lockCnt;
     String hashYn;
+    String mdCode;
 }
