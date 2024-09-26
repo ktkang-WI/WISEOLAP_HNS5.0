@@ -628,5 +628,6 @@
   "privateReportList": "Personal Report List",
   "privateReportListNoDataTxt": "There are no personal folders/reports for that user.",
   "execute": "execution",
-  "privateReportGetError": "Personal reports cannot be loaded. Please contact your administrator."
+  "privateReportGetError": "Personal reports cannot be loaded. Please contact your administrator.",
+  "paramEditInputRequired": "Conditional clauses are required input in the input window."
 }

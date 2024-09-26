@@ -65,7 +65,8 @@ const ReportInformation = ({row, setRow, flag}) => {
           selectedReportExecute();
         }
       }}
-      useBtn={true}
+      // TODO : 추후 공용 보고서도 보고서 실행 개발 예정.
+      useBtn={flag ? true : false}
       label={localizedString.execute}
     >
       <Form

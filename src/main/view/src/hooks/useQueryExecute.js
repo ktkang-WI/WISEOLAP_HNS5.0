@@ -34,7 +34,7 @@ const useQueryExecute = () => {
   const {setSpreadData} = SpreadSlice.actions;
   const {alert} = useModal();
   const {setParameterValues, filterSearchComplete} = ParameterSlice.actions;
-  const {startJob, endJob} = LoadingSlice.actions;
+  const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
 
@@ -595,6 +595,12 @@ const useQueryExecute = () => {
 
       const res = await models.Parameter.getListItems(param, linkageValues);
       const values = res.data;
+
+      // 필터 데이터 조회중 취소 된 경우 로딩장 강제 종료
+      if (res.code === 'ERR_CANCELED') {
+        dispatch(endJobForce());
+      }
+
       if (linkageFilter) {
         values.linkageFilter = linkageFilter;
       }

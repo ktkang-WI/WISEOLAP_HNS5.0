@@ -53,14 +53,62 @@ export const getFormats = (dataField, adHocOption) => {
 };
 
 // Excel Cell Download Format 및 Style 적용
-// TODO: Style 은 추후에 추가
 // fill 배경 색
 // font 글자 색
 // value 값
+// 접미사를 체크 한다면, text 형식으로 다운로드 되도록 수정
+// 접미사를 체크 안한다면, pivot format 형식으로 다운로드 되도록, 소수점 무시
 // eslint-disable-next-line max-len
-export const getExcelCellFormat = ({backgroundColor, color, formattedValue}) => ({
-  fill: backgroundColor &&
-    {type: 'pattern', pattern: 'solid', fgColor: {argb: backgroundColor}},
-  font: color && {color: {argb: color}},
-  value: formattedValue || undefined
-});
+export const getExcelCellFormat = ({backgroundColor, color, formattedValue, formData}) => {
+  const excelCellFormat = {};
+
+  if (backgroundColor) {
+    excelCellFormat.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: {argb: backgroundColor}
+    };
+  }
+
+  if (color) {
+    excelCellFormat.font = {color: {argb: color}};
+  }
+
+  if (formData?.suffixEnabled || formData?.variationValueType) {
+    excelCellFormat.value = formattedValue;
+  }
+
+  return excelCellFormat;
+};
+
+export const getPivotFormat = (measureFormat) => {
+  const format = {
+    type: 'fixedPoint'
+  };
+
+  if (measureFormat?.formatType === 'Auto') {
+    format.type = 'billions';
+  } else if (measureFormat?.formatType === 'General') {
+    format.type = 'decimal';
+  } else if (measureFormat?.formatType === 'Number') {
+    if (measureFormat?.unit === 'Auto') {
+      format.type = 'billions';
+    } else if (measureFormat?.unit === 'Ones') {
+      format.type = 'fixedPoint';
+    } else if (measureFormat?.unit === 'Thousands') {
+      format.type = 'thousands';
+    } else if (measureFormat?.unit === 'Millions') {
+      format.type = 'millions';
+    } else if (measureFormat?.unit === 'Billions') {
+      format.type = 'billions';
+    }
+  } else if (measureFormat?.formatType === 'Currency') {
+    format.type = 'currency';
+  } else if (measureFormat?.formatType === 'Scientific') {
+    format.type = 'exponential';
+  } else if (measureFormat?.formatType === 'Percent') {
+    format.type = 'percent';
+  }
+
+  return format;
+};

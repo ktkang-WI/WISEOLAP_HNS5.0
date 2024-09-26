@@ -97,7 +97,10 @@ const DataSourceFoldableList = ({dataset}) => {
   };
 
   const itemRender = (item, index, snapshot) => {
-    const shouldRenderClone = item.uniqueName === snapshot.draggingFromThisWith;
+    const shouldRenderClone =
+      (item.uniqueName === snapshot.draggingFromThisWith ||
+        item.type === 'DIMGRP' || item.type === 'MEAGRP'
+      );
     let description = '';
 
     if (dataset.datasetType === DatasetType.CUBE) {

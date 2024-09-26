@@ -56,7 +56,7 @@ const ItemBoards = ({reportId}) => {
   const {alert, openModal} = useModal();
   const tabEnabled = layout?.tabEnabled;
   const layoutConfig = Array.isArray(layout?.layoutConfig) ?
-    layout?.layoutConfig : [layout?.layoutConfig];
+      layout?.layoutConfig : layout?.layoutConfig ? [layout?.layoutConfig] : [];
 
   const selectedTab = layout?.selectedTab || 0;
 

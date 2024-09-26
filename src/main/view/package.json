@@ -45,6 +45,7 @@
     "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "marketing_wi_faltform_v2": "file:",
+    "mathjs": "^13.1.1",
     "pptxgenjs": "^3.12.0",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",

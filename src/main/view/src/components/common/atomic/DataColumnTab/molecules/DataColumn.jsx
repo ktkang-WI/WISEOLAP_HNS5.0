@@ -112,13 +112,17 @@ const DataColumn = ({
   const contextItemRender = (e) => {
     const checkIcon = '\u2713';
 
-    const summaryType = data && data.type == 'MEA' ? data.summaryType : '';
-    const sortBy = data && data.type == 'DIM' ? data.sortBy : '';
+    const summaryType = data?.type == 'MEA' ? data.summaryType : '';
+    const sortBy = data?.type == 'DIM' ? data.sortBy : '';
+    const summaryWay = data?.summaryWayEach ||
+      typeof data.summaryWayEach == 'undefined' ? 'SUMMARY_WAY' : '';
+
+    const useCheckIcon = [summaryType, sortBy, summaryWay].includes(e.value);
 
     return (
       <>
         <span className='dx-menu-item-text'>
-          {(summaryType || sortBy) == e.value && checkIcon + ' '}
+          {useCheckIcon && checkIcon + ' '}
           {e.text}
         </span>
       </>
@@ -129,6 +133,14 @@ const DataColumn = ({
     'SummaryType': (e) => {
       dispatch(updateItemField({reportId,
         dataField: {...data, summaryType: e.itemData.value}}));
+    },
+    'SummaryWay': () => {
+      let summaryWayEach = data.summaryWayEach;
+      if (typeof summaryWayEach == 'undefined') {
+        summaryWayEach = true;
+      }
+      dispatch(updateItemField({reportId,
+        dataField: {...data, summaryWayEach: !summaryWayEach}}));
     },
     'Rename': (e) => {
       openModal(SimpleInputModal, {

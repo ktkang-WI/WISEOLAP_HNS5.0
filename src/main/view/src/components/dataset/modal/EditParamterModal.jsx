@@ -139,18 +139,25 @@ const EditParamterModal = ({onClose, parameterInfo, onSubmit}) => {
     <Modal
       onSubmit={async () => {
         let newParamInfo = paramInfo;
-
+        let isSubmit = false;
         if (!_.isEmpty(selectedParam)) {
           newParamInfo = getNewParamInfo();
         }
 
         newParamInfo = newParamInfo.
             map((param) => {
+              if (!param.exceptionValue &&
+                  param.paramType === 'INPUT') {
+                alert(localizedString.paramEditInputRequired);
+                isSubmit = true;
+              }
               if (param.paramType === 'CALENDAR') {
                 param = ParamUtils.setCalendarExceptionValue(param);
               }
               return ParamUtils.sanitizeParamInformation(param);
             });
+
+        if (isSubmit) return true;
 
         const tempParameters = {
           informations: newParamInfo,

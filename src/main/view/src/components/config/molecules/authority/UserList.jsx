@@ -1,4 +1,5 @@
-import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
+import DataGrid,
+{Column, SearchPanel, Selection} from 'devextreme-react/data-grid';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
@@ -53,6 +54,10 @@ const UserList = ({onRowClick, dependency}) => {
         onRowClick={HandleClick}
       >
         <Selection mode="single" />
+        <SearchPanel
+          visible={true}
+          width={250}
+        />
         <Column
           dataField="isAuth"
           caption=""

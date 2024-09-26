@@ -1,6 +1,8 @@
 import ItemType from 'components/report/item/util/ItemType';
 import {DataFieldType} from 'components/report/item/util/dataFieldType';
 import localizedString from 'config/localization';
+import store from 'redux/modules';
+import {selectCurrentReport} from 'redux/selector/ReportSelector';
 
 const measureSummaryType = [
   {
@@ -90,6 +92,11 @@ const topN = {
   'type': 'TopN'
 };
 
+const summaryWay = {
+  'text': '총계 별도 계산',
+  'value': 'SUMMARY_WAY',
+  'type': 'SummaryWay'
+};
 
 const TOP_N_ITEMS = [
   ItemType.CHART,
@@ -120,7 +127,14 @@ export const getContextMenu = (itemType, data, sortItems = []) => {
     }
   };
 
-  if (data?.expression) return [format];
+  if (data?.expression) {
+    const report = selectCurrentReport(store.getState());
+    const reportType = report.options.reportType;
+    if (itemType == ItemType.PIVOT_GRID || reportType == 'AdHoc') {
+      return [format, summaryWay];
+    }
+    return [format];
+  }
 
   if (type == 'MEA') {
     if (fieldType == 'DIM') {

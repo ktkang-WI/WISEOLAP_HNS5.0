@@ -41,6 +41,21 @@ const ItemContent = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px 20px;
+
+  overflow: ${(props) => props.type? 'auto': 'hidden'};
+
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgb(0,0,0, 0.1);
+  }
+  &::-webkit-scrollbar-thumb { 
+    background-color: rgb(0,0,0, 0.3);
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
 `;
 
 const ItemBackground = styled.div`
@@ -72,7 +87,7 @@ const Item = ({children, item, ...props}) => {
   const jobQuantity = useSelector(selectJobQuantityItem);
   const jobMsg = useSelector(selectCurrentJobMessageItem);
   const isPivot = item?.type === 'pivot';
-  const isLoading = item.mart?.dataSourceConfig?.isLoading();
+  const isLoading = item?.mart?.dataSourceConfig?.isLoading();
 
   const targetRef = useRef();
   const contextMenuRef = useRef();
@@ -89,7 +104,7 @@ const Item = ({children, item, ...props}) => {
       className={className + (props.className || '')}
       overflowY={overflowY}
     >
-      <ItemContent>
+      <ItemContent type={isPivot}>
         {isPivot &&
           jobQuantity > 0 && isLoading &&
           <ItemBackground>
