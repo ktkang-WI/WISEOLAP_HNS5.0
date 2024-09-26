@@ -30,16 +30,15 @@ export const getSubLinkDim = (item) => {
 
 export const connectLinkedReport = (param, closeWindow, showReportList) => {
   if (param) {
-    models.Report.generateToken(param).then((res) => {
+    models.Report.generateLinkToken(param).then((res) => {
       if (res.status != 200) return;
       const token = res.data;
       const urlString =
         `${getFullUrl()}/linkviewer?token=${token}` +
         (showReportList ? '&srl=true' : '');
       const newWindow = window.open(urlString, '_blank');
+      newWindow.focus();
       if (newWindow) {
-        newWindow.focus();
-
         if (closeWindow) {
           window.close();
         }
