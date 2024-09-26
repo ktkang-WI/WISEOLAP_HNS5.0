@@ -534,10 +534,6 @@ const useReportSave = () => {
     rootDataset.datasets.every((dataset) =>
       dataset.datasetType === DatasetType.CUBE);
 
-    if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
-      return;
-    };
-
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
         executeItems();
@@ -548,6 +544,9 @@ const useReportSave = () => {
 
     if (parameters.informations.length <=
       parameters.filterSearchComplete.length) {
+      if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
+        return;
+      };
       execute();
     } else {
       let count = 0;
