@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -53,6 +55,7 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
+import com.wise.MarketingPlatForm.report.vo.LinkReportTokenDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
@@ -60,6 +63,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 import com.wise.MarketingPlatForm.utils.Function;
 import com.wise.MarketingPlatForm.utils.ListDataUtility;
 import com.wise.MarketingPlatForm.utils.ListUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Type;
 
@@ -79,6 +83,7 @@ public class ReportController {
     private final AuthService authService;
 
     private final TokenStorage<ReportTokenDTO> tokenStorage;
+    private final TokenStorage<LinkReportTokenDTO> linkTokenStorage;
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
 
     @Autowired
@@ -88,6 +93,7 @@ public class ReportController {
         this.reportService = reportService;
         this.authService = authService;
         this.tokenStorage = new TokenStorage<>("report", ReportTokenDTO.class);
+        this.linkTokenStorage = new TokenStorage<>("linkReport", LinkReportTokenDTO.class);
     }
 
     @Operation(summary = "item-data", description = "아이템의 데이터를 조회합니다.")
@@ -526,6 +532,48 @@ public class ReportController {
 
         String token = tokenStorage.saveToken(new ReportTokenDTO(Integer.parseInt(reportId), userId, reportType, promptYn));
 
+        return new ResponseEntity(token, HttpStatus.OK);
+    }
+
+    @PostMapping("/generate-link-token")
+    public ResponseEntity<String> generateLinkToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+    // public ResponseEntity<String> generateLinkToken(HttpServletRequest request, @RequestBody Map<String, Object> requestBody) {
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = (String) userDTO.getUserId();
+        String reportId = (String) requestBody.get("reportId");
+        // Integer reportId = (Integer) requestBody.get("reportId");
+        String reportType = (String) requestBody.get("reportType");
+        String parentReportId = (String) requestBody.get("parentReportId");
+        // Integer parentReportId = (Integer) requestBody.get("parentReportId");
+        String parentReportType = (String) requestBody.get("parentReportType");
+        String promptYn = (String) requestBody.get("promptYn");
+        String linkNewTab = (String) requestBody.get("linkNewTab");
+
+        // ObjectMapper objectMapper = new ObjectMapper(); 
+
+        // List<Map<String, Object>> linkFkInfo = objectMapper.convertValue(requestBody.get("linkFkInfo"), List.class);
+        // List<Map<String, Object>> linkParamInfo = objectMapper.convertValue(requestBody.get("linkParamInfo"), List.class);
+
+            // Process linkFkInfo and linkParamInfo as needed
+        // for (Map<String, Object> fkInfo : linkFkInfo) {
+        //     System.out.println("Processing fkInfo: " + fkInfo);
+        // }
+    
+        // for (Map<String, Object> paramInfo : linkParamInfo) {
+        //     System.out.println("Processing paramInfo: " + paramInfo);
+        // }
+
+        String token = linkTokenStorage.saveToken(
+            new LinkReportTokenDTO(
+                reportId,
+                reportType, 
+                parentReportId,
+                parentReportType,
+                userId,
+                promptYn,
+                linkNewTab
+                )
+            );
         return new ResponseEntity(token, HttpStatus.OK);
     }
 
