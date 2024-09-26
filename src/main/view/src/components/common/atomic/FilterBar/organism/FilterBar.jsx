@@ -11,6 +11,7 @@ import CommonButton from '../../Common/Button/CommonButton';
 import useReportSave from 'hooks/useReportSave';
 import SmallImageButton from '../../Common/Button/SmallImageButton';
 import FilterBarBtn from '../atom/FilterBarBtn';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
@@ -53,16 +54,20 @@ const FilterBar = ({
   useSearchButton=false,
   useFullscreenButton=false,
   fullscreen = false,
+  visible = true,
   handleFullscreen = () => {}
 }) => {
   const [isExpand, setIsExpand] = useState(useExpandButton);
   const queryButton = ribbonDefaultElement()['QuerySearch'];
   const {querySearch} = useReportSave();
 
+  const foldedFilterBarHeight = isPortal() ?
+    '80px' : theme.size.filterBarHeight;
+
   const Wrapper = styled.div`
     background: ${theme.color.white};
     height: ${isExpand ?
-      'auto' : 'calc(' + theme.size.filterBarHeight + ' + 2px)'};
+      'auto' : 'calc(' + foldedFilterBarHeight + ' + 2px)'};
     display: flex;
     box-sizing: border-box;
     border: 1px solid ${theme.color.gray200};
@@ -92,7 +97,10 @@ const FilterBar = ({
   };
 
   return (
-    <Wrapper style={{padding: '0px 5px'}} className='section wise-filter'>
+    <Wrapper style={{
+      padding: '0px 5px',
+      display: visible ? 'flex' : 'none'
+    }} className='section wise-filter'>
       {buttons && buttons.filter((button) => button.visible).length > 0 &&
         <ButtonWrapper>
           {

@@ -652,9 +652,17 @@ const useQueryExecute = () => {
     const reportId = selectCurrentReportId(store.getState());
 
     const setDefaultValue = (name, value) => {
+      const params = new URLSearchParams(window.location.search);
+      const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+      let _value = value;
+      if (paramValues[name]) {
+        _value = paramValues[name];
+      }
+
       dispatch(setParameterValues({
         reportId, values: {[name]: {
-          value
+          _value
         }}
       }));
       dispatch(filterSearchComplete({reportId, id: name}));
@@ -682,6 +690,13 @@ const useQueryExecute = () => {
             })());
           }
           executeListParameter(param, promises).then((data) => {
+            const params = new URLSearchParams(window.location.search);
+            const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+            if (paramValues[param.name]) {
+              data.value = paramValues[param.name];
+            }
+
             if (data) {
               setValues(param.name, data);
             }

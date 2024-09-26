@@ -62,6 +62,7 @@ const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
   return (
     <FilterWrapper>
       <FilterLabel
+        className='filter-label'
         width={info.useCaptionWidth ? info.captionWidth + 'px' : null}>
         {isTo ? '~' : '\u2022 ' + info.caption}
       </FilterLabel>

@@ -46,7 +46,9 @@ export default function useAxiosSetting() {
 
   axios.interceptors.request.use(
       (config) => {
-        dispatch(actions.startJob());
+        if (config.url.indexOf('portal/card-data') == -1) {
+          dispatch(actions.startJob());
+        }
         return config;
       },
       (error) => {
