@@ -128,8 +128,7 @@ const FilterBar = ({
         isExpand={isExpand}
       />
       {useSearchButton &&
-        <FilterBarBtn width={queryButton.width} isExpand={isExpand}
-          onClick={() => setIsExpand(!isExpand)}>
+        <FilterBarBtn width={queryButton.width} isExpand={isExpand}>
           <CommonButton
             label={queryButton.label}
             title={queryButton.label}
