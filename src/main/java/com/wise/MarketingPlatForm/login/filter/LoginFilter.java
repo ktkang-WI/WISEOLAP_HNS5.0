@@ -23,6 +23,7 @@ import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlParser;
 import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 
 @Component
@@ -54,7 +55,7 @@ public class LoginFilter implements Filter{
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
             "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**",
-            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**"
+            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**", "/linkviewer"
         };
 
         boolean useFilter = true;
@@ -81,11 +82,18 @@ public class LoginFilter implements Filter{
 
         String userId = request.getParameter("userId");
 
-        if (userId != null && !userId.isEmpty()) {
-            userDTO = authService.getUserById(userId);
-
-            SessionUtility.setSessionUser(request, userDTO);
+        try {
+            if (userId != null && !userId.isEmpty()) {
+                userDTO = authService.getUserById(userId);
+    
+                SessionUtility.setSessionUser(request, userDTO);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            log.error("failed login user === > user ID: " + userId);
+            e.printStackTrace();
         }
+
 
         if (!useFilter) {
             chain.doFilter(request, response);

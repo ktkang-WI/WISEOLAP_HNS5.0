@@ -437,8 +437,10 @@ const useReportSave = () => {
 
       // 비정형 주제영역일 때만 BETWEEN 매개변수 반드시 필요
       if (isAdhocCube && (paramInfos.length === 0)) {
+        // homenshopping 요청사항 문구
+        // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
         // eslint-disable-next-line max-len
-        throw new Error('보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.');
+        throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
       }
 
       // 날짜 문자열을 Date 객체로 변환하는 함수

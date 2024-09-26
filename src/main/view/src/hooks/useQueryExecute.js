@@ -662,7 +662,7 @@ const useQueryExecute = () => {
 
       dispatch(setParameterValues({
         reportId, values: {[name]: {
-          _value
+          value: _value
         }}
       }));
       dispatch(filterSearchComplete({reportId, id: name}));

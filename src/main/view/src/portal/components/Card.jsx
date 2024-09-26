@@ -11,8 +11,12 @@ const Card = ({title, amount, percentData, imgSrc}) => {
       <div>
         <img src={imgSrc} alt="" />
         <div className="percent_box">
-          <p>전년比 : <span className="red">{percentData.previous}</span></p>
-          <p>계획比 : <span className="blue">{percentData.plan}</span></p>
+          {percentData.previous &&
+            <p>전년比 : <span className="red">{percentData.previous}</span></p>
+          }
+          {percentData.plan &&
+            <p>계획比 : <span className="blue">{percentData.plan}</span></p>
+          }
         </div>
       </div>
     </div>

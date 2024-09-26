@@ -8,7 +8,7 @@ import './css/style.css';
 import ReportBox from './components/ReportBox';
 import Card from './components/Card';
 import models from 'models';
-import icon from './img/list_ico1.png';
+import reportIcon from './img/list_ico1.png';
 
 const App = () => {
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
@@ -83,12 +83,12 @@ const App = () => {
   const getReports = (reports) => {
     return reports.map((report) => (
       <ReportBox
-        href={`https://olap.hns.tv:8080/editds/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
         description={report.reportDesc}
-        icon={icon}
+        icon={reportIcon}
       />
     ));
   };
@@ -98,19 +98,19 @@ const App = () => {
       <div id='header'>
         <div className='header_wrap'>
           <a href='#n' id='logo'>
-            <img src='./img/logo.png' alt='' />
+            <img src={require('./img/logo.png')} alt='' />
           </a>
           <ul id='header_menu'>
             <li>
-              <a href='#fld-2290' className='active'>전사관리지표</a>
-              <a href='#fld-2282'>주요보고서</a>
-              <a href='#fld-2283'>상품</a>
-              <a href='#fld-2284'>방송</a>
-              <a href='#fld-2285'>주문</a>
-              <a href='#fld-2286'>고객</a>
-              <a href='#fld-2287'>물류</a>
-              <a href='#fld-2288'>기타</a>
-              <a href='https://olap.hns.tv:8080/editds'>OLAP</a>
+              <a href='#fld2290' className='active'>전사관리지표</a>
+              <a href='#fld2282'>주요보고서</a>
+              <a href='#fld2283'>상품</a>
+              <a href='#fld2284'>방송</a>
+              <a href='#fld2285'>주문</a>
+              <a href='#fld2286'>고객</a>
+              <a href='#fld2287'>물류</a>
+              <a href='#fld2288'>기타</a>
+              <a href='http://10.2.3.51:18080/editds'>OLAP</a>
             </li>
           </ul>
         </div>
@@ -136,7 +136,7 @@ const App = () => {
                   key={'card' + i}
                   amount={d['금액']}
                   percentData={{previous: d['전년비'], plan: d['계획비']}}
-                  imgSrc='./img/con_bg1.png'
+                  imgSrc={require('./img/con_bg' + (i + 1) + '.png')}
                 />
               );
             })
@@ -148,8 +148,8 @@ const App = () => {
         </div>
         <iframe
           width='100%'
-          height='1200px'
-          src={`http://olap.hns.tv:8080/editds/linkviewer?reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          height='2400px'
+          src={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>

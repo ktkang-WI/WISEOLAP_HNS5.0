@@ -67,8 +67,7 @@ public class PortalService {
             "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수'\n" +
-            "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
-            ";", date, date, date, date);
+            "  AND MAIN_SCRN_GATHER_DATE = '%s'\n", date, date, date, date);
 
         MartResultDTO martResultDTO = null;
 
