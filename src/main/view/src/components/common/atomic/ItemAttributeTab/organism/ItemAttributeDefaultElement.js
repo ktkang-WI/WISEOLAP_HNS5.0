@@ -284,7 +284,7 @@ const ItemAttributeDefaultElement = () => {
           }
         },
         {
-          id: 'dataFilter',
+          id: 'dataFiltering',
           label: '데이터 필터링',
           active: option?.dataFilter == 'dataFilter',
           icon: dataHighlightImg,

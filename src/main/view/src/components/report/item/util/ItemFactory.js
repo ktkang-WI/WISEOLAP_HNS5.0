@@ -67,7 +67,8 @@ const makeItem = (orgItem, countMap, palette) => {
         dataField: {
           dataFieldQuantity: 0
         },
-        dataHighlight: []
+        dataHighlight: [],
+        dataFilter: []
       }
     };
     if (orgItem.type === 'chart') {

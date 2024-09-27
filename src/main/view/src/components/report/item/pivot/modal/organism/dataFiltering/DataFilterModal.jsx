@@ -48,19 +48,16 @@ const AddBtn = styled.img`
 `;
 
 const init = {
-  applyCell: true,
-  applyTotal: true,
-  applyGrandTotal: true,
   status: 'new'
 };
 
-const selectedReportTypeHighlight = (selectedItem, reportType) => {
+const selectedReportTypeDataFiltering = (selectedItem, reportType) => {
   if (reportType === 'AdHoc') {
-    return selectedItem[1].meta.dataHighlight.length !=0 ?
-          selectedItem[1].meta.dataHighlight : [];
+    return selectedItem[1].meta.dataFiltering.length !=0 ?
+          selectedItem[1].meta.dataFiltering : [];
   } else if (reportType === 'DashAny') {
-    return selectedItem.meta.dataHighlight.length !=0 ?
-          selectedItem.meta.dataHighlight : [];
+    return selectedItem.meta.dataFiltering.length !=0 ?
+          selectedItem.meta.dataFiltering : [];
   };
 };
 
@@ -79,9 +76,9 @@ const DataFilterModal = ({...props}) => {
   const selectedItem = reportType === DesignerMode['AD_HOC'] ?
       useSelector(selectCurrentItems) : useSelector(selectCurrentItem);
   const ref = useRef(null);
-  const [highlightList, setHighlightList] =
+  const [dataFiltering, setDataFilteringList] =
     useState(
-        [...selectedReportTypeHighlight(selectedItem, reportType)]
+        [...selectedReportTypeDataFiltering(selectedItem, reportType)]
     );
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
   const [formData, setData] = useState(_.cloneDeep(init));
@@ -102,7 +99,7 @@ const DataFilterModal = ({...props}) => {
 
   // 동일 필드명, 조건이면 정보 업데이트.
   const appliedHighlight = (formData) => {
-    const copyHighlight = [...highlightList];
+    const copyHighlight = [...dataFiltering];
 
     if (_.isEmpty(formData)) {
       return copyHighlight;
@@ -139,15 +136,15 @@ const DataFilterModal = ({...props}) => {
   // 하이라이트 목록에 추가.
   const onClick = () => {
     const formData = ref.current.props.formData;
-    const highlight = appliedHighlight(formData);
+    const dataFilterInfo = appliedHighlight(formData);
 
-    if (highlight === false) {
-      alert(localizedString.highlightDupleCheck1);
+    if (dataFilterInfo === false) {
+      alert(localizedString.dataFilterInfoDupleCheck);
       setData({...init});
       return;
     }
 
-    validation(formData, highlight);
+    validation(formData, dataFilterInfo);
   };
 
   // 유효성 검사.
@@ -161,7 +158,7 @@ const DataFilterModal = ({...props}) => {
     }
 
     if (!flag) {
-      setHighlightList(highlight);
+      setDataFilteringList(highlight);
       setData(_.cloneDeep(init));
       setShowField(false);
     }
@@ -170,15 +167,15 @@ const DataFilterModal = ({...props}) => {
   };
 
   // 하이라이트 삭제 부분.
-  const deleteHighlightList = (data) => {
-    if (data.row && highlightList.length != 0) {
-      confirm(localizedString.deleteHighlight, () => {
-        const deletedHighlight = highlightList.filter(
-            (highlight) => highlight !== data.row.key
+  const deleteDataFilteringList = (data) => {
+    if (data.row && dataFiltering.length != 0) {
+      confirm('선택한 데이터 필터링 정보를 삭제 하시겠습니까?', () => {
+        const deletedDataFiltering = dataFiltering.filter(
+            (varData) => varData !== data.row.key
         );
 
         setData({...init});
-        setHighlightList(deletedHighlight);
+        setDataFilteringList(deletedDataFiltering);
       });
     }
   };
@@ -191,36 +188,38 @@ const DataFilterModal = ({...props}) => {
   return (
     <Modal
       onSubmit={() => {
-        const popupName = 'dataHighlight';
+        const popupName = 'dataFiltering';
         const formData = _.cloneDeep(ref.current.props.formData);
         const isNullData = formData.type === 'dimension'?
           formData.dataItem: (formData.dataItem && formData.condition);
-        let resultHighlightList = [];
+        let resultDataFilteringList = [];
         const newFormData = !isNullData ? [] : formData;
 
-        const highlight = appliedHighlight(newFormData);
+        const confirmedDataFiltering = appliedHighlight(newFormData);
 
-        if (!highlight) {
-          alert(localizedString.highlightDupleCheck2);
+        if (!confirmedDataFiltering) {
+          alert('중복된 조건의 데이터 필터링 정보가 존재합니다.');
           setData({...init});
           return true;
         }
         // 적용 전 유효성 검사.
         const isInvalid =
-          highlight.some((item) => !validation(item, highlight, 'flag'));
+        confirmedDataFiltering.some(
+            (item) => !validation(item, confirmedDataFiltering, 'flag')
+        );
 
         if (isInvalid) return isInvalid;
 
         if (isNullData) {
-          resultHighlightList= highlight;
-        } else if (highlightList.length != 0) {
-          resultHighlightList = highlightList;
+          resultDataFilteringList= confirmedDataFiltering;
+        } else if (dataFiltering.length != 0) {
+          resultDataFilteringList = dataFiltering;
         }
 
         const selectItem =
             Array.isArray(selectedItem) ? selectedItem[1] : selectedItem;
 
-        const item = setMeta(selectItem, popupName, resultHighlightList);
+        const item = setMeta(selectItem, popupName, resultDataFilteringList);
         dispatch(updateItem({reportId: reportId, item: item}));
         return;
       }}
@@ -237,7 +236,7 @@ const DataFilterModal = ({...props}) => {
           <AddBtn src={addHighLightIcon} onClick={onClick}/>
           <CommonDataGrid
             width='100%'
-            dataSource={highlightList}
+            dataSource={dataFiltering}
             onCellClick={(e) => {
               // 추가된 하이라이트 목록을 클릭 할 때 동작. -> 하이라이트 정보에 내용 출력.
               const rowData = _.cloneDeep(e.row ?
@@ -267,7 +266,7 @@ const DataFilterModal = ({...props}) => {
                 cssClass='dx-link'
                 icon={deleteReport}
                 visible={true}
-                onClick={deleteHighlightList}
+                onClick={deleteDataFilteringList}
                 hint={localizedString.deleteReport}
               />
             </Column>
@@ -282,8 +281,8 @@ const DataFilterModal = ({...props}) => {
             showField,
             measureNames,
             dimNames,
-            highlightList,
-            setHighlightList,
+            dataFiltering,
+            setDataFilteringList,
             setShowField,
             formData,
             setPage,
