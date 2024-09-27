@@ -201,7 +201,7 @@ const exportFile = (name, data, type, pickItem) => {
     return items;
   };
 
-  if (pickItem.type === 'pivot') {
+  if (pickItem?.type === 'pivot') {
     const newCurrentItem = filterdLayoutItem()
         .filter((item) => item.id === pickItem.id);
 

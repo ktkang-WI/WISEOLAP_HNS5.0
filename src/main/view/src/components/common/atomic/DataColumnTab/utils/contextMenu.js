@@ -6,11 +6,6 @@ import {selectCurrentReport} from 'redux/selector/ReportSelector';
 
 const measureSummaryType = [
   {
-    'text': localizedString.NoFunction,
-    'value': 'NOFUNC',
-    'type': 'SummaryType'
-  },
-  {
     'text': localizedString.count,
     'value': 'COUNT',
     'type': 'SummaryType'
