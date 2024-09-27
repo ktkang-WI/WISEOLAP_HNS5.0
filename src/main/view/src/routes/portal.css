@@ -1,0 +1,53 @@
+* {
+  --round_box: #f3f4f8
+}
+
+.portal {
+  background: white;
+}
+
+.portal .wise-filter {
+  border: none;
+  background: var(--round_box);
+  border-radius: 25px !important;
+  padding: 20px 25px !important;
+  margin-bottom: 30px;
+}
+
+.portal .board > div {
+  background: white;
+}
+
+.portal .flexlayout__tabset, .portal .flexlayout__tab, .portal .flexlayout__tab > div {
+  background: var(--round_box);
+  border: none !important;
+}
+
+.portal .flexlayout__tab, .portal .flexlayout__tabset {
+  border-radius: 25px !important;
+}
+
+.portal .flexlayout__tab_button_content span {
+  font-weight: bold;
+}
+
+.portal .flexlayout__splitter {
+  display: none;
+}
+
+.portal .wise-filter .filter-label {
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.portal .wise-filter input {
+  font-size: 20px !important;
+  text-align: center;
+}
+
+.portal .wise-filter .dx-texteditor.dx-editor-outlined {
+  border: none !important;
+  border-radius: 50px;
+  background-color: #dddee6;
+}

@@ -34,9 +34,10 @@ import attributeListActiveIcon
 import reloadImg from 'assets/image/icon/button/reset.png';
 import ReportTabs from 'components/common/atomic/ReportTab/organism/ReportTabs';
 import LinkSlice from 'redux/modules/LinkSlice';
-import ParameterSlice from 'redux/modules/ParameterSlice';
-import {selectRootParameter} from 'redux/selector/ParameterSelector';
-import store from 'redux/modules';
+// import ParameterSlice from 'redux/modules/ParameterSlice';
+// import {selectRootParameter} from 'redux/selector/ParameterSelector';
+// import store from 'redux/modules';
+
 
 
 const theme = getTheme();
@@ -55,7 +56,6 @@ const LinkViewerContent = ({children}) => {
   const report = useSelector(selectCurrentReport);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
   const [reportListOpened, setReportListOpened] = useState(true);
-  const {setParameterValues} = ParameterSlice.actions;
   const [reportData, setReportData] = useState();
   const useAttributeList = report.options.reportType == 'AdHoc';
   const {loadReport, querySearch} = useReportSave();
@@ -68,6 +68,7 @@ const LinkViewerContent = ({children}) => {
   const params = new URLSearchParams(window.location.search);
   const showReportList = params.get('srl') || false;
   const noHeader = params.get('no_header') || false;
+  const noFilter = params.get('no_filter') || false;
 
   const buttons = [{
     icon: reportListIcon,
@@ -112,37 +113,8 @@ const LinkViewerContent = ({children}) => {
   document.title = report.options.reportNm;
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
-
-    const applyParameters = (reportId) => {
-      const paramFuncs = [];
-      const paramValues = JSON.parse(params.get('param_values') || '{}');
-
-      for (const key in paramValues) {
-        if (paramValues[key]) {
-          paramFuncs.push(new Promise((resolve, reject) => {
-            const itv = setInterval(() => {
-              const parameters = selectRootParameter(store.getState());
-              const finished = parameters.filterSearchComplete.includes(key);
-
-              if (finished) {
-                clearInterval(itv);
-                dispatch(setParameterValues({
-                  reportId, values: {[key]: {
-                    ...parameters.values[key],
-                    value: paramValues[key]
-                  }}
-                }));
-                resolve();
-              }
-            }, 500);
-          }));
-        }
-      }
-
-      return Promise.all(paramFuncs);
-    };
+    const reportId = params.get('reportId');
 
     if (token) {
       models.Report.retrieveLinkReport(token).then((response) => {
@@ -152,7 +124,7 @@ const LinkViewerContent = ({children}) => {
             .then(async ({data}) => {
               dispatch(setDesignerMode(loadReportType));
               await loadReport(data);
-              if (response.data.promptYn === 'Y') {
+              if (response.data.promptYn === 'Y' || noFilter) {
                 querySearch();
               }
             }).catch((e) => {
@@ -172,6 +144,23 @@ const LinkViewerContent = ({children}) => {
       }).catch((e) => {
         console.log(e);
       });
+      return;
+    }
+
+    if (reportId) {
+      const reportType = params.get('reportType');
+
+      models.Report.getReportById(
+          reportId).then(async ({data}) => {
+        dispatch(setDesignerMode(reportType));
+        await loadReport(data);
+
+        if (data.promptYn === 'Y' || noFilter) {
+          querySearch();
+        }
+      }).catch((e) => {
+        console.log(e);
+      });
     }
   }, []);
 
@@ -186,7 +175,10 @@ const LinkViewerContent = ({children}) => {
       headerHeight={!noHeader ? theme.size.headerHeight : '0px'}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-        <FilterBar useSearchButton={true} buttons={buttons}/>
+        <FilterBar
+          visible={!noFilter}
+          useSearchButton={true}
+          buttons={buttons}/>
         <StyledWrapper>
           <CustomDrawer
             useExpandButton={false}
@@ -195,6 +187,9 @@ const LinkViewerContent = ({children}) => {
             margin={'0px 0px 10px 10px'}
             render={() => <ReportTabs reportData={reportData}/>}
             visible={showReportList}
+            style={{
+              paddingTop: noFilter ? '10px' : '0px'
+            }}
           >
             <CustomDrawer
               useExpandButton={false}

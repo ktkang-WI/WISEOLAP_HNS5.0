@@ -3,10 +3,12 @@ import {getTheme} from 'config/theme';
 import ParamUtils from 'components/dataset/utils/ParamUtils';
 import useModal from 'hooks/useModal';
 import localizedString from 'config/localization';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
 const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
+  const filterHeight = isPortal() ? '45px' : theme.size.filterHeight;
   const index = isTo ? 1 : 0;
   let dateValue = '';
   const keyFormat = info.calendarKeyFormat;
@@ -136,7 +138,7 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
       type="date"
       focusStateEnabled={false}
       hoverStateEnabled={false}
-      height={theme.size.filterHeight}
+      height={filterHeight}
       value={dateValue}
       width={width}
       displayFormat={captionFormat}

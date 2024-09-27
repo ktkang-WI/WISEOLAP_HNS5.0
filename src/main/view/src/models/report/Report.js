@@ -76,6 +76,13 @@ export const getList = async (reportType, editMode) => {
 
   return res;
 };
+
+export const getMdCode = async () => {
+  const res = axios.post(path + '/md-code');
+
+  return res;
+};
+
 /**
  * 보고서 저장 / 새로운 보고서를 저장 합니다.(insert)
  * @param {JSON} param

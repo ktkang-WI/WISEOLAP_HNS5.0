@@ -65,7 +65,7 @@ public class CoordinateChartDataMaker implements ItemDataMaker {
         sb.setLength(0);
 
         for (Dimension dimension : dimensions) {
-            sb.append(row.get(dimension.getName())).append("-");
+            sb.append(row.get(dimension.getName())).append(" - ");
         }
 
         yRange = yRange.max(new BigDecimal(row.get(yName).toString()).abs());

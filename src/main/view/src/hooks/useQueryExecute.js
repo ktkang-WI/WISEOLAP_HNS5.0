@@ -651,10 +651,32 @@ const useQueryExecute = () => {
   const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
 
-    const setDefaultValue = (name, value) => {
+    const setDefaultValue = async (name, value) => {
+      const params = new URLSearchParams(window.location.search);
+      const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+      let _value = value;
+      if (paramValues[name]) {
+        _value = paramValues[name];
+      }
+
+      if (value.includes('[MD_CODE]')) {
+        const res = await models.Report.getMdCode();
+        const mdCode = res?.data || '';
+        _value = [];
+
+        value.map((v) => {
+          if (v == '[MD_CODE]') {
+            _value.push(mdCode);
+          } else {
+            _value.push(v);
+          }
+        });
+      }
+
       dispatch(setParameterValues({
         reportId, values: {[name]: {
-          value
+          value: _value
         }}
       }));
       dispatch(filterSearchComplete({reportId, id: name}));
@@ -681,7 +703,20 @@ const useQueryExecute = () => {
               executeParameterDefaultValueQuery(param);
             })());
           }
-          executeListParameter(param, promises).then((data) => {
+          executeListParameter(param, promises).then(async (data) => {
+            const params = new URLSearchParams(window.location.search);
+            const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+            if (paramValues[param.name]) {
+              data.value = paramValues[param.name];
+            }
+
+            if (data.value[0] == '[MD_CODE]') {
+              const res = await models.Report.getMdCode();
+              const mdCode = res?.data || '';
+              data.value[0] = mdCode;
+            }
+
             if (data) {
               setValues(param.name, data);
             }

@@ -118,16 +118,16 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
       // 대상 차원이 차원 그룹일 경우
       filterTools.setMasterFilterData(target.series.name, () => {
         if (interactiveOption.mode == 'single') {
-          if (target.series.isSelected()) {
+          if (target?.series?.isSelected()) {
             component.clearSelection();
             return;
           }
           component.clearSelection();
         }
-        if (target.series.isSelected()) {
-          target.series.clearSelection();
+        if (target?.series?.isSelected()) {
+          target?.series?.clearSelection();
         } else {
-          target.series.select();
+          target?.series?.select();
         }
       });
     }

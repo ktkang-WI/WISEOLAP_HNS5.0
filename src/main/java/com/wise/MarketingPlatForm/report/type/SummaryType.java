@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public enum SummaryType {
     SUM("SUM"), COUNT("COUNT"), COUNTDISTINCT("COUNTDISTINCT"), MIN("MIN"), MAX("MAX"), AVERAGE("AVERAGE"),
-    CUSTOM("CUSTOM"), AVG("AVG");
+    CUSTOM("CUSTOM"), AVG("AVG"), NOFUNC("NOFUNC");
 
     private final String symbol;
 

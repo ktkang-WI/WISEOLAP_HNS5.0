@@ -39,6 +39,7 @@
   "ignoreMasterFilter": "Ignore Master Filter",
   "targetDimension": "Target Dimension",
   "dimensionGroup": "Dimension Group",
+  "NoFunction": "No Function",
   "count": "Count",
   "distinctCount": "Dinstinct Count",
   "sum": "Sum",
