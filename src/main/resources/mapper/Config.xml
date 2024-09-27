@@ -177,7 +177,9 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
-        ) REPORTANDFOLDER
+        ) REPORTANDFOLDER ORDER BY
+            REPORTANDFOLDER.TYPE,
+            REPORTANDFOLDER.ORDINAL
     </select>
 
     <update id="updateMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
