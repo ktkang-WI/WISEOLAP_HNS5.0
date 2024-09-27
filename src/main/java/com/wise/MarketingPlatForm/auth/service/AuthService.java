@@ -170,6 +170,7 @@ public class AuthService {
      */
     public UserDTO getUserById(String userId) {
         UserEntity entity = authDAO.selectUserById(userId);
+        List<String> mdCodes = authDAO.selectMdCode(userId);
 
         if (entity == null) return null;
         // TODO: 추후 필요한 정보 있으면 추가
@@ -181,7 +182,7 @@ public class AuthService {
                 .password(entity.getPassword())
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
                 .userNm(entity.getUserNm())
-                .mdCode(entity.getMdCode())
+                .mdCode(String.join(", ", mdCodes))
                 .build();
     }
 
