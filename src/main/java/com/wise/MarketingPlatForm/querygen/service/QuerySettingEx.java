@@ -36,6 +36,7 @@ public class QuerySettingEx {
 	
 	String owner = "";
 	String itemType = "";
+	String SUBQValuesString = "";
 
 	private ArrayList<Relation> loDtBackRel = new ArrayList<Relation>();
 	public String vbCrLf = "\r\n";
@@ -1267,8 +1268,12 @@ public class QuerySettingEx {
 								oSelClauseColl.add("Count" + "(Distinct " + sColExpress + ")" + " AS " + oColCaption);
 							else if (oRows.get(0).getMEA_AGG().equalsIgnoreCase(""))
 								oSelClauseColl.add("(" + sColExpress + ")" + " AS " + oColCaption);
+							// 240927 hmj 홈앤쇼핑 sum over() 구현을 위한 서브쿼리 분기 추가 - 계산된 컬럼 start
 							else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("NOFUNC")) 
 								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
+							else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("SUBQ")) 
+								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
+							// 240927 hmj 홈앤쇼핑 sum over() 구현을 위한 서브쿼리 분기 추가 - 계산된 컬럼 end
 						  else {
 								oSelClauseColl.add(
 									oRows.get(0).getMEA_AGG() + "(" + sColExpress + ")" + " AS " + oColCaption);
@@ -1279,10 +1284,12 @@ public class QuerySettingEx {
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
 							oSelClauseColl.add(oRows.get(0).getMEA_AGG() + "(" + oColNm.replaceAll("\"", "") + ")"
 									+ " AS " + oColCaption);
+						// 240927 hmj 홈앤쇼핑 sum over() 구현을 위한 서브쿼리 분기 추가 - 단일 컬럼 start
 						} else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("NOFUNC")) {
 							String oTblNm = oRows.get(0).getMEA_TBL_NM();
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
 							oSelClauseColl.add(oTblNm + "." + oColNm + " AS " + oColCaption);
+						// 240927 hmj 홈앤쇼핑 sum over() 구현을 위한 서브쿼리 분기 추가 - 단일 컬럼 end
 					 	} else {
 							String oTblNm = oRows.get(0).getMEA_TBL_NM();
 							String oColNm = ColumnAliasNm(aDBMSType, oRows.get(0).getMEA_COL_NM());
@@ -1870,6 +1877,7 @@ public class QuerySettingEx {
 		}
 
 		if (!oMeaGrpColl.isEmpty()) {
+			// 240927
 			for (String sMeaGrpNm : oMeaGrpColl) {
 				String sMeaTblNm = null;
 				ArrayList<SelectCubeMeasure> oMeaRows = new ArrayList<SelectCubeMeasure>();
@@ -2136,12 +2144,24 @@ public class QuerySettingEx {
 					System.out.println(selhie.toString());
 				}
 				oSelClauseColl = CubeSelClause(aDBMSType, aDtSel, aDtSelHIe, aDtSelMea, sMeaGrpNm, oDtTblAlias);
+
+				ArrayList<String> SUBQValues = new ArrayList<>();
+				for (SelectCubeMeasure oDr : aDtSelMea) {
+					if (oDr.getMEA_AGG().equals("SUBQ")) {
+						String targetValue = oDr.getCOL_EXPRESS() + " AS \"" + oDr.getMEA_CAPTION() + "\"";
+						if (oSelClauseColl.contains(targetValue)) {
+							oSelClauseColl.remove(targetValue);
+							SUBQValues.add(targetValue);
+						}
+					}
+				}
+
 				for (String s : oSelClauseColl) {
 					System.out.println(s);
 				}
 
 				oQueryGen = new QueryGen();
-
+				
 				oQueryGen.SelectColumns(oSelClauseColl);
 				sSelClauseScript = oQueryGen.BuildQuerySelect();
 
@@ -2464,7 +2484,9 @@ public class QuerySettingEx {
 					sQuery = sQuery + vbCrLf + sOrderByClauseScript;
 
 				oUnionClauseColl.add(sQuery);
+				SUBQValuesString = SUBQValues.toString();
 			}
+			
 			if (oUnionClauseColl.size() > 1) {
 				sQuery = "";
 
@@ -2906,6 +2928,20 @@ public class QuerySettingEx {
 			System.out.println("REL ERROR" + vbCrLf + sQuery);
 			return "REL ERROR";
 		} else
+		System.out.println("HS CUSSTOM SUBQ");
+		
+		String isSubQ = "N";
+		for(SelectCubeMeasure oDr : aDtSelMea) {
+			if(oDr.getMEA_AGG().equals("SUBQ")) {
+				isSubQ = "Y";
+			}
+		}
+
+		if(isSubQ == "Y") {
+			String cleanedValue = SUBQValuesString.replaceAll("\\[|\\]", "");
+			sQuery = "SELECT MST.*,"+ cleanedValue +" FROM (" + sQuery + ") MST ORDER BY 6";
+		}
+
 			return sQuery;
 
 	}
