@@ -4,9 +4,10 @@ import LoadingSlice from 'redux/modules/LoadingSlice';
 import {getConfig} from 'config/config';
 
 const contextRoot =
-process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
-let isCancel = false;
+  process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
+
 export let requestPath = [];
+
 const acceptDuple = [
   '/dataset/param-list-items',
   '/report/item-data'
@@ -17,7 +18,6 @@ export const abortController = (controllers, session) => {
   });
 
   if (!controllers || !controllers[session]) return;
-  isCancel = true;
   requestPath = requestPath.filter((path) => path !== session);
   delete controllers[session];
 };
@@ -62,23 +62,20 @@ export default function useAxiosSetting() {
         return response;
       },
       (error) => {
-        dispatch(actions.endJob());
+        dispatch(actions.endJobForce());
 
         if (process.env.NODE_ENV != 'development' &&
           error?.response?.status == 401) {
           location.href = error.config.baseURL;
         }
-        return error;
+        return Promise.reject(error);
       }
   );
 
   axios.interceptors.request.use((config) => {
     const requestKey = config.url;
     const controller = createController(requestKey);
-    if (requestKey === '/report/item-data' && isCancel) {
-      abortController(controllers, requestKey);
-      isCancel = false;
-    }
+
     if (!controller) return config;
     config.signal = controller.signal;
 
