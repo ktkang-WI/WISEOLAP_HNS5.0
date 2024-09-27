@@ -1,6 +1,6 @@
 .drawer {
   position: fixed;
-  right: 0;
+  right: -10px;
   top: 0;
   width: 300px;
   height: 100%;
@@ -10,28 +10,32 @@
   transition: transform 0.3s ease;
   text-align: left;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .menu-fld {
   cursor: pointer;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 10px 10px;
+  font-size: 15px;
+  font-weight: 500;
   font-family: 'Noto Sans KR';
   /* border: 1px solid #bfbfbf; */
-  border-radius: 20px;
-  margin: 5px 10px;
   box-sizing: border-box;
-  width: 280px;
+  width: 300px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.menu-fld img{
+  margin-right: 3px;
 }
 
 .menu-fld::after {
   content: '';
   float: right;
   position: relative;
-  height: 15px;
-  width: 15px;
-  right: 20px;
+  height: 8px;
+  width: 12px;
+  right: 15px;
   top: 7px;
   opacity: 0.3;
   background: url('../img/select_ico.png') no-repeat;
@@ -39,38 +43,30 @@
 }
 
 .is-open .menu-fld::after {
-  content: '';
-  float: right;
-  position: relative;
-  height: 15px;
-  width: 15px;
-  right: 20px;
-  top: 7px;
-  background: url('../img/select_ico.png') no-repeat;
-  background-position: center;
   transform: rotate(180deg);
 }
 
 .menu-report {
   cursor: pointer;
-  padding: 15px 15px;
-  font-size: 15px;
+  padding: 7px 15px;
+  padding-left: 30px;
+  font-size: 14px;
   font-weight: 500;
   font-family: 'Noto Sans KR';
   border-bottom: 1px solid #d9d9d9;
-  margin: 0px 15px;
+  background: #f5f5f5;
   box-sizing: border-box;
   display: block;
-  width: 270px;
+  width: 300px;
 }
 
 .menu-report:hover {
-  background-color: #f0f0f0;
+  background-color: #efefef;
 }
 
-.menu-report:last-child {
+/* .menu-report:last-child {
   border-bottom: none;
-}
+} */
 
 .drawer.open {
   transform: translateX(0);
