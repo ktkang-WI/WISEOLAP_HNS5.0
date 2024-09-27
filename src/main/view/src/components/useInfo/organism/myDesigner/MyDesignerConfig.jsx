@@ -86,7 +86,7 @@ const MyDesignerConfig = () => {
   const onClickAllReset = () => {
     // reset -> 전부 null로
     confirm(localizedString.resetAllConfirmMsg, () => {
-      setConfig({});
+      setConfig({operation: 'clearAll'});
       alert(localizedString.resetSuccess);
     });
   };
