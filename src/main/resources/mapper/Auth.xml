@@ -46,12 +46,13 @@
 <!-- Query -->
 
   <select id="selectUserById" resultMap="User">
-    SELECT um.*, MD_CD
-    FROM dm_d_oprt_md_gp md
-    LEFT JOIN USER_MSTR um ON um.USER_ID = md.md_user_id
-    WHERE um.USER_ID = #{userId}
-      AND um.DEL_YN = 'N'
-    <!-- SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N' -->
+    SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+  </select>
+
+  <select id="selectMdCode" resultType="java.lang.String">
+    SELECT DISTINCT md_cd 
+    FROM dm_d_oprt_md_gp
+    WHERE md_user_id = #{userId}
   </select>
 
   <select id="selectGroupMstrById" resultMap="GroupMstrEntity">

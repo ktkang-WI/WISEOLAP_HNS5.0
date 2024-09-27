@@ -662,11 +662,11 @@ const useQueryExecute = () => {
 
       if (value.includes('[MD_CODE]')) {
         const res = await models.Report.getMdCode();
-        const mdCode = res?.data;
+        const mdCode = res?.data || '';
         _value = [];
 
         value.map((v) => {
-          if (v == '[MD_CODE]' && mdCode) {
+          if (v == '[MD_CODE]') {
             _value.push(mdCode);
           } else {
             _value.push(v);
@@ -713,10 +713,8 @@ const useQueryExecute = () => {
 
             if (data.value[0] == '[MD_CODE]') {
               const res = await models.Report.getMdCode();
-              const mdCode = res?.data;
-              if (mdCode) {
-                data.value[0] = mdCode;
-              }
+              const mdCode = res?.data || '';
+              data.value[0] = mdCode;
             }
 
             if (data) {
