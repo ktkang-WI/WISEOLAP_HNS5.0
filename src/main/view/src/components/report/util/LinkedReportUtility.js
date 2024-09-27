@@ -38,11 +38,6 @@ export const connectLinkedReport = (param, closeWindow, showReportList) => {
         (showReportList ? '&srl=true' : '');
       const newWindow = window.open(urlString, '_blank');
       newWindow.focus();
-      if (newWindow) {
-        if (closeWindow) {
-          window.close();
-        }
-      }
     }).catch((error) => {
       console.error('Error sending link report:', error);
     });
