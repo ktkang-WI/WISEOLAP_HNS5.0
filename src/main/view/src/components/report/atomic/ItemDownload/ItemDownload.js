@@ -1,3 +1,4 @@
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import ItemType from 'components/report/item/util/ItemType';
 import {exportToFile, Type} from 'components/utils/DataExport';
 import models from 'models';
@@ -60,8 +61,11 @@ export class ItemDownload {
     return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
       if (type == Type.IMG && isImgDownloadable) return <></>;
       return (
-        <button
+        <CommonButton
           key={type}
+          type={'whiteRound'}
+          width='100%'
+          height='20px'
           onClick={() =>
             this.#exportFile(
                 id,
@@ -71,7 +75,7 @@ export class ItemDownload {
           }
         >
           {type.toLowerCase()}
-        </button>
+        </CommonButton>
       );
     });
   };

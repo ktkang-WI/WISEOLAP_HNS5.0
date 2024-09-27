@@ -237,8 +237,18 @@ const useQueryExecute = () => {
 
       switch (layout) {
         case 'chart_pivot':
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
         case 'chart':
           await getAdhocItemData(chartItem);
@@ -247,8 +257,18 @@ const useQueryExecute = () => {
           await getAdhocItemData(pivotItem);
           break;
         default:
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
       }
     } catch (error) {
@@ -308,7 +328,9 @@ const useQueryExecute = () => {
       }
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
     }
   };
 
