@@ -81,7 +81,8 @@ const FavoritModal = ({onSubmit, data, ...props}) => {
 
               report = makeParameter(param);
             }}
-            onSubmit={onSubmit}/>
+            onSubmit={() => onSubmit(report)}
+            usingPoint={'myPage'}/>
         );
       case MyDesignerConstance['DEFAULT_PALETTE']:
       case MyDesignerConstance['DEFAULT_ITEM']:
