@@ -296,9 +296,10 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        if (nullDataCheck(tempItem)) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
+        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
+        // if (nullDataCheck(tempItem)) {
+        // alert(`${item.meta.name}${localizedString.noneData}`);
+        // }
 
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
@@ -520,6 +521,19 @@ const useQueryExecute = () => {
         }, []);
 
         await Promise.all(promises);
+
+        // 조회 시 nullData alert 창 한번만 나오도록 수정
+        const nullDataItems = rootItem.items.reduce((acc, item) => {
+          if (nullDataCheck(item)) {
+            acc.push(item.meta.name);
+          }
+          return acc;
+        }, []);
+
+        if (nullDataItems.length > 0) {
+          const itemNames = nullDataItems.join('", "');
+          alert(`"${itemNames}" ${localizedString.noneData}`);
+        }
 
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
