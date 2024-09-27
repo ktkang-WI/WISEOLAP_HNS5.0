@@ -38,8 +38,6 @@ import LinkSlice from 'redux/modules/LinkSlice';
 // import {selectRootParameter} from 'redux/selector/ParameterSelector';
 // import store from 'redux/modules';
 
-
-
 const theme = getTheme();
 
 const StyledWrapper = styled.div`
