@@ -85,6 +85,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
   };
 
   const getDesignerSetting = (item) => {
+    if (data.operation) {
+      setConfig({});
+      return;
+    }
     const value =
         item.id.requiredNm ? data[item.id.requiredNm] : data[item.id];
 
