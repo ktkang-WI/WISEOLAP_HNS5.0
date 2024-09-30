@@ -1,6 +1,6 @@
-.drawer {
+.portal .drawer {
   position: fixed;
-  right: -10px;
+  right: -20px;
   top: 0;
   width: 300px;
   height: 100%;
@@ -13,7 +13,7 @@
   overflow-x: hidden;
 }
 
-.menu-fld {
+.portal .menu-fld {
   cursor: pointer;
   padding: 10px 10px;
   font-size: 15px;
@@ -25,31 +25,30 @@
   border-bottom: 1px solid #d9d9d9;
 }
 
-.menu-fld img{
+.portal .menu-fld img{
   margin-right: 3px;
 }
 
-.menu-fld::after {
+.portal .menu-fld::after {
   content: '';
   float: right;
   position: relative;
   height: 8px;
   width: 12px;
-  right: 15px;
+  right: 25px;
   top: 7px;
   opacity: 0.3;
   background: url('../img/select_ico.png') no-repeat;
   background-position: center;
 }
 
-.is-open .menu-fld::after {
+.portal .is-open .menu-fld::after {
   transform: rotate(180deg);
 }
 
-.menu-report {
+.portal .menu-report {
   cursor: pointer;
-  padding: 7px 15px;
-  padding-left: 30px;
+  padding: 7px 30px;
   font-size: 14px;
   font-weight: 500;
   font-family: 'Noto Sans KR';
@@ -68,26 +67,21 @@
   border-bottom: none;
 } */
 
-.drawer.open {
+.portal .drawer.open {
   transform: translateX(0);
   transition: transform 0.3s ease;
 }
 
-.drawer ul {
+.portal .drawer ul {
   padding-left: 20px;
   list-style: none;
 }
 
-.drawer ul li {
+.portal .drawer ul li {
   padding: 10px 0;
 }
 
-.drawer ul li:hover {
-  cursor: pointer;
-  background-color: #e0e0e0;
-}
-
-.backdrop {
+.portal .backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -97,6 +91,6 @@
   z-index: 1; /* Drawer보다 낮게 */
 }
 
-.drawer {
+.portal .drawer {
   z-index: 2; /* backdrop보다 높게 */
 }

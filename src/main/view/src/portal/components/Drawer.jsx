@@ -30,7 +30,7 @@ const DrawerMenu = ({data}) => {
 
       {isOpen && <div className="backdrop" onClick={closeDrawer}></div>}
 
-      <div className={`custom-scrollbar drawer ${isOpen ? 'open' : ''}`}>
+      <div className={`drawer ${isOpen ? 'open' : ''}`}>
         {
           data.map((fld) => {
             if (fld.reports.length == 0) return null;
