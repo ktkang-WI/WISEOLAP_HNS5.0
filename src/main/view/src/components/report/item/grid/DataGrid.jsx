@@ -172,7 +172,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         .concat(e.currentSelectedRowKeys).map((key) => {
           const d = [];
           dataGridConfig.dataSource.columns.map((col) => {
-            if (col.fieldType == 'DIM') {
+            if (col.type == 'DIM') {
               d.push(key[col.name]);
             }
           });
@@ -186,7 +186,7 @@ const DataGrid = ({setItemExports, id, item}) => {
   const onOptionChanged = (e) => {
     const options = dataGridConfig.pagingOption;
     const isPaging = config.paging.pagination.isOk;
-    console.log(e);
+
     const paging = (e.fullName === 'paging.pageIndex' && isPaging);
     const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
     if (paging) {
@@ -251,7 +251,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           </div>
         </Wrapper>
       );
-    } else if (column.fieldType === 'MEA') {
+    } else if (column.type === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
       e.value = formatNumber(displayValue, column.format, labelSuffix);
       return e.value;
@@ -310,7 +310,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
-          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
+          dataType={column.type === 'MEA' ? 'number' : 'string'}
           cellRender={(e) => cellRender(e, column, meta)}
           width={column.detailSetting === 'bar' ? '500px' : undefined}
         />
