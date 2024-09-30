@@ -15,11 +15,12 @@ const Portal = () => {
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [cardData, setCardData] = useState([]);
-  const avFolders = new Set([2282, 2283, 2284, 2285, 2286, 2287, 2288, 2290]);
+  const avFolders =
+    new Set([2282, 2283, 2284, 2285, 2286, 2287, 2288, 2290]);
 
   useEffect(() => {
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
-      if (data.status == 200) {
+      if (data.status == 200 && data.data) {
         setCardData(data.data);
       }
     });
@@ -48,7 +49,6 @@ const Portal = () => {
           }
         });
 
-        // 3. 객체 맵을 다시 배열로 변환하여 정렬
         const result = Object.values(folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
@@ -66,8 +66,6 @@ const Portal = () => {
           }
           return a.id - b.id;
         });
-
-        console.log(result);
 
         setReportList(result);
       }
@@ -88,7 +86,7 @@ const Portal = () => {
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
-        description={report.reportDesc}
+        report={report}
         icon={reportIcon}
       />
     ));
