@@ -317,15 +317,18 @@ const useQueryExecute = () => {
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
         // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
-        // if (nullDataCheck(tempItem)) {
-        // alert(`${item.meta.name}${localizedString.noneData}`);
-        // }
+        if (nullDataCheck(tempItem)) {
+          // alert(`${item.meta.name}${localizedString.noneData}`);
+          return tempItem.meta.name;
+        }
 
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
         }
 
         dispatch(updateItem({reportId, item: tempItem}));
+
+        return tempItem;
       }
     } catch (error) {
       console.error(error);
@@ -542,20 +545,10 @@ const useQueryExecute = () => {
           return acc;
         }, []);
 
-        await Promise.all(promises);
+        await Promise.all(promises).then((items) => {
+          nullDataAlert(items);
+        });
 
-        // 조회 시 nullData alert 창 한번만 나오도록 수정
-        const nullDataItems = rootItem.items.reduce((acc, item) => {
-          if (nullDataCheck(item)) {
-            acc.push(item.meta.name);
-          }
-          return acc;
-        }, []);
-
-        if (nullDataItems.length > 0) {
-          const itemNames = nullDataItems.join('", "');
-          alert(`"${itemNames}" ${localizedString.noneData}`);
-        }
 
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
@@ -820,6 +813,21 @@ const useQueryExecute = () => {
          `${localizedString.requiredFieldNotExist}`);
       }
     });
+  };
+
+  const nullDataAlert = (items) => {
+    // 조회 시 nullData alert 창 한번만 나오도록 수정
+    const nullDataItems = items.reduce((acc, item) => {
+      if (nullDataCheck(item)) {
+        acc.push(item.meta.name);
+      }
+      return acc;
+    }, []);
+
+    if (nullDataItems.length > 0) {
+      const itemNames = nullDataItems.join('", "');
+      alert(`"${itemNames}" ${localizedString.noneData}`);
+    }
   };
 
   return {
