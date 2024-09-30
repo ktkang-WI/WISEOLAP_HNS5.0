@@ -122,7 +122,7 @@ public class PieChartDataMaker implements ItemDataMaker {
                     String name = iter.next();
                     Map<String, String> seriesMeasures = new HashMap<>();
 
-                    seriesMeasures.put("summaryName", name + "-" + measure.getSummaryName());
+                    seriesMeasures.put("summaryName", name + " - " + measure.getSummaryName());
                     seriesMeasures.put("caption", name + "-" + caption);
                     seriesMeasureNames.add(seriesMeasures);
                 }

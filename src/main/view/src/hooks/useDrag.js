@@ -277,7 +277,14 @@ const useDrag = () => {
               sourceField,
               dest.droppableId);
 
+          if (typeof tempField == 'string') {
+            alert(tempField);
+            dispatch(setItemField({reportId, dataField}));
+            return;
+          }
+
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
+
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
@@ -313,6 +320,11 @@ const useDrag = () => {
               dataFieldOption,
               sourceField[0],
               dest.droppableId);
+
+          if (typeof sourceField == 'string') {
+            alert(sourceField);
+            return;
+          }
 
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
