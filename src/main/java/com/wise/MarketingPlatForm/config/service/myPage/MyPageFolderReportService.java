@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.config.service.myPage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,9 @@ public class MyPageFolderReportService {
 
         reportListModelList.add(myPageFolderReportModel);
     }
-        
+    int allDataLen = myPageFolderReportDTO.size();    
     // 개인보고서 조회 (보고서 정보에 사용.)
-    result.put("folder", myPageFolderReportDTO.subList(0, fldCount));
+    result.put("folder", myPageFolderReportDTO.subList(allDataLen-fldCount, allDataLen));
     result.put("folderReport", reportListModelList);
 
     return result;

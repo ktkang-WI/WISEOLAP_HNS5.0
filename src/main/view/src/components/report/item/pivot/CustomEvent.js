@@ -337,7 +337,9 @@ const useCustomEvent = () => {
         columns.push(...field.row);
         columns.push(...field.measure.map((mea) => ({
           name: mea.summaryType + '_' + mea.name,
-          caption: mea.caption
+          caption: mea.caption,
+          type: mea.type,
+          format: mea.format
         })));
 
         // remoteOpertion일 경우에만 적용

@@ -14,17 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
+import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlParser;
+import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 
 @Component
 @WebFilter("/*")
 public class LoginFilter implements Filter{
     Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private AuthService authService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -65,10 +73,37 @@ public class LoginFilter implements Filter{
             }
         }
 
+        String token = request.getParameter("token");
+        if (token != null && !token.isEmpty()) {
+            TokenStorage<ReportTokenDTO> tokenStorage = new TokenStorage<>("report", ReportTokenDTO.class);
+
+            ReportTokenDTO tokenDTO = tokenStorage.getValue(token);
+
+            userDTO = authService.getUserById(tokenDTO.getUserId());
+
+            SessionUtility.setSessionUser(request, userDTO);
+        }
+
+        String userId = request.getParameter("userId");
+
+        try {
+            if (userId != null && !userId.isEmpty()) {
+                userDTO = authService.getUserById(userId);
+    
+                SessionUtility.setSessionUser(request, userDTO);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            log.error("failed login user === > user ID: " + userId);
+            e.printStackTrace();
+        }
+
+
         if (!useFilter) {
             chain.doFilter(request, response);
             return;
         }
+
         // 로그인(contetxtRoot) 진입 시 동작
         if (request.getRequestURI().equals(request.getContextPath() + "/")) {
             if (userDTO != null) {

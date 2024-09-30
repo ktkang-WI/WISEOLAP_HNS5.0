@@ -8,6 +8,7 @@ import Login from './Login';
 import Register from 'components/login/organisms/Register';
 import SignIn from 'components/login/organisms/SignIn';
 import Spreadsheet from 'components/designer/Spreadsheet';
+import Portal from 'portal';
 import UserGroupManagement
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import {
@@ -116,6 +117,10 @@ const router = createBrowserRouter([
         element: <Spreadsheet/>
       }
     ]
+  },
+  {
+    path: contextPath + '/portal',
+    element: <Portal/>
   },
   {
     path: contextPath + '/viewer',

@@ -237,8 +237,18 @@ const useQueryExecute = () => {
 
       switch (layout) {
         case 'chart_pivot':
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
         case 'chart':
           await getAdhocItemData(chartItem);
@@ -247,8 +257,18 @@ const useQueryExecute = () => {
           await getAdhocItemData(pivotItem);
           break;
         default:
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
       }
     } catch (error) {
@@ -296,9 +316,10 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        if (nullDataCheck(tempItem)) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
+        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
+        // if (nullDataCheck(tempItem)) {
+        // alert(`${item.meta.name}${localizedString.noneData}`);
+        // }
 
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
@@ -308,7 +329,9 @@ const useQueryExecute = () => {
       }
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
     }
   };
 
@@ -521,6 +544,19 @@ const useQueryExecute = () => {
 
         await Promise.all(promises);
 
+        // 조회 시 nullData alert 창 한번만 나오도록 수정
+        const nullDataItems = rootItem.items.reduce((acc, item) => {
+          if (nullDataCheck(item)) {
+            acc.push(item.meta.name);
+          }
+          return acc;
+        }, []);
+
+        if (nullDataItems.length > 0) {
+          const itemNames = nullDataItems.join('", "');
+          alert(`"${itemNames}" ${localizedString.noneData}`);
+        }
+
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
         } else {
@@ -651,10 +687,32 @@ const useQueryExecute = () => {
   const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
 
-    const setDefaultValue = (name, value) => {
+    const setDefaultValue = async (name, value) => {
+      const params = new URLSearchParams(window.location.search);
+      const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+      let _value = value;
+      if (paramValues[name]) {
+        _value = paramValues[name];
+      }
+
+      if (value.includes('[MD_CODE]')) {
+        const res = await models.Report.getMdCode();
+        const mdCode = res?.data || '';
+        _value = [];
+
+        value.map((v) => {
+          if (v == '[MD_CODE]') {
+            _value.push(mdCode);
+          } else {
+            _value.push(v);
+          }
+        });
+      }
+
       dispatch(setParameterValues({
         reportId, values: {[name]: {
-          value
+          value: _value
         }}
       }));
       dispatch(filterSearchComplete({reportId, id: name}));
@@ -681,7 +739,20 @@ const useQueryExecute = () => {
               executeParameterDefaultValueQuery(param);
             })());
           }
-          executeListParameter(param, promises).then((data) => {
+          executeListParameter(param, promises).then(async (data) => {
+            const params = new URLSearchParams(window.location.search);
+            const paramValues = JSON.parse(params.get('param_values') || '{}');
+
+            if (paramValues[param.name]) {
+              data.value = paramValues[param.name];
+            }
+
+            if (data.value[0] == '[MD_CODE]') {
+              const res = await models.Report.getMdCode();
+              const mdCode = res?.data || '';
+              data.value[0] = mdCode;
+            }
+
             if (data) {
               setValues(param.name, data);
             }

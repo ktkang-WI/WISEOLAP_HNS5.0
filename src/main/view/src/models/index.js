@@ -17,6 +17,7 @@ import * as ReportFolderManagement
   from './config/reportFolderManagement/ReportFolderManagement';
 import * as MyPageConfig from './config/myPage/MyPageConfig';
 import * as Download from './report/Download';
+import * as Portal from './portal';
 
 export default {
   DataSource,
@@ -35,5 +36,6 @@ export default {
   Log,
   ReportFolderManagement,
   MyPageConfig,
-  Download
+  Download,
+  Portal
 };

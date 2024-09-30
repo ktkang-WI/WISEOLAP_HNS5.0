@@ -18,6 +18,7 @@ import {useSelector} from 'react-redux';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 import BubbleTooltip from '../../Common/Popover/BubbleTooltip';
+import meaFldImg from 'assets/image/icon/dataSource/folder.png';
 
 const theme = getTheme();
 
@@ -66,7 +67,8 @@ const iconMapper = {
   'DIM': dimImg,
   'FLD': fldImg,
   'DIMGRP': dimGrpImg,
-  'MEAGRP': meaGrpImg
+  'MEAGRP': meaGrpImg,
+  'MEAFLD': meaFldImg
 };
 
 const DataSourceFoldableList = ({dataset}) => {
@@ -99,7 +101,8 @@ const DataSourceFoldableList = ({dataset}) => {
   const itemRender = (item, index, snapshot) => {
     const shouldRenderClone =
       (item.uniqueName === snapshot.draggingFromThisWith ||
-        item.type === 'DIMGRP' || item.type === 'MEAGRP'
+        item.type === 'DIMGRP' || item.type === 'MEAGRP' ||
+        item.type === 'MEAFLD'
       );
     let description = '';
 

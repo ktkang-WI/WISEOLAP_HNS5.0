@@ -92,12 +92,12 @@ public class ChartDataMaker implements ItemDataMaker {
                     args.add(String.valueOf(row.get(name)));
                 }
 
-                String argStr = String.join("-", args);
+                String argStr = String.join(" - ", args);
                 dimensionGroupNames.add(argStr);
 
                 for (Measure measure : measures) {
                     StringBuilder sb = new StringBuilder(argStr);
-                    sb.append("-");
+                    sb.append(" - ");
                     sb.append(measure.getSummaryName());
 
                     row.put(sb.toString(), row.get(measure.getSummaryName()));
@@ -117,7 +117,7 @@ public class ChartDataMaker implements ItemDataMaker {
                 while (iter.hasNext()) {
                     final String name = iter.next();
                     final String SeriesName = isThisSizeOneRow ? 
-                        name : name + "-" + measure.getName();
+                        name : name + " - " + measure.getName();
 
                     Measure tempMeasure = Measure.builder()
                         .caption(SeriesName)
@@ -125,7 +125,7 @@ public class ChartDataMaker implements ItemDataMaker {
                         .expression(measure.getExpression())
                         .fieldId(measure.getFieldId())
                         .name(SeriesName)
-                        .summaryName(name + "-" + measure.getSummaryName())
+                        .summaryName(name + " - " + measure.getSummaryName())
                         .build();
                     seriesMeasureNames.add(tempMeasure);
                 }

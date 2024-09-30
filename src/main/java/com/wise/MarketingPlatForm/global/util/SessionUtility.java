@@ -45,8 +45,10 @@ public class SessionUtility {
     }
     
     private final static String SESSION_KEY = "WI_SESSION_USER";
+
     private final static String SSO_ID_KEY = "SSO_ID";
-    private final static int SESSION_TIME = 60 * 60 * 2;
+    private final static int SESSION_TIME = 60 * 60 * 8;
+
 
     private static UserDTO getSessionUser(HttpSession session) {
         return (UserDTO)session.getAttribute(SESSION_KEY);
