@@ -239,7 +239,7 @@
 		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
 		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
 			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
-			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.uniqueName
+			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.captionName
 		<!-- </if>
 		<if test="_databaseId == 'db2'">
 			SELECT DISTINCT T1.*
@@ -478,7 +478,7 @@
 			   , T2.MEA_DESC  as description
 		FROM	CUBE_MEA_MSTR T2
 		WHERE	T2.CUBE_ID = #{cubeId}
-		ORDER BY  T2.MEA_ORDINAL
+		ORDER BY  T2.MEA_ORDINAL, T2.MEA_CAPTION
 	</select>
 	<select id="selectCubeColumnInfomationList" parameterType="java.util.HashMap" resultType="com.wise.MarketingPlatForm.dataset.vo.CubeTableColumn">
 		SELECT  T2.DS_VIEW_ID AS dsViewId
