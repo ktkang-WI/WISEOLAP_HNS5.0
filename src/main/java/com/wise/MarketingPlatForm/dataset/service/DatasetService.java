@@ -479,12 +479,16 @@ public class DatasetService {
         List<String> defaultValue = listParameterDTO.getDefaultValue();
 
         if (!listParameterDTO.isUseAll() && !listParameterDTO.isMultiSelect()) {
-        	List newDefaultValues = new ArrayList<>();
-        	if (result.getRowData().size() > 0) {
-        		newDefaultValues.add(result.getRowData().get(0).get(listParameterDTO.getItemKey()));
-        	} else {
-        		newDefaultValues.add("");
-        	}
+        	List<String> newDefaultValues = new ArrayList<>();
+            try {
+                if (result.getRowData().size() > 0) {
+                    newDefaultValues.add(result.getRowData().get(0).get(listParameterDTO.getItemKey()).toString());
+                } else {
+                    newDefaultValues.add("");
+                }
+            } catch (Exception e) {
+                newDefaultValues.add("");
+            }
         	defaultValue = newDefaultValues;
         }
 

@@ -25,10 +25,10 @@ const ListFilter = ({
   const generateCaptionText = (keys) => {
     if (!value) return '';
 
-    const keySet = new Set(keys);
+    const keySet = new Set(keys.map((key) => key + ''));
     const captionArr = [];
     for (const item of listItems) {
-      if (keySet.has(item.name)) {
+      if (keySet.has(item.name + '')) {
         captionArr.push(item.caption);
         keySet.delete(item.name);
       }
