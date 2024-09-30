@@ -16,8 +16,8 @@ const Portal = () => {
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [cardData, setCardData] = useState([]);
-  // const avFolders =
-  //   new Set([2353, 2355, 2351, 2349, 2345, 2348, 2358]);
+  const avFolders =
+    new Set([2353, 2355, 2351, 2349, 2345, 2348, 2358]);
 
   useEffect(() => {
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
@@ -33,7 +33,7 @@ const Portal = () => {
         const {publicReport} = data.data;
 
         const folderMap = publicReport.reduce((acc, curr) => {
-          if (curr.type === 'FOLDER') {
+          if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
