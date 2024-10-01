@@ -51,7 +51,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                         break;
                 }
             }
-
+            // TODO: 현재는 오라클 기준. 추후 다른 DB 추가 필요
             return "TO_DATE(\'" + value + "\', \'" + format.toUpperCase() + "\')";
         }
         return "\'" + value + "\'";
@@ -70,7 +70,7 @@ public class SqlQueryGenerator implements QueryGenerator {
                     result = getValue(param.getValues().get(0), dataType, format);
                 } else {
                     result = param.getExceptionValue();
-                } 
+                }
 
             } else if ("IN".equals(operation) || "NOT_IN".equals(operation)) {
                 if (validateValue(values, 0)) {
@@ -93,7 +93,8 @@ public class SqlQueryGenerator implements QueryGenerator {
                 }
             } else if ("BETWEEN".equals(operation)) {
                 if (validateValue(values, 0)) {
-                    result = getValue(param.getValues().get(0), dataType, format);;
+                    result = getValue(param.getValues().get(0), dataType, format);
+                    ;
                 } else {
                     result = param.getExceptionValue();
                 }

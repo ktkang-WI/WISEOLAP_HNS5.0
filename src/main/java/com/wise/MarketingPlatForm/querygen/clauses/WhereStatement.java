@@ -489,7 +489,8 @@ public class WhereStatement extends ArrayList<ArrayList<WhereClause>> {
                             format = "YYYYMMDD";
                             break;
                     }
-        
+                    
+                    // TODO: 현재는 오라클 기준. 추후 다른 DB 추가 필요
                     return "TO_DATE(\'" + someValue.toString() + "\', \'" + format.toUpperCase() + "\')";
             	}
             	else if(valuetype.equalsIgnoreCase("DBNull"))
