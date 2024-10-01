@@ -208,7 +208,7 @@ public class QueryGenAggregationUtil {
         whereCube.setVALUES(paramValueString);
         whereCube.setVALUES_CAPTION("");
         whereCube.setAGG("");
-        whereCube.setDATA_TYPE(columnInfo.getDataType());
+        whereCube.setDATA_TYPE(inCludeParam.getDataType());
         whereCube.setPARAM_YN("False");
         whereCube.setPARAM_NM("");
         whereCube.setTYPE(columnInfo.getColumnType().equalsIgnoreCase("dimension") ? "DIM":"MEA");

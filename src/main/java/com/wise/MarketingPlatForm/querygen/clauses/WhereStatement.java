@@ -468,7 +468,29 @@ public class WhereStatement extends ArrayList<ArrayList<WhereClause>> {
             	}
             	else if(valuetype.equalsIgnoreCase("DateTime"))
             	{
-            		FormattedValue = someValue.toString();
+                    String format = "";
+                    switch (someValue.toString().length()) {
+                        case 4:
+                            format = "YYYY";
+                            break;
+                        case 6:
+                            format = "YYYYMM";
+                            break;
+                        case 8:
+                            format = "YYYYMMDD";
+                            break;
+                        case 7:
+                            format = "YYYY-MM";
+                            break;
+                        case 10:
+                            format = "YYYY-MM-DD";
+                            break;
+                        default:
+                            format = "YYYYMMDD";
+                            break;
+                    }
+        
+                    return "TO_DATE(\'" + someValue.toString() + "\', \'" + format.toUpperCase() + "\')";
             	}
             	else if(valuetype.equalsIgnoreCase("DBNull"))
             	{
