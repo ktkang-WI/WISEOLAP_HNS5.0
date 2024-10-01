@@ -1,4 +1,4 @@
-const ReportBox = ({title, icon, date, description, href}) => {
+const ReportBox = ({title, icon, date, report, href}) => {
   return (
     <li>
       <button type="button" onClick={() => {
@@ -10,7 +10,9 @@ const ReportBox = ({title, icon, date, description, href}) => {
         <img src={icon} alt="" />
         <div className="txt">
           <p>{title}</p>
-          <p>최종수정일자 : {date} 주석 : {description}</p>
+          <p>최종수정일자 : {date}</p>
+          <p>최종 수정자: {report.modUserName}</p>
+          <p>주석 : {report.reportDesc}</p>
         </div>
       </button>
     </li>

@@ -1,9 +1,7 @@
-.App {
-  overflow: auto;
-}
-
 .portal {
+  overflow: auto;
   background: white;
+  height: 100%;
 }
 
 :root {

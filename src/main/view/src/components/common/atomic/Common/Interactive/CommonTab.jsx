@@ -1,5 +1,5 @@
 import TabPanel from 'devextreme-react/tab-panel';
-import {styled} from 'styled-components';
+import {styled, css} from 'styled-components';
 import {getTheme} from 'config/theme';
 import React from 'react';
 
@@ -57,6 +57,12 @@ const StyledTabPanel = styled(TabPanel)`
   .dx-multiview-wrapper {
     border: none !important;
   }
+
+  ${(props) => !props.headerVisible && css`
+    .dx-tabpanel-tabs {
+      display: none;
+    }
+  `}
 `;
 
 const PanelTitleText = styled.span`
@@ -68,6 +74,7 @@ const itemTitleRender = (data) => {
 };
 
 const CommonTab = ({
+  headerVisible = true,
   ...props
 }) => {
   return (
@@ -76,6 +83,7 @@ const CommonTab = ({
       height='100%'
       focusStateEnabled={false}
       itemTitleRender={itemTitleRender}
+      headerVisible={headerVisible}
       {...props}
     >
     </StyledTabPanel>

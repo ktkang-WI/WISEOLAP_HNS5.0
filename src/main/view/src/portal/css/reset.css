@@ -9,8 +9,6 @@
 }
 
 
-
-
 * {
 	margin: 0;
 	padding: 0;
@@ -24,92 +22,8 @@
 	box-sizing: border-box;
 }
 
-.portal html,
-.portal body,
-.portal div,
-.portal span,
-.portal applet,
-.portal object,
-.portal iframe,
-.portal h1,
-.portal h2,
-.portal h3,
-.portal h4,
-.portal h5,
-.portal h6,
-.portal p,
-.portal blockquote,
-.portal pre,
-.portal a,
-.portal abbr,
-.portal acronym,
-.portal address,
-.portal big,
-.portal cite,
-.portal code,
-.portal del,
-.portal dfn,
-.portal em,
-.portal img,
-.portal ins,
-.portal kbd,
-.portal q,
-.portal s,
-.portal samp,
-.portal small,
-.portal strike,
-.portal strong,
-.portal sub,
-.portal sup,
-.portal tt,
-.portal var,
-.portal b,
-.portal u,
-.portal i,
-.portal enter,
-.portal dl,
-.portal dt,
-.portal dd,
-.portal ol,
-.portal ul,
-.portal li,
-.portal fieldset,
-.portal form,
-.portal label,
-.portal legend,
-.portal table,
-.portal caption,
-.portal tbody,
-.portal tfoot,
-.portal thead,
-.portal tr,
-.portal th,
-.portal td,
-.portal article,
-.portal aside,
-.portal canvas,
-.portal details,
-.portal embed,
-.portal figure,
-.portal figcaption,
-.portal footer,
-.portal header,
-.portal hgroup,
-.portal menu,
-.portal nav,
-.portal output,
-.portal ruby,
-.portal section,
-.portal summary,
-.portal time,
-.portal mark,
-.portal audio,
-.portal video {
+.portal {
 	font-family: 'NanumGothic';
-
-	margin: 0;
-	padding: 0;
-	border: 0;
 	background: transparent;
 	font-size: 100%;
 	vertical-align: baseline;
