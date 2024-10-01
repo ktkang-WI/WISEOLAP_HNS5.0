@@ -154,7 +154,7 @@ const exportComponentToWorksheet = async (
                 }
               }
 
-              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue}));
+              Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue, formData}));
             }
           }
         }

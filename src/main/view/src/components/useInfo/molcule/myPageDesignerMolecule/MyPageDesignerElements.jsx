@@ -69,6 +69,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
       data: data,
       title: modalTitle,
       onSubmit: (value) => {
+        // 변경.
+        if (value.id.indexOf('favorite') > -1) {
+          value.id = parseInt(value.id.substring(8, value.id.length));
+        }
         if (!itemId || !value) return;
         // 기본보고서 처럼 이름이 필요한경우.
         if (itemId.requiredNm) {
@@ -85,6 +89,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
   };
 
   const getDesignerSetting = (item) => {
+    if (data.operation) {
+      setConfig({});
+      return;
+    }
     const value =
         item.id.requiredNm ? data[item.id.requiredNm] : data[item.id];
 

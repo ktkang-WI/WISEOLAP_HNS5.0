@@ -12,8 +12,8 @@ import treeMapImg from 'assets/image/icon/item/treemap.png';
 import calendarImg
   from '../../../../../../assets/image/icon/item/calendar_view.png';
 import coordinateLineImg from 'assets/image/icon/item/coordinate_line.png';
-import textBoxImg
-  from '../../../../../../assets/image/icon/item/ico_textbox.png';
+// import textBoxImg
+//   from '../../../../../../assets/image/icon/item/ico_textbox.png';
 import coordinateDotImg from 'assets/image/icon/item/coordinate_dot.png';
 import heatMapImg from 'assets/image/icon/item/heatmap.png';
 import collapsibleTreeImg from 'assets/image/icon/item/collapsible_tree.png';
@@ -56,7 +56,7 @@ const CustomChartDefaulElement = () => {
     HEAT_MAP,
     SCATTER_PLOT,
     WORDCLOUD,
-    TEXT_BOX,
+    // TEXT_BOX,
     SANKEY
   } = ItemType;
   const onClick = (type) => {
@@ -258,12 +258,12 @@ const CustomChartDefaulElement = () => {
           checked: false,
           src: choroplethImg
         },
-        {
-          title: localizedString.textBox,
-          type: TEXT_BOX,
-          checked: false,
-          src: textBoxImg
-        },
+        // {
+        //   title: localizedString.textBox,
+        //   type: TEXT_BOX,
+        //   checked: false,
+        //   src: textBoxImg
+        // },
         {
           title: localizedString.scheduler,
           type: ItemType.SCHEDULER_COMPONENT,

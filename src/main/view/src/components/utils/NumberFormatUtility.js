@@ -98,6 +98,14 @@ const NumberFormatUtility = {
       value = _value;
     }
 
+    if (_value === Infinity) {
+      value = 0;
+    }
+
+    if (_value === -Infinity) {
+      value = 0;
+    }
+
     if (
       typeof _type !== 'undefined' &&
       ['Auto', 'General', 'Number', 'Currency',

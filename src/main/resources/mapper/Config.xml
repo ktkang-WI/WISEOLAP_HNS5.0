@@ -177,7 +177,9 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
-        ) REPORTANDFOLDER
+        ) REPORTANDFOLDER ORDER BY
+            REPORTANDFOLDER.TYPE,
+            REPORTANDFOLDER.ORDINAL
     </select>
 
     <update id="updateMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
@@ -260,6 +262,23 @@
             FLD_ORDINAL
 		</select>
 
+    <select id="selectConfigFolders" resultMap="ConfigFolderReportDTO">
+			SELECT FLD_ID,
+        FLD_NM,
+        FLD_LVL,
+        FLD_PARENT_ID,
+        FLD_ORDINAL,
+        0 AS REPORT_ID,
+        NULL AS REPORT_NM,
+        NULL AS REPORT_SUB_TITLE,
+        NULL AS USER_ID,
+        NULL AS REG_DT,
+        NULL AS REPORT_TAG,
+        '0' AS REPORT_ORDINAL,
+        null AS REPORT_DESC,
+        NULL AS REPORT_TYPE,
+        NULL AS PROMPT_YN  FROM PUB_FLD_MSTR     
+		</select>
     <select id="selectConfigFolderReport" resultMap="ConfigFolderReportDTO">
 			SELECT
         PUB_FLD_MSTR.FLD_ID,
@@ -281,9 +300,11 @@
             ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
                           INNER JOIN USER_MSTR 
             ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
-            WHERE REPORT_MSTR.DEL_YN = 'N' AND USER_MSTR.DEL_YN = 'N'
+            WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
+            AND (USER_MSTR.DEL_YN = 'N' OR USER_MSTR.DEL_YN IS NULL)
             ORDER BY 3 ASC, 5 ASC
 		</select>
+  
     <select id="selectConfigPrivateFolderReport" resultMap="ConfigFolderReportDTO">
 			SELECT
         USER_FLD_MSTR.FLD_ID,
@@ -309,6 +330,25 @@
             AND REPORT_MSTR.REG_USER_NO = #{userNo, jdbcType = INTEGER}
             ORDER BY 3 ASC, 5 ASC
 		</select>
+
+    <select id="selectConfigPrivateFolders" resultMap="ConfigFolderReportDTO">
+      SELECT FLD_ID,
+        FLD_NM,
+        FLD_LVL,
+        FLD_PARENT_ID,
+        FLD_ORDINAL,
+        0 AS REPORT_ID,
+        NULL AS REPORT_NM,
+        NULL AS REPORT_SUB_TITLE,
+        NULL AS USER_ID,
+        NULL AS REG_DT,
+        NULL AS REPORT_TAG,
+        '0' AS REPORT_ORDINAL,
+        null AS REPORT_DESC,
+        NULL AS REPORT_TYPE,
+        NULL AS PROMPT_YN  FROM USER_FLD_MSTR
+         WHERE USER_NO = #{userNo, jdbcType = INTEGER}
+    </select>
     
     <select id="selectConfigFolderGroup" resultMap="ConfigFolderDTO">
 			SELECT

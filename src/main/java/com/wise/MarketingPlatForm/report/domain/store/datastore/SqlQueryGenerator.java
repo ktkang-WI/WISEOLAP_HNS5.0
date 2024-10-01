@@ -17,7 +17,8 @@ public class SqlQueryGenerator implements QueryGenerator {
 
     @Override
     public String getQuery(DataAggregation dataAggregation, String ownerNm) {
-        String query = dataAggregation.getDataset().getQuery();
+        String userId = dataAggregation.getUserId() == null ? "" : dataAggregation.getUserId();
+        String query = dataAggregation.getDataset().getQuery().replace("[WI_SESSION_ID]", "'" + userId + "'");
         query = applyParameter(dataAggregation.getParameters(), query);
 
         return query;

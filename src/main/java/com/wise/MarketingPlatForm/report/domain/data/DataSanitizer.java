@@ -423,7 +423,8 @@ public final class DataSanitizer {
                                 Object value = map.get(dimensionMap.get(entry.getKey()));
                                 
                                 if (value == null) {
-                                    return entry.getValue().contains(null);
+                                    // return entry.getValue().contains(null);
+                                    return true;
                                 }
 
                                 return StringUtils.containsAny(value.toString(),

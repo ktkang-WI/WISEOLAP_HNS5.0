@@ -7,6 +7,8 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useLoaderData} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import './portal.css';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const LinkViewer = () => {
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ const LinkViewer = () => {
   }, []);
 
   return (
-    <div>
+    <div className={isPortal() && 'portal'}>
       {!noHeader &&
         <Header
           left={['Logo', 'LinkReport']}

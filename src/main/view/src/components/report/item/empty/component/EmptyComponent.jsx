@@ -11,7 +11,8 @@ const ItemContent = styled.h3`
 
 const EmptyComponent = () => {
   return (
-    <ItemContent>데이터가 없거나, 보고서 조회가 필요합니다.</ItemContent>
+    // eslint-disable-next-line react/no-unescaped-entities
+    <ItemContent>우측 상단에 '조회하기' 버튼을 눌러주세요.</ItemContent>
   );
 };
 

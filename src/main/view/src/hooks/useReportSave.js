@@ -56,6 +56,38 @@ const useReportSave = () => {
   const generateParameter = (dataSource) => {
     const reportType = selectCurrentDesignerMode(store.getState());
     const rootDataset = selectRootDataset(store.getState());
+    const datasets = rootDataset.datasets;
+    const newDataFields = [];
+
+    for (let i = 0; i < datasets.length; i ++) {
+      if (datasets[i].datasetType !== 'CUBE') {
+        newDataFields.push(datasets[i]);
+        continue;
+      }
+      const newField = [];
+      for (let j = 0; j < datasets[i].fields.length; j++) {
+        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
+          newField.push(datasets[i].fields[j]);
+        } else {
+          if (datasets[i].fields[j].type === 'MEAGRP' ||
+                datasets[i].fields[j].type === 'DIMGRP' ||
+                datasets[i].fields[j].type === 'FLD') {
+            newField.push(datasets[i].fields[j]);
+            continue;
+          }
+          const type =
+            datasets[i].fields[j].type === 'MEA'? 'MEAGRP' : 'DIMGRP';
+          newField.push({...datasets[i].fields[j], type: type});
+        }
+      }
+      newDataFields.push({...datasets[i], fields: newField});
+    }
+
+    const newRootDataset = {
+      ...rootDataset,
+      datasets: newDataFields
+    };
+
     const param = {};
     const cubeQueries = {};
     param.reportId = dataSource.reportId;
@@ -111,7 +143,7 @@ const useReportSave = () => {
         return _.omit(item, 'mart');
       });
 
-    param.datasetXml = JSON.stringify(rootDataset);
+    param.datasetXml = JSON.stringify(newRootDataset);
     param.layoutXml = JSON.stringify(selectRootLayout(store.getState()));
     param.paramXml = JSON.stringify(
         selectCurrentInformationas(store.getState()));
@@ -146,6 +178,8 @@ const useReportSave = () => {
       options.reportDesc = data.reportDesc;
       options.requester = data.gridInfo;
       options.path = data.path;
+      options.promptYn = data.promptYn;
+      options.authPublish = '1';
       options.reportType = ConvertDesignerMode[data.reportType];
 
       return options;
@@ -288,7 +322,7 @@ const useReportSave = () => {
       data.dataset.datasets.forEach((dataset) => {
         if (dataset.datasetType === DatasetType['DS_SQL']) {
           dataset.fields = makeFieldIcon(
-              dataset.fields, dataset.datasetType);
+              dataset.fields, dataset.datasetNm);
         }
       });
 
@@ -405,8 +439,10 @@ const useReportSave = () => {
 
       // 비정형 주제영역일 때만 BETWEEN 매개변수 반드시 필요
       if (isAdhocCube && (paramInfos.length === 0)) {
+        // homenshopping 요청사항 문구
+        // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
         // eslint-disable-next-line max-len
-        throw new Error('보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.');
+        throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
       }
 
       // 날짜 문자열을 Date 객체로 변환하는 함수
@@ -498,10 +534,6 @@ const useReportSave = () => {
     rootDataset.datasets.every((dataset) =>
       dataset.datasetType === DatasetType.CUBE);
 
-    if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
-      return;
-    };
-
     const execute = () => {
       if (designerMode !== DesignerMode['EXCEL']) {
         executeItems();
@@ -512,6 +544,9 @@ const useReportSave = () => {
 
     if (parameters.informations.length <=
       parameters.filterSearchComplete.length) {
+      if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
+        return;
+      };
       execute();
     } else {
       let count = 0;

@@ -25,6 +25,7 @@ import EmptyComponent from
 import ItemType from 'components/report/item/util/ItemType';
 import localizedString from 'config/localization';
 import {ItemDownload} from '../../ItemDownload/ItemDownload';
+import {isPortal} from 'components/utils/PortalUtility';
 
 const theme = getTheme();
 
@@ -80,7 +81,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const {items, selectedItemId} = item || {};
   const {reportId} = report || {};
   const rootItem = item;
-  const model = Model.fromJson(layoutConfig);
+  const model = Model?.fromJson(layoutConfig);
   const editMode = useSelector(selectEditMode);
   const designerMode = useSelector(selectCurrentDesignerMode);
   const [itemExports, setItemExports] = useState([]);
@@ -270,9 +271,11 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       <button key="download" title={localizedString.downloadReport}>
         <DownloadImage id={`${tabNode._attributes.id}btn`} src={download} />
         <Popover target={`#${tabNode._attributes.id}btn`} showEvent="click">
-          {itemDownload.renderDownloadButtons(
-              tabNode._attributes.id, item, isImg && isImgDownloadable
-          )}
+          <div style={{display: 'flex'}}>
+            {itemDownload.renderDownloadButtons(
+                tabNode._attributes.id, item, isImg && isImgDownloadable
+            )}
+          </div>
         </Popover>
       </button>
     ) : null;
@@ -315,6 +318,17 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     tabSetHeaderHeight: 40,
     tabSetTabStripHeight: 40
   }));
+
+  if (isPortal()) {
+    model.doAction(Actions.updateModelAttributes({
+      splitterSize: 30,
+      enableEdgeDock: false,
+      tabSetEnableDivide: false,
+      tabSetEnableDrag: false,
+      tabSetEnableDrop: false,
+      tabEnableDrag: false
+    }));
+  }
 
   return (
     <StyledBoard {...props}>

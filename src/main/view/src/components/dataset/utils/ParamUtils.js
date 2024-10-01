@@ -296,6 +296,20 @@ const getCalendarNowDefaultValue = (base, value) => {
   return date;
 };
 
+const checkKeyWordCalendar = (param) => {
+  const makeCalendarKeyWord = [
+    'BTD', 'BTM', 'BTY'
+  ];
+
+  if (param?.caption?.indexOf('기준일자') >= 0 ||
+    param?.caption?.indexOf('기준 일자') >= 0) return 'BTD';
+
+  const check =
+    makeCalendarKeyWord.findIndex((key) => param?.caption?.indexOf(key) >= 0);
+
+  return makeCalendarKeyWord[check];
+};
+
 export default {
   baseToFormatMapper,
   newParamInformation,
@@ -309,5 +323,6 @@ export default {
   getCubeParameterNamesCube,
   filterToParameter,
   newSingleTableParamInformation,
-  setCalendarExceptionValue
+  setCalendarExceptionValue,
+  checkKeyWordCalendar
 };

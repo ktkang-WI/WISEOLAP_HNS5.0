@@ -17,6 +17,7 @@ import {selectCurrentAdHocOption, selectCurrentItems}
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import ExpressionEngine from
   'components/utils/ExpressionEngine/ExpressionEngine';
+import {getPivotFormat} from './FormatUtility';
 
 const cache = new Map();
 
@@ -43,7 +44,7 @@ const generateMeta = (item) => {
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', false);
   setMeta(item, 'removeNullData', false);
-  setMeta(item, 'showFilter', false);
+  setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
   setMeta(item, 'dataHighlight', []);
   setMeta(item, 'pagingOption', {
@@ -89,25 +90,28 @@ const generateItem = (item, param, rootItem) => {
   }, {});
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
-  for (const field of dataField.measure) {
+  dataField.measure.forEach((field, index) => {
     const dataFieldName = field.summaryType + '_' + field.name;
-    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
+    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) return;
+    const measureFormat = dataField.measure[index].format;
 
     const newField = {
       caption: field.caption,
       summaryType: 'sum',
       dataField: dataFieldName,
-      area: 'data'
+      area: 'data',
+      format: getPivotFormat(measureFormat)
     };
 
-    if (field.expression) {
+    if (field.expression &&
+      (typeof field.summaryWayEach == 'undefined' || field.summaryWayEach)) {
       const engine = new ExpressionEngine();
 
       newField.summaryType = 'custom';
       newField.calculateSummaryValue = (summaryCell) => {
         const data = {};
         dataField.measure.map((mea) => {
-          data[mea.name] = summaryCell.value(mea.name);
+          data[mea.name] = summaryCell.value(mea.caption);
         });
 
         return engine.evaluate(data, field.expression, 0);
@@ -115,7 +119,7 @@ const generateItem = (item, param, rootItem) => {
     }
 
     fields.push(newField);
-  }
+  });
 
   for (const field of dataField.sortByItem) {
     const dataFieldName = field.summaryType + '_' + field.name;

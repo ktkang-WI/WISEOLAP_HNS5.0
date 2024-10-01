@@ -23,7 +23,9 @@ public interface ConfigDAO {
   public List<UserDTO> selectUserList();
   public List<FldMstrEntity> selectConfigFolder();
   public List<ConfigFolderReportDTO> selectConfigPrivateFolderReport(int userNo);
+  public List<ConfigFolderReportDTO> selectConfigPrivateFolders(int userNo);
   public List<ConfigFolderPubModel> selectConfigPubFolder();
+  public List<ConfigFolderReportDTO> selectConfigFolders();
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
   public boolean createConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean updateConfigFolder(FldMstrEntity fldMstrEntity);

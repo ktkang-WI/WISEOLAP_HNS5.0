@@ -307,6 +307,7 @@
   "ignoreMasterFilter": "마스터 필터 무시",
   "targetDimension": "대상 차원",
   "dimensionGroup": "차원 그룹",
+  "NoFunction": "함수 없음",
   "count": "카운트",
   "distinctCount": "고유 카운트",
   "sum": "합계",
@@ -928,7 +929,9 @@
   "selectDataset": "데이터 집합을 선택해 주세요.",
   "checkDwReport": "보고서의 데이터가 BOS 와 일치하지 않습니다.\n\n code: ",
   "eachItemResetConfirm": {
-    "defaultReportId": "기본 보고서를 초기화 하시겠습니까?",
+    "defaultReportId": "대시보드 기본 보고서를 초기화 하시겠습니까?",
+    "adHocDefaultReportId": "비정형 기본 보고서를 초기화 하시겠습니까?",
+    "excelDefaultReportId": "스프레드 기본 보고서를 초기화 하시겠습니까?",
     "defaultItem": "기본 아이템을 초기화 하시겠습니까?",
     "defaultPalette": "기본 색상을 초기화 하시겠습니까?",
     "defaultViewerReportId": "뷰어 기본 보고서를 초기화 하시겠습니까?"
@@ -1007,5 +1010,6 @@
   "privateReportList": "개인 보고서 목록",
   "privateReportListNoDataTxt": "해당 사용자의 개인 폴더/보고서가 없습니다.",
   "execute": "실행",
-  "privateReportGetError": "개인 보고서를 불러올 수 없습니다. 관리자에게 문의하세요."
+  "privateReportGetError": "개인 보고서를 불러올 수 없습니다. 관리자에게 문의하세요.",
+  "paramEditInputRequired": "입력창에서 조건절은 필수 입력 입니다."
 }

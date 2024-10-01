@@ -7,7 +7,7 @@ const StyledContent = styled.div`
   ${(props) => props.ribbonHeight || '0px'} -
   ${(props) => props.marginHeight}
   );
-  width: calc(100vw - ${(props) => props.snbWidth || '0px'} - 10px);
+  width: calc(100vw - 10px);
 `;
 
 const Content = ({marginHeight = '30px', ...props}) => {

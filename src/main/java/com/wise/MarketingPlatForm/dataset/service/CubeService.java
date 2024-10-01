@@ -73,9 +73,25 @@ public class CubeService {
         return result;
     }
 
+    private boolean isMakedFolder(List<CubeFieldVO> tempFolder, CubeMeaColEntity entity) {
+        if (tempFolder.size() == 0 && entity.getFolder() != null) return false;
+        boolean result = true;
+        // 같은 테이블 내에 같은 표시폴더가 있으면 생성하지 않게 함.(true: 폴더 생성x)
+        for (CubeFieldVO folder : tempFolder) {
+            if (folder.getFolder().equals(entity.getFolder()) && folder.getParentId().equals(entity.getTableName())) {
+                result = true;
+                break;
+            } else {
+                result = false;
+            }
+        }
+        return result;
+    }
+
     public CubeInfoDTO getCube(String cubeId, String userId) {
         AuthDataDTO auth = authService.getAuthData(userId);
         List<RootFieldVO> fields = new ArrayList<RootFieldVO>();
+        List<CubeFieldVO> tempFolder = new ArrayList<CubeFieldVO>();
         List<DetailedDataVO> detailedData = new ArrayList<>();
         CubeInfoDTO cubeInfo = new CubeInfoDTO();
 
@@ -84,7 +100,7 @@ public class CubeService {
         for (CubeTblEntity entity : cubeMeaTblEntities) {
             if (!entity.isVisible()) continue;
             fields.add(CubeFieldVO.builder()
-                    .type(DataFieldType.MEA)
+                    .type(DataFieldType.MEAGRP)
                     .order(entity.getOrder())
                     .visible(entity.isVisible())
                     .uniqueName(entity.getUniqueName())
@@ -96,7 +112,7 @@ public class CubeService {
 
         // 측정값 컬럼 불러오기
         List<CubeMeaColEntity> cubeMeaColEntities = cubeDAO.selectCubeMeaColumns(cubeId);
-
+        
         for (CubeMeaColEntity entity : cubeMeaColEntities) {
             if (!entity.isVisible()) continue;
             // 권한 있는 차원의 컬럼만 추가
@@ -105,12 +121,30 @@ public class CubeService {
                     .visible(entity.isVisible())
                     .order(entity.getMeaOrder())
                     .name(entity.getCaptionName())
-                    .parentId(entity.getTableName())
+                    .parentId(entity.getFolder() != null ? entity.getTableName() + ".[" + entity.getFolder() + "]" : entity.getTableName())
                     .dataType(entity.getDataType())
                     .uniqueName(entity.getUniqueName())
                     .description(entity.getDescription())
                     .summaryType(entity.getSummaryType())
+                    .folder(entity.getFolder())
                     .build());
+
+            // 표시 폴더 존재 여부 및 폴더가 중복 추가 되지 않게 방지.
+            if (entity.getFolder() == null || isMakedFolder(tempFolder, entity)) continue;
+            // 표시 폴더가 있는 객체를 기반으로 폴더 정보 추가.
+            tempFolder.add(CubeFieldVO.builder()
+                .type(DataFieldType.MEAFLD)
+                .visible(entity.isVisible())
+                .name(entity.getFolder())
+                .parentId(entity.getTableName())
+                .uniqueName(entity.getTableName() + ".[" + entity.getFolder() + "]")
+                .folder(entity.getFolder())
+                .build());
+        }
+        if (tempFolder.size() != 0) {
+            for (CubeFieldVO folder : tempFolder) {
+                fields.add(folder);
+            }
         }
 
         // 차원 컬럼 불러오기 - 권한 적용
@@ -153,7 +187,7 @@ public class CubeService {
             if (!entity.isVisible()) continue;
             if (authDimNames.contains(entity.getPhysicalName())) {
                 fields.add(CubeFieldVO.builder()
-                .type(DataFieldType.DIM)
+                .type(DataFieldType.DIMGRP)
                 .order(entity.getOrder())
                 .visible(entity.isVisible())
                 .uniqueName(entity.getUniqueName())
@@ -163,7 +197,7 @@ public class CubeService {
                 .build());
             } else {
                 fields.add(CubeFieldVO.builder()
-                .type(DataFieldType.DIM)
+                .type(DataFieldType.DIMGRP)
                 .order(entity.getOrder())
                 .visible(false)
                 .uniqueName(entity.getUniqueName())

@@ -31,6 +31,33 @@ import ExecuteSlice from 'redux/modules/ExecuteSlice';
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
 
+const defaultCalendarMap = {
+  BTY: {
+    calendarCaptionFormat: 'yyyy',
+    calendarKeyFormat: 'yyyy',
+    calendarPeriodBase: ['YEAR', 'YEAR'],
+    calendarDefaultType: 'NOW',
+    paramType: 'CALENDAR',
+    operation: 'BETWEEN'
+  },
+  BTM: {
+    calendarCaptionFormat: 'yyyyMM',
+    calendarKeyFormat: 'yyyyMM',
+    calendarPeriodBase: ['MONTH', 'MONTH'],
+    calendarDefaultType: 'NOW',
+    paramType: 'CALENDAR',
+    operation: 'BETWEEN'
+  },
+  BTD: {
+    calendarCaptionFormat: 'yyyyMMdd',
+    calendarKeyFormat: 'yyyyMMdd',
+    calendarPeriodBase: ['DAY', 'DAY'],
+    calendarDefaultType: 'NOW',
+    paramType: 'CALENDAR',
+    operation: 'BETWEEN'
+  }
+};
+
 const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
   const {updateParameterInformation} = ParameterSlice.actions;
@@ -106,7 +133,17 @@ const useDrag = () => {
               newParamInfo.sort((a, b) => a.order - b.order);
 
               newParamInfo = newParamInfo.
-                  map((param) => ParamUtils.sanitizeParamInformation(param));
+                  map((param) => {
+                    const keyWord = ParamUtils.checkKeyWordCalendar(param);
+
+                    if (keyWord && param.paramType !== 'CALENDAR') {
+                      const defaultVal = defaultCalendarMap[keyWord];
+                      param = {...param, ...defaultVal};
+                      param = ParamUtils.setCalendarExceptionValue(param);
+                    }
+
+                    return ParamUtils.sanitizeParamInformation(param);
+                  });
 
               dispatch(updateParameterInformation({
                 datasetId: datasetId,
@@ -240,7 +277,14 @@ const useDrag = () => {
               sourceField,
               dest.droppableId);
 
+          if (typeof tempField == 'string') {
+            alert(tempField);
+            dispatch(setItemField({reportId, dataField}));
+            return;
+          }
+
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
+
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
             dispatch(setItemField({reportId, dataField}));
@@ -276,6 +320,11 @@ const useDrag = () => {
               dataFieldOption,
               sourceField[0],
               dest.droppableId);
+
+          if (typeof sourceField == 'string') {
+            alert(sourceField);
+            return;
+          }
 
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.

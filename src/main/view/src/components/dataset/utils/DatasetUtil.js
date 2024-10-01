@@ -3,7 +3,7 @@ import meaImg from 'assets/image/icon/dataSource/measure.png';
 export const uniqueNameType = {
   CUSTOM_DATA: '987654321'
 };
-export const makeFieldIcon = (fields) => {
+export const makeFieldIcon = (fields, datasetNm) => {
   fields = fields.reduce((returnArr, field) => {
     if (field.uniqueName != 0) {
       returnArr.push({
@@ -17,7 +17,9 @@ export const makeFieldIcon = (fields) => {
     return returnArr;
   }, []);
   fields.unshift({
-    name: localizedString.defaultDatasetName,
+    // 홈앤쇼핑 데이터 집합 명으로 폴더 명 변경
+    // name: localizedString.defaultDatasetName,
+    name: datasetNm,
     type: 'FLD',
     uniqueName: '0'
   });
