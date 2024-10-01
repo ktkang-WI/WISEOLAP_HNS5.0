@@ -91,7 +91,7 @@ public class QueryGenAggregationUtil {
                 }
                 
             } else {
-                if(columnInfo.getAggregationType() == null) {
+                if(columnInfo.getAggregationType() == null || "".equals(columnInfo.getAggregationType())) {
                     selectCubeMeasure.setMEA_AGG("");
                 }else {
                     selectCubeMeasure.setMEA_AGG(columnInfo.getAggregationType());
