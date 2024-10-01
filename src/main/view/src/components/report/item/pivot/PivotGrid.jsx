@@ -121,7 +121,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement}) => {
-    if (area == 'data' && cell.dataType && cell.value) {
+    if (area == 'data' && cell.dataType && cell?.value >= 0) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
