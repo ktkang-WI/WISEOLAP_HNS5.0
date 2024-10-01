@@ -79,7 +79,8 @@ public class SqlQueryGenerator implements QueryGenerator {
                     StringBuilder sb = new StringBuilder();
 
                     for (String val : items) {
-                        getValue(val.trim(), dataType, format);
+                        sb.append(getValue(val.trim(), dataType, format));
+                        sb.append(", ");
                     }
 
                     // 마지막 쉼표와 공백 제거
