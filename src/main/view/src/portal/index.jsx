@@ -12,13 +12,13 @@ import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
 
 const Portal = () => {
-  const PORTAL_URL = 'http://10.2.3.51:18080/editds';
+  const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
-    new Set([2353, 2355, 2351, 2349, 2345, 2348, 2358]);
+    new Set([2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
 
   useEffect(() => {
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
