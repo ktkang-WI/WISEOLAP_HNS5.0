@@ -689,14 +689,16 @@ const useQueryExecute = () => {
         _value = paramValues[name];
       }
 
-      if (value.includes('[MD_CODE]')) {
-        const res = await models.Report.getMdCode();
-        const mdCode = res?.data || '';
+      if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
+        const res = await models.Report.getUserInfo();
+        const info = res?.data || {};
         _value = [];
 
         value.map((v) => {
           if (v == '[MD_CODE]') {
-            _value.push(mdCode);
+            _value.push(info['mdCode']);
+          } else if (v == '[WI_SESSION_ID]') {
+            _value.push(info['userId']);
           } else {
             _value.push(v);
           }
@@ -740,10 +742,15 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (data.value[0] == '[MD_CODE]') {
-              const res = await models.Report.getMdCode();
-              const mdCode = res?.data || '';
-              data.value[0] = mdCode;
+            if (['[MD_CODE]', '[WI_SESSION_ID]'].incldues(data.value[0])) {
+              const res = await models.Report.getUserInfo();
+              const info = res?.data || {};
+
+              if (data.value[0] == '[MD_CODE]') {
+                data.value[0] = info.mdCode;
+              } else {
+                data.value[0] = info.userId;
+              }
             }
 
             if (data) {
