@@ -264,9 +264,14 @@ public class ReportController {
         return reportService.getReport(request, reportId, reportSeq);
 	}
     
-    @PostMapping(value = "/md-code")
-	public String getMdCode(HttpServletRequest request) {
-        return SessionUtility.getSessionUser(request).getMdCode();
+    @PostMapping(value = "/user-info")
+	public Map<String, String> getUserInfo(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+        Map<String, String> res = new HashMap<> ();
+
+        res.put("mdCode", user.getMdCode());
+        res.put("userId", user.getUserId());
+        return res;
 	}
     
     @Operation(

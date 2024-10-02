@@ -77,8 +77,8 @@ export const getList = async (reportType, editMode) => {
   return res;
 };
 
-export const getMdCode = async () => {
-  const res = axios.post(path + '/md-code');
+export const getUserInfo = async () => {
+  const res = axios.post(path + '/user-info');
 
   return res;
 };
