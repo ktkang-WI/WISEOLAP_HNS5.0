@@ -742,7 +742,7 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (['[MD_CODE]', '[WI_SESSION_ID]'].incldues(data.value[0])) {
+            if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(data.value[0])) {
               const res = await models.Report.getUserInfo();
               const info = res?.data || {};
 
