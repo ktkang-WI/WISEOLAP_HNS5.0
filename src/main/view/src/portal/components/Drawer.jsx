@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import Collapsible from 'react-collapsible';
+import reportIcon from 'assets/image/icon/button/report_folder.png';
 import './Drawer.css';
 
 const DrawerMenu = ({data}) => {
@@ -17,7 +18,8 @@ const DrawerMenu = ({data}) => {
   };
 
   const getTrigger = (name) => {
-    return <div className='menu-fld'> {name} </div>;
+    return <div className='menu-fld'>
+      <img height='21px' src={reportIcon}/> {name} </div>;
   };
 
   return (
@@ -28,7 +30,7 @@ const DrawerMenu = ({data}) => {
 
       {isOpen && <div className="backdrop" onClick={closeDrawer}></div>}
 
-      <div className={`custom-scrollbar drawer ${isOpen ? 'open' : ''}`}>
+      <div className={`drawer ${isOpen ? 'open' : ''}`}>
         {
           data.map((fld) => {
             if (fld.reports.length == 0) return null;

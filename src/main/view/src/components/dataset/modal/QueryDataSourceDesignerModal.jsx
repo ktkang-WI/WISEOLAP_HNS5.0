@@ -194,7 +194,7 @@ const QueryDataSourceDesignerModal = ({
           if (!response.data.rowData[0]?.error) {
             let tempFields = response.data.metaData;
             tempFields = makeFieldIcon(tempFields, dataset.datasetNm);
-            if (dataset.customData) {
+            if (dataset?.customDatas?.customData) {
               tempFields = [...tempFields, ...dataset.customDatas.customData];
             }
 

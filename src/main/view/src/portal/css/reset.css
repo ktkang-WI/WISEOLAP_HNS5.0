@@ -9,8 +9,6 @@
 }
 
 
-
-
 * {
 	margin: 0;
 	padding: 0;
@@ -24,133 +22,49 @@
 	box-sizing: border-box;
 }
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-enter,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+.portal {
 	font-family: 'NanumGothic';
-
-	margin: 0;
-	padding: 0;
-	border: 0;
 	background: transparent;
 	font-size: 100%;
 	vertical-align: baseline;
 }
 
-html,
-body {
+.portal html,
+.portal body {
 	width: 100%;
 	height: 100%;
 }
 
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
+.portal article,
+.portal aside,
+.portal details,
+.portal figcaption,
+.portal figure,
+.portal footer,
+.portal header,
+.portal hgroup,
+.portal menu,
+.portal nav,
+.portal section {
 	display: block;
 }
 
-a {
+.portal a {
 	color: inherit;
 	text-decoration: none;
 }
 
-img {
+.portal img {
 	vertical-align: top;
 }
 
-ul,
-ol,
-li {
+.portal ul,
+.portal ol,
+.portal li {
 	list-style: none;
 }
 
-button {
+.portal button {
 	border: none;
 	background: transparent;
 	font-family: inherit;
@@ -159,20 +73,20 @@ button {
 	cursor: pointer;
 }
 
-button:active {
+.portal button:active {
 	outline: none;
 }
 
-button:focus {
+.portal button:focus {
 	outline: none;
 }
 
-table {
+.portal table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
 
-hr {
+.portal hr {
 	border: none;
 }
 

@@ -12,14 +12,16 @@ import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
 
 const Portal = () => {
+  const PORTAL_URL = 'http://10.2.3.51:18080/editds';
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [cardData, setCardData] = useState([]);
-  const avFolders = new Set([2282, 2283, 2284, 2285, 2286, 2287, 2288, 2290]);
+  const avFolders =
+    new Set([2353, 2355, 2351, 2349, 2345, 2348, 2358]);
 
   useEffect(() => {
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
-      if (data.status == 200) {
+      if (data.status == 200 && data.data) {
         setCardData(data.data);
       }
     });
@@ -48,7 +50,6 @@ const Portal = () => {
           }
         });
 
-        // 3. 객체 맵을 다시 배열로 변환하여 정렬
         const result = Object.values(folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
@@ -67,8 +68,6 @@ const Portal = () => {
           return a.id - b.id;
         });
 
-        console.log(result);
-
         setReportList(result);
       }
     });
@@ -84,11 +83,12 @@ const Portal = () => {
   const getReports = (reports) => {
     return reports.map((report) => (
       <ReportBox
-        href={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        // eslint-disable-next-line max-len
+        href={`${PORTAL_URL}/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
-        description={report.reportDesc}
+        report={report}
         icon={reportIcon}
       />
     ));
@@ -103,15 +103,60 @@ const Portal = () => {
           </a>
           <ul id='header_menu'>
             <li>
-              <a href='#fld2290' className='active'>전사관리지표</a>
-              <a href='#fld2282'>주요보고서</a>
-              <a href='#fld2283'>상품</a>
-              <a href='#fld2284'>방송</a>
-              <a href='#fld2285'>주문</a>
-              <a href='#fld2286'>고객</a>
-              <a href='#fld2287'>물류</a>
-              <a href='#fld2288'>기타</a>
-              <a href='http://10.2.3.51:18080/editds'>OLAP</a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
+                rel="noreferrer"
+                target="_blank"
+                className='active'>
+                전사관리지표
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2355`}
+                rel="noreferrer"
+                target="_blank">
+                주요보고서
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2351`}
+                rel="noreferrer"
+                target="_blank">
+                상품
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2349`}
+                rel="noreferrer"
+                target="_blank">
+                방송
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true`}
+                rel="noreferrer"
+                target="_blank">
+                주문
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2345`}
+                rel="noreferrer"
+                target="_blank">
+                고객
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2348`}
+                rel="noreferrer"
+                target="_blank">
+                물류
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2358`}
+                rel="noreferrer"
+                target="_blank">
+                기타
+              </a>
+              <a
+                href={`${PORTAL_URL}`}
+                rel="noreferrer"
+                target="_blank">
+                OLAP</a>
             </li>
           </ul>
           <DrawerMenu data={reportList}/>
@@ -151,7 +196,8 @@ const Portal = () => {
         <iframe
           width='100%'
           height='2400px'
-          src={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          // eslint-disable-next-line max-len
+          src={`${PORTAL_URL}/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>

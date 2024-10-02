@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import DataGrid, {Column, Selection}
+import DataGrid, {Column, SearchPanel, Selection}
   from 'devextreme-react/data-grid';
 import {Button} from 'devextreme-react';
 import {useCallback, useContext} from 'react';
@@ -10,8 +10,24 @@ import {UserGroupContext}
 import localizedString from 'config/localization';
 import {getRefInstance} from 'components/config/utility/utility';
 import Form from 'devextreme/ui/form';
+import styled from 'styled-components';
+import useModal from 'hooks/useModal';
+
+const StyledGrid = styled(DataGrid)`
+  & .dx-toolbar-items-container {
+    display: -webkit-inline-box;
+    position: absolute;
+    right: 0px;
+    top: -38px;
+  }
+
+  & .dx-datagrid-header-panel .dx-toolbar {
+    margin-bottom: 0px;
+  }
+`;
 
 const GroupMember = () => {
+  const {alert} = useModal();
   const getContext = useContext(UserGroupContext);
   const [groupMemberUsers, setGroupMemberUsers] =
   getContext.state.groupMemberUsers;
@@ -27,6 +43,12 @@ const GroupMember = () => {
   };
 
   const moveUserToGroup = useCallback(() => {
+    const group = getGroupInfo();
+    if (!group || Object.keys(group).length == 0) {
+      alert('그룹을 먼저 선택해 주세요.');
+      return;
+    }
+
     const selectedData = groupNotMemberUserRef
         .current._instance.getSelectedRowsData();
     const newGroupNotMmemberUsers = groupNotMemberUsers.filter((row) => {
@@ -42,11 +64,17 @@ const GroupMember = () => {
 
     setGroupMemberUsers(groupMemberUsers.concat(selectedData));
     setGroupNotMemberUsers(newGroupNotMmemberUsers);
-    setGroupDetailInfo(getGroupInfo());
+    setGroupDetailInfo(group);
   }, [groupMemberUsers, groupNotMemberUsers]);
 
 
   const moveGroupToUser = useCallback(() => {
+    const group = getGroupInfo();
+    if (!group || Object.keys(group).length == 0) {
+      alert('그룹을 먼저 선택해 주세요.');
+      return;
+    }
+
     const selectedData = groupMemberUserRef
         .current._instance.getSelectedRowsData();
     const newGroupMmemberUsers = groupMemberUsers.filter((row) => {
@@ -62,7 +90,7 @@ const GroupMember = () => {
 
     setGroupNotMemberUsers(groupNotMemberUsers.concat(selectedData));
     setGroupMemberUsers(newGroupMmemberUsers);
-    setGroupDetailInfo(getGroupInfo());
+    setGroupDetailInfo(group);
   }, [groupMemberUsers, groupNotMemberUsers]);
 
   return (
@@ -113,7 +141,7 @@ const GroupMember = () => {
       </Wrapper>
       <Wrapper>
         <Panel title={localizedString.userList}>
-          <DataGrid
+          <StyledGrid
             height={'100%'}
             dataSource={groupNotMemberUsers}
             showBorders={true}
@@ -122,6 +150,10 @@ const GroupMember = () => {
             <Selection
               mode="multiple"
               showCheckBoxesMode="always"
+            />
+            <SearchPanel
+              className='test'
+              visible={true}
             />
             <Column
               dataField="userId"
@@ -133,7 +165,7 @@ const GroupMember = () => {
               dataType="string"
               format="currency"
             />
-          </DataGrid>
+          </StyledGrid>
         </Panel>
       </Wrapper>
     </Wrapper>

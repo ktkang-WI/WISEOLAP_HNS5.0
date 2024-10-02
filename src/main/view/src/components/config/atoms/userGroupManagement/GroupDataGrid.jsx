@@ -2,7 +2,8 @@ import {UserGroupContext}
   from 'components/config/organisms/userGroupManagement/UserGroupManagement';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import DataGrid, {Column, Selection} from 'devextreme-react/data-grid';
+// eslint-disable-next-line max-len
+import DataGrid, {Column, SearchPanel, Selection} from 'devextreme-react/data-grid';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
 
@@ -40,6 +41,9 @@ const GroupDataGrid = () => {
         ref={groupDataGridRef}
       >
         <Selection mode="single" />
+        <SearchPanel
+          visible={true}
+        />
         <Column
           dataField="grpNm"
           caption={localizedString.groupName}

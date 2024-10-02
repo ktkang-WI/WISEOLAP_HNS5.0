@@ -20,7 +20,7 @@ import {iconMapper} from '../common/ConfigUtility';
 export const ReportFolderContext = createContext();
 
 const ReportFolderManagement = () => {
-  const {alert} = useModal();
+  const {alert, success} = useModal();
 
   const btns = ['plus', 'save', 'remove'];
   const [management, setManagement] = useState(managementData[0]);
@@ -108,7 +108,7 @@ const ReportFolderManagement = () => {
         if (response.data.data) {
           init();
           clearRef(listRef);
-          alert(successMessage);
+          success(successMessage);
         }
       }).catch((e) => {
         console.log(e);
@@ -125,13 +125,17 @@ const ReportFolderManagement = () => {
           .then((response) => {
             init();
             clearRef(listRef);
-            alert(localizedString.successUpdate);
+            success(localizedString.successUpdate);
           })
           .catch((e) => {
             console.error(e);
             throw new Error('Failed Update Report');
           });
     };
+    if (report.reportId === 0 && report.fldId !== 0) {
+      alert('보고서를 선택해 주세요.');
+      return;
+    }
     validateAndProcess(infoRef.validate(), saveReport);
   };
 

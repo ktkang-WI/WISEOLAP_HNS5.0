@@ -81,6 +81,16 @@ export const getNewDataField = (
     sourceField,
     droppableId = false) => {
   let tempField = getTempField(dataFieldOption, sourceField, droppableId);
+
+  if (!['field', 'sortByItem'].includes(droppableId) &&
+    tempField.type != tempField.fieldType) {
+    if (tempField.fieldType == 'DIM') {
+      return '해당 영역에는 측정값만 올릴 수 있습니다.';
+    } else {
+      return '해당 영역에는 차원만 올릴 수 있습니다.';
+    }
+  }
+
   const customDatas = getCustomDatas(tempField, sourceField);
 
   if (customDatas) tempField = customDatas;

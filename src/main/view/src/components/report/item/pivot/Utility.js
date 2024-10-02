@@ -42,7 +42,7 @@ const generateMeta = (item) => {
     dataPosition: 'column' // 측정값 위치
   });
   setMeta(item, 'layout', 'standard');
-  setMeta(item, 'autoSize', false);
+  setMeta(item, 'autoSize', true);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
