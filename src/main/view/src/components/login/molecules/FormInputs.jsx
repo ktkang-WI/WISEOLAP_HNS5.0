@@ -16,12 +16,15 @@ const StyledForm = styled.form.attrs(() => ({
   & > .interval > a > .link-textBtn {
     margin-top: 7px;
   }
+  .interval .form-textBtn {
+    margin-left: 0px;
+  }
 `;
 
 const FormInterval = styled.div`
   padding-top: ${(props) => {
     if (props.props === 'login') {
-      return '90px';
+      return '50px';
     }
   }}
 `;
@@ -106,18 +109,32 @@ const FormInputs = ({contents, onSubmit}) => {
         );
       } else {
         return (
-          <CommonButton
-            className='form-textBtn'
-            font={theme.font.bigButton}
-            key={index}
-            borderRadius='8px'
-            height='48px'
-            onClick={onSubmit}
-            background={'#FE0000'}
-            hoverBackground={'#EE0000'}
-          >
-            {btnText.linkBtn ? btnText.linkBtn : btnText}
-          </CommonButton>
+          <>
+            <CommonButton
+              className='form-textBtn'
+              font={theme.font.bigButton}
+              key={index}
+              borderRadius='8px'
+              height='48px'
+              onClick={() => onSubmit('portal')}
+              background={'#FE0000'}
+              hoverBackground={'#EE0000'}
+            >
+              {'로그인'}
+            </CommonButton>
+            <CommonButton
+              className='form-textBtn'
+              font={theme.font.bigButton}
+              key={index}
+              borderRadius='8px'
+              height='48px'
+              onClick={onSubmit}
+              background={'#FE0000'}
+              hoverBackground={'#EE0000'}
+            >
+              {'OLAP 로그인'}
+            </CommonButton>
+          </>
         );
       }
     });
