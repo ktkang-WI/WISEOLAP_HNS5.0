@@ -239,7 +239,8 @@
 		        LEFT OUTER JOIN DS_VIEW_HIE_MSTR T2
 		          ON T1.HIE_HIE_UNI_NM = T2.HIE_UNI_NM
 			WHERE   T2.DS_VIEW_ID = (SELECT DS_VIEW_ID FROM CUBE_MSTR WHERE CUBE_ID = #{cubeId})
-			ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL, T1.captionName
+			<!-- ORDER BY T1.HIE_ORDINAL, T2.HIE_ORDINAL -->
+			ORDER BY T1.HIE_ORDINAL, T1.captionName
 		<!-- </if>
 		<if test="_databaseId == 'db2'">
 			SELECT DISTINCT T1.*
