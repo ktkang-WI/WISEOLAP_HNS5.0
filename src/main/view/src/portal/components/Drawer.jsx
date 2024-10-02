@@ -5,6 +5,16 @@ import './Drawer.css';
 
 const DrawerMenu = ({data}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menus = [
+    {
+      name: '즐겨찾기',
+      key: 'favorites'
+    },
+    {
+      name: '최근 보고서',
+      key: 'recent'
+    }
+  ];
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -32,13 +42,12 @@ const DrawerMenu = ({data}) => {
 
       <div className={`drawer ${isOpen ? 'open' : ''}`}>
         {
-          data.map((fld) => {
-            if (fld.reports.length == 0) return null;
+          menus.map((menu) => {
             return (
               <Collapsible
-                key={'menu-' + fld.id}
-                trigger={getTrigger(fld.name)}>
-                {fld.reports.map((report) => {
+                key={'menu-' + menu.key}
+                trigger={getTrigger(menu.name)}>
+                {(data[menu.key] || []).map((report) => {
                   return (
                     <div
                       onClick={() => {

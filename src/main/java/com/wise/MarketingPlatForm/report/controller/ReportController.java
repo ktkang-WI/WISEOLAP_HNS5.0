@@ -616,6 +616,16 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
+
+    @GetMapping("/portal-report-list")
+    public ResponseEntity<Map<String, List<ReportListDTO>>> getPortalReportList(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        Map<String, List<ReportListDTO>> result = reportService.getportalReportList(user);
+
+        return ResponseEntity.ok().body(result);
+    }
+    
 }
 
 

@@ -74,13 +74,17 @@ const SignIn = () => {
         <FormWrap>
           <FormInputs
             contents={inputElements()['login']}
-            onSubmit={async () => {
+            onSubmit={async (type) => {
               const id = document.querySelector('#input-ID input').value;
               const password =
                 document.querySelector('#input-Password input').value;
               const res = await models.Login.login(id, password);
 
               if (res.status == 200) {
+                if (type == 'portal') {
+                  nav('portal');
+                  return;
+                }
                 const personalConfig = res.data;
                 const config = await generalLoader();
 

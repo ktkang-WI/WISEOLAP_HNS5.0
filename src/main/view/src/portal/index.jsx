@@ -15,6 +15,7 @@ const Portal = () => {
   const PORTAL_URL = 'http://10.2.3.51:18080/editds';
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
+  const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
     new Set([2353, 2355, 2351, 2349, 2345, 2348, 2358]);
@@ -34,6 +35,7 @@ const Portal = () => {
 
         const folderMap = publicReport.reduce((acc, curr) => {
           if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
+          // if (curr.type === 'FOLDER') {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
@@ -71,6 +73,12 @@ const Portal = () => {
         setReportList(result);
       }
     });
+
+    models.Report.getPortalList().then((data) => {
+      if (data.status == 200) {
+        setPortalReportList(data.data);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -95,11 +103,14 @@ const Portal = () => {
   };
 
   return (
-    <div className='portal'>
+    <div id='top' className='portal'>
       <div id='header'>
         <div className='header_wrap'>
           <a href='#n' id='logo'>
             <img src={require('./img/logo.png')} alt='' />
+          </a>
+          <a type="button" className="menu_btn top_btn" href='#header'>
+            ↑
           </a>
           <ul id='header_menu'>
             <li>
@@ -159,7 +170,7 @@ const Portal = () => {
                 OLAP</a>
             </li>
           </ul>
-          <DrawerMenu data={reportList}/>
+          <DrawerMenu data={portalReportList}/>
         </div>
       </div>
       <div className='contents'>

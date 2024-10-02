@@ -31,11 +31,14 @@ export const connectLinkedReport = (
     param, closeWindow, showReportList) => {
   if (param) {
     const {reportId, reportType} = param;
+    const params = new URLSearchParams(window.location.search);
+    const fldFilter = params.get('fld') || false;
 
     const urlString =
         `${getFullUrl()}/linkviewer?reportId=${reportId}` +
         `&reportType=${reportType}` +
-        (showReportList ? '&srl=true' : '');
+        (showReportList ? '&srl=true' : '') +
+        (fldFilter ? '&fld=' + fldFilter : '');
 
     const newWindow = window.open(urlString, '_blank');
     if (newWindow) {

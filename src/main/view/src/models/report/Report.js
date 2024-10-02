@@ -177,3 +177,12 @@ export const addFavoriteReport = async (param) => {
 export const deleteFavoriteReport = async (param) => {
   return await axios.post(path + '/favorites-remove', param);
 };
+
+/**
+ * 보고서 폴더 목록 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getPortalList = () => {
+  return axios.get(path + '/portal-report-list');
+};
