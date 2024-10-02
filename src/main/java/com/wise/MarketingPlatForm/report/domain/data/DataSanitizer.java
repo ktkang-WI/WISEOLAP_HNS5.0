@@ -270,19 +270,18 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer removeNullData() {
-        Iterator<Map<String, Object>> iterator = data.iterator();
-
-        while (iterator.hasNext()) {
-            Map<String, Object> map = iterator.next();
-
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+        for (Map<String, Object> map : data) {
+            Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
+    
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+    
                 if (entry.getValue() == null) {
-                    iterator.remove();
-                    break;
+                    iterator.remove(); // null 값이 있는 key만 제거
                 }
             }
         }
-
+    
         return this;
     }
 
