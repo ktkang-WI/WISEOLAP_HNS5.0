@@ -140,10 +140,10 @@ const Portal = () => {
                 방송
               </a>
               <a
-                href={`${PORTAL_URL}/linkviewer?srl=true`}
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2347`}
                 rel="noreferrer"
                 target="_blank">
-                주문
+                매출
               </a>
               <a
                 href={`${PORTAL_URL}/linkviewer?srl=true&fld=2345`}
