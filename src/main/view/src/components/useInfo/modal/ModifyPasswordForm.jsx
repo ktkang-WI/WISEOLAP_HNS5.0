@@ -31,10 +31,6 @@ const ModifyPasswordForm = ({...props}, ref) => {
         }}
       >
         <RequiredRule message={localizedString.required}/>
-        <StringLengthRule
-          min={6} max={15}
-          message={localizedString.lengthValidation}
-        />
         <Label showColon={false}>
           {localizedString.currentPassword}
         </Label>
