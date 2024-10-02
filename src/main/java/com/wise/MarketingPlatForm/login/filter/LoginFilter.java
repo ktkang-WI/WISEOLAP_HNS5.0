@@ -83,7 +83,7 @@ public class LoginFilter implements Filter{
         String userId = request.getParameter("userId");
 
         try {
-            if ((request.getRequestURI().indexOf("/config/general") >= 0 || request.getRequestURI().indexOf("linkViewer") >= 0) && userId != null && !userId.isEmpty()) {
+            if ((request.getRequestURI().indexOf("/config/general") >= 0 || request.getRequestURI().indexOf("linkviewer") >= 0) && userId != null && !userId.isEmpty()) {
                 userDTO = authService.getUserById(userId);
     
                 SessionUtility.setSessionUser(request, userDTO);
