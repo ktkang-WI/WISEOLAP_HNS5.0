@@ -109,32 +109,33 @@ const FormInputs = ({contents, onSubmit}) => {
         );
       } else {
         return (
+        //   <CommonButton
+        //     className='form-textBtn'
+        //     font={theme.font.bigButton}
+        //     key={index}
+        //     borderRadius='8px'
+        //     height='48px'
+        //     onClick={() => onSubmit('portal')}
+        //     background={'#FE0000'}
+        //     hoverBackground={'#EE0000'}
+        //   >
+        //     {'로그인'}
+        //   </CommonButton>
+        // );
           <CommonButton
             className='form-textBtn'
             font={theme.font.bigButton}
             key={index}
             borderRadius='8px'
             height='48px'
-            onClick={() => onSubmit('portal')}
+            onClick={onSubmit}
             background={'#FE0000'}
             hoverBackground={'#EE0000'}
           >
             {'로그인'}
           </CommonButton>
         );
-        {/* <CommonButton
-              className='form-textBtn'
-              font={theme.font.bigButton}
-              key={index}
-              borderRadius='8px'
-              height='48px'
-              onClick={onSubmit}
-              background={'#FE0000'}
-              hoverBackground={'#EE0000'}
-            >
-              {'OLAP 로그인'}
-            </CommonButton> */}
-      }
+      };
     });
   };
   return (
