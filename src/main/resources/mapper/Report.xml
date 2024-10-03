@@ -251,7 +251,7 @@
       ) A
       LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
       LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
-      ORDER BY UPPERID, TYPE, ORDINAL
+      ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
     <select id="selectTop10ReportList" resultMap="ReportList">
@@ -400,7 +400,7 @@
       LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
       LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
       WHERE ID IN (SELECT REPORT_ID FROM REPORT_FAVORITES WHERE USER_NO = #{userNo})
-      ORDER BY UPPERID, TYPE, ORDINAL
+      ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
     <select id="selectPrivateReportList" resultMap="ReportList">
@@ -477,7 +477,7 @@
         ) A
         LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO  
         LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO  
-        ORDER BY UPPERID, TYPE, ORDINAL
+        ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
     <select id="selectPublicReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
@@ -491,7 +491,7 @@
 		WHERE 		USER_MSTR.USER_NO = #{userNo}
 					AND USER_MSTR.DEL_YN = 'N'
         			AND AUTH_PUBLISH != 0
-		ORDER BY 	fldParentId, fldOrdinal
+		ORDER BY 	fldParentId, fldOrdinal, fldNm
     </select>
 
     <select id="selectPrivateReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
