@@ -21,19 +21,18 @@ public class ConfigFolderReportService {
     List<ConfigFolderReportDTO> configFolderDTO = configDao.selectConfigFolders();
     // 보고서
     List<ConfigFolderReportDTO> configReportDTO = configDao.selectConfigFolderReport();
-    List<ConfigFolderReportDTO> resultDTO = configReportDTO;
+    List<ConfigFolderReportDTO> resultDTO = configFolderDTO;
     
-    for (ConfigFolderReportDTO folderDto : configFolderDTO) {
+    for (ConfigFolderReportDTO reportDto : configReportDTO) {
       boolean hasItem = false;
-      if (configReportDTO.size() == 0) resultDTO.add(folderDto);
-      for (ConfigFolderReportDTO reportDto : configReportDTO) {
+      for (ConfigFolderReportDTO folderDto : configFolderDTO) {
         if (folderDto.getFldId() == reportDto.getFldId()) {
           hasItem = true;
           break;
         }
       }
-      if (!hasItem) {
-        resultDTO.add(folderDto);
+      if (hasItem) {
+        resultDTO.add(reportDto);
       }
     }
 
