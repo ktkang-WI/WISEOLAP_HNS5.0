@@ -133,7 +133,7 @@ const ReportFolderManagement = () => {
           });
     };
     if (report.reportId === 0 && report.fldId !== 0) {
-      alert('보고서를 선택해 주세요.');
+      alert(localizedString.selectReportAlert);
       return;
     }
     validateAndProcess(infoRef.validate(), saveReport);
