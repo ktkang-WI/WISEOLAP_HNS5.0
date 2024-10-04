@@ -220,8 +220,11 @@
             <if test='tag != ""'>
               REPORT_TAG = #{tag, jdbcType=VARCHAR},
             </if>
-            <if test='type != ""'>
+            <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
+            </if>
+            <if test='ordinal != ""'>
+              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
             </if>
             <if test='prompt != ""'>
               PROMPT_YN = #{prompt, jdbcType=VARCHAR}
