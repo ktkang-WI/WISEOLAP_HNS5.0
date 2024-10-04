@@ -164,7 +164,7 @@ const Portal = () => {
                 기타
               </a>
               <a
-                href={`${PORTAL_URL}`}
+                href={`${PORTAL_URL}/`}
                 rel="noreferrer"
                 target="_blank">
                 OLAP</a>
