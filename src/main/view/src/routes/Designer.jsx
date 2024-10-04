@@ -109,10 +109,13 @@ const Designer = () => {
     if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
     if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
     const tabItems = [];
+    const accesUserNo = [1001, 2374, 1385, 1598];
     if (menu.tabAdhoc) tabItems.push('Dashboard');
     if (menu.tabDashboard) tabItems.push('AdHoc');
     if (menu.tabSpreadSheet) tabItems.push('Spreadsheet');
-    if (menu.tabPopUpConfig) tabItems.push('Preference');
+    if (accesUserNo.includes(myPageConfigure.userNo)) {
+      tabItems.push('Preference');
+    }
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);
   }, []);

@@ -61,7 +61,7 @@ class ExpressionEngine {
     try {
       const _expression = this.evaluateExpression(expression, context);
       const result = this.math.evaluate(_expression, context);
-      return result !== undefined ? result : defaultValue;
+      return !result || (result === null) ? result : defaultValue;
     } catch (error) {
       console.warn(`Error occurred while evaluating an expression:
         ${expression}`, error);
