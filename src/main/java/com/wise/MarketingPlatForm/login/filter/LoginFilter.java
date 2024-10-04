@@ -106,6 +106,10 @@ public class LoginFilter implements Filter{
                 // 세션 존재시 runMode 적용
                 RunMode runMode = userDTO.getRunMode();
 
+                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                response.setHeader("Pragma", "no-cache");
+                response.setDateHeader("Expires", 0);
+
                 if (runMode.equals(RunMode.ADMIN)) {
                     response.sendRedirect("dashany");
                 } else {
