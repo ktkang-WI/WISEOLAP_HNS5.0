@@ -74,30 +74,44 @@ const SignIn = () => {
         <FormWrap>
           <FormInputs
             contents={inputElements()['login']}
-            onSubmit={async () => {
+            onSubmit={async (type) => {
               const id = document.querySelector('#input-ID input').value;
               const password =
                 document.querySelector('#input-Password input').value;
-              const res = await models.Login.login(id, password);
 
-              if (res.status == 200) {
-                const personalConfig = res.data;
-                const config = await generalLoader();
+              try {
+                const res = await models.Login.login(id, password);
+                if (res.status == 200) {
+                  if (type == 'portal') {
+                    nav('portal');
+                    return;
+                  }
+                  const personalConfig = res.data;
+                  const config = await generalLoader();
 
-                const getInitPage =
-                  getInitPageAndSetingFunc(
-                      config,
-                      personalConfig,
-                      afterLoginInitSettingLayout);
+                  const getInitPage =
+                    getInitPageAndSetingFunc(
+                        config,
+                        personalConfig,
+                        afterLoginInitSettingLayout);
 
-                // TODO: 추후 권한 적용
-                nav(getInitPage.toLowerCase());
-              } else if (res.response?.status == 404) {
-                document.activeElement.blur();
-                alert('사용자 정보가 잘못되었습니다.');
-              } else if (res.response?.status == 500) {
-                document.activeElement.blur();
-                alert('서버에 문제가 발생하였습니다.');
+                  // TODO: 추후 권한 적용
+                  nav(getInitPage.toLowerCase());
+                }
+              } catch (error) {
+                // 에러 발생 시 처리
+                const status = error.response?.status || error.status;
+                // 응답 상태 코드가 존재하는 경우
+                if (status === 404) {
+                  document.activeElement.blur();
+                  alert('사용자 정보가 잘못되었습니다.');
+                } else if (status === 500) {
+                  document.activeElement.blur();
+                  alert('서버에 문제가 발생하였습니다.');
+                } else {
+                  document.activeElement.blur();
+                  alert('예기치 못한 오류가 발생하였습니다.');
+                }
               }
             }}
           />

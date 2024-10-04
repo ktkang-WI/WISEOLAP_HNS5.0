@@ -52,8 +52,8 @@ public class LoginFilter implements Filter{
 
         log.info("=====SSO TEST===== userDTO : " + userDTO);
 
-        log.debug("Request URI == > " + request.getRequestURI());
-        log.debug("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
+        log.info("Request URI == > " + request.getRequestURI());
+        log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
 
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
@@ -87,7 +87,7 @@ public class LoginFilter implements Filter{
         String userId = request.getParameter("userId");
 
         try {
-            if (userId != null && !userId.isEmpty()) {
+            if ((request.getRequestURI().indexOf("/config/general") >= 0 || request.getRequestURI().indexOf("linkviewer") >= 0) && userId != null && !userId.isEmpty()) {
                 userDTO = authService.getUserById(userId);
     
                 SessionUtility.setSessionUser(request, userDTO);
@@ -109,6 +109,10 @@ public class LoginFilter implements Filter{
             if (userDTO != null) {
                 // 세션 존재시 runMode 적용
                 RunMode runMode = userDTO.getRunMode();
+
+                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                response.setHeader("Pragma", "no-cache");
+                response.setDateHeader("Expires", 0);
 
                 if (runMode.equals(RunMode.ADMIN)) {
                     response.sendRedirect("dashany");

@@ -5,10 +5,14 @@ import useModal from 'hooks/useModal';
 import {updatePassword} from 'models/config/myPage/MyPageConfig';
 import {getFrontValidations, getServerValidations} from './Validations';
 import localizedString from 'config/localization';
+import {selectOpenedModals} from 'redux/selector/ModalSelector';
+import {useSelector} from 'react-redux';
 
 const ModifyPasswordModal = ({...props}) => {
   const ref = useRef(null);
-  const {alert, success, confirm} = useModal();
+  const openedModals = useSelector(selectOpenedModals);
+
+  const {alert, success, confirm, closeModal} = useModal();
 
   const onSubmit = async () => {
     if (!ref.current) return true;
@@ -50,13 +54,20 @@ const ModifyPasswordModal = ({...props}) => {
       height='340px'
       width='500px'
       onSubmit={() => {
-        let isSubmit = true;
         confirm(localizedString.confirmModifyPw, async () => {
+          let isSubmit = true;
           isSubmit = await onSubmit();
-          return false;
+
+          // 강제 닫기 (업데이트 완료 일 경우)
+          if (!isSubmit) {
+            openedModals.map((modal, index) => {
+              const {id} = modal;
+
+              closeModal(id);
+            });
+          }
         });
-        // 변경 완료해도 팝업 안닫힘...
-        return isSubmit;
+        return true;
       }}
       {...props}
     >

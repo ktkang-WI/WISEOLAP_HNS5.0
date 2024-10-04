@@ -1,6 +1,8 @@
 import DevPivotGrid, {
   FieldChooser,
-  Scrolling
+  HeaderFilter,
+  Scrolling,
+  Search
 } from 'devextreme-react/pivot-grid';
 import React, {
   useEffect,
@@ -357,6 +359,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       >
         <FieldChooser enabled={false}> </FieldChooser>
         <Scrolling mode='virtual' />
+        <HeaderFilter>
+          <Search enabled={true} />
+        </HeaderFilter>
       </DevPivotGrid>
       {
         usePage &&

@@ -38,4 +38,6 @@ public interface ReportDAO {
     public int insertReportFavorite(ReportFavoritesEntity reportFavoritesEntity);
     public List<ReportFavoritesEntity> selectFavoritesByUserId(int userNo);
     public int deleteFavorite(ReportFavoritesEntity reportFavorite);
+    public List<ReportListDTO> selectTop10ReportList(String userId);
+    public List<ReportListDTO> selectFavoriteReportList(String userId, int userNo);
 }

@@ -58,14 +58,22 @@ body {
 
 
 .portal .menu_btn {
-  position: absolute;
+  position: fixed;
   width: 40px;
   height: 40px;
   background-color: #3679da;
   border-radius: 50%;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 50px;
+  top: 40px;
+}
+
+.portal .top_btn {
+  top: auto;
+  bottom: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 9px;
 }
 
 
@@ -333,21 +341,33 @@ body {
   align-items: center;
 }
 
-.portal .file_box button .txt {
-  margin-left: 30px;
-}
+/* .portal .file_box button .txt { */
+  /* margin-left: 30px;
+} */
 
 .portal .file_box button .txt p {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   color: #999999;
+}
+
+.portal .file_box button .txt p img {
+  height: 20px;
 }
 
 .portal .file_box button .txt p:first-child {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   color: black;
+}
+.portal .file_box button .txt p:last-child {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
 }
 
 .portal .file_box {
