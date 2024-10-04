@@ -19,8 +19,14 @@ const Portal = () => {
   const [cardData, setCardData] = useState([]);
   const avFolders =
     new Set([2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
+    models.Report.getUserInfo().then((data) => {
+      if (data.status == 200) {
+        setUserId(data.data.userId);
+      }
+    });
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
       if (data.status == 200 && data.data) {
         setCardData(data.data);
@@ -92,7 +98,7 @@ const Portal = () => {
     return reports.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
-        href={`${PORTAL_URL}/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -208,7 +214,7 @@ const Portal = () => {
           width='100%'
           height='2400px'
           // eslint-disable-next-line max-len
-          src={`${PORTAL_URL}/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>
