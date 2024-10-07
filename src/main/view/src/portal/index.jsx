@@ -131,7 +131,7 @@ const Portal = () => {
                 href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
                 rel="noreferrer"
                 target="_blank"
-                className='active'>
+              >
                 전사관리지표
               </a>
               <a
@@ -179,7 +179,8 @@ const Portal = () => {
               <a
                 href={`${PORTAL_URL}/`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className='active'>
                 OLAP</a>
             </li>
           </ul>
