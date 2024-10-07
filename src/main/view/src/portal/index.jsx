@@ -10,6 +10,11 @@ import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
+import UserInfoButtonUI
+  from 'components/common/atomic/Header/atom/UserInfoButtonUI';
+import UserInfoPopover
+  from 'components/common/atomic/Header/popover/UserInfoPopover';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const Portal = () => {
   const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
@@ -20,11 +25,13 @@ const Portal = () => {
   const avFolders =
     new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
   const [userId, setUserId] = useState('');
+  const [userNm, setUserNm] = useState('');
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
         setUserId(data.data.userId);
+        setUserNm(data.data.userNm);
       }
     });
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
@@ -176,6 +183,22 @@ const Portal = () => {
                 OLAP</a>
             </li>
           </ul>
+          <CommonButton
+            id={'portal_user_info'}
+            type={'onlyImageText'}
+            height={'32px'}
+            width={'100px'}
+            usePopover={true}
+            popoverProps={{
+              'width': 'auto',
+              'height': '80',
+              'showEvent': 'click',
+              'position': 'bottom'
+            }}
+            contentRender={() => <UserInfoPopover/>}
+          >
+            <UserInfoButtonUI name={userNm}/>
+          </CommonButton>
           <DrawerMenu data={portalReportList}/>
         </div>
       </div>
