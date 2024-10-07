@@ -83,11 +83,6 @@ const generateItem = (item, param, rootItem) => {
   const gridAttribute = rootItem?.adHocOption?.gridAttribute;
   const variationValues = rootItem?.adHocOption?.variationValues || [];
   const reportId = selectCurrentReportId(store.getState());
-  const allMeasure = dataField.measure.concat(dataField.sortByItem);
-  const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
-    acc[data.fieldId] = data;
-    return acc;
-  }, {});
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   dataField.measure.forEach((field, index) => {
@@ -155,31 +150,31 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.column) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
-    let sortBy = {};
+    // let sortBy = {};
 
-    if (field.sortBy && field.sortBy != field.fieldId) {
-      const target = getMeasureByFieldId[field.sortBy];
+    // if (field.sortBy && field.sortBy != field.fieldId) {
+    //   const target = getMeasureByFieldId[field.sortBy];
 
-      if (target) {
-        sortBy = {
-          sortBySummaryField: target.summaryType + '_' + target.name
-        };
-      } else {
-        sortBy = {
-          sortBy: dataFieldName
-        };
-      }
-    } else {
-      sortBy = {
-        sortBy: dataFieldName
-      };
-    }
+    //   if (target) {
+    //     sortBy = {
+    //       sortBySummaryField: target.summaryType + '_' + target.name
+    //     };
+    //   } else {
+    //     sortBy = {
+    //       sortBy: dataFieldName
+    //     };
+    //   }
+    // } else {
+    //   sortBy = {
+    //     sortBy: dataFieldName
+    //   };
+    // }
 
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'row' : 'column',
-      sortOrder: field.sortOrder.toLowerCase(),
+      sortBy: 'none',
       expanded: !item.meta.positionOption.column.expand ?
           true :item.meta.positionOption.column.expand,
       customizeText: (e) =>{
@@ -187,8 +182,7 @@ const generateItem = (item, param, rootItem) => {
         // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
-      },
-      ...sortBy
+      }
     });
   }
 
