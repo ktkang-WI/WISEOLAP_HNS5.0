@@ -51,7 +51,7 @@ const LinkReportListDefaultElement = () => {
                 linkNewTab: false
               };
               console.log('Param:', param);
-              connectLinkedReport(param, true, true);
+              connectLinkedReport(param, true);
             }}
           >
             {report.linkReportNm}

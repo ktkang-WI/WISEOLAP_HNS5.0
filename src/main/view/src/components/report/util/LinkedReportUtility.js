@@ -28,9 +28,10 @@ export const getSubLinkDim = (item) => {
   return subLinkDim;
 };
 
-export const connectLinkedReport = (param, closeWindow, showReportList) => {
+export const connectLinkedReport = (param, showReportList) => {
   if (param) {
-    models.Report.generateLinkToken(param).then((res) => {
+    // models.Report.generateLinkToken(param).then((res) => {
+    models.Report.generateToken(param).then((res) => {
       if (res.status != 200) return;
       const token = res.data;
       const urlString =
