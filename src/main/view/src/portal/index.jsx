@@ -98,7 +98,7 @@ const Portal = () => {
     return reports.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
-        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}

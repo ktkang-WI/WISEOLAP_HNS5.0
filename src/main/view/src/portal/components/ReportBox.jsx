@@ -22,7 +22,7 @@ const ReportBox = ({title, icon, date, report, href}) => {
           <p><img src={iconMapper[report.reportType]} alt="" /> {title}</p>
           <p>최종수정일자 : {date}</p>
           <p>최종 수정자: {report.modUserName}</p>
-          <p>주석 : {report.reportDesc}</p>
+          <p>설명 : {report.reportDesc}</p>
         </div>
       </button>
     </li>
