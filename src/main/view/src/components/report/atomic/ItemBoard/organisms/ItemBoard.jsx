@@ -128,7 +128,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
           color: theme.color.gray400,
           font: theme.font.item
         }}>
-          No Data
+          데이터가 없습니다.
         </Wrapper>
       </Item>;
     }
