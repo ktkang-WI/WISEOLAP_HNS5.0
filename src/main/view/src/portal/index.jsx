@@ -18,7 +18,7 @@ const Portal = () => {
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
-    new Set([2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
@@ -224,17 +224,17 @@ const Portal = () => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
+                    <p>
+                      <img src={require('./img/folder_ico.png')}/>
+                      {fld.name}
+                    </p>
                     <ul>
                       {getReports(fld.reports)}
                     </ul>
                   </div>);
               } else {
                 return (
-                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
-                    <div className='no-card'> 보고서가 없습니다 </div>
-                  </div>
+                  null
                 );
               }
             }

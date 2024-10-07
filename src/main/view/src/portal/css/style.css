@@ -319,9 +319,15 @@ body {
   padding: 65px 0;
 }
 
-.portal .file_box>p {
+.portal .file_box > p {
   font-size: 30px;
   margin-bottom: 15px;
+  text-align: left;
+}
+
+.portal .file_box > p > img {
+  width: 35px;
+  margin-right: 10px;
 }
 
 .portal .file_box ul {
@@ -342,7 +348,7 @@ body {
 }
 
 /* .portal .file_box button .txt { */
-  /* margin-left: 30px;
+/* margin-left: 30px;
 } */
 
 .portal .file_box button .txt p {
@@ -361,6 +367,7 @@ body {
   margin-bottom: 10px;
   color: black;
 }
+
 .portal .file_box button .txt p:last-child {
   text-overflow: ellipsis;
   overflow: hidden;
