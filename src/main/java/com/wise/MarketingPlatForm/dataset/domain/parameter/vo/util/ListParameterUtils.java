@@ -20,7 +20,7 @@ public final class ListParameterUtils {
         List<Parameter> params = new ArrayList<Parameter>();
         for (LinkageValue value : listParameterDTO.getLinkageValues()) {
             Parameter param = new Parameter(0, value.getName(),
-                     null,
+                     "",
                      value.getOperation(),
                      null,
                      value.getExceptionValue(),
