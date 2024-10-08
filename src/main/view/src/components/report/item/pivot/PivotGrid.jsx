@@ -1,12 +1,13 @@
 import DevPivotGrid, {
   FieldChooser,
-  Scrolling
+  HeaderFilter,
+  Scrolling,
+  Search
 } from 'devextreme-react/pivot-grid';
 import React, {
   useEffect,
   useRef,
-  useMemo,
-  useCallback
+  useMemo
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -93,7 +94,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, []);
 
   useEffect(() => {
-    collapseRowHeader();
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -120,8 +120,21 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
   }
 
-  const onCellPrepared = ({cell, area, cellElement}) => {
-    if (area == 'data' && cell.dataType && cell.value) {
+  const onCellPrepared = ({cell, area, cellElement, component}) => {
+    if (area === 'row' && dataset?.cubeId === 6184) {
+      if (cell.text === '') {
+        let newPath = cell.path;
+
+        if (cell.path.includes(null)) {
+          const idx = newPath.findIndex((path) => !path);
+          newPath = newPath.splice(0, idx);
+        }
+
+        component.getDataSource().collapseHeaderItem('row', newPath);
+      }
+    }
+
+    if (area == 'data' && cell.dataType && cell?.value >= 0) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
@@ -153,33 +166,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
   };
-
-  const collapseRowHeader =
-  useCallback(() => mart.dataSourceConfig.load().then((data) => {
-    if (dataset?.cubeId == 6184) {
-      const pivotDataSource = ref.current._instance.getDataSource();
-      const items = pivotDataSource.getData().rows;
-      const collapseSingleChildItems = (items, path) => {
-        items.forEach((item) => {
-          const currentPath = path.concat(item.value);
-          if (item.children && item.children.length === 1 &&
-                (item.children[0]?.text == '' ||
-                    item.children[0]?.text == 'null')) {
-            pivotDataSource.collapseHeaderItem('row', currentPath);
-          } else {
-            if (item.children) {
-              collapseSingleChildItems(item.children, currentPath);
-            }
-          }
-        });
-      };
-      collapseSingleChildItems(items, []);
-    }
-  },
-  (error) => {
-    console.log(error);
-    dispatch(loadingActions.endJobForce());
-  }), []);
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -357,6 +343,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       >
         <FieldChooser enabled={false}> </FieldChooser>
         <Scrolling mode='virtual' />
+        <HeaderFilter>
+          <Search enabled={true} />
+        </HeaderFilter>
       </DevPivotGrid>
       {
         usePage &&

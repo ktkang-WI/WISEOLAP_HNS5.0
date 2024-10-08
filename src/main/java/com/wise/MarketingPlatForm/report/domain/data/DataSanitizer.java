@@ -13,6 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
@@ -40,6 +42,8 @@ public final class DataSanitizer {
     int maxPage;
     TopBottomFilter topBottomFilter;
 
+    private static final Logger logger = LoggerFactory.getLogger(DataSanitizer.class);
+
     @Getter
     @AllArgsConstructor
     class Sort {
@@ -54,6 +58,17 @@ public final class DataSanitizer {
         this.dimensions = dimensions;
         this.sortByItems = sortByItems;
         this.isCube = isCube;
+
+        logger.info("===========Data Sanitizer 생성. rowData에 존재하는 이재형 씨 데이터===============");
+        
+        data.stream()
+            .filter(item -> 
+                "이재형".equals(item.get("MD명")) && 
+                "주식회사 가원".equals(item.get("업체명"))
+            )
+            .forEach(item -> logger.info(item.toString()));
+
+        logger.info("===========rowData에 존재하는 이재형 씨 데이터 끝===============");
 
         allMeasures = new ArrayList<>();
         allMeasures.addAll(measures);
@@ -154,12 +169,19 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer groupBy() {
+
+        logger.info("===========Group By 시작. Grouping 대상 데이터 출력===============");
+
         data = data.stream().collect(Collectors
         .groupingBy(GroupingUtils.groupingDimensionsMapper(dimensions)))
         .entrySet()
         .stream()
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
+
+                            if (e.getKey().indexOf("이재형") >= 0 && e.getKey().indexOf("주식회사 가원") >= 0) {
+                                logger.info(row.toString());
+                            }
                             // 그룹화 된 값을 집계 기준으로 측정값을 변경
                             if (acc.keySet().size() == 0) {
                                 acc = row;
@@ -214,6 +236,10 @@ public final class DataSanitizer {
                             SummaryCalculator sv = (SummaryCalculator) row.get(name);
 
                             row.put(name, sv.getSummaryValue());
+
+                            if ("이재형".equals(row.get("MD명")) && "주식회사 가원".equals(row.get("업체명"))) {
+                                logger.info(name + ": " + row.get(name));
+                            }
                         }
                     }
                     return row;
@@ -270,19 +296,18 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer removeNullData() {
-        Iterator<Map<String, Object>> iterator = data.iterator();
-
-        while (iterator.hasNext()) {
-            Map<String, Object> map = iterator.next();
-
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+        for (Map<String, Object> map : data) {
+            Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
+    
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+    
                 if (entry.getValue() == null) {
-                    iterator.remove();
-                    break;
+                    iterator.remove(); // null 값이 있는 key만 제거
                 }
             }
         }
-
+    
         return this;
     }
 

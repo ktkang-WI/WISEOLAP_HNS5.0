@@ -54,6 +54,9 @@ const ReportTabs = ({reportData}) => {
     setLinkReport
     // setSubLinkReport
   } = LinkSlice.actions;
+  const params = new URLSearchParams(window.location.search);
+  const fldFilter = params.get('fld') || false;
+
   const getTabContent = ({data}) => {
     return <ReportListTab
       items={reportList? reportList[data.id] : []}
@@ -145,13 +148,90 @@ const ReportTabs = ({reportData}) => {
   useEffect(() => {
     if (reportData) return;
 
+    const targets = [];
+
+    const createIndexMap = (data) => {
+      const map = {};
+
+      data.forEach((row) => {
+        if (!map[row.upperId]) {
+          map[row.upperId] = [];
+        }
+        map[row.upperId].push(row);
+      });
+
+      return map;
+    };
+
+    const getAllChildrenByParentId = (indexMap, upperId) => {
+      const result = [];
+
+      function findChildren(upperId) {
+        if (indexMap[upperId]) {
+          indexMap[upperId].forEach((child) => {
+            if (upperId == fldFilter) {
+              child.upperId = 0;
+            }
+            result.push(child);
+            if (child.ordinal < 0) {
+              targets.push(child);
+            }
+            findChildren(child.id); // 하위 자식 탐색
+          });
+        }
+      }
+
+      findChildren(upperId);
+      return result;
+    };
+
     models.Report.getList(null, 'viewer').then(({data}) => {
+      if (fldFilter) {
+        const indexMap = createIndexMap(data.publicReport);
+        data.publicReport = getAllChildrenByParentId(indexMap, fldFilter);
+      }
+
       setDatas(data);
+
+      if (reports.length > 1) return;
+
+      const target = targets.reduce((acc, t) => {
+        if (!acc) acc = t;
+
+        if (acc.ordinal > t.ordinal) {
+          acc = t;
+        }
+
+        return acc;
+      }, null);
+
+      if (target) {
+        models.Report.getReportById(target.id)
+            .then(async ({data}) => {
+              try {
+                dispatch(setDesignerMode(target.reportType));
+                await loadReport(data);
+                if (target.promptYn === 'Y') {
+                  querySearch();
+                }
+              } catch (e) {
+                console.error(e);
+                alert(localizedString.reportCorrupted);
+              }
+            }).catch(() => {
+              alert(localizedString.reportCorrupted);
+            });
+      }
     }).catch((e) => console.log(e));
   }, [reports]);
 
   useEffect(() => {
     if (!reportData) return;
+
+    if (fldFilter) {
+      const indexMap = createIndexMap(reportData.publicReport);
+      reportData.publicReport = getAllChildrenByParentId(indexMap, fldFilter);
+    }
 
     setDatas(reportData);
   }, [reportData]);
@@ -160,7 +240,8 @@ const ReportTabs = ({reportData}) => {
     <Wrapper>
       <StyledTab
         height={'100%'}
-        dataSource={ReportTabSource}
+        headerVisible={!fldFilter}
+        dataSource={fldFilter ? [ReportTabSource[0]]: ReportTabSource}
         itemComponent={getTabContent}
       />
     </Wrapper>

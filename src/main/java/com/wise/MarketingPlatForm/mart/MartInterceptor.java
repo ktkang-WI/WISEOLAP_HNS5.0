@@ -6,11 +6,15 @@ import com.wise.MarketingPlatForm.global.util.DataField;
 import com.wise.MarketingPlatForm.global.util.JavaxtUtils;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
+
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import org.apache.ibatis.plugin.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -30,6 +34,8 @@ import java.util.*;
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class MartInterceptor implements Interceptor {
 	
+    private static final Logger logger = LoggerFactory.getLogger(MartInterceptor.class);
+
 	@Override
     public List<MartResultDTO> intercept(Invocation invocation) throws Throwable {
         List<MartResultDTO> returnValue = new ArrayList<MartResultDTO>();
@@ -59,6 +65,7 @@ public class MartInterceptor implements Interceptor {
                 metaData.add(columnMeta);
             }
             
+            logger.info("===========MartInterceptor에서 FilebackedMapList로 밀어넣고 있는 데이터===============");
             // Mart Data
             CloseableList<Map<String, Object>> rowData = new FileBackedMapList();
             while (rs.next()) {
@@ -67,8 +74,22 @@ public class MartInterceptor implements Interceptor {
             		DataField field =  new DataField(i, rsmd, rs.getObject(i));
             		row.put(rsmd.getColumnLabel(i), JavaxtUtils.getValue(field));
             	}
+                if ("이재형".equals(row.get("MD명")) && "주식회사 가원".equals(row.get("업체명"))) {
+                    logger.info(row.toString());
+                }
             	rowData.add(row);
             }
+
+            logger.info("===========최종적으로 FIleBackedMapList에 저장된 데이터===============");
+        
+            rowData.stream()
+                .filter(item -> 
+                    "이재형".equals(item.get("MD명")) && 
+                    "주식회사 가원".equals(item.get("업체명"))
+                )
+                .forEach(item -> logger.info(item.toString()));
+    
+            logger.info("===========Mart Interceptor 끝!===============");
             MartResultDTO mart = new MartResultDTO();
             mart.setMetaData(metaData);
             mart.setRowData(rowData);

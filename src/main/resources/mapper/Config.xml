@@ -104,7 +104,7 @@
         FLD_ORDINAL,
         FLD_DESC
         FROM PUB_FLD_MSTR
-            ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
+            ORDER BY FLD_ORDINAL ASC
 		</select>
 
     <select id="selectConfigPubFolder" resultMap="ConfigFolderPub">
@@ -179,7 +179,8 @@
                   ) AND DEL_YN = 'N'
         ) REPORTANDFOLDER ORDER BY
             REPORTANDFOLDER.TYPE,
-            REPORTANDFOLDER.ORDINAL
+            REPORTANDFOLDER.ORDINAL,
+            REPORTANDFOLDER.NAME
     </select>
 
     <update id="updateMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
@@ -219,8 +220,11 @@
             <if test='tag != ""'>
               REPORT_TAG = #{tag, jdbcType=VARCHAR},
             </if>
-            <if test='type != ""'>
+            <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
+            </if>
+            <if test='ordinal != ""'>
+              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
             </if>
             <if test='prompt != ""'>
               PROMPT_YN = #{prompt, jdbcType=VARCHAR}
@@ -277,7 +281,8 @@
         '0' AS REPORT_ORDINAL,
         null AS REPORT_DESC,
         NULL AS REPORT_TYPE,
-        NULL AS PROMPT_YN  FROM PUB_FLD_MSTR     
+        NULL AS PROMPT_YN  FROM PUB_FLD_MSTR
+        ORDER BY FLD_ORDINAL ASC
 		</select>
     <select id="selectConfigFolderReport" resultMap="ConfigFolderReportDTO">
 			SELECT
@@ -302,7 +307,7 @@
             ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
             WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
             AND (USER_MSTR.DEL_YN = 'N' OR USER_MSTR.DEL_YN IS NULL)
-            ORDER BY 3 ASC, 5 ASC
+            ORDER BY REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
 		</select>
   
     <select id="selectConfigPrivateFolderReport" resultMap="ConfigFolderReportDTO">

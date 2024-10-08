@@ -316,8 +316,10 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
+        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
         if (nullDataCheck(tempItem)) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
+          // alert(`${item.meta.name}${localizedString.noneData}`);
+          return tempItem.meta.name;
         }
 
         if (data.info['type'] !== 'showQuery') {
@@ -325,6 +327,8 @@ const useQueryExecute = () => {
         }
 
         dispatch(updateItem({reportId, item: tempItem}));
+
+        return tempItem;
       }
     } catch (error) {
       console.error(error);
@@ -541,7 +545,10 @@ const useQueryExecute = () => {
           return acc;
         }, []);
 
-        await Promise.all(promises);
+        await Promise.all(promises).then((items) => {
+          nullDataAlert(items);
+        });
+
 
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
@@ -682,14 +689,16 @@ const useQueryExecute = () => {
         _value = paramValues[name];
       }
 
-      if (value.includes('[MD_CODE]')) {
-        const res = await models.Report.getMdCode();
-        const mdCode = res?.data || '';
+      if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
+        const res = await models.Report.getUserInfo();
+        const info = res?.data || {};
         _value = [];
 
         value.map((v) => {
           if (v == '[MD_CODE]') {
-            _value.push(mdCode);
+            _value.push(info['mdCode']);
+          } else if (v == '[WI_SESSION_ID]') {
+            _value.push(info['userId']);
           } else {
             _value.push(v);
           }
@@ -733,10 +742,15 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (data.value[0] == '[MD_CODE]') {
-              const res = await models.Report.getMdCode();
-              const mdCode = res?.data || '';
-              data.value[0] = mdCode;
+            if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(data.value[0])) {
+              const res = await models.Report.getUserInfo();
+              const info = res?.data || {};
+
+              if (data.value[0] == '[MD_CODE]') {
+                data.value[0] = info.mdCode;
+              } else {
+                data.value[0] = info.userId;
+              }
             }
 
             if (data) {
@@ -806,6 +820,21 @@ const useQueryExecute = () => {
          `${localizedString.requiredFieldNotExist}`);
       }
     });
+  };
+
+  const nullDataAlert = (items) => {
+    // 조회 시 nullData alert 창 한번만 나오도록 수정
+    const nullDataItems = items.reduce((acc, item) => {
+      if (nullDataCheck(item)) {
+        acc.push(item.meta.name);
+      }
+      return acc;
+    }, []);
+
+    if (nullDataItems.length > 0) {
+      const itemNames = nullDataItems.join('", "');
+      alert(`"${itemNames}" ${localizedString.noneData}`);
+    }
   };
 
   return {

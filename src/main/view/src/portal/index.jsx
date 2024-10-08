@@ -10,16 +10,32 @@ import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
+import UserInfoButtonUI
+  from 'components/common/atomic/Header/atom/UserInfoButtonUI';
+import UserInfoPopover
+  from 'components/common/atomic/Header/popover/UserInfoPopover';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const Portal = () => {
+  const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
+  const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
-  const avFolders = new Set([2282, 2283, 2284, 2285, 2286, 2287, 2288, 2290]);
+  const avFolders =
+    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+  const [userId, setUserId] = useState('');
+  const [userNm, setUserNm] = useState('');
 
   useEffect(() => {
-    models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
+    models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
+        setUserId(data.data.userId);
+        setUserNm(data.data.userNm);
+      }
+    });
+    models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
+      if (data.status == 200 && data.data) {
         setCardData(data.data);
       }
     });
@@ -32,6 +48,7 @@ const Portal = () => {
 
         const folderMap = publicReport.reduce((acc, curr) => {
           if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
+          // if (curr.type === 'FOLDER') {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
@@ -48,7 +65,6 @@ const Portal = () => {
           }
         });
 
-        // 3. 객체 맵을 다시 배열로 변환하여 정렬
         const result = Object.values(folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
@@ -67,9 +83,13 @@ const Portal = () => {
           return a.id - b.id;
         });
 
-        console.log(result);
-
         setReportList(result);
+      }
+    });
+
+    models.Report.getPortalList().then((data) => {
+      if (data.status == 200) {
+        setPortalReportList(data.data);
       }
     });
   }, []);
@@ -84,37 +104,103 @@ const Portal = () => {
   const getReports = (reports) => {
     return reports.map((report) => (
       <ReportBox
-        href={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        // eslint-disable-next-line max-len
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
-        description={report.reportDesc}
+        report={report}
         icon={reportIcon}
       />
     ));
   };
 
   return (
-    <div className='portal'>
+    <div id='top' className='portal'>
       <div id='header'>
         <div className='header_wrap'>
           <a href='#n' id='logo'>
             <img src={require('./img/logo.png')} alt='' />
           </a>
+          <a type="button" className="menu_btn top_btn" href='#header'>
+            ↑
+          </a>
           <ul id='header_menu'>
             <li>
-              <a href='#fld2290' className='active'>전사관리지표</a>
-              <a href='#fld2282'>주요보고서</a>
-              <a href='#fld2283'>상품</a>
-              <a href='#fld2284'>방송</a>
-              <a href='#fld2285'>주문</a>
-              <a href='#fld2286'>고객</a>
-              <a href='#fld2287'>물류</a>
-              <a href='#fld2288'>기타</a>
-              <a href='http://10.2.3.51:18080/editds'>OLAP</a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
+                rel="noreferrer"
+                target="_blank"
+              >
+                전사관리지표
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2355`}
+                rel="noreferrer"
+                target="_blank">
+                주요보고서
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2351`}
+                rel="noreferrer"
+                target="_blank">
+                상품
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2349`}
+                rel="noreferrer"
+                target="_blank">
+                방송
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2347`}
+                rel="noreferrer"
+                target="_blank">
+                매출
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2345`}
+                rel="noreferrer"
+                target="_blank">
+                고객
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2348`}
+                rel="noreferrer"
+                target="_blank">
+                물류
+              </a>
+              <a
+                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2358`}
+                rel="noreferrer"
+                target="_blank">
+                기타
+              </a>
+              <a
+                href={`${PORTAL_URL}/`}
+                rel="noreferrer"
+                target="_blank"
+                className='active'>
+                OLAP</a>
             </li>
           </ul>
-          <DrawerMenu data={reportList}/>
+          <CommonButton
+            id={'portal_user_info'}
+            type={'onlyImageText'}
+            height={'32px'}
+            width={'100px'}
+            usePopover={true}
+            popoverProps={{
+              'width': 'auto',
+              'height': '80',
+              'showEvent': 'click',
+              'position': 'bottom'
+            }}
+            contentRender={() => <UserInfoPopover/>}
+          >
+            <UserInfoButtonUI name={userNm}/>
+          </CommonButton>
+          <DrawerMenu data={portalReportList}/>
         </div>
       </div>
       <div className='contents'>
@@ -151,7 +237,8 @@ const Portal = () => {
         <iframe
           width='100%'
           height='2400px'
-          src={`http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          // eslint-disable-next-line max-len
+          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>
@@ -161,17 +248,17 @@ const Portal = () => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
+                    <p>
+                      <img src={require('./img/folder_ico.png')}/>
+                      {fld.name}
+                    </p>
                     <ul>
                       {getReports(fld.reports)}
                     </ul>
                   </div>);
               } else {
                 return (
-                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
-                    <div className='no-card'> 보고서가 없습니다 </div>
-                  </div>
+                  null
                 );
               }
             }

@@ -264,7 +264,8 @@ const generateParameterForQueryExecute = (parameters) => {
       dsId: p.dsId,
       uniqueName: p.uniqueName,
       caption: p.cpation,
-      paramType: p.paramType
+      paramType: p.paramType,
+      format: p.calendarKeyFormat || ''
     };
   });
 

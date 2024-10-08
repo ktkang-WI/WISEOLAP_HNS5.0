@@ -795,4 +795,15 @@ public class ReportService {
             return false; 
         }
     }
+
+    public Map<String, List<ReportListDTO>> getportalReportList(UserDTO user) {
+        Map<String, List<ReportListDTO>> result = new HashMap<> ();
+        List<ReportListDTO> fav = reportDAO.selectFavoriteReportList(user.getUserId(), user.getUserNo());
+        List<ReportListDTO> recent = reportDAO.selectTop10ReportList(user.getUserId());
+
+        result.put("favorites", fav);
+        result.put("recent", recent);
+        
+        return result;
+    }
 }

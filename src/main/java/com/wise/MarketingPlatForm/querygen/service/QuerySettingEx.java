@@ -1411,6 +1411,7 @@ public class QuerySettingEx {
 				|| aDataType.equalsIgnoreCase("VARCHAR")
 				|| aDataType.equalsIgnoreCase("NCHAR")
 				|| aDataType.equalsIgnoreCase("CHAR")
+                || aDataType.equalsIgnoreCase("STRING")
 				|| aDataType.equalsIgnoreCase("NTEXT")
 				|| aDataType.equalsIgnoreCase("TEXT"))
 			sReturn = "VARCHAR";

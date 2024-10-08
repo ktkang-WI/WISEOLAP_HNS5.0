@@ -1,9 +1,20 @@
 import {useState} from 'react';
 import Collapsible from 'react-collapsible';
+import reportIcon from 'assets/image/icon/button/report_folder.png';
 import './Drawer.css';
 
 const DrawerMenu = ({data}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menus = [
+    {
+      name: '즐겨찾기',
+      key: 'favorites'
+    },
+    {
+      name: '최근 보고서',
+      key: 'recent'
+    }
+  ];
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -17,7 +28,8 @@ const DrawerMenu = ({data}) => {
   };
 
   const getTrigger = (name) => {
-    return <div className='menu-fld'> {name} </div>;
+    return <div className='menu-fld'>
+      <img height='21px' src={reportIcon}/> {name} </div>;
   };
 
   return (
@@ -28,19 +40,18 @@ const DrawerMenu = ({data}) => {
 
       {isOpen && <div className="backdrop" onClick={closeDrawer}></div>}
 
-      <div className={`custom-scrollbar drawer ${isOpen ? 'open' : ''}`}>
+      <div className={`drawer ${isOpen ? 'open' : ''}`}>
         {
-          data.map((fld) => {
-            if (fld.reports.length == 0) return null;
+          menus.map((menu) => {
             return (
               <Collapsible
-                key={'menu-' + fld.id}
-                trigger={getTrigger(fld.name)}>
-                {fld.reports.map((report) => {
+                key={'menu-' + menu.key}
+                trigger={getTrigger(menu.name)}>
+                {(data[menu.key] || []).map((report) => {
                   return (
                     <div
                       onClick={() => {
-                        const href = `http://10.2.3.51:18080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`;
+                        const href = `https://olap.hns.tv:8080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}`;
                         const newWindow = window.open(href, '_blank');
                         if (newWindow) {
                           newWindow.focus();

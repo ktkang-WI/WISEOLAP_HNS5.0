@@ -5,6 +5,9 @@ import LoginLogo from '../assets/image/logo/login_image.png';
 import PagingTransition from
   'components/common/atomic/Common/Interactive/PagingTransition';
 import {getTheme} from 'config/theme';
+import models from 'models';
+import useModal from 'hooks/useModal';
+import {useNavigate} from 'react-router-dom';
 
 const theme = getTheme();
 
@@ -104,6 +107,9 @@ const Footer = styled.div`
 
 
 const Login = () => {
+  const {alert} = useModal();
+  const nav = useNavigate();
+
   return (
     <Wrap>
       {/* <BackgroundLogo src={bgLogo}/> */}
@@ -113,7 +119,34 @@ const Login = () => {
           <PagingTransition/>
           <LoginLogoWrap className='loginLogoWrap'>
             <VisualInnerWrap className='visualInnerWrap'>
-              <StyledLoginImg src={LoginLogo}/>
+              <StyledLoginImg onClick={async (type) => {
+                const id = document.querySelector('#input-ID input').value;
+                const password =
+                  document.querySelector('#input-Password input').value;
+
+                try {
+                  const res = await models.Login.login(id, password);
+                  if (res.status == 200) {
+                    nav('portal');
+                  }
+                } catch (error) {
+                  // 에러 발생 시 처리
+                  const status = error.response?.status || error.status;
+                  console.error(error);
+                  // 응답 상태 코드가 존재하는 경우
+                  if (status === 404) {
+                    document.activeElement.blur();
+                    alert('사용자 정보가 잘못되었습니다.');
+                  } else if (status === 500) {
+                    document.activeElement.blur();
+                    alert('서버에 문제가 발생하였습니다.');
+                  } else {
+                    document.activeElement.blur();
+                    alert('예기치 못한 오류가 발생하였습니다.');
+                  }
+                }
+              }}
+              src={LoginLogo}/>
             </VisualInnerWrap>
           </LoginLogoWrap>
         </InnerWrap>

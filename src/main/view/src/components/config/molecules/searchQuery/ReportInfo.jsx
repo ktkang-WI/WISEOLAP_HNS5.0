@@ -83,7 +83,8 @@ const ReportInfo = ({itemData}) => {
                     editorType='dxTextArea'
                     editorOptions= {{
                       class: 'custom-scrollbar',
-                      height: '300px'
+                      height: '300px',
+                      readOnly: true
                     }}
                   >
                     {

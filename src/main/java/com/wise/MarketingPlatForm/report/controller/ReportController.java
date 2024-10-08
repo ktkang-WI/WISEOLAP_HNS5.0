@@ -270,9 +270,15 @@ public class ReportController {
         return reportService.getReport(request, reportId, reportSeq);
 	}
     
-    @PostMapping(value = "/md-code")
-	public String getMdCode(HttpServletRequest request) {
-        return SessionUtility.getSessionUser(request).getMdCode();
+    @PostMapping(value = "/user-info")
+	public Map<String, String> getUserInfo(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+        Map<String, String> res = new HashMap<> ();
+
+        res.put("userNm", user.getUserNm());
+        res.put("mdCode", user.getMdCode());
+        res.put("userId", user.getUserId());
+        return res;
 	}
     
     @Operation(
@@ -664,6 +670,16 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
+
+    @GetMapping("/portal-report-list")
+    public ResponseEntity<Map<String, List<ReportListDTO>>> getPortalReportList(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        Map<String, List<ReportListDTO>> result = reportService.getportalReportList(user);
+
+        return ResponseEntity.ok().body(result);
+    }
+    
 }
 
 

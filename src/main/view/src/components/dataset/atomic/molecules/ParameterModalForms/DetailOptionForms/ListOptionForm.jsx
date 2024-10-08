@@ -158,7 +158,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
         dataField='sortBy'
         editorOptions={{buttons: [sortBySearchBtn]}}
       >
-        <Label>{localizedString.sort}</Label>
+        <Label>{localizedString.sortByItem}</Label>
       </Item>
       <Item
         editorType='dxTextBox'
@@ -176,7 +176,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
           valueExpr: 'name'
         }}
       >
-        <Label>{''}</Label>
+        <Label>{localizedString.sort}</Label>
       </Item>
       <Item
         colSpan={isBetween ? 1 : 2}

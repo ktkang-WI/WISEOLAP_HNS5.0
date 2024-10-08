@@ -251,11 +251,161 @@
       ) A
       LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
       LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
-      ORDER BY UPPERID, TYPE, ORDINAL
+      ORDER BY TYPE, UPPERID, ORDINAL, TEXT
+    </select>
+
+    <select id="selectTop10ReportList" resultMap="ReportList">
+      SELECT 
+          rm.REPORT_ID AS ID,                             
+          rm.REPORT_NM AS TEXT,                             
+          rm.FLD_ID AS UPPERID,                             
+          rm.REPORT_ORDINAL AS ORDINAL,                             
+          rm.REPORT_TYPE AS REPORT_TYPE,                             
+          'REPORT' AS TYPE,                             
+          rm.REG_DT AS REG_DT,                                                  
+          rm.REG_USER_NO AS REG_USER_NO,             
+          rm.MOD_DT AS MOD_DT,                             
+          rm.MOD_USER_NO AS MOD_USER_NO,      
+          rm.GRID_INFO AS REQUESTER,                          
+          rm.REPORT_TAG AS REPORT_TAG,                             
+          TO_CHAR(rm.REPORT_DESC) AS REPORT_DESC,
+          rm.PROMPT_YN,
+          NULL AS AUTH_PUBLISH             
+      FROM 
+      (
+          SELECT REPORT_ID
+          FROM (
+              SELECT 
+                  A.STATUS_CD AS STATUS_CD,
+                  A.LOG_SEQ AS LOG_SEQ,
+                  A.REPORT_ID AS REPORT_ID,
+                  A.REPORT_NM AS REPORT_NM,
+                  A.REPORT_TYPE AS REPORT_TYPE,
+                  A.ST_DT AS ST_DT,
+                  A.ED_DT AS ED_DT,
+                  A.USER_ID AS USER_ID,
+                  A.USER_NM AS USER_NM,
+                  A.ACCESS_IP AS ACCESS_IP,
+                  ROW_NUMBER() OVER (PARTITION BY A.REPORT_ID ORDER BY A.ST_DT DESC) AS RN
+              FROM LOG_REPORT_USE2 A
+              WHERE A.USER_ID = #{userId}
+            AND A.ST_DT BETWEEN TRUNC(SYSDATE) AND TRUNC(SYSDATE) + 1
+          )
+          WHERE RN = 1
+          ORDER BY ST_DT DESC
+          FETCH FIRST 10 ROWS ONLY
+      ) A 
+      LEFT JOIN REPORT_MSTR rm ON A.REPORT_ID = rm.REPORT_ID
+    </select>
+
+    <select id="selectFavoriteReportList" resultMap="ReportList">
+      SELECT DISTINCT 
+          A.ID,
+          A.TEXT,
+          A.UPPERID,
+          A.ORDINAL,
+          A.REPORT_TYPE,
+          A.TYPE,
+          A.REG_DT,
+          UM_REG.USER_NM AS REG_USER_NM,
+          A.MOD_DT,
+          UM_MOD.USER_NM AS MOD_USER_NM,
+          A.REQUESTER,
+          A.REPORT_TAG,
+          A.REPORT_DESC,
+          A.PROMPT_YN,
+          A.AUTH_PUBLISH
+      FROM (
+          (
+              SELECT DISTINCT  
+                  PUB_FLD_MSTR.FLD_ID AS ID,                             
+                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
+                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
+                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
+                  NULL AS REPORT_TYPE,                             
+                  'FOLDER' AS TYPE,                                                       
+                  NULL AS REG_DT,                             
+                  NULL AS REG_USER_NO,          
+                  NULL AS MOD_DT,                             
+                  NULL AS MOD_USER_NO,      
+                  NULL AS REQUESTER,                          
+                  NULL AS REPORT_TAG,                             
+                  NULL AS REPORT_DESC,
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
+              FROM               
+                  USER_AUTH_REPORT_MSTR             
+              INNER JOIN         
+                  USER_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = USER_AUTH_REPORT_MSTR.FLD_ID                             
+              WHERE            
+                  USER_MSTR.USER_ID = #{userId}   
+                    AND AUTH_VIEW != 0
+          )           
+          UNION ALL           
+          (
+              SELECT DISTINCT  
+                  PUB_FLD_MSTR.FLD_ID AS ID,                             
+                  PUB_FLD_MSTR.FLD_NM AS TEXT,                             
+                  PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,                             
+                  PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,                             
+                  NULL AS REPORT_TYPE,                      
+                  'FOLDER' AS TYPE,                                              
+                  NULL AS REG_DT,                             
+                  NULL AS REG_USER_NO,                             
+                  NULL AS MOD_DT,                             
+                  NULL AS MOD_USER_NO,  
+                  NULL AS REQUESTER,                                
+                  NULL AS REPORT_TAG,                             
+                  NULL AS REPORT_DESC,
+                  NULL AS PROMPT_YN,
+                  AUTH_PUBLISH AS AUTH_PUBLISH             
+              FROM               
+                  GRP_AUTH_REPORT_MSTR             
+              INNER JOIN         
+                  USER_MSTR ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID                             
+              WHERE            
+                  USER_MSTR.USER_ID = #{userId}                  
+                    AND AUTH_VIEW != 0                            
+          )           
+          UNION ALL           
+          (
+              SELECT            
+                  REPORT_MSTR.REPORT_ID AS ID,                             
+                  REPORT_MSTR.REPORT_NM AS TEXT,                             
+                  REPORT_MSTR.FLD_ID AS UPPERID,                             
+                  REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,                             
+                  REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,                             
+                  'REPORT' AS TYPE,                             
+                  REPORT_MSTR.REG_DT AS REG_DT,                                                  
+                  REPORT_MSTR.REG_USER_NO AS REG_USER_NO,             
+                  REPORT_MSTR.MOD_DT AS MOD_DT,                             
+                  REPORT_MSTR.MOD_USER_NO AS MOD_USER_NO,      
+                  REPORT_MSTR.GRID_INFO AS REQUESTER,                          
+                  REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
+                  TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
+                  REPORT_MSTR.PROMPT_YN,
+                  NULL AS AUTH_PUBLISH             
+              FROM               
+                  REPORT_MSTR             
+              INNER JOIN         
+                  PUB_FLD_MSTR ON REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID             
+              WHERE              
+                  REPORT_MSTR.DEL_YN != 'Y'                                    
+          )
+      ) A
+      LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO
+      LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO
+      WHERE ID IN (SELECT REPORT_ID FROM REPORT_FAVORITES WHERE USER_NO = #{userNo})
+      ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
     <select id="selectPrivateReportList" resultMap="ReportList">
         SELECT 
+          DISTINCT
             A.ID,
             A.TEXT,
             A.UPPERID,
@@ -328,7 +478,7 @@
         ) A
         LEFT JOIN USER_MSTR UM_REG ON UM_REG.USER_NO = A.REG_USER_NO  
         LEFT JOIN USER_MSTR UM_MOD ON UM_MOD.USER_NO = A.MOD_USER_NO  
-        ORDER BY UPPERID, TYPE, ORDINAL
+        ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
     <select id="selectPublicReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
@@ -342,7 +492,7 @@
 		WHERE 		USER_MSTR.USER_NO = #{userNo}
 					AND USER_MSTR.DEL_YN = 'N'
         			AND AUTH_PUBLISH != 0
-		ORDER BY 	fldParentId, fldOrdinal
+		ORDER BY 	fldParentId, fldOrdinal, fldNm
     </select>
 
     <select id="selectPrivateReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
