@@ -6,7 +6,7 @@ const Card = ({title, amount, percentData, imgSrc}) => {
     <div className="pay_box">
       <div>
         <p className="pay_title">{_title} <br /><span>{_unit}</span></p>
-        <p className="pay">{amount}</p>
+        <p className="pay">{(amount * 1).toLocaleString()}</p>
       </div>
       <div>
         <img src={imgSrc} alt="" />

@@ -61,7 +61,13 @@ class ExpressionEngine {
     try {
       const _expression = this.evaluateExpression(expression, context);
       const result = this.math.evaluate(_expression, context);
-      return !result || (result === null) ? result : defaultValue;
+
+      if (result === undefined || result === Infinity ||
+        result === -Infinity || isNaN(result)) {
+        return defaultValue;
+      }
+
+      return result;
     } catch (error) {
       console.warn(`Error occurred while evaluating an expression:
         ${expression}`, error);

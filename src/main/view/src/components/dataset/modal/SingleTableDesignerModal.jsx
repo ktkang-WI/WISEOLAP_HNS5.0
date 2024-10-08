@@ -130,17 +130,17 @@ const SingleTableDesignerModal = ({
     paramInfo.forEach((param) => {
       switch (param.operation) {
         case 'IN':
-        case 'Equals':
+        case 'EQUALS':
           sqlData += ' AND A.' + param.uniqueName +
               ' IN (' + param.name + ') \n';
           break;
-        case 'Not In':
+        case 'NOT_IN':
           sqlData += ' AND A.' + param.uniqueName +
-              'NOT IN (' + param.name + ') \n';
+              ' NOT IN (' + param.name + ') \n';
           break;
-        case 'Between':
+        case 'BETWEEN':
           sqlData += ' AND A.' + param.uniqueName +
-              'BETWEEN (' + param.name + ') \n';
+              ' BETWEEN ' + param.name + ' \n';
           break;
       }
     });

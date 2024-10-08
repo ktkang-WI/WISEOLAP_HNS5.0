@@ -269,6 +269,7 @@ public class ReportController {
         UserDTO user = SessionUtility.getSessionUser(request);
         Map<String, String> res = new HashMap<> ();
 
+        res.put("userNm", user.getUserNm());
         res.put("mdCode", user.getMdCode());
         res.put("userId", user.getUserId());
         return res;

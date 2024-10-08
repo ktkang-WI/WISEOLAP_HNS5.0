@@ -10,6 +10,11 @@ import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
+import UserInfoButtonUI
+  from 'components/common/atomic/Header/atom/UserInfoButtonUI';
+import UserInfoPopover
+  from 'components/common/atomic/Header/popover/UserInfoPopover';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const Portal = () => {
   const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
@@ -18,13 +23,15 @@ const Portal = () => {
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
-    new Set([2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
   const [userId, setUserId] = useState('');
+  const [userNm, setUserNm] = useState('');
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
         setUserId(data.data.userId);
+        setUserNm(data.data.userNm);
       }
     });
     models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
@@ -98,7 +105,7 @@ const Portal = () => {
     return reports.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
-        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -124,7 +131,7 @@ const Portal = () => {
                 href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
                 rel="noreferrer"
                 target="_blank"
-                className='active'>
+              >
                 전사관리지표
               </a>
               <a
@@ -172,10 +179,27 @@ const Portal = () => {
               <a
                 href={`${PORTAL_URL}/`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className='active'>
                 OLAP</a>
             </li>
           </ul>
+          <CommonButton
+            id={'portal_user_info'}
+            type={'onlyImageText'}
+            height={'32px'}
+            width={'100px'}
+            usePopover={true}
+            popoverProps={{
+              'width': 'auto',
+              'height': '80',
+              'showEvent': 'click',
+              'position': 'bottom'
+            }}
+            contentRender={() => <UserInfoPopover/>}
+          >
+            <UserInfoButtonUI name={userNm}/>
+          </CommonButton>
           <DrawerMenu data={portalReportList}/>
         </div>
       </div>
@@ -224,17 +248,17 @@ const Portal = () => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
+                    <p>
+                      <img src={require('./img/folder_ico.png')}/>
+                      {fld.name}
+                    </p>
                     <ul>
                       {getReports(fld.reports)}
                     </ul>
                   </div>);
               } else {
                 return (
-                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
-                    <div className='no-card'> 보고서가 없습니다 </div>
-                  </div>
+                  null
                 );
               }
             }

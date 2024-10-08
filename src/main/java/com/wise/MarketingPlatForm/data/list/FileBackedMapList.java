@@ -39,9 +39,9 @@ public class FileBackedMapList  extends LinkedList<Map<String, Object>> implemen
 
 	private static final AtomicInteger hashCodeGen = new AtomicInteger();
 
-	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_PROD = 100000;
+	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_PROD = 300000;
 
-	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_DEV = 100000;
+	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_DEV = 300000;
 
 	private static final String TEMP_FILE_PREFIX = FileBackedMapList.class.getSimpleName();
 	
