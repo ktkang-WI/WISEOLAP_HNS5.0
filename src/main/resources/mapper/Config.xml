@@ -214,6 +214,9 @@
             <if test='type != ""'>
               REPORT_TYPE = #{type, jdbcType=VARCHAR},
             </if>
+            <if test='fldParentId != ""'>
+              FLD_ID = #{fldParentId, jdbcType=INTEGER},
+            </if>
             <if test='subtitle != ""'>
               REPORT_SUB_TITLE = #{subtitle, jdbcType=VARCHAR},
             </if>

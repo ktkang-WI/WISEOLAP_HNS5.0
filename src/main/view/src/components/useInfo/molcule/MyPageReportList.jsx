@@ -81,6 +81,10 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
           }
         }
       }
+      if (e.node?.parent?.text) {
+        newData.fldParentNm = e.node?.parent?.text;
+      }
+
       setPrevName(e.itemData.name);
       reportId = newData.id;
       setData({...newData});
