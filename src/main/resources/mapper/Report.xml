@@ -405,6 +405,7 @@
 
     <select id="selectPrivateReportList" resultMap="ReportList">
         SELECT 
+          DISTINCT
             A.ID,
             A.TEXT,
             A.UPPERID,
