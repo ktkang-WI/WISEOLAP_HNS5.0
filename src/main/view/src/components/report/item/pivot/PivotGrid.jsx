@@ -7,7 +7,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useState
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -57,6 +58,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const itemExportObject =
    itemExportsObject(id, ref, 'pivot', mart.data.data);
   const dispatch = useDispatch();
+  const [blockExecute, setBlockExecute] = useState(true);
 
   const datasets = useSelector(selectCurrentDatasets);
   const reportId = useSelector(selectCurrentReportId);
@@ -121,7 +123,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement, component}) => {
-    if (area === 'row' && dataset?.cubeId === 6184) {
+    if (area === 'row' && blockExecute && dataset?.cubeId === 6184) {
       if (cell.text === '') {
         let newPath = cell.path;
 
@@ -231,6 +233,13 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         wordWrapEnabled={false}
         onCellPrepared={onCellPrepared}
         allowSorting={true}
+        onCellClick={(e) => {
+          // 홈앤쇼핑 주제영역 아이디가 6184인 경우만 적용.
+          // row의 값이 없는 경우 처음에만 접고 그 후 펴기 접기 가능하게.
+          if (dataset?.cubeId === 6184) {
+            setBlockExecute(false);
+          }
+        }}
         allowSortingBySummary={true}
         allowExpandAll={true}
         onContentReady={(e) => {
