@@ -51,7 +51,7 @@ const DrawerMenu = ({data}) => {
                   return (
                     <div
                       onClick={() => {
-                        const href = `https://olap.hns.tv:8080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}`;
+                        const href = `https://olap.hns.tv:8080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&srl=true`;
                         const newWindow = window.open(href, '_blank');
                         if (newWindow) {
                           newWindow.focus();

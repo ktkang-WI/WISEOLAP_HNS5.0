@@ -18,6 +18,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
 const Portal = () => {
   const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
+  // const PORTAL_URL = 'http://localhost:3000/editds';
   const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
@@ -34,11 +35,19 @@ const Portal = () => {
         setUserNm(data.data.userNm);
       }
     });
-    models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
+
+    models.Portal.getCardData(format(date, 'yyyyMMdd')).then((data) => {
       if (data.status == 200 && data.data) {
         setCardData(data.data);
       }
     });
+
+    // 3600000
+    const itv = setInterval(() => {
+      setDate(new Date());
+    }, 3600000);
+
+    return () => clearInterval(itv);
   }, [date]);
 
   useEffect(() => {
@@ -97,7 +106,10 @@ const Portal = () => {
   useEffect(() => {
     $('.date').datepicker({
       dateFormat: 'yy.mm.dd',
-      onSelect: (dateText) => setDate(dateText)
+      onSelect: (dateText) => {
+        const selectedDate = $.datepicker.parseDate('yy.mm.dd', dateText);
+        setDate(selectedDate);
+      }
     });
   }, []);
 
@@ -105,7 +117,7 @@ const Portal = () => {
     return reports.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
-        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}`}
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -210,7 +222,7 @@ const Portal = () => {
               <p>기준년월일</p>
               <input
                 type='text'
-                value={date}
+                value={format(date, 'yyyy.MM.dd')}
                 className='date'
                 readOnly
               />
@@ -238,7 +250,7 @@ const Portal = () => {
           width='100%'
           height='2400px'
           // eslint-disable-next-line max-len
-          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
+          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=12138&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${format(date, 'yyyyMMdd')}%22%5D%7D`}
         ></iframe>
       </div>
       <div className='blue_bg'>

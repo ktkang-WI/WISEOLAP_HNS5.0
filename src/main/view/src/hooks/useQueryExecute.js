@@ -683,19 +683,16 @@ const useQueryExecute = () => {
         _value = paramValues[name];
       }
 
-      if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
+      const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+      if (reg.test(value[0]) || reg.test(value[1])) {
         const res = await models.Report.getUserInfo();
         const info = res?.data || {};
         _value = [];
 
-        value.map((v) => {
-          if (v == '[MD_CODE]') {
-            _value.push(info['mdCode']);
-          } else if (v == '[WI_SESSION_ID]') {
-            _value.push(info['userId']);
-          } else {
-            _value.push(v);
-          }
+        _value = value.map((v) => {
+          return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+              .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
         });
       }
 
@@ -736,15 +733,16 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(data.value[0])) {
+            const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+            if (reg.test(data.value[0]) || reg.test(data.value[1])) {
               const res = await models.Report.getUserInfo();
               const info = res?.data || {};
 
-              if (data.value[0] == '[MD_CODE]') {
-                data.value[0] = info.mdCode;
-              } else {
-                data.value[0] = info.userId;
-              }
+              data.value = data.value.map((v) => {
+                return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+                    .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+              });
             }
 
             if (data) {
