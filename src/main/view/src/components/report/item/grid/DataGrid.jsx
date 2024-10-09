@@ -23,6 +23,11 @@ import useContextMenu from 'hooks/useContextMenu';
 import ItemType from '../util/ItemType';
 import useItemExport from 'hooks/useItemExport';
 import useItemSetting from '../util/hook/useItemSetting';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {debounce} from 'lodash';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const DataGrid = ({setItemExports, id, item}) => {
   const {getContextMenuItems} = useContextMenu();
@@ -31,6 +36,9 @@ const DataGrid = ({setItemExports, id, item}) => {
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
+  const dispatch = useDispatch();
+  const reportId = useSelector(selectCurrentReportId);
+  const {updateItem} = ItemSlice.actions;
 
   const interactiveOption = meta.interactiveOption || {};
 
@@ -75,6 +83,20 @@ const DataGrid = ({setItemExports, id, item}) => {
     return [...new Set(pageSizes.map((pageSize) =>
       dataSize < pageSize ? dataSize - 1 : pageSize))];
   };
+
+  const handleColumnsChanging = debounce((e) => {
+    if (!config.autoGridWidth) {
+      const columnWidth = e.component.getVisibleColumns().map((c) => c.width);
+      const newItem = {...item, meta: {...item.meta, columnWidth}};
+
+      if (item.meta.columnWidth &&
+        _.isEqual(item.meta.columnWidth, columnWidth)) {
+        return;
+      }
+
+      dispatch(updateItem({reportId, item: newItem}));
+    }
+  }, 300);
 
   const handlePagingIndex = () => {
     const dataGridInstance = dataGridRef?.current?.instance;
@@ -283,6 +305,7 @@ const DataGrid = ({setItemExports, id, item}) => {
       showColumnHeaders={config.columnHeader}
       wordWrapEnabled={config.autoWrap}
       onSelectionChanged={onSelectionChanged}
+      onColumnsChanging={handleColumnsChanging}
       onContextMenuPreparing={(e) => {
         const contextMenu = getContextMenuItems();
         e.items = contextMenu;
@@ -304,19 +327,50 @@ const DataGrid = ({setItemExports, id, item}) => {
         allowedPageSizes={generatePageSizes()}
       />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
-      {dataGridConfig.dataSource.columns.map((column, i) =>
-        <Column
+      {dataGridConfig.dataSource.columns.map((column, i) => {
+        let columnWidth = column.detailSetting === 'bar' ? '500px' : undefined;
+
+        if (!config.autoGridWidth && meta.columnWidth) {
+          if (meta.columnWidth.length ==
+            dataGridConfig.dataSource.columns.length) {
+            columnWidth = meta.columnWidth[i];
+          }
+        }
+
+        return <Column
           key={i}
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
           dataType={column.type === 'MEA' ? 'number' : 'string'}
           cellRender={(e) => cellRender(e, column, meta)}
-          width={column.detailSetting === 'bar' ? '500px' : undefined}
-        />
+          width={columnWidth}
+        />;
+      }
       )}
     </DevDataGrid>
   );
 };
 
-export default React.memo(DataGrid);
+const propsComparator = (prev, next) => {
+  const prevItem = {
+    ...prev.item,
+    meta: {
+      ...prev.item.meta,
+      columnWidth: null
+    }
+  };
+
+  const nextItem = {
+    ...next.item,
+    meta: {
+      ...next.item.meta,
+      columnWidth: null
+    }
+  };
+  const result = _.isEqual(prevItem, nextItem);
+
+  return result;
+};
+
+export default React.memo(DataGrid, propsComparator);
