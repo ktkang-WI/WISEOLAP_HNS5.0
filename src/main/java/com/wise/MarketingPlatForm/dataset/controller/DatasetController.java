@@ -302,9 +302,10 @@ public class DatasetController {
                     "}")
     }))
     @PostMapping(value = "/param-list-items")
-    public ListParameterResultVO getListParameterItems(@RequestBody Map<String, String> param) {
+    public ListParameterResultVO getListParameterItems(HttpServletRequest request, @RequestBody Map<String, String> param) {
         ListParameterDTO listParameterDTO = ListParameterDTO.fromMap(param);
-        return datasetService.getListParameterItems(listParameterDTO);
+        UserDTO user = SessionUtility.getSessionUser(request);
+        return datasetService.getListParameterItems(listParameterDTO, user);
     }
 
     @Operation(summary = "get Paramter Default Values", description = "기본값에 쿼리를 사용하는 매개변수를 조회합니다.")
@@ -316,14 +317,15 @@ public class DatasetController {
             @ExampleObject(name = "example", value = "{\"query\": \"select * from DEMO_01_D_공공_고객\", \"dsId\": \"2703\"}")
     }))
     @PostMapping(value = "/param-default-value")
-    public List<String> getDefaultvalues(@RequestBody Map<String, String> param) {
+    public List<String> getDefaultvalues(HttpServletRequest requset, @RequestBody Map<String, String> param) {
         Gson gson = new Gson();
         int dsId = Integer.parseInt(param.get("dsId"));
         List<String> defaultValue = gson.fromJson(String.valueOf(param.get("defaultValue")),
             new TypeToken<ArrayList<String>>() {
             }.getType());
+        UserDTO user = SessionUtility.getSessionUser(requset);
 
-        return datasetService.getDefaultValues(dsId, defaultValue);
+        return datasetService.getDefaultValues(dsId, defaultValue, user);
     }
 
     @Operation(summary = "get Cube Column Information", description = "필터 생성을 위한 차원 정보를 불러온다.")
