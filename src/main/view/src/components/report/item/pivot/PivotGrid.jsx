@@ -7,8 +7,7 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo,
-  useState
+  useMemo
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -58,7 +57,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const itemExportObject =
    itemExportsObject(id, ref, 'pivot', mart.data.data);
   const dispatch = useDispatch();
-  const [blockExecute, setBlockExecute] = useState(true);
 
   const datasets = useSelector(selectCurrentDatasets);
   const reportId = useSelector(selectCurrentReportId);
@@ -123,8 +121,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement, component}) => {
-    if (area === 'row' && blockExecute && dataset?.cubeId === 6184) {
+    // dataset?.cubeId == 6184
+    if (area === 'row') {
       if (cell.text === '') {
+        const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
         let newPath = cell.path;
 
         if (cell.path.includes(null)) {
@@ -132,7 +132,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           newPath = newPath.splice(0, idx);
         }
 
-        component.getDataSource().collapseHeaderItem('row', newPath);
+        const idx = click.findIndex((i) => newPath.toString() == i);
+        if (idx == -1) {
+          component.getDataSource().collapseHeaderItem('row', newPath);
+        }
       }
     }
 
@@ -231,17 +234,21 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         fieldPanel={fieldPanel}
         showTotalsPrior={showTotalsPrior}
         wordWrapEnabled={false}
-        onCellPrepared={onCellPrepared}
-        allowSorting={true}
         onCellClick={(e) => {
-          // 홈앤쇼핑 주제영역 아이디가 6184인 경우만 적용.
-          // row의 값이 없는 경우 처음에만 접고 그 후 펴기 접기 가능하게.
-          if (dataset?.cubeId === 6184) {
-            setBlockExecute(false);
+          const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
+          if (!click.includes(e.cell.path.toString())) {
+            click.push(e.cell.path.toString());
+            window.sessionStorage.setItem('cellClick', JSON.stringify(click));
           }
         }}
+        onCellPrepared={onCellPrepared}
+        allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
+        onInitialized={() => {
+          const arr = [];
+          window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
+        }}
         onContentReady={(e) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;
