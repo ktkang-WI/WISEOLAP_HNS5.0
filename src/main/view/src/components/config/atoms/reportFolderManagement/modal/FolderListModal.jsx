@@ -59,6 +59,7 @@ const FolderListModal = ({myPageFlag, ...props}) => {
         ...data
       };
     }
+    newData.fldParentNm = data.name;
     setRow(newData);
   };
 
