@@ -316,12 +316,6 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
-        if (nullDataCheck(tempItem)) {
-          // alert(`${item.meta.name}${localizedString.noneData}`);
-          return tempItem.meta.name;
-        }
-
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
         }

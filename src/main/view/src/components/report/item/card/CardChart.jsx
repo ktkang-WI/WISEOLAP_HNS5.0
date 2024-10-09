@@ -37,7 +37,8 @@ const Content = styled.div`
 const CardChart = ({
   onClick,
   title,
-  content
+  content,
+  id
 }) => {
   const ref = useRef();
 
