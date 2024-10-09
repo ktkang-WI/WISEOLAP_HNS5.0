@@ -8,6 +8,8 @@ import {useDispatch} from 'react-redux';
 import ReportSlice from 'redux/modules/ReportSlice';
 import {selectRootReport} from 'redux/selector/ReportSelector';
 import localizedString from 'config/localization';
+import {selectEditMode} from 'redux/selector/ConfigSelector';
+import {EditMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -18,9 +20,18 @@ const EditReportName = ({...props}) => {
 
   // state
   const rootReport= useSelector(selectRootReport);
+  const editMode = useSelector(selectEditMode);
 
   // slice
   const reportActions = ReportSlice.actions;
+
+  const reportNm = () => {
+    if (editMode == EditMode.VIEWER) {
+      return rootReport.reports[1].options.reportNm;
+    }
+
+    return rootReport.reports[0].options.reportNm;
+  };
 
   return (
     <Modal
@@ -44,7 +55,7 @@ const EditReportName = ({...props}) => {
       </ModalPanelTitle>
       <TextBox
         ref={ref}
-        text={rootReport.reports[0].options.reportNm}
+        text={reportNm()}
       />
     </Modal>);
 };

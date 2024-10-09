@@ -57,6 +57,7 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "") String createdDate,
     @RequestParam(required = false, defaultValue = "") String tag,
     @RequestParam(required = false, defaultValue = "0") int ordinal,
+    @RequestParam(required = false, defaultValue = "0") int fldParentId,
     @RequestParam(required = false, defaultValue = "") String desc,
     @RequestParam(required = false, defaultValue = "") String query,
     @RequestParam(required = false, defaultValue = "false") Boolean prompt
@@ -69,6 +70,7 @@ public class MyPageFolderController {
       .id(id)
       .name(name)
       .subtitle(subtitle)
+      .fldParentId(fldParentId)
       .type(type)
       .desc(desc)
       .tag(tag)

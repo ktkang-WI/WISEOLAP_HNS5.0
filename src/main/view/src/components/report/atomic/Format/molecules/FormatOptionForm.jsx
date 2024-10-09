@@ -83,6 +83,14 @@ const FormatOptionForm = ({
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
       {axisSetting && <Item
+        dataField='autoBreak'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{'스케일 브레이크 사용'}</Label>
+      </Item>}
+      {axisSetting && <Item
         dataField='axisStartToZero'
         editorType='dxCheckBox'
         editorOptions={{

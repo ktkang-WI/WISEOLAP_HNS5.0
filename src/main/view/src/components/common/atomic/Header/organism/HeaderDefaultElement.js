@@ -40,7 +40,7 @@ const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const {
-    // alert,
+    alert,
     openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
@@ -168,7 +168,14 @@ const HeaderDefaultElement = () => {
       'icon': saveAsImg,
       'type': 'CommonButton',
       'onClick': (e) => {
-        openModal(ReportSaveModal);
+        // TODO : linkViewer 방식이 변경 되면 다시 고려 해야함.
+        const items = selectCurrentItems(store.getState());
+        const isOpenAndExcute = items.some((i) => i.mart.init);
+        if (isOpenAndExcute) {
+          openModal(ReportSaveModal);
+        } else {
+          alert('보고서를 조회한 후 저장해 주세요.');
+        }
       }
     },
     'UserInfo': {
