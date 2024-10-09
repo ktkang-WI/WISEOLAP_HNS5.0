@@ -189,6 +189,8 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           }}
         />
         <ValueAxis
+          autoBreaksEnabled={meta.yAxis.autoBreak}
+          maxAutoBreakCount={4}
           name="left"
           position="left"
           title={meta.yAxis.customText} // 사용자정의텍스트
@@ -207,6 +209,8 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           <ValueAxis
             name="right"
             position="right"
+            maxAutoBreakCount={4}
+            autoBreaksEnabled={meta.extraAxis.autoBreak}
             title={meta.extraAxis.customText} // 사용자정의텍스트
             showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
             label={{
