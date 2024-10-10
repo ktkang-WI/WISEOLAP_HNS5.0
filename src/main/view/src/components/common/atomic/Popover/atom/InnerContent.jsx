@@ -51,8 +51,8 @@ const PointerWrap = styled.div`
 `;
 
 const Arrow = styled.img`
-  padding-right: 10px;
-  width: 10px;
+  padding-right: 5px;
+  width: 15px;
   height: 10px;
 `;
 
@@ -89,7 +89,7 @@ export const PopoverSubMenu = ({label, visible, contents}) => {
   return (
     <PointerWrap type='subMenu'>
       <SubMenu id='subMenu' label={label}
-        gap={-27}>
+        gap={-22}>
         <Wrap>
           {contents && visible && contents.map((i, idx) => {
             return i.visible &&

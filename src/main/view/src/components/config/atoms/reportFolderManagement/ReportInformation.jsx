@@ -162,9 +162,10 @@ const ReportInformation = ({row, setRow, flag}) => {
         </SimpleItem>
         <SimpleItem
           dataField="reportDesc"
-          editorType="dxTextBox"
+          editorType="dxTextArea"
           editorOptions= {{
-            disabled: flag ? true : false
+            disabled: flag ? true : false,
+            height: 100
           }}
         >
           <Label>{localizedString.description}</Label>
