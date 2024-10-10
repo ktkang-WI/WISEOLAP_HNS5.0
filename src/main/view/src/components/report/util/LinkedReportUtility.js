@@ -29,20 +29,37 @@ export const getSubLinkDim = (item) => {
 
 export const connectLinkedReport = (param, showReportList) => {
   if (param) {
-    // models.Report.generateLinkToken(param).then((res) => {
-    models.Report.generateToken(param).then((res) => {
-      if (res.status != 200) return;
-      const token = res.data;
-      const urlString =
-        `${getFullUrl()}/linkviewer?token=${token}` +
-        (showReportList ? '&srl=true' : '');
-      const newWindow = window.open(urlString, '_blank');
-      newWindow.focus();
-    }).catch((error) => {
-      console.error('Error sending link report:', error);
-    });
+    const {reportId, reportType, newWindowLinkParamInfo} = param;
+    const params = new URLSearchParams(window.location.search);
+    const fldFilter = params.get('fld') || false;
+    const urlString =
+        `${getFullUrl()}/linkviewer?reportId=${reportId}` +
+        `&reportType=${reportType}` +
+        (showReportList ? '&srl=true' : '') +
+        (fldFilter ? '&fld=' + fldFilter : '');
+    sessionStorage.setItem(
+        'newWindowLinkParamInfo',
+        JSON.stringify(newWindowLinkParamInfo)
+    );
+    const newWindow = window.open(urlString, '_blank');
+    newWindow.focus();
   }
 };
+  // if (param) {
+  //   // models.Report.generateLinkToken(param).then((res) => {
+  //   models.Report.generateToken(param).then((res) => {
+  //     if (res.status != 200) return;
+  //     const token = res.data;
+  //     const urlString =
+  //       `${getFullUrl()}/linkviewer?token=${token}` +
+  //       (showReportList ? '&srl=true' : '');
+  //     const newWindow = window.open(urlString, '_blank');
+  //     newWindow.focus();
+  //   }).catch((error) => {
+  //     console.error('Error sending link report:', error);
+  //   });
+  // }
+
 
 export const openNewTab = (param, closeWindow, showReportList) => {
   if (param) {
