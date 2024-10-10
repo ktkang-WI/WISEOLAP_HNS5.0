@@ -60,33 +60,45 @@ public class SessionUtility {
     }
     public static UserDTO getSessionSSO(HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        Enumeration em = session.getAttributeNames();
+        HttpSession sessionRoot = request.getSession();
 
         String ssoId = (String)request.getSession().getAttribute(SSO_ID_KEY);
+        String ssUserId =  (String) request.getSession().getServletContext().getContext("/").getAttribute(SSO_ID_KEY);
         
-        log.info("=====SSO TEST===== SSO_ID : " + ssoId);
 
-        log.info("SessionUtility ");
-        log.info("=====SSO TEST=====");
-        while (em.hasMoreElements()) {
-            String skey = (String)em.nextElement();
-            
-            log.info("key: " + skey);
-            log.info("value: " + session.getAttribute(skey));
-        }
+        UserDTO userDTO = null;
+        try {
+            if(ssoId == null || "".equals(ssoId)){
+                ssoId = ssUserId;
+            }
 
-        if (ssoId == null) {
-            return getSessionUser(request);
+            if(ssoId == null || "".equals(ssoId)){
+                userDTO = getSessionUser(request.getSession());
+            } else {
+                userDTO = authService.getUserById(ssoId);
+            }
+
+            if(userDTO != null) {
+                setSessionUser(request, userDTO);
+                request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
+            }
+        } catch(Exception e) {
+            System.out.println("Sesssion Utility ERROR : " + e.getMessage() + " : " + e);
+        } finally {
+            request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
         }
-        
-        return authService.getUserById(ssoId);
+        return userDTO;
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
         if ("database".equalsIgnoreCase(sessionType)) {
             return getSessionUserFromDatabase(request);
         } else {
-            return getSessionUser(request.getSession());
+            // return getSessionUser(request.getSession());
+            UserDTO sessionUser = getSessionUser(request.getSession());
+            if(sessionUser == null) {
+                sessionUser = getSessionSSO(request);
+            }
+            return sessionUser;
         }
     }
 
