@@ -2,7 +2,9 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   linkReport: {},
-  subLinkReport: {}
+  subLinkReport: {},
+  newLinkParamInfo: {},
+  newLinkCnt: true
 };
 
 const reducers = {
@@ -52,6 +54,10 @@ const reducers = {
     } = action.payload;
     // subYn === 'True' &&
     if (state.linkReport[linkReportId]) {
+      state.linkReport[linkReportId] =
+      {
+        ...action.payload
+      };
       // const newSubLinks =
       //   Array.isArray(subLinkReport) ? subLinkReport : [subLinkReport];
       // newSubLinks.forEach((newSubLink) => {
@@ -101,6 +107,15 @@ const reducers = {
       const {linkReportId} = report;
       state.linkReport[linkReportId] = report;
     });
+  },
+
+  setNewLinkParamInfo(state, action) {
+    if (!action.payload) return;
+    state.newLinkParamInfo = action.payload;
+  },
+
+  setNewLinkCnt(state, action) {
+    state.newLinkCnt = action.payload;
   }
 
   // setSubLinkReport(state, action) {
