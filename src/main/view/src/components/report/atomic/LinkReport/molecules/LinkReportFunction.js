@@ -95,7 +95,6 @@ export const processLinkParamData = (
     }, []);
   } else if (!data.informations) {
     let exists;
-    console.log('data.linkFkInfo :', data.linkFkInfo);
     fkNmOpts = data.linkFkInfo.reduce((acc, item) => {
       exists = acc.some((option) => option.caption === item.caption);
       if (!exists && item.caption !== null) {

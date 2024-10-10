@@ -93,12 +93,10 @@ export default function useReportLoad() {
 
     models.Report.getLinkReportList(selectedReport.id)
         .then((res) => {
-          console.log('res.data', res.data);
           if (res.data ? res.data === undefined : true) {
             console.log('링크된 보고서가 없습니다.');
           } else {
             const linkReports = res.data.linkReportDTOList;
-            console.log('linkReports', linkReports);
             dispatch(setLinkReport(linkReports));
           }
         }).catch((e) => {
@@ -160,8 +158,6 @@ export default function useReportLoad() {
           try {
             const subLinkReports = res.data.subLinkReports;
             const linkReports = res.data.linkReports;
-            console.log('subLinkReports', subLinkReports);
-            console.log('linkReports', linkReports);
             if (subLinkReports.length > 0) {
               dispatch(setSubLinkReport(subLinkReports[0]));
             } else if (subLinkReports.length === 0) {

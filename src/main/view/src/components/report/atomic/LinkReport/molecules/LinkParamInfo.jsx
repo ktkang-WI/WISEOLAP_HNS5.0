@@ -147,7 +147,6 @@ const LinkParamInfo = ({
     paramInfo
   ]
   );
-  // console.log('clonedParamInfo:', clonedParamInfo);
 
   // const subLinkInfo = {
   //   reportId: 0,
@@ -192,13 +191,12 @@ const LinkParamInfo = ({
     //     PK_COL_NM: info.pkParam
     //   }));
     // }
-
     linkReportInfo.reportId = currentReport.reportId;
     linkReportInfo.reportNm = currentReport.options.reportNm;
     linkReportInfo.reportType = currentReport.options.reportType;
     linkReportInfo.linkReportId = linkReportId;
     linkReportInfo.linkReportNm = selectedRowData.name;
-    linkReportInfo.linkReportType = selectedRowData.reportType;
+    linkReportInfo.linkReportType = selectedRowData.type;
     // linkReportInfo.linkXmlParam = linkXmlParam;
     linkReportInfo.linkParamInfo = paramInfo;
     linkReportInfo.linkFkInfo = linkFkInfo;
@@ -220,8 +218,6 @@ const LinkParamInfo = ({
     }
     onClose();
   };
-  console.log('OUT paramInfo :', paramInfo);
-  console.log('OUT fkNmOptions :', fkNmOptions);
   return (
     <PopupWrapper>
       <StyledWrapper>
@@ -241,8 +237,6 @@ const LinkParamInfo = ({
             allowUpdating: true
           }}
           onRowUpdated={(e) => {
-            console.log('e:', e);
-            console.log('paramInfo:', paramInfo);
             const newData = paramInfo.map((item) => {
               if (item.pkNm === e.key.pkNm) {
                 const selectedOption = fkNmOptions.find(
@@ -275,7 +269,6 @@ const LinkParamInfo = ({
                 valueExpr: 'CfkNm',
                 displayExpr: 'caption',
                 calculateCellValue: (data) => {
-                  console.log('data:', data);
                   return data;
                 }
               }

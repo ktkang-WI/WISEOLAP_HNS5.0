@@ -63,13 +63,11 @@ const LinkReportList = (
               }
           );
         setLinkParamData(data);
-        console.log('First Load');
       }
-      console.log('Load');
       setPopupVisible(true);
     } catch (error) {
       console.error('Error fetching link report params:', error);
-      alert('Failed to fetch link parameters.');
+      alert('연결 보고서 정보를 가져오는데 실패했습니다.');
     }
   };
 
@@ -104,12 +102,13 @@ const LinkReportList = (
           }
         }
         onSelectionChanged={(selectionChangedEvent) => {
+          console.log('Selection Changed:', selectionChangedEvent);
           const selectedRow = selectionChangedEvent.selectedRowsData[0];
           if (selectedRow) {
             const minRowData = {
               id: selectedRow.id,
               name: selectedRow.name,
-              reportType: selectedRow.reportType
+              type: selectedRow.type
             };
             setSelectedRowData(minRowData);
             onSelectionChange(minRowData);

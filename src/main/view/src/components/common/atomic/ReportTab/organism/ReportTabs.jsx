@@ -114,7 +114,6 @@ const ReportTabs = ({reportData}) => {
                 });
             models.Report.getLinkReportList(selectedReport.id)
                 .then((res) => {
-                  // const subLinkReports = res.data.subLinkReports;
                   console.log('res.data', res.data);
                   if (res.data ? res.data === undefined : true) {
                     console.log('링크된 보고서가 없습니다.');
@@ -122,12 +121,6 @@ const ReportTabs = ({reportData}) => {
                     const linkReports = res.data.linkReportDTOList;
                     dispatch(setLinkReport(linkReports));
                   }
-                  // console.log('subLinkReports', subLinkReports);
-                  // console.log('linkReports', linkReports);
-                  // if (subLinkReports.length > 0) {
-                  // dispatch(setSubLinkReport(subLinkReports[0]));
-                  // } else if (subLinkReports.length === 0) {
-                  // }
                 }).catch((e) => {
                   console.log(e);
                 });
