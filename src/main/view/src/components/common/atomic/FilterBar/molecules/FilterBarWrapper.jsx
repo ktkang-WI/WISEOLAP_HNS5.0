@@ -89,6 +89,14 @@ const FilterBarWrapper = (props) => {
           const param = parameters.informations.
               find((info) => info.name == key);
           executeLinkageFilter(param, linkageFilter).then((values) => {
+            if (values.listItems.length == 1) {
+              values.value = values.value.map((v) => {
+                if (v == '[All]') {
+                  return values.listItems[0].name;
+                }
+                return v;
+              });
+            }
             dispatch(setParameterValues({
               reportId, values: {[param.name]: values}
             }));

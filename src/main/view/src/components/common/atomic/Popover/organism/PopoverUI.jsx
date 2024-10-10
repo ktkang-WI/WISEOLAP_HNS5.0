@@ -6,7 +6,7 @@ const PopoverWrap = styled.div`
   background-color: #fff;
   border: none;
   box-shadow: 0 0 4px 0px rgba(0,0,0,.25);
-  width: 100%;
+  width: ${(props)=> props.width? props.width: '200px'}
   height: ${(props)=> props.height? props.height: '300px'};
   white-space: nowrap;
 `;

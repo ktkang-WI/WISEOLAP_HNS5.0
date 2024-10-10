@@ -66,7 +66,12 @@ const useReportSave = () => {
       }
       const newField = [];
       for (let j = 0; j < datasets[i].fields.length; j++) {
-        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
+        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1 ||
+          datasets[i].fields[j].isCustomData) {
+          if (datasets[i].fields[j].type === 'MEAGRP') {
+            newField.push({...datasets[i].fields[j], type: 'MEA'});
+            continue;
+          }
           newField.push(datasets[i].fields[j]);
         } else {
           if (datasets[i].fields[j].type === 'MEAGRP' ||

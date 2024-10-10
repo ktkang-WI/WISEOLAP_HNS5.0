@@ -319,12 +319,6 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
-        if (nullDataCheck(tempItem)) {
-          // alert(`${item.meta.name}${localizedString.noneData}`);
-          return tempItem.meta.name;
-        }
-
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
         }
@@ -689,41 +683,38 @@ const useQueryExecute = () => {
       if (paramValues[name]) {
         _value = paramValues[name];
       }
+
       if (newLinkParamInfo !== null && newLinkParamInfo.length > 0) {
         const matchedParam =
           newLinkParamInfo.find(
               (param) => param.fkParam === name);
         if (matchedParam) {
           _value = matchedParam.value;
-        } else {
-          _value = value;
         }
       } else {
         _value = value;
       }
+
       if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
-        const res = await models.Report.getUserInfo();
-        const info = res?.data || {};
-        _value = [];
+        const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+        if (reg.test(value[0]) || reg.test(value[1])) {
+          const res = await models.Report.getUserInfo();
+          const info = res?.data || {};
+          _value = [];
 
-        value.map((v) => {
-          if (v == '[MD_CODE]') {
-            _value.push(info['mdCode']);
-          } else if (v == '[WI_SESSION_ID]') {
-            _value.push(info['userId']);
-          } else {
-            _value.push(v);
-          }
-        });
-      }
+          _value = value.map((v) => {
+            return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+                .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+          });
+        }
 
-      dispatch(setParameterValues({
-        reportId, values: {[name]: {
-          value: _value
-        }}
-      }));
-      dispatch(filterSearchComplete({reportId, id: name}));
-    };
+        dispatch(setParameterValues({
+          reportId, values: {[name]: {
+            value: _value
+          }}
+        }));
+        dispatch(filterSearchComplete({reportId, id: name}));
+      };
 
     const setValues = (name, values) => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
@@ -732,6 +723,7 @@ const useQueryExecute = () => {
 
     // eslint-disable-next-line max-len
     initializeParameters(parameters || selectRootParameter(store.getState()), setDefaultValue, setValues);
+    };
   };
 
   // eslint-disable-next-line max-len
@@ -754,15 +746,16 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(data.value[0])) {
+            const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+            if (reg.test(data.value[0]) || reg.test(data.value[1])) {
               const res = await models.Report.getUserInfo();
               const info = res?.data || {};
 
-              if (data.value[0] == '[MD_CODE]') {
-                data.value[0] = info.mdCode;
-              } else {
-                data.value[0] = info.userId;
-              }
+              data.value = data.value.map((v) => {
+                return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+                    .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+              });
             }
 
             if (data) {

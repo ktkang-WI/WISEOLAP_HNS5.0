@@ -121,8 +121,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement, component}) => {
-    if (area === 'row' && dataset?.cubeId === 6184) {
+    // dataset?.cubeId == 6184
+    if (area === 'row') {
       if (cell.text === '') {
+        const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
         let newPath = cell.path;
 
         if (cell.path.includes(null)) {
@@ -130,7 +132,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           newPath = newPath.splice(0, idx);
         }
 
-        component.getDataSource().collapseHeaderItem('row', newPath);
+        const idx = click.findIndex((i) => newPath.toString() == i);
+        if (idx == -1) {
+          component.getDataSource().collapseHeaderItem('row', newPath);
+        }
       }
     }
 
@@ -229,10 +234,21 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         fieldPanel={fieldPanel}
         showTotalsPrior={showTotalsPrior}
         wordWrapEnabled={false}
+        onCellClick={(e) => {
+          const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
+          if (!click.includes(e.cell.path.toString())) {
+            click.push(e.cell.path.toString());
+            window.sessionStorage.setItem('cellClick', JSON.stringify(click));
+          }
+        }}
         onCellPrepared={onCellPrepared}
         allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
+        onInitialized={() => {
+          const arr = [];
+          window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
+        }}
         onContentReady={(e) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;

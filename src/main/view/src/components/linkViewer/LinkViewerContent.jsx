@@ -34,9 +34,8 @@ import attributeListActiveIcon
 import reloadImg from 'assets/image/icon/button/reset.png';
 import ReportTabs from 'components/common/atomic/ReportTab/organism/ReportTabs';
 import LinkSlice from 'redux/modules/LinkSlice';
-// import ParameterSlice from 'redux/modules/ParameterSlice';
-// import {selectRootParameter} from 'redux/selector/ParameterSelector';
-// import store from 'redux/modules';
+import {DesignerMode} from 'components/config/configType';
+
 
 const theme = getTheme();
 
@@ -147,9 +146,25 @@ const LinkViewerContent = ({children}) => {
     }
 
     if (reportId) {
-      const reportType = params.get('reportType');
+      let reportType = params.get('reportType');
+
+      const selectDesignerMode = (data) => {
+        if (data.spread) {
+          return DesignerMode['EXCEL'];
+        } else {
+          if (data.item.adHocOption) {
+            return DesignerMode['AD_HOC'];
+          }
+        }
+
+        return DesignerMode['DASHBOARD'];
+      };
+
       models.Report.getReportById(
           reportId).then(async ({data}) => {
+        if (!reportType) {
+          reportType = selectDesignerMode(data);
+        }
         dispatch(setDesignerMode(reportType));
         await loadReport(data);
 

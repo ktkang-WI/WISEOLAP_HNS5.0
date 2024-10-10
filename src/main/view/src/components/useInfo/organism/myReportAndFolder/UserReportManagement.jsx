@@ -89,6 +89,8 @@ const UserReprotManagement = () => {
         <MyPageReportForm
           data={data}
           ref={ref}
+          setData={setData}
+          myPageFlag={'myPage'}
         />
         <div style={{
           display: 'flex',
