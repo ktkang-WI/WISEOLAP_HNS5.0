@@ -695,26 +695,25 @@ const useQueryExecute = () => {
         _value = value;
       }
 
-      if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
-        const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
-        if (reg.test(value[0]) || reg.test(value[1])) {
-          const res = await models.Report.getUserInfo();
-          const info = res?.data || {};
-          _value = [];
+      const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
 
-          _value = value.map((v) => {
-            return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
-                .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
-          });
-        }
+      if (reg.test(value[0]) || reg.test(value[1])) {
+        const res = await models.Report.getUserInfo();
+        const info = res?.data || {};
+        _value = [];
+        _value = value.map((v) => {
+          return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+              .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+        });
+      }
 
-        dispatch(setParameterValues({
-          reportId, values: {[name]: {
-            value: _value
-          }}
-        }));
-        dispatch(filterSearchComplete({reportId, id: name}));
-      };
+      dispatch(setParameterValues({
+        reportId, values: {[name]: {
+          value: _value
+        }}
+      }));
+      dispatch(filterSearchComplete({reportId, id: name}));
+    };
 
     const setValues = (name, values) => {
       dispatch(setParameterValues({reportId, values: {[name]: values}}));
@@ -723,7 +722,6 @@ const useQueryExecute = () => {
 
     // eslint-disable-next-line max-len
     initializeParameters(parameters || selectRootParameter(store.getState()), setDefaultValue, setValues);
-    };
   };
 
   // eslint-disable-next-line max-len
