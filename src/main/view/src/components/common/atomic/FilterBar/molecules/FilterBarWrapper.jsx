@@ -5,7 +5,9 @@ import {styled} from 'styled-components';
 import {getTheme} from 'config/theme';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import {useSelector, useDispatch} from 'react-redux';
-import {useEffect} from 'react';
+import {
+  useEffect
+} from 'react';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -13,6 +15,11 @@ import store from 'redux/modules';
 import _ from 'lodash';
 import useModal from 'hooks/useModal';
 import LoadingSlice from 'redux/modules/LoadingSlice';
+import {
+  selectNewLinkParamInfo,
+  selectNewLinkCnt
+} from 'redux/selector/LinkSelector';
+import LinkSlice from 'redux/modules/LinkSlice';
 
 const theme = getTheme();
 
@@ -35,6 +42,11 @@ const FilterBarWrapper = (props) => {
   const {startJob, endJob} = LoadingSlice.actions;
   const {confirm} = useModal();
   const dispatch = useDispatch();
+  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
+  const newLinkCnt = useSelector(selectNewLinkCnt);
+  const {
+    setNewLinkCnt
+  } = LinkSlice.actions;
 
   // 매개변수 정보 수정되면 재조회
   useEffect(() => {
@@ -57,12 +69,19 @@ const FilterBarWrapper = (props) => {
       _.cloneDeep(selectRootParameter(store.getState()).values[id]);
     if (!values) return;
     if (!values?.value) return;
-    values.value[index] = value;
+    if (newLinkParamInfo != null && newLinkParamInfo.length > 0 && newLinkCnt) {
+      const matchedParam =
+        newLinkParamInfo.find(
+            (param) => param.fkParam === id);
+      values.value[index] = matchedParam.value[0];
+      dispatch(setNewLinkCnt(false));
+    } else {
+      values.value[index] = value;
+    }
     if (reValue?.length) {
       values.listItems = reValue;
     }
     dispatch(setParameterValues({reportId, values: {[id]: values}}));
-
     for (const key in parameters.values) {
       if (parameters.values[key].linkageFilter) {
         const linkageFilter = parameters.values[key].linkageFilter;
