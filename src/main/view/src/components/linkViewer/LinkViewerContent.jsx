@@ -60,7 +60,8 @@ const LinkViewerContent = ({children}) => {
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
   const {
-    setLinkReport
+    setLinkReport,
+    setNewLinkParamInfo
   } = LinkSlice.actions;
 
   const params = new URLSearchParams(window.location.search);
@@ -147,7 +148,6 @@ const LinkViewerContent = ({children}) => {
 
     if (reportId) {
       const reportType = params.get('reportType');
-
       models.Report.getReportById(
           reportId).then(async ({data}) => {
         dispatch(setDesignerMode(reportType));
@@ -159,6 +159,24 @@ const LinkViewerContent = ({children}) => {
       }).catch((e) => {
         console.log(e);
       });
+      models.Report.getLinkReportList(
+          reportId).then((res) => {
+        if (res.data ? res.data === undefined : true) {
+          console.log('링크된 보고서가 없습니다.');
+        } else {
+          const linkReports = res.data.linkReportDTOList;
+          dispatch(setLinkReport(linkReports));
+        }
+      }).catch((e) => {
+        console.log(e);
+      });
+      const newWindowLinkParamInfo =
+        JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+      if (newWindowLinkParamInfo) {
+        dispatch(setNewLinkParamInfo(newWindowLinkParamInfo));
+      } else {
+        console.log('연결보고서 정보가 존재하지 않습니다.');
+      }
     }
   }, []);
 

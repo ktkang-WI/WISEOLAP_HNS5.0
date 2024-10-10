@@ -6,6 +6,10 @@ import {
   // getSubLinkDim,
   connectLinkedReport}
   from 'components/report/util/LinkedReportUtility';
+import {
+  selectCurrentValues
+} from 'redux/selector/ParameterSelector';
+import {useSelector} from 'react-redux';
 
 const ButtonWrapper = styled.div`
   padding: 6px 16px;
@@ -21,10 +25,10 @@ const ButtonColumn = styled.div`
 
 const LinkReportListDefaultElement = () => {
   const linkReportList = selectLinkedReport(store.getState());
+  const currentParameterValues = useSelector(selectCurrentValues);
 
   if (!linkReportList || Object.keys(linkReportList).length === 0) {
     alert('연결 보고서가 존재하지 않습니다.');
-    return null;
   }
   return (
     <ButtonColumn>
@@ -35,22 +39,22 @@ const LinkReportListDefaultElement = () => {
             height={'28px'}
             type='onlyImageText'
             onClick={() => {
-              console.log(`Selected Report Name: ${report.linkReportNm}`);
-              console.log(`Selected Report ID: ${report.linkReportId}`);
-              console.log('Full Report Object:', report);
               const param = {
                 reportId: report.linkReportId,
-                // reportNm: report.linkReportNm,
                 reportType: report.linkReportType,
-                parentReportId: report.reportId,
-                // parentReportNm: report.reportNm,
-                parentReportType: report.reportType,
-                // linkFkInfo: report.linkFkInfo,
-                // linkParamInfo: report.linkParamInfo,
-                promptYn: 'N',
-                linkNewTab: false
+                newWindowLinkParamInfo:
+                  report.linkParamInfo.map((linkParam) => {
+                    const paramKey = linkParam.pkParam;
+                    // linkParam 객체를 얕은 복사하여 새로운 객체를 반환
+                    const newLinkParam = {...linkParam};
+                    if (currentParameterValues.hasOwnProperty(paramKey)) {
+                      // 불변성을 유지하면서 value 값을 새로운 객체에 추가
+                      newLinkParam['value'] =
+                        currentParameterValues[paramKey].value;
+                    }
+                    return newLinkParam;
+                  })
               };
-              console.log('Param:', param);
               connectLinkedReport(param, true);
             }}
           >
