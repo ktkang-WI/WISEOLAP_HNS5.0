@@ -53,8 +53,8 @@ const LinkReportModal = ({
     if (existLinkReports) {
       const selectedLinkReports = (data) => {
         return Object.keys(data).map((key) => {
-          const {linkReportId, linkReportNm} = data[key];
-          return {id: linkReportId, name: linkReportNm};
+          const {linkReportId, linkReportNm, linkReportType} = data[key];
+          return {id: linkReportId, name: linkReportNm, type: linkReportType};
         });
       };
       setDataSource(selectedLinkReports(existLinkReports));
@@ -98,7 +98,6 @@ const LinkReportModal = ({
   return (
     <Modal
       onsSubmit={()=> {
-        console.log('submit');
         return true;
       }}
       modalTitle={localizedString.linkReport}
