@@ -33,7 +33,9 @@ import attributeListActiveIcon
   from 'assets/image/icon/button/attribute_list_active.png';
 import reloadImg from 'assets/image/icon/button/reset.png';
 import ReportTabs from 'components/common/atomic/ReportTab/organism/ReportTabs';
+import LinkSlice from 'redux/modules/LinkSlice';
 import {DesignerMode} from 'components/config/configType';
+
 
 const theme = getTheme();
 
@@ -52,12 +54,14 @@ const LinkViewerContent = ({children}) => {
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
   const [reportListOpened, setReportListOpened] = useState(true);
   const [reportData, setReportData] = useState();
-
   const useAttributeList = report.options.reportType == 'AdHoc';
-
   const {loadReport, querySearch} = useReportSave();
   const dispatch = useDispatch();
   const {setDesignerMode} = ConfigSlice.actions;
+  const {
+    setLinkReport,
+    setNewLinkParamInfo
+  } = LinkSlice.actions;
 
   const params = new URLSearchParams(window.location.search);
   const showReportList = params.get('srl') || false;
@@ -114,18 +118,27 @@ const LinkViewerContent = ({children}) => {
       models.Report.retrieveLinkReport(token).then((response) => {
         const loadReportId = response.data.reportId;
         const loadReportType = response.data.reportType;
-
-        models.Report.getReportById(
-            loadReportId).then(async ({data}) => {
-          dispatch(setDesignerMode(loadReportType));
-          await loadReport(data);
-
-          if (response.data.promptYn === 'Y' || noFilter) {
-            querySearch();
-          }
-        }).catch((e) => {
-          console.log(e);
-        });
+        models.Report.getReportById(loadReportId)
+            .then(async ({data}) => {
+              dispatch(setDesignerMode(loadReportType));
+              await loadReport(data);
+              if (response.data.promptYn === 'Y' || noFilter) {
+                querySearch();
+              }
+            }).catch((e) => {
+              console.log(e);
+            });
+        models.Report.getLinkReportList(loadReportId)
+            .then((res) => {
+              if (res.data ? res.data === undefined : true) {
+                console.log('링크된 보고서가 없습니다.');
+              } else {
+                const linkReports = res.data.linkReportDTOList;
+                dispatch(setLinkReport(linkReports));
+              }
+            }).catch((e) => {
+              console.log(e);
+            });
       }).catch((e) => {
         console.log(e);
       });
@@ -161,6 +174,24 @@ const LinkViewerContent = ({children}) => {
       }).catch((e) => {
         console.log(e);
       });
+      models.Report.getLinkReportList(
+          reportId).then((res) => {
+        if (res.data ? res.data === undefined : true) {
+          console.log('링크된 보고서가 없습니다.');
+        } else {
+          const linkReports = res.data.linkReportDTOList;
+          dispatch(setLinkReport(linkReports));
+        }
+      }).catch((e) => {
+        console.log(e);
+      });
+      const newWindowLinkParamInfo =
+        JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+      if (newWindowLinkParamInfo) {
+        dispatch(setNewLinkParamInfo(newWindowLinkParamInfo));
+      } else {
+        console.log('연결보고서 정보가 존재하지 않습니다.');
+      }
     }
   }, []);
 

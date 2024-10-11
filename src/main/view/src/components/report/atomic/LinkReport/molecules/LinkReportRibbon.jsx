@@ -5,6 +5,7 @@ import addArrow from 'assets/image/icon/button/arrow_right.png';
 import removeArrow from 'assets/image/icon/button/arrow_left.png';
 
 const Wrapper = styled.div`
+  width: ${(props) => props.width};
   height: 100%;
   text-align: left;
   display: flex;
@@ -17,9 +18,7 @@ const Wrapper = styled.div`
 
 const LinkReportRibbon = ({width, removeLinkReport, addLinkReport}) => {
   return (
-    <Wrapper
-      width={width}
-    >
+    <Wrapper>
       <SmallImageButton
         src={addArrow}
         imgWidth='20px'

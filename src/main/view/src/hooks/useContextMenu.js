@@ -7,7 +7,9 @@ import localizedString from 'config/localization';
 import {EditMode} from 'components/config/configType';
 import {
   // getSubLinkDim,
-  connectLinkedReport}
+  // connectLinkedReport
+  openNewTab
+}
   from 'components/report/util/LinkedReportUtility';
 import useModal from './useModal';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
@@ -90,13 +92,14 @@ const useContextMenu = (item) => {
 
         const param = {
           reportId: reportId,
-          reportType: reportType
+          reportType: reportType,
+          promptYn: 'N'
         };
 
         subLinkedListItems.push({
           text: info.linkReportId,
           onItemClick: () => {
-            connectLinkedReport(param);
+            openNewTab(param);
           }
         });
       }

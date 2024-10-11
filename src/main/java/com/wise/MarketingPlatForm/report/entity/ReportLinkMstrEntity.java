@@ -1,5 +1,8 @@
 package com.wise.MarketingPlatForm.report.entity;
 
+import java.util.List;
+
+import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,23 +16,27 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportLinkMstrEntity {
-  int reportId;
+	int reportId;
+  String reportNm;
+  String reportType;
 	int linkReportId;
-	String linkXml;
-	int linkReportOrdinal;
-  String linkReportNm;
+	String linkReportNm;
 	String linkReportType;
-	String dataLinkType;
+	String linkParamInfo;
+	String linkFkInfo;
 
   public static ReportLinkMstrDTO toDTO(ReportLinkMstrEntity reportLinkMstrEntity) {
+    Gson gson = new Gson();
+
     return ReportLinkMstrDTO.builder()
       .reportId(reportLinkMstrEntity.getReportId())
+      .reportNm(reportLinkMstrEntity.getReportNm())
+      .reportType(reportLinkMstrEntity.getReportType())
       .linkReportId(reportLinkMstrEntity.getLinkReportId())
-      .linkXml(reportLinkMstrEntity.getLinkXml())
-      .linkReportOrdinal(reportLinkMstrEntity.getLinkReportOrdinal())
       .linkReportNm(reportLinkMstrEntity.getLinkReportNm())
       .linkReportType(reportLinkMstrEntity.getLinkReportType())
-      .dataLinkType(reportLinkMstrEntity.getDataLinkType())
+      .linkParamInfo(gson.fromJson(reportLinkMstrEntity.getLinkParamInfo(), List.class))
+      .linkFkInfo(gson.fromJson(reportLinkMstrEntity.getLinkFkInfo(), List.class))
       .build();
   }
 }

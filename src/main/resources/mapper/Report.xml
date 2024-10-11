@@ -506,13 +506,16 @@
     </select>
   
       <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
-		SELECT	A.REPORT_ID AS reportId,
-				A.LINK_REPORT_ID AS linkReportId,
-				(SELECT REPORT_NM FROM REPORT_MSTR WHERE REPORT_ID = LINK_REPORT_ID) AS linkReportNm,
-				A.DATA_LINK_TYPE AS dataLinkType,
-				A.LINK_XML AS linkXml,
-				A.LINK_REPORT_TYPE AS linkReportType
-		FROM REPORT_LINK_MSTR A
+		SELECT	
+        A.REPORT_ID AS reportId,
+        A.REPORT_NM AS reportNm,
+        A.REPORT_TYPE AS reportType,
+        A.LINK_REPORT_ID AS linkReportId,
+        A.LINK_REPORT_NM AS linkReportNm,
+        A.LINK_REPORT_TYPE AS linkReportType,
+        A.LINK_PARAM_INFO AS linkParamInfo,
+        A.LINK_FK_INFO AS linkFkInfo
+		FROM REPORT_LINK_MSTR_NEW A
 		WHERE A.REPORT_ID = #{id}
     </select>
 
@@ -538,25 +541,72 @@
     </select>
 
   <insert id = "insertLinkReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
-    INSERT INTO REPORT_LINK_MSTR
+    MERGE INTO REPORT_LINK_MSTR_NEW target
+    USING (
+      SELECT 
+        #{reportId} AS REPORT_ID, 
+        #{reportNm} AS REPORT_NM, 
+        #{reportType} AS REPORT_TYPE, 
+        #{linkReportId} AS LINK_REPORT_ID, 
+        #{linkReportNm} AS LINK_REPORT_NM, 
+        #{linkReportType} AS LINK_REPORT_TYPE, 
+        #{linkParamInfo} AS LINK_PARAM_INFO, 
+        #{linkFkInfo} AS LINK_FK_INFO
+      FROM dual
+    ) src
+    ON (target.REPORT_ID = src.REPORT_ID AND target.LINK_REPORT_ID = src.LINK_REPORT_ID)
+    WHEN MATCHED THEN
+      UPDATE SET 
+        target.REPORT_NM = src.REPORT_NM,
+        target.REPORT_TYPE = src.REPORT_TYPE,
+        target.LINK_REPORT_NM = src.LINK_REPORT_NM,
+        target.LINK_REPORT_TYPE = src.LINK_REPORT_TYPE,
+        target.LINK_PARAM_INFO = src.LINK_PARAM_INFO,
+        target.LINK_FK_INFO = src.LINK_FK_INFO
+    WHEN NOT MATCHED THEN
+      INSERT (
+        REPORT_ID, 
+        REPORT_NM, 
+        REPORT_TYPE, 
+        LINK_REPORT_ID, 
+        LINK_REPORT_NM, 
+        LINK_REPORT_TYPE, 
+        LINK_PARAM_INFO, 
+        LINK_FK_INFO
+      )
+      VALUES (
+        src.REPORT_ID,
+        src.REPORT_NM,
+        src.REPORT_TYPE,
+        src.LINK_REPORT_ID,
+        src.LINK_REPORT_NM,
+        src.LINK_REPORT_TYPE,
+        src.LINK_PARAM_INFO,
+        src.LINK_FK_INFO
+      )
+  </insert>
+    <!-- INSERT INTO REPORT_LINK_MSTR_NEW
       (
         REPORT_ID,
+        REPORT_NM,
+        REPORT_TYPE,
         LINK_REPORT_ID,
-        LINK_XML,
-        LINK_REPORT_ORDINAL,
+        LINK_REPORT_NM,
         LINK_REPORT_TYPE,
-        DATA_LINK_TYPE
+        LINK_PARAM_INFO,
+        LINK_FK_INFO
       )
     VALUES
       (
         #{reportId},
+        #{reportNm},
+        #{reportType},
         #{linkReportId},
-        #{linkXml},
-        #{linkReportOrdinal},
+        #{linkReportNm},
         #{linkReportType},
-        #{dataLinkType}
-      )
-  </insert>
+        #{linkParamInfo},
+        #{linkFkInfo}
+      ) -->
 
   <insert id = "insertSubLinkReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportLinkSubMstrEntity">
     INSERT INTO REPORT_LINK_SUB_MSTR

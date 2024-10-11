@@ -145,6 +145,10 @@ export const generateToken = (param) => {
   return axios.post(path + '/generate-token', param);
 };
 
+export const generateLinkToken = (param) => {
+  return axios.post(path + '/generate-link-token', param);
+};
+
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param

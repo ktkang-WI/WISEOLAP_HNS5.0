@@ -15,6 +15,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {
   selectCurrentDesignerMode
 } from 'redux/selector/ConfigSelector';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const StyledWrapper = styled(Wrapper)`
 width: 100%;
@@ -24,9 +25,9 @@ align-items: flex-start;
 justify-content: center;
 `;
 const LinkReportModal = ({
-  loadExcelFile,
   subYn,
   subLinkDim,
+  existLinkReports,
   ...props
 }) => {
   const [reportList, setReportList] = useState();
@@ -40,6 +41,7 @@ const LinkReportModal = ({
   };
   const {alert} = useModal();
   const designerMode = useSelector(selectCurrentDesignerMode);
+  const currentReportId = useSelector(selectCurrentReportId);
 
   useEffect(() => {
     models.Report.getList(designerMode, 'designer').then(({data}) => {
@@ -48,6 +50,15 @@ const LinkReportModal = ({
     }).catch((e) => {
       console.log(e);
     });
+    if (existLinkReports) {
+      const selectedLinkReports = (data) => {
+        return Object.keys(data).map((key) => {
+          const {linkReportId, linkReportNm, linkReportType} = data[key];
+          return {id: linkReportId, name: linkReportNm, type: linkReportType};
+        });
+      };
+      setDataSource(selectedLinkReports(existLinkReports));
+    }
   }, []);
 
   const handleItemSelect = useCallback((itemData) => {
@@ -59,7 +70,9 @@ const LinkReportModal = ({
       const itemExists = dataSource.some(
           (item) => item.name === selectedItem.name &&
           item.id === selectedItem.id);
-      if (!itemExists) {
+      if (currentReportId === selectedItem.id) {
+        alert(localizedString.linkReportitself);
+      } else if (!itemExists) {
         setDataSource((prevDataSource) =>
           [...prevDataSource,
             selectedItem
@@ -85,7 +98,6 @@ const LinkReportModal = ({
   return (
     <Modal
       onsSubmit={()=> {
-        console.log('submit');
         return true;
       }}
       modalTitle={localizedString.linkReport}

@@ -28,6 +28,8 @@ import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
+import {useSelector} from 'react-redux';
+import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -37,6 +39,7 @@ const useQueryExecute = () => {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
+  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -676,14 +679,23 @@ const useQueryExecute = () => {
 
   const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
-
     const setDefaultValue = async (name, value) => {
       const params = new URLSearchParams(window.location.search);
       const paramValues = JSON.parse(params.get('param_values') || '{}');
-
-      let _value = value;
+      let _value;
       if (paramValues[name]) {
         _value = paramValues[name];
+      }
+
+      if (newLinkParamInfo !== null && newLinkParamInfo.length > 0) {
+        const matchedParam =
+          newLinkParamInfo.find(
+              (param) => param.fkParam === name);
+        if (matchedParam) {
+          _value = matchedParam.value;
+        }
+      } else {
+        _value = value;
       }
 
       const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
@@ -692,7 +704,6 @@ const useQueryExecute = () => {
         const res = await models.Report.getUserInfo();
         const info = res?.data || {};
         _value = [];
-
         _value = value.map((v) => {
           return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
               .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');

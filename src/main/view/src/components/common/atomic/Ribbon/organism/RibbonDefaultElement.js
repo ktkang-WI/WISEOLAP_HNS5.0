@@ -5,7 +5,7 @@ import loadReport from 'assets/image/icon/button/load.png';
 import saveReport from 'assets/image/icon/button/save.png';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
 import downloadReport from 'assets/image/icon/button/download_new.png';
-// import connectReport from 'assets/image/icon/button/connect_report_add.png';
+import connectReport from 'assets/image/icon/button/connect_report_add.png';
 import addContainer from 'assets/image/icon/button/insert_container.png';
 import containerTabHeader
   from 'assets/image/icon/button/container_tab_header.png';
@@ -37,8 +37,8 @@ import itemOptionManager from 'components/report/item/ItemOptionManager';
 import store from 'redux/modules';
 import {RadioGroup} from 'devextreme-react';
 import useQueryExecute from 'hooks/useQueryExecute';
-// import LinkReportModal from
-//   'components/report/atomic/LinkReport/organisms/LinkReportModal';
+import LinkReportModal from
+  'components/report/atomic/LinkReport/organisms/LinkReportModal';
 import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
 import Palette from '../../Popover/organism/Palette';
@@ -48,6 +48,7 @@ import {AdHocLayoutTypes} from 'components/config/configType';
 import {getPalette} from 'devextreme/viz/palette';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {useDispatch} from 'react-redux';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
 
 const RibbonDefaultElement = () => {
   const {
@@ -66,6 +67,7 @@ const RibbonDefaultElement = () => {
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReport = useSelector(selectCurrentReport);
   const mypageConfig = useSelector(selectMyPageDesignerConfig);
+  const selectLinkedReportList = useSelector(selectLinkedReport);
 
   const dispatch = useDispatch();
   const {querySearch} = useReportSave();
@@ -289,15 +291,33 @@ const RibbonDefaultElement = () => {
         openedPopover(PopoverUI, props);
       }
     },
-    // 'ConnectReport': {
-    //   ...commonRibbonBtnElement,
-    //   'id': 'connect_report',
-    //   'label': localizedString.connectReport,
-    //   'imgSrc': connectReport,
-    //   'onClick': (e) => {
-    //     openModal(LinkReportModal, {subYn: false, subLinkDim: null});
-    //   }
-    // },
+    'ConnectReport': {
+      ...commonRibbonBtnElement,
+      'id': 'connect_report',
+      'label': localizedString.connectReport,
+      'imgSrc': connectReport,
+      'onClick': (e) => {
+        if (selectLinkedReportList === null) {
+          openModal(
+              LinkReportModal,
+              {
+                subYn: false,
+                subLinkDim: null,
+                existLinkReports: null
+              }
+          );
+        } else {
+          openModal(
+              LinkReportModal,
+              {
+                subYn: false,
+                subLinkDim: null,
+                existLinkReports: selectLinkedReportList
+              }
+          );
+        }
+      }
+    },
     'AdHocLayout': {
       ...commonPopoverButtonElement,
       'id': 'adHoc_layout',

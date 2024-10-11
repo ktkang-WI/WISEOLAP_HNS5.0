@@ -16,7 +16,7 @@ import {useSelector} from 'react-redux';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {selectReports} from 'redux/selector/ReportSelector';
 import useModal from 'hooks/useModal';
-import {connectLinkedReport} from 'components/report/util/LinkedReportUtility';
+import {openNewTab} from 'components/report/util/LinkedReportUtility';
 
 const theme = getTheme();
 
@@ -50,8 +50,10 @@ const ReportTabs = ({reportData}) => {
 
   const {setDesignerMode} = ConfigSlice.actions;
   let dblClick = 0;
-  const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
-
+  const {
+    setLinkReport
+    // setSubLinkReport
+  } = LinkSlice.actions;
   const params = new URLSearchParams(window.location.search);
   const fldFilter = params.get('fld') || false;
 
@@ -86,7 +88,7 @@ const ReportTabs = ({reportData}) => {
             }
 
             if (editMode == EditMode.VIEWER) {
-              connectLinkedReport({
+              openNewTab({
                 reportId: selectedReport.id,
                 reportType: selectedReport.reportType,
                 promptYn: selectedReport.promptYn
@@ -112,14 +114,12 @@ const ReportTabs = ({reportData}) => {
                 });
             models.Report.getLinkReportList(selectedReport.id)
                 .then((res) => {
-                  const subLinkReports = res.data.subLinkReports;
-                  const linkReports = res.data.linkReports;
-                  console.log('subLinkReports', subLinkReports);
-                  console.log('linkReports', linkReports);
-                  if (subLinkReports.length > 0) {
-                    dispatch(setSubLinkReport(subLinkReports[0]));
-                  } else if (subLinkReports.length === 0) {
-                    dispatch(setLinkReport(linkReports[0]));
+                  console.log('res.data', res.data);
+                  if (res.data ? res.data === undefined : true) {
+                    console.log('링크된 보고서가 없습니다.');
+                  } else {
+                    const linkReports = res.data.linkReportDTOList;
+                    dispatch(setLinkReport(linkReports));
                   }
                 }).catch((e) => {
                   console.log(e);
