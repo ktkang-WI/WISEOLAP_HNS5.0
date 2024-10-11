@@ -147,8 +147,7 @@
           A.REQUESTER,
           A.REPORT_TAG,
           A.REPORT_DESC,
-          A.PROMPT_YN,
-          A.AUTH_PUBLISH
+          A.PROMPT_YN
       FROM (
           (
               SELECT DISTINCT  
