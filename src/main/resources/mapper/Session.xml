@@ -58,7 +58,7 @@
     WHERE 1=1
     AND USER_SESSION_MSTR.USER_SESSION_KEY  = #{sessionId} 
     AND USER_MSTR.DEL_YN = 'N'
-    AND LAST_MSG_DT <![CDATA[>]]> SYSDATE - INTERVAL '1' HOUR
+    AND LAST_MSG_DT <![CDATA[>]]> SYSDATE - INTERVAL '9' HOUR
   </select>
 
   <select id="getSessionUserAll" resultMap="User">
@@ -68,6 +68,7 @@
     WHERE 1=1
     AND USER_SESSION_MSTR.USER_SESSION_KEY  = #{sessionId} 
     AND USER_MSTR.DEL_YN = 'N'
+    AND MOD_DT <![CDATA[>]]> SYSDATE - INTERVAL '9' HOUR
   </select>
 
   <delete id="deleteSessionUser" parameterType="String">
@@ -78,7 +79,7 @@
   <delete id="deleteSessionUserSchedule" >
         DELETE FROM USER_SESSION_MSTR
         WHERE 1=1 
-        AND MOD_DT <![CDATA[<]]> SYSDATE - INTERVAL '1' HOUR    
+        AND MOD_DT <![CDATA[<]]> SYSDATE - INTERVAL '8' HOUR    
   </delete>
 
   <select id="updateSessionUser" parameterType="com.wise.MarketingPlatForm.global.session.entity.UserSessionEntity">

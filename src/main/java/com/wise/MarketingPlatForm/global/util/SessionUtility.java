@@ -45,6 +45,7 @@ public class SessionUtility {
     }
     
     private final static String SESSION_KEY = "WI_SESSION_USER";
+    private final static String SESSION_KEY_DB_ID = "WI_SESSION_USER_DB_ID";
 
     private final static String SSO_ID_KEY = "SSO_ID";
     private final static int SESSION_TIME = 60 * 60 * 8;
@@ -59,28 +60,23 @@ public class SessionUtility {
         return getSessionUser(request.getSession());
     }
     public static UserDTO getSessionSSO(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        HttpSession sessionRoot = request.getSession();
-
-        String ssoId = (String)request.getSession().getAttribute(SSO_ID_KEY);
         String ssUserId =  (String) request.getSession().getServletContext().getContext("/").getAttribute(SSO_ID_KEY);
         
 
         UserDTO userDTO = null;
         try {
-            if(ssoId == null || "".equals(ssoId)){
-                ssoId = ssUserId;
-            }
-
-            if(ssoId == null || "".equals(ssoId)){
+            if(ssUserId == null || "".equals(ssUserId)){
                 userDTO = getSessionUser(request.getSession());
-            } else {
-                userDTO = authService.getUserById(ssoId);
-            }
 
-            if(userDTO != null) {
-                setSessionUser(request, userDTO);
-                request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
+                if(userDTO == null) {
+                    userDTO = getSessionUserFromDatabase(request);
+                }
+            } else {
+                userDTO = authService.getUserById(ssUserId);
+                if(userDTO != null) {
+                    setSessionUser(request, userDTO);
+                    request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
+                }
             }
         } catch(Exception e) {
             System.out.println("Sesssion Utility ERROR : " + e.getMessage() + " : " + e);
@@ -91,7 +87,15 @@ public class SessionUtility {
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
         if ("database".equalsIgnoreCase(sessionType)) {
-            return getSessionUserFromDatabase(request);
+            UserDTO sessionUser = getSessionUser(request.getSession());
+            if(sessionUser == null) {
+                sessionUser = getSessionSSO(request);
+            }
+
+            if(sessionUser == null) {
+                sessionUser = getSessionUserFromDatabase(request);
+            }
+            return sessionUser;
         } else {
             // return getSessionUser(request.getSession());
             UserDTO sessionUser = getSessionUser(request.getSession());
@@ -122,21 +126,21 @@ public class SessionUtility {
     }
     
     private static String getSessionId(HttpSession session) {
-        return (String) session.getAttribute(SESSION_KEY);
+        return (String) session.getAttribute(SESSION_KEY_DB_ID);
     }
 
     public static UserDTO getSessionUserFromDatabase(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String sessionId = getSessionId(session);
         if(sessionId == null) {
-            sessionId = generateSHA256Hash(request.getRemoteAddr() + SESSION_KEY);
+            sessionId = generateSHA256Hash(request.getRemoteAddr() + SESSION_KEY_DB_ID);
         }
 
         UserEntity entity = sessionDAO.getSessionUser(sessionId);
 
         if (entity == null) return null;
 
-        session.setAttribute(SESSION_KEY, sessionId);
+        session.setAttribute(SESSION_KEY_DB_ID, sessionId);
         return UserDTO.builder()
                 .userId(entity.getUserId())
                 .userNo(entity.getUserNo())
@@ -150,11 +154,21 @@ public class SessionUtility {
     public static void setSessionUserFromDatabase(HttpServletRequest request, UserDTO userDTO) {
         HttpSession session = request.getSession();
         // String sessionId = UUID.randomUUID().toString();
-        String sessionId = generateSHA256Hash(request.getRemoteAddr() + SESSION_KEY);
+        String sessionId = generateSHA256Hash(request.getRemoteAddr() + SESSION_KEY_DB_ID);
+
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.isEmpty() || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getRemoteAddr();
+        }
+        System.out.println("Request IP: " + request.getRemoteAddr());
+        System.out.println("Client IP: " + clientIp);
 
         UserEntity entity = sessionDAO.getSessionUserAll(sessionId);
 
-        session.setAttribute(SESSION_KEY, sessionId);
+        session.setAttribute(SESSION_KEY_DB_ID, sessionId);
+
+        session.setAttribute(SESSION_KEY, userDTO);
+        session.setMaxInactiveInterval(SESSION_TIME);
 
         session.setMaxInactiveInterval(SESSION_TIME);
 
@@ -172,8 +186,6 @@ public class SessionUtility {
         } else {
             sessionDAO.updateSessionUser(userSession);
         }
-
-        
     }
 
     public static void clearSessionUserFromDatabase(HttpServletRequest request) {
