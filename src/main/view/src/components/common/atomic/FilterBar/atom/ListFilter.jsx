@@ -17,7 +17,8 @@ const ListFilter = ({
   const index = isTo ? 1 : 0;
   let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
   let listItems = value?.listItems || [];
-  const isLinkageFilter = value?.linkageFilter?.length > 0;
+  const isLinkageFilter = value?.linkageFilter?.length > 0 &&
+    listItems.length == 1;
   const {alert} = useModal();
 
   const generateCaptionText = (keys) => {
@@ -26,8 +27,7 @@ const ListFilter = ({
     const keySet = new Set(keys.map((key) => key + ''));
     const captionArr = [];
     for (const item of listItems) {
-      if (keySet.has(item.name + '') ||
-        (isLinkageFilter && keys[0] == '[All]')) {
+      if (keySet.has(item.name + '') || isLinkageFilter) {
         captionArr.push(item.caption);
         keySet.delete(item.name);
       }
@@ -68,6 +68,7 @@ const ListFilter = ({
 
   useEffect(() => {
     let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
+
     if (!value || !value.value) {
       setText('');
     // eslint-disable-next-line brace-style
@@ -79,6 +80,10 @@ const ListFilter = ({
       setText(allText);
     } */
     else {
+      if (isLinkageFilter && keys) {
+        keys = listItems[0].name;
+      }
+
       if (info.dataType === 'number') {
         keys = keys.split(', ').map((key) => {
           return isNaN(Number(key)) ? key : Number(key);
