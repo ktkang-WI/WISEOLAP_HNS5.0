@@ -138,19 +138,24 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
 
-    if (area == 'data' && cell.dataType && cell?.value >= 0) {
+    // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
+    if (area == 'data' && cell.dataType) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
       if (newFormData) {
-        const labelSuffix = generateLabelSuffix(newFormData);
-        const formattedValue =
-          formatNumber(cell.value, newFormData, labelSuffix);
-        cellElement.innerHTML =
-          `<span>${formattedValue}</span>`;
+        try {
+          const labelSuffix = generateLabelSuffix(newFormData);
+          const formattedValue =
+            formatNumber(cell.value, newFormData, labelSuffix);
+          cellElement.innerHTML =
+            `<span>${formattedValue}</span>`;
 
-        Object.assign(cellElement.style, colorStyle);
+          Object.assign(cellElement.style, colorStyle);
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 

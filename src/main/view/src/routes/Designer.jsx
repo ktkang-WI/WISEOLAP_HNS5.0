@@ -113,7 +113,7 @@ const Designer = () => {
     if (menu.tabAdhoc) tabItems.push('Dashboard');
     if (menu.tabDashboard) tabItems.push('AdHoc');
     if (menu.tabSpreadSheet) tabItems.push('Spreadsheet');
-    if (accesUserNo.includes(myPageConfigure.userNo)) {
+    if (accesUserNo.includes(myPageConfigure?.userNo)) {
       tabItems.push('Preference');
     }
     setTabItems(tabItems);
