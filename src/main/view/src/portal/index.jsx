@@ -16,11 +16,68 @@ import UserInfoPopover
   from 'components/common/atomic/Header/popover/UserInfoPopover';
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
+import bigMenuIcon1 from './img/big_ico1.png';
+import bigMenuIcon2 from './img/big_ico2.png';
+import bigMenuIcon3 from './img/big_ico3.png';
+import bigMenuIcon4 from './img/big_ico4.png';
+import bigMenuIcon5 from './img/big_ico5.png';
+import bigMenuIcon6 from './img/big_ico6.png';
+import ReportSwiper from './components/ReportSwiper';
+
+const bigMenuIconMapper = {
+  '고객': bigMenuIcon1,
+  '전사관리지표': bigMenuIcon2,
+  '매출': bigMenuIcon3,
+  '물류': bigMenuIcon4,
+  '상품': bigMenuIcon5
+};
+
+const headerMenuHref = [
+  {
+    name: '전사관리지표',
+    fld: '2353'
+    // fld: '1621'
+  },
+  {
+    name: '주요보고서',
+    fld: '2355'
+  },
+  {
+    name: '상품',
+    fld: '2351'
+  },
+  {
+    name: '방송',
+    fld: '2349'
+  },
+  {
+    name: '매출',
+    fld: '2347'
+  },
+  {
+    name: '고객',
+    fld: '2345'
+  },
+  {
+    name: '물류',
+    fld: '2348'
+  },
+  {
+    name: '기타',
+    fld: '2358'
+  }
+];
+
 const Portal = () => {
-  const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
+  // const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
   // const PORTAL_URL = 'http://localhost:3000/editds';
-  const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
+  const PORTAL_URL = window.location.origin + '/editds';
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() - 1);
+
+  const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
+  const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
@@ -55,7 +112,7 @@ const Portal = () => {
       if (data.status == 200) {
         const {publicReport} = data.data;
 
-        const folderMap = publicReport.reduce((acc, curr) => {
+        const _folderMap = publicReport.reduce((acc, curr) => {
           if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
           // if (curr.type === 'FOLDER') {
             acc[curr.id] = {
@@ -69,8 +126,8 @@ const Portal = () => {
         }, {});
 
         publicReport.forEach((curr) => {
-          if (curr.type === 'REPORT' && folderMap[curr.upperId]) {
-            folderMap[curr.upperId].reports.push(curr);
+          if (curr.type === 'REPORT' && _folderMap[curr.upperId]) {
+            _folderMap[curr.upperId].reports.push(curr);
           }
         });
 
@@ -92,6 +149,7 @@ const Portal = () => {
           return a.id - b.id;
         });
 
+        setFolderMap(_folderMap);
         setReportList(result);
       }
     });
@@ -127,6 +185,29 @@ const Portal = () => {
     ));
   };
 
+  const getDropdown = (id) => {
+    return (
+      <div className='depth_menu' key={'d' + id}>
+        <ul>
+          {
+            folderMap[id]?.reports?.map((r) => {
+              return (
+                <li key={'rd'+id}>
+                  <a href={`${PORTAL_URL}/linkviewer?srl=true&fld=${id}` +
+                  `&reportId=${r.id}&reportType=${r.reportType}`}
+                  rel="noreferrer"
+                  target="_blank">
+                    <span>{r.name}</span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <div id='top' className='portal'>
       <div id='header'>
@@ -138,56 +219,17 @@ const Portal = () => {
             ↑
           </a>
           <ul id='header_menu'>
+            {
+              headerMenuHref.map((menu, i) => {
+                return (
+                  <li key={'li' + i}>
+                    <a>{menu.name}</a>
+                    {getDropdown(menu.fld)}
+                  </li>
+                );
+              })
+            }
             <li>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
-                rel="noreferrer"
-                target="_blank"
-              >
-                전사관리지표
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2355`}
-                rel="noreferrer"
-                target="_blank">
-                주요보고서
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2351`}
-                rel="noreferrer"
-                target="_blank">
-                상품
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2349`}
-                rel="noreferrer"
-                target="_blank">
-                방송
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2347`}
-                rel="noreferrer"
-                target="_blank">
-                매출
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2345`}
-                rel="noreferrer"
-                target="_blank">
-                고객
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2348`}
-                rel="noreferrer"
-                target="_blank">
-                물류
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2358`}
-                rel="noreferrer"
-                target="_blank">
-                기타
-              </a>
               <a
                 href={`${PORTAL_URL}/`}
                 rel="noreferrer"
@@ -212,7 +254,7 @@ const Portal = () => {
           >
             <UserInfoButtonUI name={userNm}/>
           </CommonButton>
-          <DrawerMenu data={portalReportList}/>
+          <DrawerMenu portalUrl={PORTAL_URL} data={portalReportList}/>
         </div>
       </div>
       <div className='contents'>
@@ -246,12 +288,124 @@ const Portal = () => {
               <div className='no-card'> 조회된 데이터가 없습니다. </div>
           }
         </div>
-        <iframe
-          width='100%'
-          height='2400px'
-          // eslint-disable-next-line max-len
-          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=12138&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${format(date, 'yyyyMMdd')}%22%5D%7D`}
-        ></iframe>
+        <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
+        <div style={{display: 'none'}}>
+          <div id="quick_box0">
+            <div className="grap_box_title">예상/실현 실적</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box1">
+            <div className="grap_box_title">공헌이익/누적분당효율</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box2">
+            <div className="grap_box_title">검색키워드/상품별 TOP 10</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box3">
+            <div className="grap_box_title">주문고객수/객단가</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box4">
+            <div className="grap_box_title">클럽고객수/TV유형상품수</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className='blue_bg'>
         <div className='contents'>
@@ -261,7 +415,7 @@ const Portal = () => {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
                     <p>
-                      <img src={require('./img/folder_ico.png')}/>
+                      <img src={bigMenuIconMapper[fld.name] || bigMenuIcon6}/>
                       {fld.name}
                     </p>
                     <ul>

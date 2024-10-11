@@ -74,6 +74,8 @@ const DatasourceList = ({mainKey, dependency}) => {
   }, [selectedKeys]);
 
   const handleSelectedKey = (selectedItems) => {
+    if (selectedItems.selectedRowsData.length == 0) return;
+
     if (!selected?.user?.next && !selected?.group?.next) {
       alert(localizedString.clickMe);
       setSelectedKeys([]);

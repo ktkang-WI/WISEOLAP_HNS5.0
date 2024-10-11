@@ -500,6 +500,9 @@ const useQueryExecute = () => {
    * @param {string} flag
    */
   const executeItems = async (flag) => {
+    const arr = [];
+    window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
+
     let loadingMsg = '데이터를 조회 중입니다.';
     if (flag) loadingMsg = '쿼리를 조회 중입니다.';
     const rootItem = selectRootItem(store.getState());
