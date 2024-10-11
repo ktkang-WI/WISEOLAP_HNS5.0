@@ -131,7 +131,7 @@ const Portal = () => {
           }
         });
 
-        const result = Object.values(folderMap).map((fld) => {
+        const result = Object.values(_folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
             if (a.ordinal !== b.ordinal) {
