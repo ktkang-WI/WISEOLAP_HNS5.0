@@ -1,5 +1,5 @@
 * {
-  --round_box: #f3f4f8
+  --round_box: white
 }
 
 .portal {
@@ -18,13 +18,27 @@
   background: white;
 }
 
-.portal .flexlayout__tabset, .portal .flexlayout__tab, .portal .flexlayout__tab > div {
-  background: var(--round_box);
+.portal .section {
+  margin-left: 0px !important; 
+  margin-right: -10px !important;
+}
+
+.portal .flexlayout__tab > div {
   border: none !important;
+}
+
+.portal .flexlayout__tabset, .portal .flexlayout__tab {
+  background: var(--round_box);
+  border: 2px solid #dddee6 !important;
 }
 
 .portal .flexlayout__tab, .portal .flexlayout__tabset {
   border-radius: 25px !important;
+}
+
+.portal .flexlayout__tab {
+  border-radius: 0px 0px 25px 25px !important;
+  border-top: none !important;
 }
 
 .portal .flexlayout__tab_button_content span {

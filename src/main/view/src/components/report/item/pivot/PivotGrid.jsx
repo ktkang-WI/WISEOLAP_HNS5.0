@@ -121,8 +121,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement, component}) => {
-    // dataset?.cubeId == 6184
-    if (area === 'row') {
+    if (area === 'row' && dataset?.cubeId == 6184) {
       if (cell.text === '') {
         const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
         let newPath = cell.path;
@@ -235,6 +234,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         showTotalsPrior={showTotalsPrior}
         wordWrapEnabled={false}
         onCellClick={(e) => {
+          if (dataset?.cubeId !== 6184) return;
           const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
           if (!click.includes(e.cell.path.toString())) {
             click.push(e.cell.path.toString());
