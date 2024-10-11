@@ -73,8 +73,12 @@ const FilterBarWrapper = (props) => {
       const matchedParam =
         newLinkParamInfo.find(
             (param) => param.fkParam === id);
-      values.value[index] = matchedParam.value[0];
-      dispatch(setNewLinkCnt(false));
+      if (matchedParam !== undefined) {
+        values.value[index] = matchedParam.value[0];
+        dispatch(setNewLinkCnt(false));
+      } else {
+        values.value[index] = value;
+      }
     } else {
       values.value[index] = value;
     }
