@@ -454,7 +454,9 @@ public class DatasetService {
             query += " GROUP BY " + column;
         } else {
             query = listParameterDTO.getDataSource();
-            query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            if (user.getMdCode() != null) {
+                query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            }
             query = query.replace("[WI_SESSION_ID]", "'" + user.getUserId() + "'");
             query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);
         }
@@ -527,7 +529,9 @@ public class DatasetService {
                 defaultValues.add("");
                 continue;
             }
-            query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            if (user.getMdCode() != null) {
+                query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            }
             query = query.replace("[WI_SESSION_ID]", "'" + user.getUserId() + "'");
             MartResultDTO result = martDAO.select(dsMstrDTO.getDsId(), query);
             List<Map<String, Object>> data = result.getRowData();
