@@ -221,6 +221,8 @@ const Portal = () => {
           <ul id='header_menu'>
             {
               headerMenuHref.map((menu, i) => {
+                if (!folderMap[menu.fld]?.reports?.length) return null;
+
                 return (
                   <li key={'li' + i}>
                     <a>{menu.name}</a>
