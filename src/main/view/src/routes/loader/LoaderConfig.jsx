@@ -79,7 +79,7 @@ export async function authorityLoader() {
     });
   // USER_MSTR
   const userData =
-    await models.Authority.getUsers({notGrpId: 0}).then(
+    await models.Authority.getUsers().then(
         (res) => getData(res)
     ).catch((e) => {
       console.log(e);
@@ -123,7 +123,13 @@ export async function authorityLoader() {
     ).catch((e) => {
       console.log(e);
     });
-
+  // PROG_LIST
+  const progList =
+    await models.ProgManagement.getProgList().then(
+        (res) => getData(res)
+    ).catch((e) => {
+      console.log(e);
+    });
   return {
     userData,
     groupData,
@@ -133,7 +139,8 @@ export async function authorityLoader() {
     dsView,
     folder,
     dsViewCube,
-    dsViewDim
+    dsViewDim,
+    progList
   };
 }
 
@@ -162,7 +169,21 @@ export async function userDesignerConfig() {
   }).catch((e) => {
     console.log(e);
   });
-  return data || null;
+
+  const generalLoader = await generalConfigure().then((result) => {
+    return result;
+  }).catch((e) => {
+    console.log(e);
+  });
+
+  if (!data) {
+    return null; // data가 null이거나 falsy인 경우 null 반환
+  }
+
+  return {
+    generalConfigure: generalLoader.generalConfigure,
+    designerConfig: data
+  };
 }
 
 export async function myPageUserInfoData() {

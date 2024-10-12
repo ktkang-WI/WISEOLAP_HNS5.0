@@ -39,6 +39,7 @@
   <resultMap id="AuthReport" type="com.wise.MarketingPlatForm.account.dto.AuthReportDTO">
     <result column="FLD_ID" property="fldId" javaType="int"/>
     <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+    <result column="AUTH_DATASOURCE" property="authDatasource" javaType="String"/>
   </resultMap>
 
 <!-- Mapper End -->
@@ -77,8 +78,9 @@
 
   <select id="selectGrpAuthReport" resultMap="AuthReport">
     SELECT 
-      FLD_ID
-      ,AUTH_PUBLISH 
+      FLD_ID,
+      AUTH_PUBLISH,
+      AUTH_DATASOURCE 
       FROM GRP_AUTH_REPORT_MSTR
       WHERE GRP_ID = #{grpId}
       AND FLD_ID = #{fldId}
@@ -86,13 +88,13 @@
 
   <select id="selectUserAuthReport" resultMap="AuthReport">
     SELECT 
-      FLD_ID
-      ,AUTH_PUBLISH 
+      FLD_ID,
+      AUTH_PUBLISH,
+      AUTH_DATASOURCE
       FROM USER_AUTH_REPORT_MSTR
       WHERE USER_NO = #{userNo}
       AND FLD_ID = #{fldId}
   </select>
-
 <!-- Query End -->
 
 </mapper>

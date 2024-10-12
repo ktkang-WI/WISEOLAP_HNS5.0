@@ -16,6 +16,7 @@ public class GroupAuthReportMstrEntity {
   int fldId;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

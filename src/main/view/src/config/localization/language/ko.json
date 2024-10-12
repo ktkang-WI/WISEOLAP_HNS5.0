@@ -543,6 +543,7 @@
   "reportNotDeleteMsg": "저장되지 않은 보고서 입니다.",
   "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
   "reportPermission": "보고서 수정 권한이 없습니다.",
+  "datasourcePermission": "보고서 수정 권한이 없습니다.",
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",

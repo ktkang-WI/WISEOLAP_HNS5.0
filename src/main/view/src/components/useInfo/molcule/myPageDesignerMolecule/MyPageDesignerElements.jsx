@@ -53,7 +53,7 @@ const Content = styled.div`
   }
 `;
 
-const MyPageDesignerElements = ({setConfig, data, items}) => {
+const MyPageDesignerElements = ({setConfig, data, items, prog}) => {
   const {openModal, confirm} = useModal();
 
   const onClickReset = (id) => {
@@ -129,6 +129,9 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
 
   return (
     items.map((item) => {
+      if ((item.id === 'maxReportQueryPeriod') && !prog.reportQueryPeriod) {
+        return null; // 해당 item을 렌더링하지 않음
+      }
       return (
         <>
           <Title title={item.title}>

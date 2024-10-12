@@ -5,10 +5,12 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.group.GroupAppDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserAppDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
@@ -17,11 +19,13 @@ import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDsMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthProgMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDatasetMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthProgMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
@@ -55,6 +59,10 @@ public interface AccountDAO {
   public List<GroupDataDTO> selectGroupData();
   public List<GroupFolderDTO> selectGroupFolder();
   public List<GroupDsDTO> selectGroupDs();
+  public List<GroupAppDTO> selectGroupApp();
+  public GroupAppDTO selectGroupAppByGrpId(int grpId);
+  public List<UserAppDTO> selectUserApp();
+  public UserAppDTO selectUserAppByUserNo(int userNo);
   public List<GroupDatasetDTO> selectGroupDataset();
   public boolean createGroup(GroupMstrEntity groupMstr);
   public boolean updateGroup(GroupMstrEntity groupMstr);
@@ -72,6 +80,10 @@ public interface AccountDAO {
   public boolean deleteGroupDsAll();
   public boolean deleteGroupFolderAll();
   public boolean deleteGroupDatasetAll();
-
-
+  public boolean deleteGroupAppAll();
+  public boolean deleteUserAppAll();
+  public boolean deleteGroupApp(List<GroupAuthProgMstrEntity> groupAuthProgMstr);
+  public boolean deleteUserApp(List<UserAuthProgMstrEntity> userAuthProgMstr);
+  public boolean putGroupApp(List<GroupAuthProgMstrEntity> groupAuthProgMstr);
+  public boolean putUserApp(List<UserAuthProgMstrEntity> userAuthProgMstr);
 }

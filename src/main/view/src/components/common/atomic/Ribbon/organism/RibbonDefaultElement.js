@@ -265,7 +265,7 @@ const RibbonDefaultElement = () => {
               removeReport(dataSource, props);
             });
           } else {
-            confirm(localizedString.reportPermission, () => {
+            alert(localizedString.reportPermission, () => {
             });
           }
         } else {
