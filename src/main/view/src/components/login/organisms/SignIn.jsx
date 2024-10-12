@@ -7,6 +7,8 @@ import useModal from 'hooks/useModal';
 import models from 'models';
 import {generalConfigure as generalLoader} from 'routes/loader/LoaderConfig';
 import useLayout from 'hooks/useLayout';
+// import ChangePasswordModal from '../modal/ChangePasswordModal';
+import ModifyPasswordModal from 'components/useInfo/modal/ModifyPasswordModal';
 
 const StyledSignIn = styled.div`
   min-height: inherit;
@@ -64,7 +66,7 @@ export const getInitPageAndSetingFunc = (
 
 const SignIn = () => {
   const nav = useNavigate();
-  const {alert} = useModal();
+  const {alert, openModal} = useModal();
   const {afterLoginInitSettingLayout} = useLayout();
 
   return (
@@ -81,7 +83,22 @@ const SignIn = () => {
 
               try {
                 const res = await models.Login.login(id, password);
+
                 if (res.status == 200) {
+                  let msg = '';
+                  // TODO: 추후 함수로 이동
+                  if (res?.data?.change === 1) {
+                    msg = '초기 비밀번호 변경 필요합니다. 비밀번호를 변경해 주세요.';
+                    openModal(ModifyPasswordModal, {msg: msg, type: 1});
+                    document.querySelector('#input-Password input').value = '';
+                    return;
+                  }
+                  if (res?.data?.change === 3) {
+                    msg = '비밀번호 변경 후 3개월이 지났습니다. 비밀번호를 변경해 주세요.';
+                    openModal(ModifyPasswordModal, {msg: msg, type: 3});
+                    document.querySelector('#input-Password input').value = '';
+                    return;
+                  }
                   if (type == 'portal') {
                     nav('portal');
                     return;

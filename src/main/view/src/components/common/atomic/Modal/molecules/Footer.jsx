@@ -16,7 +16,7 @@ const ButtonWrapper = styled.div`
 
 const Footer = ({
   onSubmit, onPrev, onNext, onClose, maxPage, currentPage, usePage, buttons=[],
-  ...props
+  changeCancel, ...props
 }) => {
   const onConfirm = async () => {
     if (!await onSubmit()) {
@@ -42,14 +42,17 @@ const Footer = ({
           {localizedString.confirm}
         </CommonButton>
       }
-      <CommonButton width={onSubmit ? '180px': '100%'} onClick={onClose}
-        type={onSubmit ? 'secondary' : 'primary'}>
-        {onSubmit ? localizedString.cancel : localizedString.confirm}
-      </CommonButton>
+      {!changeCancel &&
+        <CommonButton width={onSubmit ? '180px': '100%'} onClick={onClose}
+          type={onSubmit ? 'secondary' : 'primary'}>
+          {onSubmit ? localizedString.cancel : localizedString.confirm}
+        </CommonButton>
+      }
       {
         buttons.map((button, i) => (
           <CommonButton width="180px"
             key={i}
+            type={button.type || 'primary'}
             onClick={async () => {
               if (!await button.onClick()) {
                 onClose();
