@@ -734,7 +734,7 @@ public class ReportService {
          }
          
         List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
-        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList();
+        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userNo);
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
 

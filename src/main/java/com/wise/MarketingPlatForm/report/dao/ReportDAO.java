@@ -35,7 +35,7 @@ public interface ReportDAO {
     public List<ReportLinkMstrEntity> selectLinkReportList(String reportId);
     public List<ReportLinkSubMstrEntity> selectSubLinkReportList(String reportId);
     public List<FolderMasterVO> selectPublicReportFolderList(@Param("fldIdSet")Set<Integer> fldIdSet);
-    public List<FolderMasterVO> selectPrivateReportFolderList();
+    public List<FolderMasterVO> selectPrivateReportFolderList(int userNo);
     public List<DetailedDataItemVO> selectDetailedDataItem(String cubeId, String actId);
     public void insertUserUpload(UserUploadMstrEntity userUploadTable);
     public String selectReportName(String reportId);
