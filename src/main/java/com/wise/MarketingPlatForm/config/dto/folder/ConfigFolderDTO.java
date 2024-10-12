@@ -21,6 +21,7 @@ public class ConfigFolderDTO {
   int fldOridinal;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

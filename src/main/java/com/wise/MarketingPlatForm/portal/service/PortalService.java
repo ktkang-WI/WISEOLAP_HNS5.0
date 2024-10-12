@@ -24,8 +24,14 @@ public class PortalService {
             "    '예상취급액(백만원)' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
+            //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
+            //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_01.예상취급액'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +  // %s는 String 변수가 들어갈 위치
@@ -37,8 +43,12 @@ public class PortalService {
             "    '실현취급액(백만원)' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
@@ -50,8 +60,14 @@ public class PortalService {
             "    '실현공헌이익(백만원)' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_03.실현공헌이익'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
@@ -63,7 +79,10 @@ public class PortalService {
             "    '주문고객수(명)' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2,0) AS \"금액\",  -- 금액 대신 '명'이지만 일관성 유지\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수'\n" +

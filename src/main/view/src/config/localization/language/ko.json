@@ -543,6 +543,7 @@
   "reportNotDeleteMsg": "저장되지 않은 보고서 입니다.",
   "reportDeleteMsg": "보고서를 삭제하시겠습니까?",
   "reportPermission": "보고서 수정 권한이 없습니다.",
+  "datasourcePermission": "보고서 수정 권한이 없습니다.",
   "sortByItem": "정렬 기준 항목",
   "newSortByItem": "새 정렬 기준 항목",
   "dataHighlight": "데이터 하이라이트",
@@ -1012,5 +1013,6 @@
   "privateReportListNoDataTxt": "해당 사용자의 개인 폴더/보고서가 없습니다.",
   "execute": "실행",
   "privateReportGetError": "개인 보고서를 불러올 수 없습니다. 관리자에게 문의하세요.",
-  "paramEditInputRequired": "입력창에서 조건절은 필수 입력 입니다."
+  "paramEditInputRequired": "입력창에서 조건절은 필수 입력 입니다.",
+  "designerNoReportNoLinkReport": "현재 열려있는 보고서가 없습니다.\n먼저 보고서를 열어주세요."
 }

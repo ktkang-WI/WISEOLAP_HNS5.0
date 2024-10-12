@@ -33,6 +33,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
       fldId: item.fldId,
       authView: setFalse ? false : item.authView,
       authPublish: setFalse ? false : item.authPublish,
+      authDatasource: setFalse ? false : item.authDatasource,
       authDataItem: setFalse ? false : item.authDataItem,
       authExport: setFalse ? false : item.authExport
     };
@@ -153,6 +154,12 @@ const FolderTreeView = ({mainKey, dependency}) => {
           dataField="authPublish"
           dataType='boolean'
           caption={localizedString.reportView}
+        >
+        </Column>
+        <Column
+          dataField="authDatasource"
+          dataType='boolean'
+          caption={'데이터 원본 사용'}
         >
         </Column>
         <Column

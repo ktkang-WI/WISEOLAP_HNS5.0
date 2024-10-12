@@ -64,6 +64,7 @@ public class UserFolderService {
           .authDataItem(false)
           .authExport(false)
           .authPublish(false)
+          .authDatasource(false)
           .authView(false)
           .build();
           result.add(userAuthDatasetMstrEntity);
@@ -79,6 +80,7 @@ public class UserFolderService {
           .authDataItem(configFolderDTO.isAuthDataItem())
           .authExport(configFolderDTO.isAuthExport())
           .authPublish(configFolderDTO.isAuthPublish())
+          .authDatasource(configFolderDTO.isAuthDatasource())
           .authView(configFolderDTO.isAuthView())
           .build();
 
@@ -127,6 +129,7 @@ public class UserFolderService {
         .authDataItem(userData.isAuthDataItem())
         .authExport(userData.isAuthExport())
         .authPublish(userData.isAuthPublish())
+        .authDatasource(userData.isAuthDatasource())
         .build();
   
       folderListMode.add(folderListModel);

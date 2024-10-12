@@ -164,8 +164,7 @@
                   NULL AS REQUESTER,                          
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN,
-                  AUTH_PUBLISH AS AUTH_PUBLISH             
+                  NULL AS PROMPT_YN           
               FROM               
                   USER_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -198,8 +197,7 @@
                   NULL AS REQUESTER,                                
                   NULL AS REPORT_TAG,                             
                   NULL AS REPORT_DESC,
-                  NULL AS PROMPT_YN,
-                  AUTH_PUBLISH AS AUTH_PUBLISH             
+                  NULL AS PROMPT_YN          
               FROM               
                   GRP_AUTH_REPORT_MSTR             
               INNER JOIN         
@@ -232,8 +230,7 @@
                   REPORT_MSTR.GRID_INFO AS REQUESTER,                          
                   REPORT_MSTR.REPORT_TAG AS REPORT_TAG,                             
                   TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
-                  REPORT_MSTR.PROMPT_YN,
-                  NULL AS AUTH_PUBLISH             
+                  REPORT_MSTR.PROMPT_YN             
               FROM               
                   REPORT_MSTR             
               INNER JOIN         
@@ -480,30 +477,45 @@
         ORDER BY TYPE, UPPERID, ORDINAL, TEXT
     </select>
 
-    <select id="selectPublicReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
-        SELECT 		PUB_FLD_MSTR.FLD_ID 		AS fldId,
-					FLD_NM 						AS fldNm,
-					FLD_PARENT_ID 				AS fldParentId,
-					FLD_ORDINAL 				AS fldOrdinal
-		FROM  		GRP_AUTH_REPORT_MSTR
-					INNER JOIN USER_MSTR 		ON USER_MSTR.GRP_ID = GRP_AUTH_REPORT_MSTR.GRP_ID
-					INNER JOIN PUB_FLD_MSTR 	ON PUB_FLD_MSTR.FLD_ID = GRP_AUTH_REPORT_MSTR.FLD_ID
-		WHERE 		USER_MSTR.USER_NO = #{userNo}
-					AND USER_MSTR.DEL_YN = 'N'
-        			AND AUTH_PUBLISH != 0
-		ORDER BY 	fldParentId, fldOrdinal, fldNm
+    <select id="selectPublicReportFolderList" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+      SELECT 
+      FLD_ID AS fldId,
+      FLD_NM AS fldNm,
+      FLD_PARENT_ID AS fldParentId,
+      FLD_ORDINAL AS fldOrdinal
+      FROM PUB_FLD_MSTR
+      WHERE PUB_FLD_MSTR.FLD_ID IN
+      <foreach item="fldId" collection="fldIdSet" open="(" separator="," close=")">
+        #{fldId}
+      </foreach>
     </select>
 
     <select id="selectPrivateReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
-        SELECT FLD_ID AS fldId,
-		FLD_NM AS fldNm,
-		FLD_PARENT_ID AS fldParentId,
-		FLD_ORDINAL AS fldOrdinal
-		FROM USER_FLD_MSTR
-		INNER JOIN USER_MSTR
-		ON USER_MSTR.USER_NO = USER_FLD_MSTR.USER_NO
-		WHERE USER_MSTR.USER_NO = #{userNo}
+      SELECT 
+      FLD_ID AS fldId,
+      FLD_NM AS fldNm,
+      FLD_PARENT_ID AS fldParentId,
+      FLD_ORDINAL AS fldOrdinal
+      FROM USER_FLD_MSTR
+      WHERE USER_NO = #{userNo}
     </select>
+
+    <select id="selectePublishGrpAuthReportMstr" parameterType="int" resultType="com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity">
+      SELECT FLD_ID AS fldId
+      FROM GRP_AUTH_REPORT_MSTR
+      WHERE GRP_ID = #{grpId}
+      <!-- AND AUTH_VIEW != 0 -->
+      AND AUTH_PUBLISH != 0
+    </select>
+
+    <select id="selectePublishUserAuthReportMstr" parameterType="int" resultType="com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity">
+      SELECT FLD_ID AS fldId
+      FROM USER_AUTH_REPORT_MSTR
+      WHERE USER_NO = #{userNo}
+      <!-- AND AUTH_VIEW != 0 -->
+      AND AUTH_PUBLISH != 0
+    </select>
+
   
       <select id='selectLinkReportList' parameterType="String" resultType="com.wise.MarketingPlatForm.report.entity.ReportLinkMstrEntity">
 		SELECT	

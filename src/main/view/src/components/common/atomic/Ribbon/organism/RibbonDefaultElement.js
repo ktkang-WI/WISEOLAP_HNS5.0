@@ -265,7 +265,7 @@ const RibbonDefaultElement = () => {
               removeReport(dataSource, props);
             });
           } else {
-            confirm(localizedString.reportPermission, () => {
+            alert(localizedString.reportPermission, () => {
             });
           }
         } else {
@@ -297,24 +297,28 @@ const RibbonDefaultElement = () => {
       'label': localizedString.connectReport,
       'imgSrc': connectReport,
       'onClick': (e) => {
-        if (selectLinkedReportList === null) {
-          openModal(
-              LinkReportModal,
-              {
-                subYn: false,
-                subLinkDim: null,
-                existLinkReports: null
-              }
-          );
+        if (currentReport.reportId === 0) {
+          alert(localizedString.designerNoReportNoLinkReport);
         } else {
-          openModal(
-              LinkReportModal,
-              {
-                subYn: false,
-                subLinkDim: null,
-                existLinkReports: selectLinkedReportList
-              }
-          );
+          if (selectLinkedReportList === null) {
+            openModal(
+                LinkReportModal,
+                {
+                  subYn: false,
+                  subLinkDim: null,
+                  existLinkReports: null
+                }
+            );
+          } else {
+            openModal(
+                LinkReportModal,
+                {
+                  subYn: false,
+                  subLinkDim: null,
+                  existLinkReports: selectLinkedReportList
+                }
+            );
+          }
         }
       }
     },

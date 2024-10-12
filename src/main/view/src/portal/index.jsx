@@ -23,6 +23,7 @@ import bigMenuIcon4 from './img/big_ico4.png';
 import bigMenuIcon5 from './img/big_ico5.png';
 import bigMenuIcon6 from './img/big_ico6.png';
 import ReportSwiper from './components/ReportSwiper';
+import {DateBox} from 'devextreme-react';
 
 const bigMenuIconMapper = {
   '고객': bigMenuIcon1,
@@ -65,6 +66,17 @@ const headerMenuHref = [
   {
     name: '기타',
     fld: '2358'
+  }
+];
+
+const quickBoxs = [
+  {
+    id: 13057,
+    name: '주제영역 매트릭스 보고서'
+  },
+  {
+    id: 13350,
+    name: '전환보고서 안내'
   }
 ];
 
@@ -208,6 +220,31 @@ const Portal = () => {
     );
   };
 
+  const getQuickBoxs = () => {
+    return quickBoxs.map(({id, name}, i) => {
+      const url = `${PORTAL_URL}/linkviewer?userId=${userId}&reportId=${id}`;
+      return (
+        <div id={'quick_box' + i} key={'quick_box' + i}>
+          <div className="grap_box_title"
+            onClick={() => {
+              const href = `${url}&srl=true`;
+              const newWindow = window.open(href, '_blank');
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
+          >{name}</div>
+          <div className="graph_box_wrap">
+            <iframe
+              width='100%'
+              height='600px'
+              src={`${url}&no_header=true&no_filter=true&portal=true`}/>
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
     <div id='top' className='portal'>
       <div id='header'>
@@ -264,12 +301,15 @@ const Portal = () => {
           <ul>
             <li>
               <p>기준년월일</p>
-              <input
-                type='text'
-                value={format(date, 'yyyy.MM.dd')}
-                className='date'
-                readOnly
-              />
+              <DateBox
+                value={date}
+                buttons={[]}
+                onValueChanged={(e) => setDate(e.value)}
+                displayFormat={'yyyy.MM.dd'}
+                focusStateEnabled={false}
+                hoverStateEnabled={false}
+                openOnFieldClick={true}
+              ></DateBox>
             </li>
           </ul>
           {
@@ -291,123 +331,7 @@ const Portal = () => {
           }
         </div>
         <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
-        <div style={{display: 'none'}}>
-          <div id="quick_box0">
-            <div className="grap_box_title">예상/실현 실적</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="quick_box1">
-            <div className="grap_box_title">공헌이익/누적분당효율</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="quick_box2">
-            <div className="grap_box_title">검색키워드/상품별 TOP 10</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="quick_box3">
-            <div className="grap_box_title">주문고객수/객단가</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="quick_box4">
-            <div className="grap_box_title">클럽고객수/TV유형상품수</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {getQuickBoxs()}
       </div>
       <div className='blue_bg'>
         <div className='contents'>

@@ -20,19 +20,38 @@ import {
 import {DesignerMode} from 'components/config/configType';
 import DatasetType from 'components/dataset/utils/DatasetType';
 
-const datasetItemsInitialize = (menu, reportType, mode) => {
+const datasetItemsInitialize = (prog, reportType, mode) => {
   const datasetItems = [];
+  /* 데이터 집합 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
+  ** 주제영역
+  ** 쿼리 직접 입력
+  ** 단일 테이블
+  ** 사용자 업로드
+  **/
+  // if (
+  //   menu?.cubeData &&
+  //   reportType !== mode
+  // ) datasetItems.push(DatasetType.CUBE);
+  // if (menu?.newDatasetByQuery) {
+  //   datasetItems.push(DatasetType.DS_SQL);
+  // }
+  // if (menu?.newDatasetBySingleTable) {
+  //   datasetItems.push(DatasetType.DS_SINGLE);
+  // }
+  // if (menu?.userDataUpload) {
+  //   datasetItems.push(DatasetType.DS_UPLOAD);
+  // }
   if (
-    menu?.cubeData &&
+    prog?.cube &&
     reportType !== mode
   ) datasetItems.push(DatasetType.CUBE);
-  if (menu?.newDatasetByQuery) {
+  if (prog?.dsSql) {
     datasetItems.push(DatasetType.DS_SQL);
   }
-  if (menu?.newDatasetBySingleTable) {
+  if (prog?.dsSingle) {
     datasetItems.push(DatasetType.DS_SINGLE);
   }
-  if (menu?.userDataUpload) {
+  if (prog?.dsUpload) {
     datasetItems.push(DatasetType.DS_UPLOAD);
   }
   return datasetItems;
@@ -44,7 +63,7 @@ const DatasetDefaultElement = () => {
   const reportType = useSelector(selectCurrentDesignerMode);
   const configure = useSelector(selectCurrentConfigure);
   const datasetItems =
-    datasetItemsInitialize(configure.menu, reportType, DesignerMode['EXCEL']);
+    datasetItemsInitialize(configure.prog, reportType, DesignerMode['EXCEL']);
 
   const getDatasetElement = () => {
     const returnVal = {
