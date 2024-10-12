@@ -21,6 +21,7 @@
     <result column="RUN_MODE" property="runMode" javaType="String"/>
     <result column="HASH_YN" property="hashYn" javaType="String"/>
     <result column="MD_CD" property="mdCode" javaType="String"/>
+    <result column="PW_CHANGE_DT" property="pwChangeDt" javaType="String"/>
 	</resultMap>
 
   <resultMap id="AuthData" type="com.wise.MarketingPlatForm.auth.entity.AuthDataEntity">
