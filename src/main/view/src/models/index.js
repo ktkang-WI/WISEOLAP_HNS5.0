@@ -18,7 +18,8 @@ import * as ReportFolderManagement
 import * as MyPageConfig from './config/myPage/MyPageConfig';
 import * as Download from './report/Download';
 import * as Portal from './portal';
-
+import * as ProgManagement
+  from './config/progManagement/ProgManagement';
 export default {
   DataSource,
   Cube,
@@ -37,5 +38,6 @@ export default {
   ReportFolderManagement,
   MyPageConfig,
   Download,
-  Portal
+  Portal,
+  ProgManagement
 };

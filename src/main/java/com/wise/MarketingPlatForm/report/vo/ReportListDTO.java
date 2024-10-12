@@ -35,4 +35,6 @@ public class ReportListDTO {
     String promptYn = "N";
     @Builder.Default
     int authPublish = 0;
+    @Builder.Default
+    int authDatasource = 0;
 }

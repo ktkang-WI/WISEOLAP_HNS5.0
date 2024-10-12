@@ -51,10 +51,11 @@ const multipleLoader = async () => {
     console.log(e);
   });
 
-  const myPageConfigure = await userDesignerConfig().then((result) => {
-    if (result == null) return result;
+  const myPageConfigure = await
+  userDesignerConfig().then(({designerConfig}) => {
+    if (designerConfig == null) return designerConfig;
 
-    const object = result;
+    const object = designerConfig;
     const json = JSON.parse(object.defaultItem);
 
     object.defaultItem = json?.item || '';

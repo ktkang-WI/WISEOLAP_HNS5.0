@@ -41,9 +41,10 @@ export const seperateConfig = (designerConfig) => {
 };
 
 const MyDesignerConfig = () => {
-  const designerConfig = useLoaderData();
+  const {designerConfig, generalConfigure} = useLoaderData();
   const [config, setConfig] = useState(() => seperateConfig(designerConfig));
   const {success, alert, confirm} = useModal();
+  const prog = generalConfigure?.prog;
 
   // 마이페이지 저장.
   const onClickSave = () => {
@@ -98,6 +99,7 @@ const MyDesignerConfig = () => {
         data={config}
         // 각 설정 항목
         items={designerConfigItems}
+        prog={prog}
       />
       <div style={{
         display: 'flex',

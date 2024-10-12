@@ -10,6 +10,7 @@ import lombok.Setter;
 public class AuthReportMstrEntity {
   String authView;
   String authPublish;
+  String authDatasource;
   String authDataItem;
   String authExport;
 }

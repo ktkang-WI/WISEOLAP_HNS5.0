@@ -13,6 +13,8 @@ import ConfigHeader from 'components/config/atoms/common/ConfigHeader';
 import AddRibbonBtn from 'components/common/atomic/Ribbon/atom/AddRibbonBtn';
 import ConfigTabs from '../common/ConfigTabs';
 import saveReport from 'assets/image/icon/button/save.png';
+import GroupAppAuthority from './appAuthority/GroupAppAuthority';
+import UserAppAuthority from './appAuthority/UserAppAutority';
 
 export const AuthorityContext = createContext();
 export const path = {
@@ -20,10 +22,12 @@ export const path = {
   'GROUP_REPORT': '/account/group/folder',
   'GROUP_DATASET': '/account/group/dataset',
   'GROUP_DATASOURCE': '/account/group/ds',
+  'GROUP_APP': '/account/group/app',
   'USER_DATA': '/account/user/data',
   'USER_REPORT': '/account/user/folder',
   'USER_DATASET': '/account/user/dataset',
-  'USER_DATASOURCE': '/account/user/ds'
+  'USER_DATASOURCE': '/account/user/ds',
+  'USER_APP': '/account/user/app'
 };
 
 export const mode = {
@@ -62,6 +66,14 @@ const tabItems = [
     component: DatasourceAuthority
   },
   {
+    value: path.GROUP_APP,
+    text: localizedString.groupAppMenu,
+    props: {
+      mainKey: path.GROUP_APP
+    },
+    component: GroupAppAuthority
+  },
+  {
     value: path.USER_DATA,
     text: localizedString.userData,
     props: {
@@ -84,6 +96,14 @@ const tabItems = [
       mainKey: path.USER_DATASOURCE
     },
     component: DatasourceAuthority
+  },
+  {
+    value: path.USER_APP,
+    text: localizedString.userAppMenu,
+    props: {
+      mainKey: path.USER_APP
+    },
+    component: UserAppAuthority
   }
 ];
 
@@ -168,6 +188,12 @@ export const getUserGroupNextKeys = (currentTab, data) => {
       });
       return sizeIsOk && isOk;
     });
+  } else if (
+    currentTab == path.GROUP_APP ||
+    currentTab == path.USER_APP
+  ) {
+    result = data.next.filter((d) =>
+      !Object.values(d.prog).every((value) => value === false));
   } else {
     result = [];
   }
@@ -200,6 +226,12 @@ export const getUserGroupKeys = (currentTab, data) => {
       });
       return sizeIsOk && isOk;
     });
+  } else if (
+    currentTab == path.GROUP_APP ||
+    currentTab == path.USER_APP
+  ) {
+    result = data.prev.filter((d) =>
+      !Object.values(d.prog).every((value) => value === false));
   } else {
     result = [];
   }
@@ -265,7 +297,8 @@ const Authority = () => {
     dsView,
     folder,
     dsViewCube,
-    dsViewDim
+    dsViewDim,
+    progList
   } = useLoaderData();
   const [innerData, setInnerData] = useState();
   const [pageReload, setPageReload] = useState(false);
@@ -321,6 +354,7 @@ const Authority = () => {
       folder: folder, // stationary
       dsViewCube: dsViewCube,
       dsViewDim: dsViewDim,
+      progList: progList,
       action: [action]
     }
   };

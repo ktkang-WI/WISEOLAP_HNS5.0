@@ -19,6 +19,10 @@ export const generateAxios = async (currentTab, data) => {
     currentTab == path.GROUP_DATA ||
     currentTab == path.USER_DATA
   ) return await generatePutDataAxios(currentTab, data);
+  else if (
+    currentTab == path.GROUP_APP ||
+    currentTab == path.USER_APP
+  ) return await generatePutAppAxios(currentTab, data);
 };
 
 const generatePutDataAxios = async (currentTab, data) => {
@@ -85,6 +89,12 @@ const generatePutReportAxios = async (currentTab, data) => {
   return res;
 };
 
+const generatePutAppAxios = async (currentTab, data) => {
+  const res = axios.put(currentTab, {
+    data: data
+  });
+  return res;
+};
 
 export const generateGetAxios = async (path) => {
   return await axios.get(path);

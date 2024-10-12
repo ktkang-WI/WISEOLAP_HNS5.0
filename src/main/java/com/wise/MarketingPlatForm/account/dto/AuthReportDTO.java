@@ -11,4 +11,6 @@ public class AuthReportDTO {
     int fldId;
     @Builder.Default
     String authPublish = "";
+    @Builder.Default
+    String authDatasource = "";
 }

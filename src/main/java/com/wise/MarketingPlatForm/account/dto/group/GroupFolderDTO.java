@@ -18,6 +18,7 @@ public class GroupFolderDTO {
   int fldOrdinal;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

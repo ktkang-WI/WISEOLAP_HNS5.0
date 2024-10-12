@@ -139,6 +139,7 @@ export class AuthorityReport {
         fldId: row.fldId,
         authView: row.authView ? 'Y' : 'N',
         authPublish: row.authPublish ? 'Y' : 'N',
+        authDatasource: row.authDatasource ? 'Y' : 'N',
         authDataItem: row.authDataItem ? 'Y' : 'N',
         authExport: row.authExport ? 'Y' : 'N'
       }))
@@ -158,6 +159,7 @@ export class AuthorityReport {
         fldId: row.fldId,
         authView: row.authView ? 'Y' : 'N',
         authPublish: row.authPublish ? 'Y' : 'N',
+        authDatasource: row.authDatasource ? 'Y' : 'N',
         authDataItem: row.authDataItem ? 'Y' : 'N',
         authExport: row.authExport ? 'Y' : 'N'
       }))

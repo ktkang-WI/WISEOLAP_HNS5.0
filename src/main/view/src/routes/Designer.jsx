@@ -103,19 +103,32 @@ const Designer = () => {
         nav('viewer');
       }
     }
-    const menu = generalConfigure?.menu;
+    // const menu = generalConfigure?.menu;
+    const prog = generalConfigure?.prog;
     const mainTabItems = ['UserInfo'];
-    if (menu.searchReport) mainTabItems.unshift('ReportSearch');
-    if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
-    if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
+    /* 보고서 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
+    ** 보고서 형상 관리
+    ** 쿼리 보기*/
+    // if (menu.searchReport) mainTabItems.unshift('ReportSearch');
+    // if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
+    // if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
+    if (prog.reportConfiguration) mainTabItems.unshift('ReportHistory');
+    if (prog.viewQuery) mainTabItems.unshift('ShowQuery');
     const tabItems = [];
-    const accesUserNo = [1001, 2374, 1385, 1598];
-    if (menu.tabAdhoc) tabItems.push('Dashboard');
-    if (menu.tabDashboard) tabItems.push('AdHoc');
-    if (menu.tabSpreadSheet) tabItems.push('Spreadsheet');
-    if (accesUserNo.includes(myPageConfigure?.userNo)) {
-      tabItems.push('Preference');
-    }
+    
+    // SNB 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
+    // const accesUserNo = [1001, 2374, 1385, 1598];
+    // if (menu.tabAdhoc) tabItems.push('Dashboard');
+    // if (menu.tabDashboard) tabItems.push('AdHoc');
+    // if (menu.tabSpreadSheet) tabItems.push('Spreadsheet');
+    // if (accesUserNo.includes(myPageConfigure.userNo)) {
+    //   tabItems.push('Preference');
+    // }
+    if (prog.dashboard) tabItems.push('Dashboard');
+    if (prog.adhoc) tabItems.push('AdHoc');
+    if (prog.spreadSheet) tabItems.push('Spreadsheet');
+    if (prog.settings) tabItems.push('Preference');
+    
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);
   }, []);
@@ -178,7 +191,7 @@ const Designer = () => {
 
     const unlistenHistoryEvent = history.listen(({action}) => {
       if (action === 'POP') {
-        const path = history.location.pathname;
+        const path = history.location.pame;
         let reportType = DesignerMode['DASHBOARD'];
 
         if (path.indexOf(DesignerMode['AD_HOC'].toLowerCase()) > -1) {
