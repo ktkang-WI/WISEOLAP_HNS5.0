@@ -29,6 +29,8 @@ import com.wise.MarketingPlatForm.account.dto.AuthReportDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity;
+import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.auth.dao.AuthDAO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.dataset.domain.cube.vo.CubeInfoDTO;
@@ -177,33 +179,34 @@ public class ReportService {
                 entity = logService.selectReportHis(reportId, reportSeq);
             }
 
-            String authPublishValue = "";
+            String authPublishValue = "0";  // 기본값
+            String authDatasourceValue = "0";  // 기본값
+
             if ("PRIVATE".equals(entity.getFldType())) {
                 authPublishValue = "1";
+                authDatasourceValue = "1";
             } else {
                 AuthReportDTO grpFolderAuth = authDAO.selectGrpAuthReport(entity.getFldId(), user.getGrpId());
                 AuthReportDTO userFolderAuth = authDAO.selectUserAuthReport(entity.getFldId(), user.getUserNo());
-                
-                if (userFolderAuth == null) {
-                    userFolderAuth = AuthReportDTO.builder()
-                                        .fldId(0)
-                                        .authPublish("0")
-                                        .build();
+
+                // null 처리 시 기본값을 가진 객체 생성
+                userFolderAuth = (userFolderAuth != null) ? userFolderAuth :
+                                AuthReportDTO.builder().fldId(0).authPublish("0").authDatasource("0").build();
+                                
+                grpFolderAuth = (grpFolderAuth != null) ? grpFolderAuth :
+                                AuthReportDTO.builder().fldId(0).authPublish("0").authDatasource("0").build();
+
+                // userFolderAuth로 초기 설정 (비어 있으면 기본값 0)
+                authPublishValue = !userFolderAuth.getAuthPublish().isEmpty() ? userFolderAuth.getAuthPublish() : "0";
+                authDatasourceValue = !userFolderAuth.getAuthDatasource().isEmpty() ? userFolderAuth.getAuthDatasource() : "0";
+
+                // 그룹 권한이 있을 경우, 값 갱신
+                if ("1".equals(grpFolderAuth.getAuthPublish()) && "0".equals(authPublishValue)) {
+                    authPublishValue = grpFolderAuth.getAuthPublish();
                 }
 
-                if (grpFolderAuth == null) {
-                    grpFolderAuth = AuthReportDTO.builder()
-                                        .fldId(0)
-                                        .authPublish("0")
-                                        .build();
-                }
-
-                authPublishValue = "".equals(userFolderAuth.getAuthPublish()) ? "0" : userFolderAuth.getAuthPublish();
-
-                if (!"".equals(grpFolderAuth.getAuthPublish())) {
-                    if ("0".equals(authPublishValue) && "1".equals(grpFolderAuth.getAuthPublish())) {
-                        authPublishValue = grpFolderAuth.getAuthPublish();
-                    }
+                if ("1".equals(grpFolderAuth.getAuthDatasource()) && "0".equals(authDatasourceValue)) {
+                    authDatasourceValue = grpFolderAuth.getAuthDatasource();
                 }
             }
             
@@ -247,6 +250,7 @@ public class ReportService {
     		options.put("reportPath", null);
             options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
             options.put("authPublish", authPublishValue);
+            options.put("authDatasource", authDatasourceValue);
 
 
             // 보고서 즐겨찾기 여부 확인
@@ -707,11 +711,29 @@ public class ReportService {
         return result;
     }
 
-    public Map<String, List<FolderMasterVO>> getReportFolderList(int userNo) {
+    public Map<String, List<FolderMasterVO>> getReportFolderList(UserDTO userDTO) {
         Map<String, List<FolderMasterVO>> result = new HashMap<>();
+        int userNo = userDTO.getUserNo();
+        int grpId = userDTO.getGrpId();
 
-        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(userNo);
-        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userNo);
+        List<GroupAuthReportMstrEntity> groupAuthReportMstrEntities = reportDAO.selectePublishGrpAuthReportMstr(grpId);
+        List<UserAuthReportMstrEntity> userAuthReportMstrEntities = reportDAO.selectePublishUserAuthReportMstr(userNo);
+
+         // 중복을 제거하기 위해 Set 사용
+         Set<Integer> fldIdSet = new HashSet<>();
+
+         // groupAuthReportMstrEntities에서 fldId 추출하여 Set에 추가
+         for (GroupAuthReportMstrEntity entity : groupAuthReportMstrEntities) {
+             fldIdSet.add(entity.getFldId());
+         }
+ 
+         // userAuthReportMstrEntities에서 fldId 추출하여 Set에 추가
+         for (UserAuthReportMstrEntity entity : userAuthReportMstrEntities) {
+             fldIdSet.add(entity.getFldId());
+         }
+         
+        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
+        List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList();
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
 

@@ -63,6 +63,7 @@
       <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
       <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
       <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATASOURCE" property="authDatasource" javaType="boolean"/>
       <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
       <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
     </resultMap>
@@ -70,7 +71,6 @@
     <resultMap id="UserFolderDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO">
       <result column="USER_NO" property="userNo" javaType="int"/>
       <result column="USER_ID" property="userId" javaType="String"/>
-      <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="FLD_ID" property="fldId" javaType="int"/>
       <result column="FLD_NM" property="fldNm" javaType="String"/>
       <result column="FLD_LVL" property="fldLvl" javaType="int"/>
@@ -78,6 +78,7 @@
       <result column="FLD_ORDINAL" property="fldOrdinal" javaType="int"/>
       <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
       <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATASOURCE" property="authDatasource" javaType="boolean"/>
       <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
       <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
     </resultMap>
@@ -125,6 +126,19 @@
       <result column="PARENT_FLD_ID" property="parentFldId" javaType="int"/>
     </resultMap>
 
+    <resultMap id="GroupAppDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupAppDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
+      <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="AUTH_DATA" property="authData" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserAppDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserAppDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="USER_ID" property="userId" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="AUTH_DATA" property="authData" javaType="String"/>
+    </resultMap>
 
     <select id="selectGroupMstr" resultMap="GroupMstrEntity">
       SELECT
@@ -206,6 +220,7 @@
           PUB_FLD_MSTR.FLD_ORDINAL,
           AUTH_VIEW,
           AUTH_PUBLISH,
+          AUTH_DATASOURCE,
           AUTH_DATAITEM,
           AUTH_EXPORT
       FROM
@@ -223,7 +238,6 @@
       SELECT
           USER_MSTR.USER_NO,
           USER_MSTR.USER_ID,
-          GRP_MSTR.GRP_NM,
           PUB_FLD_MSTR.FLD_ID,
           PUB_FLD_MSTR.FLD_NM,
           PUB_FLD_MSTR.FLD_LVL,
@@ -231,10 +245,10 @@
           PUB_FLD_MSTR.FLD_ORDINAL,
           USER_AUTH_REPORT_MSTR.AUTH_VIEW,
           USER_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+          USER_AUTH_REPORT_MSTR.AUTH_DATASOURCE,
           USER_AUTH_REPORT_MSTR.AUTH_DATAITEM,
           USER_AUTH_REPORT_MSTR.AUTH_EXPORT
           FROM USER_MSTR
-              INNER JOIN GRP_MSTR ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
               INNER JOIN USER_AUTH_REPORT_MSTR ON USER_MSTR.USER_NO = USER_AUTH_REPORT_MSTR.USER_NO
               INNER JOIN PUB_FLD_MSTR ON USER_AUTH_REPORT_MSTR.FLD_ID = PUB_FLD_MSTR.FLD_ID
               ORDER BY
@@ -263,6 +277,49 @@
               GRP_MSTR.GRP_ID,
               DS_MSTR.DS_ID
     </select>
+
+    <select id="selectGroupApp" resultMap="GroupAppDTO">
+      SELECT 
+      GRP_MSTR.GRP_ID,
+      GRP_MSTR.GRP_NM,
+      GRP_MSTR.GRP_DESC,
+      GRP_AUTH_PROG_MSTR.AUTH_DATA
+      FROM GRP_MSTR INNER JOIN GRP_AUTH_PROG_MSTR
+      ON GRP_MSTR.GRP_ID = GRP_AUTH_PROG_MSTR.GRP_ID
+    </select>
+
+    <select id="selectGroupAppByGrpId" parameterType="int" resultMap="GroupAppDTO">
+      SELECT 
+      GRP_MSTR.GRP_ID,
+      GRP_MSTR.GRP_NM,
+      GRP_MSTR.GRP_DESC,
+      GRP_AUTH_PROG_MSTR.AUTH_DATA
+      FROM GRP_MSTR INNER JOIN GRP_AUTH_PROG_MSTR
+      ON GRP_MSTR.GRP_ID = GRP_AUTH_PROG_MSTR.GRP_ID
+      WHERE GRP_MSTR.GRP_ID=#{grpId}
+    </select>
+
+    <select id="selectUserApp" resultMap="UserAppDTO">
+      SELECT 
+      USER_MSTR.USER_NO,
+      USER_MSTR.USER_ID,
+      USER_MSTR.USER_NM,
+      USER_AUTH_PROG_MSTR.AUTH_DATA
+      FROM USER_MSTR INNER JOIN USER_AUTH_PROG_MSTR
+      ON USER_MSTR.USER_NO = USER_AUTH_PROG_MSTR.USER_NO
+    </select>
+
+    <select id="selectUserAppByUserNo" parameterType="int" resultMap="UserAppDTO">
+      SELECT 
+      USER_MSTR.USER_NO,
+      USER_MSTR.USER_ID,
+      USER_MSTR.USER_NM,
+      USER_AUTH_PROG_MSTR.AUTH_DATA
+      FROM USER_MSTR INNER JOIN USER_AUTH_PROG_MSTR
+      ON USER_MSTR.USER_NO = USER_AUTH_PROG_MSTR.USER_NO
+      WHERE USER_MSTR.USER_NO=#{userNo}
+    </select>
+  
     <select id="selectUserDs" resultMap="UserDsDTO">
       SELECT
         USER_MSTR.USER_NO,
@@ -538,6 +595,7 @@
               FLD_ID,
               AUTH_VIEW,
               AUTH_PUBLISH,
+              AUTH_DATASOURCE,
               AUTH_DATAITEM,
               AUTH_EXPORT
           )
@@ -547,6 +605,7 @@
             #{item.fldId, jdbcType=INTEGER},
             #{item.authView, jdbcType=BOOLEAN},
             #{item.authPublish, jdbcType=BOOLEAN},
+            #{item.authDatasource, jdbcType=BOOLEAN},
             #{item.authDataItem, jdbcType=BOOLEAN},
             #{item.authExport, jdbcType=BOOLEAN}
           )
@@ -574,6 +633,7 @@
               FLD_ID,
               AUTH_VIEW,
               AUTH_PUBLISH,
+              AUTH_DATASOURCE,
               AUTH_DATAITEM,
               AUTH_EXPORT
           )
@@ -583,6 +643,7 @@
             #{item.fldId, jdbcType=INTEGER},
             #{item.authView, jdbcType=BOOLEAN},
             #{item.authPublish, jdbcType=BOOLEAN},
+            #{item.authDatasource, jdbcType=BOOLEAN},
             #{item.authDataItem, jdbcType=BOOLEAN},
             #{item.authExport, jdbcType=BOOLEAN}
           )
@@ -706,4 +767,60 @@
           SET DEL_YN = 'Y'
           WHERE GRP_ID = #{grpId, jdbcType=INTEGER}
     </update>
+
+    <delete id="deleteGroupApp" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_PROG_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <delete id="deleteUserApp" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_PROG_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <delete id="deleteGroupAppAll" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_PROG_MSTR WHERE 1 = 1
+    </delete>
+
+    <delete id="deleteUserAppAll" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_PROG_MSTR WHERE 1 = 1
+    </delete>
+
+    <insert id="putGroupApp" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO GRP_AUTH_PROG_MSTR(
+              GRP_ID,
+              AUTH_DATA
+          )
+          VALUES
+          (
+            #{item.grpId, jdbcType=INTEGER},
+            #{item.authData, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <insert id="putUserApp" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+          INTO USER_AUTH_PROG_MSTR(
+              USER_NO,
+              AUTH_DATA
+          )
+          VALUES
+          (
+            #{item.userNo, jdbcType=INTEGER},
+            #{item.authData, jdbcType=INTEGER}
+          )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
 </mapper>

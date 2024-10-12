@@ -479,8 +479,7 @@ public class ReportController {
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(HttpServletRequest request) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        int userNo = userDTO.getUserNo();
-        return reportService.getReportFolderList(userNo);
+        return reportService.getReportFolderList(userDTO);
 	}
 
     @PatchMapping(value = "/report-delete")

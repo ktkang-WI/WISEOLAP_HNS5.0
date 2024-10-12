@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.config.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.model.ConfigModel;
 import com.wise.MarketingPlatForm.config.service.GeneralService;
+import com.wise.MarketingPlatForm.global.util.SessionUtility;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -27,9 +31,11 @@ public class ConfigController {
   private GeneralService generalService;
 
   @GetMapping
-  public ConfigModel getGeneralData() throws Exception{
+  public ConfigModel getGeneralData(HttpServletRequest request) throws Exception{
     logger.info("general-data request is successful");
-    return generalService.getGeneralData();
+    UserDTO user = SessionUtility.getSessionUser(request);
+
+    return generalService.getGeneralData(user);
   }
 
   @PatchMapping

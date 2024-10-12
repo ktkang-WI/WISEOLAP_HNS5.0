@@ -1,5 +1,6 @@
 package com.wise.MarketingPlatForm.config.model;
 
+import com.wise.MarketingPlatForm.account.model.common.ProgModel;
 import com.wise.MarketingPlatForm.config.dto.config.AdvancedDTO;
 import com.wise.MarketingPlatForm.config.dto.config.GeneralDTO;
 import com.wise.MarketingPlatForm.config.dto.config.MenuDTO;
@@ -21,4 +22,5 @@ public class ConfigModel {
   private AdvancedDTO advanced;
   private MenuDTO menu;
   private ReportDTO report;
+  private ProgModel prog;
 }
