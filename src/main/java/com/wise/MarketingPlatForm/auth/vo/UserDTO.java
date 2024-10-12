@@ -35,4 +35,7 @@ public class UserDTO implements Serializable{
     int lockCnt;
     String hasYn;
     String mdCode;
+    String pwChangeDt;
+    @Builder.Default
+    int isChangePw = 0;
 }

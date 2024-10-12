@@ -52,11 +52,18 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(HttpServletRequest request, @RequestBody Map<String, String> param) {
         String id = param.getOrDefault("id", "");
+        // front에서 입력한 pw 암호화? axios 통신 전 암호화?
         String password = param.getOrDefault("password", "");
 
         UserDTO userDTO = loginService.getLoginUser(id, password);
 
         if (userDTO != null) {
+            if (userDTO.getIsChangePw() > 0) {
+                Map<String, Integer> chagePw = new HashMap<>();
+                chagePw.put("change", userDTO.getIsChangePw());
+                return ResponseEntity.ok().body(chagePw);
+            }
+
             SessionUtility.setSessionUser(request, userDTO);
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
