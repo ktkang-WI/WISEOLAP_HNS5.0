@@ -109,13 +109,13 @@ const Designer = () => {
     /* 보고서 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
     ** 보고서 형상 관리
     ** 쿼리 보기*/
-    // if (menu.searchReport) mainTabItems.unshift('ReportSearch');
+    mainTabItems.unshift('ReportSearch');
     // if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
     // if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
     if (prog.reportConfiguration) mainTabItems.unshift('ReportHistory');
     if (prog.viewQuery) mainTabItems.unshift('ShowQuery');
     const tabItems = [];
-    
+
     // SNB 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
     // const accesUserNo = [1001, 2374, 1385, 1598];
     // if (menu.tabAdhoc) tabItems.push('Dashboard');
@@ -128,7 +128,7 @@ const Designer = () => {
     if (prog.adhoc) tabItems.push('AdHoc');
     if (prog.spreadSheet) tabItems.push('Spreadsheet');
     if (prog.settings) tabItems.push('Preference');
-    
+
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);
   }, []);
