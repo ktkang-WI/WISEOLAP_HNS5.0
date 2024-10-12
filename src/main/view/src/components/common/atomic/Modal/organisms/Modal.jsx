@@ -18,6 +18,7 @@ const Modal = ({
   width='50%', height='50%',
   modalTitle='',
   buttons,
+  changeCancel = false,
   ...props
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,6 +57,7 @@ const Modal = ({
                   {children}
                 </Inner>
                 <Footer
+                  changeCancel={changeCancel}
                   currentPage={currentPage}
                   maxPage={page}
                   usePage={usePage}

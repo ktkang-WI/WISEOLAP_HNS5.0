@@ -14,6 +14,14 @@ export const getUserInfomation = () => {
   return res;
 };
 
+export const addPwChangeDt = async (param) => {
+  const res = axios.patch(
+      myPagePath + '/add-change-pw-dt', null, {params: param}
+  );
+
+  return await res;
+};
+
 export const updatePassword = async (param) => {
   const res = axios.patch(
       myPagePath + '/user-info/update-password', null, {params: param}

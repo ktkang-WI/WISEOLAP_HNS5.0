@@ -1,5 +1,8 @@
 package com.wise.MarketingPlatForm.config.controller.myPage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,8 @@ import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "my-page-user-info", description = "마이페이지에 사용자 정보를 가져옵니다.")
 @RestController
@@ -57,14 +62,31 @@ public class MyPageUserInfoController {
     
     // 로그인 비밀번호 맞으면 비밀번호 업데이트 진행.
     if ("Success".equals(result.get("invalidStatus"))) {
+      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String dateTime = dateFormat.format(new Date());
+
       UserDTO userInfo = UserDTO.builder()
         .password(newPassword)
         .userNo(userNo)
+        .pwChangeDt(dateTime)
         .build();
       Map<String, String> updateResult = myPageUserInfoService.modifyPassword(userInfo);
       result = updateResult;
     }
     return result;
+  }
+
+  @PatchMapping(value = "/add-change-pw-dt")
+  public boolean addChangePwDt(
+    @RequestParam(required = true) String pwChangeDt,
+    HttpServletRequest request
+  ) {
+    // session
+    UserDTO userDTO = SessionUtility.getSessionUser(request);
+    userDTO.setPwChangeDt(pwChangeDt);
+    
+        
+    return myPageUserInfoService.patchPwChangeDt(userDTO);
   }
   
   @PatchMapping(value = "/user-info/update-info")

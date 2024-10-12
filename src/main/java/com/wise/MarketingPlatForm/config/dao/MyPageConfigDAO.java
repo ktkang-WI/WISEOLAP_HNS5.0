@@ -33,4 +33,6 @@ public interface MyPageConfigDAO {
   public boolean updateUserInfo(UserDTO user);
   // my viewer config
   public boolean updataMyViewerConfig(MyDesignerDTO myDesignerDTO);
+  // 비밀번호 기간 연장
+  public boolean updatePwChangeDt(UserDTO userDTO);
 }
