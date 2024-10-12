@@ -143,7 +143,7 @@ public class CubeService {
         }
         if (tempFolder.size() != 0) {
             for (CubeFieldVO folder : tempFolder) {
-                fields.add(folder);
+                fields.add(0, folder);
             }
         }
 

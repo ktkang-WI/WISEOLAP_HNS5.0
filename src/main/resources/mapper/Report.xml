@@ -490,13 +490,14 @@
       </foreach>
     </select>
 
-    <select id="selectPrivateReportFolderList" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
+    <select id="selectPrivateReportFolderList" parameterType="int" resultType="com.wise.MarketingPlatForm.report.vo.FolderMasterVO">
       SELECT 
       FLD_ID AS fldId,
       FLD_NM AS fldNm,
       FLD_PARENT_ID AS fldParentId,
       FLD_ORDINAL AS fldOrdinal
       FROM USER_FLD_MSTR
+      WHERE USER_NO = #{userNo}
     </select>
 
     <select id="selectePublishGrpAuthReportMstr" parameterType="int" resultType="com.wise.MarketingPlatForm.account.entity.GroupAuthReportMstrEntity">

@@ -99,6 +99,14 @@
       WHERE USER_NO = #{userNo}
   </update>
 
+  <update id="updatePwChangeDt" parameterType="com.wise.MarketingPlatForm.auth.vo.UserDTO">
+    UPDATE
+      USER_MSTR
+      SET
+          PW_CHANGE_DT = TO_DATE(#{pwChangeDt, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+      WHERE USER_NO = #{userNo}
+  </update>
+
   <insert id="insertWbUserConfig" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO">
     INSERT INTO 
     WB_USER_CONFIG_MSTR (
@@ -156,7 +164,8 @@
     UPDATE
       USER_MSTR
       SET
-        PASSWD = #{password, jdbcType=VARCHAR}
+        PASSWD = #{password, jdbcType=VARCHAR},
+        PW_CHANGE_DT = TO_DATE(#{pwChangeDt, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
       WHERE USER_NO = #{userNo}
   </update>
   <update id="updateUserInfo" parameterType="com.wise.MarketingPlatForm.auth.vo.UserDTO">

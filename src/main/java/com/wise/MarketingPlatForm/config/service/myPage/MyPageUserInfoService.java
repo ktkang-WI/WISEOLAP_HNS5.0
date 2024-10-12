@@ -62,4 +62,14 @@ public class MyPageUserInfoService {
     }
     return result;
   }
+
+  public boolean patchPwChangeDt(UserDTO userDTO) {
+    boolean res = false;
+    try {
+      res = myPageConfigDAO.updatePwChangeDt(userDTO);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return res;
+  }
 }

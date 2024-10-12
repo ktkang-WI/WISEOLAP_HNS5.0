@@ -28,4 +28,5 @@ public class UserEntity {
     int lockCnt;
     String hashYn;
     String mdCode;
+    String pwChangeDt;
 }
