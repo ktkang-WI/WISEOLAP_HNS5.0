@@ -298,7 +298,7 @@ const RibbonDefaultElement = () => {
       'imgSrc': connectReport,
       'onClick': (e) => {
         if (currentReport.reportId === 0) {
-          alert(localizedString.designerNoReportNoLinkReport);
+          alert(localizedString.NoReportNoLinkReport);
         } else {
           if (selectLinkedReportList === null) {
             openModal(
