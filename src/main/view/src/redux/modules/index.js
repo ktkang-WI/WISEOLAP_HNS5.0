@@ -10,6 +10,7 @@ import ParameterSlice from './ParameterSlice';
 import SpreadSlice from './SpreadSlice';
 import LoadingSlice from './LoadingSlice';
 import LinkSlice from './LinkSlice';
+import AlertSlice from './AlertSlice';
 import GC from '@grapecity/spread-sheets';
 import {sheets, workbookJSONs}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
@@ -24,7 +25,8 @@ const metaReducer = combineReducers({
   item: ItemSlice.reducer,
   parameter: ParameterSlice.reducer,
   spread: SpreadSlice.reducer,
-  link: LinkSlice.reducer
+  link: LinkSlice.reducer,
+  alert: AlertSlice.reducer
 });
 
 const systemReducer = combineReducers({

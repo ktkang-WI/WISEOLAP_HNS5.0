@@ -101,7 +101,7 @@ const LinkReportModal = ({
       );
       dispatch(deleteLink({linkReportId: selectedReport.id}));
     } else {
-      alert('Please select an item to remove.');
+      alert('삭제할 연결보고서를 선택해주세요');
     }
   };
 

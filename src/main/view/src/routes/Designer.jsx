@@ -210,7 +210,7 @@ const Designer = () => {
   return (
     <div>
       <Header
-        left={['Logo', 'Viewer']}
+        left={['Logo', 'Viewer', 'LinkReportList']}
         middle={['ReportTab']}
         right={
           mainTabItems
