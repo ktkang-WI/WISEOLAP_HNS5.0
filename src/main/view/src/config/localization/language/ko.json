@@ -1008,6 +1008,7 @@
   "pointMakerExplain2": "* 빈 포인트 무시, 역순으로 보기는 다른 측정값과 동일하게 변경, 적용됩니다.",
   "checkingInitReportRetrieval": "자동 조회 여부",
   "viewerReportLimit": "뷰어 보고서는 5개까지 조회 가능합니다.",
+  "linkReportitself": "자신의 보고서를 연결할 수 없습니다.",
   "privateReportList": "개인 보고서 목록",
   "privateReportListNoDataTxt": "해당 사용자의 개인 폴더/보고서가 없습니다.",
   "execute": "실행",

@@ -115,7 +115,7 @@ const Designer = () => {
     if (prog.reportConfiguration) mainTabItems.unshift('ReportHistory');
     if (prog.viewQuery) mainTabItems.unshift('ShowQuery');
     const tabItems = [];
-
+    
     // SNB 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
     // const accesUserNo = [1001, 2374, 1385, 1598];
     // if (menu.tabAdhoc) tabItems.push('Dashboard');
@@ -128,6 +128,7 @@ const Designer = () => {
     if (prog.adhoc) tabItems.push('AdHoc');
     if (prog.spreadSheet) tabItems.push('Spreadsheet');
     if (prog.settings) tabItems.push('Preference');
+    
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);
   }, []);

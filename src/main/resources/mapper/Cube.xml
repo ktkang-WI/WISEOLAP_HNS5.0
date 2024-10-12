@@ -92,6 +92,7 @@
 		FROM	CUBE_DIM_MSTR T1
 		WHERE	CUBE_ID = #{cubeId}
 		AND 	T1.DIM_IS_VISIBLE = 1
+		ORDER BY T1.DIM_ORDINAL, T1.DIM_CAPTION
   </select>
 
 	<select id="selectDatasetDsCube" resultMap="DatasetDsCubeMstr">

@@ -13,6 +13,7 @@ const generateMeta = (item) => {
   const defaultAxis = {
     formatType: 'Number',
     unit: 'Ones',
+    autoBreak: false,
     axisStartToZero: false,
     useAxis: true,
     customText: false,

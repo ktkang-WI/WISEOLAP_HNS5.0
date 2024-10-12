@@ -10,28 +10,101 @@ import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
 import DrawerMenu from './components/Drawer';
+import UserInfoButtonUI
+  from 'components/common/atomic/Header/atom/UserInfoButtonUI';
+import UserInfoPopover
+  from 'components/common/atomic/Header/popover/UserInfoPopover';
+import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+
+import bigMenuIcon1 from './img/big_ico1.png';
+import bigMenuIcon2 from './img/big_ico2.png';
+import bigMenuIcon3 from './img/big_ico3.png';
+import bigMenuIcon4 from './img/big_ico4.png';
+import bigMenuIcon5 from './img/big_ico5.png';
+import bigMenuIcon6 from './img/big_ico6.png';
+import ReportSwiper from './components/ReportSwiper';
+
+const bigMenuIconMapper = {
+  '고객': bigMenuIcon1,
+  '전사관리지표': bigMenuIcon2,
+  '매출': bigMenuIcon3,
+  '물류': bigMenuIcon4,
+  '상품': bigMenuIcon5
+};
+
+const headerMenuHref = [
+  {
+    name: '전사관리지표',
+    fld: '2353'
+    // fld: '1621'
+  },
+  {
+    name: '주요보고서',
+    fld: '2355'
+  },
+  {
+    name: '상품',
+    fld: '2351'
+  },
+  {
+    name: '방송',
+    fld: '2349'
+  },
+  {
+    name: '매출',
+    fld: '2347'
+  },
+  {
+    name: '고객',
+    fld: '2345'
+  },
+  {
+    name: '물류',
+    fld: '2348'
+  },
+  {
+    name: '기타',
+    fld: '2358'
+  }
+];
 
 const Portal = () => {
-  const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
-  const [date, setDate] = useState(format(new Date(), 'yyyy.MM.dd'));
+  // const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
+  // const PORTAL_URL = 'http://localhost:3000/editds';
+  const PORTAL_URL = window.location.origin + '/editds';
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() - 1);
+
+  const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
+  const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const avFolders =
-    new Set([2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
   const [userId, setUserId] = useState('');
+  const [userNm, setUserNm] = useState('');
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
         setUserId(data.data.userId);
+        setUserNm(data.data.userNm);
       }
     });
-    models.Portal.getCardData(date.replaceAll('.', '')).then((data) => {
+
+    models.Portal.getCardData(format(date, 'yyyyMMdd')).then((data) => {
       if (data.status == 200 && data.data) {
         setCardData(data.data);
       }
     });
+
+    // 3600000
+    const itv = setInterval(() => {
+      setDate(new Date());
+    }, 3600000);
+
+    return () => clearInterval(itv);
   }, [date]);
 
   useEffect(() => {
@@ -39,7 +112,7 @@ const Portal = () => {
       if (data.status == 200) {
         const {publicReport} = data.data;
 
-        const folderMap = publicReport.reduce((acc, curr) => {
+        const _folderMap = publicReport.reduce((acc, curr) => {
           if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
           // if (curr.type === 'FOLDER') {
             acc[curr.id] = {
@@ -53,12 +126,12 @@ const Portal = () => {
         }, {});
 
         publicReport.forEach((curr) => {
-          if (curr.type === 'REPORT' && folderMap[curr.upperId]) {
-            folderMap[curr.upperId].reports.push(curr);
+          if (curr.type === 'REPORT' && _folderMap[curr.upperId]) {
+            _folderMap[curr.upperId].reports.push(curr);
           }
         });
 
-        const result = Object.values(folderMap).map((fld) => {
+        const result = Object.values(_folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
             if (a.ordinal !== b.ordinal) {
@@ -76,6 +149,7 @@ const Portal = () => {
           return a.id - b.id;
         });
 
+        setFolderMap(_folderMap);
         setReportList(result);
       }
     });
@@ -90,7 +164,10 @@ const Portal = () => {
   useEffect(() => {
     $('.date').datepicker({
       dateFormat: 'yy.mm.dd',
-      onSelect: (dateText) => setDate(dateText)
+      onSelect: (dateText) => {
+        const selectedDate = $.datepicker.parseDate('yy.mm.dd', dateText);
+        setDate(selectedDate);
+      }
     });
   }, []);
 
@@ -98,7 +175,7 @@ const Portal = () => {
     return reports.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
-        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&no_header=true`}
+        href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`}
         key={report.uniqueId}
         title={report.name}
         date={format(new Date(report.modDt), 'yyyy.MM.dd.')}
@@ -106,6 +183,29 @@ const Portal = () => {
         icon={reportIcon}
       />
     ));
+  };
+
+  const getDropdown = (id) => {
+    return (
+      <div className='depth_menu' key={'d' + id}>
+        <ul>
+          {
+            folderMap[id]?.reports?.map((r) => {
+              return (
+                <li key={'rd'+id}>
+                  <a href={`${PORTAL_URL}/linkviewer?srl=true&fld=${id}` +
+                  `&reportId=${r.id}&reportType=${r.reportType}`}
+                  rel="noreferrer"
+                  target="_blank">
+                    <span>{r.name}</span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    );
   };
 
   return (
@@ -119,64 +219,44 @@ const Portal = () => {
             ↑
           </a>
           <ul id='header_menu'>
+            {
+              headerMenuHref.map((menu, i) => {
+                if (!folderMap[menu.fld]?.reports?.length) return null;
+
+                return (
+                  <li key={'li' + i}>
+                    <a>{menu.name}</a>
+                    {getDropdown(menu.fld)}
+                  </li>
+                );
+              })
+            }
             <li>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2353`}
-                rel="noreferrer"
-                target="_blank"
-                className='active'>
-                전사관리지표
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2355`}
-                rel="noreferrer"
-                target="_blank">
-                주요보고서
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2351`}
-                rel="noreferrer"
-                target="_blank">
-                상품
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2349`}
-                rel="noreferrer"
-                target="_blank">
-                방송
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2347`}
-                rel="noreferrer"
-                target="_blank">
-                매출
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2345`}
-                rel="noreferrer"
-                target="_blank">
-                고객
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2348`}
-                rel="noreferrer"
-                target="_blank">
-                물류
-              </a>
-              <a
-                href={`${PORTAL_URL}/linkviewer?srl=true&fld=2358`}
-                rel="noreferrer"
-                target="_blank">
-                기타
-              </a>
               <a
                 href={`${PORTAL_URL}/`}
                 rel="noreferrer"
-                target="_blank">
+                target="_blank"
+                className='active'>
                 OLAP</a>
             </li>
           </ul>
-          <DrawerMenu data={portalReportList}/>
+          <CommonButton
+            id={'portal_user_info'}
+            type={'onlyImageText'}
+            height={'32px'}
+            width={'100px'}
+            usePopover={true}
+            popoverProps={{
+              'width': 'auto',
+              'height': '80',
+              'showEvent': 'click',
+              'position': 'bottom'
+            }}
+            contentRender={() => <UserInfoPopover/>}
+          >
+            <UserInfoButtonUI name={userNm}/>
+          </CommonButton>
+          <DrawerMenu portalUrl={PORTAL_URL} data={portalReportList}/>
         </div>
       </div>
       <div className='contents'>
@@ -186,7 +266,7 @@ const Portal = () => {
               <p>기준년월일</p>
               <input
                 type='text'
-                value={date}
+                value={format(date, 'yyyy.MM.dd')}
                 className='date'
                 readOnly
               />
@@ -210,12 +290,124 @@ const Portal = () => {
               <div className='no-card'> 조회된 데이터가 없습니다. </div>
           }
         </div>
-        <iframe
-          width='100%'
-          height='2400px'
-          // eslint-disable-next-line max-len
-          src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13154&no_header=true&reportType=DashAny&no_filter=true&portal=true&param_values=%7B%22@DATE%22:%5B%22${date.replaceAll('.', '')}%22%5D%7D`}
-        ></iframe>
+        <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
+        <div style={{display: 'none'}}>
+          <div id="quick_box0">
+            <div className="grap_box_title">예상/실현 실적</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box1">
+            <div className="grap_box_title">공헌이익/누적분당효율</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box2">
+            <div className="grap_box_title">검색키워드/상품별 TOP 10</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box3">
+            <div className="grap_box_title">주문고객수/객단가</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="quick_box4">
+            <div className="grap_box_title">클럽고객수/TV유형상품수</div>
+            <div className="graph_box_wrap">
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico1.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+              <div className="round_box">
+                <div className="box_title">
+                  <img src="./img/title_ico2.png" alt=""/>
+                  <span>타이틀</span>
+                </div>
+                <div className="graph" style={{'height': '300px'}}>
+                  그래프가 들어갈 곳입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className='blue_bg'>
         <div className='contents'>
@@ -224,17 +416,17 @@ const Portal = () => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
+                    <p>
+                      <img src={bigMenuIconMapper[fld.name] || bigMenuIcon6}/>
+                      {fld.name}
+                    </p>
                     <ul>
                       {getReports(fld.reports)}
                     </ul>
                   </div>);
               } else {
                 return (
-                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>{fld.name}</p>
-                    <div className='no-card'> 보고서가 없습니다 </div>
-                  </div>
+                  null
                 );
               }
             }

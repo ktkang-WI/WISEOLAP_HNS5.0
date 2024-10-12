@@ -65,7 +65,10 @@ export default function useReportLoad() {
    * @param {object} selectedReport - 사용자가 선택한 보고서 객체
    */
   const getReportWithLinkedReport = async (selectedReport) => {
-    const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
+    const {
+      setLinkReport
+      // setSubLinkReport
+    } = LinkSlice.actions;
 
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
@@ -90,17 +93,21 @@ export default function useReportLoad() {
 
     models.Report.getLinkReportList(selectedReport.id)
         .then((res) => {
-          const subLinkReports = res.data.subLinkReports;
-          const linkReports = res.data.linkReports;
-          if (subLinkReports.length > 0) {
-            dispatch(setSubLinkReport(subLinkReports[0]));
-          } else if (subLinkReports.length === 0) {
-            dispatch(setLinkReport(linkReports[0]));
+          if (res.data ? res.data === undefined : true) {
+            console.log('링크된 보고서가 없습니다.');
+          } else {
+            const linkReports = res.data.linkReportDTOList;
+            dispatch(setLinkReport(linkReports));
           }
         }).catch((e) => {
           console.log(e);
           dispatch(endJobForce());
         });
+    // const subLinkReports = res.data.subLinkReports;
+    // if (subLinkReports.length > 0) {
+    // dispatch(setSubLinkReport(subLinkReports[0]));
+    // } else if (subLinkReports.length === 0) {
+    // }
   };
 
   /**
@@ -151,8 +158,6 @@ export default function useReportLoad() {
           try {
             const subLinkReports = res.data.subLinkReports;
             const linkReports = res.data.linkReports;
-            console.log('subLinkReports', subLinkReports);
-            console.log('linkReports', linkReports);
             if (subLinkReports.length > 0) {
               dispatch(setSubLinkReport(subLinkReports[0]));
             } else if (subLinkReports.length === 0) {

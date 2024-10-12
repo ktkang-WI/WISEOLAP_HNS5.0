@@ -59,17 +59,6 @@ public final class DataSanitizer {
         this.sortByItems = sortByItems;
         this.isCube = isCube;
 
-        logger.info("===========Data Sanitizer 생성. rowData에 존재하는 이재형 씨 데이터===============");
-        
-        data.stream()
-            .filter(item -> 
-                "이재형".equals(item.get("MD명")) && 
-                "주식회사 가원".equals(item.get("업체명"))
-            )
-            .forEach(item -> logger.info(item.toString()));
-
-        logger.info("===========rowData에 존재하는 이재형 씨 데이터 끝===============");
-
         allMeasures = new ArrayList<>();
         allMeasures.addAll(measures);
         allMeasures.addAll(sortByItems);
@@ -170,7 +159,6 @@ public final class DataSanitizer {
      */
     public final DataSanitizer groupBy() {
 
-        logger.info("===========Group By 시작. Grouping 대상 데이터 출력===============");
 
         data = data.stream().collect(Collectors
         .groupingBy(GroupingUtils.groupingDimensionsMapper(dimensions)))
@@ -179,9 +167,6 @@ public final class DataSanitizer {
                 .map(e -> e.getValue().stream()
                         .reduce(new HashMap<String, Object>(), (acc, row) -> {
 
-                            if (e.getKey().indexOf("이재형") >= 0 && e.getKey().indexOf("주식회사 가원") >= 0) {
-                                logger.info(row.toString());
-                            }
                             // 그룹화 된 값을 집계 기준으로 측정값을 변경
                             if (acc.keySet().size() == 0) {
                                 acc = row;
@@ -236,10 +221,6 @@ public final class DataSanitizer {
                             SummaryCalculator sv = (SummaryCalculator) row.get(name);
 
                             row.put(name, sv.getSummaryValue());
-
-                            if ("이재형".equals(row.get("MD명")) && "주식회사 가원".equals(row.get("업체명"))) {
-                                logger.info(name + ": " + row.get(name));
-                            }
                         }
                     }
                     return row;

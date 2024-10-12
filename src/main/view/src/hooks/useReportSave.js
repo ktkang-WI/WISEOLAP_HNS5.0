@@ -9,6 +9,7 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
+import LinkSlice from 'redux/modules/LinkSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentInformationas,
@@ -39,6 +40,7 @@ const useReportSave = () => {
   const {executeItems, executeSpread} = useQueryExecute();
   const editMode = useSelector(selectEditMode);
 
+  const linkActions = LinkSlice.actions;
   const reportActions = ReportSlice.actions;
   const itemActions = ItemSlice.actions;
   const layoutActions = LayoutSlice.actions;
@@ -66,7 +68,12 @@ const useReportSave = () => {
       }
       const newField = [];
       for (let j = 0; j < datasets[i].fields.length; j++) {
-        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
+        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1 ||
+          datasets[i].fields[j].isCustomData) {
+          if (datasets[i].fields[j].type === 'MEAGRP') {
+            newField.push({...datasets[i].fields[j], type: 'MEA'});
+            continue;
+          }
           newField.push(datasets[i].fields[j]);
         } else {
           if (datasets[i].fields[j].type === 'MEAGRP' ||
@@ -301,6 +308,7 @@ const useReportSave = () => {
     dispatch(layoutActions.initLayout(param));
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
+    dispatch(linkActions.initLink());
     initWorkkbookJSONs();
   };
 

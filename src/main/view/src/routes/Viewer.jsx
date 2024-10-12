@@ -45,11 +45,12 @@ const Viewer = () => {
       nav('/editds');
     }
   }, []);
+  // 'LinkReport',
 
   return (
     <div>
       <Header
-        left={['Logo', 'Designer', 'LinkReport', 'ReportTabs']}
+        left={['Logo', 'Designer', 'ReportTabs']}
         right={['DownloadReport', 'SaveAs', 'UserInfo']}
         // 'ReportProperty' TODO : 추후 추가
       >

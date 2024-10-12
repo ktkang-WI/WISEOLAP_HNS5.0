@@ -5,6 +5,7 @@ import _ from 'lodash';
 import localizedString from 'config/localization';
 import ListFilterPopoverList from './ListFilterPopoverList';
 import {isPortal} from 'components/utils/PortalUtility';
+import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
@@ -14,13 +15,11 @@ const ListFilter = ({
   info, value, isTo, onValueChanged, width, id, ...props}) => {
   const filterHeight = isPortal() ? '45px' : theme.size.filterHeight;
   const index = isTo ? 1 : 0;
-  const [selectionKeys, setSelectionKeys] = useState([]);
-  const [text, setText] = useState('');
-  const popOverRef = useRef();
-  const listRef = useRef();
-  const textBoxRef = useRef();
-  const [dataType, setDataType] = useState('');
+  let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
   let listItems = value?.listItems || [];
+  const isLinkageFilter = value?.linkageFilter?.length > 0 &&
+    listItems.length == 1;
+  const {alert} = useModal();
 
   const generateCaptionText = (keys) => {
     if (!value) return '';
@@ -28,7 +27,7 @@ const ListFilter = ({
     const keySet = new Set(keys.map((key) => key + ''));
     const captionArr = [];
     for (const item of listItems) {
-      if (keySet.has(item.name + '')) {
+      if (keySet.has(item.name + '') || isLinkageFilter) {
         captionArr.push(item.caption);
         keySet.delete(item.name);
       }
@@ -37,7 +36,7 @@ const ListFilter = ({
       }
     }
 
-    if (captionArr.length === listItems.length) {
+    if (!isLinkageFilter && captionArr.length === listItems.length) {
       if (!info.useAll && listItems.length > 1) {
         return allText;
       }
@@ -50,8 +49,26 @@ const ListFilter = ({
     return allText;
   };
 
+  if (value?.value) {
+    if (info.dataType === 'NUMBER') {
+      keys = keys.split(', ').map((key) => {
+        return isNaN(Number(key)) ? key : Number(key);
+      });
+    } else {
+      keys = keys.split(', ');
+    }
+  }
+
+  const [selectionKeys, setSelectionKeys] = useState(keys);
+  const [text, setText] = useState(!value || !value.value ? '' :
+    generateCaptionText(keys));
+  const popOverRef = useRef();
+  const listRef = useRef();
+  const textBoxRef = useRef();
+
   useEffect(() => {
     let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
+
     if (!value || !value.value) {
       setText('');
     // eslint-disable-next-line brace-style
@@ -63,7 +80,11 @@ const ListFilter = ({
       setText(allText);
     } */
     else {
-      if (dataType === 'number') {
+      if (isLinkageFilter && keys) {
+        keys = listItems[0].name;
+      }
+
+      if (info.dataType === 'number') {
         keys = keys.split(', ').map((key) => {
           return isNaN(Number(key)) ? key : Number(key);
         });
@@ -85,14 +106,11 @@ const ListFilter = ({
       listRef.current.instance.option('dataSource');
     listItems = dataSource;
     let selection;
-    if (selectionKeys.length == 0 ||
-        (selectionKeys.length == dataSource.length) ||
+    if (!isLinkageFilter && (selectionKeys.length == 0 ||
+        selectionKeys.length == dataSource.length ||
         (!_dataSource && info.useAll && !info.multiSelect &&
-        selectionKeys.length == dataSource.length - 1)) {
+        selectionKeys.length == dataSource.length - 1))) {
       if (info.defaultValueUseSql || info.useSearch) {
-        if (typeof selectionKeys[0] === 'number') {
-          setDataType(typeof selectionKeys[0]);
-        }
         selection = selectionKeys.join(', ');
         setText(generateCaptionText(selectionKeys));
       } else {
@@ -100,11 +118,12 @@ const ListFilter = ({
         setText(allText);
       }
     } else {
-      if (typeof selectionKeys[0] === 'number') {
-        setDataType(typeof selectionKeys[0]);
-      }
       selection = selectionKeys.join(', ');
       setText(generateCaptionText(selectionKeys));
+    }
+
+    if (selectionKeys.length > 300) {
+      alert('필터 값을 300개 이상 선택 시 정상적으로 조회되지 않을 수 있습니다.');
     }
 
     if (info.useSearch) {

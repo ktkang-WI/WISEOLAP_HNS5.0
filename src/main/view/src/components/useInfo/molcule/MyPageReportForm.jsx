@@ -10,6 +10,9 @@ import {
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 import styled from 'styled-components';
+// eslint-disable-next-line max-len
+import FolderListModal from 'components/config/atoms/reportFolderManagement/modal/FolderListModal';
+import useModal from 'hooks/useModal';
 
 const StyledForm = styled(Form)`
   & .dx-empty-message {
@@ -17,8 +20,30 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const MyPageReportForm = ({data}, ref) => {
+const MyPageReportForm = ({data, setData, myPageFlag}, ref) => {
+  const {openModal} = useModal();
   const [cubeItem, setCubeItem] = useState(() => '');
+
+  const folderSearchBtn = {
+    name: 'folderSearchBtn',
+    location: 'after',
+    options: {
+      visible: true,
+      stylingMode: 'text',
+      icon: 'search',
+      type: 'default',
+      disabled: false,
+      onClick: (e) => {
+        if (Object.keys(data).length > 0) {
+          openModal(FolderListModal, {
+            row: data,
+            setRow: setData,
+            myPageFlag: myPageFlag
+          });
+        }
+      }
+    }
+  };
 
   const getDatasetInfo = () => {
     return (
@@ -155,6 +180,20 @@ const MyPageReportForm = ({data}, ref) => {
           editorOptions={{
           }}>
           <Label>{localizedString.order}</Label>
+        </Item>
+        <Item
+          dataField="fldParentNm"
+          editorType="dxTextBox"
+          readOnly={true}
+          editorOptions={{
+            readOnly: true,
+            buttons: [folderSearchBtn],
+            elementAttr: {
+              id: 'fldParentName'
+            }
+          }}
+        >
+          <Label>{localizedString.folderManagement}</Label>
         </Item>
         <Item editorType='dxTextArea'
           dataField='desc'

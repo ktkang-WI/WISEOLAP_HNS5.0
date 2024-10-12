@@ -703,13 +703,14 @@ public class ReportService {
     public Map<String, Object> getAggregatedReportLinks(String reportId) {
         Map<String, Object> result = new HashMap<>();
         List<ReportLinkMstrEntity> linkReportList = reportDAO.selectLinkReportList(reportId);
-        List<ReportLinkSubMstrEntity> subLinkReportList = reportDAO.selectSubLinkReportList(reportId);
-
-        result.put("linkReports", linkReportList);
-        result.put("subLinkReports", subLinkReportList);
-
+        List<ReportLinkMstrDTO> linkReportDTOList = linkReportList.stream()
+        .map(ReportLinkMstrEntity::toDTO)
+        .collect(Collectors.toList());
+        result.put("linkReportDTOList", linkReportDTOList);
         return result;
     }
+    // List<ReportLinkSubMstrEntity> subLinkReportList = reportDAO.selectSubLinkReportList(reportId);
+    // result.put("subLinkReports", subLinkReportList);
 
     public Map<String, List<FolderMasterVO>> getReportFolderList(UserDTO userDTO) {
         Map<String, List<FolderMasterVO>> result = new HashMap<>();

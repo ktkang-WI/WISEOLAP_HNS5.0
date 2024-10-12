@@ -30,9 +30,9 @@ const LinkViewer = () => {
     <div className={isPortal() && 'portal'}>
       {!noHeader &&
         <Header
-          left={['Logo', 'LinkReport']}
+          left={['Logo', 'Designer', 'LinkReport']}
           middle={['ReportTab']}
-          right={['DownloadReport']}
+          right={['DownloadReport', 'SaveAs', 'UserInfo']}
         />
       }
       <LinkViewerContent/>

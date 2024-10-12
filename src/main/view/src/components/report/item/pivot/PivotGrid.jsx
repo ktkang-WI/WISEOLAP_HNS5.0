@@ -7,8 +7,7 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo,
-  useCallback
+  useMemo
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -95,7 +94,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, []);
 
   useEffect(() => {
-    collapseRowHeader();
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -122,20 +120,42 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
   }
 
-  const onCellPrepared = ({cell, area, cellElement}) => {
-    if (area == 'data' && cell.dataType && cell?.value >= 0) {
+  const onCellPrepared = ({cell, area, cellElement, component}) => {
+    if (area === 'row' && dataset?.cubeId == 6184) {
+      if (cell.text === '') {
+        const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
+        let newPath = cell.path;
+
+        if (cell.path.includes(null)) {
+          const idx = newPath.findIndex((path) => !path);
+          newPath = newPath.splice(0, idx);
+        }
+
+        const idx = click.findIndex((i) => newPath.toString() == i);
+        if (idx == -1) {
+          component.getDataSource().collapseHeaderItem('row', newPath);
+        }
+      }
+    }
+
+    // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
+    if (area == 'data' && cell.dataType) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
       if (newFormData) {
-        const labelSuffix = generateLabelSuffix(newFormData);
-        const formattedValue =
-          formatNumber(cell.value, newFormData, labelSuffix);
-        cellElement.innerHTML =
-          `<span>${formattedValue}</span>`;
+        try {
+          const labelSuffix = generateLabelSuffix(newFormData);
+          const formattedValue =
+            formatNumber(cell.value, newFormData, labelSuffix);
+          cellElement.innerHTML =
+            `<span>${formattedValue}</span>`;
 
-        Object.assign(cellElement.style, colorStyle);
+          Object.assign(cellElement.style, colorStyle);
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
@@ -155,33 +175,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
   };
-
-  const collapseRowHeader =
-  useCallback(() => mart.dataSourceConfig.load().then((data) => {
-    if (dataset?.cubeId == 6184) {
-      const pivotDataSource = ref.current._instance.getDataSource();
-      const items = pivotDataSource.getData().rows;
-      const collapseSingleChildItems = (items, path) => {
-        items.forEach((item) => {
-          const currentPath = path.concat(item.value);
-          if (item.children && item.children.length === 1 &&
-                (item.children[0]?.text == '' ||
-                    item.children[0]?.text == 'null')) {
-            pivotDataSource.collapseHeaderItem('row', currentPath);
-          } else {
-            if (item.children) {
-              collapseSingleChildItems(item.children, currentPath);
-            }
-          }
-        });
-      };
-      collapseSingleChildItems(items, []);
-    }
-  },
-  (error) => {
-    console.log(error);
-    dispatch(loadingActions.endJobForce());
-  }), []);
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -245,10 +238,22 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         fieldPanel={fieldPanel}
         showTotalsPrior={showTotalsPrior}
         wordWrapEnabled={false}
+        onCellClick={(e) => {
+          if (dataset?.cubeId !== 6184) return;
+          const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
+          if (!click.includes(e.cell.path.toString())) {
+            click.push(e.cell.path.toString());
+            window.sessionStorage.setItem('cellClick', JSON.stringify(click));
+          }
+        }}
         onCellPrepared={onCellPrepared}
         allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
+        onInitialized={() => {
+          const arr = [];
+          window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
+        }}
         onContentReady={(e) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;

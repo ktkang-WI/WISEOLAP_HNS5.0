@@ -3,7 +3,7 @@ import Collapsible from 'react-collapsible';
 import reportIcon from 'assets/image/icon/button/report_folder.png';
 import './Drawer.css';
 
-const DrawerMenu = ({data}) => {
+const DrawerMenu = ({data, portalUrl}) => {
   const [isOpen, setIsOpen] = useState(false);
   const menus = [
     {
@@ -33,7 +33,7 @@ const DrawerMenu = ({data}) => {
   };
 
   return (
-    <div>
+    <div className='portal-drawer'>
       <button type="button" className="menu_btn" onClick={toggleDrawer}>
         <img src={require('../img/menu_ico.png')} alt=""/>
       </button>
@@ -41,32 +41,42 @@ const DrawerMenu = ({data}) => {
       {isOpen && <div className="backdrop" onClick={closeDrawer}></div>}
 
       <div className={`drawer ${isOpen ? 'open' : ''}`}>
-        {
-          menus.map((menu) => {
-            return (
-              <Collapsible
-                key={'menu-' + menu.key}
-                trigger={getTrigger(menu.name)}>
-                {(data[menu.key] || []).map((report) => {
-                  return (
-                    <div
-                      onClick={() => {
-                        const href = `https://olap.hns.tv:8080/editds/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&no_header=true`;
-                        const newWindow = window.open(href, '_blank');
-                        if (newWindow) {
-                          newWindow.focus();
-                        }
-                      }}
-                      className='menu-report'
-                      key={'menu-r-' + report.id}>
-                      {report.name}
-                    </div>
-                  );
-                })}
-              </Collapsible>
-            );
-          })
-        }
+        <div className='drawer-reports'>
+          {
+            menus.map((menu) => {
+              return (
+                <Collapsible
+                  key={'menu-' + menu.key}
+                  trigger={getTrigger(menu.name)}>
+                  {(data[menu.key] || []).map((report) => {
+                    return (
+                      <div
+                        onClick={() => {
+                          // eslint-disable-next-line max-len
+                          const href = `${portalUrl}/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&srl=true`;
+                          const newWindow = window.open(href, '_blank');
+                          if (newWindow) {
+                            newWindow.focus();
+                          }
+                        }}
+                        className='menu-report'
+                        key={'menu-r-' + report.id}>
+                        {report.name}
+                      </div>
+                    );
+                  })}
+                </Collapsible>
+              );
+            })
+          }
+        </div>
+        <div className='drawer-quick-menu'>
+          <a href='#quick_box0' className='menu-report'>예상/실현 실적</a>
+          <a href='#quick_box1' className='menu-report'>공헌이익/누적분당효율</a>
+          <a href='#quick_box2' className='menu-report'>검색키워드/상품별 TOP10</a>
+          <a href='#quick_box3' className='menu-report'>주문고객수/객단가</a>
+          <a href='#quick_box4' className='menu-report'>클럽고객수/TV유형상품수</a>
+        </div>
       </div>
     </div>
   );

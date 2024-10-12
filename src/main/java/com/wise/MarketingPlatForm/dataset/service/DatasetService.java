@@ -417,7 +417,7 @@ public class DatasetService {
         return sql;
     }
 
-    public ListParameterResultVO getListParameterItems(ListParameterDTO listParameterDTO) {
+    public ListParameterResultVO getListParameterItems(ListParameterDTO listParameterDTO, UserDTO user) {
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(listParameterDTO.getDsId());
 
         DsMstrDTO dsMstrDTO = DsMstrDTO.builder()
@@ -454,6 +454,10 @@ public class DatasetService {
             query += " GROUP BY " + column;
         } else {
             query = listParameterDTO.getDataSource();
+            if (user.getMdCode() != null) {
+                query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            }
+            query = query.replace("[WI_SESSION_ID]", "'" + user.getUserId() + "'");
             query = ListParameterUtils.applyLinkageFilterAtQuery(query, listParameterDTO);
         }
 
@@ -493,13 +497,13 @@ public class DatasetService {
         }
 
         if (listParameterDTO.isDefaultValueUseSql()) {
-            defaultValue = getDefaultValues(listParameterDTO.getDsId(), listParameterDTO.getDefaultValue());
+            defaultValue = getDefaultValues(listParameterDTO.getDsId(), listParameterDTO.getDefaultValue(), user);
         }
 
         return new ListParameterResultVO(defaultValue, listItems, listSize);
     }
 
-    public List<String> getDefaultValues(int dsId, List<String> queries) {
+    public List<String> getDefaultValues(int dsId, List<String> queries, UserDTO user) {
         List<String> defaultValues = new ArrayList<String>();
 
         DsMstrEntity dsInfoEntity = datasetDAO.selectDataSource(dsId);
@@ -525,6 +529,10 @@ public class DatasetService {
                 defaultValues.add("");
                 continue;
             }
+            if (user.getMdCode() != null) {
+                query = query.replace("[MD_CODE]", "'" + user.getMdCode() + "'");
+            }
+            query = query.replace("[WI_SESSION_ID]", "'" + user.getUserId() + "'");
             MartResultDTO result = martDAO.select(dsMstrDTO.getDsId(), query);
             List<Map<String, Object>> data = result.getRowData();
 

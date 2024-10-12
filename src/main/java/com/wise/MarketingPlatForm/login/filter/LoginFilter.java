@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.util.AntPathMatcher;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.type.RunMode;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
+import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
+import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlParser;
@@ -33,6 +36,9 @@ public class LoginFilter implements Filter{
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    MyPageDesignerConfigService myPageDesignerConfig;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -47,15 +53,14 @@ public class LoginFilter implements Filter{
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req; 
         HttpServletResponse response = (HttpServletResponse) res; 
-        UserDTO userDTO = SessionUtility.getSessionUser(request);
-
-        log.info("Request URI == > " + request.getRequestURI());
-        log.info("Session User Name == > " + (userDTO == null ? "null" : userDTO.getUserNm()));
+        // UserDTO userDTO = SessionUtility.getSessionUser(request);
+        UserDTO userDTO = SessionUtility.getSessionSSO(request);
 
         // 로그인 필터를 태우지 않을 URL 패턴
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
             "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**",
-            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**", "/linkviewer"
+            "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**",
+            "/sso/inc/sessionView.jsp"
         };
 
         boolean useFilter = true;
@@ -83,7 +88,10 @@ public class LoginFilter implements Filter{
         String userId = request.getParameter("userId");
 
         try {
-            if ((request.getRequestURI().indexOf("/config/general") >= 0 || request.getRequestURI().indexOf("linkviewer") >= 0) && userId != null && !userId.isEmpty()) {
+            if ((request.getRequestURI().indexOf("/config/general") >= 0
+                 || request.getRequestURI().indexOf("linkviewer") >= 0) 
+                && userId != null && !userId.trim().isEmpty()
+            ) {
                 userDTO = authService.getUserById(userId);
     
                 SessionUtility.setSessionUser(request, userDTO);
@@ -111,7 +119,15 @@ public class LoginFilter implements Filter{
                 response.setDateHeader("Expires", 0);
 
                 if (runMode.equals(RunMode.ADMIN)) {
-                    response.sendRedirect("dashany");
+                    int userNo = userDTO.getUserNo();
+                    MyDesignerDTO myDesigner = myPageDesignerConfig.getDesignerConfigData(userNo);
+                    String defaultItemString = myDesigner.getDefaultItem();
+
+                    JSONObject jsonObject = new JSONObject(defaultItemString);
+
+                    String redirectPage = ((String) jsonObject.get("initDisplay")).toLowerCase();
+
+                    response.sendRedirect(redirectPage);
                 } else {
                     response.sendRedirect("viewer");
                 }
@@ -120,8 +136,9 @@ public class LoginFilter implements Filter{
             }
         // 그 외 동작
         } else if (userDTO == null) {
-            // response.sendRedirect("/");
+            response.sendRedirect("/editds");
             // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("LoginFilter, userDTO is null");
         } else {
             chain.doFilter(request, response);
         }

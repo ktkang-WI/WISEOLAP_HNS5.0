@@ -28,6 +28,8 @@ import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
+import {useSelector} from 'react-redux';
+import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -37,6 +39,7 @@ const useQueryExecute = () => {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
+  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -316,12 +319,6 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        // 아이템 조회 nullData alert 주석처리 (조회 시 한번만 alert 창 나오도록 처리)
-        if (nullDataCheck(tempItem)) {
-          // alert(`${item.meta.name}${localizedString.noneData}`);
-          return tempItem.meta.name;
-        }
-
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
         }
@@ -503,6 +500,9 @@ const useQueryExecute = () => {
    * @param {string} flag
    */
   const executeItems = async (flag) => {
+    const arr = [];
+    window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
+
     let loadingMsg = '데이터를 조회 중입니다.';
     if (flag) loadingMsg = '쿼리를 조회 중입니다.';
     const rootItem = selectRootItem(store.getState());
@@ -679,29 +679,34 @@ const useQueryExecute = () => {
 
   const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
-
     const setDefaultValue = async (name, value) => {
       const params = new URLSearchParams(window.location.search);
       const paramValues = JSON.parse(params.get('param_values') || '{}');
-
-      let _value = value;
+      let _value;
       if (paramValues[name]) {
         _value = paramValues[name];
       }
 
-      if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(value[0])) {
+      if (newLinkParamInfo !== null && newLinkParamInfo.length > 0) {
+        const matchedParam =
+          newLinkParamInfo.find(
+              (param) => param.fkParam === name);
+        if (matchedParam) {
+          _value = matchedParam.value;
+        }
+      } else {
+        _value = value;
+      }
+
+      const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+      if (reg.test(value[0]) || reg.test(value[1])) {
         const res = await models.Report.getUserInfo();
         const info = res?.data || {};
         _value = [];
-
-        value.map((v) => {
-          if (v == '[MD_CODE]') {
-            _value.push(info['mdCode']);
-          } else if (v == '[WI_SESSION_ID]') {
-            _value.push(info['userId']);
-          } else {
-            _value.push(v);
-          }
+        _value = value.map((v) => {
+          return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+              .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
         });
       }
 
@@ -742,15 +747,16 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (['[MD_CODE]', '[WI_SESSION_ID]'].includes(data.value[0])) {
+            const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+            if (reg.test(data.value[0]) || reg.test(data.value[1])) {
               const res = await models.Report.getUserInfo();
               const info = res?.data || {};
 
-              if (data.value[0] == '[MD_CODE]') {
-                data.value[0] = info.mdCode;
-              } else {
-                data.value[0] = info.userId;
-              }
+              data.value = data.value.map((v) => {
+                return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+                    .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+              });
             }
 
             if (data) {
