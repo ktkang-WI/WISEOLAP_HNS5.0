@@ -85,13 +85,7 @@ const reducers = {
       // subYn,
       // subLinkItemId
     } = action.payload;
-    // subYn === 'True' &&
     if (state.linkReport[linkReportId]) {
-      // state.linkReport[linkReportId].subLinkReport =
-      //   state.linkReport[linkReportId].subLinkReport.filter(
-      //       (sub) => sub.subLinkItemId !== subLinkItemId
-      //   );
-    } else {
       delete state.linkReport[linkReportId];
     }
   },
@@ -116,6 +110,10 @@ const reducers = {
 
   setNewLinkCnt(state, action) {
     state.newLinkCnt = action.payload;
+  },
+
+  overWriteLinkReport(state, action) {
+    state.linkReport = action.payload;
   }
 
   // setSubLinkReport(state, action) {

@@ -16,6 +16,13 @@ import {
   selectCurrentDesignerMode
 } from 'redux/selector/ConfigSelector';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
+import {
+  selectCurrentReport
+} from 'redux/selector/ReportSelector';
+import {
+  selectCurrentInformationas
+} from 'redux/selector/ParameterSelector';
 
 const StyledWrapper = styled(Wrapper)`
 width: 100%;
@@ -35,13 +42,16 @@ const LinkReportModal = ({
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const dispatch = useDispatch();
-  const {deleteLink} = LinkSlice.actions;
+  const {deleteLink, overWriteLinkReport} = LinkSlice.actions;
   const handleReportSelection = (selectedRowData) => {
     setSelectedReport(selectedRowData);
   };
   const {alert} = useModal();
   const designerMode = useSelector(selectCurrentDesignerMode);
   const currentReportId = useSelector(selectCurrentReportId);
+  const selectLinkedReportList = useSelector(selectLinkedReport);
+  const currentReport = useSelector(selectCurrentReport);
+  const currentItemParam = useSelector(selectCurrentInformationas);
 
   useEffect(() => {
     models.Report.getList(designerMode, 'designer').then(({data}) => {
@@ -95,11 +105,65 @@ const LinkReportModal = ({
     }
   };
 
+  const insertUnMappingLinkReports = async (
+      dataSource, selectLinkedReportList, currentReport) => {
+    const updatedLinkedReportList = {...selectLinkedReportList};
+    for (const item of dataSource) {
+      if (!updatedLinkedReportList[item.id]) {
+        let recieveData;
+        try {
+          recieveData = await models.Report.getLinkReportParam({
+            reportId: item.id
+          });
+        } catch (error) {
+          console.error('Error fetching link report params:', error);
+          alert('연결 보고서 정보를 가져오는데 실패했습니다.');
+        }
+        let parsedParamData;
+        let reportParamInfo;
+        if (recieveData?.data?.informations ) {
+          parsedParamData = JSON.parse(recieveData?.data?.informations);
+          reportParamInfo = currentItemParam.map((item, index) => {
+            return {
+              linkReportId: item.id,
+              pkNm: item.caption,
+              pkParam: item.name,
+              MfkNm: 'None',
+              fkParam: 'None'
+            };
+          });
+        } else {
+          parsedParamData = [];
+        }
+        updatedLinkedReportList[item.id] = {
+          reportId: currentReport.reportId,
+          reportNm: currentReport.options.reportNm,
+          reportType: currentReport.options.reportType,
+          linkReportId: item.id,
+          linkReportNm: item.name,
+          linkReportType: item.reportType,
+          linkParamInfo: reportParamInfo || [],
+          linkFkInfo: parsedParamData || []
+        };
+      };
+    }
+    return updatedLinkedReportList;
+  };
+
+  const onSubmit = async () => {
+    if (dataSource) {
+      const newLinkedReportList =
+      await insertUnMappingLinkReports(
+          dataSource,
+          selectLinkedReportList,
+          currentReport
+      );
+      dispatch(overWriteLinkReport(newLinkedReportList));
+    }
+  };
   return (
     <Modal
-      onsSubmit={()=> {
-        return true;
-      }}
+      onSubmit={onSubmit}
       modalTitle={localizedString.linkReport}
       height="700px"
       width="1000px"
