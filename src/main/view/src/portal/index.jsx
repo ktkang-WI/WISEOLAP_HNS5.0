@@ -291,53 +291,29 @@ const Portal = () => {
           }
         </div>
         <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
+        <div id="quick_box0">
+          <div className="grap_box_title">주제영역 매트릭스 보고서</div>
+          <div className="graph_box_wrap">
+            <iframe
+              width='100%'
+              height='600px'
+              src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13057` +
+                `&no_header=true&reportType=DashAny` +
+                `&no_filter=true&portal=true`}/>
+          </div>
+        </div>
+        <div id="quick_box1">
+          <div className="grap_box_title">전환보고서 안내</div>
+          <div className="graph_box_wrap">
+            <iframe
+              width='100%'
+              height='600px'
+              src={`${PORTAL_URL}/linkviewer?userId=${userId}&reportId=13350` +
+                `&no_header=true&reportType=DashAny` +
+                `&no_filter=true&portal=true`}/>
+          </div>
+        </div>
         <div style={{display: 'none'}}>
-          <div id="quick_box0">
-            <div className="grap_box_title">예상/실현 실적</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="quick_box1">
-            <div className="grap_box_title">공헌이익/누적분당효율</div>
-            <div className="graph_box_wrap">
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico1.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-              <div className="round_box">
-                <div className="box_title">
-                  <img src="./img/title_ico2.png" alt=""/>
-                  <span>타이틀</span>
-                </div>
-                <div className="graph" style={{'height': '300px'}}>
-                  그래프가 들어갈 곳입니다.
-                </div>
-              </div>
-            </div>
-          </div>
           <div id="quick_box2">
             <div className="grap_box_title">검색키워드/상품별 TOP 10</div>
             <div className="graph_box_wrap">
