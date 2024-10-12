@@ -1,10 +1,13 @@
 package com.wise.MarketingPlatForm.login.controller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -132,6 +135,29 @@ public class LoginController {
         SessionUtility.clearSessionUser(request);
 
         return ResponseEntity.ok().build();
+    }
+    @Operation(summary = "logout", description = "사용자의 모든 세션을 삭제합니다.")
+    @GetMapping("/logoutsso")
+    @ResponseBody
+    public void logoutsso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        LoginLogDTO logDTO = LoginLogDTO.builder()
+        .logType("LOGOUT")
+        .eventStamp(currentTime)
+        .modStamp(currentTime)
+        .modUserNo(userDTO.getUserNo())
+        .userNo(userDTO.getUserNo())
+        .userId(userDTO.getUserId())
+        .userNm(userDTO.getUserNm())
+        .groupId(userDTO.getGrpId())
+        .accessIp(request.getRemoteAddr())
+        .build();
+
+        logService.insertLoginLog(logDTO);
+
+        SessionUtility.clearSessionUser(request);
+        response.sendRedirect("/editds");
     }
 
     @Scheduled(cron = "0 0 */8 * * ?")

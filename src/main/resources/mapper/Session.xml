@@ -68,7 +68,6 @@
     WHERE 1=1
     AND USER_SESSION_MSTR.USER_SESSION_KEY  = #{sessionId} 
     AND USER_MSTR.DEL_YN = 'N'
-    AND MOD_DT <![CDATA[>]]> SYSDATE - INTERVAL '9' HOUR
   </select>
 
   <delete id="deleteSessionUser" parameterType="String">
