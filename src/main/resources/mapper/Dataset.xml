@@ -202,6 +202,7 @@
         DS_MSTR.HASH_YN,
         DS_MSTR.WF_YN
 						FROM DS_MSTR
+				ORDER BY DS_MSTR.DS_NM
 		</select>
 
 		<select id="selectDatasetDsViewDim" resultMap="DatasetDsViewDimMstr">
@@ -249,6 +250,7 @@
 		JOIN USER_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE USER_NO = (SELECT USER_NO FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
+		ORDER BY DS_NM
 	</select>
 
   	<select id="selectGrpAuthDsViewList" parameterType="String" resultMap="DsView">
@@ -257,6 +259,7 @@
 		JOIN GRP_AUTH_DS_MSTR B ON A.DS_ID = B.DS_ID
 		JOIN DS_VIEW_MSTR C ON C.DS_ID = B.DS_ID
 		WHERE GRP_ID = (SELECT GRP_ID FROM USER_MSTR WHERE USER_ID = #{user_id} AND DEL_YN = 'N')
+		ORDER BY DS_NM
 	</select>
   	
   	<select id="selectDataSource" parameterType="int" resultMap="DsMstr">

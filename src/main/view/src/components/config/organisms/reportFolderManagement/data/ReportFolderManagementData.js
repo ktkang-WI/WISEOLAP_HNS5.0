@@ -90,7 +90,8 @@ export const dataPrepro = ({data, mode}) => {
           key: 'r_'+ v.reportId,
           parentId: 'f_' + v.fldId,
           name: v.reportNm,
-          fldParentNm: v.fldNm
+          fldParentNm: v.fldNm,
+          fldOrdinal: v.fldOrdinal
         });
       }
 
