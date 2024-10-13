@@ -65,5 +65,7 @@ const validationMsgList = {
   wrongCurrentPw: localizedString.wrongCurrentPw,
   allRequired: localizedString.allRequired,
   notMatchPw: localizedString.notMatchPw,
-  lengthValidation: localizedString.lengthValidation
+  lengthValidation: localizedString.lengthValidation,
+  dupleCheckPw: '변경할 비밀번호가 기존 비밀번호와 같을 수 없습니다.',
+  dupleCheckPwId: '변경할 비밀번호가 아이디 또는 이름과 같을 수 없습니다.'
 };
