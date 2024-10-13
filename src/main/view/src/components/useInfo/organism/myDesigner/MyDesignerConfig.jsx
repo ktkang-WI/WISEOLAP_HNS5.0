@@ -58,7 +58,7 @@ const MyDesignerConfig = () => {
 
     const defaultMaxReportQueryPeriod = {
       check: false,
-      period: 2
+      period: 5
     };
 
     const saveConfig = {
