@@ -70,14 +70,14 @@ const headerMenuHref = [
 ];
 
 const quickBoxs = [
-  {
-    id: 13057,
-    name: '주제영역 매트릭스 보고서'
-  },
-  {
-    id: 13350,
-    name: '전환보고서 안내'
-  }
+  // {
+  //   id: 13057,
+  //   name: '주제영역 매트릭스 보고서'
+  // },
+  // {
+  //   id: 13350,
+  //   name: '전환보고서 안내'
+  // }
 ];
 
 const Portal = () => {
