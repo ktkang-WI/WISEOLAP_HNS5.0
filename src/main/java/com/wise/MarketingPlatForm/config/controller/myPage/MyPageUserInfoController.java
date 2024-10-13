@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,6 @@ import com.wise.MarketingPlatForm.global.util.SessionUtility;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "my-page-user-info", description = "마이페이지에 사용자 정보를 가져옵니다.")
 @RestController
@@ -73,6 +70,9 @@ public class MyPageUserInfoController {
       Map<String, String> updateResult = myPageUserInfoService.modifyPassword(userInfo);
       result = updateResult;
     }
+
+    SessionUtility.clearSessionUser(request);
+
     return result;
   }
 

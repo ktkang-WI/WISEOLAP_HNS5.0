@@ -69,7 +69,9 @@ public class SessionUtility {
                 userDTO = getSessionUser(request.getSession());
 
                 if(userDTO == null) {
-                    userDTO = getSessionUserFromDatabase(request);
+                    if ("database".equalsIgnoreCase(sessionType)) {
+                        userDTO = getSessionUserFromDatabase(request);
+                    }
                 }
             } else {
                 userDTO = authService.getUserById(ssUserId);
