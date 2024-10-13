@@ -205,7 +205,7 @@ const Portal = () => {
             folderMap[id]?.reports?.map((r) => {
               return (
                 <li key={'rd'+id}>
-                  <a href={`${PORTAL_URL}/linkviewer?srl=true&fld=${id}` +
+                  <a href={`${PORTAL_URL}/linkviewer?srl=true` +
                   `&reportId=${r.id}&reportType=${r.reportType}`}
                   rel="noreferrer"
                   target="_blank">
