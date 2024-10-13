@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageUserInfoService;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.utils.SHA256Util;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MyPageUserInfoController {
   @Autowired
   MyPageUserInfoService myPageUserInfoService;
+
+  @Autowired
+  SHA256Util sha256Util;
 
   @GetMapping("/get-name")
   public String getUserNm(HttpServletRequest request) {
@@ -64,13 +69,12 @@ public class MyPageUserInfoController {
     if ("Success".equals(result.get("invalidStatus"))) {
       DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String dateTime = dateFormat.format(new Date());
-
       UserDTO userInfo = UserDTO.builder()
         .password(newPassword)
         .userNo(userNo)
         .pwChangeDt(dateTime)
         .build();
-      Map<String, String> updateResult = myPageUserInfoService.modifyPassword(userInfo);
+      Map<String, String> updateResult = myPageUserInfoService.modifyPassword(userDTO, userInfo);
       result = updateResult;
     }
     return result;
