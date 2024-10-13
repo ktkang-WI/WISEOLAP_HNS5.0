@@ -1,7 +1,12 @@
 package com.wise.MarketingPlatForm.fileUpload.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +14,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.springframework.http.HttpHeaders;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -32,6 +41,8 @@ import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.global.util.WebFileUtils;
+import com.wise.MarketingPlatForm.log.vo.ExportLogDTO;
 
 @RestController
 @RequestMapping("/upload")
@@ -145,5 +156,63 @@ public class FileUploadController {
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return ResponseEntity.ok(response.getBody());
+    }
+
+    @PostMapping(value="/uploadsjs" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<InputStreamResource> fileUploadsjs(
+            HttpServletRequest request,
+			@RequestPart("file") MultipartFile file, 
+			@RequestPart("param") Map<String, String> param) throws Exception {
+
+        try {
+            String fileName = param.get("fileName");
+            Map<String,String> convertFile = fileUploadService.converToExcelWithDSExcel(file, fileName);
+            String realFolderPath = convertFile.get("folder").replace("spread_reports", "");
+            String realfileName = convertFile.get("fileName");
+
+            File folderPath = new File(new File(realFolderPath), "spread_reports");
+
+            File sysFile = WebFileUtils.getFile(folderPath, realfileName);
+
+            UrlResource resource2 = new UrlResource("file:" + realFolderPath + realfileName);
+
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(sysFile));
+	        long contentLength = file.getSize();
+                    
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentLength(contentLength);
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            String encodeUploadFileName = UriUtils.encode(realfileName, StandardCharsets.UTF_8);
+            String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
+
+            UserDTO user = SessionUtility.getSessionUser(request);
+        
+           /*
+           ExportLogDTO logDTO = ExportLogDTO.builder()
+                    .eventStamp(new Timestamp(System.currentTimeMillis()))
+                    .reportId(Integer.parseInt(reportId))
+                    .reportNm(reportNm)
+                    .reportType(reportType)
+                    .userId(user.getUserId())
+                    .userNm(user.getUserNm())
+                    .userNo(user.getUserNo())
+                    .grpId(user.getGrpId())
+                    .accessIp(request.getRemoteAddr())
+                    .ctrlId("")
+                    .ctrlCaption("")
+                    .build();
+
+            logService.insertExportLog(logDTO);
+            */
+            
+	        return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.internalServerError().body(null);
+	    }
     }
 }

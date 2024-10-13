@@ -36,10 +36,47 @@ const useFile = () => {
     return response;
   };
 
+  const uploadsjs = async (file, param) => {
+    const newParam = new Blob([JSON.stringify(param)],
+        {type: 'application/json'});
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('param', newParam);
+    const res = await models.File.uploadsjs(formData);
+    if (res.status != 200) {
+      console.error('Download Error: ', res.data);
+      return;
+    }
+
+    const contentDisposition = res.headers['content-disposition'];
+    let newFileName = 'defaultFileName';
+    if (contentDisposition) {
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      const matches = filenameRegex.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        newFileName = decodeURIComponent(matches[1].replace(/['"]/g, ''));
+      }
+    }
+    const convertFile = {
+      name: newFileName,
+      blob: new Blob([res.data])
+    };
+
+    const url = window.URL.createObjectURL(convertFile.blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', convertFile.name);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   return {
     uploadFile,
     deleteFile,
-    importFile
+    importFile,
+    uploadsjs
   };
 };
 

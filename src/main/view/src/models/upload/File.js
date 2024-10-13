@@ -50,3 +50,12 @@ export const callDrmApi = (param) => {
     params: param
   });
 };
+
+export const uploadsjs = (param) => {
+  return axios.post(path + '/uploadsjs', param, {
+    responseType: 'blob',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};

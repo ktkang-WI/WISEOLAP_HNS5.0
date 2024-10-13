@@ -56,6 +56,11 @@ import com.wise.MarketingPlatForm.querygen.querysetting.dbms.OracleSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.TiberoSetting;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 
+import com.grapecity.documents.excel.*;
+import com.grapecity.documents.excel.drawing.*;
+import java.util.*;
+
+
 @Service
 public class FileUploadService {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadService.class);
@@ -65,6 +70,7 @@ public class FileUploadService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
+    // private final String SHARED_FOLDER = "/olapnas";
     private final String SHARED_FOLDER = "/olapnas";
     private final String DECRYTION_INPUT_FOLDER = "/drm/upload";
     private final String DECRYTION_OUTPUT_FOLDER = "/drm";
@@ -81,7 +87,8 @@ public class FileUploadService {
     public void initFolderPath() {
         // 기존 경로
         // spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-        spreadReportFolder = new File(SHARED_FOLDER);
+        spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+        // spreadReportFolder = new File(SHARED_FOLDER);
         if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
 	    }
@@ -575,5 +582,44 @@ public class FileUploadService {
             value = columnType;
         }
         return value;
+    }
+
+    /**
+     * @param file
+     * @param fileName
+     * @throws Exception
+     */
+    public Map<String, String> converToExcelWithDSExcel(MultipartFile file, String fileName) throws Exception {
+        Map<String, String> converFileName = new HashMap<>();
+        try (InputStream input = file.getInputStream()) {
+
+            File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
+        	if(sysFile == null) {
+                throw new FileNotFoundException("spread File Not Found Error");
+            }
+            String filePathFolder = sysFile.getAbsolutePath().replace(fileName, "");
+            String fileNameRemoveType = fileName.replace(".sjs", "");
+            Workbook workbook = new Workbook();
+
+            workbook.open(sysFile.getAbsolutePath());
+
+            XlsxSaveOptions options = new XlsxSaveOptions();
+            options.setExcludeEmptyRegionCells(true);
+            options.setExcludeUnusedStyles(true);
+            options.setExcludeUnusedNames(true);
+
+            workbook.save(filePathFolder+ "\\"+fileNameRemoveType+".xlsx", options);
+
+            converFileName.put("folder", filePathFolder);
+            converFileName.put("fileName", fileNameRemoveType+".xlsx");
+
+        } catch (FileNotFoundException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            throw e; 
+        } catch (IllegalArgumentException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            throw e; 
+        } 
+        return converFileName;
     }
 }
