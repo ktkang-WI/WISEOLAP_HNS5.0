@@ -25,7 +25,7 @@ export default function useReportLoad() {
 
   // actions
   const {setDesignerMode} = ConfigSlice.actions;
-  const {setLinkReport, setSubLinkReport} = LinkSlice.actions;
+  const {setLinkReport} = LinkSlice.actions;
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
 
   const reportType = selectCurrentDesignerMode(store.getState());
@@ -156,12 +156,11 @@ export default function useReportLoad() {
     const res = await models.Report.getLinkReportList(reportId)
         .then((res) => {
           try {
-            const subLinkReports = res.data.subLinkReports;
-            const linkReports = res.data.linkReports;
-            if (subLinkReports.length > 0) {
-              dispatch(setSubLinkReport(subLinkReports[0]));
-            } else if (subLinkReports.length === 0) {
-              dispatch(setLinkReport(linkReports[0]));
+            if (res.data ? res.data === undefined : true) {
+              console.log('링크된 보고서가 없습니다.');
+            } else {
+              const linkReports = res.data.linkReportDTOList;
+              dispatch(setLinkReport(linkReports));
             }
             return true;
           } catch (e) {
