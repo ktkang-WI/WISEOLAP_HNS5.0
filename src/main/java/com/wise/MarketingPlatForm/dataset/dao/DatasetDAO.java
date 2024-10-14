@@ -8,6 +8,7 @@ import com.wise.MarketingPlatForm.dataset.entity.DsMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewColEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewDimEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewEntity;
+import com.wise.MarketingPlatForm.dataset.entity.DsViewMeaEntity;
 import com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity;
 import com.wise.MarketingPlatForm.dataset.entity.DsViewTableEntity;
 
@@ -40,4 +41,6 @@ public interface DatasetDAO {
   public List<DsViewDimEntity> selectDatasetDsViewDim();
 
   public List<DsViewColEntity> selectDatasetDsViewCol(int dsViewId);
+
+  public List<DsViewMeaEntity> selectDatasetCubeMea(int cubeId);
 }
