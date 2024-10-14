@@ -31,6 +31,7 @@ const DetailDataChoropleth = () => {
       <DataGrid
         dataSource={dataOfKey}
         onCellClick={handleCellClick}
+        allowColumnResizing={true}
       >
         <Selection mode="single" />
         <FilterRow visible={true} />

@@ -36,6 +36,7 @@ const DataSourceList = ({setRow}) => {
         onSelectionChanged={handleSelectionChanged}
         height={'90%'}
         keyExpr="dsId"
+        allowColumnResizing={true}
       >
         <Selection mode="single" />
         <SearchPanel visible={true} />

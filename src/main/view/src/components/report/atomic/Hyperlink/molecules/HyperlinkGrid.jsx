@@ -7,6 +7,7 @@ const HyperlinkGrid = ({gridRef, ...props}) => {
       width={'100%'}
       height={'100%'}
       showBorders={true}
+      allowColumnResizing={true}
       ref={gridRef}
       {...props}
     >

@@ -114,6 +114,7 @@ const AuthorityDataCube = ({mainKey, dependency, dsViewId}) => {
         keyExpr={['dsViewId', 'cubeId']}
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
+        allowColumnResizing={true}
       >
         <Selection
           mode="multiple"

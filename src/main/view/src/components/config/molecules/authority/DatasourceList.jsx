@@ -104,6 +104,7 @@ const DatasourceList = ({mainKey, dependency}) => {
         keyExpr="dsId"
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
+        allowColumnResizing={true}
       >
         <HeaderFilter visible={false} />
         <Selection

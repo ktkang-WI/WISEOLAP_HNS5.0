@@ -2,7 +2,8 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {ReportFolderContext}
   // eslint-disable-next-line max-len
   from 'components/config/organisms/reportFolderManagement/ReportFolderManagement';
-import {Column, SearchPanel, Selection} from 'devextreme-react/tree-list';
+// eslint-disable-next-line max-len
+import {Column, SearchPanel, Selection, Paging} from 'devextreme-react/tree-list';
 import React, {useContext} from 'react';
 import Title from '../common/Title';
 import {DataGrid} from 'devextreme-react';
@@ -55,8 +56,11 @@ const UserList = ({setRows, setRowData}) => {
         columnAutoWidth={true}
         height={'calc(100% - 40px)'}
         onRowClick={handleRowClick}
+        allowColumnResizing={true}
       >
         <Selection mode='single' key={'reportNm'}/>
+        <Paging
+          enabled={false}/>
         <SearchPanel
           visible={true}
           width={'250'}

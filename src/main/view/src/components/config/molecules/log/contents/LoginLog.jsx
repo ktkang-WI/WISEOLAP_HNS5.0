@@ -12,6 +12,7 @@ const LoginLog = ({display, dataSource}) => {
         width={'100%'}
         height={'100%'}
         dataSource={dataSource}
+        allowColumnResizing={true}
       >
         <Column
           dataField='eventDt'
