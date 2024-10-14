@@ -162,7 +162,7 @@
             TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET,
             TO_CHAR(A.ROOT_FLD_ID) AS ROOT_FLD_ID
       FROM (SELECT  FLD_ID , CONNECT_BY_ROOT FLD_ID AS ROOT_FLD_ID
-				FROM HNSWISE.PUB_FLD_MSTR
+				FROM PUB_FLD_MSTR
 				START WITH FLD_ID IN
         <foreach collection="folders" item="folder" index="index" open="(" separator="," close=")">
           #{folder}

@@ -88,7 +88,7 @@ export const paletteCollection = [
   {
     name: 'hns',
     caption: '홈앤쇼핑',
-    colors: ['#FE0000', '#BBBBBB', '#FE0000', '#BBBBBB']
+    colors: ['#BFBFBF', '#D80028', '#BFBFBF', '#D80028']
   }
 ];
 
