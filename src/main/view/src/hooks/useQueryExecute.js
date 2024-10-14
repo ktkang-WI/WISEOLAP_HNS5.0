@@ -28,8 +28,8 @@ import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
-import {useSelector} from 'react-redux';
-import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
+// import {useSelector} from 'react-redux';
+// import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -39,7 +39,9 @@ const useQueryExecute = () => {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
-  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
+  const newLinkParamInfo =
+    JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+  // useSelector(selectNewLinkParamInfo);
 
   /**
    * 조회에 필요한 파라미터 생성
