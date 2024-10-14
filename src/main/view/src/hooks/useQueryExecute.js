@@ -682,7 +682,7 @@ const useQueryExecute = () => {
     const setDefaultValue = async (name, value) => {
       const params = new URLSearchParams(window.location.search);
       const paramValues = JSON.parse(params.get('param_values') || '{}');
-      let _value;
+      let _value = value;
       if (paramValues[name]) {
         _value = paramValues[name];
       }
@@ -694,8 +694,6 @@ const useQueryExecute = () => {
         if (matchedParam) {
           _value = matchedParam.value;
         }
-      } else {
-        _value = value;
       }
 
       const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
