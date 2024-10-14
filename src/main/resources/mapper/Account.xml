@@ -411,7 +411,7 @@
             NULL,
             #{userDesc, jdbcType=VARCHAR},
             #{runMode, jdbcType=VARCHAR},
-            NULL,
+            SYSDATE,
             NULL,
             NULL,
             NULL
