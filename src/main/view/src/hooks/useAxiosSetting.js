@@ -76,7 +76,9 @@ export default function useAxiosSetting() {
           alert('관리자에게 문의 하세요.');
         }
         if (error?.response?.status == 404) {
-          alert('관리자에게 문의 하세요.');
+          if (!error?.response?.config?.url === '/login/login') {
+            alert('관리자에게 문의 하세요.');
+          }
         }
 
         if (process.env.NODE_ENV != 'development' &&
