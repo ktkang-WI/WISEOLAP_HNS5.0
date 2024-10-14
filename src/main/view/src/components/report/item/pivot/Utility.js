@@ -115,7 +115,9 @@ const generateItem = (item, param, rootItem) => {
         });
 
         selectedDataset?.customDatas?.measures.map((mea) => {
-          data[mea.name] = summaryCell.value(mea.caption);
+          if (data[mea.name] == undefined) {
+            data[mea.name] = summaryCell.value(mea.caption);
+          }
         });
 
         return engine.evaluate(data, field.expression, 0);
