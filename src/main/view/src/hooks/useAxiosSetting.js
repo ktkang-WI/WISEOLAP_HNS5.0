@@ -76,7 +76,7 @@ export default function useAxiosSetting() {
           alert('관리자에게 문의 하세요.');
         }
         if (error?.response?.status == 404) {
-          if (!error?.response?.config?.url === '/login/login') {
+          if (error?.response?.config?.url !== '/login/login') {
             alert('관리자에게 문의 하세요.');
           }
         }
