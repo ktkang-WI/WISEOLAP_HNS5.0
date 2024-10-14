@@ -62,13 +62,14 @@
 				, B.USER_NM AS RegUserNm
 				, A.REG_DT as regDt
 				, A.PROMPT_YN as promptYn
+        , A.MAX_REPORT_PERIOD_YN as maxReportPeriodYn
 				, A.REPORT_SUB_TITLE as reportSubTitle
 				, A.MOD_USER_NO as modUserNo
 				, C.USER_NM AS modUserNm
 				, A.MOD_DT as modDt
 				, B.USER_NM as userNm
 				, A.PRIVACY_YN as privacyYn
-            FROM 	REPORT_MSTR A
+        FROM 	REPORT_MSTR A
 				LEFT OUTER JOIN USER_MSTR B ON A.REG_USER_NO = B.USER_NO
 				LEFT OUTER JOIN USER_MSTR C ON A.MOD_USER_NO = C.USER_NO
             WHERE   1=1
@@ -666,6 +667,7 @@
 				REG_USER_NO,
         GRID_INFO,
         PROMPT_YN,
+        MAX_REPORT_PERIOD_YN,
 				CHART_XML,
 				LAYOUT_XML,
 				REPORT_XML,
@@ -688,6 +690,7 @@
 				#{regUserNo},
         #{gridInfo},
         #{promptYn},
+        #{maxReportPeriodYn},
 				#{chartXml},
 				#{layoutXml},
 				#{reportXml},
@@ -716,7 +719,9 @@
 			CHART_XML = #{chartXml},
 			LAYOUT_XML = #{layoutXml},
       DATASET_QUERY = #{datasetQuery},
-      MOD_DT = SYSDATE
+      MOD_DT = SYSDATE,
+      PROMPT_YN = #{promptYn},
+      MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn}
 		WHERE REPORT_ID = #{reportId}
 	</update>
 
@@ -731,7 +736,8 @@
 			REPORT_TYPE = #{reportType},
 			REPORT_DESC = #{reportDesc},
       REPORT_TAG = #{reportTag},
-      PROMPT_YN = #{promptYn}
+      PROMPT_YN = #{promptYn},
+      MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn}
 		WHERE REPORT_ID = #{reportId}
 	</update>
 

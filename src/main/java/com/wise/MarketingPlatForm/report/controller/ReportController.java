@@ -418,6 +418,8 @@ public class ReportController {
             reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             // 홈앤쇼핑 자동 조회 여부 추가. PROMPT_YN 컬럼 활용
             reportDTO.setPromptYn(param.getOrDefault("promptYn", "N"));
+            // 홈앤쇼핑 조회 기간 설정 해제 추가. MAX_REPORT_PERIOD_YN 컬럼 활용
+            reportDTO.setMaxReportPeriodYn(param.getOrDefault("maxReportPeriodYn", "N"));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -439,6 +441,10 @@ public class ReportController {
 
             // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
             reportDTO.setGridInfo(param.getOrDefault("requester", ""));
+            // 홈앤쇼핑 자동 조회 여부 추가. PROMPT_YN 컬럼 활용
+            reportDTO.setPromptYn(param.getOrDefault("promptYn", "N"));
+            // 홈앤쇼핑 조회 기간 설정 해제 추가. MAX_REPORT_PERIOD_YN 컬럼 활용
+            reportDTO.setMaxReportPeriodYn(param.getOrDefault("maxReportPeriodYn", "N"));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -460,7 +466,8 @@ public class ReportController {
       @RequestParam(required = false, defaultValue = "") String reportType,
       @RequestParam(required = false, defaultValue = "") String reportTag,
       @RequestParam(required = false, defaultValue = "") String reportDesc,
-      @RequestParam(required = false, defaultValue = "N") boolean promptYn
+      @RequestParam(required = false, defaultValue = "N") boolean promptYn,
+      @RequestParam(required = false, defaultValue = "N") boolean maxReportPeriodYn
     ) throws Exception {
     
       ReportMstrEntity reportMstr = ReportMstrEntity.builder()
@@ -474,6 +481,7 @@ public class ReportController {
           .reportDesc(reportDesc)
           .reportTag(reportTag)
           .promptYn(promptYn ? "Y" : "N")
+          .maxReportPeriodYn(maxReportPeriodYn ? "Y" : "N")
           .build();
     
       boolean result = reportService.patchConfigReport(reportMstr);

@@ -46,6 +46,7 @@ public class ReportMstrEntity {
     Date RegDt;
     String delYn;
     String promptYn;
+		String maxReportPeriodYn;
     int modUserNo;
     Date modDt;
     String privacyYn;

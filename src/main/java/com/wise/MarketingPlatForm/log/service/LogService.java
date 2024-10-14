@@ -79,6 +79,8 @@ public class LogService {
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
             .gridInfo(reportMstrDTO.getGridInfo())
+            .promptYn(reportMstrDTO.getPromptYn())
+            .maxReportPeriodYn(reportMstrDTO.getMaxReportPeriodYn())
             .build();
 
         logDAO.deleteReportHisByCount(entity);

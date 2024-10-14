@@ -8,6 +8,7 @@ import useModal from 'hooks/useModal';
 import FolderListModal from './modal/FolderListModal';
 import {useRef} from 'react';
 import {getFullUrl} from 'components/common/atomic/Location/Location';
+import {DesignerMode} from 'components/config/configType';
 
 const ReportInformation = ({row, setRow, flag}) => {
   const ref = useRef();
@@ -175,6 +176,15 @@ const ReportInformation = ({row, setRow, flag}) => {
           editorType="dxCheckBox"
         >
           <Label>{localizedString.checkingInitReportRetrieval}</Label>
+        </SimpleItem>}
+        {!flag &&
+        (row.reportType === DesignerMode['AD_HOC']) &&
+        row.cube &&
+        <SimpleItem
+          dataField="maxReportPeriodYn"
+          editorType="dxCheckBox"
+        >
+          <Label>{localizedString.maxReportPeriodYn}</Label>
         </SimpleItem>}
       </Form>
     </Panel>

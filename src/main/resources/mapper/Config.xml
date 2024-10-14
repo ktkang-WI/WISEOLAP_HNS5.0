@@ -40,6 +40,8 @@
       <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
       <result column="REPORT_TYPE" property="reportType" javaType="String"/>
       <result column="PROMPT_YN" property="promptYn" javaType="String"/>
+      <result column="MAX_REPORT_PERIOD_YN" property="maxReportPeriodYn" javaType="String"/>
+      <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
 
     <resultMap id="userList" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
@@ -83,6 +85,7 @@
       <result column="QUERY" property="query" javaType="String"/>
       <result column="CREATED_DATE" property="createdDate" javaType="String"/>
       <result column="PROMPT" property="prompt" javaType="String"/>
+      <result column="MAXREPORTPERIODYN" property="maxReportPeriodYn" javaType="String"/>
       <result column="CREATED_BY" property="createdBy" javaType="String"/>
       <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
@@ -141,6 +144,7 @@
         REPORTANDFOLDER.QUERY,
         REPORTANDFOLDER.CREATED_DATE,
 	      REPORTANDFOLDER.PROMPT,
+        REPORTANDFOLDER.maxReportPeriodYn,
         REPORTANDFOLDER.CREATED_BY,
         REPORTANDFOLDER.DATASET_XML
           FROM
@@ -157,6 +161,7 @@
             NULL AS DESCRIPTION,
             NULL AS QUERY,
             NULL AS PROMPT,
+            NULL AS maxReportPeriodYn,
 						NULL AS CREATED_DATE,
             #{userNm} AS CREATED_BY,
             NULL AS DATASET_XML
@@ -174,6 +179,7 @@
             REPORT_DESC AS DESCRIPTION,
             DATASET_QUERY AS QUERY,
             PROMPT_YN AS PROMPT,
+            MAX_REPORT_PERIOD_YN AS maxReportPeriodYn,
 	          REG_DT AS CREATED_DATE,
             #{userNm} AS CREATED_BY,
             DATASET_XML AS DATASET_XML
@@ -233,7 +239,10 @@
               REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
             </if>
             <if test='prompt != ""'>
-              PROMPT_YN = #{prompt, jdbcType=VARCHAR}
+              PROMPT_YN = #{prompt, jdbcType=VARCHAR},
+            </if>
+            <if test='maxReportPeriodYn != ""'>
+              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR}
             </if>
           WHERE REPORT_ID = #{id}
     </update>
@@ -306,7 +315,9 @@
         REPORT_MSTR.REPORT_ORDINAL,
         REPORT_MSTR.REPORT_DESC,
         REPORT_MSTR.REPORT_TYPE,
-        REPORT_MSTR.PROMPT_YN 
+        REPORT_MSTR.PROMPT_YN,
+        REPORT_MSTR.MAX_REPORT_PERIOD_YN,
+        REPORT_MSTR.DATASET_XML
         FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
             ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
                           INNER JOIN USER_MSTR 
