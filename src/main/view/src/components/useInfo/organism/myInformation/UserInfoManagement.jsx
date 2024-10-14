@@ -184,7 +184,7 @@ const UserInfoManagement = () => {
         <CommonButton
           width={'100px'}
           onClick={() =>
-            confirm(localizedString.confirmResetMsg, () => cancelOnClick)
+            confirm(localizedString.confirmResetMsg, () => cancelOnClick())
           }
         >{localizedString.cancel}</CommonButton>
         <CommonButton
