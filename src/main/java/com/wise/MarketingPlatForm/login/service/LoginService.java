@@ -31,7 +31,9 @@ public class LoginService {
             // 1: 사번, pw 같고, 처음 로그인 하는 경우.
             return 1;
         }
-
+        if (id.equals(inputPw)) {
+            return 1;
+        }
         try {
             String[] splitDate = userDTO.getPwChangeDt().split(" ");
             String[] yyyyMMdd = splitDate[0].split("-");
