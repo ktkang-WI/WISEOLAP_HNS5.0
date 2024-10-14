@@ -96,10 +96,10 @@
 
 .portal #header_menu > li .depth_menu ul li a {
   display: block;
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   color: #666666;
-  padding: 4px 0;
+  padding: 4px 20px;
   font-weight: bold;
   cursor: pointer;
 }
@@ -252,7 +252,7 @@
 }
 
 .portal .pay_box > div:first-child {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .portal .pay_box > div:last-child {

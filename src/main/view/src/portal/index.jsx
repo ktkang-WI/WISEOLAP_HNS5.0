@@ -42,10 +42,12 @@ const headerMenuHref = [
   {
     name: '주요보고서',
     fld: '2355'
+    // fld: '1781'
   },
   {
     name: '상품',
     fld: '2351'
+    // fld: '2221'
   },
   {
     name: '방송',
@@ -92,8 +94,7 @@ const Portal = () => {
   const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
-  const avFolders =
-    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+  const folders = [2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358];
   const [userId, setUserId] = useState('');
   const [userNm, setUserNm] = useState('');
 
@@ -120,13 +121,12 @@ const Portal = () => {
   }, [date]);
 
   useEffect(() => {
-    models.Report.getList(null, 'viewer').then((data) => {
+    models.Report.getPortalMenuList(folders).then((data) => {
       if (data.status == 200) {
-        const {publicReport} = data.data;
+        const publicReport = data.data;
 
         const _folderMap = publicReport.reduce((acc, curr) => {
-          if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
-          // if (curr.type === 'FOLDER') {
+          if (curr.type === 'FOLDER') {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
@@ -138,8 +138,8 @@ const Portal = () => {
         }, {});
 
         publicReport.forEach((curr) => {
-          if (curr.type === 'REPORT' && _folderMap[curr.upperId]) {
-            _folderMap[curr.upperId].reports.push(curr);
+          if (curr.type === 'REPORT' && _folderMap[curr.rootFldId]) {
+            _folderMap[curr.rootFldId].reports.push(curr);
           }
         });
 

@@ -2,7 +2,12 @@ import {getTheme} from 'config/theme';
 import {SelectBox} from 'devextreme-react';
 import {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {getPalette} from 'devextreme/viz/palette';
+import {getPalette, registerPalette} from 'devextreme/viz/palette';
+
+
+registerPalette('hns', {
+  simpleSet: ['#FE0000', '#BBBBBB', '#FE0000', '#BBBBBB']
+});
 
 export const paletteCollection = [
   {
@@ -79,8 +84,14 @@ export const paletteCollection = [
     name: 'Green Mist',
     caption: '녹색 안개',
     colors: getPalette('Green Mist').simpleSet
+  },
+  {
+    name: 'hns',
+    caption: '홈앤쇼핑',
+    colors: ['#FE0000', '#BBBBBB', '#FE0000', '#BBBBBB']
   }
 ];
+
 
 const paletteLabel = {'aria-label': 'Palette'};
 

@@ -77,6 +77,17 @@ export const getList = async (reportType, editMode) => {
   return res;
 };
 
+export const getPortalMenuList = async (folders) => {
+  const res = await axios.get(path + '/portal-menu-list', {
+    params: {
+      // folders: ['1621', '2221', '1781'].join(',')
+      folders: folders.join(',')
+    }
+  });
+
+  return res;
+};
+
 export const getUserInfo = async () => {
   const res = axios.post(path + '/user-info');
 

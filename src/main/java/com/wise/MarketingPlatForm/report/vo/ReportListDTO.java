@@ -37,4 +37,5 @@ public class ReportListDTO {
     int authPublish = 0;
     @Builder.Default
     int authDatasource = 0;
+    int rootFldId;
 }

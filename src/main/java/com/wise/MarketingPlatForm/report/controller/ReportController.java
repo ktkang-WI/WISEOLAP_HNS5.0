@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -679,6 +681,17 @@ public class ReportController {
         return ResponseEntity.ok().body(result);
     }
     
+    
+    @GetMapping("/portal-menu-list")
+    public ResponseEntity<List<ReportListDTO>> getPortalMenuList(@RequestParam("folders") String folders, HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        List<String> list =  Arrays.asList(folders.split(","));
+
+        List<ReportListDTO> result = reportService.getPortalMenuList(user, list);
+
+        return ResponseEntity.ok().body(result);
+    }
 }
 
 
