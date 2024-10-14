@@ -58,7 +58,7 @@
     </resultMap>
 
     <resultMap id="UserMeasureDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserMeasureDTO">
-      <result column="USER_ID" property="userNo" javaType="int"/>
+      <result column="USER_NO" property="userNo" javaType="int"/>
       <result column="DATA_XML" property="dataXml" javaType="String"/>
     </resultMap>
 
@@ -764,12 +764,12 @@
       INSERT ALL
       <foreach collection="list" item="item" index="index">
             INTO USER_AUTH_MEA_MSTR(
-                GRP_ID,
-                DATA
+                USER_NO,
+                DATA_XML
             )
             VALUES
             (
-                #{item.grpId, jdbcType=INTEGER},
+                #{item.userNo, jdbcType=INTEGER},
                 #{item.dataXml, jdbcType=NCLOB}
             )
       </foreach>
@@ -778,9 +778,9 @@
 
     <delete id="deleteUserMeasure" parameterType="java.util.List">
       DELETE FROM USER_AUTH_MEA_MSTR
-              WHERE GRP_ID IN
+              WHERE USER_NO IN
       <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item.grpId, jdbcType=INTEGER}
+            #{item.userNo, jdbcType=INTEGER}
       </foreach>
     </delete>
 

@@ -53,7 +53,7 @@ public class UserMeasureController {
 
         List<UserMeasureModel> userDataModel = gson.fromJson(grpDataPutData, userDataModelType);
 
-        boolean result = userMeasureService.putUserData(userDataModel);
+        boolean result = userMeasureService.putUserMeasure(userDataModel);
 
         return RestAPIVO.okResponse(result);
     }

@@ -9,5 +9,5 @@ import lombok.Getter;
 @Builder
 public class GroupMeasureModel {
   Integer grpId;
-  List<DataModel> datas;
+  List<MeasureModel> datas;
 }

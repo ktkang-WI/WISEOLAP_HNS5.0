@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.user.UserMeasureDTO;
 import com.wise.MarketingPlatForm.account.entity.UserAuthDataMstrEntity;
-import com.wise.MarketingPlatForm.account.model.user.measure.DataModel;
+import com.wise.MarketingPlatForm.account.model.groups.measure.MeasureModel;
 import com.wise.MarketingPlatForm.account.model.user.measure.UserMeasureModel;
 
 @Service
@@ -37,7 +37,7 @@ public class UserMeasureService {
         return userDataModel;
     }
 
-    public boolean putUserData(List<UserMeasureModel> userDatasetPutDTO) throws Exception {
+    public boolean putUserMeasure(List<UserMeasureModel> userDatasetPutDTO) throws Exception {
 
         List<UserAuthDataMstrEntity> userAuthDataMstr = generateUserAuthMeaObject(userDatasetPutDTO);
 
@@ -70,7 +70,7 @@ public class UserMeasureService {
 
         for (UserMeasureModel model : userDatasetPutDTO) {
             int userNo = model.getUserNo();
-            List<DataModel> datas = model.getDatas();
+            List<MeasureModel> datas = model.getDatas();
             String dataStr = objectMapper.writeValueAsString(datas);
             dataStr = base64.encodeBase64String(dataStr.getBytes("UTF-8"));
 
@@ -91,7 +91,7 @@ public class UserMeasureService {
 
         for (UserMeasureDTO data : userDataDTO) {
             String json = new String(base64.decode(data.getDataXml().getBytes()), "UTF-8");
-            List<DataModel> model = objectMapper.readValue(json, new TypeReference<List<DataModel>>() {
+            List<MeasureModel> model = objectMapper.readValue(json, new TypeReference<List<MeasureModel>>() {
             });
 
             UserMeasureModel userDataModel = UserMeasureModel.builder()

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataModel {
+public class MeasureModel {
   int dsViewId;
   int cubeId;
   List<String> measures;
