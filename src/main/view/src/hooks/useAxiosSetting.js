@@ -2,6 +2,7 @@ import axios from 'axios';
 import {useDispatch} from 'react-redux';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {getConfig} from 'config/config';
+import useModal from './useModal';
 
 const contextRoot =
   process.env.NODE_ENV == 'development' ? '' : getConfig('contextRoot');
@@ -25,6 +26,7 @@ export const abortController = (controllers, session) => {
 export default function useAxiosSetting() {
   const path = document.location.origin + contextRoot;
   const dispatch = useDispatch();
+  const {alert} = useModal();
   const actions = LoadingSlice.actions;
   const controllers = {};
 
@@ -52,6 +54,12 @@ export default function useAxiosSetting() {
         return config;
       },
       (error) => {
+        if (error?.response?.status == 500) {
+          alert('관리자에게 문의 하세요.');
+        }
+        if (error?.response?.status == 404) {
+          alert('관리자에게 문의 하세요.');
+        }
         return error;
       }
   );
@@ -62,7 +70,14 @@ export default function useAxiosSetting() {
         return response;
       },
       (error) => {
+        // 아이템 마다 에러 발생 시 여러번 alert 호출 추후변경.
         dispatch(actions.endJobForce());
+        if (error?.response?.status == 500) {
+          alert('관리자에게 문의 하세요.');
+        }
+        if (error?.response?.status == 404) {
+          alert('관리자에게 문의 하세요.');
+        }
 
         if (process.env.NODE_ENV != 'development' &&
           error?.response?.status == 401) {
@@ -81,6 +96,12 @@ export default function useAxiosSetting() {
 
     return config;
   }, (error) => {
+    if (error?.response?.status == 500) {
+      alert('관리자에게 문의 하세요.');
+    }
+    if (error?.response?.status == 404) {
+      alert('관리자에게 문의 하세요.');
+    }
     return Promise.reject(error);
   });
 
