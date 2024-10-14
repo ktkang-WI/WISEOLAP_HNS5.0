@@ -71,14 +71,14 @@
 	<select id="selectCubeList" resultMap="CubeMstr">
 		SELECT 	*
 		FROM 	CUBE_MSTR
-		ORDER BY CUBE_ORDINAL
+		ORDER BY CUBE_ORDINAL ASC, CUBE_NM ASC
 	</select>
 
   <select id="selectCubeListByDsViewId" parameterType="String" resultMap="CubeMstr">
 		SELECT 	*
 		FROM 	CUBE_MSTR
     WHERE DS_VIEW_ID = #{dsViewId}
-		ORDER BY CUBE_ORDINAL
+		ORDER BY CUBE_ORDINAL ASC, CUBE_NM ASC
 	</select>
 
   <select id="selectCubeDimTables" parameterType="String" resultMap="CubeTbl">

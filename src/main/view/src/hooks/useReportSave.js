@@ -446,12 +446,17 @@ const useReportSave = () => {
       const paramInfos = parameters.informations.filter((param) => param.operation === 'BETWEEN');
 
       // 비정형 주제영역일 때만 BETWEEN 매개변수 반드시 필요
-      if (isAdhocCube && (paramInfos.length === 0)) {
-        // homenshopping 요청사항 문구
-        // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
-        // eslint-disable-next-line max-len
-        throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
-      }
+      /* 20241013
+      ** 주제영역 비트윈 필터 반드시 포함되도록 하는 코드 주석 처리
+      ** 1. 비정형에서 비트윈필터 없어도 조회가능하게 변경
+      ** 2. 보고서에 비트윈필터가 있을때 조회기간설정 따라가도록 수정
+      */
+      // if (isAdhocCube && (paramInfos.length === 0)) {
+      // homenshopping 요청사항 문구
+      // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
+      // eslint-disable-next-line max-len
+      // throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
+      // }
 
       // 날짜 문자열을 Date 객체로 변환하는 함수
       const parseDate = (dateString, isStart) => {

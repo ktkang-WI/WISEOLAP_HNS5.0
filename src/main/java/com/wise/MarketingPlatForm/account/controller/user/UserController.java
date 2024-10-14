@@ -18,6 +18,7 @@ import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 import com.wise.MarketingPlatForm.account.service.user.UserService;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
+import com.wise.MarketingPlatForm.utils.SHA256Util;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -29,6 +30,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  SHA256Util sha256Util;
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getUser(
@@ -63,8 +67,10 @@ public class UserController {
       @RequestParam(required = false, defaultValue = "") String userDesc,
       @RequestParam(required = true) String passwd
   ) throws SQLException{
-
-    UserGroupDTO userMstr = UserGroupDTO.builder()
+    try {
+      String encodedPw = sha256Util.encrypt(passwd);
+      
+      UserGroupDTO userMstr = UserGroupDTO.builder()
       .userId(userId)
       .userNm(userNm)
       .eMail1(email1)
@@ -73,7 +79,7 @@ public class UserController {
       .grpId(grpId)
       .userRunMode(userRunMode)
       .userDesc(userDesc)
-      .passwd(passwd)
+      .passwd(encodedPw)
       .build();
 
     boolean result = userService.createUser(userMstr);
@@ -81,6 +87,10 @@ public class UserController {
     if (!result) return RestAPIVO.conflictResponse(false);
 
     return RestAPIVO.okResponse(true);
+    } catch (Exception e) {
+      // TODO: handle exception
+      return RestAPIVO.conflictResponse(false);
+    }
   }
 
   @PatchMapping

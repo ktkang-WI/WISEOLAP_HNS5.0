@@ -11,7 +11,9 @@ import DevDataGrid,
   Pager,
   Paging,
   Scrolling,
-  Selection
+  Selection,
+  HeaderFilter,
+  Sorting
 } from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
@@ -30,7 +32,7 @@ import {debounce} from 'lodash';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const DataGrid = ({setItemExports, id, item}) => {
-  const {getContextMenuItems} = useContextMenu();
+  const {getContextMenuItems} = useContextMenu(item);
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataGridRef = createRef();
@@ -292,7 +294,6 @@ const DataGrid = ({setItemExports, id, item}) => {
       id={id}
       dataSource={dataGridConfig.dataSource.data}
       showBorders={true}
-      sorting={false}
       onCellPrepared={onCellPrepared}
       onOptionChanged={onOptionChanged}
       showColumnLines={config.gridLine.column}
@@ -308,9 +309,11 @@ const DataGrid = ({setItemExports, id, item}) => {
       onColumnsChanging={handleColumnsChanging}
       onContextMenuPreparing={(e) => {
         const contextMenu = getContextMenuItems();
-        e.items = contextMenu;
+        e.items = e.items.concat(contextMenu);
       }}
     >
+      <HeaderFilter visible={true} />
+      <Sorting mode="multiple" />
       <Selection
         mode={(interactiveOption.enabled && interactiveOption.mode) || 'none'}
         showCheckBoxesMode='none'

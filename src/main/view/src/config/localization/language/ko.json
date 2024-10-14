@@ -1015,5 +1015,6 @@
   "privateReportGetError": "개인 보고서를 불러올 수 없습니다. 관리자에게 문의하세요.",
   "paramEditInputRequired": "입력창에서 조건절은 필수 입력 입니다.",
   "NoReportNoLinkReport": "현재 열려있는 보고서가 없습니다.\n먼저 보고서를 열어주세요.",
-  "yesReportNoLinkReport": "현재 불러온 보고서 연결 보고서 정보가 없습니다.\n먼저 연결 보고서를 설정해주세요."
+  "yesReportNoLinkReport": "현재 불러온 보고서 연결 보고서 정보가 없습니다.\n먼저 연결 보고서를 설정해주세요.",
+  "port": "Port"
 }

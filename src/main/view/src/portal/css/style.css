@@ -74,7 +74,6 @@
   z-index: 9;
   display: none;
   flex-direction: column;
-  align-content: center;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -97,16 +96,15 @@
 
 .portal #header_menu > li .depth_menu ul li a {
   display: block;
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   color: #666666;
-  padding: 4px 0;
+  padding: 4px 20px;
   font-weight: bold;
   cursor: pointer;
 }
 
 .portal #header_menu > li .depth_menu ul li a:hover {
-  text-decoration: underline;
   color: #3679da;
 }
 
@@ -168,7 +166,7 @@
   display: flex;
   justify-content: space-between;
   gap: 30px;
-  margin-bottom: 45px;
+  margin-bottom: 20px;
 }
 
 .portal .pay_box_wrap ul {
@@ -254,7 +252,7 @@
 }
 
 .portal .pay_box > div:first-child {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .portal .pay_box > div:last-child {

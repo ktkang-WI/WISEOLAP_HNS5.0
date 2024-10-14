@@ -125,7 +125,7 @@ const LinkReportModal = ({
           parsedParamData = JSON.parse(recieveData?.data?.informations);
           reportParamInfo = currentItemParam.map((item, index) => {
             return {
-              linkReportId: item.id,
+              linkReportId: recieveData.data.reports[0].reportId,
               pkNm: item.caption,
               pkParam: item.name,
               MfkNm: 'None',

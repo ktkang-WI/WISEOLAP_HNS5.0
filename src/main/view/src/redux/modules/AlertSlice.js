@@ -24,21 +24,3 @@ const AlertSlice = createSlice({
 });
 
 export default AlertSlice;
-
-// export const alertSlice = createSlice({
-//   name: 'alert',
-//   initialState: {
-//     isAlertShown: false,
-//   },
-//   reducers: {
-//     showAlert: (state) => {
-//       state.isAlertShown = true;
-//     },
-//     resetAlert: (state) => {
-//       state.isAlertShown = false;
-//     },
-//   },
-// });
-
-// export const { showAlert, resetAlert } = alertSlice.actions;
-// export default alertSlice.reducer;
