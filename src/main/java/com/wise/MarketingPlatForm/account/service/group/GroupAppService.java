@@ -57,12 +57,12 @@ public class GroupAppService {
     if (groupAuthProgMstr == null) return false;
 
     boolean result = false;
-    if (groupAuthProgMstr.size() == 0) {
-      result = accountDAO.deleteGroupAppAll();
-    } else {
-      result = accountDAO.deleteGroupApp(groupAuthProgMstr);
+    // if (groupAuthProgMstr.size() == 0) {
+    //   result = accountDAO.deleteGroupAppAll();
+    // } else {
+      result = accountDAO.deleteGroupApp(groupAppPutDTO);
       result = accountDAO.putGroupApp(groupAuthProgMstr);
-    }
+    // }
 
     return result;
   };

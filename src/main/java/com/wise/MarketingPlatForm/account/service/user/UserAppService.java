@@ -60,7 +60,7 @@ public class UserAppService {
     // if (userAuthProgMstr.size() == 0) {
     //   result = accountDAO.deleteUserAppAll();
     // } else {
-      result = accountDAO.deleteUserApp(userAuthProgMstr);
+      result = accountDAO.deleteUserApp(userAppPutDTO);
       result = accountDAO.putUserApp(userAuthProgMstr);
     // }
 

@@ -41,7 +41,7 @@ public class UserDatasetService {
     // if (userAuthDatasetMstr.size() == 0) {
     //   result = accountDAO.deleteUserDatasetAll();
     // } else {
-      result = accountDAO.deleteUserDataset(userAuthDatasetMstr);
+      result = accountDAO.deleteUserDataset(userDatasetPutDTO);
       result = accountDAO.putUserDataset(userAuthDatasetMstr);
     // }
 
