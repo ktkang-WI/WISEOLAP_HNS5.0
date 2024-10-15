@@ -174,6 +174,17 @@ public class LoginController {
         response.sendRedirect("/editds");
     }
 
+    @GetMapping("/session-check")
+    public ResponseEntity<Object> sessionCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
     @Scheduled(cron = "0 0 */8 * * ?")
     public void clearSessionUserSchedule() {
         SessionUtility.clearSessionUserSchedule();
