@@ -11,6 +11,7 @@ import {EditMode} from 'components/config/configType';
 import {deleteWorkbookJSON}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useEffect, useState} from 'react';
+import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
 
 const Wrapper = styled.div`
   width: calc(100vw - ${(props) => props.width}px);
@@ -36,6 +37,7 @@ const ReportTitleTabs = () => {
 
   const {setDesignerMode} = ConfigSlice.actions;
   const {selectReport} = ReportSlice.actions;
+  const userMode = useSelector(selectMyPageDesignerConfig);
 
   if (editMode == EditMode.VIEWER) {
     reports = reports.filter((report) => report.reportId != 0);
@@ -54,12 +56,17 @@ const ReportTitleTabs = () => {
     let widthSum = 0;
     const leftRight =
       ['designer', 'downLoadReport', 'user_info_popover', 'save_as'];
+    if (userMode.runMode === 'VIEW' &&
+        userMode.grpRunMode === 'VIEW' &&
+        id === 'designer') {
+    } else {
+      leftRight.map((id) => {
+        const element = document.getElementById(id);
+        const rect = element.getBoundingClientRect();
+        widthSum += rect.width;
+      });
+    }
 
-    leftRight.map((id) => {
-      const element = document.getElementById(id);
-      const rect = element.getBoundingClientRect();
-      widthSum += rect.width;
-    });
     // 로고 길이 까지
     setDistance(widthSum + 110);
   }, []);
