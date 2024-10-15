@@ -89,12 +89,6 @@ const generateItem = (item, param, rootItem) => {
   const reportId = selectCurrentReportId(store.getState());
   const selectedDataset = selectCurrentDataset(store.getState());
 
-  let expand = !item.meta.positionOption.column.expand ?
-    true :item.meta.positionOption.column.expand;
-  if (dataset?.cubeId === 6184) {
-    expand = false;
-  }
-
   let expressionCHeck = false;
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
@@ -177,12 +171,15 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.row) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
+    const rowExpand = !item.meta.positionOption.row.expand ?
+      true :item.meta.positionOption.row.expand;
+
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
-      expanded: expand,
+      expanded: dataset?.cubeId == 6184 ? false : rowExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함
@@ -195,6 +192,9 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.column) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
+    const colExpand = !item.meta.positionOption.column.expand ?
+      true :item.meta.positionOption.column.expand;
+
     // let sortBy = {};
 
     // if (field.sortBy && field.sortBy != field.fieldId) {
@@ -220,7 +220,7 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'row' : 'column',
       sortBy: 'none',
-      expanded: expand,
+      expanded: colExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함
