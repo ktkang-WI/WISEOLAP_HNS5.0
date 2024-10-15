@@ -9,6 +9,9 @@ import useReportSave from 'hooks/useReportSave';
 import {useRef} from 'react';
 import models from 'models';
 import useModal from 'hooks/useModal';
+import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
+import DatasetType from 'components/dataset/utils/DatasetType';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import useLinkReportSave from 'hooks/useLinkReportSave';
 
@@ -17,7 +20,17 @@ const theme = getTheme();
 const ReportSaveModal = ({createExcelFile, ...props}) => {
   const {alert} = useModal();
   const reportOptions = useSelector(selectCurrentReport).options;
-  const [dataSource, setDataSource] = useState(_.cloneDeep(reportOptions));
+  const newReportOptions = {
+    ...reportOptions,
+    promptYn: reportOptions.promptYn === 'Y',
+    maxReportPeriodYn: reportOptions.maxReportPeriodYn === 'Y'
+  };
+  const datasets = useSelector(selectCurrentDatasets);
+  const isCube = datasets
+      .filter((dataset) => dataset.datasetType === DatasetType['CUBE'])
+      .length > 0;
+  const designerMode = useSelector(selectCurrentDesignerMode);
+  const [dataSource, setDataSource] = useState(_.cloneDeep(newReportOptions));
   const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
   const selectLinkedReportList = useSelector(selectLinkedReport);
@@ -30,7 +43,7 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
    * @param {JSON} param  dataSource 의 key, value 값
    */
   const createDataSource = (param) => {
-    setDataSource((dataSource) => ({...dataSource, ...param}));
+    setDataSource((prevDataSource) => ({...prevDataSource, ...param}));
   };
 
   // 저장 팝업창 확인 버튼 클릭 시
@@ -99,6 +112,8 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
         dataSource={dataSource}
         createDataSource={createDataSource}
         formRef={ref}
+        isCube={isCube}
+        designerMode={designerMode}
       />
     </Modal>
   );

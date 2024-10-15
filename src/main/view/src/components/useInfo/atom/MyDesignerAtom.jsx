@@ -48,7 +48,7 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
   }
 
   if (id === 'maxReportQueryPeriod') {
-    value = data[id]?.period || 2;
+    value = data[id]?.period || 5;
   }
 
   return (
@@ -119,7 +119,7 @@ export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
               [id]: {displayCheck: e.value, initDisplay: display}});
           }
           if (id === 'maxReportQueryPeriod') {
-            const period = e.value ? data.maxReportQueryPeriod.period : 2;
+            const period = e.value ? data.maxReportQueryPeriod.period : 5;
             setConfig({...data,
               [id]: {check: e.value, maxReportQueryPeriod: period}});
           }

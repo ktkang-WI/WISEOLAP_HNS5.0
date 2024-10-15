@@ -41,6 +41,7 @@ public class MyPageFolderReportService {
         .query(mypageFolder.getQuery())
         .createdDate(mypageFolder.getCreatedDate())
         .prompt(mypageFolder.getPrompt().equals("Y") ? true : false )
+        .maxReportPeriodYn(mypageFolder.getMaxReportPeriodYn().equals("Y") ? true : false )
         .createdBy(mypageFolder.getCreatedBy())
         .ids(mypageFolder.getIds())
         .datasetXml(mypageFolder.getDatasetXml())

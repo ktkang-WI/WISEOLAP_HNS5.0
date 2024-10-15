@@ -249,6 +249,7 @@ public class ReportService {
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
             options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
+            options.put("maxReportPeriodYn", entity.getMaxReportPeriodYn() == null ? "N" : entity.getMaxReportPeriodYn());
             options.put("authPublish", authPublishValue);
             options.put("authDatasource", authDatasourceValue);
 
@@ -381,6 +382,7 @@ public class ReportService {
             .paramXml(reportMstrDTO.getParamXml())
             .gridInfo(reportMstrDTO.getGridInfo())
             .promptYn(reportMstrDTO.getPromptYn())
+            .maxReportPeriodYn(reportMstrDTO.getMaxReportPeriodYn())
             .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
@@ -440,6 +442,8 @@ public class ReportService {
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
             .datasetQuery(reportMstrDTO.getDatasetQuery())
+            .promptYn(reportMstrDTO.getPromptYn())
+            .maxReportPeriodYn(reportMstrDTO.getMaxReportPeriodYn())
             .build();
 
         try {

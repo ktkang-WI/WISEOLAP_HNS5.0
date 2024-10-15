@@ -28,7 +28,9 @@ public class MyPageFolderReportDTO {
   String query;
   String createdDate;
   @Builder.Default
-  String prompt = "Y";
+  String prompt = "N";
+  @Builder.Default
+  String maxReportPeriodYn = "N";
   String createdBy;
   List<Integer> ids;
   String datasetXml;

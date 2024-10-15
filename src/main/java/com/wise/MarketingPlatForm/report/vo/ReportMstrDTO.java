@@ -38,6 +38,7 @@ public class ReportMstrDTO {
     Date RegDt;
     String delYn;
     String promptYn;
+    String maxReportPeriodYn;
     String reportSubTitle;
     int modUserNo;
     Date modDt;
