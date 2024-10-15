@@ -34,7 +34,7 @@ const Ribbon = () => {
           'LoadReport',
           'SaveReport',
           'DeleteReport',
-          'ConnectReport',
+          // 'ConnectReport',
           'DownloadReport'
         ]}
       />
