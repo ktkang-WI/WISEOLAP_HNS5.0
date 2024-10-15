@@ -114,7 +114,23 @@ const Portal = () => {
 
     models.Portal.getCardData(format(date, 'yyyyMMdd')).then((data) => {
       if (data.status == 200 && data.data) {
-        setCardData(data.data);
+        const titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
+        const _cardData = titles.map((title, i) => {
+          const card = data.data.find((c) => c['구분'] == title);
+
+          if (!card) {
+            return {
+              '구분': title,
+              '금액': 0,
+              '전년비': '0%',
+              '계획비': i == 3 ? undefined : '0%'
+            };
+          }
+
+          return card;
+        });
+
+        setCardData(_cardData);
       }
     });
 
