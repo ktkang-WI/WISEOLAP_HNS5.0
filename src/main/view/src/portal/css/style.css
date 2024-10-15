@@ -68,7 +68,7 @@
 .portal #header_menu > li .depth_menu {
   position: absolute;
   left: 0;
-  width: 100%;
+  width: auto;
   top: 100%;
   padding-top: 5px;
   z-index: 9;
@@ -91,7 +91,7 @@
   border: 1px solid #3679da;
   border-radius: 15px;
   padding: 13px 0;
-  width: 200px;
+  width: auto;
 }
 
 .portal #header_menu > li .depth_menu ul li a {
@@ -102,6 +102,7 @@
   padding: 4px 20px;
   font-weight: bold;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .portal #header_menu > li .depth_menu ul li a:hover {
