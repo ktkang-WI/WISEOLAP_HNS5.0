@@ -62,7 +62,7 @@ const ReportTitleTabs = () => {
     } else {
       leftRight.map((id) => {
         const element = document.getElementById(id);
-        const rect = element.getBoundingClientRect();
+        const rect = element?.getBoundingClientRect() || {width: 0};
         widthSum += rect.width;
       });
     }
