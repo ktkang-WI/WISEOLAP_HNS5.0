@@ -3,7 +3,7 @@ import {DesignerMode, EditMode} from 'components/config/configType';
 import LinkViewerContent from 'components/linkViewer/LinkViewerContent';
 import useConfig from 'hooks/useConfig';
 import useReportSave from 'hooks/useReportSave';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {
   useSelector,
   useDispatch
@@ -13,6 +13,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 import './portal.css';
 import {isPortal} from 'components/utils/PortalUtility';
 import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
+import models from 'models';
 
 const LinkViewer = () => {
   const dispatch = useDispatch();
