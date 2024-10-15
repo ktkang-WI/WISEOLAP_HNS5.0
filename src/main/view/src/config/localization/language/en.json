@@ -633,5 +633,6 @@
   "execute": "execution",
   "privateReportGetError": "Personal reports cannot be loaded. Please contact your administrator.",
   "paramEditInputRequired": "Conditional clauses are required input in the input window.",
-  "port": "Port"
+  "port": "Port",
+  "pwChangeSuccess": "The password change was successful. Please log in again."
 }

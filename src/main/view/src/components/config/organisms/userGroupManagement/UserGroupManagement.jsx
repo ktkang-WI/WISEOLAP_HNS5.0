@@ -6,14 +6,16 @@ import {Group, User} from
   'models/config/userGroupManagement/UserGroupManagement.js';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal.js';
-import UserPasswordModal from
-  'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
 import {getHint} from 'components/config/utility/utility.js';
 import AddRibbonBtn
   from 'components/common/atomic/Ribbon/atom/AddRibbonBtn.jsx';
 import ConfigHeader from 'components/config/atoms/common/ConfigHeader.jsx';
 import ConfigTabs from '../common/ConfigTabs.jsx';
 import {iconMapper} from '../common/ConfigUtility.js';
+import ModifyPasswordModal
+  from 'components/useInfo/modal/ModifyPasswordModal.jsx';
+import UserPasswordModal
+  from 'components/config/atoms/userGroupManagement/UserPasswordModal.jsx';
 
 export const UserGroupContext = createContext();
 
@@ -40,7 +42,7 @@ const UserGroupManagement = () => {
   const groupMemberUserRef = useRef();
   const groupNotMemberUserRef = useRef();
 
-  const btns = ['plus', 'save', 'remove', 'key'];
+  const btns = ['plus', 'save', 'remove', 'key', 'initPw'];
 
   const context = {
     state: {
@@ -87,7 +89,9 @@ const UserGroupManagement = () => {
         handleRemove({instance});
         break;
       case 'key':
-        handleKey({instance});
+        handleKey({instance}, 'change');
+      case 'initPw':
+        handleKey({instance}, 'initPw');
       default:
         break;
     }
@@ -228,16 +232,25 @@ const UserGroupManagement = () => {
     });
   };
 
-  const handleKey = ({instance}) => {
+  const handleKey = ({instance}, type) => {
     const user = instance;
-    if (user.userNo !== 0) {
-      openModal(UserPasswordModal, {
-        user: user
-      });
+    if (user.userNo !== 0 && type === 'change') {
+      openModal(ModifyPasswordModal, {userId: user.userId});
+    }
+    if (user.userNo !== 0 && type === 'initPw') {
+      openModal(UserPasswordModal, {user: user});
     }
   };
 
   const navBarItems = (mode) => {
+    const getWidth = (item) => {
+      if (item === 'key') {
+        return '70px';
+      } else if (item === 'initPw') {
+        return '80px';
+      }
+      return undefined;
+    };
     if (mode === Mode.USER) {
       return (
         btns.map((item, index) => (
@@ -245,7 +258,7 @@ const UserGroupManagement = () => {
             key={index}
             item={{
               'imgSrc': iconMapper[item],
-              'width': item == 'key' ? '70px' : undefined,
+              'width': getWidth(item),
               'onClick': () => handleBtnClick(item),
               'label': getHint(item)
             }}
@@ -254,7 +267,7 @@ const UserGroupManagement = () => {
       );
     } else if (mode === Mode.GROUP) {
       return (
-        btns.filter((item) => item !== 'key')
+        btns.filter((item) => (item !== 'key' || item !== 'initPw'))
             .map((item, index) => (
               <AddRibbonBtn
                 key={index}

@@ -57,10 +57,18 @@ export const preventInputSpaceBar = (e) => {
   }
 };
 
+export const checkAppliedSpace = (text) => {
+  const reg = '\/s/g';
+  if (typeof text !== 'string') console.log('문자만 적용 됨.');
+  if (text.match(reg)) {
+    return true;
+  }
+};
+
 const validationMsgList = {
   ExceptionCheckCurrPw: localizedString.ExceptionCheckCurrPw,
   ExceptionUpdate: localizedString.ExceptionUpdate,
-  Success: localizedString.successUpdate,
+  Success: localizedString.pwChangeSuccess,
   FailUpdate: localizedString.FailUpdatePw,
   wrongCurrentPw: localizedString.wrongCurrentPw,
   allRequired: localizedString.allRequired,
