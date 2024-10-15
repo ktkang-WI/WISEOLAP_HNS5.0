@@ -34,11 +34,6 @@ export const getDsViewCol = (dsViewId) => {
   return res;
 };
 
-export const getDsViewMea = (cubeId) => {
-  const res = axios.get('/dataset/ds/mea', {params: {cubeId}});
-  return res;
-};
-
 // 그룹
 export const getGroupFolder = () => {
   const res = axios.get(accountPath + '/group/folder');

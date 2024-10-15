@@ -24,8 +24,4 @@ public interface AuthDAO {
     public AuthReportDTO selectGrpAuthReport(int fldId, int grpId);
 
     public AuthReportDTO selectUserAuthReport(int fldId, int userNo);
-
-    public AuthDataEntity selectGrpAuthMeasure(int grpId);
-
-    public AuthDataEntity selectUserAuthMeasure(int userNo);
 }
