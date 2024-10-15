@@ -73,7 +73,9 @@ export default function useAxiosSetting() {
         // 아이템 마다 에러 발생 시 여러번 alert 호출 추후변경.
         dispatch(actions.endJobForce());
         if (error?.response?.status == 500) {
-          alert('관리자에게 문의 하세요.');
+          if (error?.response?.config?.url !== '/login/login') {
+            alert('관리자에게 문의 하세요.');
+          }
         }
         if (error?.response?.status == 404) {
           if (error?.response?.config?.url !== '/login/login') {

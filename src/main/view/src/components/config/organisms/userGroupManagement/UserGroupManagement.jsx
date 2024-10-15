@@ -90,8 +90,10 @@ const UserGroupManagement = () => {
         break;
       case 'key':
         handleKey({instance}, 'change');
+        break;
       case 'initPw':
         handleKey({instance}, 'initPw');
+        break;
       default:
         break;
     }
@@ -247,7 +249,7 @@ const UserGroupManagement = () => {
       if (item === 'key') {
         return '70px';
       } else if (item === 'initPw') {
-        return '80px';
+        return '85px';
       }
       return undefined;
     };
@@ -267,7 +269,7 @@ const UserGroupManagement = () => {
       );
     } else if (mode === Mode.GROUP) {
       return (
-        btns.filter((item) => (item !== 'key' || item !== 'initPw'))
+        btns.filter((item) => item !== 'key' && item !== 'initPw')
             .map((item, index) => (
               <AddRibbonBtn
                 key={index}
