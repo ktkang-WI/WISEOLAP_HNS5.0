@@ -35,7 +35,7 @@ export const getFrontValidations = (formData) => {
   }
 
   // 아무 입력 안함
-  if (Object.keys(formData).length !== 3) {
+  if (Object.keys(formData).length !== 4) {
     message = validationMsgList.allRequired;
     result = true;
   }
@@ -57,10 +57,18 @@ export const preventInputSpaceBar = (e) => {
   }
 };
 
+export const checkAppliedSpace = (text) => {
+  const reg = '\/s/g';
+  if (typeof text !== 'string') console.log('문자만 적용 됨.');
+  if (text.match(reg)) {
+    return true;
+  }
+};
+
 const validationMsgList = {
   ExceptionCheckCurrPw: localizedString.ExceptionCheckCurrPw,
   ExceptionUpdate: localizedString.ExceptionUpdate,
-  Success: localizedString.successUpdate,
+  Success: localizedString.pwChangeSuccess,
   FailUpdate: localizedString.FailUpdatePw,
   wrongCurrentPw: localizedString.wrongCurrentPw,
   allRequired: localizedString.allRequired,

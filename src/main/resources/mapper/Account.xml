@@ -715,7 +715,9 @@
 
     <update id="updateUserPasswd" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
       UPDATE USER_MSTR
-          SET PASSWD = #{passwd, jdbcType=VARCHAR}
+          SET
+            PASSWD = #{passwd, jdbcType=VARCHAR},
+            PW_CHANGE_DT= TO_DATE(#{pwChangeDt, jdbcType=VARCHAR}, 'YYYYMMDD')
           WHERE USER_NO = #{userNo, jdbcType=INTEGER}
     </update>
 

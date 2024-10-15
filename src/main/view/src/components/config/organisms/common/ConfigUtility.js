@@ -7,5 +7,6 @@ export const iconMapper = {
   'plus': newIcon,
   'save': saveIcon,
   'remove': removeIcon,
-  'key': chagePWIcon
+  'key': chagePWIcon,
+  'initPw': chagePWIcon
 };

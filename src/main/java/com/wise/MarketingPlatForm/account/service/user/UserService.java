@@ -69,6 +69,7 @@ public class UserService {
     UserMstrEntity user = UserMstrEntity.builder()
       .userNo(userMstr.getUserNo())
       .passwd(userMstr.getPasswd())
+      .pwChangeDt("11111111")
       .build();
     return accountDAO.updateUserPasswd(user);
   };

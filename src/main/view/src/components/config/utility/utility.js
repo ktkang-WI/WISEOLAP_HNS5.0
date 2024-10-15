@@ -33,4 +33,8 @@ export const getHint = (item) => {
   if (item === 'key') {
     return localizedString.passwordChange;
   }
+
+  if (item === 'initPw') {
+    return '비밀번호 초기화';
+  }
 };

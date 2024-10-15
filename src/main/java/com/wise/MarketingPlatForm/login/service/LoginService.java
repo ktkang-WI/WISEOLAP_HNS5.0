@@ -27,6 +27,9 @@ public class LoginService {
     SHA256Util sha256Util;
 
     private int getIsChangePw(UserDTO userDTO, String id, String inputPw) {
+        if ("1111-11-11 00:00:00".equals(userDTO.getPwChangeDt())) {
+            return 4;
+        }
         if (userDTO != null && userDTO.getPwChangeDt() == null && id.equals(inputPw)) {
             // 1: 사번, pw 같고, 처음 로그인 하는 경우.
             return 1;
