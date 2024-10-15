@@ -117,7 +117,9 @@ const useDrag = () => {
                     order ++,
                     cubeColumnInfo);
               newParam.dataset = [datasetId];
-
+              if (newParam.name.includes('DATE')) {
+                newParam.sortOrder = 'DESC';
+              }
               newParamInfo.push(newParam);
               newParamInfo.sort((a, b) => a.order - b.order);
 
