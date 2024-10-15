@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageUserInfoService;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
@@ -28,7 +29,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 public class MyPageUserInfoController {
   @Autowired
   MyPageUserInfoService myPageUserInfoService;
-
+  
+  @Autowired
+  AuthService authService;
+  
   @Autowired
   SHA256Util sha256Util;
 
@@ -51,13 +55,12 @@ public class MyPageUserInfoController {
 
   @PatchMapping(value = "/user-info/update-password")
   public Object updatePassword(
+    @RequestParam(required = true) String id,
     @RequestParam(required = true) String currPassword,
     @RequestParam(required = true) String newPassword,
-    @RequestParam(required = true) String checkPassword,
-    HttpServletRequest request
+    @RequestParam(required = true) String checkPassword
   ) {
-    // session
-    UserDTO userDTO = SessionUtility.getSessionUser(request);
+    UserDTO userDTO = authService.getUserById(id);
     int userNo = userDTO.getUserNo();
     // 로그인 비밀번호 맞는지 여부
     Map<String, String> result = myPageUserInfoService.checkCurrentPassword(userNo, currPassword);
@@ -75,8 +78,6 @@ public class MyPageUserInfoController {
       result = updateResult;
     }
 
-    SessionUtility.clearSessionUser(request);
-
     return result;
   }
 
@@ -85,7 +86,7 @@ public class MyPageUserInfoController {
     @RequestParam(required = true) String pwChangeDt,
     HttpServletRequest request
   ) {
-    // session
+    // session -> 개발 요청 시 getuserByid로 가져오기.
     UserDTO userDTO = SessionUtility.getSessionUser(request);
     userDTO.setPwChangeDt(pwChangeDt);
     

@@ -35,7 +35,7 @@ export const getFrontValidations = (formData) => {
   }
 
   // 아무 입력 안함
-  if (Object.keys(formData).length !== 3) {
+  if (Object.keys(formData).length !== 4) {
     message = validationMsgList.allRequired;
     result = true;
   }

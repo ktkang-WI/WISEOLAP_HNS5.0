@@ -8,7 +8,7 @@ import localizedString from 'config/localization';
 import {selectOpenedModals} from 'redux/selector/ModalSelector';
 import {useSelector} from 'react-redux';
 
-const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
+const ModifyPasswordModal = ({userId, msg = '', type = 1, ...props}) => {
   const ref = useRef(null);
   const openedModals = useSelector(selectOpenedModals);
 
@@ -66,7 +66,7 @@ const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
     if (!ref.current) return true;
 
     const formData = ref.current.instance.option().formData;
-
+    formData.id = userId;
     // 통신 전 유효성 검사.
     const isPassObj = getFrontValidations(formData);
 
@@ -91,8 +91,15 @@ const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
         alert(localizedString.updateException);
       }
     }).catch((e) => {
-      console.log(e);
+      alert('관리자에게 문의 하세요.');
+      ref.current.instance.option().formData.newPassword = '';
+      ref.current.instance.option().formData.checkPassword = '';
+      ref.current.instance.repaint();
+      return true;
     });
+    ref.current.instance.option().formData.newPassword = '';
+    ref.current.instance.option().formData.checkPassword = '';
+    ref.current.instance.repaint();
     return result;
   };
 
