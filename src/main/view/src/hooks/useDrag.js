@@ -281,8 +281,12 @@ const useDrag = () => {
               const seriesOption = getSeriesOptionDefaultFormat();
               seriesOption.fieldId = tempField.fieldId;
 
-              // eslint-disable-next-line max-len
-              dataField['seriesOptions'] = [...dataField['seriesOptions'], seriesOption];
+              if (dataField['seriesOptions']) {
+                // eslint-disable-next-line max-len
+                dataField['seriesOptions'] = [...dataField['seriesOptions'], seriesOption];
+              } else {
+                dataField['seriesOptions'] = [seriesOption];
+              }
             }
 
             dispatch(setItemField({reportId, dataField}));
