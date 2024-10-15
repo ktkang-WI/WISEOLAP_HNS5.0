@@ -56,17 +56,17 @@ const ReportTitleTabs = () => {
     let widthSum = 0;
     const leftRight =
       ['designer', 'downLoadReport', 'user_info_popover', 'save_as'];
-    if (userMode.runMode === 'VIEW' &&
+
+    leftRight.map((id) => {
+      if (userMode.runMode === 'VIEW' &&
         userMode.grpRunMode === 'VIEW' &&
         id === 'designer') {
-    } else {
-      leftRight.map((id) => {
+      } else {
         const element = document.getElementById(id);
         const rect = element?.getBoundingClientRect() || {width: 0};
         widthSum += rect.width;
-      });
-    }
-
+      }
+    });
     // 로고 길이 까지
     setDistance(widthSum + 110);
   }, []);
