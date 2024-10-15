@@ -95,6 +95,7 @@ const Portal = () => {
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
   const folders = [2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358];
+  // folders.push(1621, 1781, 2221);
   const [userId, setUserId] = useState('');
   const [userNm, setUserNm] = useState('');
 
@@ -146,10 +147,7 @@ const Portal = () => {
         const result = Object.values(_folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
-            if (a.ordinal !== b.ordinal) {
-              return a.ordinal - b.ordinal;
-            }
-            return a.id - b.id;
+            return a.name.localeCompare(b.name);
           });
           return fld;
         });
