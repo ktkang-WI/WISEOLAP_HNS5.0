@@ -206,11 +206,11 @@ const Designer = () => {
 
     return unlistenHistoryEvent;
   }, [designerMode]);
-
+  // 홈앤쇼핑 오픈이후 따로 요청 'LinkReportList'
   return (
     <div>
       <Header
-        left={['Logo', 'Viewer', 'LinkReportList']}
+        left={['Logo', 'Viewer']}
         middle={['ReportTab']}
         right={
           mainTabItems

@@ -25,12 +25,12 @@ const LinkViewer = () => {
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);
   }, []);
-
+  // 홈앤쇼핑 오픈이후 따로 요청 'LinkReportList'
   return (
     <div className={isPortal() && 'portal'}>
       {!noHeader &&
         <Header
-          left={['Logo', 'Designer', 'LinkReportList']}
+          left={['Logo', 'Designer']}
           middle={['ReportTab']}
           right={['DownloadReport', 'SaveAs', 'UserInfo']}
         />
