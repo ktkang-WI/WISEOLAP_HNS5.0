@@ -313,6 +313,7 @@ const Portal = () => {
               <DateBox
                 value={date}
                 buttons={[]}
+                max={new Date()}
                 onValueChanged={(e) => setDate(e.value)}
                 displayFormat={(date) => {
                   if (!date) return '';
