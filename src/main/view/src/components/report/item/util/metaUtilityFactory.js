@@ -127,7 +127,7 @@ const makeAdHocItemMeta = (orgItem) => {
  * @param {*} data meta에 추가될 데이터 ('pieChartStyle': 'pie' 등)
  */
 const setMeta = (item, id, data) => {
-  if (!item.meta[id]) {
+  if (typeof item.meta[id] == 'undefined' || typeof item.meta[id] == null) {
     item.meta[id] = data;
   }
 };
