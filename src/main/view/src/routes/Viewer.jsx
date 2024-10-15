@@ -5,9 +5,13 @@ import useConfig from 'hooks/useConfig';
 import useReportLoad from 'hooks/useReportLoad';
 import useReportSave from 'hooks/useReportSave';
 import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import {useLoaderData, useNavigate} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
 
 const Viewer = () => {
   const dispatch = useDispatch();
@@ -18,6 +22,8 @@ const Viewer = () => {
   const {getReport, getLinkedReport} = useReportLoad();
   const {querySearch} = useReportSave();
   const nav = useNavigate();
+  const userMode = useSelector(selectMyPageDesignerConfig);
+  console.log('userMode', userMode);
 
   const getFavoritViewerReport = async () => {
     const myReportId = myPageConfigure.defaultViewerReportId;
@@ -47,10 +53,15 @@ const Viewer = () => {
   }, []);
   // 'LinkReport',
 
+  const leftItems = ['Logo', 'Designer', 'ReportTabs'];
+  const filteredLeftItems =
+    (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
+    leftItems.filter((item) => item !== 'Designer') : leftItems;
+
   return (
     <div>
       <Header
-        left={['Logo', 'Designer', 'ReportTabs']}
+        left={filteredLeftItems}
         right={['DownloadReport', 'SaveAs', 'UserInfo']}
         // 'ReportProperty' TODO : 추후 추가
       >
