@@ -12,7 +12,7 @@ const theme = getTheme();
 
 // Config 는 임시용 입니다.
 const Config = () => {
-  const left = ['Logo', 'Viewer'];
+  const left = ['Logo', 'Portal', 'Viewer'];
   const {userNm, myPageConfigure} = useLoaderData();
   const dispatch = useDispatch();
   const {setUserNm} = ConfigSlice.actions;

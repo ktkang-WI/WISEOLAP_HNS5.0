@@ -51,7 +51,7 @@ public class UserDataService {
 
     // if (userAuthDataMstr.size() == 0) return accountDAO.deleteUserDataAll();
 
-    result = accountDAO.deleteUserData(userAuthDataMstr);
+    result = accountDAO.deleteUserData(userDatasetPutDTO);
 
     userAuthDataMstr = userAuthDataMstr
     .stream()

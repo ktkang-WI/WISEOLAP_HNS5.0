@@ -40,7 +40,7 @@ public class UserDsService {
     // if (userAuthDsMstr.size() == 0) {
     //   result = accountDAO.deleteUserDsAll();
     // } else {
-      result = accountDAO.deleteUserDs(userAuthDsMstr);
+      result = accountDAO.deleteUserDs(userDsPutDTO);
       result = accountDAO.putUserDs(userAuthDsMstr);
     // }
 
