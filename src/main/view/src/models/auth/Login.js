@@ -18,6 +18,11 @@ export const logout = () => {
   return res;
 };
 
+export const sessionCheck = () => {
+  const res = axios.get(path + '/session-check');
+  return res;
+};
+
 export const checkPassword = (id, password) => {
   return axios.post(path + '/check-password', {
     id: id,

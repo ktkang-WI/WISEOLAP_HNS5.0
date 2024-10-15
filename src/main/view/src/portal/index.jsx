@@ -21,6 +21,7 @@ import bigMenuIcon5 from './img/big_ico5.png';
 import bigMenuIcon6 from './img/big_ico6.png';
 import ReportSwiper from './components/ReportSwiper';
 import {DateBox} from 'devextreme-react';
+import {useNavigate} from 'react-router-dom';
 
 const bigMenuIconMapper = {
   '고객': bigMenuIcon1,
@@ -84,6 +85,7 @@ const Portal = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() - 1);
 
+  const nav = useNavigate();
   const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
   const [reportList, setReportList] = useState([]);
   const [folderMap, setFolderMap] = useState([]);
@@ -93,6 +95,14 @@ const Portal = () => {
   // folders.push(1621, 1781, 2221);
   const [userId, setUserId] = useState('');
   const [userNm, setUserNm] = useState('');
+
+  useEffect(() => {
+    models.Login.sessionCheck().catch(({response}) => {
+      if (response.status = 401) {
+        nav('/editds');
+      }
+    });
+  }, [nav]);
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
