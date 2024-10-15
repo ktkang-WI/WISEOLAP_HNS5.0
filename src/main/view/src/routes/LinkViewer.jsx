@@ -40,7 +40,7 @@ const LinkViewer = () => {
   }, []);
   // 홈앤쇼핑 오픈이후 따로 요청 'LinkReportList'
   const leftItems = ['Logo', 'Portal', 'Designer'];
-  const filteredLeftItems =
+  let filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
     leftItems.filter((item) => item !== 'Designer') : leftItems;
 
