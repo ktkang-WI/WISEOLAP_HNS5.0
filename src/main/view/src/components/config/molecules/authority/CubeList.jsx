@@ -1,4 +1,4 @@
-import DataGrid, {Column, SearchPanel, Selection}
+import DataGrid, {Column, Selection}
   from 'devextreme-react/data-grid';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -19,25 +19,19 @@ import localizedString from 'config/localization';
 import icoEdit from 'assets/image/icon/auth/ico_edit.png';
 import useModal from 'hooks/useModal';
 
-const getDsViewKey = (dataSetMode, data, nextId, currentTab) => {
-  const key = currentTab == path.GROUP_MEASURE ||
-    currentTab == path.USER_MEASURE ? 'cubeId' : 'dsViewId';
+const getDsViewKey = (dataSetMode, data, nextId) => {
   const prevKeys = getUserOrGroupOrigin(dataSetMode, data, nextId) || [];
   const nextKeys = getUserOrGroupOriginNext(dataSetMode, data, nextId) || [];
   const notNullPrevKey = prevKeys?.datas?.filter((cube) => {
-    const cubeId = cube?.cubeId?.length ?? 0 != 0;
-    const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
     const measures = cube?.measures?.length ?? 0 != 0;
-    return cubeId || dsViewDim || measures;
+    return measures;
   });
   const notNullNextKey = nextKeys?.datas?.filter((cube) => {
-    const cubeId = cube?.cubeId?.length ?? 0 != 0;
-    const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
     const measures = cube?.measures?.length ?? 0 != 0;
-    return cubeId || dsViewDim || measures;
+    return measures;
   });
-  let prevKey = notNullPrevKey?.map((cube) => cube[key]) ?? [];
-  let nextKey = notNullNextKey?.map((cube) => cube[key]) ?? [];
+  const prevKey = notNullPrevKey?.map((cube) => cube.cubeId) ?? [];
+  const nextKey = notNullNextKey?.map((cube) => cube.cubeId) ?? [];
   const editKey = new Set();
 
   nextKey?.forEach((id) => {
@@ -46,33 +40,17 @@ const getDsViewKey = (dataSetMode, data, nextId, currentTab) => {
     }
   });
 
-  if (key == 'cubeId') {
-    _.cloneDeep(editKey).forEach((cubeId) => {
-      editKey.delete(cubeId);
-
-      const dsViewId = notNullNextKey?.find(
-          (k) => k.cubeId == cubeId)?.dsViewId;
-
-      editKey.add(dsViewId);
-    });
-
-    prevKey = notNullPrevKey?.map((cube) => cube.dsViewId) ?? [];
-    nextKey = notNullNextKey?.map((cube) => cube.dsViewId) ?? [];
-  }
-
   notNullPrevKey?.forEach((prevItem) => {
     const nextItem = notNullNextKey.find((item) =>
-      item[key] === prevItem[key]);
+      item.cubeId === prevItem.cubeId);
     const prevStringify =
     JSON.stringify(prevItem?.cubeId) +
-    JSON.stringify(prevItem?.dsViewDim) +
     JSON.stringify(prevItem?.measures);
     const nextStringify =
     JSON.stringify(nextItem?.cubeId) +
-    JSON.stringify(nextItem?.dsViewDim) +
     JSON.stringify(nextItem?.measures);
     if (prevStringify !== nextStringify) {
-      editKey.add(prevItem.dsViewId);
+      editKey.add(prevItem.cubeId);
     }
   });
   return {prevKey: prevKey, editKey: [...editKey]};
@@ -89,10 +67,10 @@ const setDsViewKey = (prevKey, editKey, dataSource, setDataSource) => {
   } else {
     setDataSource(dataSource.map((d) => {
       let isAuth = 'none';
-      if (prevKey.includes(d.dsViewId)) {
+      if (prevKey.includes(d.cubeId)) {
         isAuth = 'visible';
       }
-      if (editKey.includes(d.dsViewId)) {
+      if (editKey.includes(d.cubeId)) {
         isAuth = 'edit';
       }
       return {
@@ -103,20 +81,19 @@ const setDsViewKey = (prevKey, editKey, dataSource, setDataSource) => {
   }
 };
 
-const DatasourceViewList = ({
-  mainKey, dependency, setDsViewId, setCubeId = () => {}}) => {
+const CubeList = ({mainKey, dependency, setCubeId, dsViewId}) => {
   // context
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
   if (currentTab !== mainKey) return <></>;
   const [selectedKeys, setSelectedKeys] = useState();
-  const [dataSource, setDataSource] = useState(getContext.state.dsView || []);
+  const [dataSource, setDataSource] = useState([]);
+  const dsViewCube = getContext.state.dsViewCube || [];
   const selected = getContext.state.selected;
   const pageReload = getContext.state.pageReload;
   const data = getContext.state.data;
   const dataSetMode =
-  currentTab === path.GROUP_DATA || currentTab === path.GROUP_MEASURE ?
-  mode.GROUP : mode.USER;
+  currentTab === path.GROUP_MEASURE ? mode.GROUP : mode.USER;
   const {alert} = useModal();
 
   useEffect(() => {
@@ -130,51 +107,46 @@ const DatasourceViewList = ({
           datas: []
         });
       }
-      const {prevKey, editKey} = getDsViewKey(
-          dataSetMode, data, nextId, currentTab);
-      setDsViewKey(prevKey, editKey, dataSource, setDataSource);
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
+      const source = dsViewCube.filter((d) => d.dsViewId == dsViewId);
+      setDsViewKey(prevKey, editKey, source, setDataSource);
     };
     setSelectedKeys([]);
     updateData();
-  }, [pageReload, dependency]);
+  }, [pageReload, dependency, dsViewId]);
 
   const handleSelectedKey = (selectedItems) => {
-    setCubeId(0);
     if (!selected?.user?.next && !selected?.group?.next) {
       alert(localizedString.clickMe);
-      setDsViewId(0);
+      setCubeId(0);
       setSelectedKeys([]);
     } else {
-      const dsViewId = selectedItems.selectedRowKeys[0];
-      setDsViewId(dsViewId);
-      setSelectedKeys([dsViewId]);
+      const cubeId = selectedItems.selectedRowKeys[0];
+      setCubeId(cubeId);
+      setSelectedKeys([cubeId]);
 
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId,
-          currentTab);
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
       setDsViewKey(prevKey, editKey, dataSource, setDataSource);
     }
   };
 
   return (
     <Wrapper>
-      <Title title={localizedString.dsViewList}></Title>
+      <Title title={localizedString.addCUBE}></Title>
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
         height={'90%'}
         elementAttr={{
-          class: 'datasource-view-list'
+          class: 'cube-list'
         }}
-        keyExpr={'dsViewId'}
+        keyExpr={'cubeId'}
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
       >
         <Selection mode="single" />
-        <SearchPanel
-          visible={true}
-        />
         <Column
           dataField="isAuth"
           caption=""
@@ -190,51 +162,14 @@ const DatasourceViewList = ({
           }}
         />
         <Column
-          dataField="dsViewNm"
-          caption={localizedString.dsViewName}
+          dataField="cubeNm"
+          caption={localizedString.addCUBE}
           dataType="string"
           format="currency"
-        />
-        <Column
-          dataField="dsNm"
-          caption={localizedString.dataSourceName}
-          dataType="string"
-          format="currency"
-        />
-        <Column
-          dataField="dbmsType"
-          caption={localizedString.dbType}
-          dataType="string"
-          format="currency"
-        />
-        <Column
-          dataField="ownerNm"
-          caption={localizedString.owner}
-          dataType="string"
-          format="currency"
-        />
-        <Column
-          dataField="ip"
-          caption={localizedString.dbAddress}
-          dataType="string"
-          format="currency"
-        />
-        <Column
-          dataField="dbNm"
-          caption={localizedString.dbName}
-          dataType="string"
-          format="currency"
-        />
-        <Column
-          dataField="dsViewId"
-          caption={localizedString.dsViewId}
-          dataType="string"
-          format="currency"
-          visible={false}
         />
       </DataGrid>
     </Wrapper>
   );
 };
 
-export default React.memo(DatasourceViewList);
+export default React.memo(CubeList);

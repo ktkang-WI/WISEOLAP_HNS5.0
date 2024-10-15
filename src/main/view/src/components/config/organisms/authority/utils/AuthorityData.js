@@ -20,6 +20,10 @@ export const generateAxios = async (currentTab, data) => {
     currentTab == path.USER_DATA
   ) return await generatePutDataAxios(currentTab, data);
   else if (
+    currentTab == path.GROUP_MEASURE ||
+    currentTab == path.USER_MEASURE
+  ) return await generatePutMeasureAxios(currentTab, data);
+  else if (
     currentTab == path.GROUP_APP ||
     currentTab == path.USER_APP
   ) return await generatePutAppAxios(currentTab, data);
@@ -68,6 +72,13 @@ const generatePutDataAxios = async (currentTab, data) => {
 };
 
 const generatePutDsAxios = async (currentTab, data) => {
+  const res = axios.put(currentTab, {
+    data
+  });
+  return res;
+};
+
+const generatePutMeasureAxios = async (currentTab, data) => {
   const res = axios.put(currentTab, {
     data
   });
