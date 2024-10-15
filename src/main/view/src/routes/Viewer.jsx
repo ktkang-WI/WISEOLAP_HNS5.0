@@ -4,7 +4,8 @@ import ViewerContent from 'components/viewer/ViewerContent';
 import useConfig from 'hooks/useConfig';
 import useReportLoad from 'hooks/useReportLoad';
 import useReportSave from 'hooks/useReportSave';
-import {useEffect} from 'react';
+import models from 'models';
+import {useEffect, useState} from 'react';
 import {
   useSelector,
   useDispatch
@@ -24,6 +25,15 @@ const Viewer = () => {
   const nav = useNavigate();
   const userMode = useSelector(selectMyPageDesignerConfig);
   console.log('userMode', userMode);
+  const [grpId, setGrpId] = useState(0);
+
+  useEffect(() => {
+    models.Report.getUserInfo().then((res) => {
+      if (res.status == 200) {
+        setGrpId(res.data.grpId);
+      }
+    });
+  }, []);
 
   const getFavoritViewerReport = async () => {
     const myReportId = myPageConfigure.defaultViewerReportId;
@@ -54,9 +64,13 @@ const Viewer = () => {
   // 'LinkReport',
 
   const leftItems = ['Logo', 'Portal', 'Designer', 'ReportTabs'];
-  const filteredLeftItems =
+  let filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
     leftItems.filter((item) => item !== 'Designer') : leftItems;
+
+  if (grpId == '1503') {
+    filteredLeftItems = filteredLeftItems.filter((item) => item !== 'Portal');
+  }
 
   return (
     <div>

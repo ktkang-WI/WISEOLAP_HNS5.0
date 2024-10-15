@@ -25,8 +25,15 @@ const LinkViewer = () => {
 
   const params = new URLSearchParams(window.location.search);
   const noHeader = params.get('no_header') || false;
+  const [grpId, setGrpId] = useState(0);
 
   useEffect(() => {
+    models.Report.getUserInfo().then((res) => {
+      if (res.status == 200) {
+        setGrpId(res.data.grpId);
+      }
+    });
+
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);
   }, []);
@@ -35,6 +42,10 @@ const LinkViewer = () => {
   const filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
     leftItems.filter((item) => item !== 'Designer') : leftItems;
+
+  if (grpId == '1503') {
+    filteredLeftItems = filteredLeftItems.filter((item) => item !== 'Portal');
+  }
 
   return (
     <div className={isPortal() && 'portal'}>

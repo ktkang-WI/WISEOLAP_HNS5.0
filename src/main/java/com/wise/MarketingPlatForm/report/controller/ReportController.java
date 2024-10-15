@@ -280,6 +280,8 @@ public class ReportController {
         res.put("userNm", user.getUserNm());
         res.put("mdCode", user.getMdCode());
         res.put("userId", user.getUserId());
+        res.put("grpId", user.getGrpId() + "");
+
         return res;
 	}
     
