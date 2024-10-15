@@ -1,8 +1,5 @@
 import {useState, useEffect} from 'react';
 import {format} from 'date-fns';
-import $ from 'jquery';
-import 'jquery-ui/ui/widgets/datepicker';
-import 'jquery-ui/themes/base/all.css';
 import './css/reset.css';
 import './css/style.css';
 import ReportBox from './components/ReportBox';
@@ -83,8 +80,6 @@ const quickBoxs = [
 ];
 
 const Portal = () => {
-  // const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
-  // const PORTAL_URL = 'http://localhost:3000/editds';
   const PORTAL_URL = window.location.origin + '/editds';
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() - 1);
@@ -171,18 +166,8 @@ const Portal = () => {
     });
   }, []);
 
-  useEffect(() => {
-    $('.date').datepicker({
-      dateFormat: 'yy.mm.dd',
-      onSelect: (dateText) => {
-        const selectedDate = $.datepicker.parseDate('yy.mm.dd', dateText);
-        setDate(selectedDate);
-      }
-    });
-  }, []);
-
   const getReports = (reports) => {
-    return reports.map((report) => (
+    return reports?.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
         href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`}
@@ -219,7 +204,7 @@ const Portal = () => {
   };
 
   const getQuickBoxs = () => {
-    return quickBoxs.map(({id, name}, i) => {
+    return quickBoxs?.map(({id, name}, i) => {
       const url = `${PORTAL_URL}/linkviewer?userId=${userId}&reportId=${id}`;
       return (
         <div id={'quick_box' + i} key={'quick_box' + i}>
@@ -255,7 +240,7 @@ const Portal = () => {
           </a>
           <ul id='header_menu'>
             {
-              headerMenuHref.map((menu, i) => {
+              headerMenuHref?.map((menu, i) => {
                 if (!folderMap[menu.fld]?.reports?.length) return null;
 
                 return (
@@ -321,7 +306,7 @@ const Portal = () => {
             </li>
           </ul>
           {
-            cardData.map((d, i) => {
+            cardData?.map((d, i) => {
               return (
                 <Card
                   title={d['구분']}
@@ -344,7 +329,7 @@ const Portal = () => {
       <div className='blue_bg'>
         <div className='contents'>
           {
-            reportList.map((fld) => {
+            reportList?.map((fld) => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>
