@@ -82,13 +82,18 @@ const SignIn = () => {
               const id = document.querySelector('#input-ID input').value;
               const password =
                 document.querySelector('#input-Password input').value;
-              if (checkAppliedSpace(id)) {
-                alert('아이디 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
-                return;
-              }
-              if (checkAppliedSpace(password)) {
-                alert('비밀번호 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
-                return;
+              try {
+                if (checkAppliedSpace(id)) {
+                  alert('아이디 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
+                  return;
+                }
+                if (checkAppliedSpace(password)) {
+                  alert('비밀번호 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
+                  return;
+                }
+              } catch (error) {
+                console.log(error);
+                // alert();
               }
               try {
                 const res = await models.Login.login(id, password);
