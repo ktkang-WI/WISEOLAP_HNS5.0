@@ -37,13 +37,6 @@ const Input = ({contents, onSubmit}) => {
       return contents.passwordCheckRule;
     }
   };
-
-  const handlePaste = (e) => {
-    if (e.event) {
-      e.event.preventDefault();
-    }
-  };
-
   // TODO: 아이디저장 임시용
   const handleContentReady = (e) => {
     if (e.element.id === 'input-ID') {
@@ -73,7 +66,6 @@ const Input = ({contents, onSubmit}) => {
                       handleContentReady
                     }
                     maxLength={20}
-                    onPaste={handlePaste}
                   >
                     {type === 'register' ?
                     handleValidation(contents, input) : ''}
