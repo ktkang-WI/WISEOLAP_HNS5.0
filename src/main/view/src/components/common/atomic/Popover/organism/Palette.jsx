@@ -6,7 +6,7 @@ import {getPalette, registerPalette} from 'devextreme/viz/palette';
 
 
 registerPalette('hns', {
-  simpleSet: ['#FE0000', '#BBBBBB', '#FE0000', '#BBBBBB']
+  simpleSet: ['#D80028', '#BFBFBF', '#D80028', '#BFBFBF']
 });
 
 export const paletteCollection = [
