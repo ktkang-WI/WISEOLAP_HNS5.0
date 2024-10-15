@@ -232,6 +232,17 @@ const HeaderDefaultElement = () => {
         reload(initialDisplay);
       }
     },
+    'Portal': {
+      'id': 'portal',
+      'label': '메인화면 열기',
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        nav('/editds/portal');
+      }
+    },
     'LinkReportList': {
       'id': 'linkreport',
       'label': localizedString.linkReport,
