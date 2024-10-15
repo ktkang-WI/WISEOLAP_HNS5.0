@@ -31,7 +31,7 @@ const LinkViewer = () => {
     reload(DesignerMode.DASHBOARD);
   }, []);
   // 홈앤쇼핑 오픈이후 따로 요청 'LinkReportList'
-  const leftItems = ['Logo', 'Designer'];
+  const leftItems = ['Logo', 'Portal', 'Designer'];
   const filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
     leftItems.filter((item) => item !== 'Designer') : leftItems;

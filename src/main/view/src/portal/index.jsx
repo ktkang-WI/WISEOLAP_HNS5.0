@@ -268,7 +268,7 @@ const Portal = () => {
             }
             <li>
               <a
-                href={`${PORTAL_URL}/`}
+                href={`${PORTAL_URL}/viewer`}
                 rel="noreferrer"
                 target="_blank"
                 className='active'>

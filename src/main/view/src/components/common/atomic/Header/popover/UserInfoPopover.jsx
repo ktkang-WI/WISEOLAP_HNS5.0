@@ -47,8 +47,13 @@ const UserInfoPopover = () => {
                   reload(reportType);
                   nav(defaultPath);
                 }
-              }).catch(() => {
-                throw new Error(localizedString.failedLogout);
+              }).catch(({response}) => {
+                if (response.status == 401) {
+                  reload(reportType);
+                  nav(defaultPath);
+                } else {
+                  throw new Error(localizedString.failedLogout);
+                }
               });
             });
           }}
