@@ -85,6 +85,7 @@ const SelectDataSourceModal = ({onSubmit, isSingleTable, ...props}) => {
             visible={isDsSingleTable}/>
           <CommonDataGrid
             width='100%'
+            height={isDsSingleTable ? '70%' : '100%'}
             dataSource={dataSourceType == 'ds' ? dataSource : dsViewList}
             onSelectionChanged={(e) => {
               setSelectedDataSource(e.selectedRowsData[0]);
