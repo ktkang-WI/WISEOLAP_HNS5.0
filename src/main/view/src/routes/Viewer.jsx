@@ -24,7 +24,6 @@ const Viewer = () => {
   const {querySearch} = useReportSave();
   const nav = useNavigate();
   const userMode = useSelector(selectMyPageDesignerConfig);
-  console.log('userMode', userMode);
   const [grpId, setGrpId] = useState(0);
 
   useEffect(() => {
