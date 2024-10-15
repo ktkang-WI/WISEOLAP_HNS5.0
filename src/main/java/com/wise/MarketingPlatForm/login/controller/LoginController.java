@@ -61,14 +61,14 @@ public class LoginController {
         UserDTO userDTO = loginService.getLoginUser(id, password);
 
         if (userDTO != null) {
-            SessionUtility.setSessionUser(request, userDTO);
-        
+            
             if (userDTO.getIsChangePw() > 0) {
                 Map<String, Integer> chagePw = new HashMap<>();
                 chagePw.put("change", userDTO.getIsChangePw());
                 return ResponseEntity.ok().body(chagePw);
             }
-
+            SessionUtility.setSessionUser(request, userDTO);
+            
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
             LoginLogDTO logDTO = LoginLogDTO.builder()
