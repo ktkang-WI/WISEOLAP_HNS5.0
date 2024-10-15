@@ -166,7 +166,10 @@ const UserInfoManagement = () => {
                 borderRadius={'4px'}
                 font={theme.font.smallButton}
                 onClick = {() => {
-                  openModal(ModifyPasswordModal);
+                  const userId = ref.current.instance.option().formData.userId;
+                  if (userId) {
+                    openModal(ModifyPasswordModal, {userId: userId});
+                  }
                 }}
               >
                 <img src={icon}/>
