@@ -56,13 +56,20 @@ export const preventInputSpaceBar = (e) => {
     e.event.originalEvent.returnValue = false;
   }
 };
-
+/**
+ * @param {string} text 문자열 입력.
+ * @return {boolean}
+ */
 export const checkAppliedSpace = (text) => {
-  const reg = '\/s/g';
-  if (typeof text !== 'string') console.log('문자만 적용 됨.');
-  if (text.match(reg)) {
+  const reg = /\s/g;
+  if (typeof text !== 'string') {
+    console.log('문자만 적용 됨.');
+    throw new Error('typeError no input Object');
+  };
+  if (reg.test(text)) {
     return true;
   }
+  return false;
 };
 
 const validationMsgList = {
