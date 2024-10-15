@@ -41,7 +41,7 @@ public class GroupFolderService {
     if (groupFolderMstr.size() == 0) {
       result = accountDAO.deleteGroupFolderAll();
     } else {
-      result = accountDAO.deleteGroupFolder(groupFolderMstr);
+      result = accountDAO.deleteGroupFolder(groupFolderPatchDTO);
       result = accountDAO.putGroupFolder(groupFolderMstr);
     }
 

@@ -28,6 +28,7 @@ import com.wise.MarketingPlatForm.account.entity.UserAuthDsMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthProgMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserAuthReportMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
+import com.wise.MarketingPlatForm.account.model.groups.folder.GroupFolderModel;
 
 @Mapper
 public interface AccountDAO {
@@ -71,7 +72,7 @@ public interface AccountDAO {
   public boolean putGroupDs(List<GroupAuthDsMstrEntity> groupAuthDsMstr);
   public boolean deleteGroupDataset(List<GroupAuthDatasetMstrEntity> groupAuthDatasetMstr);
   public boolean putGroupDataset(List<GroupAuthDatasetMstrEntity> groupAuthDatasetMstr);
-  public boolean deleteGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
+  public boolean deleteGroupFolder(List<GroupFolderModel> groupFolderModel);
   public boolean putGroupFolder(List<GroupAuthReportMstrEntity> groupFolderMstr);
   public boolean deleteGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
   public boolean deleteUserDataAll();

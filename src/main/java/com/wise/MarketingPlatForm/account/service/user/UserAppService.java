@@ -57,12 +57,12 @@ public class UserAppService {
     if (userAuthProgMstr == null) return false;
 
     boolean result = false;
-    if (userAuthProgMstr.size() == 0) {
-      result = accountDAO.deleteUserAppAll();
-    } else {
+    // if (userAuthProgMstr.size() == 0) {
+    //   result = accountDAO.deleteUserAppAll();
+    // } else {
       result = accountDAO.deleteUserApp(userAuthProgMstr);
       result = accountDAO.putUserApp(userAuthProgMstr);
-    }
+    // }
 
     return result;
   };

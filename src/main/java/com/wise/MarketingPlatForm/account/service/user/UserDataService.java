@@ -49,7 +49,7 @@ public class UserDataService {
 
     boolean result = false;
 
-    if (userAuthDataMstr.size() == 0) return accountDAO.deleteUserDataAll();
+    // if (userAuthDataMstr.size() == 0) return accountDAO.deleteUserDataAll();
 
     result = accountDAO.deleteUserData(userAuthDataMstr);
 

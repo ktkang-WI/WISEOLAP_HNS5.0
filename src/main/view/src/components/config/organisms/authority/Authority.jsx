@@ -361,7 +361,21 @@ const Authority = () => {
 
   const onAction = async () => {
     try {
-      const response = await generateAxios(currentTab, data.next);
+      const editKeys = new Set(getFindDifferentIds(currentTab, data));
+
+      const targets = data.next.filter((d) => {
+        if (editKeys.has(d.grpId) || editKeys.has(d.userNo)) {
+          return true;
+        }
+        return false;
+      });
+
+      if (!targets?.length) {
+        alert('변경된 사항이 없습니다.');
+        return;
+      }
+
+      const response = await generateAxios(currentTab, targets);
       if (response.data.data) {
         alert(localizedString.successSave);
       }
