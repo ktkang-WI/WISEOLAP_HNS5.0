@@ -73,6 +73,7 @@ const PickChoropleth = () => {
           showBorders={true}
           columnAutoWidth={true}
           onCellClick={handleCellClick}
+          allowColumnResizing={true}
         >
           <Selection mode="single" />
           <FilterRow visible={true} />

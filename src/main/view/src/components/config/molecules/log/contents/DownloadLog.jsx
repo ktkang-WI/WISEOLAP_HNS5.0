@@ -12,6 +12,7 @@ const DownloadLog = ({display, dataSource}) => {
         height={'100%'}
         showBorders={true}
         dataSource={dataSource}
+        allowColumnResizing={true}
       >
         <Column
           dataField='eventDt'

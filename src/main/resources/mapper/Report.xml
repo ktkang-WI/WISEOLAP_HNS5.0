@@ -24,7 +24,8 @@
     <result column="MOD_USER_NM" property="modUserName" javaType="String"/>
     <result column="DATASET" property="dataset" javaType="String"/>
     <result column="AUTH_PUBLISH" property="authPublish" javaType="int"/>
-	</resultMap>
+    <result column="ROOT_FLD_ID" property="rootFldId" javaType="int"/>
+  </resultMap>
 
   <resultMap id="DetailedDataItem" type="com.wise.MarketingPlatForm.dataset.domain.cube.vo.DetailedDataItemVO">
     <result column="CUBE_ID" property="cubeId" javaType="int"/>
@@ -131,6 +132,84 @@
       FROM PUB_FLD_MSTR
       )
       ORDER BY UPPERID, TYPE, ORDINAL
+    </select>
+
+    <select id="selectPortalReportList" resultMap="ReportList">
+      SELECT
+      ID,
+      TEXT,
+      UPPERID,
+      ORDINAL,
+      REPORT_TYPE,
+      TYPE,
+      REPORT_DESC,
+      REG_DT,
+      MOD_DT,
+      REQUESTER,
+      REPORT_TAG,
+      DATASET,
+      ROOT_FLD_ID
+      FROM (
+      SELECT
+            REPORT_MSTR.REPORT_ID AS ID,
+            REPORT_MSTR.REPORT_NM AS TEXT,
+            REPORT_MSTR.FLD_ID AS UPPERID,
+            REPORT_MSTR.REPORT_ORDINAL AS ORDINAL,
+            REPORT_MSTR.REPORT_TYPE AS REPORT_TYPE,
+            'REPORT' AS TYPE,
+            TO_CHAR(REPORT_MSTR.REPORT_DESC) AS REPORT_DESC,
+            REPORT_MSTR.REG_DT AS REG_DT,                     
+            REPORT_MSTR.MOD_DT AS MOD_DT,                                 
+            REPORT_MSTR.GRID_INFO AS REQUESTER,                          
+            REPORT_MSTR.REPORT_TAG AS REPORT_TAG,
+            TO_CLOB(REPORT_MSTR.DATASET_XML) AS DATASET,
+            TO_CHAR(A.ROOT_FLD_ID) AS ROOT_FLD_ID
+      FROM (SELECT  FLD_ID , CONNECT_BY_ROOT FLD_ID AS ROOT_FLD_ID
+				FROM PUB_FLD_MSTR
+				START WITH FLD_ID IN
+        <foreach collection="folders" item="folder" index="index" open="(" separator="," close=")">
+          #{folder}
+        </foreach>
+				CONNECT BY PRIOR FLD_ID = FLD_PARENT_ID) A
+      INNER JOIN REPORT_MSTR
+      ON A.FLD_ID = REPORT_MSTR.FLD_ID
+      INNER JOIN USER_MSTR
+      ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
+      WHERE REPORT_MSTR.DEL_YN = 'N'
+      AND USER_MSTR.DEL_YN = 'N'
+      UNION ALL
+      SELECT
+            PUB_FLD_MSTR.FLD_ID AS ID,
+            PUB_FLD_MSTR.FLD_NM AS TEXT,
+            PUB_FLD_MSTR.FLD_PARENT_ID AS UPPERID,
+            PUB_FLD_MSTR.FLD_ORDINAL AS ORDINAL,
+            NULL AS REPORT_TYPE,
+            'FOLDER' AS TYPE,
+            '' AS REPORT_DESC,
+            NULL AS REG_DT,                                                       
+            NULL AS MOD_DT,                             
+            NULL AS REQUESTER,                               
+            NULL AS REPORT_TAG,
+            TO_CLOB('') AS DATASET,
+            '0' AS ROOT_FLD_ID
+      FROM PUB_FLD_MSTR
+      WHERE FLD_ID IN 
+      <foreach collection="folders" item="folder" index="index" open="(" separator="," close=")">
+        #{folder}
+      </foreach>
+      )     WHERE UPPERID IN (SELECT DISTINCT FLD_ID
+					FROM(
+					SELECT FLD_ID, TO_CHAR(AUTH_VIEW) AS AUTH_VIEW FROM GRP_AUTH_REPORT_MSTR
+					WHERE GRP_ID = #{grpId}
+					UNION ALL
+					SELECT FLD_ID, TO_CHAR(AUTH_VIEW) AS AUTH_VIEW FROM USER_AUTH_REPORT_MSTR
+					WHERE USER_NO = #{userNo}
+					UNION ALL 
+					SELECT 0 AS FLD_ID, '1' AS AUTH_VIEW FROM DUAL
+					)
+					WHERE AUTH_VIEW = 1
+					)
+      ORDER BY TYPE,UPPERID, ORDINAL
     </select>
 
     <select id="selectPublicReportList" resultMap="ReportList">

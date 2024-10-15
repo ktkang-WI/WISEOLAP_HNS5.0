@@ -74,7 +74,9 @@ const DatasourceList = ({mainKey, dependency}) => {
   }, [selectedKeys]);
 
   const handleSelectedKey = (selectedItems) => {
-    if (selectedItems.selectedRowsData.length == 0) return;
+    if (selectedItems.selectedRowsData.length == 0 &&
+      !selected?.group?.next
+    ) return;
 
     if (!selected?.user?.next && !selected?.group?.next) {
       alert(localizedString.clickMe);
@@ -102,6 +104,7 @@ const DatasourceList = ({mainKey, dependency}) => {
         keyExpr="dsId"
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
+        allowColumnResizing={true}
       >
         <HeaderFilter visible={false} />
         <Selection

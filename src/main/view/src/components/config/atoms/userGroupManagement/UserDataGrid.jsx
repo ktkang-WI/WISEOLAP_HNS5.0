@@ -4,7 +4,7 @@ import {UserGroupContext}
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 // eslint-disable-next-line max-len
-import DataGrid, {Column, SearchPanel, Selection} from 'devextreme-react/data-grid';
+import DataGrid, {Column, SearchPanel, Selection, Paging} from 'devextreme-react/data-grid';
 import _ from 'lodash';
 import {useContext} from 'react';
 import localizedString from 'config/localization';
@@ -29,9 +29,12 @@ const UserDataGrid = () => {
         showBorders={true}
         onRowClick={({data}) =>
           handleRowClick(data.userDetailInfo, setUserDetailInfo)}
+        allowColumnResizing={true}
         ref={userDataGridRef}
       >
         <Selection mode="single" />
+        <Paging
+          enabled={false}/>
         <SearchPanel
           visible={true}
         />

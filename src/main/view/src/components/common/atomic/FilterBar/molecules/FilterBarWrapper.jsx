@@ -16,7 +16,7 @@ import _ from 'lodash';
 import useModal from 'hooks/useModal';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {
-  selectNewLinkParamInfo,
+  // selectNewLinkParamInfo,
   selectNewLinkCnt
 } from 'redux/selector/LinkSelector';
 import LinkSlice from 'redux/modules/LinkSlice';
@@ -42,7 +42,9 @@ const FilterBarWrapper = (props) => {
   const {startJob, endJob} = LoadingSlice.actions;
   const {confirm} = useModal();
   const dispatch = useDispatch();
-  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
+  const newLinkParamInfo =
+    JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+  // useSelector(selectNewLinkParamInfo);
   const newLinkCnt = useSelector(selectNewLinkCnt);
   const {
     setNewLinkCnt

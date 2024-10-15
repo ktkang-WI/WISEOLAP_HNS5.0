@@ -70,6 +70,7 @@ const ReportHistoryModal = ({onClose, ...props}) => {
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
+        allowColumnResizing={true}
         height={'100%'}
       >
         <Column

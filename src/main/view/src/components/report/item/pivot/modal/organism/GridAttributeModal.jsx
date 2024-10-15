@@ -105,6 +105,7 @@ const GridAttributeModal = ({
       <DataGrid
         dataSource={dataSource}
         showBorders={true}
+        allowColumnResizing={true}
       >
         <Column
           dataField="type"

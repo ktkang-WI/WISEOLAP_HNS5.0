@@ -30,6 +30,7 @@ const QueryLog = ({display, dataSource}) => {
         width={'100%'}
         height={'50%'}
         dataSource={dataSource}
+        allowColumnResizing={true}
       >
         <Column
           dataField='eventDt'

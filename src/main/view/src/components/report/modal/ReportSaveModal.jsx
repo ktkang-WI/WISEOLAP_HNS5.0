@@ -12,6 +12,8 @@ import useModal from 'hooks/useModal';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import DatasetType from 'components/dataset/utils/DatasetType';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
+import useLinkReportSave from 'hooks/useLinkReportSave';
 
 const theme = getTheme();
 
@@ -31,6 +33,8 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
   const [dataSource, setDataSource] = useState(_.cloneDeep(newReportOptions));
   const {addReport, generateParameter} = useReportSave();
   const ref = useRef();
+  const selectLinkedReportList = useSelector(selectLinkedReport);
+  const {genLinkParam} = useLinkReportSave();
 
   /**
    * SaveReportModal state(dataSource) 값 설정
@@ -55,18 +59,19 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
     } else {
       const param = generateParameter(dataSource);
       let isOk = false;
+      let reportId = 0;
+      let reportNm;
       await models.Report.insertReport(param).then((res) => {
         if (res.status != 200) {
           alert(localizedString.faildSaveReportMsg);
           return;
         }
-        const reportId = res.data.report.reportId;
+        reportId = res.data.report.reportId;
+        reportNm = res.data.report.reportNm;
         const data = res.data;
         const msg = data.msg;
         const result = data.result;
-
         alert(localizedString[msg]);
-
         if (result) {
           addReport(data);
           isOk = true;
@@ -74,6 +79,19 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
         } else {
           return;
         }
+      }).catch((e) => {
+        console.log(e);
+      });
+      if (Object.keys(selectLinkedReportList).length > 0) {
+        for (const key in selectLinkedReportList) {
+          if (selectLinkedReportList.hasOwnProperty(key)) {
+            selectLinkedReportList[key].reportId = reportId;
+            selectLinkedReportList[key].reportNm = reportNm;
+          }
+        }
+      }
+      const linkParam = genLinkParam(selectLinkedReportList);
+      models.Report.insertLinkReport(linkParam.data).then((res) => {
       }).catch((e) => {
         console.log(e);
       });

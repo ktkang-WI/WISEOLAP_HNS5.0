@@ -148,6 +148,7 @@
         RUN_MODE
         FROM GRP_MSTR
         WHERE DEL_YN = 'N'
+        ORDER BY GRP_NM
     </select>
     <select id="selectUserMstr" resultMap="UserMstrEntity" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO">
       SELECT
@@ -167,6 +168,7 @@
         <if test='grpId != -1'>
           AND GRP_ID == #{grpId, jdbcType=INTEGER}
         </if>
+        ORDER BY USER_ID
     </select>
 
     <select id="selectUserJoinGroup" resultMap="UserGroupDTO">
@@ -187,6 +189,7 @@
             ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
             WHERE 1 = 1
             AND USER_MSTR.DEL_YN = 'N'
+        ORDER BY GRP_MSTR.GRP_NM, USER_ID
     </select>
     <select id="selectUserData" resultMap="UserDataDTO">
       SELECT
@@ -408,7 +411,7 @@
             NULL,
             #{userDesc, jdbcType=VARCHAR},
             #{runMode, jdbcType=VARCHAR},
-            NULL,
+            SYSDATE,
             NULL,
             NULL,
             NULL

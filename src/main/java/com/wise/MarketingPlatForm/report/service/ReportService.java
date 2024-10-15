@@ -513,6 +513,10 @@ public class ReportService {
         return result;
     }
 
+    public List<ReportListDTO> getPortalMenuList(UserDTO userDTO, List<String> folders) {
+        return reportDAO.selectPortalReportList(userDTO.getGrpId(), userDTO.getUserNo(), folders);
+    }
+
     private List<ReportListDTO> createFavoriteReports(List<ReportListDTO> reports, List<ReportFavoritesEntity> favoriteReports, int folderId,  String fldType) {
         // 해당 fldType에 맞는 reportIds 필터링
         List<Integer> reportIds = favoriteReports.stream()
