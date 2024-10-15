@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 import Wrapper from '../../Common/Wrap/Wrapper';
 import DataColumn from '../../DataColumnTab/molecules/DataColumn';
 import {Droppable, Draggable} from 'react-beautiful-dnd';
-import React, {useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {styled} from 'styled-components';
 import meaImg from 'assets/image/icon/dataSource/small_measure.png';
 import dimImg from 'assets/image/icon/dataSource/small_dimension.png';
@@ -19,6 +19,10 @@ import {selectEditMode} from 'redux/selector/ConfigSelector';
 import {EditMode} from 'components/config/configType';
 import BubbleTooltip from '../../Common/Popover/BubbleTooltip';
 import meaFldImg from 'assets/image/icon/dataSource/folder.png';
+import ContextMenu from 'devextreme-react/context-menu';
+import {useDispatch} from 'react-redux';
+import DatasetSlice from 'redux/modules/DatasetSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const theme = getTheme();
 
@@ -72,8 +76,57 @@ const iconMapper = {
 };
 
 const DataSourceFoldableList = ({dataset}) => {
+  // state
   const editMode = useSelector(selectEditMode);
+  // ref
   const ref = useRef();
+  const contextMenuRef = useRef(null);
+  const selectRef = useRef(null);
+  // hook
+  const dispatch = useDispatch();
+  const {updateDataset} = DatasetSlice.actions;
+  // selector
+  const selectedReportId = useSelector(selectCurrentReportId);
+
+  let data = _.cloneDeep(dataset.fields);
+  const menuItems = [
+    {
+      id: 'measure',
+      text: '측정값으로 변경'
+    },
+    {
+      id: 'dimension',
+      text: '차원으로 변경'
+    }
+  ];
+
+  const treeViewItemContextMenu = useCallback((e) => {
+    const isDim = e.itemData?.type === 'DIM';
+    const isMea = e.itemData?.type === 'MEA';
+
+    contextMenuRef.current.instance.option('items[0].visible', isDim);
+    contextMenuRef.current.instance.option('items[1].visible', isMea);
+    selectRef.current = e.itemData;
+  }, []);
+
+  const contextMenuItemClick = useCallback(
+      (e) => {
+        const tempDataset = _.cloneDeep(dataset);
+        tempDataset.fields = data.map((d) => {
+          if (d.uniqueName === selectRef?.current?.uniqueName) {
+            return {
+              ...d,
+              type: e.itemData.id === 'measure' ? 'MEA' : 'DIM'
+            };
+          }
+          return d;
+        });
+        dispatch(updateDataset({
+          reportId: selectedReportId,
+          dataset: tempDataset
+        }));
+      },
+      [dataset, editMode]);
 
   const getRenderItem = (items) => {
     const getDraggableItem = (provided, snapshot, rubric) => {
@@ -166,8 +219,6 @@ const DataSourceFoldableList = ({dataset}) => {
     </BubbleTooltip>;
   };
 
-  let data = _.cloneDeep(dataset.fields);
-
   if (dataset.showHiddenFields) {
     data = data.map((field) => {
       if (field.parentId) {
@@ -221,6 +272,7 @@ const DataSourceFoldableList = ({dataset}) => {
             {...provided.droppableProps}
           >
             <StyledTreeView
+              id="dataSourceFoldableTreeView"
               expandedExpr="expanded"
               ref={ref}
               items={data}
@@ -241,6 +293,13 @@ const DataSourceFoldableList = ({dataset}) => {
               }}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
               focusStateEnabled={false}
+              onItemContextMenu={treeViewItemContextMenu}
+            />
+            <ContextMenu
+              ref={contextMenuRef}
+              dataSource={menuItems}
+              target="#dataSourceFoldableTreeView .dx-treeview-item"
+              onItemClick={contextMenuItemClick}
             />
           </Wrapper>
         )
