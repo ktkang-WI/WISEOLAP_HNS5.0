@@ -53,7 +53,7 @@ const Viewer = () => {
   }, []);
   // 'LinkReport',
 
-  const leftItems = ['Logo', 'Designer', 'ReportTabs'];
+  const leftItems = ['Logo', 'Portal', 'Designer', 'ReportTabs'];
   const filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
     leftItems.filter((item) => item !== 'Designer') : leftItems;
