@@ -77,6 +77,14 @@
     SELECT * FROM USER_AUTH_DATA_MSTR WHERE USER_NO = #{userNo}
   </select>
 
+  <select id="selectGrpAuthMeasure" resultMap="AuthData">
+    SELECT * FROM GRP_AUTH_MEA_MSTR WHERE GRP_ID = #{grpId}
+  </select>
+
+  <select id="selectUserAuthMeasure" resultMap="AuthData">
+    SELECT * FROM USER_AUTH_MEA_MSTR WHERE USER_NO = #{userNo}
+  </select>
+
   <select id="selectGrpAuthReport" resultMap="AuthReport">
     SELECT 
       FLD_ID,

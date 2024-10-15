@@ -5,6 +5,7 @@ import useModal from 'hooks/useModal';
 import ReportFolderSelectorModal
   from 'components/report/modal/ReportFolderSelectorModal';
 import styled from 'styled-components';
+import {DesignerMode} from 'components/config/configType';
 
 const theme = getTheme();
 
@@ -21,10 +22,9 @@ const StyledForm = styled(Form)`
 
 `;
 
-const ReportSaveForm = ({dataSource, createDataSource, formRef,
-  ...props}) => {
+const ReportSaveForm = ({dataSource, createDataSource, formRef, isCube,
+  designerMode, ...props}) => {
   const {openModal} = useModal();
-  dataSource.promptYn = dataSource.promptYn === 'Y' ? true: false;
 
   const folderSearchBtn = {
     name: 'folderSearchBtn',
@@ -143,6 +143,18 @@ const ReportSaveForm = ({dataSource, createDataSource, formRef,
           {localizedString.checkingInitReportRetrieval}
         </Label>
       </Item>
+      {
+        (designerMode === DesignerMode['AD_HOC']) &&
+        isCube &&
+        <Item
+          editorType='dxCheckBox'
+          dataField='maxReportPeriodYn'
+        >
+          <Label>
+            {localizedString.maxReportPeriodYn}
+          </Label>
+        </Item>
+      }
       <Item
         editorType='dxTextArea'
         dataField='reportDesc'

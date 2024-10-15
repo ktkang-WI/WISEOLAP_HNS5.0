@@ -121,23 +121,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement, component}) => {
-    if (area === 'row' && dataset?.cubeId == 6184) {
-      if (cell.text === '') {
-        const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
-        let newPath = cell.path;
-
-        if (cell.path.includes(null)) {
-          const idx = newPath.findIndex((path) => !path);
-          newPath = newPath.splice(0, idx);
-        }
-
-        const idx = click.findIndex((i) => newPath.toString() == i);
-        if (idx == -1) {
-          component.getDataSource().collapseHeaderItem('row', newPath);
-        }
-      }
-    }
-
     // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
     if (area == 'data' && cell.dataType) {
       const formats = getFormats(dataField, adHocOption);
@@ -238,38 +221,25 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         fieldPanel={fieldPanel}
         showTotalsPrior={showTotalsPrior}
         wordWrapEnabled={false}
-        onCellClick={(e) => {
-          if (dataset?.cubeId !== 6184) return;
-          const click = JSON.parse(window.sessionStorage.getItem('cellClick'));
-          if (!click.includes(e.cell.path.toString())) {
-            click.push(e.cell.path.toString());
-            window.sessionStorage.setItem('cellClick', JSON.stringify(click));
-          }
-        }}
         onCellPrepared={onCellPrepared}
         allowSorting={true}
         allowSortingBySummary={true}
         allowExpandAll={true}
-        onInitialized={() => {
-          const arr = [];
-          window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
-        }}
         onContentReady={(e) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;
             const pivotDataSource = e.component.getDataSource();
-            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
-            const pivotColumnFields =
-                pivotDataSource.getAreaFields('column', true);
-            if (!item.meta.positionOption.row.expand) {
-              pivotRowFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
-              });
-            }
+            if (true || dataset?.cubeId == 6184) {
+              const test =
+                [['총취급액'], ['매출액'], ['매출원가(-)'], ['변동비(-)'], ['매출액', '상품매출액']];
 
-            if (!item.meta.positionOption.column.expand) {
-              pivotColumnFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
+              test.forEach((path) => {
+                if (['매출액', '상품매출액'].toString() === path.toString()) {
+                  // eslint-disable-next-line max-len
+                  setTimeout(() => pivotDataSource.expandHeaderItem('row', path), 500);
+                } else {
+                  pivotDataSource.expandHeaderItem('row', path);
+                }
               });
             }
           }

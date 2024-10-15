@@ -1,6 +1,7 @@
 package com.wise.MarketingPlatForm.auth.service;
 
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -13,7 +14,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
+import com.wise.MarketingPlatForm.account.model.groups.measure.MeasureModel;
 import com.wise.MarketingPlatForm.auth.dao.AuthDAO;
 import com.wise.MarketingPlatForm.auth.entity.AuthDataEntity;
 import com.wise.MarketingPlatForm.auth.entity.UserEntity;
@@ -28,6 +34,8 @@ import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 public class AuthService {
     final String defaultXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" +
                 "<NewDataSet></NewDataSet>";
+    final String defaultJson = "[]";
+    ObjectMapper objectMapper = new ObjectMapper();
     AuthDAO authDAO;
 
     AuthService(AuthDAO authDAO) {
@@ -38,38 +46,84 @@ public class AuthService {
         return str == null || str.isEmpty();
     }
 
-    public AuthDataDTO getAuthData(String userId) {
-        UserDTO user = getUserByIdForAuth(userId);
+    private String decodeString (String str, String type) {
+        byte[] decodedBytes = Base64.getDecoder().decode(
+            str.replaceAll("\\R", ""));
+        String dataXml = type.equals("xml") ? defaultXml : defaultJson;
 
-        AuthDataEntity authDataEntity = authDAO.selectGrpAuthData(user.getGrpId());
-
-        if (authDataEntity == null || isEmptyString(authDataEntity.getDataXmlBase64())) {
-            authDataEntity = authDAO.selectUserAuthData(user.getUserNo());
-
-            if (authDataEntity == null || isEmptyString(authDataEntity.getDataXmlBase64())) {
-                authDataEntity = new AuthDataEntity(user.getGrpId(), userId, user.getUserNo(), Base64.getEncoder().encodeToString(defaultXml.getBytes()));
-            }
+        if (isEmptyString(str)) {
+            return dataXml;
         }
 
-        byte[] decodedBytes = Base64.getDecoder().decode(
-                authDataEntity.getDataXmlBase64().replaceAll("\\R", ""));
-        String dataXml = "";
         try {
             dataXml = new String(decodedBytes, "UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        AuthDataDTO authData = AuthDataDTO.builder()
-                .dataXmlBase64(authDataEntity.getDataXmlBase64())
-                .dataXml(dataXml)
+        return dataXml;
+    }
+
+    public AuthDataDTO getAuthData(String userId) {
+        UserDTO user = getUserByIdForAuth(userId);
+
+        AuthDataEntity grpDataEntity = authDAO.selectGrpAuthData(user.getGrpId());
+        AuthDataEntity userDataEntity = authDAO.selectUserAuthData(user.getUserNo());
+        
+        AuthDataEntity grpMeaEntity = authDAO.selectGrpAuthMeasure(user.getGrpId());
+        AuthDataEntity userMeaEntity = authDAO.selectUserAuthMeasure(user.getUserNo());
+        
+        String grpXml = grpDataEntity == null ? "" : grpDataEntity.getDataXmlBase64();
+        String userXml = userDataEntity == null ? "" : userDataEntity.getDataXmlBase64(); 
+
+        AuthDataDTO authGrpData = AuthDataDTO.builder()
+                .dataXmlBase64(grpXml)
+                .dataXml(decodeString(grpXml, "xml"))
+                .grpId(user.getGrpId())
+                .userNo(user.getUserNo()).build();
+
+        AuthDataDTO authUserData = AuthDataDTO.builder()
+                .dataXmlBase64(userXml)
+                .dataXml(decodeString(userXml, "xml"))
                 .grpId(user.getGrpId())
                 .userNo(user.getUserNo()).build();
 
         List<AuthDimVO> authDims = new ArrayList<>();
         List<AuthCubeVO> authCubes = new ArrayList<>();
         List<AuthMemVO> authMems = new ArrayList<>();
+        List<MeasureModel> authMeas = new ArrayList<>();
 
+        try {
+            String grpJson = grpMeaEntity == null ? "" : grpMeaEntity.getDataXmlBase64();
+            String userJson = userMeaEntity == null ? "" : userMeaEntity.getDataXmlBase64();
+            String grpStr = decodeString(grpJson, "json");
+            String userStr = decodeString(userJson, "json");
+            authMeas = objectMapper.readValue(grpStr,
+                new TypeReference<List<MeasureModel>>() {});
+            authMeas.addAll(objectMapper.readValue(userStr,
+            new TypeReference<List<MeasureModel>>() {}));
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        applyAuth(authDims, authCubes, authMems, authGrpData.getDataXml());
+        applyAuth(authDims, authCubes, authMems, authUserData.getDataXml());
+
+        AuthDataDTO authData = AuthDataDTO.builder()
+        .grpId(user.getGrpId())
+        .userNo(user.getUserNo()).build();
+    
+        authData.setAuthDim(authDims);
+        authData.setAuthCube(authCubes);
+        authData.setAuthMem(authMems);
+        authData.setAuthMea(authMeas);
+
+        return authData;
+    };
+
+    void applyAuth(List<AuthDimVO> authDims,  List<AuthCubeVO> authCubes, List<AuthMemVO> authMems, String dataXml) {
+        
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -133,13 +187,7 @@ public class AuthService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        authData.setAuthDim(authDims);
-        authData.setAuthCube(authCubes);
-        authData.setAuthMem(authMems);
-
-        return authData;
-    };
+    }
 
     /**
      * 권한 설정을 위해 사용되는 메서드입니다.

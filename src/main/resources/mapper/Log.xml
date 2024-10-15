@@ -669,7 +669,9 @@
 				REPORT_XML,
 				DATASET_XML,
         MOD_USER_NO,
-        MOD_DT
+        MOD_DT,
+				PROMPT_YN,
+				MAX_REPORT_PERIOD_YN
 			)
 		VALUES
 			(
@@ -690,7 +692,9 @@
 				#{reportXml},
 				#{datasetXml},
         #{modUserNo},
-        SYSDATE
+        SYSDATE,
+				#{promptYn},
+				#{maxReportPeriodYn}
 			)
 	</insert>
 

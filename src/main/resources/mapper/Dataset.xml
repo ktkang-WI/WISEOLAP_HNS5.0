@@ -64,6 +64,15 @@
     <result column="PARENT_ID" property="parentId" javaType="String"/>
 	</resultMap>
 
+  <resultMap id="DatasetDsViewMeaMstr" type="com.wise.MarketingPlatForm.dataset.entity.DsViewMeaEntity">
+	  <result column="cubeId" property="cubeId" javaType="int"/>
+	  <result column="uniqueName" property="uniqueName" javaType="String"/>
+	  <result column="caption" property="caption" javaType="String"/>
+    <result column="parentId" property="parentId" javaType="String"/>
+    <result column="ordinal" property="ordinal" javaType="int"/>
+	</resultMap>
+
+
 	<resultMap id="UserUploadMstr" type="com.wise.MarketingPlatForm.dataset.entity.UserUploadMstrEntity">
 	  <result column="DATA_SEQ" property="dataSeq" javaType="int"/>
 	  <result column="DATA_NM" property="dataNm" javaType="String"/>
@@ -223,6 +232,26 @@
       FROM DS_VIEW_HIE_MSTR
       WHERE DS_VIEW_ID = #{dsViewId}
 		</select>
+
+    <select id="selectDatasetCubeMea" parameterType="int" resultMap="DatasetDsViewMeaMstr">
+      SELECT	  CUBE_ID AS cubeId
+          ,MEA_UNI_NM as uniqueName
+          ,TO_CHAR(MEA_GRP_UNI_NM) as parentId 
+          ,MEA_CAPTION as caption
+          ,MEA_ORDINAL AS ordinal
+          FROM	CUBE_MEA_MSTR
+          WHERE CUBE_ID = #{cubeId}
+      UNION ALL
+      SELECT	CUBE_ID as cubeId
+            ,MEA_GRP_UNI_NM as uniqueName
+            ,'0' AS parentId
+            ,MEA_GRP_CAPTION as caption
+            ,MEA_GRP_ORDINAL AS ordinal
+            FROM	CUBE_MEA_GRP_MSTR
+            WHERE	CUBE_ID = #{cubeId}
+      ORDER BY ordinal
+    </select>
+
   	<select id="selectUserAuthDsList" parameterType="String" resultMap="DsMstr">
 	    SELECT
 	      DS_MSTR.DS_ID AS DS_ID,

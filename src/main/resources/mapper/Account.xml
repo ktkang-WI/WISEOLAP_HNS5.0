@@ -52,6 +52,16 @@
       <result column="DATA_XML" property="dataXml" javaType="String"/>
     </resultMap>
 
+    <resultMap id="GroupMeasureDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupMeasureDTO">
+      <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="DATA_XML" property="dataXml" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="UserMeasureDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserMeasureDTO">
+      <result column="USER_NO" property="userNo" javaType="int"/>
+      <result column="DATA_XML" property="dataXml" javaType="String"/>
+    </resultMap>
+
     <resultMap id="GroupFolderDTO" type="com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO">
       <result column="GRP_ID" property="grpId" javaType="int"/>
       <result column="GRP_NM" property="grpNm" javaType="String"/>
@@ -209,6 +219,20 @@
           GRP_AUTH_DATA_MSTR.DATA_XML
           FROM GRP_MSTR INNER JOIN GRP_AUTH_DATA_MSTR
           ON GRP_MSTR.GRP_ID = GRP_AUTH_DATA_MSTR.GRP_ID
+    </select>
+
+    <select id="selectGroupMeasure" resultMap="GroupMeasureDTO">
+      SELECT
+          GRP_ID,
+          DATA_XML
+          FROM GRP_AUTH_MEA_MSTR
+    </select>
+
+    <select id="selectUserMeasure" resultMap="UserMeasureDTO">
+      SELECT
+          USER_NO,
+          DATA_XML
+          FROM USER_AUTH_MEA_MSTR
     </select>
 
     <select id="selectGroupFolder" resultMap="GroupFolderDTO">
@@ -711,6 +735,54 @@
       </foreach>
       SELECT * FROM DUAL
     </insert>
+
+    <insert id="putGroupMeasure" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+            INTO GRP_AUTH_MEA_MSTR(
+                GRP_ID,
+                DATA_XML
+            )
+            VALUES
+            (
+                #{item.grpId, jdbcType=INTEGER},
+                #{item.dataXml, jdbcType=NCLOB}
+            )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteGroupMeasure" parameterType="java.util.List">
+      DELETE FROM GRP_AUTH_MEA_MSTR
+              WHERE GRP_ID IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.grpId, jdbcType=INTEGER}
+      </foreach>
+    </delete>
+
+    <insert id="putUserMeasure" parameterType="java.util.List">
+      INSERT ALL
+      <foreach collection="list" item="item" index="index">
+            INTO USER_AUTH_MEA_MSTR(
+                USER_NO,
+                DATA_XML
+            )
+            VALUES
+            (
+                #{item.userNo, jdbcType=INTEGER},
+                #{item.dataXml, jdbcType=NCLOB}
+            )
+      </foreach>
+      SELECT * FROM DUAL
+    </insert>
+
+    <delete id="deleteUserMeasure" parameterType="java.util.List">
+      DELETE FROM USER_AUTH_MEA_MSTR
+              WHERE USER_NO IN
+      <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.userNo, jdbcType=INTEGER}
+      </foreach>
+    </delete>
 
 
     <update id="updateUserPasswd" parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
