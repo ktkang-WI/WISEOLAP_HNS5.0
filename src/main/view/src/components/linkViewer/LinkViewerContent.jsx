@@ -168,7 +168,7 @@ const LinkViewerContent = ({children}) => {
         dispatch(setDesignerMode(reportType));
         await loadReport(data);
 
-        if (data.promptYn === 'Y' || noFilter) {
+        if (data?.reports[0]?.options?.promptYn === 'Y' || noFilter) {
           querySearch();
         }
       }).catch((e) => {
