@@ -369,9 +369,10 @@
           )
           WHERE RN = 1
           ORDER BY ST_DT DESC
-          FETCH FIRST 10 ROWS ONLY
       ) A 
       LEFT JOIN REPORT_MSTR rm ON A.REPORT_ID = rm.REPORT_ID
+      WHERE rm.FLD_ID != 2405
+      FETCH FIRST 10 ROWS ONLY
     </select>
 
     <select id="selectFavoriteReportList" resultMap="ReportList">

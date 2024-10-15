@@ -2,8 +2,6 @@ package com.wise.MarketingPlatForm.auth.vo;
 
 import java.util.List;
 
-import com.wise.MarketingPlatForm.account.model.groups.measure.MeasureModel;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +17,6 @@ public class AuthDataDTO {
     List<AuthCubeVO> authCube;
     List<AuthDimVO> authDim;
     List<AuthMemVO> authMem;
-    List<MeasureModel> authMea;
 
     public boolean hasAuthCube(int dsViewId, int cubeId) {
         for (AuthCubeVO cubeVo : authCube) {

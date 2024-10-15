@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.wise.MarketingPlatForm.account.model.groups.measure.MeasureModel;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.AuthDataDTO;
 import com.wise.MarketingPlatForm.dataset.dao.CubeDAO;
@@ -113,30 +112,11 @@ public class CubeService {
 
         // 측정값 컬럼 불러오기
         List<CubeMeaColEntity> cubeMeaColEntities = cubeDAO.selectCubeMeaColumns(cubeId);
-        int cubeIdNumber = Integer.parseInt(cubeId);
-        MeasureModel target = null;
-
-        for (MeasureModel model : auth.getAuthMea()) {
-            if (model.getCubeId() == cubeIdNumber) {
-                if (target == null) {
-                    target = model;
-                } else {
-                    target.getMeasures().addAll(model.getMeasures());
-                }
-            }
-        }
         
-        Set<String> authMeas = new HashSet();
-
-        if (target != null) {
-            authMeas = new HashSet<>(target.getMeasures());
-        }
-
         for (CubeMeaColEntity entity : cubeMeaColEntities) {
             if (!entity.isVisible()) continue;
-            
-            if (authMeas.contains(entity.getUniqueName())) {
-                fields.add(CubeFieldVO.builder()
+            // 권한 있는 차원의 컬럼만 추가
+            fields.add(CubeFieldVO.builder()
                     .type(DataFieldType.MEA)
                     .visible(entity.isVisible())
                     .order(entity.getMeaOrder())
@@ -148,21 +128,6 @@ public class CubeService {
                     .summaryType(entity.getSummaryType())
                     .folder(entity.getFolder())
                     .build());
-            } else {
-                fields.add(CubeFieldVO.builder()
-                .type(DataFieldType.MEA)
-                .visible(false)
-                .order(entity.getMeaOrder())
-                .name(entity.getCaptionName())
-                .parentId(entity.getFolder() != null ? entity.getTableName() + ".[" + entity.getFolder() + "]" : entity.getTableName())
-                .dataType(entity.getDataType())
-                .uniqueName(entity.getUniqueName())
-                .description(entity.getDescription())
-                .summaryType(entity.getSummaryType())
-                .folder(entity.getFolder())
-                .build());
-            }
-
 
             // 표시 폴더 존재 여부 및 폴더가 중복 추가 되지 않게 방지.
             if (entity.getFolder() == null || isMakedFolder(tempFolder, entity)) continue;

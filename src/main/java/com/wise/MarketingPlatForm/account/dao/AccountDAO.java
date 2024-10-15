@@ -10,13 +10,11 @@ import com.wise.MarketingPlatForm.account.dto.group.GroupDataDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupDsDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
-import com.wise.MarketingPlatForm.account.dto.group.GroupMeasureDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserAppDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDataDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
-import com.wise.MarketingPlatForm.account.dto.user.UserMeasureDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDatasetMstrEntity;
@@ -35,7 +33,6 @@ import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 public interface AccountDAO {
   public List<UserMstrEntity> selectUserMstr(UserSelectorDTO userSelector);
   public List<UserDataDTO> selectUserData();
-  public List<UserMeasureDTO> selectUserMeasure();
   public List<UserFolderDTO> selectUserFolder();
   public List<UserDsDTO> selectUserDs();
   public List<UserDatasetDTO> selectUserDataset();
@@ -53,8 +50,6 @@ public interface AccountDAO {
   public boolean putUserFolder(List<UserAuthReportMstrEntity> userFolderMstr);
   public boolean deleteUserData(List<UserAuthDataMstrEntity> userDataMstr);
   public boolean putUserData(List<UserAuthDataMstrEntity> userDataMstr);
-  public boolean deleteUserMeasure(List<UserAuthDataMstrEntity> userDataMstr);
-  public boolean putUserMeasure(List<UserAuthDataMstrEntity> userDataMstr);
   public boolean deleteUserDatasetAll();
   public boolean deleteUserDsAll();
   public boolean deleteUserFolderAll();
@@ -62,7 +57,6 @@ public interface AccountDAO {
   public List<GroupMstrEntity> selectGroupMstr();
   public List<UserGroupDTO> selectUserJoinGroup();
   public List<GroupDataDTO> selectGroupData();
-  public List<GroupMeasureDTO> selectGroupMeasure();
   public List<GroupFolderDTO> selectGroupFolder();
   public List<GroupDsDTO> selectGroupDs();
   public List<GroupAppDTO> selectGroupApp();
@@ -83,8 +77,6 @@ public interface AccountDAO {
   public boolean deleteUserDataAll();
   public boolean deleteGroupDataAll();
   public boolean putGroupData(List<GroupAuthDataMstrEntity> groupDataMstr);
-  public boolean deleteGroupMeasure(List<GroupAuthDataMstrEntity> groupDataMstr);
-  public boolean putGroupMeasure(List<GroupAuthDataMstrEntity> groupDataMstr);
   public boolean deleteGroupDsAll();
   public boolean deleteGroupFolderAll();
   public boolean deleteGroupDatasetAll();

@@ -19,25 +19,21 @@ import localizedString from 'config/localization';
 import icoEdit from 'assets/image/icon/auth/ico_edit.png';
 import useModal from 'hooks/useModal';
 
-const getDsViewKey = (dataSetMode, data, nextId, currentTab) => {
-  const key = currentTab == path.GROUP_MEASURE ||
-    currentTab == path.USER_MEASURE ? 'cubeId' : 'dsViewId';
+const getDsViewKey = (dataSetMode, data, nextId) => {
   const prevKeys = getUserOrGroupOrigin(dataSetMode, data, nextId) || [];
   const nextKeys = getUserOrGroupOriginNext(dataSetMode, data, nextId) || [];
   const notNullPrevKey = prevKeys?.datas?.filter((cube) => {
     const cubeId = cube?.cubeId?.length ?? 0 != 0;
     const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
-    const measures = cube?.measures?.length ?? 0 != 0;
-    return cubeId || dsViewDim || measures;
+    return cubeId || dsViewDim;
   });
   const notNullNextKey = nextKeys?.datas?.filter((cube) => {
     const cubeId = cube?.cubeId?.length ?? 0 != 0;
     const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
-    const measures = cube?.measures?.length ?? 0 != 0;
-    return cubeId || dsViewDim || measures;
+    return cubeId || dsViewDim;
   });
-  let prevKey = notNullPrevKey?.map((cube) => cube[key]) ?? [];
-  let nextKey = notNullNextKey?.map((cube) => cube[key]) ?? [];
+  const prevKey = notNullPrevKey?.map((cube) => cube.dsViewId) ?? [];
+  const nextKey = notNullNextKey?.map((cube) => cube.dsViewId) ?? [];
   const editKey = new Set();
 
   nextKey?.forEach((id) => {
@@ -46,31 +42,15 @@ const getDsViewKey = (dataSetMode, data, nextId, currentTab) => {
     }
   });
 
-  if (key == 'cubeId') {
-    _.cloneDeep(editKey).forEach((cubeId) => {
-      editKey.delete(cubeId);
-
-      const dsViewId = notNullNextKey?.find(
-          (k) => k.cubeId == cubeId)?.dsViewId;
-
-      editKey.add(dsViewId);
-    });
-
-    prevKey = notNullPrevKey?.map((cube) => cube.dsViewId) ?? [];
-    nextKey = notNullNextKey?.map((cube) => cube.dsViewId) ?? [];
-  }
-
   notNullPrevKey?.forEach((prevItem) => {
     const nextItem = notNullNextKey.find((item) =>
-      item[key] === prevItem[key]);
+      item.dsViewId === prevItem.dsViewId);
     const prevStringify =
     JSON.stringify(prevItem?.cubeId) +
-    JSON.stringify(prevItem?.dsViewDim) +
-    JSON.stringify(prevItem?.measures);
+    JSON.stringify(prevItem?.dsViewDim);
     const nextStringify =
     JSON.stringify(nextItem?.cubeId) +
-    JSON.stringify(nextItem?.dsViewDim) +
-    JSON.stringify(nextItem?.measures);
+    JSON.stringify(nextItem?.dsViewDim);
     if (prevStringify !== nextStringify) {
       editKey.add(prevItem.dsViewId);
     }
@@ -103,8 +83,7 @@ const setDsViewKey = (prevKey, editKey, dataSource, setDataSource) => {
   }
 };
 
-const DatasourceViewList = ({
-  mainKey, dependency, setDsViewId, setCubeId = () => {}}) => {
+const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
   // context
   const getContext = useContext(AuthorityContext);
   const [currentTab] = getContext.state.currentTab;
@@ -115,8 +94,7 @@ const DatasourceViewList = ({
   const pageReload = getContext.state.pageReload;
   const data = getContext.state.data;
   const dataSetMode =
-  currentTab === path.GROUP_DATA || currentTab === path.GROUP_MEASURE ?
-  mode.GROUP : mode.USER;
+  currentTab === path.GROUP_DATA ? mode.GROUP : mode.USER;
   const {alert} = useModal();
 
   useEffect(() => {
@@ -130,8 +108,7 @@ const DatasourceViewList = ({
           datas: []
         });
       }
-      const {prevKey, editKey} = getDsViewKey(
-          dataSetMode, data, nextId, currentTab);
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
       setDsViewKey(prevKey, editKey, dataSource, setDataSource);
     };
     setSelectedKeys([]);
@@ -139,7 +116,6 @@ const DatasourceViewList = ({
   }, [pageReload, dependency]);
 
   const handleSelectedKey = (selectedItems) => {
-    setCubeId(0);
     if (!selected?.user?.next && !selected?.group?.next) {
       alert(localizedString.clickMe);
       setDsViewId(0);
@@ -151,8 +127,7 @@ const DatasourceViewList = ({
 
       const {nextId} = getKeys(dataSetMode, selected);
       if (!nextId) return;
-      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId,
-          currentTab);
+      const {prevKey, editKey} = getDsViewKey(dataSetMode, data, nextId);
       setDsViewKey(prevKey, editKey, dataSource, setDataSource);
     }
   };

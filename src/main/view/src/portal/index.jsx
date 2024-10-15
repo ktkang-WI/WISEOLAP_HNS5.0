@@ -303,7 +303,17 @@ const Portal = () => {
                 value={date}
                 buttons={[]}
                 onValueChanged={(e) => setDate(e.value)}
-                displayFormat={'yyyy.MM.dd'}
+                displayFormat={(date) => {
+                  if (!date) return '';
+
+                  const days = ['일', '월', '화', '수', '목', '금', '토'];
+                  const year = date.getFullYear();
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const day = String(date.getDate()).padStart(2, '0');
+                  const dayOfWeek = days[date.getDay()];
+
+                  return `${year}.${month}.${day}(${dayOfWeek})`;
+                }}
                 focusStateEnabled={false}
                 hoverStateEnabled={false}
                 openOnFieldClick={true}

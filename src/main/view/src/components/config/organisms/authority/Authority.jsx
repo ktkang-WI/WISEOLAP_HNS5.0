@@ -15,18 +15,15 @@ import ConfigTabs from '../common/ConfigTabs';
 import saveReport from 'assets/image/icon/button/save.png';
 import GroupAppAuthority from './appAuthority/GroupAppAuthority';
 import UserAppAuthority from './appAuthority/UserAppAutority';
-import MeasureAuthority from './measureAuthority/MeasureAuthority';
 
 export const AuthorityContext = createContext();
 export const path = {
   'GROUP_DATA': '/account/group/data',
-  'GROUP_MEASURE': '/account/group/measure',
   'GROUP_REPORT': '/account/group/folder',
   'GROUP_DATASET': '/account/group/dataset',
   'GROUP_DATASOURCE': '/account/group/ds',
   'GROUP_APP': '/account/group/app',
   'USER_DATA': '/account/user/data',
-  'USER_MEASURE': '/account/user/measure',
   'USER_REPORT': '/account/user/folder',
   'USER_DATASET': '/account/user/dataset',
   'USER_DATASOURCE': '/account/user/ds',
@@ -51,14 +48,6 @@ const tabItems = [
       mainKey: path.GROUP_DATA
     },
     component: DataAuthority
-  },
-  {
-    value: path.GROUP_MEASURE,
-    text: '그룹 측정값',
-    props: {
-      mainKey: path.GROUP_MEASURE
-    },
-    component: MeasureAuthority
   },
   {
     value: path.GROUP_REPORT,
@@ -91,14 +80,6 @@ const tabItems = [
       mainKey: path.USER_DATA
     },
     component: DataAuthority
-  },
-  {
-    value: path.USER_MEASURE,
-    text: '사용자 측정값',
-    props: {
-      mainKey: path.USER_MEASURE
-    },
-    component: MeasureAuthority
   },
   {
     value: path.USER_REPORT,
@@ -146,16 +127,6 @@ const getStringFy = (prevItem, nextItem, currentTab) => {
     const nextItemDatas =
       nextItem?.datas?.filter((d) =>
         d.cubeId.length != 0 || d.dsViewDim.length != 0);
-    return JSON.stringify(prevItemDatas) !==
-           JSON.stringify(nextItemDatas);
-  } else if (
-    currentTab == path.GROUP_MEASURE ||
-    currentTab == path.USER_MEASURE
-  ) {
-    const prevItemDatas =
-      prevItem?.datas?.filter((d) => d.measures.length);
-    const nextItemDatas =
-      nextItem?.datas?.filter((d) => d.measures.length);
     return JSON.stringify(prevItemDatas) !==
            JSON.stringify(nextItemDatas);
   } else if (
@@ -218,18 +189,6 @@ export const getUserGroupNextKeys = (currentTab, data) => {
       return sizeIsOk && isOk;
     });
   } else if (
-    currentTab == path.GROUP_MEASURE ||
-    currentTab == path.USER_MEASURE
-  ) {
-    result = data.next.filter((d) => {
-      const sizeIsOk = d.datas.length > 0;
-      const isOk = d.datas.some((cube) => {
-        const measures = cube?.measures?.length ?? 0 != 0;
-        return measures;
-      });
-      return sizeIsOk && isOk;
-    });
-  } else if (
     currentTab == path.GROUP_APP ||
     currentTab == path.USER_APP
   ) {
@@ -264,18 +223,6 @@ export const getUserGroupKeys = (currentTab, data) => {
         const cubeId = cube?.cubeId?.length ?? 0 != 0;
         const dsViewDim = cube?.dsViewDim?.length ?? 0 != 0;
         return cubeId || dsViewDim;
-      });
-      return sizeIsOk && isOk;
-    });
-  } else if (
-    currentTab == path.GROUP_MEASURE ||
-    currentTab == path.USER_MEASURE
-  ) {
-    result = data.prev.filter((d) => {
-      const sizeIsOk = d.datas.length > 0;
-      const isOk = d.datas.some((cube) => {
-        const measures = cube?.measures?.length ?? 0 != 0;
-        return measures;
       });
       return sizeIsOk && isOk;
     });
@@ -432,8 +379,6 @@ const Authority = () => {
       setCurrentTab(path);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setInnerData([]);
-      setCurrentTab(path);
     }
   };
 
