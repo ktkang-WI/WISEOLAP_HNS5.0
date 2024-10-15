@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -126,6 +127,11 @@ public class LoginController {
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         LoginLogDTO logDTO = LoginLogDTO.builder()
         .logType("LOGOUT")
         .eventStamp(currentTime)
