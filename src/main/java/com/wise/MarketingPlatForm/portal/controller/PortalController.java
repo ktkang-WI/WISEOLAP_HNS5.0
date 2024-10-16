@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.portal.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,4 +37,12 @@ public class PortalController {
 
         return ResponseEntity.ok().body(cardList);
     }
+
+    @GetMapping("/max-date")
+    public ResponseEntity<String> getMaxDate() {
+        String date = portalServie.getMaxDate();
+
+        return ResponseEntity.ok().body(date);
+    }
+    
 }

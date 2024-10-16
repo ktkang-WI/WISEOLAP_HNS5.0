@@ -8,3 +8,7 @@ export const getCardData = (date, type) => {
     type
   }});
 };
+
+export const getMaxDate = () => {
+  return axios.get(path + '/max-date');
+};

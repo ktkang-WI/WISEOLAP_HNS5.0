@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {format} from 'date-fns';
+import {format, parse} from 'date-fns';
 import './css/reset.css';
 import './css/style.css';
 import ReportBox from './components/ReportBox';
@@ -88,6 +88,7 @@ const Portal = () => {
   const nav = useNavigate();
   const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
   const [type, setType] = useState('조회일');
+  const [maxDate, setMaxDate] = useState(new Date());
   const [reportList, setReportList] = useState([]);
   const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
@@ -111,6 +112,12 @@ const Portal = () => {
       const newDate = new Date();
       newDate.setDate(newDate.getDate() - 1);
       setDate(newDate);
+
+      models.Portal.getMaxDate().then((data) => {
+        if (data.status === 200) {
+          setMaxDate(parse(data.data + '', 'yyyyMMdd', new Date()));
+        }
+      });
     }, 3600000);
 
     return () => clearInterval(itv);
@@ -145,6 +152,12 @@ const Portal = () => {
       if (data.status == 200) {
         setUserId(data.data.userId);
         setUserNm(data.data.userNm);
+      }
+    });
+
+    models.Portal.getMaxDate().then((data) => {
+      if (data.status === 200) {
+        setMaxDate(parse(data.data + '', 'yyyyMMdd', new Date()));
       }
     });
 
@@ -318,7 +331,7 @@ const Portal = () => {
               <DateBox
                 value={date}
                 buttons={[]}
-                max={new Date()}
+                max={maxDate}
                 onValueChanged={(e) => setDate(e.value)}
                 displayFormat={(date) => {
                   if (!date) return '';
