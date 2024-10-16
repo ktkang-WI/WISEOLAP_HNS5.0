@@ -13,7 +13,8 @@ import DevDataGrid,
   Scrolling,
   Selection,
   HeaderFilter,
-  Sorting
+  Sorting,
+  Search
 } from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
@@ -312,7 +313,9 @@ const DataGrid = ({setItemExports, id, item}) => {
         e.items = e.items.concat(contextMenu);
       }}
     >
-      <HeaderFilter visible={true} />
+      <HeaderFilter visible={true}>
+        <Search enabled={true} />
+      </HeaderFilter>
       <Sorting mode="multiple" />
       <Selection
         mode={(interactiveOption.enabled && interactiveOption.mode) || 'none'}
