@@ -82,11 +82,9 @@ const quickBoxs = [
 
 const Portal = () => {
   const PORTAL_URL = window.location.origin + '/editds';
-  const defaultDate = new Date();
-  defaultDate.setDate(defaultDate.getDate() - 1);
 
   const nav = useNavigate();
-  const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
+  const [date, setDate] = useState(null);
   const [type, setType] = useState('조회일');
   const [maxDate, setMaxDate] = useState(new Date());
   const [reportList, setReportList] = useState([]);
@@ -109,13 +107,17 @@ const Portal = () => {
   useEffect(() => {
     // 3600000
     const itv = setInterval(() => {
-      const newDate = new Date();
-      newDate.setDate(newDate.getDate() - 1);
-      setDate(newDate);
-
       models.Portal.getMaxDate().then((data) => {
         if (data.status === 200) {
-          setMaxDate(parse(data.data + '', 'yyyyMMdd', new Date()));
+          const newDate = parse(data.data + '', 'yyyyMMdd', new Date());
+          setMaxDate(newDate);
+          setDate(newDate);
+        } else {
+          const defaultDate = new Date();
+          defaultDate.setDate(defaultDate.getDate() - 1);
+
+          setMaxDate(defaultDate);
+          setDate(defaultDate);
         }
       });
     }, 3600000);
@@ -124,6 +126,7 @@ const Portal = () => {
   }, [date]);
 
   useEffect(() => {
+    if (!date) return;
     models.Portal.getCardData(format(date, 'yyyyMMdd'), type).then((data) => {
       if (data.status == 200 && data.data) {
         const titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
@@ -157,7 +160,9 @@ const Portal = () => {
 
     models.Portal.getMaxDate().then((data) => {
       if (data.status === 200) {
-        setMaxDate(parse(data.data + '', 'yyyyMMdd', new Date()));
+        const newDate = parse(data.data + '', 'yyyyMMdd', new Date());
+        setMaxDate(newDate);
+        setDate(newDate);
       }
     });
 
