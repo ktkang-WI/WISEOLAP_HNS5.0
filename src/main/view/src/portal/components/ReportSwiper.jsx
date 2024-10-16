@@ -8,7 +8,12 @@ import {format} from 'date-fns';
 import React, {useMemo} from 'react';
 
 const ReportSwiper = ({portalUrl, userId, date}) => {
-  const reportIds = [13394, 13395, 13396, 13397]; // , 13398
+  let reportIds = []; // , 13398
+
+  if (date != null) {
+    reportIds = [13394, 13395, 13396, 13397];
+  }
+
   const cache = useMemo(() => ({}), [date]);
 
   const getComponent = (id) => {

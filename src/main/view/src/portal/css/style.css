@@ -838,3 +838,11 @@
   border-radius: 100%;
   color: #337ab7;
 }
+
+.dx-calendar-cell.dx-calendar-empty-cell.dx-calendar-today.dx-state-hover span {
+  color: #337ab7 !important;
+}
+
+.dx-calendar-cell.dx-calendar-empty-cell.dx-calendar-today {
+  opacity: 0.24;
+}

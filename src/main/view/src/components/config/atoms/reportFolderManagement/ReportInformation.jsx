@@ -18,6 +18,7 @@ const ReportInformation = ({row, setRow, flag}) => {
     const formData = ref.current.props;
     const reportId = formData.formData.reportId;
     const reportType = formData.formData.reportType;
+    const prompt = formData.formData.promptYn;
 
     if (formData.formData.length === 0) return;
     if (reportId === 0) return;
@@ -28,6 +29,7 @@ const ReportInformation = ({row, setRow, flag}) => {
     window.sessionStorage.setItem('flag', 'reportManagement');
     window.sessionStorage.setItem('reportId', reportId);
     window.sessionStorage.setItem('reportType', reportType);
+    window.sessionStorage.setItem('prompt', prompt.toString());
 
     const newWindow =
       window.open(`${getFullUrl()}/${reportPosision}`, '_blank');

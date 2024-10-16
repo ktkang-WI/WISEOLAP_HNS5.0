@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.portal.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -96,11 +98,31 @@ public class PortalService {
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n", date, date, date, date);
 
         MartResultDTO martResultDTO = null;
-        System.out.println(sql);
 
         martResultDTO = martDAO.select(3465, sql);
         
         return martResultDTO.getRowData();
+    }
+
+    public String getMaxDate() {
+        String sql = "SELECT IN_DATA_DT FROM MISDM.VW_DM_F_MAIN_SCRN_DAIL_GATHER_ISDT";
+
+        MartResultDTO martResultDTO = null;
+
+        try {
+            martResultDTO = martDAO.select(3465, sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if (martResultDTO == null || martResultDTO.getRowData().size() == 0) {
+            LocalDate currentDate = LocalDate.now();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");    
+            return currentDate.minusDays(1).format(formatter);
+        } else {
+            return martResultDTO.getRowData().get(0).get("IN_DATA_DT").toString();
+        }
     }
 
 }
