@@ -106,13 +106,6 @@ const Portal = () => {
   }, [nav]);
 
   useEffect(() => {
-    models.Report.getUserInfo().then((data) => {
-      if (data.status == 200) {
-        setUserId(data.data.userId);
-        setUserNm(data.data.userNm);
-      }
-    });
-
     // 3600000
     const itv = setInterval(() => {
       const newDate = new Date();
@@ -148,6 +141,13 @@ const Portal = () => {
   }, [date, type]);
 
   useEffect(() => {
+    models.Report.getUserInfo().then((data) => {
+      if (data.status == 200) {
+        setUserId(data.data.userId);
+        setUserNm(data.data.userNm);
+      }
+    });
+
     models.Report.getPortalMenuList(folders).then((data) => {
       if (data.status == 200) {
         const publicReport = data.data;

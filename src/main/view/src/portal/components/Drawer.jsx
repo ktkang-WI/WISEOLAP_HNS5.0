@@ -53,7 +53,7 @@ const DrawerMenu = ({data, portalUrl}) => {
                       <div
                         onClick={() => {
                           // eslint-disable-next-line max-len
-                          const href = `${portalUrl}/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&srl=true`;
+                          const href = `${portalUrl}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`;
                           const newWindow = window.open(href, '_blank');
                           if (newWindow) {
                             newWindow.focus();
