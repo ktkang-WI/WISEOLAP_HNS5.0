@@ -131,21 +131,26 @@ export default function useReportLoad() {
   };
 
   const getReport = async (reportId, reportType) => {
+    const prompt = window.sessionStorage.getItem('prompt');
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(reportId);
     }
-    const res = await models.Report.getReportById(reportId).then(({data}) => {
-      try {
-        if (reportType) {
-          dispatch(setDesignerMode(reportType));
-        }
-        loadReport(data);
-        return true;
-      } catch (e) {
-        alert(localizedString.reportCorrupted);
-        return false;
-      }
-    }).catch(() => {
+    const res = await models.Report.getReportById(reportId).then(
+        async ({data}) => {
+          try {
+            if (reportType) {
+              dispatch(setDesignerMode(reportType));
+            }
+            await loadReport(data);
+            if (prompt == 'true') {
+              querySearch();
+            }
+            return true;
+          } catch (e) {
+            alert(localizedString.reportCorrupted);
+            return false;
+          }
+        }).catch(() => {
       alert(localizedString.reportCorrupted);
       return false;
     }).finally(() => {
