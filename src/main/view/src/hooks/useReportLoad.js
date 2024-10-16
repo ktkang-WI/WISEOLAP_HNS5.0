@@ -131,6 +131,9 @@ export default function useReportLoad() {
   };
 
   const getReport = async (reportId, reportType) => {
+    if (reportType === DesignerMode['EXCEL']) {
+      await setExcelFile(reportId);
+    }
     const res = await models.Report.getReportById(reportId).then(({data}) => {
       try {
         if (reportType) {
