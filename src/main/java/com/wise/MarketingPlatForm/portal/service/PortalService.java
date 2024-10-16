@@ -17,7 +17,14 @@ public class PortalService {
         this.martDAO = martDAO;
     }
 
-    public List<Map<String, Object>> getCardData(String date) {
+    public List<Map<String, Object>> getCardData(String date, String type) {
+        if (type.equals("조회일")) {
+            type = "";
+        } else {
+            type = "_" + type;
+        }
+
+        // 월누적, 년누적
         String sql = String.format(
             "-- 카드_01.예상취급액\n" +
             "SELECT \n" +
@@ -33,7 +40,7 @@ public class PortalService {
             //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
             //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_01.예상취급액'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_01.예상취급액" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +  // %s는 String 변수가 들어갈 위치
             "\n" +
             "UNION ALL\n" +
@@ -50,7 +57,7 @@ public class PortalService {
             "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
             "    END \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
             "\n" +
             "UNION ALL\n" +
@@ -69,7 +76,7 @@ public class PortalService {
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_03.실현공헌이익'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_03.실현공헌이익" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
             "\n" +
             "UNION ALL\n" +
@@ -85,10 +92,11 @@ public class PortalService {
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n", date, date, date, date);
 
         MartResultDTO martResultDTO = null;
+        System.out.println(sql);
 
         martResultDTO = martDAO.select(3465, sql);
         

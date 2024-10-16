@@ -87,6 +87,7 @@ const Portal = () => {
 
   const nav = useNavigate();
   const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
+  const [type, setType] = useState('조회일');
   const [reportList, setReportList] = useState([]);
   const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
@@ -112,7 +113,18 @@ const Portal = () => {
       }
     });
 
-    models.Portal.getCardData(format(date, 'yyyyMMdd')).then((data) => {
+    // 3600000
+    const itv = setInterval(() => {
+      const newDate = new Date();
+      newDate.setDate(newDate.getDate() - 1);
+      setDate(newDate);
+    }, 3600000);
+
+    return () => clearInterval(itv);
+  }, [date]);
+
+  useEffect(() => {
+    models.Portal.getCardData(format(date, 'yyyyMMdd'), type).then((data) => {
       if (data.status == 200 && data.data) {
         const titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
         const _cardData = titles.map((title, i) => {
@@ -133,14 +145,7 @@ const Portal = () => {
         setCardData(_cardData);
       }
     });
-
-    // 3600000
-    const itv = setInterval(() => {
-      setDate(new Date());
-    }, 3600000);
-
-    return () => clearInterval(itv);
-  }, [date]);
+  }, [date, type]);
 
   useEffect(() => {
     models.Report.getPortalMenuList(folders).then((data) => {
@@ -330,6 +335,23 @@ const Portal = () => {
                 hoverStateEnabled={false}
                 openOnFieldClick={true}
               ></DateBox>
+            </li>
+            <li className='pay_box_button_wrap'>
+              {
+                ['조회일', '월누적', '년누적'].map((title, i) =>
+                  <div
+                    key={`pay_box${i}`}
+                    className={'pay_box_button' +
+                      (title == type ? ' active' : '')
+                    }
+                    onClick={(e) => {
+                      setType(title);
+                    }}
+                  >
+                    {title}
+                  </div>
+                )
+              }
             </li>
           </ul>
           {
