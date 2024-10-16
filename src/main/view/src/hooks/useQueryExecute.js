@@ -702,6 +702,9 @@ const useQueryExecute = () => {
         const info = res?.data || {};
         _value = [];
         _value = value.map((v) => {
+          if (v == '[MD_CODE]') return info.mdCode;
+          if (v == '[WI_SESSION_ID]') return info.userId;
+
           return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
               .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
         });
@@ -751,6 +754,9 @@ const useQueryExecute = () => {
               const info = res?.data || {};
 
               data.value = data.value.map((v) => {
+                if (v == '[MD_CODE]') return info.mdCode;
+                if (v == '[WI_SESSION_ID]') return info.userId;
+
                 return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
                     .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
               });
