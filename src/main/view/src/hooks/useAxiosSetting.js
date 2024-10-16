@@ -9,10 +9,6 @@ const contextRoot =
 
 export let requestPath = [];
 
-const acceptDuple = [
-  '/dataset/param-list-items',
-  '/report/item-data'
-];
 export const abortController = (controllers, session) => {
   controllers[session]?.forEach((controller) => {
     controller.abort();
@@ -31,11 +27,6 @@ export default function useAxiosSetting() {
   const controllers = {};
 
   const createController = (requestKey) => {
-    // 무한 로딩의 가능성이 있어서
-    // /dataset/param-list-items 처럼 여러번 호출 가능한 부분은 작업 취소시 전부 취소 해줘야함.
-    // TODO : 언급한데로 여러번 호출 가능성이 있는 path는 따로 추가 하여 조건에 추가 할 예정.
-    if (requestPath.includes(requestKey) &&
-    !acceptDuple.includes(requestKey)) return;
     requestPath.push(requestKey);
 
     const controller = new AbortController();
@@ -67,11 +58,21 @@ export default function useAxiosSetting() {
   axios.interceptors.response.use(
       (response) => {
         dispatch(actions.endJob());
+        const idx =
+          requestPath.findIndex((path) => path === response.config.url);
+        if (idx > -1) {
+          requestPath =
+            requestPath.filter((_, index) => index !== idx);
+        }
         return response;
       },
       (error) => {
         // 아이템 마다 에러 발생 시 여러번 alert 호출 추후변경.
         dispatch(actions.endJobForce());
+        if (error.message === 'canceled') {
+          requestPath = [];
+        }
+        // TODO: 이행 후 에러 status 세분화
         if (error?.response?.status == 500) {
           if (error?.response?.config?.url !== '/login/login') {
             alert('관리자에게 문의 하세요.');
