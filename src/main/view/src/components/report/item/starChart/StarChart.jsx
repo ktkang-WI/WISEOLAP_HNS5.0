@@ -8,6 +8,9 @@ import {
 } from 'devextreme-react/polar-chart';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
+import {formatNumber, generateLabelSuffix}
+  from 'components/utils/NumberFormatUtility';
+import useItemSetting from '../util/hook/useItemSetting';
 
 const StarChart = ({
   setItemExports,
@@ -21,6 +24,8 @@ const StarChart = ({
   }
   const ref = useRef();
   const seriesNames = mart.data.info.seriesMeasureNames;
+  const {itemTools} = useItemSetting(item);
+  const {getDataField} = itemTools;
 
   useItemExport({
     id,
@@ -28,6 +33,11 @@ const StarChart = ({
     type: ItemType.STAR_CHART,
     data: mart?.data?.data,
     setItemExports});
+
+  const formats = getDataField().measure.reduce((acc, mea) => {
+    acc[mea.caption] = mea.format;
+    return acc;
+  }, {});
 
   return (
     <Wrapper
@@ -54,7 +64,20 @@ const StarChart = ({
           )
         }
         <CommonSeriesSettings type="line" />
-        <Tooltip enabled={true} />
+        <Tooltip
+          enabled={true}
+          customizeTooltip={(e, arg) => {
+            const format = formats[e.seriesName];
+
+            const labelSuffix = generateLabelSuffix(format);
+            const tooltipValue =
+              formatNumber(e.value, format, labelSuffix);
+            return {
+              text: `<b>${e.argument}</b><br/><b>${e.seriesName}</b>: ` +
+                `<p>${tooltipValue}</p>`
+            };
+          }}
+        />
       </PolarChart>
     </Wrapper>
   );
