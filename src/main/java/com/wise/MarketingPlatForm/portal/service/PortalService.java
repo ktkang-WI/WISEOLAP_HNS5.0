@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.portal.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -17,56 +19,95 @@ public class PortalService {
         this.martDAO = martDAO;
     }
 
-    public List<Map<String, Object>> getCardData(String date) {
+    public List<Map<String, Object>> getCardData(String date, String type) {
+        String moneyUnitStr = "백만원";
+        String humanUnitStr = "명";
+        int moneyUnit = 1_000_000;
+        int humanUnit = 1;
+        if (type.equals("조회일")) {
+            type = "";
+        } else {
+            type = "_" + type;
+        } 
+
+        if (type.equals("_년누적")) {
+            moneyUnitStr = "억원";
+            humanUnitStr = "천명";
+            moneyUnit = 100_000_000;
+            humanUnit = 1_000;
+        }
+
+
+
+        // 월누적, 년누적
         String sql = String.format(
             "-- 카드_01.예상취급액\n" +
             "SELECT \n" +
-            "    '예상취급액(백만원)' AS \"구분\",\n" +
+            "    '예상취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
-            "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
+            //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
+            //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_01.예상취급액'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_01.예상취급액" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +  // %s는 String 변수가 들어갈 위치
             "\n" +
             "UNION ALL\n" +
             "\n" +
             "-- 카드_02.실현취급액\n" +
             "SELECT \n" +
-            "    '실현취급액(백만원)' AS \"구분\",\n" +
+            "    '실현취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
-            "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
             "\n" +
             "UNION ALL\n" +
             "\n" +
             "-- 카드_03.실현공헌이익\n" +
             "SELECT \n" +
-            "    '실현공헌이익(백만원)' AS \"구분\",\n" +
+            "    '실현공헌이익(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
-            "    ROUND(MAIN_SCRN_AMT_2/1000000,0) AS \"금액\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
+            "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    END \"계획비\"\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_03.실현공헌이익'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_03.실현공헌이익" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n" +
             "\n" +
             "UNION ALL\n" +
             "\n" +
             "-- 카드_04.주문고객수\n" +
             "SELECT \n" +
-            "    '주문고객수(명)' AS \"구분\",\n" +
+            "    '주문고객수(" + humanUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
-            "    ROUND(MAIN_SCRN_AMT_2,0) AS \"금액\",  -- 금액 대신 '명'이지만 일관성 유지\n" +
-            "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
+            "    ROUND(MAIN_SCRN_AMT_2/" + humanUnit + ",0) AS \"금액\",\n" +
+            "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
+            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    END \"전년비\",\n" +
+            // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
-            "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수'\n" +
+            "WHERE MAIN_SCRN_TIT = '카드_04.주문고객수" + type+ "'\n" +
             "  AND MAIN_SCRN_GATHER_DATE = '%s'\n", date, date, date, date);
 
         MartResultDTO martResultDTO = null;
@@ -74,6 +115,27 @@ public class PortalService {
         martResultDTO = martDAO.select(3465, sql);
         
         return martResultDTO.getRowData();
+    }
+
+    public String getMaxDate() {
+        String sql = "SELECT IN_DATA_DT FROM MISDM.VW_DM_F_MAIN_SCRN_DAIL_GATHER_ISDT";
+
+        MartResultDTO martResultDTO = null;
+
+        try {
+            martResultDTO = martDAO.select(3465, sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if (martResultDTO == null || martResultDTO.getRowData().size() == 0) {
+            LocalDate currentDate = LocalDate.now();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");    
+            return currentDate.minusDays(1).format(formatter);
+        } else {
+            return martResultDTO.getRowData().get(0).get("IN_DATA_DT").toString();
+        }
     }
 
 }

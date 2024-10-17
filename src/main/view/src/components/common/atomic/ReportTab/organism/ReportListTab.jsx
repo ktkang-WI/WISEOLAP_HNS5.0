@@ -77,6 +77,18 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         }
       }, [onItemSelect]);
 
+  // paste 이벤트 처리: 붙여넣기 시 마지막 공백을 제거
+  const handleSearchValueChanged = (e) => {
+    const event = e.event.originalEvent || {};
+    let searchValue = e.value || '';
+
+    if (event.inputType === 'insertFromPaste') {
+      searchValue = searchValue.replace(/\s+$/, '');
+    }
+
+    dxRef.current.instance.option('searchValue', searchValue);
+  };
+
   return (
     <Wrapper
       width={width}
@@ -90,7 +102,8 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         keyExpr="uniqueId"
         noDataText="조회된 보고서가 없습니다."
         searchEditorOptions={{
-          placeholder: '검색'
+          placeholder: '검색',
+          onValueChanged: handleSearchValueChanged
         }}
         itemRender={itemRender}
         focusStateEnabled={true}

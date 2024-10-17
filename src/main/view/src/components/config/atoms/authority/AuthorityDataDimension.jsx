@@ -32,6 +32,7 @@ const AuthorityDataDimension = ({mainKey, dependency, dsViewId}) => {
   }, [selectedKeys]);
 
   useEffect(() => {
+    if (!dsViewId) return;
     models.Authority.getDsViewCol(dsViewId).then((res) => {
       if (res.status == 200) {
         const dsViewCol = res.data.data.map((col) => {

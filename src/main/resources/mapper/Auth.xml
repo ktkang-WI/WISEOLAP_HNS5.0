@@ -21,6 +21,7 @@
     <result column="RUN_MODE" property="runMode" javaType="String"/>
     <result column="HASH_YN" property="hashYn" javaType="String"/>
     <result column="MD_CD" property="mdCode" javaType="String"/>
+    <result column="PW_CHANGE_DT" property="pwChangeDt" javaType="String"/>
 	</resultMap>
 
   <resultMap id="AuthData" type="com.wise.MarketingPlatForm.auth.entity.AuthDataEntity">
@@ -39,6 +40,7 @@
   <resultMap id="AuthReport" type="com.wise.MarketingPlatForm.account.dto.AuthReportDTO">
     <result column="FLD_ID" property="fldId" javaType="int"/>
     <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+    <result column="AUTH_DATASOURCE" property="authDatasource" javaType="String"/>
   </resultMap>
 
 <!-- Mapper End -->
@@ -46,12 +48,13 @@
 <!-- Query -->
 
   <select id="selectUserById" resultMap="User">
-    SELECT um.*, MD_CD
-    FROM dm_d_oprt_md_gp md
-    LEFT JOIN USER_MSTR um ON um.USER_ID = md.md_user_id
-    WHERE um.USER_ID = #{userId}
-      AND um.DEL_YN = 'N'
-    <!-- SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N' -->
+    SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+  </select>
+
+  <select id="selectMdCode" resultType="java.lang.String">
+    SELECT DISTINCT md_cd 
+    FROM dm_d_oprt_md_gp
+    WHERE md_user_id = #{userId}
   </select>
 
   <select id="selectGroupMstrById" resultMap="GroupMstrEntity">
@@ -76,8 +79,9 @@
 
   <select id="selectGrpAuthReport" resultMap="AuthReport">
     SELECT 
-      FLD_ID
-      ,AUTH_PUBLISH 
+      FLD_ID,
+      AUTH_PUBLISH,
+      AUTH_DATASOURCE 
       FROM GRP_AUTH_REPORT_MSTR
       WHERE GRP_ID = #{grpId}
       AND FLD_ID = #{fldId}
@@ -85,13 +89,13 @@
 
   <select id="selectUserAuthReport" resultMap="AuthReport">
     SELECT 
-      FLD_ID
-      ,AUTH_PUBLISH 
+      FLD_ID,
+      AUTH_PUBLISH,
+      AUTH_DATASOURCE
       FROM USER_AUTH_REPORT_MSTR
       WHERE USER_NO = #{userNo}
       AND FLD_ID = #{fldId}
   </select>
-
 <!-- Query End -->
 
 </mapper>

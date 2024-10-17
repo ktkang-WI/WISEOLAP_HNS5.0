@@ -19,14 +19,13 @@ import ParameterSlice from 'redux/modules/ParameterSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import models from 'models';
 import localizedString from 'config/localization';
-import {getSeriesOptionInitFormat}
-  from 'redux/modules/SeriesOption/SeriesOptionFormat';
-import {seriesOptionInit} from 'redux/modules/SeriesOption/SeriesOptionSlice';
 import useModal from './useModal';
 import {getNewDataField}
   from 'components/common/atomic/DataColumnTab/utils/utility';
 import {currentDesignerExecution} from 'redux/selector/ExecuteSelector';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
+// eslint-disable-next-line max-len
+import {getSeriesOptionDefaultFormat} from 'redux/modules/SeriesOption/SeriesOptionFormat';
 
 // TODO: redux 적용 이후 해당 예제 참고하여 데이터 이동 구현
 // https://codesandbox.io/s/react-beautiful-dnd-copy-and-drag-5trm0?file=/index.js:4347-4351
@@ -69,16 +68,6 @@ const useDrag = () => {
   const comparePos = (destination, source) => {
     return destination && destination.droppableId == source.droppableId &&
         destination.index == source.index;
-  };
-
-  const onDragEndSeriesOption = (tempField, reportId) => {
-    if (tempField.type !== 'DIM') {
-      // seriesOptions 초기화
-      const tempSeriesOptionInit = getSeriesOptionInitFormat();
-      tempSeriesOptionInit.reportId = reportId;
-      tempSeriesOptionInit.fieldId = tempField.fieldId;
-      dispatch(seriesOptionInit(tempSeriesOptionInit));
-    }
   };
 
   const onDragStart = (e) => {
@@ -128,7 +117,9 @@ const useDrag = () => {
                     order ++,
                     cubeColumnInfo);
               newParam.dataset = [datasetId];
-
+              if (newParam.name.includes('DATE')) {
+                newParam.sortOrder = 'DESC';
+              }
               newParamInfo.push(newParam);
               newParamInfo.sort((a, b) => a.order - b.order);
 
@@ -277,22 +268,39 @@ const useDrag = () => {
               sourceField,
               dest.droppableId);
 
+          if (typeof tempField == 'string') {
+            alert(tempField);
+            dispatch(setItemField({reportId, dataField}));
+            return;
+          }
+
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
+
           dataField.datasetId = selectedDataset.datasetId;
           if (checkFieldLimit()) {
+            // eslint-disable-next-line max-len
+            if (tempField.category !== 'sortByItem' && tempField.category === 'measure') {
+              const seriesOption = getSeriesOptionDefaultFormat();
+              seriesOption.fieldId = tempField.fieldId;
+
+              if (dataField['seriesOptions']) {
+                // eslint-disable-next-line max-len
+                dataField['seriesOptions'] = [...dataField['seriesOptions'], seriesOption];
+              } else {
+                dataField['seriesOptions'] = [seriesOption];
+              }
+            }
+
             dispatch(setItemField({reportId, dataField}));
 
             // 뷰어게시 기능으로 데이터항목에 올리기전 체크해제 후 해제한 항목을 다시 올린경우 처리.
             if (selectedDataset.selectedFields) {
               dispatch(datasetAppliedFields(param));
             }
-            if (tempField.category !== 'sortByItem') {
-              onDragEndSeriesOption(tempField, reportId);
-            }
+
             if (isExecute) {
               dispatch(updateDesinerExecutionState(false));
             }
-            // 측정값을 정렬기준 항목에 추가하는 경우 불필요하게 시리즈 옵션도 추가되어 방지.
           }
         } else if (source.droppableId == dest.droppableId) {
           const sourceField = dataField[source.droppableId]
@@ -313,6 +321,11 @@ const useDrag = () => {
               dataFieldOption,
               sourceField[0],
               dest.droppableId);
+
+          if (typeof sourceField == 'string') {
+            alert(sourceField);
+            return;
+          }
 
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
@@ -335,15 +348,7 @@ const useDrag = () => {
           dataField[dest.droppableId].splice(dest.index, 0, sourceField);
 
           if (checkFieldLimit()) {
-            // 측정값에서 차원 및 정렬기준항목으로 이동. -> 시리즈옵션에서 제거.
-            if (source.droppableId === 'measure') {
-              dataField['seriesOptions'].splice(source.index, 1);
-            }
             dispatch(setItemField({reportId, dataField}));
-            // 차원 및 정렬기준 항목에서 측정값으로 이동 -> 시리즈옵션에 추가.
-            if (dest.droppableId === 'measure') {
-              onDragEndSeriesOption(sourceField, reportId);
-            }
           }
         }
       }

@@ -53,7 +53,7 @@ const Content = styled.div`
   }
 `;
 
-const MyPageDesignerElements = ({setConfig, data, items}) => {
+const MyPageDesignerElements = ({setConfig, data, items, prog}) => {
   const {openModal, confirm} = useModal();
 
   const onClickReset = (id) => {
@@ -69,6 +69,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
       data: data,
       title: modalTitle,
       onSubmit: (value) => {
+        // 변경.
+        if (value.id.indexOf('favorite') > -1) {
+          value.id = parseInt(value.id.substring(8, value.id.length));
+        }
         if (!itemId || !value) return;
         // 기본보고서 처럼 이름이 필요한경우.
         if (itemId.requiredNm) {
@@ -85,6 +89,10 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
   };
 
   const getDesignerSetting = (item) => {
+    if (data.operation) {
+      setConfig({});
+      return;
+    }
     const value =
         item.id.requiredNm ? data[item.id.requiredNm] : data[item.id];
 
@@ -121,6 +129,9 @@ const MyPageDesignerElements = ({setConfig, data, items}) => {
 
   return (
     items.map((item) => {
+      if ((item.id === 'maxReportQueryPeriod') && !prog.reportQueryPeriod) {
+        return null; // 해당 item을 렌더링하지 않음
+      }
       return (
         <>
           <Title title={item.title}>

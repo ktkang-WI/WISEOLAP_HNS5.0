@@ -10,6 +10,11 @@ import {
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import localizedString from 'config/localization';
 import styled from 'styled-components';
+// eslint-disable-next-line max-len
+import FolderListModal from 'components/config/atoms/reportFolderManagement/modal/FolderListModal';
+import useModal from 'hooks/useModal';
+import {DesignerMode} from 'components/config/configType';
+import DatasetType from 'components/dataset/utils/DatasetType';
 
 const StyledForm = styled(Form)`
   & .dx-empty-message {
@@ -17,12 +22,42 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const MyPageReportForm = ({data}, ref) => {
+const MyPageReportForm = ({data, setData, myPageFlag}, ref) => {
+  const {openModal} = useModal();
   const [cubeItem, setCubeItem] = useState(() => '');
+  const datasets = Array.isArray(data?.datasets) ?
+  _.cloneDeep(data.datasets) : [];
+  const isCube = datasets
+      .filter((dataset) => dataset.datasetType === DatasetType['CUBE'])
+      .length > 0;
+  const reportType = data?.type;
+
+  const folderSearchBtn = {
+    name: 'folderSearchBtn',
+    location: 'after',
+    options: {
+      visible: true,
+      stylingMode: 'text',
+      icon: 'search',
+      type: 'default',
+      disabled: false,
+      onClick: (e) => {
+        if (Object.keys(data).length > 0) {
+          openModal(FolderListModal, {
+            row: data,
+            setRow: setData,
+            myPageFlag: myPageFlag
+          });
+        }
+      }
+    }
+  };
 
   const getDatasetInfo = () => {
+    const datasetList = Array.isArray(data?.datasets) ?
+    _.cloneDeep(data.datasets) : [];
     return (
-      data?.datasets?.map((item, index) => {
+      datasetList?.map((item, index) => {
         const datasets = `datasets[${index}]`;
         const isCube = item.datasetType == 'CUBE' ? true : false;
         return (
@@ -156,6 +191,20 @@ const MyPageReportForm = ({data}, ref) => {
           }}>
           <Label>{localizedString.order}</Label>
         </Item>
+        <Item
+          dataField="fldParentNm"
+          editorType="dxTextBox"
+          readOnly={true}
+          editorOptions={{
+            readOnly: true,
+            buttons: [folderSearchBtn],
+            elementAttr: {
+              id: 'fldParentName'
+            }
+          }}
+        >
+          <Label>{localizedString.folderManagement}</Label>
+        </Item>
         <Item editorType='dxTextArea'
           dataField='desc'
           editorOptions={{
@@ -168,6 +217,16 @@ const MyPageReportForm = ({data}, ref) => {
           }}>
           <Label>{localizedString.checkingInitReportRetrieval}</Label>
         </Item>
+        {
+          (reportType === DesignerMode['AD_HOC']) &&
+          isCube &&
+          <Item editorType='dxCheckBox'
+            dataField='maxReportPeriodYn'
+            editorOptions={{
+            }}>
+            <Label>{localizedString.maxReportPeriodYn}</Label>
+          </Item>
+        }
         <TabbedItem>
           {getDatasetInfo()}
         </TabbedItem>

@@ -1,12 +1,13 @@
 import DevPivotGrid, {
   FieldChooser,
-  Scrolling
+  HeaderFilter,
+  Scrolling,
+  Search
 } from 'devextreme-react/pivot-grid';
 import React, {
   useEffect,
   useRef,
-  useMemo,
-  useCallback
+  useMemo
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -93,7 +94,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }, []);
 
   useEffect(() => {
-    collapseRowHeader();
     setItemExports((prev) => {
       const itemExports =
         prev.filter((item) => item.id !== itemExportObject.id);
@@ -120,20 +120,25 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
   }
 
-  const onCellPrepared = ({cell, area, cellElement}) => {
-    if (area == 'data' && cell.dataType && cell.value) {
+  const onCellPrepared = ({cell, area, cellElement, component}) => {
+    // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
+    if (area == 'data' && cell.dataType) {
       const formats = getFormats(dataField, adHocOption);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
       if (newFormData) {
-        const labelSuffix = generateLabelSuffix(newFormData);
-        const formattedValue =
-          formatNumber(cell.value, newFormData, labelSuffix);
-        cellElement.innerHTML =
-          `<span>${formattedValue}</span>`;
+        try {
+          const labelSuffix = generateLabelSuffix(newFormData);
+          const formattedValue =
+            formatNumber(cell.value, newFormData, labelSuffix);
+          cellElement.innerHTML =
+            `<span>${formattedValue}</span>`;
 
-        Object.assign(cellElement.style, colorStyle);
+          Object.assign(cellElement.style, colorStyle);
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
@@ -153,33 +158,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       }
     }
   };
-
-  const collapseRowHeader =
-  useCallback(() => mart.dataSourceConfig.load().then((data) => {
-    if (dataset?.cubeId == 6184) {
-      const pivotDataSource = ref.current._instance.getDataSource();
-      const items = pivotDataSource.getData().rows;
-      const collapseSingleChildItems = (items, path) => {
-        items.forEach((item) => {
-          const currentPath = path.concat(item.value);
-          if (item.children && item.children.length === 1 &&
-                (item.children[0]?.text == '' ||
-                    item.children[0]?.text == 'null')) {
-            pivotDataSource.collapseHeaderItem('row', currentPath);
-          } else {
-            if (item.children) {
-              collapseSingleChildItems(item.children, currentPath);
-            }
-          }
-        });
-      };
-      collapseSingleChildItems(items, []);
-    }
-  },
-  (error) => {
-    console.log(error);
-    dispatch(loadingActions.endJobForce());
-  }), []);
 
   let showTotalsPrior = 'both';
   const rowTotalPos = meta.positionOption.row.position == 'top';
@@ -251,18 +229,17 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;
             const pivotDataSource = e.component.getDataSource();
-            const pivotRowFields = pivotDataSource.getAreaFields('row', true);
-            const pivotColumnFields =
-                pivotDataSource.getAreaFields('column', true);
-            if (!item.meta.positionOption.row.expand) {
-              pivotRowFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
-              });
-            }
+            if (true || dataset?.cubeId == 6184) {
+              const test =
+                [['총취급액'], ['매출액'], ['매출원가(-)'], ['변동비(-)'], ['매출액', '상품매출액']];
 
-            if (!item.meta.positionOption.column.expand) {
-              pivotColumnFields.forEach((field) => {
-                pivotDataSource.collapseAll(field.index);
+              test.forEach((path) => {
+                if (['매출액', '상품매출액'].toString() === path.toString()) {
+                  // eslint-disable-next-line max-len
+                  setTimeout(() => pivotDataSource.expandHeaderItem('row', path), 500);
+                } else {
+                  pivotDataSource.expandHeaderItem('row', path);
+                }
               });
             }
           }
@@ -357,6 +334,9 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       >
         <FieldChooser enabled={false}> </FieldChooser>
         <Scrolling mode='virtual' />
+        <HeaderFilter>
+          <Search enabled={true} />
+        </HeaderFilter>
       </DevPivotGrid>
       {
         usePage &&

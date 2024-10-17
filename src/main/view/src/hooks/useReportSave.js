@@ -1,7 +1,8 @@
 import {selectRootDataset}
   from 'redux/selector/DatasetSelector';
 import {selectRootItem} from 'redux/selector/ItemSelector';
-import {selectCurrentReportId, selectReports, selectRootReport}
+import {selectCurrentReport, selectCurrentReportId, selectReports,
+  selectRootReport}
   from 'redux/selector/ReportSelector';
 import store from 'redux/modules';
 import {useDispatch} from 'react-redux';
@@ -9,6 +10,7 @@ import ReportSlice from 'redux/modules/ReportSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
+import LinkSlice from 'redux/modules/LinkSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import ParameterSlice from 'redux/modules/ParameterSlice';
 import {selectCurrentInformationas,
@@ -35,10 +37,11 @@ import {initWorkkbookJSONs}
 
 const useReportSave = () => {
   const dispatch = useDispatch();
-  const {alert} = useModal();
-  const {executeItems, executeSpread} = useQueryExecute();
+  const {alert, confirm} = useModal();
+  const {executeItems, executeSpread, executeValidata} = useQueryExecute();
   const editMode = useSelector(selectEditMode);
 
+  const linkActions = LinkSlice.actions;
   const reportActions = ReportSlice.actions;
   const itemActions = ItemSlice.actions;
   const layoutActions = LayoutSlice.actions;
@@ -66,7 +69,12 @@ const useReportSave = () => {
       }
       const newField = [];
       for (let j = 0; j < datasets[i].fields.length; j++) {
-        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1) {
+        if (datasets[i].fields[j].uniqueName.indexOf('].[') != -1 ||
+          datasets[i].fields[j].isCustomData) {
+          if (datasets[i].fields[j].type === 'MEAGRP') {
+            newField.push({...datasets[i].fields[j], type: 'MEA'});
+            continue;
+          }
           newField.push(datasets[i].fields[j]);
         } else {
           if (datasets[i].fields[j].type === 'MEAGRP' ||
@@ -102,7 +110,11 @@ const useReportSave = () => {
     param.requester = dataSource.requester || '';
     param.reportSubTitle = dataSource.reportSubTitle;
     // 홈앤쇼핑 초기 보고서 조회 여부 추가
-    param.promptYn = dataSource.promptYn ? 'Y' : 'N';
+    param.promptYn = (dataSource.promptYn === true ||
+      dataSource.promptYn === 'Y') ? 'Y' : 'N';
+    // 홈앤쇼핑 조회 기간 설정 해제 추가
+    param.maxReportPeriodYn = (dataSource.maxReportPeriodYn === true ||
+      dataSource.maxReportPeriodYn === 'Y') ? 'Y' : 'N';
 
     if (reportType === DesignerMode['EXCEL']) {
       param.reportXml = JSON.stringify(selectSpreadMeta(store.getState()));
@@ -179,6 +191,7 @@ const useReportSave = () => {
       options.requester = data.gridInfo;
       options.path = data.path;
       options.promptYn = data.promptYn;
+      options.maxReportPeriodYn = data.maxReportPeriodYn;
       options.authPublish = '1';
       options.reportType = ConvertDesignerMode[data.reportType];
 
@@ -301,6 +314,7 @@ const useReportSave = () => {
     dispatch(layoutActions.initLayout(param));
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
+    dispatch(linkActions.initLink());
     initWorkkbookJSONs();
   };
 
@@ -433,18 +447,8 @@ const useReportSave = () => {
 
   const querySearchException = (parameters, myPageConfigure, isAdhocCube) => {
     try {
-      // 매개변수 필터링
       // eslint-disable-next-line max-len
       const paramInfos = parameters.informations.filter((param) => param.operation === 'BETWEEN');
-
-      // 비정형 주제영역일 때만 BETWEEN 매개변수 반드시 필요
-      if (isAdhocCube && (paramInfos.length === 0)) {
-        // homenshopping 요청사항 문구
-        // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
-        // eslint-disable-next-line max-len
-        throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
-      }
-
       // 날짜 문자열을 Date 객체로 변환하는 함수
       const parseDate = (dateString, isStart) => {
         let year = 0;
@@ -505,7 +509,7 @@ const useReportSave = () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))+1;
 
         // 주어진 년도 (2년)의 최대 일수 계산
-        let period = 2;
+        let period = 5;
         if (myPageConfigure.maxReportQueryPeriod.check) {
           period = myPageConfigure.maxReportQueryPeriod.period;
         }
@@ -527,10 +531,10 @@ const useReportSave = () => {
     const designerMode = selectCurrentDesignerMode(store.getState());
     const myPageConfigure = selectMyPageDesignerConfig(store.getState());
     const rootDataset = selectRootDataset(store.getState());
+    const currentReport = selectCurrentReport(store.getState());
     // 비정형 보고서 이고, 주제영역 데이터 집합만 있는지 여부
     // true: 비정형보고서 AND 주제영역 데이터 집합만 존재
-    const isAdhocCube = process.env.NODE_ENV !== 'development' &&
-    designerMode === DesignerMode['AD_HOC'] &&
+    const isAdhocCube = designerMode === DesignerMode['AD_HOC'] &&
     rootDataset.datasets.every((dataset) =>
       dataset.datasetType === DatasetType.CUBE);
 
@@ -542,11 +546,41 @@ const useReportSave = () => {
       }
     };
 
+    if (executeValidata()) {
+      return;
+    };
+
     if (parameters.informations.length <=
       parameters.filterSearchComplete.length) {
-      if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
-        return;
-      };
+      // eslint-disable-next-line max-len
+      const paramInfos = parameters.informations.filter((param) => param.operation === 'BETWEEN');
+      /* 20241013
+      ** 주제영역 비트윈 필터 반드시 포함되도록 하는 코드 주석 처리
+      ** 1. 비정형에서 비트윈필터 없어도 조회가능하게 변경 (confirm 알림창 추가)
+      ** 2. 보고서에 비트윈필터가 있을때 조회기간설정 따라가도록 수정
+      */
+      // 보고서 비트윈 필터가 있을 때, 최대 조회기간을 무시하고 조회 (maxReportPeriodYn)
+      if (currentReport.options.maxReportPeriodYn !== 'Y') {
+        if (isAdhocCube && (paramInfos.length === 0)) {
+          // homenshopping 요청사항 문구
+          // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
+          // eslint-disable-next-line max-len
+          // throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
+          confirm('날짜 필터(BETWEEN) 가 없을 경우 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?',
+              () => {
+                execute();
+              });
+          return;
+        }
+      }
+
+      // 보고서 비트윈 필터가 있을 때, 최대 조회기간을 무시하고 조회 (maxReportPeriodYn)
+      if (currentReport.options.maxReportPeriodYn !== 'Y') {
+        if (querySearchException(parameters, myPageConfigure, isAdhocCube)) {
+          return;
+        }
+      }
+
       execute();
     } else {
       let count = 0;

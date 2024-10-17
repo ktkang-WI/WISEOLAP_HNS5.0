@@ -19,6 +19,7 @@
       <result column="FLD_PARENT_ID" property="fldParentId" javaType="int"/>
       <result column="AUTH_VIEW" property="authView" javaType="boolean"/>
       <result column="AUTH_PUBLISH" property="authPublish" javaType="boolean"/>
+      <result column="AUTH_DATASOURCE" property="authDatasource" javaType="boolean"/>
       <result column="AUTH_DATAITEM" property="authDataItem" javaType="boolean"/>
       <result column="AUTH_EXPORT" property="authExport" javaType="boolean"/>
     </resultMap>
@@ -39,6 +40,8 @@
       <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
       <result column="REPORT_TYPE" property="reportType" javaType="String"/>
       <result column="PROMPT_YN" property="promptYn" javaType="String"/>
+      <result column="MAX_REPORT_PERIOD_YN" property="maxReportPeriodYn" javaType="String"/>
+      <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
 
     <resultMap id="userList" type="com.wise.MarketingPlatForm.auth.vo.UserDTO">
@@ -64,6 +67,7 @@
       <result column="FLD_ORDINAL" property="fldOridinal" javaType="int"/>
       <result column="AUTH_VIEW" property="authView" javaType="String"/>
       <result column="AUTH_PUBLISH" property="authPublish" javaType="String"/>
+      <result column="AUTH_DATASOURCE" property="authDatasource" javaType="String"/>
       <result column="AUTH_DATAITEM" property="authDataItem" javaType="String"/>
       <result column="AUTH_EXPORT" property="authExport" javaType="String"/>
     </resultMap>
@@ -81,6 +85,7 @@
       <result column="QUERY" property="query" javaType="String"/>
       <result column="CREATED_DATE" property="createdDate" javaType="String"/>
       <result column="PROMPT" property="prompt" javaType="String"/>
+      <result column="MAXREPORTPERIODYN" property="maxReportPeriodYn" javaType="String"/>
       <result column="CREATED_BY" property="createdBy" javaType="String"/>
       <result column="DATASET_XML" property="datasetXml" javaType="String"/>
     </resultMap>
@@ -104,7 +109,7 @@
         FLD_ORDINAL,
         FLD_DESC
         FROM PUB_FLD_MSTR
-            ORDER BY FLD_LVL ASC, FLD_ORDINAL ASC
+            ORDER BY FLD_ORDINAL ASC
 		</select>
 
     <select id="selectConfigPubFolder" resultMap="ConfigFolderPub">
@@ -114,6 +119,7 @@
         FLD_PARENT_ID,
         'false' AS AUTH_VIEW,
         'false' AS AUTH_PUBLISH,
+        'false' AS AUTH_DATASOURCE,
         'false' AS AUTH_DATAITEM,
         'false' AS AUTH_EXPORT
         FROM PUB_FLD_MSTR
@@ -138,6 +144,7 @@
         REPORTANDFOLDER.QUERY,
         REPORTANDFOLDER.CREATED_DATE,
 	      REPORTANDFOLDER.PROMPT,
+        REPORTANDFOLDER.maxReportPeriodYn,
         REPORTANDFOLDER.CREATED_BY,
         REPORTANDFOLDER.DATASET_XML
           FROM
@@ -154,6 +161,7 @@
             NULL AS DESCRIPTION,
             NULL AS QUERY,
             NULL AS PROMPT,
+            NULL AS maxReportPeriodYn,
 						NULL AS CREATED_DATE,
             #{userNm} AS CREATED_BY,
             NULL AS DATASET_XML
@@ -171,13 +179,17 @@
             REPORT_DESC AS DESCRIPTION,
             DATASET_QUERY AS QUERY,
             PROMPT_YN AS PROMPT,
+            MAX_REPORT_PERIOD_YN AS maxReportPeriodYn,
 	          REG_DT AS CREATED_DATE,
             #{userNm} AS CREATED_BY,
             DATASET_XML AS DATASET_XML
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
-        ) REPORTANDFOLDER
+        ) REPORTANDFOLDER ORDER BY
+            REPORTANDFOLDER.TYPE,
+            REPORTANDFOLDER.ORDINAL,
+            REPORTANDFOLDER.NAME
     </select>
 
     <update id="updateMyFolder" parameterType="com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO">
@@ -211,17 +223,26 @@
             <if test='type != ""'>
               REPORT_TYPE = #{type, jdbcType=VARCHAR},
             </if>
+            <if test='fldParentId != ""'>
+              FLD_ID = #{fldParentId, jdbcType=INTEGER},
+            </if>
             <if test='subtitle != ""'>
               REPORT_SUB_TITLE = #{subtitle, jdbcType=VARCHAR},
             </if>
             <if test='tag != ""'>
               REPORT_TAG = #{tag, jdbcType=VARCHAR},
             </if>
-            <if test='type != ""'>
+            <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
             </if>
+            <if test='ordinal != ""'>
+              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
+            </if>
             <if test='prompt != ""'>
-              PROMPT_YN = #{prompt, jdbcType=VARCHAR}
+              PROMPT_YN = #{prompt, jdbcType=VARCHAR},
+            </if>
+            <if test='maxReportPeriodYn != ""'>
+              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR}
             </if>
           WHERE REPORT_ID = #{id}
     </update>
@@ -256,8 +277,8 @@
         FLD_ORDINAL
         FROM DATASET_FLD_MSTR
         ORDER BY
-            FLD_ID,
-            FLD_ORDINAL
+            FLD_ID ASC,
+            FLD_ORDINAL ASC
 		</select>
 
     <select id="selectConfigFolders" resultMap="ConfigFolderReportDTO">
@@ -275,7 +296,8 @@
         '0' AS REPORT_ORDINAL,
         null AS REPORT_DESC,
         NULL AS REPORT_TYPE,
-        NULL AS PROMPT_YN  FROM PUB_FLD_MSTR     
+        NULL AS PROMPT_YN  FROM PUB_FLD_MSTR
+        ORDER BY FLD_ORDINAL ASC
 		</select>
     <select id="selectConfigFolderReport" resultMap="ConfigFolderReportDTO">
 			SELECT
@@ -293,14 +315,16 @@
         REPORT_MSTR.REPORT_ORDINAL,
         REPORT_MSTR.REPORT_DESC,
         REPORT_MSTR.REPORT_TYPE,
-        REPORT_MSTR.PROMPT_YN 
+        REPORT_MSTR.PROMPT_YN,
+        REPORT_MSTR.MAX_REPORT_PERIOD_YN,
+        REPORT_MSTR.DATASET_XML
         FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
             ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
                           INNER JOIN USER_MSTR 
             ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
             WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
             AND (USER_MSTR.DEL_YN = 'N' OR USER_MSTR.DEL_YN IS NULL)
-            ORDER BY 3 ASC, 5 ASC
+            ORDER BY REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
 		</select>
   
     <select id="selectConfigPrivateFolderReport" resultMap="ConfigFolderReportDTO">
@@ -326,7 +350,7 @@
             ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
             WHERE REPORT_MSTR.DEL_YN = 'N' AND USER_MSTR.DEL_YN = 'N'
             AND REPORT_MSTR.REG_USER_NO = #{userNo, jdbcType = INTEGER}
-            ORDER BY 3 ASC, 5 ASC
+            ORDER BY USER_FLD_MSTR.FLD_ORDINAL, USER_FLD_MSTR.FLD_NM, REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
 		</select>
 
     <select id="selectConfigPrivateFolders" resultMap="ConfigFolderReportDTO">
@@ -346,6 +370,7 @@
         NULL AS REPORT_TYPE,
         NULL AS PROMPT_YN  FROM USER_FLD_MSTR
          WHERE USER_NO = #{userNo, jdbcType = INTEGER}
+        ORDER BY FLD_ORDINAL, FLD_NM
     </select>
     
     <select id="selectConfigFolderGroup" resultMap="ConfigFolderDTO">
@@ -358,6 +383,7 @@
         PUB_FLD_MSTR.FLD_ORDINAL,
         GRP_AUTH_REPORT_MSTR.AUTH_VIEW,
         GRP_AUTH_REPORT_MSTR.AUTH_PUBLISH,
+        GRP_AUTH_REPORT_MSTR.AUTH_DATASOURCE,
         GRP_AUTH_REPORT_MSTR.AUTH_DATAITEM,
         GRP_AUTH_REPORT_MSTR.AUTH_EXPORT
         FROM PUB_FLD_MSTR INNER JOIN GRP_AUTH_REPORT_MSTR

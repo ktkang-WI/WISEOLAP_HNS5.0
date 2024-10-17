@@ -303,6 +303,10 @@ const useCustomEvent = () => {
       onClick: async (id) => {
         const item = _.cloneDeep(items.find((i) => id == i.id));
         const rootItem = selectRootItem(store.getState());
+        if (!item.mart.init) {
+          alert('피벗그리드 조회 후 진행해 주세요.');
+          return;
+        }
         item.meta.colRowSwitch = !item.meta.colRowSwitch;
 
         const datasets = selectCurrentDatasets(store.getState());
@@ -329,6 +333,10 @@ const useCustomEvent = () => {
       title: localizedString.showGrid,
       onClick: async (id) => {
         const item = items.find((i) => id == i.id);
+        if (!item.mart.init) {
+          alert('피벗그리드 조회 후 진행해 주세요.');
+          return;
+        }
         const columns = [];
         const rootItem = selectRootItem(store.getState());
         const field = item.meta.dataField || rootItem.adHocOption.dataField;

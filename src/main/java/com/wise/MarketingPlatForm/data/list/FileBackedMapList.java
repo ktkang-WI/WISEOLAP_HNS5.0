@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wise.MarketingPlatForm.global.context.GenericDataResourceContext;
 
@@ -38,9 +39,9 @@ public class FileBackedMapList  extends LinkedList<Map<String, Object>> implemen
 
 	private static final AtomicInteger hashCodeGen = new AtomicInteger();
 
-	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_PROD = 100000;
+	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_PROD = 1000000;
 
-	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_DEV = 100000;
+	private static final int DEFAULT_MAX_SIZE_IN_MEMORY_ON_DEV = 1000000;
 
 	private static final String TEMP_FILE_PREFIX = FileBackedMapList.class.getSimpleName();
 	
@@ -300,6 +301,7 @@ public class FileBackedMapList  extends LinkedList<Map<String, Object>> implemen
 
 		try {
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
 			for (Map<String, Object> elem : bufferedElems) {
                 String json = objectMapper.writeValueAsString(elem);
 				dataAppender.println(json);
@@ -342,6 +344,7 @@ public class FileBackedMapList  extends LinkedList<Map<String, Object>> implemen
 			this.totalSize = totalSize;
 			this.backingFile = backingFile;
 			this.bufferSize = bufferSize;
+            mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
 		}
 		
 		@Override

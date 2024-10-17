@@ -128,7 +128,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
           color: theme.color.gray400,
           font: theme.font.item
         }}>
-          No Data
+          데이터가 없습니다.
         </Wrapper>
       </Item>;
     }
@@ -271,9 +271,11 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       <button key="download" title={localizedString.downloadReport}>
         <DownloadImage id={`${tabNode._attributes.id}btn`} src={download} />
         <Popover target={`#${tabNode._attributes.id}btn`} showEvent="click">
-          {itemDownload.renderDownloadButtons(
-              tabNode._attributes.id, item, isImg && isImgDownloadable
-          )}
+          <div style={{display: 'flex'}}>
+            {itemDownload.renderDownloadButtons(
+                tabNode._attributes.id, item, isImg && isImgDownloadable
+            )}
+          </div>
         </Popover>
       </button>
     ) : null;

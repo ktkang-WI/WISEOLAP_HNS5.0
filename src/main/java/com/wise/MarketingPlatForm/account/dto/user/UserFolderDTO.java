@@ -10,7 +10,6 @@ import lombok.Setter;
 public class UserFolderDTO {
   int userNo;
   String userId;
-  String grpNm;
   int fldId;
   String fldNm;
   int fldLvl;
@@ -18,6 +17,7 @@ public class UserFolderDTO {
   int fldOrdinal;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

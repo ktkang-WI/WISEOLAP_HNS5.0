@@ -44,7 +44,7 @@ const LinkReportList = (
   const {alert} = useModal();
   const [selectedRowData, setSelectedRowData] = useState();
   const [linkParamData, setLinkParamData] = useState();
-  const [paramInfo, setParamInfo] = useState([]);
+  // const [paramInfo, setParamInfo] = useState([]);
   const [linkFkInfo, setLinkFkInfo] = useState([]);
   const [subLinkFkInfo, setSubLinkFkInfo] = useState([]);
   const [subLinkParamInfo, setSubLinkParamInfo] = useState([]);
@@ -63,13 +63,11 @@ const LinkReportList = (
               }
           );
         setLinkParamData(data);
-        console.log('First Load');
       }
-      console.log('Load');
       setPopupVisible(true);
     } catch (error) {
       console.error('Error fetching link report params:', error);
-      alert('Failed to fetch link parameters.');
+      alert('연결 보고서 정보를 가져오는데 실패했습니다.');
     }
   };
 
@@ -104,10 +102,16 @@ const LinkReportList = (
           }
         }
         onSelectionChanged={(selectionChangedEvent) => {
+          console.log('Selection Changed:', selectionChangedEvent);
           const selectedRow = selectionChangedEvent.selectedRowsData[0];
           if (selectedRow) {
-            setSelectedRowData(selectedRow);
-            onSelectionChange(selectedRow);
+            const minRowData = {
+              id: selectedRow.id,
+              name: selectedRow.name,
+              type: selectedRow.type
+            };
+            setSelectedRowData(minRowData);
+            onSelectionChange(minRowData);
           }
         }}
       >
@@ -126,8 +130,8 @@ const LinkReportList = (
           selectedRowData = {selectedRowData}
           linkParamData={linkParamData}
           onClose={() => setPopupVisible(false)}
-          paramInfo={paramInfo}
-          setParamInfo={setParamInfo}
+          // paramInfo={paramInfo}
+          // setParamInfo={setParamInfo}
           subYn={subYn}
           subLinkDim={subLinkDim}
           subLinkParamInfo={subLinkParamInfo}

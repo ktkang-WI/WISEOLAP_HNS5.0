@@ -27,6 +27,7 @@ public class MyPageFolderReportModel {
   String query;
   String createdDate;
   boolean prompt;
+  boolean maxReportPeriodYn;
   String createdBy;
   List<Integer> ids;
   String datasetXml;

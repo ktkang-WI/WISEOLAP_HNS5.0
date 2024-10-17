@@ -50,6 +50,8 @@ public class ConfigFolderReportController {
       .reportDesc(configFolderReportDTO.getReportDesc())
       .reportType(configFolderReportDTO.getReportType())
       .promptYn(configFolderReportDTO.getPromptYn().equals("Y") ? true : false)
+      .maxReportPeriodYn(configFolderReportDTO.getMaxReportPeriodYn().equals("Y") ? true : false)
+      .isCube(configFolderReportDTO.isCube())
       .build();
 
       model.add(configFolderReportModel);

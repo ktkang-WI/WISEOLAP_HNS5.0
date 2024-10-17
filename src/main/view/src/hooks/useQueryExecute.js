@@ -28,6 +28,8 @@ import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
+// import {useSelector} from 'react-redux';
+// import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -37,6 +39,9 @@ const useQueryExecute = () => {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
+  const newLinkParamInfo =
+    JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+  // useSelector(selectNewLinkParamInfo);
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -237,8 +242,18 @@ const useQueryExecute = () => {
 
       switch (layout) {
         case 'chart_pivot':
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
         case 'chart':
           await getAdhocItemData(chartItem);
@@ -247,8 +262,18 @@ const useQueryExecute = () => {
           await getAdhocItemData(pivotItem);
           break;
         default:
-          await getAdhocItemData(chartItem);
-          await getAdhocItemData(pivotItem);
+          try {
+            const param = [chartItem, pivotItem];
+            const promises = param.reduce((acc, item) => {
+              acc.push(getAdhocItemData(item));
+
+              return acc;
+            }, []);
+
+            await Promise.all(promises);
+          } catch (e) {
+            console.log(e);
+          }
           break;
       }
     } catch (error) {
@@ -296,19 +321,19 @@ const useQueryExecute = () => {
         tempItem.mart.currentFilter = filter || {};
         tempItem.mart.toggle = ((tempItem.mart.toggle || 0) + 1) % 10;
 
-        if (nullDataCheck(tempItem)) {
-          alert(`${item.meta.name}${localizedString.noneData}`);
-        }
-
         if (data.info['type'] !== 'showQuery') {
           ItemManager.generateItem(tempItem, param);
         }
 
         dispatch(updateItem({reportId, item: tempItem}));
+
+        return tempItem;
       }
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
     }
   };
 
@@ -472,6 +497,26 @@ const useQueryExecute = () => {
     });
   };
 
+  const executeValidata = () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const rootItem = selectRootItem(store.getState());
+    try {
+      let msg = '';
+      if (datasets.length === 0) {
+        msg = localizedString.dataSourceNotSelectedMsg;
+        alert(msg);
+        return true;
+      }
+      validateRequiredField(rootItem);
+    } catch (error) {
+      console.error(error);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
+      return true;
+    }
+  };
+
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    * @param {string} flag
@@ -519,7 +564,10 @@ const useQueryExecute = () => {
           return acc;
         }, []);
 
-        await Promise.all(promises);
+        await Promise.all(promises).then((items) => {
+          nullDataAlert(items);
+        });
+
 
         if (EditMode['DESIGNER'] == editMode) {
           dispatch(updateDesinerExecutionState(true));
@@ -650,27 +698,35 @@ const useQueryExecute = () => {
 
   const executeParameters = async (parameters) => {
     const reportId = selectCurrentReportId(store.getState());
-
     const setDefaultValue = async (name, value) => {
       const params = new URLSearchParams(window.location.search);
       const paramValues = JSON.parse(params.get('param_values') || '{}');
-
       let _value = value;
       if (paramValues[name]) {
         _value = paramValues[name];
       }
 
-      if (value.includes('[MD_CODE]')) {
-        const res = await models.Report.getMdCode();
-        const mdCode = res?.data;
-        _value = [];
+      if (newLinkParamInfo !== null && newLinkParamInfo.length > 0) {
+        const matchedParam =
+          newLinkParamInfo.find(
+              (param) => param.fkParam === name);
+        if (matchedParam) {
+          _value = matchedParam.value;
+        }
+      }
 
-        value.map((v) => {
-          if (v == '[MD_CODE]' && mdCode) {
-            _value.push(mdCode);
-          } else {
-            _value.push(v);
-          }
+      const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+      if (reg.test(value[0]) || reg.test(value[1])) {
+        const res = await models.Report.getUserInfo();
+        const info = res?.data || {};
+        _value = [];
+        _value = value.map((v) => {
+          if (v == '[MD_CODE]') return info.mdCode;
+          if (v == '[WI_SESSION_ID]') return info.userId;
+
+          return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+              .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
         });
       }
 
@@ -711,12 +767,19 @@ const useQueryExecute = () => {
               data.value = paramValues[param.name];
             }
 
-            if (data.value[0] == '[MD_CODE]') {
-              const res = await models.Report.getMdCode();
-              const mdCode = res?.data;
-              if (mdCode) {
-                data.value[0] = mdCode;
-              }
+            const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
+
+            if (reg.test(data.value[0]) || reg.test(data.value[1])) {
+              const res = await models.Report.getUserInfo();
+              const info = res?.data || {};
+
+              data.value = data.value.map((v) => {
+                if (v == '[MD_CODE]') return info.mdCode;
+                if (v == '[WI_SESSION_ID]') return info.userId;
+
+                return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
+                    .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
+              });
             }
 
             if (data) {
@@ -788,6 +851,21 @@ const useQueryExecute = () => {
     });
   };
 
+  const nullDataAlert = (items) => {
+    // 조회 시 nullData alert 창 한번만 나오도록 수정
+    const nullDataItems = items.reduce((acc, item) => {
+      if (nullDataCheck(item)) {
+        acc.push(item.meta.name);
+      }
+      return acc;
+    }, []);
+
+    if (nullDataItems.length > 0) {
+      const itemNames = nullDataItems.join('", "');
+      alert(`"${itemNames}" ${localizedString.noneData}`);
+    }
+  };
+
   return {
     generateParameter,
     generateAdHocParamter,
@@ -800,7 +878,8 @@ const useQueryExecute = () => {
     executeLinkageFilter,
     executeSpread,
     executeParameterDefaultValueQuery,
-    initializeParameters
+    initializeParameters,
+    executeValidata
   };
 };
 

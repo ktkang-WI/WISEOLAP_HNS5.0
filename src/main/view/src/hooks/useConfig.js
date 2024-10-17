@@ -2,20 +2,26 @@ import {setSpreadLicense}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
 import {useDispatch} from 'react-redux';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import {useNavigate} from 'react-router';
 
 const useConfig = () => {
   const dispatch = useDispatch();
   const {addConfigure, setMyPageConfigure} = ConfigSlice.actions;
+  const nav = useNavigate();
 
   const saveConfiguration = (generalConfigure, myPageConfigure) => {
-    dispatch(addConfigure(generalConfigure));
-    dispatch(setMyPageConfigure(myPageConfigure));
+    if (!myPageConfigure) {
+      nav('/editds');
+    } else {
+      dispatch(addConfigure(generalConfigure));
+      dispatch(setMyPageConfigure(myPageConfigure));
 
-    setMainTitle(generalConfigure.general.mainTitle);
-    setSpreadLicense(
-        generalConfigure.general.spreadJsDesignLicense,
-        generalConfigure.general.spreadJsLicense
-    );
+      setMainTitle(generalConfigure.general.mainTitle);
+      setSpreadLicense(
+          generalConfigure.general.spreadJsDesignLicense,
+          generalConfigure.general.spreadJsLicense
+      );
+    }
   };
 
   const remove = () => {

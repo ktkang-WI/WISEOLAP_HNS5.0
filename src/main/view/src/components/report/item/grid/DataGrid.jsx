@@ -11,7 +11,10 @@ import DevDataGrid,
   Pager,
   Paging,
   Scrolling,
-  Selection
+  Selection,
+  HeaderFilter,
+  Sorting,
+  Search
 } from 'devextreme-react/data-grid';
 import DataGridBullet from './DataGridBullet';
 import {cellMerge, generateRowSpans} from './options/Merge';
@@ -23,14 +26,22 @@ import useContextMenu from 'hooks/useContextMenu';
 import ItemType from '../util/ItemType';
 import useItemExport from 'hooks/useItemExport';
 import useItemSetting from '../util/hook/useItemSetting';
+import {useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {debounce} from 'lodash';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const DataGrid = ({setItemExports, id, item}) => {
-  const {getContextMenuItems} = useContextMenu();
+  const {getContextMenuItems} = useContextMenu(item);
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   const dataGridRef = createRef();
   const maxValue = {};
   const config = meta.dataGridOption;
+  const dispatch = useDispatch();
+  const reportId = useSelector(selectCurrentReportId);
+  const {updateItem} = ItemSlice.actions;
 
   const interactiveOption = meta.interactiveOption || {};
 
@@ -75,6 +86,20 @@ const DataGrid = ({setItemExports, id, item}) => {
     return [...new Set(pageSizes.map((pageSize) =>
       dataSize < pageSize ? dataSize - 1 : pageSize))];
   };
+
+  const handleColumnsChanging = debounce((e) => {
+    if (!config.autoGridWidth) {
+      const columnWidth = e.component.getVisibleColumns().map((c) => c.width);
+      const newItem = {...item, meta: {...item.meta, columnWidth}};
+
+      if (item.meta.columnWidth &&
+        _.isEqual(item.meta.columnWidth, columnWidth)) {
+        return;
+      }
+
+      dispatch(updateItem({reportId, item: newItem}));
+    }
+  }, 300);
 
   const handlePagingIndex = () => {
     const dataGridInstance = dataGridRef?.current?.instance;
@@ -172,7 +197,7 @@ const DataGrid = ({setItemExports, id, item}) => {
         .concat(e.currentSelectedRowKeys).map((key) => {
           const d = [];
           dataGridConfig.dataSource.columns.map((col) => {
-            if (col.fieldType == 'DIM') {
+            if (col.type == 'DIM') {
               d.push(key[col.name]);
             }
           });
@@ -186,7 +211,7 @@ const DataGrid = ({setItemExports, id, item}) => {
   const onOptionChanged = (e) => {
     const options = dataGridConfig.pagingOption;
     const isPaging = config.paging.pagination.isOk;
-    console.log(e);
+
     const paging = (e.fullName === 'paging.pageIndex' && isPaging);
     const pagingSize = (e.fullName === 'paging.pageSize' && isPaging);
     if (paging) {
@@ -251,7 +276,7 @@ const DataGrid = ({setItemExports, id, item}) => {
           </div>
         </Wrapper>
       );
-    } else if (column.fieldType === 'MEA') {
+    } else if (column.type === 'MEA') {
       const labelSuffix = generateLabelSuffix(column.format);
       e.value = formatNumber(displayValue, column.format, labelSuffix);
       return e.value;
@@ -270,7 +295,6 @@ const DataGrid = ({setItemExports, id, item}) => {
       id={id}
       dataSource={dataGridConfig.dataSource.data}
       showBorders={true}
-      sorting={false}
       onCellPrepared={onCellPrepared}
       onOptionChanged={onOptionChanged}
       showColumnLines={config.gridLine.column}
@@ -283,11 +307,16 @@ const DataGrid = ({setItemExports, id, item}) => {
       showColumnHeaders={config.columnHeader}
       wordWrapEnabled={config.autoWrap}
       onSelectionChanged={onSelectionChanged}
+      onColumnsChanging={handleColumnsChanging}
       onContextMenuPreparing={(e) => {
         const contextMenu = getContextMenuItems();
-        e.items = contextMenu;
+        e.items = e.items.concat(contextMenu);
       }}
     >
+      <HeaderFilter visible={true}>
+        <Search enabled={true} />
+      </HeaderFilter>
+      <Sorting mode="multiple" />
       <Selection
         mode={(interactiveOption.enabled && interactiveOption.mode) || 'none'}
         showCheckBoxesMode='none'
@@ -304,19 +333,50 @@ const DataGrid = ({setItemExports, id, item}) => {
         allowedPageSizes={generatePageSizes()}
       />
       <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
-      {dataGridConfig.dataSource.columns.map((column, i) =>
-        <Column
+      {dataGridConfig.dataSource.columns.map((column, i) => {
+        let columnWidth = column.detailSetting === 'bar' ? '500px' : undefined;
+
+        if (!config.autoGridWidth && meta.columnWidth) {
+          if (meta.columnWidth.length ==
+            dataGridConfig.dataSource.columns.length) {
+            columnWidth = meta.columnWidth[i];
+          }
+        }
+
+        return <Column
           key={i}
           caption={column.caption}
           dataField={column.name}
           visible={column.visible}
-          dataType={column.fieldType === 'MEA' ? 'number' : 'string'}
+          dataType={column.type === 'MEA' ? 'number' : 'string'}
           cellRender={(e) => cellRender(e, column, meta)}
-          width={column.detailSetting === 'bar' ? '500px' : undefined}
-        />
+          width={columnWidth}
+        />;
+      }
       )}
     </DevDataGrid>
   );
 };
 
-export default React.memo(DataGrid);
+const propsComparator = (prev, next) => {
+  const prevItem = {
+    ...prev.item,
+    meta: {
+      ...prev.item.meta,
+      columnWidth: null
+    }
+  };
+
+  const nextItem = {
+    ...next.item,
+    meta: {
+      ...next.item.meta,
+      columnWidth: null
+    }
+  };
+  const result = _.isEqual(prevItem, nextItem);
+
+  return result;
+};
+
+export default React.memo(DataGrid, propsComparator);

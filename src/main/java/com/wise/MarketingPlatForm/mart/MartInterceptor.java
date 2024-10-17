@@ -6,11 +6,15 @@ import com.wise.MarketingPlatForm.global.util.DataField;
 import com.wise.MarketingPlatForm.global.util.JavaxtUtils;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.MetaDTO;
+
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import org.apache.ibatis.plugin.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -30,6 +34,8 @@ import java.util.*;
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class MartInterceptor implements Interceptor {
 	
+    private static final Logger logger = LoggerFactory.getLogger(MartInterceptor.class);
+
 	@Override
     public List<MartResultDTO> intercept(Invocation invocation) throws Throwable {
         List<MartResultDTO> returnValue = new ArrayList<MartResultDTO>();
@@ -69,6 +75,7 @@ public class MartInterceptor implements Interceptor {
             	}
             	rowData.add(row);
             }
+
             MartResultDTO mart = new MartResultDTO();
             mart.setMetaData(metaData);
             mart.setRowData(rowData);

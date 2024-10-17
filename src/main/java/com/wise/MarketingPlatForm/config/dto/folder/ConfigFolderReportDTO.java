@@ -26,6 +26,10 @@ public class ConfigFolderReportDTO {
   String reportOrdinal;
   String reportDesc;
   String reportType;
+  String datasetXml;
+  boolean isCube;
   @Builder.Default
   String promptYn = "N";
+  @Builder.Default
+  String maxReportPeriodYn = "N";
 }

@@ -77,8 +77,19 @@ export const getList = async (reportType, editMode) => {
   return res;
 };
 
-export const getMdCode = async () => {
-  const res = axios.post(path + '/md-code');
+export const getPortalMenuList = async (folders) => {
+  const res = await axios.get(path + '/portal-menu-list', {
+    params: {
+      // folders: ['1621', '2221', '1781'].join(',')
+      folders: folders.join(',')
+    }
+  });
+
+  return res;
+};
+
+export const getUserInfo = async () => {
+  const res = axios.post(path + '/user-info');
 
   return res;
 };
@@ -145,6 +156,10 @@ export const generateToken = (param) => {
   return axios.post(path + '/generate-token', param);
 };
 
+export const generateLinkToken = (param) => {
+  return axios.post(path + '/generate-link-token', param);
+};
+
 /**
  * 보고서 폴더 목록 가져오기
  * @param {JSON} param
@@ -176,4 +191,13 @@ export const addFavoriteReport = async (param) => {
  */
 export const deleteFavoriteReport = async (param) => {
   return await axios.post(path + '/favorites-remove', param);
+};
+
+/**
+ * 보고서 폴더 목록 가져오기
+ * @param {JSON} param
+ * @return {JSON}
+ */
+export const getPortalList = () => {
+  return axios.get(path + '/portal-report-list');
 };

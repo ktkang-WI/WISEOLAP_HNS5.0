@@ -26,4 +26,6 @@ public class ConfigFolderReportModel {
   String reportDesc;
   String reportType;
   boolean promptYn;
+  boolean maxReportPeriodYn;
+  boolean isCube;
 }

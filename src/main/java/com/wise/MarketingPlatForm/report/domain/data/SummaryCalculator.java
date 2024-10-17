@@ -25,6 +25,9 @@ public class SummaryCalculator {
         if (firstValue instanceof String) {
             isStringData = true;
         }
+        if (summaryType == null) {
+
+        }
         this.summaryType = summaryType;
 
         dataLength = 1;

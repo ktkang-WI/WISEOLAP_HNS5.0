@@ -1,12 +1,12 @@
 import {DataGrid} from 'devextreme-react';
 import {FilterRow, Selection} from 'devextreme-react/data-grid';
 
-const CommonDataGrid = ({useFilter = true, children, ...props}) => {
+const CommonDataGrid = ({useFilter = true, children, height, ...props}) => {
   return (
     <DataGrid
       showBorders={true}
       width={'100%'}
-      height={'100%'}
+      height={height || '100%'}
       allowColumnResizing={true}
       {...props}
     >

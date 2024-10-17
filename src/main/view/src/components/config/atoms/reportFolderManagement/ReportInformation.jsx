@@ -8,6 +8,7 @@ import useModal from 'hooks/useModal';
 import FolderListModal from './modal/FolderListModal';
 import {useRef} from 'react';
 import {getFullUrl} from 'components/common/atomic/Location/Location';
+import {DesignerMode} from 'components/config/configType';
 
 const ReportInformation = ({row, setRow, flag}) => {
   const ref = useRef();
@@ -17,6 +18,7 @@ const ReportInformation = ({row, setRow, flag}) => {
     const formData = ref.current.props;
     const reportId = formData.formData.reportId;
     const reportType = formData.formData.reportType;
+    const prompt = formData.formData.promptYn;
 
     if (formData.formData.length === 0) return;
     if (reportId === 0) return;
@@ -27,6 +29,7 @@ const ReportInformation = ({row, setRow, flag}) => {
     window.sessionStorage.setItem('flag', 'reportManagement');
     window.sessionStorage.setItem('reportId', reportId);
     window.sessionStorage.setItem('reportType', reportType);
+    window.sessionStorage.setItem('prompt', prompt.toString());
 
     const newWindow =
       window.open(`${getFullUrl()}/${reportPosision}`, '_blank');
@@ -162,9 +165,10 @@ const ReportInformation = ({row, setRow, flag}) => {
         </SimpleItem>
         <SimpleItem
           dataField="reportDesc"
-          editorType="dxTextBox"
+          editorType="dxTextArea"
           editorOptions= {{
-            disabled: flag ? true : false
+            disabled: flag ? true : false,
+            height: 100
           }}
         >
           <Label>{localizedString.description}</Label>
@@ -174,6 +178,15 @@ const ReportInformation = ({row, setRow, flag}) => {
           editorType="dxCheckBox"
         >
           <Label>{localizedString.checkingInitReportRetrieval}</Label>
+        </SimpleItem>}
+        {!flag &&
+        (row.reportType === DesignerMode['AD_HOC']) &&
+        row.cube &&
+        <SimpleItem
+          dataField="maxReportPeriodYn"
+          editorType="dxCheckBox"
+        >
+          <Label>{localizedString.maxReportPeriodYn}</Label>
         </SimpleItem>}
       </Form>
     </Panel>

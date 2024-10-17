@@ -12,6 +12,8 @@ import ItemType from '../util/ItemType';
 import store from 'redux/modules';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
+// eslint-disable-next-line max-len
+import {selectCurrentDataset, selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import {selectCurrentAdHocOption, selectCurrentItems}
   from 'redux/selector/ItemSelector';
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
@@ -42,7 +44,7 @@ const generateMeta = (item) => {
     dataPosition: 'column' // 측정값 위치
   });
   setMeta(item, 'layout', 'standard');
-  setMeta(item, 'autoSize', false);
+  setMeta(item, 'autoSize', true);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
@@ -79,21 +81,21 @@ const generateItem = (item, param, rootItem) => {
   const fields = [];
   const dataField = _.cloneDeep(
       item.meta.dataField || rootItem.adHocOption.dataField);
-
+  const datasets = selectCurrentDatasets(store.getState());
+  const dataset = datasets.find((ds) =>
+    ds.datasetId == dataField.datasetId);
   const {updateItem} = ItemSlice.actions;
   const gridAttribute = rootItem?.adHocOption?.gridAttribute;
   const variationValues = rootItem?.adHocOption?.variationValues || [];
   const reportId = selectCurrentReportId(store.getState());
-  const allMeasure = dataField.measure.concat(dataField.sortByItem);
-  const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
-    acc[data.fieldId] = data;
-    return acc;
-  }, {});
+  const selectedDataset = selectCurrentDataset(store.getState());
+
+  let expressionCHeck = false;
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   dataField.measure.forEach((field, index) => {
     const dataFieldName = field.summaryType + '_' + field.name;
-    if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) return;
+    // if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) return;
     const measureFormat = dataField.measure[index].format;
 
     const newField = {
@@ -101,18 +103,25 @@ const generateItem = (item, param, rootItem) => {
       summaryType: 'sum',
       dataField: dataFieldName,
       area: 'data',
-      format: getPivotFormat(measureFormat)
+      format: getPivotFormat(measureFormat),
+      visible: gridAttributeOptionCheck(dataFieldName, gridAttribute)
     };
 
     if (field.expression &&
       (typeof field.summaryWayEach == 'undefined' || field.summaryWayEach)) {
       const engine = new ExpressionEngine();
-
-      newField.summaryType = 'custom';
+      expressionCHeck = true;
+      // newField.summaryType = 'custom';
       newField.calculateSummaryValue = (summaryCell) => {
         const data = {};
         dataField.measure.map((mea) => {
           data[mea.name] = summaryCell.value(mea.caption);
+        });
+
+        selectedDataset?.customDatas?.measures.map((mea) => {
+          if (data[mea.name] == undefined) {
+            data[mea.name] = summaryCell.value(mea.caption);
+          }
         });
 
         return engine.evaluate(data, field.expression, 0);
@@ -121,6 +130,32 @@ const generateItem = (item, param, rootItem) => {
 
     fields.push(newField);
   });
+
+  if (expressionCHeck) {
+    if (selectedDataset?.customDatas?.measures) {
+      selectedDataset?.customDatas?.measures.forEach((field) => {
+        const includeMeasure = dataField.measure.filter((mea) => {
+          return mea.uniqueName == field.uniqueName;
+        });
+
+        if (includeMeasure.length > 0) return;
+
+        const dataFieldName = field.summaryType + '_' + field.name;
+        const measureFormat = field?.format;
+
+        const newField = {
+          caption: field.caption,
+          summaryType: 'sum',
+          dataField: dataFieldName,
+          area: 'data',
+          format: getPivotFormat(measureFormat),
+          visible: false
+        };
+
+        fields.push(newField);
+      });
+    }
+  }
 
   for (const field of dataField.sortByItem) {
     const dataFieldName = field.summaryType + '_' + field.name;
@@ -137,13 +172,15 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.row) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
+    const rowExpand = !item.meta.positionOption.row.expand ?
+      true :item.meta.positionOption.row.expand;
+
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
-      expanded: !item.meta.positionOption.row.expand ?
-        true :item.meta.positionOption.row.expand,
+      expanded: dataset?.cubeId == 6184 ? false : rowExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함
@@ -156,40 +193,41 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.column) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
-    let sortBy = {};
+    const colExpand = !item.meta.positionOption.column.expand ?
+      true :item.meta.positionOption.column.expand;
 
-    if (field.sortBy && field.sortBy != field.fieldId) {
-      const target = getMeasureByFieldId[field.sortBy];
+    // let sortBy = {};
 
-      if (target) {
-        sortBy = {
-          sortBySummaryField: target.summaryType + '_' + target.name
-        };
-      } else {
-        sortBy = {
-          sortBy: dataFieldName
-        };
-      }
-    } else {
-      sortBy = {
-        sortBy: dataFieldName
-      };
-    }
+    // if (field.sortBy && field.sortBy != field.fieldId) {
+    //   const target = getMeasureByFieldId[field.sortBy];
+
+    //   if (target) {
+    //     sortBy = {
+    //       sortBySummaryField: target.summaryType + '_' + target.name
+    //     };
+    //   } else {
+    //     sortBy = {
+    //       sortBy: dataFieldName
+    //     };
+    //   }
+    // } else {
+    //   sortBy = {
+    //     sortBy: dataFieldName
+    //   };
+    // }
 
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'row' : 'column',
-      sortOrder: field.sortOrder.toLowerCase(),
-      expanded: !item.meta.positionOption.column.expand ?
-          true :item.meta.positionOption.column.expand,
+      sortBy: 'none',
+      expanded: colExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
-      },
-      ...sortBy
+      }
     });
   }
 

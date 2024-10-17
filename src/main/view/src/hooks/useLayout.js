@@ -3,6 +3,7 @@ import {paletteCollection}
 import {useDispatch} from 'react-redux';
 import store from 'redux/modules';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
@@ -13,6 +14,7 @@ export default function useLayout() {
   const layoutSlice = LayoutSlice.actions;
   const itemSlice = ItemSlice.actions;
   const configSlice = ConfigSlice.actions;
+  const executeSlice = ExecuteSlice.actions;
 
   const initLayout = (reportTypes) => {
     dispatch(layoutSlice.initLayout(reportTypes));
@@ -48,6 +50,7 @@ export default function useLayout() {
         palette: paletteIdx > -1? paletteIdx : 0
       }
     }));
+    dispatch(executeSlice.updateDesinerExecutionState(false));
   };
 
   const deleteFlexLayout = (reportId, itemId, model) => {

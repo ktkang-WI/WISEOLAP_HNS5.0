@@ -1,10 +1,8 @@
 import {EditMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 import openViewerImg from 'assets/image/icon/button/open_viewer.png';
-import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 import ConfigSlice from 'redux/modules/ConfigSlice';
-// import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import store from 'redux/modules';
 import useModal from 'hooks/useModal';
 import showQuery from 'assets/image/icon/button/showQuery.png';
@@ -15,7 +13,7 @@ import {
   selectInitialDisplay,
   selectUserName
 } from 'redux/selector/ConfigSelector';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
@@ -35,12 +33,21 @@ import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
 import useSpread from 'hooks/useSpread';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
+import LinkReportListDefaultElement
+  from '../../Ribbon/popover/organism/LinkReportListDefaultElement';
+import {selectLinkedReport} from 'redux/selector/LinkSelector';
+import AlertSlice from 'redux/modules/AlertSlice';
+import {
+  selectAlert
+} from 'redux/selector/AlertSelector';
+import {useState} from 'react';
+import {selectSpread} from 'redux/selector/SpreadSelector';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const {
-    // alert,
+    alert,
     openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
@@ -55,6 +62,13 @@ const HeaderDefaultElement = () => {
   const reportId = useSelector(selectCurrentReportId);
   const dataSource = _.cloneDeep(currentReport.options);
   const currentParameterValues = useSelector(selectCurrentValues);
+  const selectLinkedReportList = useSelector(selectLinkedReport);
+  const {
+    showAlert,
+    resetAlert
+  } = AlertSlice.actions;
+  const isAlertShown = useSelector(selectAlert);
+  const [showLinkedReport, setShowLinkedReport] = useState(false); // 상태 관리
 
   const filterdLayoutItem = () => {
     if (currentReport.options.reportType === 'Excel') {
@@ -168,7 +182,17 @@ const HeaderDefaultElement = () => {
       'icon': saveAsImg,
       'type': 'CommonButton',
       'onClick': (e) => {
-        openModal(ReportSaveModal);
+        // TODO : linkViewer 방식이 변경 되면 다시 고려 해야함.
+        const items = selectCurrentItems(store.getState());
+        const spreadData = selectSpread(store.getState());
+        const isOpenAndExcute = items.some((i) => i.mart.init);
+        if (isOpenAndExcute) {
+          openModal(ReportSaveModal);
+        } else if (Object.keys(spreadData.meta.bindingInfos).length > 0) {
+          openModal(ReportSaveModal);
+        } else {
+          alert('보고서를 조회한 후 저장해 주세요.');
+        }
       }
     },
     'UserInfo': {
@@ -212,32 +236,62 @@ const HeaderDefaultElement = () => {
         reload(initialDisplay);
       }
     },
-    // 'LinkReport': {
-    //   'id': 'linkreport',
-    //   'label': localizedString.linkReport,
-    //   'buttonType': 'whiteRound',
-    //   'width': '115px',
-    //   'icon': openViewerImg,
-    //   'type': 'CommonButton',
-    //   'onClick': (e) => {
-    //     const linkReport = selectLinkedReport(store.getState());
-    //     if (linkReport&& Object.keys(linkReport).length > 0) {
-    //       const firstLinkReportKey = Object.keys(linkReport)[0];
-    //       const firstLinkReport = linkReport[firstLinkReportKey];
-    //       const linkReportId = firstLinkReport.linkReportId;
-    //       const linkReportType = firstLinkReport.linkReportType;
-
-    //       const param = {
-    //         reportId: linkReportId,
-    //         reportType: linkReportType
-    //       };
-
-    //       connectLinkedReport(param);
-    //     } else {
-    //       alert('연결 보고서가 존재하지 않습니다.');
-    //     }
-    //   }
-    // },
+    'Portal': {
+      'id': 'portal',
+      'label': '메인화면 열기',
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        nav('/editds/portal');
+      }
+    },
+    'LinkReportList': {
+      'id': 'linkreport',
+      'label': localizedString.linkReport,
+      'icon': openViewerImg,
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'type': 'CommonButton',
+      'popoverProps': {
+        'width': 'auto',
+        'height': 'auto',
+        'showEvent': 'click',
+        'position': 'bottom'
+      },
+      'usePopover': true,
+      'onClick': (e) => {
+        // 조건을 만족하면 LinkReportListDefaultElement 렌더링
+        if (Object.keys(selectLinkedReportList).length > 0) {
+          setShowLinkedReport(true); // 상태를 true로 설정
+        } else {
+          setShowLinkedReport(false); // 상태 초기화
+          if (currentReport.reportId === 0 && !isAlertShown) {
+            alert(localizedString.NoReportNoLinkReport);
+            dispatch(showAlert());
+            dispatch(resetAlert());
+            return;
+          }
+          if (Object.keys(selectLinkedReportList).length === 0 &&
+              !isAlertShown) {
+            alert(localizedString.yesReportNoLinkReport);
+            dispatch(showAlert());
+            dispatch(resetAlert());
+            return;
+          }
+        }
+      },
+      'contentRender': (e) => {
+        if (showLinkedReport &&
+            Object.keys(selectLinkedReportList).length > 0) {
+          return (
+            <LinkReportListDefaultElement />
+          );
+        }
+        return;
+      }
+    },
     'DownloadReport': {
       'id': 'downLoadReport',
       'label': localizedString.downloadReport,

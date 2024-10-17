@@ -1,12 +1,16 @@
 package com.wise.MarketingPlatForm.login.controller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
@@ -52,12 +55,20 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(HttpServletRequest request, @RequestBody Map<String, String> param) {
         String id = param.getOrDefault("id", "");
+        // front에서 입력한 pw 암호화? axios 통신 전 암호화?
         String password = param.getOrDefault("password", "");
 
         UserDTO userDTO = loginService.getLoginUser(id, password);
 
         if (userDTO != null) {
+            
+            if (userDTO.getIsChangePw() > 0) {
+                Map<String, Integer> chagePw = new HashMap<>();
+                chagePw.put("change", userDTO.getIsChangePw());
+                return ResponseEntity.ok().body(chagePw);
+            }
             SessionUtility.setSessionUser(request, userDTO);
+            
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
             LoginLogDTO logDTO = LoginLogDTO.builder()
@@ -115,6 +126,11 @@ public class LoginController {
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         LoginLogDTO logDTO = LoginLogDTO.builder()
         .logType("LOGOUT")
         .eventStamp(currentTime)
@@ -133,8 +149,42 @@ public class LoginController {
 
         return ResponseEntity.ok().build();
     }
+    @Operation(summary = "logout", description = "사용자의 모든 세션을 삭제합니다.")
+    @GetMapping("/logoutsso")
+    @ResponseBody
+    public void logoutsso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        LoginLogDTO logDTO = LoginLogDTO.builder()
+        .logType("LOGOUT")
+        .eventStamp(currentTime)
+        .modStamp(currentTime)
+        .modUserNo(userDTO.getUserNo())
+        .userNo(userDTO.getUserNo())
+        .userId(userDTO.getUserId())
+        .userNm(userDTO.getUserNm())
+        .groupId(userDTO.getGrpId())
+        .accessIp(request.getRemoteAddr())
+        .build();
 
-    @Scheduled(cron = "0 0 * * * ?")
+        logService.insertLoginLog(logDTO);
+
+        SessionUtility.clearSessionUser(request);
+        response.sendRedirect("/editds");
+    }
+
+    @GetMapping("/session-check")
+    public ResponseEntity<Object> sessionCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Scheduled(cron = "0 0 */8 * * ?")
     public void clearSessionUserSchedule() {
         SessionUtility.clearSessionUserSchedule();
     }

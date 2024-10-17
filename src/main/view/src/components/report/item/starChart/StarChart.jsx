@@ -1,5 +1,4 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import useSizeObserver from '../util/hook/useSizeObserver';
 import {useRef} from 'react';
 import {
   PolarChart,
@@ -9,6 +8,9 @@ import {
 } from 'devextreme-react/polar-chart';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
+import {formatNumber, generateLabelSuffix}
+  from 'components/utils/NumberFormatUtility';
+import useItemSetting from '../util/hook/useItemSetting';
 
 const StarChart = ({
   setItemExports,
@@ -22,8 +24,8 @@ const StarChart = ({
   }
   const ref = useRef();
   const seriesNames = mart.data.info.seriesMeasureNames;
-
-  const {height, width} = useSizeObserver(ref);
+  const {itemTools} = useItemSetting(item);
+  const {getDataField} = itemTools;
 
   useItemExport({
     id,
@@ -32,14 +34,19 @@ const StarChart = ({
     data: mart?.data?.data,
     setItemExports});
 
+  const formats = getDataField().measure.reduce((acc, mea) => {
+    acc[mea.caption] = mea.format;
+    return acc;
+  }, {});
+
   return (
     <Wrapper
-      ref={ref}
       id={id}
     >
       <PolarChart
-        width={width}
-        height={height}
+        width={'100%'}
+        height={'100%'}
+        ref={ref}
         dataSource={mart?.data?.data}
         palette={meta?.palette?.name} // Dev Default blend
         useSpiderWeb={true}
@@ -57,7 +64,20 @@ const StarChart = ({
           )
         }
         <CommonSeriesSettings type="line" />
-        <Tooltip enabled={true} />
+        <Tooltip
+          enabled={true}
+          customizeTooltip={(e, arg) => {
+            const format = formats[e.seriesName];
+
+            const labelSuffix = generateLabelSuffix(format);
+            const tooltipValue =
+              formatNumber(e.value, format, labelSuffix);
+            return {
+              text: `<b>${e.argument}</b><br/><b>${e.seriesName}</b>: ` +
+                `<p>${tooltipValue}</p>`
+            };
+          }}
+        />
       </PolarChart>
     </Wrapper>
   );

@@ -1,7 +1,7 @@
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
 import Form, {
-  Item, Label, RequiredRule, SimpleItem
+  Label, RequiredRule, SimpleItem
 } from 'devextreme-react/form';
 import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
@@ -76,12 +76,21 @@ const FolderInformation = ({row, setRow, myPageFlag}, ref) => {
         >
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>
-        <Item
+        <SimpleItem
           dataField={myPageFlag? 'ordinal': 'fldOrdinal'}
           editorType="dxTextBox"
         >
           <Label>{localizedString.order}</Label>
-        </Item>
+        </SimpleItem>
+        <SimpleItem
+          dataField={'fldDesc'}
+          editorType="dxTextArea"
+          editorOptions= {{
+            height: 100
+          }}
+        >
+          <Label>{localizedString.description}</Label>
+        </SimpleItem>
       </Form>
     </Panel>
   );

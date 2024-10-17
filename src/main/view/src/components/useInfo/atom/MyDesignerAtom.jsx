@@ -44,12 +44,13 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
     value = data[id]?.initDisplay || 'DashAny';
   }
   if (id == 'defaultLayout') {
-    value = data[id]?.layout || 'CTGB';
+    value = data[id]?.layout || 'G';
   }
 
   if (id === 'maxReportQueryPeriod') {
-    value = data[id]?.period || 2;
+    value = data[id]?.period || 5;
   }
+
   return (
     <SelectBox
       disabled= {!isCheck}
@@ -90,6 +91,9 @@ const LayoutSelectBox = ({id, isCheck, setConfig, data}) => {
 };
 
 const checkBoxValue = (id, data) => {
+  if (id === 'defaultDisplay') {
+    return data[id]?.displayCheck || false;
+  }
   return data[id]?.check || false;
 };
 
@@ -103,6 +107,22 @@ export const LayoutApplyCheckBox = ({id, setConfig, data}) => {
         value={Object.keys(data).length == 0 ? false : isCheck}
         onValueChanged={(e) => {
           setIsCheck(e.value);
+          if (id === 'defaultLayout') {
+            const layout = e.value ? data.defaultLayout.layout : 'G';
+            setConfig({...data,
+              [id]: {check: e.value, layout: layout}});
+          }
+          if (id === 'defaultDisplay') {
+            const display =
+              e.value ? data.defaultDisplay.initDisplay : 'DashAny';
+            setConfig({...data,
+              [id]: {displayCheck: e.value, initDisplay: display}});
+          }
+          if (id === 'maxReportQueryPeriod') {
+            const period = e.value ? data.maxReportQueryPeriod.period : 5;
+            setConfig({...data,
+              [id]: {check: e.value, maxReportQueryPeriod: period}});
+          }
         }}
       />
       <LayoutSelectBox

@@ -9,6 +9,7 @@ public class FolderListModel {
   int fldId;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

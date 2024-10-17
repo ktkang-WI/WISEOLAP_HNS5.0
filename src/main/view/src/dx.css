@@ -165,10 +165,6 @@
   padding-bottom: 10px;
 }
 
-.dx-calendar-cell.dx-calendar-today span {
-  border: none;
-}
-
 /* context menu */
 
 .dx-menu-item-expanded, .dx-menu-item.dx-state-hover {

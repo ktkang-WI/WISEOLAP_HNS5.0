@@ -63,7 +63,8 @@ const PanelTitleDefaultElement = () => {
       alert(localizedString.datasetNotSelected);
       return;
     }
-    const dataSource = await models?.DataSource?.getByDsId(dataset?.dsId);
+    const dataSource = await models?.DataSource?.getByDsId(
+        dataset?.dsId || dataset?.dataSrcId);
     if (!dataSource) {
       alert(localizedString.datasetNotSelected);
       return;
@@ -135,7 +136,7 @@ const PanelTitleDefaultElement = () => {
         const currentReport = selectCurrentReport(store.getState());
 
         const modifiyButtonAuth = !currentReport?.reportId ? true :
-        currentReport?.options?.authPublish == '1' ? true : false;
+        currentReport?.options?.authDatasource == '1' ? true : false;
 
         if (!dataset) {
           alert(localizedString.datasetNotSelected);
@@ -143,7 +144,7 @@ const PanelTitleDefaultElement = () => {
         }
 
         if (!modifiyButtonAuth) {
-          alert(localizedString.reportPermission);
+          alert(localizedString.datasourcePermission);
           return;
         }
 
@@ -206,9 +207,18 @@ const PanelTitleDefaultElement = () => {
       onClick: () => {
         const dataset = selectCurrentDataset(store.getState());
         const reportId = selectCurrentReportId(store.getState());
+        const currentReport = selectCurrentReport(store.getState());
+
+        const deleteButtonAuth = !currentReport?.reportId ? true :
+        currentReport?.options?.authDatasource == '1' ? true : false;
 
         if (!dataset) {
           alert(localizedString.datasetNotSelected);
+          return;
+        }
+
+        if (!deleteButtonAuth) {
+          alert(localizedString.datasourcePermission);
           return;
         }
 

@@ -13,6 +13,7 @@ public class ConfigFolderPubModel {
   int fldParentId;
   boolean authView;
   boolean authPublish;
+  boolean authDatasource;
   boolean authDataItem;
   boolean authExport;
 }

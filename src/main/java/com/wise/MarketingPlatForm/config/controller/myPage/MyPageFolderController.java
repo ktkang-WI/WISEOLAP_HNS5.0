@@ -57,11 +57,14 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "") String createdDate,
     @RequestParam(required = false, defaultValue = "") String tag,
     @RequestParam(required = false, defaultValue = "0") int ordinal,
+    @RequestParam(required = false, defaultValue = "0") int fldParentId,
     @RequestParam(required = false, defaultValue = "") String desc,
     @RequestParam(required = false, defaultValue = "") String query,
-    @RequestParam(required = false, defaultValue = "false") Boolean prompt
+    @RequestParam(required = false, defaultValue = "false") Boolean prompt,
+    @RequestParam(required = false, defaultValue = "false") Boolean maxReportPeriodYn
   ) {
     String strPrompt = prompt ? "Y" : "N";
+    String strMaxReportPeriodYn = maxReportPeriodYn ? "Y" : "N";
 
     if (prompt == null) strPrompt = "N";
 
@@ -69,12 +72,14 @@ public class MyPageFolderController {
       .id(id)
       .name(name)
       .subtitle(subtitle)
+      .fldParentId(fldParentId)
       .type(type)
       .desc(desc)
       .tag(tag)
       .createdBy(createdBy)
       .createdDate(createdDate)
       .prompt(strPrompt)
+      .maxReportPeriodYn(strMaxReportPeriodYn)
       .query(query)
       .ordinal(ordinal)
       .build();

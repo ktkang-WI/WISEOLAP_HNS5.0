@@ -2,6 +2,7 @@ package com.wise.MarketingPlatForm.report.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
@@ -53,6 +57,7 @@ import com.wise.MarketingPlatForm.report.type.ItemType;
 import com.wise.MarketingPlatForm.report.type.ReportType;
 import com.wise.MarketingPlatForm.report.vo.ReportListDTO;
 import com.wise.MarketingPlatForm.report.vo.FolderMasterVO;
+import com.wise.MarketingPlatForm.report.vo.LinkReportTokenDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportLinkSubMstrDTO;
 import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
@@ -60,6 +65,7 @@ import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 import com.wise.MarketingPlatForm.utils.Function;
 import com.wise.MarketingPlatForm.utils.ListDataUtility;
 import com.wise.MarketingPlatForm.utils.ListUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Type;
 
@@ -79,6 +85,7 @@ public class ReportController {
     private final AuthService authService;
 
     private final TokenStorage<ReportTokenDTO> tokenStorage;
+    private final TokenStorage<LinkReportTokenDTO> linkTokenStorage;
     private static final Logger logger = LoggerFactory.getLogger(RestController.class);
 
     @Autowired
@@ -88,6 +95,7 @@ public class ReportController {
         this.reportService = reportService;
         this.authService = authService;
         this.tokenStorage = new TokenStorage<>("report", ReportTokenDTO.class);
+        this.linkTokenStorage = new TokenStorage<>("linkReport", LinkReportTokenDTO.class);
     }
 
     @Operation(summary = "item-data", description = "아이템의 데이터를 조회합니다.")
@@ -264,9 +272,17 @@ public class ReportController {
         return reportService.getReport(request, reportId, reportSeq);
 	}
     
-    @PostMapping(value = "/md-code")
-	public String getMdCode(HttpServletRequest request) {
-        return SessionUtility.getSessionUser(request).getMdCode();
+    @PostMapping(value = "/user-info")
+	public Map<String, String> getUserInfo(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+        Map<String, String> res = new HashMap<> ();
+
+        res.put("userNm", user.getUserNm());
+        res.put("mdCode", user.getMdCode());
+        res.put("userId", user.getUserId());
+        res.put("grpId", user.getGrpId() + "");
+
+        return res;
 	}
     
     @Operation(
@@ -406,6 +422,8 @@ public class ReportController {
             reportDTO.setGridInfo(param.getOrDefault("requester", ""));
             // 홈앤쇼핑 자동 조회 여부 추가. PROMPT_YN 컬럼 활용
             reportDTO.setPromptYn(param.getOrDefault("promptYn", "N"));
+            // 홈앤쇼핑 조회 기간 설정 해제 추가. MAX_REPORT_PERIOD_YN 컬럼 활용
+            reportDTO.setMaxReportPeriodYn(param.getOrDefault("maxReportPeriodYn", "N"));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -427,6 +445,10 @@ public class ReportController {
 
             // 홈앤쇼핑 요청자 추가. GRID_INFO 컬럼 활용
             reportDTO.setGridInfo(param.getOrDefault("requester", ""));
+            // 홈앤쇼핑 자동 조회 여부 추가. PROMPT_YN 컬럼 활용
+            reportDTO.setPromptYn(param.getOrDefault("promptYn", "N"));
+            // 홈앤쇼핑 조회 기간 설정 해제 추가. MAX_REPORT_PERIOD_YN 컬럼 활용
+            reportDTO.setMaxReportPeriodYn(param.getOrDefault("maxReportPeriodYn", "N"));
             String reportTypeStr = param.getOrDefault("reportType", "");
             ReportType reportType = ReportType.fromString(reportTypeStr).orElse(ReportType.ALL);
             reportDTO.setReportType(reportType);
@@ -448,7 +470,8 @@ public class ReportController {
       @RequestParam(required = false, defaultValue = "") String reportType,
       @RequestParam(required = false, defaultValue = "") String reportTag,
       @RequestParam(required = false, defaultValue = "") String reportDesc,
-      @RequestParam(required = false, defaultValue = "N") boolean promptYn
+      @RequestParam(required = false, defaultValue = "N") boolean promptYn,
+      @RequestParam(required = false, defaultValue = "N") boolean maxReportPeriodYn
     ) throws Exception {
     
       ReportMstrEntity reportMstr = ReportMstrEntity.builder()
@@ -462,6 +485,7 @@ public class ReportController {
           .reportDesc(reportDesc)
           .reportTag(reportTag)
           .promptYn(promptYn ? "Y" : "N")
+          .maxReportPeriodYn(maxReportPeriodYn ? "Y" : "N")
           .build();
     
       boolean result = reportService.patchConfigReport(reportMstr);
@@ -474,8 +498,7 @@ public class ReportController {
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(HttpServletRequest request) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);
-        int userNo = userDTO.getUserNo();
-        return reportService.getReportFolderList(userNo);
+        return reportService.getReportFolderList(userDTO);
 	}
 
     @PatchMapping(value = "/report-delete")
@@ -496,14 +519,14 @@ public class ReportController {
         Type listType = new TypeToken<List<ReportLinkMstrDTO>>() {}.getType();
         List<ReportLinkMstrDTO> reportLinkDTO = gson.fromJson(gson.toJson(linkReports), listType);
         reportService.insertLinkReport(reportLinkDTO);
-        reportLinkDTO.forEach(subDto -> {
-            if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
-                List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
-                reportService.insertSubLinkReport(reportLinkSubDTO);
-            }
-        });
         return ResponseEntity.ok().body("Link reports successfully saved.");
     }
+        // reportLinkDTO.forEach(subDto -> {
+            // if (subDto.isSubYn() && subDto.getSubLinkReport() != null) {
+            //     List<ReportLinkSubMstrDTO> reportLinkSubDTO = subDto.getSubLinkReport();
+            //     reportService.insertSubLinkReport(reportLinkSubDTO);
+            // }
+        // });
     
 
     @PostMapping(value = "/report-link-param")
@@ -531,6 +554,48 @@ public class ReportController {
 
         String token = tokenStorage.saveToken(new ReportTokenDTO(Integer.parseInt(reportId), userId, reportType, promptYn));
 
+        return new ResponseEntity(token, HttpStatus.OK);
+    }
+
+    @PostMapping("/generate-link-token")
+    public ResponseEntity<String> generateLinkToken(HttpServletRequest request, @RequestBody Map<String, String> requestBody) {
+    // public ResponseEntity<String> generateLinkToken(HttpServletRequest request, @RequestBody Map<String, Object> requestBody) {
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+        String userId = (String) userDTO.getUserId();
+        String reportId = (String) requestBody.get("reportId");
+        // Integer reportId = (Integer) requestBody.get("reportId");
+        String reportType = (String) requestBody.get("reportType");
+        String parentReportId = (String) requestBody.get("parentReportId");
+        // Integer parentReportId = (Integer) requestBody.get("parentReportId");
+        String parentReportType = (String) requestBody.get("parentReportType");
+        String promptYn = (String) requestBody.get("promptYn");
+        String linkNewTab = (String) requestBody.get("linkNewTab");
+
+        // ObjectMapper objectMapper = new ObjectMapper(); 
+
+        // List<Map<String, Object>> linkFkInfo = objectMapper.convertValue(requestBody.get("linkFkInfo"), List.class);
+        // List<Map<String, Object>> linkParamInfo = objectMapper.convertValue(requestBody.get("linkParamInfo"), List.class);
+
+            // Process linkFkInfo and linkParamInfo as needed
+        // for (Map<String, Object> fkInfo : linkFkInfo) {
+        //     System.out.println("Processing fkInfo: " + fkInfo);
+        // }
+    
+        // for (Map<String, Object> paramInfo : linkParamInfo) {
+        //     System.out.println("Processing paramInfo: " + paramInfo);
+        // }
+
+        String token = linkTokenStorage.saveToken(
+            new LinkReportTokenDTO(
+                reportId,
+                reportType, 
+                parentReportId,
+                parentReportType,
+                userId,
+                promptYn,
+                linkNewTab
+                )
+            );
         return new ResponseEntity(token, HttpStatus.OK);
     }
 
@@ -615,6 +680,27 @@ public class ReportController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
+    }
+
+    @GetMapping("/portal-report-list")
+    public ResponseEntity<Map<String, List<ReportListDTO>>> getPortalReportList(HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        Map<String, List<ReportListDTO>> result = reportService.getportalReportList(user);
+
+        return ResponseEntity.ok().body(result);
+    }
+    
+    
+    @GetMapping("/portal-menu-list")
+    public ResponseEntity<List<ReportListDTO>> getPortalMenuList(@RequestParam("folders") String folders, HttpServletRequest request) {
+        UserDTO user = SessionUtility.getSessionUser(request);
+
+        List<String> list =  Arrays.asList(folders.split(","));
+
+        List<ReportListDTO> result = reportService.getPortalMenuList(user, list);
+
+        return ResponseEntity.ok().body(result);
     }
 }
 

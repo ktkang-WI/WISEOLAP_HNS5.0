@@ -26,4 +26,5 @@ public class Parameter {
     String paramType;
     String itemCaption;
     String itemKey;
+    String format;
 }
