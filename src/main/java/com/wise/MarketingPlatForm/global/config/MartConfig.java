@@ -31,6 +31,13 @@ public class MartConfig {
                 hikariConfig.setConnectionTimeout(120000);
                 hikariConfig.setIdleTimeout(1800000);
 
+
+                // shlim 2024-10-16 최소 유지 커넥션 수 설정
+                hikariConfig.setMinimumIdle(50);
+
+                // shlim 2024-10-16 최대 커넥션 풀 크기 설정
+                hikariConfig.setMaximumPoolSize(200);
+
                 HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
                 sqlSessionFactoryBean.setDataSource(dataSource);
