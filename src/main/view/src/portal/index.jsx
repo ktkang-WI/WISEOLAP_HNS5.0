@@ -129,7 +129,12 @@ const Portal = () => {
     if (!date) return;
     models.Portal.getCardData(format(date, 'yyyyMMdd'), type).then((data) => {
       if (data.status == 200 && data.data) {
-        const titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
+        let titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
+
+        if (type == '년누적') {
+          titles = ['예상취급액(억원)', '실현취급액(억원)', '실현공헌이익(억원)', '주문고객수(천명)'];
+        }
+
         const _cardData = titles.map((title, i) => {
           const card = data.data.find((c) => c['구분'] == title);
 
