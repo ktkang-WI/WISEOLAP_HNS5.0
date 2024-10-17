@@ -594,8 +594,13 @@
     font-size: 20px;
   }
 
-  .portal .pay_box_wrap li input, .pay_box_button {
+  .portal .pay_box_wrap li input {
     font-size: 18px;
+  }
+
+  .portal .pay_box_button {
+    font-size: 12px;
+    padding: 16px 10px;
   }
 
   .portal .pay_box_wrap ul {
@@ -766,6 +771,12 @@
   .portal .file_box button {
     height: 100%;
   }
+
+  .portal .pay_box_button {
+    font-size: 16px;
+    padding: 13px 10px;
+  }
+
 
   .portal .graph_box_wrap .box_title .box_title_btns button {
     width: 80px;
