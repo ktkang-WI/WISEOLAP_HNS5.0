@@ -38,7 +38,7 @@ import {initWorkkbookJSONs}
 const useReportSave = () => {
   const dispatch = useDispatch();
   const {alert, confirm} = useModal();
-  const {executeItems, executeSpread} = useQueryExecute();
+  const {executeItems, executeSpread, executeValidata} = useQueryExecute();
   const editMode = useSelector(selectEditMode);
 
   const linkActions = LinkSlice.actions;
@@ -544,6 +544,10 @@ const useReportSave = () => {
       } else {
         executeSpread();
       }
+    };
+
+    if (executeValidata()) {
+      return;
     };
 
     if (parameters.informations.length <=

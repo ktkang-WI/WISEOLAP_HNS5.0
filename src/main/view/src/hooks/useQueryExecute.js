@@ -497,6 +497,26 @@ const useQueryExecute = () => {
     });
   };
 
+  const executeValidata = () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const rootItem = selectRootItem(store.getState());
+    try {
+      let msg = '';
+      if (datasets.length === 0) {
+        msg = localizedString.dataSourceNotSelectedMsg;
+        alert(msg);
+        return true;
+      }
+      validateRequiredField(rootItem);
+    } catch (error) {
+      console.error(error);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
+      return true;
+    }
+  };
+
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    * @param {string} flag
@@ -858,7 +878,8 @@ const useQueryExecute = () => {
     executeLinkageFilter,
     executeSpread,
     executeParameterDefaultValueQuery,
-    initializeParameters
+    initializeParameters,
+    executeValidata
   };
 };
 
