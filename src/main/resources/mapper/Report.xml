@@ -565,7 +565,7 @@
       FLD_PARENT_ID AS fldParentId,
       FLD_ORDINAL AS fldOrdinal
       FROM PUB_FLD_MSTR
-      WHERE PUB_FLD_MSTR.FLD_ID IN
+      WHERE PUB_FLD_MSTR.FLD_ID IN 
       <foreach item="fldId" collection="fldIdSet" open="(" separator="," close=")">
         #{fldId}
       </foreach>

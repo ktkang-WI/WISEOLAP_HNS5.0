@@ -740,8 +740,11 @@ public class ReportService {
          for (UserAuthReportMstrEntity entity : userAuthReportMstrEntities) {
              fldIdSet.add(entity.getFldId());
          }
-         
-        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
+        
+        List<FolderMasterVO> publicFolderList = new ArrayList<FolderMasterVO>();
+        if (fldIdSet.size() > 0) {
+            publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
+        }
         List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userNo);
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);
