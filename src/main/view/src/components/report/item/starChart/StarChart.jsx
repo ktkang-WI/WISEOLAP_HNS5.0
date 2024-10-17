@@ -1,5 +1,4 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
-import useSizeObserver from '../util/hook/useSizeObserver';
 import {useRef} from 'react';
 import {
   PolarChart,
@@ -23,8 +22,6 @@ const StarChart = ({
   const ref = useRef();
   const seriesNames = mart.data.info.seriesMeasureNames;
 
-  const {height, width} = useSizeObserver(ref);
-
   useItemExport({
     id,
     ref,
@@ -34,12 +31,12 @@ const StarChart = ({
 
   return (
     <Wrapper
-      ref={ref}
       id={id}
     >
       <PolarChart
-        width={width}
-        height={height}
+        width={'100%'}
+        height={'100%'}
+        ref={ref}
         dataSource={mart?.data?.data}
         palette={meta?.palette?.name} // Dev Default blend
         useSpiderWeb={true}
