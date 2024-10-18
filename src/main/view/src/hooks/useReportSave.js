@@ -546,8 +546,10 @@ const useReportSave = () => {
       }
     };
 
-    if (executeValidata()) {
-      return;
+    if (designerMode === DesignerMode['AD_HOC']) {
+      if (executeValidata()) {
+        return;
+      }
     };
 
     if (parameters.informations.length <=
