@@ -2,7 +2,7 @@ import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from '../common/Title';
 import StyledTreeList from './StyledTreeList';
 import localizedString from 'config/localization';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import dash from 'assets/image/icon/report/dash.png';
 import excel from 'assets/image/icon/report/excel_file.png';
@@ -12,6 +12,12 @@ import {Report}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 
 const PrivateReportList = ({data, setRowData}) => {
+  const [newRows, setNewRows] = useState();
+  useEffect(() => {
+    const sortingRows = data.sort((a, b) =>a.fldOrdinal - b.fldOrdinal ||
+      (a.fldNm.toLowerCase() < b.fldNm.toLowerCase() ? -1 : 1));
+    setNewRows(sortingRows);
+  }, [data]);
   // state
   const cellRender = useCallback(({row}) => {
     let img = folderImg;
@@ -46,7 +52,7 @@ const PrivateReportList = ({data, setRowData}) => {
       <Title title={localizedString.privateReportList}></Title>
       <StyledTreeList
         showColumnHeaders={false}
-        dataSource={data}
+        dataSource={newRows}
         keyExpr="key"
         noDataText={localizedString.privateReportListNoDataTxt}
         parentIdExpr="parentId"

@@ -28,8 +28,8 @@ import {nullDataCheck} from 'components/report/util/ReportUtility';
 import ExecuteSlice from 'redux/modules/ExecuteSlice';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
-import {useSelector} from 'react-redux';
-import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
+// import {useSelector} from 'react-redux';
+// import {selectNewLinkParamInfo} from 'redux/selector/LinkSelector';
 
 const useQueryExecute = () => {
   const {updateItem} = ItemSlice.actions;
@@ -39,7 +39,9 @@ const useQueryExecute = () => {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
   // const dataFieldOption = useSelector(selectCurrentDataFieldOption);
   const dispatch = useDispatch();
-  const newLinkParamInfo = useSelector(selectNewLinkParamInfo);
+  const newLinkParamInfo =
+    JSON.parse(sessionStorage.getItem('newWindowLinkParamInfo'));
+  // useSelector(selectNewLinkParamInfo);
 
   /**
    * 조회에 필요한 파라미터 생성
@@ -495,14 +497,31 @@ const useQueryExecute = () => {
     });
   };
 
+  const executeValidata = () => {
+    const datasets = selectCurrentDatasets(store.getState());
+    const rootItem = selectRootItem(store.getState());
+    try {
+      let msg = '';
+      if (datasets.length === 0) {
+        msg = localizedString.dataSourceNotSelectedMsg;
+        alert(msg);
+        return true;
+      }
+      validateRequiredField(rootItem);
+    } catch (error) {
+      console.error(error);
+      if (error.message !== 'canceled') {
+        alert(error.message);
+      }
+      return true;
+    }
+  };
+
   /**
    * 선택돼 있는 보고서 전체 아이템 쿼리 실행
    * @param {string} flag
    */
   const executeItems = async (flag) => {
-    const arr = [];
-    window.sessionStorage.setItem('cellClick', JSON.stringify(arr));
-
     let loadingMsg = '데이터를 조회 중입니다.';
     if (flag) loadingMsg = '쿼리를 조회 중입니다.';
     const rootItem = selectRootItem(store.getState());
@@ -682,7 +701,7 @@ const useQueryExecute = () => {
     const setDefaultValue = async (name, value) => {
       const params = new URLSearchParams(window.location.search);
       const paramValues = JSON.parse(params.get('param_values') || '{}');
-      let _value;
+      let _value = value;
       if (paramValues[name]) {
         _value = paramValues[name];
       }
@@ -694,8 +713,6 @@ const useQueryExecute = () => {
         if (matchedParam) {
           _value = matchedParam.value;
         }
-      } else {
-        _value = value;
       }
 
       const reg = /\[MD_CODE\]|\[WI_SESSION_ID\]/;
@@ -705,6 +722,9 @@ const useQueryExecute = () => {
         const info = res?.data || {};
         _value = [];
         _value = value.map((v) => {
+          if (v == '[MD_CODE]') return info.mdCode;
+          if (v == '[WI_SESSION_ID]') return info.userId;
+
           return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
               .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
         });
@@ -754,6 +774,9 @@ const useQueryExecute = () => {
               const info = res?.data || {};
 
               data.value = data.value.map((v) => {
+                if (v == '[MD_CODE]') return info.mdCode;
+                if (v == '[WI_SESSION_ID]') return info.userId;
+
                 return v.replaceAll('[MD_CODE]', '\'' + info.mdCode + '\'')
                     .replaceAll('[WI_SESSION_ID]', '\'' + info.userId + '\'');
               });
@@ -855,7 +878,8 @@ const useQueryExecute = () => {
     executeLinkageFilter,
     executeSpread,
     executeParameterDefaultValueQuery,
-    initializeParameters
+    initializeParameters,
+    executeValidata
   };
 };
 

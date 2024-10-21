@@ -45,6 +45,7 @@ const ShowDataModal = ({
         }}
         height={'100%'}
         export={{enabled: true}}
+        allowColumnResizing={true}
         onExporting={(e) => {
           const workbook = new Workbook();
           const worksheet = workbook.addWorksheet('Main sheet');

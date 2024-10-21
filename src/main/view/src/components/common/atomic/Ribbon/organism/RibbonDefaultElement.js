@@ -43,12 +43,15 @@ import palette from 'assets/image/icon/button/global_color.png';
 import colorEdit from 'assets/image/icon/button/edit_color.png';
 import Palette from '../../Popover/organism/Palette';
 import ColorEditModal from '../../Modal/organisms/ColorEditModal';
+import ColorEditModalPalette
+  from '../../Modal/organisms/ColorEditModal_palette';
 import InputTxtModal from '../../Modal/organisms/InputTxtModal';
 import {AdHocLayoutTypes} from 'components/config/configType';
 import {getPalette} from 'devextreme/viz/palette';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {useDispatch} from 'react-redux';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
+import ItemType from 'components/report/item/util/ItemType';
 
 const RibbonDefaultElement = () => {
   const {
@@ -120,10 +123,14 @@ const RibbonDefaultElement = () => {
   const getColorEditModal = (item) => {
     const measures = getMeasures(item);
     const colorEdit = item.meta.colorEdit;
-    return openModal(ColorEditModal,
+    const palette = item.meta.palette;
+    const Component = item.type == ItemType.CHART ?
+      ColorEditModalPalette : ColorEditModal;
+    return openModal(Component,
         {
           modalTitle: localizedString.colorEdit,
           measures: measures,
+          palette: palette,
           colorEdit: colorEdit,
           onSubmit: (returnedOptions) => {
             editColor(reportId, selectedItem, returnedOptions);

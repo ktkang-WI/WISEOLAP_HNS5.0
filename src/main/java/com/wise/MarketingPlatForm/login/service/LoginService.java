@@ -1,5 +1,10 @@
 package com.wise.MarketingPlatForm.login.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,21 +12,31 @@ import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.auth.service.AuthService;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.utils.CalcDate;
+import com.wise.MarketingPlatForm.utils.SHA256Util;
 
 @Service
 public class LoginService {
+    private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
     @Autowired
     AuthService authService;
     
     @Autowired
     CalcDate calcDate;
 
+    @Autowired
+    SHA256Util sha256Util;
+
     private int getIsChangePw(UserDTO userDTO, String id, String inputPw) {
+        if ("1111-11-11 00:00:00".equals(userDTO.getPwChangeDt())) {
+            return 4;
+        }
         if (userDTO != null && userDTO.getPwChangeDt() == null && id.equals(inputPw)) {
             // 1: 사번, pw 같고, 처음 로그인 하는 경우.
             return 1;
         }
-
+        if (id.equals(inputPw)) {
+            return 1;
+        }
         try {
             String[] splitDate = userDTO.getPwChangeDt().split(" ");
             String[] yyyyMMdd = splitDate[0].split("-");
@@ -35,18 +50,35 @@ public class LoginService {
                 return 2;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error("pw_change_dt", e);
+            return 1;
         }
 
         return 0;
     };
 
-    // 추후 암호화 관련 메서드
     private boolean getMatchPw(String inputPw, String getPw) {
-        // db에서 암호화되어 저장된 pw 가져와서 풀기
-        // front에서 입력한 pw 암호화 된 것 풀기
-        // 풀고 둘이 비교. password.equals(userDTO.getPassword())
-        return inputPw.equals(getPw);
+        boolean result = false;
+
+        if ("".equals(inputPw)) {
+            return result;
+        }
+        // db에 암호화로 저장되기 전 pw
+        if (inputPw.equals(getPw)) {
+            result = true;
+        }
+
+        try {
+            String encodedPw = sha256Util.encrypt(inputPw);
+            if (encodedPw.equals(getPw)) {
+                result = true;
+            }
+        } catch (Exception e) {
+            logger.error("chack_inputPw_getPw", e);
+            return false;
+            
+        }
+        return result;
     }
 
     public UserDTO getLoginUser(String id, String password) {

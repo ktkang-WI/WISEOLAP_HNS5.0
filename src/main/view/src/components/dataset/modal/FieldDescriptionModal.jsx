@@ -48,6 +48,7 @@ const FieldDescriptionModal = ({...props}) => {
         showBorders={true}
         dataSource={fields}
         onRowUpdating={onRowUpdating}
+        allowColumnResizing={true}
       >
         <Editing
           mode="cell"

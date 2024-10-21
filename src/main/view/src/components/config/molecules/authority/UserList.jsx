@@ -1,5 +1,5 @@
 import DataGrid,
-{Column, SearchPanel, Selection} from 'devextreme-react/data-grid';
+{Column, SearchPanel, Selection, Paging} from 'devextreme-react/data-grid';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Title from 'components/config/atoms/common/Title';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
@@ -52,8 +52,11 @@ const UserList = ({onRowClick, dependency}) => {
         dataSource={dataSource}
         showBorders={true}
         onRowClick={HandleClick}
+        allowColumnResizing={true}
       >
         <Selection mode="single" />
+        <Paging
+          enabled={false}/>
         <SearchPanel
           visible={true}
           width={250}

@@ -41,6 +41,7 @@ import {
   selectAlert
 } from 'redux/selector/AlertSelector';
 import {useState} from 'react';
+import {selectSpread} from 'redux/selector/SpreadSelector';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -183,8 +184,11 @@ const HeaderDefaultElement = () => {
       'onClick': (e) => {
         // TODO : linkViewer 방식이 변경 되면 다시 고려 해야함.
         const items = selectCurrentItems(store.getState());
+        const spreadData = selectSpread(store.getState());
         const isOpenAndExcute = items.some((i) => i.mart.init);
         if (isOpenAndExcute) {
+          openModal(ReportSaveModal);
+        } else if (Object.keys(spreadData.meta.bindingInfos).length > 0) {
           openModal(ReportSaveModal);
         } else {
           alert('보고서를 조회한 후 저장해 주세요.');
@@ -230,6 +234,17 @@ const HeaderDefaultElement = () => {
         dispatch(setEditMode(EditMode.DESIGNER));
         dispatch(setDesignerMode(initialDisplay));
         reload(initialDisplay);
+      }
+    },
+    'Portal': {
+      'id': 'portal',
+      'label': '메인화면 열기',
+      'buttonType': 'whiteRound',
+      'width': '115px',
+      'icon': openViewerImg,
+      'type': 'CommonButton',
+      'onClick': (e) => {
+        nav('/editds/portal');
       }
     },
     'LinkReportList': {

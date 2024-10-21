@@ -1,8 +1,5 @@
 import {useState, useEffect} from 'react';
-import {format} from 'date-fns';
-import $ from 'jquery';
-import 'jquery-ui/ui/widgets/datepicker';
-import 'jquery-ui/themes/base/all.css';
+import {format, parse} from 'date-fns';
 import './css/reset.css';
 import './css/style.css';
 import ReportBox from './components/ReportBox';
@@ -24,6 +21,7 @@ import bigMenuIcon5 from './img/big_ico5.png';
 import bigMenuIcon6 from './img/big_ico6.png';
 import ReportSwiper from './components/ReportSwiper';
 import {DateBox} from 'devextreme-react';
+import {useNavigate} from 'react-router-dom';
 
 const bigMenuIconMapper = {
   '고객': bigMenuIcon1,
@@ -42,10 +40,12 @@ const headerMenuHref = [
   {
     name: '주요보고서',
     fld: '2355'
+    // fld: '1781'
   },
   {
     name: '상품',
     fld: '2351'
+    // fld: '2221'
   },
   {
     name: '방송',
@@ -81,21 +81,79 @@ const quickBoxs = [
 ];
 
 const Portal = () => {
-  // const PORTAL_URL = 'https://olap.hns.tv:8080/editds';
-  // const PORTAL_URL = 'http://localhost:3000/editds';
   const PORTAL_URL = window.location.origin + '/editds';
-  const defaultDate = new Date();
-  defaultDate.setDate(defaultDate.getDate() - 1);
 
-  const [date, setDate] = useState(format(defaultDate, 'yyyy.MM.dd'));
+  const nav = useNavigate();
+  const [date, setDate] = useState(null);
+  const [type, setType] = useState('조회일');
+  const [maxDate, setMaxDate] = useState(new Date());
   const [reportList, setReportList] = useState([]);
   const [folderMap, setFolderMap] = useState([]);
   const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
-  const avFolders =
-    new Set([2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358]);
+  const folders = [2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358];
+  // folders.push(1621, 1781, 2221);
   const [userId, setUserId] = useState('');
   const [userNm, setUserNm] = useState('');
+
+  useEffect(() => {
+    models.Login.sessionCheck().catch(({response}) => {
+      if (response.status = 401) {
+        nav('/editds');
+      }
+    });
+  }, [nav]);
+
+  useEffect(() => {
+    // 3600000
+    const itv = setInterval(() => {
+      models.Portal.getMaxDate().then((data) => {
+        if (data.status === 200) {
+          const newDate = parse(data.data + '', 'yyyyMMdd', new Date());
+          setMaxDate(newDate);
+          setDate(newDate);
+        } else {
+          const defaultDate = new Date();
+          defaultDate.setDate(defaultDate.getDate() - 1);
+
+          setMaxDate(defaultDate);
+          setDate(defaultDate);
+        }
+      });
+    }, 3600000);
+
+    return () => clearInterval(itv);
+  }, [date]);
+
+  useEffect(() => {
+    if (!date) return;
+    models.Portal.getCardData(format(date, 'yyyyMMdd'), type).then((data) => {
+      if (data.status == 200 && data.data) {
+        let titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
+
+        if (type == '년누적') {
+          titles = ['예상취급액(억원)', '실현취급액(억원)', '실현공헌이익(억원)', '주문고객수(천명)'];
+        }
+
+        const _cardData = titles.map((title, i) => {
+          const card = data.data.find((c) => c['구분'] == title);
+
+          if (!card) {
+            return {
+              '구분': title,
+              '금액': 0,
+              '전년비': '0%',
+              '계획비': i == 3 ? undefined : '0%'
+            };
+          }
+
+          return card;
+        });
+
+        setCardData(_cardData);
+      }
+    });
+  }, [date, type]);
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
@@ -105,28 +163,20 @@ const Portal = () => {
       }
     });
 
-    models.Portal.getCardData(format(date, 'yyyyMMdd')).then((data) => {
-      if (data.status == 200 && data.data) {
-        setCardData(data.data);
+    models.Portal.getMaxDate().then((data) => {
+      if (data.status === 200) {
+        const newDate = parse(data.data + '', 'yyyyMMdd', new Date());
+        setMaxDate(newDate);
+        setDate(newDate);
       }
     });
 
-    // 3600000
-    const itv = setInterval(() => {
-      setDate(new Date());
-    }, 3600000);
-
-    return () => clearInterval(itv);
-  }, [date]);
-
-  useEffect(() => {
-    models.Report.getList(null, 'viewer').then((data) => {
+    models.Report.getPortalMenuList(folders).then((data) => {
       if (data.status == 200) {
-        const {publicReport} = data.data;
+        const publicReport = data.data;
 
         const _folderMap = publicReport.reduce((acc, curr) => {
-          if (curr.type === 'FOLDER' && avFolders.has(curr.id)) {
-          // if (curr.type === 'FOLDER') {
+          if (curr.type === 'FOLDER') {
             acc[curr.id] = {
               id: curr.id,
               name: curr.name,
@@ -138,18 +188,15 @@ const Portal = () => {
         }, {});
 
         publicReport.forEach((curr) => {
-          if (curr.type === 'REPORT' && _folderMap[curr.upperId]) {
-            _folderMap[curr.upperId].reports.push(curr);
+          if (curr.type === 'REPORT' && _folderMap[curr.rootFldId]) {
+            _folderMap[curr.rootFldId].reports.push(curr);
           }
         });
 
         const result = Object.values(_folderMap).map((fld) => {
           // 폴더 안의 리포트들을 ordinal, id 순으로 정렬
           fld.reports.sort((a, b) => {
-            if (a.ordinal !== b.ordinal) {
-              return a.ordinal - b.ordinal;
-            }
-            return a.id - b.id;
+            return a.name.localeCompare(b.name);
           });
           return fld;
         });
@@ -173,18 +220,8 @@ const Portal = () => {
     });
   }, []);
 
-  useEffect(() => {
-    $('.date').datepicker({
-      dateFormat: 'yy.mm.dd',
-      onSelect: (dateText) => {
-        const selectedDate = $.datepicker.parseDate('yy.mm.dd', dateText);
-        setDate(selectedDate);
-      }
-    });
-  }, []);
-
   const getReports = (reports) => {
-    return reports.map((report) => (
+    return reports?.map((report) => (
       <ReportBox
         // eslint-disable-next-line max-len
         href={`${PORTAL_URL}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`}
@@ -221,7 +258,7 @@ const Portal = () => {
   };
 
   const getQuickBoxs = () => {
-    return quickBoxs.map(({id, name}, i) => {
+    return quickBoxs?.map(({id, name}, i) => {
       const url = `${PORTAL_URL}/linkviewer?userId=${userId}&reportId=${id}`;
       return (
         <div id={'quick_box' + i} key={'quick_box' + i}>
@@ -257,7 +294,7 @@ const Portal = () => {
           </a>
           <ul id='header_menu'>
             {
-              headerMenuHref.map((menu, i) => {
+              headerMenuHref?.map((menu, i) => {
                 if (!folderMap[menu.fld]?.reports?.length) return null;
 
                 return (
@@ -270,7 +307,7 @@ const Portal = () => {
             }
             <li>
               <a
-                href={`${PORTAL_URL}/`}
+                href={`${PORTAL_URL}/viewer`}
                 rel="noreferrer"
                 target="_blank"
                 className='active'>
@@ -304,16 +341,44 @@ const Portal = () => {
               <DateBox
                 value={date}
                 buttons={[]}
+                max={maxDate}
                 onValueChanged={(e) => setDate(e.value)}
-                displayFormat={'yyyy.MM.dd'}
+                displayFormat={(date) => {
+                  if (!date) return '';
+
+                  const days = ['일', '월', '화', '수', '목', '금', '토'];
+                  const year = date.getFullYear();
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const day = String(date.getDate()).padStart(2, '0');
+                  const dayOfWeek = days[date.getDay()];
+
+                  return `${year}.${month}.${day}(${dayOfWeek})`;
+                }}
                 focusStateEnabled={false}
                 hoverStateEnabled={false}
                 openOnFieldClick={true}
               ></DateBox>
             </li>
+            <li className='pay_box_button_wrap'>
+              {
+                ['조회일', '월누적', '년누적'].map((title, i) =>
+                  <div
+                    key={`pay_box${i}`}
+                    className={'pay_box_button' +
+                      (title == type ? ' active' : '')
+                    }
+                    onClick={(e) => {
+                      setType(title);
+                    }}
+                  >
+                    {title}
+                  </div>
+                )
+              }
+            </li>
           </ul>
           {
-            cardData.map((d, i) => {
+            cardData?.map((d, i) => {
               return (
                 <Card
                   title={d['구분']}
@@ -330,13 +395,18 @@ const Portal = () => {
               <div className='no-card'> 조회된 데이터가 없습니다. </div>
           }
         </div>
-        <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
+        <ReportSwiper
+          type={type}
+          portalUrl={PORTAL_URL}
+          date={date}
+          userId={userId}
+        />
         {getQuickBoxs()}
       </div>
       <div className='blue_bg'>
         <div className='contents'>
           {
-            reportList.map((fld) => {
+            reportList?.map((fld) => {
               if (fld.reports.length > 0) {
                 return (
                   <div className="file_box" key={fld.id} id={'fld' + fld.id}>

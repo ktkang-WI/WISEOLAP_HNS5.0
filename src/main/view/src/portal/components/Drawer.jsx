@@ -53,7 +53,7 @@ const DrawerMenu = ({data, portalUrl}) => {
                       <div
                         onClick={() => {
                           // eslint-disable-next-line max-len
-                          const href = `${portalUrl}/linkviewer?userId=admin&reportId=${report.id}&reportType=${report.reportType}&srl=true`;
+                          const href = `${portalUrl}/linkviewer?reportId=${report.id}&reportType=${report.reportType}&srl=true`;
                           const newWindow = window.open(href, '_blank');
                           if (newWindow) {
                             newWindow.focus();
@@ -70,13 +70,13 @@ const DrawerMenu = ({data, portalUrl}) => {
             })
           }
         </div>
-        <div className='drawer-quick-menu'>
+        {/* <div className='drawer-quick-menu'>
           <a href='#quick_box0' className='menu-report'>주제영역 매트릭스 보고서</a>
           <a href='#quick_box1' className='menu-report'>전환보고서 안내</a>
-          {/* <a href='#quick_box2' className='menu-report'>검색키워드/상품별 TOP10</a>
+           <a href='#quick_box2' className='menu-report'>검색키워드/상품별 TOP10</a>
           <a href='#quick_box3' className='menu-report'>주문고객수/객단가</a>
-          <a href='#quick_box4' className='menu-report'>클럽고객수/TV유형상품수</a> */}
-        </div>
+          <a href='#quick_box4' className='menu-report'>클럽고객수/TV유형상품수</a>
+        </div> */}
       </div>
     </div>
   );

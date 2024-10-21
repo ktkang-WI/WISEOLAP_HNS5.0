@@ -26,6 +26,7 @@ public class ReportHisEntity {
     String paramXml;
     String delYn;
     String promptYn;
+    String maxReportPeriodYn;
     String reportSubTitle;
     int modUserNo;
     Timestamp eventStamp;

@@ -38,7 +38,7 @@ const ListFilterPopoverList = ({
   cancel,
   listRef,
   selectionKeys,
-  allText='전체',
+  allText='전체\u2800',
   info,
   orgDataSource = []
 }) => {

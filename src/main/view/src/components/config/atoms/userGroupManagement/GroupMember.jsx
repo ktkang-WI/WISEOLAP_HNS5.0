@@ -1,7 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import Panel from
   'components/config/organisms/userGroupManagement/common/Panel';
-import DataGrid, {Column, SearchPanel, Selection}
+import DataGrid, {Column, SearchPanel, Selection, Paging}
   from 'devextreme-react/data-grid';
 import {Button} from 'devextreme-react';
 import {useCallback, useContext} from 'react';
@@ -102,11 +102,14 @@ const GroupMember = () => {
             dataSource={groupMemberUsers}
             showBorders={true}
             ref={groupMemberUserRef}
+            allowColumnResizing={true}
           >
             <Selection
               mode="multiple"
               showCheckBoxesMode="always"
             />
+            <Paging
+              enabled={false}/>
             <Column
               dataField="userId"
               caption={localizedString.userId}
@@ -146,11 +149,14 @@ const GroupMember = () => {
             dataSource={groupNotMemberUsers}
             showBorders={true}
             ref={groupNotMemberUserRef}
+            allowColumnResizing={true}
           >
             <Selection
               mode="multiple"
               showCheckBoxesMode="always"
             />
+            <Paging
+              enabled={false}/>
             <SearchPanel
               className='test'
               visible={true}

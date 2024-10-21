@@ -2,14 +2,13 @@ import {TextBox, Popover} from 'devextreme-react';
 import {getTheme} from 'config/theme';
 import {useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
-import localizedString from 'config/localization';
 import ListFilterPopoverList from './ListFilterPopoverList';
 import {isPortal} from 'components/utils/PortalUtility';
 import useModal from 'hooks/useModal';
 
 const theme = getTheme();
 
-const allText = localizedString.all;
+const allText = '전체\u2800';
 
 const ListFilter = ({
   info, value, isTo, onValueChanged, width, id, ...props}) => {
@@ -37,7 +36,7 @@ const ListFilter = ({
     }
 
     if (!isLinkageFilter && captionArr.length === listItems.length) {
-      if (!info.useAll && listItems.length > 1) {
+      if (listItems.length > 1) {
         return allText;
       }
     }
@@ -127,12 +126,12 @@ const ListFilter = ({
     }
 
     if (info.useSearch) {
-      let listDataSource = dataSource
+      const listDataSource = dataSource
           .filter((item) => item.name !== '[All]');
-      if (_selectionKeys) {
-        listDataSource = listDataSource
-            .filter((item) => _selectionKeys.includes(item.name));
-      }
+      // if (_selectionKeys) {
+      //   listDataSource = listDataSource
+      //       .filter((item) => _selectionKeys.includes(item.name));
+      // }
 
       onValueChanged(info.name, selection, index, listDataSource);
     } else {

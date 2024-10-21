@@ -126,7 +126,9 @@ const DataColumnList = ({
       ...dataFields,
       [id]: []
     };
-
+    if (id === 'measure') {
+      temp.seriesOptions = [];
+    }
     dispatch(setItemField({reportId, dataField: temp}));
   };
 
@@ -137,7 +139,7 @@ const DataColumnList = ({
           <Icon src={icon}></Icon>
           {label}
         </PanelTitleText>
-        <SmallImageButton src={resetImg} onClick={() => resetDataColumn(id)}/>
+        <SmallImageButton src={resetImg} onClick={() => resetDataColumn()}/>
       </Title>
       <Droppable droppableId={id} renderClone={getRenderItem(columns)}>
         {(provided) => (

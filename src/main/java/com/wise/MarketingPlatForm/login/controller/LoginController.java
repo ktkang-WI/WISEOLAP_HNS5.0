@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
@@ -61,13 +61,14 @@ public class LoginController {
         UserDTO userDTO = loginService.getLoginUser(id, password);
 
         if (userDTO != null) {
+            
             if (userDTO.getIsChangePw() > 0) {
                 Map<String, Integer> chagePw = new HashMap<>();
                 chagePw.put("change", userDTO.getIsChangePw());
                 return ResponseEntity.ok().body(chagePw);
             }
-
             SessionUtility.setSessionUser(request, userDTO);
+            
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
             LoginLogDTO logDTO = LoginLogDTO.builder()
@@ -125,6 +126,11 @@ public class LoginController {
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         LoginLogDTO logDTO = LoginLogDTO.builder()
         .logType("LOGOUT")
         .eventStamp(currentTime)
@@ -165,6 +171,17 @@ public class LoginController {
 
         SessionUtility.clearSessionUser(request);
         response.sendRedirect("/editds");
+    }
+
+    @GetMapping("/session-check")
+    public ResponseEntity<Object> sessionCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        UserDTO userDTO = SessionUtility.getSessionUser(request);
+
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @Scheduled(cron = "0 0 */8 * * ?")

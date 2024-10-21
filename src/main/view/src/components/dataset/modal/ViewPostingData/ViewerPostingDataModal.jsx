@@ -95,6 +95,7 @@ const ViewerPostingDataModal = (
         selection={{mode: 'multiple'}}
         onContentReady={(e) => onContentReady(e)}
         keyExpr="uniqueName"
+        allowColumnResizing={true}
       >
         <Column
           dataField='name'

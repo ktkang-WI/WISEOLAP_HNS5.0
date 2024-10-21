@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
@@ -15,6 +16,12 @@ public class MartConfig {
 
     @Resource(name = "martTemplates")
     MartSqlSession martSqlSession;
+
+    @Value("${connection.pool.min}")
+    private int configMinConnectionPool;
+
+    @Value("${connection.pool.max}")
+    private int configMaxConnectionPool;
 
     public void setMartDataSource(DsMstrDTO dsMstrDTO) {
     	SqlSessionTemplate templateChecker = martSqlSession.sessionTemplates.get(dsMstrDTO.getDsId());
@@ -30,6 +37,15 @@ public class MartConfig {
                 hikariConfig.setPassword(dsMstrDTO.getPassword());
                 hikariConfig.setConnectionTimeout(120000);
                 hikariConfig.setIdleTimeout(1800000);
+
+
+                // shlim 2024-10-16 최소 유지 커넥션 수 설정
+                // hikariConfig.setMinimumIdle(10);
+                hikariConfig.setMinimumIdle(configMinConnectionPool);
+
+                // shlim 2024-10-16 최대 커넥션 풀 크기 설정
+                // hikariConfig.setMaximumPoolSize(10);
+                hikariConfig.setMaximumPoolSize(configMaxConnectionPool);
 
                 HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 

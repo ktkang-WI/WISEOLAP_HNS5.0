@@ -60,7 +60,7 @@ public class LoginFilter implements Filter{
         String[] execludePatterns = {"/login/**", "/error", "/js/**", "/static/**",
             "/css/**", "/images/**", "/favicon.ico", "/index.html", "/swagger-ui/**",
             "/v3/api-docs/**", "/config/general", "/report/retrieve-link-report", "/linkviewer**",
-            "/sso/inc/sessionView.jsp"
+            "/sso/inc/sessionView.jsp", "/mypage/user-info/update-password"
         };
 
         boolean useFilter = true;

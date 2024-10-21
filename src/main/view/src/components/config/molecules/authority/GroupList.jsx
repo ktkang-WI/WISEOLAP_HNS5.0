@@ -1,7 +1,7 @@
 import {AuthorityContext, getFindDifferentIds, getUserGroupKeys}
   from 'components/config/organisms/authority/Authority';
 import DataGrid,
-{Column, SearchPanel, Selection} from 'devextreme-react/data-grid';
+{Column, SearchPanel, Selection, Paging} from 'devextreme-react/data-grid';
 import React, {useContext, useEffect, useState} from 'react';
 import passwordIcon from 'assets/image/icon/auth/ico_password.png';
 import icoEdit from 'assets/image/icon/auth/ico_edit.png';
@@ -54,6 +54,8 @@ const GroupList = ({onRowClick, dependency}) => {
         onRowClick={HandleClick}
       >
         <Selection mode="single" />
+        <Paging
+          enabled={false}/>
         <SearchPanel
           visible={true}
           width={250}

@@ -35,7 +35,7 @@ export const getFrontValidations = (formData) => {
   }
 
   // 아무 입력 안함
-  if (Object.keys(formData).length !== 3) {
+  if (Object.keys(formData).length !== 4) {
     message = validationMsgList.allRequired;
     result = true;
   }
@@ -56,14 +56,31 @@ export const preventInputSpaceBar = (e) => {
     e.event.originalEvent.returnValue = false;
   }
 };
+/**
+ * @param {string} text 문자열 입력.
+ * @return {boolean}
+ */
+export const checkAppliedSpace = (text) => {
+  const reg = /\s/g;
+  if (typeof text !== 'string') {
+    console.log('문자만 적용 됨.');
+    throw new Error('typeError no input Object');
+  };
+  if (reg.test(text)) {
+    return true;
+  }
+  return false;
+};
 
 const validationMsgList = {
   ExceptionCheckCurrPw: localizedString.ExceptionCheckCurrPw,
   ExceptionUpdate: localizedString.ExceptionUpdate,
-  Success: localizedString.successUpdate,
+  Success: localizedString.pwChangeSuccess,
   FailUpdate: localizedString.FailUpdatePw,
   wrongCurrentPw: localizedString.wrongCurrentPw,
   allRequired: localizedString.allRequired,
   notMatchPw: localizedString.notMatchPw,
-  lengthValidation: localizedString.lengthValidation
+  lengthValidation: localizedString.lengthValidation,
+  dupleCheckPw: '변경할 비밀번호가 기존 비밀번호와 같을 수 없습니다.',
+  dupleCheckPwId: '변경할 비밀번호가 아이디 또는 이름과 같을 수 없습니다.'
 };

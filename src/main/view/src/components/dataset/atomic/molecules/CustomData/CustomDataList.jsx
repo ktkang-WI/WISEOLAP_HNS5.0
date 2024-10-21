@@ -73,6 +73,7 @@ const CustomDataList = () => {
         dataSource={dataSource}
         onRowClick={handleRowClick}
         onCellClick={handleCellClick}
+        allowColumnResizing={true}
       >
         <Editing
           mode="row"

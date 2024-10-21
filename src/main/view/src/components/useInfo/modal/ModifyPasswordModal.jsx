@@ -3,12 +3,14 @@ import ModifyPasswordForm from './ModifyPasswordForm';
 import {useRef} from 'react';
 import useModal from 'hooks/useModal';
 import {updatePassword} from 'models/config/myPage/MyPageConfig';
-import {getFrontValidations, getServerValidations} from './Validations';
+import {checkAppliedSpace,
+  getFrontValidations,
+  getServerValidations} from './Validations';
 import localizedString from 'config/localization';
 import {selectOpenedModals} from 'redux/selector/ModalSelector';
 import {useSelector} from 'react-redux';
 
-const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
+const ModifyPasswordModal = ({userId, msg = '', type = 1, ...props}) => {
   const ref = useRef(null);
   const openedModals = useSelector(selectOpenedModals);
 
@@ -66,7 +68,23 @@ const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
     if (!ref.current) return true;
 
     const formData = ref.current.instance.option().formData;
-
+    formData.id = userId;
+    const curPw = formData.currPassword;
+    const checkPw = formData.checkPassword;
+    const newPw = formData.newPassword;
+    // eslint-disable-next-line max-len
+    if (checkAppliedSpace(curPw)) {
+      alert('현재 비밀번호 입력에 공백이 포함되어 있습니다. 다시 확인해 주세요.');
+      return true;
+    }
+    if (checkAppliedSpace(newPw)) {
+      alert('새 비밀번호 입력에 공백이 포함되어 있습니다. 다시 확인해 주세요.');
+      return true;
+    }
+    if (checkAppliedSpace(checkPw)) {
+      alert('비밀번호 확인 입력에 공백이 포함되어 있습니다. 다시 확인해 주세요.');
+      return true;
+    }
     // 통신 전 유효성 검사.
     const isPassObj = getFrontValidations(formData);
 
@@ -91,8 +109,15 @@ const ModifyPasswordModal = ({msg = '', type = 1, ...props}) => {
         alert(localizedString.updateException);
       }
     }).catch((e) => {
-      console.log(e);
+      alert('관리자에게 문의 하세요.');
+      ref.current.instance.option().formData.newPassword = '';
+      ref.current.instance.option().formData.checkPassword = '';
+      ref.current.instance.repaint();
+      return true;
     });
+    ref.current.instance.option().formData.newPassword = '';
+    ref.current.instance.option().formData.checkPassword = '';
+    ref.current.instance.repaint();
     return result;
   };
 

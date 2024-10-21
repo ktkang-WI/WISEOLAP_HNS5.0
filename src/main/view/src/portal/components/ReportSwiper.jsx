@@ -7,9 +7,18 @@ import 'swiper/css/pagination';
 import {format} from 'date-fns';
 import React, {useMemo} from 'react';
 
-const ReportSwiper = ({portalUrl, userId, date}) => {
-  const reportIds = [13394, 13395, 13396, 13397, 13398];
-  const cache = useMemo(() => ({}), [date]);
+const ReportSwiper = ({portalUrl, userId, date, type}) => {
+  let reportIds = []; // , 13398
+
+  if (date != null) {
+    if (type === '년누적') {
+      reportIds = [13503, 13505, 13506, 13397];
+    } else {
+      reportIds = [13394, 13395, 13396, 13397];
+    }
+  }
+
+  const cache = useMemo(() => ({}), [date, type]);
 
   const getComponent = (id) => {
     if (!cache[id]) {
@@ -31,7 +40,7 @@ const ReportSwiper = ({portalUrl, userId, date}) => {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 10000,
+          delay: 15000,
           disableOnInteraction: false
         }}
         pagination={{
@@ -39,6 +48,15 @@ const ReportSwiper = ({portalUrl, userId, date}) => {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
+        onSwiper={(swiper) => {
+          swiper.navigation.nextEl.addEventListener('click',
+              () => swiper.autoplay.stop());
+          swiper.navigation.prevEl.addEventListener('click',
+              () => swiper.autoplay.stop());
+          swiper.pagination.bullets.forEach((bullet) => {
+            bullet.addEventListener('click', () => swiper.autoplay.stop());
+          });
+        }}
       >
         {
           reportIds.map((id) => {

@@ -48,7 +48,7 @@ public class GroupDataService {
 
     boolean result = false;
   
-    if (groupAuthDataMstr.size() == 0) return accountDAO.deleteGroupDataAll();
+    // if (groupAuthDataMstr.size() == 0) return accountDAO.deleteGroupDataAll();
 
     result = accountDAO.deleteGroupData(groupAuthDataMstr);
 

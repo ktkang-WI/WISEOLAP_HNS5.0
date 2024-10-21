@@ -206,6 +206,7 @@ const ShowQuerySQLData = ({dsId, datasetQuery, paramInfo}) => {
             dataSource={dataSource}
             width={'100%'}
             height={'100%'}
+            allowColumnResizing={true}
           />
         </Wrapper>
       </Wrapper>

@@ -19,6 +19,7 @@ text-align: center;
 const FormatOptionForm = ({
   formData,
   formRef,
+  itemType = '',
   axisSetting = false
 }) => {
   const [preview, setPreview] = useState(formatValue(formData));
@@ -82,7 +83,7 @@ const FormatOptionForm = ({
       >
         <Label>{localizedString.digitUnit}: </Label>
       </Item>
-      {axisSetting && <Item
+      {itemType == 'chart' && axisSetting && <Item
         dataField='autoBreak'
         editorType='dxCheckBox'
         editorOptions={{
@@ -90,13 +91,31 @@ const FormatOptionForm = ({
       >
         <Label>{'스케일 브레이크 사용'}</Label>
       </Item>}
-      {axisSetting && <Item
+      {itemType == 'chart' && axisSetting && <Item
         dataField='axisStartToZero'
         editorType='dxCheckBox'
         editorOptions={{
         }}
       >
         <Label>{localizedString.yAsixStartPoint}</Label>
+      </Item>}
+      {itemType == 'chart' && axisSetting && <Item
+        dataField='tick'
+        editorType='dxTextBox'
+      >
+        <Label>{'간격'}</Label>
+      </Item>}
+      {itemType == 'chart' && axisSetting && <Item
+        dataField='startValue'
+        editorType='dxTextBox'
+      >
+        <Label>{'최솟값'}</Label>
+      </Item>}
+      {itemType == 'chart' && axisSetting && <Item
+        dataField='endValue'
+        editorType='dxTextBox'
+      >
+        <Label>{'최댓값'}</Label>
       </Item>}
       {axisSetting && <Item
         dataField='useAxis'

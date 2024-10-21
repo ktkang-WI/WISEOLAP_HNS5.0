@@ -9,6 +9,7 @@ import {generalConfigure as generalLoader} from 'routes/loader/LoaderConfig';
 import useLayout from 'hooks/useLayout';
 // import ChangePasswordModal from '../modal/ChangePasswordModal';
 import ModifyPasswordModal from 'components/useInfo/modal/ModifyPasswordModal';
+import {checkAppliedSpace} from 'components/useInfo/modal/Validations';
 
 const StyledSignIn = styled.div`
   min-height: inherit;
@@ -77,10 +78,23 @@ const SignIn = () => {
           <FormInputs
             contents={inputElements()['login']}
             onSubmit={async (type) => {
+              // 공백 포함 여부 정규식.
               const id = document.querySelector('#input-ID input').value;
               const password =
                 document.querySelector('#input-Password input').value;
-
+              try {
+                if (checkAppliedSpace(id)) {
+                  alert('아이디 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
+                  return;
+                }
+                if (checkAppliedSpace(password)) {
+                  alert('비밀번호 입력창에 공백이 포함 되어있습니다. 다시 입력해 주세요.');
+                  return;
+                }
+              } catch (error) {
+                console.log(error);
+                // alert();
+              }
               try {
                 const res = await models.Login.login(id, password);
 
@@ -89,13 +103,22 @@ const SignIn = () => {
                   // TODO: 추후 함수로 이동
                   if (res?.data?.change === 1) {
                     msg = '초기 비밀번호 변경 필요합니다. 비밀번호를 변경해 주세요.';
-                    openModal(ModifyPasswordModal, {msg: msg, type: 1});
+                    openModal(ModifyPasswordModal,
+                        {userId: id, msg: msg, type: 1});
                     document.querySelector('#input-Password input').value = '';
                     return;
                   }
                   if (res?.data?.change === 3) {
                     msg = '비밀번호 변경 후 3개월이 지났습니다. 비밀번호를 변경해 주세요.';
-                    openModal(ModifyPasswordModal, {msg: msg, type: 3});
+                    openModal(ModifyPasswordModal,
+                        {userId: id, msg: msg, type: 3});
+                    document.querySelector('#input-Password input').value = '';
+                    return;
+                  }
+                  if (res?.data?.change === 4) {
+                    msg = '비밀번호가 초기화 된 계정입니다. 비밀번호를 다시 변경해 주세요.';
+                    openModal(ModifyPasswordModal,
+                        {userId: id, msg: msg, type: 1});
                     document.querySelector('#input-Password input').value = '';
                     return;
                   }

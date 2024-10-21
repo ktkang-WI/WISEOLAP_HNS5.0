@@ -11,12 +11,18 @@ import SpreadBoard from '../report/atomic/spreadBoard/organisms/SpreadBoard';
 import ReportContentWrapper
   from 'components/common/atomic/Common/Wrap/ReportContentWrapper';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import {useEffect, useState} from 'react';
 
 const theme = getTheme();
 
 const SpreadContent = () => {
   // draggable을 사용할지 안할지 논의
   const {onDragEnd, onDragStart} = useDrag();
+  const [fullscreen, setFullscreen] = useState(false);
+
+  useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, [fullscreen]);
 
   return (
     <Content
@@ -26,9 +32,13 @@ const SpreadContent = () => {
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <CustomDrawer index={0} component={DataSourceTab}>
-          <Wrapper>
+          <Wrapper className={fullscreen ? 'full-screen' : ''}>
             <ReportContentWrapper>
-              <FilterBar useSearchButton={true}/>
+              <FilterBar
+                fullscreen={fullscreen}
+                useFullscreenButton={true}
+                handleFullscreen={() => setFullscreen(!fullscreen)}
+                useSearchButton={true}/>
               <SpreadBoard/>
             </ReportContentWrapper>
           </Wrapper>

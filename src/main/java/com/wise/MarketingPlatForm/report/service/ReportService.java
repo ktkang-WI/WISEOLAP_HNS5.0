@@ -249,6 +249,7 @@ public class ReportService {
     		options.put("reportSubTitle", entity.getReportSubTitle());
     		options.put("reportPath", null);
             options.put("promptYn", entity.getPromptYn() == null ? "N" : entity.getPromptYn());
+            options.put("maxReportPeriodYn", entity.getMaxReportPeriodYn() == null ? "N" : entity.getMaxReportPeriodYn());
             options.put("authPublish", authPublishValue);
             options.put("authDatasource", authDatasourceValue);
 
@@ -381,6 +382,7 @@ public class ReportService {
             .paramXml(reportMstrDTO.getParamXml())
             .gridInfo(reportMstrDTO.getGridInfo())
             .promptYn(reportMstrDTO.getPromptYn())
+            .maxReportPeriodYn(reportMstrDTO.getMaxReportPeriodYn())
             .regUserNo(reportMstrDTO.getRegUserNo())
             .chartXml(reportMstrDTO.getChartXml())
             .layoutXml(reportMstrDTO.getLayoutXml())
@@ -440,6 +442,8 @@ public class ReportService {
             .reportXml(reportMstrDTO.getReportXml())
             .datasetXml(reportMstrDTO.getDatasetXml())
             .datasetQuery(reportMstrDTO.getDatasetQuery())
+            .promptYn(reportMstrDTO.getPromptYn())
+            .maxReportPeriodYn(reportMstrDTO.getMaxReportPeriodYn())
             .build();
 
         try {
@@ -507,6 +511,10 @@ public class ReportService {
         result.put("privateReport", combinedPrivateReports);
     
         return result;
+    }
+
+    public List<ReportListDTO> getPortalMenuList(UserDTO userDTO, List<String> folders) {
+        return reportDAO.selectPortalReportList(userDTO.getGrpId(), userDTO.getUserNo(), folders);
     }
 
     private List<ReportListDTO> createFavoriteReports(List<ReportListDTO> reports, List<ReportFavoritesEntity> favoriteReports, int folderId,  String fldType) {
@@ -732,8 +740,11 @@ public class ReportService {
          for (UserAuthReportMstrEntity entity : userAuthReportMstrEntities) {
              fldIdSet.add(entity.getFldId());
          }
-         
-        List<FolderMasterVO> publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
+        
+        List<FolderMasterVO> publicFolderList = new ArrayList<FolderMasterVO>();
+        if (fldIdSet.size() > 0) {
+            publicFolderList = reportDAO.selectPublicReportFolderList(fldIdSet);
+        }
         List<FolderMasterVO> privateFolderList = reportDAO.selectPrivateReportFolderList(userNo);
         result.put("publicFolder", publicFolderList);
         result.put("privateFolder", privateFolderList);

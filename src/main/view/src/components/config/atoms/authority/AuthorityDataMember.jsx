@@ -14,6 +14,7 @@ const AuthorityDataMember = () => {
         showBorders={true}
         ref={ref}
         height="90%"
+        allowColumnResizing={true}
       >
         <Selection
           mode="multiple"

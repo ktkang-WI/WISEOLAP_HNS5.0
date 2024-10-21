@@ -1007,6 +1007,7 @@
   "pointMakerExplain": "* 포인트 마커 표시 적용은 점/선 계열, 영역 계열(버블 제외)에서 적용이 됩니다.",
   "pointMakerExplain2": "* 빈 포인트 무시, 역순으로 보기는 다른 측정값과 동일하게 변경, 적용됩니다.",
   "checkingInitReportRetrieval": "자동 조회 여부",
+  "maxReportPeriodYn": "조회 기간 설정 해제",
   "viewerReportLimit": "뷰어 보고서는 5개까지 조회 가능합니다.",
   "linkReportitself": "자신의 보고서를 연결할 수 없습니다.",
   "privateReportList": "개인 보고서 목록",
@@ -1015,5 +1016,7 @@
   "privateReportGetError": "개인 보고서를 불러올 수 없습니다. 관리자에게 문의하세요.",
   "paramEditInputRequired": "입력창에서 조건절은 필수 입력 입니다.",
   "NoReportNoLinkReport": "현재 열려있는 보고서가 없습니다.\n먼저 보고서를 열어주세요.",
-  "yesReportNoLinkReport": "현재 불러온 보고서 연결 보고서 정보가 없습니다.\n먼저 연결 보고서를 설정해주세요."
+  "yesReportNoLinkReport": "현재 불러온 보고서 연결 보고서 정보가 없습니다.\n먼저 연결 보고서를 설정해주세요.",
+  "port": "Port",
+  "pwChangeSuccess": "비밀번호 변경에 성공 했습니다. 다시 로그인해 주세요."
 }
