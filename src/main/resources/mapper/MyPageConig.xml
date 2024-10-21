@@ -21,11 +21,16 @@
     <result column="USER_NO" property="userNo" javaType="int"/>
     <result column="GRP_ID" property="grpId" javaType="int"/>
     <result column="USER_ID" property="userId" javaType="String"/>
+    <result column="RUN_MODE" property="runMode2" javaType="String"/>
     <result column="USER_NM" property="userNm" javaType="String"/>
     <result column="E_MAIL1" property="email" javaType="String"/>
     <result column="E_MAIL2" property="email2" javaType="String"/>
     <result column="TEL_NO" property="telNo" javaType="String"/>
     <result column="HP_NO" property="hpNo" javaType="String"/>
+    <result column="ACCOUNT_CREATE_DT" property="accountCreateDt" javaType="String"/>
+    <result column="COMP_CD" property="compCode" javaType="String"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
+    <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
   </resultMap>
 
   <resultMap id="reportElement" type="hashmap">
@@ -143,15 +148,22 @@
   <!-- user info -->
   <select id="selectUserInfo" resultMap="UserDTO" parameterType="int">
     SELECT
-      USER_NO,
-      GRP_ID,
-      USER_ID,
-      USER_NM,
-      E_MAIL1,
-      E_MAIL2,
-      TEL_NO,
-      HP_NO
+      USER_MSTR.USER_NO,
+      USER_MSTR.GRP_ID,
+      GRP_MSTR.GRP_NM,
+      USER_MSTR.RUN_MODE, 
+      USER_MSTR.USER_ID,
+      USER_MSTR.USER_NM,
+      USER_MSTR.E_MAIL1,
+      USER_MSTR.E_MAIL2,
+      USER_MSTR.TEL_NO,
+      USER_MSTR.HP_NO,
+      USER_MSTR.COMP_CD,
+      USER_MSTR.ACCOUNT_CREATE_DT,
+      GRP_MSTR.RUN_MODE AS GRP_RUN_MODE
     FROM USER_MSTR
+      LEFT OUTER JOIN GRP_MSTR
+        ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
     WHERE USER_NO = #{userNo, jdbcType=INTEGER}
   </select>
   <select id='getPassword' resultType="String" parameterType="int">
@@ -174,6 +186,7 @@
       SET
         USER_ID = #{userId, jdbcType=VARCHAR},
         USER_NM = #{userNm, jdbcType=VARCHAR},
+        COMP_CD = #{compCode, jdbcType=VARCHAR},
         E_MAIL1 = #{email, jdbcType=VARCHAR},
         E_MAIL2 = #{email2, jdbcType=VARCHAR},
         TEL_NO = #{telNo, jdbcType=VARCHAR},

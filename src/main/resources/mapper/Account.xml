@@ -36,6 +36,9 @@
       <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
       <result column="GRP_DESC" property="grpDesc" javaType="String"/>
+      <result column="COMP_CD" property="compCode" javaType="String"/>
+      <result column="ACCOUNT_CREATE_DT" property="accountCreateDt" javaType="String"/>
+      <result column="HP_NO" property="hpNo" javaType="String"/>
     </resultMap>
 
     <resultMap id="UserDataDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserDataDTO">
@@ -176,9 +179,12 @@
         USER_MSTR.USER_NO,
         USER_MSTR.USER_ID,
         USER_MSTR.USER_NM,
+        USER_MSTR.ACCOUNT_CREATE_DT,
+        USER_MSTR.COMP_CD,
         USER_MSTR.E_MAIL1,
         USER_MSTR.E_MAIL2,
         USER_MSTR.TEL_NO,
+        USER_MSTR.HP_NO,
         USER_MSTR.RUN_MODE AS USER_RUN_MODE,
         USER_MSTR.USER_DESC,
         GRP_MSTR.GRP_ID,
@@ -395,7 +401,8 @@
             PW_CHANGE_DT,
             COMP_CD,
             LOCK_CNT,
-            HASH_YN
+            HASH_YN,
+            ACCOUNT_CREATE_DT
         )
         VALUES(
             USER_MSTR_USER_NO_SEQ.NEXTVAL,
@@ -411,10 +418,11 @@
             NULL,
             #{userDesc, jdbcType=VARCHAR},
             #{runMode, jdbcType=VARCHAR},
-            SYSDATE,
+            null,
+            #{compCd, jdbcType=VARCHAR},
             NULL,
             NULL,
-            NULL
+            SYSDATE
         )
     </insert>
 
@@ -450,6 +458,9 @@
               </if>
               <if test='runMode != ""'>
                 RUN_MODE = #{runMode, jdbcType=VARCHAR},
+              </if>
+              <if test='compCd != ""'>
+                COMP_CD = #{compCd, jdbcType=VARCHAR},
               </if>
               PASSWD = PASSWD
           WHERE USER_NO = #{userNo, jdbcType=INTEGER}
@@ -723,7 +734,8 @@
 
     <update id="deleteUser"  parameterType="com.wise.MarketingPlatForm.account.entity.UserMstrEntity">
       UPDATE USER_MSTR
-          SET DEL_YN = 'Y'
+          SET DEL_YN = 'Y',
+          ACCOUNT_DELETE_DT = SYSDATE
           WHERE USER_NO = #{userNo, jdbcType=INTEGER}
     </update>
 

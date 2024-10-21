@@ -87,6 +87,19 @@ const UserInfo = () => {
           <RequiredRule message={localizedString.validationUserNm}/>
           <Label>{localizedString.userName}</Label>
         </SimpleItem>
+        <Item
+          dataField="compCode"
+        >
+          <Label>{'부서/회사 코드'}</Label>
+        </Item>
+        <Item
+          dataField="accountCreateDt"
+          editorOptions={{
+            readOnly: true
+          }}
+        >
+          <Label>{'계정 생성일'}</Label>
+        </Item>
         {
           userDetailInfo.userNo === 0 &&
           <SimpleItem
@@ -124,6 +137,17 @@ const UserInfo = () => {
         <Item dataField="telNo">
           <Label>{'전화번호'}</Label>
         </Item>
+        <Item dataField="hpNo">
+          <Label>{'휴대폰 번호'}</Label>
+        </Item>
+        <SimpleItem
+          dataField="grpId"
+          editorOptions={{
+            readOnly: true
+          }}
+        >
+          <Label>{'그룹 아이디'}</Label>
+        </SimpleItem>
         <SimpleItem
           dataField="grpId"
           editorType="dxSelectBox"

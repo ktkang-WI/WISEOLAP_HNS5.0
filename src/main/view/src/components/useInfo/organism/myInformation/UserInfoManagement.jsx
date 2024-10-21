@@ -24,6 +24,7 @@ const UserInfoManagement = () => {
   const userInfoFormData = useLoaderData();
   const {openModal, success, alert, confirm} = useModal();
   const ref = useRef();
+  const mode = ['ADMIN', 'VIEW'];
 
   const getValidation = (item) => {
     if (item == 'userNm') {
@@ -68,134 +69,210 @@ const UserInfoManagement = () => {
   }, []);
 
   return (
-    <Wrapper>
-      <Form
-        ref={ref}
-        width={'70%'}
-        formData={userInfoFormData}
-        onContentReady={validateForm}
+    <>
+      <Wrapper
+        overflow={'auto'}
+        height={'90%'}
       >
-        <GroupItem
-          cssClass='dx-field-group-wrapper'
-          colCount={1}
-          caption={localizedString.personalInfo}
+        <Form
+          ref={ref}
+          width={'70%'}
+          formData={userInfoFormData}
+          onContentReady={validateForm}
         >
-          <Item
-            dataField='userId'
-            validationRules={getValidation('userNm')}
-            editorOptions={{
-              readOnly: true
-            }}
+          <GroupItem
+            cssClass='dx-field-group-wrapper'
+            colCount={1}
+            caption={localizedString.personalInfo}
           >
-            <Label showColon={false}>
-              {localizedString.userId}
-            </Label>
-          </Item>
-          <Item
-            dataField='userNm'
-            editorType='dxTextBox'
-            validationRules={getValidation('userNm')}
-            editorOptions={{
-              showClearButton: true,
-              onKeyDown: preventInputSpaceBar
-            }}
-          >
-            <Label showColon={false}>
-              {localizedString.userName}
-            </Label>
-          </Item>
-          <Item
-            dataField='email'
-            editorType='dxTextBox'
-            editorOptions={{
-              showClearButton: true,
-              valueChangeEvent: 'keyup',
-              onKeyDown: preventInputSpaceBar
-            }}
-          >
-            <EmailRule message={localizedString.invalideEmailRule}/>
-            <Label showColon={false}>
-              {localizedString.email + ' 1'}
-            </Label>
-          </Item>
-          <Item
-            dataField='email2'
-            editorType='dxTextBox'
-            editorOptions={{
-              showClearButton: true,
-              valueChangeEvent: 'keyup',
-              onKeyDown: preventInputSpaceBar
-            }}
-          >
-            <EmailRule message={localizedString.invalideEmailRule}/>
-            <Label showColon={false}>
-              {localizedString.email + ' 2'}
-            </Label>
-          </Item>
-          <Item // 전화번호 형식
-            dataField='telNo'
-            editorType='dxTextBox'
-            editorOptions={{
-              showClearButton: true,
-              onKeyDown: preventInputSpaceBar
-            }}
-          >
-            <Label showColon={false}>
-              {localizedString.telNo}
-            </Label>
-          </Item>
-          <Item
-            dataField='hpNo'
-            editorType='dxTextBox'
-            editorOptions={{
-              showClearButton: true,
-              onKeyDown: preventInputSpaceBar
-            }}
-          >
-            <Label showColon={false}>
-              {localizedString.cellPhoneNo}
-            </Label>
-          </Item>
-          <Item
-            editorType='custom'
-            render={() => (
-              <CommonButton
-                height='30px'
-                width='105px'
-                type='secondary'
-                borderRadius={'4px'}
-                font={theme.font.smallButton}
-                onClick = {() => {
-                  const userId = ref.current.instance.option().formData.userId;
-                  if (userId) {
-                    openModal(ModifyPasswordModal, {userId: userId});
-                  }
-                }}
-              >
-                <img src={icon}/>
+            <Item
+              dataField='userId'
+              validationRules={getValidation('userNm')}
+              editorOptions={{
+                readOnly: true
+              }}
+            >
+              <Label showColon={false}>
+                {localizedString.userId}
+              </Label>
+            </Item>
+            <Item
+              dataField='userNm'
+              editorType='dxTextBox'
+              validationRules={getValidation('userNm')}
+              editorOptions={{
+                showClearButton: true,
+                onKeyDown: preventInputSpaceBar
+              }}
+            >
+              <Label showColon={false}>
+                {localizedString.userName}
+              </Label>
+            </Item>
+            <Item
+              dataField='compCode'
+              editorType='dxTextBox'
+              editorOptions={{
+                readOnly: true
+              }}
+            >
+              <Label showColon={false}>
+                {'부서/회사 코드'}
+              </Label>
+            </Item>
+            <Item
+              dataField='accountCreateDt'
+              editorType='dxTextBox'
+              editorOptions={{
+                readOnly: true
+              }}
+            >
+              <Label showColon={false}>
+                {'계정 생성일'}
+              </Label>
+            </Item>
+            <Item
+              dataField='email'
+              editorType='dxTextBox'
+              editorOptions={{
+                showClearButton: true,
+                valueChangeEvent: 'keyup',
+                onKeyDown: preventInputSpaceBar
+              }}
+            >
+              <EmailRule message={localizedString.invalideEmailRule}/>
+              <Label showColon={false}>
+                {localizedString.email + ' 1'}
+              </Label>
+            </Item>
+            <Item
+              dataField='email2'
+              editorType='dxTextBox'
+              editorOptions={{
+                showClearButton: true,
+                valueChangeEvent: 'keyup',
+                onKeyDown: preventInputSpaceBar
+              }}
+            >
+              <EmailRule message={localizedString.invalideEmailRule}/>
+              <Label showColon={false}>
+                {localizedString.email + ' 2'}
+              </Label>
+            </Item>
+            <Item // 전화번호 형식
+              dataField='telNo'
+              editorType='dxTextBox'
+              editorOptions={{
+                showClearButton: true,
+                onKeyDown: preventInputSpaceBar
+              }}
+            >
+              <Label showColon={false}>
+                {localizedString.telNo}
+              </Label>
+            </Item>
+            <Item
+              dataField='hpNo'
+              editorType='dxTextBox'
+              editorOptions={{
+                showClearButton: true,
+                onKeyDown: preventInputSpaceBar
+              }}
+            >
+              <Label showColon={false}>
+                {localizedString.cellPhoneNo}
+              </Label>
+            </Item>
+            <Item
+              dataField='grpId'
+              editorType='dxTextBox'
+              editorOptions={{
+                readOnly: true
+              }}
+            >
+              <Label showColon={false}>
+                {'그룹 아이디'}
+              </Label>
+            </Item>
+            <Item
+              dataField='grpNm'
+              editorType='dxTextBox'
+              editorOptions={{
+                readOnly: true
+              }}
+            >
+              <Label showColon={false}>
+                {'그룹 명'}
+              </Label>
+            </Item>
+            <Item
+              dataField='runMode2'
+              editorType='dxSelectBox'
+              editorOptions={{
+                disabled: true,
+                dataSource: mode
+              }}
+            >
+              <Label showColon={false}>
+                {'사용자 실행모드'}
+              </Label>
+            </Item>
+            <Item
+              dataField='grpRunMode'
+              editorType='dxSelectBox'
+              editorOptions={{
+                disabled: true,
+                dataSource: mode
+              }}
+            >
+              <Label showColon={false}>
+                {'그룹 실행모드'}
+              </Label>
+            </Item>
+            <Item
+              editorType='custom'
+              render={() => (
+                <CommonButton
+                  height='30px'
+                  width='105px'
+                  type='secondary'
+                  borderRadius={'4px'}
+                  font={theme.font.smallButton}
+                  onClick = {() => {
+                    // eslint-disable-next-line max-len
+                    const userId = ref.current.instance.option().formData.userId;
+                    if (userId) {
+                      openModal(ModifyPasswordModal, {userId: userId});
+                    }
+                  }}
+                >
+                  <img src={icon}/>
+                  {localizedString.passwordChange}
+                </CommonButton>
+              )}
+            >
+              <Label showColon={false}>
                 {localizedString.passwordChange}
-              </CommonButton>
-            )}
-          >
-            <Label showColon={false}>
-              {localizedString.passwordChange}
-            </Label>
-          </Item>
-        </GroupItem>
-      </Form>
-      <ButtonDiv>
-        <CommonButton
-          width={'100px'}
-          onClick={() =>
-            confirm(localizedString.confirmResetMsg, () => cancelOnClick())
-          }
-        >{localizedString.cancel}</CommonButton>
-        <CommonButton
-          width={'100px'}
-          onClick={onClick}
-        >{localizedString.save}</CommonButton>
-      </ButtonDiv>
-    </Wrapper>
+              </Label>
+            </Item>
+          </GroupItem>
+        </Form>
+      </Wrapper>
+      <div>
+        <ButtonDiv>
+          <CommonButton
+            width={'100px'}
+            onClick={() =>
+              confirm(localizedString.confirmResetMsg, () => cancelOnClick())
+            }
+          >{localizedString.cancel}</CommonButton>
+          <CommonButton
+            width={'100px'}
+            onClick={onClick}
+          >{localizedString.save}</CommonButton>
+        </ButtonDiv>
+      </div>
+    </>
   );
 };
 export default UserInfoManagement;

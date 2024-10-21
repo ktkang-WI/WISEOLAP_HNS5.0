@@ -30,7 +30,8 @@ export class User {
   passwd = '';
 
   constructor({userNo = 0, userId = '', userNm = '', email1 = '', email2 = '',
-    telNo = '', grpId = '', userRunMode = '', userDesc = '', passwd = ''}) {
+    telNo = '', grpId = '', userRunMode = '', userDesc = '', passwd = '',
+    hpNo = '', accountCreateDt = '', compCode = ''}) {
     this.userNo = userNo;
     this.userId = userId;
     this.userNm = userNm;
@@ -41,6 +42,9 @@ export class User {
     this.userRunMode = userRunMode;
     this.userDesc = userDesc;
     this.passwd = passwd;
+    this.hpNo = hpNo;
+    this.accountCreateDt = accountCreateDt;
+    this.compCode = compCode;
   }
 
   getUserGroups = async () => {
@@ -75,7 +79,8 @@ export class User {
       grpId: this.grpId,
       userRunMode: this.userRunMode,
       userDesc: this.userDesc,
-      passwd: this.passwd
+      passwd: this.passwd,
+      compCode: this.compCode
     };
     const res = axios.post(accountPath + '/user', null, {params: user});
     return res;
@@ -92,7 +97,8 @@ export class User {
       userRunMode: this.userRunMode,
       userDesc: this.userDesc,
       passwd: this.passwd,
-      userNo: this.userNo
+      userNo: this.userNo,
+      compCode: this.compCode
     };
     const res = axios.patch(accountPath + '/user', null, {params: user});
     return res;
