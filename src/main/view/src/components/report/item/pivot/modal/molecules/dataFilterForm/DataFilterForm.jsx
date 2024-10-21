@@ -17,9 +17,7 @@ const DataFilterForm = () => {
     setShowField,
     highlightList,
     setHighlightList,
-    ref,
-    setPage,
-    page
+    ref
   } = useContext(dataFilterFormContext);
 
   return (
@@ -37,20 +35,20 @@ const DataFilterForm = () => {
         // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
         const copyHighlight = _.cloneDeep(highlightList);
 
-        const findIdx = copyHighlight.findIndex(
-            (data) => (data.dataItem === formData.dataItem &&
-            data.condition === formData.condition)
-        );
+        // const findIdx = copyHighlight?.findIndex(
+        //     (data) => (data.dataItem === formData.dataItem &&
+        //     data.condition === formData.condition)
+        // );
         // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
-        let isOtherChange = true;
-        if (findIdx != -1) {
-          const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
-          if (dataFieldList.includes(e.dataField)) {
-            if (copyHighlight[findIdx][e.dataField] == e.value) {
-              isOtherChange = false;
-            }
-          }
-        }
+        // let isOtherChange = true;
+        // if (findIdx != -1) {
+        //   const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
+        //   if (dataFieldList.includes(e.dataField)) {
+        //     if (copyHighlight[findIdx][e.dataField] == e.value) {
+        //       isOtherChange = false;
+        //     }
+        //   }
+        // }
 
         if (formData.rowIdx != undefined && formData.status == 'update') {
           if (formData.valueTo && formData.valueFrom) {
@@ -70,16 +68,10 @@ const DataFilterForm = () => {
       <Item
         name='type'
         dataField='type'
-        editorType='dxSelectBox'
+        editorType='dxTextBox'
         editorOptions={{
-          items: localizedString.dataItemTypeList,
-          value: page || 'measure',
-          valueExpr: 'name',
-          displayExpr: 'caption',
-          onValueChanged: (e) => {
-            setPage(e.value || 'measure');
-          },
-          disabled: formData.dataItem ?? false
+          value: '측정값',
+          readOnly: true
         }}>
         <Label>{localizedString.dataItemType}</Label>
       </Item>
@@ -118,14 +110,16 @@ const DataFilterForm = () => {
       <Item
         name='valueFrom'
         dataField='valueFrom'
-        editorType='dxTextBox'>
+        editorType='dxNumberBox'
+      >
         <Label>{localizedString.valueFrom}
           <span className='requireRule'> *</span>: </Label>
       </Item>
       {showField && <Item // show in Between.
         name='valueTo'
         dataField='valueTo'
-        editorType='dxTextBox'>
+        editorType='dxNumberBox'
+      >
         <Label>{localizedString.valueTo}
           <span className='requireRule'> *</span>: </Label>
       </Item>}

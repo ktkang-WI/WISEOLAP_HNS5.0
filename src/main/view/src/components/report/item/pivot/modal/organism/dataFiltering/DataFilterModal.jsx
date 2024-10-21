@@ -6,7 +6,7 @@ import ModalPanel from 'components/common/atomic/Modal/molecules/ModalPanel';
 import CommonDataGrid from 'components/common/atomic/Common/CommonDataGrid';
 import {Column, Selection, Button} from 'devextreme-react/data-grid';
 import styled from 'styled-components';
-import addHighLightIcon
+import addDataFilterInfoIcon
   from 'assets/image/icon/button/ico_zoom.png';
 import {createContext, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
@@ -23,7 +23,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from '../../../../../../config/configType';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
 import {
-  getIdxAndFlag,
+  // getIdxAndFlag,
   getNames,
   getValidation,
   setMeta
@@ -52,6 +52,8 @@ const init = {
 };
 
 const selectedReportTypeDataFiltering = (selectedItem, reportType) => {
+  console.log('selectedItem:', selectedItem);
+  console.log('reportType:', reportType);
   if (reportType === 'AdHoc') {
     return selectedItem[1].meta.dataFiltering.length !=0 ?
           selectedItem[1].meta.dataFiltering : [];
@@ -105,31 +107,31 @@ const DataFilterModal = ({...props}) => {
       return copyHighlight;
     }
     // 선택한 측정값, 차원의 순서(인덱스)를 가져옴.
-    const idxAndFlag =
-      getIdxAndFlag(formData, reportType, rootItem, selectedItem);
+    // const idxAndFlag =
+    //   getIdxAndFlag(formData, reportType, rootItem, selectedItem);
 
-    const idx = idxAndFlag.idx;
-    const flag = idxAndFlag.flag;
+    // const idx = idxAndFlag.idx;
+    // const flag = idxAndFlag.flag;
 
-    const highlightData = {...formData, idx: idx, flag: flag};
-    const findIdx = copyHighlight.findIndex(
-        (data) => (data.dataItem === formData.dataItem &&
-          data.condition === formData.condition &&
-          data.valueFrom === formData.valueFrom &&
-          data.valueTo === formData.valueTo)
-    );
+    // const highlightData = {...formData, idx: idx, flag: flag};
+    // const findIdx = copyHighlight?.findIndex(
+    //     (data) => (data.dataItem === formData.dataItem &&
+    //       data.condition === formData.condition &&
+    //       data.valueFrom === formData.valueFrom &&
+    //       data.valueTo === formData.valueTo)
+    // );
     // 하이라이트 추가시 중복된 경우.
-    if (findIdx != -1 && formData.status == 'new') {
-      return false;
-    }
+    // if (findIdx != -1 && formData.status == 'new') {
+    //   return false;
+    // }
 
-    if (findIdx == -1 || formData.status == 'new') {
-      delete highlightData.status;
-      copyHighlight.push(highlightData);
-    } else if (findIdx != -1 && formData.status == 'update') {
-      delete highlightData.status;
-      copyHighlight[findIdx] = highlightData;
-    }
+    // if (findIdx == -1 || formData.status == 'new') {
+    //   delete highlightData.status;
+    //   copyHighlight.push(highlightData);
+    // } else if (findIdx != -1 && formData.status == 'update') {
+    //   delete highlightData.status;
+    //   copyHighlight[findIdx] = highlightData;
+    // }
     return copyHighlight;
   };
 
@@ -137,6 +139,8 @@ const DataFilterModal = ({...props}) => {
   const onClick = () => {
     const formData = ref.current.props.formData;
     const dataFilterInfo = appliedHighlight(formData);
+    console.log('formData:', formData);
+    console.log('dataFilterInfo:', dataFilterInfo);
 
     if (dataFilterInfo === false) {
       alert(localizedString.dataFilterInfoDupleCheck);
@@ -149,6 +153,9 @@ const DataFilterModal = ({...props}) => {
 
   // 유효성 검사.
   const validation = (formData, highlight, flag) => {
+    console.log('formData:', formData);
+    console.log('highlight:', highlight);
+    console.log('flag:', flag);
     const alertMsg = getValidation(formData);
 
     if (alertMsg) {
@@ -233,7 +240,7 @@ const DataFilterModal = ({...props}) => {
           title={'데이터 필터링 목록'}
           width='60%'
           padding='10'>
-          <AddBtn src={addHighLightIcon} onClick={onClick}/>
+          <AddBtn src={addDataFilterInfoIcon} onClick={onClick}/>
           <CommonDataGrid
             width='100%'
             dataSource={dataFiltering}
@@ -284,9 +291,7 @@ const DataFilterModal = ({...props}) => {
             dataFiltering,
             setDataFilteringList,
             setShowField,
-            formData,
-            setPage,
-            page
+            formData
           }}>
             <DataFilterForm/>
           </dataFilterFormContext.Provider>

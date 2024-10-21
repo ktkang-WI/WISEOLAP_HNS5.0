@@ -7,9 +7,9 @@ export const getValidation = (formData) => {
   // 필수 적용 항목 (측정값, 차원 둘 다)
   let requireItems = [
     'dataItem',
-    'condition',
-    'valueFrom',
-    'valueTo'
+    'condition'
+    // 'valueFrom',
+    // 'valueTo'
   ];
 
   // 기존 데이터하이라이트를 만들었던 보고서는 type이 없어 null(측정값 하이라이트).

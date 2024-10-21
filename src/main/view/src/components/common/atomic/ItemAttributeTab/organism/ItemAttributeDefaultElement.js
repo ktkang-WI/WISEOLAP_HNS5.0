@@ -290,10 +290,11 @@ const ItemAttributeDefaultElement = () => {
           icon: dataHighlightImg,
           width: '50%',
           onClick: () => {
-            const chartMartInit = rootItem.items[0].mart.init;
+            // const chartMartInit = rootItem.items[0].mart.init;
             const pivotMartInit = rootItem.items[1].mart.init;
-
-            if (!chartMartInit && !pivotMartInit) {
+            console.log('pivotMartInit', pivotMartInit);
+            // !chartMartInit &&
+            if (!pivotMartInit) {
               return;
             }
 
