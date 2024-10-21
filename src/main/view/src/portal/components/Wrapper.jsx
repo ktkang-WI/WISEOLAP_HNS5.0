@@ -354,6 +354,18 @@ const Wrapper = styled.div`
     margin-bottom: 45px;
   }
 
+  .pay_box:first-child::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #F5D7C2;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
   .pay_box_wrap ul {
     width: 250px;
     display: flex;
