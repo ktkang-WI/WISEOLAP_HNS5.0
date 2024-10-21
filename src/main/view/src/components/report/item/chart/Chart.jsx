@@ -8,6 +8,8 @@ import DevChart, {
   // Point,
   Series,
   ValueAxis
+  // Label,
+  // Font
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import {
@@ -157,6 +159,33 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     };
   };
 
+  const palette = meta?.paletteType == 'colorEdit' ?
+    meta.colorEdit : meta.palette.name;
+
+  const MarkerTemplate = (target) => {
+    const color = target.series.isVisible() ? target.marker.fill : '#888';
+    const type = target.series.type;
+
+    let icon = <rect x={0} y={0} width={18} height={10} fill={color}/>;
+
+    if (type.indexOf('bar') >= 0) {
+      icon = <rect x={0} y={0} width={25} height={10} fill={color}/>;
+    } else if (type == 'scatter' || type == 'burble') {
+      icon = <circle cx={10} cy={10} r={5} fill={color}/>;
+    } else if (type.indexOf('line') >= 0) {
+      icon = <g>
+        <rect x={0} y={3.5} width={25} height={3} fill={color}/>
+        <circle cx={13} cy={5} r={4} fill={color}/>
+      </g>;
+    }
+
+    return (
+      <svg>
+        {icon}
+      </svg>
+    );
+  };
+
   return (
     <>
       <DevChart
@@ -165,7 +194,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         height="100%"
         customizeLabel={(o) => customizeLabel(o, formats)}
         resolveLabelOverlapping={overlapping}
-        palette={meta?.palette?.name} // Dev Default blend
+        palette={palette} // Dev Default blend
         id={id}
         ref={dxRef}
         onPointClick={onPointClick}
@@ -195,6 +224,12 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           position="left"
           title={meta.yAxis.customText} // 사용자정의텍스트
           showZero={meta.yAxis.axisStartToZero} // 제로수준 표시
+          visualRangeUpdateMode='keep'
+          visualRange={{
+            endValue: meta.yAxis.endValue * 1 || undefined,
+            startValue: meta.yAxis.startValue * 1 || undefined
+          }}
+          tickInterval={meta.yAxis.tick || undefined}
           label={{
             visible: meta.yAxis.useAxis, // y축 표시
             customizeText: ({value}) => { // y축 custom Suffix
@@ -213,6 +248,12 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
             autoBreaksEnabled={meta.extraAxis.autoBreak}
             title={meta.extraAxis.customText} // 사용자정의텍스트
             showZero={meta.extraAxis.axisStartToZero} // 제로수준 표시
+            visualRangeUpdateMode='keep'
+            visualRange={{
+              endValue: meta.extraAxis.endValue * 1 || undefined,
+              startValue: meta.extraAxis.startValue * 1 || undefined
+            }}
+            tickInterval={meta.extraAxis.tick || undefined}
             label={{
               visible: meta.extraAxis.useAxis, // y축 표시
               customizeText: ({value}) => { // y축 custom Suffix
@@ -229,6 +270,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           horizontalAlignment={meta.legend.horizontalAlignment}
           verticalAlignment={meta.legend.verticalAlignment}
           itemTextPosition={meta.legend.itemTextPosition}
+          markerRender={MarkerTemplate}
         />
         <Tooltip
           enabled={true}
@@ -262,6 +304,11 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
                   }
                   point={{visible: option?.general?.pointerMarker}}
                 >
+                  {/* <Label
+                    visible={true}
+                    backgroundColor='rgba(255, 255, 255, 0.5)'>
+                    <Font color="#666" weight={'bold'}/>
+                  </Label> */}
                 </Series>;
               }
           )

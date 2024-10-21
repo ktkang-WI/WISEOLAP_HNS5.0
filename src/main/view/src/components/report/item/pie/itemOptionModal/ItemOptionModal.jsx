@@ -63,6 +63,7 @@ const ItemOptionModal = ({popupName, height, ...props}) => {
       }
       {(popupName === 'extraAxis' || popupName === 'yAxis') &&
         <FormatOptionForm
+          itemType={selectedItem?.type || ''}
           formData={_.cloneDeep(selectedItem.meta[popupName])}
           formRef={ref}
           axisSetting={true}
