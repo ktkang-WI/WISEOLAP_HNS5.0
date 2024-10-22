@@ -6,7 +6,8 @@ import {getTheme} from 'config/theme';
 import {selectRootParameter} from 'redux/selector/ParameterSelector';
 import {useSelector, useDispatch} from 'react-redux';
 import {
-  useEffect
+  useEffect,
+  useRef
 } from 'react';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ParameterSlice from 'redux/modules/ParameterSlice';
@@ -40,6 +41,7 @@ const FilterBarWrapper = (props) => {
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
   const {setParameterValues, deleteParameter} = ParameterSlice.actions;
   const {startJob, endJob} = LoadingSlice.actions;
+  const startCounting = useRef(0);
   const {confirm} = useModal();
   const dispatch = useDispatch();
   const newLinkParamInfo =
@@ -54,6 +56,7 @@ const FilterBarWrapper = (props) => {
   useEffect(() => {
     if (parameters.filterSearchComplete.length == 0 &&
       parameters.informations.length != 0) {
+      startCounting.current = startCounting.current + 1;
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
     }
@@ -62,7 +65,10 @@ const FilterBarWrapper = (props) => {
   useEffect(() => {
     if (parameters.filterSearchComplete.length ==
       parameters.informations.length) {
-      dispatch(endJob('필터 데이터를 조회 중입니다.'));
+      for (const i = 0; i < startCounting.current; i++) {
+        dispatch(endJob('필터 데이터를 조회 중입니다.'));
+      }
+      startCounting.current = 0;
     }
   }, [parameters.filterSearchComplete]);
 
