@@ -65,7 +65,8 @@ public class UserController {
       @RequestParam(required = false, defaultValue = "0") int grpId,
       @RequestParam(required = true) String userRunMode,
       @RequestParam(required = false, defaultValue = "") String userDesc,
-      @RequestParam(required = true) String passwd
+      @RequestParam(required = true) String passwd,
+      @RequestParam(required = false, defaultValue = "") String compCode
   ) throws SQLException{
     try {
       String encodedPw = sha256Util.encrypt(passwd);
@@ -74,6 +75,7 @@ public class UserController {
       .userId(userId)
       .userNm(userNm)
       .eMail1(email1)
+      .compCode(compCode)
       .eMail2(email2)
       .telNo(telNo)
       .grpId(grpId)
@@ -101,9 +103,11 @@ public class UserController {
     @RequestParam(required = false, defaultValue = "") String email1,
     @RequestParam(required = false, defaultValue = "") String email2,
     @RequestParam(required = false, defaultValue = "") String telNo,
+    @RequestParam(required = false, defaultValue = "") String hpNo,
     @RequestParam(required = false, defaultValue = "0") int grpId,
     @RequestParam(required = false, defaultValue = "") String userRunMode,
-    @RequestParam(required = false, defaultValue = "") String userDesc
+    @RequestParam(required = false, defaultValue = "") String userDesc,
+    @RequestParam(required = false, defaultValue = "") String compCode
   ) throws SQLException{
 
     UserGroupDTO userMstr = UserGroupDTO.builder()
@@ -111,6 +115,8 @@ public class UserController {
       .userId(userId)
       .userNm(userNm)
       .eMail1(email1)
+      .compCode(compCode)
+      .hpNo(hpNo)
       .eMail2(email2)
       .telNo(telNo)
       .grpId(grpId)
