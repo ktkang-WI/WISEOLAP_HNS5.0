@@ -66,6 +66,7 @@ public class FileUploadService {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadService.class);
 
     private File spreadReportFolder;
+    private File spreadDonwloadFolder;
     private final DatasetService datasetService;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
@@ -74,6 +75,7 @@ public class FileUploadService {
     private final String SHARED_FOLDER = "/olapnas";
     private final String DECRYTION_INPUT_FOLDER = "/drm/upload";
     private final String DECRYTION_OUTPUT_FOLDER = "/drm";
+    private final String DOWNLOAD_OUTPUT_FOLDER = "/drm";
 
     FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO) {
         this.datasetService = datasetService;
@@ -88,6 +90,7 @@ public class FileUploadService {
         // 기존 경로
         // spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
         spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+        spreadDonwloadFolder = new File(new File("UploadFiles"), "spread_download");
         // spreadReportFolder = new File(SHARED_FOLDER);
         if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
@@ -593,22 +596,20 @@ public class FileUploadService {
         Map<String, String> converFileName = new HashMap<>();
         try (InputStream input = file.getInputStream()) {
 
-            File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
+            File sysFile = WebFileUtils.getFile(spreadDonwloadFolder, fileName);
         	if(sysFile == null) {
                 throw new FileNotFoundException("spread File Not Found Error");
             }
+
+            Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            
             String filePathFolder = sysFile.getAbsolutePath().replace(fileName, "");
             String fileNameRemoveType = fileName.replace(".sjs", "");
             Workbook workbook = new Workbook();
 
             workbook.open(sysFile.getAbsolutePath());
 
-            XlsxSaveOptions options = new XlsxSaveOptions();
-            options.setExcludeEmptyRegionCells(true);
-            options.setExcludeUnusedStyles(true);
-            options.setExcludeUnusedNames(true);
-
-            workbook.save(filePathFolder+ "\\"+fileNameRemoveType+".xlsx", options);
+            workbook.save(filePathFolder+ "\\"+fileNameRemoveType+".xlsx");
 
             converFileName.put("folder", filePathFolder);
             converFileName.put("fileName", fileNameRemoveType+".xlsx");

@@ -170,7 +170,7 @@ public class FileUploadController {
             String realFolderPath = convertFile.get("folder").replace("spread_reports", "");
             String realfileName = convertFile.get("fileName");
 
-            File folderPath = new File(new File(realFolderPath), "spread_reports");
+            File folderPath = new File(realFolderPath);
 
             File sysFile = WebFileUtils.getFile(folderPath, realfileName);
 
