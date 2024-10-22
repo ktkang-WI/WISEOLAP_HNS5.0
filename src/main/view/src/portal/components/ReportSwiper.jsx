@@ -12,7 +12,7 @@ const ReportSwiper = ({portalUrl, userId, date, type}) => {
 
   if (date != null) {
     if (type === '년누적') {
-      reportIds = [13503, 13505, 13506, 13397];
+      reportIds = [13503, 13505, 13396, 13506];
     } else {
       reportIds = [13394, 13395, 13396, 13397];
     }
