@@ -40,6 +40,7 @@ export default function useAxiosSetting() {
   axios.interceptors.request.use(
       (config) => {
         if (config.url.indexOf('portal/card-data') == -1) {
+          console.log(config.url, '로딩 시작');
           dispatch(actions.startJob());
         }
         return config;
@@ -58,6 +59,7 @@ export default function useAxiosSetting() {
   axios.interceptors.response.use(
       (response) => {
         dispatch(actions.endJob());
+        console.log(response.config.url, '로딩 끝');
         const idx =
           requestPath.findIndex((path) => path === response.config.url);
         if (idx > -1) {

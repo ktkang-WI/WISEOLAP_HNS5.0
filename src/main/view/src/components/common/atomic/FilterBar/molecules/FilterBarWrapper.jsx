@@ -57,14 +57,17 @@ const FilterBarWrapper = (props) => {
     if (parameters.filterSearchComplete.length == 0 &&
       parameters.informations.length != 0) {
       startCounting.current = startCounting.current + 1;
+      console.log(startCounting.current);
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
     }
   }, [parameters.informations, parameters.values]);
 
   useEffect(() => {
-    if (parameters.filterSearchComplete.length ==
+    if (parameters.informations.length != 0 &&
+      parameters.filterSearchComplete.length >=
       parameters.informations.length) {
+      console.log(startCounting.current);
       for (let i = 0; i < startCounting.current; i++) {
         dispatch(endJob('필터 데이터를 조회 중입니다.'));
       }
