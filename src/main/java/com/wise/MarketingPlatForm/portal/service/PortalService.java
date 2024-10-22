@@ -42,7 +42,7 @@ public class PortalService {
         // 월누적, 년누적
         String sql = String.format(
             "-- 카드_01.예상취급액\n" +
-            "SELECT /*+ RESULT_CACHE */ \n" +
+            "SELECT /*+ RESULT_CACHES */ \n" +
             "    '예상취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
@@ -61,7 +61,7 @@ public class PortalService {
             "UNION ALL\n" +
             "\n" +
             "-- 카드_02.실현취급액\n" +
-            "SELECT /*+ RESULT_CACHE */ \n" +
+            "SELECT /*+ RESULT_CACHES */ \n" +
             "    '실현취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
@@ -78,7 +78,7 @@ public class PortalService {
             "UNION ALL\n" +
             "\n" +
             "-- 카드_03.실현공헌이익\n" +
-            "SELECT /*+ RESULT_CACHE */ \n" +
+            "SELECT /*+ RESULT_CACHES */ \n" +
             "    '실현공헌이익(" + moneyUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
@@ -97,7 +97,7 @@ public class PortalService {
             "UNION ALL\n" +
             "\n" +
             "-- 카드_04.주문고객수\n" +
-            "SELECT /*+ RESULT_CACHE */ \n" +
+            "SELECT /*+ RESULT_CACHES */ \n" +
             "    '주문고객수(" + humanUnitStr + ")' AS \"구분\",\n" +
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + humanUnit + ",0) AS \"금액\",\n" +
