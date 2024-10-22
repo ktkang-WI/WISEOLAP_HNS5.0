@@ -23,7 +23,8 @@ const reducers = {
     if (msg) {
       const idx = state.messageQueue.indexOf(msg);
       if (idx >= 0) {
-        state.messageQueue = state.messageQueue.filter((v) => msg != v);
+        state.messageQueue =
+          state.messageQueue.filter((_, index) => index !== idx);
         if (state.jobCount !== 0) {
           state.jobCount = state.jobCount - 1;
         }

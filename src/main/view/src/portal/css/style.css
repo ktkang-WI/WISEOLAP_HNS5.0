@@ -191,6 +191,36 @@
   position: relative;
 }
 
+.portal .pay_box_wrap .pay_box:nth-of-type(1), .portal .pay_box_wrap .pay_box:nth-of-type(2) {
+  background: white;
+}
+
+.portal .pay_box_wrap .pay_box:nth-of-type(1)::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #F5D7C2;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.portal .pay_box_wrap .pay_box:nth-of-type(2)::before {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #EBAAB9;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
 .portal .pay_box_wrap li p {
   font-weight: bold;
   font-size: 16px;

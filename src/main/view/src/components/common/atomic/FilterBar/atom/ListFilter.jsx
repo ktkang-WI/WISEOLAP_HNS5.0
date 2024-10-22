@@ -126,12 +126,12 @@ const ListFilter = ({
     }
 
     if (info.useSearch) {
-      let listDataSource = dataSource
+      const listDataSource = dataSource
           .filter((item) => item.name !== '[All]');
-      if (_selectionKeys) {
-        listDataSource = listDataSource
-            .filter((item) => _selectionKeys.includes(item.name));
-      }
+      // if (_selectionKeys) {
+      //   listDataSource = listDataSource
+      //       .filter((item) => _selectionKeys.includes(item.name));
+      // }
 
       onValueChanged(info.name, selection, index, listDataSource);
     } else {

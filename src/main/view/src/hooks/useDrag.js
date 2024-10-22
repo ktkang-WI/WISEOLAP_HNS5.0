@@ -86,6 +86,23 @@ const useDrag = () => {
     const targetId = e.draggableId;
     const datasetId = selectedDataset.datasetId;
 
+    const itemDupleCheck = (field) => {
+      const typeMap = dest.droppableId;
+      if (typeMap === 'sortByItem') return false;
+      const colTypeDatas = dataField[typeMap];
+
+      if (colTypeDatas.length === 0) return false;
+
+      const findIndex =
+        colTypeDatas.findIndex((t) => t.uniqueName === field.uniqueName);
+
+      if (findIndex > -1) {
+        return true;
+      }
+
+      return false;
+    };
+
     const checkFieldLimit = () => {
       const limit = dataFieldOption[dest.droppableId]?.limit;
       if (limit && dataField[dest.droppableId].length > limit) {
@@ -274,6 +291,12 @@ const useDrag = () => {
             return;
           }
 
+          const dupleCheck = itemDupleCheck(sourceField);
+          if (dupleCheck) {
+            alert('이미 존재하는 컬럼입니다.');
+            return;
+          }
+
           dataField[dest.droppableId].splice(dest.index, 0, tempField);
 
           dataField.datasetId = selectedDataset.datasetId;
@@ -327,6 +350,11 @@ const useDrag = () => {
             return;
           }
 
+          const dupleCheck = itemDupleCheck(sourceField);
+          if (dupleCheck) {
+            alert('이미 존재하는 컬럼입니다.');
+            return;
+          }
           // TODO: 추후 데이터 항목 contextMenu 기능 추가시 데이터 교체 필요
           // 현재는 해당 기능이 필요 없으므로 아이템 복제만 함.
           // 정렬 기준 항목에서 측정값으로 이동시 summaryType 기본값 설정

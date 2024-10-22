@@ -395,7 +395,12 @@ const Portal = () => {
               <div className='no-card'> 조회된 데이터가 없습니다. </div>
           }
         </div>
-        <ReportSwiper portalUrl={PORTAL_URL} date={date} userId={userId}/>
+        <ReportSwiper
+          type={type}
+          portalUrl={PORTAL_URL}
+          date={date}
+          userId={userId}
+        />
         {getQuickBoxs()}
       </div>
       <div className='blue_bg'>

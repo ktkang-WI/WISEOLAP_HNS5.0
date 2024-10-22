@@ -7,14 +7,18 @@ import 'swiper/css/pagination';
 import {format} from 'date-fns';
 import React, {useMemo} from 'react';
 
-const ReportSwiper = ({portalUrl, userId, date}) => {
+const ReportSwiper = ({portalUrl, userId, date, type}) => {
   let reportIds = []; // , 13398
 
   if (date != null) {
-    reportIds = [13394, 13395, 13396, 13397];
+    if (type === '년누적') {
+      reportIds = [13503, 13505, 13506, 13397];
+    } else {
+      reportIds = [13394, 13395, 13396, 13397];
+    }
   }
 
-  const cache = useMemo(() => ({}), [date]);
+  const cache = useMemo(() => ({}), [date, type]);
 
   const getComponent = (id) => {
     if (!cache[id]) {

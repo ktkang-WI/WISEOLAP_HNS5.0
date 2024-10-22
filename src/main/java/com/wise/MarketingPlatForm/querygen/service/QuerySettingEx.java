@@ -2333,8 +2333,10 @@ public class QuerySettingEx {
 								sDataType, oDr.getPARAM_NM(), LogicOperator.getLogicOperator(sLogic));
 						String sTmpWhereClauseScript = oQueryGen.BuildQueryOnlyWhere();
 						sTmpWhereClauseScript = sTmpWhereClauseScript.replace("AND" + "\t", "").trim();
-						sTmpWhereClauseScript = sTmpWhereClauseScript.replace("'" + oDr.getWHERE_CLAUSE() + "'",
-								oDr.getWHERE_CLAUSE());
+						if (!"BETWEEN".equals(oDr.getOPERATION())) {
+							sTmpWhereClauseScript = sTmpWhereClauseScript.replace("'" + oDr.getWHERE_CLAUSE() + "'",
+									oDr.getWHERE_CLAUSE());
+						}
 
 						if (sTmpWhereClauseScript.indexOf("#SUB_QUERY#") > -1)
 							if (!sSubQuery.equals(""))
