@@ -68,11 +68,10 @@ const UserList = ({setRows, setRowData}) => {
         <Column
           dataField="userId"
           caption={localizedString.userId}
-          // cellRender={cellRender}
         />
         <Column
           dataField="userNm"
-          caption={localizedString.userNm}
+          caption={localizedString.log.userNm}
         />
       </DataGrid>
     </Wrapper>
