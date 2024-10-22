@@ -4,9 +4,16 @@ import {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import {getPalette, registerPalette} from 'devextreme/viz/palette';
 
+const hns = ['#BFBFBF', '#D80028', '#BFBFBF', '#D80028'];
+const rainbow = ['#e81416', '#ffa500', '#faeb36', '#79c314',
+  '#487de7', '#70369d'];
 
 registerPalette('hns', {
-  simpleSet: ['#BFBFBF', '#D80028', '#BFBFBF', '#D80028']
+  simpleSet: hns
+});
+
+registerPalette('rainbow', {
+  simpleSet: rainbow
 });
 
 export const paletteCollection = [
@@ -86,9 +93,14 @@ export const paletteCollection = [
     colors: getPalette('Green Mist').simpleSet
   },
   {
+    name: 'rainbow',
+    caption: '무지개',
+    colors: rainbow
+  },
+  {
     name: 'hns',
     caption: '홈앤쇼핑',
-    colors: ['#BFBFBF', '#D80028', '#BFBFBF', '#D80028']
+    colors: hns
   }
 ];
 
