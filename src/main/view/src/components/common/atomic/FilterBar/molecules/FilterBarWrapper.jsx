@@ -60,7 +60,8 @@ const FilterBarWrapper = (props) => {
   }, [parameters.informations, parameters.values]);
 
   useEffect(() => {
-    if (parameters.filterSearchComplete.length ==
+    if (parameters.informations.length != 0 &&
+      parameters.filterSearchComplete.length >=
       parameters.informations.length) {
       dispatch(endJob('필터 데이터를 조회 중입니다.'));
     }

@@ -20,6 +20,7 @@ public class UserDTO implements Serializable{
 
     int userNo;
     int grpId;
+    String grpNm;
     String userId;
     String userNm;
     String password;
@@ -31,11 +32,16 @@ public class UserDTO implements Serializable{
     String userRelCd;
     String userDesc;
     RunMode runMode;
+    String runMode2;
     String grpRunMode;
     int lockCnt;
     String hasYn;
     String mdCode;
     String pwChangeDt;
+    @Builder.Default
+    String compCode = "";
+    @Builder.Default
+    String accountCreateDt = "";
     @Builder.Default
     int isChangePw = 0;
 }

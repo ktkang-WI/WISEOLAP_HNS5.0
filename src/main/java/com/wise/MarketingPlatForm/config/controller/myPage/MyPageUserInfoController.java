@@ -102,12 +102,14 @@ public class MyPageUserInfoController {
     @RequestParam(required = false, defaultValue = "") String email,
     @RequestParam(required = false, defaultValue = "") String email2,
     @RequestParam(required = false, defaultValue = "") String hpNo,
-    @RequestParam(required = false, defaultValue = "") String telNo
+    @RequestParam(required = false, defaultValue = "") String telNo,
+    @RequestParam(required = false, defaultValue = "") String compCode
   ) {
     UserDTO user = UserDTO.builder()
       .userNo(userNo)
       .userId(userId)
       .userNm(userNm)
+      .compCode(compCode)
       .email(email)
       .email2(email2)
       .telNo(telNo)
