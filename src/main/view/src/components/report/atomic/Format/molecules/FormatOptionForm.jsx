@@ -92,6 +92,14 @@ const FormatOptionForm = ({
         <Label>{'스케일 브레이크 사용'}</Label>
       </Item>}
       {itemType == 'chart' && axisSetting && <Item
+        dataField='hideNegativeNumber'
+        editorType='dxCheckBox'
+        editorOptions={{
+        }}
+      >
+        <Label>{'음수 값 숨김'}</Label>
+      </Item>}
+      {itemType == 'chart' && axisSetting && <Item
         dataField='axisStartToZero'
         editorType='dxCheckBox'
         editorOptions={{

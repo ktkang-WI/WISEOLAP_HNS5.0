@@ -233,6 +233,9 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
           label={{
             visible: meta.yAxis.useAxis, // y축 표시
             customizeText: ({value}) => { // y축 custom Suffix
+              if (meta.yAxis.hideNegativeNumber && value < 0) {
+                return '';
+              }
               return valueAxisCustomLabel(value, meta.yAxis);
             }
           }}
@@ -257,6 +260,9 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
             label={{
               visible: meta.extraAxis.useAxis, // y축 표시
               customizeText: ({value}) => { // y축 custom Suffix
+                if (meta.extraAxis.hideNegativeNumber && value < 0) {
+                  return '';
+                }
                 return valueAxisCustomLabel(value, meta.extraAxis);
               }
             }}
