@@ -102,7 +102,6 @@ const LinkReportList = (
           }
         }
         onSelectionChanged={(selectionChangedEvent) => {
-          console.log('Selection Changed:', selectionChangedEvent);
           const selectedRow = selectionChangedEvent.selectedRowsData[0];
           if (selectedRow) {
             const minRowData = {

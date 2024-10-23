@@ -292,7 +292,6 @@ const ItemAttributeDefaultElement = () => {
           onClick: () => {
             // const chartMartInit = rootItem.items[0].mart.init;
             const pivotMartInit = rootItem.items[1].mart.init;
-            console.log('pivotMartInit', pivotMartInit);
             // !chartMartInit &&
             if (!pivotMartInit) {
               return;

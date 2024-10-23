@@ -142,8 +142,6 @@ const DataHighlightModal = ({...props}) => {
   const onClick = () => {
     const formData = ref.current.props.formData;
     const highlight = appliedHighlight(formData);
-    console.log('formData:', formData);
-    console.log('dataFilterInfo:', dataFilterInfo);
 
     if (highlight === false) {
       alert(localizedString.highlightDupleCheck1);
@@ -156,9 +154,6 @@ const DataHighlightModal = ({...props}) => {
 
   // 유효성 검사.
   const validation = (formData, highlight, flag) => {
-    console.log('formData:', formData);
-    console.log('highlight:', highlight);
-    console.log('flag:', flag);
     const alertMsg = getValidation(formData);
 
     if (alertMsg) {
