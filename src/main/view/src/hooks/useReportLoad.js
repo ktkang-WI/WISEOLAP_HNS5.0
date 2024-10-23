@@ -131,18 +131,24 @@ export default function useReportLoad() {
   };
 
   const getReport = async (reportId, reportType) => {
+    const selectedReportId = reportId;
     const prompt = window.sessionStorage.getItem('prompt');
     if (reportType === DesignerMode['EXCEL']) {
       await setExcelFile(reportId);
     }
-    const res = await models.Report.getReportById(reportId).then(
+    const res = await models.Report.getReportById(selectedReportId).then(
         async ({data}) => {
           try {
             if (reportType) {
               dispatch(setDesignerMode(reportType));
             }
+            const defaultReportPrompt =
+              data.reports.find((r) => r.reportId == selectedReportId);
+
             await loadReport(data);
-            if (prompt == 'true') {
+
+            if (prompt == 'true' ||
+              defaultReportPrompt?.options?.promptYn == 'Y') {
               querySearch();
             }
             return true;
