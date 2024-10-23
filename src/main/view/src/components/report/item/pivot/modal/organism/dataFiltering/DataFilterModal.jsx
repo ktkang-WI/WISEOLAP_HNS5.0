@@ -23,11 +23,11 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from '../../../../../../config/configType';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
 import {
-  // getIdxAndFlag,
+  getIdxAndFlag,
   getNames,
   getValidation,
   setMeta
-} from '../datahighlight/DataHighlightUtil';
+} from './DataFilterUtil';
 
 const theme = getTheme();
 
@@ -48,12 +48,11 @@ const AddBtn = styled.img`
 `;
 
 const init = {
-  status: 'new'
+  status: 'new',
+  type: 'measure'
 };
 
 const selectedReportTypeDataFiltering = (selectedItem, reportType) => {
-  console.log('selectedItem:', selectedItem);
-  console.log('reportType:', reportType);
   if (reportType === 'AdHoc') {
     return selectedItem[1].meta.dataFiltering.length !=0 ?
           selectedItem[1].meta.dataFiltering : [];
@@ -92,55 +91,46 @@ const DataFilterModal = ({...props}) => {
   const measureNames = useMemo(
       () => getNames(reportType, rootItem, selectedItem).measures, []);
 
-  const dimNames = useMemo(() => {
-    const dimensions = getNames(reportType, rootItem, selectedItem).dimensions;
-    const onlyNames = dimensions.rows.concat(dimensions.cols);
-
-    return onlyNames;
-  }, []);
-
   // 동일 필드명, 조건이면 정보 업데이트.
-  const appliedHighlight = (formData) => {
-    const copyHighlight = [...dataFiltering];
+  const appliedDataFiltering = (formData) => {
+    const copyDataFilterInfo = [...dataFiltering];
 
     if (_.isEmpty(formData)) {
-      return copyHighlight;
+      return copyDataFilterInfo;
     }
     // 선택한 측정값, 차원의 순서(인덱스)를 가져옴.
-    // const idxAndFlag =
-    //   getIdxAndFlag(formData, reportType, rootItem, selectedItem);
+    const idxAndFlag =
+      getIdxAndFlag(formData, reportType, rootItem, selectedItem);
 
-    // const idx = idxAndFlag.idx;
-    // const flag = idxAndFlag.flag;
+    const idx = idxAndFlag.idx;
+    const flag = idxAndFlag.flag;
 
-    // const highlightData = {...formData, idx: idx, flag: flag};
-    // const findIdx = copyHighlight?.findIndex(
-    //     (data) => (data.dataItem === formData.dataItem &&
-    //       data.condition === formData.condition &&
-    //       data.valueFrom === formData.valueFrom &&
-    //       data.valueTo === formData.valueTo)
-    // );
+    const FilteredData = {...formData, idx: idx, flag: flag};
+    const findIdx = copyDataFilterInfo?.findIndex(
+        (data) => (data.dataItem === formData.dataItem &&
+          data.condition === formData.condition &&
+          data.valueFrom === formData.valueFrom &&
+          data.valueTo === formData.valueTo)
+    );
     // 하이라이트 추가시 중복된 경우.
-    // if (findIdx != -1 && formData.status == 'new') {
-    //   return false;
-    // }
+    if (findIdx != -1 && formData.status == 'new') {
+      return false;
+    }
 
-    // if (findIdx == -1 || formData.status == 'new') {
-    //   delete highlightData.status;
-    //   copyHighlight.push(highlightData);
-    // } else if (findIdx != -1 && formData.status == 'update') {
-    //   delete highlightData.status;
-    //   copyHighlight[findIdx] = highlightData;
-    // }
-    return copyHighlight;
+    if (findIdx == -1 || formData.status == 'new') {
+      delete FilteredData.status;
+      copyDataFilterInfo.push(FilteredData);
+    } else if (findIdx != -1 && formData.status == 'update') {
+      delete FilteredData.status;
+      copyDataFilterInfo[findIdx] = FilteredData;
+    }
+    return copyDataFilterInfo;
   };
 
   // 하이라이트 목록에 추가.
   const onClick = () => {
     const formData = ref.current.props.formData;
-    const dataFilterInfo = appliedHighlight(formData);
-    console.log('formData:', formData);
-    console.log('dataFilterInfo:', dataFilterInfo);
+    const dataFilterInfo = appliedDataFiltering(formData);
 
     if (dataFilterInfo === false) {
       alert(localizedString.dataFilterInfoDupleCheck);
@@ -152,10 +142,7 @@ const DataFilterModal = ({...props}) => {
   };
 
   // 유효성 검사.
-  const validation = (formData, highlight, flag) => {
-    console.log('formData:', formData);
-    console.log('highlight:', highlight);
-    console.log('flag:', flag);
+  const validation = (formData, dataFilterInfo, flag) => {
     const alertMsg = getValidation(formData);
 
     if (alertMsg) {
@@ -165,7 +152,7 @@ const DataFilterModal = ({...props}) => {
     }
 
     if (!flag) {
-      setDataFilteringList(highlight);
+      setDataFilteringList(dataFilterInfo);
       setData(_.cloneDeep(init));
       setShowField(false);
     }
@@ -202,7 +189,7 @@ const DataFilterModal = ({...props}) => {
         let resultDataFilteringList = [];
         const newFormData = !isNullData ? [] : formData;
 
-        const confirmedDataFiltering = appliedHighlight(newFormData);
+        const confirmedDataFiltering = appliedDataFiltering(newFormData);
 
         if (!confirmedDataFiltering) {
           alert('중복된 조건의 데이터 필터링 정보가 존재합니다.');
@@ -285,9 +272,9 @@ const DataFilterModal = ({...props}) => {
           padding='10'>
           <dataFilterFormContext.Provider value={{
             ref,
+            setData,
             showField,
             measureNames,
-            dimNames,
             dataFiltering,
             setDataFilteringList,
             setShowField,

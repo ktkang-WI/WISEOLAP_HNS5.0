@@ -1,26 +1,26 @@
+import {DesignerMode} from 'components/config/configType';
+import localizedString from 'config/localization';
+
 // 유효성 검사.
 export const getValidation = (formData) => {
   let alertMsg = '';
   // 필수 적용 항목 (측정값, 차원 둘 다)
-  let requireItems = [
+  const requireItems = [
     'dataItem',
     'condition',
     'valueFrom',
     'valueTo'
   ];
 
-  // 기존 데이터하이라이트를 만들었던 보고서는 type이 없어 null(측정값 하이라이트).
-  if (!formData.type || formData.type === 'measure' ) {
-    if (formData.condition !== 'Between') {
-      requireItems.pop();
-    }
+  if (formData.condition !== 'Between') {
+    requireItems.pop();
   }
 
-  if (formData.type === 'dimension') {
-    requireItems = ['dataItem'];
-  }
-
-  const noValueRequireItems = requireItems.findIndex((i) => !formData[i]);
+  // const noValueRequireItems = requireItems.findIndex((i) => !formData[i]);
+  const noValueRequireItems =
+    requireItems.findIndex(
+        (i) => formData[i] === undefined || formData[i] === null
+    );
 
   if (noValueRequireItems > -1) {
     alertMsg = localizedString.highlightInputEssentialValueMsg;
@@ -30,7 +30,7 @@ export const getValidation = (formData) => {
 
   if (formData.condition) {
     alertMsg = requireItems.reduce((acc, i) => {
-      if (['type', 'dataItem', 'condition'].includes(i)) return acc;
+      if (['dataItem', 'condition'].includes(i)) return acc;
 
       if (i == 'valueTo') {
         if (!formData[i]) {
@@ -51,4 +51,42 @@ export const getValidation = (formData) => {
 
     return alertMsg;
   }
+};
+
+export const getNames = (reportType, rootItem, selectedItem) => {
+  const result = {measures: [], dimensions: {}};
+  let reportItem = rootItem.adHocOption;
+
+  if (reportType === DesignerMode['DASHBOARD']) {
+    reportItem = selectedItem.meta;
+  }
+
+  result.measures = reportItem.dataField.measure.map((mea) => mea.name);
+
+  return result;
+};
+
+// setMeta
+export const setMeta = (item, key, value) => {
+  return {
+    ...item,
+    meta: {
+      ...item.meta,
+      [key]: value
+    }
+  };
+};
+
+export const getIdxAndFlag = (formData, reportType, rootItem, selectedItem) => {
+  const measureNames = getNames(reportType, rootItem, selectedItem).measures;
+  const result = {
+    idx: -1,
+    flag: ''
+  };
+
+  result.idx = measureNames.findIndex((measure) =>
+    measure == formData.dataItem
+  );
+  result.flag = 'value';
+  return result;
 };

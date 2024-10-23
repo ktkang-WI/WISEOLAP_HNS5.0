@@ -11,13 +11,14 @@ const DataFilterForm = () => {
   const {alert} = useModal();
 
   const {
-    formData,
-    measureNames,
+    ref,
+    setData,
     showField,
+    measureNames,
+    dataFiltering,
+    setDataFilteringList,
     setShowField,
-    highlightList,
-    setHighlightList,
-    ref
+    formData
   } = useContext(dataFilterFormContext);
 
   return (
@@ -33,22 +34,22 @@ const DataFilterForm = () => {
         }
 
         // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
-        const copyHighlight = _.cloneDeep(highlightList);
+        const copyDataFilterInfo = _.cloneDeep(dataFiltering);
 
-        // const findIdx = copyHighlight?.findIndex(
-        //     (data) => (data.dataItem === formData.dataItem &&
-        //     data.condition === formData.condition)
-        // );
+        const findIdx = copyDataFilterInfo?.findIndex(
+            (data) => (data.dataItem === formData.dataItem &&
+            data.condition === formData.condition)
+        );
         // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
-        // let isOtherChange = true;
-        // if (findIdx != -1) {
-        //   const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
-        //   if (dataFieldList.includes(e.dataField)) {
-        //     if (copyHighlight[findIdx][e.dataField] == e.value) {
-        //       isOtherChange = false;
-        //     }
-        //   }
-        // }
+        let isOtherChange = true;
+        if (findIdx != -1) {
+          const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
+          if (dataFieldList.includes(e.dataField)) {
+            if (copyDataFilterInfo[findIdx][e.dataField] == e.value) {
+              isOtherChange = false;
+            }
+          }
+        }
 
         if (formData.rowIdx != undefined && formData.status == 'update') {
           if (formData.valueTo && formData.valueFrom) {
@@ -57,10 +58,16 @@ const DataFilterForm = () => {
             }
           }
           if (isOtherChange) {
-            copyHighlight[formData.rowIdx] = formData;
-            setHighlightList(copyHighlight);
+            copyDataFilterInfo[formData.rowIdx] = formData;
+            setDataFilteringList(copyDataFilterInfo);
           } else {
             alert(localizedString.highlightDupleCheck2);
+            setData({
+              applyCell: true,
+              applyTotal: true,
+              applyGrandTotal: true,
+              status: 'new'
+            });
           }
         }
       }}
@@ -68,10 +75,14 @@ const DataFilterForm = () => {
       <Item
         name='type'
         dataField='type'
-        editorType='dxTextBox'
+        editorType='dxSelectBox'
         editorOptions={{
-          value: '측정값',
-          readOnly: true
+          items: localizedString.dataItemTypeList,
+          value: formData.type || 'measure',
+          valueExpr: 'name',
+          displayExpr: 'caption',
+          readOnly: true,
+          disabled: formData.dataItem ?? false
         }}>
         <Label>{localizedString.dataItemType}</Label>
       </Item>
@@ -80,6 +91,7 @@ const DataFilterForm = () => {
         dataField='dataItem'
         editorType='dxSelectBox'
         editorOptions={{
+          placeholder: '항목을 선택해주세요.',
           items: measureNames
         }}>
         <Label>{localizedString.dataItem}
@@ -90,6 +102,7 @@ const DataFilterForm = () => {
         dataField='condition'
         editorType='dxSelectBox'
         editorOptions={{
+          placeholder: '조건을 선택해주세요.',
           items: [
             '=',
             '<>',
@@ -111,6 +124,10 @@ const DataFilterForm = () => {
         name='valueFrom'
         dataField='valueFrom'
         editorType='dxNumberBox'
+        editorOptions={{
+          placeholder: '수치를 입력해주세요.',
+          value: formData.valueFrom || ''
+        }}
       >
         <Label>{localizedString.valueFrom}
           <span className='requireRule'> *</span>: </Label>
@@ -119,6 +136,10 @@ const DataFilterForm = () => {
         name='valueTo'
         dataField='valueTo'
         editorType='dxNumberBox'
+        editorOptions={{
+          placeholder: '수치를 입력해주세요.',
+          value: formData.valueFrom || ''
+        }}
       >
         <Label>{localizedString.valueTo}
           <span className='requireRule'> *</span>: </Label>
