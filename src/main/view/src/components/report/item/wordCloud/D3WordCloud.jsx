@@ -3,8 +3,8 @@ import {useRef, useMemo, useCallback} from 'react';
 import WordCloud from 'react-d3-cloud';
 import styled from 'styled-components';
 
-const MAX_FONT_SIZE = 150;
-const MIN_FONT_SIZE = 30;
+const MAX_FONT_SIZE = 200;
+const MIN_FONT_SIZE = 70;
 const MAX_FONT_WEIGHT = 700;
 const MIN_FONT_WEIGHT = 400;
 const MAX_WORDS = 150;
