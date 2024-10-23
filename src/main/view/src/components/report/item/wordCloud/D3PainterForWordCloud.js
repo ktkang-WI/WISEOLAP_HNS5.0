@@ -8,7 +8,7 @@ D3PainterForWordCloud.defaultOption = (option) => {
   return {
     size: (group) => group.length,
     word: (d) => d,
-    sectionSize: option?.sectionSize ? option?.sectionSize : 5,
+    sectionSize: option?.sectionSize ? option?.sectionSize : 15,
     marginTop: 0,
     marginRight: 0,
     marginBottom: 0,
@@ -64,7 +64,7 @@ init.funcs.divide = (size) => {
 
 init.funcs.fontSize = (option) => {
   const size = Math.sqrt(
-      option.width * option.width + option.height * option.height);
+      option.width * option.width + option.height * option.height) / 1.5;
   const average = size / init.funcs.divide(option.length);
   const section = average / option.sectionSize;
   const start = average - (section * 4) || 2;
