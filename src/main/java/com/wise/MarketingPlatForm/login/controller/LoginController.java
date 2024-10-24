@@ -184,7 +184,7 @@ public class LoginController {
         return ResponseEntity.ok().build();
     }
 
-    @Scheduled(cron = "0 0 */8 * * ?")
+    @Scheduled(cron = "0 0 */1 * * ?")
     public void clearSessionUserSchedule() {
         SessionUtility.clearSessionUserSchedule();
     }
