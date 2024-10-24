@@ -51,11 +51,8 @@ export const callDrmApi = (param) => {
   });
 };
 
-export const uploadsjs = (param) => {
-  return axios.post(path + '/uploadsjs', param, {
-    responseType: 'blob',
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+export const uploadWorkbookData = (param) => {
+  return axios.post(path + '/uploadWorkbookData', param, {
+    responseType: 'blob' // 서버에서 오는 응답을 Blob 형태로 처리
   });
 };

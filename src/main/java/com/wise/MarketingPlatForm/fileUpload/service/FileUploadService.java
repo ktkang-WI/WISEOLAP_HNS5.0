@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -45,6 +47,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -587,40 +594,51 @@ public class FileUploadService {
         return value;
     }
 
-    /**
-     * @param file
-     * @param fileName
-     * @throws Exception
-     */
-    public Map<String, String> converToExcelWithDSExcel(MultipartFile file, String fileName) throws Exception {
-        Map<String, String> converFileName = new HashMap<>();
-        try (InputStream input = file.getInputStream()) {
-
+    public void uploadWorkbookData(MultipartFile file, String fileName) throws Exception {
+        try (InputStream inputStream = file.getInputStream()) {
             File sysFile = WebFileUtils.getFile(spreadDonwloadFolder, fileName);
         	if(sysFile == null) {
                 throw new FileNotFoundException("spread File Not Found Error");
             }
 
-            Files.copy(input, sysFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            
-            String filePathFolder = sysFile.getAbsolutePath().replace(fileName, "");
-            String fileNameRemoveType = fileName.replace(".sjs", "");
+            String jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
             Workbook workbook = new Workbook();
+            workbook.fromJson(jsonData);
+            workbook.save(sysFile.toPath().toString());
 
-            workbook.open(sysFile.getAbsolutePath());
-
-            workbook.save(filePathFolder+ "\\"+fileNameRemoveType+".xlsx");
-
-            converFileName.put("folder", filePathFolder);
-            converFileName.put("fileName", fileNameRemoveType+".xlsx");
-
+            return;
         } catch (FileNotFoundException e) {
-            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            logger.error("파일 저장 중 오류가 발생했습니다.");
+            e.printStackTrace();
             throw e; 
         } catch (IllegalArgumentException e) {
-            logger.error("파일 저장 중 오류가 발생했습니다.", e);
+            logger.error("파일 저장 중 오류가 발생했습니다.");
+            e.printStackTrace();
             throw e; 
         } 
-        return converFileName;
+    }
+
+    public ResponseEntity<byte[]> downloadFile(String fileName) {
+        try {
+            File sysFile = WebFileUtils.getFile(spreadDonwloadFolder, fileName);
+            if (sysFile == null) {
+                throw new FileNotFoundException("spread File Not Found Error");
+            }
+            File excelFile = new File(sysFile.toPath().toString());
+            byte[] fileContent = Files.readAllBytes(excelFile.toPath());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            // URL 인코딩을 통해 파일 이름 안전하게 변환
+            String encodedFileName = URLEncoder.encode(excelFile.getName(), StandardCharsets.UTF_8.toString());
+            headers.setContentDisposition(ContentDisposition.attachment().filename(encodedFileName).build());
+            headers.setContentLength(fileContent.length);
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

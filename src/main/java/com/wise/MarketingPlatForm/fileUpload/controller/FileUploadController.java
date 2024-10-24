@@ -3,6 +3,7 @@ package com.wise.MarketingPlatForm.fileUpload.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,8 +15,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.http.HttpHeaders;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +41,8 @@ import org.springframework.web.util.UriUtils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.grapecity.documents.excel.SaveFileFormat;
+import com.grapecity.documents.excel.Workbook;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
 import com.wise.MarketingPlatForm.fileUpload.service.FileUploadService;
@@ -158,61 +164,20 @@ public class FileUploadController {
         return ResponseEntity.ok(response.getBody());
     }
 
-    @PostMapping(value="/uploadsjs" , consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<InputStreamResource> fileUploadsjs(
-            HttpServletRequest request,
-			@RequestPart("file") MultipartFile file, 
-			@RequestPart("param") Map<String, String> param) throws Exception {
-
+    @PostMapping("/uploadWorkbookData")
+    public ResponseEntity<byte[]> uploadWorkbookData(
+        @RequestPart("file") MultipartFile file,
+        @RequestParam("fileName") String fileName
+    ) {
         try {
-            String fileName = param.get("fileName");
-            Map<String,String> convertFile = fileUploadService.converToExcelWithDSExcel(file, fileName);
-            String realFolderPath = convertFile.get("folder").replace("spread_reports", "");
-            String realfileName = convertFile.get("fileName");
-
-            File folderPath = new File(realFolderPath);
-
-            File sysFile = WebFileUtils.getFile(folderPath, realfileName);
-
-            UrlResource resource2 = new UrlResource("file:" + realFolderPath + realfileName);
-
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(sysFile));
-	        long contentLength = file.getSize();
-                    
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentLength(contentLength);
-            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-
-            String encodeUploadFileName = UriUtils.encode(realfileName, StandardCharsets.UTF_8);
-            String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
-
-            UserDTO user = SessionUtility.getSessionUser(request);
-        
-           /*
-           ExportLogDTO logDTO = ExportLogDTO.builder()
-                    .eventStamp(new Timestamp(System.currentTimeMillis()))
-                    .reportId(Integer.parseInt(reportId))
-                    .reportNm(reportNm)
-                    .reportType(reportType)
-                    .userId(user.getUserId())
-                    .userNm(user.getUserNm())
-                    .userNo(user.getUserNo())
-                    .grpId(user.getGrpId())
-                    .accessIp(request.getRemoteAddr())
-                    .ctrlId("")
-                    .ctrlCaption("")
-                    .build();
-
-            logService.insertExportLog(logDTO);
-            */
-            
-	        return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                    .body(resource);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return ResponseEntity.internalServerError().body(null);
-	    }
+            fileUploadService.uploadWorkbookData(file, fileName);
+            return fileUploadService.downloadFile(fileName);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            // 오류 발생 시 500 Internal Server Error 응답
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(null);
+        }
     }
 }

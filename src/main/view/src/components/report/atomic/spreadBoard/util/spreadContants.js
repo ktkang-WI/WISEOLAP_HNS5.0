@@ -113,7 +113,7 @@ export const SpreadRibbonDefaultElement = {
 
 export const spreadDownlaodReportModel = {
   templateName: 'downlaodReportDialog',
-  title: '파일 저장',
+  title: '파일 다운로드',
   content: [{
     type: 'FlexContainer',
     children: [{

@@ -16,7 +16,6 @@ import {selectCurrentDesignerMode}
   from 'redux/selector/ConfigSelector';
 import {
   sheets,
-  excelIO,
   resetWorkbookJSON,
   designerRef,
   clearSheets
@@ -34,7 +33,7 @@ import datasetDefaultElement
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
   const {reload} = useReportSave();
-  const {uploadFile, deleteFile, uploadsjs} = useFile();
+  const {uploadFile, deleteFile, uploadWorkbookData} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {getDatasetElement} = datasetDefaultElement();
@@ -106,15 +105,11 @@ const useSpreadRibbon = () => {
     });
   };
 
-  const downloadExcelFile = (fileName) => {
-    createReportBlob().then(
-        (blob) => uploadsjs(
-            blob,
-            {fileName: fileName + '.sjs'}
-        )).catch((e) => {
-      console.log(e);
-    });
+  const uploadworkbookJSONData = async (
+      workbookJSONData, fileName, reportId) => {
+    await uploadWorkbookData(workbookJSONData, fileName, reportId);
   };
+
   const saveReport = () => {
     getElementByLable(localizedString.saveReport)
         .onClick({createExcelFile: createExcelFile});
@@ -138,13 +133,13 @@ const useSpreadRibbon = () => {
     const currentReportId = selectCurrentReportId(store.getState());
     const designer = designerRef.current.designer;
     reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
+
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',
           fileName: reportNm,
           reportId: currentReportId,
-          designer: designer,
-          excelIO: excelIO
+          workbookJSONData: designer.getWorkbook().toJSON()
         },
         xlsxDownload
     );
@@ -157,18 +152,10 @@ const useSpreadRibbon = () => {
       if (e.fileName
           .substr(-e.extName.length, e.extName.length) !== e.extName) {
         e.fileName += e.extName;
+        e.reportId += e.extName;
       }
-      // const fileName = e.fileName;
-      const fileName = e.reportId;
-      // 다운로드 방식 변경
-      /*
-      e.designer.getWorkbook().export((blob) => {
-        saveAs(blob, fileName);
-      }, () => {
-        alert(localizedString.reportCorrupted);
-      }, {includeBindingSource: true, fileType: 0});
-      */
-      downloadExcelFile(fileName);
+
+      uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
     }
   };
 

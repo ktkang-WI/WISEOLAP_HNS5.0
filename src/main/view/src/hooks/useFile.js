@@ -36,47 +36,34 @@ const useFile = () => {
     return response;
   };
 
-  const uploadsjs = async (file, param) => {
-    const newParam = new Blob([JSON.stringify(param)],
+  const uploadWorkbookData = async (file, fileName, reportId) => {
+    const newParam = new Blob([JSON.stringify(file)],
         {type: 'application/json'});
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('param', newParam);
-    const res = await models.File.uploadsjs(formData);
-    if (res.status != 200) {
-      console.error('Download Error: ', res.data);
-      return;
-    }
 
-    const contentDisposition = res.headers['content-disposition'];
-    let newFileName = 'defaultFileName';
-    if (contentDisposition) {
-      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      const matches = filenameRegex.exec(contentDisposition);
-      if (matches != null && matches[1]) {
-        newFileName = decodeURIComponent(matches[1].replace(/['"]/g, ''));
-      }
-    }
-    const convertFile = {
-      name: newFileName,
-      blob: new Blob([res.data])
-    };
+    formData.append('file', newParam);
+    formData.append('fileName', reportId.toString());
 
-    const url = window.URL.createObjectURL(convertFile.blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', convertFile.name);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    try {
+      const response = await models.File.uploadWorkbookData(formData);
+      // 응답을 Blob 형태로 변환
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName); // 다운로드할 파일 이름 지정
+      document.body.appendChild(link);
+      link.click(); // 다운로드 링크 클릭하여 파일 다운로드 시작
+      link.remove(); // 링크 제거
+    } catch (error) {
+      console.error('다운로드를 할 수 없습니다.', error);
+    }
   };
 
   return {
     uploadFile,
     deleteFile,
     importFile,
-    uploadsjs
+    uploadWorkbookData
   };
 };
 
