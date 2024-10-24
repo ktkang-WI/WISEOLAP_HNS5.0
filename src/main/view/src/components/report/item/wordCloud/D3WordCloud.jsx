@@ -46,6 +46,17 @@ const D3WordCloud = ({
     }
   };
 
+  const getPadding = () => {
+    if (dataSource.length > 50) {
+      return 1;
+    } else if (dataSource.length > 20) {
+      return 10;
+    }
+
+    return 20;
+  };
+
+  const PADDING = useMemo(getPadding, [dataSource]);
   const MAX_FONT_SIZE = useMemo(getMaxFontSize, [dataSource]);
   const MIN_FONT_SIZE = useMemo(getMinFontSize, [dataSource]);
   const MAX_FONT_WEIGHT = 700;
@@ -105,13 +116,30 @@ const D3WordCloud = ({
     return maxTextWidth + 100; // 1000과 maxTextWidth 중 큰 값 반환
   }, [sortedWords]);
 
-  const getColor = (word) => {
-    const normalizedValue =
-      (maxOccurences - word.value) / (maxOccurences - minOccurences);
-    const colorIndex = Math.round(normalizedValue * (palette.length - 1));
-    return palette[colorIndex]; // 색상 팔레트에서 색상 선택
-  };
+  const getColor = useCallback((word) => {
+    // 로그 스케일 적용 (0을 피하기 위해 +1을 더함)
+    const logValue = Math.log(word.value + 1); // +1을 추가하여 0을 피함
+    const logMin = Math.log(minOccurences + 1);
+    const logMax = Math.log(maxOccurences + 1);
 
+    // 분모가 0이 되지 않도록 예외 처리
+    if (logMax === logMin) {
+      return palette[0]; // 모두 동일한 값이면 기본 색상 반환
+    }
+
+    // 정규화 계산
+    const normalizedValue = (logValue - logMin) / (logMax - logMin);
+
+    // 정규화 값이 0~1을 넘지 않도록 보정
+    const clampedNormalizedValue =
+      1 - Math.max(0, Math.min(1, normalizedValue));
+
+    // 큰 값일수록 낮은 인덱스의 색상 (반전)
+    const colorIndex = Math.round(clampedNormalizedValue *
+      (palette.length - 1));
+
+    return palette[colorIndex];
+  }, [maxOccurences, minOccurences, palette]);
   // 비율 유지하기
   const ratio = width / height;
   const minHeight = minWidth / ratio;
@@ -130,7 +158,7 @@ const D3WordCloud = ({
         data={sortedWords}
         font='Noto Sans KR'
         rotate={0}
-        padding={1}
+        padding={PADDING}
         spiral={'rectangular'}
         fontSize={(word) => calculateFontSize(word.value)}
         random={() => 0.5}
