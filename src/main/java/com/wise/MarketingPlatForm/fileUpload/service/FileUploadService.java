@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -45,6 +47,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -56,18 +63,26 @@ import com.wise.MarketingPlatForm.querygen.querysetting.dbms.OracleSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.TiberoSetting;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 
+import com.grapecity.documents.excel.*;
+import com.grapecity.documents.excel.drawing.*;
+import java.util.*;
+
+
 @Service
 public class FileUploadService {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadService.class);
 
     private File spreadReportFolder;
+    private File spreadDonwloadFolder;
     private final DatasetService datasetService;
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
+    // private final String SHARED_FOLDER = "/olapnas";
     private final String SHARED_FOLDER = "/olapnas";
     private final String DECRYTION_INPUT_FOLDER = "/drm/upload";
     private final String DECRYTION_OUTPUT_FOLDER = "/drm";
+    private final String DOWNLOAD_OUTPUT_FOLDER = "/drm";
 
     FileUploadService(DatasetService datasetService, MartConfig martConfig, MartDAO martDAO, ReportDAO reportDAO) {
         this.datasetService = datasetService;
@@ -81,7 +96,9 @@ public class FileUploadService {
     public void initFolderPath() {
         // 기존 경로
         // spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-        spreadReportFolder = new File(SHARED_FOLDER);
+        spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
+        spreadDonwloadFolder = new File(new File("UploadFiles"), "spread_download");
+        // spreadReportFolder = new File(SHARED_FOLDER);
         if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
 	    }
@@ -575,5 +592,53 @@ public class FileUploadService {
             value = columnType;
         }
         return value;
+    }
+
+    public void uploadWorkbookData(MultipartFile file, String fileName) throws Exception {
+        try (InputStream inputStream = file.getInputStream()) {
+            File sysFile = WebFileUtils.getFile(spreadDonwloadFolder, fileName);
+        	if(sysFile == null) {
+                throw new FileNotFoundException("spread File Not Found Error");
+            }
+
+            String jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+            Workbook workbook = new Workbook();
+            workbook.fromJson(jsonData);
+            workbook.save(sysFile.toPath().toString());
+
+            return;
+        } catch (FileNotFoundException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.");
+            e.printStackTrace();
+            throw e; 
+        } catch (IllegalArgumentException e) {
+            logger.error("파일 저장 중 오류가 발생했습니다.");
+            e.printStackTrace();
+            throw e; 
+        } 
+    }
+
+    public ResponseEntity<byte[]> downloadFile(String fileName) {
+        try {
+            File sysFile = WebFileUtils.getFile(spreadDonwloadFolder, fileName);
+            if (sysFile == null) {
+                throw new FileNotFoundException("spread File Not Found Error");
+            }
+            File excelFile = new File(sysFile.toPath().toString());
+            byte[] fileContent = Files.readAllBytes(excelFile.toPath());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            // URL 인코딩을 통해 파일 이름 안전하게 변환
+            String encodedFileName = URLEncoder.encode(excelFile.getName(), StandardCharsets.UTF_8.toString());
+            headers.setContentDisposition(ContentDisposition.attachment().filename(encodedFileName).build());
+            headers.setContentLength(fileContent.length);
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

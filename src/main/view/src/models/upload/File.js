@@ -50,3 +50,9 @@ export const callDrmApi = (param) => {
     params: param
   });
 };
+
+export const uploadWorkbookData = (param) => {
+  return axios.post(path + '/uploadWorkbookData', param, {
+    responseType: 'blob' // 서버에서 오는 응답을 Blob 형태로 처리
+  });
+};
