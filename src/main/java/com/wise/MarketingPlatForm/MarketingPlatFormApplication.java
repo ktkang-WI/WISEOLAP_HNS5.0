@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.grapecity.documents.excel.*;
+import com.grapecity.documents.excel.drawing.*;
 import com.wise.MarketingPlatForm.global.context.BeanContext;
 
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class MarketingPlatFormApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        Workbook.SetLicenseKey("E388988213738328#A0xZSRiwiI8IzM8MzNzEjM8gTO8gzMiojIklkI1pjIEJCLi4TPBZDa4NzbHl6Qq5kSoBzba54RaJnRrx4MGJkbm5GeR9EMWRUY8IzQ5Mjb5BzbBFXMrg5VzxEUXlHaGRnbxUndGl5YN9UePZEN73UW6pUR5BnSqBzQ0RmI0IyUiwCM5MTMyQTM9QTM0IicfJye35XX3JSVDRkMiojIDJCLicjdgEmdhpEIsV6Y8VEIy3mZgQnbl5Wdj3GRgM4RiojIOJyebpjIkJHUiwiI8QTNxIDMgATMwEDNyAjMiojI4J7QiwiI9ATMxQjMwIjI0ICc8VkIsISKRWZ12eI1kWJ1ImZ1o4YhtTbnsTYlsjLhsTInsLiOiEmTDJCLlVncJp3I");
         return builder.sources(MarketingPlatFormApplication.class);
     }
 

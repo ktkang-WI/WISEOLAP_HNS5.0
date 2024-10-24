@@ -269,6 +269,14 @@
       <artifactId>commons-io</artifactId>
       <version>2.13.0</version>
     </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/com.mescius.documents/dsexcel -->
+    <dependency>
+        <groupId>com.mescius.documents</groupId>
+        <artifactId>dsexcel</artifactId>
+        <version>7.2.3</version>
+    </dependency>
+
 
     <!-- 		<dependency> -->
     <!--    			<groupId>org.json</groupId> -->

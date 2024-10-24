@@ -16,7 +16,6 @@ import {selectCurrentDesignerMode}
   from 'redux/selector/ConfigSelector';
 import {
   sheets,
-  excelIO,
   resetWorkbookJSON,
   designerRef,
   clearSheets
@@ -34,7 +33,7 @@ import datasetDefaultElement
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
   const {reload} = useReportSave();
-  const {uploadFile, deleteFile} = useFile();
+  const {uploadFile, deleteFile, uploadWorkbookData} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {getDatasetElement} = datasetDefaultElement();
@@ -105,6 +104,12 @@ const useSpreadRibbon = () => {
       console.log(e);
     });
   };
+
+  const uploadworkbookJSONData = async (
+      workbookJSONData, fileName, reportId) => {
+    await uploadWorkbookData(workbookJSONData, fileName, reportId);
+  };
+
   const saveReport = () => {
     getElementByLable(localizedString.saveReport)
         .onClick({createExcelFile: createExcelFile});
@@ -125,14 +130,16 @@ const useSpreadRibbon = () => {
 
   const downloadReportXLSX = () => {
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+    const currentReportId = selectCurrentReportId(store.getState());
     const designer = designerRef.current.designer;
     reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
+
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',
           fileName: reportNm,
-          designer: designer,
-          excelIO: excelIO
+          reportId: currentReportId,
+          workbookJSONData: designer.getWorkbook().toJSON()
         },
         xlsxDownload
     );
@@ -145,14 +152,10 @@ const useSpreadRibbon = () => {
       if (e.fileName
           .substr(-e.extName.length, e.extName.length) !== e.extName) {
         e.fileName += e.extName;
+        e.reportId += e.extName;
       }
-      const fileName = e.fileName;
-      // 다운로드 방식 변경
-      e.designer.getWorkbook().export((blob) => {
-        saveAs(blob, fileName);
-      }, () => {
-        alert(localizedString.reportCorrupted);
-      }, {includeBindingSource: true, fileType: 0});
+
+      uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
     }
   };
 
