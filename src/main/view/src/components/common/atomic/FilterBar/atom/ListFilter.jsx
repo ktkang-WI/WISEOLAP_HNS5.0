@@ -14,7 +14,7 @@ const ListFilter = ({
   info, value, isTo, onValueChanged, width, id, ...props}) => {
   const filterHeight = isPortal() ? '45px' : theme.size.filterHeight;
   const index = isTo ? 1 : 0;
-  let keys = value && value.value ? _.cloneDeep(value.value[index]) : '';
+  let keys = value && value.value ? _.cloneDeep(value.value[index]) || '' : '';
   let listItems = value?.listItems || [];
   const isLinkageFilter = value?.linkageFilter?.length > 0 &&
     listItems.length == 1;
