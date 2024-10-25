@@ -57,9 +57,9 @@ const renameObjectKey = (obj, oldKeyName, newKeyName) => {
 };
 
 const sortObject = (obj) => {
-  let keys = Object.keys(obj);
+  const keys = Object.keys(obj);
 
-  keys = keys.sort();
+  // keys = keys.sort();
 
   if (!keys) {
     console.error('정렬 작업중 오류 발생 수정 필요 !!');
