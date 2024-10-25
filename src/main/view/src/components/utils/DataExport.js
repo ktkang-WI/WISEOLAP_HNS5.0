@@ -59,6 +59,7 @@ const renameObjectKey = (obj, oldKeyName, newKeyName) => {
 const sortObject = (obj) => {
   const keys = Object.keys(obj);
 
+  // 데이터 그리드 순서 안맞는 현상 정렬 주석처리
   // keys = keys.sort();
 
   if (!keys) {
@@ -99,6 +100,8 @@ const extractingValues = (insertedData) => {
 };
 
 const mergeHeaderValue = (data) => {
+  // 데이터 그리드 순서 안맞는 현상 정렬 주석처리
+  // let keys = extractingKeys(data).sort();
   const keys = extractingKeys(data);
   if (!keys) return null;
   // keys = keys.map((key) => wasteDisposalKey(key));
