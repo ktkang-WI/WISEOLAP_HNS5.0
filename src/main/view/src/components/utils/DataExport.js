@@ -99,9 +99,12 @@ const extractingValues = (insertedData) => {
 };
 
 const mergeHeaderValue = (data) => {
-  let keys = extractingKeys(data).sort();
+  const keys = extractingKeys(data);
   if (!keys) return null;
-  keys = keys.map((key) => wasteDisposalKey(key));
+  // keys = keys.map((key) => wasteDisposalKey(key));
+  keys.forEach((value, index, arr) => {
+    arr[index] = wasteDisposalKey(value);
+  });
   const values = extractingValues(data);
   if (!values) return null;
   values.unshift(keys);
