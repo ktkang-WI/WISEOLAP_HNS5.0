@@ -105,6 +105,7 @@ const useSpreadRibbon = () => {
     });
   };
 
+  // eslint-disable-next-line no-unused-vars
   const uploadworkbookJSONData = async (
       workbookJSONData, fileName, reportId) => {
     await uploadWorkbookData(workbookJSONData, fileName, reportId);
@@ -139,6 +140,7 @@ const useSpreadRibbon = () => {
           extName: '.xlsx',
           fileName: reportNm,
           reportId: currentReportId,
+          designer: designer,
           workbookJSONData: designer.getWorkbook().toJSON()
         },
         xlsxDownload
@@ -155,7 +157,13 @@ const useSpreadRibbon = () => {
         e.reportId += e.extName;
       }
 
-      uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
+      e.designer.getWorkbook().export((blob) => {
+        saveAs(blob, e.fileName);
+      }, () => {
+        alert(localizedString.reportCorrupted);
+      }, {includeBindingSource: true, fileType: 0});
+
+      // uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
     }
   };
 
