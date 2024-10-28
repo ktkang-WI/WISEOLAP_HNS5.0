@@ -117,30 +117,25 @@ const D3WordCloud = ({
   }, [sortedWords]);
 
   const getColor = useCallback((word) => {
-    // 로그 스케일 적용 (0을 피하기 위해 +1을 더함)
-    const logValue = Math.log(word.value + 1); // +1을 추가하여 0을 피함
+    const logValue = Math.log(word.value + 1);
     const logMin = Math.log(minOccurences + 1);
     const logMax = Math.log(maxOccurences + 1);
 
-    // 분모가 0이 되지 않도록 예외 처리
     if (logMax === logMin) {
-      return palette[0]; // 모두 동일한 값이면 기본 색상 반환
+      return palette[0];
     }
 
-    // 정규화 계산
     const normalizedValue = (logValue - logMin) / (logMax - logMin);
 
-    // 정규화 값이 0~1을 넘지 않도록 보정
     const clampedNormalizedValue =
       1 - Math.max(0, Math.min(1, normalizedValue));
 
-    // 큰 값일수록 낮은 인덱스의 색상 (반전)
     const colorIndex = Math.round(clampedNormalizedValue *
       (palette.length - 1));
 
     return palette[colorIndex];
   }, [maxOccurences, minOccurences, palette]);
-  // 비율 유지하기
+
   const ratio = width / height;
   const minHeight = minWidth / ratio;
 

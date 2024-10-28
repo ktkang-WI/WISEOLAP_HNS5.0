@@ -6,6 +6,7 @@ import {pointLabelData}
 import {DataColumnSeriesOptionsContext}
   from '../../organism/DataColumnSeriesOptions/DataColumnSeriesOptions';
 import _ from 'lodash';
+import {LabelTextBox} from './Common/LabelTextBox';
 
 /*
 Notation: 'None',
@@ -31,11 +32,27 @@ const DataColumnPointLabel = () => {
   }, []);
 
   const handleSelectBoxValueChanged = (e, id) => {
+    console.log(pointLabelOptions);
+    console.log(pointLabelFormat);
     setPointLabelOptions((prev) => {
       return prev.map((item) => {
         if (item.id === id) {
           item.value = e.value;
           pointLabelFormat[item.name] = e.value;
+        }
+        return item;
+      });
+    });
+    setPointLabel(pointLabelFormat);
+  };
+
+  const handleTextBoxValueChanged = (e, id, key) => {
+    console.log(e);
+    setPointLabelOptions((prev) => {
+      return prev.map((item) => {
+        if (item.id === id) {
+          item[key] = e;
+          pointLabelFormat[key] = e;
         }
         return item;
       });
@@ -53,6 +70,21 @@ const DataColumnPointLabel = () => {
           items={item.items}
           label={item.label}
         />)}
+      {
+        pointLabelOptions[0].value == 'Top N 값' &&
+        <>
+          <LabelTextBox
+            label={'TOP 표시 개수'}
+            value={pointLabelFormat['top']}
+            onValueChanged={(e) => handleTextBoxValueChanged(e, 0, 'top')}
+          />
+          <LabelTextBox
+            label={'BOTTOM 표시 개수'}
+            value={pointLabelFormat['bottom']}
+            onValueChanged={(e) => handleTextBoxValueChanged(e, 0, 'bottom')}
+          />
+        </>
+      }
     </LabelPanel>
   );
 };

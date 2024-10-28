@@ -18,7 +18,8 @@ export const labelFormat = (Notation, valueObject) => {
     format = `${valueObject.argument}`;
   } else if (pointLabelNotationData.measureName === Notation) {
     format = `${valueObject.seriesName}`;
-  } else if (pointLabelNotationData.value === Notation) {
+  } else if (pointLabelNotationData.value === Notation ||
+    pointLabelNotationData.topNvalue == Notation) {
     format = `${valueObject.value}`;
   } else if (pointLabelNotationData.argumentMeasureName === Notation) {
     format = `${valueObject.argument} (${valueObject.seriesName})`;
