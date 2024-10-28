@@ -271,11 +271,14 @@
     </dependency>
     
     <!-- https://mvnrepository.com/artifact/com.mescius.documents/dsexcel -->
-    <dependency>
+    <!-- dsExcel 임시 주석 처리 
+        TODO: dsExcel 라이센스 발급 후 주석 해제
+    -->
+    <!-- <dependency>
         <groupId>com.mescius.documents</groupId>
         <artifactId>dsexcel</artifactId>
         <version>7.2.3</version>
-    </dependency>
+    </dependency> -->
 
 
     <!-- 		<dependency> -->
