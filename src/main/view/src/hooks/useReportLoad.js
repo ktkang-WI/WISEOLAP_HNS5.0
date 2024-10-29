@@ -10,7 +10,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {setIconReportList} from 'components/report/util/ReportUtility';
 import {DesignerMode} from 'components/config/configType';
 import useSpread from './useSpread';
-import {selectCurrentReport, selectCurrentReportId}
+import {selectCurrentReport}
   from 'redux/selector/ReportSelector';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import Alert from 'components/common/atomic/Modal/organisms/Alert';
@@ -29,21 +29,26 @@ export default function useReportLoad() {
   const {startJob, endJob, endJobForce} = LoadingSlice.actions;
 
   const reportType = selectCurrentDesignerMode(store.getState());
-  const reportId = selectCurrentReportId(store.getState());
+  // const reportId = selectCurrentReportId(store.getState());
   const report = selectCurrentReport(store.getState());
 
   /**
    * getReportList 훅
    * 현재 디자이너 모드에 따라 보고서 데이터를 불러오고 관리
    * 보고서 데이터 를 비동기적으로 로드하여 보고서 목록을 반환
+   * @param {boolean} showAll
    * @return {Object} reportList - 불러온 보고서 데이터 목록
    * @return {String} reportType - 현재 디자이너 모드 타입
    */
-  const getReportList = () => {
+  const getReportList = (showAll) => {
     const [reportList, setReportList] = useState([]);
 
     const getList = async () => {
-      await models.Report.getList(reportType, 'designer').then(({data}) => {
+      let types = reportType;
+      if (showAll) {
+        types = null;
+      }
+      await models.Report.getList(types, 'designer').then(({data}) => {
         setIconReportList(data.privateReport);
         setIconReportList(data.publicReport);
         setReportList(data);
@@ -70,7 +75,7 @@ export default function useReportLoad() {
       // setSubLinkReport
     } = LinkSlice.actions;
 
-    if (reportType === DesignerMode['EXCEL']) {
+    if (selectedReport.reportType === DesignerMode['EXCEL']) {
       await setExcelFile(selectedReport.id);
     }
     dispatch(startJob('보고서 정보를 불러오고 있습니다.'));
@@ -124,9 +129,9 @@ export default function useReportLoad() {
       return true;
     }
 
-    if (reportId !== 0) {
-      reload(reportType);
-    }
+    const reportType = selectedReport.reportType;
+
+    reload(reportType);
     await getReportWithLinkedReport(selectedReport);
   };
 

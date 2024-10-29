@@ -34,6 +34,7 @@ import useQueryExecute from './useQueryExecute';
 import DatasetType from 'components/dataset/utils/DatasetType';
 import {initWorkkbookJSONs}
   from 'components/report/atomic/spreadBoard/util/SpreadCore';
+import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const useReportSave = () => {
   const datasetActions = DatasetSlice.actions;
   const parameterActions = ParameterSlice.actions;
   const spreadActions = SpreadSlice.actions;
+  const configActions = ConfigSlice.actions;
 
   const currentReportId = useSelector(selectCurrentReportId);
 
@@ -315,6 +317,7 @@ const useReportSave = () => {
     dispatch(parameterActions.initParameter());
     dispatch(spreadActions.initSpread());
     dispatch(linkActions.initLink());
+    dispatch(configActions.setDesignerMode(designerMode));
     initWorkkbookJSONs();
   };
 

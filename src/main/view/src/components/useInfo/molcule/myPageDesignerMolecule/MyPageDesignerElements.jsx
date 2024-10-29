@@ -70,7 +70,7 @@ const MyPageDesignerElements = ({setConfig, data, items, prog}) => {
       title: modalTitle,
       onSubmit: (value) => {
         // 변경.
-        if (value.id.indexOf('favorite') > -1) {
+        if (value.id?.indexOf('favorite') > -1) {
           value.id = parseInt(value.id.substring(8, value.id.length));
         }
         if (!itemId || !value) return;
