@@ -32,8 +32,6 @@ const DataColumnPointLabel = () => {
   }, []);
 
   const handleSelectBoxValueChanged = (e, id) => {
-    console.log(pointLabelOptions);
-    console.log(pointLabelFormat);
     setPointLabelOptions((prev) => {
       return prev.map((item) => {
         if (item.id === id) {
