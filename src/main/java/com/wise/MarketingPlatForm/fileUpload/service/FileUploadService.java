@@ -63,8 +63,8 @@ import com.wise.MarketingPlatForm.querygen.querysetting.dbms.OracleSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.TiberoSetting;
 import com.wise.MarketingPlatForm.report.dao.ReportDAO;
 
-import com.grapecity.documents.excel.*;
-import com.grapecity.documents.excel.drawing.*;
+// import com.grapecity.documents.excel.*;
+// import com.grapecity.documents.excel.drawing.*;
 import java.util.*;
 
 
@@ -603,9 +603,9 @@ public class FileUploadService {
 
             String jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
-            Workbook workbook = new Workbook();
-            workbook.fromJson(jsonData);
-            workbook.save(sysFile.toPath().toString());
+            // Workbook workbook = new Workbook();
+            // workbook.fromJson(jsonData);
+            // workbook.save(sysFile.toPath().toString());
 
             return;
         } catch (FileNotFoundException e) {
