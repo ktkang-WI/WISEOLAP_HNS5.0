@@ -52,6 +52,7 @@ import LayoutSlice from 'redux/modules/LayoutSlice';
 import {useDispatch} from 'react-redux';
 import {selectLinkedReport} from 'redux/selector/LinkSelector';
 import ItemType from 'components/report/item/util/ItemType';
+import {useNavigate} from 'react-router-dom';
 
 const RibbonDefaultElement = () => {
   const {
@@ -72,6 +73,7 @@ const RibbonDefaultElement = () => {
   const mypageConfig = useSelector(selectMyPageDesignerConfig);
   const selectLinkedReportList = useSelector(selectLinkedReport);
 
+  const nav = useNavigate();
   const dispatch = useDispatch();
   const {querySearch} = useReportSave();
   const {executeItems} = useQueryExecute();
@@ -232,7 +234,11 @@ const RibbonDefaultElement = () => {
       'label': localizedString.loadReport,
       'imgSrc': loadReport,
       'onClick': (e) => {
-        openModal(LoadReportModal);
+        openModal(LoadReportModal, {
+          nav: nav,
+          modelType: 'loadReport',
+          showAll: true
+        });
       }
     },
     'SaveReport': {

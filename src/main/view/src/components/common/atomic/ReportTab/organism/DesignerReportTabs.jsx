@@ -16,7 +16,7 @@ const ReportTabSource = [
 
 const DesignerReportTabs = (
     {reportList, onSelectionChanged, onSubmit, onClose, searchValue,
-      searchEnabled, dropdownBoxRef, usingPoint, value}
+      searchEnabled, dropdownBoxRef, usingPoint, value, navigator, modalType}
 ) => {
   const getTabContent = ({data}) => {
     return <ReportListTab
@@ -32,6 +32,8 @@ const DesignerReportTabs = (
       onSubmit={onSubmit}
       onClose={onClose}
       usingPoint={usingPoint}
+      navigator={navigator}
+      modalType={modalType}
     />;
   };
 
