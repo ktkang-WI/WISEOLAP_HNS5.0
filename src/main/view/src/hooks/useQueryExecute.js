@@ -750,7 +750,12 @@ const useQueryExecute = () => {
   // eslint-disable-next-line max-len
   const initializeParameters = async (parameters, setDefaultValue, setValues) => {
     const promises = {};
-    parameters.informations.forEach(async (param) => {
+    parameters.informations.forEach(async (param, i) => {
+      if (parameters.filterSearchComplete &&
+        parameters.filterSearchComplete.includes(param.name)) {
+        return true;
+      }
+
       try {
         // 리스트 파라미터인지 확인
         if (param.paramType == 'LIST') {

@@ -52,7 +52,8 @@ const FilterBarWrapper = (props) => {
 
   // 매개변수 정보 수정되면 재조회
   useEffect(() => {
-    if (parameters.filterSearchComplete.length == 0 &&
+    if (parameters.informations.length >
+      parameters.filterSearchComplete.length &&
       parameters.informations.length != 0) {
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
