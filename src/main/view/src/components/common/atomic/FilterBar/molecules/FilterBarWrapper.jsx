@@ -150,7 +150,8 @@ const FilterBarWrapper = (props) => {
 
               let onDeleted = undefined;
 
-              if (filter.dsType == 'CUBE') {
+              // 데이터 집합이 쿼리직접입력이 아닐 경우에만 필터 삭제 버튼 활성화
+              if (filter.dsType !== 'DS_SQL') {
                 onDeleted = () => {
                   deleteConfirm(filter.name);
                 };
