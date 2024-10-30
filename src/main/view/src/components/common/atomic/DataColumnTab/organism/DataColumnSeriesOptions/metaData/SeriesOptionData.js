@@ -65,7 +65,8 @@ const pointLabelSelectBoxData = {
       pointLabelNotationData.value,
       pointLabelNotationData.argumentMeasureName,
       pointLabelNotationData.measureNameValue,
-      pointLabelNotationData.argumentMeasureNameValue
+      pointLabelNotationData.argumentMeasureNameValue,
+      pointLabelNotationData.topNvalue
     ],
     overlappingModeItems: [
       overlappingModeData.default,
