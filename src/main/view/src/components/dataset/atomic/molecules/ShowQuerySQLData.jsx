@@ -124,7 +124,7 @@ const ShowQuerySQLData = ({dsId, datasetQuery, paramInfo}) => {
         alert(localizedString.executeSQLAlert);
       }
     } catch (error) {
-      alert(localizedString.invalidQuery);
+      // alert(localizedString.invalidQuery);
     }
   };
 

@@ -34,6 +34,20 @@ export default function useModal() {
   };
 
   /**
+     * 알림창을 엽니다.
+     * @param {string} msg
+     * @param {string} detail
+     * 서버에서 보낸 에러를 보고 싶은 경우. 불필요 시 삭제 예정.
+     */
+  const detailMsgAlert = (msg, detail) => {
+    openModal(Alert, {
+      message: msg,
+      serverDetailMsg: detail,
+      useOpenBtn: true
+    });
+  };
+
+  /**
    * 확인, 취소 버튼이 있는 알림창을 엽니다.
    * @param {string} msg
    * @param {funciton} onSubmit
@@ -74,6 +88,7 @@ export default function useModal() {
     alert,
     warning,
     confirm,
-    success
+    success,
+    detailMsgAlert
   };
 };
