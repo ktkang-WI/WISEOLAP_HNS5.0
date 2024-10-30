@@ -29,6 +29,7 @@ import DatasetType from 'components/dataset/utils/DatasetType';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import datasetDefaultElement
   from 'components/common/atomic/Ribbon/popover/organism/DatasetDefaultElement';
+import {useNavigate} from 'react-router-dom';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
@@ -37,6 +38,7 @@ const useSpreadRibbon = () => {
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {getDatasetElement} = datasetDefaultElement();
+  const nav = useNavigate();
   const {
     createReportBlob
   } = useSpread();
@@ -92,7 +94,7 @@ const useSpreadRibbon = () => {
   };
 
   const openReport = () => {
-    openModal(LoadReportModal);
+    openModal(LoadReportModal, {nav: nav, showAll: true});
   };
 
   const createExcelFile = (reportId) => {

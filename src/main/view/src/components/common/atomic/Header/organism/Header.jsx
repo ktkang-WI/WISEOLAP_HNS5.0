@@ -258,6 +258,7 @@ const Header = ({left, middle, right}) => {
           width={'auto'}
           position={item.position}>
           <DropdownBoxReportSearch
+            showAll={true}
             report={report}
             button={item.button}
             id={item.id}
