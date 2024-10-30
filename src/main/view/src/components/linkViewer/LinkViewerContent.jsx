@@ -53,6 +53,8 @@ const LinkViewerContent = ({children}) => {
   const report = useSelector(selectCurrentReport);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
   const [reportListOpened, setReportListOpened] = useState(true);
+  const [fullscreen, setFullscreen] = useState(false);
+
   const [reportData, setReportData] = useState();
   const useAttributeList = report.options.reportType == 'AdHoc';
   const {loadReport, querySearch} = useReportSave();
@@ -109,6 +111,10 @@ const LinkViewerContent = ({children}) => {
 
   const enabled = report.options.reportType == 'AdHoc' && dataColumnOpened;
   document.title = report.options.reportNm;
+
+  useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, [fullscreen]);
 
   useEffect(() => {
     const token = params.get('token');
@@ -202,14 +208,24 @@ const LinkViewerContent = ({children}) => {
         flexDirection: 'column',
         width: '100%'
       }}
-      marginHeight={'10px'}
-      headerHeight={!noHeader ? theme.size.headerHeight : '0px'}
+      marginHeight={fullscreen ? '0px' : '10px'}
+      className={fullscreen ? 'viewer-full-screen' : ''}
+      headerHeight={noHeader || fullscreen ? '0px' : theme.size.headerHeight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <FilterBar
           visible={!noFilter}
+          fullscreen={fullscreen}
+          useFullscreenButton={true}
+          handleFullscreen={() => {
+            if (!fullscreen) {
+              setReportListOpened(false);
+              setDataColumnOpened(false);
+            }
+            setFullscreen(!fullscreen);
+          }}
           useSearchButton={true}
-          buttons={buttons}/>
+          buttons={fullscreen ? [] : buttons}/>
         <StyledWrapper>
           <CustomDrawer
             useExpandButton={false}

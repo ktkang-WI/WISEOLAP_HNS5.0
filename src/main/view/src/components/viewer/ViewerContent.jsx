@@ -50,6 +50,8 @@ const ViewerContent = ({children}) => {
 
   const [reportListOpened, setReportListOpened] = useState(true);
   const [dataColumnOpened, setDataColumnOpened] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+
   const [reportData, setReportData] = useState();
   const componentCache = useMemo(() => ({}), []);
 
@@ -114,11 +116,23 @@ const ViewerContent = ({children}) => {
         flexDirection: 'column',
         width: '100%'
       }}
-      marginHeight={'10px'}
-      headerHeight={theme.size.headerHeight}
+      marginHeight={fullscreen ? '0px' : '10px'}
+      className={fullscreen ? 'viewer-full-screen' : ''}
+      headerHeight={fullscreen ? '0px' : theme.size.headerHeight}
     >
       <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-        <FilterBar useSearchButton={true} buttons={buttons}/>
+        <FilterBar
+          fullscreen={fullscreen}
+          useFullscreenButton={true}
+          handleFullscreen={() => {
+            if (!fullscreen) {
+              setReportListOpened(false);
+              setDataColumnOpened(false);
+            }
+            setFullscreen(!fullscreen);
+          }}
+          useSearchButton={true}
+          buttons={fullscreen ? [] : buttons}/>
         <StyledWrapper>
           <CustomDrawer
             useExpandButton={false}
