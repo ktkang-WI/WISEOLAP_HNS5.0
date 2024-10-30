@@ -108,7 +108,8 @@
 				  and    a.table_name  = c.table_name(+)
 				  and    a.column_name = c.column_name(+)
 				  and    a.table_name  = d.table_name(+)
-				  order    by PK_YN, column_id)
+				  <!--order    by PK_YN, column_id-->)
+					order  BY CASE WHEN DATA_TYPE = 'NUMBER' THEN 0 ELSE 1 END
 		</if>
 		<if test='dbType.equalsIgnoreCase("MS_SQL")'>
 			SELECT
