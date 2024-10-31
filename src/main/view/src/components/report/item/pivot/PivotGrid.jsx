@@ -213,8 +213,14 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         dataSource={mart.dataSourceConfig}
         showColumnTotals={meta.positionOption.column.totalVisible}
         showRowTotals={meta.positionOption.row.totalVisible}
-        showColumnGrandTotals={meta.positionOption.column.grandTotalVisible}
-        showRowGrandTotals={meta.positionOption.row.grandTotalVisible}
+        showColumnGrandTotals={
+          fieldCount.column > 0 ?
+          meta.positionOption.column.grandTotalVisible : true
+        }
+        showRowGrandTotals={
+          fieldCount.row > 0 ?
+          meta.positionOption.row.grandTotalVisible : true
+        }
         rowHeaderLayout={meta.layout}
         dataFieldArea={meta.positionOption.dataPosition}
         allowFiltering={meta.showFilter}
