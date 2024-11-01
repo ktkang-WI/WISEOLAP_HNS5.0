@@ -284,11 +284,14 @@ const DataSourceFoldableList = ({dataset}) => {
               searchMode={'contains'}
               height={'calc(100% - 80px)'}
               onItemClick={(e) => {
-                if (e.itemData.disabled) {
-                  const instance = e.component;
-                  const node = instance.getNodeByItem(e.itemData);
+                const {component: instance, itemData} = e;
 
+                if (itemData.disabled) {
+                  const node = instance.getNodeByItem(itemData);
                   instance.expandItem(node.key);
+                } else {
+                  itemData.expanded ? instance.collapseItem(itemData) :
+                  instance.expandItem(itemData);
                 }
               }}
               itemRender={(item, index) => itemRender(item, index, snapshot)}
