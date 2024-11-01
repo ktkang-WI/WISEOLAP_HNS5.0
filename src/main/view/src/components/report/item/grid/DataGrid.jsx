@@ -270,7 +270,8 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   const cellRender = (e, column, meta) => {
     let endScaleValue = 0;
-    const value = e.data[column.name] === null ?
+    // eslint-disable-next-line max-len
+    const value = ((e.data[column.name] === null) || (e.data[column.name] === '')) ?
       null : e.data[column.name] || 0;
     const displayValue = e.displayValue ? e.displayValue : 0;
 
