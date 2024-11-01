@@ -155,7 +155,8 @@ public class CubeService {
         for (CubeDimColEntity entity : cubeDimColEntities) {
             if (!entity.isVisible()) continue;
             // 권한 있는 차원의 컬럼만 추가
-            if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())) {
+            // if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())) {
+            if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getTableName())) {
                 authDimNames.add(entity.getTableName());
                 fields.add(CubeFieldVO.builder()
                         .type(DataFieldType.DIM)
