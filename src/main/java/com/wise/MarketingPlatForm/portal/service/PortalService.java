@@ -28,13 +28,16 @@ public class PortalService {
             type = "";
         } else {
             type = "_" + type;
-        } 
+        }
 
         if (type.equals("_년누적")) {
             moneyUnitStr = "억원";
             humanUnitStr = "천명";
             moneyUnit = 100_000_000;
             humanUnit = 1_000;
+        } else if (type.equals("_월누적")) {
+            humanUnitStr = "백명";
+            humanUnit = 100;
         }
 
 
@@ -47,10 +50,10 @@ public class PortalService {
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
             "    END \"전년비\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
             "    END \"계획비\"\n" +
             //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +  // %%는 %를 나타냄
             //"    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
@@ -66,10 +69,10 @@ public class PortalService {
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
             "    END \"전년비\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
             "    END \"계획비\"\n" +
             "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
             "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액" + type+ "'\n" +
@@ -83,10 +86,10 @@ public class PortalService {
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
             "    END \"전년비\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%'\n" +
             "    END \"계획비\"\n" +
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
@@ -102,7 +105,7 @@ public class PortalService {
             "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
             "    ROUND(MAIN_SCRN_AMT_2/" + humanUnit + ",0) AS \"금액\",\n" +
             "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-            "    ELSE ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
+            "    ELSE ROUND(100-(MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%'\n" +
             "    END \"전년비\",\n" +
             // "    ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
             "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
