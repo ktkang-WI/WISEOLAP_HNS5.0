@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +25,6 @@ import com.wise.MarketingPlatForm.config.dto.myPage.MyDesignerDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageDesignerConfigService;
 import com.wise.MarketingPlatForm.fileUpload.store.token.TokenStorage;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
-import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlParser;
 import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 
 @Component
@@ -108,8 +106,11 @@ public class LoginFilter implements Filter{
             return;
         }
 
+        boolean isCallCenterGrp = userDTO != null && userDTO.getGrpId() == 1503;
+        isCallCenterGrp = isCallCenterGrp && request.getRequestURI().indexOf("/portal") >= 0;
+
         // 로그인(contetxtRoot) 진입 시 동작
-        if (request.getRequestURI().equals(request.getContextPath() + "/")) {
+        if (request.getRequestURI().equals(request.getContextPath() + "/") || isCallCenterGrp) {
             if (userDTO != null) {
                 // 세션 존재시 runMode 적용
                 RunMode runMode = userDTO.getRunMode();
