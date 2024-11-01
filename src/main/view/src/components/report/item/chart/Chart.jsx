@@ -13,6 +13,7 @@ import DevChart, {
 } from 'devextreme-react/chart';
 import customizeTooltip from '../util/customizeTooltip';
 import {
+  pointLabelNotationData,
   seriesOptionDefaultFormat}
   from 'redux/modules/SeriesOption/SeriesOptionFormat';
 import {
@@ -33,6 +34,7 @@ import ItemManager from 'components/report/item/util/ItemManager';
 import useItemSetting from '../util/hook/useItemSetting';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
+import {findTopAndBottom} from 'components/report/util/TopBottom';
 
 const Chart = ({setItemExports, id, adHocOption, item}) => {
   const dxRef = useRef();
@@ -81,6 +83,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
   const seriesMeasurse = mart.data.info.seriesMeasureNames;
   const visibleMeasureIds = Array.from(
       new Set(seriesMeasurse.map(({fieldId}) => fieldId)));
+  const labelCache = {};
 
   const formats = measures.reduce((acc, mea) => {
     if (visibleMeasureIds.includes(mea.fieldId)) {
@@ -138,12 +141,30 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
 
   const customizeLabel = (o, formats) => {
     const formData = formats[o.series.tag.math];
+
     if (!formData) console.error('format 데이터쪽 확인필요이상감지');
     const labelSuffix = generateLabelSuffix(formData);
-    o.value = formatNumber(o.value, formData, labelSuffix);
+    const value = o.value;
+    o.value = formatNumber(value, formData, labelSuffix);
     const fieldId = o.series.tag.fieldId;
-    const dataField =
-      seriesOptions.filter((item) => (item.fieldId === fieldId))[0];
+    const dataField = seriesOptions.find((item) => (item.fieldId === fieldId));
+
+    if (dataField.pointLabel.Notation == pointLabelNotationData.topNvalue) {
+      const fieldName = o.series.getValueFields()[0];
+
+      if (!labelCache[fieldName]) {
+        labelCache[fieldName] = findTopAndBottom(mart.data.data, fieldName,
+            dataField.pointLabel.top, dataField.pointLabel.bottom);
+      }
+
+      if (!(labelCache[fieldName].topValues.includes(value) ||
+      labelCache[fieldName].bottomValues.includes(value))) {
+        return {
+          visible: false
+        };
+      }
+    }
+
     const label = !dataField ?
       seriesOptionDefaultFormat.pointLabel.Notation :
       labelFormat(dataField.pointLabel.Notation, o);
@@ -209,7 +230,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         </CommonSeriesSettings>
         <CommonAxisSettings aggregatedPointsPosition="crossTicks" />
         <ArgumentAxis
-          inverted={reverseView}
+          inverted={reverseView != meta.useRotate}
           title={meta.xAxis.axisCutomText}
           label={{
             visible: meta.xAxis.xAxisMark,

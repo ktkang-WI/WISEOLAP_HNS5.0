@@ -10,7 +10,7 @@ const theme = getTheme();
 const LoadReportModal = ({...props}) => {
   // hook
   const {getReportList, handleSubmit} = useReportLoad();
-  const {reportList} = getReportList();
+  const {reportList} = getReportList(props.showAll);
 
   // local
   let selectedReport = {};
@@ -36,6 +36,8 @@ const LoadReportModal = ({...props}) => {
         searchValue={props.searchValue}
         searchEnabled={props.searchEnabled}
         onClose={props.onClose}
+        navigator={props.nav}
+        modalType={props.modalType}
       />
     </Modal>
   );

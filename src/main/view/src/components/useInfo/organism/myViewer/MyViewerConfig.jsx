@@ -55,7 +55,7 @@ const MyViewerConfig = () => {
     <Wrapper className='custom-scrollbar' overflow='auto'>
       <MyPageDesignerElements
         setConfig={setConfig}
-        data={config}
+        data={config.designerConfig}
         items={defaultReport}
       />
       <div style={{

@@ -32,7 +32,8 @@ const pointLabelNotationData = {
   value: seriesOption.pointLabelNotation.value,
   argumentMeasureName: seriesOption.pointLabelNotation.argumentMeasureName,
   measureNameValue: seriesOption.pointLabelNotation.measureNameValue,
-  argumentMeasureNameValue: seriesOption.pointLabelNotation.argMeaNameValue
+  argumentMeasureNameValue: seriesOption.pointLabelNotation.argMeaNameValue,
+  topNvalue: 'Top N 값'
 };
 
 const overlappingModeData = {

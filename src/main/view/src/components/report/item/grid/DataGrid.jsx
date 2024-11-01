@@ -66,16 +66,32 @@ const DataGrid = ({setItemExports, id, item}) => {
       });
 
 
+  // 데이터 그리드 다운로드 순서 이슈
+  // mart data 생성 시 필드 순서대로 만들어지지 않음.
+  // 필드(columns) 순서에 맞게 새로운 mart data 재생성
+  const cloneData = _.cloneDeep(mart.data);
+  const columnNames = mart.data.columns.map((col) => col.name);
+  const sortedMartData = cloneData.data.map((item) => {
+    return columnNames.reduce((acc, column) => {
+      if (item.hasOwnProperty(column)) {
+        acc[column] = item[column]; // column 순서에 맞게 새로운 객체 생성
+      }
+      return acc;
+    }, {});
+  });
+
+  cloneData.data = sortedMartData;
+
   useItemExport({
     id,
     ref: dataGridRef,
     type: ItemType.DATA_GRID,
-    data: mart?.data?.data,
+    data: cloneData?.data,
     setItemExports});
 
   const dataGridConfig = {
     pagingOption: getPagingOption(config),
-    dataSource: _.cloneDeep(mart.data),
+    dataSource: cloneData,
     rowSpans: null
   };
 

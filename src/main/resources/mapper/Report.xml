@@ -8,6 +8,7 @@
 		<result column="ID" property="id" javaType="int"/>
     <result column="ID" property="uniqueId" javaType="String"/>
     <result column="TEXT" property="name" javaType="String"/>
+    <result column="TRIM_TEXT" property="searchTarget" javaType="String"/>
     <result column="UPPERID" property="upperId" javaType="int"/>
     <result column="ORDINAL" property="ordinal" javaType="int"/>
     <result column="REPORT_TYPE" property="reportType" javaType="String"/>
@@ -216,6 +217,7 @@
       SELECT DISTINCT 
           A.ID,
           A.TEXT,
+          REPLACE(A.TEXT, ' ', '') || '\' || A.TEXT AS TRIM_TEXT,
           A.UPPERID,
           A.ORDINAL,
           A.REPORT_TYPE,
@@ -485,6 +487,7 @@
           DISTINCT
             A.ID,
             A.TEXT,
+            REPLACE(A.TEXT, ' ', '') || '\' || A.TEXT AS TRIM_TEXT,
             A.UPPERID,
             A.ORDINAL,
             A.REPORT_TYPE,

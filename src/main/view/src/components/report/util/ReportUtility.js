@@ -39,7 +39,7 @@ export const nullDataCheck = (item) => {
     ItemType.PIVOT_GRID
   ];
 
-  const isExclude = excludedItems.includes(item.type);
+  const isExclude = excludedItems.includes(item?.type);
   if (isExclude) return false;
 
   return !item ||

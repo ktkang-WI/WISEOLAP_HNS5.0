@@ -2,6 +2,8 @@ import {getTheme} from 'config/theme';
 import {styled} from 'styled-components';
 import {TreeView} from 'devextreme-react';
 import React, {useRef, useCallback} from 'react';
+import {preventInputSpecialChar} from 'components/useInfo/modal/Validations';
+import {useNavigate} from 'react-router-dom';
 
 const theme = getTheme();
 
@@ -26,9 +28,14 @@ const StyledTreeView = styled(TreeView)`
   }
 `;
 
-const ReportListTab = ({title, width, onItemSelect, ...props}) => {
+const ReportListTab = (
+    {title, width, onItemSelect, navigator, modalType, ...props}) => {
   const dxRef = useRef();
   let dblClick = 0;
+  let nav = navigator;
+  if (!navigator && modalType) {
+    nav = useNavigate();
+  }
 
   const getReportTooltipMsg = (data) => {
     const writer = data.modUserName || data.regUserName || '';
@@ -65,9 +72,15 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
 
         if (dblClick > 1) {
           if (!props.onClose) {
+            if (nav) {
+              nav('/editds/' + e.itemData.reportType.toLowerCase());
+            }
             props.onSubmit(e.itemData);
             props.dropdownBoxRef.current._instance.option('opened', false);
           } else {
+            if (nav) {
+              nav('/editds/' + e.itemData.reportType.toLowerCase());
+            }
             if (!await props.onSubmit()) {
               props.onClose();
             };
@@ -79,6 +92,12 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
 
   // paste 이벤트 처리: 붙여넣기 시 마지막 공백을 제거
   const handleSearchValueChanged = (e) => {
+    if (e.value?.includes('\\')) {
+      e.value = '';
+      dxRef.current.instance.option('searchValue', e.value);
+      return;
+    }
+
     const event = e.event.originalEvent || {};
     let searchValue = e.value || '';
 
@@ -101,9 +120,11 @@ const ReportListTab = ({title, width, onItemSelect, ...props}) => {
         parentIdExpr="upperId"
         keyExpr="uniqueId"
         noDataText="조회된 보고서가 없습니다."
+        searchExpr='searchTarget'
         searchEditorOptions={{
           placeholder: '검색',
-          onValueChanged: handleSearchValueChanged
+          onValueChanged: handleSearchValueChanged,
+          onKeyDown: preventInputSpecialChar
         }}
         itemRender={itemRender}
         focusStateEnabled={true}

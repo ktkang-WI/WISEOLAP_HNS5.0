@@ -246,8 +246,8 @@ img {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100vw !important;
+  height: 100vh !important;
   padding: 10px 0px !important;
   background-color: #F6F8FC;
   z-index: 30; /* Ensure it appears above other content */
@@ -255,4 +255,23 @@ img {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.viewer-full-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding-bottom: 10px !important;
+  background-color: #F6F8FC;
+  z-index: 30; /* Ensure it appears above other content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.viewer-full-screen .wise-filter {
+  width: calc(100% - 20px);
 }

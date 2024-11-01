@@ -30,7 +30,7 @@ import com.wise.MarketingPlatForm.report.domain.xml.reportTypeParser.ExcelXmlPar
 import com.wise.MarketingPlatForm.report.vo.ReportTokenDTO;
 
 @Component
-@WebFilter("/*")
+//@WebFilter("/*")
 public class LoginFilter implements Filter{
     Logger log = LoggerFactory.getLogger(this.getClass());
 

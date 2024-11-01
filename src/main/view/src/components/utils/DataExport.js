@@ -57,9 +57,10 @@ const renameObjectKey = (obj, oldKeyName, newKeyName) => {
 };
 
 const sortObject = (obj) => {
-  let keys = Object.keys(obj);
+  const keys = Object.keys(obj);
 
-  keys = keys.sort();
+  // 데이터 그리드 순서 안맞는 현상 정렬 주석처리
+  // keys = keys.sort();
 
   if (!keys) {
     console.error('정렬 작업중 오류 발생 수정 필요 !!');
@@ -99,9 +100,14 @@ const extractingValues = (insertedData) => {
 };
 
 const mergeHeaderValue = (data) => {
-  let keys = extractingKeys(data).sort();
+  // 데이터 그리드 순서 안맞는 현상 정렬 주석처리
+  // let keys = extractingKeys(data).sort();
+  const keys = extractingKeys(data);
   if (!keys) return null;
-  keys = keys.map((key) => wasteDisposalKey(key));
+  // keys = keys.map((key) => wasteDisposalKey(key));
+  keys.forEach((value, index, arr) => {
+    arr[index] = wasteDisposalKey(value);
+  });
   const values = extractingValues(data);
   if (!values) return null;
   values.unshift(keys);

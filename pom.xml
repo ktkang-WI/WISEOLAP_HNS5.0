@@ -15,11 +15,20 @@
   <name>MarketingPlatForm</name>
   <packaging>war</packaging>
   <description>Demo project for Spring Boot</description>
+
   <properties>
-    <java.version>1.8</java.version>
+    <java.version>17</java.version>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <log4j2.version>2.20.0</log4j2.version>
     <webapp.lib>${basedir}/lib</webapp.lib>
   </properties>
+
+  <!-- <properties>
+    <java.version>1.8</java.version>
+    <log4j2.version>2.20.0</log4j2.version>
+    <webapp.lib>${basedir}/lib</webapp.lib>
+  </properties> -->
 
   <repositories>
     <repository>
@@ -260,6 +269,17 @@
       <artifactId>commons-io</artifactId>
       <version>2.13.0</version>
     </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/com.mescius.documents/dsexcel -->
+    <!-- dsExcel 임시 주석 처리 
+        TODO: dsExcel 라이센스 발급 후 주석 해제
+    -->
+    <!-- <dependency>
+        <groupId>com.mescius.documents</groupId>
+        <artifactId>dsexcel</artifactId>
+        <version>7.2.3</version>
+    </dependency> -->
+
 
     <!-- 		<dependency> -->
     <!--    			<groupId>org.json</groupId> -->

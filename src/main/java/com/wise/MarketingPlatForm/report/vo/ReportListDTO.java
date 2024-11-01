@@ -17,6 +17,7 @@ public class ReportListDTO {
     int id;
     String uniqueId;
     String name;
+    String searchTarget;
     int upperId;
     int ordinal;
     String reportType;

@@ -16,7 +16,6 @@ import {selectCurrentDesignerMode}
   from 'redux/selector/ConfigSelector';
 import {
   sheets,
-  excelIO,
   resetWorkbookJSON,
   designerRef,
   clearSheets
@@ -30,14 +29,16 @@ import DatasetType from 'components/dataset/utils/DatasetType';
 import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import datasetDefaultElement
   from 'components/common/atomic/Ribbon/popover/organism/DatasetDefaultElement';
+import {useNavigate} from 'react-router-dom';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
   const {reload} = useReportSave();
-  const {uploadFile, deleteFile} = useFile();
+  const {uploadFile, deleteFile, uploadWorkbookData} = useFile();
   const {getElementByLable} = saveDefaultElement();
   const ribbonElement = ribbonDefaultElement();
   const {getDatasetElement} = datasetDefaultElement();
+  const nav = useNavigate();
   const {
     createReportBlob
   } = useSpread();
@@ -93,7 +94,7 @@ const useSpreadRibbon = () => {
   };
 
   const openReport = () => {
-    openModal(LoadReportModal);
+    openModal(LoadReportModal, {nav: nav, showAll: true});
   };
 
   const createExcelFile = (reportId) => {
@@ -105,6 +106,13 @@ const useSpreadRibbon = () => {
       console.log(e);
     });
   };
+
+  // eslint-disable-next-line no-unused-vars
+  const uploadworkbookJSONData = async (
+      workbookJSONData, fileName, reportId) => {
+    await uploadWorkbookData(workbookJSONData, fileName, reportId);
+  };
+
   const saveReport = () => {
     getElementByLable(localizedString.saveReport)
         .onClick({createExcelFile: createExcelFile});
@@ -125,14 +133,17 @@ const useSpreadRibbon = () => {
 
   const downloadReportXLSX = () => {
     let reportNm = selectCurrentReport(store.getState()).options.reportNm;
+    const currentReportId = selectCurrentReportId(store.getState());
     const designer = designerRef.current.designer;
     reportNm = reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
+
     sheets.Designer.showDialog('downlaodReportDialog',
         {
           extName: '.xlsx',
           fileName: reportNm,
+          reportId: currentReportId,
           designer: designer,
-          excelIO: excelIO
+          workbookJSONData: designer.getWorkbook().toJSON()
         },
         xlsxDownload
     );
@@ -145,14 +156,16 @@ const useSpreadRibbon = () => {
       if (e.fileName
           .substr(-e.extName.length, e.extName.length) !== e.extName) {
         e.fileName += e.extName;
+        e.reportId += e.extName;
       }
-      const fileName = e.fileName;
-      // 다운로드 방식 변경
+
       e.designer.getWorkbook().export((blob) => {
-        saveAs(blob, fileName);
+        saveAs(blob, e.fileName);
       }, () => {
         alert(localizedString.reportCorrupted);
       }, {includeBindingSource: true, fileType: 0});
+
+      // uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
     }
   };
 

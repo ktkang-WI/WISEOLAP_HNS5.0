@@ -20,6 +20,8 @@ import {
   selectNewLinkCnt
 } from 'redux/selector/LinkSelector';
 import LinkSlice from 'redux/modules/LinkSlice';
+import {selectCurrentDataset} from 'redux/selector/DatasetSelector';
+import DatasetSlice from 'redux/modules/DatasetSlice';
 
 const theme = getTheme();
 
@@ -37,8 +39,10 @@ const StyledFilterBarWrapper = styled.div`
 const FilterBarWrapper = (props) => {
   const parameters = useSelector(selectRootParameter);
   const reportId = selectCurrentReportId(store.getState());
+  const selectedDataset = selectCurrentDataset(store.getState());
   const {executeParameters, executeLinkageFilter} = useQueryExecute();
   const {setParameterValues, deleteParameter} = ParameterSlice.actions;
+  const {updateDataset} = DatasetSlice.actions;
   const {startJob, endJob} = LoadingSlice.actions;
   const {confirm} = useModal();
   const dispatch = useDispatch();
@@ -52,7 +56,8 @@ const FilterBarWrapper = (props) => {
 
   // 매개변수 정보 수정되면 재조회
   useEffect(() => {
-    if (parameters.filterSearchComplete.length == 0 &&
+    if (parameters.informations.length >
+      parameters.filterSearchComplete.length &&
       parameters.informations.length != 0) {
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
@@ -127,6 +132,26 @@ const FilterBarWrapper = (props) => {
     });
   };
 
+  const deleteConfirmDsSingle = (filter) => {
+    confirm(localizedString.deleteParameterMsg, () => {
+      const name = filter.name;
+      const uniqueName = filter.uniqueName;
+
+      let deleteParamQuery = ' AND A.' + uniqueName +
+                  ' IN (' + name + ') \n';
+      // eslint-disable-next-line max-len
+      deleteParamQuery = selectedDataset.datasetQuery.replace(deleteParamQuery, '');
+      dispatch(deleteParameter({reportId, name}));
+      dispatch(updateDataset({
+        reportId: reportId,
+        dataset: {
+          ...selectedDataset,
+          datasetQuery: deleteParamQuery
+        }
+      }));
+    });
+  };
+
   return (
     <Droppable droppableId="filter-bar">
       {(provided) => (
@@ -150,9 +175,16 @@ const FilterBarWrapper = (props) => {
 
               let onDeleted = undefined;
 
+              // 데이터 집합이 쿼리직접입력이 아닐 경우에만 필터 삭제 버튼
               if (filter.dsType == 'CUBE') {
                 onDeleted = () => {
                   deleteConfirm(filter.name);
+                };
+              }
+
+              if (filter.dsType == 'DS_SINGLE') {
+                onDeleted = () => {
+                  deleteConfirmDsSingle(filter);
                 };
               }
 

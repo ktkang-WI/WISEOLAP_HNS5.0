@@ -3,12 +3,12 @@ import {useRef} from 'react';
 import DesignerReportTabs from '../../ReportTab/organism/DesignerReportTabs';
 import useReportLoad from 'hooks/useReportLoad';
 
-const DropdownBoxReportSearch = ({report, button, id}) => {
+const DropdownBoxReportSearch = ({showAll, report, button, id}) => {
   // hook
   const {getReportList, handleSubmit} = useReportLoad();
 
   // local
-  const {reportList} = getReportList();
+  const {reportList} = getReportList(showAll);
   const dropdownBoxRef = useRef();
 
   const reportListRender = () => {

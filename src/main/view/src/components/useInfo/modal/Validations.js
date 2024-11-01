@@ -56,6 +56,18 @@ export const preventInputSpaceBar = (e) => {
     e.event.originalEvent.returnValue = false;
   }
 };
+
+/**
+ * @param {object} e // 문자열 입력 이벤트.
+ * 특수문자 입력 방지. 필요한 경우 더 추가 예정.
+ * @return {void}
+ */
+export const preventInputSpecialChar = (e) => {
+  if (e.event.key == '\\') {
+    e.event.originalEvent.returnValue = false;
+  }
+};
+
 /**
  * @param {string} text 문자열 입력.
  * @return {boolean}

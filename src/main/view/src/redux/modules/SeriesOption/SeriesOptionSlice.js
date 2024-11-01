@@ -126,11 +126,13 @@ export const removedSeriesOptions = (state, reportId, fetchFieldId) => {
 };
 
 const generatePointLabel =
-   (Notation, direction, overlayMode) => {
+   (Notation, direction, overlayMode, top, bottom) => {
      const tempPointLabel = getSeriesOptionPointLabelFormat();
      tempPointLabel.Notation = Notation;
      tempPointLabel.direction = direction;
      tempPointLabel.overlayMode = overlayMode;
+     tempPointLabel.top = top;
+     tempPointLabel.bottom = bottom;
      return tempPointLabel;
    };
 
@@ -157,7 +159,10 @@ const seriesOptionsSynchronization = (
       generatePointLabel(
           item.pointLabel.Notation,
           item.pointLabel.direction,
-          tempPointGeneralOption.pointLabel.overlayMode);
+          tempPointGeneralOption.pointLabel.overlayMode,
+          item.pointLabel.top,
+          item.pointLabel.bottom
+      );
     item.general =
       generateGeneralOption(
           item.general.auxiliaryAxis,

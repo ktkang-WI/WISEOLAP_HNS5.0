@@ -10,8 +10,21 @@ import alertImg from 'assets/image/component/alert.png';
 import successImg from 'assets/image/component/success.png';
 import {getTheme} from 'config/theme';
 import localizedString from 'config/localization';
+import {useState} from 'react';
 
 const theme = getTheme();
+
+const Detailed = styled.span`
+`;
+
+const TextArea = styled.textarea`
+  width: 250px;
+  height: 200px;
+  max-height: 220px;
+  resize: none;
+  font-size: 16px;
+  font-weight: bold;
+`;
 
 const AlertInnenr = styled.div`
   box-sizing: border-box;
@@ -39,8 +52,11 @@ const Alert = ({
   width='320px', height='auto',
   type='alert',
   message='',
+  useOpenBtn = false,
+  serverDetailMsg = '',
   ...props
 }) => {
+  const [open, setOpen] = useState(true);
   return (
     <motion.div
       // NOTE: DevExpress Overlay 위로 알림창 띄울 경우
@@ -55,7 +71,9 @@ const Alert = ({
         <Draggable
           handle='.modal-header'
         >
-          <Wrapper>
+          <Wrapper
+            display={useOpenBtn ? 'flex' : 'block'}
+          >
             <motion.div
               style={{width: '100%', height: '100%'}}
               initial={{scale: 0.7}}
@@ -72,7 +90,28 @@ const Alert = ({
                     type == 'success' ? theme.color.blue : theme.color.green}>
                     {localizedString[type]}
                   </AlertTitle>
-                  {message}
+                  {message + '\n'}
+                  {useOpenBtn &&
+                    <>
+                      <span
+                        title='클릭해서 자세히 보기.'
+                        onClick={() => {
+                          setOpen(!open);
+                        }}
+                      >
+                          자세히 보기
+                      </span>
+                      {/* TODO: 추후 팝오버형식으로 변경 요청시 변경 예정 */}
+                      <Detailed>
+                        <TextArea
+                          hidden={open}
+                          readOnly={true}
+                        >
+                          {serverDetailMsg}
+                        </TextArea>
+                      </Detailed>
+                    </>
+                  }
                 </AlertInnenr>
                 <Footer
                   onSubmit={onSubmit}

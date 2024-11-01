@@ -540,6 +540,7 @@ public class ReportService {
                         .id(report.getId())
                         .uniqueId("favorite" + report.getId())
                         .name(report.getName())
+                        .searchTarget(report.getSearchTarget())
                         .upperId(folderId)
                         .ordinal(report.getOrdinal())
                         .reportType(report.getReportType())

@@ -59,7 +59,7 @@ const defaultCalendarMap = {
 
 const useDrag = () => {
   const {setItemField} = ItemSlice.actions;
-  const {updateParameterInformation} = ParameterSlice.actions;
+  const {updateParameterInformationNoInit} = ParameterSlice.actions;
   const {updateDataset, datasetAppliedFields} = DatasetSlice.actions;
   const {updateDesinerExecutionState} = ExecuteSlice.actions;
   const dispatch = useDispatch();
@@ -153,7 +153,7 @@ const useDrag = () => {
                     return ParamUtils.sanitizeParamInformation(param);
                   });
 
-              dispatch(updateParameterInformation({
+              dispatch(updateParameterInformationNoInit({
                 datasetId: datasetId,
                 reportId: reportId,
                 informations: newParamInfo
@@ -177,7 +177,7 @@ const useDrag = () => {
         newParamInfo = newParamInfo.
             map((param) => ParamUtils.sanitizeParamInformation(param));
 
-        dispatch(updateParameterInformation({
+        dispatch(updateParameterInformationNoInit({
           datasetId: datasetId,
           reportId: reportId,
           informations: newParamInfo
