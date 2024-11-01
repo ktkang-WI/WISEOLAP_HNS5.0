@@ -270,7 +270,8 @@ const DataGrid = ({setItemExports, id, item}) => {
 
   const cellRender = (e, column, meta) => {
     let endScaleValue = 0;
-    const value = e.data[column.name] ? e.data[column.name] : 0;
+    const value = e.data[column.name] === null ?
+      null : e.data[column.name] || 0;
     const displayValue = e.displayValue ? e.displayValue : 0;
 
     if (column.detailSetting === 'bar') {
