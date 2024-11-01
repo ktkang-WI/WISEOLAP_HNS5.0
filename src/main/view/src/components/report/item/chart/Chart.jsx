@@ -230,7 +230,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
         </CommonSeriesSettings>
         <CommonAxisSettings aggregatedPointsPosition="crossTicks" />
         <ArgumentAxis
-          inverted={reverseView}
+          inverted={reverseView != meta.useRotate}
           title={meta.xAxis.axisCutomText}
           label={{
             visible: meta.xAxis.xAxisMark,
