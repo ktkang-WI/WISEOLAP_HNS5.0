@@ -133,6 +133,8 @@ const Portal = () => {
 
         if (type == '년누적') {
           titles = ['예상취급액(억원)', '실현취급액(억원)', '실현공헌이익(억원)', '주문고객수(천명)'];
+        } else if (type == '월누적') {
+          titles[3] = '주문고객수(백명)';
         }
 
         const _cardData = titles.map((title, i) => {
