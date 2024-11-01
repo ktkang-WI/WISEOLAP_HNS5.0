@@ -17,6 +17,7 @@ import com.wise.MarketingPlatForm.querygen.model.QueryGenAggregation;
 import com.wise.MarketingPlatForm.querygen.util.QueryGenAggregationUtil;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.HavingClauseInfo;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
 import com.wise.MarketingPlatForm.report.type.ItemType;
@@ -39,6 +40,7 @@ public class QueryGenAggregator {
         List<Parameter> params = dataAggregation.getParameters();
 
         List<CubeTableColumn> columnInfoList = cubeParamSet.getColumnInfoList();
+        List<HavingClauseInfo> havingClauseInfo = dataAggregation.getHavingClauseInfo();
         
         try {
             //Relation Update (주제영역관계, 원본뷰 관계)
@@ -74,6 +76,10 @@ public class QueryGenAggregator {
             
         } catch (Exception e) {
 
+        }
+        
+        if (havingClauseInfo != null) {
+            queryGenAggregation.setHavingClauseInfo(new ArrayList<>(havingClauseInfo));
         }
 
         return queryGenAggregation;

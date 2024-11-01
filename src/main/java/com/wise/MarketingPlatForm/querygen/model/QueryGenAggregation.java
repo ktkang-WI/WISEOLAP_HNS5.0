@@ -8,6 +8,7 @@ import com.wise.MarketingPlatForm.querygen.dto.SelectCubeEtc;
 import com.wise.MarketingPlatForm.querygen.dto.SelectCubeMeasure;
 import com.wise.MarketingPlatForm.querygen.dto.SelectCubeOrder;
 import com.wise.MarketingPlatForm.querygen.dto.SelectCubeWhere;
+import com.wise.MarketingPlatForm.report.domain.data.data.HavingClauseInfo;
 import com.wise.MarketingPlatForm.querygen.dto.Relation;
 
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class QueryGenAggregation {
 	ArrayList<SelectCubeWhere> cubeWhere = new ArrayList<SelectCubeWhere>();
 	ArrayList<SelectCubeOrder> cubeOrder = new ArrayList<SelectCubeOrder>();
     ArrayList<SelectCubeEtc> cubeEtc = new ArrayList<SelectCubeEtc>();
+    ArrayList<HavingClauseInfo> havingClauseInfo = new ArrayList<HavingClauseInfo>();
 
     public void addSelectCube(SelectCube selectCube) {
         this.cubeSelectAll.add(selectCube);
@@ -54,4 +56,7 @@ public class QueryGenAggregation {
         this.cubeWhere.add(cubeWhere);
     }
     
+    public void addHavingClauseInfo(HavingClauseInfo havingClauseInfo) {
+        this.havingClauseInfo.add(havingClauseInfo);
+    }
 }
