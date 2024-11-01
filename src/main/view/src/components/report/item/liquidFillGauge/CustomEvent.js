@@ -33,7 +33,6 @@ const useCustomEvent = () => {
             notationFormat:
               selectedItem.meta.liquidFillGaugeOption.notationFormat,
             onSubmit: (returnedOptions) => {
-              console.log(returnedOptions);
               const item =
                  ribbonEvent[key](key, returnedOptions.notationFormat.key);
               dispatch(updateItem({reportId, item}));

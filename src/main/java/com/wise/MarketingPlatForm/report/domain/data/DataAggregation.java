@@ -8,6 +8,7 @@ import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.HavingClauseInfo;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Parameter;
@@ -40,4 +41,5 @@ public class DataAggregation {
     AdHocOption adHocOption;
     PivotOption pivotOption;
     Map<String, HashMap<String, Object>> gridAttribute;
+    List<HavingClauseInfo> havingClauseInfo;
 }

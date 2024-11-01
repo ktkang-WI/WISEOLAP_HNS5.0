@@ -49,6 +49,7 @@ const generateMeta = (item) => {
   setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
   setMeta(item, 'dataHighlight', []);
+  setMeta(item, 'dataFiltering', []);
   setMeta(item, 'pagingOption', {
     pagination: {
       isOk: false,

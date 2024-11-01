@@ -183,6 +183,10 @@ const useQueryExecute = () => {
     param.gridAttribute =
       JSON.stringify(rootItem?.adHocOption?.gridAttribute) || '{}';
     ItemManager.generateAdHocParameter(rootItem, param);
+    if (rootItem.items[1].meta.dataFiltering) {
+      param.havingClauseInfo =
+        JSON.stringify(rootItem.items[1].meta.dataFiltering);
+    }
     return param;
   };
 

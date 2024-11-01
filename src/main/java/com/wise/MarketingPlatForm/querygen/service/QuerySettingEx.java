@@ -30,6 +30,7 @@ import com.wise.MarketingPlatForm.querygen.querysetting.dbms.OracleSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.POSTGRESSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.SybaseSetting;
 import com.wise.MarketingPlatForm.querygen.querysetting.dbms.TiberoSetting;
+import com.wise.MarketingPlatForm.report.domain.data.data.HavingClauseInfo;
 
 public class QuerySettingEx {
 	
@@ -1791,9 +1792,11 @@ public class QuerySettingEx {
 			ArrayList<SelectCubeWhere> aDtWhere,
 			ArrayList<SelectCubeOrder> aDtOrder, String aDBMSType,
 			ArrayList<Relation> aDtCubeRel, ArrayList<Relation> aDtDsViewRel,
-			ArrayList<SelectCubeEtc> aDtEtc) {
+			ArrayList<SelectCubeEtc> aDtEtc,
+			ArrayList<HavingClauseInfo> aDtHaving
+			) {
 		return CubeQuerySetting(aDtSel, aDtSelHIe, aDtSelMea, aDtWhere, aDtOrder, aDBMSType, aDtCubeRel, aDtDsViewRel,
-				aDtEtc, aDtSelHIe,"");
+				aDtEtc, aDtSelHIe, "", aDtHaving);
 	}
 
 	public String CubeQuerySetting(QueryGenAggregation queygenAggregation, String owner) {
@@ -1806,9 +1809,10 @@ public class QuerySettingEx {
 		ArrayList<Relation> aDtCubeRel = queygenAggregation.getCubeRelations();
 		ArrayList<Relation> aDtDsViewRel = queygenAggregation.getDsViewRelations();
 		ArrayList<SelectCubeEtc> aDtEtc = queygenAggregation.getCubeEtc();
+		ArrayList<HavingClauseInfo> aDtHaving = queygenAggregation.getHavingClauseInfo();
 
 		return CubeQuerySetting(aDtSel, aDtSelHIe, aDtSelMea, aDtWhere, aDtOrder, aDBMSType, aDtCubeRel, aDtDsViewRel,
-				aDtEtc, aDtSelHIe,owner);
+				aDtEtc, aDtSelHIe, owner, aDtHaving);
 	}
 
 	// 20210511 AJKIM 차원 멤버 groupBy 절에서 제거하기 위해 CubeQuerySetting 오버로딩 (aDtSelHIeJoin
@@ -1820,7 +1824,8 @@ public class QuerySettingEx {
 			ArrayList<SelectCubeOrder> aDtOrder, String aDBMSType,
 			ArrayList<Relation> aDtCubeRel, ArrayList<Relation> aDtDsViewRel,
 			ArrayList<SelectCubeEtc> aDtEtc, ArrayList<Hierarchy> aDtSelHIeJoin,
-			String owner) {
+			String owner,
+			ArrayList<HavingClauseInfo> aDtHaving) {
 		boolean bNonRelQuery = false;
 
 		String sRtnQuery = "";
@@ -2383,8 +2388,8 @@ public class QuerySettingEx {
 				/* dogfoot 주제영역 계산식없는 측정값 그룹BY 오류 수정 shlim 20210124 */
 				// ArrayList<String> oGroupByColl =
 				// CubeGroupByByClause(aDBMSType,aDtSelHIe,oDtTblAlias);
-//				ArrayList<String> oGroupByColl = CubeGroupByByClause(aDBMSType, aDtSelHIe, oDtTblAlias, aDtSel,
-//						aDtSelMea);
+				//	ArrayList<String> oGroupByColl = CubeGroupByByClause(aDBMSType, aDtSelHIe, oDtTblAlias, aDtSel,
+				//	aDtSelMea);
 				
 				ArrayList<String> oGroupByColl = new ArrayList<>();
 				if("HISTOGRAM_CHART".equals(itemType) || "BOX_PLOT".equals(itemType)) {
@@ -2930,9 +2935,10 @@ public class QuerySettingEx {
 		if (bNonRelQuery) {
 			System.out.println("REL ERROR" + vbCrLf + sQuery);
 			return "REL ERROR";
-		} else
-		System.out.println("HS CUSSTOM SUBQ");
-		
+		} else {
+			// System.out.println("HS CUSSTOM SUBQ");
+		}
+
 		String isSubQ = "N";
 		for(SelectCubeMeasure oDr : aDtSelMea) {
 			if(oDr.getMEA_AGG().equals("SUBQ")) {
@@ -2943,6 +2949,56 @@ public class QuerySettingEx {
 		if(isSubQ == "Y") {
 			String cleanedValue = SUBQValuesString.replaceAll("\\[|\\]", "");
 			sQuery = "SELECT MST.*,"+ cleanedValue +" FROM (" + sQuery + ") MST ORDER BY 6";
+		}
+
+		if (aDtHaving != null && !aDtHaving.isEmpty()) {
+			StringBuilder havingClauseBuilder = new StringBuilder("\nHAVING ");
+			for (int i = 0; i < aDtHaving.size(); i++) {
+					HavingClauseInfo havingClauseInfo = aDtHaving.get(i);
+
+					if (i > 0) {
+						String relationCondition = havingClauseInfo.getRelationCondition() != null ? havingClauseInfo.getRelationCondition() : "AND";
+						havingClauseBuilder.append("\n").append(relationCondition).append(" ");
+					}
+
+					String cleanUniqueName = havingClauseInfo.getUniqueName().replace("[", "").replace("]", "");
+					String[] parts = cleanUniqueName.split("\\.");
+					String table = parts[0];
+					String column = parts[1];
+
+					// BETWEEN 조건일 때만 ()로 감싸기
+					if ("BETWEEN".equalsIgnoreCase(havingClauseInfo.getCondition()) && havingClauseInfo.getValueTo() != null) {
+						havingClauseBuilder.append("(");
+					}
+
+					havingClauseBuilder.append("SUM(")
+						.append(table).append(".\"").append(column).append("\") ");
+
+					// BETWEEN 사용 여부에 따라 조건문을 다르게 구성
+					if ("BETWEEN".equalsIgnoreCase(havingClauseInfo.getCondition()) && havingClauseInfo.getValueTo() != null) {
+							havingClauseBuilder.append("BETWEEN ")
+									.append(havingClauseInfo.getValueFrom())
+									.append(" AND ")
+									.append(havingClauseInfo.getValueTo());
+					} else {
+							havingClauseBuilder.append(havingClauseInfo.getCondition())
+									.append(" ")
+									.append(havingClauseInfo.getValueFrom());
+					}
+					
+        	// BETWEEN 조건일 때만 닫는 괄호 추가
+        	if ("BETWEEN".equalsIgnoreCase(havingClauseInfo.getCondition()) && havingClauseInfo.getValueTo() != null) {
+						havingClauseBuilder.append(")");
+					}
+						// .append(havingClauseInfo.getCondition())
+						// .append(" ").append(havingClauseInfo.getValueFrom());
+					// if (i < aDtHaving.size() - 1) {
+					// 		havingClauseBuilder.append("\nAND ");
+					// }
+			}
+	
+			// Append the HAVING clause to sQuery
+			sQuery += " " + havingClauseBuilder.toString();
 		}
 
 			return sQuery;

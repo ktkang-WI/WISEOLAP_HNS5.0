@@ -114,7 +114,6 @@ const ReportTabs = ({reportData}) => {
                 });
             models.Report.getLinkReportList(selectedReport.id)
                 .then((res) => {
-                  console.log('res.data', res.data);
                   if (res.data ? res.data === undefined : true) {
                     console.log('링크된 보고서가 없습니다.');
                   } else {

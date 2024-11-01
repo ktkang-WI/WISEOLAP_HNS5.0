@@ -44,6 +44,7 @@ import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
 import com.wise.MarketingPlatForm.report.domain.data.data.AdHocOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dataset;
 import com.wise.MarketingPlatForm.report.domain.data.data.Dimension;
+import com.wise.MarketingPlatForm.report.domain.data.data.HavingClauseInfo;
 import com.wise.MarketingPlatForm.report.domain.data.data.Measure;
 import com.wise.MarketingPlatForm.report.domain.data.data.PagingOption;
 import com.wise.MarketingPlatForm.report.domain.data.data.PivotOption;
@@ -161,6 +162,7 @@ public class ReportController {
         String pivotOptionStr = param.getOrDefault("pivotOption", "{}");
         String flag = param.getOrDefault("flag", "");
         String hasData = param.getOrDefault("hasData", "no");
+        String havingClauseInfo = param.getOrDefault("havingClauseInfo", "[]");
 
         List<Dimension> dimensions = gson.fromJson(dimensionsStr,
                 new TypeToken<ArrayList<Dimension>>() {
@@ -183,6 +185,10 @@ public class ReportController {
         Map<String, HashMap<String, Object>> gridAttribute = gson.fromJson(gridAttributeStr,
                 new TypeToken<HashMap<String, HashMap<String, Object>>> () {
                 }.getType());
+        List<HavingClauseInfo> havingClauseInfos = gson.fromJson(havingClauseInfo,
+                new TypeToken<ArrayList<HavingClauseInfo>>() {
+                }.getType());
+        
         Dataset dataset = gson.fromJson(datasetStr, Dataset.class);
         PagingOption pagingOption = gson.fromJson(pagingOptionStr, PagingOption.class);
         PivotOption pivotOption = gson.fromJson(pivotOptionStr, PivotOption.class);
@@ -194,6 +200,7 @@ public class ReportController {
         listUtility.removeNullInParameterList(dimensions);
         listUtility.removeNullInParameterList(sortByItems);
         listUtility.removeNullInParameterList(temporaryMeasures);
+        listUtility.removeNullInParameterList(havingClauseInfos);
 
         final boolean isUsedGridAttribute = gridAttribute.size() != 0;
         if (isUsedGridAttribute) {
@@ -245,6 +252,7 @@ public class ReportController {
                 .filter(filter)
                 .adHocOption(adHocOption)
                 .pivotOption(pivotOption)
+                .havingClauseInfo(havingClauseInfos)
                 .build();
 
         return reportService.getItemData(request, dataAggregation, flag, hasData);
