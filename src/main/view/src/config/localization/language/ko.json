@@ -1019,5 +1019,6 @@
   "NoReportNoLinkReport": "현재 열려있는 보고서가 없습니다.\n먼저 보고서를 열어주세요.",
   "yesReportNoLinkReport": "현재 불러온 보고서 연결 보고서 정보가 없습니다.\n먼저 연결 보고서를 설정해주세요.",
   "port": "Port",
-  "pwChangeSuccess": "비밀번호 변경에 성공 했습니다. 다시 로그인해 주세요."
+  "pwChangeSuccess": "비밀번호 변경에 성공 했습니다. 다시 로그인해 주세요.",
+  "selectRelationCondition" : "연결 조건"
 }

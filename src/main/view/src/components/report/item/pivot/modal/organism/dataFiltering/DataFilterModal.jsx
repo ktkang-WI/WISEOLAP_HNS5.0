@@ -10,8 +10,11 @@ import addDataFilterInfoIcon
   from 'assets/image/icon/button/ico_zoom.png';
 import {createContext, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {selectCurrentItem, selectCurrentItems, selectRootItem}
-  from 'redux/selector/ItemSelector';
+import {
+  selectCurrentItem,
+  selectCurrentItems,
+  selectRootItem
+} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {useDispatch} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
@@ -23,6 +26,7 @@ import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 import {DesignerMode} from '../../../../../../config/configType';
 import deleteReport from 'assets/image/icon/button/crud_remove.png';
 import {
+  getDetailInfo,
   getIdxAndFlag,
   getNames,
   getValidation,
@@ -81,6 +85,9 @@ const DataFilterModal = ({...props}) => {
     useState(
         [...selectedReportTypeDataFiltering(selectedItem, reportType)]
     );
+  // Add a new state to store the original data
+  const [originalData, setOriginalData] = useState(null);
+
   // 하이라이트 목록 중 하나를 선택 시 하이라이트 정보에 보여줌.
   const [formData, setData] = useState(_.cloneDeep(init));
   // 하이라이트에 존재하는 목록을 전부 삭제시, 전부 삭제한 부분도 update되야 함.
@@ -116,10 +123,10 @@ const DataFilterModal = ({...props}) => {
     if (findIdx != -1 && formData.status == 'new') {
       return false;
     }
-
     if (findIdx == -1 || formData.status == 'new') {
       delete FilteredData.status;
-      copyDataFilterInfo.push(FilteredData);
+      const detailedFilteredData = getDetailInfo(FilteredData, rootItem);
+      copyDataFilterInfo.push(detailedFilteredData);
     } else if (findIdx != -1 && formData.status == 'update') {
       delete FilteredData.status;
       copyDataFilterInfo[findIdx] = FilteredData;
@@ -130,6 +137,14 @@ const DataFilterModal = ({...props}) => {
   // 하이라이트 목록에 추가.
   const onClick = () => {
     const formData = ref.current.props.formData;
+    if (
+      !formData.dataItem || !formData.condition ||
+      formData.valueFrom === undefined || formData.valueFrom === null
+    ) {
+      alert('정보를 모두 입력해주세요.');
+      return;
+    }
+
     const dataFilterInfo = appliedDataFiltering(formData);
 
     if (dataFilterInfo === false) {
@@ -215,10 +230,14 @@ const DataFilterModal = ({...props}) => {
 
         const item = setMeta(selectItem, popupName, resultDataFilteringList);
         dispatch(updateItem({reportId: reportId, item: item}));
+
+        setOriginalData(null);
+        setData(_.cloneDeep(init));
+        setShowField(false);
         return;
       }}
       height={theme.size.bigModalHeight}
-      width={'calc(' + theme.size.bigModalWidth + ' - 70px)'}
+      width={'calc(' + theme.size.bigModalWidth + ' - 30px)'}
       modalTitle={'데이터 필터링'}
       {...props}
     >
@@ -233,11 +252,22 @@ const DataFilterModal = ({...props}) => {
             dataSource={dataFiltering}
             onCellClick={(e) => {
               // 추가된 하이라이트 목록을 클릭 할 때 동작. -> 하이라이트 정보에 내용 출력.
-              const rowData = _.cloneDeep(e.row ?
-                {...e.row.data, status: 'update', rowIdx: e.rowIndex,
-                  type: (e.row?.data?.type || 'measure')} :
-                {applyCell: true, applyTotal: true, applyGrandTotal: true,
-                  status: 'new', type: (e.row?.data?.type || 'measure')});
+              const rowData = _.cloneDeep(e.row ? {
+                ...e.row.data,
+                status: 'update',
+                rowIdx: e.rowIndex,
+                type: (e.row?.data?.type || 'measure')} :
+                {
+                  status: 'new',
+                  type: (e.row?.data?.type || 'measure')
+                }
+              );
+              setOriginalData({
+                dataItem: rowData.dataItem,
+                condition: rowData.condition,
+                valueFrom: rowData.valueFrom,
+                valueTo: rowData.valueTo
+              });
               rowData.condition === 'Between' && setShowField(true);
               rowData.condition !== 'Between' && setShowField(false);
               const currPage = page;
@@ -249,6 +279,9 @@ const DataFilterModal = ({...props}) => {
             <Column caption={'구분'} dataField='type' cellRender={typeCaption}/>
             <Column caption={localizedString.fieldName} dataField='dataItem'/>
             <Column caption={localizedString.condition} dataField='condition'/>
+            <Column
+              caption={localizedString.selectRelationCondition}
+              dataField='relationCondition'/>
             <Column
               caption={localizedString.conditionValue + '(From)'}
               dataField='valueFrom'/>
@@ -278,7 +311,8 @@ const DataFilterModal = ({...props}) => {
             dataFiltering,
             setDataFilteringList,
             setShowField,
-            formData
+            formData,
+            originalData
           }}>
             <DataFilterForm/>
           </dataFilterFormContext.Provider>

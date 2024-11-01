@@ -90,3 +90,18 @@ export const getIdxAndFlag = (formData, reportType, rootItem, selectedItem) => {
   result.flag = 'value';
   return result;
 };
+
+export const getDetailInfo = (FilteredData, rootItem) => {
+  const measures = rootItem?.adHocOption?.dataField?.measure || [];
+  const matchedMeasure = measures.find(
+      (measure) => measure.name === FilteredData.dataItem
+  );
+
+  return {
+    ...FilteredData,
+    uniqueName: matchedMeasure.uniqueName,
+    summaryType: matchedMeasure.summaryType
+  };
+};
+
+

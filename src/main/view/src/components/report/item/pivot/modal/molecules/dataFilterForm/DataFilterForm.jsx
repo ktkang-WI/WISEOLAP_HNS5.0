@@ -18,7 +18,8 @@ const DataFilterForm = () => {
     dataFiltering,
     setDataFilteringList,
     setShowField,
-    formData
+    formData,
+    originalData
   } = useContext(dataFilterFormContext);
 
   return (
@@ -32,22 +33,65 @@ const DataFilterForm = () => {
           delete formData.valueTo;
           setShowField(false);
         }
-
         // 하이라이트 정보 변경 시 +버튼 클릭 없어도 바로 적용.
         const copyDataFilterInfo = _.cloneDeep(dataFiltering);
+        let duplicateItems;
+        if (originalData !== undefined && originalData !== null) {
+          duplicateItems = copyDataFilterInfo?.filter((data) => {
+            const isMatchingDataItem =
+              data.dataItem === originalData.dataItem;
+            const isMatchingCondition =
+              data.condition === originalData.condition;
+            const isMatchingRelationCondition =
+              data.relationCondition === originalData.relationCondition;
+            const isMatchingValueFrom =
+              data.valueFrom === originalData.valueFrom;
+            // Check valueTo only when relationCondition is 'BETWEEN'
+            const isMatchingValueTo = data.relationCondition === 'BETWEEN' ?
+              data.valueTo === originalData.valueTo : true;
 
-        const findIdx = copyDataFilterInfo?.findIndex(
-            (data) => (data.dataItem === formData.dataItem &&
-            data.condition === formData.condition)
+            return isMatchingDataItem &&
+            isMatchingCondition &&
+            isMatchingRelationCondition &&
+            isMatchingValueFrom &&
+            isMatchingValueTo;
+          });
+
+          // duplicateItems = copyDataFilterInfo?.filter(
+          //     (data) =>
+          //       data.dataItem === originalData.dataItem &&
+          //     data.condition === originalData.condition &&
+          //     data.relationCondition === originalData.relationCondition &&
+          //     data.valueFrom === originalData.valueFrom
+          //     // data.valueTo === originalData.valueTo
+          // );
+
+          // 중복된 항목이 존재할 경우 alert 후 처리 중단
+          if (duplicateItems.length > 1 ||
+            (duplicateItems.length === 1 &&
+              duplicateItems[0] !== originalData)) {
+            alert('중복된 조건의 정보가 있습니다.');
+            setData({status: 'new'});
+            return;
+          }
+        }
+
+        // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
+        const findIdx = copyDataFilterInfo.findIndex(
+            (data) =>
+              data.dataItem === formData.dataItem &&
+            data.condition === formData.condition &&
+            data.relationCondition === formData.relationCondition &&
+            data.valueFrom === formData.valueFrom
         );
+
         // 데이터항목, 조건 유형, 조건 값이 아닌 값 변경 시
         let isOtherChange = true;
-        if (findIdx != -1) {
-          const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
-          if (dataFieldList.includes(e.dataField)) {
-            if (copyDataFilterInfo[findIdx][e.dataField] == e.value) {
-              isOtherChange = false;
-            }
+
+        const dataFieldList = ['dataItem', 'condition', 'valueFrom'];
+        if (findIdx != -1 && dataFieldList.includes(e.dataField)) {
+          if (copyDataFilterInfo[findIdx][e.dataField] == e.value) {
+            isOtherChange = false;
           }
         }
 
@@ -61,11 +105,8 @@ const DataFilterForm = () => {
             copyDataFilterInfo[formData.rowIdx] = formData;
             setDataFilteringList(copyDataFilterInfo);
           } else {
-            alert(localizedString.highlightDupleCheck2);
+            alert('중복된 조건의 정보가 있습니다.');
             setData({
-              applyCell: true,
-              applyTotal: true,
-              applyGrandTotal: true,
               status: 'new'
             });
           }
@@ -121,12 +162,22 @@ const DataFilterForm = () => {
           <span className='requireRule'> *</span>: </Label>
       </Item>
       <Item
+        name='relationCondition'
+        dataField='relationCondition'
+        editorType='dxSelectBox'
+        editorOptions={{
+          placeholder: '조건을 선택해주세요.',
+          items: ['AND', 'OR']
+        }}>
+        <Label>{localizedString.selectRelationCondition}
+          <span className='requireRule'> *</span>: </Label>
+      </Item>
+      <Item
         name='valueFrom'
         dataField='valueFrom'
-        editorType='dxNumberBox'
+        editorType='dxTextBox'
         editorOptions={{
-          placeholder: '수치를 입력해주세요.',
-          value: formData.valueFrom || ''
+          placeholder: '수치를 입력해주세요.'
         }}
       >
         <Label>{localizedString.valueFrom}
@@ -135,10 +186,9 @@ const DataFilterForm = () => {
       {showField && <Item // show in Between.
         name='valueTo'
         dataField='valueTo'
-        editorType='dxNumberBox'
+        editorType='dxTextBox'
         editorOptions={{
-          placeholder: '수치를 입력해주세요.',
-          value: formData.valueFrom || ''
+          placeholder: '수치를 입력해주세요.'
         }}
       >
         <Label>{localizedString.valueTo}
