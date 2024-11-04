@@ -3,7 +3,7 @@ import {DesignerMode, EditMode} from 'components/config/configType';
 import LinkViewerContent from 'components/linkViewer/LinkViewerContent';
 import useConfig from 'hooks/useConfig';
 import useReportSave from 'hooks/useReportSave';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {
   useSelector,
   useDispatch
@@ -13,7 +13,6 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 import './portal.css';
 import {isPortal} from 'components/utils/PortalUtility';
 import {selectMyPageDesignerConfig} from 'redux/selector/ConfigSelector';
-import models from 'models';
 
 const LinkViewer = () => {
   const dispatch = useDispatch();
@@ -26,27 +25,17 @@ const LinkViewer = () => {
 
   const params = new URLSearchParams(window.location.search);
   const noHeader = params.get('no_header') || false;
-  const [grpId, setGrpId] = useState(0);
 
   useEffect(() => {
-    models.Report.getUserInfo().then((res) => {
-      if (res.status == 200) {
-        setGrpId(res.data.grpId);
-      }
-    });
-
     dispatch(setEditMode(EditMode.VIEWER));
     reload(DesignerMode.DASHBOARD);
   }, []);
   // 홈앤쇼핑 오픈이후 따로 요청 'LinkReportList'
   const leftItems = ['Logo', 'Portal', 'Designer'];
-  let filteredLeftItems =
+  const filteredLeftItems =
     (userMode.runMode === 'VIEW' && userMode.grpRunMode === 'VIEW') ?
-    leftItems.filter((item) => item !== 'Designer') : leftItems;
-
-  if (grpId == '1503') {
-    filteredLeftItems = filteredLeftItems.filter((item) => item !== 'Portal');
-  }
+    leftItems.filter((item) => item !== 'Designer' && item !== 'Portal') :
+    leftItems;
 
   return (
     <div className={isPortal() && 'portal'}>
