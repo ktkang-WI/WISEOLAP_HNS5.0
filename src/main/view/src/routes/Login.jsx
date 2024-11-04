@@ -127,7 +127,14 @@ const Login = () => {
                 try {
                   const res = await models.Login.login(id, password);
                   if (res.status == 200) {
-                    nav('portal');
+                    // nav('portal');
+                    const runMode = res?.data?.runMode == 'VIEW' &&
+                        res?.data?.grpRunMode == 'VIEW';
+                    if (runMode) {
+                      nav('/editds/viewer');
+                    } else {
+                      nav('/editds/portal');
+                    }
                   }
                 } catch (error) {
                   // 에러 발생 시 처리
