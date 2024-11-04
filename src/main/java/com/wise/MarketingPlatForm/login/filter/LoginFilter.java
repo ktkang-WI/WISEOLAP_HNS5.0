@@ -1,6 +1,8 @@
 package com.wise.MarketingPlatForm.login.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -106,7 +108,19 @@ public class LoginFilter implements Filter{
             return;
         }
 
-        boolean isCallCenterGrp = userDTO != null && userDTO.getGrpId() == 1503;
+        // TODO 홈앤쇼핑 협력업체 임시 하드코딩 추후 권한 설정 개발 후 삭제 or 변경 필요
+        List<Integer> iscallcenterList = new ArrayList<>();
+        iscallcenterList.add(1000);
+        iscallcenterList.add(1044);
+        iscallcenterList.add(1424);
+        iscallcenterList.add(1523);
+        iscallcenterList.add(1034);
+        iscallcenterList.add(1068);
+        iscallcenterList.add(1503);
+        iscallcenterList.add(1089);
+
+        boolean isCallCenterGrp = userDTO != null && iscallcenterList.contains(userDTO.getGrpId());
+
         isCallCenterGrp = isCallCenterGrp && request.getRequestURI().indexOf("/portal") >= 0;
 
         // 로그인(contetxtRoot) 진입 시 동작
