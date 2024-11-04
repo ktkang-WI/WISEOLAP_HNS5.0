@@ -2,10 +2,12 @@ import {DropDownBox, TextBox} from 'devextreme-react';
 import {useRef} from 'react';
 import DesignerReportTabs from '../../ReportTab/organism/DesignerReportTabs';
 import useReportLoad from 'hooks/useReportLoad';
+import {useNavigate} from 'react-router-dom';
 
 const DropdownBoxReportSearch = ({showAll, report, button, id}) => {
   // hook
   const {getReportList, handleSubmit} = useReportLoad();
+  const nav = useNavigate();
 
   // local
   const {reportList} = getReportList(showAll);
@@ -17,6 +19,7 @@ const DropdownBoxReportSearch = ({showAll, report, button, id}) => {
         reportList={reportList}
         onSubmit={handleSubmit}
         dropdownBoxRef={dropdownBoxRef}
+        navigator={nav}
       />
     );
   };
