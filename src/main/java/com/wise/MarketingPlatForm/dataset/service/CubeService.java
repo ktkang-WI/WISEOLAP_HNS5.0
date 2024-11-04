@@ -115,9 +115,12 @@ public class CubeService {
         
         for (CubeMeaColEntity entity : cubeMeaColEntities) {
             if (!entity.isVisible()) continue;
+
+            DataFieldType dataType = (entity.getSummaryType() == null || "".equals(entity.getSummaryType()))
+                    ? DataFieldType.DIM : DataFieldType.MEA;
             // 권한 있는 차원의 컬럼만 추가
             fields.add(CubeFieldVO.builder()
-                    .type(DataFieldType.MEA)
+                    .type(dataType)
                     .visible(entity.isVisible())
                     .order(entity.getMeaOrder())
                     .name(entity.getCaptionName())
@@ -155,8 +158,10 @@ public class CubeService {
         for (CubeDimColEntity entity : cubeDimColEntities) {
             if (!entity.isVisible()) continue;
             // 권한 있는 차원의 컬럼만 추가
-            if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())) {
-            // if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getTableName())) {
+            if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getHieHieUniNm()) ||
+                auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())
+                ) {
+            // if (auth.hasAuthDim(cubeDimTblEntities.get(0).getDsViewId(), entity.getUniqueName())) {
                 authDimNames.add(entity.getTableName());
                 fields.add(CubeFieldVO.builder()
                         .type(DataFieldType.DIM)
