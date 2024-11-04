@@ -61,7 +61,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
         data = sanitizer.getData();
 
         DataPickUpMake customData = new DataPickUpMake(data);
-        List<Map<String, Object>> tempData = customData.executer(dimensions, temporaryMeasures);
+        List<Map<String, Object>> tempData = customData.executer(dimensions, allMeasure);
         if (tempData != null) {
             data = tempData;
         }

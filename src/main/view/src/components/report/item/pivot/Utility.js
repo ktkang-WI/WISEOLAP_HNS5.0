@@ -90,6 +90,12 @@ const generateItem = (item, param, rootItem) => {
   const reportId = selectCurrentReportId(store.getState());
   const selectedDataset = selectCurrentDataset(store.getState());
 
+  const allMeasure = dataField.measure.concat(dataField.sortByItem);
+  const getMeasureByFieldId = allMeasure.reduce((acc, data) => {
+    acc[data.fieldId] = data;
+    return acc;
+  }, {});
+
   let expressionCHeck = false;
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
@@ -196,38 +202,39 @@ const generateItem = (item, param, rootItem) => {
     const colExpand = !item.meta.positionOption.column.expand ?
       true :item.meta.positionOption.column.expand;
 
-    // let sortBy = {};
+    let sortBy = {};
 
-    // if (field.sortBy && field.sortBy != field.fieldId) {
-    //   const target = getMeasureByFieldId[field.sortBy];
+    if (field.sortBy && field.sortBy != field.fieldId) {
+      const target = getMeasureByFieldId[field.sortBy];
 
-    //   if (target) {
-    //     sortBy = {
-    //       sortBySummaryField: target.summaryType + '_' + target.name
-    //     };
-    //   } else {
-    //     sortBy = {
-    //       sortBy: dataFieldName
-    //     };
-    //   }
-    // } else {
-    //   sortBy = {
-    //     sortBy: dataFieldName
-    //   };
-    // }
+      if (target) {
+        sortBy = {
+          sortBySummaryField: target.summaryType + '_' + target.name
+        };
+      } else {
+        sortBy = {
+          sortBy: dataFieldName
+        };
+      }
+    } else {
+      sortBy = {
+        sortBy: dataFieldName
+      };
+    }
 
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'row' : 'column',
-      sortBy: 'none',
+      sortOrder: field.sortOrder.toLowerCase(),
       expanded: colExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
-      }
+      },
+      ...sortBy
     });
   }
 
