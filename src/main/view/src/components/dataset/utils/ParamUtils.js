@@ -73,7 +73,11 @@ const newCubeParamInformation = (name, dsId, dsType,
         cubeColumnInfo.physicalColumnKey :
         cubeColumnInfo.physicalColumnName :
         cubeColumnInfo.physicalColumnKey, // 정렬 기준 항목
-    multiSelect: true // 다중 선택
+    multiSelect: true, // 다중 선택
+    useSearch: cubeColumnInfo.noLoading == 2 ?
+      true : false,
+    paramType: cubeColumnInfo.noLoading == 1 ?
+      'INPUT' : 'LIST'
   };
 };
 
