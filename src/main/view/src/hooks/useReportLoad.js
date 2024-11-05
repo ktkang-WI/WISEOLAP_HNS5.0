@@ -118,9 +118,10 @@ export default function useReportLoad() {
   /**
    * 선택된 보고서를 제출하고 관련된 모든 작업을 처리하는 함수
    * @param {Object} selectedReport - 사용자가 선택한 보고서 객체
+   * @param {Object} nav - modal에서 navigator를 사용.
    * @return {Boolean} - 오류가 발생하면 true를 반환
    */
-  const handleSubmit = async (selectedReport) => {
+  const handleSubmit = async (selectedReport, nav) => {
     if (!selectedReport || selectedReport.type !== 'REPORT') {
       openModal(Alert, {
         message: '보고서를 선택하지 않았습니다.'
@@ -130,7 +131,9 @@ export default function useReportLoad() {
     }
 
     const reportType = selectedReport.reportType;
-
+    if (nav) {
+      nav('/editds/' + reportType.toLowerCase());
+    }
     reload(reportType);
     await getReportWithLinkedReport(selectedReport);
   };
