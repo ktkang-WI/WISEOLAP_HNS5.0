@@ -101,7 +101,7 @@ const CardChart = ({
             cn = t.value < content.value ? 'blue' :
               t.value > content.value ? 'red' : '';
           }
-          console.log(t.value);
+
           return <p
             key={'t' + i}
             className={cn}>

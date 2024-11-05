@@ -18,13 +18,6 @@ const CardContainer = styled.div`
   scrollbar-gutter: stable;
 `;
 
-// const CardRow = styled.div`
-//   width: 100%;
-//   margin: 5px 0;
-//   height: 100%;
-//   display: flex;
-// `;
-
 const DefaultCard = ({
   dataSource,
   argumentField,
