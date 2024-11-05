@@ -61,7 +61,10 @@ export const getNames = (reportType, rootItem, selectedItem) => {
     reportItem = selectedItem.meta;
   }
 
-  result.measures = reportItem.dataField.measure.map((mea) => mea.name);
+  result.measures =
+    reportItem.dataField.measure
+        .filter((mea) => mea.summaryType !== 'SUBQ')
+        .map((mea) => mea.name);
 
   return result;
 };

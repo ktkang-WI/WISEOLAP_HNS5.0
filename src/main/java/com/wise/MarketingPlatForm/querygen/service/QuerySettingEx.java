@@ -2939,18 +2939,6 @@ public class QuerySettingEx {
 			// System.out.println("HS CUSSTOM SUBQ");
 		}
 
-		String isSubQ = "N";
-		for(SelectCubeMeasure oDr : aDtSelMea) {
-			if(oDr.getMEA_AGG().equals("SUBQ")) {
-				isSubQ = "Y";
-			}
-		}
-
-		if(isSubQ == "Y") {
-			String cleanedValue = SUBQValuesString.replaceAll("\\[|\\]", "");
-			sQuery = "SELECT MST.*,"+ cleanedValue +" FROM (" + sQuery + ") MST ORDER BY 6";
-		}
-
 		if (aDtHaving != null && !aDtHaving.isEmpty()) {
 			StringBuilder havingClauseBuilder = new StringBuilder("\nHAVING ");
 			for (int i = 0; i < aDtHaving.size(); i++) {
@@ -2999,6 +2987,18 @@ public class QuerySettingEx {
 	
 			// Append the HAVING clause to sQuery
 			sQuery += " " + havingClauseBuilder.toString();
+		}
+
+		String isSubQ = "N";
+		for(SelectCubeMeasure oDr : aDtSelMea) {
+			if(oDr.getMEA_AGG().equals("SUBQ")) {
+				isSubQ = "Y";
+			}
+		}
+
+		if(isSubQ == "Y") {
+			String cleanedValue = SUBQValuesString.replaceAll("\\[|\\]", "");
+			sQuery = "SELECT MST.*,"+ cleanedValue +" FROM (" + sQuery + ") MST";
 		}
 
 			return sQuery;
