@@ -57,7 +57,7 @@ const FilterBarWrapper = (props) => {
   // 매개변수 정보 수정되면 재조회
   useEffect(() => {
     if (parameters.informations.length >
-      parameters.filterSearchComplete.length &&
+      new Set(parameters.filterSearchComplete).size &&
       parameters.informations.length != 0) {
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
@@ -66,7 +66,7 @@ const FilterBarWrapper = (props) => {
 
   useEffect(() => {
     if (parameters.informations.length != 0 &&
-      parameters.filterSearchComplete.length >=
+      new Set(parameters.filterSearchComplete).size >=
       parameters.informations.length) {
       dispatch(endJob('필터 데이터를 조회 중입니다.'));
     }
