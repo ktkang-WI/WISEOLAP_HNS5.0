@@ -10,7 +10,7 @@ import {updateViewerConfig} from 'models/config/myPage/MyPageConfig';
 import useModal from 'hooks/useModal';
 
 const MyViewerConfig = () => {
-  const designerConfig = useLoaderData();
+  const {designerConfig} = useLoaderData();
   const {alert, success, confirm} = useModal();
   const [config, setConfig] = useState(() => seperateConfig(designerConfig));
 
@@ -55,7 +55,7 @@ const MyViewerConfig = () => {
     <Wrapper className='custom-scrollbar' overflow='auto'>
       <MyPageDesignerElements
         setConfig={setConfig}
-        data={config.designerConfig}
+        data={config}
         items={defaultReport}
       />
       <div style={{

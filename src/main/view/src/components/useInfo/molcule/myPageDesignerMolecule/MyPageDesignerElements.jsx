@@ -89,7 +89,7 @@ const MyPageDesignerElements = ({setConfig, data, items, prog}) => {
   };
 
   const getDesignerSetting = (item) => {
-    if (data.operation) {
+    if (data?.operation) {
       setConfig({});
       return;
     }
