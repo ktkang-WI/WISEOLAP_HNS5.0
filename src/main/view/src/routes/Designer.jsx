@@ -191,7 +191,7 @@ const Designer = () => {
 
     const unlistenHistoryEvent = history.listen(({action}) => {
       if (action === 'POP') {
-        const path = history.location.pame;
+        const path = history.location.pathname;
         let reportType = DesignerMode['DASHBOARD'];
 
         if (path.indexOf(DesignerMode['AD_HOC'].toLowerCase()) > -1) {

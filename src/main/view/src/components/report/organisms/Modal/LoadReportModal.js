@@ -17,7 +17,7 @@ const LoadReportModal = ({...props}) => {
 
   return (
     <Modal
-      onSubmit={() => handleSubmit(selectedReport)}
+      onSubmit={() => handleSubmit(selectedReport, props.nav)}
       modalTitle={localizedString.loadReport}
       height={theme.size.middleModalHeight}
       width={theme.size.smallModalWidth}
