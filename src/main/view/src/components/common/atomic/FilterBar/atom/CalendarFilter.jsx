@@ -142,6 +142,9 @@ const CalendarFilter = ({info, value, isTo, onValueChanged, width}) => {
       value={dateValue}
       width={width}
       displayFormat={captionFormat}
+      disabledDates={({date}) => {
+        return date.getFullYear() < 2000;
+      }}
     />
   );
 };
