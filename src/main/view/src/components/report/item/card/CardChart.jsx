@@ -46,6 +46,7 @@ const Bottom = styled.div`
   display: flex;
   height: auto;
   padding: 20px;
+  padding-top: 5px;
   width: 100%;
   flex-direction: column;
   text-align: right;
@@ -93,14 +94,14 @@ const CardChart = ({
       <Content>{getValue(content.value, content.format)}</Content>
       <Bottom>
         {targets.map((t, i) => {
-          let cn = '';
+          const cn = '';
 
-          if (t.format.formatType == 'Percent') {
-            cn = t.value < 0 ? 'blue' : t.value > 0 ? 'red' : '';
-          } else {
-            cn = t.value < content.value ? 'blue' :
-              t.value > content.value ? 'red' : '';
-          }
+          // if (t.format.formatType == 'Percent') {
+          //   cn = t.value < 0 ? 'blue' : t.value > 0 ? 'red' : '';
+          // } else {
+          //   cn = t.value < content.value ? 'blue' :
+          //     t.value > content.value ? 'red' : '';
+          // }
 
           return <p
             key={'t' + i}
