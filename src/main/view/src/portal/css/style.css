@@ -325,7 +325,7 @@
 }
 
 .portal .pay_box > div:last-child {
-  align-items: end;
+  align-items: start;
 }
 
 .portal .pay_box .percent_box p {
@@ -333,6 +333,7 @@
 }
 
 .portal .pay_box .percent_box p:first-child {
+  margin-top: 5px;
   margin-bottom: 12px;
 }
 
