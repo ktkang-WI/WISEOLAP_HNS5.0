@@ -48,14 +48,16 @@ const ReportSwiper = ({portalUrl, userId, date, type}) => {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
+        onPaginationRender={(swiper) => {
+          swiper.pagination.bullets.forEach((bullet) => {
+            bullet.addEventListener('click', () => swiper.autoplay.stop());
+          });
+        }}
         onSwiper={(swiper) => {
           swiper.navigation.nextEl.addEventListener('click',
               () => swiper.autoplay.stop());
           swiper.navigation.prevEl.addEventListener('click',
               () => swiper.autoplay.stop());
-          swiper.pagination.bullets.forEach((bullet) => {
-            bullet.addEventListener('click', () => swiper.autoplay.stop());
-          });
         }}
       >
         {
