@@ -7,11 +7,13 @@ import {autoCoulumnNumber}
   from 'components/report/item/util/layoutUtility';
 import styled from 'styled-components';
 
+
 const CardContainer = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(${(props) => props.columnNumber || '5'}, 1fr);
+  grid-template-columns: repeat(${
+  (props) => props.columnNumber || '5'}, minmax(0, 1fr));
   gap: 10px;
   padding-left: 10px;
   overflow-y: auto;
