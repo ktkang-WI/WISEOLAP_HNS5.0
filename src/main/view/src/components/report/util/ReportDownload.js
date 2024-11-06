@@ -128,6 +128,13 @@ const exportComponentToWorksheet = async (
         // 240903 홈앤쇼핑 행 차원항목 표시(열은 제대로 표시안됨)
         exportRowFieldHeaders: true,
         customizeCell: ({pivotCell, excelCell}) => {
+          const borderStyle = {style: 'thin', color: {argb: 'FF7E7E7E'}};
+          excelCell.border = {
+            bottom: borderStyle,
+            left: borderStyle,
+            right: borderStyle,
+            top: borderStyle
+          };
           if (pivotCell.area == 'data' && pivotCell.dataType) {
             const formats = getFormats(dataField, adhocOption);
             const formData = formats[pivotCell.dataIndex];
@@ -156,6 +163,9 @@ const exportComponentToWorksheet = async (
 
               Object.assign(excelCell, getExcelCellFormat({backgroundColor, color, formattedValue, formData}));
             }
+          } else {
+            excelCell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'F2F2F2'}};
+            excelCell.font = {color: {argb: '3F3F3F'}, bold: true};
           }
         }
       });
