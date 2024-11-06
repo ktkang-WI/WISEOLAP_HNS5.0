@@ -62,6 +62,7 @@ const DataColumnSeriesOptions = (
     if (!seriesOptions.length == 0) {
       const seriesOption =
         seriesOptions.find((item) => item.fieldId === fieldId);
+      if (!seriesOptions) return;
       setType(seriesOption.type);
       setGeneral(seriesOption.general);
       setPointLabel(seriesOption.pointLabel);
