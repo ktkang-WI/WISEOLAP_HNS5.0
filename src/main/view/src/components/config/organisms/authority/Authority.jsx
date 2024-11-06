@@ -135,6 +135,12 @@ const getStringFy = (prevItem, nextItem, currentTab) => {
   ) {
     return JSON.stringify(prevItem?.fldIds) !==
            JSON.stringify(nextItem?.fldIds);
+  } else if (
+    currentTab === path.USER_APP ||
+     currentTab === path.GROUP_APP
+  ) {
+    return JSON.stringify(prevItem?.prog) !==
+           JSON.stringify(nextItem?.prog);
   }
 };
 
