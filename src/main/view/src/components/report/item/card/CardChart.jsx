@@ -6,50 +6,69 @@ import {useRef} from 'react';
 import styled from 'styled-components';
 
 const CardBoard = styled.div`
+  font-family: 'NanumGothic';
+  padding: 10px 20px;
   width: 100%;
   height: ${(props) => props.height || '100%'};
-  background-color: #FAFAFA;
-  border-radius: 10px;
+  background-color: #f3f4f8;
   border: 1px solid #bdbdbd;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
 
   &.selected {
-    background-color: #f4f8ff;
-    border: 1px solid #a2c4ff
+    border: 1px solid #a2c4ff;
+    background-color: #e8f0ff;
   }
 `;
 
 const Title = styled.div`
-  font-size: 1rem;
-  font-weight: 600;
-  color: #818181;
+  font-size: 20px;
+  font-weight: 400;
   overflow: hidden;
-  text-overflow: ellipsis; 
-  white-space: pre-line;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   height: auto;
+  max-width: 40%;
 `;
 
 const Content = styled.div`
-  font-size: 1.5rem;
+  font-size: 30px;
   font-weight: 600;
-  color: #818181;
+  max-width: 60%;
+  padding-left: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: right;
+  overflow: hidden;
+`;
+
+const Row = styled.div`
+  flex-direction: row;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex: 1;
 `;
 
 const Bottom = styled.div`
-  font-weight: 600;
-  color: #818181;
   display: flex;
   height: auto;
-  padding: 20px;
+  padding: 10px 0px;
   padding-top: 5px;
+  font-size: 16px;
   width: 100%;
   flex-direction: column;
   text-align: right;
+
+  & span {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  & p {
+    margin-bottom: 5px;
+  }
 
   .red {
     color: red;
@@ -77,6 +96,7 @@ const CardChart = ({
     return formatNumber(value, format, labelSuffix);
   };
 
+  const contentStr = getValue(content.value, content.format);
   return (
     <CardBoard
       className={selected && 'selected'}
@@ -90,11 +110,14 @@ const CardChart = ({
           content: content
         });
       }}>
-      <Title>{title}</Title>
-      <Content>{getValue(content.value, content.format)}</Content>
+      <Row>
+        <Title title={title}>{title}</Title>
+        <Content title={contentStr}>{contentStr}</Content>
+      </Row>
       <Bottom>
         {targets.map((t, i) => {
           const cn = '';
+          const v = getValue(t.value, t.format);
 
           // if (t.format.formatType == 'Percent') {
           //   cn = t.value < 0 ? 'blue' : t.value > 0 ? 'red' : '';
@@ -105,8 +128,9 @@ const CardChart = ({
 
           return <p
             key={'t' + i}
+            title={v}
             className={cn}>
-            {t.key}: {getValue(t.value, t.format)}
+            {t.key}: <span>{v}</span>
           </p>;
         })}
       </Bottom>
