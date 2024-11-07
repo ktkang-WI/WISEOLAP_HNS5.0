@@ -43,7 +43,7 @@ public class PivotGridDataMaker implements ItemDataMaker {
 
         List<Measure> allMeasure = new ArrayList<>();
 
-        allMeasure.addAll(measures);
+        allMeasure.addAll(temporaryMeasures);
         allMeasure.addAll(sortByItems);
 
         // 데이터 기본 가공
