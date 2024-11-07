@@ -51,6 +51,8 @@ public class MyDesignerDTO {
   @Builder.Default
   String userNm = "";
   @Builder.Default
+  String userId = "";
+  @Builder.Default
   String maxReportQueryPeriod = "{\"check\": false, \"period\": 5}";
   RunMode runMode;
   @Builder.Default

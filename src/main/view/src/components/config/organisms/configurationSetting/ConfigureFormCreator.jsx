@@ -16,7 +16,7 @@ const itemType = {
 };
 
 const createItemDefaultProperties = (
-    dataset, dataField, value, type, items) => ({
+    dataset, dataField, value, type, items, readOnly) => ({
   'dataField': dataField,
   'type': type,
   'editorOptions': {
@@ -24,6 +24,7 @@ const createItemDefaultProperties = (
     ...(itemType.SelectBox === type ? {displayExpr: 'caption'} : {}),
     ...(itemType.SelectBox === type ? {valueExpr: 'name'} : {}),
     value: value,
+    readOnly: readOnly == true ? true: false,
     onValueChanged: (e) => {
       dataset[dataField] = e.value;
     }
@@ -43,6 +44,11 @@ export const createSelectBoxItemProperties = (
     dataset, dataField, value, items) =>
   createItemDefaultProperties(
       dataset, dataField, value, itemType.SelectBox, items);
+
+export const createTextBoxReadOnlyItemProperties = (
+    dataset, dataField, value, readOnly) =>
+  createItemDefaultProperties(
+      dataset, dataField, value, itemType.TextBox, undefined, readOnly);
 
 
 const labelTemplate = (iconName) => {

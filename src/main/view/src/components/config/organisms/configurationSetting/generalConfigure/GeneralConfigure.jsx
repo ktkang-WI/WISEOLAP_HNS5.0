@@ -4,8 +4,12 @@ import Form from 'devextreme-react/form';
 import {ConfigureContext} from '../ConfigurationSetting';
 import localizedString from 'config/localization';
 import {
+  selectMyPageDesignerConfig
+} from 'redux/selector/ConfigSelector';
+import {useSelector} from 'react-redux';
+import {
   createSelectBoxItemProperties,
-  createTextBoxItemProperties,
+  createTextBoxReadOnlyItemProperties,
   generateItems
 } from '../ConfigureFormCreator';
 
@@ -30,26 +34,32 @@ const initLayoutSelectBox = [
 
 const GeneralConfigure = () => {
   const getContext = useContext(ConfigureContext);
+  const myPageConfigure = useSelector(selectMyPageDesignerConfig);
   const general = getContext.state.general;
   const ref = getContext.state.ref;
+
+  const readOnlyValue = myPageConfigure?.userId === 'admin' ? false : true;
 
   const items = [
     {
       'title': localizedString.config.general.licenseInfo,
       'items': [
-        ...licenseInformationTextBox.map((field) => createTextBoxItemProperties(
-            general,
-            field,
-            general[field]))
+        ...licenseInformationTextBox.map((field) =>
+          createTextBoxReadOnlyItemProperties(
+              general,
+              field,
+              general[field],
+              readOnlyValue))
       ]
     },
     {
       'title': localizedString.config.general.solutionTitle,
       'items': [
-        ...appTitleTextBox.map((field) => createTextBoxItemProperties(
+        ...appTitleTextBox.map((field) => createTextBoxReadOnlyItemProperties(
             general,
             field,
-            general[field]))
+            general[field],
+            readOnlyValue))
       ]
     },
     {
@@ -60,7 +70,8 @@ const GeneralConfigure = () => {
               general,
               field.dataField,
               general[field.dataField],
-              field.items),
+              field.items,
+              readOnlyValue),
         )
       ]
     }

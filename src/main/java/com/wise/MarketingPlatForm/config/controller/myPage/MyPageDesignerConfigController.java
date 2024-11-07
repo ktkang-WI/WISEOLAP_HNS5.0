@@ -34,6 +34,7 @@ public class MyPageDesignerConfigController {
 
     MyDesignerDTO model = myPageDesignerConfig.getDesignerConfigData(userNo);
     model.setUserNm(userDTO.getUserNm()); 
+    model.setUserId(userDTO.getUserId()); 
     model.setRunMode(userDTO.getRunMode());
     model.setGrpRunMode(userDTO.getGrpRunMode());
   
