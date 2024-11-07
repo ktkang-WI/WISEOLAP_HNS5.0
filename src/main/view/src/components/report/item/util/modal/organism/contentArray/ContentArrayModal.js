@@ -15,15 +15,12 @@ const theme = getTheme();
 const ContentArrayModal = ({
   popupName,
   contentArray,
-  customHeight,
   max = 10,
   ...props}) => {
   const [autoNumberSet, setAutoNumberSet] =
     useState(contentArray.autoNumberSet);
   const [columnNumber, setColumnNumber] =
     useState(contentArray.columnNumber);
-  const [height, setHeight] =
-    useState(contentArray.height || 0);
 
   const handleCheckBox = (e) => {
     setAutoNumberSet(e.value);
@@ -36,15 +33,10 @@ const ContentArrayModal = ({
   return (
     <Modal
       onSubmit={() => {
-        const data = {contentArray: {
+        props.onSubmit({contentArray: {
           autoNumberSet: autoNumberSet,
           columnNumber: columnNumber
-        }};
-
-        if (customHeight) {
-          data.contentArray.height = height;
-        }
-        props.onSubmit(data);
+        }});
         return false;
       }}
       onClose={()=>{
@@ -52,7 +44,7 @@ const ContentArrayModal = ({
       }}
       modalTitle={props.modalTitle}
       width={theme.size.smallModalWidth}
-      height='400px'
+      height='335px'
     >
       <FieldSet>
         <Field>
@@ -79,19 +71,6 @@ const ContentArrayModal = ({
             />
           </FieldValue>
         </Field>
-        {customHeight &&
-        <Field>
-          <FieldLabel>카드 높이</FieldLabel>
-          <FieldValue
-          >
-            <NumberBox
-              defaultValue={height}
-              min={0}
-              showSpinButtons={true}
-              onValueChanged={(e) => setHeight(e.value)}
-            />
-          </FieldValue>
-        </Field>}
       </FieldSet>
     </Modal>
   );

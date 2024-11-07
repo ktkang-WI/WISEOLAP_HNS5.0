@@ -11,8 +11,7 @@ import {setMeta} from '../util/metaUtilityFactory';
 const cardOption = {
   contentArray: {
     autoNumberSet: true,
-    columnNumber: 5,
-    height: 0
+    columnNumber: 5
   }
 };
 const generateMeta = (item) => {
@@ -43,7 +42,8 @@ const getDataFieldOptionChild = () => {
     ...defaultMeasure,
     useButton: false,
     // 우측에 버튼 추가가 필요한 경우 사용하는 옵션 ex)시리즈 옵션
-    buttonIcon: chartSeriesButtonIcon
+    buttonIcon: chartSeriesButtonIcon,
+    limit: 1
   };
 
   const dataFieldDimension = {

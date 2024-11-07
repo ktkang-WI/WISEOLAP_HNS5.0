@@ -22,7 +22,7 @@ export default function useItemSetting(
     }
 ) {
   const {selectedItemType, clearSelection} = filterOptions;
-  const splitters = ['<br/>', ' - ', '\n'];
+  const splitters = ['<br/>', ' - '];
   const meta = item.meta;
   const interactiveOption = filterCondition ?
     {} : meta.interactiveOption;

@@ -414,50 +414,30 @@ public final class DataSanitizer {
      * @return DataSanitizer
      */
     public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
-        if (isCube) {
-            Map<String, String> dimensionMap = dimensions.stream()
+        Map<String, String> dimensionMap = dimensions.stream()
             .collect(Collectors.toMap(
                 Dimension::getUniqueName,
                 Dimension::getName,
                 (existingValue, newValue) -> newValue
             ));
 
-            // 필터가 존재하는 경우에만 필터링
-            if (filter != null && filter.size() > 0) {
-                data = data.stream()
-                        .filter(map -> filter.entrySet().stream()
-                                .allMatch(entry -> {
-                                    Object value = map.get(dimensionMap.get(entry.getKey()));
-                                    
-                                    if (value == null) {
-                                        // return entry.getValue().contains(null);
-                                        return true;
-                                    }
+        // 필터가 존재하는 경우에만 필터링
+        if (filter != null && filter.size() > 0) {
+            data = data.stream()
+                    .filter(map -> filter.entrySet().stream()
+                            .allMatch(entry -> {
+                                Object value = map.get(dimensionMap.get(entry.getKey()));
+                                
+                                if (value == null) {
+                                    // return entry.getValue().contains(null);
+                                    return true;
+                                }
 
-                                    return StringUtils.containsAny(value.toString(),
-                                        entry.getValue().toArray(new CharSequence[0]));
-                                }))
-                        .collect(Collectors.toList());
-            }
-        } else {
-            // 필터가 존재하는 경우에만 필터링
-            if (filter != null && filter.size() > 0) {
-                data = data.stream()
-                        .filter(map -> filter.entrySet().stream()
-                                .allMatch(entry -> {
-                                    Object value = map.get(entry.getKey());
-                                    
-                                    if (value == null) {
-                                        return true;
-                                    }
-
-                                    return StringUtils.containsAny(value.toString(),
-                                        entry.getValue().toArray(new CharSequence[0]));
-                                }))
-                        .collect(Collectors.toList());
-            }
+                                return StringUtils.containsAny(value.toString(),
+                                    entry.getValue().toArray(new CharSequence[0]));
+                            }))
+                    .collect(Collectors.toList());
         }
-        
 
         return this;
     }

@@ -23,7 +23,6 @@ const useCustomEvent = () => {
     'contentArray': (key, value) => {
       return openModal(ContentArrayModal,
           {
-            customHeight: true,
             popupName: 'contentArray',
             modalTitle: localizedString.contentArray,
             options: value,
