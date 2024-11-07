@@ -1,10 +1,13 @@
 import {TreeMap} from 'devextreme-react';
 import {Label, Tooltip} from 'devextreme-react/tree-map';
 import React, {useRef} from 'react';
-import ItemManager from 'components/report/item/util/ItemManager';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
 import useItemSetting from '../util/hook/useItemSetting';
+import {
+  formatNumber,
+  generateLabelSuffix
+} from 'components/utils/NumberFormatUtility';
 
 const TreeMapChart = ({setItemExports, id, item}) => {
   const mart = item ? item.mart : null;
@@ -45,9 +48,17 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   };
   const customizeTooltip = (arg, seriesCaption) => {
     const {data} = arg.node;
+
+    const format = dataField?.measure[0]?.format;
+
+    const labelSuffix = generateLabelSuffix(format);
+    const tooltipValue =
+      formatNumber(arg.value, format, labelSuffix);
+
     const returnText =
-      `${data.arg} - ${seriesCaption} 
-      \n ${seriesCaption}: ${arg.valueText}`;
+      `<b>${data.args || data.name}</b>
+      \n ${seriesCaption}: ${tooltipValue}`;
+
     return {
       text: returnText
     };
@@ -55,7 +66,7 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   const handleClick = (e) => {
     if (!interactiveOption.enabled || dataField.dimension.length == 0) return;
     e.node.select(!e.node.isSelected());
-    filterTools.setMasterFilterData(e?.node?.data['arg'], () => {}, true);
+    filterTools.setMasterFilterData(e?.node?.data['args']);
   };
 
   return (
@@ -65,9 +76,10 @@ const TreeMapChart = ({setItemExports, id, item}) => {
       width={'100%'}
       height={'100%'}
       colorizer={treeMapOptions.colorizer}
-      dataSource={mart.data.data} // mart
-      valueField={seriesNames[0].summaryName}
-      labelField='arg'
+      dataSource={_.cloneDeep(mart.data.data)} // mart
+      valueField={'value'}
+      idField='id'
+      parentField='parentId'
       selectionMode={interactiveOption.enabled && interactiveOption.mode}
       onClick={handleClick}
     >
@@ -80,4 +92,13 @@ const TreeMapChart = ({setItemExports, id, item}) => {
   );
 };
 
-export default React.memo(TreeMapChart, ItemManager.commonPropsComparator);
+export default React.memo(TreeMapChart, (prev, next) => {
+  let result = true;
+
+  if (!_.isEqual(next?.item?.mart, prev?.item?.mart)) {
+    result = false;
+  } else if (!_.isEqual(prev?.item?.meta, next?.item?.meta)) {
+    result = false;
+  }
+  return result;
+});
