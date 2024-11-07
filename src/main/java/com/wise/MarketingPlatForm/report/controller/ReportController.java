@@ -469,32 +469,16 @@ public class ReportController {
 
     @PatchMapping(value = "/update")
     public ResponseEntity<RestAPIVO> patchConfigReportData(
-      @RequestParam(required = true) int reportId,
-      @RequestParam(required = false, defaultValue = "") String reportNm,
-      @RequestParam(required = false, defaultValue = "0") String reportSubTitle,
-      @RequestParam(required = false, defaultValue = "0") int fldId,
-      @RequestParam(required = false, defaultValue = "0") String fldType,
-      @RequestParam(required = false, defaultValue = "") int reportOrdinal,
-      @RequestParam(required = false, defaultValue = "") String reportType,
-      @RequestParam(required = false, defaultValue = "") String reportTag,
-      @RequestParam(required = false, defaultValue = "") String reportDesc,
-      @RequestParam(required = false, defaultValue = "N") boolean promptYn,
-      @RequestParam(required = false, defaultValue = "N") boolean maxReportPeriodYn
+        @RequestBody Map<String, String> param
     ) throws Exception {
-    
-      ReportMstrEntity reportMstr = ReportMstrEntity.builder()
-          .reportId(reportId)
-          .reportNm(reportNm)
-          .reportSubTitle(reportSubTitle)
-          .fldId(fldId)
-          .fldType(fldType)
-          .reportOrdinal(reportOrdinal)
-          .reportType(reportType)
-          .reportDesc(reportDesc)
-          .reportTag(reportTag)
-          .promptYn(promptYn ? "Y" : "N")
-          .maxReportPeriodYn(maxReportPeriodYn ? "Y" : "N")
-          .build();
+        String strPrompt = param.get("promptYn").equals("true") ? "Y" : "N";
+        String strMaxReportPeriodYn = param.get("maxReportPeriodYn").equals("true") ? "Y" : "N";
+
+        param.put("promptYn", strPrompt);
+        param.put("maxReportPeriodYn", strMaxReportPeriodYn);
+
+        Gson gson = new Gson();
+        ReportMstrEntity reportMstr = gson.fromJson(gson.toJson(param), ReportMstrEntity.class);
     
       boolean result = reportService.patchConfigReport(reportMstr);
     

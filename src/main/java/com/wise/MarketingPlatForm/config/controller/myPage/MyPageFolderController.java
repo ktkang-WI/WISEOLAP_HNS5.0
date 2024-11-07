@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.auth.vo.UserDTO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
 import com.wise.MarketingPlatForm.config.service.myPage.MyPageFolderReportService;
 import com.wise.MarketingPlatForm.global.util.SessionUtility;
+import com.wise.MarketingPlatForm.report.vo.ReportMstrDTO;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -49,40 +51,16 @@ public class MyPageFolderController {
 
   @PatchMapping
   public ResponseEntity<RestAPIVO> updateMyReport(
-    @RequestParam(required = true) int id,
-    @RequestParam(required = false, defaultValue = "") String name,
-    @RequestParam(required = false, defaultValue = "") String subtitle,
-    @RequestParam(required = false, defaultValue = "") String type,
-    @RequestParam(required = false, defaultValue = "") String createdBy,
-    @RequestParam(required = false, defaultValue = "") String createdDate,
-    @RequestParam(required = false, defaultValue = "") String tag,
-    @RequestParam(required = false, defaultValue = "0") int ordinal,
-    @RequestParam(required = false, defaultValue = "0") int fldParentId,
-    @RequestParam(required = false, defaultValue = "") String desc,
-    @RequestParam(required = false, defaultValue = "") String query,
-    @RequestParam(required = false, defaultValue = "false") Boolean prompt,
-    @RequestParam(required = false, defaultValue = "false") Boolean maxReportPeriodYn
+    @RequestBody Map<String, String> param
   ) {
-    String strPrompt = prompt ? "Y" : "N";
-    String strMaxReportPeriodYn = maxReportPeriodYn ? "Y" : "N";
+    Gson gson = new Gson();
+    String strPrompt = param.get("prompt").equals("true") ? "Y" : "N";
+    String strMaxReportPeriodYn = param.get("maxReportPeriodYn").equals("true") ? "Y" : "N";
+    
+    param.put("prompt", strPrompt);
+    param.put("maxReportPeriodYn", strMaxReportPeriodYn);
 
-    if (prompt == null) strPrompt = "N";
-
-    MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()
-      .id(id)
-      .name(name)
-      .subtitle(subtitle)
-      .fldParentId(fldParentId)
-      .type(type)
-      .desc(desc)
-      .tag(tag)
-      .createdBy(createdBy)
-      .createdDate(createdDate)
-      .prompt(strPrompt)
-      .maxReportPeriodYn(strMaxReportPeriodYn)
-      .query(query)
-      .ordinal(ordinal)
-      .build();
+    MyPageFolderReportDTO fldReprotDTO = gson.fromJson(gson.toJson(param), MyPageFolderReportDTO.class);
 
     boolean result = myPageFolderReportService.updateMyReport(fldReprotDTO);
     
