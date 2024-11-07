@@ -57,7 +57,7 @@ export const updateMyPageFolder = (param) => {
 
 export const updateMyPageReport = (param) => {
   const res =
-    axios.patch(configPath + '/my-page-folder', null, {params: param});
+    axios.patch(configPath + '/my-page-folder', param);
   return res;
 };
 
@@ -134,7 +134,7 @@ export class Report {
       promptYn: this.promptYn,
       maxReportPeriodYn: this.maxReportPeriodYn
     };
-    const res = axios.patch(reportPath + '/update', null, {params: report});
+    const res = axios.patch(reportPath + '/update', report);
     return res;
   };
 

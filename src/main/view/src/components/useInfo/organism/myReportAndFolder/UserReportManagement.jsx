@@ -47,12 +47,11 @@ const UserReprotManagement = () => {
       updateMyPageReport(report).then((response) => {
         if (!(response.status == 200)) return alert(localizedString.saveFail);
 
-        success(localizedString.reportInfoChangeSuccess);
-
         userFolderData().then((res) => {
           if (!res) return alert(localizedString.saveFail);
 
           setTreeViewData(res);
+          success(localizedString.reportInfoChangeSuccess);
         });
 
         setData({});
