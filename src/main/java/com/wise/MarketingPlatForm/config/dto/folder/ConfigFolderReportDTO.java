@@ -21,7 +21,13 @@ public class ConfigFolderReportDTO {
   String reportNm;
   String reportSubTitle;
   String userId;
-  String regDt;
+  String regDt; // 게시 일자
+  int regUserNo; // 게시자
+  String regUserNm;
+  String modDt; // 최종 수정 일자
+  int modUserNo; // 최종 수정자
+  String modUserNm;
+  String requester; // 요청자
   String reportTag;
   String reportOrdinal;
   String reportDesc;
