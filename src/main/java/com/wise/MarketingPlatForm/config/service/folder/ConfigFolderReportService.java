@@ -2,7 +2,10 @@ package com.wise.MarketingPlatForm.config.service.folder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,43 +32,37 @@ public class ConfigFolderReportService {
     List<ConfigFolderReportDTO> configReportDTO = configDao.selectConfigFolderReport();
     List<ConfigFolderReportDTO> resultDTO = configFolderDTO;
     ObjectMapper objectMapper = new ObjectMapper();
+    
+    Map<Integer, String> userNmCache = new HashMap<>();
+    Set<Integer> folderIds = configFolderDTO.stream()
+        .map(ConfigFolderReportDTO::getFldId)
+        .collect(Collectors.toSet());
 
-    for (ConfigFolderReportDTO reportDto : configReportDTO) {
-      boolean hasItem = false;
-      for (ConfigFolderReportDTO folderDto : configFolderDTO) {
-        if (folderDto.getFldId() == reportDto.getFldId()) {
-          hasItem = true;
-          break;
-        }
-      }
-      if (hasItem) {
-        try {
-          JSONObject datasets = new JSONObject(objectMapper.readValue(reportDto.getDatasetXml(), Map.class));
-          final JSONArray datasetArray = datasets.getJSONArray("datasets");
-          boolean isCube = false;
-          for (int i= 0; i < datasetArray.length(); i++) {
-            JSONObject dataset = datasetArray.getJSONObject(i);
-            String datasetType = dataset.get("datasetType").toString();
-            if (datasetType.equals(DataSetType.CUBE.toString())) {
-              isCube = true;
-              break;
-            }
+        for (ConfigFolderReportDTO reportDto : configReportDTO) {
+          if (folderIds.contains(reportDto.getFldId())) {
+              try {
+                  JSONObject datasets = new JSONObject(objectMapper.readValue(reportDto.getDatasetXml(), Map.class));
+                  final JSONArray datasetArray = datasets.getJSONArray("datasets");
+                  boolean isCube = false;
+                  
+                  for (int i = 0; i < datasetArray.length(); i++) {
+                      String datasetType = datasetArray.getJSONObject(i).get("datasetType").toString();
+                      if (datasetType.equals(DataSetType.CUBE.toString())) {
+                          isCube = true;
+                          break;
+                      }
+                  }
+                  
+                  reportDto.setCube(isCube);
+                  reportDto.setRegUserNm(userNmCache.computeIfAbsent(reportDto.getRegUserNo(), this::getUserNm));
+                  reportDto.setModUserNm(userNmCache.computeIfAbsent(reportDto.getModUserNo(), this::getUserNm));
+                  
+                  resultDTO.add(reportDto);
+              } catch (JsonProcessingException e) {
+                  e.printStackTrace();
+              }
           }
-
-          reportDto.setCube(isCube);
-          reportDto.setRegUserNm(getUserNm(reportDto.getRegUserNo()));
-          reportDto.setModUserNm(getUserNm(reportDto.getModUserNo()));
-
-          resultDTO.add(reportDto);
-        } catch (JsonMappingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (JsonProcessingException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
       }
-    }
 
     return resultDTO;
   };
