@@ -227,17 +227,22 @@ const filterToParameter = (values, columnInfo, dsId) => {
 
 /**
  * 쿼리 실행에 필요한 Request Body 생성
- * @param {*} parameters 매개변수 목록
+ * @param {parameters} parameters 매개변수 목록
+ * @param {getColumnCheck} getColumnCheck 쿼리 검증시 쓰레기값 입력
  * @return {string} parameter
  */
-const generateParameterForQueryExecute = (parameters) => {
+const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
   const parameter = parameters.informations.map((p) => {
     let values = [];
 
     if (parameters.values[p.name]) {
       values = parameters.values[p.name].value;
     } else {
+      // values = p.defaultValue;
       values = [];
+      if (getColumnCheck) {
+        values = ['-', '-'];
+      }
     }
 
     if (values.length == 0 &&
