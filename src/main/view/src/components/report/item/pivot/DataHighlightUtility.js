@@ -85,6 +85,14 @@ export const isDataCell = (cell, area, highlight) => {
   }
 };
 
+export const isTotalCell = (cell) =>
+  cell.type === 'T' ||
+  cell.type === 'GT' ||
+  cell.rowType === 'T' ||
+  cell.rowType === 'GT' ||
+  cell.columnType === 'T' ||
+  cell.columnType === 'GT';
+
 // 홈앤쇼핑 커스터마이징
 // 변동측정값 서식 적용
 export const addStyleVariationValue = (formData, cell) => {
