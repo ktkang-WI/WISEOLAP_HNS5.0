@@ -62,7 +62,7 @@ const FilterBarWrapper = (props) => {
       dispatch(startJob('필터 데이터를 조회 중입니다.'));
       executeParameters();
     }
-  }, [parameters.informations, parameters.values]);
+  }, [parameters.informations]);
 
   useEffect(() => {
     if (parameters.informations.length != 0 &&
