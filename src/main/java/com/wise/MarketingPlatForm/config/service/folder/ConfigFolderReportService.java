@@ -33,7 +33,6 @@ public class ConfigFolderReportService {
     List<ConfigFolderReportDTO> resultDTO = configFolderDTO;
     ObjectMapper objectMapper = new ObjectMapper();
     
-    Map<Integer, String> userNmCache = new HashMap<>();
     Set<Integer> folderIds = configFolderDTO.stream()
         .map(ConfigFolderReportDTO::getFldId)
         .collect(Collectors.toSet());
@@ -54,9 +53,6 @@ public class ConfigFolderReportService {
                   }
                   
                   reportDto.setCube(isCube);
-                  reportDto.setRegUserNm(userNmCache.computeIfAbsent(reportDto.getRegUserNo(), this::getUserNm));
-                  reportDto.setModUserNm(userNmCache.computeIfAbsent(reportDto.getModUserNo(), this::getUserNm));
-                  
                   resultDTO.add(reportDto);
               } catch (JsonProcessingException e) {
                   e.printStackTrace();
@@ -97,14 +93,5 @@ public class ConfigFolderReportService {
     return configFolderDTO;
   };
   
-  public String getUserNm(int userNo) {
-    UserDTO user = configDao.selectUserByUserNo(userNo);
-    if (user != null) {
-        return user.getUserNm();
-    } else {
-        // 사용자 정보가 없을 때 null
-        return null;
-    }
-  }
 }
 

@@ -36,8 +36,10 @@
       <result column="USER_ID" property="userId" javaType="String"/>
       <result column="REG_DT" property="regDt" javaType="String"/> <!-- 게시 일자 -->
       <result column="REG_USER_NO" property="regUserNo" javaType="int"/> <!-- 게시자 -->
+      <result column="REG_USER_NM" property="regUserNm" javaType="String"/> <!-- 게시자 이름 -->
       <result column="MOD_DT" property="modDt" javaType="String"/> <!-- 최종 수정 일자-->
       <result column="MOD_USER_NO" property="modUserNo" javaType="int"/> <!-- 최종 수정자-->
+      <result column="MOD_USER_NM" property="modUserNm" javaType="String"/> <!-- 최종 수정자 이름 -->
       <result column="GRID_INFO" property="requester" javaType="String"/> <!-- 요청자-->
       <result column="REPORT_TAG" property="reportTag" javaType="String"/>
       <result column="REPORT_ORDINAL" property="reportOrdinal" javaType="String"/>
@@ -316,34 +318,40 @@
 		</select>
     <select id="selectConfigFolderReport" resultMap="ConfigFolderReportDTO">
 			SELECT
-        PUB_FLD_MSTR.FLD_ID,
-        PUB_FLD_MSTR.FLD_NM,
-        PUB_FLD_MSTR.FLD_LVL,
-        PUB_FLD_MSTR.FLD_PARENT_ID,
-        PUB_FLD_MSTR.FLD_ORDINAL,
-        REPORT_MSTR.REPORT_ID,
-        REPORT_MSTR.REPORT_NM,
-        REPORT_MSTR.REPORT_SUB_TITLE,
-        USER_MSTR.USER_ID,
-        REPORT_MSTR.REG_DT, <!-- 게시 일자 -->
-        REPORT_MSTR.REG_USER_NO, <!-- 게시자 -->
-        REPORT_MSTR.MOD_DT, <!-- 최종 수정 일자 -->
-        REPORT_MSTR.MOD_USER_NO, <!-- 최종 수정자 -->
-        REPORT_MSTR.GRID_INFO, <!-- 요청자 -->
-        REPORT_MSTR.REPORT_TAG,
-        REPORT_MSTR.REPORT_ORDINAL,
-        REPORT_MSTR.REPORT_DESC,
-        REPORT_MSTR.REPORT_TYPE,
-        REPORT_MSTR.PROMPT_YN,
-        REPORT_MSTR.MAX_REPORT_PERIOD_YN,
-        REPORT_MSTR.DATASET_XML
-        FROM PUB_FLD_MSTR INNER JOIN REPORT_MSTR
-            ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
-                          INNER JOIN USER_MSTR 
-            ON USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
-            WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
-            AND (USER_MSTR.DEL_YN = 'N' OR USER_MSTR.DEL_YN IS NULL)
-            ORDER BY REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
+      PUB_FLD_MSTR.FLD_ID,
+      PUB_FLD_MSTR.FLD_NM,
+      PUB_FLD_MSTR.FLD_LVL,
+      PUB_FLD_MSTR.FLD_PARENT_ID,
+      PUB_FLD_MSTR.FLD_ORDINAL,
+      REPORT_MSTR.REPORT_ID,
+      REPORT_MSTR.REPORT_NM,
+      REPORT_MSTR.REPORT_SUB_TITLE,
+      REG_USER_MSTR.USER_ID,
+      REPORT_MSTR.REG_DT, <!-- 게시 일자 -->
+      REPORT_MSTR.REG_USER_NO, <!-- 게시자 -->
+      REG_USER_MSTR.USER_NM AS REG_USER_NM, <!-- 게시자 이름 -->
+      REPORT_MSTR.MOD_DT, <!-- 최종 수정 일자 -->
+      REPORT_MSTR.MOD_USER_NO, <!-- 최종 수정자 -->
+      MOD_USER_MSTR.USER_NM AS MOD_USER_NM, <!-- 최종 수정자 이름 -->
+      REPORT_MSTR.GRID_INFO, <!-- 요청자 -->
+      REPORT_MSTR.REPORT_TAG,
+      REPORT_MSTR.REPORT_ORDINAL,
+      REPORT_MSTR.REPORT_DESC,
+      REPORT_MSTR.REPORT_TYPE,
+      REPORT_MSTR.PROMPT_YN,
+      REPORT_MSTR.MAX_REPORT_PERIOD_YN,
+      REPORT_MSTR.DATASET_XML
+      FROM PUB_FLD_MSTR
+      INNER JOIN REPORT_MSTR
+      ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
+      INNER JOIN USER_MSTR REG_USER_MSTR
+      ON REG_USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
+      AND (REG_USER_MSTR.DEL_YN = 'N' OR REG_USER_MSTR.DEL_YN IS NULL)
+      INNER JOIN USER_MSTR MOD_USER_MSTR
+      ON MOD_USER_MSTR.USER_NO = REPORT_MSTR.MOD_USER_NO
+      AND (MOD_USER_MSTR.DEL_YN = 'N' OR MOD_USER_MSTR.DEL_YN IS NULL)
+      WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
+      ORDER BY REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
 		</select>
   
     <select id="selectConfigPrivateFolderReport" resultMap="ConfigFolderReportDTO">

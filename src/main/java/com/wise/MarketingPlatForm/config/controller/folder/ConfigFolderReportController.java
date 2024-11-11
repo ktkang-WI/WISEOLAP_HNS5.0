@@ -93,7 +93,7 @@ public class ConfigFolderReportController {
       .reportNm(configFolderReportDTO.getReportNm())
       .reportSubTitle(configFolderReportDTO.getReportSubTitle())
       .userId(configFolderReportDTO.getUserId())
-      .regDt(configFolderReportDTO.getRegDt())
+      .regDt(configFolderReportDTO.getRegDt()) // 게시일자
       .reportTag(configFolderReportDTO.getReportTag())
       .reportOrdinal(configFolderReportDTO.getReportOrdinal())
       .reportDesc(configFolderReportDTO.getReportDesc())
