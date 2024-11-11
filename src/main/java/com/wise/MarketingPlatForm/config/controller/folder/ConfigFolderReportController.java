@@ -44,7 +44,11 @@ public class ConfigFolderReportController {
       .reportNm(configFolderReportDTO.getReportNm())
       .reportSubTitle(configFolderReportDTO.getReportSubTitle())
       .userId(configFolderReportDTO.getUserId())
-      .regDt(configFolderReportDTO.getRegDt())
+      .regDt(configFolderReportDTO.getRegDt()) // 게시일자
+      .regUserNm(configFolderReportDTO.getRegUserNm()) // 게시자
+      .modDt(configFolderReportDTO.getModDt()) //최종 수정 일자
+      .modUserNm(configFolderReportDTO.getModUserNm()) // 최종 수정자
+      .requester(configFolderReportDTO.getRequester()) // 요청자
       .reportTag(configFolderReportDTO.getReportTag())
       .reportOrdinal(configFolderReportDTO.getReportOrdinal())
       .reportDesc(configFolderReportDTO.getReportDesc())

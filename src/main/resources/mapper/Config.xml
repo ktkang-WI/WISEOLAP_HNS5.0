@@ -34,7 +34,11 @@
       <result column="REPORT_NM" property="reportNm" javaType="String"/>
       <result column="REPORT_SUB_TITLE" property="reportSubTitle" javaType="String"/>
       <result column="USER_ID" property="userId" javaType="String"/>
-      <result column="REG_DT" property="regDt" javaType="String"/>
+      <result column="REG_DT" property="regDt" javaType="String"/> <!-- 게시 일자 -->
+      <result column="REG_USER_NO" property="regUserNo" javaType="int"/> <!-- 게시자 -->
+      <result column="MOD_DT" property="modDt" javaType="String"/> <!-- 최종 수정 일자-->
+      <result column="MOD_USER_NO" property="modUserNo" javaType="int"/> <!-- 최종 수정자-->
+      <result column="GRID_INFO" property="requester" javaType="String"/> <!-- 요청자-->
       <result column="REPORT_TAG" property="reportTag" javaType="String"/>
       <result column="REPORT_ORDINAL" property="reportOrdinal" javaType="String"/>
       <result column="REPORT_DESC" property="reportDesc" javaType="String"/>
@@ -99,6 +103,17 @@
         FROM USER_MSTR
           WHERE DEL_YN = 'N'
             ORDER BY USER_ID ASC
+		</select>
+    <select id="selectUserByUserNo" parameterType="int" resultMap="userList">
+			SELECT
+      USER_NO,
+      GRP_ID,
+      USER_ID,
+      USER_NM
+      FROM USER_MSTR
+      WHERE DEL_YN = 'N'
+      AND USER_NO = #{userNo}
+      ORDER BY USER_ID ASC
 		</select>
     <select id="selectConfigFolder" resultMap="FldMstr">
 			SELECT
@@ -310,7 +325,11 @@
         REPORT_MSTR.REPORT_NM,
         REPORT_MSTR.REPORT_SUB_TITLE,
         USER_MSTR.USER_ID,
-        REPORT_MSTR.REG_DT,
+        REPORT_MSTR.REG_DT, <!-- 게시 일자 -->
+        REPORT_MSTR.REG_USER_NO, <!-- 게시자 -->
+        REPORT_MSTR.MOD_DT, <!-- 최종 수정 일자 -->
+        REPORT_MSTR.MOD_USER_NO, <!-- 최종 수정자 -->
+        REPORT_MSTR.GRID_INFO, <!-- 요청자 -->
         REPORT_MSTR.REPORT_TAG,
         REPORT_MSTR.REPORT_ORDINAL,
         REPORT_MSTR.REPORT_DESC,

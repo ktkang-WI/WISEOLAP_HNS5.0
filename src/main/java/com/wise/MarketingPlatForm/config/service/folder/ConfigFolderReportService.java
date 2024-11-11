@@ -51,7 +51,11 @@ public class ConfigFolderReportService {
               break;
             }
           }
+
           reportDto.setCube(isCube);
+          reportDto.setRegUserNm(getUserNm(reportDto.getRegUserNo()));
+          reportDto.setModUserNm(getUserNm(reportDto.getModUserNo()));
+
           resultDTO.add(reportDto);
         } catch (JsonMappingException e) {
           // TODO Auto-generated catch block
@@ -95,4 +99,15 @@ public class ConfigFolderReportService {
     
     return configFolderDTO;
   };
+  
+  public String getUserNm(int userNo) {
+    UserDTO user = configDao.selectUserByUserNo(userNo);
+    if (user != null) {
+        return user.getUserNm();
+    } else {
+        // 사용자 정보가 없을 때 null
+        return null;
+    }
+  }
 }
+
