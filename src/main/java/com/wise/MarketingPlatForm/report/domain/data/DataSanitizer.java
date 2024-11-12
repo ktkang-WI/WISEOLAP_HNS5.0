@@ -433,8 +433,8 @@ public final class DataSanitizer {
                                     return true;
                                 }
 
-                                return StringUtils.containsAny(value.toString(),
-                                    entry.getValue().toArray(new CharSequence[0]));
+                                return entry.getValue().stream()
+                                    .anyMatch(v -> v.equals(value.toString()));
                             }))
                     .collect(Collectors.toList());
         }
