@@ -138,7 +138,7 @@ const CheckBoxs = ({onValueChanged, checkboxs, ...props}) => {
   return (
     <StyledUl>
       {checkboxs.map((item, index) =>
-        <CheckBox
+        (item.visible !== false) && <CheckBox
           key={index}
           title={item.title}
           id={item.type}
@@ -165,7 +165,8 @@ export const ImgCheckBox = ({onValueChanged, ...props}) => {
         <CheckBoxs
           onValueChanged={onValueChanged}
           title={props.title}
-          checkboxs={props.checkboxs}/>
+          checkboxs={props.checkboxs}
+        />
       }
     </StyledWrapper>
   );

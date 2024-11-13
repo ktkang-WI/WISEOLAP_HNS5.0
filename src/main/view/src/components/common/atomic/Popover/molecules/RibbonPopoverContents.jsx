@@ -90,17 +90,23 @@ const popoverContents = (element, popoverType, titlePanel) => {
 };
 
 const RibbonPopoverContents = ({popoverType, titlePanel, id, element}) => {
-  if (id == 'add_default_chart' || id == 'add_custom_chart') {
+  if (id === 'add_default_chart' || id === 'add_custom_chart' ||
+     id === 'download_report') {
     const {data, onClick} = element;
 
     return (
-      <div style={{width: '500px', padding: '15px', paddingTop: '5px'}}>
+      <div style={{
+        width: id !== 'download_report' ? '500px' : '320px',
+        padding: '15px',
+        paddingTop: '5px'
+      }}>
         {data.map((item, index) =>
           <ImgCheckBox key={index}
             onValueChanged={(e) => onClick(e.target.id)}
             title={item.title}
             useChecked={false}
-            checkboxs={item.checkboxs} />)}
+            checkboxs={item.checkboxs}
+          />)}
       </div>
     );
   } else {
