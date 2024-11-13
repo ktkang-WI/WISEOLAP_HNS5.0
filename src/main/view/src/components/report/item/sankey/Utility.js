@@ -1,4 +1,4 @@
-import {defaultDimension}
+import {defaultDimension, defaultMeasure}
   from 'components/report/item/util/martUtilityFactory';
 import {DataFieldType} from '../util/dataFieldType';
 // import {setMeta} from '../util/metaUtilityFactory';
@@ -31,7 +31,13 @@ const getDataFieldOptionChild = () => {
     ...defaultDimension
   };
 
+  const dataFieldMeasure = {
+    ...defaultMeasure,
+    limit: 1
+  };
+
   return {
+    [DataFieldType.MEASURE]: dataFieldMeasure,
     [DataFieldType.DIMENSION]: dataFieldDimension
   };
 };
@@ -58,9 +64,7 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'YAxisSetting',
     'Palette',
-    'ColorEdit',
     'InputTxt'
   ];
 };
@@ -71,7 +75,6 @@ const getRibbonItems = () => {
  */
 const getAttributeItems = () => {
   return [
-    'InteractionNoDrillDown',
     'InteractionConfiguration'
   ];
 };
