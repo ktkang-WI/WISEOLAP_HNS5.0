@@ -3,6 +3,7 @@ import {getTheme} from 'config/theme';
 import {getConfig} from 'config/config';
 import AnimatedButton from '../../Common/Button/AnimatedButton';
 import snbDefaultElement from './SNBDefaultElement';
+import {Popover} from 'devextreme-react';
 
 const theme = getTheme();
 const useSNBDrawer = getConfig('useSNBDrawer');
@@ -56,10 +57,25 @@ const getSNBItem = (item) => {
           onClick={item.onClick}
           path={item.path}
           active={item.active}
+          id={item.id}
         />
+        {item.isPopover &&
+        popOverIterator(item)}
       </ItemWrapper>
     );
   }
+};
+
+const popOverIterator = (item) => {
+  return (
+    <Popover
+      target={item.target}
+      showEvent={item.showEvent}
+      position={item.position}
+    >
+      {item.content}
+    </Popover>
+  );
 };
 
 const itemIterator = (snbDefaultItems, items) => {
