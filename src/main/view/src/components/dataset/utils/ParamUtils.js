@@ -240,9 +240,6 @@ const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
     } else {
       // values = p.defaultValue;
       values = [];
-      if (getColumnCheck) {
-        values = ['-', '-'];
-      }
     }
 
     if (values.length == 0 &&
@@ -261,6 +258,10 @@ const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
           values.push(value);
         }
       });
+    } else {
+      if (getColumnCheck) {
+        values = ['-', '-'];
+      }
     }
 
     return {
