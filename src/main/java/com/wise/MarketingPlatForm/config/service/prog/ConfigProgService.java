@@ -11,6 +11,7 @@ public class ConfigProgService {
     .adhoc(false)
     .spreadSheet(false)
     .settings(false)
+    .excelUploadResourceMap (false)
     .reportQueryPeriod(false)
     .viewQuery(false)
     .reportConfiguration(false)

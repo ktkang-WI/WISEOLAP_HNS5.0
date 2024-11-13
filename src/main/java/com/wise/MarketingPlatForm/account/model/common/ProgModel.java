@@ -17,6 +17,8 @@ public class ProgModel {
   Boolean adhoc;
   Boolean spreadSheet;
   Boolean settings;
+  @Builder.Default
+  Boolean excelUploadResourceMap = false;
   // ReportManagement
   Boolean reportQueryPeriod;
   Boolean viewQuery;
@@ -39,6 +41,7 @@ public class ProgModel {
       .adhoc(model1.adhoc || model2.adhoc)
       .spreadSheet(model1.spreadSheet || model2.spreadSheet)
       .settings(model1.settings || model2.settings)
+      .excelUploadResourceMap(model1.excelUploadResourceMap || model2.excelUploadResourceMap)
       .reportQueryPeriod(model1.reportQueryPeriod || model2.reportQueryPeriod)
       .viewQuery(model1.viewQuery || model2.viewQuery)
       .reportConfiguration(model1.reportConfiguration || model2.reportConfiguration)
