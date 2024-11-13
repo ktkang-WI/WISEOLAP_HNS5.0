@@ -44,4 +44,6 @@ public class UserDTO implements Serializable{
     String accountCreateDt = "";
     @Builder.Default
     int isChangePw = 0;
+    @Builder.Default
+    String sessionUserKey = "";
 }

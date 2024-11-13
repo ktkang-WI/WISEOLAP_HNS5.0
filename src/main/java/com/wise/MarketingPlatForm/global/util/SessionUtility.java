@@ -150,6 +150,7 @@ public class SessionUtility {
                 .userDesc(entity.getUserDesc())
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
                 .userNm(entity.getUserNm())
+                .sessionUserKey(sessionId)
                 .build();
     }
     
