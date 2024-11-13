@@ -64,9 +64,7 @@ const getRibbonItems = () => {
   return [
     'CaptionView',
     'NameEdit',
-    'YAxisSetting',
     'Palette',
-    'ColorEdit',
     'InputTxt'
   ];
 };
