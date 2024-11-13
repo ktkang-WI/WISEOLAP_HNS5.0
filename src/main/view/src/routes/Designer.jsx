@@ -128,6 +128,7 @@ const Designer = () => {
     if (prog.adhoc) tabItems.push('AdHoc');
     if (prog.spreadSheet) tabItems.push('Spreadsheet');
     if (prog.settings) tabItems.push('Preference');
+    if (prog.excelUploadResourceMap ) tabItems.push('ExcelResource');
 
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);

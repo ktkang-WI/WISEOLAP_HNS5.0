@@ -21,7 +21,8 @@ const ProgList = ({mainKey, dependency}) => {
       {dataField: 'dashboard', label: '대시보드'},
       {dataField: 'adhoc', label: '비정형보고서'},
       {dataField: 'spreadSheet', label: '스프레드 시트'},
-      {dataField: 'settings', label: '환경설정'}
+      {dataField: 'settings', label: '환경설정'},
+      {dataField: 'excelUploadResourceMap', label: '엑셀 업로드/리소스맵'}
     ],
     reportManagement: [
       {dataField: 'reportQueryPeriod', label: '보고서 조회 기간 설정'},

@@ -85,6 +85,9 @@ public class SessionUtility {
         } finally {
             request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
         }
+        if (userDTO != null) {
+            userDTO.setSessionUserKey(getSessionId(request.getSession()));
+        }
         return userDTO;
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
