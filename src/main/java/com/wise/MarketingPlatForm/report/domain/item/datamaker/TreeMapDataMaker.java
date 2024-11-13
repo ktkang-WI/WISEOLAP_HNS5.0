@@ -1,10 +1,12 @@
 package com.wise.MarketingPlatForm.report.domain.item.datamaker;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.wise.MarketingPlatForm.dataset.type.DsType;
 import com.wise.MarketingPlatForm.report.domain.data.DataAggregation;
@@ -17,6 +19,7 @@ import com.wise.MarketingPlatForm.report.domain.result.ReportResult;
 import com.wise.MarketingPlatForm.report.domain.result.result.CommonResult;
 
 public class TreeMapDataMaker implements ItemDataMaker {
+    int idCounter = 1;
 
     @Override
     public ReportResult make(DataAggregation dataAggregation, List<Map<String, Object>> data) {
@@ -58,24 +61,7 @@ public class TreeMapDataMaker implements ItemDataMaker {
             dimNames.add(dim.getName());
         }
 
-        for (Map<String, Object> row : data) {
-            if (dimNames.size() == 0) {
-                row.put("arg", "Grand Total");
-            }
-
-            if (dimNames.size() == 1) {
-                row.put("arg", row.get(dimNames.get(0)));
-            }
-
-            if (dimNames.size() >= 2) {
-                List<String> args = new ArrayList<>();
-                for (String name : dimNames) {
-                    args.add(String.valueOf(row.get(name)));
-                }
-                Collections.reverse(args);
-                row.put("arg", String.join("<br/>", args));
-            }
-        }
+        data = convertToTreeMapData(data, dimNames, measures.get(0).getSummaryName());
 
         for (Measure measure : measures) {
             seriesMeasureNames.add(measure);
@@ -87,4 +73,54 @@ public class TreeMapDataMaker implements ItemDataMaker {
         return result;
     }
 
+    public List<Map<String, Object>> convertToTreeMapData(
+            List<Map<String, Object>> data, List<String> groupFields, String valueField) {
+        
+        List<Map<String, Object>> result = new ArrayList<>();
+        convertGroup(data, groupFields, valueField, 0, null, result);
+        
+        return result;
+    }
+
+    private void convertGroup(
+            List<Map<String, Object>> data, List<String> groupFields, String valueField,
+            int groupIdx, String parentId, List<Map<String, Object>> result) {
+        
+        if (groupIdx >= groupFields.size()) return;
+        
+        String currentGroupField = groupFields.get(groupIdx);
+        
+        Map<Object, List<Map<String, Object>>> groupedData = data.stream()
+                .collect(Collectors.groupingBy(item -> item.get(currentGroupField)));
+        
+        for (Map.Entry<Object, List<Map<String, Object>>> entry : groupedData.entrySet()) {
+            Map<String, Object> groupNode = new HashMap<>();
+            Map<String, Object> item = entry.getValue().get(0);
+            String currentId = String.valueOf(idCounter++);
+            
+            groupNode.put("id", currentId);
+            groupNode.put("name", entry.getKey());
+
+            
+            String args = groupFields.stream()
+                .limit(groupIdx + 1)
+                .map(field -> String.valueOf(item.get(field)))
+                .collect(Collectors.joining(" - "));
+        
+            groupNode.put("args", args);
+            
+            if (parentId != null) {
+                groupNode.put("parentId", parentId);
+            }
+            
+            if (groupIdx < groupFields.size() - 1) {
+                convertGroup(entry.getValue(), groupFields, valueField, groupIdx + 1, currentId, result);
+            } else {
+                groupNode.put("value", new BigDecimal(String.valueOf(item.get(valueField))));
+                groupNode.put("originalData", item);
+            }
+            
+            result.add(groupNode);
+        }
+    }
 }
