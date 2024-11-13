@@ -38,7 +38,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 
 const useReportSave = () => {
   const dispatch = useDispatch();
-  const {alert, confirm} = useModal();
+  const {alert} = useModal();
   const {executeItems, executeSpread, executeValidata} = useQueryExecute();
   const editMode = useSelector(selectEditMode);
 
@@ -571,10 +571,11 @@ const useReportSave = () => {
           // 기존: (보고서 조회를 위한 달력(BETWEEN) 매개변수가 반드시 필요합니다.\n 매개변수를 확인해주세요.)
           // eslint-disable-next-line max-len
           // throw new Error('먼저 제공된 날짜 필터를 설정해 주세요.');
-          confirm('날짜 필터(BETWEEN) 가 없을 경우 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?',
-              () => {
-                execute();
-              });
+          // confirm('날짜 필터(BETWEEN) 가 없을 경우
+          // 데이터 조회에 많은 시간이 소요될 수 있습니다. 계속하시겠습니까?',
+          //     () => {
+          //     });
+          execute();
           return;
         }
       }

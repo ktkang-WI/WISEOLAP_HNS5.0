@@ -21,6 +21,7 @@ public interface ConfigDAO {
   public List<ConfigFolderDTO> selectConfigFolderGroup();
   public List<ConfigFolderDatasetDTO> selectConfigFolderDataset();
   public List<UserDTO> selectUserList();
+  public UserDTO selectUserByUserNo(int userNo);
   public List<FldMstrEntity> selectConfigFolder();
   public List<ConfigFolderReportDTO> selectConfigPrivateFolderReport(int userNo);
   public List<ConfigFolderReportDTO> selectConfigPrivateFolders(int userNo);

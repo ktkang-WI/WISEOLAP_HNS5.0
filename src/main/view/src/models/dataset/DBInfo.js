@@ -39,7 +39,8 @@ export const getTablesByMart = (dsId, searchValue) => {
  * @return {axios}
  */
 export const getDataByQueryMart = (dsId, query, parameters) => {
-  const parameter = ParamUtils.generateParameterForQueryExecute(parameters);
+  const parameter =
+      ParamUtils.generateParameterForQueryExecute(parameters, true);
 
   return axios.post(path + '/query-dataset-datas', {
     dsId: parseInt(dsId),

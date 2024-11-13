@@ -136,14 +136,65 @@ const ReportInformation = ({row, setRow, flag}) => {
           <RequiredRule message={localizedString.validationFolderSelect}/>
           <Label>{localizedString.folderManagement}</Label>
         </SimpleItem>}
+        {/* {flag && <SimpleItem
+          dataField="fldParentNm"
+          editorType="dxTextBox"
+          readOnly={true}
+          editorOptions={{
+            readOnly: true,
+            buttons: [folderSearchBtn],
+            elementAttr: {
+              id: 'fldParentName'
+            }
+          }}
+        >
+          <RequiredRule message={localizedString.validationFolderSelect}/>
+          <Label>{localizedString.folderManagement}</Label>
+        </SimpleItem>} */}
         {!flag && <SimpleItem
-          dataField="regDt"
+          dataField="regDt" // 게시일자
           editorType="dxTextBox"
           editorOptions= {{
             disabled: true
           }}
         >
           <Label>{localizedString.registerDate}</Label>
+        </SimpleItem>}
+        {!flag && <SimpleItem
+          dataField="regUserNm" // 게시자
+          editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
+        >
+          <Label>{'게시자'}</Label>
+        </SimpleItem>}
+        {!flag && <SimpleItem
+          dataField="modDt" // 최종 수정 일자
+          editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
+        >
+          <Label>{'최종 수정 일자'}</Label>
+        </SimpleItem>}
+        {!flag && <SimpleItem
+          dataField="modUserNm" // 최종 수정자
+          editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
+        >
+          <Label>{'최종 수정자'}</Label>
+        </SimpleItem>}
+        {!flag && <SimpleItem
+          dataField="requester" // 요청자
+          editorType="dxTextBox"
+          editorOptions= {{
+            disabled: true
+          }}
+        >
+          <Label>{'요청자'}</Label>
         </SimpleItem>}
         <SimpleItem
           dataField="reportTag"

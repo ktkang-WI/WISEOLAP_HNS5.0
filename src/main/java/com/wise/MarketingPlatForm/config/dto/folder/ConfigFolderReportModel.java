@@ -20,7 +20,11 @@ public class ConfigFolderReportModel {
   String reportNm;
   String reportSubTitle;
   String userId;
-  String regDt;
+  String regDt; // 게시 일자
+  String regUserNm; // 게시자
+  String modDt; // 최종 수정 일자
+  String modUserNm; // 최종 수정자
+  String requester; // 요청자
   String reportTag;
   String reportOrdinal;
   String reportDesc;

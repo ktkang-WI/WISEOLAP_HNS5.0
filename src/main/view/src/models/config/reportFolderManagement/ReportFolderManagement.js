@@ -91,6 +91,11 @@ export class Report {
   fldType = '';
   reportOrdinal = 0;
   reportType = '';
+  regDt = ''; // 게시 일자
+  regUserNm = ''; // 게시자
+  modDt = ''; // 최종 수정 일자
+  modUserNm = ''; // 최종 수정자
+  requester = ''; // 요청자
   reportTag = '';
   reportDesc = '';
   fldParentNm = '';
@@ -100,6 +105,7 @@ export class Report {
   constructor({reportId = 0, reportNm = '', reportSubTitle = '', fldId = 0,
     fldLvl = 0, fldNm = '', fldParentId = 0, fldType = 'PUBLIC',
     reportOrdinal = 0, reportType ='', reportTag = '',
+    regDt = '', regUserNm = '', modDt = '', modUserNm = '', requester = '',
     reportDesc = '', fldParentNm = '', promptYn = false,
     maxReportPeriodYn = false, cube=false}) {
     this.reportId = reportId;
@@ -113,6 +119,11 @@ export class Report {
     this.reportOrdinal = reportOrdinal;
     this.reportType = reportType;
     this.reportTag = reportTag;
+    this.regDt = regDt; // 게시 일자
+    this.regUserNm = regUserNm; // 게시자
+    this.modDt = modDt; // 최종 수정 일자
+    this.modUserNm = modUserNm; // 최종 수정자
+    this.requester = requester; // 요청자
     this.reportDesc = reportDesc;
     this.fldParentNm = fldParentNm;
     this.promptYn = promptYn;

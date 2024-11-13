@@ -37,6 +37,7 @@ public class MyPageDesignerConfigController {
     model.setUserId(userDTO.getUserId()); 
     model.setRunMode(userDTO.getRunMode());
     model.setGrpRunMode(userDTO.getGrpRunMode());
+    model.setSessionUserKey(userDTO.getSessionUserKey());
   
     return RestAPIVO.okResponse(model);
   } 
