@@ -45,10 +45,10 @@ public class PortalService {
                 "      '예상취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(EXPC_HDAMT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_EXPC_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(PVMN_EXPC_HDAMT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(PVMN_EXPC_HDAMT) * 100, 'FM999990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(EXPC_GOAL_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(EXPC_GOAL_HDAMT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(EXPC_GOAL_HDAMT) * 100, 'FM999990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
@@ -61,10 +61,10 @@ public class PortalService {
                 "      '실현취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(RLZ_HDAMT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_RLZ_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(PVMN_RLZ_HDAMT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(PVMN_RLZ_HDAMT) * 100, 'FM999990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(RLZ_GOAL_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(RLZ_GOAL_HDAMT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(RLZ_GOAL_HDAMT) * 100, 'FM999990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
@@ -78,10 +78,10 @@ public class PortalService {
                 "      '실현공헌이익(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(RLZ_CTTN_PFT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_RLZ_CTTN_PFT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(PVMN_RLZ_CTTN_PFT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(PVMN_RLZ_CTTN_PFT) * 100, 'FM999990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(RLZ_GOAL_CTTN_PFT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(RLZ_GOAL_CTTN_PFT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(RLZ_GOAL_CTTN_PFT) * 100, 'FM999990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
@@ -124,10 +124,10 @@ public class PortalService {
                         "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
                         "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"전년비\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"계획비\"\n" +
                         // " ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" + //
                         // %%는 %를 나타냄
@@ -144,10 +144,10 @@ public class PortalService {
                         "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
                         "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"전년비\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"계획비\"\n" +
                         "FROM MISDM.DM_F_MAIN_SCRN_DAIL_GATHER\n" +
                         "WHERE MAIN_SCRN_TIT = '카드_02.실현취급액" + type + "'\n" +
@@ -161,10 +161,10 @@ public class PortalService {
                         "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
                         "    ROUND(MAIN_SCRN_AMT_2/" + moneyUnit + ",0) AS \"금액\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"전년비\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_3 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"계획비\"\n" +
                         // " ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
                         // " ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_3)*100,1)||'%%' AS \"계획비\"\n" +
@@ -180,7 +180,7 @@ public class PortalService {
                         "    MAIN_SCRN_GATHER_DATE AS \"일자\",\n" +
                         "    ROUND(MAIN_SCRN_AMT_2/" + humanUnit + ",0) AS \"금액\",\n" +
                         "    CASE WHEN MAIN_SCRN_AMT_1 = 0 THEN 0 || '%%'\n" +
-                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM9990.0')||'%%'\n" +
+                        "    ELSE TO_CHAR(ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100 - 100,1), 'FM999990.0')||'%%'\n" +
                         "    END \"전년비\",\n" +
                         // " ROUND((MAIN_SCRN_AMT_2/MAIN_SCRN_AMT_1)*100,1)||'%%' AS \"전년비\",\n" +
                         "    '' AS \"계획비\"  -- 해당 데이터가 없으므로 빈 칸 처리\n" +
@@ -221,7 +221,7 @@ public class PortalService {
         String sql = "SELECT MD_TEAM_NM\r\n" +
                         "\tFROM MISDM.VW_MAIN_IM_TEAM_FILTER\r\n" +
                         "\tWHERE GATHER_BASE_DATE = '" + date + "'" +
-                        "\tAND MD_TEAM_NM NOT IN('비매핑', '기타')" +
+                        "\tAND MD_TEAM_NM NOT IN('비매핑')" +
                         "\tORDER BY MD_TEAM_ORD";
 
         MartResultDTO martResultDTO = null;
