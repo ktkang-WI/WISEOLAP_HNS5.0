@@ -221,6 +221,7 @@ public class PortalService {
         String sql = "SELECT MD_TEAM_NM\r\n" +
                         "\tFROM MISDM.VW_MAIN_IM_TEAM_FILTER\r\n" +
                         "\tWHERE GATHER_BASE_DATE = '" + date + "'" +
+                        "\tAND MD_TEAM_NM NOT IN('비매핑', '기타')" +
                         "\tORDER BY MD_TEAM_ORD";
 
         MartResultDTO martResultDTO = null;
