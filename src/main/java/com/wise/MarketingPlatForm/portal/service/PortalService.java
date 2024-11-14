@@ -45,10 +45,10 @@ public class PortalService {
                 "      '예상취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(EXPC_HDAMT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_EXPC_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(PVMN_EXPC_HDAMT) * 100, 'FM9990.0') || '%%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(PVMN_EXPC_HDAMT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(EXPC_GOAL_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(EXPC_GOAL_HDAMT) * 100, 'FM9990.0') || '%%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(EXPC_HDAMT) / SUM(EXPC_GOAL_HDAMT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
@@ -61,10 +61,10 @@ public class PortalService {
                 "      '실현취급액(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(RLZ_HDAMT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_RLZ_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(PVMN_RLZ_HDAMT) * 100, 'FM9990.0') || '%%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(PVMN_RLZ_HDAMT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(RLZ_GOAL_HDAMT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(RLZ_GOAL_HDAMT) * 100, 'FM9990.0') || '%%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(RLZ_HDAMT) / SUM(RLZ_GOAL_HDAMT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
@@ -78,10 +78,10 @@ public class PortalService {
                 "      '실현공헌이익(" + moneyUnitStr + ")' AS \"구분\",\n" +
                 "      ROUND(SUM(RLZ_CTTN_PFT) / " + moneyUnit + ", 0) AS \"금액\",\n" +
                 "      CASE WHEN SUM(PVMN_RLZ_CTTN_PFT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(PVMN_RLZ_CTTN_PFT) * 100, 'FM9990.0') || '%%' END AS \"전월비\",\n"
+                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(PVMN_RLZ_CTTN_PFT) * 100, 'FM9990.0') || '%' END AS \"전월비\",\n"
                 +
                 "      CASE WHEN SUM(RLZ_GOAL_CTTN_PFT) = 0 THEN NULL \n" +
-                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(RLZ_GOAL_CTTN_PFT) * 100, 'FM9990.0') || '%%' END AS \"계획비\"\n"
+                "           ELSE TO_CHAR(SUM(RLZ_CTTN_PFT) / SUM(RLZ_GOAL_CTTN_PFT) * 100, 'FM9990.0') || '%' END AS \"계획비\"\n"
                 +
                 "FROM MISDM.MAIN_EXPC_RLZ_CTTN_GATHER\n" +
                 "WHERE " +
