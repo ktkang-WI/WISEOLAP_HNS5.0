@@ -1,4 +1,4 @@
-const Card = ({title, amount, percentData, imgSrc}) => {
+const Card = ({title, amount, percentData, imgSrc, unit}) => {
   const piece = title.split('(');
   const _title = piece[0];
   const _unit = '(' + piece[1];
@@ -37,7 +37,8 @@ const Card = ({title, amount, percentData, imgSrc}) => {
         <img src={imgSrc} alt="" />
         <div className="percent_box">
           {percentData.previous &&
-            <p>전년比 : <span>{getIcon(percentData.previous)}</span>
+            <p>전{unit == 'year' ? '년' : '월'}比 :
+              <span>{getIcon(percentData.previous)}</span>
               <span>
                 {percentData.previous.replace('-', '')}
               </span>

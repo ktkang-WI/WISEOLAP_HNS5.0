@@ -51,7 +51,7 @@ export default function useAxiosSetting() {
 
   axios.interceptors.request.use(
       (config) => {
-        if (config.url.indexOf('portal/card-data') == -1) {
+        if (config.url.indexOf('card-data') == -1) {
           dispatch(actions.startJob());
         }
         return config;

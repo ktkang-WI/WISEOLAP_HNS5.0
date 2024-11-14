@@ -124,6 +124,10 @@ const router = createBrowserRouter([
     element: <Portal/>
   },
   {
+    path: contextPath + '/adportal',
+    element: <Portal admin={true}/>
+  },
+  {
     path: contextPath + '/viewer',
     element: <Viewer/>,
     loader: multipleLoader
