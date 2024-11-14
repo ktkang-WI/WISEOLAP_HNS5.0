@@ -124,7 +124,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     if (dataset?.cubeId == 6184) {
       // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
       // if (cell?.rowPath && cell?.rowPath[0] === '총취급액') {
-      if (cell.rowPath[1] === '일목표금액') {
+      if (cell?.rowPath && cell.rowPath[1] === '일목표금액') {
         console.log(cell.rowPath);
         console.log(cell);
         cellElement.style.display = 'none';
@@ -133,7 +133,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
     if (area == 'row') {
       //  if (cell?.path && cell.path[0] === '총취급액') {
-      if (cell.path[1] === '일목표금액') {
+      if (cell?.path && cell.path[1] === '일목표금액') {
         cellElement.style.display = 'none';
         console.log(cell.rowPath);
         console.log(cell);
