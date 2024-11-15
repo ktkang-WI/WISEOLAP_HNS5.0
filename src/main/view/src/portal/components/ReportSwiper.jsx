@@ -7,14 +7,29 @@ import 'swiper/css/pagination';
 import {format} from 'date-fns';
 import React, {useMemo} from 'react';
 
-const ReportSwiper = ({portalUrl, userId, date, type, team}) => {
+const ReportSwiper = ({
+  portalUrl,
+  userId,
+  date,
+  type,
+  team,
+  admin
+}) => {
   let reportIds = []; // , 13398
 
   if (date != null) {
-    if (type === '년누적') {
-      reportIds = [13503, 13505, 13550, 13551, 13506];
+    if (admin) {
+      if (type === '년누적') {
+        reportIds = [13787, 13790, 13791];
+      } else {
+        reportIds = [13774, 13788, 13792];
+      }
     } else {
-      reportIds = [13548, 13549, 13550, 13551, 13397];
+      if (type === '년누적') {
+        reportIds = [13503, 13505, 13550, 13551, 13506];
+      } else {
+        reportIds = [13548, 13549, 13550, 13551, 13397];
+      }
     }
   }
 

@@ -332,6 +332,7 @@ const Portal = ({admin = false}) => {
           date={date}
           team={team}
           userId={userId}
+          admin={admin}
         />
         {getQuickBoxs()}
       </div>
