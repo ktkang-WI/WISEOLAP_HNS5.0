@@ -43,6 +43,7 @@ const GeneralConfigure = () => {
   const items = [
     {
       'title': localizedString.config.general.licenseInfo,
+      'visible': !readOnlyValue,
       'items': [
         ...licenseInformationTextBox.map((field) =>
           createTextBoxReadOnlyItemProperties(
