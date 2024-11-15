@@ -20,9 +20,9 @@ const ReportSwiper = ({
   if (date != null) {
     if (admin) {
       if (type === '년누적') {
-        reportIds = [13787, 13790, 13791];
+        reportIds = [13787, 13790, 13791, 13801];
       } else {
-        reportIds = [13774, 13788, 13792];
+        reportIds = [13774, 13788, 13792, 13799];
       }
     } else {
       if (type === '년누적') {
