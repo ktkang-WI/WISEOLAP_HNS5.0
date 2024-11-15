@@ -14,8 +14,9 @@ const Cards = ({cardData}) => {
           amount={d['금액']}
           percentData={{
             previous: d['전년비'] || d['전월비'],
-            plan: d['계획비'],
-            unit: d['전월비'] ? 'month' : 'year'}}
+            plan: d['계획비']
+          }}
+          unit={d['전월비'] ? 'month' : 'year'}
           imgSrc={require('../img/con_bg' + (i + 1) + '.png')}
         />
       );
