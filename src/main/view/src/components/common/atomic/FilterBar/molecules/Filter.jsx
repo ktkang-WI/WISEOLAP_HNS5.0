@@ -4,9 +4,6 @@ import {getTheme} from 'config/theme';
 import InputFilter from '../atom/InputFilter';
 import ListFilter from '../atom/ListFilter';
 import CalendarFilter from '../atom/CalendarFilter';
-import {EditMode} from 'components/config/configType';
-import {useSelector} from 'react-redux';
-import {selectEditMode} from 'redux/selector/ConfigSelector';
 
 const theme = getTheme();
 
@@ -35,8 +32,6 @@ const DeleteButton = styled.div`
 
 // TODO: 추후 각 필터에 onChangeValue 받아서 이벤트 처리 예정
 const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
-  const editMode = useSelector(selectEditMode);
-
   const getParamId = (id) => {
     return id.slice(1);
   };
@@ -67,7 +62,7 @@ const Filter = ({info, value, isTo, onValueChanged, onDeleted}) => {
         {isTo ? '~' : '\u2022 ' + info.caption}
       </FilterLabel>
       {getFilter(info.paramType)}
-      {onDeleted && editMode === EditMode.DESIGNER &&
+      {onDeleted &&
         <DeleteButton onClick={() => {
           onDeleted();
         }}>X</DeleteButton>

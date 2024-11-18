@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.map.LazyMap;
+import org.apache.commons.jexl3.JexlArithmetic;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlContext;
 import org.apache.commons.jexl3.JexlEngine;
@@ -22,6 +23,19 @@ import com.wise.MarketingPlatForm.report.domain.item.pivot.aggregator.util.Pivot
 
 @Service
 public class ExpressionEngine {
+    class CustomArithmetic extends JexlArithmetic {
+        public CustomArithmetic(boolean strict) {
+            super(strict);
+        }
+    
+        @Override
+        public Object divide(Object left, Object right) {
+            if (right instanceof Number && ((Number) right).doubleValue() == 0) {
+                return 0;
+            }
+            return super.divide(left, right);
+        }
+    }
 
     private static Logger log = LoggerFactory.getLogger(ExpressionEngine.class);
 
@@ -39,7 +53,7 @@ public class ExpressionEngine {
         final Map<String, Object> globalNamespace = new HashMap<>();
         globalNamespace.put(null, new PivotFunctions());
 
-        jexl = new JexlBuilder().permissions(null).namespaces(globalNamespace).create();
+        jexl = new JexlBuilder().permissions(null).arithmetic(new CustomArithmetic(true)).namespaces(globalNamespace).create();
     }
 
     public JexlEngine getJexl() {
