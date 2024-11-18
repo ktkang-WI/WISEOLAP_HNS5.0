@@ -15,10 +15,11 @@ const customFunctions = {
   Iif: ExpressionFunctions.Iif,
   IsNull: ExpressionFunctions.IsNull,
   IsNullOrEmpty: ExpressionFunctions.IsNullOrEmpty,
-  ToBoolean: ExpressionFunctions.ToBoolean
+  ToBoolean: ExpressionFunctions.ToBoolean,
+  divide: (a, b) => (b === 0 ? 0 : a / b)
 };
 
-math.import(customFunctions);
+math.import(customFunctions, {override: true});
 
 class ExpressionEngine {
   constructor() {
