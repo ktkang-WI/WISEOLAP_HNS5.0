@@ -855,6 +855,7 @@ const Wrapper = styled.div`
   #portal_user_info {
     position: absolute;
     right: 30px;
+    display: flex;
   }
 
   #portal_user_info img {

@@ -6,6 +6,8 @@ import UserInfoPopover
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import {useEffect, useState} from 'react';
 import models from 'models';
+import DropdownBoxReportSearch
+  from 'components/common/atomic/Header/atom/DropdownBoxReportSearch';
 
 const Header = ({
   PORTAL_URL,
@@ -16,6 +18,18 @@ const Header = ({
   admin
 }) => {
   const [portalReportList, setPortalReportList] = useState({});
+
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    // 1초마다 현재 시간을 업데이트
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    // 컴포넌트 언마운트 시 인터벌 정리
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     models.Report.getPortalList().then((data) => {
@@ -90,22 +104,40 @@ const Header = ({
             </li>
           }
         </ul>
-        <CommonButton
-          id={'portal_user_info'}
-          type={'onlyImageText'}
-          height={'32px'}
-          width={'100px'}
-          usePopover={true}
-          popoverProps={{
-            'width': 'auto',
-            'height': '80',
-            'showEvent': 'click',
-            'position': 'bottom'
-          }}
-          contentRender={() => <UserInfoPopover/>}
-        >
-          <UserInfoButtonUI name={userNm} />
-        </CommonButton>
+        <div className='portal_right_menu'>
+          <h3>{time.toLocaleTimeString()}</h3>
+          <DropdownBoxReportSearch
+            showAll={true}
+            button={[{
+              name: 'reportSearch',
+              location: 'after',
+              options: {
+                visible: true,
+                stylingMode: 'text',
+                icon: 'search',
+                type: 'default',
+                disabled: true
+              }
+            }]}
+            id={'portal_report_search'}
+          />
+          <CommonButton
+            id={'portal_user_info'}
+            type={'onlyImageText'}
+            height={'32px'}
+            width={'100px'}
+            usePopover={true}
+            popoverProps={{
+              'width': 'auto',
+              'height': '80',
+              'showEvent': 'click',
+              'position': 'bottom'
+            }}
+            contentRender={() => <UserInfoPopover/>}
+          >
+            <UserInfoButtonUI name={userNm} />
+          </CommonButton>
+        </div>
         <DrawerMenu portalUrl={PORTAL_URL} data={portalReportList} />
       </div>
     </div>

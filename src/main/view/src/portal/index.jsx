@@ -29,8 +29,11 @@ const Portal = ({admin = false}) => {
   const PORTAL_URL = window.location.origin + '/editds';
 
   const nav = useNavigate();
+  const auth = admin ? 'admin' : 'user';
   const [date, setDate] = useState(null);
-  const [type, setType] = useState('조회일');
+  const [types, setTypes] = useState([]);
+  const [reportIds, setReportIds] = useState({});
+  const [type, setType] = useState('');
   const [team, setTeam] = useState('전체');
 
   const [maxDate, setMaxDate] = useState(new Date());
@@ -52,6 +55,23 @@ const Portal = ({admin = false}) => {
   }, [nav]);
 
   useEffect(() => {
+    models.Portal.getPortalInfo(auth).then((data) => {
+      if (data.status == 200) {
+        setTypes(data?.data?.types.map(({name}) => name) || []);
+        setType(data?.data?.types[0].name);
+        const reports = data?.data?.reports.reduce((acc, report) => {
+          if (!acc[report.type]) {
+            acc[report.type] = [];
+          }
+
+          acc[report.type].push(report.reportId);
+
+          return acc;
+        }, {});
+        setReportIds(reports);
+      }
+      console.log(data?.data);
+    });
     // 3600000
     const itv = setInterval(() => {
       models.Portal.getMaxDate().then((data) => {
@@ -83,51 +103,15 @@ const Portal = ({admin = false}) => {
   }, [date]);
 
   useEffect(() => {
-    if (!date) return;
+    if (!date || !type) return;
 
-    let getCardData = models.Portal.getCardData;
-
-    if (admin) getCardData = models.Portal.getAdminCardData;
-
-    getCardData(format(date, 'yyyyMMdd'), type, team)
+    models.Portal.getCardData(auth, format(date, 'yyyyMMdd'), type, team)
         .then((data) => {
           if (data.status == 200 && data.data) {
-            let titles = [
-              '예상취급액(백만원)',
-              '실현취급액(백만원)',
-              '실현공헌이익(백만원)',
-              '주문고객수(명)'
-            ];
-
-            if (type == '년누적') {
-              titles = ['예상취급액(억원)', '실현취급액(억원)', '실현공헌이익(억원)', '주문고객수(천명)'];
-            } else if (type == '월누적') {
-              titles[3] = '주문고객수(백명)';
-            }
-
-            if (admin) titles = titles.slice(0, 3);
-
-            const prevKey = admin ? '전월비' : '전년비';
-
-            const _cardData = titles.map((title, i) => {
-              const card = data.data.find((c) => c['구분'] == title);
-
-              if (!card) {
-                return {
-                  '구분': title,
-                  '금액': 0,
-                  [prevKey]: '0%',
-                  '계획비': i == 3 ? undefined : '0%'
-                };
-              }
-
-              return card;
-            });
-
-            setCardData(_cardData);
+            setCardData(data.data);
           }
         });
-  }, [date, type, team]);
+  }, [auth, date, type, team]);
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
@@ -293,7 +277,7 @@ const Portal = ({admin = false}) => {
             </li>
             <li className='pay_box_button_wrap'>
               {
-                ['조회일', '월누적', '년누적'].map((title, i) =>
+                types.map((title, i) =>
                   <div
                     key={`pay_box${i}`}
                     className={'pay_box_button' +
@@ -329,6 +313,7 @@ const Portal = ({admin = false}) => {
         <ReportSwiper
           type={type}
           portalUrl={PORTAL_URL}
+          reportIds={reportIds}
           date={date}
           team={team}
           userId={userId}

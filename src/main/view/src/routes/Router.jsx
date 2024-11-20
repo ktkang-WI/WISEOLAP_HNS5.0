@@ -42,6 +42,7 @@ import Log from 'components/config/organisms/log/Log';
 import SearchQuery from 'components/config/organisms/searchQuery/SearchQuery';
 
 import {getUserNmLoader} from './loader/MyPageLoaderConfig';
+import PortalConfig from 'components/config/organisms/portal/PortalConfig';
 
 export const contextPath = '/editds';
 const multipleLoader = async () => {
@@ -168,6 +169,10 @@ const router = createBrowserRouter([
       {
         path: 'conflog',
         element: <Log/>
+      },
+      {
+        path: 'portalconf',
+        element: <PortalConfig/>
       },
       {
         path: 'search-query',

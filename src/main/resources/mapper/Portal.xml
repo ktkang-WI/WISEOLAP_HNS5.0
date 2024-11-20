@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wise.MarketingPlatForm.portal.dao.PortalDAO">
+<!-- Mapper -->
+	<resultMap id="PortalCardQueryMstr" type="com.wise.MarketingPlatForm.mart.vo.PortalCardQueryMstrVO">
+		<result column="TYPE" property="type" javaType="String"/>
+    <result column="QUERY" property="query" javaType="String"/>
+    <result column="AUTH" property="auth" javaType="String"/>
+    <result column="DS_ID" property="dsId" javaType="int"/>
+	</resultMap>
+
+  <resultMap id="PortalTypeMstr" type="com.wise.MarketingPlatForm.mart.vo.PortalTypeMstrVO">
+		<result column="NAME" property="name" javaType="String"/>
+    <result column="ORDINAL" property="ordinal" javaType="int"/>
+    <result column="AUTH" property="auth" javaType="String"/>
+	</resultMap>
+
+  <resultMap id="PortalReportMstr" type="com.wise.MarketingPlatForm.mart.vo.PortalReportMstrVO">
+		<result column="TYPE" property="type" javaType="String"/>
+    <result column="ORDINAL" property="ordinal" javaType="int"/>
+    <result column="AUTH" property="auth" javaType="String"/>
+    <result column="REPORT_ID" property="reportId" javaType="int"/>
+	</resultMap>
+<!-- Mapper End -->
+
+<!-- Query -->
+  <select
+    id="selectPortalCardQueryMstr"
+    parameterType="com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO"
+    resultMap="PortalCardQueryMstr"
+  >
+    SELECT
+      TYPE,
+      TO_CHAR(QUERY) AS QUERY,
+      AUTH,
+      DS_ID
+    FROM PORTAL_CARD_QUERY_MSTR
+    WHERE
+      TYPE = #{type}
+      AND AUTH = #{auth}
+  </select>
+
+  <select id="selectPortalTypeMstr" resultMap="PortalTypeMstr">
+    SELECT * FROM PORTAL_TYPE_MSTR
+    WHERE AUTH = #{auth}
+    ORDER BY ORDINAL
+  </select>
+
+  <select id="selectPortalReportMstr" resultMap="PortalReportMstr">
+    SELECT * FROM PORTAL_REPORT_MSTR
+    WHERE AUTH = #{auth}
+    ORDER BY ORDINAL
+  </select>
+</mapper>

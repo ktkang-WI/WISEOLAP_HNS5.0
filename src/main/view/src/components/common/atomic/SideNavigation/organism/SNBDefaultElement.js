@@ -236,6 +236,15 @@ const SNBDefaultElement = () => {
       onClick: (e) => {
         nav('search-query');
       }
+    },
+    'PortalConfig': {
+      id: 'portalconf',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '메인화면 설정',
+      onClick: (e) => {
+        nav('portalconf');
+      }
     }
   };
 };

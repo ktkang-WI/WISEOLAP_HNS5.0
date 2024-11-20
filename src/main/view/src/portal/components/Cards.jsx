@@ -12,6 +12,7 @@ const Cards = ({cardData}) => {
           title={d['구분']}
           key={'card' + i}
           amount={d['금액']}
+          color={d['색상']}
           percentData={{
             previous: d['전년비'] || d['전월비'],
             plan: d['계획비']

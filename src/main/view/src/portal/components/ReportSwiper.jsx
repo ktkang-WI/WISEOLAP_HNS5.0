@@ -13,25 +13,10 @@ const ReportSwiper = ({
   date,
   type,
   team,
+  reportIds,
   admin
 }) => {
-  let reportIds = []; // , 13398
-
-  if (date != null) {
-    if (admin) {
-      if (type === '년누적') {
-        reportIds = [13787, 13790, 13791, 13801];
-      } else {
-        reportIds = [13774, 13788, 13792, 13799];
-      }
-    } else {
-      if (type === '년누적') {
-        reportIds = [13503, 13505, 13550, 13551, 13506];
-      } else {
-        reportIds = [13548, 13549, 13550, 13551, 13397];
-      }
-    }
-  }
+  if (!type) return <></>;
 
   const cache = useMemo(() => ({}), [date, type, team]);
 
@@ -84,7 +69,7 @@ const ReportSwiper = ({
         }}
       >
         {
-          reportIds.map((id) => {
+          reportIds[type].map((id) => {
             return (
               <SwiperSlide key={'r'+id}>
                 {getComponent(id)}

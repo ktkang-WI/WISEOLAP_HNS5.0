@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO;
 import com.wise.MarketingPlatForm.portal.service.PortalService;
 
 @RestController
@@ -22,11 +23,17 @@ public class PortalController {
     }
 
     @GetMapping("/card-data")
-    public ResponseEntity<List<Map<String, Object>>> getCardData(@RequestParam("date") String date, @RequestParam("type") String type) {
+    public ResponseEntity<List<Map<String, Object>>> getCardData(
+        @RequestParam("auth") String auth,
+        @RequestParam("date") String date,
+        @RequestParam("type") String type,
+        @RequestParam(value = "team", required = false) String team) {
         List<Map<String, Object>> cardList = new ArrayList<>();
 
+        PortalFilterDTO filter = new PortalFilterDTO(auth, type, date, team);
+
         try {
-            cardList = portalServie.getCardData(date, type);
+            cardList = portalServie.getCardData(filter);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,6 +63,13 @@ public class PortalController {
         String date = portalServie.getMaxDate();
 
         return ResponseEntity.ok().body(date);
+    }
+
+    @GetMapping("/portal-info")
+    public ResponseEntity<Map<String, Object>> getPortalInfo(@RequestParam("auth") String auth) {
+        Map<String, Object> result = portalServie.getPortalInfo(auth);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/team-list")
