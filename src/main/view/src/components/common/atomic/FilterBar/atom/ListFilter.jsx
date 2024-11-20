@@ -25,6 +25,7 @@ const ListFilter = ({
 
     const keySet = new Set(keys.map((key) => key + ''));
     const captionArr = [];
+
     for (const item of listItems) {
       if (keySet.has(item.name + '') || isLinkageFilter) {
         captionArr.push(item.caption);
@@ -35,9 +36,11 @@ const ListFilter = ({
       }
     }
 
-    if (!isLinkageFilter && captionArr.length === listItems.length) {
-      if (listItems.length > 1) {
-        return allText;
+    if (!info.useSearch) {
+      if (!isLinkageFilter && captionArr.length === listItems.length) {
+        if (listItems.length > 1) {
+          return allText;
+        }
       }
     }
 
