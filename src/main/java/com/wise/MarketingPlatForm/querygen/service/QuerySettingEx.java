@@ -2954,13 +2954,33 @@ public class QuerySettingEx {
 					String table = parts[0];
 					String column = parts[1];
 
+					// Check if uniqueName contains "WISE_" and fetch the corresponding COL_EXPRESS
+					String colExpress = column; // Default to column
+					if (havingClauseInfo.getUniqueName().contains("WISE_")) {
+							for (SelectCubeMeasure measure : aDtSelMea) {
+									if (measure.getMEA_UNI_NM().equals(havingClauseInfo.getUniqueName()) && measure.getCOL_EXPRESS() != null) {
+											colExpress = measure.getCOL_EXPRESS();
+											break;
+									}
+							}
+					}
+
+					String summaryType = havingClauseInfo.getSummaryType() != null ? havingClauseInfo.getSummaryType().toUpperCase() : "SUM";
+
 					// BETWEEN 조건일 때만 ()로 감싸기
 					if ("BETWEEN".equalsIgnoreCase(havingClauseInfo.getCondition()) && havingClauseInfo.getValueTo() != null) {
 						havingClauseBuilder.append("(");
 					}
 
-					havingClauseBuilder.append("SUM(")
-						.append(table).append(".\"").append(column).append("\") ");
+					// WISE_가 포함된 경우, colExpress 그대로 사용
+					if (havingClauseInfo.getUniqueName().contains("WISE_")) { 
+						havingClauseBuilder.append(summaryType).append("(")
+								.append(colExpress).append(") "); // colExpress 그대로 추가
+					} else { 
+						// 일반 컬럼 이름은 테이블 이름과 함께 추가
+						havingClauseBuilder.append(summaryType).append("(")
+								.append(table).append(".\"").append(colExpress).append("\") ");
+					}
 
 					// BETWEEN 사용 여부에 따라 조건문을 다르게 구성
 					if ("BETWEEN".equalsIgnoreCase(havingClauseInfo.getCondition()) && havingClauseInfo.getValueTo() != null) {
