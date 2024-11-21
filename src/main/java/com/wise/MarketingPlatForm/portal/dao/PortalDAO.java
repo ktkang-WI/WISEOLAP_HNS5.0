@@ -15,4 +15,22 @@ public interface PortalDAO {
   public List<PortalTypeMstrVO> selectPortalTypeMstr(String auth);
 
   public List<PortalReportMstrVO> selectPortalReportMstr(String auth);    
+
+  public List<PortalCardQueryMstrVO> selectAllPortalCardQueryMstr();
+
+  public List<PortalTypeMstrVO> selectAllPortalTypeMstr();
+
+  public List<PortalReportMstrVO> selectAllPortalReportMstr();
+
+public void deleteAllPortalCardQueryMstr();
+
+public void deleteAllPortalTypeMstr();
+
+public void deleteAllPortalReportMstr();
+
+public void insertPortalCardQueryMstr(List<PortalCardQueryMstrVO> queries);
+
+public void insertPortalTypeMstr(List<PortalTypeMstrVO> types);
+
+public void insertPortalReportMstr(List<PortalReportMstrVO> reports);    
 }

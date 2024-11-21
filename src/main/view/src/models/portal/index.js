@@ -30,3 +30,11 @@ export const getMaxDate = () => {
 export const getPortalInfo = (auth) => {
   return axios.get(path + '/portal-info', {params: {auth}});
 };
+
+export const getPortalConfig = () => {
+  return axios.get(path + '/portal-config');
+};
+
+export const setPortalConfig = (data) => {
+  return axios.put(path + '/portal-config', {data});
+};

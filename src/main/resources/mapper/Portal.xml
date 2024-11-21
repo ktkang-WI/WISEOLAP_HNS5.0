@@ -53,4 +53,65 @@
     WHERE AUTH = #{auth}
     ORDER BY ORDINAL
   </select>
+
+  <select id="selectAllPortalTypeMstr" resultMap="PortalTypeMstr">
+    SELECT * FROM PORTAL_TYPE_MSTR
+    ORDER BY AUTH, ORDINAL
+  </select>
+
+  <select id="selectAllPortalReportMstr" resultMap="PortalReportMstr">
+    SELECT * FROM PORTAL_REPORT_MSTR
+    ORDER BY AUTH, TYPE, ORDINAL
+  </select>
+
+  <select
+    id="selectAllPortalCardQueryMstr"
+    resultMap="PortalCardQueryMstr"
+  >
+    SELECT
+      TYPE,
+      TO_CHAR(QUERY) AS QUERY,
+      AUTH,
+      DS_ID
+    FROM PORTAL_CARD_QUERY_MSTR
+  </select>
+
+  <delete id="deleteAllPortalCardQueryMstr">
+    DELETE FROM PORTAL_CARD_QUERY_MSTR
+  </delete>
+
+  <delete id="deleteAllPortalTypeMstr">
+    DELETE FROM PORTAL_TYPE_MSTR
+  </delete>
+
+  <delete id="deleteAllPortalReportMstr">
+    DELETE FROM PORTAL_REPORT_MSTR
+  </delete>
+
+  <insert id="insertPortalCardQueryMstr" parameterType="list">
+    INSERT ALL
+    <foreach collection="list" item="item">
+      INTO PORTAL_CARD_QUERY_MSTR (TYPE, QUERY, AUTH, DS_ID)
+      VALUES (#{item.type}, #{item.query}, #{item.auth}, #{item.dsId})
+    </foreach>
+    SELECT 1 FROM DUAL
+  </insert>
+
+  <insert id="insertPortalTypeMstr" parameterType="list">
+    INSERT ALL
+    <foreach collection="list" item="item">
+      INTO PORTAL_TYPE_MSTR (NAME, ORDINAL, AUTH)
+      VALUES (#{item.name}, #{item.ordinal}, #{item.auth})
+    </foreach>
+    SELECT 1 FROM DUAL
+  </insert>
+
+  <insert id="insertPortalReportMstr" parameterType="list">
+    INSERT ALL
+    <foreach collection="list" item="item">
+      INTO PORTAL_REPORT_MSTR (TYPE, ORDINAL, AUTH, REPORT_ID)
+      VALUES (#{item.type}, #{item.ordinal}, #{item.auth}, #{item.reportId})
+    </foreach>
+    SELECT 1 FROM DUAL
+  </insert>
 </mapper>

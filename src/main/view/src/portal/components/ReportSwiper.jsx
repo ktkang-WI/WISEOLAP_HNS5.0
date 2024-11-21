@@ -18,6 +18,8 @@ const ReportSwiper = ({
 }) => {
   if (!type) return <></>;
 
+  console.log(reportIds, type);
+
   const cache = useMemo(() => ({}), [date, type, team]);
 
   const getComponent = (id) => {
@@ -69,7 +71,7 @@ const ReportSwiper = ({
         }}
       >
         {
-          reportIds[type].map((id) => {
+          (reportIds[type] || []).map((id) => {
             return (
               <SwiperSlide key={'r'+id}>
                 {getComponent(id)}

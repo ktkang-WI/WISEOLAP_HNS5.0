@@ -66,7 +66,8 @@ const Config = () => {
               'ReportFolderManagement',
               'DataSourceAddition',
               'Log',
-              'SearchQuery'
+              'SearchQuery',
+              'PortalConfig'
             ]}
           />
         </Wrapper>

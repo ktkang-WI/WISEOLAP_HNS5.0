@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.dataset.service.DatasetService;
 import com.wise.MarketingPlatForm.dataset.vo.DsMstrDTO;
@@ -14,12 +15,14 @@ import com.wise.MarketingPlatForm.global.config.MartConfig;
 import com.wise.MarketingPlatForm.mart.dao.MartDAO;
 import com.wise.MarketingPlatForm.mart.vo.MartResultDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalCardQueryMstrVO;
+import com.wise.MarketingPlatForm.mart.vo.PortalDataDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalReportMstrVO;
 import com.wise.MarketingPlatForm.mart.vo.PortalTypeMstrVO;
 import com.wise.MarketingPlatForm.portal.dao.PortalDAO;
 
 @Service
+@Transactional
 public class PortalService {
 
     private final MartDAO martDAO;
@@ -28,7 +31,7 @@ public class PortalService {
     private final MartConfig martConfig;
 
     PortalService(
-        MartDAO martDAO, PortalDAO portalDAO, MartConfig martConfig, DatasetService datasetService) {
+            MartDAO martDAO, PortalDAO portalDAO, MartConfig martConfig, DatasetService datasetService) {
         this.martDAO = martDAO;
         this.portalDAO = portalDAO;
         this.martConfig = martConfig;
@@ -53,7 +56,7 @@ public class PortalService {
 
         if (type.equals("월누적")) {
             dateFilter = "GATHER_BASE_DATE BETWEEN SUBSTR('" + date + "',1,6)||'01' AND '" + date + "'";
-        } else if(type.equals("년누적")) {
+        } else if (type.equals("년누적")) {
             dateFilter = "GATHER_BASE_DATE BETWEEN SUBSTR('" + date + "',1,4)||'0101' AND '" + date + "'";
         }
 
@@ -118,7 +121,7 @@ public class PortalService {
         String team = filter.getTeam();
         String date = "'" + filter.getDate() + "'";
 
-        if (team == null || team.equals("")|| team.equals("전체")) {
+        if (team == null || team.equals("") || team.equals("전체")) {
             team = "MD_TEAM_NM";
         } else {
             team = "'" + team + "'";
@@ -162,30 +165,51 @@ public class PortalService {
 
     public List<Map<String, Object>> getTeamList(String date) {
         String sql = "SELECT MD_TEAM_NM\r\n" +
-                        "\tFROM MISDM.VW_MAIN_IM_TEAM_FILTER\r\n" +
-                        "\tWHERE GATHER_BASE_DATE = '" + date + "'" +
-                        "\tAND MD_TEAM_NM NOT IN('비매핑')" +
-                        "\tORDER BY MD_TEAM_ORD";
+                "\tFROM MISDM.VW_MAIN_IM_TEAM_FILTER\r\n" +
+                "\tWHERE GATHER_BASE_DATE = '" + date + "'" +
+                "\tAND MD_TEAM_NM NOT IN('비매핑')" +
+                "\tORDER BY MD_TEAM_ORD";
 
         MartResultDTO martResultDTO = null;
 
         DsMstrDTO dsMstrDTO = datasetService.getDataSource(3465);
         martConfig.setMartDataSource(dsMstrDTO);
-        
+
         martResultDTO = martDAO.select(3465, sql);
 
         return martResultDTO.getRowData();
     }
 
     public Map<String, Object> getPortalInfo(String auth) {
-        Map<String, Object> result = new HashMap<> ();
+        Map<String, Object> result = new HashMap<>();
 
         List<PortalTypeMstrVO> portalTypes = portalDAO.selectPortalTypeMstr(auth);
         List<PortalReportMstrVO> portalReports = portalDAO.selectPortalReportMstr(auth);
-        
+
         result.put("types", portalTypes);
         result.put("reports", portalReports);
 
         return result;
+    }
+
+    public PortalDataDTO getPortalConfig() {
+
+        List<PortalTypeMstrVO> portalTypes = portalDAO.selectAllPortalTypeMstr();
+        List<PortalReportMstrVO> portalReports = portalDAO.selectAllPortalReportMstr();
+        List<PortalCardQueryMstrVO> portalQueries = portalDAO.selectAllPortalCardQueryMstr();
+
+        PortalDataDTO result = new PortalDataDTO(portalTypes, portalReports, portalQueries);
+
+        return result;
+    }
+
+    public void setPortalConfig(PortalDataDTO portalDataDTO) {
+        portalDAO.deleteAllPortalCardQueryMstr();
+        portalDAO.deleteAllPortalTypeMstr();
+        portalDAO.deleteAllPortalReportMstr();
+
+        portalDAO.insertPortalCardQueryMstr(portalDataDTO.getQueries());
+        portalDAO.insertPortalTypeMstr(portalDataDTO.getTypes());
+        portalDAO.insertPortalReportMstr(portalDataDTO.getReports());
     }
 }

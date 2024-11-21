@@ -18,7 +18,7 @@ const Cards = ({cardData}) => {
             plan: d['계획비']
           }}
           unit={d['전월비'] ? 'month' : 'year'}
-          imgSrc={require('../img/con_bg' + (i + 1) + '.png')}
+          imgSrc={require('../img/con_bg' + ((i % 4) + 1) + '.png')}
         />
       );
     })

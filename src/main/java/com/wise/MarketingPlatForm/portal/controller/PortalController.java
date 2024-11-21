@@ -10,13 +10,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.wise.MarketingPlatForm.mart.vo.PortalDataDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO;
 import com.wise.MarketingPlatForm.portal.service.PortalService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/portal")
 public class PortalController {
     private final PortalService portalServie;
+    private final Gson gson = new Gson();
 
     PortalController (PortalService portalService) {
         this.portalServie = portalService;
@@ -72,6 +79,13 @@ public class PortalController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/portal-config")
+    public ResponseEntity<PortalDataDTO> getPortalConfig() {
+        PortalDataDTO result = portalServie.getPortalConfig();
+
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping("/team-list")
     public ResponseEntity<List<Map<String, Object>>> getTeamList(@RequestParam("date") String date) {
         List<Map<String, Object>> list = portalServie.getTeamList(date);
@@ -79,5 +93,24 @@ public class PortalController {
         return ResponseEntity.ok().body(list);
     }
     
-    
+    @PutMapping("/portal-config")
+    public ResponseEntity<String> setPortalConfig(@RequestBody Map<String, Object> body) {
+        String data = body.get("data").toString();
+
+        if (data == null) {
+            return ResponseEntity.internalServerError().body("전송된 데이터가 없습니다.");
+        }
+
+        PortalDataDTO portalDataDTO = gson.fromJson(data, PortalDataDTO.class);
+        
+        try {
+            portalServie.setPortalConfig(portalDataDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+        
+        
+        return ResponseEntity.ok().body("");
+    }
 }
