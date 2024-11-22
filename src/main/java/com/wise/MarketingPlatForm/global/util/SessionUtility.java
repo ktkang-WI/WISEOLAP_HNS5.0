@@ -91,8 +91,9 @@ public class SessionUtility {
         return userDTO;
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
+        UserDTO sessionUser = null;
         if ("database".equalsIgnoreCase(sessionType)) {
-            UserDTO sessionUser = getSessionUser(request.getSession());
+            sessionUser = getSessionUser(request.getSession());
             if(sessionUser == null) {
                 sessionUser = getSessionSSO(request);
             }
@@ -100,15 +101,18 @@ public class SessionUtility {
             if(sessionUser == null) {
                 sessionUser = getSessionUserFromDatabase(request);
             }
-            return sessionUser;
         } else {
             // return getSessionUser(request.getSession());
-            UserDTO sessionUser = getSessionUser(request.getSession());
+            sessionUser = getSessionUser(request.getSession());
             if(sessionUser == null) {
                 sessionUser = getSessionSSO(request);
             }
-            return sessionUser;
         }
+
+        if (sessionUser != null) {
+            setSessionUser(request, sessionUser);
+        }
+        return sessionUser;
     }
 
     public static void setSessionUser(HttpServletRequest request, UserDTO userDTO) {
