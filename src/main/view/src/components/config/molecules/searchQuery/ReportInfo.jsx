@@ -20,6 +20,7 @@ const ReportInfo = ({itemData}) => {
       '주제 영역 데이터 집합을 사용하는 보고서에서는 MART에 사용된 테이블과 컬럼을 검색합니다.'
           }
           height={'100px'}
+          readOnly={true}
         />
       }
       <Form
