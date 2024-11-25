@@ -260,7 +260,11 @@ const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
       });
     } else {
       if (getColumnCheck) {
-        values = ['-', '-'];
+        if (p.paramType == 'CALENDAR') {
+          values = [];
+        } else {
+          values = ['-', '-'];
+        }
       }
     }
 
