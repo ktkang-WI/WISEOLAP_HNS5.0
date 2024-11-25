@@ -30,6 +30,9 @@ const PortalTypeGrid = ({dxRef, ...props}) => {
         confirmDelete: false,
         newRowPosition: 'last'
       }}
+      paging={{
+        enabled: false
+      }}
       {...props}
     >
       <Column dataField='auth' caption='뷰어 모드'>

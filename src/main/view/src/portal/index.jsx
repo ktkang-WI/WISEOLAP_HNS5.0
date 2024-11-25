@@ -116,6 +116,9 @@ const Portal = ({admin = false}) => {
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
+        if (admin && data.data.userId == 'admin') {
+          nav('/editds/portal');
+        }
         setUserId(data.data.userId);
         setUserNm(data.data.userNm);
       }
@@ -246,7 +249,7 @@ const Portal = ({admin = false}) => {
         folderMap={folderMap}
         headerMenuHref={headerMenuHref}
         userNm={userNm}
-        useAdminButton={true}
+        useAdminButton={userId == 'admin'}
         admin={admin}
       />
       <div className='contents'>

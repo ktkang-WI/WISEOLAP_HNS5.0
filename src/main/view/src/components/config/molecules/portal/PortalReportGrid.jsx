@@ -33,9 +33,13 @@ const PortalReportGrid = ({dxRef, ...props}) => {
       ref={dxRef}
       style={{maxWidth: '700px'}}
       dataSource={[]}
+      paging={{
+        enabled: false
+      }}
       onRowInserting={(e) => {
         const newData = e.data;
-        if (!newData.name || !newData.ordinal || !newData.auth) {
+        if (!newData.reportId || !newData.ordinal ||
+          !newData.auth || !newData.type) {
           e.cancel = true;
           alert('모든 필드를 입력해야 합니다.');
         }

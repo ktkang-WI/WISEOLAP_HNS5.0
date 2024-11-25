@@ -592,6 +592,12 @@
   border: none !important;
 }
 
+@media (max-width: 1250px) {
+  .portal #header_menu li a:not(.active) {
+    display: none;
+  }
+}
+
 @media (max-width:1900px) {
   .portal .header_wrap {
     padding: 35px 20px;
