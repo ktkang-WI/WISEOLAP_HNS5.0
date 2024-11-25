@@ -433,6 +433,8 @@
   "img": "IMG",
   "html": "html",
   "pdf": "PDF",
+  "csv": "CSV",
+  "txt": "TXT",
   "addDsUpload": "사용자 업로드",
   "addDsSingle": "단일 테이블",
   "editParameter": "매개변수 편집",

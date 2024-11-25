@@ -270,12 +270,14 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     const downloadButton = isDownloadable ? (
       <button key="download" title={localizedString.downloadReport}>
         <DownloadImage id={`${tabNode._attributes.id}btn`} src={download} />
-        <Popover target={`#${tabNode._attributes.id}btn`} showEvent="click">
-          <div style={{display: 'flex'}}>
-            {itemDownload.renderDownloadButtons(
-                tabNode._attributes.id, item, isImg && isImgDownloadable
-            )}
-          </div>
+        <Popover
+          target={`#${tabNode._attributes.id}btn`}
+          showEvent="click"
+          hideOnOutsideClick={true}
+        >
+          {itemDownload.renderDownloadButtons(
+              tabNode._attributes.id, item, isImg && isImgDownloadable
+          )}
         </Popover>
       </button>
     ) : null;

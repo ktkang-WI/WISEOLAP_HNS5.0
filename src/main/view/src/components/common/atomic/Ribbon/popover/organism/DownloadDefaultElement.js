@@ -23,6 +23,8 @@ import pptImg from 'assets/image/icon/item/ico_ept_msppt.png';
 import wordImg from 'assets/image/icon/item/ico_ept_msword.png';
 import imagesImg from 'assets/image/icon/item/ico_exportImages.png';
 import pdfImg from 'assets/image/icon/item/ico_exportPDF.png';
+import csvImg from 'assets/image/icon/item/ico-csvdownload.png';
+import txtImg from 'assets/image/icon/item/ico_ept_txt.png';
 
 const DownloadDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
@@ -231,6 +233,20 @@ const DownloadDefaultElement = () => {
           checked: false,
           src: pdfImg,
           visible: true
+        },
+        {
+          title: localizedString.csv,
+          type: 'csv',
+          checked: false,
+          src: csvImg,
+          visible: false
+        },
+        {
+          title: localizedString.txt,
+          type: 'txt',
+          checked: false,
+          src: txtImg,
+          visible: false
         }
       ]
     }

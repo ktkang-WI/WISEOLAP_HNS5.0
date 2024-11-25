@@ -1,4 +1,7 @@
-import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
+// eslint-disable-next-line max-len
+import {ImgCheckBox} from 'components/common/atomic/DataColumnTab/molecules/DataColumnSeriesOptions/Common/ImgCheckBox';
+import downloadDefaultElement from
+  'components/common/atomic/Ribbon/popover/organism/DownloadDefaultElement';
 import ItemType from 'components/report/item/util/ItemType';
 import {exportToFile, Type} from 'components/utils/DataExport';
 import models from 'models';
@@ -58,26 +61,63 @@ export class ItemDownload {
   };
 
   renderDownloadButtons = (id, item, isImgDownloadable) => {
-    return [Type.IMG, Type.CSV, Type.TXT, Type.XLSX].map((type) => {
-      if (type == Type.IMG && isImgDownloadable) return <></>;
-      return (
-        <CommonButton
-          key={type}
-          type={'whiteRound'}
-          width='100%'
-          height='20px'
-          onClick={() =>
-            this.#exportFile(
-                id,
-                type,
-                item.meta.name
-            )
-          }
-        >
-          {type.toLowerCase()}
-        </CommonButton>
-      );
-    });
+    const {data} = downloadDefaultElement();
+    const itemName = item?.meta?.name;
+    return (
+      <div style={{
+        width: '220px'
+      }}>
+        {
+          data.map((item, index) => {
+            const elements = item.checkboxs.filter((ch) =>
+              ch.type === 'excelMergeXlsx' ||
+              (ch.type === 'img' && !isImgDownloadable) ||
+              ch.type === 'csv' ||
+              ch.type === 'txt'
+            ).map((ch) => ({...ch, 'visible': true}));
+            return (
+              <ImgCheckBox key={index}
+                onValueChanged={(e) => {
+                  let type = '';
+                  if (e.target.id === 'img') {
+                    type = Type.IMG;
+                  } else if (e.target.id === 'excelMergeXlsx') {
+                    type = Type.XLSX;
+                  } else if (e.target.id === 'csv') {
+                    type = Type.CSV;
+                  } else if (e.target.id === 'txt') {
+                    type = Type.TXT;
+                  }
+                  this.#exportFile(
+                      id,
+                      type,
+                      itemName
+                  );
+                }}
+                title={item.title}
+                useChecked={false}
+                checkboxs={elements}
+              />
+            );
+          })
+        }
+      </div>
+    );
+    // <CommonButton
+    //   key={type}
+    //   type={'whiteRound'}
+    //   width='100%'
+    //   height='20px'
+    //   onClick={() =>
+    //     this.#exportFile(
+    //         id,
+    //         type,
+    //         item.meta.name
+    //     )
+    //   }
+    // >
+    //   {type.toLowerCase()}
+    // </CommonButton>
   };
   #exportFile = (e, type, name) => {
     const pickItem = this.#itemExportsPicker(e);
