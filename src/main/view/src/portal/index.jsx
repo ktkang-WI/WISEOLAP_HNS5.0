@@ -70,7 +70,6 @@ const Portal = ({admin = false}) => {
         }, {});
         setReportIds(reports);
       }
-      console.log(data?.data);
     });
     // 3600000
     const itv = setInterval(() => {
@@ -162,7 +161,6 @@ const Portal = ({admin = false}) => {
           return fld;
         });
 
-        console.log(result);
         result.sort((a, b) => {
           if (a.name == '부서별 폴더') return -1;
           if (b.name == '부서별 폴더') return 1;
