@@ -92,7 +92,8 @@ const newSingleTableParamInformation = (name, dsId, dsType,
     dataSource: sourceField.TBL_NM,
     itemCaption: sourceField.COL_NM, // 리스트에 보여줄 값
     itemKey: sourceField.COL_NM, // 조회할 때 실제로 쿼리에 들어가는 값
-    multiSelect: true // 다중 선택
+    multiSelect: true, // 다중 선택
+    sortBy: sourceField.COL_NM
   };
 };
 
