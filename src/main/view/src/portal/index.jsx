@@ -162,7 +162,11 @@ const Portal = ({admin = false}) => {
           return fld;
         });
 
+        console.log(result);
         result.sort((a, b) => {
+          if (a.name == '부서별 폴더') return -1;
+          if (b.name == '부서별 폴더') return 1;
+
           if (a.ordinal !== b.ordinal) {
             return a.ordinal - b.ordinal;
           }
