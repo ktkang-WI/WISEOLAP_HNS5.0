@@ -115,7 +115,7 @@ const Portal = ({admin = false}) => {
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
-        if (admin && data.data.userId == 'admin') {
+        if (admin && data.data.userId != 'admin') {
           nav('/editds/portal');
         }
         setUserId(data.data.userId);
@@ -162,8 +162,8 @@ const Portal = ({admin = false}) => {
         });
 
         result.sort((a, b) => {
-          if (a.name == '부서별 폴더') return -1;
-          if (b.name == '부서별 폴더') return 1;
+          if (a.name == '부서별보고서') return -1;
+          if (b.name == '부서별보고서') return 1;
 
           if (a.ordinal !== b.ordinal) {
             return a.ordinal - b.ordinal;
