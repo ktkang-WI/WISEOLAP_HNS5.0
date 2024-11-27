@@ -39,6 +39,17 @@ const FolderListModal = ({myPageFlag, ...props}) => {
                   .option('dataSource');
               const fldIdList = getFolderIdList(reportList);
               newData = newData.filter((row) => fldIdList.includes(row.fldId));
+            } else {
+              if (!myPageFlag) {
+                newData.unshift({
+                  'fldId': -1,
+                  'fldNm': '최상위 폴더',
+                  'fldLvl': 0,
+                  'fldParentId': 0,
+                  'fldOrdinal': 0,
+                  'fldDesc': null});
+              }
+              // 최상위 폴더 생성
             }
             setDataSource(newData);
           }
@@ -73,7 +84,8 @@ const FolderListModal = ({myPageFlag, ...props}) => {
       };
     } else {
       newRow = {
-        fldParentId: myPageFlag? row.id : row.fldId,
+        // 최상위 폴더 선택시 예외처리
+        fldParentId: myPageFlag ? row.id : (row.fldId === -1 ? 0 : row.fldId),
         fldParentNm: myPageFlag? row.name : row.fldNm
       };
     }
