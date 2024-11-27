@@ -139,7 +139,7 @@ const convertToFormat = (data, type) => {
     result = convertToTxt(data);
   } else if (type === Type.CSV) {
     result = convertToCsv(data);
-  } else if (type === Type.XLSX) {
+  } else if (type === Type.XLSX || type.endsWith('XLSX')) {
     result = convertToXlsx(data);
   }
   return result;
@@ -212,8 +212,8 @@ const exportFile = (name, data, type, pickItem) => {
         .filter((item) => item.id === pickItem.id);
 
     const option = {
-      mergeColumn: true,
-      mergeRow: true
+      mergeColumn: type === Type.XLSX,
+      mergeRow: type === Type.XLSX
     };
     exportExcel(
         currentReport,
@@ -221,7 +221,8 @@ const exportFile = (name, data, type, pickItem) => {
         currentParameter,
         currentParameterValues,
         dataSource,
-        option);
+        option,
+        name);
   } else {
     let blob = null;
     if (type === Type.CSV) {

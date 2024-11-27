@@ -17,21 +17,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import ViewQuery from '../modal/ViewQuery';
 import UserInfoPopover from '../popover/UserInfoPopover';
 import ReportSaveModal from 'components/report/modal/ReportSaveModal';
-import {exportExcel} from 'components/report/util/ReportDownload';
 import {
-  selectCurrentItems,
-  selectRootItem
+  selectCurrentItems
 } from 'redux/selector/ItemSelector';
-import {
-  selectCurrentInformationas,
-  selectCurrentValues
-} from 'redux/selector/ParameterSelector';
 import {selectCurrentReport,
   selectCurrentReportId} from 'redux/selector/ReportSelector';
 import EditReportName from '../modal/EditReportName';
 import {getFullUrl} from '../../Location/Location';
 import ReportHistoryModal from '../modal/ReportHistory/ReportHistoryModal';
-import useSpread from 'hooks/useSpread';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import LinkReportListDefaultElement
   from '../../Ribbon/popover/organism/LinkReportListDefaultElement';
@@ -42,6 +35,9 @@ import {
 } from 'redux/selector/AlertSelector';
 import {useState} from 'react';
 import {selectSpread} from 'redux/selector/SpreadSelector';
+import elementFactory from '../../Popover/molecules/ElementFactory';
+import RibbonPopoverContents
+  from '../../Popover/molecules/RibbonPopoverContents';
 
 const HeaderDefaultElement = () => {
   const nav = useNavigate();
@@ -51,18 +47,13 @@ const HeaderDefaultElement = () => {
     openModal} = useModal();
   const {setEditMode, setDesignerMode} = ConfigSlice.actions;
   const {reload} = useReportSave();
-  const {getWorkbook} = useSpread();
 
   const userNm = useSelector(selectUserName);
   const initialDisplay = useSelector(selectInitialDisplay);
-  const rootItem = useSelector(selectRootItem);
-  const currentItem = useSelector(selectCurrentItems);
-  const currentParameter = useSelector(selectCurrentInformationas);
   const currentReport = useSelector(selectCurrentReport);
   const reportId = useSelector(selectCurrentReportId);
-  const dataSource = _.cloneDeep(currentReport.options);
-  const currentParameterValues = useSelector(selectCurrentValues);
   const selectLinkedReportList = useSelector(selectLinkedReport);
+  const editMode = selectEditMode(store.getState());
   const {
     showAlert,
     resetAlert
@@ -70,25 +61,7 @@ const HeaderDefaultElement = () => {
   const isAlertShown = useSelector(selectAlert);
   const [showLinkedReport, setShowLinkedReport] = useState(false); // 상태 관리
 
-  const filterdLayoutItem = () => {
-    if (currentReport.options.reportType === 'Excel') {
-      const reportNm =
-        currentReport.options.reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
-      return {type: 'excel', name: reportNm};
-    };
-
-    if (!rootItem.adHocOption) return currentItem;
-
-    let items = currentItem.filter((item) =>
-      item.type == rootItem.adHocOption.layoutSetting
-    );
-
-    if (items.length === 0) { // 차트 피벗 전부 보기인 경우.
-      items = currentItem;
-    }
-
-    return items;
-  };
+  const element = elementFactory();
 
   return {
     'Logo': {
@@ -299,39 +272,39 @@ const HeaderDefaultElement = () => {
       'width': '115px',
       'icon': openViewerImg,
       'type': 'CommonButton',
+      'usePopover': true,
+      'popoverProps': {
+        'width': 'auto',
+        'height': 'auto',
+        'showEvent': 'click',
+        'position': 'bottom',
+        'wrapperAttr': {id: 'viewerDownloadPopover'}
+      },
+      'contentRender': (e) => {
+        if (editMode === EditMode['VIEWER'] && currentReport.reportId === 0) {
+          return;
+        }
+
+        const props = {
+          width: '400px',
+          height: 'auto',
+          popoverType: 'labelImages',
+          titlePanel: false,
+          id: 'download_report'
+        };
+
+        return (
+          <RibbonPopoverContents
+            element={element[props.id]}
+            {...props}/>
+        );
+      },
       'onClick': (e) => {
         // viewer 다운로드 예외 처리(아무것도 없는 경우)
-        const editMode = selectEditMode(store.getState());
-
         if (editMode === EditMode['VIEWER'] && currentReport.reportId === 0) {
           alert(localizedString.viwerDownloadMsg);
           return;
         }
-
-        const newCurrentItem = filterdLayoutItem();
-
-        if (newCurrentItem.type === 'excel') {
-          const spread = getWorkbook();
-
-          spread.export((blob) => {
-            saveAs(blob, newCurrentItem.name);
-          }, () => {
-            alert(localizedString.reportCorrupted);
-          }, {includeBindingSource: true, fileType: 0});
-          return;
-        }
-        const option = {
-          mergeColumn: true,
-          mergeRow: true
-        };
-        exportExcel(
-            currentReport,
-            newCurrentItem,
-            currentParameter,
-            currentParameterValues,
-            dataSource,
-            option
-        );
       }
     }
   };

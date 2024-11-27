@@ -357,7 +357,8 @@ export const exportExcel = async (
     parameters,
     parameterValues,
     dataSource,
-    option) => {
+    option,
+    itemName) => {
   store.dispatch(startJob());
   try {
     const workbook = await mergeExcelFiles(items, parameters, parameterValues, option);
@@ -377,8 +378,10 @@ export const exportExcel = async (
       const file = await getExcelBlob('report.xlsx', downloadData);
       const url = window.URL.createObjectURL(file.blob);
       const link = document.createElement('a');
+      const downloadName = itemName ? itemName + file.name.slice(file.name.lastIndexOf('.')) : file.name;
       link.href = url;
-      link.setAttribute('download', file.name);
+
+      link.setAttribute('download', downloadName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -395,7 +398,12 @@ export const exportImg = async (report, fileName) => {
   store.dispatch(startJob());
   const selectedElements =
     document.querySelectorAll('.tab-selected, .flexlayout__tabset');
-  selectedElements.forEach((element) =>
+  // 활성화된 tab 만 다운로드
+  const filteredElements = Array.from(selectedElements).filter((element) => {
+    const grandParent = element.parentElement?.parentElement; // 부모의 부모 요소 찾기
+    return grandParent && grandParent.style.display === 'block'; // display가 block인지 확인
+  });
+  filteredElements.forEach((element) =>
     element.classList.add('download'));
   const elements = [];
   const layout = selectRootLayout(store.getState());
@@ -404,7 +412,10 @@ export const exportImg = async (report, fileName) => {
   if (Array.isArray(layout.layoutConfig)) {
     useContainer = true;
     layout.layoutConfig.forEach((config, i) => {
-      elements.push(document.querySelector('.board-' + report.reportId + '-' + i));
+      // 활성화된 tab 만 다운로드
+      if (i === layout.selectedTab) {
+        elements.push(document.querySelector('.board-' + report.reportId + '-' + i));
+      }
     });
   } else {
     elements.push(document.querySelector('.board-' + report.reportId + '-' + 0));

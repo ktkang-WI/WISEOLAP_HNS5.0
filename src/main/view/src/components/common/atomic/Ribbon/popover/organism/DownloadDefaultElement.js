@@ -25,6 +25,10 @@ import imagesImg from 'assets/image/icon/item/ico_exportImages.png';
 import pdfImg from 'assets/image/icon/item/ico_exportPDF.png';
 import csvImg from 'assets/image/icon/item/ico-csvdownload.png';
 import txtImg from 'assets/image/icon/item/ico_ept_txt.png';
+import useSpread from 'hooks/useSpread';
+import {DesignerMode} from 'components/config/configType';
+import {excelExportOptions} from
+  'components/report/atomic/spreadBoard/util/spreadContants';
 
 const DownloadDefaultElement = () => {
   const currentItem = useSelector(selectCurrentItems);
@@ -35,6 +39,7 @@ const DownloadDefaultElement = () => {
   const rootLayout = useSelector(selectRootLayout);
   const dataSource = _.cloneDeep(currentReport.options);
   const {alert} = useModal();
+  const {getWorkbook} = useSpread();
   const defaultReportName = localizedString.defaultReportName;
 
   const checkExecuteQuery = () => {
@@ -65,6 +70,12 @@ const DownloadDefaultElement = () => {
   // 비정형인 경우 레이아웃 설정에 따라 다운로드 되는 아이템이 달라야 함.
   // (ex. 그리드만 보기 -> 전체 다운로드 -> 그리드만 다운로드)
   const filterdLayoutItem = () => {
+    if (currentReport.options.reportType === 'Excel') {
+      const reportNm =
+        currentReport.options.reportNm.replaceAll(/[\s\/\\:*?'<>]/gi, '_');
+      return {type: 'excel', name: reportNm};
+    };
+
     if (!rootItem.adHocOption) {
       return currentItem.filter((item) => item.tab === rootLayout.selectedTab);
     }
@@ -80,14 +91,31 @@ const DownloadDefaultElement = () => {
     return items;
   };
 
+  const downloadSpread = (newCurrentItem) => {
+    const spread = getWorkbook();
+
+    spread.export((blob) => {
+      saveAs(blob, newCurrentItem.name);
+    }, () => {
+      alert(localizedString.reportCorrupted);
+    }, excelExportOptions);
+    return;
+  };
+
   const onClick = (type) => {
+    const isExcel = currentReport.options.reportType === DesignerMode.EXCEL;
+    if (!isExcel && !checkExecuteQuery()) {
+      alert('조회 후 다운로드를 진행해 주세요.');
+      return;
+    }
     if (type === 'excelMergeXlsx') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
+      const newCurrentItem = filterdLayoutItem();
+
+      if (newCurrentItem.type === 'excel') {
+        downloadSpread(newCurrentItem);
         return;
       }
 
-      const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: true,
         mergeRow: true
@@ -100,12 +128,12 @@ const DownloadDefaultElement = () => {
           dataSource,
           option);
     } else if (type === 'excelXlsx') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
+      const newCurrentItem = filterdLayoutItem();
+
+      if (newCurrentItem.type === 'excel') {
+        downloadSpread(newCurrentItem);
         return;
       }
-
-      const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: false,
         mergeRow: false
@@ -118,11 +146,6 @@ const DownloadDefaultElement = () => {
           dataSource,
           option);
     } else if (type === 'word') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
-        return;
-      }
-
       const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: true,
@@ -136,11 +159,6 @@ const DownloadDefaultElement = () => {
           currentParameter,
           option);
     } else if (type === 'powerpoint') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
-        return;
-      }
-
       const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: true,
@@ -154,19 +172,9 @@ const DownloadDefaultElement = () => {
           currentParameter,
           option);
     } else if (type === 'img') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
-        return;
-      }
-
       exportImg(currentReport,
           currentReport?.options?.reportNm || defaultReportName);
     } else if ( type === 'pdf') {
-      if (!checkExecuteQuery()) {
-        alert('조회 후 다운로드를 진행해 주세요.');
-        return;
-      }
-
       const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: true,
@@ -187,8 +195,7 @@ const DownloadDefaultElement = () => {
       title: localizedString.MSOffice,
       checkboxs: [
         {
-          title: rootItem?.adHocOption ?
-          localizedString.excelMergeXlsx : 'EXCEL',
+          title: 'EXCEL',
           type: 'excelMergeXlsx',
           checked: false,
           src: xlsImg,
@@ -199,21 +206,24 @@ const DownloadDefaultElement = () => {
           type: 'excelXlsx',
           checked: false,
           src: xlsImg,
-          visible: rootItem?.adHocOption ? true : false
+          visible: currentReport.options.reportType === DesignerMode.AD_HOC ?
+          true : false
         },
         {
           title: localizedString.word,
           type: 'word',
           checked: false,
           src: wordImg,
-          visible: true
+          visible: currentReport.options.reportType === DesignerMode.EXCEL ?
+          false : true
         },
         {
           title: localizedString.powerpoint,
           type: 'powerpoint',
           checked: false,
           src: pptImg,
-          visible: true
+          visible: currentReport.options.reportType === DesignerMode.EXCEL ?
+          false : true
         }
       ]
     },
@@ -225,14 +235,16 @@ const DownloadDefaultElement = () => {
           type: 'img',
           checked: false,
           src: imagesImg,
-          visible: true
+          visible: currentReport.options.reportType === DesignerMode.EXCEL ?
+          false : true
         },
         {
           title: localizedString.pdf,
           type: 'pdf',
           checked: false,
           src: pdfImg,
-          visible: true
+          visible: currentReport.options.reportType === DesignerMode.EXCEL ?
+          false : true
         },
         {
           title: localizedString.csv,

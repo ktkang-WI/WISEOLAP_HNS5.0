@@ -61,8 +61,10 @@ export class ItemDownload {
   };
 
   renderDownloadButtons = (id, item, isImgDownloadable) => {
-    const {data} = downloadDefaultElement();
+    const {data, onClick} = downloadDefaultElement();
     const itemName = item?.meta?.name;
+    const itemType = item?.type;
+
     return (
       <div style={{
         width: '220px'
@@ -71,21 +73,29 @@ export class ItemDownload {
           data.map((item, index) => {
             const elements = item.checkboxs.filter((ch) =>
               ch.type === 'excelMergeXlsx' ||
+              ((itemType === 'pivot') && ch.type === 'excelXlsx') ||
               (ch.type === 'img' && !isImgDownloadable) ||
               ch.type === 'csv' ||
               ch.type === 'txt'
-            ).map((ch) => ({...ch, 'visible': true}));
+            ).map((ch) => ({
+              ...ch,
+              'visible': true,
+              'id': id + '_' + ch.type
+            }));
             return (
               <ImgCheckBox key={index}
                 onValueChanged={(e) => {
+                  onClick();
                   let type = '';
-                  if (e.target.id === 'img') {
+                  if (e.target.id.endsWith('img')) {
                     type = Type.IMG;
-                  } else if (e.target.id === 'excelMergeXlsx') {
+                  } else if (e.target.id.endsWith('excelMergeXlsx')) {
                     type = Type.XLSX;
-                  } else if (e.target.id === 'csv') {
+                  } else if (e.target.id.endsWith('excelXlsx')) {
+                    type = 'noMergeXLSX';
+                  } else if (e.target.id.endsWith('csv')) {
                     type = Type.CSV;
-                  } else if (e.target.id === 'txt') {
+                  } else if (e.target.id.endsWith('txt')) {
                     type = Type.TXT;
                   }
                   this.#exportFile(
@@ -131,6 +141,8 @@ export class ItemDownload {
       exportToFile(name, pickItem.data, Type.TXT);
     } else if (Type.XLSX === type) {
       exportToFile(name, pickItem.data, Type.XLSX, pickItem);
+    } else if (type.endsWith('XLSX')) {
+      exportToFile(name, pickItem.data, type, pickItem);
     } else if (Type.IMG === type) {
       exportToFile(name, pickItem, Type.IMG);
     }

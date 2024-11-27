@@ -96,8 +96,8 @@ const RibbonPopoverContents = ({popoverType, titlePanel, id, element}) => {
 
     return (
       <div style={{
-        width: id !== 'download_report' ? '500px' : '320px',
-        padding: '15px',
+        width: id !== 'download_report' ? '500px' : '300px',
+        padding: '10px',
         paddingTop: '5px'
       }}>
         {data.map((item, index) =>
