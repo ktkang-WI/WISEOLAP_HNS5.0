@@ -327,6 +327,10 @@ const DataGrid = ({setItemExports, id, item}) => {
       onSelectionChanged={onSelectionChanged}
       onColumnsChanging={handleColumnsChanging}
       onContextMenuPreparing={(e) => {
+        if (!e.cell || e.cell.columnType === undefined ||
+          e.cell.rowType === undefined) {
+          return;
+        }
         const contextMenu = getContextMenuItems();
         e.items = e.items.concat(contextMenu);
       }}
