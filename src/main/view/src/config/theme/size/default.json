@@ -13,6 +13,8 @@
     "panelWidth": "240px",
     "width_450": "450px",
     "smallModalWidth" : "500px",
+    "pagingModalWidth" : "400px",
+    "pagingModalHeight": "700px",
     "bigModalWidthPx": "1400px",
     "bigModalHeightPx": "800px",
     "tinyModalHeight" : "17vh",

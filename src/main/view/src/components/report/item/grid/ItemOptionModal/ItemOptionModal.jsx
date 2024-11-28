@@ -93,8 +93,8 @@ const ItemOptionModal = ({popupName, ...props}) => {
         return props.onClose();
       }}
       modalTitle={props.modalTitle}
-      width={theme.size.smallModalWidth}
-      height='600px'
+      width={theme.size.pagingModalWidth}
+      height={theme.size.pagingModalHeight}
     > <FieldSet>
         <Field>
           <FieldLabel>
