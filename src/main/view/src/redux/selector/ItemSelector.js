@@ -37,7 +37,7 @@ export const selectCurrentDataField = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
     (selectedItem, reportId, item) => {
-      if (item[reportId].adHocOption) {
+      if (item[reportId]?.adHocOption) {
         return item[reportId].adHocOption.dataField;
       }
       return selectedItem?.meta?.dataField;
@@ -61,7 +61,7 @@ export const selectCurrentDataFieldOption = createSelector(
     selectCurrentReportId,
     (state) => state.meta.item,
     (selectedItem, reportId, item) => {
-      if (item[reportId].adHocOption) {
+      if (item[reportId]?.adHocOption) {
         return item[reportId].adHocOption.dataFieldOption;
       }
       return selectedItem ? selectedItem.mart.dataFieldOption : [];
