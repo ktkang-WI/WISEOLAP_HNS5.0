@@ -48,6 +48,7 @@ const SpreadBoard = () => {
   // hook
   const {
     sheetChangedListener,
+    calculationProgressListener,
     sheetNameChangedListener,
     bindData,
     hnsDrmUpload
@@ -133,6 +134,8 @@ const SpreadBoard = () => {
               workbookJSON: designer.getWorkbook().toJSON()
             });
             sheetChangedListener(designer.getWorkbook());
+            // 수식 계산 시 progressBar 보이도록 수정
+            calculationProgressListener(designer.getWorkbook());
             sheetNameChangedListener(designer);
           }
         }}
