@@ -860,7 +860,7 @@
   "selectReportAndDeleteConfirm": "보고서를 선택 후 삭제 버튼을 눌러주세요.",
   "noReports": "조회된 보고서가 없습니다.",
   "changeFolderNm": "폴더 이름 변경",
-  "changeFolderNmConfirm": "폴더 이름을 변경 하시겠습니까?",
+  "changeFolderNmConfirm": "폴더 내용을 변경 하시겠습니까?",
   "deleteConfirm": "삭제 하시겠습니까?",
   "createFolder": "폴더 생성",
   "createFolderConfirm": "폴더를 생성 하시겠습니까?",
