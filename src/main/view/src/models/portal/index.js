@@ -19,8 +19,8 @@ export const getAdminCardData = (date, type, team) => {
   }});
 };
 
-export const getTeamList = (date) => {
-  return axios.get(path + '/team-list', {params: {date}});
+export const getTeamList = (auth, date) => {
+  return axios.get(path + '/team-list', {params: {auth, date}});
 };
 
 export const getMaxDate = () => {

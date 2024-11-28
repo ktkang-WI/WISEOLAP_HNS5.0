@@ -18,6 +18,7 @@ import com.wise.MarketingPlatForm.mart.vo.PortalCardQueryMstrVO;
 import com.wise.MarketingPlatForm.mart.vo.PortalDataDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO;
 import com.wise.MarketingPlatForm.mart.vo.PortalReportMstrVO;
+import com.wise.MarketingPlatForm.mart.vo.PortalTeamQueryMstrVO;
 import com.wise.MarketingPlatForm.mart.vo.PortalTypeMstrVO;
 import com.wise.MarketingPlatForm.portal.dao.PortalDAO;
 
@@ -163,19 +164,19 @@ public class PortalService {
         }
     }
 
-    public List<Map<String, Object>> getTeamList(String date) {
-        String sql = "SELECT MD_TEAM_NM\r\n" +
-                "\tFROM MISDM.VW_MAIN_IM_TEAM_FILTER\r\n" +
-                "\tWHERE GATHER_BASE_DATE = '" + date + "'" +
-                "\tAND MD_TEAM_NM NOT IN('비매핑')" +
-                "\tORDER BY MD_TEAM_ORD";
+    public List<Map<String, Object>> getTeamList(PortalFilterDTO filter) {
+        PortalTeamQueryMstrVO queryVO = portalDAO.selectPortalTeamQueryMstr(filter);
+        String query = queryVO.getQuery();
+        String date = "'" + filter.getDate() + "'";
+
+        query = query.replaceAll("@DATE", date);
 
         MartResultDTO martResultDTO = null;
 
-        DsMstrDTO dsMstrDTO = datasetService.getDataSource(3465);
+        DsMstrDTO dsMstrDTO = datasetService.getDataSource(queryVO.getDsId());
         martConfig.setMartDataSource(dsMstrDTO);
 
-        martResultDTO = martDAO.select(3465, sql);
+        martResultDTO = martDAO.select(queryVO.getDsId(), query);
 
         return martResultDTO.getRowData();
     }
@@ -196,9 +197,10 @@ public class PortalService {
 
         List<PortalTypeMstrVO> portalTypes = portalDAO.selectAllPortalTypeMstr();
         List<PortalReportMstrVO> portalReports = portalDAO.selectAllPortalReportMstr();
-        List<PortalCardQueryMstrVO> portalQueries = portalDAO.selectAllPortalCardQueryMstr();
+        List<PortalCardQueryMstrVO> portalCards = portalDAO.selectAllPortalCardQueryMstr();
+        List<PortalTeamQueryMstrVO> portalTemas = portalDAO.selectAllPortalTeamQueryMstr();
 
-        PortalDataDTO result = new PortalDataDTO(portalTypes, portalReports, portalQueries);
+        PortalDataDTO result = new PortalDataDTO(portalTypes, portalReports, portalCards, portalTemas);
 
         return result;
     }
@@ -207,8 +209,10 @@ public class PortalService {
         portalDAO.deleteAllPortalCardQueryMstr();
         portalDAO.deleteAllPortalTypeMstr();
         portalDAO.deleteAllPortalReportMstr();
+        portalDAO.deleteAllPortalTeamQueryMstr();
 
-        portalDAO.insertPortalCardQueryMstr(portalDataDTO.getQueries());
+        portalDAO.insertPortalTeamQueryMstr(portalDataDTO.getTeams());
+        portalDAO.insertPortalCardQueryMstr(portalDataDTO.getCards());
         portalDAO.insertPortalTypeMstr(portalDataDTO.getTypes());
         portalDAO.insertPortalReportMstr(portalDataDTO.getReports());
     }

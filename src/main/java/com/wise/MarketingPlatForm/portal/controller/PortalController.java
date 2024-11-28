@@ -87,8 +87,13 @@ public class PortalController {
     }
 
     @GetMapping("/team-list")
-    public ResponseEntity<List<Map<String, Object>>> getTeamList(@RequestParam("date") String date) {
-        List<Map<String, Object>> list = portalServie.getTeamList(date);
+    public ResponseEntity<List<Map<String, Object>>> getTeamList(
+        @RequestParam("date") String date,
+        @RequestParam("auth") String auth
+    ) {
+        PortalFilterDTO filter = new PortalFilterDTO(auth, null, date, null);
+
+        List<Map<String, Object>> list = portalServie.getTeamList(filter);
 
         return ResponseEntity.ok().body(list);
     }

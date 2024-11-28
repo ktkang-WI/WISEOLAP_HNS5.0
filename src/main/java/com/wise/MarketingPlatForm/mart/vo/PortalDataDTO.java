@@ -14,5 +14,6 @@ import lombok.Setter;
 public class PortalDataDTO {
     List<PortalTypeMstrVO> types;
     List<PortalReportMstrVO> reports;
-    List<PortalCardQueryMstrVO> queries;
+    List<PortalCardQueryMstrVO> cards;
+    List<PortalTeamQueryMstrVO> teams;
 }
