@@ -112,7 +112,7 @@ public class MyPageFolderController {
     @RequestParam(required = false, defaultValue = "") int ordinal,
     @RequestParam(required = false, defaultValue = "") int fldLvl,
     @RequestParam(required = false, defaultValue = "") String name,
-    @RequestParam(required = false, defaultValue = "") String desc
+    @RequestParam(required = false, defaultValue = "") String fldDesc
   ) {
     MyPageFolderReportDTO fldReprotDTO = MyPageFolderReportDTO.builder()
         .id(id)    
@@ -120,7 +120,7 @@ public class MyPageFolderController {
         .ordinal(ordinal)
         .fldLvl(fldLvl)
         .name(name)
-        .desc(desc)
+        .desc(fldDesc)
         .build();
     
     return myPageFolderReportService.updateMyFolder(fldReprotDTO);

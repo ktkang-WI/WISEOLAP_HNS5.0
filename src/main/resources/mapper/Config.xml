@@ -175,7 +175,7 @@
             CAST('FOLDER' AS NVARCHAR2(20)) AS TYPE,
             NULL AS SUBTITLE,
             NULL AS TAG,
-            NULL AS DESCRIPTION,
+            FLD_DESC AS DESCRIPTION,
             NULL AS QUERY,
             NULL AS PROMPT,
             NULL AS maxReportPeriodYn,
@@ -203,7 +203,8 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
-        ) REPORTANDFOLDER ORDER BY
+        ) REPORTANDFOLDER 
+           ORDER BY
             REPORTANDFOLDER.TYPE,
             REPORTANDFOLDER.ORDINAL,
             REPORTANDFOLDER.NAME

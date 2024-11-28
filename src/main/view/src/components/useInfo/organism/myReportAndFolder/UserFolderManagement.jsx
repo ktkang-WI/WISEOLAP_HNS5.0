@@ -77,6 +77,7 @@ const UserFolderManagement = () => {
       formData.ordinal= newItemData?.ordinal || 0;
       formData.fldLvl = newItemData?.fldLvl || 0;
       formData.desc = newItemData?.desc || '';
+      formData.fldDesc = newItemData?.desc || '';
 
       ref.current.instance.repaint();
     }
