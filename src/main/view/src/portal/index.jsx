@@ -41,6 +41,7 @@ const Portal = ({admin = false}) => {
   const [folderMap, setFolderMap] = useState([]);
   const [cardData, setCardData] = useState([]);
   const [teamList, setTeamList] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(null);
   const folders = [2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358];
   // folders.push(1621, 1781, 2221);
   const [userId, setUserId] = useState('');
@@ -92,7 +93,9 @@ const Portal = ({admin = false}) => {
   }, []);
 
   useEffect(() => {
-    models.Portal.getTeamList(format(date, 'yyyyMMdd')).then((data) => {
+    if (!admin) return;
+
+    models.Portal.getTeamList(auth, format(date, 'yyyyMMdd')).then((data) => {
       if (data.status == 200) {
         setTeamList(data.data);
       } else {
@@ -113,11 +116,15 @@ const Portal = ({admin = false}) => {
   }, [auth, date, type, team]);
 
   useEffect(() => {
+    if (admin && isAdmin === false) {
+      nav('/editds/portal');
+    }
+  }, [isAdmin]);
+
+  useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
-        if (admin && data.data.userId != 'admin') {
-          nav('/editds/portal');
-        }
+        setIsAdmin(data.data.grpId == '1004');
         setUserId(data.data.userId);
         setUserNm(data.data.userNm);
       }
@@ -251,7 +258,7 @@ const Portal = ({admin = false}) => {
         folderMap={folderMap}
         headerMenuHref={headerMenuHref}
         userNm={userNm}
-        useAdminButton={userId == 'admin'}
+        useAdminButton={isAdmin}
         admin={admin}
       />
       <div className='contents'>

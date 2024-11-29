@@ -11,6 +11,12 @@
     <result column="DS_ID" property="dsId" javaType="int"/>
 	</resultMap>
 
+  <resultMap id="PortalTeamQueryMstr" type="com.wise.MarketingPlatForm.mart.vo.PortalTeamQueryMstrVO">
+    <result column="QUERY" property="query" javaType="String"/>
+    <result column="AUTH" property="auth" javaType="String"/>
+    <result column="DS_ID" property="dsId" javaType="int"/>
+	</resultMap>
+
   <resultMap id="PortalTypeMstr" type="com.wise.MarketingPlatForm.mart.vo.PortalTypeMstrVO">
 		<result column="NAME" property="name" javaType="String"/>
     <result column="ORDINAL" property="ordinal" javaType="int"/>
@@ -40,6 +46,20 @@
     WHERE
       TYPE = #{type}
       AND AUTH = #{auth}
+  </select>
+
+  <select
+    id="selectPortalTeamQueryMstr"
+    parameterType="com.wise.MarketingPlatForm.mart.vo.PortalFilterDTO"
+    resultMap="PortalTeamQueryMstr"
+  >
+    SELECT
+      TO_CHAR(QUERY) AS QUERY,
+      AUTH,
+      DS_ID
+    FROM PORTAL_TEAM_QUERY_MSTR
+    WHERE
+      AUTH = #{auth}
   </select>
 
   <select id="selectPortalTypeMstr" resultMap="PortalTypeMstr">
@@ -76,8 +96,24 @@
     FROM PORTAL_CARD_QUERY_MSTR
   </select>
 
+  <select
+    id="selectAllPortalTeamQueryMstr"
+    resultMap="PortalTeamQueryMstr"
+  >
+    SELECT
+      TO_CHAR(QUERY) AS QUERY,
+      AUTH,
+      DS_ID
+    FROM PORTAL_TEAM_QUERY_MSTR
+  </select>
+
+
   <delete id="deleteAllPortalCardQueryMstr">
     DELETE FROM PORTAL_CARD_QUERY_MSTR
+  </delete>
+
+  <delete id="deleteAllPortalTeamQueryMstr">
+    DELETE FROM PORTAL_TEAM_QUERY_MSTR
   </delete>
 
   <delete id="deleteAllPortalTypeMstr">
@@ -93,6 +129,15 @@
     <foreach collection="list" item="item">
       INTO PORTAL_CARD_QUERY_MSTR (TYPE, QUERY, AUTH, DS_ID)
       VALUES (#{item.type}, #{item.query}, #{item.auth}, #{item.dsId})
+    </foreach>
+    SELECT 1 FROM DUAL
+  </insert>
+
+  <insert id="insertPortalTeamQueryMstr" parameterType="list">
+    INSERT ALL
+    <foreach collection="list" item="item">
+      INTO PORTAL_TEAM_QUERY_MSTR (QUERY, AUTH, DS_ID)
+      VALUES (#{item.query}, #{item.auth}, #{item.dsId})
     </foreach>
     SELECT 1 FROM DUAL
   </insert>

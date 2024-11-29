@@ -5,20 +5,9 @@ import {
   Column, Editing, Form, Lookup, Popup, Item
 } from 'devextreme-react/data-grid';
 import useModal from 'hooks/useModal';
-import models from 'models';
-import {useEffect, useState} from 'react';
 
-const PortalCardGrid = ({dxRef, ...props}) => {
+const PortalCardGrid = ({dxRef, dsSource, ...props}) => {
   const {alert} = useModal();
-  const [dataSource, setDataSource] = useState([]);
-
-  useEffect(() => {
-    models.DataSource.getDs().then((res) => {
-      if (res.status == 200) {
-        setDataSource(res.data.data);
-      }
-    });
-  }, []);
 
   return (
     <DataGrid
@@ -89,7 +78,7 @@ const PortalCardGrid = ({dxRef, ...props}) => {
       </Column>
       <Column dataField='dsId' caption='데이터 원본'>
         <Lookup
-          dataSource={dataSource}
+          dataSource={dsSource}
           displayExpr={'dsNm'}
           valueExpr={'dsId'}/>
       </Column>
