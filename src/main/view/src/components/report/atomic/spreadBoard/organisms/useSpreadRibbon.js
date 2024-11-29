@@ -23,6 +23,7 @@ import {
 import {
   SpreadRibbonDefaultElement,
   defaultWorkbookJSON,
+  excelExportOptions,
   spreadDownlaodReportModel
 } from 'components/report/atomic/spreadBoard/util/spreadContants.js';
 import DatasetType from 'components/dataset/utils/DatasetType';
@@ -163,7 +164,7 @@ const useSpreadRibbon = () => {
         saveAs(blob, e.fileName);
       }, () => {
         alert(localizedString.reportCorrupted);
-      }, {includeBindingSource: true, fileType: 0});
+      }, excelExportOptions);
 
       // uploadworkbookJSONData(e.workbookJSONData, e.fileName, e.reportId);
     }
@@ -288,7 +289,7 @@ const useSpreadRibbon = () => {
       },
       downloadReportXLSX: {
         title: 'XLSX',
-        text: 'XLSX',
+        text: localizedString.excelXls,
         commandName: 'downloadReportXLSX',
         execute: (context, propertyName, fontItalicChecked) => {
           downloadReportXLSX();

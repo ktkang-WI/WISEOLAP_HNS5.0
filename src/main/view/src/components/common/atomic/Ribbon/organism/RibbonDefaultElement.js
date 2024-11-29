@@ -300,7 +300,7 @@ const RibbonDefaultElement = () => {
         const props = {
           width: '500px',
           height: 'auto',
-          popoverType: 'subMenuBtn',
+          popoverType: 'labelImages',
           titlePanel: false,
           id: 'download_report'
         };

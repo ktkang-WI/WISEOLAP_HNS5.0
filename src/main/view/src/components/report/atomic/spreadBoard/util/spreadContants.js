@@ -35,6 +35,11 @@ export const excelIOOpenOtions = {
   iterativeCalculationMaximumIterations: 100
 };
 
+export const excelExportOptions = {
+  includeBindingSource: true,
+  fileType: 0
+};
+
 export const SpreadRibbonDefaultElement = {
   id: 'fileMenu',
   text: localizedString.file,

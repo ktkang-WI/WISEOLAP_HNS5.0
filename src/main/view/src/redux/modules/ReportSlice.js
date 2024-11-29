@@ -2,6 +2,19 @@ import {createSlice} from '@reduxjs/toolkit';
 import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
 
+const setInitDesignerMode = () => {
+  const href = window.location.href;
+  if (href.indexOf(DesignerMode['DASHBOARD'].toLowerCase()) > -1) {
+    return DesignerMode['DASHBOARD'];
+  } else if (href.indexOf(DesignerMode['AD_HOC'].toLowerCase()) > -1) {
+    return DesignerMode['AD_HOC'];
+  } else if (href.indexOf(DesignerMode['EXCEL'].toLowerCase()) > -1) {
+    return DesignerMode['EXCEL'];
+  }
+
+  return DesignerMode['DASHBOARD'];
+};
+
 const initialState = {
   selectedReportId: 0,
   reports: [{
@@ -16,7 +29,7 @@ const initialState = {
       reportTag: '',
       reportDesc: '',
       path: '', // 해당 경로 비어있을 경우 새 보고서 다시 확인
-      reportType: DesignerMode['DASHBOARD']
+      reportType: setInitDesignerMode()
     }
   }]
 };
@@ -28,6 +41,7 @@ const reducers = {
     const designerMode = actions.payload;
     const cloneState = _.cloneDeep(initialState);
     cloneState.reports[0].reportType = designerMode;
+    cloneState.reports[0].options.reportType = designerMode;
     return cloneState;
   },
   /*

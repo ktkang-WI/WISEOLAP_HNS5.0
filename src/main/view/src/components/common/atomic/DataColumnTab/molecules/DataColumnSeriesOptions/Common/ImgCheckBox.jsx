@@ -12,7 +12,7 @@ const StyledWrapper = styled(Wrapper)`
   border-radius: 10px;
   color: ${theme.color.gray600};
   border: 1px solid ${theme.color.gray100};
-  margin-top: 20px;
+  margin-top: 10px;
   box-sizing: border-box;
 
   & + & {
@@ -138,10 +138,10 @@ const CheckBoxs = ({onValueChanged, checkboxs, ...props}) => {
   return (
     <StyledUl>
       {checkboxs.map((item, index) =>
-        <CheckBox
+        (item.visible !== false) && <CheckBox
           key={index}
           title={item.title}
-          id={item.type}
+          id={item.id || item.type}
           src={item.src}
           onValueChanged={onValueChanged}
           checked={item.checked}/>
@@ -153,7 +153,9 @@ const CheckBoxs = ({onValueChanged, checkboxs, ...props}) => {
 export const ImgCheckBox = ({onValueChanged, ...props}) => {
   const [expanded, setExpanded] = useState(true);
 
+  const visibleCheckboxs = props.checkboxs.filter((ch) => ch.visible !== false);
   return (
+    visibleCheckboxs.length > 0 &&
     <StyledWrapper>
       <StyledTitle
         expanded={expanded}
@@ -162,10 +164,11 @@ export const ImgCheckBox = ({onValueChanged, ...props}) => {
       </StyledTitle>
       {
         expanded &&
-        <CheckBoxs
-          onValueChanged={onValueChanged}
-          title={props.title}
-          checkboxs={props.checkboxs}/>
+          <CheckBoxs
+            onValueChanged={onValueChanged}
+            title={props.title}
+            checkboxs={props.checkboxs}
+          />
       }
     </StyledWrapper>
   );

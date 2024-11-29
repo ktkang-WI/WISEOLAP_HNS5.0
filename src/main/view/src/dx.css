@@ -543,3 +543,12 @@ td[role="columnheader"] {
 .dx-popup-content .dx-list-item-selected .dx-list-item-content {
   font-weight: bold;
 }
+
+/*popover css*/
+#viewerDownloadPopover .dx-popup-content {
+  padding: 3px;
+}
+
+.itemDownloadPopover .dx-popup-content {
+  padding: 0 10px 15px 10px;
+}
