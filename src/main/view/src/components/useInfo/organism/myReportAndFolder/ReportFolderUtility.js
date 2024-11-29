@@ -92,17 +92,16 @@ const ReportFolderUtility = () => {
   };
 
   const deleteUserFolderUtil = (itemData, treeViewData, setTreeViewData) => {
-    confirm(localizedString.deleteConfirm, () => {
+    confirm(localizedString.deleteConfirm, async () => {
       const flds = treeViewData.filter((fld) => fld.id == itemData.id);
 
       getRecursiveUserFolderId(treeViewData, itemData, flds);
 
       const deleteFldIds = flds.map((f) => f.id);
 
-      deleteMyPageFolder(deleteFldIds).then((response) => {
-        itemData = {};
-        afterCrudLoadData(setTreeViewData);
-      }).catch();
+      await deleteMyPageFolder(deleteFldIds);
+      itemData = {};
+      afterCrudLoadData(setTreeViewData);
     });
   };
 

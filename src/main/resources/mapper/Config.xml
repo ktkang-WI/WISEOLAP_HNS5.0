@@ -419,6 +419,15 @@
             PUB_FLD_MSTR.FLD_ORDINAL ASC
 		</select>
 
+    <select id="selectReportCountByFldId" parameterType="java.util.List" resultType="int">
+      SELECT COUNT(*)
+      FROM REPORT_MSTR
+      WHERE FLD_ID IN
+      <foreach item="id" collection="list" open="(" separator="," close=")">
+          #{id, jdbcType=INTEGER}
+      </foreach>
+  </select>
+
     <update id="updateConfig" parameterType="com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity">
       UPDATE CONFIG_MSTR
           SET 
@@ -530,18 +539,12 @@
     <update id="deleteChildReports" parameterType="java.util.List">
       UPDATE 	REPORT_MSTR
       SET		DEL_YN = 'Y'
-      WHERE
-      <if test="list != null and list.size != 1">
-        FLD_ID IN
+      WHERE FLD_ID IN
+      <if test="list != null">
         <foreach item="id" index="index" collection="list" separator="," open="(" close=")">
           #{id, jdbcType=INTEGER}
         </foreach>
       </if>
-      <if test="list != null and list.size == 1">
-        FLD_ID =
-        <foreach item="id" collection="list">
-          #{id, jdbcType=INTEGER}
-        </foreach>
-      </if>
+      AND FLD_ID IS NOT NULL
     </update>
 </mapper>
