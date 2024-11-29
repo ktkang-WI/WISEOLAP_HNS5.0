@@ -200,6 +200,22 @@ const useSpread = () => {
     statusBar.bind(workbook);
   };
 
+  // 수식 계산 시 progressBar 보이도록 수정
+  const calculationProgressListener = (workbook) => {
+    workbook.bind(
+        sheets.Events.CalculationProgress,
+        (e, info) => {
+          const {totalCells, pendingCells} = info;
+          if (totalCells === pendingCells) {
+            dispatch(startJob('엑셀 수식을 계산 중입니다.'));
+          }
+          if (pendingCells === 0) {
+            dispatch(endJob('엑셀 수식을 계산 중입니다.'));
+          }
+        }
+    );
+  };
+
   const sheetChangedListener = (workbook) => {
     workbook.bind(
         sheets.Events.SheetChanged,
@@ -422,6 +438,7 @@ const useSpread = () => {
   return {
     getWorkbook,
     bindData,
+    calculationProgressListener,
     sheetChangedListener,
     initSpreadBar,
     sheetNameChangedListener,

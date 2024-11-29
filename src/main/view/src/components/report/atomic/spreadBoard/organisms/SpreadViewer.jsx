@@ -37,7 +37,8 @@ const StatusBar = styled('div')`
 const SpreadViewer = ({reportId}) => {
   const spreadData = useSelector((state) => selectSpreadData(state, reportId));
   const {setSpreadData} = SpreadSlice.actions;
-  const {bindData, setExcelFile, sheetChangedListener} =
+  const {bindData, setExcelFile, sheetChangedListener,
+    calculationProgressListener} =
   useSpread();
   const dispatch = useDispatch();
   const {setRibbonRemoveFileMenu} = useSpreadRibbon();
@@ -112,7 +113,9 @@ const SpreadViewer = ({reportId}) => {
 
 
           setWorkbookRef(workbookRef);
-          sheetChangedListener(designer);
+          sheetChangedListener(designer.getWorkbook());
+          // 수식 계산 시 progressBar 보이도록 수정
+          calculationProgressListener(designer.getWorkbook());
           // initSpreadBar(designer, reportId);
         }}
         styleInfo={{
