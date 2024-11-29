@@ -478,9 +478,7 @@
               <if test='fldLvl != 0'>
                 FLD_LVL = #{fldLvl, jdbcType=INTEGER},
               </if>
-              <if test='fldParentId != 0'>
                 FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
-              </if>
               <if test='fldOrdinal != 0'>
                 FLD_ORDINAL = #{fldOrdinal, jdbcType=INTEGER},
               </if>
