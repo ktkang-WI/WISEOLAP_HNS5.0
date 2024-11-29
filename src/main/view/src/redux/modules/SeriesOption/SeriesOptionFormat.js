@@ -104,7 +104,10 @@ const getSeriesOptionGeneralFormat = () => {
 const getSeriesOptionPointLabelFormat = () => {
   return _.cloneDeep(seriesOptionDefaultFormat.pointLabel);
 };
-const getSeriesOptionDefaultFormat = () => {
+const getSeriesOptionDefaultFormat = (seriesType) => {
+  if (seriesType) {
+    seriesOptionDefaultFormat.type = seriesType;
+  }
   return _.cloneDeep(seriesOptionDefaultFormat);
 };
 const getSeriesOptionGetDataFieldFormat = () => {

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
@@ -71,10 +72,14 @@ public class MyPageFolderReportService {
     return result;
   }
 
+  @Transactional
   public boolean deleteMyFolder(List<Integer> data) {
     boolean result = false;
+    int count = configDAO.selectReportCountByFldId(data);
     result = configDAO.deleteMyFolder(data);
-    result = configDAO.deleteChildReports(data);
+    if (count > 0) {
+      result = configDAO.deleteChildReports(data);
+    }
 
     return result;
   }

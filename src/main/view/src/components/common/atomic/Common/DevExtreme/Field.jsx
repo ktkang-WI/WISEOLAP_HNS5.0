@@ -9,7 +9,13 @@ export const FieldSet = ({children}) => {
 
 export const Field = ({children}) => {
   return (
-    <div className="dx-field">
+    <div
+      className="dx-field"
+      style={{
+        display: 'flex',
+        alignItems: 'center'
+      }}
+    >
       {children}
     </div>
   );
@@ -17,7 +23,12 @@ export const Field = ({children}) => {
 
 export const FieldLabel = ({children}) => {
   return (
-    <div className="dx-field-label">
+    <div
+      className="dx-field-label"
+      style={{
+        flex: 1
+      }}
+    >
       {children}
     </div>
   );
@@ -25,7 +36,12 @@ export const FieldLabel = ({children}) => {
 
 export const FieldValue = ({children}) => {
   return (
-    <div className="dx-field-value">
+    <div
+      className="dx-field-value"
+      style={{
+        flex: 1
+      }}
+    >
       {children}
     </div>
   );

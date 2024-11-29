@@ -12,6 +12,7 @@ import adhocActive
 import preference from 'assets/image/icon/button/preference.png';
 import preferenceActive
   from 'assets/image/icon/button/preference_active.png';
+import excelResource from 'assets/image/icon/button/ico_exist.png';
 import log from 'assets/image/icon/button/log.png';
 import logActive
   from 'assets/image/icon/button/log_active.png';
@@ -41,6 +42,8 @@ import {clearSheets} from
   'components/report/atomic/spreadBoard/util/SpreadCore';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import useReportLoad from 'hooks/useReportLoad';
+
+import ExcelUploadResourceMap from './ExcelUploadResourceMap';
 
 const SNBDefaultElement = () => {
   // actions
@@ -146,6 +149,24 @@ const SNBDefaultElement = () => {
         nav('confgeneral');
       }
     },
+    'ExcelResource': {
+      id: 'excelResource',
+      imgSrc: excelResource,
+      label: '엑셀 업로드/리소스맵',
+      isPopover: true,
+      target: '#excelResource',
+      showEvent: 'click',
+      position: 'right',
+      content: (
+        <ExcelUploadResourceMap
+          userId={myPageConfigure.userId}
+          sessionUserKey={myPageConfigure.sessionUserKey}
+        />
+      ),
+      onClick: (e) => {
+
+      }
+    },
     // TODO: 임시용 입니다.
     'ConfigurationSetting': {
       id: 'configurationSetting',
@@ -214,6 +235,15 @@ const SNBDefaultElement = () => {
       label: '쿼리 검색',
       onClick: (e) => {
         nav('search-query');
+      }
+    },
+    'PortalConfig': {
+      id: 'portalconf',
+      imgSrc: preference,
+      hoveredImgSrc: preferenceActive,
+      label: '메인화면 설정',
+      onClick: (e) => {
+        nav('portalconf');
       }
     }
   };

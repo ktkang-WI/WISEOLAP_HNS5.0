@@ -7,12 +7,16 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import dash from 'assets/image/icon/report/dash.png';
 import excel from 'assets/image/icon/report/excel_file.png';
 import adhoc from 'assets/image/icon/report/adhoc.png';
-import {Column, SearchPanel, Selection} from 'devextreme-react/tree-list';
+import {Column, SearchPanel, Selection}
+  from 'devextreme-react/tree-list';
 import {Report}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
+import {TextBox} from 'devextreme-react';
+
 
 const PrivateReportList = ({data, setRowData}) => {
   const [newRows, setNewRows] = useState();
+  const reportNum = data && data.filter((d) => d.type !== 'folder')?.length;
   useEffect(() => {
     const sortingRows = data.sort((a, b) =>a.fldOrdinal - b.fldOrdinal ||
       (a.fldNm.toLowerCase() < b.fldNm.toLowerCase() ? -1 : 1));
@@ -51,6 +55,7 @@ const PrivateReportList = ({data, setRowData}) => {
     <Wrapper>
       <Title title={localizedString.privateReportList}></Title>
       <StyledTreeList
+        style={{marginBottom: '5px'}}
         showColumnHeaders={false}
         dataSource={newRows}
         keyExpr="key"
@@ -59,7 +64,7 @@ const PrivateReportList = ({data, setRowData}) => {
         elementAttr={{
           class: 'report-list'
         }}
-        height={'calc(100% - 40px)'}
+        height={'calc(100% - 70px)'}
         onRowClick={handleRowClick}
       >
         <SearchPanel
@@ -73,6 +78,19 @@ const PrivateReportList = ({data, setRowData}) => {
           cellRender={cellRender}
         />
       </StyledTreeList>
+      <Wrapper
+        display='flex'
+        center='end'
+        alignItems='start'
+      >
+        <TextBox
+          width={'140px'}
+          height={'30px'}
+          value={'보고서 개수: ' + reportNum}
+          readOnly={true}
+          stylingMode={'field'}
+        />
+      </Wrapper>
     </Wrapper>
   );
 };

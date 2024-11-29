@@ -57,4 +57,6 @@ public class MyDesignerDTO {
   RunMode runMode;
   @Builder.Default
   String grpRunMode = "";
+  @Builder.Default
+  String sessionUserKey = "";
 }

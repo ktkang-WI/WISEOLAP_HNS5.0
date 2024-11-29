@@ -73,8 +73,8 @@ const PagingOptionModal = ({options, onSubmit, onClose}) => {
       }}
       onClose={onClose}
       modalTitle={localizedString.paging}
-      width={theme.size.smallModalWidth}
-      height='600px'
+      width={theme.size.pagingModalWidth}
+      height={theme.size.pagingModalHeight}
     > <FieldSet>
         <Field>
           <FieldLabel>

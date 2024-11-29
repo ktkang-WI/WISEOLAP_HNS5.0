@@ -864,7 +864,7 @@ const useQueryExecute = () => {
     // 조회 시 nullData alert 창 한번만 나오도록 수정
     const nullDataItems = items.reduce((acc, item) => {
       if (nullDataCheck(item)) {
-        acc.push(item.meta.name);
+        acc.push(item?.meta?.name);
       }
       return acc;
     }, []);

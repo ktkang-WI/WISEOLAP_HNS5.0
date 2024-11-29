@@ -37,6 +37,7 @@ public interface ConfigDAO {
   public boolean createMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   public boolean deleteMyFolder(List<Integer> data);
   public boolean deleteChildReports(List<Integer> data);
+  public int selectReportCountByFldId(List<Integer> data);
   public boolean updateMyFolder(MyPageFolderReportDTO myPageFolderReportDTO);
   public List<FldMstrEntity> selectMyPageFolder(int userNo);
   public int selectMyPageFolderCount(int userNo);

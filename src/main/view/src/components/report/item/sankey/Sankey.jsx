@@ -5,13 +5,17 @@ import Sankey, {Tooltip, Link, Node} from 'devextreme-react/sankey';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import useItemExport from 'hooks/useItemExport';
 import ItemType from '../util/ItemType';
+import {
+  formatNumber,
+  generateLabelSuffix
+} from 'components/utils/NumberFormatUtility';
 
 const SankeyChart = ({setItemExports, id, item}) => {
   const ref = useRef();
 
-  const {filterTools} = useItemSetting(item);
+  const {filterTools, itemTools} = useItemSetting(item);
   const {setMasterFilterData} = filterTools;
-
+  const {getDataField} = itemTools;
   const mart = item ? item.mart : null;
   const meta = item ? item.meta : null;
   if (!mart.init) {
@@ -25,9 +29,22 @@ const SankeyChart = ({setItemExports, id, item}) => {
     data: mart?.data?.data,
     setItemExports});
 
-  const customizeLinkTooltip = (info) => {
+  const format = getDataField()?.measure[0].format;
+
+  const customizeLinkTooltip = ({source, target, weight}) => {
+    const labelSuffix = generateLabelSuffix(format);
+    const value = formatNumber(weight, format, labelSuffix);
     return {
-      html: `<b>From:</b> ${info.source}<br/><b>To:</b> ${info.target}<br/>`
+      html: `<b>${source}-${target}</b><br/>${value}`
+    };
+  };
+
+  const customizeNodeTooltip = ({label, weightIn, weightOut}) => {
+    const weight = weightIn || weightOut;
+    const labelSuffix = generateLabelSuffix(format);
+    const value = formatNumber(weight, format, labelSuffix);
+    return {
+      html: `<b>${label}</b><br/>${value}`
     };
   };
 
@@ -83,16 +100,20 @@ const SankeyChart = ({setItemExports, id, item}) => {
       <Sankey
         id={id}
         dataSource={mart.data.data}
-        dataStructure={'plain'}
         palette={meta.palette.name}
         onPointClick={onPointClick}
         allowExpandAll={true}
         allowFiltering={true}
         allowSorting={true}
+        sourceField='source'
+        targetField='target'
+        weightField='weight'
+        height={'100%'}
         allowSortingBySummary={true}
       >
         <Tooltip
           enabled={true}
+          customizeNodeTooltip={customizeNodeTooltip}
           customizeLinkTooltip={customizeLinkTooltip}/>
         <Link colorMode='gradient'/>
         <Node width={8} padding={30}/>

@@ -100,7 +100,7 @@ const DataGrid = ({setItemExports, id, item}) => {
     const pageSizes = config?.paging?.pageUsageOfPageCount?.pageSizes;
     if (!pageSizes || !dataSize) throw Error();
     return [...new Set(pageSizes.map((pageSize) =>
-      dataSize < pageSize ? dataSize - 1 : pageSize))];
+      pageSize))];
   };
 
   const handleColumnsChanging = debounce((e) => {
@@ -327,6 +327,10 @@ const DataGrid = ({setItemExports, id, item}) => {
       onSelectionChanged={onSelectionChanged}
       onColumnsChanging={handleColumnsChanging}
       onContextMenuPreparing={(e) => {
+        if (!e.cell || e.cell.columnType === undefined ||
+          e.cell.rowType === undefined) {
+          return;
+        }
         const contextMenu = getContextMenuItems();
         e.items = e.items.concat(contextMenu);
       }}
@@ -350,7 +354,8 @@ const DataGrid = ({setItemExports, id, item}) => {
         showPageSizeSelector={config.paging.pageUsageOfPageCount.isOk}
         allowedPageSizes={generatePageSizes()}
       />
-      <Scrolling mode="standard" /> {/* or "virtual" | "infinite" */}
+      <Scrolling mode={config.paging.pagination.isOk ?
+        'standard':'virtual'} /> {/* or "virtual" | "infinite" */}
       {dataGridConfig.dataSource.columns.map((column, i) => {
         let columnWidth = column.detailSetting === 'bar' ? '500px' : undefined;
 

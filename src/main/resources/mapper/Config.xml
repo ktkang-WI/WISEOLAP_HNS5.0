@@ -175,7 +175,7 @@
             CAST('FOLDER' AS NVARCHAR2(20)) AS TYPE,
             NULL AS SUBTITLE,
             NULL AS TAG,
-            NULL AS DESCRIPTION,
+            FLD_DESC AS DESCRIPTION,
             NULL AS QUERY,
             NULL AS PROMPT,
             NULL AS maxReportPeriodYn,
@@ -203,7 +203,8 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
-        ) REPORTANDFOLDER ORDER BY
+        ) REPORTANDFOLDER 
+           ORDER BY
             REPORTANDFOLDER.TYPE,
             REPORTANDFOLDER.ORDINAL,
             REPORTANDFOLDER.NAME
@@ -218,12 +219,8 @@
             <if test='fldParentId != 0'>
               FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
             </if>
-            <if test='ordinal != 0'>
               FLD_ORDINAL = #{ordinal, jdbcType=INTEGER},
-            </if>
-            <if test='desc != ""'>
               FLD_DESC = #{desc, jdbcType=VARCHAR},
-            </if>
             <if test='fldLvl != 0'>
               FLD_LVL = #{fldLvl, jdbcType=INTEGER},
             </if>
@@ -252,7 +249,7 @@
             <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
             </if>
-            <if test='ordinal != ""'>
+            <if test='ordinal != null'>
               REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
             </if>
             <if test='prompt != ""'>
@@ -346,11 +343,11 @@
       ON PUB_FLD_MSTR.FLD_ID = REPORT_MSTR.FLD_ID
       INNER JOIN USER_MSTR REG_USER_MSTR
       ON REG_USER_MSTR.USER_NO = REPORT_MSTR.REG_USER_NO
-      AND (REG_USER_MSTR.DEL_YN = 'N' OR REG_USER_MSTR.DEL_YN IS NULL)
-      INNER JOIN USER_MSTR MOD_USER_MSTR
+      AND (REG_USER_MSTR.DEL_YN = 'N')
+      LEFT JOIN USER_MSTR MOD_USER_MSTR
       ON MOD_USER_MSTR.USER_NO = REPORT_MSTR.MOD_USER_NO
-      AND (MOD_USER_MSTR.DEL_YN = 'N' OR MOD_USER_MSTR.DEL_YN IS NULL)
-      WHERE (REPORT_MSTR.DEL_YN = 'N' OR REPORT_MSTR.DEL_YN IS NULL)
+      AND (MOD_USER_MSTR.DEL_YN = 'N')
+      WHERE (REPORT_MSTR.DEL_YN = 'N')
       ORDER BY REPORT_MSTR.REPORT_ORDINAL, REPORT_MSTR.REPORT_NM
 		</select>
   
@@ -421,6 +418,15 @@
             PUB_FLD_MSTR.FLD_LVL ASC, 
             PUB_FLD_MSTR.FLD_ORDINAL ASC
 		</select>
+
+    <select id="selectReportCountByFldId" parameterType="java.util.List" resultType="int">
+      SELECT COUNT(*)
+      FROM REPORT_MSTR
+      WHERE FLD_ID IN
+      <foreach item="id" collection="list" open="(" separator="," close=")">
+          #{id, jdbcType=INTEGER}
+      </foreach>
+  </select>
 
     <update id="updateConfig" parameterType="com.wise.MarketingPlatForm.config.entity.ConfigMstrEntity">
       UPDATE CONFIG_MSTR
@@ -533,18 +539,12 @@
     <update id="deleteChildReports" parameterType="java.util.List">
       UPDATE 	REPORT_MSTR
       SET		DEL_YN = 'Y'
-      WHERE
-      <if test="list != null and list.size != 1">
-        FLD_ID IN
+      WHERE FLD_ID IN
+      <if test="list != null">
         <foreach item="id" index="index" collection="list" separator="," open="(" close=")">
           #{id, jdbcType=INTEGER}
         </foreach>
       </if>
-      <if test="list != null and list.size == 1">
-        FLD_ID =
-        <foreach item="id" collection="list">
-          #{id, jdbcType=INTEGER}
-        </foreach>
-      </if>
+      AND FLD_ID IS NOT NULL
     </update>
 </mapper>

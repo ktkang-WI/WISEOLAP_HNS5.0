@@ -22,7 +22,7 @@ export default function useItemSetting(
     }
 ) {
   const {selectedItemType, clearSelection} = filterOptions;
-  const splitters = ['<br/>', ' - '];
+  const splitters = ['<br/>', ' - ', '\n'];
   const meta = item.meta;
   const interactiveOption = filterCondition ?
     {} : meta.interactiveOption;
@@ -99,7 +99,16 @@ export default function useItemSetting(
   ]);
 
   const findSplitter = (data) => {
-    const splitter = splitters.find((splitter) => data.includes(splitter));
+    let splitter = splitters.find((splitter) => data.includes(splitter));
+
+    if (!splitter) {
+      getSelectedItem()?.some(({name}) => {
+        splitter = splitters.find((splitter) => name.includes(splitter));
+
+        return splitter;
+      });
+    }
+
     return splitter || 'wise-none';
   };
 

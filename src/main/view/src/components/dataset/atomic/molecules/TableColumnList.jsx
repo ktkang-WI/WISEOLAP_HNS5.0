@@ -41,7 +41,7 @@ const TableColumnList = ({compact=false, dataSource, ...props}) => {
         caption={localizedString.order}
         dataField='order'
         visible={!compact}
-        allowEditing={false}
+        allowEditing={true}
       />
     </CommonDataGrid>
   );

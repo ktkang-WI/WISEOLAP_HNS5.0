@@ -3,71 +3,16 @@ import {format, parse} from 'date-fns';
 import './css/reset.css';
 import './css/style.css';
 import ReportBox from './components/ReportBox';
-import Card from './components/Card';
 import models from 'models';
 import reportIcon from './img/list_ico1.png';
-import DrawerMenu from './components/Drawer';
-import UserInfoButtonUI
-  from 'components/common/atomic/Header/atom/UserInfoButtonUI';
-import UserInfoPopover
-  from 'components/common/atomic/Header/popover/UserInfoPopover';
-import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 
-import bigMenuIcon1 from './img/big_ico1.png';
-import bigMenuIcon2 from './img/big_ico2.png';
-import bigMenuIcon3 from './img/big_ico3.png';
-import bigMenuIcon4 from './img/big_ico4.png';
-import bigMenuIcon5 from './img/big_ico5.png';
-import bigMenuIcon6 from './img/big_ico6.png';
+import defaultIcon from './img/big_ico6.png';
 import ReportSwiper from './components/ReportSwiper';
 import {DateBox} from 'devextreme-react';
 import {useNavigate} from 'react-router-dom';
-
-const bigMenuIconMapper = {
-  '고객': bigMenuIcon1,
-  '전사관리지표': bigMenuIcon2,
-  '매출': bigMenuIcon3,
-  '물류': bigMenuIcon4,
-  '상품': bigMenuIcon5
-};
-
-const headerMenuHref = [
-  {
-    name: '전사관리지표',
-    fld: '2353'
-    // fld: '1621'
-  },
-  {
-    name: '주요보고서',
-    fld: '2355'
-    // fld: '1781'
-  },
-  {
-    name: '상품',
-    fld: '2351'
-    // fld: '2221'
-  },
-  {
-    name: '방송',
-    fld: '2349'
-  },
-  {
-    name: '매출',
-    fld: '2347'
-  },
-  {
-    name: '고객',
-    fld: '2345'
-  },
-  {
-    name: '물류',
-    fld: '2348'
-  },
-  {
-    name: '기타',
-    fld: '2358'
-  }
-];
+import {bigMenuIconMapper, headerMenuHref} from './data/data';
+import Header from './components/Header';
+import Cards from './components/Cards';
 
 const quickBoxs = [
   // {
@@ -80,17 +25,22 @@ const quickBoxs = [
   // }
 ];
 
-const Portal = () => {
+const Portal = ({admin = false}) => {
   const PORTAL_URL = window.location.origin + '/editds';
 
   const nav = useNavigate();
+  const auth = admin ? 'admin' : 'user';
   const [date, setDate] = useState(null);
-  const [type, setType] = useState('조회일');
+  const [types, setTypes] = useState([]);
+  const [reportIds, setReportIds] = useState({});
+  const [type, setType] = useState('');
+  const [team, setTeam] = useState('전체');
+
   const [maxDate, setMaxDate] = useState(new Date());
   const [reportList, setReportList] = useState([]);
   const [folderMap, setFolderMap] = useState([]);
-  const [portalReportList, setPortalReportList] = useState({});
   const [cardData, setCardData] = useState([]);
+  const [teamList, setTeamList] = useState([]);
   const folders = [2343, 2353, 2355, 2351, 2349, 2347, 2345, 2348, 2358];
   // folders.push(1621, 1781, 2221);
   const [userId, setUserId] = useState('');
@@ -105,6 +55,22 @@ const Portal = () => {
   }, [nav]);
 
   useEffect(() => {
+    models.Portal.getPortalInfo(auth).then((data) => {
+      if (data.status == 200) {
+        setTypes(data?.data?.types.map(({name}) => name) || []);
+        setType(data?.data?.types[0].name);
+        const reports = data?.data?.reports.reduce((acc, report) => {
+          if (!acc[report.type]) {
+            acc[report.type] = [];
+          }
+
+          acc[report.type].push(report.reportId);
+
+          return acc;
+        }, {});
+        setReportIds(reports);
+      }
+    });
     // 3600000
     const itv = setInterval(() => {
       models.Portal.getMaxDate().then((data) => {
@@ -123,43 +89,35 @@ const Portal = () => {
     }, 3600000);
 
     return () => clearInterval(itv);
+  }, []);
+
+  useEffect(() => {
+    models.Portal.getTeamList(format(date, 'yyyyMMdd')).then((data) => {
+      if (data.status == 200) {
+        setTeamList(data.data);
+      } else {
+        setTeamList([]);
+      }
+    });
   }, [date]);
 
   useEffect(() => {
-    if (!date) return;
-    models.Portal.getCardData(format(date, 'yyyyMMdd'), type).then((data) => {
-      if (data.status == 200 && data.data) {
-        let titles = ['예상취급액(백만원)', '실현취급액(백만원)', '실현공헌이익(백만원)', '주문고객수(명)'];
+    if (!date || !type) return;
 
-        if (type == '년누적') {
-          titles = ['예상취급액(억원)', '실현취급액(억원)', '실현공헌이익(억원)', '주문고객수(천명)'];
-        } else if (type == '월누적') {
-          titles[3] = '주문고객수(백명)';
-        }
-
-        const _cardData = titles.map((title, i) => {
-          const card = data.data.find((c) => c['구분'] == title);
-
-          if (!card) {
-            return {
-              '구분': title,
-              '금액': 0,
-              '전년비': '0%',
-              '계획비': i == 3 ? undefined : '0%'
-            };
+    models.Portal.getCardData(auth, format(date, 'yyyyMMdd'), type, team)
+        .then((data) => {
+          if (data.status == 200 && data.data) {
+            setCardData(data.data);
           }
-
-          return card;
         });
-
-        setCardData(_cardData);
-      }
-    });
-  }, [date, type]);
+  }, [auth, date, type, team]);
 
   useEffect(() => {
     models.Report.getUserInfo().then((data) => {
       if (data.status == 200) {
+        if (admin && data.data.userId != 'admin') {
+          nav('/editds/portal');
+        }
         setUserId(data.data.userId);
         setUserNm(data.data.userNm);
       }
@@ -204,6 +162,9 @@ const Portal = () => {
         });
 
         result.sort((a, b) => {
+          if (a.name == '부서별보고서') return -1;
+          if (b.name == '부서별보고서') return 1;
+
           if (a.ordinal !== b.ordinal) {
             return a.ordinal - b.ordinal;
           }
@@ -212,12 +173,6 @@ const Portal = () => {
 
         setFolderMap(_folderMap);
         setReportList(result);
-      }
-    });
-
-    models.Report.getPortalList().then((data) => {
-      if (data.status == 200) {
-        setPortalReportList(data.data);
       }
     });
   }, []);
@@ -234,29 +189,6 @@ const Portal = () => {
         icon={reportIcon}
       />
     ));
-  };
-
-  const getDropdown = (id) => {
-    return (
-      <div className='depth_menu' key={'d' + id}>
-        <ul>
-          {
-            folderMap[id]?.reports?.map((r) => {
-              return (
-                <li key={'rd'+id}>
-                  <a href={`${PORTAL_URL}/linkviewer?srl=true` +
-                  `&reportId=${r.id}&reportType=${r.reportType}`}
-                  rel="noreferrer"
-                  target="_blank">
-                    <span>{r.name}</span>
-                  </a>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </div>
-    );
   };
 
   const getQuickBoxs = () => {
@@ -284,57 +216,44 @@ const Portal = () => {
     });
   };
 
+  const getBottomReportList = () => {
+    return (<div className='blue_bg'>
+      <div className='contents'>
+        {
+          reportList?.map((fld) => {
+            if (fld.reports.length > 0) {
+              return (
+                <div className="file_box" key={fld.id} id={'fld' + fld.id}>
+                  <p>
+                    <img src={bigMenuIconMapper[fld.name] || defaultIcon}/>
+                    {fld.name}
+                  </p>
+                  <ul>
+                    {getReports(fld.reports)}
+                  </ul>
+                </div>);
+            } else {
+              return (
+                null
+              );
+            }
+          }
+          )
+        }
+      </div>
+    </div>);
+  };
+
   return (
     <div id='top' className='portal'>
-      <div id='header'>
-        <div className='header_wrap'>
-          <a href='#n' id='logo'>
-            <img src={require('./img/logo.png')} alt='' />
-          </a>
-          <a type="button" className="menu_btn top_btn" href='#header'>
-            ↑
-          </a>
-          <ul id='header_menu'>
-            {
-              headerMenuHref?.map((menu, i) => {
-                if (!folderMap[menu.fld]?.reports?.length) return null;
-
-                return (
-                  <li key={'li' + i}>
-                    <a>{menu.name}</a>
-                    {getDropdown(menu.fld)}
-                  </li>
-                );
-              })
-            }
-            <li>
-              <a
-                href={`${PORTAL_URL}/viewer`}
-                rel="noreferrer"
-                target="_blank"
-                className='active'>
-                OLAP</a>
-            </li>
-          </ul>
-          <CommonButton
-            id={'portal_user_info'}
-            type={'onlyImageText'}
-            height={'32px'}
-            width={'100px'}
-            usePopover={true}
-            popoverProps={{
-              'width': 'auto',
-              'height': '80',
-              'showEvent': 'click',
-              'position': 'bottom'
-            }}
-            contentRender={() => <UserInfoPopover/>}
-          >
-            <UserInfoButtonUI name={userNm}/>
-          </CommonButton>
-          <DrawerMenu portalUrl={PORTAL_URL} data={portalReportList}/>
-        </div>
-      </div>
+      <Header
+        PORTAL_URL={PORTAL_URL}
+        folderMap={folderMap}
+        headerMenuHref={headerMenuHref}
+        userNm={userNm}
+        useAdminButton={userId == 'admin'}
+        admin={admin}
+      />
       <div className='contents'>
         <div className='round_box pay_box_wrap'>
           <ul>
@@ -363,7 +282,7 @@ const Portal = () => {
             </li>
             <li className='pay_box_button_wrap'>
               {
-                ['조회일', '월누적', '년누적'].map((title, i) =>
+                types.map((title, i) =>
                   <div
                     key={`pay_box${i}`}
                     className={'pay_box_button' +
@@ -378,58 +297,36 @@ const Portal = () => {
                 )
               }
             </li>
+            {admin &&
+              <li>
+                <select
+                  onChange={(e) => setTeam(e.target.value)}
+                  className="select"
+                >
+                  <option value="전체">팀(전체)</option>
+                  {teamList.map(({MD_TEAM_NM}, i) => {
+                    return <option key={i} value={MD_TEAM_NM}>
+                      {MD_TEAM_NM}
+                    </option>;
+                  })}
+                </select>
+              </li>
+            }
           </ul>
-          {
-            cardData?.map((d, i) => {
-              return (
-                <Card
-                  title={d['구분']}
-                  key={'card' + i}
-                  amount={d['금액']}
-                  percentData={{previous: d['전년비'], plan: d['계획비']}}
-                  imgSrc={require('./img/con_bg' + (i + 1) + '.png')}
-                />
-              );
-            })
-          }
-          {
-            cardData.length == 0 &&
-              <div className='no-card'> 조회된 데이터가 없습니다. </div>
-          }
+          <Cards cardData={cardData}/>
         </div>
         <ReportSwiper
           type={type}
           portalUrl={PORTAL_URL}
+          reportIds={reportIds}
           date={date}
+          team={team}
           userId={userId}
+          admin={admin}
         />
         {getQuickBoxs()}
       </div>
-      <div className='blue_bg'>
-        <div className='contents'>
-          {
-            reportList?.map((fld) => {
-              if (fld.reports.length > 0) {
-                return (
-                  <div className="file_box" key={fld.id} id={'fld' + fld.id}>
-                    <p>
-                      <img src={bigMenuIconMapper[fld.name] || bigMenuIcon6}/>
-                      {fld.name}
-                    </p>
-                    <ul>
-                      {getReports(fld.reports)}
-                    </ul>
-                  </div>);
-              } else {
-                return (
-                  null
-                );
-              }
-            }
-            )
-          }
-        </div>
-      </div>
+      {!admin && getBottomReportList()}
     </div>
   );
 };

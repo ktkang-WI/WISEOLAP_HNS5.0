@@ -149,7 +149,7 @@ const Chart = ({setItemExports, id, adHocOption, item}) => {
     const fieldId = o.series.tag.fieldId;
     const dataField = seriesOptions.find((item) => (item.fieldId === fieldId));
 
-    if (dataField.pointLabel.Notation == pointLabelNotationData.topNvalue) {
+    if (dataField?.pointLabel?.Notation == pointLabelNotationData.topNvalue) {
       const fieldName = o.series.getValueFields()[0];
 
       if (!labelCache[fieldName]) {

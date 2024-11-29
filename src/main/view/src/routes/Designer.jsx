@@ -18,6 +18,7 @@ import ConfigSlice from 'redux/modules/ConfigSlice';
 import ItemSlice from 'redux/modules/ItemSlice';
 import LayoutSlice from 'redux/modules/LayoutSlice';
 import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 const Designer = () => {
   // hooks
@@ -39,6 +40,7 @@ const Designer = () => {
 
   // selector
   const designerMode = useSelector(selectCurrentDesignerMode);
+  const currentReportId = useSelector(selectCurrentReportId);
 
   // actions
   const {setDesignerMode, reloadDisplaySetting} = ConfigSlice.actions;
@@ -48,6 +50,10 @@ const Designer = () => {
   const {configStringToJson} = configureUtility();
 
   const getFavoritReport = async (hasFavoritReport, param) => {
+    if (currentReportId != 0) {
+      return;
+    }
+
     const privateReportType = window.sessionStorage.getItem('reportType');
     const mapper = {
       AdHoc: myPageConfigure?.adHocDefaultReportType,
@@ -128,6 +134,7 @@ const Designer = () => {
     if (prog.adhoc) tabItems.push('AdHoc');
     if (prog.spreadSheet) tabItems.push('Spreadsheet');
     if (prog.settings) tabItems.push('Preference');
+    if (prog.excelUploadResourceMap ) tabItems.push('ExcelResource');
 
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);

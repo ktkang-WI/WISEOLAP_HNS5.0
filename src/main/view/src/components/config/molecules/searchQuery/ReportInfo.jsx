@@ -17,9 +17,11 @@ const ReportInfo = ({itemData}) => {
         <TextArea
           value={'보고서 쿼리 검색을 통해 각 보고서에서 사용된 테이블과 컬럼 을 파악할 수 있습니다.\n\n' +
       '쿼리 직접 입력 방식의 보고서에서는 쿼리 내에 포함된 테이블과 컬럼을 검색합니다.\n' +
-      '주제 영역 데이터 집합을 사용하는 보고서에서는 MART에 사용된 테이블과 컬럼을 검색합니다.'
+      '주제 영역 데이터 집합을 사용하는 보고서에서는 MART에 사용된 테이블과 컬럼을 검색합니다.\n\n' +
+      '또한, 주제 영역 이름으로 검색하면 해당 주제 영역을 사용한 보고서를 찾아볼 수 있습니다.\n'
           }
-          height={'100px'}
+          height={'150px'}
+          readOnly={true}
         />
       }
       <Form
@@ -28,7 +30,8 @@ const ReportInfo = ({itemData}) => {
           marginTop: '10px',
           overflow: 'auto'
         }}
-        height={'calc(100% - 110px)'}
+        height={!(itemData.datasetInfo && itemData.datasetInfo.length > 0) ?
+          'calc(100% - 160px)' : 'calc(100% - 10px)'}
         elementAttr={{
           class: 'dx-fieldset custom-scrollbar form-tab'
         }}

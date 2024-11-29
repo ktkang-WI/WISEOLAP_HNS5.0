@@ -605,14 +605,20 @@ public class ReportService {
                     Map<String, Object> datasetMap = objectMapper.readValue(dataset, Map.class);
                     List<Map<String, String>> datasetInfo = extractDatasetInfo(datasetMap);
                     StringBuilder queryBuilder = new StringBuilder();
+                    StringBuilder datasetNmBuilder = new StringBuilder();
                     for (Map<String, String> map : datasetInfo) {
                         queryBuilder.append(map.get("datasetQuery"));
+                        if (map.get("datasetType").equals("CUBE")) {
+                            datasetNmBuilder.append(map.get("datasetNm"));
+                        }
                     }
                     
                     String query = queryBuilder.toString();
+                    String datasetNm = datasetNmBuilder.toString();
 
                     datasource.put("datasetInfo", datasetInfo);
                     datasource.put("query", query);
+                    datasource.put("cubeNm", datasetNm);
                 }
 
                 datasourceList.add(datasource);

@@ -85,11 +85,15 @@ public class SessionUtility {
         } finally {
             request.getSession().getServletContext().getContext("/").setAttribute(SSO_ID_KEY, null);
         }
+        if (userDTO != null) {
+            userDTO.setSessionUserKey(getSessionId(request.getSession()));
+        }
         return userDTO;
     }
     public static UserDTO getSessionUser(HttpServletRequest request) { 
+        UserDTO sessionUser = null;
         if ("database".equalsIgnoreCase(sessionType)) {
-            UserDTO sessionUser = getSessionUser(request.getSession());
+            sessionUser = getSessionUser(request.getSession());
             if(sessionUser == null) {
                 sessionUser = getSessionSSO(request);
             }
@@ -97,15 +101,18 @@ public class SessionUtility {
             if(sessionUser == null) {
                 sessionUser = getSessionUserFromDatabase(request);
             }
-            return sessionUser;
         } else {
             // return getSessionUser(request.getSession());
-            UserDTO sessionUser = getSessionUser(request.getSession());
+            sessionUser = getSessionUser(request.getSession());
             if(sessionUser == null) {
                 sessionUser = getSessionSSO(request);
             }
-            return sessionUser;
         }
+
+        if (sessionUser != null) {
+            setSessionUser(request, sessionUser);
+        }
+        return sessionUser;
     }
 
     public static void setSessionUser(HttpServletRequest request, UserDTO userDTO) {
@@ -150,6 +157,7 @@ public class SessionUtility {
                 .userDesc(entity.getUserDesc())
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
                 .userNm(entity.getUserNm())
+                .sessionUserKey(sessionId)
                 .build();
     }
     

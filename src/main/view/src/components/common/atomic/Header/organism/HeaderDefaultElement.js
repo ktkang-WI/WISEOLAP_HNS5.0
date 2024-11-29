@@ -52,8 +52,10 @@ const HeaderDefaultElement = () => {
   const initialDisplay = useSelector(selectInitialDisplay);
   const currentReport = useSelector(selectCurrentReport);
   const reportId = useSelector(selectCurrentReportId);
+  const editMode = useSelector(selectEditMode);
+  const dataSource = _.cloneDeep(currentReport.options);
+  const currentParameterValues = useSelector(selectCurrentValues);
   const selectLinkedReportList = useSelector(selectLinkedReport);
-  const editMode = selectEditMode(store.getState());
   const {
     showAlert,
     resetAlert
@@ -80,7 +82,9 @@ const HeaderDefaultElement = () => {
       'type': 'ReportTab',
       'width': 'auto',
       'onClick': (e) => {
-        openModal(EditReportName);
+        if (editMode !== EditMode['VIEWER']) {
+          openModal(EditReportName);
+        }
       }
     },
     'ReportTabs': {

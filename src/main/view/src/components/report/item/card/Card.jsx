@@ -1,8 +1,10 @@
 import DefaultCard from 'components/common/atomic/Common/Card/DefaultCard';
 import React, {useRef} from 'react';
-import {useInteractiveEffect} from '../util/useInteractiveEffect';
 import ItemType from '../util/ItemType';
 import useItemExport from 'hooks/useItemExport';
+import useSizeObserver from '../util/hook/useSizeObserver';
+import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
+import useItemSetting from '../util/hook/useItemSetting';
 
 
 const Card = ({setItemExports, id, item, node}) => {
@@ -13,28 +15,13 @@ const Card = ({setItemExports, id, item, node}) => {
   }
   const dataSource = mart.data.data;
   const seriesNames = mart.data.info.seriesMeasureNames;
+  const {itemTools, filterTools} = useItemSetting(item);
+
+  const dataField = itemTools.getDataField();
+  const {setMasterFilterData, getSelectedItem} = filterTools;
 
   const dxRef = useRef();
-  const {
-    functions
-  } = useInteractiveEffect({
-    item: item,
-    meta: meta,
-    selectionFunc: (event) => {
-      const refs = event.map((item) => item.ref);
-      if (refs.length === 0) return;
-      refs.forEach((ref) => {
-        ref.current.style.backgroundColor = '#f1f1f1';
-      });
-    },
-    removeSelectionFunc: (event) => {
-      const refs = event.map((item) => item.ref);
-      refs.forEach((ref) => {
-        if (!ref?.current) return;
-        ref.current.style.backgroundColor = '';
-      });
-    }
-  });
+  const {width} = useSizeObserver(dxRef);
 
   useItemExport({
     id,
@@ -45,21 +32,27 @@ const Card = ({setItemExports, id, item, node}) => {
 
   const handleClick = (e, data) => {
     e.data = data.title;
-    functions.setDataMasterFilter(e.data);
-    functions.masterFilterReload(e);
+    setMasterFilterData(e.data);
   };
+
   return (
-    <DefaultCard
-      ref={dxRef}
-      width={node?._rect?.width}
-      dataSource={dataSource}
-      argumentField='arg'
-      autoCoulmn={meta?.cardOption?.contentArray.autoNumberSet}
-      columnNumber={meta?.cardOption?.contentArray.columnNumber}
-      valueFiled={seriesNames[0].summaryName}
-      onClick={handleClick}
-      column={2}
-    />
+    <Wrapper ref={dxRef}>
+      <DefaultCard
+        ref={dxRef}
+        width={width}
+        selectedItem={getSelectedItem(true)}
+        dataSource={dataSource}
+        argumentField='arg'
+        height={meta?.cardOption?.contentArray.height}
+        autoCoulmn={meta?.cardOption?.contentArray.autoNumberSet}
+        columnNumber={meta?.cardOption?.contentArray.columnNumber}
+        valueField={seriesNames[0].summaryName}
+        targetFields={seriesNames.slice(1)}
+        formats={dataField.measure.map(({format}) => format)}
+        onClick={handleClick}
+        column={2}
+      />
+    </Wrapper>
   );
 };
 const propsComparator = (prev, next) => {

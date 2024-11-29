@@ -144,7 +144,7 @@ const SignIn = () => {
                 // 응답 상태 코드가 존재하는 경우
                 if (status === 404) {
                   document.activeElement.blur();
-                  alert('사용자 정보가 잘못되었습니다.');
+                  alert('아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.');
                 } else if (status === 500) {
                   document.activeElement.blur();
                   alert('서버에 문제가 발생하였습니다.');

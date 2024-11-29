@@ -70,8 +70,7 @@ public class CardDataMaker implements ItemDataMaker {
                 for (String name : dimNames) {
                     args.add(String.valueOf(row.get(name)));
                 }
-                Collections.reverse(args);
-                row.put("arg", String.join("<br/>", args));
+                row.put("arg", String.join(" - ", args));
             }
         }
 

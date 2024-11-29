@@ -54,7 +54,7 @@ const ValueAxisCustomLabel = (value, axisOption) => {
       treatedNumber(value, (value.toString().length - 1),
           axisOption.precision, axisOption).toString() +
           (value ? ('E' + '+' + (value.toString().length - 1)) : ''),
-    'Percent': parseFloat(value * 1000).toFixed(axisOption.precision) + '%',
+    'Percent': parseFloat(value * 100).toFixed(axisOption.precision) + '%',
     'Number': customizeSuffixValue(value, axisOption),
     'Currency': '₩' + customizeSuffixValue(value, axisOption)
   };

@@ -4,7 +4,8 @@ import {
 } from 'redux/selector/DatasetSelector';
 import {
   selectCurrentDataField,
-  selectCurrentDataFieldOption
+  selectCurrentDataFieldOption,
+  selectCurrentItem
 } from 'redux/selector/ItemSelector';
 import {
   selectCurrentReportId
@@ -79,6 +80,7 @@ const useDrag = () => {
     const isExecute = currentDesignerExecution(store.getState());
     const reportId = selectCurrentReportId(store.getState());
     const dataField = _.cloneDeep(selectCurrentDataField(store.getState()));
+    const currentItem = selectCurrentItem(store.getState());
     const dataFieldOption =
     _.cloneDeep(selectCurrentDataFieldOption(store.getState()));
     const dest = e.destination;
@@ -303,7 +305,8 @@ const useDrag = () => {
           if (checkFieldLimit()) {
             // eslint-disable-next-line max-len
             if (tempField.category !== 'sortByItem' && tempField.category === 'measure') {
-              const seriesOption = getSeriesOptionDefaultFormat();
+              // eslint-disable-next-line max-len
+              const seriesOption = getSeriesOptionDefaultFormat(currentItem.meta.seriesType);
               seriesOption.fieldId = tempField.fieldId;
 
               if (dataField['seriesOptions']) {

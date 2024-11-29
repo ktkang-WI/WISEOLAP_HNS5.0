@@ -77,6 +77,7 @@ const UserFolderManagement = () => {
       formData.ordinal= newItemData?.ordinal || 0;
       formData.fldLvl = newItemData?.fldLvl || 0;
       formData.desc = newItemData?.desc || '';
+      formData.fldDesc = newItemData?.desc || '';
 
       ref.current.instance.repaint();
     }
@@ -128,7 +129,7 @@ const UserFolderManagement = () => {
   return (
     <Wrapper display='flex' direction='row'>
       <Panel title={localizedString.folderManager}>
-        <div style={{width: '100%', height: '50%', textAlign: 'left'}}>
+        <div style={{width: '100%', height: '90%', textAlign: 'left'}}>
           <StyledTreeView
             height='100%'
             width='100%'
@@ -152,7 +153,7 @@ const UserFolderManagement = () => {
         </div>
         <div style={{
           display: 'flex',
-          height: '50%',
+          height: '10%',
           padding: '10px 20px',
           justifyContent: 'right'
         }}>
