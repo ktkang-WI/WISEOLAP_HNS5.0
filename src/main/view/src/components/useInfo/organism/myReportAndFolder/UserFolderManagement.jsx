@@ -1,11 +1,9 @@
 import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
-import {TreeView} from 'devextreme-react';
 import Form from 'devextreme/ui/form';
 import {useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
-import styled from 'styled-components';
 import reportFolderUtility from './ReportFolderUtility';
 import FolderInformation
   from 'components/config/atoms/reportFolderManagement/FolderInformation';
@@ -17,29 +15,11 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
 import removeImg from 'assets/image/icon/button/remove_white.png';
 import checkImg from 'assets/image/icon/button/check_white.png';
+// eslint-disable-next-line max-len
+import StyledTreeList from 'components/config/atoms/reportFolderManagement/StyledTreeList';
+import {Column, SearchPanel, Selection} from 'devextreme-react/tree-list';
 
 const theme = getTheme();
-
-const StyledTreeView = styled(TreeView)`
-  color: ${theme.color.primaryFont};
-  font: ${theme.font.dataSource};
-  padding: 20px;
-  box-sizing: border-box;
-  letter-spacing: -1px;
-
-  .dx-treeview-toggle-item-visibility {
-    color: ${theme.color.primaryFont};
-  }
-
-  .dx-treeview-item-content {
-    transform: none !important;
-  }
-
-  .dx-scrollable-wrapper {
-    border: 1px solid #D4D7DC;
-    border-radius: 6px;
-  }
-`;
 
 const smallButton = {
   height: '30px',
@@ -61,7 +41,7 @@ const UserFolderManagement = () => {
 
   // 폴더 목록 선택.
   const handleItemClick = (e) => {
-    const itemData = {...e.itemData};
+    const itemData = {...e.data};
     const parentFld = treeViewData?.folder.find(
         (d) => d.id === itemData?.fldParentId
     );
@@ -76,7 +56,6 @@ const UserFolderManagement = () => {
       formData.fldParentId= newItemData?.fldParentId || 0;
       formData.ordinal= newItemData?.ordinal || 0;
       formData.fldLvl = newItemData?.fldLvl || 0;
-      formData.desc = newItemData?.desc || '';
       formData.fldDesc = newItemData?.desc || '';
 
       ref.current.instance.repaint();
@@ -117,39 +96,41 @@ const UserFolderManagement = () => {
     }
   };
 
-  const itemRender = (item) => {
-    return (
-      <div className="dx-item-content dx-treeview-item-content">
-        <img width='16px' src={folderImg} className="dx-icon"/>
-        <span>{item.name}</span>
-      </div>
-    );
-  };
-
   return (
     <Wrapper display='flex' direction='row'>
       <Panel title={localizedString.folderManager}>
         <div style={{width: '100%', height: '90%', textAlign: 'left'}}>
-          <StyledTreeView
-            height='100%'
-            width='100%'
-            items={treeViewData?.folder || []}
-            dataStructure="plain"
-            displayExpr="name"
-            selectionMode='single'
-            parentIdExpr="fldParentId"
+          <StyledTreeList
+            dataSource={treeViewData?.folder || []}
             keyExpr="id"
-            noDataText={localizedString.noReports}
-            searchEnabled={true}
-            searchEditorOptions={{
-              placeholder: localizedString.search,
-              width: '300px'
-            }}
-            itemRender={itemRender}
-            selectByClick={false}
-            focusStateEnabled={true}
-            onItemClick={handleItemClick}
-          />
+            parentIdExpr="fldParentId"
+            height={'90%'}
+            width='100%'
+            showColumnHeaders={false}
+            onRowClick={handleItemClick}
+          >
+            <SearchPanel
+              visible={true}
+              width={250}
+            />
+            <Selection mode="single" />
+            <Column
+              dataField="name"
+              caption={localizedString.folderName}
+              cellRender={({row}) => {
+                return (
+                  <>
+                    <img
+                      style={{marginTop: '1.5px', float: 'left'}}
+                      height={'17px'} src={folderImg}/>
+                    <span style={{lineHeight: '17px', marginLeft: '5px'}}>
+                      {row.data.name}
+                    </span>
+                  </>
+                );
+              }}
+            />
+          </StyledTreeList>
         </div>
         <div style={{
           display: 'flex',
