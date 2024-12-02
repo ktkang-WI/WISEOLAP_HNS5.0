@@ -35,6 +35,11 @@ const StyledTreeView = styled(TreeView)`
   }
   .dx-treeview-item-content {
     transform: none !important;
+    height: 32px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding-left: 3px;
   }
 
   .dx-treeview-node {
@@ -58,11 +63,17 @@ const StyledTreeView = styled(TreeView)`
     display: inline-block;
     position: relative;
   }
+
   .dx-treeview-item:hover .tooltip {
     display:block;
   }
+
   .dx-treeview-item:hover .tooltipWrapper {
     width: 200px;
+  }
+
+  .dx-treeview-item {
+    padding: 0 !important;
   }
 `;
 
