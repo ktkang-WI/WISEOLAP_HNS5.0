@@ -64,6 +64,9 @@ export default function useAxiosSetting() {
         if (error?.response?.status == 404) {
           alert('관리자에게 문의 하세요.');
         }
+        if (error?.response?.status == 401) {
+          location.href = path;
+        }
         return error;
       }
   );
@@ -111,10 +114,10 @@ export default function useAxiosSetting() {
 
         removeRequestPath(url);
 
-        if (process.env.NODE_ENV != 'development' &&
-          error?.response?.status == 401) {
+        if (error?.response?.status == 401) {
           location.href = error.config.baseURL;
         }
+
         return Promise.reject(error);
       }
   );
@@ -134,6 +137,9 @@ export default function useAxiosSetting() {
     }
     if (error?.response?.status == 404) {
       alert('관리자에게 문의 하세요.');
+    }
+    if (error?.response?.status == 401) {
+      location.href = path;
     }
     return Promise.reject(error);
   });
