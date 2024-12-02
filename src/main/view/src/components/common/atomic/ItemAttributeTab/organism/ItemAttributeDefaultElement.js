@@ -152,6 +152,19 @@ const ItemAttributeDefaultElement = () => {
             filterItem(tempItem,
               ignoreMasterFilter ? {} : focusedItem.mart.filter);
           }
+        },
+        {
+          id: 'onlyWithFilter',
+          label: localizedString.onlyWithFilter,
+          active: option.onlyWithFilter,
+          icon: ignoreMasterFilterImg,
+          onClick: () => {
+            const onlyWithFilter = !option.onlyWithFilter;
+
+            dispatch(updateInteractiveOption({
+              reportId, option: {onlyWithFilter}
+            }));
+          }
         }
       ]
     },

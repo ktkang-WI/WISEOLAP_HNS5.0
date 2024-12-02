@@ -119,18 +119,29 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     const selected = selectedItemId == item?.id;
     const selectedClassName = selected ? tabSelectedClass : '';
 
-    if (item?.mart?.init && nullDataCheck(item)) {
-      return <Item className={selectedClassName}>
-        <Wrapper style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: theme.color.gray400,
-          font: theme.font.item
-        }}>
-          데이터가 없습니다.
-        </Wrapper>
-      </Item>;
+    if (item?.mart?.init) {
+      let msg = '';
+
+      if (item?.meta?.interactiveOption?.onlyWithFilter &&
+        Object.keys(item?.mart?.filter || {}).length == 0) {
+        msg = '필터링할 항목을 선택해주세요.';
+      } else if (nullDataCheck(item)) {
+        msg = '데이터가 없습니다.';
+      }
+
+      if (msg) {
+        return <Item className={selectedClassName}>
+          <Wrapper style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: theme.color.gray400,
+            font: theme.font.item
+          }}>
+            {msg}
+          </Wrapper>
+        </Item>;
+      }
     }
 
     return (

@@ -303,6 +303,16 @@ const useQueryExecute = () => {
 
       const reportId = selectCurrentReportId(store.getState());
 
+      if (flag != 'showQuery' &&
+        item?.meta?.interactiveOption?.onlyWithFilter &&
+        Object.keys(item?.mart?.filter || {}).length == 0) {
+        tempItem.mart.init = true;
+
+        dispatch(updateItem({reportId, item: tempItem}));
+
+        return tempItem;
+      }
+
       // TODO: 추후 PivotMatrix 옵션화
       if (false && item.type == ItemType.PIVOT_GRID) {
         tempItem.mart.init = true;
@@ -863,7 +873,9 @@ const useQueryExecute = () => {
   const nullDataAlert = (items) => {
     // 조회 시 nullData alert 창 한번만 나오도록 수정
     const nullDataItems = items.reduce((acc, item) => {
-      if (nullDataCheck(item)) {
+      const onlyWithFitler = item?.meta?.interactiveOption?.onlyWithFilter &&
+      Object.keys(item?.mart?.filter || {}).length == 0;
+      if (nullDataCheck(item) && !onlyWithFitler) {
         acc.push(item?.meta?.name);
       }
       return acc;
