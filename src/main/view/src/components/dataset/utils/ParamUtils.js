@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const baseToFormatMapper = {
   'yyyy:': 'YEAR',
   'yyyyMM': 'MONTH',
@@ -264,7 +262,7 @@ const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
         if (p.paramType == 'CALENDAR') {
           values = [];
         } else {
-          values = ['-', '-'];
+          values = setDefaultValueByType(p);
         }
       }
     }
@@ -285,6 +283,38 @@ const generateParameterForQueryExecute = (parameters, getColumnCheck) => {
   });
 
   return parameter;
+};
+
+/**
+ * 매개변수 기본
+ * @param {*} p 매개변수 정보
+ * @return {returnVal} 디폴트 값
+ */
+const setDefaultValueByType = (p) => {
+  let returnVal = [];
+  switch (p?.dataType) {
+    case 'STRING':
+      returnVal = ['0', '0'];
+      break;
+    case 'NUMBER':
+      returnVal = [1, 1];
+      break;
+    case 'DATE':
+      returnVal = ['19940101', '19940101'];
+      break;
+    default:
+      returnVal = ['0', '0'];
+      break;
+  }
+
+  if (!p.defaultValueUseSql && p.defaultValue) {
+    const defaultValueCheck = p?.defaultValue[0] ? p?.defaultValue[0] : '';
+    if (defaultValueCheck &&
+      defaultValueCheck.toUpperCase().indexOf('ALL') !== -1) {
+      returnVal = p?.defaultValue;
+    }
+  }
+  return returnVal;
 };
 
 /**
