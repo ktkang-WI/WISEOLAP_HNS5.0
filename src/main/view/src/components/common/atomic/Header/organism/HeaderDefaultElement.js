@@ -53,8 +53,6 @@ const HeaderDefaultElement = () => {
   const currentReport = useSelector(selectCurrentReport);
   const reportId = useSelector(selectCurrentReportId);
   const editMode = useSelector(selectEditMode);
-  const dataSource = _.cloneDeep(currentReport.options);
-  const currentParameterValues = useSelector(selectCurrentValues);
   const selectLinkedReportList = useSelector(selectLinkedReport);
   const {
     showAlert,

@@ -27,14 +27,15 @@ const D3WordCloud = ({
   if (width <= 0 || height <= 0) {
     return <></>;
   }
+
   // 폰트 사이즈 데이터 양에 따라 편차 두기
   const getMaxFontSize = () => {
     if (dataSource.length > 80) {
       return 100;
     } else if (dataSource.length > 30) {
-      return 150;
+      return 120;
     } else {
-      return 200;
+      return 150;
     }
   };
 
