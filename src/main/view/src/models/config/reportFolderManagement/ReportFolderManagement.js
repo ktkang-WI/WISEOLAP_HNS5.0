@@ -80,6 +80,16 @@ export const resetDesignerConfig = () => {
   return res;
 };
 
+export const updateMyPageFolderOrder = (param) => {
+  const res =
+    axios.patch(configPath + '/my-page-folder/move-folder', param, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';

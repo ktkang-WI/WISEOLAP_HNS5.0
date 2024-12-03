@@ -2,7 +2,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import Form from 'devextreme/ui/form';
-import {useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import reportFolderUtility from './ReportFolderUtility';
 import FolderInformation
@@ -17,7 +17,9 @@ import removeImg from 'assets/image/icon/button/remove_white.png';
 import checkImg from 'assets/image/icon/button/check_white.png';
 // eslint-disable-next-line max-len
 import StyledTreeList from 'components/config/atoms/reportFolderManagement/StyledTreeList';
-import {Column, SearchPanel, Selection} from 'devextreme-react/tree-list';
+import {Column, RowDragging, SearchPanel, Selection}
+  from 'devextreme-react/tree-list';
+import {onDragChange, onReorder} from 'components/config/utility/utility.js';
 
 const theme = getTheme();
 
@@ -36,6 +38,7 @@ const UserFolderManagement = () => {
     newUserFolderUtil,
     deleteUserFolderUtil,
     updateUserFolderUtil,
+    updateUserFolderOrderUtil,
     checkValidation
   } = reportFolderUtility();
 
@@ -114,6 +117,23 @@ const UserFolderManagement = () => {
               width={250}
             />
             <Selection mode="single" />
+            <RowDragging
+              onDragChange={(e) => onDragChange({...e, key: 'id'})}
+              onReorder={useCallback((e) => {
+                const cloneFolders = _.cloneDeep(folders);
+                const {datasource, sourceData} = onReorder({
+                  ...e,
+                  datasource: _.cloneDeep(treeViewData?.folder),
+                  key: 'id',
+                  parentKey: 'fldParentId'
+                });
+                updateUserFolderOrderUtil(datasource, sourceData,
+                    cloneFolders, setTreeViewData);
+              }, [treeViewData?.folder])}
+              allowDropInsideItem={true}
+              allowReordering={true}
+              showDragIcons={false}
+            />
             <Column
               dataField="name"
               caption={localizedString.folderName}

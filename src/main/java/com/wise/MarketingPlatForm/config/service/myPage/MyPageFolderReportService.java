@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wise.MarketingPlatForm.config.dao.ConfigDAO;
 import com.wise.MarketingPlatForm.config.dto.myPage.MyPageFolderReportDTO;
@@ -84,5 +85,22 @@ public class MyPageFolderReportService {
     result = configDAO.updateMyFolder(myPageFolderReportDTO);
 
     return result;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public boolean updateMyFolderList(List<MyPageFolderReportDTO> fldDtoList) {
+    try {
+      int ordinal = 0;
+      for (MyPageFolderReportDTO dto : fldDtoList) { 
+        dto.setOrdinal(ordinal++);
+        if (!updateMyFolder(dto)) {
+          throw new RuntimeException("개인 폴더 update 오류 발생: " + dto.getName());
+        }
+      }
+      return true;
+    } catch (Exception e) {
+      System.err.println("Exception 발생: " + e.getMessage());
+      throw e; 
+    }
   }
 }

@@ -1,7 +1,8 @@
 import InputTxtAndCheckBox
   from 'components/common/atomic/Modal/organisms/InputTxtAndCheckBox';
 import useModal from 'hooks/useModal';
-import {createMyPageFolder, deleteMyPageFolder, updateMyPageFolder}
+import {createMyPageFolder, deleteMyPageFolder,
+  updateMyPageFolder, updateMyPageFolderOrder}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
@@ -119,11 +120,27 @@ const ReportFolderUtility = () => {
     });
   };
 
+  const updateUserFolderOrderUtil = (datasource, sourceData, cloneFolders,
+      setTreeViewData) => {
+    const updateFolderList = datasource
+        .filter((data) => data.fldParentId === sourceData.fldParentId)
+        .map((data, i) => ({...data, ordinal: i}));
+    const updatedDatasource = datasource.map((data) =>
+      updateFolderList.find((item) => item.id === data.id) || data
+    );
+    updateMyPageFolderOrder(updateFolderList).then((response) => {
+      if (response.status === 200) {
+        setTreeViewData({...cloneFolders, folder: updatedDatasource});
+      }
+    });
+  };
+
   return {
     newUserFolderUtil,
     deleteUserFolderUtil,
     updateUserFolderUtil,
-    checkValidation
+    checkValidation,
+    updateUserFolderOrderUtil
   };
 };
 export default ReportFolderUtility;
