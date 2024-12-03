@@ -129,6 +129,7 @@ const UserFolderManagement = () => {
                 });
                 updateUserFolderOrderUtil(datasource, sourceData,
                     cloneFolders, setTreeViewData);
+                e.component.clearSelection();
               }, [treeViewData?.folder])}
               allowDropInsideItem={true}
               allowReordering={true}
