@@ -203,6 +203,7 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
+                  AND REPORT_MSTR.FLD_TYPE = 'PRIVATE'
         ) REPORTANDFOLDER 
            ORDER BY
             REPORTANDFOLDER.TYPE,
