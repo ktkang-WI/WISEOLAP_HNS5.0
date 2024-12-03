@@ -69,7 +69,7 @@ const UserReprotManagement = () => {
         width='50%'
         padding='10'
       >
-        <div style={{width: '100%', height: '50%', textAlign: 'left'}}>
+        <div style={{width: '100%', height: '100%', textAlign: 'left'}}>
           <MyPageReportList
             data={treeViewData?.folderReport || []}
             setData={setData}

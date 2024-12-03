@@ -133,7 +133,7 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
     <>
       <StyledTreeView
         ref={ref}
-        height='100%'
+        height='90%'
         width='100%'
         items={data}
         dataStructure="plain"
@@ -153,7 +153,7 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
       />
       <div style={{
         display: 'flex',
-        height: '50%',
+        height: '10%',
         padding: '10px 20px',
         justifyContent: 'right'
       }}>
