@@ -27,6 +27,7 @@ const PortalConfig = () => {
   const typeRef = useRef();
   const reportRef = useRef();
   const queryRef = useRef();
+  const teamRef = useRef();
 
   useEffect(() => {
     models.DataSource.getDs().then((res) => {
@@ -56,7 +57,7 @@ const PortalConfig = () => {
         reportRef.current.instance?.getDataSource().items();
       param.cards =
         queryRef.current.instance?.getDataSource().items();
-      param.teams = [teams];
+      param.teams = [teamRef.current.instance?.option('formData')];
 
       models.Portal.setPortalConfig(JSON.stringify(param)).then((res) => {
         if (res.status == 200) {
@@ -120,14 +121,9 @@ const PortalConfig = () => {
           <Form
             labelMode='outside'
             labelLocation='left'
+            ref={teamRef}
             formData={teams}
             width={'100%'}
-            onFieldDataChanged={({dataField, value}) => {
-              setTeams({
-                ...teams,
-                [dataField]: value
-              });
-            }}
             style={{maxWidth: '700px'}}
           >
             <Item
