@@ -120,7 +120,6 @@ const UserFolderManagement = () => {
             <RowDragging
               onDragChange={(e) => onDragChange({...e, key: 'id'})}
               onReorder={useCallback((e) => {
-                const cloneFolders = _.cloneDeep(folders);
                 const {datasource, sourceData} = onReorder({
                   ...e,
                   datasource: _.cloneDeep(treeViewData?.folder),
@@ -128,7 +127,7 @@ const UserFolderManagement = () => {
                   parentKey: 'fldParentId'
                 });
                 updateUserFolderOrderUtil(datasource, sourceData,
-                    cloneFolders, setTreeViewData);
+                    setTreeViewData);
                 e.component.clearSelection();
               }, [treeViewData?.folder])}
               allowDropInsideItem={true}

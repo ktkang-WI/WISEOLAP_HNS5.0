@@ -120,7 +120,7 @@ const ReportFolderUtility = () => {
     });
   };
 
-  const updateUserFolderOrderUtil = (datasource, sourceData, cloneFolders,
+  const updateUserFolderOrderUtil = (datasource, sourceData,
       setTreeViewData) => {
     const updateFolderList = datasource
         .filter((data) => data.fldParentId === sourceData.fldParentId)
@@ -130,7 +130,10 @@ const ReportFolderUtility = () => {
     );
     updateMyPageFolderOrder(updateFolderList).then((response) => {
       if (response.status === 200) {
-        setTreeViewData({...cloneFolders, folder: updatedDatasource});
+        setTreeViewData((prev) => ({
+          ...prev,
+          folder: updatedDatasource
+        }));
       }
     });
   };
