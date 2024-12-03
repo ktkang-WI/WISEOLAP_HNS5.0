@@ -305,8 +305,9 @@ const useQueryExecute = () => {
 
       if (flag != 'showQuery' &&
         item?.meta?.interactiveOption?.onlyWithFilter &&
-        Object.keys(item?.mart?.filter || {}).length == 0) {
+        Object.keys(filter).length == 0) {
         tempItem.mart.init = true;
+        tempItem.mart.currentFilter = {};
 
         dispatch(updateItem({reportId, item: tempItem}));
 
@@ -873,8 +874,7 @@ const useQueryExecute = () => {
   const nullDataAlert = (items) => {
     // 조회 시 nullData alert 창 한번만 나오도록 수정
     const nullDataItems = items.reduce((acc, item) => {
-      const onlyWithFitler = item?.meta?.interactiveOption?.onlyWithFilter &&
-      Object.keys(item?.mart?.filter || {}).length == 0;
+      const onlyWithFitler = item?.meta?.interactiveOption?.onlyWithFilter;
       if (nullDataCheck(item) && !onlyWithFitler) {
         acc.push(item?.meta?.name);
       }
