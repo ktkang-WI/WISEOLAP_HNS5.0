@@ -241,10 +241,15 @@ const mergeExcelFiles = async (items, parameters, parameterValues, option) => {
 
   const elements = _items.map((item, index) => {
     const selector = '#report' + reportId + ' #' + item.id;
+    let rename = item.meta.name;
+
+    if (rename.includes('/')) {
+      rename = rename.replace(/\//g, '_');
+    }
 
     return {
       type: item.type,
-      name: item.meta.name,
+      name: rename,
       selector: selector,
       tab: item.tab || 0,
       index
