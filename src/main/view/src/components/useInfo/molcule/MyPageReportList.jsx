@@ -6,15 +6,17 @@ import dashImg from 'assets/image/icon/report/dash.png';
 import excelImg from 'assets/image/icon/report/excel_file.png';
 import adhocImg from 'assets/image/icon/report/adhoc.png';
 import {DesignerMode} from 'components/config/configType';
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {getTheme} from 'config/theme';
 import useModal from 'hooks/useModal';
 import {deleteReport} from 'models/report/Report';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import StyledTreeList from
   'components/config/atoms/reportFolderManagement/StyledTreeList';
-import {Column, SearchPanel, Selection}
+import {Column, RowDragging, SearchPanel, Selection}
   from 'devextreme-react/tree-list';
+import {onDragChange, onReorder}
+  from 'components/config/utility/utility';
 const theme = getTheme();
 
 const smallButton = {
@@ -30,14 +32,16 @@ const iconMapper = {
   [DesignerMode.EXCEL]: excelImg
 };
 
-const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
+const MyPageReportList = ({data, setData, setTreeViewData, setPrevName,
+  updateUserReportOrderUtil
+}) => {
   const {alert, confirm, success} = useModal();
-  let reportId = null;
+  const [reportId, setReportId] = useState(null);
 
-  const handleItemClick = (e) => {
+  const handleItemClick = useCallback((e) => {
     const itemData = e.data;
     if (itemData.type == 'FOLDER') {
-      reportId = null;
+      setReportId(null);
       setPrevName(null);
       setData({});
     } else {
@@ -67,13 +71,13 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
       }
 
       setPrevName(itemData.name);
-      reportId = newData.id;
+      setReportId(newData.id);
       setData({...newData});
     }
-  };
+  }, [data, reportId]);
 
-  const onClickRemove = (e) => {
-    const id = reportId;
+  const onClickRemove = useCallback((e) => {
+    const id = _.cloneDeep(reportId);
 
     if (!id || id === '') {
       alert(localizedString.selectReportAndDeleteConfirm);
@@ -99,7 +103,26 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
         console.log(e);
       });
     });
-  };
+  }, [reportId, data]);
+
+  const handleReorder = useCallback((e) => {
+    const updatedEvent = {
+      ...e,
+      datasource: _.cloneDeep(data),
+      key: 'id',
+      parentKey: 'fldParentId',
+      typeKey: 'type'
+    };
+    const {datasource, sourceData} = onReorder(updatedEvent);
+
+    if (!datasource) {
+      return;
+    }
+
+    // const newDatasource = datasource.filter((data) => data.type != 'FOLDER');
+    updateUserReportOrderUtil(datasource, sourceData, setTreeViewData);
+    e.component.clearSelection();
+  }, [reportId, data]);
 
   return (
     <>
@@ -117,6 +140,13 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName}) => {
           width={250}
         />
         <Selection mode="single" />
+        <RowDragging
+          onDragChange={(e) => onDragChange({...e, key: 'id'})}
+          onReorder={handleReorder}
+          allowDropInsideItem={true}
+          allowReordering={true}
+          showDragIcons={false}
+        />
         <Column
           dataField="name"
           caption={localizedString.folderName}

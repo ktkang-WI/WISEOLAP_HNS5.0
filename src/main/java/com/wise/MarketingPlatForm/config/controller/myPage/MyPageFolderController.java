@@ -141,4 +141,28 @@ public class MyPageFolderController {
       return RestAPIVO.conflictResponse(false);
     }
   }
+
+  @PatchMapping("/move-report")
+  public ResponseEntity<RestAPIVO> updateMyReport(@RequestBody List<MyPageFolderReportDTO> reportDtoList) {
+    try {
+
+      for (MyPageFolderReportDTO dto : reportDtoList) {
+        dto.setName("");
+        dto.setType("");
+        dto.setSubtitle("");
+        dto.setTag("");
+        dto.setDesc("");
+        dto.setPrompt("");
+        dto.setMaxReportPeriodYn("");
+      }
+      // 업데이트 시도
+      boolean success = myPageFolderReportService.updateMyReportList(reportDtoList);
+
+      // 성공 시 200, 실패 시 400
+      return success ? RestAPIVO.okResponse(true) : RestAPIVO.badRequest(false);
+    } catch (Exception e) {
+      // 예외 발생 시 500
+      return RestAPIVO.conflictResponse(false);
+    }
+  }
 }

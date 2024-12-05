@@ -250,14 +250,14 @@
             <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
             </if>
-            <if test='ordinal != null'>
-              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
-            </if>
             <if test='prompt != ""'>
               PROMPT_YN = #{prompt, jdbcType=VARCHAR},
             </if>
             <if test='maxReportPeriodYn != ""'>
-              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR}
+              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR},
+            </if>
+            <if test='ordinal != null'>
+              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER}
             </if>
           WHERE REPORT_ID = #{id}
     </update>

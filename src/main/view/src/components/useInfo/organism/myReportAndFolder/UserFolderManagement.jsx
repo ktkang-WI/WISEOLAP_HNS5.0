@@ -2,7 +2,7 @@ import CommonButton from 'components/common/atomic/Common/Button/CommonButton';
 import localizedString from 'config/localization';
 import {getTheme} from 'config/theme';
 import Form from 'devextreme/ui/form';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import reportFolderUtility from './ReportFolderUtility';
 import FolderInformation
@@ -20,6 +20,7 @@ import StyledTreeList from 'components/config/atoms/reportFolderManagement/Style
 import {Column, RowDragging, SearchPanel, Selection}
   from 'devextreme-react/tree-list';
 import {onDragChange, onReorder} from 'components/config/utility/utility.js';
+import {userFolderData} from 'routes/loader/LoaderConfig';
 
 const theme = getTheme();
 
@@ -29,7 +30,7 @@ const smallButton = {
   font: theme.font.smallButton
 };
 
-const UserFolderManagement = () => {
+const UserFolderManagement = ({val}) => {
   const folders = useLoaderData();
   const [treeViewData, setTreeViewData] = useState(folders);
   const [row, setRow] = useState({});
@@ -41,6 +42,16 @@ const UserFolderManagement = () => {
     updateUserFolderOrderUtil,
     checkValidation
   } = reportFolderUtility();
+
+  useEffect(() => {
+    userFolderData().then((res) => {
+      if (!res) return;
+
+      setTreeViewData(res);
+    }).catch((e) => {
+      console.log(e);
+    });
+  }, [val]);
 
   // 폴더 목록 선택.
   const handleItemClick = (e) => {
@@ -99,6 +110,23 @@ const UserFolderManagement = () => {
     }
   };
 
+  const handleReorder = useCallback((e) => {
+    const updatedEvent = {
+      ...e,
+      datasource: _.cloneDeep(treeViewData?.folder),
+      key: 'id',
+      parentKey: 'fldParentId',
+      typeKey: 'type'
+    };
+    const {datasource, sourceData} = onReorder(updatedEvent);
+
+    if (!datasource) {
+      return;
+    }
+    updateUserFolderOrderUtil(datasource, sourceData, setTreeViewData);
+    e.component.clearSelection();
+  }, [treeViewData?.folder]);
+
   return (
     <Wrapper display='flex' direction='row'>
       <Panel title={localizedString.folderManager}>
@@ -119,17 +147,7 @@ const UserFolderManagement = () => {
             <Selection mode="single" />
             <RowDragging
               onDragChange={(e) => onDragChange({...e, key: 'id'})}
-              onReorder={useCallback((e) => {
-                const {datasource, sourceData} = onReorder({
-                  ...e,
-                  datasource: _.cloneDeep(treeViewData?.folder),
-                  key: 'id',
-                  parentKey: 'fldParentId'
-                });
-                updateUserFolderOrderUtil(datasource, sourceData,
-                    setTreeViewData);
-                e.component.clearSelection();
-              }, [treeViewData?.folder])}
+              onReorder={handleReorder}
               allowDropInsideItem={true}
               allowReordering={true}
               showDragIcons={false}

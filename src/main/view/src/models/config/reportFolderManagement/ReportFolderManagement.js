@@ -90,6 +90,12 @@ export const updateMyPageFolderOrder = (param) => {
   return res;
 };
 
+export const updateMyPageReportOrder = (param) => {
+  const res =
+    axios.patch(configPath + '/my-page-folder/move-report', param);
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';

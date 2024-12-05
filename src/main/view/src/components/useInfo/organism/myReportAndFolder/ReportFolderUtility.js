@@ -2,7 +2,7 @@ import InputTxtAndCheckBox
   from 'components/common/atomic/Modal/organisms/InputTxtAndCheckBox';
 import useModal from 'hooks/useModal';
 import {createMyPageFolder, deleteMyPageFolder,
-  updateMyPageFolder, updateMyPageFolderOrder}
+  updateMyPageFolder, updateMyPageFolderOrder, updateMyPageReportOrder}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
@@ -122,17 +122,44 @@ const ReportFolderUtility = () => {
 
   const updateUserFolderOrderUtil = (datasource, sourceData,
       setTreeViewData) => {
-    const updateFolderList = datasource
-        .filter((data) => data.fldParentId === sourceData.fldParentId)
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
         .map((data, i) => ({...data, ordinal: i}));
     const updatedDatasource = datasource.map((data) =>
-      updateFolderList.find((item) => item.id === data.id) || data
+      updatedList.find((item) => item['id'] === data['id']) || data
     );
-    updateMyPageFolderOrder(updateFolderList).then((response) => {
+
+    updateMyPageFolderOrder(updatedList).then((response) => {
       if (response.status === 200) {
         setTreeViewData((prev) => ({
           ...prev,
           folder: updatedDatasource
+        }));
+      }
+    });
+  };
+
+  const updateUserReportOrderUtil = (datasource, sourceData,
+      setTreeViewData) => {
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
+        .filter((data) => data.type !== 'FOLDER')
+        .map((data, i) => ({...data, ordinal: i}));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList.find((item) => item['id'] === data['id']) || data
+    );
+    const newUpdatedList = updatedList.map((item) => {
+      delete item.datasets;
+      delete item.query;
+      delete item.datasetXml;
+      return item;
+    });
+
+    updateMyPageReportOrder(newUpdatedList).then((response) => {
+      if (response.status === 200) {
+        setTreeViewData((prev) => ({
+          ...prev,
+          folderReport: updatedDatasource
         }));
       }
     });
@@ -143,7 +170,8 @@ const ReportFolderUtility = () => {
     deleteUserFolderUtil,
     updateUserFolderUtil,
     checkValidation,
-    updateUserFolderOrderUtil
+    updateUserFolderOrderUtil,
+    updateUserReportOrderUtil
   };
 };
 export default ReportFolderUtility;

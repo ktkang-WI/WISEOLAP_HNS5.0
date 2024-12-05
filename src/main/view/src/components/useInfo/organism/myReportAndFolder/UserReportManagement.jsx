@@ -8,21 +8,31 @@ import localizedString from 'config/localization';
 import useModal from 'hooks/useModal';
 import {updateMyPageReport}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useLoaderData} from 'react-router-dom';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import reportFolderUtility from './ReportFolderUtility';
 import MyPageReportList from 'components/useInfo/molcule/MyPageReportList';
 
-const UserReprotManagement = () => {
+const UserReprotManagement = ({val}) => {
   const reports = useLoaderData();
   const ref = useRef();
   const [treeViewData, setTreeViewData] = useState(reports);
   const [data, setData] = useState({});
   const [prevName, setPrevName] = useState(null);
   const {confirm, alert, success} = useModal();
-  const {checkValidation} = reportFolderUtility();
+  const {checkValidation, updateUserReportOrderUtil} = reportFolderUtility();
   const prevNm = prevName;
+
+  useEffect(() => {
+    userFolderData().then((res) => {
+      if (!res) return;
+
+      setTreeViewData(res);
+    }).catch((e) => {
+      console.log(e);
+    });
+  }, [val]);
 
   const onClickSave = (e) => {
     const report = ref.current?.instance?.option('formData');
@@ -76,6 +86,7 @@ const UserReprotManagement = () => {
             setTreeViewData={setTreeViewData}
             setPrevName={setPrevName}
             ref={ref}
+            updateUserReportOrderUtil={updateUserReportOrderUtil}
           />
         </div>
       </Panel>
