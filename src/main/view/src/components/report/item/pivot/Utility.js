@@ -45,6 +45,7 @@ const generateMeta = (item) => {
   });
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', true);
+  setMeta(item, 'customExpand', false);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
@@ -175,11 +176,16 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
+  const customExpand = item.meta.customExpand;
+
   for (const field of dataField.row) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
-    const rowExpand = !item.meta.positionOption.row.expand ?
-      true :item.meta.positionOption.row.expand;
+    let rowExpand = item.meta.positionOption?.row?.expand || false;
+
+    if (customExpand) {
+      rowExpand = field.expand || false;
+    }
 
     fields.push({
       caption: field.caption,
@@ -199,9 +205,11 @@ const generateItem = (item, param, rootItem) => {
   for (const field of dataField.column) {
     const dataFieldName = field.name;
     if (!gridAttributeOptionCheck(dataFieldName, gridAttribute)) continue;
-    const colExpand = !item.meta.positionOption.column.expand ?
-      true :item.meta.positionOption.column.expand;
+    let colExpand = item.meta.positionOption?.column?.expand || false;
 
+    if (customExpand) {
+      colExpand = field.expand || false;
+    }
     let sortBy = {};
 
     if (field.sortBy && field.sortBy != field.fieldId) {

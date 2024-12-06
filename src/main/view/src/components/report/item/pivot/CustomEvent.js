@@ -44,11 +44,15 @@ const useCustomEvent = () => {
     commonRibbonBtnElement
   } = itemOptionManager();
   let formItems = {};
+  let dataField = {};
+  let customExpand = false;
 
   // Ribbon 영역 CustomEvent
   // Ribbon 렌더링에 사용되는 dataSource
   if (selectedItem && selectedItem.type == ItemType.PIVOT_GRID) {
     formItems = CustomEventUtility.getFormItems(selectedItem);
+    dataField = selectedItem.meta.dataField;
+    customExpand = selectedItem.meta.customExpand || false;
   }
 
   const getRadioPopover = (key, value) => {
@@ -85,6 +89,51 @@ const useCustomEvent = () => {
     </>;
   };
 
+  const getInitStatePopover = () => {
+    const generateCheckBox = (field, pos, i) => {
+      return <CheckBox
+        onValueChanged={(e) => {
+          const dataFields = _.cloneDeep(dataField);
+          dataFields[pos][i].expand = !dataFields[pos][i].expand;
+          const item = setMeta(selectedItem, 'dataField', dataFields);
+          dispatch(updateItem({reportId, item}));
+        }}
+        key={field.fieldId}
+        value={field.expand || false}
+        text={field.caption}
+        visible={customExpand}
+      />;
+    };
+
+    try {
+      return <>
+        {getCheckBoxPopover('initState')}
+        <CheckBox
+          onValueChanged={(e) => {
+            const item = setMeta(selectedItem, 'customExpand', e.value);
+            dispatch(updateItem({reportId, item}));
+          }}
+          style={{marginBottom: '10px'}}
+          value={customExpand}
+          text={'커스텀 확장'}
+        />
+        <br/>
+        {(selectedItem?.meta?.dataField?.row || [])
+            .slice(0, -1).map((field, i) =>
+              generateCheckBox(field, 'row', i)
+            )
+        }
+        {(selectedItem?.meta?.dataField?.column || [])
+            .slice(0, -1).map((field, i) =>
+              generateCheckBox(field, 'column', i)
+            )
+        }
+      </>;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const getModal = (key, params, Component) => {
     return openModal(Component,
         {
@@ -106,7 +155,7 @@ const useCustomEvent = () => {
       'label': localizedString.initState,
       'imgSrc': initStateImg,
       'renderContent': () => {
-        return getCheckBoxPopover('initState');
+        return getInitStatePopover();
       }
     },
     'Total': {
