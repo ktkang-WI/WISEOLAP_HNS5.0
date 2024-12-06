@@ -49,20 +49,21 @@ export const getHint = (item) => {
  * @param {number} params.toIndex - 드래그된 항목이 이동하려는 대상의 인덱스.
  * @param {boolean} params.cancel - 드래그가 취소될지 여부를 나타내는 플래그.
  * @param {string} params.key - 항목을 구분할 수 있는 키, 예를 들어 항목의 ID와 같은 고유 식별자.
+ * @return {boolean}
  */
 export const onDragChange = ({component, itemData, toIndex, cancel, key}) => {
   const visibleRows = component.getVisibleRows();
   const sourceNode = component.getNodeByKey(itemData[key]);
-
   let targetNode = visibleRows[toIndex].node;
+
   while (targetNode && targetNode.data) {
     if (targetNode.data[key] === sourceNode.data[key]) {
-      cancel = true;
-      break;
+      return true;
     }
 
     targetNode = targetNode.parent;
   }
+  return false;
 };
 
 /**
@@ -90,7 +91,8 @@ export const onReorder = ({
 
   // 폴더 안에 아이템을 넣을 경우
   if (dropInsideItem) {
-    if (visibleRows[toIndex].data[typeKey] !== 'FOLDER') {
+    if (visibleRows[toIndex].data[typeKey] &&
+      visibleRows[toIndex].data[typeKey] !== 'FOLDER') {
       return false;
     }
     const parentNodeKey = visibleRows[toIndex].key;
@@ -126,4 +128,22 @@ export const onReorder = ({
   }
 
   return {datasource, sourceData};
+};
+
+/**
+ * 드래그 앤 드랍 완료 후 호출되는 함수
+ * @param {Object} params - 드래그 앤 드랍 이벤트의 매개변수
+ * @param {Object} params.component - TreeList 컴포넌트
+ * @param {Array} params.datasource - TreeList의 데이터 소스
+ */
+export const onDragEnd = ({component, datasource, key, parentKey}) => {
+  // 데이터 소스에서 각 노드를 검사
+  datasource.forEach((node) => {
+    // eslint-disable-next-line max-len
+    const children = datasource.filter((item) => item[parentKey] === node[key]); // 하위 요소 필터링
+    if (children.length === 0 && component.isRowExpanded(node[key])) {
+      // 하위 요소가 없고, 확장된 상태라면 축소
+      component.collapseRow(node[key]);
+    }
+  });
 };

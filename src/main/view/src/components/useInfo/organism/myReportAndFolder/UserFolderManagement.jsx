@@ -9,7 +9,7 @@ import FolderInformation
   from 'components/config/atoms/reportFolderManagement/FolderInformation';
 import Panel
   from 'components/config/organisms/userGroupManagement/common/Panel';
-import {getRefInstance} from 'components/config/utility/utility';
+import {getRefInstance, onDragEnd} from 'components/config/utility/utility';
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import folderImg from 'assets/image/icon/report/folder_load.png';
 import modifyImg from 'assets/image/icon/button/modify.png';
@@ -146,8 +146,14 @@ const UserFolderManagement = ({val}) => {
             />
             <Selection mode="single" />
             <RowDragging
-              onDragChange={(e) => onDragChange({...e, key: 'id'})}
+              onDragChange={(e) => e.cancel = onDragChange({...e, key: 'id'})}
               onReorder={handleReorder}
+              onDragEnd={(e) => onDragEnd({
+                component: e.component,
+                datasource: treeViewData?.folder,
+                key: 'id',
+                parentKey: 'fldParentId'
+              })}
               allowDropInsideItem={true}
               allowReordering={true}
               showDragIcons={false}

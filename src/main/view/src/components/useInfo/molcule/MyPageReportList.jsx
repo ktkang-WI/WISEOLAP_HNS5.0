@@ -15,7 +15,7 @@ import StyledTreeList from
   'components/config/atoms/reportFolderManagement/StyledTreeList';
 import {Column, RowDragging, SearchPanel, Selection}
   from 'devextreme-react/tree-list';
-import {onDragChange, onReorder}
+import {onDragChange, onDragEnd, onReorder}
   from 'components/config/utility/utility';
 const theme = getTheme();
 
@@ -141,11 +141,17 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName,
         />
         <Selection mode="single" />
         <RowDragging
-          onDragChange={(e) => onDragChange({...e, key: 'id'})}
+          onDragChange={(e) => e.cancel = onDragChange({...e, key: 'id'})}
           onReorder={handleReorder}
           allowDropInsideItem={true}
           allowReordering={true}
           showDragIcons={false}
+          onDragEnd={(e) => onDragEnd({
+            component: e.component,
+            datasource: data,
+            key: 'id',
+            parentKey: 'fldParentId'
+          })}
         />
         <Column
           dataField="name"
