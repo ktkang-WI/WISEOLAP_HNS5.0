@@ -119,7 +119,6 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName,
       return;
     }
 
-    // const newDatasource = datasource.filter((data) => data.type != 'FOLDER');
     updateUserReportOrderUtil(datasource, sourceData, setTreeViewData);
     e.component.clearSelection();
   }, [reportId, data]);
@@ -141,7 +140,12 @@ const MyPageReportList = ({data, setData, setTreeViewData, setPrevName,
         />
         <Selection mode="single" />
         <RowDragging
-          onDragChange={(e) => e.cancel = onDragChange({...e, key: 'id'})}
+          onDragChange={(e) => e.cancel = onDragChange({
+            ...e,
+            key: 'id',
+            typeKey: 'type',
+            isReport: true
+          })}
           onReorder={handleReorder}
           allowDropInsideItem={true}
           allowReordering={true}

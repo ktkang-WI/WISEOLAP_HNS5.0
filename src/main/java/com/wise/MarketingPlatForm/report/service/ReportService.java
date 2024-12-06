@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.Gson;
 import com.wise.MarketingPlatForm.config.controller.ConfigController;
+import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.account.dto.AuthReportDTO;
 import com.wise.MarketingPlatForm.account.dto.group.GroupFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
@@ -467,6 +468,26 @@ public class ReportService {
 
         return map;
     }
+
+    public boolean reorderReport(ReportMstrEntity reportMstrEntity) {
+        return reportDAO.reorderReport(reportMstrEntity);
+      }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean reorderReports(List<ReportMstrEntity> reports) {
+        try {
+        for (ReportMstrEntity report : reports) {
+            if (!reorderReport(report)) {
+            throw new RuntimeException("공용 폴더 reorder 오류 발생: " + report.getReportId());
+            };
+        }
+    
+        return true;
+        } catch (Exception e) {
+        System.err.println("Exception 발생: " + e.getMessage());
+        throw e; 
+        }
+    };
 
     public boolean patchConfigReport(ReportMstrEntity reportMstrEntity) {
         return reportDAO.updateConfigReport(reportMstrEntity);

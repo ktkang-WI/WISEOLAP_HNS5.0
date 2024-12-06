@@ -107,6 +107,17 @@ export const reorderFolders = (folders) => {
   return res;
 };
 
+export const reorderReports = (reports) => {
+  const reorderedReports = reports.map((report) => ({
+    reportId: report.reportId,
+    fldId: report.parentId.slice(report.parentId.indexOf('_')+1),
+    reportOrdinal: report.reportOrdinal
+  }));
+  // eslint-disable-next-line max-len
+  const res = axios.patch(reportPath + '/reorderReports', reorderedReports);
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';

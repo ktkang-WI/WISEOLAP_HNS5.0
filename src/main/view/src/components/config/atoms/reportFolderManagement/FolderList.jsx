@@ -85,7 +85,12 @@ const FolderList = ({setRow}) => {
         />
         <Selection mode="single" />
         <RowDragging
-          onDragChange={(e) => e.cancel = onDragChange({...e, key: 'fldId'})}
+          onDragChange={(e) => e.cancel = onDragChange({
+            ...e,
+            key: 'fldId',
+            typeKey: 'type',
+            isReport: false
+          })}
           onReorder={handleReorder}
           onDragEnd={(e) => onDragEnd({
             component: e.component,

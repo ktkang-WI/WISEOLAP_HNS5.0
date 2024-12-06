@@ -146,7 +146,12 @@ const UserFolderManagement = ({val}) => {
             />
             <Selection mode="single" />
             <RowDragging
-              onDragChange={(e) => e.cancel = onDragChange({...e, key: 'id'})}
+              onDragChange={(e) => e.cancel = onDragChange({
+                ...e,
+                key: 'id',
+                typeKey: 'type',
+                isReport: false
+              })}
               onReorder={handleReorder}
               onDragEnd={(e) => onDragEnd({
                 component: e.component,

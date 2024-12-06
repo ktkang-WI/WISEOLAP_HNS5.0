@@ -47,15 +47,29 @@ export const getHint = (item) => {
  * @param {Object} params.component - 이벤트를 발생시킨 컴포넌트 객체 드래그할 수 있는 노드를 가져오는 데 사용.
  * @param {Object} params.itemData - 드래그된 항목의 데이터.
  * @param {number} params.toIndex - 드래그된 항목이 이동하려는 대상의 인덱스.
- * @param {boolean} params.cancel - 드래그가 취소될지 여부를 나타내는 플래그.
  * @param {string} params.key - 항목을 구분할 수 있는 키, 예를 들어 항목의 ID와 같은 고유 식별자.
  * @return {boolean}
  */
-export const onDragChange = ({component, itemData, toIndex, cancel, key}) => {
+export const onDragChange = ({component, itemData, toIndex, dropInsideItem,
+  key, typeKey, isReport}) => {
   const visibleRows = component.getVisibleRows();
   const sourceNode = component.getNodeByKey(itemData[key]);
   let targetNode = visibleRows[toIndex].node;
 
+  if (isReport) {
+    // 보고서 목록일 경우, 폴더는 드래그할 수 없도록 설정
+    if (sourceNode.data[typeKey]?.toUpperCase() === 'FOLDER') {
+      return true;
+    }
+    // 보고서 목록일 경우, 요소를 폴더 외의 항목 안으로 드롭할 수 없도록 설정
+    if (dropInsideItem) {
+      if (visibleRows[toIndex].data[typeKey]?.toUpperCase() !== 'FOLDER') {
+        return true;
+      }
+    }
+  }
+
+  // 드래그한 항목을 자신의 하위 항목으로 이동하지 못하도록 설정
   while (targetNode && targetNode.data) {
     if (targetNode.data[key] === sourceNode.data[key]) {
       return true;
@@ -91,10 +105,6 @@ export const onReorder = ({
 
   // 폴더 안에 아이템을 넣을 경우
   if (dropInsideItem) {
-    if (visibleRows[toIndex].data[typeKey] &&
-      visibleRows[toIndex].data[typeKey] !== 'FOLDER') {
-      return false;
-    }
     const parentNodeKey = visibleRows[toIndex].key;
     const childNodes = datasource.filter(
         (item) => item[parentKey] === parentNodeKey
@@ -103,7 +113,7 @@ export const onReorder = ({
     const insertIndex = childNodes.length > 0 ?
     datasource.indexOf(childNodes[childNodes.length - 1]) + 1 :
       toIndex + 1;
-    // 부모 ID 설정 후 이동
+    // 부모 key 설정 후 이동
     sourceData = {...sourceData, [parentKey]: parentNodeKey};
     datasource.splice(sourceIndex, 1); // 기존 위치에서 제거
     // eslint-disable-next-line max-len

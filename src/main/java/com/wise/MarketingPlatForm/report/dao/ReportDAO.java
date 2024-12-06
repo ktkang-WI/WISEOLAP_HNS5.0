@@ -28,6 +28,7 @@ public interface ReportDAO {
     public List<ReportListDTO> selectPortalReportList(int grpId, int userNo, List<String> folders);
     public List<ReportListDTO> selectPrivateReportList(String userId, List<String> reportTypes, String editMode);
     public boolean updateReport(ReportMstrEntity reportMstrEntity);
+    public boolean reorderReport(ReportMstrEntity reportMstrEntity);
     public boolean insertReport(ReportMstrEntity reportMstrEntity);
     public boolean updateConfigReport(ReportMstrEntity reportMstrEntity);
     public boolean deleteReport(int reportId);

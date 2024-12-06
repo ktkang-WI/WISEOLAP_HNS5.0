@@ -3,7 +3,7 @@ import InputTxtAndCheckBox
 import useModal from 'hooks/useModal';
 import {createMyPageFolder, deleteMyPageFolder,
   updateMyPageFolder, updateMyPageFolderOrder, updateMyPageReportOrder,
-  reorderFolders}
+  reorderFolders, reorderReports}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
@@ -159,6 +159,27 @@ const ReportFolderUtility = () => {
     });
   };
 
+  const updatePublicReportOrderUtil = (datasource, sourceData,
+      setData) => {
+    const updatedList = datasource
+        .filter((data) => data['parentId'] === sourceData['parentId'])
+        .filter((data) => data.type !== 'folder')
+        .map((data, i) => ({
+          ...data,
+          reportOrdinal: i
+        }));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList
+          .find((item) => item['key'] === data['key']) || data
+    );
+
+    reorderReports(updatedList).then((response) => {
+      if (response.status === 200) {
+        setData(updatedDatasource);
+      }
+    });
+  };
+
   const updateUserReportOrderUtil = (datasource, sourceData,
       setTreeViewData) => {
     const updatedList = datasource
@@ -192,6 +213,7 @@ const ReportFolderUtility = () => {
     checkValidation,
     updateUserFolderOrderUtil,
     updatePublicFolderOrderUtil,
+    updatePublicReportOrderUtil,
     updateUserReportOrderUtil
   };
 };
