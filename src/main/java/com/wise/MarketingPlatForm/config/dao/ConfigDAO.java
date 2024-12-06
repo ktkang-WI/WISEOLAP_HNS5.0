@@ -30,6 +30,7 @@ public interface ConfigDAO {
   public List<ConfigFolderReportDTO> selectConfigFolderReport();
   public boolean createConfigFolder(FldMstrEntity fldMstrEntity);
   public boolean updateConfigFolder(FldMstrEntity fldMstrEntity);
+  public boolean reorderFolder(FldMstrEntity fldMstrEntity);
   public boolean deleteConfigFolder(FldMstrEntity fldMstrEntity);
   // myPage 이동 에정
   public ArrayList<MyPageFolderReportDTO> selectMyPageFolderReport(int userNo, String userNm);

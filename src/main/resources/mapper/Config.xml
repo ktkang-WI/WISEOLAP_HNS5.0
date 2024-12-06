@@ -486,6 +486,14 @@
           WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
     </update>
 
+    <update id="reorderFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+      UPDATE PUB_FLD_MSTR
+      SET 
+      FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},             
+      FLD_ORDINAL = #{fldOrdinal, jdbcType=INTEGER}
+      WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
+    </update>
+
     <insert id="createConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
         INSERT INTO
         PUB_FLD_MSTR(

@@ -96,6 +96,17 @@ export const updateMyPageReportOrder = (param) => {
   return res;
 };
 
+export const reorderFolders = (folders) => {
+  const reorderedFolders = folders.map((folder) => ({
+    fldId: folder.fldId,
+    fldParentId: folder.fldParentId,
+    fldOrdinal: folder.fldOrdinal
+  }));
+  // eslint-disable-next-line max-len
+  const res = axios.patch(configPath + '/folder/reorderFolders', reorderedFolders);
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';

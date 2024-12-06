@@ -2,7 +2,8 @@ import InputTxtAndCheckBox
   from 'components/common/atomic/Modal/organisms/InputTxtAndCheckBox';
 import useModal from 'hooks/useModal';
 import {createMyPageFolder, deleteMyPageFolder,
-  updateMyPageFolder, updateMyPageFolderOrder, updateMyPageReportOrder}
+  updateMyPageFolder, updateMyPageFolderOrder, updateMyPageReportOrder,
+  reorderFolders}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
@@ -139,6 +140,25 @@ const ReportFolderUtility = () => {
     });
   };
 
+  const updatePublicFolderOrderUtil = (datasource, sourceData,
+      setData) => {
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
+        .map((data, i) => ({
+          ...data,
+          fldOrdinal: i
+        }));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList.find((item) => item['fldId'] === data['fldId']) || data
+    );
+
+    reorderFolders(updatedList).then((response) => {
+      if (response.status === 200) {
+        setData(updatedDatasource);
+      }
+    });
+  };
+
   const updateUserReportOrderUtil = (datasource, sourceData,
       setTreeViewData) => {
     const updatedList = datasource
@@ -171,6 +191,7 @@ const ReportFolderUtility = () => {
     updateUserFolderUtil,
     checkValidation,
     updateUserFolderOrderUtil,
+    updatePublicFolderOrderUtil,
     updateUserReportOrderUtil
   };
 };
