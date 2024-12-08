@@ -44,15 +44,11 @@ const useCustomEvent = () => {
     commonRibbonBtnElement
   } = itemOptionManager();
   let formItems = {};
-  let dataField = {};
-  let customExpand = false;
 
   // Ribbon 영역 CustomEvent
   // Ribbon 렌더링에 사용되는 dataSource
   if (selectedItem && selectedItem.type == ItemType.PIVOT_GRID) {
     formItems = CustomEventUtility.getFormItems(selectedItem);
-    dataField = selectedItem.meta.dataField;
-    customExpand = selectedItem.meta.customExpand || false;
   }
 
   const getRadioPopover = (key, value) => {
@@ -90,6 +86,11 @@ const useCustomEvent = () => {
   };
 
   const getInitStatePopover = () => {
+    const rootItem = selectRootItem(store.getState());
+    const dataField = selectedItem.meta.dataField ||
+      rootItem.adHocOption.dataField;
+    const customExpand = selectedItem.meta.customExpand || false;
+
     const generateCheckBox = (field, pos, i) => {
       return <CheckBox
         onValueChanged={(e) => {
@@ -118,16 +119,10 @@ const useCustomEvent = () => {
           text={'커스텀 확장'}
         />
         <br/>
-        {(selectedItem?.meta?.dataField?.row || [])
-            .slice(0, -1).map((field, i) =>
-              generateCheckBox(field, 'row', i)
-            )
-        }
-        {(selectedItem?.meta?.dataField?.column || [])
-            .slice(0, -1).map((field, i) =>
-              generateCheckBox(field, 'column', i)
-            )
-        }
+        {(dataField?.row || []).slice(0, -1).map((field, i) =>
+          generateCheckBox(field, 'row', i))}
+        {(dataField?.column || []).slice(0, -1).map((field, i) =>
+          generateCheckBox(field, 'column', i))}
       </>;
     } catch (e) {
       console.error(e);
