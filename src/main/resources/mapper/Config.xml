@@ -217,9 +217,7 @@
             <if test='name != ""'>
               FLD_NM = #{name, jdbcType=VARCHAR},
             </if>
-            <if test='fldParentId != 0'>
               FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
-            </if>
               FLD_ORDINAL = #{ordinal, jdbcType=INTEGER},
               FLD_DESC = #{desc, jdbcType=VARCHAR},
             <if test='fldLvl != 0'>
