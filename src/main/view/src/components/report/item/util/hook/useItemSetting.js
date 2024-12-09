@@ -26,6 +26,13 @@ export default function useItemSetting(
   const meta = item.meta;
   const interactiveOption = filterCondition ?
     {} : meta.interactiveOption;
+  const {
+    crossDataSource,
+    targetDimension,
+    mode,
+    enabled
+  } = interactiveOption;
+  const prevInteractiveOption = useRef(interactiveOption);
   const {filterItems, clearAllFilter} = useQueryExecute();
   const [selectedItemState, setSelectedItemState] = useState([]);
   const selectedItemRef = useRef([]);
@@ -78,24 +85,30 @@ export default function useItemSetting(
   }, [item.mart.toggle]);
 
   useEffect(() => {
-    if (!filterCondition && item.mart.init) {
+    const temp = prevInteractiveOption.current;
+    if (!_.isEqual(temp, interactiveOption) &&
+      !filterCondition && item.mart.init) {
+      prevInteractiveOption.current = interactiveOption;
       clearSelection();
       setSelectedItem([]);
       filterItems(item, {});
     }
   }, [
-    interactiveOption.targetDimension,
-    interactiveOption.mode,
-    interactiveOption.enabled]);
+    targetDimension,
+    mode,
+    enabled]);
 
   useEffect(() => {
-    if (!filterCondition && item.mart.init) {
+    const temp = prevInteractiveOption.current;
+    if (!_.isEqual(temp, interactiveOption) &&
+      !filterCondition && item.mart.init) {
+      prevInteractiveOption.current = interactiveOption;
       clearSelection();
       setSelectedItem([]);
       clearAllFilter(item);
     }
   }, [
-    interactiveOption.crossDataSource
+    crossDataSource
   ]);
 
   const findSplitter = (data) => {
