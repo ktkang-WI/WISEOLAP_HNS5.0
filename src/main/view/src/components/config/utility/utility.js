@@ -66,6 +66,11 @@ export const onDragChange = ({component, itemData, toIndex, dropInsideItem,
       if (visibleRows[toIndex].data[typeKey]?.toUpperCase() !== 'FOLDER') {
         return true;
       }
+    } else {
+      // 보고서 목록일 경우, 최상위로 드랍 할 수 없도록 설정
+      if (targetNode.parent.key === 0) {
+        return true;
+      }
     }
   }
 
