@@ -226,6 +226,14 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       focusItem(itemId);
     }
 
+    if (action.type == 'FlexLayout_MaximizeToggle') {
+      model.doAction(Actions.maximizeToggle(
+          action.data.node || action.data.tabsetNode));
+      const modelJson = model.toJson();
+
+      updateLayoutShape(reportId, modelJson);
+    }
+
     // 레이아웃 조절
     if (action.type == 'FlexLayout_AdjustSplit') {
       const modelJson = model.toJson();
