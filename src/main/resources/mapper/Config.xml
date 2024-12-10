@@ -203,6 +203,7 @@
               FROM REPORT_MSTR WHERE FLD_ID IN (
                     SELECT FLD_ID FROM USER_FLD_MSTR WHERE USER_NO = #{userNo}
                   ) AND DEL_YN = 'N'
+                  AND REPORT_MSTR.FLD_TYPE = 'PRIVATE'
         ) REPORTANDFOLDER 
            ORDER BY
             REPORTANDFOLDER.TYPE,
@@ -216,9 +217,7 @@
             <if test='name != ""'>
               FLD_NM = #{name, jdbcType=VARCHAR},
             </if>
-            <if test='fldParentId != 0'>
               FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},
-            </if>
               FLD_ORDINAL = #{ordinal, jdbcType=INTEGER},
               FLD_DESC = #{desc, jdbcType=VARCHAR},
             <if test='fldLvl != 0'>
@@ -249,14 +248,14 @@
             <if test='desc != ""'>
               REPORT_DESC = #{desc, jdbcType=VARCHAR},
             </if>
-            <if test='ordinal != null'>
-              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER},
-            </if>
             <if test='prompt != ""'>
               PROMPT_YN = #{prompt, jdbcType=VARCHAR},
             </if>
             <if test='maxReportPeriodYn != ""'>
-              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR}
+              MAX_REPORT_PERIOD_YN = #{maxReportPeriodYn, jdbcType=VARCHAR},
+            </if>
+            <if test='ordinal != null'>
+              REPORT_ORDINAL = #{ordinal, jdbcType=INTEGER}
             </if>
           WHERE REPORT_ID = #{id}
     </update>
@@ -490,6 +489,14 @@
               </if>
               FLD_ID = FLD_ID
           WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
+    </update>
+
+    <update id="reorderFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">
+      UPDATE PUB_FLD_MSTR
+      SET 
+      FLD_PARENT_ID = #{fldParentId, jdbcType=INTEGER},             
+      FLD_ORDINAL = #{fldOrdinal, jdbcType=INTEGER}
+      WHERE FLD_ID = #{fldId, jdbcType=INTEGER}
     </update>
 
     <insert id="createConfigFolder" parameterType="com.wise.MarketingPlatForm.config.entity.FldMstrEntity">

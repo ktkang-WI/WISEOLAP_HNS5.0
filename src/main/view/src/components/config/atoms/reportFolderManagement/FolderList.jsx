@@ -1,6 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {
   Column,
+  RowDragging,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 import React, {useCallback, useContext, useEffect} from 'react';
@@ -12,19 +13,30 @@ import folderImg from 'assets/image/icon/report/folder_load.png';
 import {Folder} from
   'models/config/reportFolderManagement/ReportFolderManagement';
 import StyledTreeList from './StyledTreeList';
+import {onDragChange, onReorder, onDragEnd}
+  from 'components/config/utility/utility';
+import reportFolderUtility from
+  'components/useInfo/organism/myReportAndFolder/ReportFolderUtility';
 
 const FolderList = ({setRow}) => {
   // context
   const reportFolderContext = useContext(ReportFolderContext);
 
   // state
-  const [data] = reportFolderContext.state.data;
+  const [data, setData] = reportFolderContext.state.data;
+  const {updatePublicFolderOrderUtil} = reportFolderUtility();
+  const folders = data;
 
   useEffect(() => {
     setRow(new Folder({}));
   }, []);
 
   const handleRowClick = useCallback(({data}) => {
+    const newFldParentNm = folders
+        .find((folder)=>folder.fldId === data.fldParentId)?.fldNm;
+    if (newFldParentNm) {
+      data.fldParentNm = newFldParentNm;
+    }
     setRow(new Folder(data));
   }, [data]);
 
@@ -32,6 +44,24 @@ const FolderList = ({setRow}) => {
     if (selectedRowKeys.length === 0) {
       setRow(new Folder({}));
     }
+  }, [data]);
+
+  const handleReorder = useCallback((e) => {
+    const updatedEvent = {
+      ...e,
+      datasource: _.cloneDeep(data),
+      key: 'fldId',
+      parentKey: 'fldParentId',
+      typeKey: 'type'
+    };
+    const {datasource, sourceData} = onReorder(updatedEvent);
+
+    if (!datasource) {
+      return;
+    }
+
+    updatePublicFolderOrderUtil(datasource, sourceData, setData);
+    e.component.clearSelection();
   }, [data]);
 
   return (
@@ -54,6 +84,24 @@ const FolderList = ({setRow}) => {
           width={250}
         />
         <Selection mode="single" />
+        <RowDragging
+          onDragChange={(e) => e.cancel = onDragChange({
+            ...e,
+            key: 'fldId',
+            typeKey: 'type',
+            isReport: false
+          })}
+          onReorder={handleReorder}
+          onDragEnd={(e) => onDragEnd({
+            component: e.component,
+            datasource: data,
+            key: 'fldId',
+            parentKey: 'fldParentId'
+          })}
+          allowDropInsideItem={true}
+          allowReordering={true}
+          showDragIcons={false}
+        />
         <Column
           dataField="fldNm"
           caption={localizedString.folderName}

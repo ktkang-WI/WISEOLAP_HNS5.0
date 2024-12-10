@@ -16,6 +16,7 @@ import com.wise.MarketingPlatForm.account.vo.RestAPIVO;
 import com.wise.MarketingPlatForm.config.entity.FldMstrEntity;
 import com.wise.MarketingPlatForm.config.service.folder.ConfigFolderService;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "config-folder", description = "폴더 리스트를 가져옵니다.")
@@ -81,6 +82,15 @@ public class ConfigFolderController {
       .build();
 
     boolean result = configFolderService.patchConfigFolder(fldMstr);
+
+    if (!result) return RestAPIVO.conflictResponse(false);
+  
+    return RestAPIVO.okResponse(result);
+  }
+
+  @PatchMapping("/reorderFolders")
+  public ResponseEntity<RestAPIVO> reorderFolders(@RequestBody List<FldMstrEntity> folders){
+    boolean result = configFolderService.reorderFolders(folders);
 
     if (!result) return RestAPIVO.conflictResponse(false);
   

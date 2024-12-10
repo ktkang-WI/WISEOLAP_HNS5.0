@@ -80,6 +80,44 @@ export const resetDesignerConfig = () => {
   return res;
 };
 
+export const updateMyPageFolderOrder = (param) => {
+  const res =
+    axios.patch(configPath + '/my-page-folder/move-folder', param, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  return res;
+};
+
+export const updateMyPageReportOrder = (param) => {
+  const res =
+    axios.patch(configPath + '/my-page-folder/move-report', param);
+  return res;
+};
+
+export const reorderFolders = (folders) => {
+  const reorderedFolders = folders.map((folder) => ({
+    fldId: folder.fldId,
+    fldParentId: folder.fldParentId,
+    fldOrdinal: folder.fldOrdinal
+  }));
+  // eslint-disable-next-line max-len
+  const res = axios.patch(configPath + '/folder/reorderFolders', reorderedFolders);
+  return res;
+};
+
+export const reorderReports = (reports) => {
+  const reorderedReports = reports.map((report) => ({
+    reportId: report.reportId,
+    fldId: report.parentId.slice(report.parentId.indexOf('_')+1),
+    reportOrdinal: report.reportOrdinal
+  }));
+  // eslint-disable-next-line max-len
+  const res = axios.patch(reportPath + '/reorderReports', reorderedReports);
+  return res;
+};
+
 export class Report {
   reportId = 0;
   reportNm = '';
