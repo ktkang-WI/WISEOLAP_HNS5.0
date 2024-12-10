@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Modal from 'components/common/atomic/Modal/organisms/Modal';
 import QueryEditor from '../atomic/molecules/QueryEditor';
 import DataSourceInfoForm from '../atomic/molecules/DataSourceInfoForm';
@@ -60,7 +61,7 @@ const QueryDataSourceDesignerModal = ({
   };
 
   // hook
-  const {openModal, alert, confirm} = useModal();
+  const {openModal, alert, confirm, detailMsgAlert} = useModal();
   const dispatch = useDispatch();
 
   // actions
@@ -227,7 +228,7 @@ const QueryDataSourceDesignerModal = ({
 
             onClose();
           } else {
-            alert(localizedString.invalidQuery);
+            detailMsgAlert(localizedString.invalidQuery, response.data.rowData[0]?.error);
           }
         };
 
