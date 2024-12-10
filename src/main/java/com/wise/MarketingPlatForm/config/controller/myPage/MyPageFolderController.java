@@ -2,10 +2,12 @@ package com.wise.MarketingPlatForm.config.controller.myPage;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -124,5 +126,43 @@ public class MyPageFolderController {
         .build();
     
     return myPageFolderReportService.updateMyFolder(fldReprotDTO);
+  }
+
+  @PatchMapping("/move-folder")
+  public ResponseEntity<RestAPIVO> updateMyFolder(@RequestBody List<MyPageFolderReportDTO> fldDtoList) {
+    try {
+      // 업데이트 시도
+      boolean success = myPageFolderReportService.updateMyFolderList(fldDtoList);
+
+      // 성공 시 200, 실패 시 400
+      return success ? RestAPIVO.okResponse(true) : RestAPIVO.badRequest(false);
+    } catch (Exception e) {
+      // 예외 발생 시 500
+      return RestAPIVO.conflictResponse(false);
+    }
+  }
+
+  @PatchMapping("/move-report")
+  public ResponseEntity<RestAPIVO> updateMyReport(@RequestBody List<MyPageFolderReportDTO> reportDtoList) {
+    try {
+
+      for (MyPageFolderReportDTO dto : reportDtoList) {
+        dto.setName("");
+        dto.setType("");
+        dto.setSubtitle("");
+        dto.setTag("");
+        dto.setDesc("");
+        dto.setPrompt("");
+        dto.setMaxReportPeriodYn("");
+      }
+      // 업데이트 시도
+      boolean success = myPageFolderReportService.updateMyReportList(reportDtoList);
+
+      // 성공 시 200, 실패 시 400
+      return success ? RestAPIVO.okResponse(true) : RestAPIVO.badRequest(false);
+    } catch (Exception e) {
+      // 예외 발생 시 500
+      return RestAPIVO.conflictResponse(false);
+    }
   }
 }

@@ -90,4 +90,34 @@ public class MyPageFolderReportService {
 
     return result;
   }
+
+  @Transactional(rollbackFor = Exception.class)
+  public boolean updateMyFolderList(List<MyPageFolderReportDTO> fldDtoList) {
+    try {
+      for (MyPageFolderReportDTO dto : fldDtoList) { 
+        if (!updateMyFolder(dto)) {
+          throw new RuntimeException("개인 폴더 update 오류 발생: " + dto.getName());
+        }
+      }
+      return true;
+    } catch (Exception e) {
+      System.err.println("Exception 발생: " + e.getMessage());
+      throw e; 
+    }
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public boolean updateMyReportList(List<MyPageFolderReportDTO> reportDtoList) {
+    try {
+      for (MyPageFolderReportDTO dto : reportDtoList) { 
+        if (!updateMyReport(dto)) {
+          throw new RuntimeException("개인 보고서 update 오류 발생: " + dto.getId());
+        }
+      }
+      return true;
+    } catch (Exception e) {
+      System.err.println("Exception 발생: " + e.getMessage());
+      throw e; 
+    }
+  }
 }

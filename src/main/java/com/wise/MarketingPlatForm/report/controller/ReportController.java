@@ -476,6 +476,17 @@ public class ReportController {
       return RestAPIVO.okResponse(result);
     }
 
+    @PatchMapping(value = "/reorderReports")
+    public ResponseEntity<RestAPIVO> reorderReports(
+        @RequestBody List<ReportMstrEntity> reports
+    ) throws Exception {
+      boolean result = reportService.reorderReports(reports);
+    
+      if (!result) return RestAPIVO.conflictResponse(false);
+    
+      return RestAPIVO.okResponse(result);
+    }
+
     @PostMapping(value = "/report-folder-list")
 	public Map<String, List<FolderMasterVO>> getReportFolderList(HttpServletRequest request) {
         UserDTO userDTO = SessionUtility.getSessionUser(request);

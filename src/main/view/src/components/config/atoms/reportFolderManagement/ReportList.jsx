@@ -1,6 +1,7 @@
 import Wrapper from 'components/common/atomic/Common/Wrap/Wrapper';
 import {
   Column,
+  RowDragging,
   SearchPanel,
   Selection} from 'devextreme-react/tree-list';
 import React, {useCallback, useContext, useEffect} from 'react';
@@ -15,19 +16,31 @@ import adhoc from 'assets/image/icon/report/adhoc.png';
 import {Report} from
   'models/config/reportFolderManagement/ReportFolderManagement';
 import StyledTreeList from './StyledTreeList';
+import {onDragChange, onReorder, onDragEnd}
+  from 'components/config/utility/utility';
+import reportFolderUtility from
+  'components/useInfo/organism/myReportAndFolder/ReportFolderUtility';
 
 const ReportList = ({setRow}) => {
   // context
   const reportFolderContext = useContext(ReportFolderContext);
 
   // state
-  const [data] = reportFolderContext.state.data;
+  const [data, setData] = reportFolderContext.state.data;
+  const reports = data;
+
+  const {updatePublicReportOrderUtil} = reportFolderUtility();
 
   useEffect(() => {
     setRow(new Report({}));
   }, []);
 
   const handleRowClick = useCallback(({data}) => {
+    const newReportParentNm = reports
+        .find((report)=>report.key === data.parentId)?.fldNm;
+    if (newReportParentNm) {
+      data.fldParentNm = newReportParentNm;
+    }
     setRow(new Report(data));
   }, [data]);
 
@@ -61,6 +74,25 @@ const ReportList = ({setRow}) => {
     );
   }, [data]);
 
+  const handleReorder = useCallback((e) => {
+    const updatedEvent = {
+      ...e,
+      datasource: _.cloneDeep(data),
+      key: 'key',
+      parentKey: 'parentId',
+      typeKey: 'type'
+    };
+    const {datasource, sourceData} = onReorder(updatedEvent);
+
+    if (!datasource) {
+      return;
+    }
+
+    // const newDatasource = datasource.filter((data) => data.type != 'FOLDER');
+    updatePublicReportOrderUtil(datasource, sourceData, setData);
+    e.component.clearSelection();
+  }, [data]);
+
   return (
     <Wrapper>
       <Title title={localizedString.reportlist}></Title>
@@ -81,6 +113,24 @@ const ReportList = ({setRow}) => {
           width={'250'}
         />
         <Selection mode="single" />
+        <RowDragging
+          onDragChange={(e) => e.cancel = onDragChange({
+            ...e,
+            key: 'key',
+            typeKey: 'type',
+            isReport: true
+          })}
+          onReorder={handleReorder}
+          onDragEnd={(e) => onDragEnd({
+            component: e.component,
+            datasource: data,
+            key: 'key',
+            parentKey: 'parentId'
+          })}
+          allowDropInsideItem={true}
+          allowReordering={true}
+          showDragIcons={false}
+        />
         <Column
           dataField="name"
           caption={localizedString.reportName}

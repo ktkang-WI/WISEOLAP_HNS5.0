@@ -1,7 +1,9 @@
 import InputTxtAndCheckBox
   from 'components/common/atomic/Modal/organisms/InputTxtAndCheckBox';
 import useModal from 'hooks/useModal';
-import {createMyPageFolder, deleteMyPageFolder, updateMyPageFolder}
+import {createMyPageFolder, deleteMyPageFolder,
+  updateMyPageFolder, updateMyPageFolderOrder, updateMyPageReportOrder,
+  reorderFolders, reorderReports}
   from 'models/config/reportFolderManagement/ReportFolderManagement';
 import {userFolderData} from 'routes/loader/LoaderConfig';
 import localizedString from 'config/localization';
@@ -118,11 +120,100 @@ const ReportFolderUtility = () => {
     });
   };
 
+  const updateUserFolderOrderUtil = (datasource, sourceData,
+      setTreeViewData) => {
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
+        .map((data, i) => ({...data, ordinal: i}));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList.find((item) => item['id'] === data['id']) || data
+    );
+
+    updateMyPageFolderOrder(updatedList).then((response) => {
+      if (response.status === 200) {
+        setTreeViewData((prev) => ({
+          ...prev,
+          folder: updatedDatasource
+        }));
+      }
+    });
+  };
+
+  const updatePublicFolderOrderUtil = (datasource, sourceData,
+      setData) => {
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
+        .map((data, i) => ({
+          ...data,
+          fldOrdinal: i
+        }));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList.find((item) => item['fldId'] === data['fldId']) || data
+    );
+
+    reorderFolders(updatedList).then((response) => {
+      if (response.status === 200) {
+        setData(updatedDatasource);
+      }
+    });
+  };
+
+  const updatePublicReportOrderUtil = (datasource, sourceData,
+      setData) => {
+    const updatedList = datasource
+        .filter((data) => data['parentId'] === sourceData['parentId'])
+        .filter((data) => data.type !== 'folder')
+        .map((data, i) => ({
+          ...data,
+          reportOrdinal: i
+        }));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList
+          .find((item) => item['key'] === data['key']) || data
+    );
+
+    reorderReports(updatedList).then((response) => {
+      if (response.status === 200) {
+        setData(updatedDatasource);
+      }
+    });
+  };
+
+  const updateUserReportOrderUtil = (datasource, sourceData,
+      setTreeViewData) => {
+    const updatedList = datasource
+        .filter((data) => data['fldParentId'] === sourceData['fldParentId'])
+        .filter((data) => data.type !== 'FOLDER')
+        .map((data, i) => ({...data, ordinal: i}));
+    const updatedDatasource = datasource.map((data) =>
+      updatedList.find((item) => item['id'] === data['id']) || data
+    );
+    const newUpdatedList = updatedList.map((item) => {
+      delete item.datasets;
+      delete item.query;
+      delete item.datasetXml;
+      return item;
+    });
+
+    updateMyPageReportOrder(newUpdatedList).then((response) => {
+      if (response.status === 200) {
+        setTreeViewData((prev) => ({
+          ...prev,
+          folderReport: updatedDatasource
+        }));
+      }
+    });
+  };
+
   return {
     newUserFolderUtil,
     deleteUserFolderUtil,
     updateUserFolderUtil,
-    checkValidation
+    checkValidation,
+    updateUserFolderOrderUtil,
+    updatePublicFolderOrderUtil,
+    updatePublicReportOrderUtil,
+    updateUserReportOrderUtil
   };
 };
 export default ReportFolderUtility;

@@ -811,6 +811,14 @@
 		WHERE REPORT_ID = #{reportId}
 	</update>
 
+  <update id = "reorderReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
+		UPDATE REPORT_MSTR
+		SET
+			FLD_ID = #{fldId},
+			REPORT_ORDINAL = #{reportOrdinal}
+		WHERE REPORT_ID = #{reportId}
+	</update>
+
   <update id = "updateConfigReport" parameterType="com.wise.MarketingPlatForm.report.entity.ReportMstrEntity">
 		UPDATE REPORT_MSTR
 		SET
