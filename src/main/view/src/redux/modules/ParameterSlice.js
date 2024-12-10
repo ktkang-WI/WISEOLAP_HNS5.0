@@ -65,7 +65,7 @@ const reducers = {
     // 기존에 파라미터로 넘어온 datasetId를 가지고 있던 필터 정보 삭제
     state[reportId].informations = state[reportId].informations
         .reduce((acc, info) => {
-          const datasetArr = info.dataset;
+          const datasetArr = [...new Set(info.dataset)];
           const idx = datasetArr.indexOf(datasetId);
 
           if (idx >= 0) {
