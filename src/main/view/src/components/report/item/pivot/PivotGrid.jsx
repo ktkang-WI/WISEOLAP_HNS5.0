@@ -221,11 +221,11 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const usePage = meta.pagingOption.pagination.isOk;
 
   return (
-    <Wrapper>
+    <Wrapper width={meta.autoSize ? 'fit-content' : '100%'}>
       <DevPivotGrid
         ref={ref}
         id={id}
-        width={meta.autoSize ? 'fit-content' : '100%'}
+        width={'auto'}
         height={usePage ? 'calc(100% - 50px)' : '100%'}
         showBorders={true}
         dataSource={mart.dataSourceConfig}
@@ -357,7 +357,10 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
         }}
       >
         <FieldChooser enabled={false}> </FieldChooser>
-        <Scrolling mode='virtual' />
+        <Scrolling
+          mode='virtual'
+          useNative={meta.autoSize ? true : false}
+        />
         <HeaderFilter>
           <Search enabled={true} />
         </HeaderFilter>
