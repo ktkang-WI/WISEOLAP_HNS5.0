@@ -5,9 +5,25 @@ class ExpressionFunctions {
     return sum / nums.length;
   };
 
+  static Abs = (o) => Math.abs(o);
+
   static Count = (o) => ExpressionFunctions.extractNumberArray(o).length;
 
-  static Max = (o) => Math.max(...ExpressionFunctions.extractNumberArray(o));
+  static Max = (o1, o2) => {
+    if (o2) {
+      return Math.max(o1, o2);
+    }
+
+    Math.max(...ExpressionFunctions.extractNumberArray(o1));
+  };
+
+  static Min = (o1, o2) => {
+    if (o2) {
+      return Math.min(o1, o2);
+    }
+
+    Math.min(...ExpressionFunctions.extractNumberArray(o1));
+  };
 
   static Median = (o) => {
     const nums = ExpressionFunctions.
@@ -15,8 +31,6 @@ class ExpressionFunctions {
     const mid = Math.floor(nums.length / 2);
     return nums.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
   };
-
-  static Min = (o) => Math.min(...ExpressionFunctions.extractNumberArray(o));
 
   static Sum = (o) => ExpressionFunctions
       .extractNumberArray(o).reduce((a, b) => a + b, 0);
@@ -27,6 +41,10 @@ class ExpressionFunctions {
     const mean = ExpressionFunctions.Avg(nums);
     return nums.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / nums.length;
   };
+
+  static Round = (o) => Math.round(o);
+
+  static Floor = (o) => Math.floor(o);
 
   // eslint-disable-next-line new-cap
   static StdDev = (o) => Math.sqrt(ExpressionFunctions.Var(o));
@@ -40,6 +58,9 @@ class ExpressionFunctions {
   static ToBoolean = (v) => !!v;
 
   static extractNumberArray = (o) => {
+    if (o._data) {
+      return o._data;
+    }
     if (Array.isArray(o)) {
       return o.map(Number);
     } else if (typeof o === 'object' && o !== null) {

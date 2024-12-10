@@ -874,8 +874,8 @@ const useQueryExecute = () => {
   const nullDataAlert = (items) => {
     // 조회 시 nullData alert 창 한번만 나오도록 수정
     const nullDataItems = items.reduce((acc, item) => {
-      const onlyWithFitler = item?.meta?.interactiveOption?.onlyWithFilter;
-      if (nullDataCheck(item) && !onlyWithFitler) {
+      const onlyWithFilter = item?.meta?.interactiveOption?.onlyWithFilter;
+      if (nullDataCheck(item) && !onlyWithFilter) {
         acc.push(item?.meta?.name);
       }
       return acc;
