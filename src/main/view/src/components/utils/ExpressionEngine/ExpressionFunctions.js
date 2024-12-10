@@ -10,7 +10,7 @@ class ExpressionFunctions {
   static Count = (o) => ExpressionFunctions.extractNumberArray(o).length;
 
   static Max = (o1, o2) => {
-    if (o2) {
+    if (o2 || o2 === 0) {
       return Math.max(o1, o2);
     }
 
@@ -18,7 +18,7 @@ class ExpressionFunctions {
   };
 
   static Min = (o1, o2) => {
-    if (o2) {
+    if (o2 || o2 === 0) {
       return Math.min(o1, o2);
     }
 
