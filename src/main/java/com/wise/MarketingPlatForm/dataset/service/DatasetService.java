@@ -486,11 +486,15 @@ public class DatasetService {
         	List<String> newDefaultValues = new ArrayList<>();
             try {
                 if (result.getRowData().size() > 0) {
-                    newDefaultValues.add(result.getRowData().get(0).get(listParameterDTO.getItemKey()).toString());
+                    String value = result.getRowData().get(0).get(listParameterDTO.getItemKey()).toString();
+                    newDefaultValues.add(value);
+                    newDefaultValues.add(value);
                 } else {
+                    newDefaultValues.add("");
                     newDefaultValues.add("");
                 }
             } catch (Exception e) {
+                newDefaultValues.add("");
                 newDefaultValues.add("");
             }
         	defaultValue = newDefaultValues;

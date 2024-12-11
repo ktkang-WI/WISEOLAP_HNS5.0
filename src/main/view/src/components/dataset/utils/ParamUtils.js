@@ -129,6 +129,7 @@ const sanitizeParamInformation = (param) => {
     deleteCalendarValue();
     if (info.operation == 'BETWEEN') {
       delete info.multiSelect;
+      delete info.useAll;
     }
   }
   if (info.paramType == 'CALENDAR' || info.paramType == 'INPUT') {

@@ -114,6 +114,7 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
   };
 
   const formData = _.cloneDeep(param);
+
   return (
     <Form
       labelMode='outside'
@@ -213,13 +214,22 @@ const ListOptionForm = ({param, onFieldDataChanged, ...props}) => {
       <Item
         editorType='dxCheckBox'
         dataField='multiSelect'
+        editorOptions={{
+          disabled: isBetween ? true : false
+        }}
       >
         <Label>{localizedString.multiSelect}</Label>
       </Item>
+      {
+
+      }
       <Item
         colSpan={2}
         editorType='dxCheckBox'
         dataField='useAll'
+        editorOptions={{
+          disabled: isBetween ? true : false
+        }}
       >
         <Label>{localizedString.useAll}</Label>
       </Item>
