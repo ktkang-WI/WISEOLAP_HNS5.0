@@ -47,7 +47,7 @@ const SingleTableDesignerModal = ({
 }) => {
   const defaultDataset = {
     datasetNm: selectedTable.datasetNm ?
-         selectedTable.datasetNm : selectedTable.TBL_NM,
+         selectedTable.datasetNm : selectedTable.TBL_CAPTION,
     datasetType: DatasetType.DS_SINGLE,
     dataSrcId: selectedDataSource.dsId,
     datasetQuery: ''
