@@ -11,7 +11,7 @@
     "customDataCalc": {
       "empty": "필드명,계산식,타입이 빈값이 있습니다.",
       "errorNamingOfAggregateFunc": "집계함수 명칭을 사용할수 없습니다.",
-      "Inspection": "계산식에 올바르지 않습니다."
+      "Inspection": "계산식이 올바르지 않습니다."
     }
   },
   "customData": {

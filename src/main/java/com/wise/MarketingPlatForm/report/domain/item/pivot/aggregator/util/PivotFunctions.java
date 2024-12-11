@@ -38,6 +38,31 @@ public final class PivotFunctions {
         return BigDecimal.valueOf(StatUtils.min(extractNumberArray(o)));
     }
 
+    public BigDecimal Min(final Object o1, final Object o2) {
+        double[] values = {
+            new BigDecimal(o1.toString()).doubleValue(),
+            new BigDecimal(o2.toString()).doubleValue()
+        };
+
+        return BigDecimal.valueOf(StatUtils.min(values));
+    }
+
+    public BigDecimal Max(final Object o1, final Object o2) {
+        double[] values = {
+            new BigDecimal(o1.toString()).doubleValue(),
+            new BigDecimal(o2.toString()).doubleValue()
+        };
+        return BigDecimal.valueOf(StatUtils.max(values));
+    }
+
+    public BigDecimal Median(final Object o1, final Object o2) {
+        double[] values = {
+            new BigDecimal(o1.toString()).doubleValue(),
+            new BigDecimal(o2.toString()).doubleValue()
+        };
+        return BigDecimal.valueOf(StatUtils.percentile(values, 50.0));
+    }
+
     public BigDecimal[] Mode(final Object o) {
         double[] modeValues = StatUtils.mode(extractNumberArray(o));
 

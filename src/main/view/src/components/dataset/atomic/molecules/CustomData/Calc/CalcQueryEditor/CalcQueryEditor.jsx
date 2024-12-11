@@ -5,6 +5,8 @@ import {useContext, useEffect, useState} from 'react';
 import {CustomDataCalContext}
   from 'components/dataset/modal/CustomData/CustomDataCalcModal';
 import localizedString from 'config/localization';
+import ExpressionEngine
+  from 'components/utils/ExpressionEngine/ExpressionEngine';
 
 const CalcQueryEditor = ({editorRef, ...props}) => {
   const [annotations, setAnnotations] = useState([]);
@@ -42,17 +44,42 @@ const CalcQueryEditor = ({editorRef, ...props}) => {
 
   const handleLineException = (lines) => {
     const newAnnotations = [];
+    const content = lines.reduce((acc, line) => acc + line, '');
+
+    const engine = new ExpressionEngine();
+    const availableExp = engine.compileTest(content);
+
+    if (availableExp) {
+      handleCheck(true);
+    } else {
+      const message = localizedString.alertInfo.customDataCalc.Inspection;
+      newAnnotations.push({
+        row: 0,
+        column: 0,
+        type: 'error',
+        text: message
+      });
+      handleCheck(false);
+    }
+    setAnnotations(newAnnotations);
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const handleLineExceptionPrev = (lines) => {
+    const newAnnotations = [];
     let addedLine = '';
     lines.forEach((line, index) => {
-      const operPatternCase1 = /[\*+-\/]{2,}\s{0,}/g;
+      const operPatternCase1 = /[\*+-\/]{2,}\s{0,}/g; // 산술 연산자
       const operPatternCase2 = /(\]\s{0,}\d)|(\d\s{0,}\[)/g;
-      const numberPattern = /\d\s{1,}\d/g;
-      const parenthesisEmpty = /\(\s*\)/g;
-      const aggregationCase = /SUM|AVG|MIN|MAX/g;
+      const numberPattern = /\d\s{1,}\d/g; // 숫자
+      const parenthesisEmpty = /\(\s*\)/g; // 괄호
+      const aggregationCase = /SUM|AVG|MIN|MAX/g; // 집계 함수
+      const logicalOperators = /&&|\|\||!|==|!=|===|!==|<|>|<=|>=/g; // 논리 연산자
       let test = '';
       addedLine = addedLine.concat(line+' ');
 
-      test = addedLine.replaceAll(/\[.*?\]/gmi, '');
+      test = addedLine.replaceAll(logicalOperators, '');
+      test = test.replaceAll(/\[.*?\]/gmi, '');
       test = test.replaceAll(/[\*+-\/\s\d()]/gmi, '');
 
       const errorCheck =

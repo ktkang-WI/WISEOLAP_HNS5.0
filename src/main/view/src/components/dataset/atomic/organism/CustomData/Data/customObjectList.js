@@ -27,6 +27,72 @@ export const dataSource = [
       {
         key: '/',
         explanation: '나누기'
+      },
+      {
+        key: '==',
+        explanation: ''
+      },
+      {
+        key: '!=',
+        explanation: ''
+      },
+      {
+        key: '<',
+        explanation: ''
+      },
+      {
+        key: '<=',
+        explanation: ''
+      },
+      {
+        key: '>',
+        explanation: ''
+      },
+      {
+        key: '>=',
+        explanation: ''
+      },
+      {
+        key: 'not',
+        explanation: '부정 연산'
+      },
+      {
+        key: 'and',
+        explanation: 'AND 연산'
+      },
+      {
+        key: 'or',
+        explanation: 'OR 연산'
+      }
+    ]
+  },
+  {
+    key: '함수',
+    collection: [
+      {
+        key: 'Iif()',
+        explanation: 'Iif(Expression, TruePart, FalsePart)\n' +
+          '부울 식 평가에 따라 TruePart 또는 FalsePart를 반환합니다.'
+      },
+      {
+        key: 'Abs()',
+        explanation: 'Abs(Value)\n지정된 숫자 식의 절대값을 반환합니다.'
+      },
+      {
+        key: 'Round()',
+        explanation: 'Round(Value)\n주어진 값을 가장 가까운 정수로 반올림합니다.'
+      },
+      {
+        key: 'Floor()',
+        explanation: 'Floor(Value)\n주어진 값보다 작거나 같은 가장 큰 정수를 반환합니다.'
+      },
+      {
+        key: 'Max()',
+        explanation: 'Max(Value1, Value2)\n지정 된 값에서 최대값을 반환합니다.'
+      },
+      {
+        key: 'Min()',
+        explanation: 'Min(Value1, Value2)\n지정 된 값에서 최소값을 반환합니다.'
       }
     ]
   }
