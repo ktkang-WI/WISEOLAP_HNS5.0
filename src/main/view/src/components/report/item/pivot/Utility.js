@@ -97,7 +97,7 @@ const generateItem = (item, param, rootItem) => {
     return acc;
   }, {});
 
-  let expressionCHeck = false;
+  let expressionCheck = false;
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   dataField.measure.forEach((field, index) => {
@@ -117,7 +117,7 @@ const generateItem = (item, param, rootItem) => {
     if (field.expression &&
       (typeof field.summaryWayEach == 'undefined' || field.summaryWayEach)) {
       const engine = new ExpressionEngine();
-      expressionCHeck = true;
+      expressionCheck = true;
       // newField.summaryType = 'custom';
       newField.calculateSummaryValue = (summaryCell) => {
         const data = {};
@@ -138,7 +138,7 @@ const generateItem = (item, param, rootItem) => {
     fields.push(newField);
   });
 
-  if (expressionCHeck) {
+  if (expressionCheck) {
     if (selectedDataset?.customDatas?.measures) {
       selectedDataset?.customDatas?.measures.forEach((field) => {
         const includeMeasure = dataField.measure.filter((mea) => {
