@@ -25,6 +25,7 @@ const generateDataSource = (dataField, gridAttribute) => {
     const summaryName = getSummaryName(data);
     return ({
       ...data,
+      type: data.type === 'DIM' ? '차원' : '측정값',
       chartVisibility: gridAttribute?.[summaryName]?.chartVisibility ?? true,
       gridVisibility: gridAttribute?.[summaryName]?.gridVisibility ?? true
     });
