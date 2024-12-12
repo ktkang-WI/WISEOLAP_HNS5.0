@@ -71,11 +71,14 @@ const ReportSaveModal = ({createExcelFile, ...props}) => {
         const data = res.data;
         const msg = data.msg;
         const result = data.result;
-        alert(localizedString[msg]);
         if (result) {
           addReport(data);
           isOk = true;
-          if (createExcelFile) createExcelFile(reportId);
+          if (createExcelFile) {
+            createExcelFile(reportId);
+          } else {
+            alert(localizedString[msg]);
+          }
         } else {
           return;
         }

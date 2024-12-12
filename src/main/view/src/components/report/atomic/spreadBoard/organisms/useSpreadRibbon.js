@@ -31,9 +31,13 @@ import {selectCurrentDatasets} from 'redux/selector/DatasetSelector';
 import datasetDefaultElement
   from 'components/common/atomic/Ribbon/popover/organism/DatasetDefaultElement';
 import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import LoadingSlice from 'redux/modules/LoadingSlice';
 
 const useSpreadRibbon = () => {
   const {openModal, alert, confirm} = useModal();
+  const dispatch = useDispatch();
+  const {startJob, endJob} = LoadingSlice.actions;
   const {reload} = useReportSave();
   const {uploadFile, deleteFile, uploadWorkbookData} = useFile();
   const {getElementByLable} = saveDefaultElement();
@@ -98,14 +102,18 @@ const useSpreadRibbon = () => {
     openModal(LoadReportModal, {nav: nav, showAll: true});
   };
 
-  const createExcelFile = (reportId) => {
-    createReportBlob().then(
+  const createExcelFile = async (reportId) => {
+    const loadingMsg = '엑셀 파일을 업로드 중입니다...';
+    dispatch(startJob(loadingMsg));
+    await createReportBlob().then(
         (blob) => uploadFile(
             blob,
             {fileName: reportId + '.sjs'}
         )).catch((e) => {
       console.log(e);
     });
+    dispatch(endJob(loadingMsg));
+    alert(localizedString['saveReportMsg']);
   };
 
   // eslint-disable-next-line no-unused-vars
