@@ -6,6 +6,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import DatasetSlice from 'redux/modules/DatasetSlice';
 import './itemBoard.css';
 import download from 'assets/image/icon/button/download_new.png';
+import reset from 'assets/image/icon/report/reset.png';
 import useLayout from 'hooks/useLayout';
 import {useState} from 'react';
 import {getTheme} from 'config/theme';
@@ -76,7 +77,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
   const dispatch = useDispatch();
   const {getTabHeaderButtons} = ItemManager.useCustomEvent();
 
-  const {selectItem} = ItemSlice.actions;
+  const {selectItem, updateItem} = ItemSlice.actions;
   const {selectDataset} = DatasetSlice.actions;
   const {items, selectedItemId} = item || {};
   const {reportId} = report || {};
@@ -275,6 +276,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     const id = tabNode.getId();
     const item = items.find((item) => item.id === id);
     const memo = item?.meta?.memo || null;
+    const masterFilter = item?.meta?.interactiveOption?.enabled;
 
     const buttons = ItemManager.getTabHeaderItems(type)
         .map((key) => getTabHeaderButtons(type, key, id));
@@ -305,6 +307,21 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
       </button>
     ) : null;
 
+    const resetMasterFilter = masterFilter ? (
+      <button
+        key="reset_filter"
+        title={'마스터필터 초기화'}
+        onClick={() => {
+          const _item = _.cloneDeep(item);
+
+          _item.mart.resetFilter = true;
+          dispatch(updateItem({reportId, item: _item}));
+        }}
+      >
+        <img src={reset}></img>
+      </button>
+    ) : null;
+
     const closeButton = showCloseButton ? (
       <button
         key="delete"
@@ -318,6 +335,7 @@ const ItemBoard = ({layoutConfig, item, report, ...props}) => {
     renderValues.buttons.push(
         (memo ? <Memo>{memo}</Memo> : <></>),
         closeButton,
+        resetMasterFilter,
         downloadButton,
         ...buttons
     );

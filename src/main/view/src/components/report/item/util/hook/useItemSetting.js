@@ -1,5 +1,8 @@
 import useQueryExecute from 'hooks/useQueryExecute';
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import ItemSlice from 'redux/modules/ItemSlice';
+import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 
 /**
  * 아이템 필수 세팅 hook
@@ -36,6 +39,9 @@ export default function useItemSetting(
   const {filterItems, clearAllFilter} = useQueryExecute();
   const [selectedItemState, setSelectedItemState] = useState([]);
   const selectedItemRef = useRef([]);
+  const dispatch = useDispatch();
+  const reportId = useSelector(selectCurrentReportId);
+  const {updateItem} = ItemSlice.actions;
 
   /**
    * 현재 선택된 데이터를 반환합니다.
@@ -72,6 +78,19 @@ export default function useItemSetting(
       selectedItemRef.current = state;
     }
   };
+
+  useEffect(() => {
+    if (item.mart.resetFilter) {
+      clearSelection();
+      setSelectedItem([]);
+      filterItems(item, {});
+
+      const _item = _.cloneDeep(item);
+
+      _item.mart.resetFilter = false;
+      dispatch(updateItem({reportId, item: _item}));
+    }
+  }, [item.mart.resetFilter]);
 
   useEffect(() => {
     reloadMasterFilter();
