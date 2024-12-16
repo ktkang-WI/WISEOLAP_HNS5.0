@@ -225,7 +225,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       <DevPivotGrid
         ref={ref}
         id={id}
-        width={'auto'}
+        width={meta.autoSize ? 'calc(100% + 20px)' : 'auto'}
         height={usePage ? 'calc(100% - 50px)' : '100%'}
         showBorders={true}
         dataSource={mart.dataSourceConfig}
