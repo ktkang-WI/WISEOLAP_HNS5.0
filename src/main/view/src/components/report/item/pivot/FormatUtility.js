@@ -38,7 +38,7 @@ export const getFormats = (dataField, adHocOption) => {
   (adHocOption?.variationValues || []).forEach((v) => {
     const target = targets.find((m) => m.fieldId == v.targetId);
     if (v.type == 'absoluteVariation') {
-      const format = target.format || getDefaultFormat();
+      const format = (target && target.format) || getDefaultFormat();
       formats.push(Object.assign(_.cloneDeep(format),
           {variationValueType: v.type}));
     } else if (v.type.startsWith('Rank')) {
