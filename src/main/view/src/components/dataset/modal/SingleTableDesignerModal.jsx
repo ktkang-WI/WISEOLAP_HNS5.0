@@ -242,6 +242,7 @@ const SingleTableDesignerModal = ({
                   }
                   return row;
                 });
+                changeColumnList.sort((a, b) => a.order - b.order);
                 setColumList(changeColumnList);
               }}
             />
