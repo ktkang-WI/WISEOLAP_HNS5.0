@@ -19,7 +19,8 @@ import {selectCurrentAdHocOption, selectCurrentItems}
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import ExpressionEngine from
   'components/utils/ExpressionEngine/ExpressionEngine';
-import {getPivotFormat} from './FormatUtility';
+import {checkVisibleMeasure, getPivotFormat, getVisibledMeasure}
+  from './FormatUtility';
 
 const cache = new Map();
 
@@ -98,6 +99,9 @@ const generateItem = (item, param, rootItem) => {
   }, {});
 
   let expressionCheck = false;
+  // eslint-disable-next-line max-len
+  const visibledMeasure = rootItem?.adHocOption ? getVisibledMeasure(rootItem?.adHocOption) : [];
+
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   dataField.measure.forEach((field, index) => {
@@ -258,7 +262,8 @@ const generateItem = (item, param, rootItem) => {
       caption: variationValue.name,
       summaryType: 'sum',
       dataType: 'number',
-      summaryDisplayMode: variationValue.type
+      summaryDisplayMode: variationValue.type,
+      visible: checkVisibleMeasure(target, visibledMeasure)
     };
 
     fields.push(field);
