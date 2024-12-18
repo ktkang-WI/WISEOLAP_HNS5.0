@@ -4,31 +4,43 @@ import {
   getDefaultFormatRatio
 } from 'components/utils/NumberFormatUtility';
 
-export const getFormats = (dataField, adHocOption) => {
-  const targets = dataField.measure.concat(dataField.sortByItem);
-
-  let formats;
+export const getVisibledMeasure = (adHocOption) => {
+  const visibledMeasure = new Set();
   if (adHocOption?.gridAttribute) {
-    const visibledMeasure = new Set();
-
     for (const key in adHocOption.gridAttribute) {
       if (adHocOption.gridAttribute[key].gridVisibility) {
         visibledMeasure.add(key);
       }
     }
+  }
 
+  return visibledMeasure;
+};
+
+export const checkVisibleMeasure = (item, visibledMeasure) => {
+  let key = '';
+  if (item.summaryType) {
+    key = item.summaryType + '_' + item.name;
+  } else {
+    key = item.name;
+  }
+
+  return visibledMeasure.has(key);
+};
+
+export const getFormats = (dataField, adHocOption) => {
+  const targets = dataField.measure.concat(dataField.sortByItem);
+  const visibledMeasure = getVisibledMeasure(adHocOption);
+
+  let formats;
+
+  if (adHocOption?.gridAttribute) {
     formats = targets.reduce((acc, item) => {
-      let key = '';
-      if (item.summaryType) {
-        key = item.summaryType + '_' + item.name;
-      } else {
-        key = item.name;
-      }
-
-      if (visibledMeasure.has(key)) {
+      if (checkVisibleMeasure(item, visibledMeasure)) {
         acc.push(item.format);
+      } else {
+        acc.push(getDefaultFormat());
       }
-
       return acc;
     }, []);
   } else {
@@ -36,16 +48,19 @@ export const getFormats = (dataField, adHocOption) => {
   }
 
   (adHocOption?.variationValues || []).forEach((v) => {
-    const target = targets.find((m) => m.fieldId == v.targetId);
-    if (v.type == 'absoluteVariation') {
-      const format = (target && target.format) || getDefaultFormat();
-      formats.push(Object.assign(_.cloneDeep(format),
-          {variationValueType: v.type}));
-    } else if (v.type.startsWith('Rank')) {
-      formats.push(getDefaultFormat());
-    } else {
-      formats.push(Object.assign(getDefaultFormatRatio(),
-          {variationValueType: v.type}));
+    const target = targets.find((m) => m.fieldId == v.targetId &&
+    checkVisibleMeasure(m, visibledMeasure));
+    if (target) {
+      if (v.type == 'absoluteVariation') {
+        const format = target.format || getDefaultFormat();
+        formats.push(Object.assign(_.cloneDeep(format),
+            {variationValueType: v.type}));
+      } else if (v.type.startsWith('Rank')) {
+        formats.push(getDefaultFormat());
+      } else {
+        formats.push(Object.assign(getDefaultFormatRatio(),
+            {variationValueType: v.type}));
+      }
     }
   });
 
