@@ -77,6 +77,9 @@ const DownloadDefaultElement = () => {
     };
 
     if (!rootItem.adHocOption) {
+      if (!rootLayout.tabEnabled) {
+        return currentItem;
+      }
       return currentItem.filter((item) => item.tab === rootLayout.selectedTab);
     }
 
