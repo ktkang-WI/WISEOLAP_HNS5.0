@@ -406,27 +406,26 @@ public final class DataSanitizer {
         return this;
     }
 
+    String processString(String input) {
+        if (input.startsWith("[") && input.endsWith("]")) {
+            return input.substring(1, input.length() - 1); 
+        }
+        return input;
+    }
+
     /**
      * 데이터에 필터(마스터 필터)를 적용한 결과를 반환합니다.
      * @param filter
      * @return DataSanitizer
      */
     public final DataSanitizer dataFiltering(Map<String, List<String>> filter) {
-        Map<String, String> dimensionMap = dimensions.stream()
-        .collect(Collectors.toMap(
-            Dimension::getUniqueName,
-            Dimension::getName,
-            (existingValue, newValue) -> newValue
-        ));
-
         // 필터가 존재하는 경우에만 필터링
         if (filter != null && filter.size() > 0) {
             data = data.stream()
                     .filter(map -> filter.entrySet().stream()
                             .allMatch(entry -> {
-                                String name = entry.getKey();
-                                String name2 = dimensionMap.get(entry.getKey());
-                                Object value = map.containsKey(name) ? map.get(name) : map.get(name2);
+                                String name = processString(entry.getKey());
+                                Object value = map.get(name);
                                 
                                 if (value == null) {
                                     return true;
