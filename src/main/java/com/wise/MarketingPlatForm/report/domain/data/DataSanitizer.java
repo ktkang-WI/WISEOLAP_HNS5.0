@@ -297,9 +297,9 @@ public final class DataSanitizer {
      */
     public final DataSanitizer replaceNullData() {
         for (Map<String, Object> map : data) {
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getValue() == null) {
-                    entry.setValue("\u2800");
+            for (Dimension dimension : dimensions) {
+                if (map.get(dimension.getName()) == null) {
+                    map.put(dimension.getName(), "\u2800");
                 }
             }
         }
