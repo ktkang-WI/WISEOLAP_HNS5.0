@@ -195,6 +195,7 @@ const useReportSave = () => {
       options.promptYn = data.promptYn;
       options.maxReportPeriodYn = data.maxReportPeriodYn;
       options.authPublish = '1';
+      options.authDatasource = '1';
       options.reportType = ConvertDesignerMode[data.reportType];
 
       return options;
