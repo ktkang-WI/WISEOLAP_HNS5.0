@@ -18,6 +18,9 @@ export const getVisibledMeasure = (adHocOption) => {
 };
 
 export const checkVisibleMeasure = (item, visibledMeasure) => {
+  if (visibledMeasure.size === 0) {
+    return true;
+  }
   let key = '';
   if (item.summaryType) {
     key = item.summaryType + '_' + item.name;
