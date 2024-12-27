@@ -23,7 +23,7 @@ const InputOptionForm = ({param, onFieldDataChanged, ...props}) => {
         }}
       >
         <Label>{localizedString.defaultParameter +
-        (isBetween? ' TO' : '')}</Label>
+        (isBetween? ' FROM' : '')}</Label>
       </Item>
       {
         isBetween &&
@@ -36,7 +36,7 @@ const InputOptionForm = ({param, onFieldDataChanged, ...props}) => {
           }}
           labelMode='none'
         >
-          <Label>{localizedString.defaultParameter} FROM</Label>
+          <Label>{localizedString.defaultParameter} TO</Label>
         </Item>
       }
       <Item
