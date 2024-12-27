@@ -486,9 +486,11 @@ public class DatasetService {
         	List<String> newDefaultValues = new ArrayList<>();
             try {
                 if (result.getRowData().size() > 0) {
-                    String value = result.getRowData().get(0).get(listParameterDTO.getItemKey()).toString();
-                    newDefaultValues.add(value);
-                    newDefaultValues.add(value);
+                    if ("".equals(defaultValue.get(0))) {
+                        String value = result.getRowData().get(0).get(listParameterDTO.getItemKey()).toString();
+                        newDefaultValues.add(value);
+                        newDefaultValues.add(value);
+                    }
                 } else {
                     newDefaultValues.add("");
                     newDefaultValues.add("");
@@ -497,7 +499,10 @@ public class DatasetService {
                 newDefaultValues.add("");
                 newDefaultValues.add("");
             }
-        	defaultValue = newDefaultValues;
+
+            if (newDefaultValues.size() > 0) {
+                defaultValue = newDefaultValues;
+            }
         }
 
         if (listParameterDTO.isDefaultValueUseSql()) {
