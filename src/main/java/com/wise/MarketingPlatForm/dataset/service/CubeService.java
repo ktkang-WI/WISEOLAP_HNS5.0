@@ -130,6 +130,7 @@ public class CubeService {
                     .description(entity.getDescription())
                     .summaryType(entity.getSummaryType())
                     .folder(entity.getFolder())
+                    .parentType(DataFieldType.MEAGRP)
                     .build());
 
             // 표시 폴더 존재 여부 및 폴더가 중복 추가 되지 않게 방지.
@@ -173,6 +174,7 @@ public class CubeService {
                         .visible(entity.isVisible())
                         .uniqueName(entity.getUniqueName())
                         .description(entity.getDescription())
+                        .parentType(DataFieldType.DIMGRP)
                         .build());
             } else {
                 fields.add(CubeFieldVO.builder()
@@ -185,6 +187,7 @@ public class CubeService {
                         .visible(false)
                         .uniqueName(entity.getUniqueName())
                         .description(entity.getDescription())
+                        .parentType(DataFieldType.DIMGRP)
                         .build());
             }
         }

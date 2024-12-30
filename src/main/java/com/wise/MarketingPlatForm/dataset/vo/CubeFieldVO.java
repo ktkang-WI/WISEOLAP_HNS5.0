@@ -1,5 +1,7 @@
 package com.wise.MarketingPlatForm.dataset.vo;
 
+import com.wise.MarketingPlatForm.dataset.type.DataFieldType;
+
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -15,4 +17,5 @@ public class CubeFieldVO extends RootFieldVO{
   String description;
   String summaryType;
   String folder;
+  DataFieldType parentType;
 }

@@ -310,8 +310,8 @@ const setDefaultValueByType = (p) => {
 
   if (!p.defaultValueUseSql && p.defaultValue) {
     const defaultValueCheck = p?.defaultValue[0] ? p?.defaultValue[0] : '';
-    if (defaultValueCheck &&
-      defaultValueCheck.toUpperCase().indexOf('ALL') !== -1) {
+    if (defaultValueCheck != '' &&
+      defaultValueCheck.toUpperCase().indexOf('ALL') == -1) {
       returnVal = p?.defaultValue;
     }
   }
