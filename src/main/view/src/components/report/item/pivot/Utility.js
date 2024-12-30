@@ -111,7 +111,8 @@ const generateItem = (item, param, rootItem) => {
 
     const newField = {
       caption: field.caption,
-      summaryType: 'sum',
+      // summaryType: 'sum',
+      summaryType: getSummaryField(field.summaryType),
       dataField: dataFieldName,
       area: 'data',
       format: getPivotFormat(measureFormat),
@@ -720,6 +721,32 @@ const getAttributeItems = () => {
 const getTabHeaderItems = () => {
   // TODO: 추후 그리드로 보기 비정형일 때만 보이게 수정해야 함.
   return ['ColRowSwitch', 'ShowGrid'];
+};
+
+const getSummaryField = (summaryType) => {
+  let summaryValue = 'sum';
+  switch (summaryType) {
+    case 'MIN':
+      summaryValue = 'min';
+      break;
+    case 'MAX':
+      summaryValue = 'max';
+      break;
+    case 'AVG':
+      summaryValue = 'avg';
+      break;
+    case 'SUBQ':
+    case 'SUBQTOTAL':
+    case 'COUNT':
+    case 'NOFUNC':
+    case 'DISTINCTCOUNT':
+      summaryValue = 'sum';
+      break;
+    default:
+      summaryValue = 'sum';
+      break;
+  }
+  return summaryValue;
 };
 
 export default {

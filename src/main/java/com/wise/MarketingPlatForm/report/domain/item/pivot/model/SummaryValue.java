@@ -140,6 +140,7 @@ public class SummaryValue implements Cloneable {
         switch (summaryType) {
         case SUM:
         case CUSTOM:
+        case NOFUNC:
            return sum;
         case COUNT:
             return BigDecimal.valueOf(count);

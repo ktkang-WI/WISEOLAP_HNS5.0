@@ -404,6 +404,7 @@ public class DataAggregator {
                 case SUM:
                 case AVERAGE:
                 case AVG:
+                case NOFUNC:
                 case CUSTOM:
                     newValue = dataRow.getBigDecimalValue(summaryColumnName);
                     if (newValue == null) {
@@ -811,6 +812,7 @@ public class DataAggregator {
             case SUM:
             case AVERAGE:
             case AVG:
+            case NOFUNC:
             case CUSTOM:
             	newValue = dataGroup.getSummaryValues().get(j).getRepresentingValue();
             	if (newValue == null) {

@@ -20,6 +20,8 @@ const getSummaryType = (tempField, sourceField) => {
     if (tempField.fieldType == 'DIM' && tempField.type == 'MEA') {
       summaryType = 'COUNT';
     }
+    if (sourceField?.parentType == 'MEAGRP' &&
+      sourceField?.summaryType == undefined) summaryType = 'NOFUNC';
   }
 
   return summaryType;
@@ -84,10 +86,16 @@ export const getNewDataField = (
 
   if (!['field', 'sortByItem'].includes(droppableId) &&
     tempField.type != tempField.fieldType) {
-    if (tempField.fieldType == 'DIM') {
-      return '해당 영역에는 측정값만 올릴 수 있습니다.';
+    if (sourceField?.parentType != undefined &&
+       sourceField.parentType == 'MEAGRP') {
+      // 측정값그룹 예외
+      tempField.fieldType = 'MEA';
     } else {
-      return '해당 영역에는 차원만 올릴 수 있습니다.';
+      if (tempField.fieldType == 'DIM') {
+        return '해당 영역에는 측정값만 올릴 수 있습니다.';
+      } else {
+        return '해당 영역에는 차원만 올릴 수 있습니다.';
+      }
     }
   }
 

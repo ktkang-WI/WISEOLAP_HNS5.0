@@ -58,6 +58,11 @@ public class QueryGenAggregator {
                 //측정값에 포함되어있는지 확인
                 if(isIncludeByMeasures(columnInfo,measures)){
                     if ("measure".equalsIgnoreCase(columnInfo.getColumnType())) {
+                        // 구성비 관련 커스터마이징 추후제거
+                        if("SUBQ".equalsIgnoreCase(columnInfo.getAggregationType())
+                            && columnInfo.getExpression() != null){
+                            setSubqPartitionBy(columnInfo,dimensions);   
+                        }
                         updateCubeSelectAll(queryGenAggregation,cubeParamSet, columnInfo, "measure");
                         updateCubeSelectMeasure(queryGenAggregation,cubeParamSet, columnInfo, measures);
                     } else if ("dimension".equalsIgnoreCase(columnInfo.getColumnType())) {
@@ -235,6 +240,31 @@ public class QueryGenAggregator {
 
         if (cubeOrder != null) {
             queryGenAggregation.addCubeOrder(cubeOrder);
+        }
+    }
+    
+    // 구성비 관련 커스터마이징 추후제거
+    private void setSubqPartitionBy(CubeTableColumn columnInfo, List<Dimension> dimensions) {
+        if(dimensions.size() > 0) {
+            String tmpQ = "OVER(";
+            boolean firstDim = true;
+            for(Dimension dimension : dimensions){
+                if("column".equalsIgnoreCase(dimension.getCategory())){
+                    if(firstDim) {
+                        firstDim = false;
+                        tmpQ = tmpQ+"PARTITION BY " + " \""+ dimension.getCaption()+"\"";
+                    } else {
+                        tmpQ = tmpQ + " ,\""+ dimension.getCaption()+"\"";
+                    }
+                }
+            }
+            tmpQ = tmpQ + ")";
+            String expressionQuery = columnInfo.getExpression().toUpperCase();
+
+            expressionQuery = expressionQuery.replaceAll("OVER\\(\\)", tmpQ);
+
+            columnInfo.setExpression(expressionQuery);
+
         }
     }
 }

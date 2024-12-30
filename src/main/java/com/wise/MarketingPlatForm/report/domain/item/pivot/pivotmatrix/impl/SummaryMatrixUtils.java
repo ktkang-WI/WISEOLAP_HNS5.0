@@ -52,6 +52,7 @@ public final class SummaryMatrixUtils {
         switch (target.getSummaryType()) {
         case SUM:
         case CUSTOM:
+        case NOFUNC:
             target.setCount(target.getCount() + source.getCount());
             if (target.getSum() != null && source.getSum() != null) {
                 target.addSum(source.getSum());
