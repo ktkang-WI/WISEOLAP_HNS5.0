@@ -318,6 +318,12 @@ const setDefaultValueByType = (p) => {
   return returnVal;
 };
 
+function getLastDateOfMonth(year, month) {
+  // month는 0부터 시작하므로 다음 달의 0번째 날로 계산
+  const date = new Date(year, month + 1, 0);
+  return date.getDate();
+};
+
 /**
  * 달력 매개변수 현재 기준 기본값 계산
  * @param {*} base 기본값 기준
@@ -332,7 +338,8 @@ const getCalendarNowDefaultValue = (base, value) => {
   }
   if (base == 'MONTH') {
     const month = date.getMonth() + Number(value);
-    date = new Date(date.getFullYear(), month, date.getDate());
+    date = new Date(date.getFullYear(), month,
+        getLastDateOfMonth(date.getFullYear(), month));
   }
   if (base == 'DAY') {
     const day = date.getDate() + Number(value);
