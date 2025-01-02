@@ -197,7 +197,8 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
-      expanded: dataset?.cubeId == 6184 ? false : rowExpand,
+      expanded: (dataset?.cubeId == 6184 || reportId == 14020) ?
+         false : rowExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
         // 해당소스 제거해야함

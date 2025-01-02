@@ -60,7 +60,9 @@ const Header = ({
         <a type="button" className="menu_btn top_btn" href='#header'>
           ↑
         </a>
-        <ul id='header_menu'>
+        <ul id='header_menu'
+          className={!admin && 'admin_viewer'}
+        >
           {
             headerMenuHref?.map((menu, i) => {
               if (!folderMap[menu.fld]?.reports?.length) return null;
