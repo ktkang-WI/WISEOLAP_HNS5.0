@@ -45,10 +45,11 @@ public class LoginService {
             if (result >=0) {
                 // 3: 변경일 만료
                 return 3;
-            } else if (result < 0 && result >= -5) {
+            } 
+            // else if (result < 0 && result >= -5) {
                 // TODO: 변경 예정일 5일전 (알림용, 추후 필요시 개발예정)
-                return 2;
-            }
+                // return 2;
+            // }
         } catch (Exception e) {
             logger.error("pw_change_dt", e);
             return 1;

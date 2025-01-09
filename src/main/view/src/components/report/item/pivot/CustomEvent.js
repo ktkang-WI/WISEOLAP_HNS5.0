@@ -38,7 +38,7 @@ const useCustomEvent = () => {
   const selectedItem = useSelector(selectCurrentItem);
   const items = useSelector(selectCurrentItems);
   const {generateParameter, generateAdHocParamter} = useQueryExecute();
-  const {updateItem} = ItemSlice.actions;
+  const {updateItem, setItemField} = ItemSlice.actions;
   const {
     commonPopoverButtonElement,
     commonRibbonBtnElement
@@ -96,8 +96,9 @@ const useCustomEvent = () => {
         onValueChanged={(e) => {
           const dataFields = _.cloneDeep(dataField);
           dataFields[pos][i].expand = !dataFields[pos][i].expand;
-          const item = setMeta(selectedItem, 'dataField', dataFields);
-          dispatch(updateItem({reportId, item}));
+          dispatch(setItemField({reportId, dataField: dataFields}));
+          // const item = setMeta(selectedItem, 'dataField', dataFields);
+          // dispatch(updateItem({reportId, item}));
         }}
         key={field.fieldId}
         value={field.expand || false}
