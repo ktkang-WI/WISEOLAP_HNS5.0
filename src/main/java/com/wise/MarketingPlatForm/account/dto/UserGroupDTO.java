@@ -24,6 +24,8 @@ public class UserGroupDTO {
   String hpNo;
   String userRunMode;
   String userDesc;
+  @Builder.Default
+  String pwChangeDt = "";
   int grpId;
   String grpNm;
   String grpRunMode;

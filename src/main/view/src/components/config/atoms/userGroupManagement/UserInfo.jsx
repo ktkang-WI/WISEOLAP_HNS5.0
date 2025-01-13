@@ -100,6 +100,14 @@ const UserInfo = () => {
         >
           <Label>{'계정 생성일'}</Label>
         </Item>
+        <Item
+          dataField="pwChangeDt"
+          editorOptions={{
+            readOnly: true
+          }}
+        >
+          <Label>{'비밀번호 만료일'}</Label>
+        </Item>
         {
           userDetailInfo.userNo === 0 &&
           <SimpleItem

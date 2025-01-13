@@ -32,6 +32,7 @@
       <result column="TEL_NO" property="telNo" javaType="String"/>
       <result column="USER_RUN_MODE" property="userRunMode" javaType="String"/>
       <result column="USER_DESC" property="userDesc" javaType="String"/>
+      <result column="PW_CHANGE_DT" property="pwChangeDt" javaType="String"/>
       <result column="GRP_ID" property="grpId" javaType="int"/>
       <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="GRP_RUN_MODE" property="grpRunMode" javaType="String"/>
@@ -187,6 +188,7 @@
         USER_MSTR.HP_NO,
         USER_MSTR.RUN_MODE AS USER_RUN_MODE,
         USER_MSTR.USER_DESC,
+        ADD_MONTHS(USER_MSTR.PW_CHANGE_DT, 3) AS PW_CHANGE_DT,
         GRP_MSTR.GRP_ID,
         GRP_MSTR.GRP_NM,
         GRP_MSTR.RUN_MODE AS GRP_RUN_MODE,

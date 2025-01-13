@@ -20,4 +20,5 @@ public class UserDetailInfoModel {
   String userRunMode;
   String grpRunMode;
   String userDesc;
+  String pwChangeDt;
 }

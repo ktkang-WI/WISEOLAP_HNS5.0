@@ -153,6 +153,7 @@ public class UserGroupService {
         .userRunMode(userGroup.getUserRunMode())
         .grpRunMode(userGroup.getGrpRunMode())
         .userDesc(userGroup.getUserDesc())
+        .pwChangeDt(userGroup.getPwChangeDt())
         .build();
 
     if (userDetailInfo == null) {
