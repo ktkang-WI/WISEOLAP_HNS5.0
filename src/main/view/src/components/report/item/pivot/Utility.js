@@ -47,6 +47,7 @@ const generateMeta = (item) => {
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', true);
   setMeta(item, 'customExpand', false);
+  setMeta(item, 'customHnsExpand', false);
   setMeta(item, 'removeNullData', false);
   setMeta(item, 'showFilter', true);
   setMeta(item, 'colRowSwitch', false);
@@ -116,7 +117,13 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: 'data',
       format: getPivotFormat(measureFormat),
-      visible: gridAttributeOptionCheck(dataFieldName, gridAttribute)
+      visible: gridAttributeOptionCheck(dataFieldName, gridAttribute),
+      customizeText: (e) =>{
+        // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
+        // 해당소스 제거해야함
+        const cText = e?.valueText == 'null' ? '' : e?.valueText;
+        return cText;
+      }
     };
 
     if (field.expression &&
@@ -182,6 +189,9 @@ const generateItem = (item, param, rootItem) => {
   }
 
   const customExpand = item.meta.customExpand;
+  // eslint-disable-next-line max-len
+  const customHnsExpand = (dataset?.cubeId == 6184 || reportId == 14020) ?
+  item.meta.customHnsExpand : false;
 
   for (const field of dataField.row) {
     const dataFieldName = field.name;
@@ -197,7 +207,10 @@ const generateItem = (item, param, rootItem) => {
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
       sortBy: 'none',
-      expanded: (dataset?.cubeId == 6184 || reportId == 14020) ?
+      // eslint-disable-next-line max-len
+      // expanded: (dataset?.cubeId == 6184 || reportId == 14020 || reportId == 14095) ?
+      //  false : rowExpand,
+      expanded: customHnsExpand ?
          false : rowExpand,
       customizeText: (e) =>{
         // TO-DO 추후 환경설정 null 데이터 옵션 설정을 적용하거나,
