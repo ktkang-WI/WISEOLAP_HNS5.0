@@ -121,7 +121,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   }
 
   const onCellPrepared = ({cell, area, cellElement}) => {
-    if (dataset?.cubeId == 6184 || reportId == 14020) {
+    // eslint-disable-next-line max-len
+    if (dataset?.cubeId == 6184 || reportId == 14020 || reportId == 14095) {
       // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
       // if (cell?.rowPath && cell?.rowPath[0] === '총취급액') {
       if (cell?.rowPath && cell.rowPath[1] === '일목표금액') {
@@ -148,7 +149,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
       if (newFormData) {
         try {
           const labelSuffix = generateLabelSuffix(newFormData);
-          const formattedValue =
+          const formattedValue = cell.value == undefined ? '' :
             formatNumber(cell.value, newFormData, labelSuffix);
           cellElement.innerHTML =
             `<span>${formattedValue}</span>`;
@@ -253,7 +254,8 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
           if (reRender != mart?.dataSourceConfig?.reRender) {
             reRender = mart?.dataSourceConfig?.reRender;
             const pivotDataSource = e.component.getDataSource();
-            if (true || dataset?.cubeId == 6184 || reportId == 14020) {
+            // eslint-disable-next-line max-len
+            if (true || dataset?.cubeId == 6184 || reportId == 14020 || reportId == 14095) {
               const test =
                 [['총취급액'], ['매출액'], ['매출원가(-)'], ['변동비(-)'], ['매출액', '상품매출액']];
 

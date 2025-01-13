@@ -44,6 +44,11 @@ const measureSummaryType = [
 
 const sortByItemSummaryType = [
   {
+    'text': localizedString.NoFunction,
+    'value': 'NOFUNC',
+    'type': 'SummaryType'
+  },
+  {
     'text': localizedString.min,
     'value': 'MIN',
     'type': 'SummaryType'

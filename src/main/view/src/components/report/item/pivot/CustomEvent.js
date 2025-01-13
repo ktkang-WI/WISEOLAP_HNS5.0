@@ -89,7 +89,15 @@ const useCustomEvent = () => {
     const rootItem = selectRootItem(store.getState());
     const dataField = selectedItem.meta.dataField ||
       rootItem.adHocOption.dataField;
+    const customHnsExpand = selectedItem.meta.customHnsExpand || false;
     const customExpand = selectedItem.meta.customExpand || false;
+    const datasets = selectCurrentDatasets(store.getState());
+    const dataset = datasets.find((ds) =>
+      ds.datasetId == dataField.datasetId);
+
+    // eslint-disable-next-line max-len
+    const customVisible = (dataset?.cubeId == 6184 || reportId == 14020) ?
+      true : false;
 
     const generateCheckBox = (field, pos, i) => {
       return <CheckBox
@@ -110,6 +118,16 @@ const useCustomEvent = () => {
     try {
       return <>
         {getCheckBoxPopover('initState')}
+        <CheckBox
+          onValueChanged={(e) => {
+            const item = setMeta(selectedItem, 'customHnsExpand', e.value);
+            dispatch(updateItem({reportId, item}));
+          }}
+          style={{marginBottom: '10px'}}
+          value={customHnsExpand}
+          text={'전사관리지표 커스텀'}
+          visible={customVisible}
+        />
         <CheckBox
           onValueChanged={(e) => {
             const item = setMeta(selectedItem, 'customExpand', e.value);
