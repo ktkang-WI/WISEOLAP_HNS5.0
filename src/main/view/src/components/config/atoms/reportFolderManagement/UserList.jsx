@@ -19,7 +19,9 @@ const UserList = ({setRows, setRowData}) => {
   const userListContext = useContext(ReportFolderContext);
   const {alert} = useModal();
 
-  const list = userListContext.state.data[0];
+  const list = userListContext.state.data[0].length > 0 &&
+  userListContext.state.data[0][0].userNo ?
+    userListContext.state.data[0] : [];
 
   const handleRowClick = (e) => {
     if (!e.data?.userNo) {
