@@ -106,6 +106,14 @@
           WHERE DEL_YN = 'N'
             ORDER BY USER_ID ASC
 		</select>
+
+    <select id="getPrivateReportCount" resultType="int">
+        SELECT COUNT(*) AS reportCnt
+        FROM report_mstr
+        WHERE fld_type = 'PRIVATE'
+        AND reg_user_no = #{regUserNo}
+        AND del_yn = 'N'
+    </select>
     <select id="selectUserByUserNo" parameterType="int" resultMap="userList">
 			SELECT
       USER_NO,

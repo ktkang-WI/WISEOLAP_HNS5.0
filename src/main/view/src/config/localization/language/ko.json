@@ -759,6 +759,7 @@
   "publisher": "게시자",
   "registerDate": "게시일자",
   "reportlist": "보고서 목록",
+  "reportCount": "보고서 개수",
   "reportInformation": "보고서 정보",
   "folderInformation": "폴더 정보",
   "userGroupManagement": "사용자/그룹관리",

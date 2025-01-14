@@ -88,10 +88,18 @@ public class ConfigFolderReportService {
   };
   public List<UserDTO> getUserList() {
 
-    List<UserDTO> configFolderDTO = configDao.selectUserList();
+    List<UserDTO> userList = configDao.selectUserList();
+
+    for (UserDTO user : userList) {
+      int reportCount = getPrivateReportCount(user.getUserNo());
+      user.setReportCount(reportCount);
+    }
     
-    return configFolderDTO;
+    return userList;
   };
   
+  public int getPrivateReportCount(int userNo) {
+    return configDao.getPrivateReportCount(userNo);
+  }
 }
 

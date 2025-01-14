@@ -75,6 +75,10 @@ const UserList = ({setRows, setRowData}) => {
           dataField="userNm"
           caption={localizedString.log.userNm}
         />
+        <Column
+          dataField="reportCount"
+          caption={localizedString.reportCount}
+        />
       </DataGrid>
     </Wrapper>
   );
