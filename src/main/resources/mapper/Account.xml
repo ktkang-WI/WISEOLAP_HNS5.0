@@ -20,6 +20,7 @@
       <result column="E_MAIL2" property="eMail2" javaType="String"/>
       <result column="TEL_NO" property="telNo" javaType="String"/>
       <result column="GRP_ID" property="grpId" javaType="int"/>
+      <result column="GRP_NM" property="grpNm" javaType="String"/>
       <result column="USER_DESC" property="userDesc" javaType="String"/>
     </resultMap>
 
@@ -156,23 +157,26 @@
     </select>
     <select id="selectUserMstr" resultMap="UserMstrEntity" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO">
       SELECT
-        USER_NO,
-        USER_ID,
-        USER_NM,
-        E_MAIL1,
-        E_MAIL2,
-        TEL_NO,
-        GRP_ID,
-        USER_DESC
+        USER_MSTR.USER_NO,
+        USER_MSTR.USER_ID,
+        USER_MSTR.USER_NM,
+        USER_MSTR.E_MAIL1,
+        USER_MSTR.E_MAIL2,
+        USER_MSTR.TEL_NO,
+        GRP_MSTR.GRP_ID,
+        GRP_MSTR.GRP_NM,
+        USER_MSTR.USER_DESC
         FROM USER_MSTR
-        WHERE DEL_YN = 'N'
+        INNER JOIN GRP_MSTR
+        ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+        WHERE USER_MSTR.DEL_YN = 'N'
         <if test='notGrpId != -1'>
-          AND GRP_ID != #{notGrpId, jdbcType=INTEGER}
+          AND GRP_MSTR.GRP_ID != #{notGrpId, jdbcType=INTEGER}
         </if>
         <if test='grpId != -1'>
-          AND GRP_ID == #{grpId, jdbcType=INTEGER}
+          AND GRP_MSTR.GRP_ID == #{grpId, jdbcType=INTEGER}
         </if>
-        ORDER BY USER_ID
+        ORDER BY USER_MSTR.USER_ID
     </select>
 
     <select id="selectUserJoinGroup" resultMap="UserGroupDTO">

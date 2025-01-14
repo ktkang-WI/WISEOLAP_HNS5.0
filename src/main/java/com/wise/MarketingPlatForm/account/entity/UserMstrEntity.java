@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserMstrEntity {
   int userNo;
   int grpId;
+  String grpNm;
   String userId;
   String userNm;
   String passwd;
