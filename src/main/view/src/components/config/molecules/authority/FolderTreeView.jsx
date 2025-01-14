@@ -128,6 +128,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
         id="folderTreeView"
         height={'90%'}
         onRowUpdating={onRowUpdating}
+        allowColumnResizing={true}
       >
         <Editing
           mode="cell"
@@ -143,6 +144,7 @@ const FolderTreeView = ({mainKey, dependency}) => {
           dataField="fldNm"
           caption={localizedString.folderName}
           allowEditing={false}
+          width={200}
         />
         <Column
           dataField="authView"

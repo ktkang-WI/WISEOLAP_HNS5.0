@@ -145,6 +145,7 @@ const DatasourceViewList = ({mainKey, dependency, setDsViewId}) => {
         keyExpr={'dsViewId'}
         selectedRowKeys={selectedKeys}
         onSelectionChanged={handleSelectedKey}
+        allowColumnResizing={true}
       >
         <Selection mode="single" />
         <SearchPanel

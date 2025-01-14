@@ -28,7 +28,7 @@ const ReportAuthority = ({mainKey, ...props}) => {
 
   return (
     <Wrapper display='flex' direction='row'>
-      <Wrapper padding='10px' size='4'>
+      <Wrapper padding='10px' size='3'>
         {
           currentTab === path.GROUP_REPORT &&
           <GroupList onRowClick={handleRowClick} dependency={dependency}/>
@@ -38,7 +38,7 @@ const ReportAuthority = ({mainKey, ...props}) => {
           <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
-      <Wrapper padding='10px' size='6'>
+      <Wrapper padding='10px' size='7'>
         {
           (currentTab === path.GROUP_REPORT ||
            currentTab === path.USER_REPORT) &&

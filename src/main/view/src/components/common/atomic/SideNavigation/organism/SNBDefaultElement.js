@@ -149,24 +149,6 @@ const SNBDefaultElement = () => {
         nav('confgeneral');
       }
     },
-    'ExcelResource': {
-      id: 'excelResource',
-      imgSrc: excelResource,
-      label: '엑셀 업로드/리소스맵',
-      isPopover: true,
-      target: '#excelResource',
-      showEvent: 'click',
-      position: 'right',
-      content: (
-        <ExcelUploadResourceMap
-          userId={myPageConfigure.userId}
-          sessionUserKey={myPageConfigure.sessionUserKey}
-        />
-      ),
-      onClick: (e) => {
-
-      }
-    },
     // TODO: 임시용 입니다.
     'ConfigurationSetting': {
       id: 'configurationSetting',
@@ -235,6 +217,24 @@ const SNBDefaultElement = () => {
       label: '쿼리 검색',
       onClick: (e) => {
         nav('search-query');
+      }
+    },
+    'ExcelResource': {
+      id: 'excelResource',
+      imgSrc: excelResource,
+      label: '엑셀 업로드/리소스맵',
+      isPopover: true,
+      target: '#excelResource',
+      showEvent: 'click',
+      position: 'right',
+      content: (
+        <ExcelUploadResourceMap
+          userId={myPageConfigure.userId}
+          sessionUserKey={myPageConfigure.sessionUserKey}
+        />
+      ),
+      onClick: (e) => {
+
       }
     },
     'PortalConfig': {

@@ -27,7 +27,7 @@ const DatasourceAuthority = ({mainKey, ...props}) => {
 
   return (
     <Wrapper display='flex' direction='row'>
-      <Wrapper padding='10px'>
+      <Wrapper padding='10px' size='3'>
         {
           currentTab === path.GROUP_DATASOURCE &&
           <GroupList onRowClick={handleRowClick} dependency={dependency}/>
@@ -37,7 +37,7 @@ const DatasourceAuthority = ({mainKey, ...props}) => {
           <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
-      <Wrapper padding='10px'>
+      <Wrapper padding='10px' size='7'>
         {
           (currentTab === path.GROUP_DATASOURCE ||
            currentTab === path.USER_DATASOURCE) &&

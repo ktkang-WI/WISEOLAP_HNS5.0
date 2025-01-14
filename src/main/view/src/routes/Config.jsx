@@ -3,20 +3,48 @@ import Header from 'components/common/atomic/Header/organism/Header';
 import SideNavigationBar from
   'components/common/atomic/SideNavigation/organism/SideNavigationBar';
 import {getTheme} from 'config/theme';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Outlet, useLoaderData, useNavigate} from 'react-router-dom';
 import ConfigSlice from 'redux/modules/ConfigSlice';
+import useConfig from 'hooks/useConfig';
 
 const theme = getTheme();
 
 // Config 는 임시용 입니다.
 const Config = () => {
   const left = ['Logo', 'Portal', 'Viewer'];
-  const {userNm, myPageConfigure} = useLoaderData();
+  const {userNm, myPageConfigure, generalConfigure} = useLoaderData();
   const dispatch = useDispatch();
   const {setUserNm} = ConfigSlice.actions;
   const nav = useNavigate();
+  const {saveConfiguration} = useConfig();
+
+  const [tabItems, setTabItems] = useState();
+
+  const adminTab = [
+    'ConfigurationSetting',
+    'UserGroupManagement',
+    'Authority',
+    'ReportFolderManagement',
+    'DataSourceAddition',
+    'Log',
+    'SearchQuery',
+    'PortalConfig',
+    'ExcelResource'
+  ];
+
+  const userTab = [
+    'Log',
+    'SearchQuery',
+    'ExcelResource'
+  ];
+
+  if (myPageConfigure != undefined) {
+    saveConfiguration(generalConfigure, myPageConfigure);
+  } else {
+    nav('/editds');
+  }
 
   useEffect(() => {
     if (window.location.pathname.indexOf('adhoc') > -1 ||
@@ -33,6 +61,16 @@ const Config = () => {
         nav('viewer');
       }
     }
+
+    const prog = generalConfigure?.prog;
+
+    if (prog?.settings) {
+      setTabItems(adminTab);
+    } else {
+      setTabItems(userTab);
+      nav('conflog');
+    }
+
     if (userNm != null && userNm != '') {
       dispatch(setUserNm(userNm));
     } else {
@@ -59,16 +97,7 @@ const Config = () => {
         <Wrapper
           size={`0 0 ${theme.size.snbWidth}`}>
           <SideNavigationBar
-            content={[
-              'ConfigurationSetting',
-              'UserGroupManagement',
-              'Authority',
-              'ReportFolderManagement',
-              'DataSourceAddition',
-              'Log',
-              'SearchQuery',
-              'PortalConfig'
-            ]}
+            content={tabItems}
           />
         </Wrapper>
         <Wrapper

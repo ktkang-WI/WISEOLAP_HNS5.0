@@ -118,8 +118,8 @@ const Designer = () => {
     mainTabItems.unshift('ReportSearch');
     // if (menu.reportHistory) mainTabItems.unshift('ReportHistory');
     // if (menu.lookQuery) mainTabItems.unshift('ShowQuery');
-    if (prog.reportConfiguration) mainTabItems.unshift('ReportHistory');
-    if (prog.viewQuery) mainTabItems.unshift('ShowQuery');
+    if (prog?.reportConfiguration) mainTabItems.unshift('ReportHistory');
+    if (prog?.viewQuery) mainTabItems.unshift('ShowQuery');
     const tabItems = [];
 
     // SNB 관리 권한 변경 (전체 설정 -> 그룹 및 사용자 별)
@@ -130,11 +130,12 @@ const Designer = () => {
     // if (accesUserNo.includes(myPageConfigure.userNo)) {
     //   tabItems.push('Preference');
     // }
-    if (prog.dashboard) tabItems.push('Dashboard');
-    if (prog.adhoc) tabItems.push('AdHoc');
-    if (prog.spreadSheet) tabItems.push('Spreadsheet');
-    if (prog.settings) tabItems.push('Preference');
-    if (prog.excelUploadResourceMap ) tabItems.push('ExcelResource');
+    if (prog?.dashboard) tabItems.push('Dashboard');
+    if (prog?.adhoc) tabItems.push('AdHoc');
+    if (prog?.spreadSheet) tabItems.push('Spreadsheet');
+    // if (prog?.settings) tabItems.push('Preference');
+    if (true) tabItems.push('Preference');
+    // if (prog?.excelUploadResourceMap ) tabItems.push('ExcelResource');
 
     setTabItems(tabItems);
     setMainTabItems(mainTabItems);

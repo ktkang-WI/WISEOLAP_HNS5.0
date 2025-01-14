@@ -38,7 +38,7 @@ const DataAuthority = ({mainKey, ...props}) => {
 
   return (
     <Wrapper display='flex' direction='row' height={theme.size.mlModalHeight}>
-      <Wrapper padding='10px'>
+      <Wrapper padding='10px' size='3'>
         {
           currentTab === path.GROUP_DATA &&
           <GroupList onRowClick={handleRowClick} dependency={dependency}/>
@@ -48,7 +48,7 @@ const DataAuthority = ({mainKey, ...props}) => {
           <UserList onRowClick={handleRowClick} dependency={dependency}/>
         }
       </Wrapper>
-      <Wrapper display='flex' direction='column'>
+      <Wrapper display='flex' direction='column' size='7'>
         <Wrapper height="55%" padding='10px'>
           {
             (currentTab === path.GROUP_DATA || currentTab === path.USER_DATA) &&
