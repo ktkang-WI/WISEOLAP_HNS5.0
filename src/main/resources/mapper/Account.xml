@@ -145,6 +145,13 @@
       <result column="AUTH_DATA" property="authData" javaType="String"/>
     </resultMap>
 
+    <resultMap id="UserExcelResourceDTO" type="com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO">
+      <result column="LOGIN_AC_ID" property="loginAcId" javaType="String"/>
+      <result column="USER_GID" property="userGid" javaType="String"/>
+      <result column="USER_NM" property="userNm" javaType="String"/>
+      <result column="USERG_LNM" property="userGlnm" javaType="String"/>
+    </resultMap>
+
     <select id="selectGroupMstr" resultMap="GroupMstrEntity">
       SELECT
         GRP_ID,
@@ -846,4 +853,30 @@
       </foreach>
       SELECT * FROM DUAL
     </insert>
+    <select id="selectExcelResourceGroup" resultMap="UserExcelResourceDTO">
+      SELECT S_USER.LOGIN_AC_ID AS "LOGIN_AC_ID"
+        , S_USER.USER_GID  AS "USER_GID"
+        , S_USER.USER_NM  AS "USER_NM"
+        , S_USER_GRP.USERG_LNM AS "USERG_LNM"
+      FROM S_USER LEFT JOIN S_USER_GRP
+      ON S_USER.USER_GID = S_USER_GRP.USERG_ID 
+    </select>
+
+    <select id="selectExcelResourceUser" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO" 
+        resultMap="UserExcelResourceDTO">
+      SELECT S_USER.LOGIN_AC_ID AS "LOGIN_AC_ID"
+        , S_USER.USER_GID  AS "USER_GID"
+        , S_USER.USER_NM  AS "USER_NM"
+      FROM S_USER 
+      WHERE LOGIN_AC_ID = #{loginAcId, jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateExcelResourceUser" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO">
+        UPDATE S_USER
+          SET
+              <if test='userGid != ""'>
+                USER_GID = #{userGid, jdbcType=VARCHAR}
+              </if>
+          WHERE LOGIN_AC_ID = #{loginAcId, jdbcType=VARCHAR}
+    </update>
 </mapper>

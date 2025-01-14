@@ -28,10 +28,11 @@ export class User {
   userRunMode = '';
   userDesc = '';
   passwd = '';
+  excelResourceGrp='';
 
   constructor({userNo = 0, userId = '', userNm = '', email1 = '', email2 = '',
     telNo = '', grpId = '', userRunMode = '', userDesc = '', passwd = '',
-    hpNo = '', accountCreateDt = '', compCode = ''}) {
+    hpNo = '', accountCreateDt = '', compCode = '', excelResourceGrp=''}) {
     this.userNo = userNo;
     this.userId = userId;
     this.userNm = userNm;
@@ -45,6 +46,7 @@ export class User {
     this.hpNo = hpNo;
     this.accountCreateDt = accountCreateDt;
     this.compCode = compCode;
+    this.excelResourceGrp = excelResourceGrp;
   }
 
   getUserGroups = async () => {
@@ -80,7 +82,8 @@ export class User {
       userRunMode: this.userRunMode,
       userDesc: this.userDesc,
       passwd: this.passwd,
-      compCode: this.compCode
+      compCode: this.compCode,
+      excelResourceGrp: this.excelResourceGrp
     };
     const res = axios.post(accountPath + '/user', null, {params: user});
     return res;
@@ -98,7 +101,8 @@ export class User {
       userDesc: this.userDesc,
       passwd: this.passwd,
       userNo: this.userNo,
-      compCode: this.compCode
+      compCode: this.compCode,
+      excelResourceGrp: this.excelResourceGrp
     };
     const res = axios.patch(accountPath + '/user', null, {params: user});
     return res;

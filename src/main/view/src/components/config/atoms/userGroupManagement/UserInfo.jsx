@@ -31,6 +31,20 @@ const UserInfo = () => {
     };
   });
   const mode = ['ADMIN', 'VIEW'];
+  const modeER = [
+    {
+      grpId: 'GRP00003',
+      grpNm: '없음'
+    },
+    {
+      grpId: 'GRP00001',
+      grpNm: '관리자'
+    },
+    {
+      grpId: 'GRP00002',
+      grpNm: '일반사용자'
+    }
+  ];
 
   const asyncValidation = (params) => {
     const selectedRow = userDataGridRef.current._instance
@@ -188,6 +202,17 @@ const UserInfo = () => {
         >
           <Label>{localizedString.groupRunMode}</Label>
         </Item>
+        <SimpleItem
+          dataField="excelResourceGrp"
+          editorType="dxSelectBox"
+          editorOptions={{
+            dataSource: modeER,
+            displayExpr: 'grpNm',
+            valueExpr: 'grpId'
+          }}
+        >
+          <Label>{localizedString.userExcelResourceRunMode}</Label>
+        </SimpleItem>
         <Item
           dataField="userDesc"
           editorType='dxTextArea'

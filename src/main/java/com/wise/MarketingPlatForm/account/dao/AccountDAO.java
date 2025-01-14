@@ -20,6 +20,7 @@ import com.wise.MarketingPlatForm.account.dto.user.UserDatasetDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDatasetPutDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserDsPutDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserFolderDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupAuthDataMstrEntity;
@@ -94,4 +95,7 @@ public interface AccountDAO {
   public boolean deleteUserApp(List<UserAppPutDTO> userAuthProgMstr);
   public boolean putGroupApp(List<GroupAuthProgMstrEntity> groupAuthProgMstr);
   public boolean putUserApp(List<UserAuthProgMstrEntity> userAuthProgMstr);
+  public List<UserExcelResourceDTO> selectExcelResourceGroup();
+  public UserExcelResourceDTO selectExcelResourceUser(String loginAcId);
+  public boolean updateExcelResourceUser(UserExcelResourceDTO userExcelResourceDTO);
 }

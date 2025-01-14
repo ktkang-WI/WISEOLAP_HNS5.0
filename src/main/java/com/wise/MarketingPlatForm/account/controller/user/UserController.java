@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,9 @@ public class UserController {
 
   @Autowired
   SHA256Util sha256Util;
+
+  @Value("${excelresource.link}")
+  private boolean excelResourceLink;
 
   @GetMapping
   public ResponseEntity<RestAPIVO> getUser(
@@ -107,7 +111,8 @@ public class UserController {
     @RequestParam(required = false, defaultValue = "0") int grpId,
     @RequestParam(required = false, defaultValue = "") String userRunMode,
     @RequestParam(required = false, defaultValue = "") String userDesc,
-    @RequestParam(required = false, defaultValue = "") String compCode
+    @RequestParam(required = false, defaultValue = "") String compCode,
+    @RequestParam(required = false, defaultValue = "") String excelResourceGrp
   ) throws SQLException{
 
     UserGroupDTO userMstr = UserGroupDTO.builder()
@@ -125,6 +130,9 @@ public class UserController {
       .build();
 
     boolean result = userService.updateUser(userMstr);
+    if(excelResourceLink){
+      boolean result2 = userService.updateExcelResourceUser(userMstr,excelResourceGrp);
+    }
 
     if (!result) return RestAPIVO.conflictResponse(false);
 

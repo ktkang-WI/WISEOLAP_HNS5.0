@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO;
 import com.wise.MarketingPlatForm.account.dto.user.UserSelectorDTO;
 import com.wise.MarketingPlatForm.account.entity.UserMstrEntity;
 
@@ -49,6 +50,7 @@ public class UserService {
       .runMode(userMstr.getUserRunMode())
       .userDesc(userMstr.getUserDesc())
       .build();
+    
     return accountDAO.updateUser(user);
   };
 
@@ -84,5 +86,21 @@ public class UserService {
   public List<UserMstrEntity> selectUserMstr(UserSelectorDTO userSelector) {
     return accountDAO.selectUserMstr(userSelector);
   }
+
+  public boolean updateExcelResourceUser(UserGroupDTO userMstr, String excelResourceGrp) {
+
+    UserExcelResourceDTO result = accountDAO.selectExcelResourceUser(userMstr.getUserId());
+
+    if (result == null) {
+      return false;
+    }
+
+    UserExcelResourceDTO user = UserExcelResourceDTO.builder()
+      .loginAcId(userMstr.getUserId())
+      .userGid(excelResourceGrp)
+      .userNm(userMstr.getUserNm())
+      .build();
+    return accountDAO.updateExcelResourceUser(user);
+  };
 
 }

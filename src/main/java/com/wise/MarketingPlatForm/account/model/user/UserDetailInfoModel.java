@@ -19,6 +19,7 @@ public class UserDetailInfoModel {
   String grpNm;
   String userRunMode;
   String grpRunMode;
+  String excelResourceGrp;
   String userDesc;
   String pwChangeDt;
 }

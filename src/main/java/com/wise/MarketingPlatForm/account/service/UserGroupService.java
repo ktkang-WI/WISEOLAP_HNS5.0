@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.wise.MarketingPlatForm.account.dao.AccountDAO;
 import com.wise.MarketingPlatForm.account.dto.UserGroupDTO;
+import com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO;
 import com.wise.MarketingPlatForm.account.entity.GroupMstrEntity;
 import com.wise.MarketingPlatForm.account.model.common.UsersGroupsModel;
 import com.wise.MarketingPlatForm.account.model.groups.GroupDetailInfoModel;
@@ -22,12 +24,16 @@ public class UserGroupService {
   @Autowired
   private AccountDAO accountDAO;
 
+  @Value("${excelresource.link}")
+    private boolean excelResourceLink;
+
   public UsersGroupsModel getUserGroupData() {
 
     List<UserGroupDTO> userMstr = accountDAO.selectUserJoinGroup();
+    List<UserExcelResourceDTO> userExcelResourceMstr = excelResourceLink ? accountDAO.selectExcelResourceGroup() : null;
     List<GroupMstrEntity> groupMstr = accountDAO.selectGroupMstr();
     
-    List<UsersModel> usersFormat = generateUsersObject(userMstr);
+    List<UsersModel> usersFormat = generateUsersObject(userMstr,userExcelResourceMstr);
     List<GroupsModel> groupsFormat = generateGroupsObject(groupMstr, userMstr);
 
     UsersGroupsModel usersGroupsFormat = UsersGroupsModel.builder()
@@ -119,7 +125,7 @@ public class UserGroupService {
   };
 
 
-  private List<UsersModel> generateUsersObject(List<UserGroupDTO> userGroups) {
+  private List<UsersModel> generateUsersObject(List<UserGroupDTO> userGroups, List<UserExcelResourceDTO> userExcelResourceMstr) {
     List<UsersModel> result = new ArrayList<>();
 
     for (UserGroupDTO userGroup : userGroups) {
@@ -128,7 +134,7 @@ public class UserGroupService {
         .userNm(userGroup.getUserNm())
         .userNo(userGroup.getUserNo())
         .grpNm(userGroup.getGrpNm())
-        .userDetailInfo(generateUserDetailInfoObject(userGroup))
+        .userDetailInfo(generateUserDetailInfoObject(userGroup, userExcelResourceMstr))
         .build();
       if (usersFormat == null) {
         throw new NullPointerException("usersFormat is null");
@@ -138,7 +144,18 @@ public class UserGroupService {
     return result;
   };
 
-  private UserDetailInfoModel generateUserDetailInfoObject(UserGroupDTO userGroup){
+  private UserDetailInfoModel generateUserDetailInfoObject(UserGroupDTO userGroup, List<UserExcelResourceDTO> userExcelResourceMstr){
+
+    String excelResourceGooup = "";
+    if (excelResourceLink) {
+      for (UserExcelResourceDTO userExcelResource : userExcelResourceMstr) {
+        if(userGroup.getUserId().equals(userExcelResource.getLoginAcId())) {
+          excelResourceGooup = userExcelResource.getUserGid();
+        }
+      }
+    }
+    
+
     UserDetailInfoModel userDetailInfo = UserDetailInfoModel.builder()
         .userNo(userGroup.getUserNo())
         .userId(userGroup.getUserId())
@@ -152,6 +169,7 @@ public class UserGroupService {
         .grpId(userGroup.getGrpId())
         .userRunMode(userGroup.getUserRunMode())
         .grpRunMode(userGroup.getGrpRunMode())
+        .excelResourceGrp(excelResourceGooup)
         .userDesc(userGroup.getUserDesc())
         .pwChangeDt(userGroup.getPwChangeDt())
         .build();
