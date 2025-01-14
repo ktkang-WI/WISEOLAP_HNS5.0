@@ -23,7 +23,10 @@ const FolderList = ({setRow}) => {
   const reportFolderContext = useContext(ReportFolderContext);
 
   // state
-  const [data, setData] = reportFolderContext.state.data;
+  const [data, setData] = reportFolderContext.state.data[0].length > 0 &&
+  reportFolderContext.state.data[0][0].fldId ?
+  reportFolderContext.state.data : [];
+
   const {updatePublicFolderOrderUtil} = reportFolderUtility();
   const folders = data;
 
