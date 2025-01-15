@@ -93,66 +93,70 @@ const PortalConfig = () => {
           padding: '40px'
         }}
       >
-        <Group title='메인화면 필터 관리'>
-          <PortalTypeGrid
-            dataSource={types}
-            dxRef={typeRef}
-          />
-        </Group>
-        <Group title='메인화면 보고서 관리'>
-          <PortalReportGrid
-            dataSource={reports}
-            dxRef={reportRef}
-          />
-        </Group>
-        <Group title='메인화면 카드 쿼리 관리'>
-          <PortalCardGrid
-            dataSource={cards}
-            dxRef={queryRef}
-            dsSource={dsSource}
-          />
-          <br/>
-          <p>※ 구분, 색상, 금액, 전년비(또는 전월비), 계획비로 이루어진 데이터 반환</p>
-          <p>※ 색상은 데이터가 없을 경우 기본 색상으로 렌더링 됩니다.</p>
-          <p>※ 계획비는 데이터가 없을 경우 렌더링되지 않습니다.</p>
-          <p>※ @DATE, @MDTEAM 으로 필터에 선택된 날짜와 팀을 매핑할 수 있습니다.</p>
-        </Group>
-        <Group title='팀 쿼리 관리'>
-          <Form
-            labelMode='outside'
-            labelLocation='left'
-            ref={teamRef}
-            formData={teams}
-            width={'100%'}
-            style={{maxWidth: '700px'}}
-          >
-            <Item
-              dataField='dsId'
-              label={{
-                'text': '데이터 원본'
-              }}
-              editorType='dxSelectBox'
-              editorOptions={{
-                dataSource: dsSource,
-                displayExpr: 'dsNm',
-                valueExpr: 'dsId'
-              }}
+        <Wrapper display='flex'>
+          <Group title='메인화면 필터 관리' width={'50%'}>
+            <PortalTypeGrid
+              dataSource={types}
+              dxRef={typeRef}
             />
-            <Item
-              dataField='query'
-              name='쿼리'
-              label={{
-                'text': '쿼리'
-              }}
-              editorType='dxTextArea'
-              editorOptions={{
-                height: '230px',
-                valueChangeEvent: 'keyup'
-              }}
+          </Group>
+          <Group title='메인화면 보고서 관리' width={'50%'}>
+            <PortalReportGrid
+              dataSource={reports}
+              dxRef={reportRef}
             />
-          </Form>
-          <p>※ MD_TEAM_NM 컬럼을 가진 데이터 반환</p>
-        </Group>
+          </Group>
+        </Wrapper>
+        <Wrapper display='flex'>
+          <Group title='메인화면 카드 쿼리 관리'>
+            <PortalCardGrid
+              dataSource={cards}
+              dxRef={queryRef}
+              dsSource={dsSource}
+            />
+            <br/>
+            <p>※ 구분, 색상, 금액, 전년비(또는 전월비), 계획비로 이루어진 데이터 반환</p>
+            <p>※ 색상은 데이터가 없을 경우 기본 색상으로 렌더링 됩니다.</p>
+            <p>※ 계획비는 데이터가 없을 경우 렌더링되지 않습니다.</p>
+            <p>※ @DATE, @MDTEAM 으로 필터에 선택된 날짜와 팀을 매핑할 수 있습니다.</p>
+          </Group>
+          <Group title='팀 쿼리 관리'>
+            <Form
+              labelMode='outside'
+              labelLocation='left'
+              ref={teamRef}
+              formData={teams}
+              width={'100%'}
+              style={{maxWidth: '700px'}}
+            >
+              <Item
+                dataField='dsId'
+                label={{
+                  'text': '데이터 원본'
+                }}
+                editorType='dxSelectBox'
+                editorOptions={{
+                  dataSource: dsSource,
+                  displayExpr: 'dsNm',
+                  valueExpr: 'dsId'
+                }}
+              />
+              <Item
+                dataField='query'
+                name='쿼리'
+                label={{
+                  'text': '쿼리'
+                }}
+                editorType='dxTextArea'
+                editorOptions={{
+                  height: '230px',
+                  valueChangeEvent: 'keyup'
+                }}
+              />
+            </Form>
+            <p>※ MD_TEAM_NM 컬럼을 가진 데이터 반환</p>
+          </Group>
+        </Wrapper>
       </Wrapper>
     </Wrapper>
   );
