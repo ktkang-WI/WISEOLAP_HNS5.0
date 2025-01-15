@@ -30,14 +30,12 @@ const Config = () => {
     'DataSourceAddition',
     'Log',
     'SearchQuery',
-    'PortalConfig',
-    'ExcelResource'
+    'PortalConfig'
   ];
 
   const userTab = [
     'Log',
-    'SearchQuery',
-    'ExcelResource'
+    'SearchQuery'
   ];
 
   if (myPageConfigure != undefined) {
@@ -65,8 +63,10 @@ const Config = () => {
     const prog = generalConfigure?.prog;
 
     if (prog?.settings) {
+      if (prog?.excelUploadResourceMap) adminTab.push('ExcelResource');
       setTabItems(adminTab);
     } else {
+      if (prog?.excelUploadResourceMap) userTab.push('ExcelResource');
       setTabItems(userTab);
       nav('conflog');
     }
