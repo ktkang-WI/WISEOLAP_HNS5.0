@@ -3,7 +3,7 @@ import {getTheme} from 'config/theme';
 import {getConfig} from 'config/config';
 import AnimatedButton from '../../Common/Button/AnimatedButton';
 import snbDefaultElement from './SNBDefaultElement';
-import {Popover} from 'devextreme-react';
+import {Popover, ScrollView} from 'devextreme-react';
 
 const theme = getTheme();
 const useSNBDrawer = getConfig('useSNBDrawer');
@@ -118,9 +118,16 @@ const SideNavigationBar = ({content}) => {
   const snbDefaultItems = snbDefaultElement();
   return (
     <StyledSNB>
-      <Wrapper>
-        {itemIterator(snbDefaultItems, content)}
-      </Wrapper>
+      <ScrollView
+        height={'100%'}
+        width={'100%'}
+        direction='vertical'
+        showScrollbar={'never'}
+      >
+        <Wrapper>
+          {itemIterator(snbDefaultItems, content)}
+        </Wrapper>
+      </ScrollView>
     </StyledSNB>
   );
 };
