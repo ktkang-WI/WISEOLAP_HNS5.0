@@ -19,6 +19,7 @@ public class QueryLogDTO {
     Timestamp eventStamp;
     int reportId;
     String reportType;
+    String reportNm;
     int userNo;
     String userId;
     String userNm;

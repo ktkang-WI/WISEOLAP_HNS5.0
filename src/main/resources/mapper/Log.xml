@@ -50,6 +50,7 @@
     <result column="EVENT_DT" property="eventDt" javaType="String"/>
     <result column="EVENT_TIME" property="eventTime" javaType="String"/>
     <result column="REPORT_TYPE" property="reportType" javaType="String"/>
+		<result column="REPORT_NM" property="reportNm" javaType="String"/>
     <result column="USER_ID" property="userId" javaType="String"/>
     <result column="USER_NM" property="userNm" javaType="String"/>
     <result column="GRP_NM" property="grpNm" javaType="String"/>
@@ -383,10 +384,12 @@
 					C.IP AS DB_IP,
 					C.DBMS_TYPE AS DBMS_TYPE,
 					A.RUN_TIME AS RUN_TIME,
-					A.RUN_QUERY AS RUN_QUERY_BASE64
+					A.RUN_QUERY AS RUN_QUERY_BASE64,
+					D.REPORT_NM AS REPORT_NM
 			FROM	LOG_EXEC_QUERY A
 					LEFT OUTER JOIN GRP_MSTR B ON A.GRP_ID = B.GRP_ID
 					LEFT OUTER JOIN DS_MSTR C ON A.DS_ID = C.DS_ID
+					LEFT OUTER JOIN REPORT_MSTR D ON A.REPORT_ID = D.REPORT_ID
 			WHERE	1=1
 					AND TO_CHAR(A.EVENT_DT, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
 		<!-- </if>

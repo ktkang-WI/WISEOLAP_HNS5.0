@@ -47,6 +47,10 @@ const QueryLog = ({display, dataSource}) => {
           caption={localizedString.log.reportType}
         />
         <Column
+          dataField='reportNm'
+          caption={localizedString.log.reportNm}
+        />
+        <Column
           dataField='userId'
           caption={localizedString.log.userId}
         />
