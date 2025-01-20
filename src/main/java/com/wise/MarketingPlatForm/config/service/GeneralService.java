@@ -37,6 +37,9 @@ public class GeneralService {
   };
 
   public ProgModel getProgModel(UserDTO user) throws Exception{
+    if (user == null) {
+      return ConfigProgService.getDefaultProgModel();
+    }
     GroupAppModel groupAppModel = groupAppService.getGroupAppByGrpId(user.getGrpId());
     UserAppModel userAppModel = userAppService.getUserAppByUserNo(user.getUserNo());
 
