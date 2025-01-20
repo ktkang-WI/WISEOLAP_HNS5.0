@@ -93,6 +93,14 @@ export const dataSource = [
       {
         key: 'Min()',
         explanation: 'Min(Value1, Value2)\n지정 된 값에서 최소값을 반환합니다.'
+      },
+      {
+        key: 'Sum()',
+        explanation: 'Sum([Value1, Value2])\n지정 된 값들의 합계를 반환합니다. ("[ ]" 사용)'
+      },
+      {
+        key: 'Avg()',
+        explanation: 'Avg([Value1, Value2])\n지정 된 값들의 평균을 반환합니다. ("[ ]" 사용)'
       }
     ]
   }
