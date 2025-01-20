@@ -22,7 +22,8 @@ const ProgList = ({mainKey, dependency}) => {
       {dataField: 'adhoc', label: '비정형보고서'},
       {dataField: 'spreadSheet', label: '스프레드 시트'},
       {dataField: 'settings', label: '환경설정'},
-      {dataField: 'excelUploadResourceMap', label: '엑셀 업로드/리소스맵'}
+      {dataField: 'excelUpload', label: '엑셀 업로드'},
+      {dataField: 'resourceMap', label: '리소스맵'}
     ],
     reportManagement: [
       {dataField: 'reportQueryPeriod', label: '보고서 조회 기간 설정'},

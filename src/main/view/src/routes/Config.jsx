@@ -63,10 +63,10 @@ const Config = () => {
     const prog = generalConfigure?.prog;
 
     if (prog?.settings) {
-      if (prog?.excelUploadResourceMap) adminTab.push('ExcelResource');
+      if (prog.excelUpload || prog.resourceMap) adminTab.push('ExcelResource');
       setTabItems(adminTab);
     } else {
-      if (prog?.excelUploadResourceMap) userTab.push('ExcelResource');
+      if (prog.excelUpload || prog.resourceMap) userTab.push('ExcelResource');
       setTabItems(userTab);
       nav('conflog');
     }
