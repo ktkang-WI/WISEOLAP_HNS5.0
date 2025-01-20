@@ -19,6 +19,10 @@ public class ProgModel {
   Boolean settings;
   @Builder.Default
   Boolean excelUploadResourceMap = false;
+  @Builder.Default
+  Boolean excelUpload = false;
+  @Builder.Default
+  Boolean resourceMap = false;
   // ReportManagement
   Boolean reportQueryPeriod;
   Boolean viewQuery;
@@ -41,7 +45,8 @@ public class ProgModel {
       .adhoc(model1.adhoc || model2.adhoc)
       .spreadSheet(model1.spreadSheet || model2.spreadSheet)
       .settings(model1.settings || model2.settings)
-      .excelUploadResourceMap(model1.excelUploadResourceMap || model2.excelUploadResourceMap)
+      .excelUpload(model1.excelUpload || model2.excelUpload)
+      .resourceMap(model1.resourceMap || model2.resourceMap)
       .reportQueryPeriod(model1.reportQueryPeriod || model2.reportQueryPeriod)
       .viewQuery(model1.viewQuery || model2.viewQuery)
       .reportConfiguration(model1.reportConfiguration || model2.reportConfiguration)

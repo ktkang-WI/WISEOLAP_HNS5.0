@@ -231,6 +231,7 @@ const SNBDefaultElement = () => {
         <ExcelUploadResourceMap
           userId={myPageConfigure.userId}
           sessionUserKey={myPageConfigure.sessionUserKey}
+          prog={configure.prog}
         />
       ),
       onClick: (e) => {
