@@ -31,6 +31,9 @@ const QueryLog = ({display, dataSource}) => {
         height={'50%'}
         dataSource={dataSource}
         allowColumnResizing={true}
+        sorting={{
+          mode: 'multiple'
+        }}
       >
         <Column
           dataField='eventDt'
