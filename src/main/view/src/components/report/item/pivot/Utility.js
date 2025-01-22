@@ -202,14 +202,34 @@ const generateItem = (item, param, rootItem) => {
       rowExpand = field.expand || false;
     }
 
+    let sortBy = {};
+
+    if (field.sortBy && field.sortBy != field.fieldId) {
+      const target = getMeasureByFieldId[field.sortBy];
+
+      if (target) {
+        sortBy = {
+          sortBySummaryField: target.summaryType + '_' + target.name
+        };
+      } else {
+        sortBy = {
+          sortBy: dataFieldName
+        };
+      }
+    } else {
+      sortBy = {
+        sortBy: dataFieldName
+      };
+    }
+
     fields.push({
       caption: field.caption,
       dataField: dataFieldName,
       area: item.meta.colRowSwitch? 'column' : 'row',
-      sortBy: 'none',
       // eslint-disable-next-line max-len
       // expanded: (dataset?.cubeId == 6184 || reportId == 14020 || reportId == 14095) ?
       //  false : rowExpand,
+      sortOrder: field.sortOrder.toLowerCase(),
       expanded: customHnsExpand ?
          false : rowExpand,
       customizeText: (e) =>{
@@ -217,7 +237,8 @@ const generateItem = (item, param, rootItem) => {
         // 해당소스 제거해야함
         const cText = e?.valueText == 'null' ? '' : e?.valueText;
         return cText;
-      }
+      },
+      ...sortBy
     });
   }
 
