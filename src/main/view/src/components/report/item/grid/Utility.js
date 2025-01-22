@@ -45,13 +45,13 @@ const dataGridOptionConfig = {
       time: 5
     },
     pagination: {
-      isOk: true,
+      isOk: false,
       content: '',
       pagingRange: 20,
       index: 1
     },
     pageUsageOfPageCount: {
-      isOk: true,
+      isOk: false,
       pageSizes: [10, 20, 50]
     }
   },

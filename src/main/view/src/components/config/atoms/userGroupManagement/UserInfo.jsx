@@ -38,11 +38,11 @@ const UserInfo = () => {
     },
     {
       grpId: 'GRP00001',
-      grpNm: '관리자'
+      grpNm: '엑셀업로드/리소스맵'
     },
     {
       grpId: 'GRP00002',
-      grpNm: '일반사용자'
+      grpNm: '엑셀업로드'
     }
   ];
 

@@ -858,7 +858,7 @@
         , S_USER.USER_GID  AS "USER_GID"
         , S_USER.USER_NM  AS "USER_NM"
         , S_USER_GRP.USERG_LNM AS "USERG_LNM"
-      FROM S_USER LEFT JOIN S_USER_GRP
+      FROM WISECSR.S_USER S_USER LEFT JOIN WISECSR.S_USER_GRP S_USER_GRP
       ON S_USER.USER_GID = S_USER_GRP.USERG_ID 
     </select>
 
@@ -867,12 +867,12 @@
       SELECT S_USER.LOGIN_AC_ID AS "LOGIN_AC_ID"
         , S_USER.USER_GID  AS "USER_GID"
         , S_USER.USER_NM  AS "USER_NM"
-      FROM S_USER 
+      FROM WISECSR.S_USER S_USER
       WHERE LOGIN_AC_ID = #{loginAcId, jdbcType=VARCHAR}
     </select>
 
     <update id="updateExcelResourceUser" parameterType="com.wise.MarketingPlatForm.account.dto.user.UserExcelResourceDTO">
-        UPDATE S_USER
+        UPDATE WISECSR.S_USER
           SET
               <if test='userGid != ""'>
                 USER_GID = #{userGid, jdbcType=VARCHAR}
