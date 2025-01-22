@@ -25,7 +25,7 @@ import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectCurrentAdHocOption} from 'redux/selector/ItemSelector';
 import {getExcelCellFormat, getFormats} from '../item/pivot/FormatUtility';
-import {formatNumber, generateLabelSuffix} from 'components/utils/NumberFormatUtility';
+// import {formatNumber, generateLabelSuffix} from 'components/utils/NumberFormatUtility';
 import {isDataCell as highlightIsDataCell, getCssStyle, addStyleVariationValue} from '../item/pivot/DataHighlightUtility';
 
 
@@ -141,8 +141,9 @@ const exportComponentToWorksheet = async (
             const {newFormData, colorStyle} = addStyleVariationValue(formData, pivotCell);
 
             if (newFormData) {
-              const labelSuffix = generateLabelSuffix(newFormData);
-              const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
+              // const labelSuffix = generateLabelSuffix(newFormData);
+              // const formattedValue = formatNumber(pivotCell.value, newFormData, labelSuffix);
+              const formattedValue = pivotCell.value;
 
               let backgroundColor = '';
               let color = colorStyle?.color?.slice(1);
