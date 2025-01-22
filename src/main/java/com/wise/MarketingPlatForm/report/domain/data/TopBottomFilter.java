@@ -98,10 +98,11 @@ public class TopBottomFilter {
             sumByGroup.forEach((key, list) -> {
                 BigDecimal sum = list.stream()
                         .map(entry2 -> (BigDecimal) entry2.get(topBottom.getTarget()))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        .filter(value -> value != null) // null 값 필터링
+                        .reduce(BigDecimal.ZERO, BigDecimal::add); // 합계 계산
                 sumMap.put(key, sum);
             });
-
+            
             // 값을 기준으로 내림차순으로 정렬
             List<Map.Entry<Object, BigDecimal>> sortedEntries = sortEntries(topBottom.getType(), sumMap);
 
