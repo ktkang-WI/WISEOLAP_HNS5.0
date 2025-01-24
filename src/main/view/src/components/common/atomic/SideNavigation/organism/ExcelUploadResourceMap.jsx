@@ -4,7 +4,8 @@ import resourceMapImg from
   '../../../../../assets/image/icon/button/ico_points.png';
 
 const ExcelUploadResourceMap = ({userId, sessionUserKey, prog}) => {
-  const origin = window.location.origin;
+  // const origin = window.location.origin;
+  const origin = '10.2.3.51:18080';
   // eslint-disable-next-line max-len
   const url = `${origin}/wise-csr-mng/login?id=${userId}&pwd=1&sessionUserKey=${sessionUserKey}&&gubun=`;
 
