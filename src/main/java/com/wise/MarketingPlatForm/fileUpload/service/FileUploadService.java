@@ -78,7 +78,6 @@ public class FileUploadService {
     private final MartConfig martConfig;
     private final MartDAO martDAO;
     private final ReportDAO reportDAO;
-    // private final String SHARED_FOLDER = "/olapnas";
     private final String SHARED_FOLDER = "/olapnas";
     private final String DECRYTION_INPUT_FOLDER = "/drm/upload";
     private final String DECRYTION_OUTPUT_FOLDER = "/drm";
@@ -94,11 +93,11 @@ public class FileUploadService {
     }
 	
     public void initFolderPath() {
+        spreadDonwloadFolder = new File(new File("UploadFiles"), "spread_download");
+
         // 기존 경로
         // spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-        spreadReportFolder = new File(new File("UploadFiles"), "spread_reports");
-        spreadDonwloadFolder = new File(new File("UploadFiles"), "spread_download");
-        // spreadReportFolder = new File(SHARED_FOLDER);
+        spreadReportFolder = new File(SHARED_FOLDER);
         if (!this.spreadReportFolder.isDirectory()) {
 	        this.spreadReportFolder.mkdirs();
 	    }
@@ -107,6 +106,7 @@ public class FileUploadService {
 	public void saveFile(MultipartFile file, String fileName) throws Exception {
         try (InputStream input = file.getInputStream()) {
             File sysFile = WebFileUtils.getFile(spreadReportFolder, fileName);
+
         	if(sysFile == null) {
                 throw new FileNotFoundException("spread File Not Found Error");
             }
@@ -601,7 +601,7 @@ public class FileUploadService {
                 throw new FileNotFoundException("spread File Not Found Error");
             }
 
-            String jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            // String jsonData = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
             // Workbook workbook = new Workbook();
             // workbook.fromJson(jsonData);

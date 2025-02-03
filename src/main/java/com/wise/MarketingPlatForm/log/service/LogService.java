@@ -90,4 +90,8 @@ public class LogService {
     public ReportMstrEntity selectReportHis(String reportId, String reportSeq) {
         return logDAO.selectReportHis(reportId, reportSeq);
     }
+
+    public void insertQueryLogNoTime(QueryLogDTO queryLogDTO) {
+        logDAO.insertQueryLogNoTime(queryLogDTO);
+    }
 }

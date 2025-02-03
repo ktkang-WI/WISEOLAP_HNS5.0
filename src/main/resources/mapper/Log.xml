@@ -558,6 +558,44 @@
 			'WB'
 		)
 	</insert>
+	<insert id="insertQueryLogNoTime" parameterType="com.wise.MarketingPlatForm.log.vo.ReportLogDTO">
+		INSERT INTO LOG_EXEC_QUERY2
+		(
+			EVENT_DT,
+			REPORT_ID,
+			REPORT_NM,
+			REPORT_TYPE,
+			USER_ID,
+			USER_NM,
+			USER_NO,
+			GRP_ID,
+			GRP_NM,
+			ACCESS_IP,
+			ACCESS_GUID,
+			RUN_QUERY,
+			DS_ID,
+			RUN_TIME,
+			PROG_TYPE
+		)
+		VALUES
+		(
+			NULL,
+			#{reportId},
+			null,
+			#{reportType},
+			#{userId},
+			#{userNm},
+			#{userNo},
+			#{grpId},
+			null,
+			#{accessIp},
+			null,
+			#{runQuery},
+			#{dsId},
+			NULL,
+			'WB'
+		)
+	</insert>
 	<insert id="insertExportLog" parameterType="com.wise.MarketingPlatForm.log.vo.ExportLogDTO">
 		INSERT INTO LOG_EXPORT_USE
 		(

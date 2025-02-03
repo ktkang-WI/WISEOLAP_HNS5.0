@@ -40,4 +40,6 @@ public interface LogDAO {
 
     ReportMstrEntity selectReportHis(String reportId, String reportSeq);
 
+    void insertQueryLogNoTime(QueryLogDTO queryLogDTO);
+
 }

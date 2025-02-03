@@ -319,19 +319,10 @@ public class ReportService {
 
         String query = queryGenerator.getQuery(dataAggregation, ownerNm);
 
-        Timer timer = new Timer();
-        timer.start();
-        MartResultDTO martResultDTO = null;
-        if (!("showQuery".equals(flag) && hasData.equals("no"))) {
-            martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
-        }
-        
-        timer.end();
-
         UserDTO user = dataAggregation.getUser();
 
         QueryLogDTO queryLogDTO = QueryLogDTO.builder()
-                .eventStamp(new Timestamp(timer.getStartTime()))
+                .eventStamp(null)
                 .reportId(Integer.parseInt(dataAggregation.getReportId()))
                 .userId(user.getUserId())
                 .reportType(dataAggregation.getReportType().toString())
@@ -341,8 +332,24 @@ public class ReportService {
                 .accessIp(request.getRemoteAddr())
                 .runQuery(query)
                 .dsId(dsMstrDTO.getDsId())
-                .runTime(timer.getInterval())
+                .runTime(null)
                 .build();
+
+        logService.insertQueryLogNoTime(queryLogDTO);
+
+        Timer timer = new Timer();
+        timer.start();
+        MartResultDTO martResultDTO = null;
+        if (!("showQuery".equals(flag) && hasData.equals("no"))) {
+            martResultDTO = martDAO.select(dsMstrDTO.getDsId(), query);
+        }
+        
+        timer.end();
+
+        
+
+        queryLogDTO.setEventStamp(new Timestamp(timer.getStartTime()));
+        queryLogDTO.setRunTime(timer.getInterval());
 
         logService.insertQueryLog(queryLogDTO);
 

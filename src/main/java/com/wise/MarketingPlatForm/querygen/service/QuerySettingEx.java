@@ -1274,6 +1274,8 @@ public class QuerySettingEx {
 								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
 							else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("SUBQ")) 
 								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
+							else if (oRows.get(0).getMEA_AGG().trim().equalsIgnoreCase("SUBQTOTAL")) 
+								oSelClauseColl.add(sColExpress + " AS " + oColCaption);
 							// 240927 hmj 홈앤쇼핑 sum over() 구현을 위한 서브쿼리 분기 추가 - 계산된 컬럼 end
 						  else {
 								oSelClauseColl.add(
@@ -2153,7 +2155,7 @@ public class QuerySettingEx {
 
 				ArrayList<String> SUBQValues = new ArrayList<>();
 				for (SelectCubeMeasure oDr : aDtSelMea) {
-					if (oDr.getMEA_AGG().equals("SUBQ")) {
+					if (oDr.getMEA_AGG().equals("SUBQ") || oDr.getMEA_AGG().equals("SUBQTOTAL")) {
 						String targetValue = oDr.getCOL_EXPRESS() + " AS \"" + oDr.getMEA_CAPTION() + "\"";
 						if (oSelClauseColl.contains(targetValue)) {
 							oSelClauseColl.remove(targetValue);
@@ -3011,7 +3013,7 @@ public class QuerySettingEx {
 
 		String isSubQ = "N";
 		for(SelectCubeMeasure oDr : aDtSelMea) {
-			if(oDr.getMEA_AGG().equals("SUBQ")) {
+			if(oDr.getMEA_AGG().equals("SUBQ")|| oDr.getMEA_AGG().equals("SUBQTOTAL")) {
 				isSubQ = "Y";
 			}
 		}
