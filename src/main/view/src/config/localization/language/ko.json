@@ -595,7 +595,7 @@
   "treeLayout": "소형",
   "standardLayout": "테이블 형식",
   "autoSize": "사이즈 자동 맞추기",
-  "freezePanes": "틀고정",
+  "freezePanes": "틀고정 해제",
   "fieldOptionSetting": "열 옵션 설정",
   "fieldType": "필드 타입",
   "visibility": "표시 여부",
