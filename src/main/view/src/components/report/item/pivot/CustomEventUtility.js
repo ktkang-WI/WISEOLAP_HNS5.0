@@ -58,6 +58,11 @@ const getFormItems = (item) => {
         id: 'autoSize',
         text: localizedString.autoSize,
         value: item.meta.autoSize
+      },
+      {
+        id: 'freezePanes',
+        text: localizedString.freezePanes,
+        value: item.meta.freezePanes
       }
     ],
     'rowTotalPosition': [

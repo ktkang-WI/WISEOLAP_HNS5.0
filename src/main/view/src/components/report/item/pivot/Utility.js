@@ -46,6 +46,7 @@ const generateMeta = (item) => {
   });
   setMeta(item, 'layout', 'standard');
   setMeta(item, 'autoSize', true);
+  setMeta(item, 'freezePanes', false);
   setMeta(item, 'customExpand', false);
   setMeta(item, 'customHnsExpand', false);
   setMeta(item, 'removeNullData', false);
