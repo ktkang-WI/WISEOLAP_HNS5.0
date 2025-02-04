@@ -217,6 +217,11 @@ export const getExcelCellFormat = ({backgroundColor, color, formattedValue, form
 
   cellFormat.numFmt = numberFormat;
 
+  if (isNaN(cellFormat.value)) {
+    cellFormat.value = '';
+    cellFormat.numFmt = '';
+  }
+
   return cellFormat;
 };
 // eslint-disable-next-line max-len
