@@ -222,11 +222,13 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const usePage = meta.pagingOption.pagination.isOk;
 
   return (
-    <Wrapper width={meta.autoSize ? 'fit-content' : '100%'}>
+    <Wrapper width={meta.freezePanes ? '' :
+    meta.autoSize ? 'fit-content' : '100%'}>
       <DevPivotGrid
         ref={ref}
         id={id}
-        width={meta.autoSize ? 'calc(100% + 20px)' : 'auto'}
+        width={meta.freezePanes ? 'fit-content' :
+          meta.autoSize ? 'calc(100% + 20px)' : 'auto'}
         height={usePage ? 'calc(100% - 50px)' : '100%'}
         showBorders={true}
         dataSource={mart.dataSourceConfig}
