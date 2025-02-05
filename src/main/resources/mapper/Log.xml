@@ -579,7 +579,7 @@
 		)
 		VALUES
 		(
-			NULL,
+			SYSDATE,
 			#{reportId},
 			null,
 			#{reportType},
