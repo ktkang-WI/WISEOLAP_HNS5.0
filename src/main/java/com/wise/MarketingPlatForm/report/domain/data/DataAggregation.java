@@ -27,6 +27,7 @@ public class DataAggregation {
     UserDTO user;
     String userId;
     String reportId;
+    String reportNm;
     ReportType reportType;
     List<Measure> measures;
     List<Measure> originalMeasures;

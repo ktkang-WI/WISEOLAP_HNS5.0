@@ -145,6 +145,7 @@ public class ReportController {
         String gridAttributeStr = param.getOrDefault("gridAttribute", "{}");
         UserDTO user = SessionUtility.getSessionUser(request);
         String reportId = param.getOrDefault("reportId", "");
+        String reportNm = param.getOrDefault("reportNm", "");
         ReportType reportType = ReportType.fromString(param.getOrDefault("reportType", "AdHoc")).get();
         String pagingOptionStr = param.getOrDefault("pagingOption", "");
         String filterStr = param.getOrDefault("filter", "{}");
@@ -234,6 +235,7 @@ public class ReportController {
                 .user(user)
                 .userId(user.getUserId())
                 .reportId(reportId)
+                .reportNm(reportNm)
                 .reportType(reportType)
                 .parameters(parameters)
                 .removeNullData(removeNullData)

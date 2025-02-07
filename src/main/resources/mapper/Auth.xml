@@ -8,6 +8,7 @@
 	<resultMap id="User" type="com.wise.MarketingPlatForm.auth.entity.UserEntity">
 		<result column="USER_NO" property="userNo" javaType="int"/>
     <result column="GRP_ID" property="grpId" javaType="int"/>
+    <result column="GRP_NM" property="grpNm" javaType="String"/>
     <result column="USER_ID" property="userId" javaType="String"/>
     <result column="USER_NM" property="userNm" javaType="String"/>
     <result column="PASSWD" property="password" javaType="String"/>
@@ -48,7 +49,13 @@
 <!-- Query -->
 
   <select id="selectUserById" resultMap="User">
-    SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N'
+    <!-- SELECT * FROM USER_MSTR WHERE USER_ID = #{userId} AND DEL_YN = 'N' -->
+    SELECT USER_MSTR.*,
+    GRP_MSTR.GRP_NM
+    FROM USER_MSTR 
+    INNER JOIN GRP_MSTR
+    ON USER_MSTR.GRP_ID = GRP_MSTR.GRP_ID
+    WHERE USER_MSTR.USER_ID = #{userId} AND USER_MSTR.DEL_YN = 'N'
   </select>
 
   <select id="selectMdCode" resultType="java.lang.String">

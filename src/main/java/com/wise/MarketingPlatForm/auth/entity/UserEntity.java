@@ -14,6 +14,7 @@ import lombok.Setter;
 public class UserEntity {
     int userNo;
     int grpId;
+    String grpNm;
     String userId;
     String userNm;
     String password;

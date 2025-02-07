@@ -65,6 +65,7 @@ const useQueryExecute = () => {
     const dataField = adhocOption?.dataField ||
       item?.meta?.dataField;
     param.reportId = report.reportId;
+    param.reportNm = report.options?.reportNm;
     param.reportType = report.options?.reportType;
     param.itemType = item.type;
     param.dataset = {};
@@ -143,6 +144,7 @@ const useQueryExecute = () => {
     const report = selectCurrentReport(store.getState()) || {};
 
     param.reportId = report.reportId;
+    param.reportNm = report.options?.reportNm;
     param.reportType = report.options?.reportType;
     param.itemType = ItemType.CHART;
     param.dataset = {};

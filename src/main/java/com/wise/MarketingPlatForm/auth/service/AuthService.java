@@ -184,6 +184,7 @@ public class AuthService {
                 .userId(userId)
                 .userNo(entity.getUserNo())
                 .grpId(entity.getGrpId())
+                .grpNm(entity.getGrpNm())
                 .userDesc(entity.getUserDesc())
                 .password(entity.getPassword())
                 .runMode(RunMode.fromString(entity.getRunMode()).get())
