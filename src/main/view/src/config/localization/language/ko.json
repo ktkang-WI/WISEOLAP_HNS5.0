@@ -1026,5 +1026,6 @@
   "port": "Port",
   "pwChangeSuccess": "비밀번호 변경에 성공 했습니다. 다시 로그인해 주세요.",
   "selectRelationCondition" : "연결 조건",
-  "userExcelResourceRunMode": "엑셀/리소스맵 권한"
+  "userExcelResourceRunMode": "엑셀/리소스맵 권한",
+  "itemNameNoBlank": "아이템 이름은 빈 값일 수 없습니다. 다시 입력해 주세요."
 }

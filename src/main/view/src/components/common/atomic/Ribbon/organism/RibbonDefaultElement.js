@@ -444,6 +444,11 @@ const RibbonDefaultElement = () => {
               modalTitle: localizedString.nameEdit,
               defaultValue: selectedItem.meta.name,
               onSubmit: (value) => {
+                // TODO: 유효성 체크 추가 될 경우 함수로 빼기.
+                if (!value) {
+                  alert(localizedString.itemNameNoBlank);
+                  return true;
+                }
                 const selectedReportId =
                   selectCurrentReportId(store.getState());
                 editItemName(selectedReportId, selectedItem, value);
