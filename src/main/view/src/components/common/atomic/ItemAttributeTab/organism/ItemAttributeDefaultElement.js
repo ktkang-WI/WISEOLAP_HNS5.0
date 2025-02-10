@@ -293,7 +293,7 @@ const ItemAttributeDefaultElement = () => {
               return;
             }
 
-            openModal(VariationValueModal);
+            openModal(VariationValueModal, {itemId: rootItem.items[1].id});
           }
         },
         {
