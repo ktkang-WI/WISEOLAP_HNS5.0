@@ -15,7 +15,7 @@ import {
   exportImg,
   exportPdf,
   exportPptx
-} from 'components/report/util/ReportDownload';
+} from 'components/report/util/reportDownload/ReportDownload';
 import useModal from 'hooks/useModal';
 import {selectRootLayout} from 'redux/selector/LayoutSelector';
 import xlsImg from 'assets/image/icon/item/ico_ept_msexcell.png';
@@ -84,7 +84,7 @@ const DownloadDefaultElement = () => {
     }
 
     let items = currentItem.filter((item) =>
-      item.type == rootItem.adHocOption.layoutSetting
+      item.type == rootItem.adHocOption?.layoutSetting
     );
 
     if (items.length === 0) { // 차트 피벗 전부 보기인 경우.
@@ -177,7 +177,7 @@ const DownloadDefaultElement = () => {
     } else if (type === 'img') {
       exportImg(currentReport,
           currentReport?.options?.reportNm || defaultReportName);
-    } else if ( type === 'pdf') {
+    } else if (type === 'pdf') {
       const newCurrentItem = filterdLayoutItem();
       const option = {
         mergeColumn: true,

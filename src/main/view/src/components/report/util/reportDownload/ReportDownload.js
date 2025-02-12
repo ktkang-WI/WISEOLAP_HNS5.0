@@ -24,10 +24,9 @@ import store from 'redux/modules';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import LoadingSlice from 'redux/modules/LoadingSlice';
 import {selectCurrentAdHocOption} from 'redux/selector/ItemSelector';
-import {getExcelCellFormat, getFormats} from '../item/pivot/FormatUtility';
+import {getExcelCellFormat, getFormats} from '../../item/pivot/FormatUtility';
 // import {formatNumber, generateLabelSuffix} from 'components/utils/NumberFormatUtility';
-import {isDataCell as highlightIsDataCell, getCssStyle, addStyleVariationValue} from '../item/pivot/DataHighlightUtility';
-
+import {isDataCell as highlightIsDataCell, getCssStyle, addStyleVariationValue} from '../../item/pivot/DataHighlightUtility';
 
 const EXCEL_ROW_HEIGHT = 23.055;
 const EXCEL_COLUMN_WIDTH = 71.811;
@@ -287,6 +286,7 @@ const mergeExcelFiles = async (items, parameters, parameterValues, option) => {
     }
 
     let startRow = 2;
+
     const worksheet = workbook.addWorksheet(elementObj.name);
     if (parameters) {
       worksheet.getCell('A1').value = '필터차원';
@@ -593,10 +593,10 @@ export const exportPdf = async (report, fileName, items, parameters, option) => 
   }
 };
 
-export const exportDocx = async (report, fileName, items, parameters, option) => {
+export const exportDocx = async (alert, report, fileName, items, parameters, option) => {
   store.dispatch(startJob());
   try {
-    const workbook = await mergeExcelFiles(items, parameters, option);
+    const workbook = await mergeExcelFiles(alert, items, parameters, option);
     const sections = [];
 
     for (const sheet of workbook.worksheets) {
@@ -688,11 +688,11 @@ export const exportDocx = async (report, fileName, items, parameters, option) =>
   }
 };
 
-export const exportPptx = async (report, fileName, items, parameters, option) => {
+export const exportPptx = async (alert, report, fileName, items, parameters, option) => {
   store.dispatch(startJob());
 
   try {
-    const workbook = await mergeExcelFiles(items, parameters, option);
+    const workbook = await mergeExcelFiles(alert, items, parameters, option);
     const pptx = new PptxGenJS();
 
     for (const sheet of workbook.worksheets) {
