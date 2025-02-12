@@ -35,15 +35,17 @@ import useModal from 'hooks/useModal';
 import {useSelector} from 'react-redux';
 import {
   selectCurrentConfigure,
-  selectCurrentDesignerMode,
-  selectMyPageDesignerConfig
+  selectCurrentDesignerMode
 } from 'redux/selector/ConfigSelector';
 import {clearSheets} from
   'components/report/atomic/spreadBoard/util/SpreadCore';
 import {selectEditMode} from 'redux/selector/ConfigSelector';
 import useReportLoad from 'hooks/useReportLoad';
-
 import ExcelUploadResourceMap from './ExcelUploadResourceMap';
+import moveToCube from 'assets/image/icon/button/gnb-ico2@2x.png';
+import moveToCubeActive from 'assets/image/icon/button/gnb-ico2-on@2x.png';
+import {encode as base64Encode} from 'js-base64';
+import {useLoaderData} from 'react-router-dom';
 
 const SNBDefaultElement = () => {
   // actions
@@ -60,8 +62,16 @@ const SNBDefaultElement = () => {
   // redux
   const designerMode = useSelector(selectCurrentDesignerMode);
   const configure = useSelector(selectCurrentConfigure);
-  const myPageConfigure = useSelector(selectMyPageDesignerConfig);
   const editMode = useSelector(selectEditMode);
+  const {myPageConfigure, generalConfigure} = useLoaderData();
+  const prog = generalConfigure?.prog;
+  const userMode = {
+    runMode: myPageConfigure.runMode,
+    userId: myPageConfigure.userId,
+    userNo: myPageConfigure.userNo,
+    grpRunMode: myPageConfigure.grpRunMode,
+    auth: prog.settings
+  };
 
   // local
   const onClick = (designerMode, executeFn) => {
@@ -245,6 +255,21 @@ const SNBDefaultElement = () => {
       label: '메인화면 설정',
       onClick: (e) => {
         nav('portalconf');
+      }
+    },
+    'MoveToCube': {
+      id: 'movetocube',
+      imgSrc: moveToCube,
+      hoveredImgSrc: moveToCubeActive,
+      label: '주제영역 편집',
+      onClick: (e) => {
+        const encodedUserMode = base64Encode(JSON.stringify(userMode));
+        // 250212 hmj 홈앤쇼핑 기준 url 하드코딩을 해야함. 같은 도메인이라도 별도의 어플리케이션이기때문에
+        // 반드시 사업지에서 사용되는 url로 변경할것. 로컬 개별 구동과 로컬 서버 구동 기준으로 정상작동 확인
+        const urlString = `http://localhost:38080/cube/?data=${encodedUserMode}`;
+        // const urlString = `http://localhost:3002/?data=${encodedUserMode}`;
+        window.open(urlString, '_blank');
+        // olap.hns.tv
       }
     }
   };

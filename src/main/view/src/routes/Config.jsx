@@ -30,7 +30,8 @@ const Config = () => {
     'DataSourceAddition',
     'Log',
     'SearchQuery',
-    'PortalConfig'
+    'PortalConfig',
+    'MoveToCube'
   ];
 
   const userTab = [
