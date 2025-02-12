@@ -14,12 +14,14 @@ import _ from 'lodash';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import localizedString from 'config/localization';
+import PivotGrid from 'devextreme/ui/pivot_grid';
+import {getVariationFields} from '../../PivotFieldUtility';
 
 const theme = getTheme();
 
 const ID_STR = 'VARIATION_VALUE_';
 
-const VariationValueModal = ({...props}) => {
+const VariationValueModal = ({itemId, ...props}) => {
   const adhocOption = useSelector(selectCurrentAdHocOption);
   const dataFields = useSelector(selectCurrentDataField);
   const reportId = useSelector(selectCurrentReportId);
@@ -126,6 +128,23 @@ const VariationValueModal = ({...props}) => {
   };
 
   const onSubmit = () => {
+    const instance = PivotGrid.getInstance('#' + itemId);
+
+    console.log(itemId);
+    console.log(instance);
+    if (instance) {
+      const fields = instance.getDataSource().fields();
+      const vFields = getVariationFields(
+          adhocOption, dataFields, variationValues);
+      const newFields = fields.filter(
+          ({summaryDisplayMode}) => !summaryDisplayMode);
+
+      newFields.push(...vFields);
+
+      instance.getDataSource().fields(newFields);
+      instance.getDataSource().reload();
+    }
+
     dispatch(updateVariationValues({
       reportId,
       variationValues

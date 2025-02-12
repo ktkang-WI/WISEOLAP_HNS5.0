@@ -39,6 +39,8 @@ export default function useItemSetting(
   const {filterItems, clearAllFilter} = useQueryExecute();
   const [selectedItemState, setSelectedItemState] = useState([]);
   const selectedItemRef = useRef([]);
+  const cachedDataField = useRef();
+  const prevToggleId = useRef();
   const dispatch = useDispatch();
   const reportId = useSelector(selectCurrentReportId);
   const {updateItem} = ItemSlice.actions;
@@ -297,6 +299,13 @@ export default function useItemSetting(
     return meta.palette.colors;
   }, [item.meta.paletteType, item.meta.colorEdit, item.meta.palette]);
 
+
+  const updateSeriesOptions = (cachedOptions, newOptions) => {
+    if (!cachedOptions || !newOptions) return cachedOptions;
+    return cachedOptions.map((opt) =>
+      newOptions.find(({fieldId}) => fieldId === opt.fieldId) || opt
+    );
+  };
   /**
    * 현재 아이템에서 사용되고 있는 데이터 필드를 반환합니다.
    * fieldDependency가 별도로 존재하지 않는 경우 data가 변할 때만 값이 갱신됩니다.
@@ -304,9 +313,25 @@ export default function useItemSetting(
    * dataFeild를 가져올 땐 해당 메서드 사용을 권장합니다.
    * @return {JSON} dataField
    */
-  const getDataField = useCallback(() => {
-    return adHocOption?.dataField || item.meta.dataField;
-  }, [item?.mart?.toggle, ...fieldDependency]);
+  const getDataField = () => {
+    const dataField = adHocOption?.dataField || item.meta.dataField;
+    // 재조회하거나 캐시가 없는 경우 새로 반환
+    if (!cachedDataField.current || prevToggleId.current != item.mart.toggle) {
+      cachedDataField.current = dataField;
+      prevToggleId.current = item.mart.toggle;
+      return dataField;
+    }
+
+    if (!dataField?.seriesOptions) return cachedDataField.current;
+    const newDataField = {
+      ...cachedDataField.current,
+      seriesOptions: updateSeriesOptions(
+          cachedDataField.current.seriesOptions, dataField.seriesOptions)
+    };
+
+    cachedDataField.current = newDataField;
+    return newDataField;
+  };
 
   const reloadMasterFilter = () => {
     const selectedItem = getSelectedItem() || [];
