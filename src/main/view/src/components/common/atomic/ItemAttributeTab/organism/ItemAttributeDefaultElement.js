@@ -13,25 +13,13 @@ import ignoreMasterFilterImg
 import dimensionImg from 'assets/image/icon/report/dimension.png';
 import dimensionGroupImg
   from 'assets/image/icon/report/dimension_group.png';
-import deltaValueImg from 'assets/image/icon/adhoc/deltaValue.png';
-import dataHighlightImg from 'assets/image/icon/adhoc/dataHighlight.png';
-import gridAttributeImg from 'assets/image/icon/adhoc/gridAttribute.png';
 import useModal from 'hooks/useModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {selectCurrentItem, selectRootItem} from 'redux/selector/ItemSelector';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
-// import TopBottomModal from '../modal/TopBottomModal';
-// eslint-disable-next-line max-len
-import DataHighlightModal from 'components/report/item/pivot/modal/organism/datahighlight/DataHighLightModal';
-import GridAttributeModal
-  from 'components/report/item/pivot/modal/organism/GridAttributeModal';
-import VariationValueModal
-  from 'components/report/item/pivot/modal/organism/VariationValueModal';
-import DataFilterModal
-  from
-  'components/report/item/pivot/modal/organism/dataFiltering/DataFilterModal';
+import {pivotOptions} from './ItemAttributeUtils';
 
 
 const ItemAttributeDefaultElement = () => {
@@ -201,119 +189,11 @@ const ItemAttributeDefaultElement = () => {
     },
     DashAnyPivotOption: {
       title: '피벗그리드 옵션',
-      items: [
-        {
-          id: 'dataHighlight',
-          label: localizedString.dataHighlight,
-          icon: dataHighlightImg,
-          active: option.dataHighlight == 'dataHighlight',
-          onClick: () => {
-            const pivotMartInit = focusedItem.mart.init;
-
-            if (!pivotMartInit) {
-              return;
-            }
-
-            openModal(DataHighlightModal);
-          }
-        }
-      ]
+      items: pivotOptions(rootItem, focusedItem, openModal)
     },
     AdHocOptions: {
       title: '비정형 옵션',
-      items: [
-        {
-          id: 'dataHighlight',
-          label: localizedString.dataHighlight,
-          icon: dataHighlightImg,
-          active: option.dataHighlight == 'dataHighlight',
-          width: '50%',
-          onClick: () => {
-            const chartMartInit = rootItem.items[0].mart.init;
-            const pivotMartInit = rootItem.items[1].mart.init;
-
-            if (!chartMartInit && !pivotMartInit) {
-              return;
-            }
-
-            openModal(DataHighlightModal);
-          }
-        },
-        // {
-        //   id: 'topBottom',
-        //   label: localizedString.topBottom,
-        //   icon: topBottomImg,
-        //   active: option.topBottom == 'topBottom',
-        //   width: '50%',
-        //   onClick: () => {
-        //     const dataField = rootItem.adHocOption.dataField;
-        //     if (dataField.measure.length === 0) {
-        //       return;
-        //     }
-
-        // eslint-disable-next-line max-len
-        //     if (dataField.row.length === 0 && dataField.column.length === 0) {
-        //       return;
-        //     }
-
-        //     openModal(TopBottomModal, {
-        //       topBottomInfo: rootItem.adHocOption.topBottomInfo
-        //     });
-        //   }
-        // },
-        {
-          id: 'gridAttribute',
-          label: localizedString.gridAttribute,
-          icon: gridAttributeImg,
-          active: option?.gridAttribute == 'gridAttribute',
-          width: '50%',
-          onClick: () => {
-            // TODO: Get Grid Attribute List
-            const gridAttribute = rootItem?.adHocOption?.gridAttribute;
-            const dataField = rootItem?.adHocOption?.dataField;
-            openModal(GridAttributeModal, {
-              dataField: dataField,
-              gridAttribute: gridAttribute
-            });
-          }
-        },
-        // TODO: 기능 개발 후 활성화
-        {
-          id: 'deltaValue',
-          label: '변동 측정값',
-          active: option?.deltaValue == 'deltaValue',
-          icon: deltaValueImg,
-          width: '50%',
-          onClick: () => {
-            // 피벗그리드 데이터를 가져와야 변동 측정값 실행 되게.
-            // TODO : 홈앤쇼핑 브랜치와 같이 피벗만 보기시 차트 데이터는 안가져오게(피벗데이터만 가져옴).
-            const pivotMartInit = rootItem.items[1].mart.init;
-
-            if (!pivotMartInit) {
-              return;
-            }
-
-            openModal(VariationValueModal);
-          }
-        },
-        {
-          id: 'dataFiltering',
-          label: '데이터 필터링',
-          active: option?.dataFilter == 'dataFilter',
-          icon: dataHighlightImg,
-          width: '50%',
-          onClick: () => {
-            // const chartMartInit = rootItem.items[0].mart.init;
-            const pivotMartInit = rootItem.items[1].mart.init;
-            // !chartMartInit &&
-            if (!pivotMartInit) {
-              return;
-            }
-
-            openModal(DataFilterModal);
-          }
-        }
-      ]
+      items: pivotOptions(rootItem, focusedItem, openModal)
     }
   };
 };

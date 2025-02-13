@@ -8,6 +8,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import useQueryExecute from 'hooks/useQueryExecute';
 import ItemSlice from 'redux/modules/ItemSlice';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
+import store from 'redux/modules';
 
 const theme = getTheme();
 
@@ -51,6 +55,7 @@ const GridAttributeModal = ({
 }) => {
   const {executeItems} = useQueryExecute();
   const dispatch = useDispatch();
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const selectedReportId = useSelector(selectCurrentReportId);
   const [dataSource, setDataSource] = useState([]);
   const [gridAttribute, setGridAttribute] = useState({});
@@ -88,10 +93,18 @@ const GridAttributeModal = ({
   }, [handleVisibility]);
 
   const onSubmit = useCallback(() => {
-    dispatch(ItemSlice.actions.updateGridAttribute({
+    const curItem = selectCurrentItem(store?.getState());
+    const param = {
+      designerMode: designerMode,
       reportId: selectedReportId,
       gridAttribute: gridAttribute
-    }));
+    };
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      const curItemId = curItem?.id;
+      param.itemId = curItemId;
+    }
+    // curItemId 필요, pivot meta에 옵션넣기. 차트 표시 여부는 안보이게.
+    dispatch(ItemSlice.actions.updateGridAttribute(param));
     executeItems();
   }, [dispatch, selectedReportId, gridAttribute, executeItems]);
 
@@ -120,6 +133,7 @@ const GridAttributeModal = ({
           dataField="caption"
           caption={localizedString.dataItem}
           dataType="string" />
+        {designerMode === DesignerMode['AD_HOC'] &&
         <Column
           dataField="chartVisibility"
           caption={localizedString.chartVisibility}
@@ -130,7 +144,7 @@ const GridAttributeModal = ({
               onValueChanged={(e) => handleChartVisibility(e, cellData)}
             />
           )}
-        />
+        />}
         <Column
           dataField="gridVisibility"
           caption={localizedString.gridVisibility}

@@ -7,7 +7,8 @@ import DevPivotGrid, {
 import React, {
   useEffect,
   useRef,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react';
 import {isDataCell, getCssStyle, addStyleVariationValue}
   from './DataHighlightUtility';
@@ -39,6 +40,8 @@ import {itemExportsObject} from
   'components/report/atomic/ItemDownload/ItemDownload';
 import {getFormats} from './FormatUtility';
 import LoadingSlice from 'redux/modules/LoadingSlice';
+import {DesignerMode} from 'components/config/configType';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
 
 const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
   const mart = item ? item.mart : null;
@@ -58,6 +61,7 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
    itemExportsObject(id, ref, 'pivot', mart.data.data);
   const dispatch = useDispatch();
 
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const datasets = useSelector(selectCurrentDatasets);
   const reportId = useSelector(selectCurrentReportId);
   const dataset = datasets.find((ds) =>
@@ -120,29 +124,32 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     dispatch(loadingActions.startJobItem('피벗 그리드 조회중... '));
   }
 
+  const getAdHocOptionOrMeta = useCallback(() => {
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      return item.meta;
+    };
+
+    return adHocOption;
+  }, [adHocOption, item.meta]);
+
   const onCellPrepared = ({cell, area, cellElement}) => {
     // eslint-disable-next-line max-len
     if (dataset?.cubeId == 6184 || reportId == 14020 || reportId == 14095) {
       // 사용자정의 데이터 및 일반 컬럼에서 음수 값일 경우 처리.
-      // if (cell?.rowPath && cell?.rowPath[0] === '총취급액') {
       if (cell?.rowPath && cell.rowPath[1] === '일목표금액') {
-        console.log(cell.rowPath);
-        console.log(cell);
         cellElement.style.display = 'none';
       }
-      // }
     }
+
     if (area == 'row') {
-      //  if (cell?.path && cell.path[0] === '총취급액') {
       if (cell?.path && cell.path[1] === '일목표금액') {
         cellElement.style.display = 'none';
-        console.log(cell.rowPath);
-        console.log(cell);
       }
-      // }
     }
+
     if (area == 'data' && cell.dataType) {
-      const formats = getFormats(dataField, adHocOption);
+      const option = getAdHocOptionOrMeta();
+      const formats = getFormats(dataField, option);
       const formData = formats[cell.dataIndex];
       const {newFormData, colorStyle} = addStyleVariationValue(formData, cell);
 
@@ -162,7 +169,6 @@ const PivotGrid = ({setItemExports, id, adHocOption, item}) => {
     }
 
     if (highlight.length != 0) {
-      // isDataCell -> 셀, 합계 셀, 총계 셀 체크에 대한 분기처리
       for (let i = 0; i < highlight.length; i ++) {
         if (isDataCell(cell, area, highlight[i])) {
           Object.assign(

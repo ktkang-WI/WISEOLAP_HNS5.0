@@ -272,14 +272,30 @@ const reducers = {
   updateVariationValues(state, actions) {
     const reportId = actions.payload.reportId;
     const variationValues = actions.payload.variationValues;
+    const designerMode = actions.payload.designerMode;
+    const itemId = actions.payload.itemId;
 
-    state[reportId].adHocOption.variationValues = variationValues;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      const dashboardItems = state[reportId].items;
+      const idx = dashboardItems.findIndex((i) => i.id === itemId);
+      state[reportId].items[idx].meta.variationValues = variationValues;
+    } else {
+      state[reportId].adHocOption.variationValues = variationValues;
+    }
   },
   updateGridAttribute(state, actions) {
     const reportId = actions.payload.reportId;
     const gridAttribute = actions.payload.gridAttribute;
+    const designerMode = actions.payload.designerMode;
+    const itemId = actions.payload.itemId;
 
-    state[reportId].adHocOption.gridAttribute = gridAttribute;
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      const dashboardItems = state[reportId].items;
+      const idx = dashboardItems.findIndex((i) => i.id === itemId);
+      state[reportId].items[idx].meta.gridAttribute = gridAttribute;
+    } else {
+      state[reportId].adHocOption.gridAttribute = gridAttribute;
+    }
   },
   updateLayoutSetting(state, actions) {
     const reportId = actions.payload.reportId;

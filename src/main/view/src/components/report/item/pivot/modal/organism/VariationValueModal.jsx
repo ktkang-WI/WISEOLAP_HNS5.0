@@ -7,25 +7,37 @@ import VariationValueGrid
 import VariationValueForm
   from '../molecules/variationValueModal/VariationValueForm';
 import {useSelector, useDispatch} from 'react-redux';
-import {selectCurrentAdHocOption, selectCurrentDataField}
+import {selectCurrentAdHocOption, selectCurrentDataField, selectCurrentItem}
   from 'redux/selector/ItemSelector';
 import {useRef, useState} from 'react';
 import _ from 'lodash';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import localizedString from 'config/localization';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {DesignerMode} from 'components/config/configType';
+import store from 'redux/modules';
 
 const theme = getTheme();
 
 const ID_STR = 'VARIATION_VALUE_';
 
+const setVariationValue = (designerMode, adhocOption, currItem) => {
+  if (designerMode === DesignerMode['DASHBOARD']) {
+    return _.cloneDeep(currItem?.meta?.variationValues || []);
+  };
+  return _.cloneDeep(adhocOption?.variationValues || []);
+};
+
 const VariationValueModal = ({...props}) => {
+  const designerMode = useSelector(selectCurrentDesignerMode);
   const adhocOption = useSelector(selectCurrentAdHocOption);
+  const currItem = useSelector(selectCurrentItem);
   const dataFields = useSelector(selectCurrentDataField);
   const reportId = useSelector(selectCurrentReportId);
 
   const [variationValues, setVariationValues] = useState(
-      _.cloneDeep(adhocOption?.variationValues || []));
+      setVariationValue(designerMode, adhocOption, currItem));
   const [selectedItem, setSelectedItem] = useState({});
 
   const formRef = useRef();
@@ -126,10 +138,19 @@ const VariationValueModal = ({...props}) => {
   };
 
   const onSubmit = () => {
-    dispatch(updateVariationValues({
-      reportId,
-      variationValues
-    }));
+    const curItem = selectCurrentItem(store?.getState());
+    const param = {
+      reportId: reportId,
+      variationValues: variationValues,
+      designerMode: designerMode
+    };
+
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      const curItemId = curItem?.id;
+      param.itemId = curItemId;
+    };
+
+    dispatch(updateVariationValues(param));
   };
 
   return (

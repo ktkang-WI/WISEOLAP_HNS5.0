@@ -1,5 +1,8 @@
 import {DesignerMode} from 'components/config/configType';
 import localizedString from 'config/localization';
+import store from 'redux/modules';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import {selectCurrentItem} from 'redux/selector/ItemSelector';
 
 // 유효성 검사.
 export const getValidation = (formData) => {
@@ -94,8 +97,25 @@ export const getIdxAndFlag = (formData, reportType, rootItem, selectedItem) => {
   return result;
 };
 
+/**
+ * @param {string} designerMode
+ * @param {object} rootItem
+ * @param {object} currItem
+ * 비정형, 대시보드의 현재 아이템의 측정값 리스트를 가져옴.
+ * @return {*}
+ */
+const getMeasureList = (designerMode, rootItem, currItem) => {
+  if (designerMode === DesignerMode['DASHBOARD']) {
+    return currItem?.meta?.dataField?.measure || [];
+  };
+
+  return rootItem?.adHocOption?.dataField?.measure || [];
+};
+
 export const getDetailInfo = (FilteredData, rootItem) => {
-  const measures = rootItem?.adHocOption?.dataField?.measure || [];
+  const designerMode = selectCurrentDesignerMode(store?.getState());
+  const currItem = selectCurrentItem(store?.getState());
+  const measures = getMeasureList(designerMode, rootItem, currItem);
   const matchedMeasure = measures.find(
       (measure) => measure.name === FilteredData.dataItem
   );
