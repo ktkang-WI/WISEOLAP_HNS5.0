@@ -296,8 +296,8 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
-  const variationFields = getVariationFields(rootItem.adHocOption,
-      dataField, variationValues);
+  const variationFields = getVariationFields(rootItem?.adHocOption,
+      dataField, variationValues, item);
   fields.push(...variationFields);
 
   if (dataField.measure.length == 1) {

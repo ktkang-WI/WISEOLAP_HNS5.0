@@ -1,8 +1,11 @@
 import {checkVisibleMeasure, getVisibledMeasure} from './FormatUtility';
 
-export const getVariationFields = (adHocOption, dataField, variationValues) => {
+export const getVariationFields = (
+    adHocOption, dataField, variationValues, item
+) => {
   const fields = [];
-  const visibledMeasure = adHocOption ? getVisibledMeasure(adHocOption) : [];
+  const option = adHocOption ? adHocOption : item.meta;
+  const visibledMeasure = getVisibledMeasure(option);
 
   for (const variationValue of variationValues) {
     const targets = [...dataField.measure, ...dataField.sortByItem];
