@@ -1028,5 +1028,6 @@
   "selectRelationCondition" : "연결 조건",
   "userExcelResourceRunMode": "엑셀/리소스맵 권한",
   "deltaValue": "변동 측정값",
-  "dataFiltering": "데이터 필터링"
+  "dataFiltering": "데이터 필터링",
+  "itemNameNoBlank": "아이템 이름은 빈 값일 수 없습니다. 다시 입력해 주세요."
 }

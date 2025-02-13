@@ -636,5 +636,6 @@
   "port": "Port",
   "pwChangeSuccess": "The password change was successful. Please log in again.",
   "deltaValue": "Variation measure",
-  "dataFiltering": "Data Filtering"
+  "dataFiltering": "Data Filtering",
+  "itemNameNoBlank": "Item name cannot be empty. Please enter again."
 }

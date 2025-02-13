@@ -1,7 +1,9 @@
 import * as XLSX from 'xlsx';
 import {exportWidgets} from 'devextreme/viz/export';
 import _ from 'lodash';
-import {exportExcel} from 'components/report/util/ReportDownload';
+import {
+  exportExcel
+} from 'components/report/util/reportDownload/ReportDownload';
 import store from 'redux/modules';
 import {selectCurrentReport} from 'redux/selector/ReportSelector';
 import {selectCurrentItems, selectRootItem} from 'redux/selector/ItemSelector';

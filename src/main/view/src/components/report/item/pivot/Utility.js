@@ -19,8 +19,8 @@ import {selectCurrentAdHocOption, selectCurrentItem, selectCurrentItems}
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import ExpressionEngine from
   'components/utils/ExpressionEngine/ExpressionEngine';
-import {checkVisibleMeasure, getPivotFormat, getVisibledMeasure}
-  from './FormatUtility';
+import {getPivotFormat} from './FormatUtility';
+import {getVariationFields} from './PivotFieldUtility';
 
 const cache = new Map();
 
@@ -113,10 +113,6 @@ const generateItem = (item, param, rootItem) => {
   }, {});
 
   let expressionCheck = false;
-  const opiton = rootItem?.adHocOption ? rootItem?.adHocOption : item.meta;
-  // eslint-disable-next-line max-len
-  const visibledMeasure = getVisibledMeasure(opiton);
-
 
   // TODO: 추후 PivotMatrix 옵션화시 sum / SUM 대소문자 구분 필요. matrix사용할 때에는 대문자
   dataField.measure.forEach((field, index) => {
@@ -300,24 +296,9 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
-  for (const variationValue of variationValues) {
-    const targets = [...dataField.measure, ...dataField.sortByItem];
-    const target = targets.find((t) => t.fieldId == variationValue.targetId);
-
-    if (!target) continue;
-
-    const field = {
-      area: 'data',
-      dataField: target.summaryType + '_' + target.name,
-      caption: variationValue.name,
-      summaryType: 'sum',
-      dataType: 'number',
-      summaryDisplayMode: variationValue.type,
-      visible: checkVisibleMeasure(target, visibledMeasure)
-    };
-
-    fields.push(field);
-  }
+  const variationFields = getVariationFields(rootItem.adHocOption,
+      dataField, variationValues);
+  fields.push(...variationFields);
 
   if (dataField.measure.length == 1) {
     fields.push({

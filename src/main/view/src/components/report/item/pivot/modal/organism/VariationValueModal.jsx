@@ -14,9 +14,6 @@ import _ from 'lodash';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import localizedString from 'config/localization';
-import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
-import {DesignerMode} from 'components/config/configType';
-import store from 'redux/modules';
 
 const theme = getTheme();
 
@@ -30,7 +27,6 @@ const setVariationValue = (designerMode, adhocOption, currItem) => {
 };
 
 const VariationValueModal = ({...props}) => {
-  const designerMode = useSelector(selectCurrentDesignerMode);
   const adhocOption = useSelector(selectCurrentAdHocOption);
   const currItem = useSelector(selectCurrentItem);
   const dataFields = useSelector(selectCurrentDataField);
@@ -138,19 +134,10 @@ const VariationValueModal = ({...props}) => {
   };
 
   const onSubmit = () => {
-    const curItem = selectCurrentItem(store?.getState());
-    const param = {
-      reportId: reportId,
-      variationValues: variationValues,
-      designerMode: designerMode
-    };
-
-    if (designerMode === DesignerMode['DASHBOARD']) {
-      const curItemId = curItem?.id;
-      param.itemId = curItemId;
-    };
-
-    dispatch(updateVariationValues(param));
+    dispatch(updateVariationValues({
+      reportId,
+      variationValues
+    }));
   };
 
   return (

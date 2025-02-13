@@ -9,7 +9,8 @@ const item = (defaultItem, palette) => {
   return makeItem({
     id: 'item1',
     type: defaultItem || 'chart',
-    palette: palette
+    palette: palette,
+    tab: 0
   });
 };
 
