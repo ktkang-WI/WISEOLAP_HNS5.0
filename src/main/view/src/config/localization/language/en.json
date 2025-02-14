@@ -635,5 +635,7 @@
   "paramEditInputRequired": "Conditional clauses are required input in the input window.",
   "port": "Port",
   "pwChangeSuccess": "The password change was successful. Please log in again.",
+  "deltaValue": "Variation measure",
+  "dataFiltering": "Data Filtering",
   "itemNameNoBlank": "Item name cannot be empty. Please enter again."
 }

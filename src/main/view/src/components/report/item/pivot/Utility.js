@@ -14,7 +14,7 @@ import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 // eslint-disable-next-line max-len
 import {selectCurrentDataset, selectCurrentDatasets} from 'redux/selector/DatasetSelector';
-import {selectCurrentAdHocOption, selectCurrentItems}
+import {selectCurrentAdHocOption, selectCurrentItem, selectCurrentItems}
   from 'redux/selector/ItemSelector';
 import PivotGridDataSource from 'devextreme/ui/pivot_grid/data_source';
 import ExpressionEngine from
@@ -75,6 +75,18 @@ const gridAttributeOptionCheck = (dataFieldName, gridAttribute) => {
 
   return noGridAttribute || noFieldInGridAttribute || fieldIsVisible;
 };
+
+const getGridAttribute = (rootItem) => {
+  const curItem = selectCurrentItem(store?.getState());
+  return rootItem?.adHocOption?.gridAttribute || curItem?.meta?.gridAttribute;
+};
+
+const getVariationValues = (rootItem) => {
+  const curItem = selectCurrentItem(store?.getState());
+  return rootItem?.adHocOption?.variationValues ||
+    curItem?.meta?.variationValues || [];
+};
+
 /**
  * 아이템 객체를 기반으로 아이템 조회에 필요한 옵션 생성
  * @param {*} item 옵션을 삽입할 아이템 객체
@@ -89,8 +101,8 @@ const generateItem = (item, param, rootItem) => {
   const dataset = datasets.find((ds) =>
     ds.datasetId == dataField.datasetId);
   const {updateItem} = ItemSlice.actions;
-  const gridAttribute = rootItem?.adHocOption?.gridAttribute;
-  const variationValues = rootItem?.adHocOption?.variationValues || [];
+  const gridAttribute = getGridAttribute(rootItem);
+  const variationValues = getVariationValues(rootItem);
   const reportId = selectCurrentReportId(store.getState());
   const selectedDataset = selectCurrentDataset(store.getState());
 
@@ -284,8 +296,8 @@ const generateItem = (item, param, rootItem) => {
     });
   }
 
-  const variationFields = getVariationFields(rootItem.adHocOption,
-      dataField, variationValues);
+  const variationFields = getVariationFields(rootItem?.adHocOption,
+      dataField, variationValues, item);
   fields.push(...variationFields);
 
   if (dataField.measure.length == 1) {

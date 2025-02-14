@@ -7,27 +7,37 @@ import VariationValueGrid
 import VariationValueForm
   from '../molecules/variationValueModal/VariationValueForm';
 import {useSelector, useDispatch} from 'react-redux';
-import {selectCurrentAdHocOption, selectCurrentDataField}
+import {selectCurrentAdHocOption, selectCurrentDataField, selectCurrentItem}
   from 'redux/selector/ItemSelector';
 import {useRef, useState} from 'react';
 import _ from 'lodash';
 import ItemSlice from 'redux/modules/ItemSlice';
 import {selectCurrentReportId} from 'redux/selector/ReportSelector';
 import localizedString from 'config/localization';
-import PivotGrid from 'devextreme/ui/pivot_grid';
-import {getVariationFields} from '../../PivotFieldUtility';
+import {DesignerMode} from 'components/config/configType';
+import {selectCurrentDesignerMode} from 'redux/selector/ConfigSelector';
+import store from 'redux/modules';
 
 const theme = getTheme();
 
 const ID_STR = 'VARIATION_VALUE_';
 
-const VariationValueModal = ({itemId, ...props}) => {
+const setVariationValue = (designerMode, adhocOption, currItem) => {
+  if (designerMode === DesignerMode['DASHBOARD']) {
+    return _.cloneDeep(currItem?.meta?.variationValues || []);
+  };
+  return _.cloneDeep(adhocOption?.variationValues || []);
+};
+
+const VariationValueModal = ({...props}) => {
   const adhocOption = useSelector(selectCurrentAdHocOption);
+  const currItem = useSelector(selectCurrentItem);
   const dataFields = useSelector(selectCurrentDataField);
   const reportId = useSelector(selectCurrentReportId);
+  const designerMode = useSelector(selectCurrentDesignerMode);
 
   const [variationValues, setVariationValues] = useState(
-      _.cloneDeep(adhocOption?.variationValues || []));
+      setVariationValue(designerMode, adhocOption, currItem));
   const [selectedItem, setSelectedItem] = useState({});
 
   const formRef = useRef();
@@ -128,27 +138,19 @@ const VariationValueModal = ({itemId, ...props}) => {
   };
 
   const onSubmit = () => {
-    const instance = PivotGrid.getInstance('#' + itemId);
+    const curItem = selectCurrentItem(store?.getState());
+    const param = {
+      reportId: reportId,
+      variationValues: variationValues,
+      designerMode: designerMode
+    };
 
-    console.log(itemId);
-    console.log(instance);
-    if (instance) {
-      const fields = instance.getDataSource().fields();
-      const vFields = getVariationFields(
-          adhocOption, dataFields, variationValues);
-      const newFields = fields.filter(
-          ({summaryDisplayMode}) => !summaryDisplayMode);
+    if (designerMode === DesignerMode['DASHBOARD']) {
+      const curItemId = curItem?.id;
+      param.itemId = curItemId;
+    };
 
-      newFields.push(...vFields);
-
-      instance.getDataSource().fields(newFields);
-      instance.getDataSource().reload();
-    }
-
-    dispatch(updateVariationValues({
-      reportId,
-      variationValues
-    }));
+    dispatch(updateVariationValues(param));
   };
 
   return (

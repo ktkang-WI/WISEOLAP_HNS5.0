@@ -4,11 +4,11 @@ import {
   getDefaultFormatRatio
 } from 'components/utils/NumberFormatUtility';
 
-export const getVisibledMeasure = (adHocOption) => {
+export const getVisibledMeasure = (options) => {
   const visibledMeasure = new Set();
-  if (adHocOption?.gridAttribute) {
-    for (const key in adHocOption.gridAttribute) {
-      if (adHocOption.gridAttribute[key].gridVisibility) {
+  if (options?.gridAttribute) {
+    for (const key in options.gridAttribute) {
+      if (options.gridAttribute[key].gridVisibility) {
         visibledMeasure.add(key);
       }
     }
@@ -31,13 +31,13 @@ export const checkVisibleMeasure = (item, visibledMeasure) => {
   return visibledMeasure.has(key);
 };
 
-export const getFormats = (dataField, adHocOption) => {
+export const getFormats = (dataField, option) => {
   const targets = dataField.measure.concat(dataField.sortByItem);
-  const visibledMeasure = getVisibledMeasure(adHocOption);
+  const visibledMeasure = getVisibledMeasure(option);
 
   let formats;
 
-  if (adHocOption?.gridAttribute) {
+  if (option?.gridAttribute) {
     formats = targets.reduce((acc, item) => {
       if (checkVisibleMeasure(item, visibledMeasure)) {
         acc.push(item.format);
@@ -50,7 +50,7 @@ export const getFormats = (dataField, adHocOption) => {
     formats = targets.map((item) => item.format);
   }
 
-  (adHocOption?.variationValues || []).forEach((v) => {
+  (option?.variationValues || []).forEach((v) => {
     const target = targets.find((m) => m.fieldId == v.targetId &&
     checkVisibleMeasure(m, visibledMeasure));
     if (target) {

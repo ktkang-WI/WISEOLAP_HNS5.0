@@ -126,6 +126,10 @@ const useQueryExecute = () => {
       JSON.stringify(orgDataset?.customDatas?.measures) || '[]';
     param.sortByItem = JSON.stringify(dataField.sortByItem);
     ItemManager.generateParameter(item, param);
+    if (item?.meta?.dataFiltering) {
+      param.havingClauseInfo =
+          JSON.stringify(item?.meta?.dataFiltering || []);
+    }
 
     return param;
   };
